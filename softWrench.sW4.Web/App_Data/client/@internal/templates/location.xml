@@ -137,7 +137,7 @@
                           parameters="schema,datamap" service="locationService" method="dispatchWO"/>
               </container>
             </commandgroup>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>

@@ -117,7 +117,7 @@
         <schema id="myprofiledetail" parentschema="detail" title="Edit My Profile">
           <!-- Fix for SWWEB-1245-->
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <command id="cancel" icon="fa-times" service="personService" method="cancelEdition" label="Cancel" tooltip="Cancel"/>
             </commandgroup>
 

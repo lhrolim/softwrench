@@ -343,6 +343,17 @@ namespace softWrench.sW4.Util {
             }
         }
 
+        public static bool UIShowToolbarLabels
+        {
+            get
+            {
+                var flagStr = MetadataProvider.GlobalProperty("ui.toolbars.showlabels");
+                var flag = false;
+                bool.TryParse(flagStr, out flag);
+                return flag;
+            }
+        }
+
         #endregion
 
         #region Attachments

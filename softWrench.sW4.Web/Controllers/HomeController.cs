@@ -122,7 +122,8 @@ namespace softWrench.sW4.Web.Controllers {
                 MatrectransTransfersListScanOrder = matrectransTransfersListScanOrder,
                 InvIssueListBeringScanOrder = invIssueListBeringScanOrder,
                 DefaultEmail = MetadataProvider.GlobalProperty("defaultEmail"),
-                UIShowClassicAdminMenu = ApplicationConfiguration.UIShowClassicAdminMenu
+                UIShowClassicAdminMenu = ApplicationConfiguration.UIShowClassicAdminMenu,
+                UIShowToolbarLabels = ApplicationConfiguration.UIShowToolbarLabels
             };
         }
 

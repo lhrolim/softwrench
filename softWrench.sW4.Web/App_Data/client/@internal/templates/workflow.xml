@@ -39,7 +39,7 @@
             
           </optionfield>
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <removecommand id="print"/>
             </commandgroup>
           </commandbars>

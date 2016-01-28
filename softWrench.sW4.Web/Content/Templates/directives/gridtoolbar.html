@@ -15,16 +15,18 @@
 
         <span ng-if="command.type == 'ContainerCommand'" ng-click="validateRole(command)">
             <div class="btn-group">
-                <button ng-if="command.service != null"
-                        type="button" class="btn btn-default btn-sm hidden-xs"
-                        ng-click="executeService(command)" href="#" ng-if="shouldShowCommand(command)"
+                <button ng-if="command.service != null && shouldShowCommand(command)"
+                        type="button"
+                        ng-click="executeService(command)"
+                        href="#"
                         ng-enabled="command.service!=null"
-                        data-original-title="{{commandtooltip(command)}}" rel="tooltip" data-container="body">
+                        data-original-title="{{commandtooltip(command)}}"
+                        rel="tooltip" data-container="body">
                     <i class="fa" ng-class="command.icon"></i><span>&ensp;{{command.label}}</span>
                 </button>
 
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
-                    <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i><span>&ensp;{{command.label}}</span>
+                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
+                    <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i><span ng-show="showLabel()">&ensp;{{command.label}}</span>
                     <span class="caret"></span>
                 </button>
 

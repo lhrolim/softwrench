@@ -288,6 +288,7 @@ angular.module('sw_prelogin', []);
             $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
             contextService.insertIntoContext("activityStreamFlag", config.activityStreamFlag, true);
             contextService.insertIntoContext("UIShowClassicAdminMenu", config.uiShowClassicAdminMenu, true);
+            contextService.insertIntoContext("UIShowToolbarLabels", config.uiShowToolbarLabels, true);
 
             $scope.mainlogo = config.logo;
             $scope.myprofileenabled = config.myProfileEnabled;

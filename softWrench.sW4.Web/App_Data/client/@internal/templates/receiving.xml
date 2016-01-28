@@ -105,11 +105,11 @@
           <field attribute="quantity" label="Quantity Received"/>
 
           <commandbars>
-            <commandgroup position="compositiontop" removeundeclared="true">
+            <commandgroup position="detail.secondary" removeundeclared="true">
               <command id="ordereditems" label="Select Ordered Items" service="poreceivingService" method="submitorderedItems" parameters="schema,datamap" />
               <command id="rotatingitems" label="Select Rotating Items to Return" service="poreceivingService" method="returnRotatingItems" />
             </commandgroup>
-            <commandgroup position="compositionbottom" removeundeclared="true"/>
+            <commandgroup position="detail.primary" removeundeclared="true"/>
           </commandbars>
         </list>
 

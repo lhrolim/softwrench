@@ -120,7 +120,7 @@ app.directive('crudInput', function (contextService, associationService) {
 
             $scope.getPosition = function (schema) {
                 if (!schema.properties || !schema.properties["commandbar.bottom"]) {
-                    return "detailform";
+                    return "detail.primary";
                 }
                 return schema.properties["commandbar.bottom"];
             }

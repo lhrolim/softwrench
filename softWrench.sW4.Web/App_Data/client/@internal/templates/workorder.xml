@@ -196,7 +196,7 @@
           <field attribute="wopriority" label="Priority"/>
           <field attribute="siteid" label="Site"/>
           <commandbars>
-            <commandgroup position="compositionbottom">
+            <commandgroup position="detail.primary">
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>
@@ -212,7 +212,7 @@
           <field attribute="wopriority" label="Priority"/>
           <field attribute="siteid" label="Site"/>
           <!--<commandbars>
-            <commandgroup position="compositionbottom">
+            <commandgroup position="detail.primary">
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>-->

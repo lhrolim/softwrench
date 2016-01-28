@@ -26,6 +26,14 @@
 
     $scope.commandtooltip = function (command) {
         var tooltip = command.tooltip;
+
+        //if the label and tooltip are the same, only show the tooltip if the labels are hidden
+        if (tooltip == command.label) {
+            if ($scope.showLabel()) {
+                return;
+            }
+        }
+
         if (tooltip == null) {
             return $scope.commandLabel(command);
         }
@@ -33,17 +41,30 @@
         if (tooltip.startsWith("$scope:")) {
             return $scope.invokeOuterScopeFn(tooltip);
         }
+
         return i18NService.get18nValue('_bars.gridtop' + command.id, tooltip);
+    }
+
+    $scope.showLabel = function () {
+        return contextService.fetchFromContext('UIShowToolbarLabels', false, true);
     }
 
     $scope.commandLabel = function (command) {
         var label = command.label;
+
+        //hide the labels if needed
+        if (!$scope.showLabel()) {
+            return '';
+        }
+
         if (label == null) {
             return null;
         }
+
         if (label.startsWith("$scope:")) {
             return $scope.invokeOuterScopeFn(label);
         }
+
         return label;
     }
 
@@ -144,10 +165,10 @@
         if (command.pressed) {
             classes += "active ";
         }
-        if (command.primary || $scope.position.equalsAny('detailform', 'compositionbottom', 'applyfilter')) {
-            return classes + "btn-primary commandButton navbar-btn" + command.cssClasses;
+        if (command.primary || $scope.position.equalsAny('detail.primary', 'applyfilter')) {
+            return classes + command.cssClasses;
         }
-        return classes + "btn-default btn-sm " + command.cssClasses;
+        return classes + command.cssClasses;
     }
 
     // verifies if it is a toggle command and returns the correct child command

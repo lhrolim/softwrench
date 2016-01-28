@@ -101,7 +101,7 @@
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <!--<properties>
             <property key="detail.showtitle" value="true"/>
-          </properties>-->
+          </properties>-->         
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="ticketid" label="SR#:" hidden="true"/>
@@ -163,18 +163,10 @@
             <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
-
           </section>
 
-
           <section secondarycontent="true" orientation="vertical">
-
-
-
-
-
             <section orientation="horizontal">
-
               <section>
                 <section orientation="horizontal">
                   <header displacement="ontop" label="Work Details" params="fieldset=true" />
@@ -234,9 +226,6 @@
               </section>
 
             </section>
-
-
-
 
             <section id="compositions"/>
 
