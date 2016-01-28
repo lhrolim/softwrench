@@ -11,14 +11,16 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
-    class FirstSolarWorkorderDataSet : MaximoApplicationDataSet {
-
-        public override string ApplicationName() {
-            return "location";
-        }
+    class FirstSolarLocationDataSet : BaseLocationDataSet {
 
         public override string ClientFilter() {
             return "firstsolar";
+        }
+
+        private readonly FirstSolarPCSLocationHandler _pcsLocationHandler;
+
+        public FirstSolarLocationDataSet(FirstSolarPCSLocationHandler pcsLocationHandler) {
+            _pcsLocationHandler = pcsLocationHandler;
         }
 
 
@@ -28,16 +30,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             if (string.IsNullOrEmpty(quickSearchData)) {
                 return base.GetList(application, searchDto);
             }
-            if (quickSearchData.EndsWith("%") || !quickSearchData.Contains("%")) {
-                //apply default search to these cases
-                return base.GetList(application, searchDto);
+
+            var query = _pcsLocationHandler.DoGetPCSQuery(quickSearchData,"location");
+            if (query != null) {
+                searchDto.AppendWhereClause(query);
             }
 
-            var numberOfDashes = quickSearchData.GetNumberOfItems("-");
-            if (numberOfDashes != 4) {
-                return base.GetList(application, searchDto);
-            }
-            searchDto.AppendWhereClause("LEN(location.location) - LEN(REPLACE(location.location, '-', '')) = 4");
             return base.GetList(application, searchDto);
         }
     }

@@ -141,7 +141,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private bool _lazyFksResolved;
 
-        private bool _filtersResolved;
+        public bool FiltersResolved { get; private set; }
 
         private bool _referencesResolved;
 
@@ -245,13 +245,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get {
                 if (Stereotype != SchemaStereotype.List) {
                     //only resolve it for list schemas
-                    _filtersResolved = true;
+                    FiltersResolved = true;
                     return _schemaFilters;
                 }
 
-                if (SchemaFilterResolver != null && !_filtersResolved) {
+                if (SchemaFilterResolver != null && !FiltersResolved) {
                     _schemaFilters = SchemaFilterResolver(this);
-                    _filtersResolved = true;
+                    FiltersResolved = true;
                 }
                 return _schemaFilters;
             }

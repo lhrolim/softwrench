@@ -18,6 +18,8 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.Schema {
     public class SchemaFilterBuilder {
+        private const string FilterWhereClauseAliasPattern = "Filter WhereClause service provider {0}/{1}";
+        private const string FilterProviderAliasPattern = "Filter 'Provider' service provider {0}/{1}";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SchemaFilterBuilder));
 
@@ -124,6 +126,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                     //merging existing filter
                     overridenFilter.Label = overridenFilter.Label ?? field.Label;
                     overridenFilter.Tooltip = overridenFilter.Tooltip ?? field.ToolTip;
+                    ValidateServiceWhereClauseProvider(schema, overridenFilter, entity);
                     if (overridenFilter is MetadataOptionFilter) {
                         ValidateOptionFilter(schema, (MetadataOptionFilter)overridenFilter, entity);
                     }
@@ -171,6 +174,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                             applicationName));
                 }
 
+                ValidateServiceWhereClauseProvider(schema, filter, entity);
                 if (filter is MetadataOptionFilter) {
                     ValidateOptionFilter(schema, (MetadataOptionFilter)filter, entity);
                 }
@@ -202,6 +206,28 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             }
         }
 
+        private static void ValidateServiceWhereClauseProvider(ApplicationSchemaDefinition schema, BaseMetadataFilter filter, EntityMetadata entity) {
+            var whereClause = filter.WhereClause;
+            if (whereClause == null) {
+                return;
+            }
+
+            if (!ClientPlatform.Web.Equals(schema.Platform)) {
+                //nothing to do, because it could be schema shared to the offline world whose implementation will be an angular service
+                return;
+            }
+
+            if (!whereClause.StartsWith("@")) {
+                //no need to validate it
+                return;
+            }
+            var parameterData =
+                new GenericSwMethodInvoker.ParameterData(
+                    FilterWhereClauseAliasPattern.Fmt(schema.ApplicationName, filter.Attribute), typeof(string),
+                    typeof(FilterWhereClauseParameters));
+            GenericSwMethodInvoker.CheckExistenceByString(schema, whereClause, parameterData);
+        }
+
         /// <summary>
         /// Validates the given provider exists.
         /// 
@@ -224,16 +250,10 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                     //nothing to do, because it could be schema shared to the offline world whose implementation will be an angular service
                     return;
                 }
-
-                var dataSet = DataSetProvider.GetInstance().LookupDataSet(schema.ApplicationName, schema.SchemaId);
-                var mi = ReflectionUtil.GetMethodNamed(dataSet, provider.Substring(1));
-                if (mi == null) {
-                    throw new FilterMetadataException("missing filter provider method {0} on dataset for application {1}".Fmt(provider.Substring(1), schema.ApplicationName));
-                }
-                if (mi.GetParameters().Length != 1 || !typeof(IEnumerable<IAssociationOption>).IsAssignableFrom(mi.ReturnType) || !typeof(FilterProviderParameters).IsAssignableFrom(mi.GetParameters()[0].ParameterType)) {
-                    //checking signature of the method
-                    throw new InvalidOperationException(string.Format("Filter provider {0} at  {1} has wrong signature ", provider.Substring(1), dataSet.GetType().Name));
-                }
+                var parameterData =
+                    new GenericSwMethodInvoker.ParameterData(FilterProviderAliasPattern.Fmt(schema.ApplicationName, overridenFilter.Attribute), typeof(IEnumerable<IAssociationOption>),
+                typeof(FilterProviderParameters));
+                GenericSwMethodInvoker.CheckExistenceByString(schema, overridenFilter.Provider, parameterData);
                 return;
             }
 

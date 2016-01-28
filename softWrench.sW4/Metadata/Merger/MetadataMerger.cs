@@ -52,10 +52,11 @@ namespace softWrench.sW4.Metadata.Validator {
         private static CompleteApplicationMetadataDefinition DoMergeApplication([NotNull]CompleteApplicationMetadataDefinition souceAplication, [NotNull]CompleteApplicationMetadataDefinition overridenApplication) {
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> resultSchemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
             var resultComponents = MergeComponents(souceAplication, overridenApplication);
-            var resultFilters =SchemaFilterBuilder.ApplyFilterCustomizations(souceAplication.AppFilters,overridenApplication.AppFilters);
+            var resultFilters = SchemaFilterBuilder.ApplyFilterCustomizations(souceAplication.AppFilters, overridenApplication.AppFilters);
 
 
             foreach (var schema in souceAplication.Schemas()) {
+
                 ApplicationSchemaDefinition overridenSchema;
                 overridenApplication.Schemas().TryGetValue(schema.Key, out overridenSchema);
 
@@ -67,8 +68,13 @@ namespace softWrench.sW4.Metadata.Validator {
                     //this is for adding the base schemas that have no redeclaration (i.e. they exist only on the templates)
                     resultSchemas.Add(schema.Key, schema.Value);
                 } else {
+
                     if (overridenSchema.Stereotype.Equals(SchemaStereotype.List)) {
                         overridenSchema.DeclaredFilters.Merge(resultFilters);
+                        if (overridenSchema.FiltersResolved) {
+                            //second pass
+                            overridenSchema.SchemaFilters = resultFilters;
+                        }
                     }
 
                     if (!overridenSchema.RedeclaringSchema) {
@@ -106,11 +112,11 @@ namespace softWrench.sW4.Metadata.Validator {
 
             return new CompleteApplicationMetadataDefinition(souceAplication.Id, souceAplication.ApplicationName,
                 title, entity, idFieldName, userIdFieldName,
-                overridenParameters, resultSchemas, souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), mergedFilters, service,role, auditEnabled);
+                overridenParameters, resultSchemas, souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), mergedFilters, service, role, auditEnabled);
 
         }
 
-      
+
 
         private static List<DisplayableComponent> MergeComponents(CompleteApplicationMetadataDefinition souceAplication,
             CompleteApplicationMetadataDefinition overridenApplication) {

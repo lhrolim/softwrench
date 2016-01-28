@@ -62,7 +62,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                     var numberFilter = new MetadataNumberFilter(attribute, label, icon, position, tooltip, whereclause);
                     filters.AddLast(numberFilter);
                 } else if (el.IsNamed(XmlFilterSchema.BaseFilterElement)) {
-                    var toRemove = el.Attribute(XmlFilterSchema.RemoveAttribute).ValueOrDefault(true);
+                    var toRemove = el.Attribute(XmlFilterSchema.RemoveAttribute).ValueOrDefault(false);
                     filters.AddLast(new BaseMetadataFilter(attribute, label, icon, position, tooltip, whereclause, toRemove, style));
                 }
             }
