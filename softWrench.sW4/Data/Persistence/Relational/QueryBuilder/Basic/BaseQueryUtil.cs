@@ -17,8 +17,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         public static string AliasEntity(string entity, string alias) {
             var metadata = MetadataProvider.Entity(entity);
             var table = metadata.GetTableName();
-            if (ApplicationConfiguration.IsOracle(DBType.Maximo))
-            {
+            if (ApplicationConfiguration.IsOracle(DBType.Maximo)) {
                 return string.Format("{0} {1}", table, alias);
             }
             return string.Format("{0} as {1}", table, alias);
@@ -39,24 +38,27 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             return sb.ToString(0, sb.Length - 1);
         }
 
-        public static string GenerateOrLikeString(IEnumerable<string> items) {
+        public static string GenerateOrLikeString(string columnName, IEnumerable<string> items) {
             var sb = new StringBuilder();
             foreach (var item in items) {
-                sb.Append("'").Append(item).Append("'");
-                sb.Append(",");
+                if (item.Contains("%")) {
+                    sb.AppendFormat(" {0} like '{1}'", columnName, item);
+                } else {
+                    sb.AppendFormat(" {0} = '{1}'", columnName, item);
+                }
+                sb.Append(" or ");
             }
-            return sb.ToString(0, sb.Length - 1);
+            return sb.ToString(0, sb.Length - 4);
         }
 
-        public static string GenerateInString(IEnumerable<DataMap> items,string columnName = null) {
+        public static string GenerateInString(IEnumerable<DataMap> items, string columnName = null) {
             var dataMaps = items as DataMap[] ?? items.ToArray();
-            if (items== null || !dataMaps.Any()) {
+            if (items == null || !dataMaps.Any()) {
                 return null;
             }
 
             var sb = new StringBuilder();
-            foreach (var item in dataMaps)
-            {
+            foreach (var item in dataMaps) {
                 var id = columnName == null ? item.Id : item.GetAttribute(columnName);
                 sb.Append("'").Append(id).Append("'");
                 sb.Append(",");
