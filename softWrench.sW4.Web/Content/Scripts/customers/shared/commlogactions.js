@@ -37,8 +37,8 @@
                 });
         }
 
-        function dispatchEvent(clonedItem) {
-            $scope.$emit("sw.composition.edit", clonedItem);
+        function dispatchEvent(clonedItem, title) {
+            $scope.$emit("sw.composition.edit", clonedItem, title);
             return clonedItem;
         }
 
@@ -96,6 +96,12 @@
             detailItem['sendto'] = detailItem['cc'] = null;
             return detailItem;
         }
+        
+        var eventDispatcher = function(title) {
+            return function(clonedItem) {
+                return dispatchEvent(clonedItem, title);
+            }
+        }
 
         // Forward message
         // Send to: User entered
@@ -107,7 +113,7 @@
             //TODO: open new message in modal
             return getServerData(commlogitem)
                 .then(transformForward)
-                .then(dispatchEvent);
+                .then(eventDispatcher("Forward"));
         };
 
         // Reply to Original sender
@@ -120,7 +126,7 @@
             //TODO: open new message in modal
             return getServerData(commlogitem)
                 .then(transformReply)
-               .then(dispatchEvent);
+               .then(eventDispatcher("Reply"));
         };
 
         // Reply to all
@@ -133,7 +139,7 @@
             //TODO: open new message in modal
             return getServerData(commlogitem)
                .then(transformReplyAll)
-               .then(dispatchEvent);
+               .then(eventDispatcher("Reply All"));
         };
     }
 

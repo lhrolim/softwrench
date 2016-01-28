@@ -1,11 +1,11 @@
 <div class="composition master-details clearfix">
     <div ng-show="hasRecords()" class="clearfix">
         <div class="master col-xs-12 col-sm-4">
-            <div class="quick-search">
+            <!--<div class="quick-search">
                 <search-box ng-model="searchText" data-placeholder="'Search'" />
-            </div>
+            </div>-->
             <div class="entries">
-                <div ng-repeat="entry in compositiondata | filter:searchText" ng-class="$odd ? 'odd' : 'even'" ng-click="displayDetails(entry)" class="entry clearfix">
+                <div ng-repeat="entry in compositiondata" ng-class="$odd ? 'odd' : 'even'" ng-click="displayDetails(entry)" class="entry clearfix">
                     <div class="icons">
                         <div ng-repeat="icon in entry.master.icons" ng-show="icon" class="icon">
                             <i class="fa {{icon}}"></i>
@@ -18,13 +18,13 @@
                         <div class="message">{{entry.master.message}}</div>
                     </div>
                     <div class="details" ng-class={open:entry.open}>
-                        <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="fields">
+                        <div ng-if="!!compositiondata" class="fields">
                             <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
                                 <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
                                 <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
                             </div>
                         </div>
-                        <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="commands">
+                        <div ng-if="!!compositiondata" class="commands">
                             <div ng-controller="CommLogActionsController" class="buttons">
                                 <button class="btn btn-default fa fa-mail-reply" ng-click="reply(getDetailDatamap)" title="Reply"></button>
                                 <button class="btn btn-default fa fa-mail-reply-all" ng-click="replyAll(getDetailDatamap)" title="Reply all"></button>
@@ -34,23 +34,25 @@
                     </div>
                 </div>
             </div>
-            <!--TODO: Pagination-->
+            <div class="context clearfix" ng-if="showPagination">
+                <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" pagination-simple-layout />
+            </div>
         </div>
         <div class="details col-xs-12 col-sm-8 hidden-xs">
-            <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="fields">
+            <div ng-if="!!compositiondata" class="fields">
                 <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
                     <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
                     <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
                 </div>
             </div>
-            <div ng-if="compositiondata.length && (compositiondata | filter:searchText).length" class="commands">
+            <div ng-if="!!compositiondata" class="commands">
                 <div ng-controller="CommLogActionsController" class="buttons">
                     <button class="btn btn-default fa fa-mail-reply" ng-click="reply(getDetailDatamap)" title="Reply"></button>
                     <button class="btn btn-default fa fa-mail-reply-all" ng-click="replyAll(getDetailDatamap)" title="Reply all"></button>
                     <button class="btn btn-default fa fa-mail-forward" ng-click="forward(getDetailDatamap)" title="Forward"></button>
                 </div>
             </div>
-            <div ng-if="compositiondata.length && !(compositiondata | filter:searchText).length" class="no-records">
+            <div ng-if="!compositiondata" class="no-records">
                 <i class="fa fa-info-circle"></i>&ensp;No records match your search.
             </div>
         </div>

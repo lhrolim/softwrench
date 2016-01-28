@@ -9,8 +9,6 @@
             }
 
             .entries {
-                margin-top: 20px;
-
                 .entry {
                     padding: 15px;
                     background-color: #ebebeb;
@@ -49,6 +47,8 @@
 
                         .date {
                             display: flex;
+                            color: $cts_gray;
+                            margin-left: auto;
                         }
 
                         .author {
@@ -70,7 +70,6 @@
                         display: none;
                         padding-top: 30px;
                         clear: both;
-
                         /*&.open {
                             display: block !important;
                         }*/
@@ -86,7 +85,6 @@
         .details {
             margin-bottom: 40px;
             /*display: none;*/
-
             .fields {
                 .field {
                     margin-bottom: 20px;
@@ -119,20 +117,19 @@
 }
 
 @media all and (max-width: 768px) {
-.composition {
-    &.master-details {
-        .master {
-              .entries {
-                .entry {
-                    .details {
-                        &.open {
-                            display: block;
+    .composition {
+        &.master-details {
+            .master {
+                .entries {
+                    .entry {
+                        .details {
+                            &.open {
+                                display: block;
+                            }
                         }
                     }
-
                 }
             }
-        }
         }
     }
 }

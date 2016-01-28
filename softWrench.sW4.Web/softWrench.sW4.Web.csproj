@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build;CopyCustomerDLL" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -537,6 +537,7 @@
     <Content Include="Content\Scripts\client\directives\searchbox.js" />
     <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\directives\stringtonumber.js" />
+    <Content Include="Content\Scripts\client\services\controllerinheritanceservice.js" />
     <Content Include="Content\Scripts\client\services\notificationService.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
     <Content Include="Content\Scripts\client\services\recursionHelper_service.js" />
@@ -656,7 +657,7 @@
     <Content Include="Content\styles\default\_notifications.scss" />
     <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js.map" />
     <Content Include="Content\styles\default\_searchbox.scss" />
-<Content Include="bower.json" />
+    <Content Include="bower.json" />
     <Content Include="Content\styles\default\_bootbox.scss" />
     <None Include="Content\styles\default\_button.scss" />
     <None Include="Content\styles\default\vendor\_xeditable.scss" />

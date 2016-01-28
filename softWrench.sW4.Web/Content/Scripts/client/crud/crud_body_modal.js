@@ -104,7 +104,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             //TODO: review this decision here it might not be suitable for all the scenarios
             crudContextHolderService.modalLoaded();
 
-            associationService.loadSchemaAssociations(datamapToUse, schema).then(function() {
+            associationService.loadSchemaAssociations(datamapToUse, schema).then(function () {
                 if (modaldata.onloadfn) {
                     modaldata.onloadfn($scope);
                 }
