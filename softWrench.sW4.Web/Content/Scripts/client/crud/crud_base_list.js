@@ -99,10 +99,11 @@ function BaseList($scope, formatService, expressionService, searchService, field
     };
 
     $scope.GetAssociationOptions = function (fieldMetadata, forfilter) {
-        if (fieldMetadata.type == "OptionField") {
+        if (fieldMetadata.type === "OptionField") {
             return $scope.GetOptionFieldOptions(fieldMetadata, forfilter);
         }
-        return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey);
+        var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+        return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
     };
 
     $scope.GetOptionFieldOptions = function (optionField, forfilter) {

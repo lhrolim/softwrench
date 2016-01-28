@@ -18,7 +18,8 @@
 
         return {
             refreshFromAttribute: function (associationFieldMetadata, scope) {
-                var value = associationService.getFullObject(associationFieldMetadata, scope.datamap, scope.associationOptions);
+                var contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+                var value = associationService.getFullObject(associationFieldMetadata, scope.datamap, contextData);
                 var associationkey = associationFieldMetadata.associationKey;
                 var label = value == null ? null : value.label;
                 $log.getInstance('cmpAutocompleteServer#refreshFromAttribute').debug("update autocomplete-server {0} with value {1}".format(associationkey, label));

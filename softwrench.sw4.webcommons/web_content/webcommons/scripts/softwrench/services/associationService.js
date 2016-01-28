@@ -49,16 +49,15 @@
             if (selectedValue == null) {
                 return null;
             } else if (Array.isArray(selectedValue)) {
-                var ObjectArray = [];
-
                 // Extract each item into an array object
-                for (var i = 0; i < selectedValue.length; i++) {
-                    var Object = doGetFullObject(associationFieldMetadata, selectedValue[i], contextData);
-                    ObjectArray = ObjectArray.concat(Object);
-                }
+                var objectArray = selectedValue
+                    .map(function (value) {
+                        return doGetFullObject(associationFieldMetadata, value, contextData);
+                    })
+                    .flatten();
 
                 // Return results for multi-value selection
-                return ObjectArray;
+                return objectArray;
             }
 
             // we need to locate the value from the list of association options
@@ -106,7 +105,7 @@
             return "(" + item.value + ")" + " - " + item.label;
         };
 
-        function getFullObject(associationFieldMetadata, datamap) {
+        function getFullObject(associationFieldMetadata, datamap, contextData) {
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
             var target = associationFieldMetadata.target;
@@ -115,7 +114,7 @@
             if (selectedValue == null) {
                 return null;
             }
-            var resultValue = doGetFullObject(associationFieldMetadata, selectedValue);
+            var resultValue = doGetFullObject(associationFieldMetadata, selectedValue, contextData);
             if (resultValue == null) {
                 $log.getInstance('associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
             }
