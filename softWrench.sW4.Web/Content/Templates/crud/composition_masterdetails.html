@@ -5,7 +5,7 @@
                 <search-box ng-model="searchText" data-placeholder="'Search'" />
             </div>-->
             <div class="entries">
-                <div ng-repeat="entry in compositiondata" ng-class="$odd ? 'odd' : 'even'" ng-click="displayDetails(entry)" class="entry clearfix">
+                <div ng-repeat="entry in compositiondata" ng-class="[$odd ? 'odd' : 'even', entry.open ? 'current' : '']" ng-click="displayDetails(entry)" class="entry clearfix">
                     <div class="icons">
                         <div ng-repeat="icon in entry.master.icons" ng-show="icon" class="icon">
                             <i class="fa {{icon}}"></i>
