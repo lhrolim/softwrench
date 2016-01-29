@@ -102,6 +102,7 @@
         /**
          * Initiates an inheritance chain on the childCtrl:
          * `service.begin(childCtrl).inherit(parentCtrl_1, {...})...inherit(parentCtrl_n)`
+         *
          * 
          * @see InheritanceBuilder for more information
          * @param NgController childCtrl

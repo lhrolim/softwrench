@@ -37,22 +37,22 @@
                         display: flex;
                         flex-wrap: wrap;
 
-                        .author, .date, .title {
+                        .title, .tag, .subtitle {
                             margin-bottom: 5px;
                         }
 
-                        .title, .message {
+                        .subtitle, .message {
                             clear: both;
                             width: 100%;
                         }
 
-                        .date {
+                        .tag {
                             display: flex;
                             color: $cts_gray;
                             margin-left: auto;
                         }
 
-                        .author {
+                        .title {
                             display: flex;
                             font-weight: bold;
                             width: -moz-calc(100% - 100px);

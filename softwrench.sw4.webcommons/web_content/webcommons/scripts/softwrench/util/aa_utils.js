@@ -228,7 +228,12 @@ Array.prototype.subarray = function (start, end) {
     return this.slice(start, this.length + 1 - (end * -1));
 }
 
-// http://stackoverflow.com/questions/27266550/how-to-flatten-nested-array-in-javascript
+/**
+ * Flattens a nested array (works with any level of 'nestedness') e.g.
+ * [1, [2, 3, [4, 5]], 6, [7, [8, [9]]]].flatten() === [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ * @see http://stackoverflow.com/questions/27266550/how-to-flatten-nested-array-in-javascript 
+ * @returns flattened array 
+ */
 Array.prototype.flatten = function() {
     var toString = Object.prototype.toString;
     var arrayTypeStr = "[object Array]";

@@ -84,16 +84,16 @@
           <field attribute="inbound">
             <renderer type="icon" params="expression={'1':'fa-long-arrow-right green','0':'fa-long-arrow-left orange'}"/>
           </field>
-          <field attribute="createdate" label="Created Date/Time" qualifier="date">
-            <renderer type="datetime" params="format=MM/dd/yyyy"/>
+          <field attribute="createdate" label="Created Date/Time" qualifier="tag">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-          <field attribute="sendto" label="To" qualifier="personTo">
+          <field attribute="sendto" label="To" qualifier="expression={'!@inbound':'title'}">
             <renderer type="default" params="formatter=lower"/>
           </field>
-          <field attribute="sendfrom" label="From" qualifier="personFrom">
+          <field attribute="sendfrom" label="From" qualifier="expression={'@inbound':'title'}">
             <renderer type="default" params="formatter=lower"/>
           </field>
-          <field attribute="subject" label="Subject" qualifier="title">
+          <field attribute="subject" label="Subject" qualifier="subtitle">
             <renderer type="default"/>
           </field>
           <field attribute="message" label="Message" qualifier="message">

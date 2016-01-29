@@ -16,8 +16,8 @@
                 title: '@'
             },
 
-            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "$log", "controllerInheritanceService",
-                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, $log, controllerInheritanceService) {
+            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "$log", "controllerInheritanceService", "fieldService",
+                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, $log, controllerInheritanceService, fieldService) {
 
                     var log = $log.getInstance('sw4.composition.master/detail');
 
@@ -87,65 +87,39 @@
                         return i18NService.get18nValue(key, defaultValue, paramArray);
                     };
 
+                    function formatEntryString(entry, field, qualifier) {
+                        var string = entry[field.attribute];
+                        if (qualifier === "message") {
+                            string = $("<p>" + string + "</p>").text();
+                        }
+                        if (string.length > 200) {
+                            string = string.substring(0, 200) + "...";
+                        }
+                        return $scope.getFormattedValue(string, field, entry);
+                    }
+
                     $scope.mapMaster = function (compositiondata, schema) {
 
                         //loop thru the records
                         compositiondata.forEach(function (entry) {
-                            var master = {};
-                            master.icons = [];
+                            var master = {
+                                icons: []
+                            };
 
                             //loop thru the schema fields
                             schema.displayables.forEach(function (field) {
+                                var qualifier = fieldService.getQualifier(field, entry);
 
-                                //map fields to master info
-                                var string = entry[field.attribute];
-                                var qualifier = field.qualifier;
-
-                                //format fields
-                                switch (qualifier) {
-                                    case "message":
-                                        //remove html tags
-                                        string = $("<p>" + string + "</p>").text();
-
-                                        //reduce string length
-                                        if (string.length > 200) {
-                                            string = string.substring(0, 200) + "...";
-                                        }
-                                        break;
-                                    default:
-                                        //reduce string length
-                                        if (string.length > 80) {
-                                            string = string.substring(0, 80) + "...";
-                                        }
+                                if (!!qualifier) {
+                                    master[qualifier] = formatEntryString(entry, field, qualifier);
                                 }
-
-                                //remap fields
-                                switch (qualifier) {
-                                    case "personTo":
-                                        //for comm logs, use if outbound
-                                        if (!entry.inbound) {
-                                            qualifier = "person";
-                                        }
-                                        break;
-                                    case "personFrom":
-                                        //for comm logs, use if inbound
-                                        if (entry.inbound) {
-                                            qualifier = "person";
-                                        }
-                                        break;
-                                }
-
-                                master[qualifier] = $scope.getFormattedValue(string, field, entry);
 
                                 //process the icon fields
-                                switch (field.rendererType) {
-                                    case "icon":
-                                        var icon = iconService.loadIcon(entry[field.attribute], field);
-
-                                        if (icon) {
-                                            master.icons.push(iconService.loadIcon(entry[field.attribute], field) + " " + field.attribute);
-                                        }
-                                        break;
+                                if (field.rendererType === "icon") {
+                                    var icon = iconService.loadIcon(entry[field.attribute], field);
+                                    if (!!icon) {
+                                        master.icons.push(icon + " " + field.attribute);
+                                    }
                                 }
                             });
 
