@@ -53,11 +53,13 @@
                         }
 
                         .title {
-                            display: flex;
+                            /*display: flex;*/
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                             font-weight: bold;
                             width: -moz-calc(100% - 100px);
                             width: -webkit-calc(100% - 100px);
-                            width: calc(100% - 100px);
+                            width: calc(100% - 120px);
                             overflow: hidden;
                             margin-right: 20px;
                         }
