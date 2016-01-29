@@ -793,40 +793,49 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         }
         //TODO: refactor this, using promises
         $scope.$emit("sw_submitdata", {
-            successCbk: function (data) {
-                var updatedArray = data.resultObject != null ? data.resultObject.fields[$scope.relationship] : null;
-                if (alwaysrefresh || updatedArray == null || updatedArray.length === 0) {
-                    window.location.href = window.location.href;
-                    return;
-                }
-                //we need to clone it again here, to avoid binding, otherwise the data would be shown in the list before submission confirms on server side
-                $scope.clonedCompositionData = JSON.parse(JSON.stringify(updatedArray));
-                $scope.clonedData = {};
-                $scope.compositiondata = updatedArray;
-                $scope.newDetail = false;
-                $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
-                $scope.selecteditem = {};
-                $scope.collapseAll();
-                if ($rootScope.showingModal) {
-                    //hides the modal after submiting it
-                    modalService.hide();
-                }
-                $scope.selecteditem = null;
-            },
-            failureCbk: function (data) {
-                var idx = $scope.compositiondata.indexOf(selecteditem);
-                if (idx != -1) {
-                    $scope.compositiondata.splice(idx, 1);
-                }
-                $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
-            },
+            successCbk: afterSaveListener("onAfterSave", alwaysrefresh),
+            failureCbk: afterSaveListener("onSaveError"),
             dispatcherComposition: $scope.relationship,
             isComposition: true,
-            nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId },
-            refresh: alwaysrefresh,
+            nextSchemaObj: { schemaId: crudContextHolderService.currentSchema().schemaId },
+            refresh: alwaysrefresh
         });
     };
 
+    function afterSaveListener(name, extra) {
+        return function (data) {
+            $scope[name](data, extra);
+        }
+    };
+
+    $scope.onSaveError = function (data, extra) {
+        var idx = $scope.compositiondata.indexOf(selecteditem);
+        if (idx !== -1) {
+            $scope.compositiondata.splice(idx, 1);
+        }
+        $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
+    };
+
+    $scope.onAfterSave = function (data, alwaysrefresh) {
+        var updatedArray = data.resultObject != null ? data.resultObject.fields[$scope.relationship] : null;
+        if (alwaysrefresh || updatedArray == null || updatedArray.length === 0) {
+            window.location.href = window.location.href;
+            return;
+        }
+        //we need to clone it again here, to avoid binding, otherwise the data would be shown in the list before submission confirms on server side
+        $scope.clonedCompositionData = JSON.parse(JSON.stringify(updatedArray));
+        $scope.clonedData = {};
+        $scope.compositiondata = updatedArray;
+        $scope.newDetail = false;
+        $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
+        $scope.selecteditem = {};
+        $scope.collapseAll();
+        if ($rootScope.showingModal) {
+            //hides the modal after submiting it
+            modalService.hide();
+        }
+        $scope.selecteditem = null;
+    };
 
 
     /*API Methods*/

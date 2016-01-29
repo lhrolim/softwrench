@@ -169,6 +169,15 @@
                             $scope.getDetailDatamap.open = true;
                         }
                     }
+
+                    function prepareDataProxy(original, params, context) {
+                        var result = original.apply(context, params);
+                        if (result && angular.isFunction(result.then)) {
+                            return result.then(prepareData);
+                        }
+                        return prepareData();
+                    }
+
                     function init(self) {
                         prepareData();
 
@@ -180,11 +189,9 @@
                                 $attrs: $attrs
                             })
                             .overrides()
-                            .scope($scope, "selectPage", function (original, params, context) {
-                                return original.apply(context, params).then(function () {
-                                    prepareData();
-                                });
-                            });
+                            .scope($scope, "selectPage", prepareDataProxy)
+                            .scope($scope, "onAfterSave", prepareDataProxy)
+                            .scope($scope, "onSaveError", prepareDataProxy);
 
                         log.debug($scope, $scope.compositiondata);
                     }
