@@ -85,7 +85,7 @@
             <renderer type="icon" params="expression={'1':'fa-long-arrow-right green','0':'fa-long-arrow-left orange'}"/>
           </field>
           <field attribute="createdate" label="Created Date/Time" qualifier="date">
-            <renderer type="datetime" params="format=MM/dd/yyyy"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
           <field attribute="sendto" label="To" qualifier="personTo">
             <renderer type="default" params="formatter=lower"/>
