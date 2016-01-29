@@ -31,7 +31,7 @@
             }
 
             &.pagination {
-                padding-top: 8px;
+                padding-top: 7px;
             }
 
             &.total {
@@ -39,12 +39,22 @@
             }
         }
 
-        /*button {
-            margin-bottom: 5px;
-        }*/
-
         label {
             font-weight: normal;
+        }
+
+        .buttons {
+            display: inline-block;
+            margin: 0 5px 5px 0;
+
+
+            .btn-context {
+                background: transparent;
+
+                &:hover {
+                    background: #ddd;
+                }
+            }
         }
     }
 

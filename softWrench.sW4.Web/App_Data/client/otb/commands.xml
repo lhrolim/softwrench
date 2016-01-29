@@ -11,7 +11,7 @@
   </commandgroup>
 
   <commandgroup position="detail.primary" platform="web">
-    <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />
+    <!--<command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />-->
     <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave"/>
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>    
   </commandgroup>

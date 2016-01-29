@@ -1,19 +1,23 @@
 <div class="group">
-    <span ng-repeat="command in getGridToolbar()">
-        <button type="button" ng-class="buttonClasses(getCommand(command))"
+    <div class="buttons" ng-repeat="command in getGridToolbar()">
+        <button type="button"
+                ng-class="buttonClasses(getCommand(command))"
                 ng-init="initIfToggleCommand(command)"
                 ng-click="executeService(getCommand(command), toggleCommandOrNull(command))" href="#" 
                 ng-if="(command.type == 'ApplicationCommand' || command.type == 'ToggleCommand') && shouldShowCommand(getCommand(command))"
                 ng-enabled="isCommandEnabled(getCommand(command))"
-                data-original-title="{{commandtooltip(getCommand(command))}}" rel="tooltip" data-container="body" class="applicationcommand">
+                data-original-title="{{commandtooltip(getCommand(command))}}"
+                rel="tooltip"
+                data-container="body"
+                class="applicationcommand btn-context">
             <i class="fa" ng-class="commandIcon(getCommand(command))"></i><span ng-show="commandLabel(getCommand(command))">&ensp;{{commandLabel(getCommand(command))}}</span>
         </button>
 
-        <span ng-if="command.type == 'ResourceCommand'" ng-click="validateRole(command)">
+        <div ng-if="command.type == 'ResourceCommand'" ng-click="validateRole(command)">
             <ng-include src="url(command.path)" />
-        </span>
+        </div>
 
-        <span ng-if="command.type == 'ContainerCommand'" ng-click="validateRole(command)">
+        <div ng-if="command.type == 'ContainerCommand'" ng-click="validateRole(command)">
             <div class="btn-group">
                 <button ng-if="command.service != null && shouldShowCommand(command)"
                         type="button"
@@ -21,11 +25,12 @@
                         href="#"
                         ng-enabled="command.service!=null"
                         data-original-title="{{commandtooltip(command)}}"
-                        rel="tooltip" data-container="body">
+                        rel="tooltip"
+                        data-container="body">
                     <i class="fa" ng-class="command.icon"></i><span>&ensp;{{command.label}}</span>
                 </button>
 
-                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
+                <button type="button" class="btn btn-context dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
                     <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i><span ng-show="showLabel()">&ensp;{{command.label}}</span>
                     <span class="caret"></span>
                 </button>
@@ -41,6 +46,6 @@
                     </li>
                 </ul>
             </div>
-        </span>
-    </span>
+        </div>
+    </div>
 </div>
