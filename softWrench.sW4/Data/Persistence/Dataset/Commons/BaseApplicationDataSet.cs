@@ -329,6 +329,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             Log.DebugFormat("BaseApplicationDataSet#GetList calling Find method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, ctx);
             entities = Engine().Find(entityMetadata, dto, applicationCompositionSchemata);
 
+
             // Get the composition data for the list, only in the case of detailed list (like printing details), otherwise, this is unecessary
             if (applicationCompositionSchemata.Count > 0) {
                 var request = new PreFetchedCompositionFetchRequest(entities) {

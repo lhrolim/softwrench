@@ -17,27 +17,31 @@
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Active" value="INPRG,APPR,WOEN,ENRV,HOLD" preselected="true" displaycode="false" tooltip="The status of active work orders. Matchs any work order of &quot;INPRG&quot;, &quot;APPR&quot;, &quot;WOEN&quot;, &quot;ENRV&quot; or &quot;HOLD&quot; status."/>
             </optionfilter>
-            <optionfilter attribute="location" provider="location_.location" displaycode="false" advancedfilterschema="location.locationfilter" allowblank="true"/>
+            <optionfilter attribute="location" provider="@firstSolarPCSLocationHandler.HandlePCSLocationProvider" displaycode="false" 
+                          advancedfilterschema="location.locationfilter" allowblank="true" whereclause="@firstSolarPCSLocationHandler.HandlePCSLocation"/>
             <optionfilter attribute="classstructure_.description" provider="classstructure_.description" allowblank="true" whereclause="classstructure_.classstructureid in (!@#value)"/>
             <!--<optionfilter attribute="classstructure_.classificationid" provider="@GetWOClassStructureType" allowblank="true"/>-->
           </filters>
-          
-          
+
+
           <customization position="+description">
             <field attribute="classstructure_.description" label="Classification"></field>
           </customization>
-          
+
         </list>
 
         <schema id="readonlyfixedlist" stereotype="list.modal.readonly">
           <field attribute="wonum" label="WO#" >
-            <renderer type="default" params="width=10%" />
+            <renderer type="default"/>
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="excelwidth=50" />
+            <renderer type="default" />
+          </field>
+          <field attribute="location" label="Location">
+            <renderer type="default" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="statuscolor" params="width=15%;grid=workorder;column=status" />
+            <renderer type="statuscolor" params="grid=workorder;column=status" />
           </field>
         </schema>
 
@@ -55,7 +59,7 @@
           <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
-        
+
           <properties>
             <property key="addassociationlabels" value="true"/>
           </properties>
@@ -81,7 +85,7 @@
           <field attribute="siteid" label="SiteId">
             <renderer type="default" params="updatable=true"/>
           </field>
-       
+
 
           <properties>
             <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
@@ -116,7 +120,7 @@
           <field attribute="details" label="Details:" requiredexpression="true">
             <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
-       
+
           <field attribute="classification" label="Classification">
             <renderer type="default" params="updatable=true"/>
           </field>
@@ -124,7 +128,7 @@
           <field attribute="siteid" label="SiteId">
             <renderer type="default" params="updatable=true"/>
           </field>
-          
+
 
           <properties>
             <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
@@ -154,11 +158,11 @@
           <field attribute="details" label="Details:">
             <renderer type="textarea" params="updatable=true"/>
           </field>
-          
+
           <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
-        
+
           <properties>
             <property key="addassociationlabels" value="true"/>
           </properties>
@@ -170,7 +174,7 @@
           </commandbars>
         </schema>
 
-    
+
         <schema id="batchAssetInlineEdit" title="Edit Workorder" stereotype="detail.modal">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="userIdFieldName" hidden="true"/>
@@ -202,6 +206,12 @@
     </application>
 
     <application name="location" title="Location" entity="location" >
+
+      <filters>
+        <optionfilter attribute="location" provider="@firstSolarPCSLocationHandler.HandlePCSLocationProvider" displaycode="false"
+              allowblank="true" whereclause="@firstSolarPCSLocationHandler.HandlePCSLocation"/>
+      </filters>
+
       <schemas>
         <schema id="locationfilter" stereotype="list.selection.modal.filter">
           <field attribute="location" label="Location"/>
@@ -226,6 +236,11 @@
 
 
     <application name="asset" title="Asset" entity="asset" >
+      <filters>
+        <optionfilter attribute="location" provider="@firstSolarPCSLocationHandler.HandlePCSLocationProvider" displaycode="false"
+              allowblank="true" whereclause="@firstSolarPCSLocationHandler.HandlePCSLocation"/>
+      </filters>
+
       <schemas>
         <schema id="assetlist"  redeclaring="false" stereotype="list.selection">
           <commandbars>

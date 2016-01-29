@@ -164,6 +164,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\BaseAssetDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseLocationDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseMultiassetlocciDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\GenericSWMethodInvoker.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\BaseTicketDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\CommlogHelper.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\WoActivityDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderReadingDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseCommLogDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\FilterWhereClauseParameters.cs" />
     <Compile Include="Metadata\Applications\Schema\SchemaFilterBuilder.cs" />
     <Compile Include="Metadata\Menu\MenuCatalogMerger.cs" />
     <Compile Include="Metadata\Menu\XMLMenuParserCommons.cs" />

@@ -18,12 +18,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
 
         private readonly MaximoHibernateDAO _dao;
 
-        private const string BaseBatchLocationQuery = "select location,wonum from workorder where status not in('CLOSED','COMPLETED') and location in ({0})";
+        private const string BaseBatchLocationQuery = "select location,wonum from workorder where status not in('CLOSED','COMPLETED') and ({0})";
 
         private const string BaseSingleLocationProjectionQuery = "select wonum,description,status from workorder where ";
 
         private const string BaseAssetQuery =
-            "select assetnum,wonum,description from workorder where status not in('CLOSED','COMPLETED') and assetnum in ({0})";
+            "select assetnum,wonum,description,location from workorder where status not in('CLOSED','COMPLETED') and assetnum in ({0})";
         //this is needed to return to the client side the fixedwhereclause for the modal
         private const string BaseSingleLocationWhereQuery = "status not in('CLOSED','COMPLETED') and location = '{0}'";
 
@@ -32,18 +32,22 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
         }
 
 
-        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkorders(FirstSolarBatchType batchType, ICollection<MultiValueAssociationOption>items , string classification)
-        {
+        public IDictionary<string, List<string>> ValidateIdsThatHaveWorkorders(FirstSolarBatchType batchType, ICollection<MultiValueAssociationOption> items, string classification) {
             var userIdFieldName = batchType.GetUserIdName();
 
-            var baseQuery = batchType.Equals(FirstSolarBatchType.Asset)? BaseAssetQuery : BaseBatchLocationQuery;
-            var inQueryString = BaseQueryUtil.GenerateInString(items.Select(i => i.Value));
-
             var sb = new StringBuilder();
-            sb.AppendFormat(baseQuery, inQueryString);
+            if (batchType.Equals(FirstSolarBatchType.Location)) {
+                var orQueryString = BaseQueryUtil.GenerateOrLikeString("location", items.Select(i => i.Value + "%"));
+                sb.AppendFormat(BaseBatchLocationQuery, orQueryString);
+            } else {
+                var inQueryString = BaseQueryUtil.GenerateInString(items.Select(i => i.Value));
+                sb.AppendFormat(BaseAssetQuery, inQueryString);
+            }
+
             if (classification != null) {
                 sb.AppendFormat(" and classstructureid = '{0}'", classification);
             }
+            sb.AppendFormat("order by {0} asc", userIdFieldName);
             var queryResult = _dao.FindByNativeQuery(sb.ToString());
 
             var result = new Dictionary<string, List<string>>();
@@ -51,10 +55,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             foreach (var row in queryResult) {
                 var itemId = row[userIdFieldName];
                 var wonum = row["wonum"];
-                if (!result.ContainsKey(itemId)) {
-                    result.Add(itemId, new List<string> { wonum });
+                var matchingResult = result.Keys.FirstOrDefault(f => itemId.StartsWith(f));
+                if (matchingResult == null) {
+                    var list = new List<string>() { wonum };
+                    result.Add(itemId, list);
                 } else {
-                    result[itemId].Add(wonum);
+                    result[matchingResult].Add(wonum);
                 }
             }
             return result;

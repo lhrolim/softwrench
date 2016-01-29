@@ -18,9 +18,11 @@ namespace softWrench.sW4.Metadata.Parsing {
     internal sealed class XmlEntitySourceMetadataParser : IXmlMetadataParser<Tuple<IEnumerable<EntityMetadata>, EntityQueries>> {
 
         private readonly Boolean _isSWDDB = false;
+        private bool _isTemplateParsing;
 
-        public XmlEntitySourceMetadataParser(bool isSWDB) {
+        public XmlEntitySourceMetadataParser(bool isSWDB, bool isTemplateParsing) {
             _isSWDDB = isSWDB;
+            _isTemplateParsing = isTemplateParsing;
         }
 
         /// <summary>
@@ -56,7 +58,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// <param name="stream">The input stream containing the XML representation of the metadata file.</param>
         /// <param name="alreadyParsedTemplates"></param>
         [NotNull]
-        public Tuple<IEnumerable<EntityMetadata>, EntityQueries> Parse([NotNull] TextReader stream, ISet<string> alreadyParsedTemplates = null) {
+        public Tuple<IEnumerable<EntityMetadata>, EntityQueries> Parse([NotNull] TextReader stream,  ISet<string> alreadyParsedTemplates = null) {
             Validate.NotNull(stream, "stream");
             var document = XDocument.Load(stream);
             if (null == document.Root) throw new InvalidDataException();

@@ -123,7 +123,8 @@
 
             var params = {
                 searchDTO: {
-                    filterFixedWhereClause: fixedWhereClause
+                    filterFixedWhereClause: fixedWhereClause,
+                    pageSize:10
                 },
                 title: "Work Orders of " + rowDm["specificLabel"]
             }

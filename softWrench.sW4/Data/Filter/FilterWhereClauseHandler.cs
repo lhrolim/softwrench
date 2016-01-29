@@ -1,13 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Filter {
 
@@ -20,7 +25,7 @@ namespace softWrench.sW4.Data.Filter {
             var schemaFilters = schema.SchemaFilters;
 
             // if all filters are the column filters no need to take any action
-            if (schemaFilters==null || !schemaFilters.HasOverridenFilter || parameters == null) {
+            if (schemaFilters == null || !schemaFilters.HasOverridenFilter || parameters == null) {
                 return searchDto;
             }
 
@@ -62,18 +67,34 @@ namespace softWrench.sW4.Data.Filter {
                     if (values != null) {
                         whereClause = whereClause.Replace("!@#value", BaseQueryUtil.GenerateInString(values));
                     } else if (paramValue.Value is string) {
+                        whereClause = whereClause.Replace("%!@#value%", "'%" + paramValue.Value + "%'");
+                        whereClause = whereClause.Replace("%!@#value", "'%" + paramValue.Value + "'");
+                        whereClause = whereClause.Replace("!@#value%", "'" + paramValue.Value + "%'");
                         whereClause = whereClause.Replace("!@#value", "'" + paramValue.Value + "'");
+                        whereClause = whereClause.Replace("!@",
+                            MetadataProvider.Entity(schema.EntityName).GetTableName() + ".");
                     }
                     whereClause = whereClause.Replace("!@#value", paramValue.Value as string);
                     whereClause = whereClause.Replace("!@", entity.Name + ".");
                     //vanilla string case
                     searchDto.AppendWhereClause(whereClause);
+                } else {
+                    HandleServiceWhereClauseHandler(schema, searchDto, paramValue, whereClause);
                 }
                 // TODO: starts with @: call service that builds whereclause
 
             }
 
             return searchDto;
+        }
+
+        private static void HandleServiceWhereClauseHandler(ApplicationSchemaDefinition schema,
+            PaginatedSearchRequestDto searchDto, SearchParameter paramValue, string whereClause) {
+            var parameter = new FilterWhereClauseParameters(schema, searchDto, paramValue);
+            var result = GenericSwMethodInvoker.Invoke<string>(schema, whereClause, parameter);
+            if (result != null) {
+                searchDto.AppendWhereClause(result);
+            }
         }
 
         public string GenerateFilterFreeTextWhereClause(MetadataOptionFilter filterProvider, string labelSearchString, ApplicationSchemaDefinition schema) {
@@ -90,8 +111,8 @@ namespace softWrench.sW4.Data.Filter {
                 return "({0} like '{1}' or {2} like '{1}')".Fmt(filterProvider.Provider, labelSearchString,
                     attributeToUse);
             }
-            
-            return "({0}.{1} like '{2}')".Fmt(schema.EntityName,attributeToUse, labelSearchString);
+
+            return "({0}.{1} like '{2}')".Fmt(schema.EntityName, attributeToUse, labelSearchString);
 
         }
 
