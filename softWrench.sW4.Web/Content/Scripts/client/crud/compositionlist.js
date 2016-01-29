@@ -821,7 +821,8 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
     };
 
     $scope.onAfterSave = function (data, alwaysrefresh) {
-        var updatedArray = data.resultObject != null ? data.resultObject.fields[$scope.relationship] : null;
+        var parentData = data.resultObject;
+        var updatedArray = parentData != null ? parentData.fields[$scope.relationship] : null;
         if (alwaysrefresh || updatedArray == null || updatedArray.length === 0) {
             window.location.href = window.location.href;
             return;
@@ -834,6 +835,12 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
         $scope.selecteditem = {};
         $scope.collapseAll();
+
+        // update tab counts
+        if (!!updatedArray) {
+            crudContextHolderService.incrementTabRecordCount($scope.relationship);
+        }
+
         if ($rootScope.showingModal) {
             //hides the modal after submiting it
             modalService.hide();

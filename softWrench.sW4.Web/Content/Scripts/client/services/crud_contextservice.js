@@ -195,6 +195,13 @@
             return context.tabRecordCount && context.tabRecordCount[tab.tabId];
         }
 
+        function incrementTabRecordCount(tabId, panelId) {
+            var context = getContext(panelId);
+            if (context.tabRecordCount && context.tabRecordCount[tabId]) {
+                context.tabRecordCount[tabId] = context.tabRecordCount[tabId] + 1;
+            }
+        }
+
 
         //#endregion
 
@@ -497,6 +504,7 @@
             getActiveTab: getActiveTab,
             setActiveTab: setActiveTab,
             getTabRecordCount: getTabRecordCount,
+            incrementTabRecordCount: incrementTabRecordCount,
             shouldShowRecordCount: shouldShowRecordCount,
             getCurrentSelectedProfile: getCurrentSelectedProfile,
             setCurrentSelectedProfile: setCurrentSelectedProfile,
