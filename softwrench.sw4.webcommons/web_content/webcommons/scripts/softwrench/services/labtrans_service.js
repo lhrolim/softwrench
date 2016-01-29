@@ -46,7 +46,7 @@ angular.module('sw_layout')
                 var difference = finishDate - startDate;
                 // convert ms to hours
                 var hours = difference / 3600000;
-                hours.toPrecision(6);
+                hours = hours.toPrecision(6);
                 // set the labor hours
                 event.fields['regularhrs'] = hours;
             }
