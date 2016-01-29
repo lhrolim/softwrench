@@ -9,7 +9,13 @@
          */
         var OverrideBuilder = (function () {
             /**
-             * Constructor function (call with 'new' operator)
+             * Constructor function (call with 'new' operator).
+             * Initiates an override chain on the childCtrl:
+             * ```
+             * new OverrideBuider()
+             *      .scope($scope, 'method_1' ...)...scope($scope, 'method_n')
+             *      .controller(parentCtrl_1, 'method' ...)...controller(parentCtrl_n, ...)
+             * ```
              * @param NgController childCtrl 
              * @returns OverrideBuilder instance 
              */
@@ -64,7 +70,10 @@
          */
         var InheritanceBuilder = (function () {
             /**
-             * Constructor function (call with 'new' operator)
+             * Constructor function (call with 'new' operator).
+             * Initiates an inheritance chain on the childCtrl:
+             * `new InheritanceBuilder(childCtrl).inherit(parentCtrl_1, {...})...inherit(parentCtrl_n)`.
+             * 
              * @param NgController childCtrl 
              * @returns InheritanceBuilder instance 
              */
@@ -100,9 +109,47 @@
 
         //#region Public methods
         /**
-         * Initiates an inheritance chain on the childCtrl:
-         * `service.begin(childCtrl).inherit(parentCtrl_1, {...})...inherit(parentCtrl_n)`
-         *
+         * Initiates an inheritance chain on the childCtrl.
+         * Complete example - inheriting from BaseController and CompositionListController 
+         * and overriding $scope methods 'selectPage' (execute data transformation after page is selected), 
+         * 'edit' (change a $scope flag variable before start editting) and 'hasLookupModel' (change the logic completely):
+         * ```
+         * function MyController($scope, $element, $attrs, controllerInheritanceService, ...other services...) {
+         *   
+         *  function transformDataList() { 
+         *    // ...do data transformation... 
+         *  }
+         *   
+         *  // init controller
+         *  (function(self) {
+         *      controllerInheritanceService.begin(self) // initiate 'inheritance' chain
+         *          .inherit(BaseController, { 
+         *              $scope: $scope 
+         *          })
+         *          .inherit(CompositionListController, { 
+         *              $scope: $scope, 
+         *              $element: $element, 
+         *              $attrs: $attrs 
+         *          })
+         *          .overrides() // initiate 'override' chain
+         *              .scope($scope, "selectPage", function(original, params, context) { 
+         *                  var selectPagePromise = original.apply(context, params);
+         *                  return selectPagePromise.then(transformCompositionList);
+         *              })
+         *              .scope($scope, "edit", function(original, params, context) {
+         *                  $scope.isEditing = true;
+         *                  original.apply(context, params);
+         *              })
+         *              .scope($scope, "hasLookupModel", function(original, params, context) {  
+         *                  var schema = params[0];
+         *                  return schema.applicationName === "SR";
+         *              });
+         * 
+         *   })(this); // self as `this` (the controller function)
+         * 
+         * }
+         * 
+         * ```
          * 
          * @see InheritanceBuilder for more information
          * @param NgController childCtrl
