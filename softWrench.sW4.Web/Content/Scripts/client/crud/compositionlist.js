@@ -220,14 +220,16 @@ app.directive('compositionList', function (contextService, formatService, schema
                 $scope.crudform = form;
             };
 
-
+            $scope.showTableHover = function () {
+                return ($scope.compositionlistschema.properties['list.click.event'] != undefined || $scope.compositiondetailschema != undefined) && $scope.compositiondata.length > 0;
+            };
 
             $scope.compositionData = function () {
                 if (this.isBatch() || !this.hasDetailSchema()) {
                     return $scope.compositiondata;
                 }
                 return $scope.clonedCompositionData;
-            }
+            };
 
             $scope.isFieldRequired = function (item, requiredExpression) {
                 return expressionService.evaluate(requiredExpression, item);
