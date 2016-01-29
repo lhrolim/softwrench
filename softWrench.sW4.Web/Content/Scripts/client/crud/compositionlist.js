@@ -215,12 +215,16 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
 
 
 
+    $scope.showTableHover = function () {
+    	return ($scope.compositionlistschema.properties['list.click.event'] != undefined || $scope.compositiondetailschema != undefined) && $scope.compositiondata.length > 0;
+    };
+    
     $scope.compositionData = function () {
         if ($scope.isBatch() || !$scope.hasDetailSchema()) {
             return $scope.compositiondata;
         }
         return $scope.clonedCompositionData;
-    }
+    };
 
     $scope.isFieldRequired = function (item, requiredExpression) {
         return expressionService.evaluate(requiredExpression, item);

@@ -277,8 +277,6 @@
 
 #listgrid, #compositionlistgrid {
     tbody tr {
-        cursor: pointer;
-
         &.odd {
             background: #ebebeb;
         }
@@ -309,6 +307,7 @@
             padding-right: 3px;
         }
     }
+
     td {
         .input-group, .input-group .glyphicon {
             position: initial;
@@ -319,6 +318,7 @@
             padding-left: 15px;
             padding-right: 3px;
         }
+
         &.edit-detail {
             padding-right: 15px;
         }
@@ -409,10 +409,6 @@ table .detaildata {
 
 #compositionlistgrid {
     tbody tr {
-        &:hover {
-            background: #f5f5f5;
-        }
-
         a {
             color: #000;
 
@@ -427,11 +423,22 @@ table .detaildata {
     }
 }
 
+#listgrid, #compositionlistgrid {
+    &.table-hover {
+        tbody tr {
+            cursor: pointer;
 
+            &:hover {
+                background: #f5f5f5;
+            }
+        }
+    }
+}
 .quick-search {
     float: left;
     padding-top: 4px;
     padding-left: 10px;
+
 
     .btn {
         height: 34px;
@@ -521,5 +528,24 @@ table .detaildata {
         input {
             background-color: white !important;
         }
+    }
+}
+
+#listgrid, #compositionlistgrid {
+    [ng-show="isNoRecords"] {
+        /*background: #f00;*/
+    tr {
+        cursor: default;
+
+        &:hover {
+            background: transparent;
+        }
+    }
+}
+    }
+
+.table-hover > [ng-show="isNoRecords"] > tr:hover {
+    & > td, & > th {
+        background-color: transparent;
     }
 }

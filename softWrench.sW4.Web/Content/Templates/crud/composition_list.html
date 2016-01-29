@@ -17,7 +17,7 @@
     <!--build responsive css rules based on metadata-->
     <style column-widths schema="compositionlistschema"></style>
 
-    <table class="table table-hover" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
+    <table class="table" ng-class="showTableHover() ? 'table-hover' : 'no-hover'" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
         <thead>
             <tr class="hapag-table-header">
                 <th ng-if="hasDetailSchema()">
