@@ -97,7 +97,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             };
             var datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
             $scope.originalDatamap = angular.copy(datamapToUse);
-            fieldService.fillDefaultValues(schema.displayables, datamap);
+            fieldService.fillDefaultValues(schema.displayables, datamap, { parentdata: modaldata.previousdata, parentschema: modaldata.previousschema });
             $('#crudmodal').modal('show');
             $("#crudmodal").draggable();
             $rootScope.showingModal = true;

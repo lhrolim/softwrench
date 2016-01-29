@@ -210,9 +210,6 @@
                                 return original.apply(context, params).then(function () {
                                     prepareData();
                                 });
-                            })
-                            .scope($scope, "setForm", function(original, params, context) {
-                                console.log(original, params, context);
                             });
 
                         log.debug($scope, $scope.compositiondata);

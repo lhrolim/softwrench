@@ -474,7 +474,7 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
 
     $scope.edit = function (datamap, actionTitle) {
         if (shouldEditInModal()) {
-            modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, $scope.save);
+            modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, $scope.save, null, $scope.parentdata, $scope.parentschema);
         } else {
             //TODO: switch to edit
             $scope.newDetail = true;

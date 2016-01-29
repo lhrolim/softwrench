@@ -1,6 +1,5 @@
-﻿
-(function (angular) {
-    'use strict';
+﻿(function (angular) {
+    "use strict";
 
 
     function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService) {
@@ -165,7 +164,7 @@
             if (associationMetadata.events == undefined) {
                 return;
             }
-            var afterChangeEvent = associationMetadata.events['afterchange'];
+            var afterChangeEvent = associationMetadata.events["afterchange"];
             if (afterChangeEvent == undefined) {
                 return;
             }
@@ -182,7 +181,7 @@
             var afterchangeEvent = {
                 fields: fields,
                 scope: scope,
-                parentdata: scope.parentdata,
+                parentdata: scope.parentdata || /* when trigerring event from modal */ crudContextHolderService.rootDataMap(), 
                 triggerparams: instantiateIfUndefined(triggerparams)
             };
             $log.getInstance('sw4.associationservice#postAssociationHook').debug('invoking post hook service {0} method {1} from association {2}|{3}'
