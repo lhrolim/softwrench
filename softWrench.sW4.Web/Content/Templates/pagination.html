@@ -1,10 +1,10 @@
 <div class="" ng-show="isPaginationEnabled()">
     <div class="part pagination" ng-show="shouldShowPagination()">
-        <a ng-click="previousPage()" ng-class="getDirectionClass('prev')" href="#" class="direction prev" rel="tooltip" data-original-title="{{getTooltip('prev')}}">
+        <a ng-click="previousPage()" ng-class="getDirectionClass('prev')" href="#" class="direction prev" rel="tooltip" data-original-title="{{getTooltip('prev', layout.simple)}}">
             <i class="fa fa-chevron-left"></i>
         </a>
         <pagination-pages pagination-data="paginationData" ng-if="!layout.simple"></pagination-pages>
-        <a ng-click="nextPage()" ng-class="getDirectionClass('next')" href="#" class="direction next" rel="tooltip" data-original-title="{{getTooltip('next')}}">
+        <a ng-click="nextPage()" ng-class="getDirectionClass('next')" href="#" class="direction next" rel="tooltip" data-original-title="{{getTooltip('next', layout.simple)}}">
             <i class="fa fa-chevron-right"></i>
         </a>
     </div>

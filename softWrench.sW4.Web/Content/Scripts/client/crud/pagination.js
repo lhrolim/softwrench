@@ -93,52 +93,55 @@ app.directive('pagination', ['contextService', '$log', function (contextService,
             }
 
             $scope.getDirectionClass = function (direction) {
-                if ($scope.paginationData) {
-                    var currentPage = $scope.paginationData.pageNumber;
-                    var pageCount = $scope.paginationData.pageCount;
-                    var classString = 'disable';
-
-                    switch (direction) {
-                        case 'prev':
-                            if (currentPage == 1) {
-                                return classString;
-                            }
-
-                            break;
-                        case 'next':
-                            if (currentPage == pageCount) {
-                                return classString;
-                            }
-                            break;
-                    }
+                //exit if no data
+                if (!$scope.paginationData) {
+                    return '';
                 }
+
+                var classString = '';
+                var currentPage = $scope.paginationData.pageNumber;
+                var pageCount = $scope.paginationData.pageCount;
+                
+                //disable the prev/next arrow if we are on the first/last page
+                if (direction == 'prev' && currentPage == 1 || direction == 'next' && currentPage == pageCount) {
+                    classString = 'disable';
+                }
+
+                return classString;
             }
 
-            $scope.getTooltip = function (direction) {
-                if ($scope.paginationData) {
-                    var currentPage = $scope.paginationData.pageNumber;
-                    var pageCount = $scope.paginationData.pageCount;
-                    var tooltip = 'Go to {0} of ' + pageCount;
+            $scope.getTooltip = function (direction, simpleLayout) {
+                //use the direction as the default tooltip text
+                var tooltip = direction.replace(/\w\S*/g, function (txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
 
-                    switch (direction) {
-                        case 'prev':
-                            if (currentPage > 1) {
-                                return tooltip.format(currentPage - 1);
-                            }
-
-                            break;
-                        case 'next':
-                            if (currentPage < pageCount) {
-                                return tooltip.format(currentPage + 1);
-                            }
-                            break;
-                    }
+                //if not pagination return the default tooltip
+                if (!$scope.paginationData) {
+                    return tooltip;
                 }
-            }
 
-            //$scope.$on("sw_redirectapplicationsuccess", function (event) {
-            //    // $scope.searchData = {};
-            //});
+                var currentPage = $scope.paginationData.pageNumber;
+                var pageCount = $scope.paginationData.pageCount;
+
+                //if we are on the first or last page, remove prev/next tooltips
+                if (direction == 'prev' && currentPage == 1 || direction == 'next' && currentPage == pageCount) {
+                    return '';
+                }
+
+                var tooltipFormat = 'Go to {0} of ' + pageCount;
+
+                //display the current and total pages for the simple pagination
+                if (simpleLayout) {
+                    if (direction == 'prev' && currentPage > 1) {
+                        tooltip = tooltipFormat.format(currentPage - 1);
+                    } else if (direction == 'next' && currentPage < pageCount) {
+                        tooltip = tooltipFormat.format(currentPage + 1);
+                    }
+                }          
+
+                return tooltip;
+            }
 
             function init() {
                 // 'booleanizing' the values (compensates for undefined-like/null-like values)
@@ -153,7 +156,7 @@ app.directive('pagination', ['contextService', '$log', function (contextService,
         }],
 
         link: function(scope, element, attrs) {
-            scope.setSimpleLayout(attrs.hasOwnProperty("paginationSimpleLayout"));
+            scope.setSimpleLayout(attrs.hasOwnProperty('paginationSimpleLayout'));
         }
     };
 }]);
@@ -178,24 +181,34 @@ app.directive('paginationPages', ['contextService', '$log', function (contextSer
             };
 
             $scope.getLastPage = function () {
-                return $scope.paginationData.pageCount
+                return $scope.paginationData.pageCount;
             }
 
             $scope.getPageArray = function () {
-                if ($scope.paginationData) {
-                    var pageArray = new Array($scope.paginationData.pageCount)
+                //fix undefined error in modal
+                if (!$scope.paginationData) {
+                    return null;
+                }
+
+                var pageArray = new Array($scope.paginationData.pageCount);
                     pageArray = pageArray.slice(0, -2);
 
-                    return pageArray;
-                }
+                return pageArray;
             }
 
             $scope.getPageClass = function (index) {
-                if ($scope.paginationData) {
-                    if (index + 2 == $scope.paginationData.pageNumber) {
-                        return 'current';
-                    }
+                //fix undefined error in modal
+                if (!$scope.paginationData) {
+                    return '';
                 }
+
+                var className = '';
+
+                if (index + 2 == $scope.paginationData.pageNumber) {
+                    className = 'current';
+                }
+
+                return className;
             }
 
             $scope.getPageRange = function (currentPage) {
@@ -226,27 +239,33 @@ app.directive('paginationPages', ['contextService', '$log', function (contextSer
             }
 
             $scope.showEllipsis = function (location) {
-                if ($scope.paginationData) {
-                    var currentPage = $scope.paginationData.pageNumber;
-                    var pageRange = $scope.getPageRange(currentPage);
+                var show = false;
 
-                    switch (location) {
-                        case 'start':
-                            return !(1 >= pageRange.min);
-                            break;
-                        case 'end':
-                            return !($scope.paginationData.pageCount <= pageRange.max);
-                            break;
-                    }
-
-                    return true;
+                //fix undefined error in modal
+                if (!$scope.paginationData) {
+                    return null;
                 }
+
+                var currentPage = $scope.paginationData.pageNumber;
+                var pageRange = $scope.getPageRange(currentPage);
+
+                //show ellipsis if page is outside of page range
+                if (location == 'start') {
+                    show = !(1 >= pageRange.min);
+                } else if (location == 'end') {
+                    show = !($scope.paginationData.pageCount <= pageRange.max);
+                }
+
+                return show;
             }
 
             $scope.showLastPage = function () {
-                if ($scope.paginationData) {
-                    return $scope.paginationData.pageCount > 1;
+                //fix undefined error in modal
+                if (!$scope.paginationData) {
+                    return null;
                 }
+
+                return $scope.paginationData.pageCount > 1;
             }
 
             $scope.showPage = function (index) {
