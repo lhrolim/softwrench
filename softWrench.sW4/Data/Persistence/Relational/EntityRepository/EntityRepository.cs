@@ -244,7 +244,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         }
 
         private BaseHibernateDAO GetDao(EntityMetadata metadata) {
-            if (metadata.Name.StartsWith("_")) {
+            if (metadata.Name.EndsWith("_")) {
                 return _swdbDao;
             }
             return _maximoHibernateDao;

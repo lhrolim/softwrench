@@ -70,13 +70,17 @@
       <HintPath>Dependencies\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentMigrator, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
+    <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="FluentMigrator.Runner, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+    <Reference Include="FluentMigrator.Runner, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.Runner.1.6.1\lib\40\FluentMigrator.Runner.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IBM.Data.DB2, Version=9.0.0.2, Culture=neutral, PublicKeyToken=7c307b91aa13d208, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependencies\FluentMigrator.Runner.dll</HintPath>
+      <HintPath>.\IBM.Data.DB2.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
@@ -115,7 +119,7 @@
     </Reference>
     <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NHibernate.3.3.1.4000\lib\Net35\NHibernate.dll</HintPath>
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.Mapping.Attributes, Version=3.2.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -308,8 +312,18 @@
     <Compile Include="DB_Migration\4.2.0\Migration201506241200Swweb1166Part3.cs" />
     <Compile Include="DB_Migration\4.2.0\Migration201507201700Swweb1166Part4.cs" />
     <Compile Include="DB_Migration\4.4.1\20150723_SWWEB_1275.cs" />
+    <Compile Include="DB_Migration\5.3.0\20160127_SWWEB_2020.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\ColumnBase.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2Column.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2DbFactory.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2Generator.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2Processor.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2ProcessorFactory.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2Quoter.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2TypeMap.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\EmptyDescriptionGenerator.cs" />
     <Compile Include="Formatting\JsonDateTimeConverter.cs" />
     <Compile Include="Formatting\LeanJsonContractResolver.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
