@@ -25,7 +25,7 @@
 
 
           <customization position="+description">
-            <field attribute="classstructure_.description" label="Classification"></field>
+            <field attribute="classstructure_.description" label="Classification" noresulttarget="classstructureid"></field>
           </customization>
 
         </list>

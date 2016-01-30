@@ -162,15 +162,16 @@
           <field attribute="location" label="Location">
             <renderer type="default" params="width=15%" />
           </field>
-          <field attribute="asset_.description" label="Asset">
+          <field attribute="asset_.description" label="Asset" noresulttarget="assetnum">
             <renderer type="default" params="width=25%" />
           </field>
-          <field attribute="status" label="Status">
+          <field attribute="status" label="Status" preventnoresultscarry="true">
             <renderer type="statuscolor" params="width=15%;grid=workorder;column=status" />
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
             <property key="list.defaultorderby" value="workorder.statusdate desc"/>
+            <property key="list.noresultsnewschema" value="newdetail"/>
             <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
           </properties>
         </list>

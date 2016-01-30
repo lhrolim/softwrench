@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using softWrench.sW4.Metadata.Stereotypes;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 
 
 namespace softWrench.sW4.Metadata.Parsing {
@@ -136,11 +137,16 @@ namespace softWrench.sW4.Metadata.Parsing {
             var fieldEntityQuery = fieldAttributeMetadata == null ? null : fieldAttributeMetadata.Query;
             var declaredAsQueryOnEntity = !fieldEntityQuery.NullOrEmpty() && fieldEntityQuery.Length > 0;
 
+
+            var noResultsTarget = field.Attribute(XmlBaseSchemaConstants.FieldNoResultsTargetAtt).ValueOrDefault((string)null);
+            var preventNoresultsCarry = "true" == field.Attribute(XmlBaseSchemaConstants.FieldPreventNoresultsCarryAtt).ValueOrDefault("false");
+
             var datatype = ParseDataType(entityMetadata, attribute);
 
 
             return new ApplicationFieldDefinition(applicationName, attribute, datatype, label, requiredExpression, isReadOnly, isHidden, renderer,
-                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault, defaultExpression, declaredAsQueryOnEntity);
+                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault, 
+                defaultExpression, declaredAsQueryOnEntity, noResultsTarget, preventNoresultsCarry);
         }
 
         private static string ParseDataType(EntityMetadata entityMetadata, string attribute) {
@@ -454,18 +460,18 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// <param name="entityName"></param>
         /// <param name="application">The `application` element containing the web schema to be deserialized.</param>
         /// <param name="idFieldName"></param>
-        private IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> ParseSchemas(string applicationName, string entityName,
-            XElement application, string idFieldName, string userIdFieldName) {
+        private IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> ParseSchemas(string applicationName, string applicationTitle,
+            string entityName, XElement application, string idFieldName, string userIdFieldName) {
             var schemasElement = application.Elements().First(f => f.Name.LocalName == XmlMetadataSchema.SchemasElement);
             var xElements = schemasElement.Elements();
             var resultDictionary = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
             foreach (var xElement in xElements) {
-                DoParseSchema(applicationName, entityName, idFieldName, userIdFieldName, xElement, resultDictionary);
+                DoParseSchema(applicationName, applicationTitle, entityName, idFieldName, userIdFieldName, xElement, resultDictionary);
             }
             return resultDictionary;
         }
 
-        private void DoParseSchema(string applicationName, string entityName, string idFieldName, string userIdFieldName,
+        private void DoParseSchema(string applicationName, string applicationTitle, string entityName, string idFieldName, string userIdFieldName,
             XElement xElement, Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> resultDictionary) {
             var localName = xElement.Name.LocalName;
             var id = xElement.Attribute(XmlMetadataSchema.SchemaIdAttribute).ValueOrDefault((string)null);
@@ -526,7 +532,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
 
             resultDictionary.Add(new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr),
-                ApplicationSchemaFactory.GetInstance(entityName, applicationName, title, id, redeclaring, stereotypeAttr, stereotype, mode, platform,
+                ApplicationSchemaFactory.GetInstance(entityName, applicationName, applicationTitle, title, id, redeclaring, stereotypeAttr, stereotype, mode, platform,
                     isAbstract, displayables, filters, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName,
                     userIdFieldName, unionSchema, ParseEvents(xElement)));
         }
@@ -609,7 +615,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
             var appFilters = XmlFilterMetadataParser.ParseSchemaFilters(application);
 
-            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), appFilters, service, role, auditFlag);
+            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, title, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), appFilters, service, role, auditFlag);
         }
 
 
@@ -728,6 +734,9 @@ namespace softWrench.sW4.Metadata.Parsing {
             foreach (var applicationEl in applicationElements) {
                 var application = ParseApplication(applicationEl, _entityMetadata);
                 if (application != null) {
+                    application.Schemas()
+                    .Where(s => SchemaStereotype.List.Equals(s.Value.Stereotype))
+                    .ToList().ForEach(s => AddNoResultsNewSchema(application, s.Value));
                     overridenApplications.Add(application);
                 }
             }
@@ -735,6 +744,31 @@ namespace softWrench.sW4.Metadata.Parsing {
 
 
             return resultApplications;
+        }
+
+        private static void AddNoResultsNewSchema(CompleteApplicationMetadataDefinition app,
+            ApplicationSchemaDefinition schema) {
+            // return if is set to prevent the new button on no result list
+            string preventNoResults;
+            schema.Properties.TryGetValue(ApplicationSchemaPropertiesCatalog.PreventNoResultsNew, out preventNoResults);
+            if ("true".Equals(preventNoResults)) {
+                return;
+            }
+
+            // if the schema of no result new is set uses it 
+            string noResultsNewSchema;
+            schema.Properties.TryGetValue(ApplicationSchemaPropertiesCatalog.NoResultsNewSchema, out noResultsNewSchema);
+            if (noResultsNewSchema != null) {
+                schema.NoResultsNewSchema = noResultsNewSchema;
+                return;
+            }
+
+            // finally if there is only one detail new schema on the same app, it is set as the new schema on no results list
+            var detailNewSchemas = app.Schemas().Where(s => SchemaStereotype.DetailNew.Equals(s.Value.Stereotype)).ToList();
+            if (detailNewSchemas.Count() != 1) {
+                return;
+            }
+            schema.NoResultsNewSchema = detailNewSchemas.First().Value.SchemaId;
         }
 
         private static class XmlWidgetParser {
