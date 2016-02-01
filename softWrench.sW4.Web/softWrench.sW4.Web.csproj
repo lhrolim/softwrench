@@ -763,12 +763,14 @@
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />
     <Content Include="Content\Templates\otb\commlogaction.html" />
     <Content Include="Content\Templates\otb\receiving.html" />
+    <Content Include="Content\Templates\pagination-pages.html" />
     <Content Include="Content\Templates\samelinepickers.html" />
     <Content Include="Content\Templates\hapag\conditionalfield.html" />
     <Content Include="Content\Templates\configConditionModal.html" />
     <Content Include="Content\Templates\printModal.html" />
     <Content Include="Content\modules\lookup\templates\lookupModal.html" />
     <Content Include="Content\Templates\usefulFaqLinks.html" />
+    <Content Include="Content\styles\default\_pagination.scss" />
     <None Include="Content\styles\default\_treeview.scss" />
     <Content Include="Content\Templates\downloadattachment.html" />
     <Content Include="Content\Templates\usersetup\userstatistics.html" />

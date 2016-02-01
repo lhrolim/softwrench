@@ -438,11 +438,13 @@ table .detaildata {
 .grid-header {
     .quick-search {
         float: left;
-        padding-top: 4px;
         padding-left: 10px;
 
+        input {
+                height: 32px;
+        }
+
         .btn {
-            height: 34px;
             border-left: none;
         }
     }

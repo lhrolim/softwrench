@@ -1,40 +1,22 @@
-<div class="right" ng-show="isPaginationEnabled()">
-    <div>
-        <div class="group total">
-            <label ng-if="isHapag()">{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
-            <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Total Items: {0}",[paginationData.totalCount])}}</label>
-        </div>
-    </div>
-
-    <div class="group pagination" ng-show="shouldShowPagination()">
-        <span ng-if="!layout.simple">
-            <a ng-click="selectPage(1)" href="#">
-                <i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i>
-            </a>&ensp;
-        </span>
-        <a ng-click="previousPage()" href="#">
+<div class="" ng-show="isPaginationEnabled()">
+    <div class="part pagination" ng-show="shouldShowPagination()">
+        <a ng-click="previousPage()" ng-class="getDirectionClass('prev')" href="#" class="direction prev" rel="tooltip" data-original-title="{{getTooltip('prev', layout.simple)}}">
             <i class="fa fa-chevron-left"></i>
-        </a>&ensp;
-        <label>{{i18N('_grid.pagination.page','Page')}}{{ !layout.simple ? ':' : ''}} </label>
-        <input ng-if="!layout.simple" type="text" ng-model="paginationData.pageNumber" ng-change="selectPage(paginationData.pageNumber)" style="width: 25px !important; text-align: center" />
-        <span ng-show="layout.simple">{{paginationData.pageNumber}}</span>
-        <label ng-show="!layout.simple">{{i18N('_grid.pagination.of','of')}} {{paginationData.pageCount}}</label>
-        &ensp;<a ng-click="nextPage()" href="#">
+        </a>
+        <pagination-pages pagination-data="paginationData" ng-if="!layout.simple"></pagination-pages>
+        <a ng-click="nextPage()" ng-class="getDirectionClass('next')" href="#" class="direction next" rel="tooltip" data-original-title="{{getTooltip('next', layout.simple)}}">
             <i class="fa fa-chevron-right"></i>
         </a>
-        <span ng-if="!layout.simple">
-            &ensp;<a ng-click="selectPage(paginationData.pageCount)" href="#">
-                <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i>
-            </a>
-        </span>
     </div>
-
-    <div class="group pagesize" ng-show="shouldShowPagination()" ng-if="!layout.simple">
+    <div class="part total" ng-if="layout.simple">
+        <label ng-if="isHapag()">{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
+        <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Items: {0}",[paginationData.totalCount])}}</label>
+    </div>
+    <div class="part pagesize" ng-show="shouldShowPagination()" ng-if="!layout.simple">
         <label>{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
         <select id="pagesize"
-            ng-model="paginationData.pageSize"
-            ng-options="option as option for option in paginationData.paginationOptions"
-            ng-change="selectPage(1)">
-        </select>
+                ng-model="paginationData.pageSize"
+                ng-options="option as option for option in paginationData.paginationOptions"
+                ng-change="selectPage(1)"></select>
     </div>
 </div>
