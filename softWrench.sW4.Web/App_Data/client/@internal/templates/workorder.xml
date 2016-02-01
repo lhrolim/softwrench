@@ -162,7 +162,7 @@
           <field attribute="location" label="Location">
             <renderer type="default" params="width=15%" />
           </field>
-          <field attribute="asset_.description" label="Asset" noresulttarget="assetnum">
+          <field attribute="asset_.description" label="Asset">
             <renderer type="default" params="width=25%" />
           </field>
           <field attribute="status" label="Status" preventnoresultscarry="true">

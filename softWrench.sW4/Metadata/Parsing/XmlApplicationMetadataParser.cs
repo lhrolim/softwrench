@@ -137,16 +137,36 @@ namespace softWrench.sW4.Metadata.Parsing {
             var fieldEntityQuery = fieldAttributeMetadata == null ? null : fieldAttributeMetadata.Query;
             var declaredAsQueryOnEntity = !fieldEntityQuery.NullOrEmpty() && fieldEntityQuery.Length > 0;
 
-
-            var noResultsTarget = field.Attribute(XmlBaseSchemaConstants.FieldNoResultsTargetAtt).ValueOrDefault((string)null);
             var preventNoresultsCarry = "true" == field.Attribute(XmlBaseSchemaConstants.FieldPreventNoresultsCarryAtt).ValueOrDefault("false");
 
             var datatype = ParseDataType(entityMetadata, attribute);
 
+            var fieldObj = new ApplicationFieldDefinition(applicationName, attribute, datatype, label, requiredExpression, isReadOnly, isHidden, renderer,
+                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault,
+                defaultExpression, declaredAsQueryOnEntity, preventNoresultsCarry);
 
-            return new ApplicationFieldDefinition(applicationName, attribute, datatype, label, requiredExpression, isReadOnly, isHidden, renderer,
-                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault, 
-                defaultExpression, declaredAsQueryOnEntity, noResultsTarget, preventNoresultsCarry);
+            AddPrimaryAttribute(fieldObj, entityMetadata);
+
+            return fieldObj;
+        }
+
+        private static void AddPrimaryAttribute(ApplicationFieldDefinition field, EntityMetadata entityMetadata) {
+            var attribute = field.Attribute;
+            if (attribute == null || !attribute.Contains(".") || entityMetadata.Associations.Count == 0) {
+                return;
+            }
+
+            var toEntity = attribute.Split('.')[0];
+            var association = entityMetadata.Associations.FirstOrDefault(assoc => assoc.Qualifier != null && assoc.Qualifier.Equals(toEntity));
+            if (association == null) {
+                return;
+            }
+
+            var primaryAttribute = association.Attributes.FirstOrDefault(att => att.Primary);
+            if (primaryAttribute == null) {
+                return;
+            }
+            field.PrimaryAttribute = primaryAttribute.From;
         }
 
         private static string ParseDataType(EntityMetadata entityMetadata, string attribute) {

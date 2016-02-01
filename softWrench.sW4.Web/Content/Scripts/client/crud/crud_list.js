@@ -473,8 +473,8 @@
                             // the destiny atribute name comes from displayable prop 
                             // or filter atribute name by default
                             var atributeName = filter.attribute;
-                            if (displayable && displayable.noResultsTarget) {
-                                atributeName = displayable.noResultsTarget;
+                            if (displayable && displayable.primaryAttribute) {
+                                atributeName = displayable.primaryAttribute;
                             }
 
                             if ("MetadataOptionFilter" !== filter.type && "MetadataModalFilter" !== filter.type) {

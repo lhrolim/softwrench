@@ -509,15 +509,6 @@
     <attribute name="default" type="string"></attribute>
     <attribute name="defaultexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
-    <attribute name="noresulttarget" type="string">
-      <annotation>
-        <documentation>
-          During a search of no results a creation can be started.
-          If this atribute is empty the search data of this field will be carried to 
-          a field with same name. If not it will be carried to a field with the name given.
-        </documentation>
-      </annotation>
-    </attribute>
     <attribute name="preventnoresultscarry" type="boolean">
       <annotation>
         <documentation>

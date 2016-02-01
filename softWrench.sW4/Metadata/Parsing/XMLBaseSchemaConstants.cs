@@ -31,7 +31,6 @@
         public const string DisplayCodeAttribute = "displaycode";
         public const string RoleAttribute = "role";
 
-        public const string FieldNoResultsTargetAtt = "noresulttarget";
         public const string FieldPreventNoresultsCarryAtt = "preventnoresultscarry";
 
         public const string ToggleButtonInitialStateExpressionAttribute = "initialstateexpression";
