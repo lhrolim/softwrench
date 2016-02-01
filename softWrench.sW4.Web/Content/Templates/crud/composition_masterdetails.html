@@ -12,10 +12,10 @@
                         </div>
                     </div>
                     <div class="info clearfix">
-                        <div class="title">{{entry.master.title}}</div>
-                        <div class="tag">{{entry.master.tag}}</div>
-                        <div class="subtitle">{{entry.master.subtitle}}</div>
-                        <div class="message">{{entry.master.message}}</div>
+                        <div class="title" ng-show="entry.master.title">{{entry.master.title}}</div>
+                        <div class="tag" ng-show="entry.master.tag">{{entry.master.tag}}</div>
+                        <div class="subtitle" ng-show="entry.master.subtitle">{{entry.master.subtitle}}</div>
+                        <div class="message" ng-show="entry.master.message">{{entry.master.message}}</div>
                     </div>
                     <div class="details" ng-class={open:entry.open}>
                         <div ng-if="!!compositiondata" class="fields">

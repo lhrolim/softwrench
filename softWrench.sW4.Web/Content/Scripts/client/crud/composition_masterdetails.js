@@ -22,7 +22,6 @@
                     var log = $log.getInstance('sw4.composition.master/detail');
 
                     $scope.compositionlistschema = $scope.compositionschemadefinition.schemas.list;
-
                     $scope.compositiondetailschema = $scope.compositionschemadefinition.schemas.detail;
 
                     $scope.i18NInputLabel = function (fieldMetadata) {
@@ -33,28 +32,19 @@
                         //close the current record
                         $scope.getDetailDatamap.open = false;
 
+                        //update the first message if another message is viewed
+                        if (!$scope.getDetailDatamap.read) {
+                            $scope.markAsRead($scope.getDetailDatamap);
+                        }
+
                         //display the selected details
                         $scope.getDetailDatamap = entry;
                         entry.open = true;
 
                         if (!entry.read) {
-                            //remove the read icon
-                            angular.forEach(entry.master.icons, function (icon, index) {
-                                if (icon.indexOf("read") >= 0) {
-                                    entry.master.icons[index] = "";
-                                }
-                            });
-
-                            //update the read flag on the server
-                            var parameters = {};
-                            parameters.compositionItemId = entry.commloguid;
-                            parameters.compositionItemData = entry;
-                            parameters.parentData = $scope.parentdata;
-                            parameters.parentSchema = $scope.parentschema;
-                            eventService.onviewdetail($scope.compositionschemadefinition, parameters);
-
-                            entry.read = true;
+                            $scope.markAsRead(entry);
                         }
+
                         // scroll to the detail:
                         $(document.body).animate({ scrollTop: 0 });
 
@@ -87,17 +77,6 @@
                         return i18NService.get18nValue(key, defaultValue, paramArray);
                     };
 
-                    function formatEntryString(entry, field, qualifier) {
-                        var string = entry[field.attribute];
-                        if (qualifier === "message") {
-                            string = $("<p>" + string + "</p>").text();
-                        }
-                        if (string.length > 200) {
-                            string = string.substring(0, 200) + "...";
-                        }
-                        return $scope.getFormattedValue(string, field, entry);
-                    }
-
                     $scope.mapMaster = function (compositiondata, schema) {
 
                         //loop thru the records
@@ -128,6 +107,27 @@
                         });
                     };
 
+                    $scope.markAsRead = function (entry) {
+                        log.debug('mark as read', entry);
+
+                        //remove the read icon
+                        angular.forEach(entry.master.icons, function (icon, index) {
+                            if (icon.indexOf("read") >= 0) {
+                                entry.master.icons[index] = "";
+                            }
+                        });
+
+                        //update the read flag on the server
+                        var parameters = {};
+                        parameters.compositionItemId = entry.commloguid;
+                        parameters.compositionItemData = entry;
+                        parameters.parentData = $scope.parentdata;
+                        parameters.parentSchema = $scope.parentschema;
+                        eventService.onviewdetail($scope.compositionschemadefinition, parameters);
+
+                        entry.read = true;
+                    };
+
                     $scope.showDetailField = function (fieldMetadata) {
                         if ($scope.getDetailDatamap == undefined) {
                             return;
@@ -144,6 +144,24 @@
                     };
 
                     /* Directvie Methods */
+                    function formatEntryString(entry, field, qualifier) {
+                        var string = entry[field.attribute];
+                        if (qualifier === "message") {
+                            string = $("<p>" + string + "</p>").text();
+                        }
+                        if (string.length > 200) {
+                            string = string.substring(0, 200) + "...";
+                        }
+
+                        string = $scope.getFormattedValue(string, field, entry);
+
+                        if (string == 'null') {
+                            string = '';
+                        }
+
+                        return string;
+                    }
+
                     this.getAddIcon = function () {
                         var iconCompositionAddbutton = $scope.compositionschemadefinition.schemas.list.properties['icon.composition.addbutton'];
                         if (!iconCompositionAddbutton) {

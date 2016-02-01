@@ -37,13 +37,10 @@
                         display: flex;
                         flex-wrap: wrap;
 
-                        .title, .tag, .subtitle {
-                            margin-bottom: 5px;
-                        }
-
                         .subtitle, .message {
                             clear: both;
                             width: 100%;
+                            margin-top: 5px;
                         }
 
                         .tag {
@@ -53,7 +50,6 @@
                         }
 
                         .title {
-                            /*display: flex;*/
                             text-overflow: ellipsis;
                             white-space: nowrap;
                             font-weight: bold;
@@ -92,7 +88,7 @@
 
         .details {
             margin-bottom: 40px;
-            /*display: none;*/
+
             .fields {
                 .field {
                     margin-bottom: 20px;
