@@ -1,8 +1,8 @@
 ﻿.affix-pagination {
     width: 100%;
 
-    .pagination-pager a:hover {
-        text-decoration: none;
+    pagination {
+        float: right;
     }
 }
 
@@ -11,25 +11,8 @@
         width: 100%;
         background: #eee;
         border-bottom: #000 1px solid;
-        padding: 5px 40px 10px 10px;
-
-        .group {
-            margin: 5px 10px 0;
-            &.pagesize {
-                padding-top: 8px;
-            }
-            &.pagination {
-                padding-top: 8px;
-            }
-
-            &.total {
-                margin-top: 15px;
-            }
-        }
-
-        button {
-            margin-bottom: 5px;
-        }
+        padding: 10px 10px 5px;
+        min-height: 50px;
 
         label {
             font-weight: normal;
@@ -39,36 +22,13 @@
     &.mobile .context .group.pagination a {
         padding: 8px 6px;
     }
-
-    pagination {
-        .pagination {
-            a {
-                color: #555;
-                font-size: 16px;
-
-                &:hover, &:active, &:focus {
-                    color: #999;
-                    text-decoration: none;
-                }
-            }
-        }
-    }
-
-    #affixpagination1 {
-        padding-top: 0px;
-        padding-bottom: 8px;
-        border-bottom: none;
-    }
 }
 
 @media all and (min-width: 480px) {
     .container {
         .context {
-            padding: 5px 40px 5px 10px;
-
             .group {
                 float: left;
-                /*min-height: 34px;*/
             }
         }
     }
@@ -84,48 +44,13 @@
             .hidden-xs {
                 display: inline-block !important;
             }
-
-            .group {
-                margin: 5px 10px 0;
-
-                &.total {
-                    height: auto;
-
-                    label {
-                        margin: 0;
-                    }
-                }
-            }
-
-            .right .group {
-                float: right;
-            }
         }
     }
 }
 
 @media all and (min-width: 992px) {
-    .container {
-
-        .context {
-            .group {
-                margin: 5px 0 0 20px;
-
-                &:first-child {
-                    margin-left: 10px;
-                }
-            }
-        }
-    }
-
     #crudbodyform .context .group:first-child {
         margin-left: 0;
-    }
-}
-
-@media all and (min-width: 1170px) {
-    .container .context .group.total {
-        display: block;
     }
 }
 
@@ -137,4 +62,9 @@
     .gridtop .applicationcommand {
         display: inline-block;
     }
+}
+
+#affixpagination1 {
+    border-bottom: none;
+    border-top: #000 1px solid;
 }
