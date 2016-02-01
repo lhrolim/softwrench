@@ -448,45 +448,7 @@
                     }
 
                     $scope.noRecordsNewClick = function () {
-                        if (!$scope.schema.schemaFilters || !$scope.schema.schemaFilters.filters) {
-                            return;
-                        }
-                        var datamap = {};
-                        var displayables = {};
-                        $scope.schema.displayables.forEach(function(displayable) {
-                            displayables[displayable.attribute] = displayable;
-                        });
-
-                        // build datamap from filter seach data
-                        $scope.schema.schemaFilters.filters.forEach(function (filter) {
-                            var data = $scope.searchData[filter.attribute];
-                            if (!data) {
-                                return;
-                            }
-
-                            // if a field is set to prevent data carry, returns
-                            var displayable = displayables[filter.attribute];
-                            if (displayable && displayable.preventNoresultsCarry) {
-                                return;
-                            }
-
-                            // the destiny atribute name comes from displayable prop 
-                            // or filter atribute name by default
-                            var atributeName = filter.attribute;
-                            if (displayable && displayable.primaryAttribute) {
-                                atributeName = displayable.primaryAttribute;
-                            }
-
-                            if ("MetadataOptionFilter" !== filter.type && "MetadataModalFilter" !== filter.type) {
-                                datamap[atributeName] = data;
-                                return;
-                            }
-                            // if it is a option filter or modal filter ignores multi option selections
-                            if (data.indexOf(",") === -1) {
-                                datamap[atributeName] = data;
-                            }
-                        });
-                        redirectService.goToApplication($scope.schema.applicationName, $scope.schema.noResultsNewSchema, null, datamap);
+                        redirectService.goToApplication($scope.schema.applicationName, $scope.schema.noResultsNewSchema);
                     }
 
 

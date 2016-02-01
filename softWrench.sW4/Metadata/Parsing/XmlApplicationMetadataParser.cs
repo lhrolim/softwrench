@@ -137,13 +137,11 @@ namespace softWrench.sW4.Metadata.Parsing {
             var fieldEntityQuery = fieldAttributeMetadata == null ? null : fieldAttributeMetadata.Query;
             var declaredAsQueryOnEntity = !fieldEntityQuery.NullOrEmpty() && fieldEntityQuery.Length > 0;
 
-            var preventNoresultsCarry = "true" == field.Attribute(XmlBaseSchemaConstants.FieldPreventNoresultsCarryAtt).ValueOrDefault("false");
-
             var datatype = ParseDataType(entityMetadata, attribute);
 
             var fieldObj = new ApplicationFieldDefinition(applicationName, attribute, datatype, label, requiredExpression, isReadOnly, isHidden, renderer,
                 ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault,
-                defaultExpression, declaredAsQueryOnEntity, preventNoresultsCarry);
+                defaultExpression, declaredAsQueryOnEntity);
 
             AddPrimaryAttribute(fieldObj, entityMetadata);
 
