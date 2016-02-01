@@ -1,0 +1,72 @@
+﻿pagination {
+    .part {
+        display: inline-block;
+        margin-right: 20px;
+
+        a {
+            color: #555;
+            font-size: 16px;
+            text-decoration: none;
+
+            &:hover, &:active {
+                color: #999;
+                text-decoration: none;
+            }
+        }
+
+        &.pagination {
+            margin: 7px 20px 3px 10px;
+
+            .direction {
+                &.prev {
+                    margin-right: 5px;
+                }
+
+                &.next {
+                    margin-left: 5px;
+                }
+
+                &.disable {
+                    color: #ccc;
+                    cursor: default;
+                }
+            }
+
+            .pages {
+                display: inline-block;
+                margin-left: -5px;
+                position: relative;
+                top: -1px;
+
+                .page {
+                    display: inline-block;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    padding-top: 3px;
+                    min-width: 24px;
+                    height: 24px;
+                    text-align: center;
+                    cursor: pointer;
+                    margin-left: 5px;
+
+                    &:hover {
+                        background: #ccc;
+                    }
+
+                    &.current {
+                        font-weight: bold;
+                        border-color: #000;
+                    }
+                }
+
+                .ellipsis {
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    text-align: center;
+                    margin-right: -5px;
+                }
+            }
+        }
+    }
+}

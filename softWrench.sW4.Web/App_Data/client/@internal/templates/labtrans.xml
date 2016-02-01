@@ -63,15 +63,19 @@
           </association>
           <field label="Start Date" requiredexpression="true" attribute="startdate">
             <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
+            <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
           </field>
           <field label="Start Time" attribute="starttime" >
             <renderer type="time" params="format=HH:mm;showdate=false" />
+            <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
           </field>
           <field label="End Date" attribute="finishdate">
             <renderer type="date" params="format=MM/dd/yyyy;showtime=false" />
+            <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
           </field>
           <field label="End Time" attribute="finishtime" >
             <renderer type="time" params="format=HH:mm;showdate=false" />
+            <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
           </field>
           <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8"/>
           <association label="GL Debit Account" requiredexpression="true" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
