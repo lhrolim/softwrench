@@ -34,7 +34,7 @@
 
                         //update the first message if another message is viewed
                         if (!$scope.getDetailDatamap.read) {
-                            $scope.markAsRead($scope.getDetailDatamap);
+                            $scope.onViewDetail($scope.getDetailDatamap);
                         }
 
                         //display the selected details
@@ -42,7 +42,7 @@
                         entry.open = true;
 
                         if (!entry.read) {
-                            $scope.markAsRead(entry);
+                            $scope.onViewDetail(entry);
                         }
 
                         // scroll to the detail:
@@ -78,6 +78,7 @@
                     };
 
                     $scope.mapMaster = function (compositiondata, schema) {
+                        if (!compositiondata) return;
 
                         //loop thru the records
                         compositiondata.forEach(function (entry) {
@@ -107,7 +108,7 @@
                         });
                     };
 
-                    $scope.markAsRead = function (entry) {
+                    $scope.onViewDetail = function (entry) {
                         log.debug('mark as read', entry);
 
                         //remove the read icon
@@ -209,11 +210,14 @@
                             .overrides()
                             .scope($scope, "selectPage", prepareDataProxy)
                             .scope($scope, "onAfterSave", prepareDataProxy)
-                            .scope($scope, "onSaveError", prepareDataProxy);
+                            .scope($scope, "onSaveError", prepareDataProxy)
+                            .scope($scope, "onAfterCompositionResolved", prepareDataProxy);
 
                         log.debug($scope, $scope.compositiondata);
                     }
                     init(this);
+
+                    $scope.$on("sw_compositiondataresolved", prepareData);
                 }]
         };
     });

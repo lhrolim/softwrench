@@ -348,7 +348,7 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         return replaceAll(path, "\\.", "_");
     }
 
-    $scope.$on('sw_compositiondataresolved', function (event, compositiondata) {
+    $scope.onAfterCompositionResolved = function (event, compositiondata) {
         if (!compositiondata[$scope.relationship]) {
             //this is not the data this tab is interested
             return;
@@ -358,7 +358,9 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         $scope.compositiondata = compositiondata[$scope.relationship].list;
         init();
         $scope.$digest();
-    });
+    };
+
+    $scope.$on("sw_compositiondataresolved", $scope.onAfterCompositionResolved);
 
     $scope.getBooleanClass = function (compositionitem, attribute) {
         if (compositionitem[attribute] == "true" || compositionitem[attribute] == 1) {
