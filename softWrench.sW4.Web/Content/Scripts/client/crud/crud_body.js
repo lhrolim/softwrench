@@ -91,7 +91,8 @@
                 scope.$name = 'crudbody';
             },
 
-            controller: function ($scope, $http, $rootScope, $filter, $injector,
+            controller: function ($scope, $element, $rootScope,
+                $http, $filter, $injector,
                 formatService, fixHeaderService,
                 searchService, tabsService,
                 fieldService, commandService, i18NService,
@@ -538,14 +539,14 @@
                         if (event.target.tagName.equalIc("br") || !!$(event.target).parents("[text-angular]")) return;
                         // can create the attachment
                         image = image[0];
-                        attachmentService.createAttachmentFromImage($scope.schema, image);
+                        attachmentService.createAttachmentFromFile($scope.schema, image);
                         // prevent bubbling and default behavior
                         event.stopPropagation();
                         event.preventDefault();
                     }
-                    angular.element(document).on("paste", pasteListener);
+                    $element.on("paste", pasteListener);
                     $scope.$on("$destroy", function() {
-                        angular.element(document).off("paste", pasteListener);
+                        $element.off("paste", pasteListener);
                     });
                 }
                 init(this);

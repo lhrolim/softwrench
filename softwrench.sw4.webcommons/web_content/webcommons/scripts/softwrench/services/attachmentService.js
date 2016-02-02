@@ -3,14 +3,15 @@
 
     var staticvalidFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png", "lic"];
 
-    angular.module("sw_layout").factory("attachmentService", ["contextService", "fieldService", "schemaService", "alertService", "i18NService", "searchService", "tabsService", "redirectService", attachmentService]);
+    angular.module("sw_layout").factory("attachmentService", ["$rootScope", "$q", "contextService", "fieldService", "schemaService", "alertService", "i18NService", "searchService", "tabsService", "redirectService", attachmentService]);
 
-    function attachmentService(contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService) {
+    function attachmentService($rootScope, $q, contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService) {
 
         var service = {
             isValid: isValid,
             downloadFile: downloadFile,
-            selectAttachment: selectAttachment
+            selectAttachment: selectAttachment,
+            createAttachmentFromFile: createAttachmentFromFile
         };
 
         return service;
@@ -70,7 +71,7 @@
             return false;
         }
 
-        function createAttachmentFromImage(schema, file) {
+        function createAttachmentFromFile(schema, file) {
             // find the attachment view and redirect to it
             var tabs = tabsService.tabsDisplayables(schema);
             if (!tabs) return;
@@ -78,16 +79,27 @@
                 return tab.tabId.startsWith("attachment");
             });
             if (!attachmentTab) return;
-            redirectService.redirectToTab(attachmentTab[0].tabId);
-            // TODO: open creation form
-            // open form
-            var blob = file.getAsFile();
-            var reader = new FileReader();
-            reader.addEventListener("load",function (event) {
-                var url = event.target.result;
-            }); 
-            reader.readAsDataURL(blob);
-            // TODO: set file into the creation form
+            redirectService.redirectToTab(attachmentTab[0].tabId)
+                .then(function () {
+                    var deferred = $q.defer();
+                    var blob = file.getAsFile();
+                    var reader = new FileReader();
+                    reader.addEventListener("load", function (event) {
+                        var url = event.target.result;
+                        deferred.resolve({
+                            file: url,
+                            fileName: "attachment<timestamp>.<extension>",
+                            size: "<size>"
+                        });
+                    });
+                    reader.readAsDataURL(blob);
+                    // TODO: set file into the creation form  
+                    return deferred.promise;
+                })
+                .then(function(fileWrapper) {
+                    $rootScope.$broadcast("sw.attachment.<descent_name>", fileWrapper);
+                });
+            
         }
 
     }
