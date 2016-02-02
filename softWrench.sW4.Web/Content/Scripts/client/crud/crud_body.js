@@ -549,18 +549,19 @@
                                 return item.kind === "file" && item.type.startsWith("image");
                             });
                         // has no image: default behavior
-                        if (!image) return;
+                        if (image === undefined || image === null || image.length <= 0) return true;
                         // has image but is pasting inside richtext element
-                        if (event.target.tagName.equalIc("br") || !!$(event.target).parents("[text-angular]")) return;
+                        if (event.target.tagName.equalIc("br") || $(event.target).parents("[text-angular]").length > 0) return true;
                         // can create the attachment
                         image = image[0];
-                        attachmentService.createAttachmentFromFile($scope.schema, image);
+                        attachmentService.createAttachmentFromFile(image, $scope.schema, { redirect: true, event: true });
                         // prevent bubbling and default behavior
                         event.stopPropagation();
                         event.preventDefault();
+                        return false;
                     }
                     $element.on("paste", pasteListener);
-                    $scope.$on("$destroy", function() {
+                    $scope.$on("$destroy", function () {
                         $element.off("paste", pasteListener);
                     });
                 }

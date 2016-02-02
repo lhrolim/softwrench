@@ -474,8 +474,26 @@ app.directive('compositionList', function (contextService, formatService, schema
         $scope.$emit('sw_cancelclicked');
     };
 
+    function onAttachmentFileLoaded(event, file) {
+        if (!$scope.relationship.contains("attachment")) return;
+        var datamap = { 'newattachment_path': file.fileName };
 
+        // set file on the datamap
+        $scope.compositiondetailschema.displayables
+            .filter(function (field) { // file upload fields
+                var renderer = field.renderer.rendererType;
+                return !!renderer && renderer.endsWith("upload");
+            })
+            .forEach(function (field) { // set file
+                datamap[field.attribute] = file.file;
+            });
+        // open create form
+        $timeout(function () {
+            $scope.edit(datamap);
+        });
+    }
 
+    $scope.$on("sw.attachment.file.load", onAttachmentFileLoaded);
 
     $scope.$on("sw.composition.edit", function (event, datamap) {
         $scope.edit(datamap);
@@ -965,3 +983,4 @@ app.directive('compositionList', function (contextService, formatService, schema
 }
 };
 });
+
