@@ -97,7 +97,8 @@
                 fieldService, commandService, i18NService,
                 submitService, redirectService,
                 associationService, crudContextHolderService, alertService,
-                validationService, schemaService, $timeout, eventService, $log, expressionService, focusService, modalService) {
+                validationService, schemaService, $timeout, eventService, $log, expressionService, focusService, modalService,
+                attachmentService) {
 
                 $(document).on("sw_autocompleteselected", function (event, key) {
                     focusService.resetFocusToCurrent($scope.schema, key);
@@ -512,14 +513,42 @@
                 };
 
 
+                function init(self) {
+                    $injector.invoke(BaseController, self, {
+                        $scope: $scope,
+                        i18NService: i18NService,
+                        fieldService: fieldService,
+                        commandService: commandService,
+                        formatService: formatService
+                    });
 
-                $injector.invoke(BaseController, this, {
-                    $scope: $scope,
-                    i18NService: i18NService,
-                    fieldService: fieldService,
-                    commandService: commandService,
-                    formatService: formatService,
-                });
+                    // 'paste' event listener -> 
+                    // if image create an attachment with the clipboard data as the image
+                    function pasteListener(event) {
+                        var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                        // look for image
+                        var image = Array.prototype.slice
+                            .call(items)
+                            .filter(function (item) {
+                                return item.kind === "file" && item.type.startsWith("image");
+                            });
+                        // has no image: default behavior
+                        if (!image) return;
+                        // has image but is pasting inside richtext element
+                        if (event.target.tagName.equalIc("br") || !!$(event.target).parents("[text-angular]")) return;
+                        // can create the attachment
+                        image = image[0];
+                        attachmentService.createAttachmentFromImage($scope.schema, image);
+                        // prevent bubbling and default behavior
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                    angular.element(document).on("paste", pasteListener);
+                    $scope.$on("$destroy", function() {
+                        angular.element(document).off("paste", pasteListener);
+                    });
+                }
+                init(this);
 
 
             }

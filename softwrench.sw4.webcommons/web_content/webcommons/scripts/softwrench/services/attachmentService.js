@@ -1,12 +1,11 @@
-﻿
-(function () {
-    'use strict';
+﻿(function (angular, $) {
+    "use strict";
 
-    var staticvalidFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png", "lic"]
+    var staticvalidFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png", "lic"];
 
-    angular.module('sw_layout').factory('attachmentService', ['contextService', 'fieldService', 'schemaService', 'alertService', 'i18NService', 'searchService', attachmentService]);
+    angular.module("sw_layout").factory("attachmentService", ["contextService", "fieldService", "schemaService", "alertService", "i18NService", "searchService", "tabsService", "redirectService", attachmentService]);
 
-    function attachmentService(contextService, fieldService, schemaService, alertService, i18NService, searchService) {
+    function attachmentService(contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService) {
 
         var service = {
             isValid: isValid,
@@ -16,7 +15,7 @@
 
         return service;
 
-        function downloadFile(item,column,schema) {
+        function downloadFile(item, column, schema) {
 
             var parameters = {};
             var id = item['docinfoid'];
@@ -28,7 +27,7 @@
             $.fileDownload(rawUrl, {
 
                 failCallback: function (html, url) {
-                    alertService.alert(String.format(i18NService.get18nValue('download.error', 'Error downloading file with id {0}. Please, Contact your Administrator'), id));
+                    alertService.alert(String.format(i18NService.get18nValue("download.error", "Error downloading file with id {0}. Please, Contact your Administrator"), id));
                 }
             });
             return false;
@@ -53,7 +52,7 @@
             }
 
             var fileName = value.match(/[^\/\\]+$/);
-            var validFileTypes = contextService.fetchFromContext('allowedfiles', true);
+            var validFileTypes = contextService.fetchFromContext("allowedfiles", true);
             if (!validFileTypes) {
                 validFileTypes = staticvalidFileTypes;
             }
@@ -63,7 +62,7 @@
         }
 
         function selectAttachment(item, column, schema) {
-            if (item['docinfo_.urltype'] === "URL") {
+            if (item["docinfo_.urltype"] === "URL") {
                 getUrl(item, column, schema);
             } else {
                 downloadFile(item, column, schema);
@@ -71,5 +70,26 @@
             return false;
         }
 
+        function createAttachmentFromImage(schema, file) {
+            // find the attachment view and redirect to it
+            var tabs = tabsService.tabsDisplayables(schema);
+            if (!tabs) return;
+            var attachmentTab = tabs.filter(function (tab) {
+                return tab.tabId.startsWith("attachment");
+            });
+            if (!attachmentTab) return;
+            redirectService.redirectToTab(attachmentTab[0].tabId);
+            // TODO: open creation form
+            // open form
+            var blob = file.getAsFile();
+            var reader = new FileReader();
+            reader.addEventListener("load",function (event) {
+                var url = event.target.result;
+            }); 
+            reader.readAsDataURL(blob);
+            // TODO: set file into the creation form
+        }
+
     }
-})();
+
+})(angular, jQuery);
