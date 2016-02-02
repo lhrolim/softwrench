@@ -13,10 +13,16 @@
         <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Items: {0}",[paginationData.totalCount])}}</label>
     </div>
     <div class="part pagesize" ng-show="shouldShowPagination()" ng-if="!layout.simple">
-        <label>{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
-        <select id="pagesize"
-                ng-model="paginationData.pageSize"
-                ng-options="option as option for option in paginationData.paginationOptions"
-                ng-change="selectPage(1)"></select>
+        <div class="form-inline">
+            <div class="form-group">
+                <label class="control-label">{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
+                <select class="form-control input-sm"
+                        id="pagesize"
+                        ng-model="paginationData.pageSize"
+                        ng-options="option as option for option in paginationData.paginationOptions"
+                        ng-change="selectPage(1)"></select>
+            </div>
+        </div>
     </div>
 </div>
+
