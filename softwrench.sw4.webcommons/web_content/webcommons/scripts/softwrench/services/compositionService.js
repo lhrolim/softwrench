@@ -29,24 +29,7 @@
                 return dto;
             };
 
-            function getLazyCompositions(schema, datamap) {
-                if (!schema || !schema["cachedCompositions"]) {
-                    return null;
-                }
-                var compositions = [];
-                var cachedCompositions = schema.cachedCompositions;
-                for (var composition in cachedCompositions) {
-                    if (!cachedCompositions.hasOwnProperty(composition)) {
-                        continue;
-                    }
-                    if ("lazy".equalsIc(cachedCompositions[composition].fetchType)) {
-                        compositions.push(composition);
-                    } else if ("eager".equalsIc(cachedCompositions[composition].fetchType)) {
-                        compositionContext[composition] = datamap[composition];
-                    }
-                }
-                return compositions;
-            };
+            
 
             function fetchCompositions(requestDTO, datamap, showLoading) {
                 var log = $log.getInstance('compositionservice#fetchCompositions');
@@ -138,7 +121,26 @@
 
             //#endregion
 
-            //#region Public methods
+            //#region Public 
+
+            function getLazyCompositions(schema, datamap) {
+                if (!schema || !schema["cachedCompositions"]) {
+                    return null;
+                }
+                var compositions = [];
+                var cachedCompositions = schema.cachedCompositions;
+                for (var composition in cachedCompositions) {
+                    if (!cachedCompositions.hasOwnProperty(composition)) {
+                        continue;
+                    }
+                    if ("lazy".equalsIc(cachedCompositions[composition].fetchType)) {
+                        compositions.push(composition);
+                    } else if ("eager".equalsIc(cachedCompositions[composition].fetchType)) {
+                        compositionContext[composition] = datamap[composition];
+                    }
+                }
+                return compositions;
+            };
 
             function isCompositionLodaded(relationship) {
                 return compositionContext[relationship] != null;
@@ -236,7 +238,8 @@
                 buildMergedDatamap: buildMergedDatamap,
                 populateWithCompositionData: populateWithCompositionData,
                 getCompositionList: getCompositionList,
-                isCompositionLodaded: isCompositionLodaded
+                isCompositionLodaded: isCompositionLodaded,
+                getLazyCompositions: getLazyCompositions
             };
 
             return api;

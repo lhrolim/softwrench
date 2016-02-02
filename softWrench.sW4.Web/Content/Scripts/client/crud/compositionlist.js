@@ -801,28 +801,18 @@ app.directive('compositionList', function (contextService, formatService, schema
         //TODO: refactor this, using promises
         $scope.$emit("sw_submitdata", {
             successCbk: function (data) {
-                var updatedArray = data.resultObject != null ? data.resultObject.fields[$scope.relationship] : null;
-                if (alwaysrefresh || updatedArray == null || updatedArray.length === 0) {
-                    window.location.href = window.location.href;
-                    return;
-                }
-                //we need to clone it again here, to avoid binding, otherwise the data would be shown in the list before submission confirms on server side
-                $scope.clonedCompositionData = JSON.parse(JSON.stringify(updatedArray));
-                $scope.clonedData = {};
-                $scope.compositiondata = updatedArray;
+                if (alwaysrefresh) window.location.href = window.location.href;
+                // dispose of the edit/creation form
+                if ($rootScope.showingModal) modalService.hide();
                 $scope.newDetail = false;
-                $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
                 $scope.selecteditem = {};
                 $scope.collapseAll();
-                if ($rootScope.showingModal) {
-                    //hides the modal after submiting it
-                    modalService.hide();
-                }
-                $scope.selecteditem = null;
+                // select first page
+                return $scope.selectPage(1);
             },
             failureCbk: function (data) {
                 var idx = $scope.compositiondata.indexOf(selecteditem);
-                if (idx != -1) {
+                if (idx >= 0) {
                     $scope.compositiondata.splice(idx, 1);
                 }
                 $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
