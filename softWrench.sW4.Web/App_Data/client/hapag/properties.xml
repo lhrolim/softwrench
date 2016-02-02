@@ -115,5 +115,26 @@
     <property key="ismcredentials.password" value="xK7AgFqJJQ"/>
   </environment>
 
+  <environment key="prodprod">
+    <property key="maximoutc" value="0"/>
+    <property key="globalwsdlpath" value="https://170.225.28.205/MPWSNTestProxyWS/DocHandler?wsdl"/>
+    <property key="globaservletpath_inc" value="https://195.183.78.121/HAPAGLLOYDSNINCWS/DocHandlerServlet"/>
+    <property key="globaservletpath_chg" value="https://195.183.78.121/HAPAGLLOYDSNCHGWS/DocHandlerServlet"/>
+    <property key="maximo_DB_url" value="Server=10.132.160.132:5103;Database=maximo;UID=maxsas;PWD=SIT4Prod;currentSchema=maximo;" />
+    <property key="swdb_url" value="Data Source=localhost;Initial Catalog=swdb-prod;User Id=sw;password=hapag123;" />
+    <property key="swdb_provider" value="System.Data.SQL" />
+    <property key="ldapServer" value="adquery.hlag.com"/>
+    <property key="ldapPortNumber" value="389"/>
+    <property key="ldapBaseDn" value="dc=ww,dc=hl,dc=lan"/>
+    <property key="targetmapping" value="ism"/>
+    <property key="ldap.synceverytime" value="true"/>
+    <property key="ldap.allownonmaximousers" value="true"/>
+    <property key="basewsURL" value="C:\ServiceIT\config\mifwsdl\PROD\" />
+    <property key="mifcredentials.user" value="dey99msy@ww.hl.lan"/>
+    <property key="mifcredentials.password" value="Winter16"/>
+    <property key="ismcredentials.user" value="hl2tkbrg"/>
+    <property key="ismcredentials.password" value="Cqkn3N66CQ"/>
+  </environment>
+
 
 </Properties>
