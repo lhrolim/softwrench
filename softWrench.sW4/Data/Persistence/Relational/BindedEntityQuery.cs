@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 namespace softWrench.sW4.Data.Persistence.Relational {
     internal class BindedEntityQuery {
-        private readonly string _sql;
+        private string _sql;
         private dynamic _parameters;
 
         public BindedEntityQuery([NotNull] string sql, [CanBeNull] IEnumerable<KeyValuePair<string, object>> parameters) {
@@ -27,12 +27,19 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
         [NotNull]
         public string Sql {
-            get { return _sql; }
+            get {
+                return _sql;
+            }
+            set {
+                _sql = value;
+            }
         }
 
         [CanBeNull]
         public ExpandoObject Parameters {
-            get { return _parameters; }
+            get {
+                return _parameters;
+            }
         }
     }
 }

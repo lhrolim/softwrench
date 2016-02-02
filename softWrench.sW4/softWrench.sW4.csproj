@@ -181,6 +181,7 @@
     <Compile Include="Data\Entities\SyncManagers\AMaximoRowstampManager.cs" />
     <Compile Include="Data\Entities\SyncManagers\IUserSyncManager.cs" />
     <Compile Include="Data\ExtraAttributes.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\GenericSWMethodInvoker.cs" />
     <Compile Include="Data\Persistence\PaginationData.cs" />
     <Compile Include="Data\Persistence\NHibernatePaginationUtil.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QuerySearchSortBuilder.cs" />

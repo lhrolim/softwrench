@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Menu xmlns="http://www.example.org/Menu" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmenudisplacement="vertical" indexitem="WO">
-  <!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
-  <application id="WO" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
-</Menu>

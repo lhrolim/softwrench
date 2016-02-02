@@ -106,6 +106,8 @@ namespace softWrench.sW4.Data.Pagination {
             set { _needsCountUpdate = value; }
         }
 
+        
+
         public static PaginatedSearchRequestDto DefaultInstance(ApplicationSchemaDefinition schema) {
             var defaultSize = 30;
             var paginationOptions = DefaultPaginationOptions;

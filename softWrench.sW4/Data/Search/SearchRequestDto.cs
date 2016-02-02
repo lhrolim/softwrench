@@ -86,6 +86,9 @@ namespace softWrench.sW4.Data.Search {
         public string FilterFixedWhereClause { get; set; }
         public string UnionFilterFixedWhereClause { get; set; }
 
+        public string QueryGeneratorService {
+            get; set;
+        }
 
 
         internal void BuildProjection(ApplicationSchemaDefinition schema) {

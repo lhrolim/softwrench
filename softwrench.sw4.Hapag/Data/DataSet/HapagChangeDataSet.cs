@@ -15,6 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata.Entities;
 using c = softwrench.sw4.Hapag.Data.DataSet.Helper.ApproverConstants;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
@@ -166,7 +168,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             foreach (var worklog in worklogs) {
                 var wlDate = worklog["itdcreatedate"] as DateTime?;
                 if (wlDate > latestAuthStatusDate) {
-                    Log.DebugFormat("Adding worklog {0}, with date {1} to list",worklog["worklogid"], worklog["itdcreatedate"]);
+                    Log.DebugFormat("Adding worklog {0}, with date {1} to list", worklog["worklogid"], worklog["itdcreatedate"]);
                     resultList.Add(worklog);
                 }
             }
@@ -209,6 +211,11 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             }
             return approverLevel.ToString().EqualsIc(changeLevel.ToString());
         }
+
+        public string GenerateUnionQuery(EntityMetadata entity, SearchRequestDto searchDTO) {
+            return ChangeGridUnionQueryGenerator.GenerateQuery(entity, searchDTO);
+        }
+
 
 
         public override string ApplicationName() {

@@ -191,6 +191,10 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             } else {
                 searchDto.QueryAlias = application.Name + "." + schema.SchemaId;
             }
+            if (application.Schema.GetProperty("list.querygeneratorservice") != null) {
+                searchDto.QueryGeneratorService = application.Schema.GetProperty("list.querygeneratorservice");
+            }
+
 
             if (schema.UnionSchema != null) {
                 searchDto.BuildUnionDTO(searchDto, schema);
