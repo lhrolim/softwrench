@@ -99,7 +99,7 @@
                 submitService, redirectService,
                 associationService, crudContextHolderService, alertService,
                 validationService, schemaService, $timeout, eventService, $log, expressionService, focusService, modalService,
-                attachmentService) {
+                compositionService, attachmentService) {
 
                 $(document).on("sw_autocompleteselected", function (event, key) {
                     focusService.resetFocusToCurrent($scope.schema, key);
@@ -490,13 +490,28 @@
                         crudContextHolderService.afterSave();
 
 
-                        if (data.type !== 'BlankApplicationResponse') {
-                            $scope.datamap = data.resultObject;
+                        if (data.type !== "BlankApplicationResponse") {
+                            var responseDataMap = data.resultObject;
+
+                            // handle the case where the datamap had lazy compositions already fetched
+                            // and the response does not have them (for performance reasons)
+                            var compositions = compositionService.getLazyCompositions($scope.schema, $scope.datamap.fields);
+                            compositions.forEach(function(composition) {
+                                var currentValue = $scope.datamap.fields[composition];
+                                var updatedValue = responseDataMap.fields[composition];
+                                // has previous data but has no updated data: not safe to update -> hydrate with previous value
+                                if (!!currentValue && (!responseDataMap.fields.hasOwnProperty(composition) || !angular.isArray(updatedValue))) {
+                                    responseDataMap.fields[composition] = currentValue;
+                                }
+                            });
+
+                            $scope.datamap = responseDataMap;
                         }
                         if (data.id && $scope.datamap.fields) {
                             //updating the id, useful when it´s a creation and we need to update value return from the server side
                             $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
                         }
+
 
                         if (successCbk == null || applyDefaultSuccess) {
                             defaultSuccessFunction(data);
