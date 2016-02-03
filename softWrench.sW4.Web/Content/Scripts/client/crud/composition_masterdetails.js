@@ -209,7 +209,6 @@
                             })
                             .overrides()
                             .scope($scope, "selectPage", prepareDataProxy)
-                            .scope($scope, "onAfterSave", prepareDataProxy)
                             .scope($scope, "onSaveError", prepareDataProxy)
                             .scope($scope, "onAfterCompositionResolved", prepareDataProxy);
 
