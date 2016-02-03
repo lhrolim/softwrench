@@ -47,7 +47,7 @@
         });
     }));
 
-    function testSetup(inputData, outputData, actionfn, hasSystemDefault, inputsignature) {
+    function testSetup(inputData, outputData, actionfn, hasSystemDefault, inputsignature, actionTitle) {
         spyOn(mockScope, "$emit");
 
         spyOn(_contextService, "getUserData").and.returnValue({ email: useremail, userPreferences: { signature: inputsignature } });
@@ -70,7 +70,7 @@
         mockScope[actionfn]({});
         //this is needed to trigger the promises resolutions!
         _rootScope.$digest();
-        expect(mockScope.$emit).toHaveBeenCalledWith('sw.composition.edit', outputData);
+        expect(mockScope.$emit).toHaveBeenCalledWith('sw.composition.edit', outputData, actionTitle);
     }
 
     it("Reply All, with default email not present, with system default", function () {
@@ -100,7 +100,7 @@
             "createdate": "mockeddate!"
         }
 
-        testSetup(mockedResult1, resultCompositionData, "replyAll", true, defaultSignature);
+        testSetup(mockedResult1, resultCompositionData, "replyAll", true, defaultSignature, "Reply All");
 
     });
 
@@ -131,7 +131,7 @@
             "createdate": "mockeddate!"
         }
 
-        testSetup(mockedResult1, resultCompositionData, "replyAll", true, defaultSignature);
+        testSetup(mockedResult1, resultCompositionData, "replyAll", true, defaultSignature, "Reply All");
 
     });
 
@@ -162,7 +162,7 @@
             "createdate": "mockeddate!"
         }
 
-        testSetup(mockedResult1, resultCompositionData, "replyAll", false, defaultSignature);
+        testSetup(mockedResult1, resultCompositionData, "replyAll", false, defaultSignature, "Reply All");
 
     });
 
@@ -193,7 +193,7 @@
             "createdate": "mockeddate!"
         }
 
-        testSetup(mockedResult1, resultCompositionData, "reply", false, defaultSignature);
+        testSetup(mockedResult1, resultCompositionData, "reply", false, defaultSignature, "Reply");
 
     });
 
@@ -224,7 +224,7 @@
             "createdate": "mockeddate!"
         }
 
-        testSetup(mockedResult1, resultCompositionData, "forward", false, defaultSignature);
+        testSetup(mockedResult1, resultCompositionData, "forward", false, defaultSignature, "Forward");
 
     });
 
@@ -255,7 +255,7 @@
             "createdate": "mockeddate!"
         }
 
-        testSetup(mockedResult1, resultCompositionData, "reply", false, "");
+        testSetup(mockedResult1, resultCompositionData, "reply", false, "", "Reply");
 
     });
 

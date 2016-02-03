@@ -136,13 +136,13 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         private static void AppendQuickSearch(ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             var appMetadata = GetAssociationApplicationMetadata(association);
+            var primaryAttribute = association.EntityAssociation.PrimaryAttribute();
 
-            IEnumerable<string> listOfFields = appMetadata != null
+            var listOfFields = appMetadata != null
                 ? appMetadata.Schema.NonHiddenFields.Where(i => !i.DeclaredAsQueryOnEntity).Select(f => f.Attribute)
-                : new List<string> {
-                    association.EntityAssociation.PrimaryAttribute().To,
-                    association.LabelFields.FirstOrDefault(),
-                };
+                : primaryAttribute != null
+                    ? new[] { primaryAttribute.To, association.LabelFields.FirstOrDefault() }
+                    : new[] { association.LabelFields.FirstOrDefault() };
 
             var quickSearchWhereClause = QuickSearchHelper.BuildOrWhereClause(listOfFields, association.EntityAssociation.To);
             associationFilter.AppendWhereClause(quickSearchWhereClause);
