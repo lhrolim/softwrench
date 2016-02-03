@@ -79,7 +79,7 @@
 
                             restService.getPromise("FilterData", "GetFilterOptions", parameters).then(function (result) {
                                 scope.filteroptions = scope.filteroptions.concat(result.data);
-                                scope.filteroptions = removeDuplicatesOnArray(scope.filteroptions);
+                                scope.filteroptions = removeDuplicatesOnArray(scope.filteroptions, "value");
                             });
                         } else {
                             scope.vm.notSearching = true;
@@ -196,7 +196,7 @@
 
                         $scope.getAllAvailableOptions = function () {
                             var allOptions = $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
-                            return removeDuplicatesOnArray(allOptions);
+                            return removeDuplicatesOnArray(allOptions, "value");
                         }
 
                         // updates the lookup modal grid buffer

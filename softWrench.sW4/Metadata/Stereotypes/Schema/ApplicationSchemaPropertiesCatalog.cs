@@ -101,6 +101,16 @@
         /// </summary>
         public const string PaginationOptions = "list.paginationoptions";
 
+        /// <summary>
+        ///  Destination schema of the new button of empty list.
+        /// </summary>
+        public const string NoResultsNewSchema = "list.noresultsnewschema";
+
+        /// <summary>
+        ///  Property to prevent the adition of the new button of empty list.
+        /// </summary>
+        public const string PreventNoResultsNew = "list.preventnoresultsnew";
+
 
 
         /// <summary>
