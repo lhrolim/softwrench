@@ -10,7 +10,7 @@
 
             var config = {
                 defaultPageSize: 10,
-                defaultOptions: [10, 30, "all"],
+                defaultOptions: [10, 30, 100],
                 defaultRequestOptions: [0, 10, 30]
             };
 
