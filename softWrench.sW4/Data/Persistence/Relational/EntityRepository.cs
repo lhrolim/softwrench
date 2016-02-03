@@ -222,7 +222,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var query = new EntityQueryBuilder().CountRows(entityMetadata, searchDto);
             if (searchDto.QueryGeneratorService != null && entityMetadata is SlicedEntityMetadata) {
                 var sliced = (SlicedEntityMetadata)entityMetadata;
-                query.Sql = GenericSwMethodInvoker.Invoke<string>(sliced.AppSchema, searchDto.QueryGeneratorService, entityMetadata,
+                query.Sql = GenericSwMethodInvoker.Invoke<string>(sliced.AppSchema, searchDto.QueryGeneratorService + "Count", entityMetadata,
                     searchDto);
             }
 
