@@ -216,6 +216,10 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return ChangeGridUnionQueryGenerator.GenerateQuery(entity, searchDTO);
         }
 
+        public string GenerateUnionQueryCount(EntityMetadata entity, SearchRequestDto searchDTO) {
+            return ChangeGridUnionQueryGenerator.GenerateQueryCount(entity, searchDTO);
+        }
+
 
 
         public override string ApplicationName() {

@@ -1773,7 +1773,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           </section>
           <properties>
             <property key="list.click.service" value="changeservice.opendetail"/>
-<!--            <property key="list.querygeneratorservice" value="GenerateUnionQuery"/>-->
+            <property key="list.querygeneratorservice" value="GenerateUnionQuery"/>
           </properties>
         </list>
 
