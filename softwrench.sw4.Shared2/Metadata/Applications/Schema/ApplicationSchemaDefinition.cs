@@ -90,6 +90,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+        public string ApplicationTitle {
+            get; set;
+        }
+
         public string EntityName {
             get; set;
         }
@@ -136,6 +140,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public string IdDisplayable {
+            get; set;
+        }
+
+        public string NoResultsNewSchema {
             get; set;
         }
 
