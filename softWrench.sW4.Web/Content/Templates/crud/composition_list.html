@@ -37,7 +37,7 @@
                     <span class="add-on">{{i18NLabel(column)}}</span>
                 </th>
                 <th ng-if="isBatch()">
-                    <button class="fa fa-plus btn btn-primary" ng-click="addBatchItem()"></button>
+                    <button ng-if="collectionproperties.allowInsertion == 'true'" class="fa fa-plus btn btn-primary" ng-click="addBatchItem()"></button>
                 </th>
             </tr>
 
@@ -161,7 +161,7 @@
                     </ng-switch>
                 </td>
                 <td ng-if="isBatch()" ng-hide="compositionitem[compositionlistschema.idFieldName] > 0">
-                    <button class="fa fa-trash btn" ng-click="removeBatchItem(rowindex)"></button>
+                    <button ng-if="collectionproperties.allowRemoval == 'true'" class="fa fa-trash btn" ng-click="removeBatchItem(rowindex)"></button>
                 </td>
             </tr>
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">

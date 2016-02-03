@@ -25,11 +25,52 @@
 
 
           <customization position="+description">
-            <field attribute="classstructure_.description" label="Classification"></field>
+            <field attribute="classstructure_.description" label="Origination"></field>
           </customization>
 
         </list>
 
+        <schema id="adetail" redeclaring="false" stereotype="detail">
+          <customization position="location">
+            <section orientation="horizontal">
+              <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" requiredexpression="true">
+                <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
+                <renderer type="lookup" />
+              </association>
+            </section>
+          </customization>
+          <customization position="classstructureid">
+            <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true">
+              <renderer type="autocompleteclient" params="inputsize=large" />
+            </optionfield>
+          </customization>
+          <customization position="worktype">
+            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+              <renderer type="lookup" params="inputsize=small"/>
+            </association>
+          </customization>
+        </schema>
+
+        <schema id="newdetail" redeclaring="false" stereotype="detailnew" platform="web" parentschema="adetail">
+          <customization position="classstructureid">
+            <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureType" requiredexpression="true">
+              <renderer type="autocompleteclient" params="inputsize=large" />
+            </optionfield>
+          </customization>
+          <properties>
+            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,newattachment"/>
+          </properties>
+        </schema>
+
+        <schema id="editdetail" redeclaring="false" stereotype="detail" platform="web" parentschema="adetail">
+          <customization position="matusetrans"/>
+          <customization position="labtrans"/>
+          <customization position="tooltrans"/>
+          <properties>
+            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,worklog,woactivity,commlog,attachment,assetmeter,locationmeter,relatedrecord"/>
+          </properties>
+        </schema>
+        
         <schema id="readonlyfixedlist" stereotype="list.modal.readonly">
           <field attribute="wonum" label="WO#" >
             <renderer type="default"/>
@@ -56,9 +97,12 @@
           <field attribute="details" label="Details:">
             <renderer type="textarea"/>
           </field>
-          <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
+          <optionfield attribute="classificationid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
+          <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+            <renderer type="lookup"/>
+          </association>
 
           <properties>
             <property key="addassociationlabels" value="true"/>
@@ -79,14 +123,15 @@
           <field attribute="details" label="Details:" requiredexpression="true">
             <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
-          <field attribute="classification" label="Classification">
+          <field attribute="classification" label="Origination">
+            <renderer type="default" params="updatable=true"/>
+          </field>
+          <field attribute="worktype" label="Work Type">
             <renderer type="default" params="updatable=true"/>
           </field>
           <field attribute="siteid" label="SiteId">
             <renderer type="default" params="updatable=true"/>
           </field>
-
-
           <properties>
             <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
             <property key="list.click.schema" value="batchLocationInlineEdit"/>
@@ -100,7 +145,6 @@
               <command id="save" service="batchWorkorderService" method="submitBatch" parameters="location" primary="true"/>
             </commandgroup>
           </commandbars>
-
         </schema>
 
 
@@ -120,15 +164,15 @@
           <field attribute="details" label="Details:" requiredexpression="true">
             <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
-
-          <field attribute="classification" label="Classification">
+          <field attribute="classification" label="Origination">
             <renderer type="default" params="updatable=true"/>
           </field>
-
+          <field attribute="worktype" label="Work Type">
+            <renderer type="default" params="updatable=true"/>
+          </field>
           <field attribute="siteid" label="SiteId">
             <renderer type="default" params="updatable=true"/>
           </field>
-
 
           <properties>
             <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
@@ -146,7 +190,6 @@
         </schema>
 
 
-
         <schema id="batchLocationInlineEdit" title="Edit Workorder" stereotype="detail.modal">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="userIdFieldName" hidden="true"/>
@@ -159,9 +202,12 @@
             <renderer type="textarea" params="updatable=true"/>
           </field>
 
-          <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
+          <optionfield attribute="classificationid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
+          <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+            <renderer type="lookup"/>
+          </association>
 
           <properties>
             <property key="addassociationlabels" value="true"/>
@@ -187,9 +233,12 @@
           <field attribute="details" label="Details:">
             <renderer type="textarea" params="updatable=true"/>
           </field>
-          <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
+          <optionfield attribute="classificationid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
+          <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+            <renderer type="lookup"/>
+          </association>
 
           <properties>
             <property key="addassociationlabels" value="true"/>
