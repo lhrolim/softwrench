@@ -110,12 +110,9 @@
             <event type="afterchange" service="commlogService" method="formatCommTemplate"/>
           </association>
           <!--<field attribute="createdate" label="Created Date/Time" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
           </field>-->
           <field attribute="orgobject" label="Origination" hidden="true"/>
-          <!--<field attribute="sendto" label="To" requiredexpression="true">
-            <renderer type="email"/>
-          </field>-->
           <association label="To" target="sendto" labelfield="email_.loweremail" valuefield="loweremail" orderbyfield="LOWER(emailaddress) desc" requiredexpression="true" >
             <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
@@ -150,6 +147,4 @@
       </schemas>
     </application>
   </applications>
-
-
 </metadata>
