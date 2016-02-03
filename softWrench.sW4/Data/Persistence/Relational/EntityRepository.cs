@@ -42,11 +42,14 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
             if (searchDto.QueryGeneratorService != null && entityMetadata is SlicedEntityMetadata) {
                 var sliced = (SlicedEntityMetadata)entityMetadata;
-                query.Sql = GenericSwMethodInvoker.Invoke<string>(sliced.AppSchema, searchDto.QueryGeneratorService, entityMetadata,
+                var customQuery = GenericSwMethodInvoker.Invoke<string>(sliced.AppSchema, searchDto.QueryGeneratorService, entityMetadata,
                     searchDto);
+                if (customQuery != null) {
+                    query.Sql = customQuery;
+                }
             }
             var rows = Query(entityMetadata, query, searchDto);
-         
+
 
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
                .Select(r => BuildDataMap(entityMetadata, r))
@@ -78,8 +81,11 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
             if (searchDto.QueryGeneratorService != null && entityMetadata is SlicedEntityMetadata) {
                 var sliced = (SlicedEntityMetadata)entityMetadata;
-                query.Sql = GenericSwMethodInvoker.Invoke<string>(sliced.AppSchema, searchDto.QueryGeneratorService, entityMetadata,
-                    searchDto);
+                var customQuery = GenericSwMethodInvoker.Invoke<string>(sliced.AppSchema, searchDto.QueryGeneratorService, entityMetadata,
+                      searchDto);
+                if (customQuery != null) {
+                    query.Sql = customQuery;
+                }
             }
 
             var rows = Query(entityMetadata, query, rowstamp, searchDto);

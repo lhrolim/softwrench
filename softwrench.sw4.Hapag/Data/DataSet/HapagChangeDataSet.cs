@@ -22,9 +22,11 @@ using c = softwrench.sw4.Hapag.Data.DataSet.Helper.ApproverConstants;
 namespace softwrench.sw4.Hapag.Data.DataSet {
     public class HapagChangeDataSet : HapagBaseApplicationDataSet {
 
+        private ChangeGridUnionQueryGenerator _changeGridUnionQueryGenerator;
 
-        public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
+        public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao, ChangeGridUnionQueryGenerator changeGridUnionQueryGenerator)
             : base(locationManager, entityRepository, maxDao) {
+            _changeGridUnionQueryGenerator = changeGridUnionQueryGenerator;
         }
 
 
@@ -213,11 +215,24 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
         public string GenerateUnionQuery(EntityMetadata entity, SearchRequestDto searchDTO) {
-            return ChangeGridUnionQueryGenerator.GenerateQuery(entity, searchDTO);
+            var context = ContextLookuper.LookupContext();
+            var isTomOrItom = context.IsInModule(FunctionalRole.Itom) || context.IsInModule(FunctionalRole.Tom);
+            if (isTomOrItom) {
+                //HAP-805, tom or itom roles can see everything in the grid
+                return null;
+            }
+
+            return _changeGridUnionQueryGenerator.GenerateQuery(entity, searchDTO);
         }
 
         public string GenerateUnionQueryCount(EntityMetadata entity, SearchRequestDto searchDTO) {
-            return ChangeGridUnionQueryGenerator.GenerateQueryCount(entity, searchDTO);
+            var context = ContextLookuper.LookupContext();
+            var isTomOrItom = context.IsInModule(FunctionalRole.Itom) || context.IsInModule(FunctionalRole.Tom);
+            if (isTomOrItom) {
+                //HAP-805, tom or itom roles can see everything in the grid
+                return null;
+            }
+            return _changeGridUnionQueryGenerator.GenerateQueryCount(entity, searchDTO);
         }
 
 
