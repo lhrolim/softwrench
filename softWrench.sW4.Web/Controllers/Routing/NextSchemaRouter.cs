@@ -68,6 +68,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
 
                 if (routerParameter.DispatcherComposition != null) {
                     var detailRequest = new DetailRequest(nextMetadata.Schema.GetSchemaKey(), null) { Id = id,UserIdSitetuple = userIdSiteTuple,CompositionsToFetch = routerParameter.DispatcherComposition };
+                    detailRequest.CompositionsToFetch = null; // for performance
                     var response = dataSet.Get(nextMetadata, SecurityFacade.CurrentUser(), detailRequest);
                     return response;
                 }
