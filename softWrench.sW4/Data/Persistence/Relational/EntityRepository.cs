@@ -228,8 +228,13 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var query = new EntityQueryBuilder().CountRows(entityMetadata, searchDto);
             if (searchDto.QueryGeneratorService != null && entityMetadata is SlicedEntityMetadata) {
                 var sliced = (SlicedEntityMetadata)entityMetadata;
-                query.Sql = GenericSwMethodInvoker.Invoke<string>(sliced.AppSchema, searchDto.QueryGeneratorService + "Count", entityMetadata,
-                    searchDto);
+
+                var customQuery = GenericSwMethodInvoker.Invoke<string>(sliced.AppSchema, searchDto.QueryGeneratorService + "Count", entityMetadata,
+                     searchDto);
+                if (customQuery != null) {
+                    query.Sql = customQuery;
+                }
+
             }
 
             return GetDao(entityMetadata).CountByNativeQuery(query.Sql, query.Parameters, searchDto.QueryAlias);

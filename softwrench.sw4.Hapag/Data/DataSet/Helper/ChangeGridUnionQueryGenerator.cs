@@ -19,8 +19,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         }
 
 
-        const string BaseQuery = @"
-      select
+        const string BaseQuery = 
+      @"select
       wochange.workorderid AS workorderid,
       sr_.ticketid AS sr_ticketid,
       relatedsr_.recordkey AS relatedsr_recordkey,
@@ -139,58 +139,68 @@ select wochange.workorderid   AS workorderid,
 FROM   wochange AS wochange
        INNER JOIN pmchgotherapprovers approvals_ 
        ON ( wochange.wonum = approvals_.wonum  AND approvals_.approvergroup IN ({1})) 
-       AND ( wochange.pluspcustomer LIKE 'HLC-%' ) 
+       WHERE ( wochange.pluspcustomer LIKE 'HLC-%' ) 
        and not exists (select 1 from sr AS sr_ where ( wochange.origrecordid = sr_.ticketid ))
-UNION ALL 
-SELECT NULL, 
-       NULL, 
-       NULL, 
-       NULL, 
-       '-666'                  AS zeroedattr, 
-       srforchange.description AS hlagchangesummary, 
-       srforchange.ticketid    AS ticketid, 
-       asset_.description      AS asset_description, 
-       NULL, 
-       NULL, 
-       CASE 
-         WHEN srforchange.pluspcustomer IS NOT NULL 
-              AND srforchange.pluspcustomer = 'HLC-00' THEN 'HLAG' 
-         WHEN srforchange.pluspcustomer IS NOT NULL 
-              AND Length(srforchange.pluspcustomer) >= 3 THEN Substr( 
-         srforchange.pluspcustomer, Length( 
-         srforchange.pluspcustomer) - 2, 3) 
-         ELSE '' 
-       END                     AS hlagpluspcustomer, 
-       CASE 
-         WHEN Locate('@', srforchange.reportedby) > 0 THEN Substr( 
-         srforchange.reportedby, 1, 
-         Locate('@', srforchange.reportedby) - 1) 
-         ELSE srforchange.reportedby 
-       END                     AS hlagreportedby, 
-       srforchange.status      AS status 
-FROM   sr AS srforchange 
-       LEFT JOIN asset AS asset_ 
-              ON ( srforchange.assetnum = asset_.assetnum 
-                   AND srforchange.siteid = asset_.siteid ) 
-WHERE  (( srforchange.classificationid IS NULL 
-           OR srforchange.classificationid NOT LIKE '8151%' )) 
-       AND ( NOT EXISTS (SELECT 1 
-                         FROM   wochange wo4sr_ 
-                         WHERE  wo4sr_.origrecordid = srforchange.ticketid 
-                                AND wo4sr_.origrecordclass = 'SR' 
-                                AND wo4sr_.woclass = 'CHANGE') 
-             AND NOT EXISTS (SELECT 1 
-                             FROM   relatedrecord relatedcr_ 
-                             WHERE  relatedcr_.relatedreckey = 
-                                    srforchange.ticketid 
-                                    AND relatedcr_.relatedrecclass = 'SR' 
-                                    AND relatedcr_.class = 'CHANGE') 
-             AND srforchange.templateid IN ( {0} ) ) 
-       AND ( srforchange.pluspcustomer LIKE 'HLC-%' )";
+      UNION
+      ALL
+      SELECT
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      '-666' AS zeroedattr,
+      srforchange.description AS hlagchangesummary,
+      srforchange.ticketid AS ticketid,
+      asset_.description AS asset_description,
+      NULL,
+      NULL,
+      CASE WHEN srforchange.pluspcustomer IS NOT NULL
+      AND srforchange.pluspcustomer = 'HLC-00' THEN 'HLAG' WHEN srforchange.pluspcustomer IS NOT NULL
+      AND Length(srforchange.pluspcustomer) >= 3 THEN Substr( srforchange.pluspcustomer, Length( srforchange.pluspcustomer) - 2, 3) ELSE '' END AS hlagpluspcustomer,
+      CASE WHEN Locate('@', srforchange.reportedby) > 0 THEN Substr( srforchange.reportedby, 1, Locate('@', srforchange.reportedby) - 1) ELSE srforchange.reportedby END AS hlagreportedby,
+      srforchange.status AS status
+      FROM sr AS srforchange
+      LEFT JOIN asset AS asset_ ON
+      (
+         srforchange.assetnum = asset_.assetnum
+         AND srforchange.siteid = asset_.siteid
+      )
+      WHERE
+      (
+         (
+            srforchange.classificationid IS NULL OR srforchange.classificationid NOT LIKE '8151%'
+         )
+      )
+      AND
+      (
+         NOT EXISTS
+         (
+            SELECT
+            1
+            FROM wochange wo4sr_
+            WHERE wo4sr_.origrecordid = srforchange.ticketid
+            AND wo4sr_.origrecordclass = 'SR'
+            AND wo4sr_.woclass = 'CHANGE'
+         )
+         AND NOT EXISTS
+         (
+            SELECT
+            1
+            FROM relatedrecord relatedcr_
+            WHERE relatedcr_.relatedreckey = srforchange.ticketid
+            AND relatedcr_.relatedrecclass = 'SR'
+            AND relatedcr_.class = 'CHANGE'
+         )
+         AND srforchange.templateid IN
+         (
+            'HLCDECHG','HLCDECHSSO','HLCDECHTUI'
+         )
+      )
+      AND ( srforchange.pluspcustomer LIKE 'HLC-%' )";
 
 
-        const string BaseCountQuery = @"
-      select sum(cnt) from (select count(*) as cnt
+        const string BaseCountQuery = 
+      @"select sum(cnt) from (select count(*) as cnt
       FROM wochange AS wochange
       INNER JOIN sr AS sr_ ON
       (
@@ -256,7 +266,7 @@ select count(*) as cnt
 FROM   wochange AS wochange
        INNER JOIN pmchgotherapprovers approvals_ 
        ON ( wochange.wonum = approvals_.wonum  AND approvals_.approvergroup IN ({1})) 
-       AND ( wochange.pluspcustomer LIKE 'HLC-%' ) 
+       where ( wochange.pluspcustomer LIKE 'HLC-%' ) 
        and not exists (select 1 from sr AS sr_ where ( wochange.origrecordid = sr_.ticketid ))
        UNION 
 select count(*) as cnt
@@ -264,9 +274,9 @@ FROM   wochange AS wochange
        INNER JOIN  woactivity AS woactivity_ 
        ON  wochange.wonum = woactivity_.parent 
        AND woactivity_.ownergroup IN ( {1} ) 
-       AND ( wochange.pluspcustomer LIKE 'HLC-%' ) 
+       WHERE ( wochange.pluspcustomer LIKE 'HLC-%' ) 
        and not exists (select 1 from sr AS sr_ where ( wochange.origrecordid = sr_.ticketid ))
-       UNION ALL 
+UNION ALL 
 select count(*) as cnt
 FROM   sr AS srforchange 
        LEFT JOIN asset AS asset_ 
@@ -286,7 +296,7 @@ WHERE  (( srforchange.classificationid IS NULL
                                     AND relatedcr_.relatedrecclass = 'SR' 
                                     AND relatedcr_.class = 'CHANGE') 
              AND srforchange.templateid IN ( {0} ) ) 
-       AND ( srforchange.pluspcustomer LIKE 'HLC-%' ) 
+       AND ( srforchange.pluspcustomer LIKE 'HLC-%' )
 )";
 
 
