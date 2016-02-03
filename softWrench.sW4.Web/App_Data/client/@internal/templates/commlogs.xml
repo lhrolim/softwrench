@@ -109,9 +109,9 @@
             <renderer type="lookup"/>
             <event type="afterchange" service="commlogService" method="formatCommTemplate"/>
           </association>
-          <field attribute="createdate" label="Created Date/Time" readonly="true">
+          <!--<field attribute="createdate" label="Created Date/Time" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
+          </field>-->
           <field attribute="orgobject" label="Origination" hidden="true"/>
           <!--<field attribute="sendto" label="To" requiredexpression="true">
             <renderer type="email"/>
