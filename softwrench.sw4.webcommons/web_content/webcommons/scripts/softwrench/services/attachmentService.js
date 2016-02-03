@@ -71,72 +71,79 @@
             return false;
         }
 
+        function redirectToAttachmentView(schema) {
+            // find the attachment view and redirect to i
+            var tabs = tabsService.tabsDisplayables(schema);
+            if (!tabs) {
+                return $q.reject(new Error("no displayable tabs for schema {0}.{1}".format(schema.applicationName, schema.schemaId)));
+            }
+            var attachmentTab = tabs.filter(function (tab) {
+                return tab.tabId.startsWith("attachment");
+            });
+            if (!attachmentTab) {
+                return $q.reject(new Error("no attachment tab for schema {0}.{1}".format(schema.applicationName, schema.schemaId)));
+            }
+            // redirect to view
+            return redirectService.redirectToTab(attachmentTab[0].tabId);
+        }
+
+        function readFile(file) {
+            var deferred = $q.defer();
+            var reader = new FileReader();
+
+            reader.addEventListener("loadend", function (event) {
+                deferred.resolve(reader.result);
+            });
+            reader.addEventListener("error", function (error) {
+                deferred.reject(error);
+            });
+
+            reader.readAsDataURL(file);
+            return deferred.promise;
+        }
+
         /**
          * Resolves a file wrapper instance from a DataTransferItem.
          * If options.redirect is `true`: will redirect the view to a visible attachment tab
          * If options.event is `true`: will fire "sw.attachment.file.load" event with the file wrapper as argument 
          * 
-         * @param DataTransferItem file
+         * @param DataTransferItem|Blob|File file
          * @param {} [schema] attachment's parent schema
          * @param {} options: { 'redirect': Boolean, 'event': Boolean } 
-         * @returns Promise resolved with a file wrapper instance: 
+         * @returns Promise resolved with a file wrapper dto instance: 
          *          {
          *               file: String, // content
+         *               name: String, // file's name
          *               type: String, // mime type
-         *               fileName: String, // file's name
          *               size: Number // size in bytes
          *           } 
          */
         function createAttachmentFromFile(file, schema, options) {
-            var fileReadPromise;
+            options = options || {};
 
-            if (!!options.redirect) {
-                // find the attachment view and redirect to i
-                var tabs = tabsService.tabsDisplayables(schema);
-                if (!tabs) {
-                    return $q.reject(new Error("no displayable tabs for schema {0}.{1}".format(schema.applicationName, schema.schemaId)));
-                }
-                var attachmentTab = tabs.filter(function (tab) {
-                    return tab.tabId.startsWith("attachment");
-                });
-                if (!attachmentTab) {
-                    return $q.reject(new Error("no attachment tab for schema {0}.{1}".format(schema.applicationName, schema.schemaId)));
-                }
-                // redirect to view
-                fileReadPromise = redirectService.redirectToTab(attachmentTab[0].tabId);
-            } else {
-                fileReadPromise = $q.when();
-            }
+            var promise = !!options.redirect ? redirectToAttachmentView(schema) : $q.when();
 
             // file data has to be querried before returning the promise
             // because it gets disposed (no content and empty properties) after the function returns
-            var blob = file.getAsFile();
+            var blob = file instanceof DataTransferItem ? file.getAsFile() : file;
             var extension = file.type.split("/")[1];
-            var fileName = "attachment{0}.{1}".format(Date.now().getTime(), extension);
+            var fileName = !!blob.name ? blob.name : "attachment{0}.{1}".format(Date.now().getTime(), extension);
 
-            fileReadPromise = fileReadPromise.then(function () {
-                var deferred = $q.defer();
-                var reader = new FileReader();
-
-                reader.addEventListener("loadend", function (event) {
-                    deferred.resolve({
-                        file: reader.result,
-                        type: file.type,
-                        fileName: fileName,
-                        size: blob.size
-                    });
-                });
-                reader.addEventListener("error", function (error) {
-                    deferred.reject(error);
-                });
-
-                reader.readAsDataURL(blob);
-                return deferred.promise;
+            promise = promise.then(function () {
+                return readFile(blob);
+            })
+            .then(function (content) {
+                return {
+                    file: content,
+                    name: fileName,
+                    type: file.type,
+                    size: blob.size
+                };
             });
 
             return !options.event
-                ? fileReadPromise
-                : fileReadPromise.then(function (fileWrapper) {
+                ? promise
+                : promise.then(function (fileWrapper) {
 
                     var timer = $timeout(function () {
                         $rootScope.$broadcast("sw.attachment.file.load", fileWrapper);

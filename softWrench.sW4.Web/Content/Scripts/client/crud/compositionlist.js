@@ -476,7 +476,7 @@ app.directive('compositionList', function (contextService, formatService, schema
 
     function onAttachmentFileLoaded(event, file) {
         if (!$scope.relationship.contains("attachment")) return;
-        var datamap = { 'newattachment_path': file.fileName };
+        var datamap = { 'newattachment_path': file.name };
 
         // set file on the datamap
         $scope.compositiondetailschema.displayables
