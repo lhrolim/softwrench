@@ -10,7 +10,6 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
     internal class ChangeGridUnionQueryGenerator {
 
       const string BaseQuery = @"
-      set current schema maximo;
       select
       wochange.workorderid AS workorderid,
       sr_.ticketid AS sr_ticketid,
