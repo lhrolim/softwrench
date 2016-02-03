@@ -805,7 +805,7 @@ app.directive('compositionList', function (contextService, formatService, schema
                 // dispose of the edit/creation form
                 if ($rootScope.showingModal) modalService.hide();
                 $scope.newDetail = false;
-                $scope.selecteditem = {};
+                $scope.selecteditem = null;
                 $scope.collapseAll();
                 // select first page
                 return $scope.selectPage(1);
