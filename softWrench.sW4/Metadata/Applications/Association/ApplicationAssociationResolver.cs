@@ -136,13 +136,17 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         private static void AppendQuickSearch(ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             var appMetadata = GetAssociationApplicationMetadata(association);
+            var primaryAttribute = association.EntityAssociation.PrimaryAttribute();
 
-            IEnumerable<string> listOfFields = appMetadata != null
+            // has primary and not in a reverse association and primary does not require an extra join
+            // TODO: add support for the extra join in quicksearch queries
+            var shouldUsePrimary = primaryAttribute != null && !association.Reverse && !primaryAttribute.To.Contains("_");
+
+            var listOfFields = appMetadata != null
                 ? appMetadata.Schema.NonHiddenFields.Where(i => !i.DeclaredAsQueryOnEntity).Select(f => f.Attribute)
-                : new List<string> {
-                    association.EntityAssociation.PrimaryAttribute().To,
-                    association.LabelFields.FirstOrDefault(),
-                };
+                : shouldUsePrimary
+                    ? new[] { primaryAttribute.To, association.LabelFields.FirstOrDefault() }
+                    : new[] { association.LabelFields.FirstOrDefault() };
 
             var quickSearchWhereClause = QuickSearchHelper.BuildOrWhereClause(listOfFields, association.EntityAssociation.To);
             associationFilter.AppendWhereClause(quickSearchWhereClause);

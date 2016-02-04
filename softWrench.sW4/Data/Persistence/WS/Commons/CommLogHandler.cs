@@ -72,7 +72,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 w.CopyFromRootEntity(rootObject, integrationObject, Siteid, user.SiteId);
                 w.CopyFromRootEntity(rootObject, integrationObject, Orgid, user.OrgId);
                 w.CopyFromRootEntity(rootObject, integrationObject, Createby, user.Login, "CHANGEBY");
-                w.CopyFromRootEntity(rootObject, integrationObject, Createdate, DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
+                w.SetValue(integrationObject, Createdate, DateTime.Now.FromServerToRightKind());
                 w.CopyFromRootEntity(rootObject, integrationObject, Modifydate, DateTime.Now.FromServerToRightKind());
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);

@@ -144,8 +144,17 @@
             <tbody crudtbody schema="schema" datamap="datamap" panelid="panelid" timestamp="{{timestamp}}" bindonce />
         </table>
     </div>
-    <p class="no-results" ng-show="datamap.length == 0">
-        <i class="fa fa-info-circle"></i>&ensp;{{i18N("_grid.filter.noresult","No records found, try adjusting your search terms.")}}
+    <p class="no-results" ng-show="datamap.length == 0" ng-if="schema.noResultsNewSchema == null">
+        <i class="fa fa-info-circle"></i>&ensp;
+        {{i18N("_grid.filter.noresult","No records found, try adjusting your search terms.")}}
+    </p>
+    <p class="no-results" ng-show="datamap.length == 0" ng-if="schema.noResultsNewSchema != null">
+        <i class="fa fa-info-circle"></i>&ensp;
+        {{i18N("_grid.filter.noresultWithNewBegin","No records found, ")}}
+        <button type="button" class="btn btn-default btn-primary" ng-click="noRecordsNewClick()" href="#" data-container="body">
+            {{noRecordsNewButtonLabel()}}
+        </button>
+        {{i18N("_grid.filter.noresultWithNewEnd"," or try adjusting your search terms.")}}
     </p>
     <!--this is exclusive for IBM Demo to indicate the bottom of the page.-->
     <div ng-if="isNotHapagTest()" ng-hide="hidebars">

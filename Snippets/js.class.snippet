@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>JS ES5 Class</Title>
+      <Author>Rodrigo Botti</Author>
+      <Description>Template for creating a JS class-like constructor function using ES5 compliant code</Description>
+      <Shortcut>jsclass</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>Class</ID>
+          <ToolTip>Class name</ToolTip>
+          <Default>MyClass</Default>
+        </Literal>
+        <Literal>
+          <ID>property</ID>
+          <ToolTip>Object prperty/attribute</ToolTip>
+          <Default>property</Default>
+        </Literal>
+        <Literal>
+          <ID>method</ID>
+          <ToolTip>Object method</ToolTip>
+          <Default>method</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="JavaScript">
+        <![CDATA[
+        var $Class$ = (function() {
+          function _$Class$($property$) {
+            this.$property$ = $property$;
+          }
+          _$Class$.prototype.$method$ = function() {
+            return this.$property$;
+          };
+          return _$Class$;
+        })();
+        ]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

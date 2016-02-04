@@ -380,7 +380,7 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
                 return eval(expressionToEval);
             } catch (e) {
                 if (contextService.isLocal()) {
-                    console.log(e);
+                    console.error(e);
                 }
                 return true;
             }

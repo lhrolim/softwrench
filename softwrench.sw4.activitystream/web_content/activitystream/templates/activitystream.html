@@ -30,14 +30,13 @@
                 </div>
             </div>
             <div class="filter" ng-show="enableFilter">
-                <input type="text" class="form-control hasclear" placeholder="Filter Activity" ng-model="$parent.filterText" />
-                <div class="button" ng-if="$parent.filterText" ng-click="clearFilter()"><i class="fa fa-times-circle clearer"></i></div>
+                <search-box ng-model="filterText" data-placeholder="'Filter Activity'" />
             </div>
         </header>
         <div class="scroll">
             <div class="messages">
                 <div class="message clearfix"
-                     ng-repeat="activity in activities | filter:$parent.filterText"
+                     ng-repeat="activity in activities | filter:filterText"
                      ng-class="activity.isRead ? 'is-read' : 'not-read'"
                      ng-class-odd="'odd'" ng-class-even="'even'"
                      ng-show="displayHidden(activity)">
@@ -66,7 +65,7 @@
                 </div>
                 <div class="nomessages" ng-if="!activities.length"><i class="fa fa-info-circle"></i>&ensp;No recent activity to display.</div>
                 <div class="nomessages" ng-if="statusAllHidden && !hiddenToggle"><i class="fa fa-info-circle"></i>&ensp;All recent activity has been read.</div>
-                <div class="nomessages" ng-if="activities.length && !(activities | filter:$parent.filterText).length"><i class="fa fa-info-circle"></i>&ensp;No activity matches your filter.</div>
+                <div class="nomessages" ng-if="activities.length && !(activities | filter:filterText).length"><i class="fa fa-info-circle"></i>&ensp;No activity matches your filter.</div>
             </div>
         </div>
     </div>

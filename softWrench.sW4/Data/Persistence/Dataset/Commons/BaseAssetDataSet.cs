@@ -47,8 +47,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         /// <param name="user"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request)
-        {
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var result = base.GetApplicationDetail(application, user, request);
 
             //result.ResultObject.SetAttribute("parentlocation_.systemid", request.CustomParameters["parentlocation_.systemid"]);
@@ -89,14 +88,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             JObject currentData) {
 
             var result = base.GetCompositionData(application, request, currentData);
+            if (!result.ResultObject.ContainsKey("assetspec_")) {
+                //if we are navigating on one of the compositions records, the others are not fetched
+                //SWWEB-2038
+                return result;
+            }
+
             var assetspecList = result.ResultObject["assetspec_"].ResultList;
-            if (assetspecList.Any())
-            {
+            if (assetspecList.Any()) {
                 var classificationids =
                     assetspecList.Select(value => value["classstructure_.classificationid"].ToString()).ToList();
                 var classhierarchys = GetClassstructureHierarchyPath(classificationids);
-                foreach (var assetspec in assetspecList)
-                {
+                foreach (var assetspec in assetspecList) {
                     var classificationid = assetspec["classstructure_.classificationid"].ToString();
                     var path = classhierarchys.Single(p => p["id"] == classificationid)["hierarchypath"];
                     assetspec.Add("classstructure_.hierarchypath", path);
