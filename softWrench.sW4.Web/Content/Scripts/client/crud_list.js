@@ -351,7 +351,11 @@ app.directive('crudList', function (contextService) {
                 }
 
                 var searchString = $scope.searchData[columnName];
+                
                 if (!!searchString) {
+                    $scope.selectPage(1);
+                } else {
+                    $scope.searchOperator[columnName] = searchService.noFilter();
                     $scope.selectPage(1);
                 }
 
