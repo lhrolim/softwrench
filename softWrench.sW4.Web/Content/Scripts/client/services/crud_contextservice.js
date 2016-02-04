@@ -314,9 +314,10 @@
                 //when we have a reverse relationship, let´s add it to the parentdatamap, to make "life" easier for the outer components, such as the angulartypeahead, 
                 //and/or expressions
                 var displayable = displayables[0];
-                if (displayable.reverse) {
+                var key = Object.keys(options)[0];
+                if (displayable.reverse && key) {
                     //Object.keys(options)[0] --> this would be the key of the association
-                    _crudContext.rootDataMap.fields[displayable.target] = Object.keys(options)[0].toLowerCase();
+                    _crudContext.rootDataMap.fields[displayable.target] = key.toLowerCase();
                 }
             }
 

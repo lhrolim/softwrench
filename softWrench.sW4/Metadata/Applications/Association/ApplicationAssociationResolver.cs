@@ -138,9 +138,13 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var appMetadata = GetAssociationApplicationMetadata(association);
             var primaryAttribute = association.EntityAssociation.PrimaryAttribute();
 
+            // has primary and not in a reverse association and primary does not require an extra join
+            // TODO: add support for the extra join in quicksearch queries
+            var shouldUsePrimary = primaryAttribute != null && !association.Reverse && !primaryAttribute.To.Contains("_");
+
             var listOfFields = appMetadata != null
                 ? appMetadata.Schema.NonHiddenFields.Where(i => !i.DeclaredAsQueryOnEntity).Select(f => f.Attribute)
-                : primaryAttribute != null
+                : shouldUsePrimary
                     ? new[] { primaryAttribute.To, association.LabelFields.FirstOrDefault() }
                     : new[] { association.LabelFields.FirstOrDefault() };
 
