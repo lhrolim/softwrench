@@ -1177,6 +1177,7 @@
           <field attribute="classificationid" hidden="true"/>
           <field attribute="reportedemail" hidden="true"/>
           <field attribute="affectedemail" hidden="true"/>
+          <field attribute="ownerperson_.displayname" hidden="true"/>
         </componentdisplayable>
       </components>
       

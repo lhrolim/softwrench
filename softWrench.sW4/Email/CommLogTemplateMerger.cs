@@ -68,6 +68,10 @@ namespace softWrench.sW4.Email {
             if (normalizedvariable.Equals("description_longdescription")) {
                 normalizedvariable = "longdescription_.ldtext";
             }
+            if (normalizedvariable.Equals("ownerperson.displayname")) {
+                normalizedvariable = "ownerperson_.displayname";
+            }
+
             return normalizedvariable;
         }
 
