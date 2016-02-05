@@ -6,19 +6,22 @@ angular.module('sw_layout')
 
     return {
         refreshFromAttribute: function (value, associationOptions) {
-            var valueMissing = true;
-            for (var i = 0; i < associationOptions.length; i++) {
-                if (associationOptions[i].value.trim() === ("" + value).trim()) {
-                    valueMissing = false;
+            if (!nullOrEmpty(value) && associationOptions) {
+                var valueMissing = true;
+                for (var i = 0; i < associationOptions.length; i++) {
+                    if (associationOptions[i].value.trim() === ("" + value).trim()) {
+                        valueMissing = false;
+                        break;
+                    }
                 }
-            }
-            if (valueMissing) {
-                var missingValue = {
-                    "type": "AssociationOption",
-                    "value": value,
-                    "label": value + " ** unknown to softwrench **"
+                if (valueMissing) {
+                    var missingValue = {
+                        "type": "AssociationOption",
+                        "value": value,
+                        "label": value + " ** unknown to softwrench **"
+                    }
+                    associationOptions.push(missingValue);
                 }
-                associationOptions.push(missingValue);
             }
         }
     };
