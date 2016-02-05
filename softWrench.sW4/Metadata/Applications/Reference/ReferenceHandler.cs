@@ -76,7 +76,7 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
             }
 
             // verify if the real reference is enabled
-            XmlApplicationMetadataParser.VerifyEnabledField(schema, applicationDisplayable);
+            XmlEnabledFieldsVerifier.VerifyEnabledField(schema, applicationDisplayable);
         }
 
         private static object CloneAndResolve([NotNull]IPCLCloneable declaredDisplayable, ApplicationSchemaDefinition schema, ReferenceDisplayable reference) {

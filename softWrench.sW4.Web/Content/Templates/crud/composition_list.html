@@ -161,7 +161,7 @@
                     </ng-switch>
                 </td>
                 <td ng-if="isBatch()" ng-hide="compositionitem[compositionlistschema.idFieldName] > 0">
-                    <button ng-if="collectionproperties.allowRemoval == 'true'" class="fa fa-trash btn" ng-click="removeBatchItem(rowindex)"></button>
+                    <button class="fa fa-trash btn" ng-click="removeBatchItem(rowindex)"></button>
                 </td>
             </tr>
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
