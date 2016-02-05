@@ -70,47 +70,35 @@
       <properties>
         <property key ="icon" value="fa fa-envelope-o"/>
         <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
+        <property key="list.click.popup" value="modal"/>
       </properties>
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <properties>
             <property key="expansible" value="false"/>
+            <property key="masterdetail" value="true"/>
           </properties>
-          <field attribute="commloguid" hidden="true"/>
-          
-          <!--<field attribute="#inboundicon">
-            <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
-          </field>-->
-          <field attribute="inbound">
-            <renderer type="icon" params="expression={'1':'fa-long-arrow-left green','0':'fa-long-arrow-right orange'};width=3%"/>
-          </field>
           <field attribute="read">
-            <renderer type="icon" params="expression={'#default':'fa-envelope envelopeYellow','true':''};width=3%"/>
+            <renderer type="icon" params="expression={'#default':'fa-circle','true':''}"/>
           </field>
-          <field attribute="orgobject" label="Origination" hidden="true"/>
-          <field attribute="createdate" label="Created Date/Time">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=10%"/>
+          <field attribute="inbound">
+            <renderer type="icon" params="expression={'1':'fa-long-arrow-right green','0':'fa-long-arrow-left orange'}"/>
           </field>
-          <field attribute="sendto" label="To">
-            <renderer type="default" params="width=25%;formatter=lower"/>
+          <field attribute="createdate" label="Created Date/Time" qualifier="tag">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-          <field attribute="cc" hidden="true"/>
-          <field attribute="ccflag" label="CC">
-            <renderer type="checkbox"  params="width=5%"/>
+          <field attribute="sendto" label="To" qualifier="expression={'!@inbound':'title'}">
+            <renderer type="default" params="formatter=lower"/>
           </field>
-          <field attribute="bcc" hidden="true"/>
-          <field attribute="bccflag" label="BCC">
-            <renderer type="checkbox"  params="width=5%"/>
+          <field attribute="sendfrom" label="From" qualifier="expression={'@inbound':'title'}">
+            <renderer type="default" params="formatter=lower"/>
           </field>
-          <field attribute="sendfrom" label="From">
-            <renderer type="default" params="width=25%;formatter=lower"/>
-          </field>
-          <field attribute="subject" label="Subject">
+          <field attribute="subject" label="Subject" qualifier="subtitle">
             <renderer type="default"/>
           </field>
-          <section resourcepath="/Content/Templates/otb/commlogaction.html">
-            <renderer type="default" params="width=13%"/>
-          </section>
+          <field attribute="message" label="Message" qualifier="message">
+            <renderer type="default"/>
+          </field>          
         </schema>
 
         <schema id="detail" stereotype="compositiondetail">
@@ -121,13 +109,10 @@
             <renderer type="lookup"/>
             <event type="afterchange" service="commlogService" method="formatCommTemplate"/>
           </association>
-          <field attribute="createdate" label="Created Date/Time" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-          <field attribute="orgobject" label="Origination" hidden="true"/>
-          <!--<field attribute="sendto" label="To" requiredexpression="true">
-            <renderer type="email"/>
+          <!--<field attribute="createdate" label="Created Date/Time" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
           </field>-->
+          <field attribute="orgobject" label="Origination" hidden="true"/>
           <association label="To" target="sendto" labelfield="email_.loweremail" valuefield="loweremail" orderbyfield="LOWER(emailaddress) desc" requiredexpression="true" >
             <renderer type="multiselectautocompleteclient" stereotype="email"/>
             <dataprovider postfilterfunction="EmailPostFilter"/>
@@ -162,6 +147,4 @@
       </schemas>
     </application>
   </applications>
-
-
 </metadata>

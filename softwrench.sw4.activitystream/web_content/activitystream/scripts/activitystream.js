@@ -270,7 +270,8 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 log.debug('toggleFilter');
 
                 $scope.enableFilter = !$scope.enableFilter;
-                $scope.clearFilter();
+                $scope.filterText = '';
+                $(window).trigger('resize');
             };
 
             $scope.toggleHidden = function () {

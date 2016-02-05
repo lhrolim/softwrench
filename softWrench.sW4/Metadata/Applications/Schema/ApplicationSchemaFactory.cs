@@ -130,7 +130,23 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             var resultingDisplayables = new List<IApplicationDisplayable>();
             var parentDisplayables = parentContainer.Displayables;
             var childSections = DisplayableUtil.GetDisplayable<ApplicationSection>(typeof(ApplicationSection), childSchema.Displayables);
+            var childCustomizations = DisplayableUtil.GetDisplayable<ApplicationSchemaCustomization>(typeof(ApplicationSchemaCustomization), childSchema.Displayables);
             foreach (var dis in parentDisplayables) {
+                // compare customizations
+                var parentCustomization = dis as ApplicationSchemaCustomization;
+                if (parentCustomization != null) {
+                    var childCustomization = childCustomizations.FirstOrDefault(c => c.Position.Equals(parentCustomization.Position));
+                    // if there is a child customization on the same position adds the child and not the parent one
+                    if (childCustomization != null) {
+                        // also removes from child customizations list, at the and the remaining are added too
+                        childCustomizations.Remove(childCustomization);
+                        resultingDisplayables.Add(childCustomization);
+                        continue;
+                    }
+                    resultingDisplayables.Add(parentCustomization);
+                    continue;
+                }
+
                 var parentSection = dis as ApplicationSection;
                 if (parentSection == null) {
                     //just adding the non-section displayable, on the child schema
@@ -158,6 +174,9 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 }
 
             }
+
+            // add the remaining child customizations
+            resultingDisplayables.AddRange(childCustomizations);
             return resultingDisplayables;
         }
 

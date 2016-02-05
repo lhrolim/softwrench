@@ -1,7 +1,7 @@
 ﻿(function(angular) {
     'use strict';
 
-    function commlogService($http, contextService, restService, richTextService) {
+    function commlogService($http, contextService, restService, richTextService, crudContextHolderService) {
         function updatereadflag(parameters) {
             if (parameters.compositionItemData["read"]) {
                 return;
@@ -25,7 +25,7 @@
         };
 
         function formatCommTemplate(parameters) {
-            var parentSchema = parameters.scope.parentschema;
+            var parentSchema = parameters.scope.parentschema || /* when commlog being edited in modal */ crudContextHolderService.currentSchema();
 
             var parentIdFieldName = parentSchema.idFieldName;
             var parentData = parameters.parentdata["fields"];
@@ -62,7 +62,7 @@
         return service;
     }
 
-    angular.module("sw_layout").factory('commlogService', ['$http', 'contextService', 'restService', 'richTextService', commlogService]);
+    angular.module("sw_layout").factory("commlogService", ["$http", "contextService", "restService", "richTextService", "crudContextHolderService", commlogService]);
 
 
 })(angular);

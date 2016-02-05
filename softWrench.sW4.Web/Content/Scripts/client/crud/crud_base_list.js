@@ -4,8 +4,8 @@
 angular.module("sw_layout").controller("BaseList", BaseList);
 
 //idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-BaseList.$inject = ["$scope", "formatService", "expressionService", "searchService", "fieldService", "i18NService", "commandService", "crudContextHolderService", "gridSelectionService", "redirectService"];
-function BaseList($scope, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService, redirectService) {
+BaseList.$inject = ["$scope", "formatService", "expressionService", "searchService", "fieldService", "i18NService", "commandService", "crudContextHolderService", "gridSelectionService"];
+function BaseList($scope, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService) {
 
     $scope.isFieldHidden = function (application, fieldMetadata) {
         return fieldService.isFieldHidden($scope.datamap, application, fieldMetadata);
@@ -99,10 +99,11 @@ function BaseList($scope, formatService, expressionService, searchService, field
     };
 
     $scope.GetAssociationOptions = function (fieldMetadata, forfilter) {
-        if (fieldMetadata.type == "OptionField") {
+        if (fieldMetadata.type === "OptionField") {
             return $scope.GetOptionFieldOptions(fieldMetadata, forfilter);
         }
-        return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey);
+        var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+        return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
     };
 
     $scope.GetOptionFieldOptions = function (optionField, forfilter) {

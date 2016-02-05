@@ -434,19 +434,15 @@ table .detaildata {
         }
     }
 }
+.quick-search {
+    float: left;
+    padding-top: 4px;
+    padding-left: 10px;
 
-.grid-header {
-    .quick-search {
-        float: left;
-        padding-left: 10px;
 
-        input {
-                height: 32px;
-        }
-
-        .btn {
-            border-left: none;
-        }
+    .btn {
+        height: 34px;
+        border-left: none;
     }
 }
 

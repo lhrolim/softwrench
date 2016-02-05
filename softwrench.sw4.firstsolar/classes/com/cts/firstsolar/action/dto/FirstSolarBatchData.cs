@@ -27,6 +27,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto {
         public AssociationOption Classification {
             get; set;
         }
+
+        public string WorkType {
+            get; set;
+        }
     }
 
     public class BatchStartingData :BatchSharedData {

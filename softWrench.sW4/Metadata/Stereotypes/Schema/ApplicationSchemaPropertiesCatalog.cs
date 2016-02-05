@@ -174,6 +174,15 @@
         /// </summary>
         public static string DetailPreFetchCompositions = "detail.prefetchcompositions";
 
+        /// <summary>
+        /// If present:
+        ///    - Only the given fields and options (attributes separated by comma) will not be read only.
+        ///    - Only the given associations(targets separated by comma) will be enabled.
+        ///    - Only the given compositions(relationships separated by comma) will allow insertions e updates.
+        ///    - Only the given references (ids separated by comma) will not be read only.
+        /// </summary>
+        public static string DetailEnabledFields = "detail.enabledfields";
+
 
         /// <summary>
         /// If true all options fields of this schema will be rendered with no initial selection
