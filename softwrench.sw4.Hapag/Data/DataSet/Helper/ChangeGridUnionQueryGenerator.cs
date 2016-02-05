@@ -107,9 +107,9 @@ FROM   wochange AS wochange
 select count(*) as cnt
 FROM   wochange AS wochange
        INNER JOIN  woactivity AS woactivity_ 
-       ON  wochange.wonum = woactivity_.parent
+       ON  (wochange.wonum = woactivity_.parent
+       AND woactivity_.ownergroup IN ( {1} ) )
        left join ci as ci_ on (wochange.cinum = ci_.cinum)  
-       AND woactivity_.ownergroup IN ( {1} ) 
        WHERE ( wochange.pluspcustomer LIKE 'HLC-%' ) 
        and not exists (select 1 from sr AS sr_ where ( wochange.origrecordid = sr_.ticketid ))
        {0}";
