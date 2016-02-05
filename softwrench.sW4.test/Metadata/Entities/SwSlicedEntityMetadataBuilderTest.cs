@@ -17,14 +17,14 @@ namespace softwrench.sW4.test.Metadata.Entities {
         public static void Init(TestContext testContext) {
             ApplicationConfiguration.TestclientName = "otb";
             MetadataProvider.StubReset();
-            var schemas = MetadataProvider.Application("_SoftwrenchError").Schemas();
+            var schemas = MetadataProvider.Application("SoftwrenchError_").Schemas();
             _schema = schemas[new ApplicationMetadataSchemaKey("detail", "input", "web")];
         }
 
         [TestMethod]
         public void TestSWDBSlicedEntity() {
-            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("_Problem"), _schema);
-            IApplicationDisplayable rowstamp = new ApplicationFieldDefinition("_SoftwrenchError", "rowstamp", "rowstamp");
+            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("Problem_"), _schema);
+            IApplicationDisplayable rowstamp = new ApplicationFieldDefinition("SoftwrenchError_", "rowstamp", "rowstamp");
             Assert.IsFalse(sliced.AppSchema.Displayables.Contains(rowstamp));
             Assert.IsFalse(sliced.AppSchema.Displayables.Contains(null));
             Assert.AreNotEqual(sliced, null);
