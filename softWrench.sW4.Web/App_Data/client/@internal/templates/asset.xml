@@ -77,7 +77,7 @@
             <field attribute="assetnum" label="Asset" readonly="true"/>  
             <field attribute="description" label="Description" readonly="true"/>
             <field attribute="status" label="Status" readonly="true"/>
-            <field attribute="siteid" readonly="true" hidden="true"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
           </section>
           
           <section orientation="horizontal">

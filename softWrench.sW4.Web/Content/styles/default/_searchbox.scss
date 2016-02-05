@@ -1,0 +1,21 @@
+﻿.searchbox {
+    .form-control {
+        padding: 6px 32px 6px 12px;
+    }
+
+    .clear-button {
+        position: relative;
+        top: -33px;
+        width: 34px;
+        height: 34px;
+        line-height: 34px;
+        text-align: center;
+        cursor: pointer;
+        color: #999;
+        float: right;
+
+        &:hover {
+            color: #333;
+        }
+    }
+}

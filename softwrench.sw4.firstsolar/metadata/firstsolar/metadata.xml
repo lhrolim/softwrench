@@ -7,7 +7,13 @@
     <template path="@location.xml"/>
   </templates>
 
-
+  <entities>
+    <entity name="asset" idAttribute="assetid">
+      <attributes>
+        <attribute name="openwo" query="(select count(1) from workorder where UPPER(workorder.status) not in ('CAN', 'COMP', 'CLOSE') and workorder.assetnum = !@assetnum and workorder.siteid = !@siteid and workorder.orgid = !@orgid)" type="int"/>
+      </attributes>
+    </entity>
+  </entities>
 
   <applications>
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
@@ -292,6 +298,9 @@
 
       <schemas>
         <schema id="assetlist"  redeclaring="false" stereotype="list.selection">
+          <customization position="+siteid">
+            <field attribute="openwo" label="Work Orders"/>
+          </customization>
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">

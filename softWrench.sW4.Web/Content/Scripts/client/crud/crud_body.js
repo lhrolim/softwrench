@@ -338,7 +338,7 @@
                     }
 
 
-                    var modalSavefn = modalService.getSaveFn();
+                    var modalSavefn = $scope.ismodal === "true" ? modalService.getSaveFn() : null;
                     //if there´s a custom modal service, let´s use it instead of the ordinary crud savefn
                     if (modalSavefn) {
                         var errorForm = $scope.crudform ? $scope.crudform.$error : {};

@@ -16,8 +16,7 @@
     }
 
     $scope.getGridToolbar = function () {
-        var schema = $scope.schema;
-        return commandService.getBarCommands(schema, $scope.position);
+        return commandService.getBarCommands($scope.schema, $scope.position);
     }
 
     $scope.url = function (path) {
@@ -204,6 +203,41 @@ app.directive('compositiontoolbar', ["contextService", function (contextService)
         replace: true,
         templateUrl: contextService.getResourceUrl('/Content/Templates/directives/gridtoolbar.html'),
         require: '^compositionList',
+        scope: {
+            paginationData: '=',
+            searchData: '=',
+            searchOperator: '=',
+            searchSort: '=',
+            /*only appliable for compositions, otherwise this will be null*/
+            parentschema: '=',
+            schema: '=',
+            mode: '@',
+            position: '@',
+            /*only appliable for compositions, otherwise this will be null*/
+            parentdatamap: '=',
+            datamap: '=',
+            //holds the selected ids amongst the ones prensent on the datamap 
+            selectedids: '='
+        },
+
+        link: function (scope, element, attrs, ctrl) {
+            scope.ctrlfns = {};
+            angular.forEach(ctrl, function (fn, name) {
+                if (angular.isFunction(fn)) scope.ctrlfns[name] = fn;
+            });
+        },
+
+        controller: sharedController
+
+    };
+}]);
+
+app.directive('masterdetailtoolbar', ["contextService", function (contextService) {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: contextService.getResourceUrl('/Content/Templates/directives/gridtoolbar.html'),
+        require: '^compositionMasterDetails',
         scope: {
             paginationData: '=',
             searchData: '=',
