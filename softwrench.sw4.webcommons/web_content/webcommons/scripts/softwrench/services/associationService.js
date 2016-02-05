@@ -1,6 +1,5 @@
-﻿
-(function (angular) {
-    'use strict';
+﻿(function (angular) {
+    "use strict";
 
 
     function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService) {
@@ -49,16 +48,15 @@
             if (selectedValue == null) {
                 return null;
             } else if (Array.isArray(selectedValue)) {
-                var ObjectArray = [];
-
                 // Extract each item into an array object
-                for (var i = 0; i < selectedValue.length; i++) {
-                    var Object = doGetFullObject(associationFieldMetadata, selectedValue[i], contextData);
-                    ObjectArray = ObjectArray.concat(Object);
-                }
+                var objectArray = selectedValue
+                    .map(function (value) {
+                        return doGetFullObject(associationFieldMetadata, value, contextData);
+                    })
+                    .flatten();
 
                 // Return results for multi-value selection
-                return ObjectArray;
+                return objectArray;
             }
 
             // we need to locate the value from the list of association options
@@ -106,7 +104,7 @@
             return "(" + item.value + ")" + " - " + item.label;
         };
 
-        function getFullObject(associationFieldMetadata, datamap) {
+        function getFullObject(associationFieldMetadata, datamap, contextData) {
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
             var target = associationFieldMetadata.target;
@@ -115,7 +113,7 @@
             if (selectedValue == null) {
                 return null;
             }
-            var resultValue = doGetFullObject(associationFieldMetadata, selectedValue);
+            var resultValue = doGetFullObject(associationFieldMetadata, selectedValue, contextData);
             if (resultValue == null) {
                 $log.getInstance('associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
             }
@@ -166,7 +164,7 @@
             if (associationMetadata.events == undefined) {
                 return;
             }
-            var afterChangeEvent = associationMetadata.events['afterchange'];
+            var afterChangeEvent = associationMetadata.events["afterchange"];
             if (afterChangeEvent == undefined) {
                 return;
             }
@@ -183,7 +181,7 @@
             var afterchangeEvent = {
                 fields: fields,
                 scope: scope,
-                parentdata: scope.parentdata,
+                parentdata: scope.parentdata || /* when trigerring event from modal */ crudContextHolderService.rootDataMap(), 
                 triggerparams: instantiateIfUndefined(triggerparams)
             };
             $log.getInstance('sw4.associationservice#postAssociationHook').debug('invoking post hook service {0} method {1} from association {2}|{3}'

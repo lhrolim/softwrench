@@ -94,6 +94,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+        public string PrimaryAttribute { get; set; }
+
         public FieldRenderer Renderer {
             get {
                 return _renderer;
@@ -167,8 +169,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public object Clone() {
-            return new ApplicationFieldDefinition(ApplicationName, Attribute, DataType, Label, RequiredExpression, IsReadOnly, IsHidden,
+            var clone = new ApplicationFieldDefinition(ApplicationName, Attribute, DataType, Label, RequiredExpression, IsReadOnly, IsHidden,
                 Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression, EvalExpression, EnableDefault, DefaultExpression, DeclaredAsQueryOnEntity);
+            clone.PrimaryAttribute = PrimaryAttribute;
+            return clone;
         }
 
         public static ApplicationFieldDefinition HiddenInstance(string applicationName, string attributeName) {

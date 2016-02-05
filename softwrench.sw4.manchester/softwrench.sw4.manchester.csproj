@@ -42,12 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\com\cts\manchester\dataset\ComMatusetransDataSet.cs" />
-    <Compile Include="classes\com\cts\manchester\migration\Migration20150331Comsw74.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\manchester\configuration\" />
     <Folder Include="classes\com\cts\manchester\connector\" />
+    <Folder Include="classes\com\cts\manchester\migration\" />
     <Folder Include="web_content\manchester\htmls\" />
   </ItemGroup>
   <ItemGroup>

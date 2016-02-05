@@ -509,6 +509,14 @@
     <attribute name="default" type="string"></attribute>
     <attribute name="defaultexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
+    <attribute name="preventnoresultscarry" type="boolean">
+      <annotation>
+        <documentation>
+          During a search of no results a creation can be started.
+          If this atribute is set to true no search data of this field will be carried.
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="Renderer">

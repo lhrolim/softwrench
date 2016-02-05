@@ -39,12 +39,7 @@
                 /// <param name="parentdata">holds the parent datamap</param>
                 /// <param name="parentschema">holds the parent schema</param>
                 show: function (schemaorModalData, datamap, properties, savefn, cancelfn, parentdata, parentschema) {
-
-
-
-
                     if (schemaorModalData.schema) {
-
                         $rootScope.$broadcast("sw.modal.show", schemaorModalData);
                         return;
                     }

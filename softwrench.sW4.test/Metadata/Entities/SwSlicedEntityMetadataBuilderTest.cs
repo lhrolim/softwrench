@@ -29,6 +29,8 @@ namespace softwrench.sW4.test.Metadata.Entities {
             Assert.IsFalse(sliced.AppSchema.Displayables.Contains(null));
             Assert.AreNotEqual(sliced, null);
         }
-        
+
+
+
     }
 }

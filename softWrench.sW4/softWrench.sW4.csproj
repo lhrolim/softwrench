@@ -217,6 +217,7 @@
     <Compile Include="Metadata\Menu\XMLMenuParserCommons.cs" />
     <Compile Include="Metadata\Menu\XmlTemplateMenuMetadataParser.cs" />
     <Compile Include="Metadata\OffLineMetadataProvider.cs" />
+    <Compile Include="Metadata\Parsing\XmlEnabledFieldsVerifier.cs" />
     <Compile Include="Metadata\Parsing\XmlFilterMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlFilterSchema.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />

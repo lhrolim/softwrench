@@ -90,6 +90,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+        public string ApplicationTitle {
+            get; set;
+        }
+
         public string EntityName {
             get; set;
         }
@@ -139,9 +143,15 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+        public string NoResultsNewSchema {
+            get; set;
+        }
+
         private bool _lazyFksResolved;
 
-        public bool FiltersResolved { get; private set; }
+        public bool FiltersResolved {
+            get; private set;
+        }
 
         private bool _referencesResolved;
 
@@ -170,7 +180,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public ApplicationSchemaDefinition(string entityName,
-            string applicationName, string title, string schemaId, bool redeclaringSchema,string streotypeAttr, SchemaStereotype stereotype,
+            string applicationName, string title, string schemaId, bool redeclaringSchema, string streotypeAttr, SchemaStereotype stereotype,
             SchemaMode? mode, ClientPlatform? platform, bool @abstract,
             List<IApplicationDisplayable> displayables, SchemaFilters declaredFilters, IDictionary<string, string> schemaProperties,
             ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema,
@@ -207,7 +217,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             DeclaredFilters = declaredFilters ?? SchemaFilters.BlankInstance();
         }
 
-        public string StereotypeAttr { get; set; }
+        public string StereotypeAttr {
+            get; set;
+        }
 
 
         [JsonIgnore]
@@ -237,6 +249,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 return Fields.Where(f => !f.IsHidden);
             }
         }
+
+
+        public IEnumerable<ApplicationFieldDefinition> HiddenFields {
+            get {
+                return Fields.Where(f => f.IsHidden);
+            }
+        }
+
 
 
 
@@ -413,12 +433,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-        public IDictionary<string, string> Properties
-        {
+        public IDictionary<string, string> Properties {
             get {
                 return _properties;
             }
-            set { _properties = value; }
+            set {
+                _properties = value;
+            }
         }
 
 

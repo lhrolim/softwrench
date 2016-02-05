@@ -29,9 +29,9 @@ angular.module('sw_prelogin', []);
     //    uiSelectConfig.theme = "bootstrap";
     //});
 
-    app.run(function (editableOptions) {
+    app.run(["editableOptions", function (editableOptions) {
         editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-    });
+    }]);
 
 
     //#region extra directives

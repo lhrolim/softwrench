@@ -101,6 +101,16 @@
         /// </summary>
         public const string PaginationOptions = "list.paginationoptions";
 
+        /// <summary>
+        ///  Destination schema of the new button of empty list.
+        /// </summary>
+        public const string NoResultsNewSchema = "list.noresultsnewschema";
+
+        /// <summary>
+        ///  Property to prevent the adition of the new button of empty list.
+        /// </summary>
+        public const string PreventNoResultsNew = "list.preventnoresultsnew";
+
 
 
         /// <summary>
@@ -163,6 +173,15 @@
         /// If true, the title of the detail schema will be hidden
         /// </summary>
         public static string DetailPreFetchCompositions = "detail.prefetchcompositions";
+
+        /// <summary>
+        /// If present:
+        ///    - Only the given fields and options (attributes separated by comma) will not be read only.
+        ///    - Only the given associations(targets separated by comma) will be enabled.
+        ///    - Only the given compositions(relationships separated by comma) will allow insertions e updates.
+        ///    - Only the given references (ids separated by comma) will not be read only.
+        /// </summary>
+        public static string DetailEnabledFields = "detail.enabledfields";
 
 
         /// <summary>

@@ -26,8 +26,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     w.SetValueIfNull(integrationObject, "PHYSCNT", 0);
 
                     //required for maximo 7.6
-                    w.SetValueIfNull(integrationObject, "ACTUALDATE", DateTime.Now);
-                    w.SetValueIfNull(integrationObject, "PHYSCNTDATE", DateTime.Now);
+                    var currentTime = DateTime.Now.FromServerToRightKind();
+                    var adjustedCurrentTime = currentTime.AddSeconds(-60);
+                    w.SetValueIfNull(integrationObject, "ACTUALDATE", adjustedCurrentTime);
+                    w.SetValueIfNull(integrationObject, "PHYSCNTDATE", adjustedCurrentTime);
 
                     ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
                 });

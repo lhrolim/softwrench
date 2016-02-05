@@ -138,6 +138,8 @@
             <field attribute="assetnum" hidden="true"/>
             <field attribute="failurecode" hidden="true"/>
             <field attribute="cinum" hidden="true"/>
+            <field attribute="ownerperson_.displayname" hidden="true"/>
+            
           </section>
 
           <field attribute="changeby" default="@username" hidden="true"/>
