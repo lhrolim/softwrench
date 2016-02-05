@@ -161,7 +161,7 @@ namespace softWrench.sW4.Web.Security {
                 if (!uriProperty.IsNullOrWhiteSpace()) {
                     uri = new Uri(uriProperty);
                 }
-                MemoryContext.Add("httpcontext", new SwHttpContext(uri.Scheme, uri.Host, uri.Port, request.ApplicationPath));
+                MemoryContext.Add("httpcontext", new SwHttpContext(uri.Scheme, uri.Host, uri.Port, uri.AbsolutePath));
             }
 
         }
