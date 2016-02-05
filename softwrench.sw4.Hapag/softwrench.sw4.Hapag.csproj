@@ -85,6 +85,7 @@
     <Compile Include="Data\Connector\Imac\ImacServicePlanHelper.cs" />
     <Compile Include="Data\DataSet\HapagOfferingDataSet.cs" />
     <Compile Include="Data\DataSet\Helper\ApproverConstants.cs" />
+    <Compile Include="Data\DataSet\Helper\ChangeGridUnionQueryGenerator.cs" />
     <Compile Include="Data\ExternalUser\ExternalUserWhereClauseProvider.cs" />
     <Compile Include="Data\InMemoryUserExtensions.cs" />
     <Compile Include="Data\ExternalUser\TuiWhereClauseProvider.cs" />

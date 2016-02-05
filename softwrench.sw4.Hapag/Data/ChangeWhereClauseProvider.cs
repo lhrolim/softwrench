@@ -79,7 +79,7 @@ namespace softwrench.sw4.Hapag.Data {
         }
 
 
-        private string GetTemplateIds() {
+        public string GetTemplateIds() {
             var module = _contextLookuper.LookupContext().Module;
             if (module.Equals(FunctionalRole.Sso.ToString(), StringComparison.InvariantCultureIgnoreCase)) {
                 return HapagChangeHandler.GetSSOTemplateString();

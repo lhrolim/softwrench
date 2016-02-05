@@ -16,7 +16,7 @@ namespace softWrench.sW4.Data.Persistence {
         public static string ApplyManualPaging(string queryst, PaginationData paginationData) {
             var pageSize = paginationData.PageSize;
             var firstValue = (paginationData.PageNumber - 1) * pageSize;
-            var hasUnion = queryst.Contains("union");
+            var hasUnion = queryst.Contains("union") || queryst.Contains("UNION");
             var templateToUse = hasUnion ? ManualPaginationUnionTemplate : ManualPaginationTemplate;
             var pagingCondition = hasUnion ? "paging.rownum" : "rownum";
             var orderBy1 = paginationData.SortString;

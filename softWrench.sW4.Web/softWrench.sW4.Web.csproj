@@ -321,21 +321,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Client\entegra\menu.mobile.xml" />
-    <Content Include="App_Data\Client\entegra\menu.web.xml" />
-    <Content Include="App_Data\Client\entegra\properties.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="App_Data\Client\entegra\metadata.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="App_Data\Client\gric\deploy.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="App_Data\Client\gric\properties.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="App_Data\Client\hapag\deploy.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -343,33 +328,9 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Client\manchester\menu.web.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\manchester\metadata.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\manchester\properties.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="App_Data\Client\otb\deploy.xml" />
     <Content Include="App_Data\Client\otb\menu.mobile.xml" />
     <Content Include="App_Data\Client\otb\properties.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\scottsdale\menu.web.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\scottsdale\metadata.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\scottsdale\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -465,14 +426,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Client\otb\metadata.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\gric\metadata.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\gric\menu.web.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -774,9 +727,6 @@
     </Content>
     <Content Include="Dependencies\softWrench.sW4.Controls.ActiveX.dll" />
     <Content Include="App_Data\Client\hapag\i18n\de\labels.json" />
-    <Content Include="App_Data\Client\entegra\deploy.xml">
-      <SubType>Designer</SubType>
-    </Content>
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
     <Content Include="IBM.Data.DB2.dll" />
     <Content Include="Content\Images\update_16.png" />
@@ -1360,7 +1310,6 @@
     <Content Include="Views\Report\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\Client\gric\i18n\en\" />
     <Folder Include="Content\Customers\gric\" />
     <Folder Include="Views\HapagHome\" />
     <Folder Include="Views\SchedulerSetup\" />

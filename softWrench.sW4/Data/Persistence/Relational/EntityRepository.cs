@@ -12,6 +12,8 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Util;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 
@@ -37,7 +39,18 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
             if (searchDto == null) throw new ArgumentNullException("searchDto");
             var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
+
+            if (searchDto.QueryGeneratorService != null && entityMetadata is SlicedEntityMetadata) {
+                var sliced = (SlicedEntityMetadata)entityMetadata;
+                var customQuery = GenericSwMethodInvoker.Invoke<string>(sliced.AppSchema, searchDto.QueryGeneratorService, entityMetadata,
+                    searchDto);
+                if (customQuery != null) {
+                    query.Sql = customQuery;
+                }
+            }
             var rows = Query(entityMetadata, query, searchDto);
+
+
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
                .Select(r => BuildDataMap(entityMetadata, r))
                .ToList();
@@ -65,6 +78,16 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 searchDto = new SearchRequestDto();
             }
             var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
+
+            if (searchDto.QueryGeneratorService != null && entityMetadata is SlicedEntityMetadata) {
+                var sliced = (SlicedEntityMetadata)entityMetadata;
+                var customQuery = GenericSwMethodInvoker.Invoke<string>(sliced.AppSchema, searchDto.QueryGeneratorService, entityMetadata,
+                      searchDto);
+                if (customQuery != null) {
+                    query.Sql = customQuery;
+                }
+            }
+
             var rows = Query(entityMetadata, query, rowstamp, searchDto);
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
                .Select(r => BuildDataMap(entityMetadata, r))
@@ -82,7 +105,9 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             /// Holds the PaginationData for the result
             /// </summary>
             [CanBeNull]
-            public PaginatedSearchRequestDto PaginationData { get; set; }
+            public PaginatedSearchRequestDto PaginationData {
+                get; set;
+            }
         }
 
 
@@ -132,13 +157,13 @@ namespace softWrench.sW4.Data.Persistence.Relational {
         private IEnumerable<dynamic> Query(EntityMetadata entityMetadata, BindedEntityQuery query, SearchRequestDto searchDTO) {
             //TODO: hack to avoid garbage data and limit size of list queries.
             var paginationData = PaginationData.GetInstance(searchDTO, entityMetadata);
-            var rows = GetDao(entityMetadata).FindByNativeQuery(query.Sql, query.Parameters, paginationData,searchDTO.QueryAlias);
+            var rows = GetDao(entityMetadata).FindByNativeQuery(query.Sql, query.Parameters, paginationData, searchDTO.QueryAlias);
             return rows;
         }
 
         private IEnumerable<dynamic> Query(EntityMetadata entityMetadata, BindedEntityQuery query, long rowstamp, SearchRequestDto searchDto) {
             var sqlAux = query.Sql.Replace("1=1", RowStampUtil.RowstampWhereCondition(entityMetadata, rowstamp, searchDto));
-            var rows = GetDao(entityMetadata).FindByNativeQuery(sqlAux, query.Parameters,null,searchDto.QueryAlias);
+            var rows = GetDao(entityMetadata).FindByNativeQuery(sqlAux, query.Parameters, null, searchDto.QueryAlias);
             return rows;
         }
 
@@ -201,8 +226,18 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
             if (searchDto == null) throw new ArgumentNullException("searchDto");
             var query = new EntityQueryBuilder().CountRows(entityMetadata, searchDto);
+            if (searchDto.QueryGeneratorService != null && entityMetadata is SlicedEntityMetadata) {
+                var sliced = (SlicedEntityMetadata)entityMetadata;
 
-            return GetDao(entityMetadata).CountByNativeQuery(query.Sql, query.Parameters,searchDto.QueryAlias);
+                var customQuery = GenericSwMethodInvoker.Invoke<string>(sliced.AppSchema, searchDto.QueryGeneratorService + "Count", entityMetadata,
+                     searchDto);
+                if (customQuery != null) {
+                    query.Sql = customQuery;
+                }
+
+            }
+
+            return GetDao(entityMetadata).CountByNativeQuery(query.Sql, query.Parameters, searchDto.QueryAlias);
 
         }
 

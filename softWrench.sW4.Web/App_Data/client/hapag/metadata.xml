@@ -348,7 +348,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <entity name="wochange" idAttribute="wonum">
       <attributes>
-        <attribute name="hlagchangesummary" type="varchar" required="false" query="CASE WHEN (!@description is not null) then !@description when (relatedsr_.relatedreckey IS NOT NULL and relatedsr_sr_.DESCRIPTION is NOT NULL) THEN relatedsr_sr_.DESCRIPTION WHEN (sr_.ticketid IS NOT NULL and sr_.DESCRIPTION IS NOT NULL) THEN sr_.DESCRIPTION ELSE !@description END" />
+        <attribute name="hlagchangesummary" type="varchar" required="false" query="!@description" />
         <attribute name="hlagchangeticketid" type="varchar" required="false" query="CASE WHEN sr_.ticketid IS NOT NULL THEN sr_.ticketid ELSE relatedsr_.relatedreckey END" />
         <attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
         <attribute name="hlagsrid" type="varchar" required="false" query="CASE WHEN !@ORIGRECORDCLASS IS NOT NULL AND !@ORIGRECORDCLASS = 'SR' THEN !@ORIGRECORDID ELSE '' END"/>
@@ -1773,6 +1773,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           </section>
           <properties>
             <property key="list.click.service" value="changeservice.opendetail"/>
+            <property key="list.querygeneratorservice" value="GenerateUnionQuery"/>
           </properties>
         </list>
 

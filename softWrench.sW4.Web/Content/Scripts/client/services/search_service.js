@@ -35,7 +35,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
         { id: "GT", symbol: ">", title: filtertype.gt, tooltip: filtertype.gt, begin: ">", end: "", renderType: ["default", "datetime"] },
         { id: "LT", symbol: "<", title: filtertype.lt, lt: filtertype.lt, begin: "<", end: "", renderType: ["default", "datetime"] },
         { id: "GTE", symbol: ">=", title: filtertype.gte, tooltip: filtertype.gte, begin: ">=", end: "", renderType: ["default", "datetime"] },
-        { id: "LTE", symbol: "<=", title: filtertype.lte, tooltip: filtertype.lte, begin: "<=", end: "", renderType: ["default", "datetime"] }        
+        { id: "LTE", symbol: "<=", title: filtertype.lte, tooltip: filtertype.lte, begin: "<=", end: "", renderType: ["default", "datetime"] }
         ];
         return searchOperations;
     };
@@ -80,7 +80,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
         return resultString;
     };
 
-   
+
 
     return {
 
@@ -139,7 +139,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
             searchData = searchData || {};
             searchSort = searchSort || {};
             searchOperator = searchOperator || {};
-          
+
 
             searchDto.searchParams = buildSearchParamsString(searchData, searchOperator);
             searchDto.searchValues = this.buildSearchValuesString(searchData, searchOperator);
@@ -153,7 +153,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
 
         },
 
-        buildReportSearchDTO: function (searchDto, searchData, searchSort, searchOperator, filterFixedWhereClause,unionFilterFixedWhereClause) {
+        buildReportSearchDTO: function (searchDto, searchData, searchSort, searchOperator, filterFixedWhereClause, unionFilterFixedWhereClause) {
             if (searchDto == null || searchDto == undefined) {
                 var searchDto = {};
                 searchDto.searchParams = buildSearchParamsString(searchData, searchOperator);
@@ -165,9 +165,9 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
 
                 if (extraParams != null && extraParams != '' && extraValues != null && extraValues != '') {
                     searchDto.searchParams += "&&" + extraParams;
-                    searchDto.searchValues += ",,," + extraValues;       
+                    searchDto.searchValues += ",,," + extraValues;
                 }
-            }            
+            }
             searchDto.searchSort = buildSearchSortString(searchSort);
             searchDto.SearchAscending = searchSort.order == "asc";
             searchDto.filterFixedWhereClause = filterFixedWhereClause;
@@ -205,9 +205,13 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
 
         defaultSearchOperation: function () {
             return this.searchOperations()[1];
+        },
+
+        noFilter: function () {
+            return this.searchOperations()[0];
         }
 
     };
 
-  
+
 });

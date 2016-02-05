@@ -93,7 +93,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                     return "red";
                 }
 
-                if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "AUTHORIZED", "AUTH", "HOLDINPRG", "PLANNED", "ACC_CAT", "ASSESSES", "PENDAPPR", "RCACOMP", "WMATL", "INFOPEND")) {
+                if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "AUTHORIZED", "AUTH", "HOLDINPRG", "PLANNED", "ACC_CAT", "ASSESSES", "PENDAPPR", "RCACOMP", "WMATL", "INFOPEND", "ASSESS")) {
                     return "blue";
                 }
                 if (status.equalsAny("CLOSED", "RESOLVCONF", "IMPL", "IMPLEMENTED", "REVIEW", "CLOSE", "HISTEDIT", "COMP")) {

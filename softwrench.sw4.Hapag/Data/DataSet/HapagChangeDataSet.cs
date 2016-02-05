@@ -15,14 +15,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata.Entities;
 using c = softwrench.sw4.Hapag.Data.DataSet.Helper.ApproverConstants;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     public class HapagChangeDataSet : HapagBaseApplicationDataSet {
 
+        private ChangeGridUnionQueryGenerator _changeGridUnionQueryGenerator;
 
-        public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
+        public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao, ChangeGridUnionQueryGenerator changeGridUnionQueryGenerator)
             : base(locationManager, entityRepository, maxDao) {
+            _changeGridUnionQueryGenerator = changeGridUnionQueryGenerator;
         }
 
 
@@ -166,7 +170,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             foreach (var worklog in worklogs) {
                 var wlDate = worklog["itdcreatedate"] as DateTime?;
                 if (wlDate > latestAuthStatusDate) {
-                    Log.DebugFormat("Adding worklog {0}, with date {1} to list",worklog["worklogid"], worklog["itdcreatedate"]);
+                    Log.DebugFormat("Adding worklog {0}, with date {1} to list", worklog["worklogid"], worklog["itdcreatedate"]);
                     resultList.Add(worklog);
                 }
             }
@@ -209,6 +213,28 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             }
             return approverLevel.ToString().EqualsIc(changeLevel.ToString());
         }
+
+        public string GenerateUnionQuery(EntityMetadata entity, SearchRequestDto searchDTO) {
+            var context = ContextLookuper.LookupContext();
+            var isTomOrItom = context.IsInModule(FunctionalRole.Itom) || context.IsInModule(FunctionalRole.Tom);
+            if (isTomOrItom) {
+                //HAP-805, tom or itom roles can see everything in the grid
+                return null;
+            }
+
+            return _changeGridUnionQueryGenerator.GenerateQuery(entity, searchDTO);
+        }
+
+        public string GenerateUnionQueryCount(EntityMetadata entity, SearchRequestDto searchDTO) {
+            var context = ContextLookuper.LookupContext();
+            var isTomOrItom = context.IsInModule(FunctionalRole.Itom) || context.IsInModule(FunctionalRole.Tom);
+            if (isTomOrItom) {
+                //HAP-805, tom or itom roles can see everything in the grid
+                return null;
+            }
+            return _changeGridUnionQueryGenerator.GenerateQueryCount(entity, searchDTO);
+        }
+
 
 
         public override string ApplicationName() {

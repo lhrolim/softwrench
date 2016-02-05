@@ -21,7 +21,7 @@ namespace softWrench.sW4.Data.Persistence {
 
     public abstract class BaseHibernateDAO : ISingletonComponent {
 
-        private static readonly ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
+        private static readonly ILog HibernateLog = LogManager.GetLogger("PAGINATION.SQL");
 
         public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false, string queryAlias=null) {
             var result = HibernateUtil.TranslateQueryString(queryst, parameters);
