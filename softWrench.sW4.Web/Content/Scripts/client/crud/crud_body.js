@@ -527,7 +527,8 @@
                         }
                     });
                 };
-
+                
+                
 
                 function init(self) {
                     $injector.invoke(BaseController, self, {
@@ -537,33 +538,69 @@
                         commandService: commandService,
                         formatService: formatService
                     });
+                    
+                    //#region screenshot paste handling
+                    // `contenteditable` element
+                    var pasteCatcher = $element[0].querySelector(".js_crud_pastecatcher");
 
                     // 'paste' event listener -> 
                     // if image create an attachment with the clipboard data as the image
-                    function pasteListener(event) {
-                        var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                    function pasteListener($event) {
+                        var items = !window.clipboardData
+                            ? ($event.clipboardData || $event.originalEvent.clipboardData).items // chrome
+                            : window.clipboardData.files; // IE
+
+                        // FF
+                        if (!items) {
+                            $(pasteCatcher).focus();
+                            attachmentService.createAttachmentFromElement(pasteCatcher, $scope.schema);
+                            return true;
+                        }
+
                         // look for image
                         var image = Array.prototype.slice
                             .call(items)
                             .filter(function (item) {
-                                return item.kind === "file" && item.type.startsWith("image");
+                                return item.type.startsWith("image");
                             });
                         // has no image: default behavior
                         if (image === undefined || image === null || image.length <= 0) return true;
                         // has image but is pasting inside richtext element
-                        if (event.target.tagName.equalIc("br") || $(event.target).parents("[text-angular]").length > 0) return true;
+                        if ($event.target.tagName.equalIc("br") || $($event.target).parents("[text-angular]").length > 0) return true;
                         // can create the attachment
                         image = image[0];
-                        attachmentService.createAttachmentFromFile(image, $scope.schema, { redirect: true, event: true });
+                        attachmentService.createAttachmentFromFile(image, $scope.schema);
                         // prevent bubbling and default behavior
-                        event.stopPropagation();
-                        event.preventDefault();
+                        $event.stopPropagation();
+                        $event.preventDefault();
                         return false;
-                    }
-                    $element.on("paste", pasteListener);
+                    };
+
+                    var pasteTarget = isIE() ? angular.element(pasteCatcher) : $element;
+
+                    pasteTarget.on("paste", pasteListener);
                     $scope.$on("$destroy", function () {
-                        $element.off("paste", pasteListener);
+                        pasteTarget.off("paste", pasteListener);
                     });
+
+                    function keyupListener(event) {
+                        // intercept 'ctrl+v' keys
+                        var isCtrlV = event.ctrlKey && event.keyCode === 86;
+                        if (!isCtrlV) return true;
+                        // focus on a `contenteditable` element
+                        $(pasteCatcher).focus();
+                        return true;
+                    }
+
+                    if (isIE()) {
+                        // in IE `paste` event doesn't trigger unless in a `contenteditable` element
+                        // trick to focus on the element when hitting 'ctrl+v' so it triggers the `paste`
+                        $element.on("keyup", keyupListener);
+                        $scope.$on("$destroy", function() {
+                            $element.off("keyup", keyupListener);
+                        });
+                    }
+                    //#endregion
                 }
                 init(this);
 

@@ -11,7 +11,9 @@
             isValid: isValid,
             downloadFile: downloadFile,
             selectAttachment: selectAttachment,
-            createAttachmentFromFile: createAttachmentFromFile
+            redirectToAttachmentView: redirectToAttachmentView,
+            createAttachmentFromFile: createAttachmentFromFile,
+            createAttachmentFromElement: createAttachmentFromElement
         };
 
         return service;
@@ -102,14 +104,51 @@
             return deferred.promise;
         }
 
+        function base64ToBlob(b64Data, contentType, sliceSize) {
+            contentType = contentType || "";
+            sliceSize = sliceSize || 512;
+
+            var byteCharacters = atob(b64Data);
+            var byteArrays = [];
+
+            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+                var byteNumbers = new Array(slice.length);
+                for (var i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+
+                var byteArray = new Uint8Array(byteNumbers);
+
+                byteArrays.push(byteArray);
+            }
+
+            var blob = new Blob(byteArrays, { type: contentType });
+            return blob;
+        }
+
+        function newAttachmentFileName(extension) {
+            return "attachment{0}.{1}".format(Date.now().getTime(), extension);
+        }
+
+        function broadCastAttachmentLoaded(file) {
+            var timer = $timeout(function () {
+                $rootScope.$broadcast("sw.attachment.file.load", file);
+            }, 0, false);
+
+            return timer.then(function () {
+                return file;
+            });
+        }
+
         /**
          * Resolves a file wrapper instance from a DataTransferItem.
-         * If options.redirect is `true`: will redirect the view to a visible attachment tab
-         * If options.event is `true`: will fire "sw.attachment.file.load" event with the file wrapper as argument 
+         * - will redirect the view to a visible attachment tab
+         * - will fire "sw.attachment.file.load" event with the file wrapper as argument 
          * 
          * @param DataTransferItem|Blob|File file
-         * @param {} [schema] attachment's parent schema
-         * @param {} options: { 'redirect': Boolean, 'event': Boolean } 
+         * @param {} schema attachment's parent schema
          * @returns Promise resolved with a file wrapper dto instance: 
          *          {
          *               file: String, // content
@@ -118,42 +157,72 @@
          *               size: Number // size in bytes
          *           } 
          */
-        function createAttachmentFromFile(file, schema, options) {
-            options = options || {};
-
-            var promise = !!options.redirect ? redirectToAttachmentView(schema) : $q.when();
-
+        function createAttachmentFromFile(file, schema) {
             // file data has to be querried before returning the promise
             // because it gets disposed (no content and empty properties) after the function returns
-            var blob = file instanceof DataTransferItem ? file.getAsFile() : file;
+            var blob = (file instanceof Blob || file instanceof File) ? file : file.getAsFile();
             var extension = file.type.split("/")[1];
-            var fileName = !!blob.name ? blob.name : "attachment{0}.{1}".format(Date.now().getTime(), extension);
+            var fileName = !!blob.name ? blob.name : newAttachmentFileName(extension);
 
-            promise = promise.then(function () {
-                return readFile(blob);
-            })
-            .then(function (content) {
-                return {
-                    file: content,
-                    name: fileName,
-                    type: file.type,
-                    size: blob.size
-                };
-            });
+            return redirectToAttachmentView(schema)
+                .then(function () {
+                    return readFile(blob);
+                })
+                .then(function (content) {
+                    return {
+                        file: content,
+                        name: fileName,
+                        type: file.type,
+                        size: blob.size
+                    };
+                })
+                .then(broadCastAttachmentLoaded);
+        }
 
-            return !options.event
-                ? promise
-                : promise.then(function (fileWrapper) {
+        /**
+         * Resolves a file wrapper instance from an HTMLNode the received a pasted image.
+         * - will redirect the view to a visible attachment tab
+         * - will fire "sw.attachment.file.load" event with the file wrapper as argument
+         * 
+         * @param HTMLNode contentHolder DOM node with `contenteditable='true'` that received the pasted content
+         * @param {} schema attachment's parent schema
+         * @returns Promise resolved with a file wrapper dto instance: 
+         *          {
+         *               file: String, // content
+         *               name: String, // file's name
+         *               type: String, // mime type
+         *           }  
+         */
+        function createAttachmentFromElement(contentHolder, schema) {
 
-                    var timer = $timeout(function () {
-                        $rootScope.$broadcast("sw.attachment.file.load", fileWrapper);
-                    }, 0, false);
+            var promise = null;
 
-                    return timer.then(function () {
-                        return fileWrapper;
-                    });
+            var waitForImage = function () {
+                if (!contentHolder.childNodes || contentHolder.childNodes.length <= 0) {
+                    promise = $timeout(waitForImage, 20, false);
+                    return promise;
+                }
+                var child = contentHolder.childNodes[0];
+                contentHolder.innerHTML = "";
+                if (!child) return $q.reject(new Error("image was not pasted"));
+                if (child.tagName !== "IMG") return $q.reject(new Error("can only support images"));
+                return child.src;
+            };
 
+            promise = $timeout(waitForImage, 0, false);
+
+            // use timer promise prior to the redirect so the image validation can happen before redirecting
+            return promise.then(function (content) {
+                // redirect and resolve then chain and resolve with the file
+                return redirectToAttachmentView(schema).then(function () {
+                    return {
+                        file: content,
+                        name: newAttachmentFileName("png"),
+                        type: "image/png"
+                    }
                 });
+            })
+            .then(broadCastAttachmentLoaded);
         }
 
     }

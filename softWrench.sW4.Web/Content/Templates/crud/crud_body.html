@@ -122,7 +122,11 @@
         <print-modal schema="schema" datamap="datamap" />
     </div>
     <div ng-if="schema != null">
-        <print-section schema="schema" datamap="datamap" />
+        <print-section schema="schema" datamap="datamap"/>
     </div>
+
+    <!-- paste catcher element (for IE and FF) -->
+    <div class="js_crud_pastecatcher" contenteditable="true" style="opacity: 0; position: absolute; top: -5000px"></div>
+
 </div>
 
