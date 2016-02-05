@@ -33,7 +33,7 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
                 .WithColumn("schemaref").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("fields").AsString(MigrationUtil.StringMedium).Nullable()
                 .WithColumn("defaultsortfield").AsString(MigrationUtil.StringMedium).Nullable()
-                .WithColumn("_limit").AsInt32().NotNullable().WithDefaultValue(30);
+                .WithColumn("limit_").AsInt32().NotNullable().WithDefaultValue(30);
                 
 
             Create.Table("DASH_DASHBOARDREL").

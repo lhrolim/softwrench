@@ -30,7 +30,7 @@ namespace softWrench.sW4.Web.DB_Migration._1._0
 
             Create.Table("SW_DATACONSTRAINT")
                  .WithColumn("ID").AsInt32().PrimaryKey().Identity()
-                 .WithColumn("whereclause").AsString().NotNullable()
+                 .WithColumn("whereclause").AsString(4000).NotNullable()
                  .WithColumn("entityname").AsString(100).NotNullable()
                  .WithColumn("isactive").AsBoolean().WithDefaultValue(true);
 

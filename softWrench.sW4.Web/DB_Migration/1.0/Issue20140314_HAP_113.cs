@@ -10,7 +10,8 @@ namespace softWrench.sW4.Web.DB_Migration._1._0 {
         }
 
         public override void Down() {
-            Alter.Column("whereclause").OnTable("SW_DATACONSTRAINT").AsString().NotNullable();
+            // after db2 support the initial value was changed to AsString(4000) too
+            Alter.Column("whereclause").OnTable("SW_DATACONSTRAINT").AsString(4000).NotNullable();
         }
     }
 }

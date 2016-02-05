@@ -1,6 +1,7 @@
 ﻿using System;
 using cts.commons.persistence;
 using FluentMigrator.Builders.Alter.Column;
+using FluentMigrator.Builders.Create.Column;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Exceptions;
 using softWrench.sW4.Util;
@@ -34,7 +35,21 @@ namespace softWrench.sW4.Extension {
             var customClobType = CustomClobType();
             return createTableColumnAsTypeSyntax.AsCustom(customClobType);
         }
-        
+
+
+
+        /// <summary>
+        /// Extends migration to add method AsClob when creating a column
+        /// Determines the proper "CLOB" datatype according to the database being used.
+        /// 
+        /// </summary>
+        /// <param name="createColumnAsTypeOrInSchemaSyntax"></param>
+        /// <returns></returns>
+        public static ICreateColumnOptionSyntax AsClob(this ICreateColumnAsTypeOrInSchemaSyntax createColumnAsTypeOrInSchemaSyntax) {
+            var customClobType = CustomClobType();
+            return createColumnAsTypeOrInSchemaSyntax.AsCustom(customClobType);
+        }
+
         private static string CustomClobType()
         {
             string customClobType = null;
@@ -51,7 +66,7 @@ namespace softWrench.sW4.Extension {
                     customClobType = "CLOB";
                     break;
                 case DBMS.DB2:
-                    customClobType = "CLOB()";
+                    customClobType = "CLOB";
                     break;
                 default:
                     throw new DatabaseOperationNotSupportedException(

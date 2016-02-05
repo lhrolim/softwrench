@@ -12,6 +12,7 @@ using FluentMigrator.Runner.Processors;
 using FluentMigrator.Runner.Processors.MySql;
 using log4net;
 using softWrench.sW4.Util;
+using softWrench.sW4.Web.DB_Migration.DB2_FluentMigrator;
 
 namespace softWrench.sW4.Web.DB_Migration {
     public class MigratorExecutor {
@@ -40,10 +41,6 @@ namespace softWrench.sW4.Web.DB_Migration {
         }
 
         public void Migrate(Action<IMigrationRunner> runnerAction) {
-            if (_serverType == "db2") {
-                Log.Info(String.Format("Migrator skipped due to SWDB using DB2"));
-                return;
-            }
             var before = Stopwatch.StartNew();
             if (ApplicationConfiguration.IsLocal() && !ApplicationConfiguration.IsLocalHostSWDB()) {
                 Log.Debug("Ignoring Migration on remoteDB");
@@ -65,7 +62,7 @@ namespace softWrench.sW4.Web.DB_Migration {
             };
             var processor = factory.Create(_connectionString, announcer, options);
             var runner = new MigrationRunner(assembly, migrationContext, processor);
-            var migratorAssemblies =AssemblyLocator.GetMigratorAssemblies();
+            var migratorAssemblies = AssemblyLocator.GetMigratorAssemblies();
             runner.MigrationLoader = new MultiAssemblyMigrationLoader(runner.Conventions, migratorAssemblies, migrationContext.Namespace, migrationContext.NestedNamespaces, migrationContext.Tags);
             runner.MigrateUp(true);
 
@@ -76,6 +73,9 @@ namespace softWrench.sW4.Web.DB_Migration {
         private MigrationProcessorFactory GetFactory() {
             if (_serverType == "mssql") {
                 return new FluentMigrator.Runner.Processors.SqlServer.SqlServerProcessorFactory();
+            }
+            if (_serverType == "db2") {
+                return new Db2ProcessorFactory();
             }
 
             return new MySqlProcessorFactory();

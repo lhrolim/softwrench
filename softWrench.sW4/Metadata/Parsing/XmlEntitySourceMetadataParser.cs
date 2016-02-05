@@ -33,14 +33,14 @@ namespace softWrench.sW4.Metadata.Parsing {
         private EntityMetadata ParseEntity(XElement entity) {
             var name = entity.Attribute(XmlMetadataSchema.EntityAttributeName).Value;
             if (_isSWDDB) {
-                name = "_" + name;
+                name = name + "_";
             }
             var idAttributeName = entity.Attribute(XmlMetadataSchema.EntityAttributeIdAttribute).Value;
             var useridAttributeName = entity.Attribute(XmlMetadataSchema.EntityAttributeUserIdAttribute).ValueOrDefault(idAttributeName);
             var whereClause = entity.Attribute(XmlMetadataSchema.EntityAttributeWhereClause).ValueOrDefault((string)null);
             var parentEntity = entity.Attribute(XmlMetadataSchema.EntityAttributeParentEntity).ValueOrDefault((string)null);
             if (_isSWDDB && parentEntity != null) {
-                parentEntity = "_" + parentEntity;
+                parentEntity = parentEntity + "_";
             }
             var associations = XmlAssociationsParser.Parse(name, entity);
             return new EntityMetadata(name,
