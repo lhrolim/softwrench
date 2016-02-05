@@ -37,7 +37,7 @@
                     <span class="add-on">{{i18NLabel(column)}}</span>
                 </th>
                 <th ng-if="isBatch()">
-                    <button class="fa fa-plus btn btn-primary" ng-click="addBatchItem()"></button>
+                    <button ng-if="collectionproperties.allowInsertion == 'true'" class="fa fa-plus btn btn-primary" ng-click="addBatchItem()"></button>
                 </th>
             </tr>
 

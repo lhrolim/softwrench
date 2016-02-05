@@ -17,7 +17,8 @@
             var params = {
                 batchType: saveDataMap.userIdFieldName === "location" ? "location" : "asset",
                 specificValue: saveDataMap[saveDataMap.userIdFieldName],
-                classificationId: saveDataMap["classificationid"]
+                classificationId: saveDataMap["classificationid"],
+                worktype: saveDataMap["worktype"]
             }
 
             var resultObject;
@@ -33,6 +34,7 @@
                         row.fields.siteid = saveDataMap.siteid;
                         row.fields.classification = saveDataMap["#classificationid_label"] || "";
                         row.fields.classificationid = saveDataMap.classificationid;
+                        row.fields.worktype = saveDataMap.worktype;
                         row.fields["#warning"] = resultObject["#warning"];
                         row.fields["#wonums"] = resultObject["#wonums"];
                     }
@@ -55,7 +57,8 @@
                 classification: {
                     value: modalData["classificationid"],
                     label: modalData["#classificationid_label"]
-                }
+                },
+                worktype: modalData["worktype"]
             }
 
 
