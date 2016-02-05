@@ -471,6 +471,63 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         $scope.$emit('sw_cancelclicked');
     };
 
+    //#region attachments
+
+    function onAttachmentFileDropped(event, file) {
+        // remove preview element if a new file is added
+        var preview = $element[0].querySelector(".js_attachment_preview");
+        if (!preview) return;
+        preview.parentNode.removeChild(preview);
+    }
+
+    function showImagePreview(content) {
+        // trick to wait for the element to be available in the DOM
+        var fieldHolder = null, promise = null;
+        function waitForFieldHolder() {
+            fieldHolder = $element[0].querySelector("[ng-switch-when$='upload']");
+            if (!fieldHolder) {
+                promise = $timeout(waitForFieldHolder, 300);
+                return promise;
+            }
+            return fieldHolder;
+        }
+        promise = $timeout(waitForFieldHolder);
+
+        return promise.then(function(holder) {
+            var preview = holder.querySelector(".js_attachment_preview");
+
+            if (!!preview) {
+                // preview element already created: change image src
+                preview.querySelector("img").src = content;
+                return;
+            }
+
+            // build preview element
+            preview = document.createElement("div");
+            $(preview)
+                .css({
+                    'height': "300px",
+                    'border': "1px solid #808080",
+                    'text-align': "center",
+                    'border-radius': "5px"
+                })
+                .addClass("js_attachment_preview");
+
+            // build img tag and set src
+            var img = new Image();
+            $(img).css({
+                'height': "100%",
+                'width': "100%",
+                'object-fit': "contain"
+            });
+            img.src = content;
+
+            // append to DOM
+            preview.appendChild(img);
+            holder.appendChild(preview);
+        });
+    }
+
     function onAttachmentFileLoaded(event, file) {
         if (!$scope.relationship.contains("attachment")) return;
         var datamap = { 'newattachment_path': file.name };
@@ -485,13 +542,16 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
                 datamap[field.attribute] = file.file;
             });
         // open create form
-        $timeout(function () {
-            $scope.edit(datamap);
-        });
+        $scope.edit(datamap);
+        // show image preview
+        showImagePreview(file.file);
     }
 
+    $scope.$on("file-dropzone-drop-event", onAttachmentFileDropped);
     
     $scope.$on("sw.attachment.file.load", onAttachmentFileLoaded);
+
+    //#endregion
 	
 	$scope.$on("sw.composition.edit", function (event, datamap, actionTitle) {
         $scope.edit(datamap, actionTitle);

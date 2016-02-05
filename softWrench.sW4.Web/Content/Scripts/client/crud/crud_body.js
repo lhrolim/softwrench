@@ -576,11 +576,9 @@
                         return false;
                     };
 
-                    var pasteTarget = isIE() ? angular.element(pasteCatcher) : $element;
-
-                    pasteTarget.on("paste", pasteListener);
+                    $element.on("paste", pasteListener);
                     $scope.$on("$destroy", function () {
-                        pasteTarget.off("paste", pasteListener);
+                        $element.off("paste", pasteListener);
                     });
 
                     function ctrlVInterceptor(event) {
@@ -611,12 +609,16 @@
 
                         // polls the current focused element:
                         // if its 'background' set focus on the pasteCatcher so it can capture `paste`
-                        $interval(function() {
+                        var interval = $interval(function() {
                             var focused = document.activeElement;
                             if (isBackground(focused)) {
                                 $(pasteCatcher).focus();
                             }
                         }, 500, 0, false);
+
+                        $scope.$on("$destroy", function () {
+                            $interval.cancel(interval);
+                        });
                     }
                     //#endregion
                 }
