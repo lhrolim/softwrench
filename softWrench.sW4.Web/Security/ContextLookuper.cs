@@ -8,8 +8,10 @@ using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
+using Microsoft.Ajax.Utilities;
 using softwrench.sw4.api.classes.fwk.context;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
@@ -153,7 +155,12 @@ namespace softWrench.sW4.Web.Security {
                 return;
             }
             var uri = request.Url;
-            if (!MemoryContext.ContainsKey("httpcontext")) {
+            if (!MemoryContext.ContainsKey("httpcontext"))
+            {
+                string uriProperty = MetadataProvider.GlobalProperty("iiscontextpath ");
+                if (!uriProperty.IsNullOrWhiteSpace()) {
+                    uri = new Uri(uriProperty);
+                }
                 MemoryContext.Add("httpcontext", new SwHttpContext(uri.Scheme, uri.Host, uri.Port, request.ApplicationPath));
             }
 
