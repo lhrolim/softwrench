@@ -21,7 +21,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         #region nonticketunions
 
         const string NonTicketUnions =
-            @"UNION
+            @"UNION ALL
 select wochange.workorderid   AS workorderid, 
        NULL AS sr_ticketid, 
        NULL AS relatedsr_recordkey, 
@@ -54,7 +54,7 @@ FROM   wochange AS wochange
        and not exists (select 1 from sr AS sr_ where ( wochange.origrecordid = sr_.ticketid ))
       {0}
     -- those WITHOUT joined tickets for ownergroup 2
-    UNION
+    UNION ALL
       select wochange.workorderid   AS workorderid, 
        NULL AS sr_ticketid, 
        NULL AS relatedsr_recordkey, 
@@ -93,7 +93,7 @@ FROM   wochange AS wochange
         #region nonticketcountunions
 
         const string NonTicketCountUnions =
-        @"UNION
+        @"UNION ALL
 select count(*) as cnt
 FROM   wochange AS wochange
        INNER JOIN pmchgotherapprovers approvals_ 
@@ -103,7 +103,7 @@ FROM   wochange AS wochange
        and not exists (select 1 from sr AS sr_ where ( wochange.origrecordid = sr_.ticketid ))
        {0}
 -- those WITHOUT joined tickets for approvals group 2
-       UNION 
+       UNION ALL
 select count(*) as cnt
 FROM   wochange AS wochange
        INNER JOIN  woactivity AS woactivity_ 
@@ -165,7 +165,7 @@ FROM   wochange AS wochange
       AND ( wochange.pluspcustomer LIKE 'HLC-%' )
       {2}
     -- those with joined tickets for approvals group 2
-      UNION
+      UNION ALL
       select
       wochange.workorderid AS workorderid,
       sr_.ticketid AS sr_ticketid,
@@ -309,7 +309,7 @@ FROM   wochange AS wochange
       )
       AND ( wochange.pluspcustomer LIKE 'HLC-%' )
       -- those with joined tickets for approvals group 2
-      UNION
+      UNION ALL
       select count(*) as cnt
       FROM wochange AS wochange
       INNER JOIN sr AS sr_ ON
