@@ -33,21 +33,31 @@ angular.module('sw_layout')
         refreshFromAttribute: function (scope,displayable, value, availableoptions) {
             var attribute = displayable.attribute;
 
-            var log =$log.getInstance("autocompleteclient#refreshFromAttribute", ["association"]);
+            var log = $log.getInstance("autocompleteclient#refreshFromAttribute", ["association"]);
             var labelValue = value;
             if (!nullOrEmpty(value) && availableoptions) {
                 //Fixing SWWEB-1349--> the underlying selects have only the labels, so we need to fetch the entries using the original array instead
+                var valueMissing = true;
                 for (var i = 0; i < availableoptions.length; i++) {
-                    if (availableoptions[i].value.trim() === (""+value).trim()) {
+                    if (availableoptions[i].value.trim() === ("" + value).trim()) {
+                        valueMissing = false;
                         labelValue = availableoptions[i].label;
                     }
+                }
+                if (valueMissing) {
+                    var missingValue = {
+                        "type": "AssociationOption",
+                        "value": value,
+                        "label": value + " ** unknown to softwrench **"
+                    }
+                    availableoptions.push(missingValue);
                 }
             } else if (displayable.rendererParameters && "true" === displayable.rendererParameters["selectonlyavailableoption"] && availableoptions && availableoptions.length === 1) {
                 labelValue = availableoptions[0].label;
                 scope.datamap[displayable.target] = availableoptions[0].value;
             }
             var combo = $('#' + RemoveSpecialChars(attribute)).data('combobox');
-            log.debug("setting autocompleteclient {0} to value {1}".format(attribute,labelValue));
+            log.debug("setting autocompleteclient {0} to value {1}".format(attribute, labelValue));
             //due to a different timeout order this could be called on FF/IE before the availableoptions has been updated
             if (combo != undefined && availableoptions) {
                 combo.refresh(labelValue);
