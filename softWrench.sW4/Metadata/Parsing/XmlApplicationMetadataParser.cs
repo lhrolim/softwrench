@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using NHibernate.Linq;
+using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Metadata.Stereotypes;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 
@@ -555,14 +557,12 @@ namespace softWrench.sW4.Metadata.Parsing {
                     userIdFieldName, unionSchema, ParseEvents(xElement)));
         }
 
-
-
         private static ApplicationSchemaDefinition LookupParentSchema(string id, string applicationName, string parentSchemaValue, ClientPlatform? platform,
             Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> resultDictionary, IList<IApplicationDisplayable> displayables) {
 
             ApplicationSchemaDefinition parentSchema = LookupSchema(id, applicationName, parentSchemaValue, platform, resultDictionary);
 
-            if (parentSchema != null && parentSchema.Displayables.Any() && displayables.Any(d => d.GetType() != typeof(ApplicationSection))) {
+            if (parentSchema != null && parentSchema.Displayables.Any() && displayables.Any(d => d.GetType() != typeof(ApplicationSection) && d.GetType() != typeof(ApplicationSchemaCustomization))) {
                 throw new InvalidOperationException("concrete schemas must only declare displayables inside sections");
             }
             return parentSchema;
@@ -758,8 +758,10 @@ namespace softWrench.sW4.Metadata.Parsing {
                     overridenApplications.Add(application);
                 }
             }
-            var resultApplications = MetadataMerger.MergeApplications(result, overridenApplications);
+            var resultApplications = MetadataMerger.MergeApplications(result, overridenApplications).ToList();
 
+            // verifies if fields are enabled
+            resultApplications.ForEach(a => a.SchemasList.ForEach(XmlEnabledFieldsVerifier.VerifyEnabledFields));
 
             return resultApplications;
         }
