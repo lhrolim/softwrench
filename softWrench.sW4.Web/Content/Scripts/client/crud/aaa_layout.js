@@ -138,6 +138,8 @@ angular.module('sw_prelogin', []);
         return {
             require: 'ngModel',
             link: function (scope, element, attrs, ngModel) {
+                // Some non-string values coming from the rootdatamap are breaking the string binding, so we need to format them to string
+                // https://controltechnologysolutions.atlassian.net/browse/SWWEB-2042 : first issue
                 ngModel.$formatters.push(function (value) {
                     return '' + value;
                 });
