@@ -98,7 +98,7 @@
                 fieldService, commandService, i18NService,
                 submitService, redirectService,
                 associationService, crudContextHolderService, alertService,
-                validationService, schemaService, $timeout, eventService, $log, expressionService, focusService, modalService,
+                validationService, schemaService, $timeout, $interval, eventService, $log, expressionService, focusService, modalService,
                 compositionService, attachmentService) {
 
                 $(document).on("sw_autocompleteselected", function (event, key) {
@@ -547,10 +547,10 @@
                     // if image create an attachment with the clipboard data as the image
                     function pasteListener($event) {
                         var items = !window.clipboardData
-                            ? ($event.clipboardData || $event.originalEvent.clipboardData).items // chrome
-                            : window.clipboardData.files; // IE
+                            ? ($event.clipboardData || $event.originalEvent.clipboardData).items // chrome: image comes from the event
+                            : window.clipboardData.files; // IE: image comes from global object
 
-                        // FF
+                        // FF: has to wait for the image to be appended to a `contenteditable` element (as an image node) 
                         if (!items) {
                             $(pasteCatcher).focus();
                             attachmentService.createAttachmentFromElement(pasteCatcher, $scope.schema);
@@ -583,7 +583,7 @@
                         pasteTarget.off("paste", pasteListener);
                     });
 
-                    function keyupListener(event) {
+                    function ctrlVInterceptor(event) {
                         // intercept 'ctrl+v' keys
                         var isCtrlV = event.ctrlKey && event.keyCode === 86;
                         if (!isCtrlV) return true;
@@ -592,13 +592,31 @@
                         return true;
                     }
 
+                    function isBackground(element) {
+                        return !!element // not null
+                            && !["input", "textarea", "select", "button", "a", "selectize"].some(function (tag) { //not input
+                                return element.tagName.equalIc(tag);
+                            })
+                            && !$(element).parents("[text-angular]").length > 0 // not inside richtext
+                            && !$(element).hasClass("js_crud_pastecatcher"); // no the pasteCatcher
+                    }
+
                     if (isIE()) {
                         // in IE `paste` event doesn't trigger unless in a `contenteditable` element
                         // trick to focus on the element when hitting 'ctrl+v' so it triggers the `paste`
-                        $element.on("keyup", keyupListener);
-                        $scope.$on("$destroy", function() {
-                            $element.off("keyup", keyupListener);
+                        $element.on("keyup", ctrlVInterceptor);
+                        $scope.$on("$destroy", function () {
+                            $element.off("keyup", ctrlVInterceptor);
                         });
+
+                        // polls the current focused element:
+                        // if its 'background' set focus on the pasteCatcher so it can capture `paste`
+                        $interval(function() {
+                            var focused = document.activeElement;
+                            if (isBackground(focused)) {
+                                $(pasteCatcher).focus();
+                            }
+                        }, 500, 0, false);
                     }
                     //#endregion
                 }

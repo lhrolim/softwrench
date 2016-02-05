@@ -143,7 +143,7 @@
         }
 
         /**
-         * Resolves a file wrapper instance from a DataTransferItem.
+         * Resolves a file wrapper instance from a DataTransferItem|File|Blob.
          * - will redirect the view to a visible attachment tab
          * - will fire "sw.attachment.file.load" event with the file wrapper as argument 
          * 
@@ -158,8 +158,8 @@
          *           } 
          */
         function createAttachmentFromFile(file, schema) {
-            // file data has to be querried before returning the promise
-            // because it gets disposed (no content and empty properties) after the function returns
+            // file data has to be querried before returning the promise (can't be done inside the callbacks)
+            // because the file gets disposed (no content and empty properties) after the function returns
             var blob = (file instanceof Blob || file instanceof File) ? file : file.getAsFile();
             var extension = file.type.split("/")[1];
             var fileName = !!blob.name ? blob.name : newAttachmentFileName(extension);
@@ -180,11 +180,11 @@
         }
 
         /**
-         * Resolves a file wrapper instance from an HTMLNode the received a pasted image.
+         * Resolves a file wrapper instance from an HTMLNode that will receive a pasted image (FF trick).
          * - will redirect the view to a visible attachment tab
          * - will fire "sw.attachment.file.load" event with the file wrapper as argument
          * 
-         * @param HTMLNode contentHolder DOM node with `contenteditable='true'` that received the pasted content
+         * @param HTMLNode contentHolder DOM node with `contenteditable='true'` that will receive the pasted content as an image Node
          * @param {} schema attachment's parent schema
          * @returns Promise resolved with a file wrapper dto instance: 
          *          {
@@ -198,22 +198,24 @@
             var promise = null;
 
             var waitForImage = function () {
+                // polling the Node to see if the image node was appended
                 if (!contentHolder.childNodes || contentHolder.childNodes.length <= 0) {
                     promise = $timeout(waitForImage, 20, false);
                     return promise;
                 }
+                // get the image as base64 encoded from child image Node
                 var child = contentHolder.childNodes[0];
                 contentHolder.innerHTML = "";
                 if (!child) return $q.reject(new Error("image was not pasted"));
                 if (child.tagName !== "IMG") return $q.reject(new Error("can only support images"));
                 return child.src;
             };
-
+            // begin polling for image
             promise = $timeout(waitForImage, 0, false);
 
-            // use timer promise prior to the redirect so the image validation can happen before redirecting
+            // use timer promise prior to the redirect so the image validation can happen before trying to redirect
             return promise.then(function (content) {
-                // redirect and resolve then chain and resolve with the file
+                // redirect then chain and resolve with the file
                 return redirectToAttachmentView(schema).then(function () {
                     return {
                         file: content,
