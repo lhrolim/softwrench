@@ -1,5 +1,7 @@
-﻿using cts.commons.persistence.Util;
+﻿using cts.commons.persistence;
+using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.migration {
 
@@ -7,7 +9,27 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.migration {
     public class Migration201506062320BatOffLine : Migration {
         public override void Up() {
 
+            // on db2 is not possible to rename a referred table
+            if (ApplicationConfiguration.IsDB2(DBType.Swdb)) {
+                Delete.ForeignKey("fk_report_batch").OnTable("BAT_REPORT");
+                Delete.ForeignKey("fk_batch_user_id").OnTable("BAT_BATCH");
+            }
+
             Rename.Table("BAT_BATCH").To("BAT_MULBATCH");
+
+            // on db2 is not possible to rename a referred table
+            if (ApplicationConfiguration.IsDB2(DBType.Swdb)) {
+                Create.ForeignKey("fk_report_batch")
+                    .FromTable("BAT_REPORT")
+                    .ForeignColumn("batch")
+                    .ToTable("BAT_MULBATCH")
+                    .PrimaryColumn("Id");
+                Create.ForeignKey("fk_batch_user_id")
+                    .FromTable("BAT_MULBATCH")
+                    .ForeignColumn("userid")
+                    .ToTable("SW_USER2")
+                    .PrimaryColumn("id");
+            }
 
 
             Create.Table("BAT_BATCH")
@@ -18,7 +40,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.migration {
                 .WithColumn("UpdateDate").AsDateTime().NotNullable()
                 .WithColumn("Status").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("RemoteId").AsString(MigrationUtil.StringMedium).NotNullable();
-                
+
 
 
             Create.Table("BAT_BATCHITEM")

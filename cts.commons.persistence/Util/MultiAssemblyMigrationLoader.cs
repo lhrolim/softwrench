@@ -8,12 +8,11 @@ using FluentMigrator.Infrastructure;
 using FluentMigrator.Runner;
 
 //took from http://stackoverflow.com/questions/25239992/using-multiple-fluentmigrator-assemblies-on-same-database
-namespace cts.commons.persistence.Util
-{
+namespace cts.commons.persistence.Util {
     public class MultiAssemblyMigrationLoader : IMigrationInformationLoader {
         public MultiAssemblyMigrationLoader(IMigrationConventions conventions, IEnumerable<Assembly> assemblies, string @namespace, IEnumerable<string> tagsToMatch)
             : this(conventions, assemblies, @namespace, false, tagsToMatch) {
-            }
+        }
 
         public MultiAssemblyMigrationLoader(IMigrationConventions conventions, IEnumerable<Assembly> assemblies, string @namespace, bool loadNestedNamespaces, IEnumerable<string> tagsToMatch) {
             this.Conventions = conventions;
@@ -36,10 +35,10 @@ namespace cts.commons.persistence.Util
         public SortedList<long, IMigrationInfo> LoadMigrations() {
             var sortedList = new SortedList<long, IMigrationInfo>();
 
-            IEnumerable<IMigration> migrations = this.FindMigrations();
+            IEnumerable<Type> migrations = this.FindMigrationTypes();
             if (migrations == null) return sortedList;
 
-            foreach (IMigration migration in migrations) {
+            foreach (Type migration in migrations) {
                 IMigrationInfo migrationInfo = this.Conventions.GetMigrationInfo(migration);
                 if (sortedList.ContainsKey(migrationInfo.Version))
                     throw new DuplicateMigrationException(string.Format("Duplicate migration version {0}.", migrationInfo.Version));
@@ -48,33 +47,27 @@ namespace cts.commons.persistence.Util
             return sortedList;
         }
 
-        private IEnumerable<IMigration> FindMigrations() {
+        private IEnumerable<Type> FindMigrationTypes() {
             IEnumerable<Type> types = new Type[] { };
             foreach (var assembly in Assemblies) {
                 types = types.Concat(assembly.GetExportedTypes());
             }
+            IEnumerable<Type> matchedTypes = types.Where(t => Conventions.TypeIsMigration(t)
+                                                                 &&
+                                                                 (Conventions.TypeHasMatchingTags(t, TagsToMatch) ||
+                                                                  !Conventions.TypeHasTags(t)));
 
-            IEnumerable<Type> source = types.Where(t => {
-                                                            if (!Conventions.TypeIsMigration(t))
-                                                                return false;
-                                                            if (!Conventions.TypeHasMatchingTags(t, this.TagsToMatch))
-                                                                return !Conventions.TypeHasTags(t);
-                                                            return true;
-            });
             if (!string.IsNullOrEmpty(Namespace)) {
-                Func<Type, bool> predicate = t => t.Namespace == Namespace;
+                Func<Type, bool> shouldInclude = t => t.Namespace == Namespace;
                 if (LoadNestedNamespaces) {
                     string matchNested = Namespace + ".";
-                    predicate = t => {
-                                         if (t.Namespace != Namespace)
-                                             return t.Namespace.StartsWith(matchNested);
-                                         return true;
-                    };
+                    shouldInclude = t => t.Namespace == Namespace || t.Namespace.StartsWith(matchNested);
                 }
-                source = source.Where(predicate);
-            }
-            return source.Select(matchedType => (IMigration)matchedType.Assembly.CreateInstance(matchedType.FullName));
-        }
 
+                matchedTypes = matchedTypes.Where(shouldInclude);
+            }
+
+            return matchedTypes;
+        }
     }
 }

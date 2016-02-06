@@ -38,7 +38,9 @@ namespace softWrench.sW4.Metadata.Validator {
             var customizations = GetCustomizations(overridenSchema);
             var fieldsThatShouldBeCustomized = customizations.Count();
             var customizationsActuallyApplied = new HashSet<int>();
-            original.Stereotype = overridenSchema.Stereotype;
+            original.Stereotype = overridenSchema.Stereotype == SchemaStereotype.None
+                ? original.Stereotype
+                : overridenSchema.Stereotype;
             original.CommandSchema.Merge(overridenSchema.CommandSchema);
 
 

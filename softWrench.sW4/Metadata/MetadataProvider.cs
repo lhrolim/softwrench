@@ -189,7 +189,7 @@ namespace softWrench.sW4.Metadata {
         public static EntityMetadata Entity([NotNull] string name, Boolean throwException = true) {
             Validate.NotNull(name, "name");
             ICollection<EntityMetadata> entityMetadata;
-            if (name.StartsWith("_")) {
+            if (name.EndsWith("_")) {
                 entityMetadata = _swdbmetadataXmlInitializer != null ? _swdbmetadataXmlInitializer.Entities : _swdbentityMetadata;
             } else {
                 entityMetadata = _metadataXmlInitializer != null ? _metadataXmlInitializer.Entities : _entityMetadata;

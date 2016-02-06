@@ -610,12 +610,12 @@ namespace softWrench.sW4.Metadata.Parsing {
             var role = application.Attribute(XmlMetadataSchema.RoleAttribute).ValueOrDefault((string)null);
             var auditFlag = application.Attribute(XmlMetadataSchema.ApplicationAuditFlagAttribute).ValueOrDefault(false);
             if (_isSWDB) {
-                entity = "_" + entity;
+                entity = entity + "_";
             }
             var service = application.Attribute(XmlMetadataSchema.ApplicationServiceAttribute).ValueOrDefault((string)null);
             var metadata = entityMetadata.FirstOrDefault(e => e.Name.EqualsIc(entity));
             if (metadata == null) {
-                if (!entity.StartsWith("_")) {
+                if (!entity.EndsWith("_")) {
                     throw new InvalidOperationException("entity {0} not found".Fmt(entity));
                 }
                 LoggingUtil.DefaultLog.WarnFormat("entity {0} not found. Are you missing a dll reference?", entity);

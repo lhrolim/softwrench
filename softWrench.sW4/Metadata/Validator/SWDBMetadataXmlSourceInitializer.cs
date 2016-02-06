@@ -31,7 +31,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
         private EntityMetadata Convert(Type type) {
             //TODO: relationships
-            var name = "_" + type.Name;
+            var name = type.Name + "_";
             Log.DebugFormat("adding swdb internal entity {0}", name);
             var properties = ParseProperties(name, type);
             var entitySchema = new EntitySchema(name, properties.Item1, "id", "id", true, true, null, null, type, false);
@@ -92,12 +92,12 @@ namespace softWrench.sW4.Metadata.Validator {
         private static EntityAssociation HandleOneToMany(PropertyInfo memberInfo, OneToManyAttribute oneTomany) {
             var keyAttr = memberInfo.ReadAttribute<KeyAttribute>();
             var qualifier = memberInfo.Name;
-            var to = "_" + oneTomany.ClassType.Name.ToLower();
+            var to = oneTomany.ClassType.Name.ToLower() + "_";
             //            //TODO: Add reverse customization
             //            string reverse = null;
             IList<EntityAssociationAttribute> attributes = new List<EntityAssociationAttribute>();
             attributes.Add(new EntityAssociationAttribute(keyAttr.Column, "id", null, true));
-            return new EntityAssociation("_" + qualifier, to, attributes, true,false, false, null, false);
+            return new EntityAssociation(qualifier + "_", to, attributes, true,false, false, null, false);
         }
 
         private static ConnectorParameters ConnectorParameters(Type type) {

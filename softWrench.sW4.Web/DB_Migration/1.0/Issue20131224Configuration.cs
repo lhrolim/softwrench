@@ -10,7 +10,7 @@ namespace softWrench.sW4.Web.DB_Migration._1._0 {
             Create.Table("CONF_PROPERTYDEFINITION")
                 .WithColumn("fullkey").AsString(255).PrimaryKey()
                 .WithColumn("key_").AsString(255).NotNullable()
-                .WithColumn("defaultvalue").AsString(65535).NotNullable()
+                .WithColumn("defaultvalue").AsString(4000).NotNullable()
                 .WithColumn("description").AsString(65535).Nullable()
                 .WithColumn("datatype").AsString(50).NotNullable()
                 .WithColumn("renderer").AsString(50).Nullable()
@@ -21,7 +21,7 @@ namespace softWrench.sW4.Web.DB_Migration._1._0 {
             Create.Table("CONF_PROPERTYVALUE")
                 .WithColumn("ID").AsInt32().PrimaryKey().Identity()
                 .WithColumn("condition_").AsString(4000).Nullable()
-                .WithColumn("value").AsString(255).NotNullable()
+                .WithColumn("value").AsString(4000).NotNullable()
                 .WithColumn("definition_id").AsString().ForeignKey("propval_definition_def", "CONF_PROPERTYDEFINITION", "fullkey").NotNullable();
 
             
