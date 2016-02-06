@@ -266,13 +266,17 @@
                     <input id="uploadFile" ng-model="datamap.newattachment_path" class="form-control" placeholder="No file chosen" disabled="disabled" />
                     <div file-dropzone="pdf, zip, txt, doc, docx, dwg, gif, jpg, csv, xls, xlsx, ppt, xml, xsl, bmp, html, png, lic"
                          class="dropzone form-control" data-file-name="datamap.newattachment_path" data-file="datamap[fieldMetadata.attribute]"
-                         data-dropzone-hover-class="file-over">
+                         data-dropzone-hover-class="file-over"
+                         data-field="fieldMetadata">
                         <i class="fa fa-dot-circle-o"></i>&ensp;Drag and drop a file here to upload, or
-                        <input id="uploadInput" type="file" fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path" />
+                        <input id="uploadInput" type="file" fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"/>
                         <a href="" id="uploadInputLink">browse</a>
                         <br/>
                         <i class="fa fa-question-circle"></i>
                         &ensp;You can also take a screenshot and paste it anywhere to be used as the file
+                    </div>
+                    <div ng-if="fieldMetadata.rendererParameters['showImagePreview']" class="imagepreview">
+                        <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
                     </div>
                 </div>
                 <div ng-switch-when="multipleupload">
