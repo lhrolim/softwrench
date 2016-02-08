@@ -4,7 +4,7 @@
   <Deployment>
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\otb" outputDirectory="Client\otb\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\@internal" outputDirectory="Client\@internal\" />
-    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\entegra" outputDirectory="Client\firstsolar\entegra" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\entegra" outputDirectory="Client\entegra" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\hapag" outputDirectory="Client\hapag\" />
 
     
