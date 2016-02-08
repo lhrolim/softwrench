@@ -42,14 +42,15 @@ $(function () {
         }
 
         //make sure the height includes the footer
-        $('.site-footer').css('position', 'initial');
+        $('.site-footer').css('position', 'static');
+
         var containerHeight = $('[ng-controller="LayoutController"]').height();
         var windowHeight = $(window).height();
         //console.log('fix footer', containerHeight, windowHeight);
 
         //adjust footer position
         if (containerHeight > windowHeight) {
-            $('.site-footer').css('position', 'initial');
+            $('.site-footer').css('position', 'static');
         } else {
             $('.site-footer').css('position', 'absolute');
         }

@@ -235,7 +235,12 @@
                     //get the total height of the content
                     var contents = $('.jspPane', scroll).height();
                     if (contents == null) {
-                        contents = scroll.height(true);
+                        contents = scroll.height();
+                    }
+
+                    //if the height was not set (no content), exit
+                    if (contents == 0) {
+                        return null;
                     }
 
                     //set pane height to smallest, contents or available area
@@ -244,6 +249,8 @@
                     } else {
                         scroll.height(contents);
                     }
+
+                    return scroll.height();
                 }
 
                 function initScrollPane(pane, scroll) {
@@ -257,7 +264,7 @@
                 }
 
                 function setSrcollHeight() {
-                    var composition = $('.composition.master-details');
+                    var composition = $('.composition.master-details:visible');
 
                     if (composition.position() != undefined) {
                         var scrollTop = composition.position().top;
@@ -268,23 +275,28 @@
                         var masterMargins = $('.master', element).outerHeight(true) - $('.master', element).height();
                         var pagination = $('.master .swpagination', element).outerHeight(true);
 
-                        getPaneHeight(masterScroll, scrollHeight, masterMargins + pagination);
-                        scrollPanes.master = initScrollPane(scrollPanes.master, masterScroll);
+                        var newHeight = getPaneHeight(masterScroll, scrollHeight, masterMargins + pagination);
+                        //only try to create scroll pane if height is set
+                        if (newHeight != null) {
+                            scrollPanes.master = initScrollPane(scrollPanes.master, masterScroll);
+                        }
 
                         //create the details scroll pane
                         var detailScroll = $('.details .scroll', element);
                         var commandbuttons = $('.master-details .commands:visible', element).outerHeight(true);
+                        newHeight = getPaneHeight(detailScroll, scrollHeight, commandbuttons);
+                        //only try to create scroll pane if height is set
+                        if (newHeight != null) {
+                            scrollPanes.details = initScrollPane(scrollPanes.details, detailScroll);
+                        }
 
-                        getPaneHeight(detailScroll, scrollHeight, commandbuttons);
-                        scrollPanes.details = initScrollPane(scrollPanes.details, detailScroll);
+                        log.debug(scrollPanes);
                     }
-
-                    log.debug(scrollPanes);
                 }
 
                 var lazyLayout = window.debounce(setSrcollHeight, 200);
                 $(window).resize(lazyLayout);
-                $(window).trigger('resize');
+                //$(window).trigger('resize');
             }
         };
     });
