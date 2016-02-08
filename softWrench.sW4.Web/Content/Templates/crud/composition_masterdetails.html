@@ -3,8 +3,8 @@
         <div class="master col-xs-12 col-sm-4">
             <div class="scroll">
                 <!--<div class="quick-search">
-                    <search-box ng-model="searchText" data-placeholder="'Search'"/>
-                </div>-->
+            <search-box ng-model="searchText" data-placeholder="'Search'"/>
+        </div>-->
                 <div class="entries">
                     <div ng-repeat="entry in compositiondata" ng-class="[$odd ? 'odd' : 'even', entry.open ? 'current' : '']" ng-click="displayDetails(entry)" class="entry clearfix">
                         <div class="icons">
@@ -35,11 +35,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="context clearfix" ng-if="showPagination">
-                    <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" pagination-simple-layout/>
-                </div>
             </div>
-            <!-- TODO: add pagination -->
+            <div class="context swpagination clearfix" ng-if="showPagination">
+                <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)"/>
+            </div>
         </div>
         <div class="details col-xs-12 col-sm-8 hidden-xs">
             <div class="scroll">

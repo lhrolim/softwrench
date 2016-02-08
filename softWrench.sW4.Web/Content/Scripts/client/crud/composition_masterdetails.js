@@ -238,15 +238,9 @@
                         contents = scroll.height(true);
                     }
 
-                    //log.debug(contents, available, subtract);
-
                     //set pane height to smallest, contents or available area
                     if (contents > available) {
-
-                        log.debug(available, subtract);
                         scroll.height(available - subtract);
-
-
                     } else {
                         scroll.height(contents);
                     }
@@ -263,23 +257,27 @@
                 }
 
                 function setSrcollHeight() {
-                    var scrollTop = $('.composition.master-details').position().top;
-                    var scrollHeight = $(window).height() - scrollTop;
-            
-                    //create the master scroll pane
-                    var masterScroll = $('.master .scroll', element);
-                    var masterMargins = $('.master', element).outerHeight(true) - $('.master', element).height();
+                    var composition = $('.composition.master-details');
 
-                    //TODO: subtract pagination
-                    getPaneHeight(masterScroll, scrollHeight, masterMargins);
-                    scrollPanes.master = initScrollPane(scrollPanes.master, masterScroll);
+                    if (composition.position() != undefined) {
+                        var scrollTop = composition.position().top;
+                        var scrollHeight = $(window).height() - scrollTop;
 
-                    //create the details scroll pane
-                    var detailScroll = $('.details .scroll', element);
-                    var commandbuttons = $('.master-details .commands:visible', element).outerHeight(true);
+                        //create the master scroll pane
+                        var masterScroll = $('.master .scroll', element);
+                        var masterMargins = $('.master', element).outerHeight(true) - $('.master', element).height();
+                        var pagination = $('.master .swpagination', element).outerHeight(true);
 
-                    getPaneHeight(detailScroll, scrollHeight, commandbuttons);
-                    scrollPanes.details = initScrollPane(scrollPanes.details, detailScroll);
+                        getPaneHeight(masterScroll, scrollHeight, masterMargins + pagination);
+                        scrollPanes.master = initScrollPane(scrollPanes.master, masterScroll);
+
+                        //create the details scroll pane
+                        var detailScroll = $('.details .scroll', element);
+                        var commandbuttons = $('.master-details .commands:visible', element).outerHeight(true);
+
+                        getPaneHeight(detailScroll, scrollHeight, commandbuttons);
+                        scrollPanes.details = initScrollPane(scrollPanes.details, detailScroll);
+                    }
 
                     log.debug(scrollPanes);
                 }
