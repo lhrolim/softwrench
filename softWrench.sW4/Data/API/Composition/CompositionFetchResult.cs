@@ -7,7 +7,7 @@ using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 
 namespace softWrench.sW4.Data.API.Composition {
-    public class CompositionFetchResult : GenericResponseResult<Dictionary<string, EntityRepository.SearchEntityResult>> {
+    public class CompositionFetchResult : GenericResponseResult<IDictionary<string, EntityRepository.SearchEntityResult>> {
 
         /// <summary>
         /// To use on the server side, this won´t be propagated back to the client side. Use ModifiedMap instead. 
@@ -22,7 +22,7 @@ namespace softWrench.sW4.Data.API.Composition {
         /// </summary>
         public IDictionary<string, object> ParentModifiedFields { get; set; }
 
-        public CompositionFetchResult(Dictionary<string, EntityRepository.SearchEntityResult> compositions, AttributeHolder originalCruddata)
+        public CompositionFetchResult(IDictionary<string, EntityRepository.SearchEntityResult> compositions, AttributeHolder originalCruddata)
             : base(compositions) {
             OriginalCruddata = originalCruddata;
             ParentModifiedFields = new Dictionary<string, object>();
