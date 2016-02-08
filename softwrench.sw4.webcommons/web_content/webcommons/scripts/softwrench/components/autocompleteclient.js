@@ -42,6 +42,7 @@ angular.module('sw_layout')
                     if (availableoptions[i].value.trim() === ("" + value).trim()) {
                         valueMissing = false;
                         labelValue = availableoptions[i].label;
+                        break;
                     }
                 }
                 if (valueMissing) {
