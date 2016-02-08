@@ -272,8 +272,11 @@
                         <input id="uploadInput" type="file" fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"/>
                         <a href="" id="uploadInputLink">browse</a>
                         <br/>
-                        <i class="fa fa-question-circle"></i>
-                        &ensp;You can also take a screenshot and paste it anywhere to be used as the file
+                        <i class="fa fa-question-circle" style="color: inherit"
+                           rel="tooltip"
+                           data-original-title="{{ isIE() ? 'On Internet Explorer: click somewhere on the page\'s background before pasting.' : 'Take a screenshot and paste it anywhere to attach it' }}">
+                        </i>
+                        &ensp;You can also use 'Print Screen' and 'Ctrl+V' to attach a screenshot
                     </div>
                     <div ng-if="fieldMetadata.rendererParameters['showImagePreview']" class="imagepreview">
                         <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />

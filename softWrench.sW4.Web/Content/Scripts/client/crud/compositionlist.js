@@ -514,13 +514,17 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         $scope.edit(datamap, actionTitle);
     });
 
-    $scope.edit = function (datamap, actionTitle) {
+	$scope.edit = function (datamap, actionTitle) {
         if (shouldEditInModal()) {
             modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, $scope.save, null, $scope.parentdata, $scope.parentschema);
         } else {
             //TODO: switch to edit
             $scope.newDetail = true;
             $scope.selecteditem = datamap;
+            $timeout(function () {
+                $(".no-touch [rel=tooltip]").tooltip({ container: "body", trigger: "hover" });
+                $(".no-touch [rel=tooltip]").tooltip("hide");
+            });
         }
         $scope.collapseAll();
     };
