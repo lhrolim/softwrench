@@ -92,6 +92,9 @@
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="width=15%;grid=servicerequest;column=status" />
           </field>
+          <field attribute="attachments" tooltip="Attachments">
+            <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};"/>
+          </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
             <property key="list.defaultorderby" value="sr.ticketuid desc"/>
