@@ -1,7 +1,7 @@
 ﻿(function (angular, app) {
     "use strict";
 
-    app.directive('compositionMasterDetails', function (contextService) {
+    app.directive('compositionMasterDetails', function (contextService, $log) {
         return {
             restrict: 'E',
             replace: false,
@@ -16,8 +16,8 @@
                 title: '@'
             },
 
-            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "$log", "controllerInheritanceService", "fieldService",
-                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, $log, controllerInheritanceService, fieldService) {
+            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "controllerInheritanceService", "fieldService", "$timeout",
+                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, controllerInheritanceService, fieldService, $timeout) {
 
                     var log = $log.getInstance('sw4.composition.master/detail');
 
@@ -49,6 +49,10 @@
                         $(document.body).animate({ scrollTop: 0 });
 
                         log.debug('$scope.displayDetails', entry);
+
+                        $timeout(function () {
+                            $(window).resize();
+                        });
                     };
 
                     $scope.getDetailDisplayables = function () {
@@ -217,7 +221,73 @@
                     init(this);
 
                     $scope.$on("sw_compositiondataresolved", prepareData);
-                }]
+                }],
+
+            link: function (scope, element, attrs) {
+                var log = $log.getInstance('sw4.composition.master/detail.link');                
+                var scrollPanes = {
+                    master: null,
+                    details: null
+                };
+
+                function getPaneHeight(scroll, available, subtract) {
+
+                    //get the total height of the content
+                    var contents = $('.jspPane', scroll).height();
+                    if (contents == null) {
+                        contents = scroll.height(true);
+                    }
+
+                    //log.debug(contents, available, subtract);
+
+                    //set pane height to smallest, contents or available area
+                    if (contents > available) {
+
+                        log.debug(available, subtract);
+                        scroll.height(available - subtract);
+
+
+                    } else {
+                        scroll.height(contents);
+                    }
+                }
+
+                function initScrollPane(pane, scroll) {
+                    if (pane == null) {
+                        pane = scroll.jScrollPane().data('jsp');
+                    } else {
+                        pane.reinitialise();
+                    }
+
+                    return pane;
+                }
+
+                function setSrcollHeight() {
+                    var scrollTop = $('.composition.master-details').position().top;
+                    var scrollHeight = $(window).height() - scrollTop;
+            
+                    //create the master scroll pane
+                    var masterScroll = $('.master .scroll', element);
+                    var masterMargins = $('.master', element).outerHeight(true) - $('.master', element).height();
+
+                    //TODO: subtract pagination
+                    getPaneHeight(masterScroll, scrollHeight, masterMargins);
+                    scrollPanes.master = initScrollPane(scrollPanes.master, masterScroll);
+
+                    //create the details scroll pane
+                    var detailScroll = $('.details .scroll', element);
+                    var commandbuttons = $('.master-details .commands:visible', element).outerHeight(true);
+
+                    getPaneHeight(detailScroll, scrollHeight, commandbuttons);
+                    scrollPanes.details = initScrollPane(scrollPanes.details, detailScroll);
+
+                    log.debug(scrollPanes);
+                }
+
+                var lazyLayout = window.debounce(setSrcollHeight, 200);
+                $(window).resize(lazyLayout);
+                $(window).trigger('resize');
+            }
         };
     });
 
