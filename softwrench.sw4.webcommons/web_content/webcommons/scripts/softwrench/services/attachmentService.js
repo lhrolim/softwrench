@@ -135,7 +135,7 @@
         function broadCastAttachmentLoaded(file) {
             var timer = $timeout(function () {
                 $rootScope.$broadcast("sw.attachment.file.load", file);
-            }, 0, false);
+            });
 
             return timer.then(function () {
                 return file;

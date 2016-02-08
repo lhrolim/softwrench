@@ -126,8 +126,11 @@
     </div>
 
     <!--
-    paste catcher element (for IE and FF)
-    positioned at a coordinate in which the focus will not cause the scroll to jump 
+    paste catcher element:
+    - IE: wont trigger 'paste' unless focused on contenteditable
+    - FF: won't paste clicpboard content unless focused on contenteditable
+    - Chrome: guarantee that if the user is not focused on this directive's $element it will still catch the paste event
+    positioned at a coordinate in which the focus will not cause the scroll to jump
     -->
     <div class="js_crud_pastecatcher" contenteditable="true" style="opacity: 0; height: 0; width: 0; position: fixed; top: 20%"></div>
 

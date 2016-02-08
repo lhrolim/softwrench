@@ -581,15 +581,6 @@
                         $element.off("paste", pasteListener);
                     });
 
-                    function ctrlVInterceptor(event) {
-                        // intercept 'ctrl+v' keys
-                        var isCtrlV = event.ctrlKey && event.keyCode === 86;
-                        if (!isCtrlV) return true;
-                        // focus on a `contenteditable` element
-                        $(pasteCatcher).focus();
-                        return true;
-                    }
-
                     function isBackground(element) {
                         return !!element // not null
                             && !["input", "textarea", "select", "button", "a", "selectize"].some(function (tag) { //not input
@@ -599,22 +590,15 @@
                             && !$(element).hasClass("js_crud_pastecatcher"); // no the pasteCatcher
                     }
 
-                    if (isIE()) {
-                        // in IE `paste` event doesn't trigger unless in a `contenteditable` element
-                        // trick to focus on the element when hitting 'ctrl+v' so it triggers the `paste`
-                        $element.on("keyup", ctrlVInterceptor);
-                        $scope.$on("$destroy", function () {
-                            $element.off("keyup", ctrlVInterceptor);
-                        });
-
+                    if (!isChrome()) {
                         // polls the current focused element:
                         // if its 'background' set focus on the pasteCatcher so it can capture `paste`
-                        var interval = $interval(function() {
+                        var interval = $interval(function () {
                             var focused = document.activeElement;
                             if (isBackground(focused)) {
                                 $(pasteCatcher).focus();
                             }
-                        }, 500, 0, false);
+                        }, 2000, 0, false);
 
                         $scope.$on("$destroy", function () {
                             $interval.cancel(interval);
