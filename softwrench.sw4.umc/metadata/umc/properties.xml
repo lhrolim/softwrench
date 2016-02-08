@@ -23,15 +23,15 @@
   <property key="dashboard.enabled" value="false"/>
 
   <environment key="dev">
-    <property key="basewsURL" value="http://10.50.100.159:9080/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=UMC_R5;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_UMC_R5;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.50.100.194:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=UMC76DEV;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_UMC76DEV;User Id=sw;password=softwrench;" />
   </environment>
 
   <environment key="qa">
-    <property key="basewsURL" value="http://10.50.100.159:9080/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=UMC_R5;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_UMC_R5;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.50.100.194:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=UMC76DEV;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_UMC76DEV_QA;User Id=sw;password=softwrench;" />
   </environment>
 
   <environment key="prod">
