@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -49,22 +50,22 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         }
 
 
-        public Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
+        public IDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
             compositionSchemas, IEnumerable<AttributeHolder> attributeHolders) {
             return DoResolveCollections(new CollectionResolverParameters(compositionSchemas, entityMetadata, attributeHolders));
         }
 
-        public Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
+        public IDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
             compositionSchemas, AttributeHolder attributeHolders, PaginatedSearchRequestDto paginatedSearch = null) {
             return DoResolveCollections(new CollectionResolverParameters(compositionSchemas, entityMetadata, new List<AttributeHolder> { attributeHolders }), paginatedSearch);
         }
 
 
-        public Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(CollectionResolverParameters parameters) {
+        public IDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(CollectionResolverParameters parameters) {
             return DoResolveCollections(parameters);
         }
 
-        private Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> DoResolveCollections(CollectionResolverParameters parameters, PaginatedSearchRequestDto paginatedSearch = null) {
+        private IDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> DoResolveCollections(CollectionResolverParameters parameters, PaginatedSearchRequestDto paginatedSearch = null) {
             var compositionSchemas = parameters.CompositionSchemas;
             var entityMetadata = parameters.SlicedEntity;
 
@@ -81,7 +82,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                     compositionSchemas.Keys.Contains(entityAssociation.Qualifier))
                 .ToList();
 
-            var results = new Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult>();
+            var results = new ConcurrentDictionary<string, EntityRepository.EntityRepository.SearchEntityResult>();
             // only a single composition being fetched: do it in the same Thread
             if (collectionAssociations.Count == 1) {
                 var entityAssociation = collectionAssociations[0];
@@ -103,7 +104,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             return results;
         }
 
-        private InternalCollectionResolverParameter BuildInternalParameter(CollectionResolverParameters parameters, EntityAssociation collectionAssociation, Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> results) {
+        private InternalCollectionResolverParameter BuildInternalParameter(CollectionResolverParameters parameters, EntityAssociation collectionAssociation, IDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> results) {
             var ctx = ContextLookuper.LookupContext();
             var compositionRowstamps = parameters.RowstampMap ?? new Dictionary<string, long?>();
             long? rowstamp = null;
