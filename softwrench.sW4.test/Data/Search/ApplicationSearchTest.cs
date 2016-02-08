@@ -112,7 +112,7 @@ namespace softwrench.sW4.test.Data.Search {
             Assert.IsTrue(SearchUtils.GetWhere(searchRequestDto, "SR").Equals("( SR.reportdate <= :reportdate_end )"));
             var parametersMap = SearchUtils.GetParameters(searchRequestDto);
             Assert.IsTrue(parametersMap.Count == 1);
-            Assert.IsTrue(parametersMap["reportdate_end"].Equals(DateTime.Parse("2013-01-01 15:45")));
+            Assert.AreEqual(DateTime.Parse("2013-01-01 15:45:59.999"), parametersMap["reportdate_end"]);
         }
 
 

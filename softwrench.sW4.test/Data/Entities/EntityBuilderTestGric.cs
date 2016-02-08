@@ -19,6 +19,7 @@ namespace softwrench.sW4.test.Data.Entities {
     public class EntityBuilderTestGric {
 
         [TestMethod]
+        [Ignore]
         public void TestAddWorkLogToIncident() {
             ApplicationConfiguration.TestclientName = "gric";
             MetadataProvider.StubReset();

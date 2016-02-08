@@ -1,0 +1,1019 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
+
+  <entities>
+    <entity name="workorder" idAttribute="wonum" >
+      <attributes>
+        <attribute name="workorderid" required="true" type="bigint" />
+        <attribute name="wonum" required="true" type="varchar"  auto-generated="true"/>
+        <attribute name="status" required="true" type="varchar" />
+        <attribute name="orgid" required="false" type="varchar"  />
+        <attribute name="siteid" required="false" type="varchar" />
+        <attribute name="statusdate" required="false" type="timestamp"  />
+        <attribute name="worktype" required="false" type="varchar"  />
+        <attribute name="description" required="false" type="varchar" />
+        <attribute name="assetnum" required="false" type="varchar" />
+        <attribute name="location" required="false" type="varchar" />
+        <attribute name="changeby" required="false" type="varchar" />
+        <attribute name="changedate" required="false" type="timestamp"  />
+        <attribute name="estdur" required="false" type="float"  />
+        <attribute name="estlabhrs" required="false" type="float"  />
+        <attribute name="estmatcost" required="false" type="decimal"  />
+        <attribute name="estlabcost" required="false" type="decimal"  />
+        <attribute name="esttoolcost" required="false" type="decimal"  />
+        <attribute name="actlabhrs" required="false" type="float"  />
+        <attribute name="actmatcost" required="false" type="decimal"  />
+        <attribute name="actlabcost" required="false" type="decimal"  />
+        <attribute name="acttoolcost" required="false" type="decimal"  />
+        <attribute name="historyflag" required="false" type="smallint"  />
+        <attribute name="wopriority" required="false" type="int" />
+        <attribute name="reportedby" required="false" type="varchar"  />
+        <attribute name="reportdate" required="false" type="timestamp" />
+        <attribute name="phone" required="false" type="varchar"  />
+        <attribute name="problemcode" required="false" type="varchar"  />
+        <attribute name="actstart" required="false" type="timestamp"  />
+        <attribute name="actfinish" required="false" type="timestamp"  />
+        <attribute name="schedstart" required="false" type="timestamp"  />
+        <attribute name="schedfinish" required="false" type="timestamp"  />
+        <attribute name="supervisor" required="false" type="varchar"  />
+        <attribute name="failurecode" required="false" type="varchar"  />
+        <attribute name="glaccount" required="false" type="varchar"  />
+        <attribute name="observation" required="false" type="varchar"  />
+        <attribute name="onbehalfof" required="false" type="varchar"  />
+        <attribute name="vendor" required="false" type="varchar"  />
+        <attribute name="owner" required="false" type="varchar" />
+        <attribute name="ownergroup" required="false" type="varchar"  />
+        <attribute name="woclass" required="false" type="varchar"  />
+        <attribute name="hasfollowupwork" required="false" type="boolean"  />
+        <attribute name="origrecordid" required="false" type="varchar"  />
+        <attribute name="origrecordclass" required="false" type="varchar"  />
+        <attribute name="rowstamp" required="false" type="integer"  />
+        <!--        <attribute name="location.description" required="false" type="varchar"  />-->
+        <!--        <attribute name="asset.description" required="false" type="varchar"  />-->
+        <!--        <attribute name="synstatus.maxvalue" required="false" type="varchar"  />-->
+        <!--        <attribute name="synstatus.description" required="false" type="varchar"  />-->
+        <!--        <attribute name="failurecode.description" required="false" type="varchar"  />-->
+        <!--        <attribute name="worktype.wtypedesc" required="false" type="varchar"  />-->
+        <!--        <attribute name="chartofaccounts.accountname" required="false" type="varchar"  />-->
+        <!--        <attribute name="longdescription.ldtext" required="false" type="varchar"  />-->
+      </attributes>
+      <relationships>
+        <relationship to="worklog" collection="true">
+          <relationshipAttribute from="wonum" to="recordkey" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true" />
+        </relationship>
+        <relationship to="matusetrans" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="labtrans" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="location" >
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="asset" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="failurecode" >
+          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="worktype" >
+          <relationshipAttribute from="worktype" to="worktype" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="chartofaccounts" >
+          <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" >
+          <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="DOCLINKS" qualifier="attachment" collection="true">
+          <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <!--<connectorParameter key="audittable" value="A_WORKORDER" />-->
+        <connectorParameter key="mea_integration_interface" value="SWWO" />
+        <connectorParameter key="mif_integration_interface" value="MXSW3Workorder" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Mea.MeaWorkOrderCrudConnector" />
+        <connectorParameter key="createfollowup_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Workorder.FollowUpWorkorderHandler" />
+        <connectorParameter key="updatestatus_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Workorder.UpdateStatusWorkorderHandler" />
+      </connectorParameters>
+    </entity>
+    <entity name="worklog" idAttribute="worklogid" >
+      <attributes>
+        <attribute name="worklogid"  type="bigint" required="true" />
+        <attribute name="siteid"  type="varchar" required="true" />
+        <attribute name="orgid"  type="varchar" required="true" />
+        <attribute name="recordkey"  type="varchar" required="true" />
+        <attribute name="description"  type="varchar" required="true" />
+        <attribute name="createby"  type="varchar" required="true" />
+        <attribute name="createdate"  type="datetime" required="true" />
+        <attribute name="class"  type="varchar" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="longdescription" >
+          <relationshipAttribute from="worklogid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKLOG" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="mea_integration_interface" value="ISW_WL" />
+      </connectorParameters>
+    </entity>
+    <entity name="matusetrans" idAttribute="matusetransid" >
+      <attributes>
+        <attribute name="matusetransid"  type="bigint" required="true" />
+        <attribute name="siteid"  type="varchar" required="true" />
+        <attribute name="orgid"  type="varchar" required="true" />
+        <attribute name="refwo"  type="varchar" required="true" />
+        <attribute name="storeloc"  type="varchar" required="true" />
+        <attribute name="itemnum"  type="varchar" required="true" />
+        <attribute name="description"  type="varchar" required="true" />
+        <attribute name="transdate"  type="datetime" required="true" />
+        <attribute name="quantity"  type="double" required="true" />
+        <attribute name="unitcost"  type="decimal" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="location" qualifier="storeroom">
+          <relationshipAttribute from="storeloc" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+        </relationship>
+        <relationship to="item" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity name="labtrans" idAttribute="labtransid">
+      <attributes>
+        <attribute name="labtransid" type="bigint"/>
+        <attribute name="laborcode" type="varchar"/>
+        <attribute name="transtype" type="varchar"/>
+        <attribute name="orgid" type="varchar"/>
+        <attribute name="siteid" type="varchar"/>
+        <attribute name="refwo" type="varchar"/>
+        <attribute name="enterby"  type="varchar" required="true" />
+        <attribute name="enterdate"  type="datetime" required="true" />
+        <attribute name="startdate" type="datetime"/>
+        <attribute name="starttime" type="datetime"/>
+        <attribute name="finishdate" type="datetime"/>
+        <attribute name="finishtime" type="datetime"/>
+        <attribute name="regularhrs" type="float"/>
+      </attributes>
+      <relationships>
+        <relationship to="labor">
+          <relationshipAttribute from="laborcode" to="laborcode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+      </relationships>
+    </entity>
+    <entity name="asset" idAttribute="assetid">
+      <attributes>
+        <attribute name="assetid"  type="bigint" required="true" />
+        <attribute name="assetnum" label="Asset" type="varchar" required="true" auto-generated="true" />
+        <attribute name="location" label="Location" type="varchar" required="true" />
+        <attribute name="vendor" label="Vendor" type="varchar" />
+        <attribute name="description" label="Description" type="varchar" />
+        <attribute name="failurecode" label="Failure Code" type="varchar" />
+        <attribute name="priority" label="Priority" type="int" />
+        <attribute name="siteid"  type="varchar" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="MXSW3Asset" />
+      </connectorParameters>
+    </entity>
+    <entity name="location" idAttribute="locationsid">
+      <attributes>
+        <attribute name="locationsid"  type="int" required="true" />
+        <attribute name="location" type="varchar"  required="true" />
+        <attribute name="description" type="varchar"  required="true" />
+        <attribute name="siteid"  type="varchar" />
+        <attribute name="type"  type="varchar" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="locations" />
+      </connectorParameters>
+    </entity>
+    <entity name="failurecode" idAttribute="failurecodeid">
+      <attributes>
+        <attribute name="failurecodeid" type="int"  required="true" />
+        <attribute name="failurecode" type="varchar"  required="true" />
+        <attribute name="description" type="varchar"  required="true" />
+        <attribute name="orgid"  type="varchar" />
+      </attributes>
+    </entity>
+    <entity name="worktype" idAttribute="worktypeid">
+      <attributes>
+        <attribute name="worktypeid" type="int"  required="true" />
+        <attribute name="worktype" type="varchar"  required="true" />
+        <attribute name="wtypedesc" type="varchar"  required="true" />
+        <attribute name="orgid"  type="varchar" />
+      </attributes>
+    </entity>
+    <entity name="chartofaccounts" idAttribute="chartofaccountsid">
+      <attributes>
+        <attribute name="chartofaccountsid" type="int"  required="true" />
+        <attribute name="glaccount" type="varchar"  required="true" />
+        <attribute name="accountname" type="varchar"  required="true" />
+        <attribute name="orgid"  type="varchar" />
+      </attributes>
+    </entity>
+    <entity name="person"  idAttribute="personid">
+      <attributes>
+        <attribute name="personid" type="varchar"/>
+        <attribute name="displayname" type="varchar"/>
+      </attributes>
+    </entity>
+    <entity name="labor"  idAttribute="laborid">
+      <attributes>
+        <attribute name="laborid" type="int"/>
+        <attribute name="orgid" type="orgid"/>
+        <attribute name="laborcode" type="varchar"/>
+        <attribute name="personid" type="personid"/>
+      </attributes>
+      <relationships>
+        <relationship to="person">
+          <relationshipAttribute from="personid" to="personid" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity name="item" idAttribute="itemnum" >
+      <attributes>
+        <attribute name="itemnum"  type="varchar" required="true" />
+        <attribute name="description"  type="varchar" required="true" />
+      </attributes>
+    </entity>
+    <entity name="synonymdomain" idAttribute="synonymdomainid">
+      <attributes>
+        <attribute name="domainid"  type="varchar" />
+        <attribute name="maxvalue"   type="varchar"/>
+        <attribute name="value"   type="varchar"/>
+        <attribute name="description"   type="varchar"/>
+        <attribute name="synonymdomainid"  type="varchar" />
+      </attributes>
+    </entity>
+    <entity name="longdescription" idAttribute="longdescriptionid">
+      <attributes>
+        <attribute name="ldkey"   type="varchar"/>
+        <attribute name="ldownertable"   type="varchar"/>
+        <attribute name="ldownercol"   type="varchar"/>
+        <attribute name="ldtext"   type="varchar"/>
+        <attribute name="longdescriptionid"   type="varchar"/>
+      </attributes>
+    </entity>
+    <entity name="invbalances" idAttribute="invbalancesid">
+      <attributes>
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="binnum" type="varchar" required="false" />
+        <attribute name="lotnum" type="varchar" required="false" />
+        <attribute name="curbal" type="decimal" required="true" />
+        <attribute name="physcnt" type="decimal" required="true" />
+        <attribute name="physcntdate" type="datetime" required="false" />
+        <attribute name="ib1" type="varchar" required="false" />
+        <attribute name="reconciled" type="smallint" required="true" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="conditioncode" type="varchar" required="false" />
+        <attribute name="invbalancesid" type="int" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="false" />
+      </attributes>
+      <relationships>
+        <relationship to="item" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+        <relationship to="inventory" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="invbalances" />
+      </connectorParameters>
+    </entity>
+    <entity name="inventory" idAttribute="inventoryid">
+      <attributes>
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="binnum" type="varchar" required="false" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="manufacturer" type="varchar" required="false" />
+        <attribute name="modelnum" type="varchar" required="false" />
+        <attribute name="catalogcode" type="varchar" required="false" />
+        <attribute name="minlevel" type="decimal" required="true" />
+        <attribute name="maxlevel" type="decimal" required="true" />
+        <attribute name="category" type="varchar" required="true" />
+        <attribute name="orderunit" type="varchar" required="false" />
+        <attribute name="issueunit" type="varchar" required="true" />
+        <attribute name="orderqty" type="decimal" required="true" />
+        <attribute name="lastissuedate" type="datetime" required="false" />
+        <attribute name="issueytd" type="decimal" required="true" />
+        <attribute name="issue1yrago" type="decimal" required="true" />
+        <attribute name="issue2yrago" type="decimal" required="true" />
+        <attribute name="issue3yrago" type="decimal" required="true" />
+        <attribute name="abctype" type="varchar" required="false" />
+        <attribute name="ccf" type="int" required="true" />
+        <attribute name="sstock" type="decimal" required="false" />
+        <attribute name="deliverytime" type="int" required="true" />
+        <attribute name="il1" type="varchar" required="false" />
+        <attribute name="il5" type="decimal" required="false" />
+        <attribute name="glaccount" type="varchar" required="false" />
+        <attribute name="controlacc" type="varchar" required="true" />
+        <attribute name="shrinkageacc" type="varchar" required="false" />
+        <attribute name="invcostadjacc" type="varchar" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="internal" type="smallint" required="true" />
+        <attribute name="inventoryid" type="int" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="storeloc" type="varchar" required="false" />
+        <attribute name="storelocsiteid" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="false" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="inventory" />
+      </connectorParameters>
+    </entity>
+  </entities>
+
+  <applications>
+
+    <application name="workorder" title="Work Order" entity="workorder">
+      <properties>
+        <property key="mobile.userInteractionEnabled" value="true"/>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <list title="Work Order Grid" platform="web">
+          <field attribute="wonum" label="#Number">
+            <renderer type="default" params="minwidth=110px" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="location" label="Location">
+            <renderer type="default" params="minwidth=150px" />
+          </field>
+          <field attribute="asset_.description" label="Asset">
+            <renderer type="default" params="minwidth=150px" />
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="default" params="minwidth=150px" />
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+          </properties>
+        </list>
+
+        <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
+          <field attribute="workorderid"  readonly="true" hidden="true"/>
+          <field attribute="wonum" label="#Number" readonly="true" />
+          <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
+          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
+          <field attribute="woclass" hidden="true"/>
+          <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
+          <section id="ownerstatussection"/>
+          <field attribute="wopriority" label="Priority" required="true" default="1">
+            <number decimals="0" min="0" max="999" />
+          </field>
+          <association label="Location" target="location" labelfield="location_.description">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.description" >
+            <renderer type="lookup"/>
+          </association>
+          <association label="Failure Code" target="failurecode" labelfield="failurecode.description" >
+            <renderer type="lookup"/>
+          </association>
+          <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" >
+            <renderer type="lookup"/>
+          </association>
+          <association label="GL Account" target="glaccount" labelfield="chartofaccounts_.accountname" >
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="description" label="Description" required="true" />
+          <field label="Details" attribute="longdescription_.ldtext" required="true">
+            <renderer type="textarea"/>
+          </field>
+          <section id="attachmentsection"/>
+          <section id="worklogsection"/>
+          <section id="matusetranssection"/>
+          <section id="labtranssection"/>
+        </schema>
+
+        <schema parentschema="adetail" title="New Work Order" id="newdetail">
+          <section id="ownerstatussection">
+            <field attribute="owner" hidden="true"/>
+            <field label="Status" attribute="status" readonly="true" default="OPEN" hidden="true"/>
+          </section>
+          <section id="attachmentsection">
+            <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
+            </field>
+
+            <field label="ScreenShot:" attribute="newscreenshot">
+              <renderer type="screenshot"/>
+            </field>
+          </section>
+        </schema>
+
+        <schema parentschema="adetail" id="editdetail" title="Work Order Detail">
+          <section id="ownerstatussection">
+            <field attribute="owner" label="Owner" readonly="true"/>
+            <association label="Status" target="status" labelfield="synstatus.description">
+              <renderer type="combo" />
+            </association>
+          </section>
+
+          <section id="worklogsection">
+            <composition relationship="worklog" label="Work Log"/>
+          </section>
+
+          <section id="matusetranssection">
+            <composition relationship="matusetrans" label="Materials">
+              <collectionproperties allowupdate="false" allowcreation="false" listschema="list" />
+            </composition>
+          </section>
+
+          <section id="labtranssection">
+            <composition relationship="labtrans" label="Labors">
+              <collectionproperties allowupdate="false" allowcreation="false" listschema="list" />
+            </composition>
+          </section>
+
+          <section id="attachmentsection">
+            <composition relationship="attachment" label="Attachments"/>
+          </section>
+
+        </schema>
+
+        <list platform="mobile">
+          <field attribute="wonum" label="Number" qualifier="title"/>
+          <field attribute="asset_.description" label="Asset" qualifier="subtitle"/>
+          <field attribute="status" label="Status" qualifier="featured"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+        </list>
+
+        <detail platform="mobile" title="Work Orders">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="woclass" hidden="true"/>
+          <field attribute="hasfollowupwork" hidden="true"/>
+          <field attribute="origrecordid" hidden="true"/>
+          <field attribute="origrecordclass" hidden="true"/>
+          <field attribute="wonum" label="Number"  required="true" readonly="true" />
+          <field attribute="reportdate" label="Reported On" hidden="true"/>
+          <field attribute="changeby" label="Changed By" hidden="true"/>
+          <field attribute="owner" label="Owner"  readonly="true"/>
+          <field attribute="status"  hidden="true" default="OPEN"/>
+          <field attribute="synstatus_.maxvalue" hidden="true"/>
+          <association label="Status" target="status" labelfield="synstatus.description" default="OPEN" />
+          <field attribute="synstatus_.description" label="Status" readonly="true" required="true">
+            <lookup sourceApplication="synonymdomain" sourceField="value" sourceDisplay="description,value" targetField="status" targetQualifier="">
+              <lookupFilters>
+                <lookupFilter sourceField="domainid" literal="WOSTATUS" />
+              </lookupFilters>
+            </lookup>
+          </field>
+
+          <field attribute="wopriority" label="Priority" required="true" >
+            <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
+            <number decimals="0" min="0" max="999" />
+          </field>
+          <field attribute="location" hidden="true"/>
+          <field attribute="location_.description" label="Location" >
+            <lookup sourceApplication="location" sourceField="location" sourceDisplay="description,location" targetField="location" targetQualifier="">
+              <lookupFilters>
+                <lookupFilter sourceField="siteid" targetField="siteid" />
+              </lookupFilters>
+            </lookup>
+          </field>
+          <field attribute="assetnum" hidden="true"/>
+          <field attribute="asset_.description" label="Asset" >
+            <lookup sourceApplication="asset" sourceField="assetnum" sourceDisplay="description,assetnum" targetField="assetnum" targetQualifier="">
+              <lookupFilters>
+                <lookupFilter sourceField="siteid" targetField="siteid" />
+              </lookupFilters>
+            </lookup>
+          </field>
+
+          <association label="Location" target="location" labelfield="location.description" />
+          <association label="Asset" target="assetnum" labelfield="asset.description" />
+          <association label="Failure Code" target="failurecode" labelfield="failurecode.description" />
+          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
+          <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
+          <association label="Status" target="status" labelfield="synstatus.description" />
+          <composition relationship="worklog" label="Work Log" />
+          <composition relationship="matusetrans" label="Materials" />
+          <composition relationship="labtrans" label="Labors" />
+          <composition relationship="attachment" label="Attachments" detailschema="" />
+          <!--<field attribute="longdescription_.ldtext" label="Long Description" name="description_longdescription"/>-->
+          <!--          <composition attribute="longdescription" >-->
+          <!--            <field attribute="longdescription.ldtext" label="Long Description" name="description_longdescription"/>-->
+          <!--          </composition>-->
+          <field attribute="failurecode" hidden="true"/>
+          <field attribute="failurecode_.description" label="Failure Code" >
+            <lookup sourceApplication="failurecode" sourceField="failurecode" sourceDisplay="description,failurecode" targetField="failurecode" targetQualifier="">
+              <lookupFilters>
+                <lookupFilter sourceField="orgid" targetField="orgid" />
+              </lookupFilters>
+            </lookup>
+          </field>
+          <field attribute="worktype" hidden="true"/>
+          <field attribute="worktype_.wtypedesc" label="Work Type" >
+            <lookup sourceApplication="worktype" sourceField="worktype" sourceDisplay="wtypedesc,worktype" targetField="worktype" targetQualifier="">
+              <lookupFilters>
+                <lookupFilter sourceField="orgid" targetField="orgid" />
+              </lookupFilters>
+            </lookup>
+          </field>
+          <field attribute="glaccount" hidden="true"/>
+          <field attribute="chartofaccounts_.accountname" label="GL Account" >
+            <lookup sourceApplication="chartofaccounts" sourceField="glaccount" sourceDisplay="accountname,glaccount" targetField="glaccount" targetQualifier="">
+              <lookupFilters>
+                <lookupFilter sourceField="orgid" targetField="orgid" />
+              </lookupFilters>
+            </lookup>
+          </field>
+          <field attribute="description" label="Description"  />
+          <field attribute="longdescription_.ldtext" label="Details" name="description_longdescription" />
+        </detail>
+      </schemas>
+    </application>
+
+    <!--    ToString="asset + @description"-->
+    <application name="asset" title="Asset" entity="asset" id="00000000-0000-0000-0000-000000000001" >
+      <properties>
+        <property key="mobile.fetchlimit" value="30"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="assetnum" label="Asset" qualifier="title"/>
+          <field attribute="location" label="Location" qualifier="subtitle"/>
+          <field attribute="vendor" label="Vendor"  qualifier="featured"/>
+        </list>
+        <detail>
+          <field attribute="assetid" label="ID"  required="true" />
+          <field attribute="assetnum" label="Asset"  required="true" />
+          <field attribute="location" label="Location"  required="true" />
+          <field attribute="vendor" label="Vendor"  />
+          <field attribute="description" label="Description"  />
+          <field attribute="failurecode" label="Failure Code"  />
+          <field attribute="priority" label="Priority"  />
+          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
+        </detail>
+      </schemas>
+
+    </application>
+
+    <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
+      <properties>
+        <property key="mobile.fetchlimit" value="1000"/>
+      </properties>
+      <schemas>
+        <list >
+          <field attribute="location" label="Location" qualifier="title"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+        </list>
+        <detail>
+          <field attribute="locationsid" label="ID"  required="true" />
+          <field attribute="location" label="Location"  required="true" />
+          <field attribute="description" label="Description"  required="true" />
+          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
+          <field attribute="type"  required="true" readonly="true" hidden="true"/>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="failurecode" title="Failure Code" entity="failurecode" id="00000000-0000-0000-0000-000000000003">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="failurecode" label="Failure Code" qualifier="title"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+        </list>
+        <detail>
+          <field attribute="failurecodeid" label="ID"  required="true" />
+          <field attribute="failurecode" label="Failure Code"  required="true" />
+          <field attribute="description" label="Description"  required="true" />
+          <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="worktype" title="Work Type" entity="worktype" id="00000000-0000-0000-0000-000000000004">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="worktype" label="Work Type" qualifier="title"/>
+          <field attribute="wtypedesc" label="Description" qualifier="excerpt"/>
+        </list>
+        <detail>
+          <field attribute="worktypeid" label="ID"  required="true" />
+          <field attribute="worktype" label="Work Type"  required="true" />
+          <field attribute="wtypedesc" label="Description"  required="true" />
+          <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="chartofaccounts" title="Chart of Accounts" entity="chartofaccounts" id="00000000-0000-0000-0000-000000000005">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="glaccount" label="Account" qualifier="title"/>
+          <field attribute="accountname" label="Name" qualifier="excerpt"/>
+        </list>
+        <detail>
+          <field attribute="chartofaccountsid" label="ID"  required="true" />
+          <field attribute="glaccount" label="Account"  required="true" />
+          <field attribute="accountname" label="Name"  required="true" />
+          <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="synonymdomain" title="Synonym Domain" entity="synonymdomain" id="00000000-0000-0000-0000-000000000006">
+      <schemas>
+        <detail>
+          <field attribute="domainid"  />
+          <field attribute="maxvalue"  />
+          <field attribute="value"  />
+          <field attribute="description"  />
+          <field attribute="synonymdomainid"  />
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="longdescription" title="Long Description" entity="longdescription" id="00000000-0000-0000-0000-000000000007">
+      <properties>
+        <property key="mobile.fetchlimit" value="30"/>
+      </properties>
+      <schemas>
+        <detail>
+          <field attribute="ldkey"  />
+          <field attribute="ldownertable"  />
+          <field attribute="ldownercol"  />
+          <field attribute="ldtext"  />
+          <field attribute="longdescriptionid"  />
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="worklog" title="Work Log" entity="worklog">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <list>
+          <field  attribute="description" label="Summary" qualifier="title"/>
+          <field attribute="createdate" label="Date" qualifier="subtitle"/>
+          <field  attribute="longdescription_.ldtext" hidden="true" />
+        </list>
+
+        <detail platform="mobile">
+          <field attribute="worklogid" hidden="true" />
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true" />
+          <field attribute="class" hidden="true" />
+          <field attribute="recordkey" hidden="true" />
+          <field attribute="createby" hidden="true" />
+          <field attribute="createdate" label="Date" readonly="true" />
+          <field attribute="description" label="Summary" required="true" />
+          <field attribute="longdescription_.ldtext" label="Description" />
+        </detail>
+
+        <detail platform="web">
+          <field attribute="worklogid" hidden="true" />
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true" />
+          <field attribute="class" hidden="true" />
+          <field attribute="recordkey" hidden="true" />
+          <field attribute="createby" hidden="true" />
+          <field attribute="description" label="Summary" required="true" />
+          <field  attribute="longdescription_.ldtext" label="Details" >
+            <renderer type="textarea"/>
+          </field>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="item_.description" label="Description" qualifier="title"/>
+          <field attribute="quantity" label="Quantity" qualifier="subtitle"/>
+        </list>
+
+        <detail platform="web">
+          <field attribute="matusetransid" hidden="true" />
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true" />
+          <field attribute="refwo" hidden="true" />
+          <field attribute="description" hidden="true" />
+          <field attribute="transdate" label="Date" readonly="true" />
+          <field attribute="quantity" label="Quantity" required="true">
+            <!--            <renderer type="numericinput" params="decimals=2"/>-->
+            <number decimals="2"  min="" max="" />
+          </field>
+          <association label="Item" target="itemnum" labelfield="item_.description">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Storeroom" target="storeloc" labelfield="storeroom_.description">
+            <renderer type="lookup"/>
+          </association>
+        </detail>
+
+        <detail platform="mobile">
+          <field attribute="matusetransid" hidden="true" />
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true" />
+          <field attribute="refwo" hidden="true" />
+          <field attribute="description" hidden="true" />
+          <field attribute="transdate" label="Date" readonly="true" />
+          <field attribute="quantity" label="Quantity" required="true">
+            <!--            <renderer type="numericinput" params="decimals=2"/>-->
+            <number decimals="2"  min="" max="" />
+          </field>
+          <!--                    <field attribute="unitcost" label="UnitCost" required="true">-->
+          <!--                      <number decimals="2" min="0" max="" />-->
+          <!--                    </field>-->
+          <association label="Item" target="itemnum" labelfield="item.itemnum,item.description" />
+          <association label="Storeroom" target="storeloc" labelfield="storeroom.locationsid,storeroom.description" />
+
+          <field attribute="itemnum" hidden="true" />
+          <field attribute="item_.description" label="Item" >
+            <lookup sourceApplication="item" sourceField="itemnum" sourceDisplay="description,itemnum" targetField="itemnum" targetQualifier=""/>
+          </field>
+
+          <field attribute="storeloc" hidden="true" />
+          <field attribute="storeroom_.description" label="Storeroom" >
+            <lookup sourceApplication="location" sourceField="location" sourceDisplay="description,locationsid" targetField="storeloc" targetQualifier="storeroom_">
+              <lookupFilters>
+                <lookupFilter sourceField="siteid" targetField="siteid" />
+                <lookupFilter sourceField="type" literal="STOREROOM" />
+              </lookupFilters>
+            </lookup>
+          </field>
+
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="item" title="Item" entity="item" id="00000000-0000-0000-0000-000000000010">
+      <properties>
+        <property key="mobile.fetchlimit" value="100"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="itemnum" label="Item" qualifier="title"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+        </list>
+        <detail>
+          <field attribute="itemnum" label="Item"  required="true" />
+          <field attribute="description" label="Description"  required="true" />
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="labtrans" entity="labtrans" title="Labor" id="00000000-0000-0000-0000-000000000011">
+      <properties>
+        <property key="mobile.fetchlimit" value="100"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="laborcode" label="Labor" qualifier="title"/>
+          <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
+        </list>
+
+        <detail platform="web">
+          <field attribute="labtransid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="laborcode" hidden="true" />
+          <field attribute="transtype" hidden="true" />
+          <field attribute="refwo" hidden="true" />
+          <field attribute="enterby" hidden="true" />
+          <field attribute="enterdate" hidden="true" />
+          <association label="Labor" target="laborcode" labelfield="labor_.laborcode" >
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="startdate" label="Start Date">
+            <!--            <renderer type="date" params="format=short;time=false"/>-->
+            <date format="Short" time="false" />
+          </field>
+          <field attribute="starttime" label="Start Time">
+            <!--            <renderer type="date" params="format=HH:mm;time=true"/>-->
+            <date format="HH:mm" time="true" />
+          </field>
+          <field attribute="finishdate" label="End Date">
+            <!--            <renderer type="date" params="format=short;time=false"/>-->
+            <date format="Short" time="false" />
+          </field>
+          <field attribute="finishtime" label="End Time">
+            <!--            <renderer type="date" params="format=HH:mm;time=true"/>-->
+            <date format="HH:mm" time="true" />
+          </field>
+          <field attribute="regularhrs" label="Regular Hours"/>
+        </detail>
+
+        <detail platform="mobile">
+          <field attribute="labtransid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="laborcode" hidden="true" />
+          <field attribute="transtype" hidden="true" />
+          <field attribute="refwo" hidden="true" />
+          <field attribute="enterby" hidden="true" />
+          <field attribute="enterdate" hidden="true" />
+          <association label="Labor" target="laborcode" labelfield="labor.laborcode" />
+          <field attribute="labor_.laborcode" label="Labor" >
+            <lookup sourceApplication="labor" sourceField="laborcode" sourceDisplay="laborcode,person_.displayname" targetField="laborcode" targetQualifier="">
+              <lookupFilters >
+                <lookupFilter sourceField="orgid" targetField="orgid" />
+              </lookupFilters>
+            </lookup>
+          </field>
+          <field attribute="startdate" label="Start Date">
+            <!--            <renderer type="date" params="format=short;time=false"/>-->
+            <date format="Short" time="false" />
+          </field>
+          <field attribute="starttime" label="Start Time">
+            <!--            <renderer type="date" params="format=HH:mm;time=true"/>-->
+            <date format="HH:mm" time="true" />
+          </field>
+          <field attribute="finishdate" label="End Date">
+            <!--            <renderer type="date" params="format=short;time=false"/>-->
+            <date format="Short" time="false" />
+          </field>
+          <field attribute="finishtime" label="End Time">
+            <!--            <renderer type="date" params="format=HH:mm;time=true"/>-->
+            <date format="HH:mm" time="true" />
+          </field>
+          <field attribute="regularhrs" label="Regular Hours"/>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="person" title="Person" entity="person" id="00000000-0000-0000-0000-000000000012">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="displayname" label="Display Name" qualifier="title"/>
+        </list>
+        <detail>
+          <field attribute="personid" hidden="true" />
+          <field attribute="displayname" label="Display Name" required="true" />
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="labor" title="Labor" entity="labor" id="00000000-0000-0000-0000-000000000013">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="laborcode" label="Labor" qualifier="title"/>
+        </list>
+        <detail>
+          <field attribute="laborid" label="Labor"  required="true" />
+          <field attribute="orgid" label="Labor"  required="true" />
+          <field attribute="laborcode" label="Labor"  required="true" />
+          <field attribute="personid" label="Labor"  required="true" />
+          <association label="Person" target="personid" labelfield="person.displayname" />
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="attachment" title="Attachment" entity="DOCLINKS">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <list stereotype="compositionlist" platform="mobile">
+          <field label="Id" hidden="true" attribute="docinfoid"/>
+          <field hidden="true" attribute="doclinksid"/>
+          <field label="Document" attribute="document" qualifier="title"/>
+          <field label="Created Date" attribute="createdate" qualifier="subtitle"/>
+          <field hidden="true" attribute="docinfo_.urlname"/>
+          <field hidden="true" attribute="maximoURL"/>
+        </list>
+
+
+        <list stereotype="compositionlist" platform="web">
+          <properties>
+            <property key="detail.cancel.lbl" value="Close"/>
+            <property key="expansible" value="false"/>
+          </properties>
+          <field label="Id" hidden="true" attribute="docinfoid"/>
+          <field hidden="true" attribute="doclinksid"/>
+          <field label="Document" hidden="true" attribute="document"/>
+          <section label="Document" attribute="document"
+									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>
+          <field label="Created Date" attribute="createdate"/>
+        </list>
+
+        <schema id="faqAttachments" stereotype="compositionlist" platform="web">
+          <field label="Id" hidden="true" attribute="docinfoid"/>
+          <field hidden="true" attribute="doclinksid"/>
+          <field label="Document" hidden="true" attribute="document"/>
+          <section label="Document" attribute="document" resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Faq;action=Download;idcolumn=docinfoid"/>
+        </schema>
+
+        <detail>
+          <field hidden="true" attribute="doclinksid"/>
+          <field label="Id" hidden="true" attribute="docinfoid"/>
+          <field label="Title:" attribute="document" />
+          <field label="Attachment:" attribute="newattachment" >
+            <renderer type="image"/>
+          </field>
+          <!--          <field hidden="true" attribute="ownerid"/>-->
+          <!--          <field hidden="true" attribute="ownertable"/>-->
+          <field hidden="true" attribute="createdate"/>
+        </detail>
+
+      </schemas>
+    </application>
+
+    <application name="invbalances" title="Inventory" entity="invbalances">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <list title="Inventory Grid" platform="web">
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="minwidth=110px" />
+          </field>
+          <field attribute="item_.description" label="Description">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="location" label="Storeroom">
+            <renderer type="default" params="minwidth=120px" />
+          </field>
+          <field attribute="binnum" label="Bin">
+            <renderer type="default" params="minwidth=100px" />
+          </field>
+          <field attribute="curbal" label="Balance">
+            <renderer type="default" params="minwidth=100px" />
+          </field>
+          <field attribute="siteid" label="Site">
+            <renderer type="default" params="minwidth=100px" />
+          </field>
+          <properties>
+            <property key="list.click.mode" value="output"/>
+          </properties>
+        </list>
+
+        <schema id="detail" mode="output" platform="web" title="Inventory Details">
+          <field label="Item" attribute="itemnum" />
+          <field label="Description" attribute="item_.description" />
+          <field label="Storeroom" attribute="location" />
+          <field label="Bin" attribute="binnum" />
+          <field label="Balance" attribute="curbal" />
+          <field label="Site" attribute="siteid" />
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>
