@@ -122,7 +122,17 @@
         <print-modal schema="schema" datamap="datamap" />
     </div>
     <div ng-if="schema != null">
-        <print-section schema="schema" datamap="datamap" />
+        <print-section schema="schema" datamap="datamap"/>
     </div>
+
+    <!--
+    paste catcher element:
+    - IE: wont trigger 'paste' unless focused on contenteditable
+    - FF: won't paste clicpboard content unless focused on contenteditable
+    - Chrome: guarantee that if the user is not focused on this directive's $element it will still catch the paste event
+    positioned at a coordinate in which the focus will not cause the scroll to jump
+    -->
+    <div class="js_crud_pastecatcher" contenteditable="true" style="opacity: 0; height: 0; width: 0; position: fixed; top: 20%"></div>
+
 </div>
 

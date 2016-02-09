@@ -70,11 +70,11 @@
             toggleParentCommand.state = !toggleParentCommand.state;
         }
 
-        $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
-        $('.no-touch [rel=tooltip]').tooltip('hide');
-
-        //update header/footer layout
         $timeout(function () {
+            $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
+            $('.no-touch [rel=tooltip]').tooltip('hide');
+
+            //update header/footer layout
             $(window).trigger('resize');
         }, false);
 
