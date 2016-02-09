@@ -91,14 +91,15 @@
                 scope.$name = 'crudbody';
             },
 
-            controller: function ($scope, $http, $rootScope, $filter, $injector,
+            controller: function ($scope, $element, $rootScope,
+                $http, $filter, $injector,
                 formatService, fixHeaderService,
                 searchService, tabsService,
                 fieldService, commandService, i18NService,
                 submitService, redirectService,
                 associationService, crudContextHolderService, alertService,
-                validationService, schemaService, $timeout, eventService, $log, expressionService, focusService, modalService,
-                compositionService) {
+                validationService, schemaService, $timeout, $interval, eventService, $log, expressionService, focusService, modalService,
+                compositionService, attachmentService) {
 
                 $(document).on("sw_autocompleteselected", function (event, key) {
                     focusService.resetFocusToCurrent($scope.schema, key);
@@ -526,16 +527,86 @@
                         }
                     });
                 };
+                
+                
 
+                function init(self) {
+                    $injector.invoke(BaseController, self, {
+                        $scope: $scope,
+                        i18NService: i18NService,
+                        fieldService: fieldService,
+                        commandService: commandService,
+                        formatService: formatService
+                    });
+                    
+                    //#region screenshot paste handling
+                    // `contenteditable` element
+                    var pasteCatcher = $element[0].querySelector(".js_crud_pastecatcher");
 
+                    // 'paste' event listener -> 
+                    // if image create an attachment with the clipboard data as the image
+                    function pasteListener($event) {
+                        var items = !window.clipboardData
+                            ? ($event.clipboardData || $event.originalEvent.clipboardData).items // chrome: image comes from the event
+                            : window.clipboardData.files; // IE: image comes from global object
 
-                $injector.invoke(BaseController, this, {
-                    $scope: $scope,
-                    i18NService: i18NService,
-                    fieldService: fieldService,
-                    commandService: commandService,
-                    formatService: formatService,
-                });
+                        // FF: has to wait for the image to be appended to a `contenteditable` element (as an image node) 
+                        if (!items) {
+                            $(pasteCatcher).focus();
+                            attachmentService.createAttachmentFromElement(pasteCatcher, $scope.schema);
+                            return true;
+                        }
+
+                        // look for image
+                        var image = Array.prototype.slice
+                            .call(items)
+                            .filter(function (item) {
+                                return item.type.startsWith("image");
+                            });
+                        // has no image: default behavior
+                        if (image === undefined || image === null || image.length <= 0) return true;
+                        // has image but is pasting inside richtext element
+                        if ($event.target.tagName.equalIc("br") || $($event.target).parents("[text-angular]").length > 0) return true;
+                        // can create the attachment
+                        image = image[0];
+                        attachmentService.createAttachmentFromFile(image, $scope.schema);
+                        // prevent bubbling and default behavior
+                        $event.stopPropagation();
+                        $event.preventDefault();
+                        return false;
+                    };
+
+                    $element.on("paste", pasteListener);
+                    $scope.$on("$destroy", function () {
+                        $element.off("paste", pasteListener);
+                    });
+
+                    function isBackground(element) {
+                        return !!element // not null
+                            && !["input", "textarea", "select", "button", "a", "selectize"].some(function (tag) { //not input
+                                return element.tagName.equalIc(tag);
+                            })
+                            && !$(element).parents("[text-angular]").length > 0 // not inside richtext
+                            && !$(element).hasClass("js_crud_pastecatcher"); // no the pasteCatcher
+                    }
+
+                    if (!isChrome()) {
+                        // polls the current focused element:
+                        // if its 'background' set focus on the pasteCatcher so it can capture `paste`
+                        var interval = $interval(function () {
+                            var focused = document.activeElement;
+                            if (isBackground(focused)) {
+                                $(pasteCatcher).focus();
+                            }
+                        }, 2000, 0, false);
+
+                        $scope.$on("$destroy", function () {
+                            $interval.cancel(interval);
+                        });
+                    }
+                    //#endregion
+                }
+                init(this);
 
 
             }

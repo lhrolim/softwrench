@@ -471,20 +471,60 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         $scope.$emit('sw_cancelclicked');
     };
 
+    //#region attachments
 
-    $scope.$on("sw.composition.edit", function (event, datamap, actionTitle) {
+    function onAttachmentFileDropped(event, file) {
+        // remove preview element if a new file is added
+        getFileUploadFields().forEach(function(field) {
+            field.rendererParameters["showImagePreview"] = false;
+        });
+    }
+
+    function getFileUploadFields() {
+        return $scope.compositiondetailschema.displayables
+            .filter(function(field) { // file upload fields
+                var renderer = field.renderer.rendererType;
+                return !!renderer && renderer.endsWith("upload");
+            });
+    }
+
+    function onAttachmentFileLoaded(event, file) {
+        if (!$scope.relationship.contains("attachment")) return;
+        var datamap = { 'newattachment_path': file.name };
+    
+        // set file on the datamap
+       getFileUploadFields()
+            .forEach(function (field) { // set file
+                datamap[field.attribute] = file.file;
+                field.rendererParameters["showImagePreview"] = true;
+            });
+        // open create form
+        $timeout(function() {
+             $scope.edit(datamap);
+        });
+    }
+
+    $scope.$on("file-dropzone-drop-event", onAttachmentFileDropped);
+    
+    $scope.$on("sw.attachment.file.load", onAttachmentFileLoaded);
+
+    //#endregion
+	
+	$scope.$on("sw.composition.edit", function (event, datamap, actionTitle) {
         $scope.edit(datamap, actionTitle);
     });
 
-    
-
-    $scope.edit = function (datamap, actionTitle) {
+	$scope.edit = function (datamap, actionTitle) {
         if (shouldEditInModal()) {
             modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, $scope.save, null, $scope.parentdata, $scope.parentschema);
         } else {
             //TODO: switch to edit
             $scope.newDetail = true;
             $scope.selecteditem = datamap;
+            $timeout(function () {
+                $(".no-touch [rel=tooltip]").tooltip({ container: "body", trigger: "hover" });
+                $(".no-touch [rel=tooltip]").tooltip("hide");
+            });
         }
         $scope.collapseAll();
     };
