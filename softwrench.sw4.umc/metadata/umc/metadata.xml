@@ -11,7 +11,7 @@
   <entities>
     <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
       <relationships>
-        <relationship to="synonymdomain" qualifier="crew">
+        <relationship to="alndomain" qualifier="crew">
           <relationshipAttribute from="crewid" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="CREWID" quoteLiteral="true"/>
         </relationship>
