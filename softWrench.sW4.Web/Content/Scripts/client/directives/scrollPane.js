@@ -6,12 +6,15 @@
             restrict: 'E',
             replace: false,
             scope: {
-                availablefn: '&'
+                availablefn: '&',
+                preventscroll: '='
             },
 
-            link: function (scope, element, attrs) {
+            link: function(scope, element, attrs) {
                 var log = $log.getInstance('sw4.scrollPane');
+
                 var scrollPaneData = null;
+                var scrollElement = $('.scroll', element);
 
                 function getContentHeight(scrollElement, available) {
                     //look for .jspPane to ensure we get the total content height
@@ -47,7 +50,6 @@
                 }
 
                 function setSrcollHeight() {
-                    var scrollElement = $('.scroll', element);
                     var contentHeight = getContentHeight(scrollElement, scope.availablefn()());
 
                     if (contentHeight != null) {
@@ -58,8 +60,21 @@
                     //log.debug(scrollPaneData);
                 }
 
-                var lazyLayout = window.debounce(setSrcollHeight, 200);
+                function stopScroll(prevent) {
+                    //prevent window scrolling after reaching end of navigation pane if enabled
+                    if (prevent) {
+                        scrollElement.on('mousewheel', function(e) {
+                            var delta = e.originalEvent.wheelDelta;
+                            this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+                            e.preventDefault();
+                        });
+                    }
+                }
+                stopScroll(scope.preventscroll);
+
+                var lazyLayout = window.debounce(setSrcollHeight, 100);
                 $(window).resize(lazyLayout);
+
             }
         };
     });

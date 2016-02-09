@@ -48,7 +48,6 @@ $(function () {
 
         var containerHeight = $('[ng-controller="LayoutController"]').height();
         var windowHeight = $(window).height();
-        console.log('scroll fix footer', containerHeight, windowHeight);
 
         //adjust footer position
         if (containerHeight > windowHeight) {
