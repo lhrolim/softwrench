@@ -548,6 +548,7 @@
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_bar.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_viewmodel.js" />
     <Content Include="Content\Scripts\client\crud\crud_expandable_section.js" />
+    <Content Include="Content\Scripts\client\directives\scrollPane.js" />
     <Content Include="Content\Scripts\client\directives\searchbox.js" />
     <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\directives\stringtonumber.js" />

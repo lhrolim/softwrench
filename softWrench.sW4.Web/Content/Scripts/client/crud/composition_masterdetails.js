@@ -52,7 +52,7 @@
 
                         $timeout(function () {
                             $(window).resize();
-                        });
+                        }, false);
                     };
 
                     $scope.getDetailDisplayables = function () {
@@ -71,6 +71,29 @@
                             return null;
                         }
                         return formattedValue;
+                    };
+
+                    $scope.getScrollSpaceMaster = function () {
+                        var scrollTop = getScrollTop();
+                        if (scrollTop == null) {
+                            return null;
+                        }
+
+                        var masterMargins = $('.master-details .master').outerHeight(true) - $('.master').height();
+                        var pagination = $('.master-details  .master .swpagination').outerHeight(true);
+
+                        return $(window).height() - scrollTop - masterMargins - pagination;
+                    };
+
+                    $scope.getScrollSpaceDetails = function () {
+                        var scrollTop = getScrollTop();
+                        if (scrollTop == null) {
+                            return null;
+                        }
+
+                        var commandbuttons = $('.master-details .commands:visible').outerHeight(true);
+
+                        return $(window).height() - scrollTop - commandbuttons;
                     };
 
                     $scope.hasRecords = function () {
@@ -180,6 +203,15 @@
                         return $scope.i18N($scope.relationship + ".add", "Add " + $scope.title);
                     }
 
+                    function getScrollTop() {
+                        var composition = $('.composition.master-details:visible');
+                        if (composition.position() != undefined) {
+                            return composition.position().top;
+                        } else {
+                            return null;
+                        }
+                    }
+
                     //init directive
                     function prepareData() {
                         //add master info to the record data
@@ -189,7 +221,8 @@
                         $scope.getDetailDatamap = $scope.compositiondata[0];
 
                         if ($scope.getDetailDatamap) {
-                            $scope.getDetailDatamap.open = true;
+                            //make sure the first record is marked as read
+                            $scope.displayDetails($scope.getDetailDatamap);
                         }
                     }
 
@@ -221,83 +254,7 @@
                     init(this);
 
                     $scope.$on("sw_compositiondataresolved", prepareData);
-                }],
-
-            link: function (scope, element, attrs) {
-                var log = $log.getInstance('sw4.composition.master/detail.link');                
-                var scrollPanes = {
-                    master: null,
-                    details: null
-                };
-
-                function getPaneHeight(scroll, available, subtract) {
-
-                    //get the total height of the content
-                    var contents = $('.jspPane', scroll).height();
-                    if (contents == null) {
-                        contents = scroll.height();
-                    }
-
-                    //if the height was not set (no content), exit
-                    if (contents == 0) {
-                        return null;
-                    }
-
-                    //set pane height to smallest, contents or available area
-                    if (contents > available) {
-                        scroll.height(available - subtract);
-                    } else {
-                        scroll.height(contents);
-                    }
-
-                    return scroll.height();
-                }
-
-                function initScrollPane(pane, scroll) {
-                    if (pane == null) {
-                        pane = scroll.jScrollPane().data('jsp');
-                    } else {
-                        pane.reinitialise();
-                    }
-
-                    return pane;
-                }
-
-                function setSrcollHeight() {
-                    var composition = $('.composition.master-details:visible');
-
-                    if (composition.position() != undefined) {
-                        var scrollTop = composition.position().top;
-                        var scrollHeight = $(window).height() - scrollTop;
-
-                        //create the master scroll pane
-                        var masterScroll = $('.master .scroll', element);
-                        var masterMargins = $('.master', element).outerHeight(true) - $('.master', element).height();
-                        var pagination = $('.master .swpagination', element).outerHeight(true);
-
-                        var newHeight = getPaneHeight(masterScroll, scrollHeight, masterMargins + pagination);
-                        //only try to create scroll pane if height is set
-                        if (newHeight != null) {
-                            scrollPanes.master = initScrollPane(scrollPanes.master, masterScroll);
-                        }
-
-                        //create the details scroll pane
-                        var detailScroll = $('.details .scroll', element);
-                        var commandbuttons = $('.master-details .commands:visible', element).outerHeight(true);
-                        newHeight = getPaneHeight(detailScroll, scrollHeight, commandbuttons);
-                        //only try to create scroll pane if height is set
-                        if (newHeight != null) {
-                            scrollPanes.details = initScrollPane(scrollPanes.details, detailScroll);
-                        }
-
-                        log.debug(scrollPanes);
-                    }
-                }
-
-                var lazyLayout = window.debounce(setSrcollHeight, 200);
-                $(window).resize(lazyLayout);
-                //$(window).trigger('resize');
-            }
+                }]
         };
     });
 

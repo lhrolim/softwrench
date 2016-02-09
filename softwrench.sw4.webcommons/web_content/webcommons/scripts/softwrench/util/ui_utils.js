@@ -3,7 +3,7 @@ $(function () {
     //ensure that english is the current locale for moment.js
     moment.locale('en');
 
-    $(window).resize(function () {
+    function setHeaderPosition () {
         //console.log('resize');
 
         if ($('.site-header').css('position') == 'fixed') {
@@ -40,13 +40,15 @@ $(function () {
             $('.listgrid-thead').css('top', 'auto');
             $('.listgrid-table').css('margin-top', 'auto');
         }
+    };
 
+    function setFooterPosition () {
         //make sure the height includes the footer
         $('.site-footer').css('position', 'static');
 
         var containerHeight = $('[ng-controller="LayoutController"]').height();
         var windowHeight = $(window).height();
-        //console.log('fix footer', containerHeight, windowHeight);
+        console.log('scroll fix footer', containerHeight, windowHeight);
 
         //adjust footer position
         if (containerHeight > windowHeight) {
@@ -54,7 +56,11 @@ $(function () {
         } else {
             $('.site-footer').css('position', 'absolute');
         }
-    });
+    };
+
+    //register layout functions, debounced to stop repeated calls while resizing the browser window
+    $(window).resize(window.debounce(setHeaderPosition, 300));
+    $(window).resize(window.debounce(setFooterPosition, 300));
 
     //show or hide the menu when the expand button is clicked
     $('.menu-expand').click(function () {

@@ -161,7 +161,7 @@ app.directive('pagination', ['contextService', '$log', function (contextService,
     };
 }]);
 
-app.directive('paginationPages', ['contextService', '$log', function (contextService, $log) {
+app.directive('paginationPages', ['contextService', '$log', '$timeout', function (contextService, $log, $timeout) {
     var log = $log.getInstance('sw4.pagination.pages');
 
     return {
@@ -178,6 +178,11 @@ app.directive('paginationPages', ['contextService', '$log', function (contextSer
             $scope.changePage = function (page) {
                 log.debug($scope.paginationData);
                 $scope.$parent.selectPage(page);
+
+                //update header/footer layout
+                $timeout(function () {
+                    $(window).trigger('resize');
+                }, false);
             };
 
             $scope.getLastPage = function () {
