@@ -1,7 +1,7 @@
 <div class="composition master-details clearfix">
         <div ng-show="hasRecords()" class="clearfix">
             <div class="master col-xs-12 col-sm-4">
-                <scroll-pane availablefn="getScrollSpaceMaster">
+                <scroll-pane data-available-fn="getScrollSpaceMaster">
                     <div class="scroll">
                         <div class="entries">
                             <div ng-repeat="entry in compositiondata" ng-class="[$odd ? 'odd' : 'even', entry.open ? 'current' : '']" ng-click="displayDetails(entry)" class="entry clearfix">
@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="details col-xs-12 col-sm-8 hidden-xs">
-                <scroll-pane availablefn="getScrollSpaceDetails">
+                <scroll-pane data-available-fn="getScrollSpaceDetails">
                     <div class="scroll">
                         <div ng-if="!!compositiondata" class="fields">
                             <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">

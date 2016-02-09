@@ -6,8 +6,8 @@
             restrict: 'E',
             replace: false,
             scope: {
-                availablefn: '&',
-                preventscroll: '='
+                availableFn: '&',
+                preventWindowScroll: '='
             },
 
             link: function(scope, element, attrs) {
@@ -50,7 +50,7 @@
                 }
 
                 function setSrcollHeight() {
-                    var contentHeight = getContentHeight(scrollElement, scope.availablefn()());
+                    var contentHeight = getContentHeight(scrollElement, scope.availableFn()());
 
                     if (contentHeight != null) {
                         scrollElement.height(contentHeight);
@@ -60,7 +60,7 @@
                     //log.debug(scrollPaneData);
                 }
 
-                function stopScroll(prevent) {
+                function stopWindowScroll(prevent) {
                     //prevent window scrolling after reaching end of navigation pane if enabled
                     if (prevent) {
                         scrollElement.on('mousewheel', function(e) {
@@ -70,7 +70,7 @@
                         });
                     }
                 }
-                stopScroll(scope.preventscroll);
+                stopWindowScroll(scope.preventWindowScroll);
 
                 var lazyLayout = window.debounce(setSrcollHeight, 100);
                 $(window).resize(lazyLayout);
