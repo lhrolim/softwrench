@@ -1,87 +1,87 @@
 <div class="composition master-details clearfix">
-    <div ng-show="hasRecords()" class="clearfix">
-        <div class="master col-xs-12 col-sm-4">
-            <div class="scroll">
-                <!--<div class="quick-search">
-                    <search-box ng-model="searchText" data-placeholder="'Search'"/>
-                </div>-->
-                <div class="entries">
-                    <div ng-repeat="entry in compositiondata" ng-class="[$odd ? 'odd' : 'even', entry.open ? 'current' : '']" ng-click="displayDetails(entry)" class="entry clearfix">
-                        <div class="icons">
-                            <div ng-repeat="icon in entry.master.icons" ng-show="icon" class="icon">
-                                <i class="fa {{icon}}"></i>
-                            </div>
-                        </div>
-                        <div class="info clearfix">
-                            <div class="title" ng-show="entry.master.title">{{entry.master.title}}</div>
-                            <div class="tag" ng-show="entry.master.tag">{{entry.master.tag}}</div>
-                            <div class="subtitle" ng-show="entry.master.subtitle">{{entry.master.subtitle}}</div>
-                            <div class="message" ng-show="entry.master.message">{{entry.master.message}}</div>
-                        </div>
-                        <div class="details" ng-class={open:entry.open}>
-                            <div ng-if="!!compositiondata" class="fields">
-                                <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
-                                    <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
-                                    <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
+        <div ng-show="hasRecords()" class="clearfix">
+            <div class="master col-xs-12 col-sm-4">
+                <scroll-pane availablefn="getScrollSpaceMaster">
+                    <div class="scroll">
+                        <div class="entries">
+                            <div ng-repeat="entry in compositiondata" ng-class="[$odd ? 'odd' : 'even', entry.open ? 'current' : '']" ng-click="displayDetails(entry)" class="entry clearfix">
+                                <div class="icons">
+                                    <div ng-repeat="icon in entry.master.icons" ng-show="icon" class="icon">
+                                        <i class="fa {{icon}}"></i>
+                                    </div>
                                 </div>
-                            </div>
-                            <div ng-if="!!compositiondata" class="commands">
-                                <div ng-controller="CommLogActionsController" class="buttons">
-                                    <button class="btn btn-default fa fa-mail-reply" ng-click="reply(getDetailDatamap)" title="Reply"></button>
-                                    <button class="btn btn-default fa fa-mail-reply-all" ng-click="replyAll(getDetailDatamap)" title="Reply all"></button>
-                                    <button class="btn btn-default fa fa-mail-forward" ng-click="forward(getDetailDatamap)" title="Forward"></button>
+                                <div class="info clearfix">
+                                    <div class="title" ng-show="entry.master.title">{{entry.master.title}}</div>
+                                    <div class="tag" ng-show="entry.master.tag">{{entry.master.tag}}</div>
+                                    <div class="subtitle" ng-show="entry.master.subtitle">{{entry.master.subtitle}}</div>
+                                    <div class="message" ng-show="entry.master.message">{{entry.master.message}}</div>
+                                </div>
+                                <div class="details" ng-class={open:entry.open}>
+                                    <div ng-if="!!compositiondata" class="fields">
+                                        <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
+                                            <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
+                                            <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
+                                        </div>
+                                    </div>
+                                    <div ng-if="!!compositiondata" class="commands">
+                                        <div ng-controller="CommLogActionsController" class="buttons">
+                                            <button class="btn btn-default fa fa-mail-reply" ng-click="reply(getDetailDatamap)" title="Reply"></button>
+                                            <button class="btn btn-default fa fa-mail-reply-all" ng-click="replyAll(getDetailDatamap)" title="Reply all"></button>
+                                            <button class="btn btn-default fa fa-mail-forward" ng-click="forward(getDetailDatamap)" title="Forward"></button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="context clearfix" ng-if="showPagination">
-                    <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" pagination-simple-layout/>
+                </scroll-pane>
+                <div class="context swpagination clearfix" ng-if="showPagination">
+                    <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" />
                 </div>
             </div>
-            <!-- TODO: add pagination -->
-        </div>
-        <div class="details col-xs-12 col-sm-8 hidden-xs">
-            <div class="scroll">
-                <div ng-if="!!compositiondata" class="fields">
-                    <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
-                        <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
-                        <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
+            <div class="details col-xs-12 col-sm-8 hidden-xs">
+                <scroll-pane availablefn="getScrollSpaceDetails">
+                    <div class="scroll">
+                        <div ng-if="!!compositiondata" class="fields">
+                            <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
+                                <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
+                                <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
+                            </div>
+                        </div>
+                    </div>
+                </scroll-pane>
+                <div ng-if="!!compositiondata" class="commands">
+                    <div ng-controller="CommLogActionsController" class="buttons">
+                        <button class="btn btn-default fa fa-mail-reply" ng-click="reply(getDetailDatamap)" title="Reply"></button>
+                        <button class="btn btn-default fa fa-mail-reply-all" ng-click="replyAll(getDetailDatamap)" title="Reply all"></button>
+                        <button class="btn btn-default fa fa-mail-forward" ng-click="forward(getDetailDatamap)" title="Forward"></button>
                     </div>
                 </div>
-            </div>
-            <div ng-if="!!compositiondata" class="commands">
-                <div ng-controller="CommLogActionsController" class="buttons">
-                    <button class="btn btn-default fa fa-mail-reply" ng-click="reply(getDetailDatamap)" title="Reply"></button>
-                    <button class="btn btn-default fa fa-mail-reply-all" ng-click="replyAll(getDetailDatamap)" title="Reply all"></button>
-                    <button class="btn btn-default fa fa-mail-forward" ng-click="forward(getDetailDatamap)" title="Forward"></button>
+                <div ng-if="!compositiondata" class="no-records">
+                    <i class="fa fa-info-circle"></i>&ensp;No records match your search.
                 </div>
             </div>
-            <div ng-if="!compositiondata" class="no-records">
-                <i class="fa fa-info-circle"></i>&ensp;No records match your search.
-            </div>
         </div>
-    </div>
-    <div ng-hide="hasRecords()" class="no-records col-xs-12">
-        <i class="fa fa-info-circle"></i>&ensp;No records to display.
-    </div>
-    <div class="form-actions hidden-phone form-group hiddenonprint commandbar" data-class="commandbar">
-        <div class="spinner" data-class="spinner" id="detailspinner" ng-if="!inline"></div>
-        <table style="width: 100%;">
-            <tr>
-                <td style="text-align: center; vertical-align: middle;" data-class="commandbar">
-                    <masterdetailtoolbar position="compositionbottom"
-                                         schema="compositionlistschema"
-                                         parentschema="parentschema"
-                                         datamap="compositiondata"
-                                         parentdatamap="parentdata"
-                                         pagination-data="paginationData"
-                                         search-data="searchData"
-                                         search-sort="searchSort"
-                                         search-operator="searchOperator"
-                                         mode="{{mode}}" />
-                </td>
-            </tr>
-        </table>
-    </div>
+        <div ng-hide="hasRecords()" class="no-records col-xs-12">
+            <i class="fa fa-info-circle"></i>&ensp;No records to display.
+        </div>
+        <div class="form-actions hidden-phone form-group hiddenonprint commandbar" data-class="commandbar">
+            <div class="spinner" data-class="spinner" id="detailspinner" ng-if="!inline"></div>
+            <table style="width: 100%;">
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;" data-class="commandbar">
+                        <masterdetailtoolbar position="compositionbottom"
+                                             schema="compositionlistschema"
+                                             parentschema="parentschema"
+                                             datamap="compositiondata"
+                                             parentdatamap="parentdata"
+                                             pagination-data="paginationData"
+                                             search-data="searchData"
+                                             search-sort="searchSort"
+                                             search-operator="searchOperator"
+                                             mode="{{mode}}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
 </div>
