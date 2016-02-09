@@ -313,6 +313,7 @@
                   <renderer type="autocompleteclient" params="inputsize=small"/>
                 </optionfield>
               </section>
+              <!-- field used to base custmozations for UMC from -->
               <field attribute="hiddenfield" hidden="true"/>
             </section>
 
