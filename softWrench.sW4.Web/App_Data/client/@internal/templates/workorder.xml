@@ -297,7 +297,7 @@
                 </association>
               </section>
 
-              <section orientation="horizontal">
+              <section orientation="horizontal" id="classsection">
                 <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureType">
                   <renderer type="autocompleteclient" params="inputsize=large" />
                 </optionfield>
@@ -313,7 +313,7 @@
                   <renderer type="autocompleteclient" params="inputsize=small"/>
                 </optionfield>
               </section>
-
+              <field attribute="hiddenfield" hidden="true"/>
             </section>
 
             <section orientation="horizontal">
