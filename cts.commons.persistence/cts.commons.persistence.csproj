@@ -71,6 +71,8 @@
     <Compile Include="Event\RestartDBEvent.cs" />
     <Compile Include="IBaseAuditEntity.cs" />
     <Compile Include="IBaseEntity.cs" />
+    <Compile Include="IBaseHibernateDAO.cs" />
+    <Compile Include="IMaximoHibernateDAO.cs" />
     <Compile Include="ISWDBHibernateDAO.cs" />
     <Compile Include="ReadWriteHibernateDAO.cs" />
     <Compile Include="SessionManagerWrapper.cs" />

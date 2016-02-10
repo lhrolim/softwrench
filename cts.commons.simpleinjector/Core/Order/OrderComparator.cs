@@ -10,8 +10,8 @@ namespace cts.commons.simpleinjector.Core.Order {
         public virtual int Compare(T o1, T o2) {
             var ordered = o1 as IOrdered;
             var ordered2 = o2 as IOrdered;
-            var num = (ordered != null) ? ordered.Order : 2147483647;
-            var num2 = (ordered2 != null) ? ordered2.Order : 2147483647;
+            var num = (ordered != null) ? ordered.Order : int.MaxValue - 100; // -100 to give space to put ordereds after default
+            var num2 = (ordered2 != null) ? ordered2.Order : int.MaxValue - 100; // -100 to give space to put ordereds after default
             if (num < num2) {
                 return -1;
             }

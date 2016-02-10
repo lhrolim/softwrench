@@ -499,7 +499,6 @@
           </commandbars>
           <field attribute="orgid" hidden="true"/>
           <field attribute="matusetransid" hidden="true"/>
-          <field attribute="storeloc" hidden="true"/>
           <field attribute="binnum" hidden="true"/>
           <field attribute="item_.itemnum" hidden="true"/>
           <field attribute="itemnum" label="Item"/>

@@ -797,6 +797,13 @@
     <attribute name="sort" type="boolean"></attribute>
     <attribute name="dependantfields" type="string"></attribute>
     <attribute name="qualifier" type="string"></attribute>
+    <attribute name="skipvalidation" type="boolean">
+      <annotation>
+        <documentation>
+          If true skips the validation of "provideratribute" attribute.
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="OptionType">

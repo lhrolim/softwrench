@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using cts.commons.persistence;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data;
@@ -10,7 +11,7 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 
 namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
     class KongsbergServiceRequestDataSet : BaseServiceRequestDataSet {
-        public KongsbergServiceRequestDataSet(SWDBHibernateDAO swdbDao) : base(swdbDao) {
+        public KongsbergServiceRequestDataSet(ISWDBHibernateDAO swdbDao) : base(swdbDao) {
         }
 
 
