@@ -74,7 +74,7 @@ namespace softWrench.sW4.Data.Search {
             var where = GetWhere(dto, entityName);
             var parameters = GetParameters(dto);
             foreach (var parameter in parameters) {
-                where = where.Replace(":" + parameter.Key, "'" + (string)parameter.Value + "'");
+                where = where.Replace(":" + parameter.Key, "'" + parameter.Value + "'");
             }
             return where;
         }
