@@ -22,13 +22,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using cts.commons.persistence;
 using softWrench.sW4.Metadata.Applications.DataSet.Faq;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagServiceRequestDataSet : HapagBaseApplicationDataSet {
 
 
-        public HapagServiceRequestDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
+        public HapagServiceRequestDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, IMaximoHibernateDAO maxDao)
             : base(locationManager, entityRepository, maxDao) {
         }
 

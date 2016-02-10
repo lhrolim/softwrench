@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using softwrench.sw4.Shared2.Data.Association;
-using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Security.Services;
 
@@ -19,7 +19,7 @@ namespace softWrench.sW4.Metadata.Applications.Classification {
         };
 
         public static IEnumerable<IAssociationOption> GetClassStructureType(ClassStructureType type, OptionFieldProviderParameters parameters) {
-            var maxDAO = SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
+            var maxDAO = SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(typeof(IMaximoHibernateDAO));
             var user = SecurityFacade.CurrentUser();
 
             var query = string.Format(@"SELECT c.classstructureid AS ID,

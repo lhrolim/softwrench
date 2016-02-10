@@ -41,14 +41,25 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dependencies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector">
+      <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -80,6 +91,7 @@
     <Compile Include="Data\Search\ApplicationSearchTest.cs" />
     <Compile Include="Data\Search\SearchTest2.cs" />
     <Compile Include="Email\CommLogTemplateMergerTest.cs" />
+    <Compile Include="ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Hapag\Data\Connector\Imac\ImacServicePlanHelperTest.cs" />
     <Compile Include="Hapag\Security\HlagGroupedLocationTest.cs" />
     <Compile Include="Metadata\AbstractSchemaTest.cs" />
@@ -94,12 +106,14 @@
     <Compile Include="Metadata\Entities\TargetAttributeHandlerTest.cs" />
     <Compile Include="Metadata\Entities\TargetConstantHandlerTest.cs" />
     <Compile Include="Metadata\Entities\ManchesterSlicedEntityMetadataBuilderTest.cs" />
+    <Compile Include="Metadata\ApplicationMetadataValidatorTest.cs" />
     <Compile Include="Metadata\MissingSchemaFieldsTest.cs" />
     <Compile Include="Metadata\MetadataPropertiesTest.cs" />
     <Compile Include="Metadata\MenuParsingTest.cs" />
     <Compile Include="Metadata\CustomizationTest.cs" />
     <Compile Include="Metadata\Parsing\XmlStereotypeMetadataParserTest.cs" />
     <Compile Include="Metadata\Parsing\XmlMCommandBarMetadataParserTest.cs" />
+    <Compile Include="Metadata\TestSimpleInjectorScanner.cs" />
     <Compile Include="Metadata\SyncSchemaTest.cs" />
     <Compile Include="offline\ClientStateJsonConverterTest.cs" />
     <Compile Include="Resources\MifSRSample.cs" />
@@ -155,7 +169,9 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_data\Client\test_only\metadata.xml" />
+    <Content Include="App_data\Client\test_only\metadata.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_data\Client\test_only\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -235,6 +251,10 @@
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
       <Name>cts.commons.simpleinjector</Name>
     </ProjectReference>
+    <ProjectReference Include="..\cts.commons.web\cts.commons.web.csproj">
+      <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
+      <Name>cts.commons.web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\cts.commons\cts.commons.csproj">
       <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
       <Name>cts.commons</Name>
@@ -243,9 +263,21 @@
       <Project>{34d2e894-c3aa-4f6e-b562-7a91d3078793}</Project>
       <Name>softwrench.sw4.activitystream</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.amex\softwrench.sw4.amex.csproj">
+      <Project>{93e0b0e8-f6ca-4e06-8a82-616e2dfc905a}</Project>
+      <Name>softwrench.sw4.amex</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.apachegold\softwrench.sw4.apachegold.csproj">
+      <Project>{cbf64ea8-97df-43b4-97cb-477769f9941c}</Project>
+      <Name>softwrench.sw4.apachegold</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.audit\softwrench.sw4.audit.csproj">
+      <Project>{a5e4cb59-33c1-4072-8d97-2cee10c4f964}</Project>
+      <Name>softwrench.sw4.audit</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
       <Project>{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}</Project>
@@ -255,6 +287,30 @@
       <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
       <Name>softwrench.sW4.batches</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.bering\softwrench.sw4.bering.csproj">
+      <Project>{a267fe4b-887c-47a5-b09d-f29e5c55a868}</Project>
+      <Name>softwrench.sw4.bering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.chicago\softwrench.sw4.chicago.csproj">
+      <Project>{2350e8f9-0d82-45c3-a268-57a732e85945}</Project>
+      <Name>softwrench.sw4.chicago</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.classic\softwrench.sw4.classic.csproj">
+      <Project>{a8d521d4-5a04-4764-8fcb-204bdd4a29d9}</Project>
+      <Name>softwrench.sw4.classic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.deltadental\softwrench.sw4.deltadental.csproj">
+      <Project>{a89dc757-b0bd-4ba0-9436-e4ae87f31bf1}</Project>
+      <Name>softwrench.sw4.deltadental</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.firstsolar\softwrench.sw4.firstsolar.csproj">
+      <Project>{4812b935-8303-4b80-9e32-8cd81abefc9f}</Project>
+      <Name>softwrench.sw4.firstsolar</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.fluor\softwrench.sw4.fluor.csproj">
+      <Project>{d31084ae-e36f-4328-a6e2-a92aa3aca623}</Project>
+      <Name>softwrench.sw4.fluor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.gric\softwrench.sw4.gric.csproj">
       <Project>{3b4ed6c6-ba78-45cd-8af9-964f3dc409e6}</Project>
       <Name>softwrench.sw4.gric</Name>
@@ -263,17 +319,69 @@
       <Project>{22d901fc-310e-4f14-9506-d9433cf192cf}</Project>
       <Name>softwrench.sw4.Hapag</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.kongsberg\softwrench.sw4.kongsberg.csproj">
+      <Project>{9b568df3-6a78-4a01-b080-8e88c8dab0f7}</Project>
+      <Name>softwrench.sw4.kongsberg</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.liggett\softwrench.sw4.liggett.csproj">
+      <Project>{dafd4db9-7f56-46ed-91d7-96c95685362a}</Project>
+      <Name>softwrench.sw4.liggett</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.manchester\softwrench.sw4.manchester.csproj">
+      <Project>{75c4b153-e741-4d16-9f10-96b2f6335331}</Project>
+      <Name>softwrench.sw4.manchester</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.nasco\softwrench.sw4.nasco.csproj">
+      <Project>{eca0c543-9a9a-48b8-bf22-4140656fff2c}</Project>
+      <Name>softwrench.sw4.nasco</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.ninewest\softwrench.sw4.ninewest.csproj">
+      <Project>{08b929a1-6e1c-4eb7-9357-57df9be07381}</Project>
+      <Name>softwrench.sw4.ninewest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.nisource\softwrench.sw4.nisource.csproj">
+      <Project>{e15deedc-a4c9-45d2-b548-459c5da52a14}</Project>
+      <Name>softwrench.sw4.nisource</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.offlineserver\softwrench.sw4.offlineserver.csproj">
       <Project>{1a476897-dd39-49eb-8ab1-f1eed8ce9ab2}</Project>
       <Name>softwrench.sw4.offlineserver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.pae\softwrench.sw4.pae.csproj">
+      <Project>{8248b6ce-335f-4611-89d2-1a79da5192c2}</Project>
+      <Name>softwrench.sw4.pae</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.pesco\softwrench.sw4.pesco.csproj">
+      <Project>{3ecf0937-dd18-4b53-98ab-c75cc46a5ab4}</Project>
+      <Name>softwrench.sw4.pesco</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.swgas\softwrench.sw4.swgas.csproj">
+      <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>
+      <Name>softwrench.sw4.swgas</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.tgcs\softwrench.sw4.tgcs.csproj">
+      <Project>{83d9b360-0879-487f-b03c-62044846192c}</Project>
+      <Name>softwrench.sw4.tgcs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.umc\softwrench.sw4.umc.csproj">
+      <Project>{6e187557-8460-4992-9687-84373c5f3ed2}</Project>
+      <Name>softwrench.sw4.umc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
       <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
       <Name>softwrench.sw4.user</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.xerox\softwrench.sw4.xerox.csproj">
+      <Project>{d704fc33-6b04-44a1-b12f-a8c196127a08}</Project>
+      <Name>softwrench.sw4.xerox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.yavapai\softwrench.sw4.yavapai.csproj">
+      <Project>{3c826d52-6795-4243-8d0e-cf8cbcb47891}</Project>
+      <Name>softwrench.sw4.yavapai</Name>
     </ProjectReference>
     <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
       <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>

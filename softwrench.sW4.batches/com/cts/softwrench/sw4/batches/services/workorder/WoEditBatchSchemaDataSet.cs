@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
@@ -16,9 +17,9 @@ using softwrench.sw4.Shared2.Data.Association;
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
     public class WoEditBatchSchemaDataSet : MaximoApplicationDataSet {
 
-        private readonly SWDBHibernateDAO _swdbdao;
+        private readonly ISWDBHibernateDAO _swdbdao;
 
-        public WoEditBatchSchemaDataSet(SWDBHibernateDAO swdbdao) {
+        public WoEditBatchSchemaDataSet(ISWDBHibernateDAO swdbdao) {
             _swdbdao = swdbdao;
         }
 

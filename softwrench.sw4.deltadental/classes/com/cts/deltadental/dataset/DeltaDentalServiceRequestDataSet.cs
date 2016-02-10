@@ -13,7 +13,7 @@ using System.Linq;
 namespace softwrench.sw4.deltadental.classes.com.cts.deltadental.dataset {
     class DeltaDentalServiceRequestDataSet : BaseServiceRequestDataSet {
         private readonly string[] _sites = { "PA", "ALP", "SF", "RNCHO" };
-        public DeltaDentalServiceRequestDataSet(SWDBHibernateDAO swdbDao) : base(swdbDao) {
+        public DeltaDentalServiceRequestDataSet(ISWDBHibernateDAO swdbDao) : base(swdbDao) {
         }
 
         protected override string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null)

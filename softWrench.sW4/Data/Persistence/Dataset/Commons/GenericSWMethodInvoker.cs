@@ -33,19 +33,24 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 var methodName = strings[1];
                 var ob = SimpleInjectorGenericFactory.Instance.GetObject<object>(serviceName);
                 if (ob != null) {
-                    return (T) ReflectionUtil.Invoke(ob, methodName, parameters);
+                    return (T)ReflectionUtil.Invoke(ob, methodName, parameters);
                 }
                 //shouldn´t happen as theoretically method should have been checked by existence before
                 return default(T);
             }
             //if no service is defined, applying dataset implementation
             var dataSet = DataSetProvider.GetInstance().LookupDataSet(schema.ApplicationName, schema.SchemaId);
-            return (T) ReflectionUtil.Invoke(dataSet, stringToCheck, parameters);
+            return (T)ReflectionUtil.Invoke(dataSet, stringToCheck, parameters);
         }
 
 
 
         public static void CheckExistenceByString(ApplicationSchemaDefinition schema, string stringToCheck, ParameterData parameterData = null) {
+            CheckExistenceByString(schema.ApplicationName, schema.SchemaId, stringToCheck, parameterData);
+        }
+
+        public static void CheckExistenceByString(string applicationName, string schemaId, string stringToCheck,
+            ParameterData parameterData = null) {
             if (stringToCheck.StartsWith("@")) {
                 stringToCheck = stringToCheck.Substring(1);
             }
@@ -69,7 +74,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     throw new MetadataException("error locating reference {0}: service {1} not found".Fmt(alias, serviceName));
                 }
             } else {
-                service = DataSetProvider.GetInstance().LookupDataSet(schema.ApplicationName, schema.SchemaId);
+                service = DataSetProvider.GetInstance().LookupDataSet(applicationName, schemaId);
                 methodName = stringToCheck;
                 serviceName = service.GetType().Name;
             }

@@ -710,25 +710,6 @@
       </schemas>
     </application>
 
-    <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
-      <schemas>
-        <detail platform="web" redeclaring="false">
-          <customization position="itemnum">
-            <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
-              <dataprovider prefilterfunction="filterPlannedMaterials"/>
-              <renderer type="lookup"/>
-              <event type="afterchange" service="matusetranService" method="afteritemchange"/>
-            </association>
-          </customization>
-          <customization position="gldebitacct">
-            <association label="GL Debit Account:" target="gldebitacct" labelfield="glcomponents_.comptext">
-              <renderer type="lookup"/>
-            </association>
-          </customization>
-      </detail>
-      </schemas>
-    </application>
-
     <application name="tooltrans" entity="tooltrans" title="Tools">
       <schemas>
         <detail platform="web" redeclaring="false">

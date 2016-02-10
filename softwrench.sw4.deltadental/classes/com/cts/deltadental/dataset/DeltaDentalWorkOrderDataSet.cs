@@ -12,7 +12,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sw4.deltadental.classes.com.cts.deltadental.dataset {
     class DeltaDentalWorkOrderDataSet : BaseWorkorderDataSet {
-        public DeltaDentalWorkOrderDataSet(SWDBHibernateDAO swdb) : base(swdb) {}
+        public DeltaDentalWorkOrderDataSet(ISWDBHibernateDAO swdb) : base(swdb) {}
         
         private readonly string[] _sites = { "PA", "ALN", "SF", "RNCHO" };
         protected override string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {

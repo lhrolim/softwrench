@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using cts.commons.persistence;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
@@ -18,9 +19,9 @@ using softWrench.sW4.Security.Services;
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
     public class BaseWorkorderDataSet : BaseTicketDataSet {
-        private readonly SWDBHibernateDAO _swdbDao;
+        private readonly ISWDBHibernateDAO _swdbDao;
 
-        public BaseWorkorderDataSet(SWDBHibernateDAO swdbDao) {
+        public BaseWorkorderDataSet(ISWDBHibernateDAO swdbDao) {
             _swdbDao = swdbDao;
         }
 
