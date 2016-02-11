@@ -143,6 +143,11 @@
                     function getRenderableDateValue(value) {
                         try {
                             var dateFromUser = $.fn.datetimepicker.DPGlobal.parseDate(value, $.fn.datepicker.DPGlobal.parseFormat(dateFormat), attrs.language);
+                            // attempt a regular parse just in case:
+                            // this may be necessary when the user causes the parse of an already formatted date (e.g. multiple clicking enter)
+                            if (isInvalidValidDate(dateFromUser)) {
+                                dateFromUser = Date.parse(value);
+                            }
                             var dateToUse = isInvalidValidDate(dateFromUser) ? startDate : dateFromUser;
                             return formatService.formatDate(dateToUse, originalDateFormat);
                         } catch (e) {
