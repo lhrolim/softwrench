@@ -224,13 +224,28 @@
         _attachEvents: function () {
             this._detachEvents();
             if (this.isInput) { // single input
-                this._events = [
-					[this.element, {
-					    focus: $.proxy(this.show, this),
-					    keyup: $.proxy(this.update, this),
-					    keydown: $.proxy(this.keydown, this)
-					}]
-                ];
+                var icon = this.element.siblings("span");
+                if (!!icon[0]) { // has icon -> only show datetimepicker when clicking the icon (not on input focus)
+                    this._events = [
+					    [this.element, {
+					        //focus: $.proxy(this.show, this),
+					        keyup: $.proxy(this.update, this),
+					        keydown: $.proxy(this.keydown, this)
+					    }],
+                        [icon, {
+                            click: $.proxy(this.show, this)
+                        }]
+                    ];
+                } else {
+                    this._events = [
+					    [this.element, {
+					        focus: $.proxy(this.show, this),
+					        keyup: $.proxy(this.update, this),
+					        keydown: $.proxy(this.keydown, this)
+					    }]
+                    ];
+                }
+                
             }
             else if (this.component && this.hasInput) { // component: input + button
                 this._events = [
