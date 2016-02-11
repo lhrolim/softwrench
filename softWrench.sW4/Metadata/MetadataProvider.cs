@@ -308,7 +308,7 @@ namespace softWrench.sW4.Metadata {
         }
 
 
-        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchTopLevelApps(ClientPlatform platform, ISWUser user) {
+        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchTopLevelApps(ClientPlatform platform, [CanBeNull]ISWUser user) {
             var watch = Stopwatch.StartNew();
             var result = new HashSet<CompleteApplicationMetadataDefinition>();
             var menu = Menu(platform);
@@ -316,7 +316,7 @@ namespace softWrench.sW4.Metadata {
             foreach (var menuBaseDefinition in leafs) {
                 if (menuBaseDefinition is ApplicationMenuItemDefinition) {
                     var application = Application((menuBaseDefinition as ApplicationMenuItemDefinition).Application);
-                    if (user.IsInRole(application.Role) || (user.IsInRole(menuBaseDefinition.Role))) {
+                    if (user == null || user.IsInRole(application.Role) || (user.IsInRole(menuBaseDefinition.Role))) {
                         result.Add(application);
                     }
                 }
@@ -420,7 +420,7 @@ namespace softWrench.sW4.Metadata {
 
         [NotNull]
         public static IStereotype Stereotype([CanBeNull]string id) {
-            if (id != null &&_mergedStereotypes.ContainsKey(id)) {
+            if (id != null && _mergedStereotypes.ContainsKey(id)) {
                 return _mergedStereotypes[id];
             }
             return new BlankStereotype();

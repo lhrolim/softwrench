@@ -869,6 +869,9 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
     };
 
 
+    $scope.isCheckboxSelected = function (compositionitem) {
+        return true === compositionitem["_#selected"];
+    }
 
     $scope.showListCommands = function () {
         return !$scope.detail || $scope.expanded;

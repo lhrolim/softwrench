@@ -354,6 +354,11 @@
 
 
         function updateEagerAssociationOptions(associationKey, options, contextData, panelid) {
+            if (options == null) {
+                //case for dependant associations
+                return;
+            }
+
             var context = getContext(panelid);
             if (context.showingModal) {
                 contextData = { schemaId: "#modal" };

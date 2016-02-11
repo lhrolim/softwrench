@@ -1,24 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
+using cts.commons.portable.Util;
+using cts.commons.web.Attributes;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.entities.security;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 
 namespace softWrench.sW4.Web.Controllers.Security {
+
     [Authorize]
+    [SWControllerConfiguration]
     public class UserProfileController : ApiController {
 
         private static readonly SecurityFacade SecurityFacade = SecurityFacade.GetInstance();
 
         private readonly SWDBHibernateDAO _dao;
 
-        public UserProfileController(SWDBHibernateDAO dao)
-        {
+        private UserProfileManager _userProfileManager;
+
+        public UserProfileController(SWDBHibernateDAO dao, UserProfileManager userProfileManager) {
             _dao = dao;
+            _userProfileManager = userProfileManager;
         }
 
 
@@ -34,18 +42,35 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return new GenericResponseResult<UserProfileListDto>(dto);
         }
 
+        [HttpGet]
+        public ApplicationPermission LoadApplicationPermissions(int profileId, string application) {
+            var profile = _userProfileManager.FindById(profileId);
+            if (profile == null) {
+                throw new InvalidOperationException("informed profile does not exist");
+            }
+            return profile.ApplicationPermission.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
+        }
+
         public class UserProfileListDto {
             private ICollection<UserProfile> _profiles;
             private ICollection<Role> _roles;
 
             public ICollection<UserProfile> Profiles {
-                get { return _profiles; }
-                set { _profiles = value; }
+                get {
+                    return _profiles;
+                }
+                set {
+                    _profiles = value;
+                }
             }
 
             public ICollection<Role> Roles {
-                get { return _roles; }
-                set { _roles = value; }
+                get {
+                    return _roles;
+                }
+                set {
+                    _roles = value;
+                }
             }
         }
 

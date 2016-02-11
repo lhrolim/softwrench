@@ -57,11 +57,8 @@
                     <!--Multiselect-->
                     <!-- TODO: Move style to css -->
                     <input type="checkbox"
-                           name="compositionlistschema.properties['list.selectionstyle']"
-                           value="{{option.value}}"
-                           ng-checked="isCheckboxSelected(option,column.associationKey)"
-                           ng-click="toggleCheckboxSelection(option,column.associationKey)"
-                           ng-true-value="1" ng-false-value="0">
+                           ng-model="compositionitem['_#selected']"
+                           ng-true-value="true" ng-false-value="false">
                 </td>
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                     <input type="radio" ng-model="compositionitem['#selected']" value="true" name="radio" ng-click="toggleDetails(compositionitem,column,'singleselection',$event,rowindex)">

@@ -28,12 +28,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         private readonly UserSetupEmailService _userSetupEmailService;
         private readonly UserLinkManager _userLinkManager;
         private readonly UserStatisticsService _userStatisticsService;
+        private readonly UserProfileManager _userProfileManager;
 
-        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService) {
+        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService, UserProfileManager userProfileManager) {
             _swdbDAO = swdbDAO;
             _userSetupEmailService = userSetupEmailService;
             _userLinkManager = userLinkManager;
             _userStatisticsService = userStatisticsService;
+            _userProfileManager = userProfileManager;
         }
 
 
@@ -100,7 +102,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             }
 
             dataMap.SetAttribute("#profiles", swUser.Profiles);
-            var availableprofiles = UserProfileManager.FetchAllProfiles(true).ToList();
+            var availableprofiles = _userProfileManager.FetchAllProfiles(true).ToList();
             foreach (var profile in swUser.Profiles) {
                 availableprofiles.Remove(profile);
             }

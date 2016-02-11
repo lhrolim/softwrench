@@ -6,6 +6,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace softWrench.sW4.Metadata.Applications {
@@ -81,6 +82,20 @@ namespace softWrench.sW4.Metadata.Applications {
                 }
                 return null;
             }
+        }
+
+
+        public static IEnumerable<ApplicationSchemaDefinition> SchemasByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName) {
+            return application.Schemas().Values.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && !schema.Abstract));
+        }
+
+        public static ApplicationSchemaDefinition PreferredSchemaByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName) {
+            var schemas = application.Schemas().Values.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && !schema.Abstract));
+            var applicationSchemaDefinitions = schemas as ApplicationSchemaDefinition[] ?? schemas.ToArray();
+            if (applicationSchemaDefinitions.Count() > 1) {
+                return null;
+            }
+            return applicationSchemaDefinitions.FirstOrDefault();
         }
     }
 }

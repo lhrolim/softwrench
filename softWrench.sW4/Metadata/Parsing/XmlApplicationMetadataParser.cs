@@ -53,6 +53,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             _commandBars = commandBars;
             _isSWDB = isSWDB;
             _isTemplateParsing = isTemplateParsing;
+            _xmlTemplateHandler = new XmlTemplateHandler(_isSWDB);
         }
 
 
@@ -718,6 +719,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private readonly IEnumerable<EntityMetadata> _entityMetadata;
         private readonly IDictionary<string, CommandBarDefinition> _commandBars;
+        private XmlTemplateHandler _xmlTemplateHandler;
 
         /// <summary>
         ///     Parses the XML document provided by the specified
@@ -739,7 +741,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
             var applications = enumerable.FirstOrDefault(f => f.IsNamed(XmlMetadataSchema.ApplicationsElement));
             var templates = enumerable.FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.TemplatesElement));
-            result.AddRange(XmlTemplateHandler.HandleTemplatesForApplications(templates, _entityMetadata, _commandBars, _isSWDB, alreadyParsedTemplates));
+            result.AddRange(_xmlTemplateHandler.HandleTemplatesForApplications(templates, _entityMetadata, _commandBars, _isSWDB, alreadyParsedTemplates));
 
 
             if (null == applications) {

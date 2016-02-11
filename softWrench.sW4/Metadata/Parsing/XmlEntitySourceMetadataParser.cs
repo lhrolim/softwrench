@@ -19,10 +19,12 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private readonly Boolean _isSWDDB = false;
         private bool _isTemplateParsing;
+        private XmlTemplateHandler _xmlTemplateHandler;
 
         public XmlEntitySourceMetadataParser(bool isSWDB, bool isTemplateParsing) {
             _isSWDDB = isSWDB;
             _isTemplateParsing = isTemplateParsing;
+            _xmlTemplateHandler = new XmlTemplateHandler(_isSWDDB);
         }
 
         /// <summary>
@@ -73,7 +75,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var entityMetadatas = new List<EntityMetadata>();
             var result = new Tuple<IEnumerable<EntityMetadata>, EntityQueries>(entityMetadatas, new EntityQueries(new Dictionary<string, string>()));
 
-            entityMetadatas.AddRange(XmlTemplateHandler.HandleTemplatesForEntities(templates, _isSWDDB, alreadyParsedTemplates));
+            entityMetadatas.AddRange(_xmlTemplateHandler.HandleTemplatesForEntities(templates, _isSWDDB, alreadyParsedTemplates));
 
 
             var entities = enumerable.FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.EntitiesElement));

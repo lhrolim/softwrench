@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+
+
+    <application entity="Role" name="Role" title="Roles">
+      <schemas>
+        <list>
+          <field label="Name" attribute="name" />
+          <field label="Description" attribute="description" />
+        </list>
+      </schemas>
+
+    </application>
+
+
+    <application entity="UserProfile" name="UserProfile" title="Security Groups">
+      <schemas>
+        <list>
+          <field label="Name" attribute="name" />
+          <field label="Description" attribute="description" />
+          <commandbars>
+            <commandgroup position="gridtop">
+              <command id="new" icon="fa-plus"
+                       service="redirectService" method="goToApplicationView" parameters="_UserProfile,detail" label="New Security Group" tooltip="New Security Group" position="left"/>
+            </commandgroup>
+          </commandbars>
+        </list>
+        <detail>
+          <field label="Name" attribute="name" />
+          <field label="Description" attribute="description" />
+          <tab label="Basic Roles" id="basicroles">
+<!--            <composition detailschema="" fetchtype="eager"  relationship="#basicroles"  printschema="" inline="true">-->
+<!--              <collectionproperties allowcreation="false" listschema="rolerepresentation"/>-->
+<!--            </composition>-->
+          </tab>
+          <optionfield attribute="application" providerattribute="topLevelApplications" label="Application">
+            <event type="afterchange" service="userProfileService" method="onApplicationChange"/>
+          </optionfield>
+          <section orientation="horizontal" showexpression="@application!=null">
+            <section orientation="horizontal">
+              <section>
+                <header displacement="ontop" label="Basic Setup"/>
+                <field attribute="#appallowcreation" label="Allow Creation">
+                  <renderer type="checkbox"/>
+                </field>
+                <field attribute="#appallowupdate" label="Allow Update">
+                  <renderer type="checkbox"/>
+                </field>
+                <field attribute="#appallowview" label="Allow Only Visualization">
+                  <renderer type="checkbox"/>
+                </field>
+              </section>
+              <section>
+                <header displacement="ontop" label="Action Setup"/>
+                <section orientation="horizontal">
+                  <optionfield label="Mode" attribute="#selectedmode" providerattribute="selectableModes" dependantfields="application"/>
+                  <optionfield label="Schema" attribute="#schema" providerattribute="schemas" showexpression="@hasmultipleschemasformode == true" dependantfields="application,#selectedmode"/>
+                </section>
+
+                <optionfield label="Tab" attribute="#selectedtab" providerattribute="selectableTabs" dependantfields="#selectedmode"/>
+                
+                <section>
+                  <field attribute="#compallowcreation" label="Allow Creation">
+                    <renderer type="checkbox"/>
+                  </field>
+                  <field attribute="#compallowupdate" label="Allow Update">
+                    <renderer type="checkbox"/>
+                  </field>
+                  <field attribute="#compallowview" label="Allow Visualization">
+                    <renderer type="checkbox"/>
+                  </field>
+                </section>
+              </section>
+            </section>
+
+            <section>
+              <header displacement="ontop" label="Field Setup"/>
+              <composition detailschema="" fetchtype="eager"  relationship="#basicroles"  printschema="" inline="true">
+                <collectionproperties allowcreation="false" listschema="rolerepresentation"/>
+              </composition>
+              
+            </section>
+
+          </section>
+
+
+        </detail>
+
+        <schema id="rolerepresentation" stereotype="list.selection">
+          <field hidden="true" attribute="id"/>
+          <field label="Name" attribute="name" />
+          <field label="Description" attribute="description" />
+        </schema>
+
+      </schemas>
+
+    </application>
+
+  </applications>
+
+
+
+
+</metadata>

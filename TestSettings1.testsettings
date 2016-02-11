@@ -14,6 +14,7 @@
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\kongsberg" outputDirectory="Client\kongsberg\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\hapag" outputDirectory="Client\hapag\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\amex" outputDirectory="Client\amex" />
+	<DeploymentItem filename="softWrench.sW4.Web\App_Data\client\entegra" outputDirectory="Client\entegra" />
     
     
     <DeploymentItem filename="softwrench.sw4.api\metadata\" />

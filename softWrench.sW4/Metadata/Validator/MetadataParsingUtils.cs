@@ -12,9 +12,13 @@ namespace softWrench.sW4.Metadata.Validator {
 
         private const string ClientMetadataPattern = "\\App_Data\\Client\\{0}\\";
         internal const string TemplatesInternalPath = "\\App_Data\\Client\\@internal\\templates\\{0}";
+        internal const string TemplatesSWDBInternalPath = "\\App_Data\\Client\\@internal\\templates\\swdb\\{0}";
         internal const string MenuTemplatesInternalPath = "\\App_Data\\Client\\@internal\\templates\\menu\\menutemplate.{0}.xml";
         internal const string TestMenuTemplatesInternalPath = "\\Client\\@internal\\templates\\menu\\menutemplate.{0}.xml";
+
         internal const string TestTemplatesInternalPath = "\\Client\\@internal\\templates\\{0}";
+        internal const string TestSWDBTemplatesInternalPath = "\\Client\\@internal\\templates\\swdb\\{0}";
+
         private const string InternalMetadataPattern = "\\App_Data\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestInternalMetadataPattern = "\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestMetadataPath = "\\Client\\{0}\\";
@@ -51,14 +55,15 @@ namespace softWrench.sW4.Metadata.Validator {
 
 
 
-        public static string GetTemplateInternalPath(string resource) {
+        public static string GetTemplateInternalPath(string resource, bool isSWDB) {
+
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             if (resource.StartsWith("@")) {
                 resource = resource.Substring(1);
                 if (ApplicationConfiguration.IsUnitTest) {
-                    return @"" + baseDirectory + TestTemplatesInternalPath.Fmt(resource);
+                    return @"" + baseDirectory + (isSWDB ? TestSWDBTemplatesInternalPath.Fmt(resource): TestTemplatesInternalPath.Fmt(resource));
                 }
-                return @"" + baseDirectory + TemplatesInternalPath.Fmt(resource);
+                return @"" + baseDirectory + (isSWDB ? TemplatesSWDBInternalPath.Fmt(resource) : TemplatesInternalPath.Fmt(resource));
             }
             if (ApplicationConfiguration.IsUnitTest) {
                 return @"" + baseDirectory + TestMetadataPath.Fmt(ApplicationConfiguration.ClientName) + resource;
@@ -69,9 +74,9 @@ namespace softWrench.sW4.Metadata.Validator {
 
         public static string GetMenuTemplatePath(ClientPlatform platform) {
             if (ApplicationConfiguration.IsUnitTest) {
-                return AppDomain.CurrentDomain.BaseDirectory +TestMenuTemplatesInternalPath.Fmt(platform.ToString().ToLower());
+                return AppDomain.CurrentDomain.BaseDirectory + TestMenuTemplatesInternalPath.Fmt(platform.ToString().ToLower());
             }
-            return AppDomain.CurrentDomain.BaseDirectory+ MenuTemplatesInternalPath.Fmt(platform.ToString().ToLower());
+            return AppDomain.CurrentDomain.BaseDirectory + MenuTemplatesInternalPath.Fmt(platform.ToString().ToLower());
 
         }
 

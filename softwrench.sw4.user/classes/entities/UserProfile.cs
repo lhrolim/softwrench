@@ -5,6 +5,7 @@ using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using NHibernate.Linq.Visitors;
 using NHibernate.Mapping.Attributes;
+using softwrench.sw4.user.classes.entities.security;
 
 namespace softwrench.sw4.user.classes.entities {
     [Class(Table = "SW_USERPROFILE")]
@@ -40,6 +41,17 @@ namespace softwrench.sw4.user.classes.entities {
             get; set;
         }
 
+
+        [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
+        [Key(1, Column = "profile_id")]
+        [OneToMany(2, ClassType = typeof(ApplicationPermission))]
+        public virtual ISet<ApplicationPermission> ApplicationPermission {
+            get; set;
+        }
+
+
+
+
         //
         //        [Set(0, Table = "sw_userprofile_dataconstraint",
         //        Lazy = CollectionLazy.False, Cascade = "all")]
@@ -66,13 +78,15 @@ namespace softwrench.sw4.user.classes.entities {
             var profile = new UserProfile();
             profile.Roles = new HashedSet<Role>();
 
-            JToken roles = jObject["roles"];
+            JToken roles = jObject["#basicroles_"];
             if (roles != null) {
                 foreach (var jToken in roles.ToArray()) {
-                    profile.Roles.Add(new Role {
-                        Id = (int?)jToken["id"],
-                        Name = (string)jToken["name"]
-                    });
+                    if ((bool)jToken["_#selected"]) {
+                        profile.Roles.Add(new Role {
+                            Id = (int?)jToken["id"],
+                            Name = (string)jToken["name"]
+                        });
+                    }
                 }
             }
             profile.Name = (string)jObject["name"];

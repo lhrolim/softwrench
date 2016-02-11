@@ -31,6 +31,8 @@ namespace softWrench.sW4.Security.Services {
 
         private static GridFilterManager _gridFilterManager;
 
+        private static UserProfileManager _userProfileManager;
+
         private static UserStatisticsService _statisticsService;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SecurityFacade));
@@ -45,10 +47,11 @@ namespace softWrench.sW4.Security.Services {
             return _instance;
         }
 
-        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService) {
+        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager) {
             _eventDispatcher = dispatcher;
             _gridFilterManager = gridFilterManager;
             _statisticsService = statisticsService;
+            _userProfileManager = userProfileManager;
         }
 
         public InMemoryUser DoLogin(User dbUser, string userTimezoneOffset) {
@@ -111,7 +114,7 @@ namespace softWrench.sW4.Security.Services {
                 userTimezoneOffsetInt = tmp;
             }
 
-            var profiles = UserProfileManager.FindUserProfiles(dbUser);
+            var profiles = _userProfileManager.FindUserProfiles(dbUser);
             var gridPreferences = new GridPreferences() {
                 GridFilters = _gridFilterManager.LoadAllOfUser(dbUser.Id)
             };
@@ -149,7 +152,7 @@ namespace softWrench.sW4.Security.Services {
 
         public static void InitSecurity() {
             RoleManager.LoadActiveRoles();
-            UserProfileManager.FetchAllProfiles(true);
+            _userProfileManager.FetchAllProfiles(true);
         }
 
 
@@ -250,17 +253,17 @@ namespace softWrench.sW4.Security.Services {
 
 
         public void SaveUserProfile(UserProfile profile) {
-            UserProfileManager.SaveUserProfile(profile);
+            _userProfileManager.SaveUserProfile(profile);
             ClearUserFromCache();
         }
 
 
         public ICollection<UserProfile> FetchAllProfiles(Boolean eager) {
-            return UserProfileManager.FetchAllProfiles(eager);
+            return _userProfileManager.FetchAllProfiles(eager);
         }
 
         public void DeleteProfile(UserProfile profile) {
-            UserProfileManager.DeleteProfile(profile);
+            _userProfileManager.DeleteProfile(profile);
         }
         public User SaveUser(User user, Iesi.Collections.Generic.ISet<UserProfile> profiles, Iesi.Collections.Generic.ISet<UserCustomRole> customRoles, Iesi.Collections.Generic.ISet<UserCustomConstraint> customConstraints) {
             user.Profiles = profiles;
