@@ -22,11 +22,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(EntityRepository));
 
-        private readonly SWDBHibernateDAO _swdbDao;
-        private readonly MaximoHibernateDAO _maximoHibernateDao;
-        private readonly EntityQueryBuilder _entityQueryBuilder; 
+        private readonly ISWDBHibernateDAO _swdbDao;
+        private readonly IMaximoHibernateDAO _maximoHibernateDao;
+        private readonly EntityQueryBuilder _entityQueryBuilder;
 
-        public EntityRepository(SWDBHibernateDAO swdbDao, MaximoHibernateDAO maximoHibernateDao) {
+        public EntityRepository(ISWDBHibernateDAO swdbDao, IMaximoHibernateDAO maximoHibernateDao) {
             _swdbDao = swdbDao;
             _maximoHibernateDao = maximoHibernateDao;
             _entityQueryBuilder = new EntityQueryBuilder();
@@ -64,7 +64,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             }
             if (attributeDeclaration.ConnectorParameters.Parameters.ContainsKey("utcdate")) {
                 var date = (DateTime)value;
-                date=DateTime.SpecifyKind(date, DateTimeKind.Utc);
+                date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
                 return date;
             }
             return value;
@@ -204,7 +204,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         }
 
         [CanBeNull]
-        public AttributeHolder ByUserIdSite([NotNull] EntityMetadata entityMetadata, [NotNull]Tuple<string,string>userIdSiteTuple ) {
+        public AttributeHolder ByUserIdSite([NotNull] EntityMetadata entityMetadata, [NotNull]Tuple<string, string> userIdSiteTuple) {
             //TODO: we're always handling the entity ID as a string.
             //Maybe we should leverage the entity attribute type.
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
@@ -243,7 +243,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
         }
 
-        private BaseHibernateDAO GetDao(EntityMetadata metadata) {
+        private IBaseHibernateDAO GetDao(EntityMetadata metadata) {
             if (metadata.Name.EndsWith("_")) {
                 return _swdbDao;
             }

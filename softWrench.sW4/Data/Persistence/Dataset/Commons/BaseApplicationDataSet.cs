@@ -238,7 +238,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
             var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            Dictionary<string, EntityRepository.SearchEntityResult> result;
+            IDictionary<string, EntityRepository.SearchEntityResult> result;
 
             if (request.CompositionList != null) {
                 foreach (var compositionKey in request.CompositionList.Where(applicationCompositionSchemas.ContainsKey)) {
@@ -358,10 +358,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var result = new AssociationMainSchemaLoadResult();
 
             var associationsToFetch = AssociationHelper.BuildAssociationsToPrefetch(request, schema);
-            if (associationsToFetch.IsNone) {
-                return result;
-            }
-
 
             IDictionary<string, IEnumerable<IAssociationOption>>
                 eagerFetchedOptions = new ConcurrentDictionary<string, IEnumerable<IAssociationOption>>();

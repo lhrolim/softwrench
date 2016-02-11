@@ -5,6 +5,7 @@
       require: '^?form',
       restrict: 'A',
       scope: {
+        field: '=',
         file: '=',
         fileName: '=',
         dropzoneHoverClass: '@'
@@ -57,6 +58,7 @@
             event.preventDefault();
           }
           element.removeClass(scope.dropzoneHoverClass);
+          scope.field.rendererParameters["showImagePreview"] = false;
           reader = new FileReader();
           reader.onload = function(evt) {
             if (checkSize(size) && isTypeValid(name.split('.').pop())) {

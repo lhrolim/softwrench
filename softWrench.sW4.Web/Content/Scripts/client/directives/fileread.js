@@ -67,7 +67,7 @@ app.directive("fileread", function ($log, alertService, attachmentService) {
                 var fileRead = [];
 
                 readFiles(changeEvent, fileRead, reader, 0);
-                for (i = 0; i < changeEvent.target.files.length; i++) {
+                for (var i = 0; i < changeEvent.target.files.length; i++) {
                     file = changeEvent.target.files[i];
                     fileName.push(file.name);
                 }

@@ -13,6 +13,10 @@
    
   </commandgroup>
 
+  <commandgroup position="actions" platform="web">
+
+  </commandgroup>
+
   <!--TODO: finish bars-->
   <commandgroup position="detailform">
     <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave"/>

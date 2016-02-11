@@ -12,6 +12,7 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagBaseApplicationDataSet : MaximoApplicationDataSet {
@@ -22,9 +23,9 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         //        protected readonly EntityRepository EntityRepository = new EntityRepository();
 
-        private readonly MaximoHibernateDAO _maxDao;
+        private readonly IMaximoHibernateDAO _maxDao;
 
-        public HapagBaseApplicationDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) {
+        public HapagBaseApplicationDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, IMaximoHibernateDAO maxDao) {
             _locationManager = locationManager;
             _entityRepository = entityRepository;
             _maxDao = maxDao;

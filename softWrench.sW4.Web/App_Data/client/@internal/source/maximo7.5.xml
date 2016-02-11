@@ -556,6 +556,7 @@
         <attribute name="ticketuid" type="bigint" required="true" />
         <attribute name="urgency" type="int" required="false" />
         <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="attachments" type="int" query="(select count(*) from doclinks where ownertable = 'SR' and ownerid = !@ticketuid)" required="false"/>
       </attributes>
       <relationships>
         <relationship to="asset">
@@ -1784,6 +1785,7 @@
         <attribute name="vendoraddress3" type="varchar" required="false" />
         <attribute name="vendoraddress4" type="varchar" required="false" />
         <attribute name="division" type="varchar" required="false" />
+        <attribute name="attachments" type="int" query="(select count(*) from doclinks where ownertable = 'WORKORDER' and ownerid = !@workorderid)" required="false"/>
       </attributes>
       <relationships>
         <relationship to="worklog" collection="true">
@@ -1968,6 +1970,7 @@
         <attribute name="ticketuid" type="bigint" required="true" />
         <attribute name="urgency" type="int" required="false" />
         <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="attachments" type="int" query="(select count(*) from doclinks where ownertable = 'INCIDENT' and ownerid = !@ticketuid)" required="false"/>
       </attributes>
       <relationships>
         <relationship to="asset">

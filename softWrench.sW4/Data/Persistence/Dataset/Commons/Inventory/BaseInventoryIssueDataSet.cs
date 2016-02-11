@@ -156,7 +156,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
         }
 
         public override string ApplicationName() {
-            return "invissue";
+            return "invissue,keyinvissue";
         }
 
         public override string ClientFilter() {

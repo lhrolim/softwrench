@@ -90,17 +90,20 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             JObject currentData) {
 
             var result = base.GetCompositionData(application, request, currentData);
-            var locationspecList = result.ResultObject["locationspec_"].ResultList;
-            if (locationspecList.Any())
+            if (result.ResultObject.ContainsKey("locationspec_"))
             {
-                var classificationids =
-                    locationspecList.Select(value => value["classstructure_.classificationid"].ToString()).ToList();
-                var classhierarchys = GetClassstructureHierarchyPath(classificationids);
-                foreach (var locationspec in locationspecList)
+                var locationspecList = result.ResultObject["locationspec_"].ResultList;
+                if (locationspecList.Any())
                 {
-                    var classificationid = locationspec["classstructure_.classificationid"].ToString();
-                    var path = classhierarchys.Single(p => p["id"] == classificationid)["hierarchypath"];
-                    locationspec.Add("classstructure_.hierarchypath", path);
+                    var classificationids =
+                        locationspecList.Select(value => value["classstructure_.classificationid"].ToString()).ToList();
+                    var classhierarchys = GetClassstructureHierarchyPath(classificationids);
+                    foreach (var locationspec in locationspecList)
+                    {
+                        var classificationid = locationspec["classstructure_.classificationid"].ToString();
+                        var path = classhierarchys.Single(p => p["id"] == classificationid)["hierarchypath"];
+                        locationspec.Add("classstructure_.hierarchypath", path);
+                    }
                 }
             }
             return result;

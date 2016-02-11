@@ -13,13 +13,14 @@ using softWrench.sW4.Metadata.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 using c = softwrench.sw4.Hapag.Data.DataSet.Helper.ApproverConstants;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagChangeDataSet : HapagBaseApplicationDataSet {
 
 
-        public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) 
+        public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, IMaximoHibernateDAO maxDao) 
             : base(locationManager, entityRepository, maxDao)
         {
         }

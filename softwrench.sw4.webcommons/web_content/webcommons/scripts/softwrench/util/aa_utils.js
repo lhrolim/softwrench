@@ -408,19 +408,33 @@ function capitaliseFirstLetter(string) {
     return returnstring;
 }
 
-function isIe9() {
-    if ("true" == sessionStorage.mockie9) {
-        return true;
+// http://stackoverflow.com/questions/17907445/how-to-detect-ie11
+function isIE11() {
+    if (navigator.appName !== "Netscape") {
+        return false;
     }
-    return BrowserDetect.browser == "Explorer" && (BrowserDetect.version == '9' || BrowserDetect.version == '8' || BrowserDetect.version == '7');
+    var ua = navigator.userAgent;
+    var re = new RegExp("Trident/.*rv:([0-9]{1,}[\.0-9]{0,})");
+    return re.exec(ua) != null;
+}
+
+function isIE() {
+    return BrowserDetect.browser === "Explorer" || isIE11();
+}
+
+function isIe9() {
+    var mockie9 = sessionStorage["mockie9"];
+    return (mockie9 === true || "true" === mockie9)
+        ? true
+        : isIE() && (BrowserDetect.version == '9' || BrowserDetect.version == '8' || BrowserDetect.version == '7');
 };
 
 function isChrome() {
-    return BrowserDetect.browser == "Chrome";
+    return BrowserDetect.browser === "Chrome";
 };
 
 function isFirefox() {
-    return BrowserDetect.browser == "Firefox";
+    return BrowserDetect.browser === "Firefox";
 };
 
 $.extend({

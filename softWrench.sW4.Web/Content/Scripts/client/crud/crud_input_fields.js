@@ -509,8 +509,7 @@ app.directive('configAssociationListInputDatamap', function () {
                 return url(path);
             };
             $scope.isIE = function () {
-                //TODO: is this needed for all ieversions or only 9 and, in this case replace function for aa_utils
-                return isIe9();
+                return isIE();
             };
             $scope.getLabelStyle = function (fieldMetadata) {
                 var rendererColor = styleService.getLabelStyle(fieldMetadata, 'color');
@@ -665,6 +664,7 @@ app.directive('configAssociationListInputDatamap', function () {
             $scope.isFieldRequired = function (fieldMetadata) {
                 return fieldService.isFieldRequired(fieldMetadata, $scope.datamap);
             };
+
         }]
     }
 }])

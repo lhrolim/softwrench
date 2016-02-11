@@ -37,6 +37,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                        SimpleInjectorGenericFactory.Instance.GetObject<DataSetProvider>(typeof(DataSetProvider)));
         }
 
+        public override void Clear() {
+            _maximoDataSets.Clear();
+            _swdbDataSets.Clear();
+            base.Clear();
+        }
 
         protected override IDataSet LocateDefaultItem(string applicationName, string schemaId, string clientName) {
             var isSWDBApplication = applicationName.StartsWith("_");

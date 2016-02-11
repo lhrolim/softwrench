@@ -5,7 +5,7 @@ using NHibernate;
 
 namespace cts.commons.persistence
 {
-    public interface ISWDBHibernateDAO : ISingletonComponent
+    public interface ISWDBHibernateDAO : IBaseHibernateDAO, ISingletonComponent
     {
         T Save<T>(T ob) where T : class;
         void DeleteCollection(IEnumerable<object> collection);
