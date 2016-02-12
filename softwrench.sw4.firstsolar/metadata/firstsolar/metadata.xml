@@ -5,6 +5,7 @@
     <template path="@person.xml"/>
     <template path="@workorder.xml"/>
     <template path="@location.xml"/>
+    <template path="@workflow.xml"/>
   </templates>
 
   <entities>
