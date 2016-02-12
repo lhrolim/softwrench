@@ -358,6 +358,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var result = new AssociationMainSchemaLoadResult();
 
             var associationsToFetch = AssociationHelper.BuildAssociationsToPrefetch(request, schema);
+            if (associationsToFetch.IsNone) {
+                return result;
+            }
 
             IDictionary<string, IEnumerable<IAssociationOption>>
                 eagerFetchedOptions = new ConcurrentDictionary<string, IEnumerable<IAssociationOption>>();
