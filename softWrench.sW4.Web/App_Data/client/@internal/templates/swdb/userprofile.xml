@@ -42,7 +42,7 @@
             <section orientation="horizontal">
               <section>
                 <header displacement="ontop" label="Basic Setup"/>
-                <field attribute="#appallowcreation" label="Allow Creation">
+                <field attribute="#appallowcreation" label="Allow Creation" showexpression="@hasCreationSchema==true">
                   <renderer type="checkbox"/>
                 </field>
                 <field attribute="#appallowupdate" label="Allow Update">
@@ -55,13 +55,22 @@
               <section>
                 <header displacement="ontop" label="Action Setup"/>
                 <section orientation="horizontal">
-                  <optionfield label="Mode" attribute="#selectedmode" providerattribute="selectableModes" dependantfields="application"/>
-                  <optionfield label="Schema" attribute="#schema" providerattribute="schemas" showexpression="@hasmultipleschemasformode == true" dependantfields="application,#selectedmode"/>
+                  <optionfield label="Mode" attribute="selectedmode" providerattribute="selectableModes" dependantfields="application">
+                    <event type="afterchange" service="userProfileService" method="afterModeChanged"/>
+                  </optionfield>
+                  <optionfield label="Schema" attribute="schema" providerattribute="schemas" dependantfields="application,selectedmode" showexpression="@showschemacombo" >
+                    <renderer type="combo" params="donotignoreeventsifhidden=true"/>
+                    <event type="providerloaded" service="userProfileService" method="afterSchemaListLoaded"/>
+                  </optionfield>
                 </section>
 
-                <optionfield label="Tab" attribute="#selectedtab" providerattribute="selectableTabs" dependantfields="#selectedmode"/>
+                <optionfield label="Tab/Table" attribute="#selectedtab" providerattribute="selectableTabs" dependantfields="selectedmode,schema" showexpression="@showtabscombo">
+                  <renderer type="combo" params="donotignoreeventsifhidden=true"/>
+                  <event type="providerloaded" service="userProfileService" method="afterTabsLoaded"/>
+                  <event type="afterchange" service="userProfileService" method="tabvaluechanged"/>
+                </optionfield>
                 
-                <section>
+                <section showexpression="@iscompositiontab">
                   <field attribute="#compallowcreation" label="Allow Creation">
                     <renderer type="checkbox"/>
                   </field>

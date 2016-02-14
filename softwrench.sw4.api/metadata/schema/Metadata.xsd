@@ -1228,6 +1228,13 @@
             <restriction base="string">
               <enumeration value="afterchange"></enumeration>
               <enumeration value="beforechange"></enumeration>
+              <enumeration value="providerloaded">
+                <annotation>
+                  <documentation>
+                    Hook to invoke a service right after the list of available options of a given association has been loaded
+                  </documentation>
+                </annotation>
+              </enumeration>
             </restriction>
           </simpleType>
         </attribute>

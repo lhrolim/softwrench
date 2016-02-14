@@ -14,6 +14,7 @@ using System.ComponentModel;
 using System.Linq;
 using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
+using softwrench.sw4.Shared2.Metadata.Applications.UI;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
@@ -27,6 +28,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         #region cache
         private readonly IDictionary<SchemaFetchMode, IList<ApplicationAssociationDefinition>> _cachedAssociations = new Dictionary<SchemaFetchMode, IList<ApplicationAssociationDefinition>>();
         private readonly IDictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>> _cachedCompositions = new Dictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>>();
+        private readonly IDictionary<SchemaFetchMode, IList<IApplicationIndentifiedDisplayable>> _cachedTabs = new Dictionary<SchemaFetchMode, IList<IApplicationIndentifiedDisplayable>>();
         private readonly IDictionary<SchemaFetchMode, IList<OptionField>> _cachedOptionFields = new Dictionary<SchemaFetchMode, IList<OptionField>>();
         #endregion
 
@@ -196,7 +198,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             PrintSchema = printSchema;
             SchemaId = schemaId;
             Stereotype = stereotype;
-            StereotypeAttr = streotypeAttr;
+            StereotypeAttr = streotypeAttr ?? stereotype.ToString().ToLower();
             Abstract = @abstract;
             Mode = mode;
             CommandSchema = commandSchema;
@@ -318,6 +320,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return Associations(isShowMoreMode ? SchemaFetchMode.SecondaryContent : SchemaFetchMode.MainContent);
         }
 
+        [NotNull]
         public virtual IList<ApplicationAssociationDefinition> Associations(SchemaFetchMode mode = SchemaFetchMode.All) {
             if (_cachedAssociations.ContainsKey(mode)) {
                 return _cachedAssociations[mode];
@@ -327,12 +330,24 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return result;
         }
 
+        [NotNull]
         public virtual IList<ApplicationCompositionDefinition> Compositions(SchemaFetchMode mode = SchemaFetchMode.All) {
             if (_cachedCompositions.ContainsKey(mode)) {
                 return _cachedCompositions[mode];
             }
             var result = GetDisplayable<ApplicationCompositionDefinition>(typeof(ApplicationCompositionDefinition), mode);
             _cachedCompositions[mode] = result;
+            return result;
+        }
+
+
+        [NotNull]
+        public virtual IList<IApplicationIndentifiedDisplayable> Tabs(SchemaFetchMode mode = SchemaFetchMode.All) {
+            if (_cachedTabs.ContainsKey(mode)) {
+                return _cachedTabs[mode];
+            }
+            var result = DisplayableUtil.GetDisplayable<IApplicationIndentifiedDisplayable>(new[] { typeof(ApplicationTabDefinition), typeof(ApplicationCompositionDefinition) }, Displayables, mode, false);
+            _cachedTabs[mode] = result;
             return result;
         }
 
@@ -476,7 +491,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 int hashCode = (SchemaId != null ? SchemaId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ Mode.GetHashCode();
                 hashCode = (hashCode * 397) ^ (ApplicationName != null ? ApplicationName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (int)Platform;
                 return hashCode;
             }
         }
@@ -528,7 +542,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public string GetProperty(string propertyKey) {
-            if (!Properties.ContainsKey(propertyKey)) {
+            if (Properties == null || !Properties.ContainsKey(propertyKey)) {
                 return null;
             }
             return Properties[propertyKey];

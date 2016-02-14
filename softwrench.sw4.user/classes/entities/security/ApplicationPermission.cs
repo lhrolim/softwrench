@@ -32,6 +32,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         [Property]
         public string ApplicationName { get; set; }
 
+
         [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
         [Key(1, Column = "app_id")]
         [OneToMany(2, ClassType = typeof(SchemaPermissionGroup))]

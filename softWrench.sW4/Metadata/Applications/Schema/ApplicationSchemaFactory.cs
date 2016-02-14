@@ -53,7 +53,9 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             if (schema.ParentSchema != null) {
                 schema.Displayables = MergeParentSchemaDisplayables(schema, schema.ParentSchema);
                 schema.Mode = schema.Mode == null || schema.Mode == SchemaMode.None ? schema.ParentSchema.Mode : schema.Mode;
+                schema.StereotypeAttr = schema.Stereotype == SchemaStereotype.None? schema.ParentSchema.Stereotype.ToString().ToLower(): schema.StereotypeAttr;
                 schema.Stereotype = schema.Stereotype == SchemaStereotype.None ? schema.ParentSchema.Stereotype : schema.Stereotype;
+                
                 MergeWithParentProperties(schema);
                 MergeWithParentCommands(schema);
                 MergeWithParentEvents(schema);

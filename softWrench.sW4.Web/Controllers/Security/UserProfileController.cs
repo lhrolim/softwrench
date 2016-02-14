@@ -7,8 +7,10 @@ using cts.commons.web.Attributes;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.entities.security;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 
@@ -43,12 +45,27 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
         [HttpGet]
-        public ApplicationPermission LoadApplicationPermissions(int profileId, string application) {
+        public ApplicationPermissionResultDTO LoadApplicationPermissions(int profileId, string application) {
             var profile = _userProfileManager.FindById(profileId);
             if (profile == null) {
                 throw new InvalidOperationException("informed profile does not exist");
             }
-            return profile.ApplicationPermission.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
+            //force eager cache
+            MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, application);
+            var loadApplicationPermissions = profile.ApplicationPermission.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
+            
+            return new ApplicationPermissionResultDTO()
+            {
+                AppPermission = loadApplicationPermissions,
+                HasCreationSchema = MetadataProvider.Application(application).HasCreationSchema
+            };
+        }
+
+        public class ApplicationPermissionResultDTO {
+
+            public bool HasCreationSchema { get; set; }
+            public ApplicationPermission AppPermission { get; set; }
+
         }
 
         public class UserProfileListDto {

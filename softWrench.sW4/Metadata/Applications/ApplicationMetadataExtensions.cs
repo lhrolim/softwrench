@@ -85,12 +85,21 @@ namespace softWrench.sW4.Metadata.Applications {
         }
 
 
-        public static IEnumerable<ApplicationSchemaDefinition> SchemasByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName) {
-            return application.Schemas().Values.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && !schema.Abstract));
+        public static IEnumerable<ApplicationSchemaDefinition> NonInternalSchemasByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName, ClientPlatform platform = ClientPlatform.Web) {
+            var schemas = MetadataProvider.FetchNonInternalSchemas(platform, application.ApplicationName);
+            if (stereotypeName == "detail") {
+                return schemas.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && schema.StereotypeAttr.ToLower() != "detailnew" && !schema.Abstract));
+            }
+
+            return schemas.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && !schema.Abstract));
         }
 
+
         public static ApplicationSchemaDefinition PreferredSchemaByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName) {
+
+
             var schemas = application.Schemas().Values.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && !schema.Abstract));
+
             var applicationSchemaDefinitions = schemas as ApplicationSchemaDefinition[] ?? schemas.ToArray();
             if (applicationSchemaDefinitions.Count() > 1) {
                 return null;

@@ -384,6 +384,7 @@
 
             log.info("update eager list for {0}. Size: {1}".format(associationKey, options.length));
 
+
             $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData);
 
 

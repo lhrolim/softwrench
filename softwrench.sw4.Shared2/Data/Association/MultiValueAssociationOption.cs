@@ -13,7 +13,7 @@ namespace softwrench.sw4.Shared2.Data.Association {
             ForceDistinctOptions = forceDistinctOptions;
         }
 
-        public MultiValueAssociationOption(string value, string label, IDictionary<string, object> fields, bool forceDistinctOptions = true)
+        public MultiValueAssociationOption(string value, string label, [CanBeNull]IDictionary<string, object> fields, bool forceDistinctOptions = true)
             : base(value, label) {
             Extrafields = fields;
             ForceDistinctOptions = forceDistinctOptions;

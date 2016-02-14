@@ -4,11 +4,13 @@ using System.Linq;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Iesi.Collections.Generic;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.entities.security;
+using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
@@ -56,44 +58,77 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null).Select(a => new AssociationOption(a.ApplicationName, a.ApplicationName));
         }
 
+        [UsedImplicitly]
+        public IEnumerable<IAssociationOption> GetSelectableModes(OptionFieldProviderParameters parameters) {
+            var entity = parameters.OriginalEntity;
+            var allowCreation = "true".EqualsIc(entity.GetStringAttribute("#appallowcreation"));
+            var allowUpdate = "true".EqualsIc(entity.GetStringAttribute("#appallowupdate"));
 
+            //TODO: include logic based on permissions
+            var enumOptions = new List<SchemaPermissionMode>(Enum.GetValues(typeof(SchemaPermissionMode)).Cast<SchemaPermissionMode>());
+            if (!allowCreation) {
+                enumOptions.Remove(SchemaPermissionMode.Creation);
+            }
+            if (!allowUpdate) {
+                enumOptions.Remove(SchemaPermissionMode.Update);
+            }
+            var options = enumOptions.Select(i => new PriorityBasedAssociationOption(i.GetName(), i.Label(), i.Priority()));
+            return options.OrderBy(a => a.Priority);
+        }
+
+        /// <summary>
+        /// This method just need to return a non null value if more than one schema is available for selection, otherwise, just by selecting the mode, it should be enough for the user
+        /// 
+        /// 
+        ///  
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public IEnumerable<IAssociationOption> GetSchemas(OptionFieldProviderParameters parameters) {
             var entity = parameters.OriginalEntity;
-            var mode = entity.GetStringAttribute("#selectedmode");
+            var mode = entity.GetStringAttribute("selectedmode");
             var application = entity.GetStringAttribute("application");
             SchemaPermissionMode schemaMode;
-            Enum.TryParse(mode, out schemaMode);
+            Enum.TryParse(mode, true, out schemaMode);
             var completeApplicationMetadataDefinition = MetadataProvider.Application(application);
+            var resultSchemas = DoGetSchemas(completeApplicationMetadataDefinition, schemaMode);
+            return resultSchemas == null ? null : resultSchemas.Select(s => new AssociationOption(s.SchemaId, s.Title));
+        }
+
+        private IEnumerable<ApplicationSchemaDefinition> DoGetSchemas(CompleteApplicationMetadataDefinition completeApplicationMetadataDefinition, SchemaPermissionMode schemaMode) {
             if (SchemaPermissionMode.View.Equals(schemaMode)) {
                 var outputSchemas = completeApplicationMetadataDefinition.Schemas().Values.Where(s => s.Mode == SchemaMode.output);
                 var applicationSchemaDefinitions = outputSchemas as ApplicationSchemaDefinition[] ?? outputSchemas.ToArray();
-                if (applicationSchemaDefinitions.Any() && applicationSchemaDefinitions.Count() > 1) {
+                if (applicationSchemaDefinitions.Any()) {
                     //if there are output schemas present, use them
-                    return applicationSchemaDefinitions.Select(o => new AssociationOption(o.SchemaId, o.Title));
+                    return applicationSchemaDefinitions;
                 }
-
-                
-
-
+                return null;
             }
-            return null;
-        }
-
-        public IEnumerable<IAssociationOption> GetSelectableModes(OptionFieldProviderParameters parameters) {
-            var entity = parameters.OriginalEntity;
-            var fullControl = entity.GetAttribute("#appfullcontrol");
-            var allowCreation = entity.GetAttribute("#allowCreation");
-            var allowUpdate = entity.GetAttribute("#appfullcontrol");
-            var allowRemoval = entity.GetAttribute("#appfullcontrol");
-            //TODO: include logic based on permissions
-            return Enum.GetValues(typeof(SchemaPermissionMode)).Cast<SchemaPermissionMode>().Select(i => new PriorityBasedAssociationOption(i.GetName(), i.Label(), i.Priority())).OrderBy(a => a.Priority);
+            if (SchemaPermissionMode.Creation.Equals(schemaMode)) {
+                return completeApplicationMetadataDefinition.NonInternalSchemasByStereotype("detailnew");
+            }
+            if (SchemaPermissionMode.Grid.Equals(schemaMode)) {
+                return completeApplicationMetadataDefinition.NonInternalSchemasByStereotype("list");
+            }
+            return completeApplicationMetadataDefinition.NonInternalSchemasByStereotype("detail");
         }
 
 
         public IEnumerable<IAssociationOption> GetSelectableTabs(OptionFieldProviderParameters parameters) {
             var entity = parameters.OriginalEntity;
-
-            return Enum.GetValues(typeof(SchemaPermissionMode)).Cast<SchemaPermissionMode>().Select(i => new PriorityBasedAssociationOption(i.GetName(), i.Label(), i.Priority())).OrderBy(a => a.Priority);
+            var mode = entity.GetStringAttribute("selectedmode");
+            var application = entity.GetStringAttribute("application");
+            var schemaId = entity.GetStringAttribute("schema");
+            SchemaPermissionMode schemaMode;
+            Enum.TryParse(mode, true, out schemaMode);
+            var completeApplicationMetadataDefinition = MetadataProvider.Application(application);
+            ApplicationSchemaDefinition schema =
+                completeApplicationMetadataDefinition.Schema(new ApplicationMetadataSchemaKey(schemaId));
+            var results = new List<PriorityBasedAssociationOption>();
+            results.Add(new PriorityBasedAssociationOption("main", "Main",0, new Dictionary<string, object> { { "type", "main" } }));
+            results.AddRange(schema.Tabs().Select(c => new PriorityBasedAssociationOption(c.Attribute, c.Label,1, new Dictionary<string, object> { { "type", c.Type } })));
+            return results;
         }
 
 

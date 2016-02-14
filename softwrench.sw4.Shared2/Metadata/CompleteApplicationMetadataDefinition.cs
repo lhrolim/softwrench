@@ -212,5 +212,8 @@ namespace softwrench.sW4.Shared2.Metadata {
             get { return Parameters; }
             set { Parameters = value; }
         }
+
+        public IEnumerable<ApplicationSchemaDefinition> CachedNonInternalSchemas { get; set; }
+        public bool HasCreationSchema { get; set; }
     }
 }

@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace softwrench.sw4.Shared2.Data.Association {
-    public class PriorityBasedAssociationOption : AssociationOption {
-        public PriorityBasedAssociationOption(string value, string label, int priority) : base(value, label) {
+    public class PriorityBasedAssociationOption : MultiValueAssociationOption {
+
+        public PriorityBasedAssociationOption(string value, string label, int priority, IDictionary<string,object>extraFields=null) : base(value, label,extraFields) {
             Priority = priority;
         }
 

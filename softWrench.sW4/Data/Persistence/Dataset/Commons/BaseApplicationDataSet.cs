@@ -611,7 +611,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     tasks.Add(Task.Factory.NewThread(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
                         var data = _dynamicOptionFieldResolver.ResolveOptions(application.Schema, optionField, cruddata);
-                        resultObject.Add(optionField.AssociationKey, new LookupOptionsFetchResultDTO(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                        if (data != null) {
+                            resultObject.Add(optionField.AssociationKey, new LookupOptionsFetchResultDTO(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                        }
                     }, ctx));
                 } else {
                     var associationApplicationMetadata =
