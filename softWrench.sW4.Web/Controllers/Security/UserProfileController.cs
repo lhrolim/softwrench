@@ -24,7 +24,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         private readonly SWDBHibernateDAO _dao;
 
-        private UserProfileManager _userProfileManager;
+        private readonly UserProfileManager _userProfileManager;
 
         public UserProfileController(SWDBHibernateDAO dao, UserProfileManager userProfileManager) {
             _dao = dao;
@@ -53,18 +53,37 @@ namespace softWrench.sW4.Web.Controllers.Security {
             //force eager cache
             MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, application);
             var loadApplicationPermissions = profile.ApplicationPermission.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
-            
-            return new ApplicationPermissionResultDTO()
-            {
+
+            return new ApplicationPermissionResultDTO() {
                 AppPermission = loadApplicationPermissions,
                 HasCreationSchema = MetadataProvider.Application(application).HasCreationSchema
             };
         }
 
+
+//        [HttpGet]
+//        public SchemaPermissionGroup LoadSchemaGroupPermission(int profileId, string application, string mode, string schemaId) {
+//            var profile = _userProfileManager.FindById(profileId);
+//            if (profile == null) {
+//                throw new InvalidOperationException("informed profile does not exist");
+//            }
+//            //force eager cache
+//            MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, application);
+//            var appPermission = profile.ApplicationPermission.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
+//            if (appPermission != null) {
+//                return appPermission.SchemaGroups.FirstOrDefault(f => f.Mode.EqualsIc(mode) && f.Schema.EqualsIc(schemaId));
+//            }
+//            return null;
+//        }
+
         public class ApplicationPermissionResultDTO {
 
-            public bool HasCreationSchema { get; set; }
-            public ApplicationPermission AppPermission { get; set; }
+            public bool HasCreationSchema {
+                get; set;
+            }
+            public ApplicationPermission AppPermission {
+                get; set;
+            }
 
         }
 

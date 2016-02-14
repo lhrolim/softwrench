@@ -26,9 +26,13 @@
                 if (scope.$last === false) {
                     return;
                 }
-
                 var log = $log.getInstance('tabsrendered');
                 log.debug("finished rendering tabs of detail screen");
+                if (scope.$last === undefined) {
+                    //0 tabs scenario
+                    return $rootScope.$broadcast("sw_alltabsloaded");
+                }
+                
                 $timeout(function () {
                     var firstTabId = null;
                     $('.compositiondetailtab li>a').each(function () {
@@ -119,7 +123,7 @@
                         //time for the components to be rendered
                         focusService.setFocusToFirstField($scope.schema, $scope.datamap);
                     }, 1000, false);
-
+                    eventService.dispatchEvent($scope.schema, "onschemafullyloaded");
                 });
 
                 $scope.getTabRecordCount = function (tab) {
@@ -191,6 +195,9 @@
                     if (onLoadMessage) {
                         alertService.notifymessage('success', onLoadMessage);
                     }
+
+                    
+                    
                 });
 
                 $scope.setActiveTab = function (tabId) {

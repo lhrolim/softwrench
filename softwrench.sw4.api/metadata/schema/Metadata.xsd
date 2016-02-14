@@ -1249,7 +1249,9 @@
           <simpleType>
             <restriction base="string">
               <enumeration value="onviewdetail"></enumeration>
+              <!-- TODO:review called multiple times-->
               <enumeration value="onload"></enumeration>
+              <enumeration value="onschemafullyloaded"></enumeration>
               <enumeration
 								value="beforesubmit.onvalidation">
               </enumeration>

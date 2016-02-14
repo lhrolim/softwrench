@@ -21,6 +21,11 @@
         </div>
 
         <div class="hiddenonprint detail-body">
+            <!--Adding this div, just to dispatch the tabsrendered event, making the framework consistent for the 0 tab scenario-->
+            <div ng-if="!hasTabs(schema)" tabsrendered/>
+
+            
+
             <div class="detail-header clearfix" ng-if="hasTabs(schema)">
                 <ul class="nav nav-tabs compositiondetailtab hapag-composition">
                     <li ng-if="hasAnyFieldOnMainTab(schema)" ng-class="{'active': hasAnyFieldOnMainTab(schema)}">
@@ -46,7 +51,7 @@
                 </div>
 
                 <div class="buttons">
-                    <crudbodydetailtoolbar schema="schema" datamap="datamap" mode="'input'" position="actions" />
+                    <crudbodydetailtoolbar schema="schema" datamap="datamap" mode="'input'" position="actions"/>
                 </div>
 
             </div>
@@ -66,14 +71,14 @@
                                                 cancelfn="cancel(data,schema)"
                                                 savefn="save(selecteditem, parameters)"
                                                 previousschema="previousschema" previousdata="previousdata"
-                                                is-main-tab='true' tabid="main" />
+                                                is-main-tab='true' tabid="main"/>
 
                         </div>
                         <div ng-switch-when="false">
                             <crud-output-wrapper extraparameters="extraparameters"
                                                  schema="schema" datamap="datamap.fields"
                                                  displayables="schema.displayables"
-                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="main" />
+                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="main"/>
                         </div>
                     </ng-switch>
                 </div>
@@ -86,7 +91,7 @@
                                                       previousschema="previousschema" previousdata="previousdata"
                                                       metadata="tab"
                                                       tabid="{{tab.tabId}}"
-                                                      ismodal="{{ismodal}}" />
+                                                      ismodal="{{ismodal}}"/>
                         </div>
                         <div ng-switch-when="false">
                         </div>
@@ -102,13 +107,13 @@
                                                 blockedassociations="blockedassociations"
                                                 cancelfn="cancel(data,schema)"
                                                 savefn="save(selecteditem, parameters)"
-                                                previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
+                                                previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}"/>
                         </div>
                         <div ng-switch-when="false">
                             <crud-output-wrapper extraparameters="extraparameters"
                                                  schema="schema" datamap="datamap.fields"
                                                  displayables="tab.displayables"
-                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
+                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}"/>
                         </div>
                     </div>
                 </div>

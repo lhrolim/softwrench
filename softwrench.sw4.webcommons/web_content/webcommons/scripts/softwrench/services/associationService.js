@@ -178,7 +178,7 @@
                 fields = scope.datamap.fields;
             }
 
-            var afterchangeEvent = {
+            var params = {
                 fields: fields,
                 scope: scope,
                 parentdata: scope.parentdata || /* when trigerring event from modal */ crudContextHolderService.rootDataMap(), 
@@ -186,7 +186,8 @@
             };
             $log.getInstance('sw4.associationservice#postAssociationHook').debug('invoking post hook service {0} method {1} from association {2}|{3}'
                 .format(afterChangeEvent.service, afterChangeEvent.method, associationMetadata.target, associationMetadata.associationKey));
-            return $q.when(fn(afterchangeEvent));
+            var promise = $q.when(fn(params));
+            return promise;
         };
 
 

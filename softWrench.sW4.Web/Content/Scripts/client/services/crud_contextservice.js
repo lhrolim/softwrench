@@ -14,7 +14,8 @@
             currentSchema: null,
             rootDataMap: null,
             currentApplicationName: null,
-
+            //a datamap that could be used in a transient fashion but that would have the same lifecycle as the main one, i.e, would get cleaned automatically upon app redirect
+            auxDataMap:null,
             /*{
             #global:{
              eagerassociation1_ :[],
@@ -149,8 +150,12 @@
             return getContext(panelid).currentSchema;
         }
 
-        function rootDataMap(panelid) {
-            return getContext(panelid).rootDataMap;
+        function rootDataMap(panelid,datamap) {
+            var context = getContext(panelid);
+            if (datamap) {
+                context.rootDataMap = datamap;
+            }
+            return context.rootDataMap;
         }
 
         function getAffectedProfiles(panelid) {

@@ -62,7 +62,7 @@
                 var shouldDoWatch = true;
                 var isMultiValued = association.multiValued;
                 $scope.$watch('{0}["{1}"]'.format(datamappropertiesName, association.attribute), function (newValue, oldValue) {
-                    if (oldValue === newValue || !shouldDoWatch) {
+                    if (oldValue == newValue || !shouldDoWatch) {
                         return;
                     }
 

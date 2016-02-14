@@ -30,13 +30,14 @@
         <detail>
           <field label="Name" attribute="name" />
           <field label="Description" attribute="description" />
-          <tab label="Basic Roles" id="basicroles">
+<!--          <tab label="Basic Roles" id="basicroles">-->
 <!--            <composition detailschema="" fetchtype="eager"  relationship="#basicroles"  printschema="" inline="true">-->
 <!--              <collectionproperties allowcreation="false" listschema="rolerepresentation"/>-->
 <!--            </composition>-->
-          </tab>
+<!--          </tab>-->
           <optionfield attribute="application" providerattribute="topLevelApplications" label="Application">
             <event type="afterchange" service="userProfileService" method="onApplicationChange"/>
+            <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>
           </optionfield>
           <section orientation="horizontal" showexpression="@application!=null">
             <section orientation="horizontal">
@@ -61,6 +62,7 @@
                   <optionfield label="Schema" attribute="schema" providerattribute="schemas" dependantfields="application,selectedmode" showexpression="@showschemacombo" >
                     <renderer type="combo" params="donotignoreeventsifhidden=true"/>
                     <event type="providerloaded" service="userProfileService" method="afterSchemaListLoaded"/>
+                    <event type="afterchange" service="userProfileService" method="afterSchemaChanged"/>
                   </optionfield>
                 </section>
 
@@ -94,6 +96,7 @@
 
           </section>
 
+          <event type="onschemafullyloaded" method="onSchemaLoad" service="userProfileService"/>
 
         </detail>
 
