@@ -5,6 +5,7 @@
     <template path="@person.xml"/>
     <template path="@workorder.xml"/>
     <template path="@location.xml"/>
+    <template path="@workflow.xml"/>
   </templates>
 
   <entities>
@@ -272,7 +273,7 @@
           <field attribute="location" label="Location"/>
           <field attribute="description" label="Description"/>
           <field attribute="classstructure_.description" label="Class Structure"/>
-          <field attribute="parentlocation_.parent" label="Parent Location"/>
+          <!--field attribute="parentlocation_.parent" label="Parent Location"/-->
           <field attribute="siteid" label="Site"/>
         </schema>
         <schema id="list"  redeclaring="false" stereotype="list.selection">
