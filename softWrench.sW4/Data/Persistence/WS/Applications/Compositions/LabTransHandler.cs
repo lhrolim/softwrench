@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -53,7 +54,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 // Maximo 7.6 Changes
                 DateTime startdateentered;
                 if (crudData.GetAttribute("startdate") != null && DateTime.TryParse(crudData.GetAttribute("startdate").ToString(), out startdateentered)) {
-                    WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", startdateentered.FromServerToRightKind(), true);
+                    WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", DateUtil.BeginOfDay(startdateentered).FromServerToRightKind(), true);
                 }
                 ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
                 FillLineCostLabor(integrationObject);
