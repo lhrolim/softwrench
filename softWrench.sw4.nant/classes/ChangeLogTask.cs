@@ -5,13 +5,17 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using NAnt.Core;
 using NAnt.Core.Attributes;
 using Newtonsoft.Json.Linq;
 using Task = NAnt.Core.Task;
 
 namespace softWrench.sw4.nant.classes {
-    
+
     public class ChangeLogTask : Task {
+        [TaskAttribute("dochangelog", Required = false)]
+        public string DoChangelog { get; set; }
+
         [TaskAttribute("pattern", Required = false)]
         public string Pattern { get; set; }
 
@@ -42,6 +46,11 @@ namespace softWrench.sw4.nant.classes {
         private bool _includeEnd = true;
 
         protected override void ExecuteTask() {
+            if (string.IsNullOrEmpty(DoChangelog) || !"true".Equals(DoChangelog)) {
+                Log(Level.Info, "Changelog skipped due to \"dochangelog\" property.");
+                return;
+            }
+
             if (!string.IsNullOrEmpty(Pattern)) {
                 _tagRegex = new Regex(Pattern, RegexOptions.IgnoreCase);
             }
