@@ -60,7 +60,7 @@
 
         <schema id="newdetail" redeclaring="false" stereotype="detailnew" platform="web" parentschema="adetail">
           <customization position="classstructureid">
-            <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureType" requiredexpression="true">
+            <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true">
               <renderer type="autocompleteclient" params="inputsize=large" />
             </optionfield>
           </customization>
