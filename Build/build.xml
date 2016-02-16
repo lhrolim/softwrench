@@ -798,7 +798,7 @@
     <if test="${property::exists('ChangelogRNToList')==true}">
       <mail from="ctschangelog@gmail.com" tolist="${ChangelogRNToList}" cclist="${ChangelogRNCCList}" isbodyhtml="true" mailhost="smtp.gmail.com" mailport="587" password="f50HLV9U0Grk9ufqoF45" ssl="true" subject="Release Notes" user="ctschangelog@gmail.com">
         <files>
-          <include name="changelog.html" />
+          <include name="${deploypath}/changelog.html" />
         </files>
       </mail>
     </if>
@@ -819,7 +819,7 @@
     <if test="${property::exists('ChangelogITToList')==true}">
       <mail from="ctschangelog@gmail.com" tolist="${ChangelogITToList}" cclist="${ChangelogITCCList}" isbodyhtml="true" mailhost="smtp.gmail.com" mailport="587" password="f50HLV9U0Grk9ufqoF45" ssl="true" subject="Instalation Tasks" user="ctschangelog@gmail.com">
         <files>
-          <include name="instalationTasks.html" />
+          <include name="${deploypath}/instalationTasks.html" />
         </files>
       </mail>
     </if>
