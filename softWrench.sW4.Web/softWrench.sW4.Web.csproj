@@ -821,6 +821,7 @@
     <Content Include="Dependencies\softWrench.sW4.Controls.ActiveX.dll" />
     <Content Include="App_Data\Client\hapag\i18n\de\labels.json" />
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
+    <None Include="Doc\securitygroup.md" />
     <Content Include="Doc\scanner.txt" />
     <Content Include="Gruntfile.js" />
     <Content Include="IBM.Data.DB2.dll" />

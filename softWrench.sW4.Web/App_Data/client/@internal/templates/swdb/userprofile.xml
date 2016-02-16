@@ -30,11 +30,11 @@
         <detail>
           <field label="Name" attribute="name" />
           <field label="Description" attribute="description" />
-<!--          <tab label="Basic Roles" id="basicroles">-->
-<!--            <composition detailschema="" fetchtype="eager"  relationship="#basicroles"  printschema="" inline="true">-->
-<!--              <collectionproperties allowcreation="false" listschema="rolerepresentation"/>-->
-<!--            </composition>-->
-<!--          </tab>-->
+          <tab label="Basic Roles" id="basicroles">
+            <composition detailschema="" fetchtype="eager"  relationship="#basicroles"  printschema="" inline="true">
+              <collectionproperties allowcreation="false" listschema="rolerepresentation"/>
+            </composition>
+          </tab>
           <optionfield attribute="application" providerattribute="topLevelApplications" label="Application">
             <event type="afterchange" service="userProfileService" method="onApplicationChange"/>
             <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>
@@ -86,10 +86,11 @@
               </section>
             </section>
 
-            <section>
-              <header displacement="ontop" label="Field Setup"/>
-              <composition detailschema="" fetchtype="eager"  relationship="#basicroles"  printschema="" inline="true">
-                <collectionproperties allowcreation="false" listschema="rolerepresentation"/>
+            <section showexpression="@#selectedtab !=null">
+              <header displacement="ontop" label="Field Setup" />
+
+              <composition detailschema="" fetchtype="eager"  relationship="#fieldPermissions"  printschema="" inline="true">
+                <collectionproperties allowcreation="false" listschema="fieldRepresentation"/>
               </composition>
               
             </section>
@@ -104,6 +105,17 @@
           <field hidden="true" attribute="id"/>
           <field label="Name" attribute="name" />
           <field label="Description" attribute="description" />
+        </schema>
+
+        <schema id="fieldRepresentation" stereotype="list">
+          <field hidden="true" attribute="id"/>
+          <field label="Field" attribute="fieldLabel" />
+          <optionfield attribute="permission" label="Permission">
+            <renderer type="radio"/>
+            <option label="Full Control" value="fullcontrol"/>
+            <option label="None" value="none"/>
+            <option label="Read Only" value="readonly"/>
+          </optionfield>
         </schema>
 
       </schemas>
