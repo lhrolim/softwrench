@@ -779,9 +779,11 @@
 
     <changelog dochangelog="${DoChangelog}" pattern="${ChangelogTagRegex}" initversion="${ChangelogInitVersion}" endversion="${ChangelogEndVersion}" includeinit="${ChangelogIncludeInit}" includeend="${ChangelogIncludeEnd}"/>
     <copy todir="${deploypath}">
-      <fileset basedir=".">
+      <fileset basedir="..">
         <include name="changelog.html" />
         <include name="instalationTasks.html" />
+        <include name="Build/changelog.html" />
+        <include name="Build/instalationTasks.html" />
       </fileset>
     </copy>
 
