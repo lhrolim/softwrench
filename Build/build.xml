@@ -88,7 +88,7 @@
     <property name="logtime" value="${environment::get-variable('logtime')}" />
   </if>
 
-  <target name="fulldeploy" depends="compile,copydlls,copylinkedfolders,webcompile,deploy"/>
+  <target name="fulldeploy" depends="compile,changelog,copydlls,copylinkedfolders,webcompile,deploy"/>
 
   <target name="fullmultideploy">
     <logtimestart/>
@@ -110,6 +110,7 @@
 
       <trycatch>
         <try>
+          <call target="changelog" />
           <call target="copydlls" />
           <call target="copylinkedfolders" />
           <call target="webcompile" />
@@ -145,7 +146,7 @@
 
   <target name="generatedeploynocompile" depends="copydlls,copylinkedfolders,webcompile"/>
 
-  <target name="fullbuildlocal" depends="compile,zip"/>
+  <target name="fullbuildlocal" depends="compile,changelog,zip"/>
 
   <target name="compile">
     <logtimestart/>
@@ -739,61 +740,67 @@
     <logtimeend/>
   </target>
 
+  <target name="changelog" depends="mkdir">
+    <logtimestart/>
+
+    <property name="DoChangelog" value="false" />
+    <if test="${environment::variable-exists('dochangelog')}">
+      <property name="DoChangelog" value="${environment::get-variable('dochangelog')}" />
+    </if>
+
+    <property name="ChangelogTagRegex" value="^v.*$" />
+    <if test="${environment::variable-exists('changelogtagregex')}">
+      <property name="ChangelogTagRegex" value="${environment::get-variable('changelogtagregex')}" />
+    </if>
+
+    <property name="ChangelogInitVersion" value="" />
+    <if test="${environment::variable-exists('changeloginitversion')}">
+      <property name="ChangelogInitVersion" value="${environment::get-variable('changeloginitversion')}" />
+    </if>
+
+    <property name="ChangelogEndVersion" value="" />
+    <if test="${environment::variable-exists('changelogendversion')}">
+      <property name="ChangelogEndVersion" value="${environment::get-variable('changelogendversion')}" />
+    </if>
+
+    <property name="ChangelogIncludeInit" value="" />
+    <if test="${environment::variable-exists('changelogincludeinit')}">
+      <property name="ChangelogIncludeInit" value="${environment::get-variable('changelogincludeinit')}" />
+    </if>
+
+    <property name="ChangelogIncludeEnd" value="" />
+    <if test="${environment::variable-exists('changelogincludeend')}">
+      <property name="ChangelogIncludeEnd" value="${environment::get-variable('changelogincludeend')}" />
+    </if>
+
+    <changelog dochangelog="${DoChangelog}" pattern="${ChangelogTagRegex}" initversion="${ChangelogInitVersion}" endversion="${ChangelogEndVersion}" includeinit="${ChangelogIncludeInit}" includeend="${ChangelogIncludeEnd}"/>
+    <copy todir="${deploypath}">
+      <fileset basedir=".">
+        <include name="changelog.html" />
+        <include name="instalationTasks.html" />
+      </fileset>
+    </copy>
+    <logtimeend/>
+  </target>
+
   <script language="C#">
+    <references>
+      <include name="./dependencies/softWrench.sw4.nant.dll" />
+    </references>
     <imports>
-      <import namespace="System.Collections.Generic" />
+      <import namespace="softWrench.sw4.nant.classes" />
     </imports>
     <code>
-      <![CDATA[      
-          public class LogTimeCommons {
-            public static Dictionary<string, long> StartTimes = new Dictionary<string, long>();
-            
-            public static bool SkipLog(Project project){
-              if(!project.Properties.Contains("logtime")){
-                return true;
-              }
-              var logTime = project.Properties["logtime"];
-              return logTime != "true";
-            }
-          }
-        
-          [TaskName("logtimestart")]
-          public class LogTimeStartTask : Task {          
-            protected override void ExecuteTask() {
-              Target target = Project.CurrentTarget;              
-              if (target == null || LogTimeCommons.SkipLog(Project)) {
-                return;
-              }
-            
-              // gets the start time and logs
-              var now = DateTime.Now;
-              LogTimeCommons.StartTimes.Add(target.Name, now.Ticks);
-              var sb = new StringBuilder();
-              sb.Append("\n\n\n==== Start of ").Append(target.Name).Append(" at ");
-              sb.Append(now).Append(" =======================================\n\n\n");
-              Log(Level.Info, sb.ToString());
-            }
-          }
-          
-          [TaskName("logtimeend")]
-          public class LogTimeEndTask : Task {            
-            protected override void ExecuteTask() {
-                Target target = Project.CurrentTarget;
-                if (target == null || LogTimeCommons.SkipLog(Project) || !LogTimeCommons.StartTimes.ContainsKey(target.Name)) {
-                  return;
-                }               
-            
-                // calcs the time delta and logs
-                var start = LogTimeCommons.StartTimes[target.Name];
-                var now = DateTime.Now;
-                var delta = (now.Ticks - start) / 10000;
-                var sb = new StringBuilder();
-                sb.Append("\n\n\n==== End of ").Append(target.Name).Append(" at ");
-                sb.Append(now).Append(" ==== Task ran in ").Append(delta).Append("ms =================\n\n\n");
-                Log(Level.Info, sb.ToString());
-            }
-          }
-        ]]>
+      <![CDATA[
+        [TaskName("changelog")]        
+        public class ScriptChangeLogTask : ChangeLogTask {}
+
+        [TaskName("logtimestart")]
+        public class ScriptLogTimeStartTask : LogTimeStartTask {}
+
+        [TaskName("logtimeend")]
+        public class ScriptLogTimeEndTask : LogTimeEndTask {}
+      ]]>
     </code>
   </script>
 </project>
