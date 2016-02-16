@@ -99,6 +99,8 @@
 
     <echo message="Common compile task." />
     <call target="compile" />
+    <echo message="Common changelog task." />
+    <call target="changelog" />
 
     <property name="failure" value="false"/>
     <property name="failureclients" value=""/>
@@ -110,7 +112,6 @@
 
       <trycatch>
         <try>
-          <call target="changelog" />
           <call target="copydlls" />
           <call target="copylinkedfolders" />
           <call target="webcompile" />
@@ -779,12 +780,6 @@
 
     <changelog dochangelog="${DoChangelog}" pattern="${ChangelogTagRegex}" initversion="${ChangelogInitVersion}" endversion="${ChangelogEndVersion}" includeinit="${ChangelogIncludeInit}" includeend="${ChangelogIncludeEnd}"/>
     <copy todir="${deploypath}">
-      <fileset basedir="..">
-        <include name="changelog.html" />
-        <include name="instalationTasks.html" />
-      </fileset>
-    </copy>
-    <copy todir="${deploypath}">
       <fileset basedir=".">
         <include name="changelog.html" />
         <include name="instalationTasks.html" />
@@ -804,7 +799,7 @@
     <if test="${property::exists('ChangelogRNToList')==true}">
       <mail from="ctschangelog@gmail.com" tolist="${ChangelogRNToList}" cclist="${ChangelogRNCCList}" isbodyhtml="true" mailhost="smtp.gmail.com" mailport="587" password="f50HLV9U0Grk9ufqoF45" ssl="true" subject="Release Notes" user="ctschangelog@gmail.com">
         <files>
-          <include name="${deploypath}/changelog.html" />
+          <include name="changelog.html" />
         </files>
       </mail>
     </if>

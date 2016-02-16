@@ -34,8 +34,8 @@ namespace softWrench.sw4.nant.classes {
         private const string Username = "emfmesquita";
         private const string Password = "FE7IFKu0Biqc2ptn1TW2";
         private const string ReleasesPath = "/repos/controltechnologysolutions/softwrench/releases";
-        private const string ChangelogPath = "changelog.html";
-        private const string InstalationTasksPath = "instalationTasks.html";
+        private const string ChangelogPath = "/changelog.html";
+        private const string InstalationTasksPath = "/instalationTasks.html";
         public static Regex VersionNumberRegex = new Regex("([0-9]+\\.)*[0-9]+");
         public static Regex InstalationTaskRegex = new Regex("<h2>[\\W]*(installation task)((?!<h2>).)*", RegexOptions.IgnoreCase);
 
@@ -64,8 +64,8 @@ namespace softWrench.sw4.nant.classes {
             EndVersion = ExtractVersion(EndVersion);
 
             LoadReleases();
-            CreateChangelogFile(BuildContent(_releases), ChangelogPath);
-            CreateChangelogFile(BuildContent(_instalationTasks), InstalationTasksPath);
+            CreateChangelogFile(BuildContent(_releases), Project.BaseDirectory + ChangelogPath);
+            CreateChangelogFile(BuildContent(_instalationTasks), Project.BaseDirectory + InstalationTasksPath);
         }
 
         public void Test() {
