@@ -782,8 +782,12 @@
       <fileset basedir="..">
         <include name="changelog.html" />
         <include name="instalationTasks.html" />
-        <include name="Build/changelog.html" />
-        <include name="Build/instalationTasks.html" />
+      </fileset>
+    </copy>
+    <copy todir="${deploypath}">
+      <fileset basedir=".">
+        <include name="changelog.html" />
+        <include name="instalationTasks.html" />
       </fileset>
     </copy>
 
