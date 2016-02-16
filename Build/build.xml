@@ -155,7 +155,7 @@
       <arg line="/property:Configuration=Debug" />
       <arg value="/maxcpucount:2" />
       <arg value="/target:Rebuild" />
-      <arg value="/verbosity:quiet" />
+      <arg value="/verbosity:detailed" />
       <arg value="/nologo" />
     </exec>
     <logtimeend/>
