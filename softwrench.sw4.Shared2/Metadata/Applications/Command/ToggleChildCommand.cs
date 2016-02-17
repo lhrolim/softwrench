@@ -10,10 +10,10 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
         public ToggleChildCommand(string id, string label, string service, string method, string role, string stereotype,
             string showExpression, string enableExpression, string successMessage,
             string nextSchemaId, string scopeParameters, string properties, string defaultPosition, string icon,
-            string tooltip, string cssClasses, bool primary, bool pressed) : base(id, label, service, method, role, stereotype,
+            string tooltip, string cssClasses, bool primary, bool pressed, string permissionExpression) : base(id, label, service, method, role, stereotype,
             showExpression, enableExpression, successMessage,
             nextSchemaId, scopeParameters, properties, defaultPosition, icon,
-            tooltip, cssClasses, primary)
+            tooltip, cssClasses, primary, permissionExpression)
         {
             Pressed = pressed;
         }

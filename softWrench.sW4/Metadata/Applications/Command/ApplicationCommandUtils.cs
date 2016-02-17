@@ -43,37 +43,26 @@ namespace softWrench.sW4.Metadata.Applications.Command {
                 var commands = new List<ICommandDisplayable>();
 
                 foreach (var command in commandBarDefinition.Commands) {
-                    if (command.Role == null) {
-                        commands.Add(command);
-                        continue;
-                    }
-
-                    if (!user.IsInRole(command.Role) && !user.IsSwAdmin()) {
-                        //if not in role, just skip it (unless swadmin that can see everything...)
-                        Log.DebugFormat("ignoring command {0} due to abscence of role {1}", command.Id, command.Role);
-                        continue;
-                    }
-
                     if (command is ContainerCommand) {
                         var secured = ((ContainerCommand)command).Secure(user);
                         if (secured != null) {
                             commands.Add(secured);
                         }
                     } else {
+                        if (!user.IsInRole(command.Role) && !user.IsSwAdmin()) {
+                            //if not in role, just skip it (unless swadmin that can see everything...)
+                            Log.DebugFormat("ignoring command {0} due to abscence of role {1}", command.Id, command.Role);
+                            continue;
+                        }
+                        if (command.Hidden()) {
+                            continue;
+                        }
                         commands.Add(command);
                     }
-
-
                 }
-
                 result[commandBar.Key] = new CommandBarDefinition(commandBarDefinition.Id, commandBarDefinition.Position, commandBarDefinition.ExcludeUndeclared, commands);
             }
-
-
-
             return result;
         }
-
-
     }
 }

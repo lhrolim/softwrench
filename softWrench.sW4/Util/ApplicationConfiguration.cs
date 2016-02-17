@@ -458,6 +458,11 @@ namespace softWrench.sW4.Util {
             return !IsMif() && !IsISM();
         }
 
+        public static bool IsSCCD() {
+            var source = MetadataProvider.GlobalProperty(MetadataProperties.Source) ?? "";
+            return source.ToLower() == "smartcloud7.5";
+        }
+
         public static string DBConnectionString(DBType dbType) {
             var connectionStringSettings = DBConnection(dbType);
             return connectionStringSettings == null ? null : connectionStringSettings.ConnectionString;

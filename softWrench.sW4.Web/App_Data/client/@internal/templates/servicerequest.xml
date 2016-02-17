@@ -297,8 +297,8 @@
                 <command id="dispatchwo" icon="fa-tachometer" label="Create Work Order"
                           parameters="schema,datamap" service="dispatchService" method="dispatchWO"/>
                 <!-- Incident is for smart cloud only, allowing them to dispatch incidents on all images is a violation for maximo images -->
-                <!--<command id="dispatchincident" icon="fa-tachometer" label="Create Incident"
-                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>-->
+                <command id="dispatchincident" icon="fa-tachometer" label="Create Incident" permissionexpression="true"
+                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
                 <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                     showexpression="service:genericTicketService.isDeleteAllowed" successmessage="SR deleted" position="right" icon="fa-remove"/>
               </container>
