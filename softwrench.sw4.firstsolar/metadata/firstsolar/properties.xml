@@ -51,4 +51,25 @@
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_FS76MAX;User Id=sw;password=softwrench;" />
   </environment>
   
+  <environment key="dev-uat">
+    <property key="basewsURL" value="http://10.1.16.236/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.1.16.82;Initial Catalog=MaxDev;User Id=zSvc_softwrench_d;password=tapes-hEmWKx8;" />
+    <property key="swdb_url" value="Data Source=10.1.17.109;Initial Catalog=SWDB_MaxDev;User Id=zSvc_softwrench_d;password=tapes-hEmWKx8;" />
+    <property key="mifcredentials.user" value="maxadmin"/>
+    <property key="mifcredentials.password" value="maxadmin"/>
+  </environment>
+
+  <environment key="qa-uat">
+    <property key="defaultOrgId" value="ORG1"/>
+    <property key="defaultSiteId" value="1101"/>
+    <property key="defaultStoreloc" value="0001"/>
+    <property key="basewsURL" value="http://10.1.16.236/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=PBG1SQL03S514.DEV.FS\MAXIMO_120_S514;Initial Catalog=MaxDev;User Id=zSvc_Softwrench_D;password=tapes-hEmWKx8;" />
+    <property key="swdb_url" value="Data Source=10.1.17.109;Initial Catalog=SWDB_MaxDev;User Id=zSvc_Softwrench_D;password=tapes-hEmWKx8;" />  
+    <property key="ldapServer" value="10.1.20.101"/>
+    <property key="ldapPortNumber" value="389"/>
+    <property key="ldapBaseDN" value="OU=Users,OU=NorthAmerica,DC=FS,DC=LOCAL"/>
+  </environment>
+
+  
 </Properties>
