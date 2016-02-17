@@ -37,7 +37,13 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             get; set;
         }
 
+        public string ShowExpression {
+            get; set;
+        }
 
+        public string PermissionExpression {
+            get; set;
+        }
 
         public IEnumerable<ICommandDisplayable> Displayables {
             get; set;
@@ -52,7 +58,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             return this;
         }
 
-        public ContainerCommand(string id, string label, string tooltip, string role, string position, string icon, string service, string method, IEnumerable<ICommandDisplayable> displayables) {
+        public ContainerCommand(string id, string label, string tooltip, string role, string position, string icon, string service, string method, IEnumerable<ICommandDisplayable> displayables, string permissionexpression) {
             Id = id;
             Label = label;
             Tooltip = tooltip;
@@ -62,6 +68,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             Icon = icon;
             Service = service;
             Method = method;
+            PermissionExpression = permissionexpression;
         }
 
         public bool IsDynamic() {
@@ -71,7 +78,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
                 if (commandDisplayable is ContainerCommand) {
                     result = result || ((ContainerCommand)commandDisplayable).IsDynamic();
                 }
-                if (commandDisplayable.Role != null) {
+                if (commandDisplayable.Role != null || commandDisplayable.PermissionExpression != null) {
                     return true;
                 }
             }

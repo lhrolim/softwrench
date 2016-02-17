@@ -12,6 +12,11 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
         String Position { get; }
 
         String Type { get; }
+
+        String ShowExpression { get; }
+
+        String PermissionExpression { get; }
+
         ICommandDisplayable KeepingOriginalData(ICommandDisplayable originalCommand);
     }
 }
