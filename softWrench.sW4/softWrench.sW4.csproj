@@ -442,6 +442,7 @@
     <Compile Include="Security\Interfaces\IRoleEvaluator.cs" />
     <Compile Include="Security\Services\ClearMenuEvent.cs" />
     <Compile Include="Security\Services\ClearCacheEvent.cs" />
+    <Compile Include="Security\Services\MaximoVersionEvaluator.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />
     <Compile Include="Security\Services\UserPreferenceManager.cs" />
     <Compile Include="Security\UserType.cs" />
