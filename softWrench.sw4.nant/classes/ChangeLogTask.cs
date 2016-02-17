@@ -34,8 +34,8 @@ namespace softWrench.sw4.nant.classes {
         private const string Username = "emfmesquita";
         private const string Password = "FE7IFKu0Biqc2ptn1TW2";
         private const string ReleasesPath = "/repos/controltechnologysolutions/softwrench/releases";
-        private const string ChangelogPath = "changelog.html";
-        private const string InstalationTasksPath = "instalationTasks.html";
+        private const string ChangelogPath = "/changelog.html";
+        private const string InstalationTasksPath = "/instalationTasks.html";
         public static Regex VersionNumberRegex = new Regex("([0-9]+\\.)*[0-9]+");
         public static Regex InstalationTaskRegex = new Regex("<h2>[\\W]*(installation task)((?!<h2>).)*", RegexOptions.IgnoreCase);
 
@@ -60,9 +60,12 @@ namespace softWrench.sw4.nant.classes {
             if (!string.IsNullOrEmpty(IncludeEnd)) {
                 _includeEnd = "true".Equals(IncludeEnd);
             }
+            InitVersion = ExtractVersion(InitVersion);
+            EndVersion = ExtractVersion(EndVersion);
+
             LoadReleases();
-            CreateChangelogFile(BuildContent(_releases), ChangelogPath);
-            CreateChangelogFile(BuildContent(_instalationTasks), InstalationTasksPath);
+            CreateChangelogFile(BuildContent(_releases), Project.BaseDirectory + ChangelogPath);
+            CreateChangelogFile(BuildContent(_instalationTasks), Project.BaseDirectory + InstalationTasksPath);
         }
 
         public void Test() {
@@ -71,6 +74,19 @@ namespace softWrench.sw4.nant.classes {
 
         private void LoadReleases() {
             Load(ReleasesPath, AddRelease);
+        }
+
+        // extract version from tag
+        private string ExtractVersion(string tag) {
+            if (string.IsNullOrEmpty(tag)) {
+                return null;
+            }
+            var m = VersionNumberRegex.Match(tag);
+            if (m.Length > 0) {
+                return m.Groups[0].Value;
+            }
+            Log(Level.Info, string.Format("The version {0} is not valid", tag));
+            return null;
         }
 
         // create changelog file

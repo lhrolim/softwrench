@@ -60,8 +60,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             contextService, $rootScope, alertService) {
 
             var log = $log.getInstance('sw4.activityStream');
-            var jScrollPaneAPI;
-            var throttleTimeout;
+
             $scope.hiddenToggle = false;
             $scope.enableFilter = false;
             $scope.availableProfiles = [];
@@ -247,10 +246,6 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         //TODO: remove for production
                         //$scope.activities = demoNotifications;
 
-                        //resize the scroll pane if needed
-                        if (typeof jScrollPaneAPI !== 'undefined') {
-                            jScrollPaneAPI.reinitialise();
-                        }
                         log.debug($scope.activities);
                     });
             };
@@ -278,12 +273,8 @@ angular.module('sw_layout').directive('activitystream', function (contextService
 
                 $scope.hiddenToggle = !$scope.hiddenToggle;
 
-                //resize the scroll pane if needed
-                if (typeof jScrollPaneAPI !== 'undefined') {
-                    $timeout(function () {
-                        jScrollPaneAPI.reinitialise();
-                    }, 0);
-                }
+                //resize/position elements
+                $(window).trigger('resize');
             };
 
             $scope.toggleActivityStream = function () {

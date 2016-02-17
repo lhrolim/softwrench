@@ -99,6 +99,8 @@
 
     <echo message="Common compile task." />
     <call target="compile" />
+    <echo message="Common changelog task." />
+    <call target="changelog" />
 
     <property name="failure" value="false"/>
     <property name="failureclients" value=""/>
@@ -110,7 +112,6 @@
 
       <trycatch>
         <try>
-          <call target="changelog" />
           <call target="copydlls" />
           <call target="copylinkedfolders" />
           <call target="webcompile" />
@@ -146,7 +147,7 @@
 
   <target name="generatedeploynocompile" depends="copydlls,copylinkedfolders,webcompile"/>
 
-  <target name="fullbuildlocal" depends="compile,changelog,zip"/>
+  <target name="fullbuildlocal" depends="compile,zip"/>
 
   <target name="compile">
     <logtimestart/>
@@ -491,7 +492,7 @@
     <logtimeend/>
   </target>
 
-  <target name="zip" depends="copydlls,copylinkedfolders,webcompile,setclient,setenv">
+  <target name="zip" depends="changelog,copydlls,copylinkedfolders,webcompile,setclient,setenv">
     <logtimestart/>
     <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4_${platform}_${client}_${profile}_${build.date}.zip">
       <fileset basedir="${deploypath}">
@@ -740,6 +741,10 @@
     <logtimeend/>
   </target>
 
+  <!-- - Builds the changelog and instalation tasks files (only if dochangelog env variavel is true); -->
+  <!-- - Copy them to deploy folder; -->
+  <!-- - Sends one email with release notes (only if changelogrntolist env variable is set); -->
+  <!-- - Sends one email with instalation tasks (only if changelogittolist env variable is set). -->
   <target name="changelog" depends="mkdir">
     <logtimestart/>
 
@@ -780,6 +785,49 @@
         <include name="instalationTasks.html" />
       </fileset>
     </copy>
+
+    <!-- Release Notes Email -->
+    <if test="${environment::variable-exists('changelogrntolist')}">
+      <property name="ChangelogRNToList" value="${environment::get-variable('changelogrntolist')}" />
+    </if>
+
+    <property name="ChangelogRNCCList" value="" />
+    <if test="${environment::variable-exists('changelogcclist')}">
+      <property name="ChangelogRNCCList" value="${environment::get-variable('changelogcclist')}" />
+    </if>
+
+    <if test="${property::exists('ChangelogRNToList')==true}">
+      <mail from="ctschangelog@gmail.com" tolist="${ChangelogRNToList}" cclist="${ChangelogRNCCList}" isbodyhtml="true" mailhost="smtp.gmail.com" mailport="587" password="f50HLV9U0Grk9ufqoF45" ssl="true" subject="Release Notes" user="ctschangelog@gmail.com">
+        <files>
+          <include name="changelog.html" />
+        </files>
+      </mail>
+    </if>
+    <if test="${property::exists('ChangelogRNToList')!=true}">
+      <echo message="Release notes email not sent due to the absence of enviroment variable 'changelogrntolist'." />
+    </if>    
+
+    <!-- Instalation Tasks Email -->
+    <if test="${environment::variable-exists('changelogittolist')}">
+      <property name="ChangelogITToList" value="${environment::get-variable('changelogittolist')}" />
+    </if>
+
+    <property name="ChangelogITCCList" value="" />
+    <if test="${environment::variable-exists('changelogitcclist')}">
+      <property name="ChangelogITCCList" value="${environment::get-variable('changelogitcclist')}" />
+    </if>
+
+    <if test="${property::exists('ChangelogITToList')==true}">
+      <mail from="ctschangelog@gmail.com" tolist="${ChangelogITToList}" cclist="${ChangelogITCCList}" isbodyhtml="true" mailhost="smtp.gmail.com" mailport="587" password="f50HLV9U0Grk9ufqoF45" ssl="true" subject="Instalation Tasks" user="ctschangelog@gmail.com">
+        <files>
+          <include name="${deploypath}/instalationTasks.html" />
+        </files>
+      </mail>
+    </if>
+    <if test="${property::exists('ChangelogITToList')!=true}">
+      <echo message="Instalation tasks email not sent due to the absence of enviroment variable 'changelogittolist'." />
+    </if> 
+
     <logtimeend/>
   </target>
 
