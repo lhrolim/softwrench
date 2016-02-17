@@ -54,7 +54,7 @@ namespace softWrench.sW4.Metadata.Applications.Command {
                             Log.DebugFormat("ignoring command {0} due to abscence of role {1}", command.Id, command.Role);
                             continue;
                         }
-                        if (command.Hidden()) {
+                        if (!command.Permitted()) {
                             continue;
                         }
                         commands.Add(command);
