@@ -557,7 +557,7 @@
           <composition relationship="labtrans" label="Labor">
             <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
           </composition>
-          <composition relationship="attachment" label="Attachments" />
+          <!--<composition relationship="attachment" label="Attachments" />-->
           <field attribute="description" label="Description"  />
           <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
@@ -602,9 +602,9 @@
           <composition relationship="labtrans" label="Labor">
             <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
           </composition>
-          <composition relationship="attachment" label="Attachments">
+          <!--<composition relationship="attachment" label="Attachments">
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-          </composition>
+          </composition>-->
           <field attribute="description" label="Description"  />
           <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
