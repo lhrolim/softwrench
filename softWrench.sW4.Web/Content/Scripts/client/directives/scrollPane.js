@@ -7,7 +7,8 @@
             replace: false,
             scope: {
                 availableFn: '&',
-                preventWindowScroll: '='
+                preventWindowScroll: '=',
+                useAvailableHeight: '='
             },
 
             link: function(scope, element, attrs) {
@@ -17,6 +18,11 @@
                 var scrollElement = $('.scroll', element);
 
                 function getContentHeight(scrollElement, available) {
+                    //if set use the avaialbe height as the pane size
+                    if (scope.useAvailableHeight) {
+                        return available;
+                    }
+
                     //look for .jspPane to ensure we get the total content height
                     var contents = $('.jspPane', scrollElement).height();
                     if (contents == null) {
