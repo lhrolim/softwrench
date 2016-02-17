@@ -14,13 +14,14 @@
                                           component-id="{{field.associationKey}}"
                                           items-method="associationSearch(query,componentId)"
                                           item-value-key="{{getAssociationValueField(field)}}"
-                                          item-view-value-key="{{getAssociationLabelField(field)}}" association-description />
+                                          item-view-value-key="{{getAssociationLabelField(field)}}" 
+                                          association-description />
 
                     </div>
                     <div ng-switch-when="OptionField">
                         {{datamap[field.target]}}
                         <option-field header-text="{{field.label}}"
-                                      allow-empty='false'
+                                      allow-empty="false"
                                       value="datamap[field.target]"
                                       text="Choose"
                                       items="field.options" />

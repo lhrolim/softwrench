@@ -10,14 +10,17 @@
         });
 
 
-        $scope.$on("sw_validationerrors", function (event, validationArray) {
+        //$scope.$on("sw_validationerrors", function (event, validationArray) {
 
-        });
+        //});
 
-     
 
-        $scope.associationSearch = function (query, componentId) {
+        $scope.associationSearch = function(query, componentId) {
             return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, componentId, query);
+        };
+
+        function testEmpty(label) {
+            return "(!!" + label + " && " + label + " !== \'null\' && " + label + " !== \'undefined\')";
         }
 
         $scope.getAssociationLabelField = function (fieldMetadata) {
@@ -25,7 +28,11 @@
             if ("true" === fieldMetadata.hideDescription) {
                 return associationValueField;
             }
-            return associationValueField +  "+' - '+"  + "datamap." + fieldMetadata.labelFields[0];
+
+            var label = "datamap." + fieldMetadata.labelFields[0];
+
+            return "(" + testEmpty(associationValueField) +  " ? " + associationValueField + " : \'\' ) + " + 
+                    "(" + testEmpty(label) + " ? (\' - \'  + "  + label + ") : \'\')";
         }
 
         $scope.getAssociationValueField = function (fieldMetadata) {

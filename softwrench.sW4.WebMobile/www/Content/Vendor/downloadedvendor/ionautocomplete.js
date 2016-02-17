@@ -351,10 +351,10 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         if (compiledTemplate.scope.multipleSelect === "true" && angular.isArray(compiledTemplate.scope.model)) {
                             angular.forEach(compiledTemplate.scope.model, function (modelValue) {
                                 resolveAndSelectModelItem(modelValue);
-                            })
-                        } else {
-//                            resolveAndSelectModelItem(compiledTemplate.scope.model);
-                        }
+                            });
+                        } //else {
+                            //resolveAndSelectModelItem(compiledTemplate.scope.model);
+                        //}
                     }
 
                 });
@@ -367,7 +367,9 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 // set the view value of the model
                 ngModel.$formatters.push(function (modelValue) {
                     var viewValue = scope.getItemValue(modelValue, scope.itemViewValueKey);
-                    return viewValue == undefined ? "" : viewValue;
+                    if (!viewValue) return ""; 
+                    viewValue = replaceAll(viewValue, "undefined|null", "");
+                    return viewValue.startsWith(" -") || viewValue.endsWith("- ") ? replaceAll(viewValue, " - | -|- ", "") : viewValue;
                 });
 
                 // set the model value of the model
