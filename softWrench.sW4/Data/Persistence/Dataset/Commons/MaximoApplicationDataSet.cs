@@ -1,4 +1,5 @@
-﻿using softWrench.sW4.Data.Persistence.Engine;
+﻿using cts.commons.persistence;
+using softWrench.sW4.Data.Persistence.Engine;
 using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
@@ -6,7 +7,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         private IConnectorEngine _connectorEngine;
 
-        private MaximoHibernateDAO _maxDAO;
+        private IMaximoHibernateDAO _maxDAO;
 
         protected override IConnectorEngine Engine() {
             if (_connectorEngine == null) {
@@ -15,12 +16,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return _connectorEngine;
         }
 
-        protected MaximoHibernateDAO MaxDAO {
+        protected IMaximoHibernateDAO MaxDAO {
             get {
                 if (_maxDAO == null) {
                     _maxDAO =
-                        SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(
-                            typeof(MaximoHibernateDAO));
+                        SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(
+                            typeof(IMaximoHibernateDAO));
                 }
                 return _maxDAO;
             }

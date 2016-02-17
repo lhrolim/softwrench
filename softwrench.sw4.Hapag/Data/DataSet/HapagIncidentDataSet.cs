@@ -16,6 +16,7 @@ using softWrench.sW4.Metadata.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet
 {
@@ -35,7 +36,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet
 
         #region Filter functions
 
-        public HapagIncidentDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) 
+        public HapagIncidentDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, IMaximoHibernateDAO maxDao) 
             : base(locationManager, entityRepository, maxDao)
         {
         }

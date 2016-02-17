@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder;
@@ -20,10 +21,10 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report {
     public class BatchReportDataSet : SWDBApplicationDataset {
 
-        private readonly SWDBHibernateDAO _dao;
+        private readonly ISWDBHibernateDAO _dao;
         private readonly WoEditBatchSchemaDataSet _batchDataSet;
 
-        public BatchReportDataSet(SWDBHibernateDAO dao, WoEditBatchSchemaDataSet batchDataSet) {
+        public BatchReportDataSet(ISWDBHibernateDAO dao, WoEditBatchSchemaDataSet batchDataSet) {
             _dao = dao;
             _batchDataSet = batchDataSet;
         }

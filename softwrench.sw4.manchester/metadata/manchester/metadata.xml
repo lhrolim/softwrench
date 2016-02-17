@@ -72,7 +72,7 @@
           <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
         </relationship>
         <!--COMSW 51 Reverse Lookup of Service Address (Lazy Fetch)-->
-        <relationship to="woaddress" reverselookupattribute="addresscode" >
+        <relationship to="woaddress" reverselookupattribute="addresscode" >ele
           <relationshipAttribute from="wonum" to="woserviceaddress_.wonum" primary="true"/>
         </relationship>
         <relationship to="woserviceaddress">
@@ -80,7 +80,7 @@
           <relationshipAttribute from="orgid" to="orgid"/>
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="synstatus">
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
         </relationship>

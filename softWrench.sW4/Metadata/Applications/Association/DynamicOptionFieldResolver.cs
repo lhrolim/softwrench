@@ -19,8 +19,6 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }
             var attribute = optionField.ProviderAttribute;
             var extraParameter = optionField.ExtraParameter;
-            attribute = attribute.Replace("#", "");
-            attribute = attribute.Replace("_", "");
 
 
             var methodName = GetMethodName(attribute);
@@ -47,15 +45,18 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             return associationOptions;
         }
 
-        private static string GetMethodName(string attribute) {
-            if (char.IsNumber(attribute[0])) {
+        public static string GetMethodName(string attribute) {
+            var internalAttribute = attribute.Replace("#", "");
+            internalAttribute = internalAttribute.Replace("_", "");
+
+            if (char.IsNumber(internalAttribute[0])) {
                 //deprecated: using on the final of string to avoid angular errors
-                return "Get" + StringUtil.FirstLetterToUpper(attribute.Substring(1));
+                return "Get" + StringUtil.FirstLetterToUpper(internalAttribute.Substring(1));
             }
-            if (char.IsNumber(attribute[attribute.Length - 1])) {
-                return "Get" + StringUtil.FirstLetterToUpper(attribute.Substring(0, attribute.Length - 1));
+            if (char.IsNumber(internalAttribute[internalAttribute.Length - 1])) {
+                return "Get" + StringUtil.FirstLetterToUpper(internalAttribute.Substring(0, internalAttribute.Length - 1));
             }
-            return "Get" + StringUtil.FirstLetterToUpper(attribute);
+            return "Get" + StringUtil.FirstLetterToUpper(internalAttribute);
         }
     }
 }

@@ -270,9 +270,9 @@
                                 }
                             }
                             else if (column.rendererType === "icon") {
-                                var classtoLoad = "'fa ' + innerLoadIcon({0}, {1})".format(i, j);
+                                var classtoLoad = "fa " + scope.innerLoadIcon(i, j);
                                 html += "<div>";
-                                html += " <i class=\"{{{0}}}\"".format(classtoLoad);
+                                html += " <i class=\"{0}\"".format(classtoLoad);
                                 html += "rel=\"tooltip\" data-original-title=\"{0}\"></i>".format(column.toolTip);
                             }
 

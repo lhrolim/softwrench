@@ -399,7 +399,7 @@
           <field attribute="woclass" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
           <association label="Status" target="status" labelfield="synstatus.description"  default="OPEN">
-            <dataprovider prefilterfunction="FilterAvailableStatus"/>
+            <dataprovider postfilterfunction="FilterAvailableStatus"/>
           </association>
           <field attribute="location" hidden="true"/>
           <field attribute="location_.description" label="Location" >
@@ -846,22 +846,6 @@
           <field hidden="true" attribute="createdate"/>
         </detail>
 
-      </schemas>
-    </application>
-
-
-    <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
-      <schemas>
-        <detail platform="web" redeclaring="false">
-          <!-- to simulate a scenario where there are two associations binding to the same target...-->
-          <customization position="item_.description">
-            <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
-              <dataprovider prefilterfunction="filterPlannedMaterials"/>
-              <renderer type="lookup"/>
-              <event type="afterchange" service="matusetranService" method="afteritemchange"/>
-            </association>
-          </customization>
-        </detail>
       </schemas>
     </application>
 

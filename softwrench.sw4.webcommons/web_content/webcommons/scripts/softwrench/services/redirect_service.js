@@ -59,11 +59,11 @@
         };
 
         function redirectToTab(tabId) {
-            $timeout(function () {
+            return $timeout(function () {
                 //this timeout is needed because a digest might already be in progress
                 contextService.setActiveTab(tabId);
                 var tab = $('a[href="#' + tabId + '"]');
-                tab.trigger('click');;
+                tab.trigger('click');
             }, 0, false);
         };
 

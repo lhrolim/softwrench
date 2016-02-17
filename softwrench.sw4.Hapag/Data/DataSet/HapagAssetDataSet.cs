@@ -14,11 +14,12 @@ using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagAssetDataSet : MaximoApplicationDataSet {
 
-        private SWDBHibernateDAO _dao;
+        private ISWDBHibernateDAO _dao;
 
         private HapagImacDataSet _imacDataSet;
 
@@ -34,9 +35,9 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return _imacDataSet;
         }
 
-        private SWDBHibernateDAO GetDAO() {
+        private ISWDBHibernateDAO GetDAO() {
             if (_dao == null) {
-                _dao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
+                _dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>(typeof(ISWDBHibernateDAO));
             }
             return _dao;
         }
