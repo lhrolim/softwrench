@@ -5,10 +5,16 @@ using System.Web.Http;
 using cts.commons.portable.Util;
 using cts.commons.web.Attributes;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.entities.security;
 using softwrench.sW4.Shared2.Metadata.Applications;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
@@ -60,21 +66,28 @@ namespace softWrench.sW4.Web.Controllers.Security {
             };
         }
 
+        [HttpGet]
+        public CompositionFetchResult LoadAvailableFields(string application, string schemaId, string tab, int pageNumber) {
+            var app = MetadataProvider.Application(application);
+            var schema = app.Schema(new ApplicationMetadataSchemaKey(schemaId, SchemaMode.None, ClientPlatform.Web));
+            return _userProfileManager.LoadAvailableFieldsAsCompositionData(schema, tab, pageNumber);
+        }
 
-//        [HttpGet]
-//        public SchemaPermissionGroup LoadSchemaGroupPermission(int profileId, string application, string mode, string schemaId) {
-//            var profile = _userProfileManager.FindById(profileId);
-//            if (profile == null) {
-//                throw new InvalidOperationException("informed profile does not exist");
-//            }
-//            //force eager cache
-//            MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, application);
-//            var appPermission = profile.ApplicationPermission.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
-//            if (appPermission != null) {
-//                return appPermission.SchemaGroups.FirstOrDefault(f => f.Mode.EqualsIc(mode) && f.Schema.EqualsIc(schemaId));
-//            }
-//            return null;
-//        }
+
+        //        [HttpGet]
+        //        public SchemaPermissionGroup LoadSchemaGroupPermission(int profileId, string application, string mode, string schemaId) {
+        //            var profile = _userProfileManager.FindById(profileId);
+        //            if (profile == null) {
+        //                throw new InvalidOperationException("informed profile does not exist");
+        //            }
+        //            //force eager cache
+        //            MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, application);
+        //            var appPermission = profile.ApplicationPermission.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
+        //            if (appPermission != null) {
+        //                return appPermission.SchemaGroups.FirstOrDefault(f => f.Mode.EqualsIc(mode) && f.Schema.EqualsIc(schemaId));
+        //            }
+        //            return null;
+        //        }
 
         public class ApplicationPermissionResultDTO {
 
@@ -86,6 +99,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             }
 
         }
+
 
         public class UserProfileListDto {
             private ICollection<UserProfile> _profiles;

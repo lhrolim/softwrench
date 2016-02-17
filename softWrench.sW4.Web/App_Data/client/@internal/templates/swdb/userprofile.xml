@@ -71,7 +71,7 @@
                   <event type="providerloaded" service="userProfileService" method="afterTabsLoaded"/>
                   <event type="afterchange" service="userProfileService" method="tabvaluechanged"/>
                 </optionfield>
-                
+
                 <section showexpression="@iscompositiontab">
                   <field attribute="#compallowcreation" label="Allow Creation">
                     <renderer type="checkbox"/>
@@ -86,13 +86,15 @@
               </section>
             </section>
 
-            <section showexpression="@#selectedtab !=null">
+            <section showexpression="@#selectedtab !=null &amp;&amp; !@iscompositiontab">
               <header displacement="ontop" label="Field Setup" />
 
               <composition detailschema="" fetchtype="eager"  relationship="#fieldPermissions"  printschema="" inline="true">
                 <collectionproperties allowcreation="false" listschema="fieldRepresentation"/>
               </composition>
               
+              
+
             </section>
 
           </section>
@@ -105,17 +107,29 @@
           <field hidden="true" attribute="id"/>
           <field label="Name" attribute="name" />
           <field label="Description" attribute="description" />
+          <properties>
+            <property key="list.paginationsize" value="10"/>
+            <property key="list.paginationoptions" value="10"/>
+          </properties>
         </schema>
 
         <schema id="fieldRepresentation" stereotype="list">
-          <field hidden="true" attribute="id"/>
-          <field label="Field" attribute="fieldLabel" />
-          <optionfield attribute="permission" label="Permission">
-            <renderer type="radio"/>
+
+          <event type="onload" service="userProfileService" method="availableFieldsRefreshed"/>
+          <field hidden="true" attribute="#attribute"/>
+          <field label="Field" attribute="#label" />
+          <optionfield attribute="#permission" label="Permission">
             <option label="Full Control" value="fullcontrol"/>
             <option label="None" value="none"/>
             <option label="Read Only" value="readonly"/>
           </optionfield>
+          <properties>
+            <property key="list.paginationsize" value="10"/>
+            <property key="list.paginationoptions" value="10"/>
+          </properties>
+          
+          
+          
         </schema>
 
       </schemas>

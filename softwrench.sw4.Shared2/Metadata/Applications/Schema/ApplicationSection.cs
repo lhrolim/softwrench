@@ -56,6 +56,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public bool SecondaryContent { get; set; }
 
+        public bool IsHidden {
+            get; set;
+        }
+
         public ApplicationSection() {
 
         }

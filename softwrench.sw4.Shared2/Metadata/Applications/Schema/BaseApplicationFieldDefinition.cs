@@ -17,6 +17,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public bool IsReadOnly { get; set; }
         public string DefaultValue { get; set; }
         public string Qualifier { get; set; }
+        public abstract bool IsHidden { get; set; }
+
         [JsonIgnore]
         public bool DeclaredAsQueryOnEntity { get; set; }
         [DefaultValue("true")] public string ShowExpression { get; set; }

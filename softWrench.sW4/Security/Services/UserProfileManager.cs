@@ -10,8 +10,15 @@ using JetBrains.Annotations;
 using NHibernate;
 using log4net;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sW4.Shared2.Metadata.Applications;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softWrench.sW4.Data.API.Composition;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.DataConstraint;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Metadata;
 
 
 namespace softWrench.sW4.Security.Services {
@@ -113,6 +120,28 @@ namespace softWrench.sW4.Security.Services {
                 }
             }
         }
+
+        public CompositionFetchResult LoadAvailableFieldsAsCompositionData(ApplicationSchemaDefinition schema, string tab, int pageNumber) {
+            var fields = schema.NonHiddenFieldsOfTab(tab);
+            var pageSize = 10;
+            var applicationAttributeDisplayables = fields as IApplicationAttributeDisplayable[] ?? fields.ToArray();
+            int totalCount = applicationAttributeDisplayables.Count();
+            var fieldsToShow = applicationAttributeDisplayables.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            var compositionData = new EntityRepository.SearchEntityResult();
+            compositionData.PaginationData = new PaginatedSearchRequestDto(totalCount, pageNumber, 10, null, new List<int>() { 10 });
+            compositionData.ResultList = new List<Dictionary<string, object>>();
+            foreach (var field in fieldsToShow) {
+                var dict = new Dictionary<string, object>();
+                dict["#label"] = field.Label;
+                dict["#attribute"] = field.Attribute;
+                //enabled by default
+                dict["#permission"] = "fullcontrol";
+                compositionData.ResultList.Add(dict);
+            }
+            return CompositionFetchResult.SingleCompositionInstance("#fieldPermissions_", compositionData);
+        }
+
 
 
     }

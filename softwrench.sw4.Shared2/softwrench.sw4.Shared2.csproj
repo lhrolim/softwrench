@@ -66,7 +66,6 @@
     <Compile Include="Metadata\Applications\Filter\BaseMetadataFilter.cs" />
     <Compile Include="Metadata\Applications\Filter\MetadataOptionFilter.cs" />
     <Compile Include="Metadata\Applications\Filter\SchemaFilters.cs" />
-    <Compile Include="Metadata\Applications\Notification\ApplicationNotificationDisplayable.cs" />
     <Compile Include="Metadata\Applications\Notification\SchemaStereotype.cs" />
     <Compile Include="Metadata\Applications\Relationships\Compositions\FetchType.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationEvent.cs" />

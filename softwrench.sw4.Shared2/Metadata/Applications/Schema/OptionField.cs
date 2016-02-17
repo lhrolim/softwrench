@@ -54,7 +54,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         }
 
-        public bool IsHidden { get; set; }
+        public override bool IsHidden { get; set; }
 
         public IDictionary<string, object> RendererParameters {
             get { return _renderer == null ? new Dictionary<string, object>() : _renderer.ParametersAsDictionary(); }

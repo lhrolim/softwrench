@@ -284,6 +284,7 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
             parentdata: $scope.parentdata,
             parentschema: $scope.parentschema,
             element: $element,
+            relationship:$scope.relationship,
             clonedCompositionData: $scope.compositionData()
         };
         eventService.onload($scope, $scope.compositionlistschema, $scope.parentdata.fields, parameters);
@@ -355,9 +356,14 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         }
         spinService.stop({ compositionSpin: true });
         $scope.paginationData = compositiondata[$scope.relationship].paginationData;
-        $scope.compositiondata = compositiondata[$scope.relationship].list;
+        $scope.compositiondata = compositiondata[$scope.relationship].list || compositiondata[$scope.relationship].resultList;
         init();
-        $scope.$digest();
+        try {
+            $scope.$digest();
+        } catch (e) {
+            //digest already in progress...
+        }
+        
     };
 
     $scope.$on("sw_compositiondataresolved", $scope.onAfterCompositionResolved);
@@ -402,7 +408,24 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         return result;
     };
 
+    $scope.GetAssociationOptions = function (fieldMetadata) {
+        if (fieldMetadata.type === "OptionField") {
+            return $scope.GetOptionFieldOptions(fieldMetadata);
+        }
+        var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+        return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
+    }
+    $scope.GetOptionFieldOptions = function (optionField) {
+        if (optionField.providerAttribute == null) {
+            return optionField.options;
+        }
+        var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+        return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData);
+    }
 
+    $scope.i18NOptionField = function (option, fieldMetadata, schema) {
+        return i18NService.getI18nOptionField(option, fieldMetadata, schema);
+    };
 
 
     $scope.compositionProvider = function () {
@@ -958,8 +981,11 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
             $scope.paginationData.pageNumber = pageNumber;
             return;
         }
+
+        var fields = $scope.parentdata.fields || $scope.parentdata;
+
         return compositionService
-            .getCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields, pageNumber, $scope.paginationData.pageSize)
+            .getCompositionList($scope.relationship, $scope.parentschema, fields, pageNumber, $scope.paginationData.pageSize)
             .then(function (result) {
                 $scope.clonedCompositionData = [];
                 // clear lists

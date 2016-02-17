@@ -14,6 +14,7 @@ using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata;
@@ -45,15 +46,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
                 //not a creation
                 profileOb = _userProfileManager.FindByName(profileDatamap.GetAttribute("name") as string);
             }
-
-
             HandleBasicRoles(profileOb, profileDatamap);
-
-
-
             return result;
         }
 
+        [UsedImplicitly]
         public IEnumerable<IAssociationOption> GetTopLevelApplications(OptionFieldProviderParameters parameters) {
             return MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null).Select(a => new AssociationOption(a.ApplicationName, a.ApplicationName));
         }
@@ -84,6 +81,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
+        [UsedImplicitly]
         public IEnumerable<IAssociationOption> GetSchemas(OptionFieldProviderParameters parameters) {
             var entity = parameters.OriginalEntity;
             var mode = entity.GetStringAttribute("selectedmode");
@@ -114,7 +112,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return completeApplicationMetadataDefinition.NonInternalSchemasByStereotype("detail");
         }
 
-
+        [UsedImplicitly]
         public IEnumerable<IAssociationOption> GetSelectableTabs(OptionFieldProviderParameters parameters) {
             var entity = parameters.OriginalEntity;
             var mode = entity.GetStringAttribute("selectedmode");
@@ -126,8 +124,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             ApplicationSchemaDefinition schema =
                 completeApplicationMetadataDefinition.Schema(new ApplicationMetadataSchemaKey(schemaId));
             var results = new List<PriorityBasedAssociationOption>();
-            results.Add(new PriorityBasedAssociationOption("main", "Main",0, new Dictionary<string, object> { { "type", "main" } }));
-            results.AddRange(schema.Tabs().Select(c => new PriorityBasedAssociationOption(c.Attribute, c.Label,1, new Dictionary<string, object> { { "type", c.Type } })));
+            results.Add(new PriorityBasedAssociationOption("main", "Main", 0, new Dictionary<string, object> { { "type", "main" } }));
+            results.AddRange(schema.Tabs().Select(c => new PriorityBasedAssociationOption(c.Attribute, c.Label, 1, new Dictionary<string, object> { { "type", c.Type } })));
             return results;
         }
 
@@ -147,6 +145,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             profileDatamap.SetAttribute("#basicroles_", basicRoles);
         }
 
+
+        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
+            JObject currentData) {
+            var result = base.GetCompositionData(application, request, currentData);
+            if (request.CompositionList != null && request.CompositionList.Contains("#fieldPermissions_") && request.CompositionList.Count == 1) {
+                var app = MetadataProvider.Application(result.OriginalCruddata.GetStringAttribute("application"));
+                var schema = app.Schema(new ApplicationMetadataSchemaKey(result.OriginalCruddata.GetStringAttribute("schema"), SchemaMode.None, ClientPlatform.Web));
+                return _userProfileManager.LoadAvailableFieldsAsCompositionData(schema, result.OriginalCruddata.GetStringAttribute("#selectedtab"), request.PaginatedSearch.PageNumber);
+            }
+            return result;
+        }
 
         public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch,
             Tuple<string, string> userIdSite) {

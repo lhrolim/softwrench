@@ -4,9 +4,9 @@
 
 
 
-    function userProfileService($q,$rootScope,$log, restService, contextService, crudContextHolderService) {
+    function userProfileService($q, $rootScope, $log, restService, contextService, crudContextHolderService) {
 
-        var simpleLog =$log.get("userProfileService", ["profile"]);
+        var simpleLog = $log.get("userProfileService", ["profile"]);
 
         function onSchemaLoad() {
             simpleLog.debug("initing transientprofile data");
@@ -40,17 +40,49 @@
         function tabvaluechanged(parameters) {
             var dm = parameters.fields;
             var tab = parameters.fields["#selectedtab"];
+            var application = parameters.fields["application"];
+            var schemaId = parameters.fields["schema"];
+            dm["#fieldPermissions"] = [];
+
+            simpleLog.debug("tab changed to {0}".format(tab));
+
             var fullObject = crudContextHolderService.fetchEagerAssociationOptions("selectableTabs").filter(function (item) {
                 return item.value === tab;
             })[0];
-            if (fullObject) {
-                dm["iscompositiontab"] = fullObject.extrafields["type"] === "ApplicationCompositionDefinition";
+            if (!fullObject) {
+                simpleLog.warn("tab {0} not found from available options".format(tab));
+                return;
             }
+
+            //allow creation/allow update flags only make sense for composition(collection)tabs
+            var isCompositionTab = fullObject.extrafields["type"] === "ApplicationCompositionDefinition";
+            dm["iscompositiontab"] = isCompositionTab;
+            if (!isCompositionTab) {
+                var queryParameters = {
+                    application: application,
+                    schemaId: schemaId,
+                    tab: tab,
+                    pageNumber: 1
+                }
+
+                restService.getPromise("UserProfile", "LoadAvailableFields", queryParameters).then(function (httpResponse) {
+                    var compositionData = httpResponse.data.resultObject;
+
+                    //TODO: merge permissions with local permissions
+                    //                    result.forEach(function (value) {
+                    //                    });
+                    $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
+                });
+            }
+
+
+
         }
 
         function afterModeChanged(parameters) {
             var dm = parameters.fields;
             //cleaning up data
+            simpleLog.debug("resting tab");
             dm["#selectedtab"] = dm["iscompositiontab"] = null;
         }
 
@@ -88,10 +120,10 @@
                     if (dmToRestore.hasOwnProperty(attr)) {
                         parameters.fields[attr] = dmToRestore[attr];
                     }
-                     
+
                 }
                 parameters.scope.datamap = parameters.fields;
-//                crudContextHolderService.rootDataMap(null, transientData[nextApplication]);
+                //                crudContextHolderService.rootDataMap(null, transientData[nextApplication]);
                 return $q.when();
             }
 
@@ -100,7 +132,7 @@
                 application: nextApplication
             };
 
-          
+
 
             simpleLog.debug("application has changed. No transient data found. fetching application permission from server");
 
@@ -138,14 +170,28 @@
             crudContextHolderService.updateEagerAssociationOptions("selectableTabs", []);
         }
 
+        //method called whenever the list of fields get changed, such as in a pagination event
+        function availableFieldsRefreshed(scope, schema, datamap, parameters) {
+            if (parameters.relationship === "#fieldPermissions_") {
+                simpleLog.debug("list of fields changed for tab {0}".format(parameters.parentdata["#selectedtab"]));
+                var compositiondata = parameters.clonedCompositionData;
+                compositiondata.forEach(function (value) {
+                    //TODO: apply merge with transientdata
+                    //                    value["#permission"] = "readonly";
+                });
+            }
+
+        }
+
         var service = {
-            onSchemaLoad:onSchemaLoad,
+            availableFieldsRefreshed: availableFieldsRefreshed,
+            onSchemaLoad: onSchemaLoad,
             onApplicationChange: onApplicationChange,
             afterSchemaListLoaded: afterSchemaListLoaded,
-            afterModeChanged:afterModeChanged,
-            afterSchemaChanged:afterSchemaChanged,
+            afterModeChanged: afterModeChanged,
+            afterSchemaChanged: afterSchemaChanged,
             afterTabsLoaded: afterTabsLoaded,
-            beforeApplicationChange:beforeApplicationChange,
+            beforeApplicationChange: beforeApplicationChange,
             tabvaluechanged: tabvaluechanged
         };
 
@@ -153,6 +199,6 @@
     }
 
 
-    angular.module('sw_crudadmin').factory('userProfileService', ['$q',"$rootScope","$log",'restService','contextService', 'crudContextHolderService', userProfileService]);
+    angular.module('sw_crudadmin').factory('userProfileService', ['$q', "$rootScope", "$log", 'restService', 'contextService', 'crudContextHolderService', userProfileService]);
 
 })(angular);

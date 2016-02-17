@@ -5,6 +5,7 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softwrench.sw4.Shared2.Metadata.Applications.UI;
 
 namespace softwrench.sW4.Shared2.Util {
 
@@ -23,14 +24,16 @@ namespace softwrench.sW4.Shared2.Util {
 
         public static IList<T> GetDisplayable<T>(Type[] typesToCheck,
             IEnumerable<IApplicationDisplayable> originalDisplayables, SchemaFetchMode schemaFetchMode,
-            bool insideSecondary) {
+            bool insideSecondary, string tabOfInterest = null, string tabContext = null) {
             var resultingDisplayables = new List<T>();
 
             foreach (IApplicationDisplayable displayable in originalDisplayables) {
 
                 if (typesToCheck.Any(typeToCheck => typeToCheck.IsInstanceOfType(displayable))) {
                     if (schemaFetchMode != SchemaFetchMode.SecondaryContent || insideSecondary) {
-                        resultingDisplayables.Add((T)displayable);
+                        if (tabOfInterest == null || tabOfInterest.Equals(tabContext)) {
+                            resultingDisplayables.Add((T)displayable);
+                        }
                     }
                 }
 
@@ -43,9 +46,17 @@ namespace softwrench.sW4.Shared2.Util {
                         //under some circustances we might not be interested in returning the secondary content displayables
                         continue;
                     }
+                    var tabDefinition = container as ApplicationTabDefinition;
+                    //                    if (tabDefinition != null && tabOfInterest != null && tabDefinition.TabId != tabOfInterest) {
+                    //                        
+                    //                    }
+                    if (tabDefinition != null) {
+                        tabContext = tabDefinition.TabId;
+                    }
+
                     resultingDisplayables.AddRange(GetDisplayable<T>(typesToCheck, container.Displayables,
                         schemaFetchMode,
-                        insideSecondary || isSecondarySection));
+                        insideSecondary || isSecondarySection, tabOfInterest, tabContext));
                 }
             }
             return resultingDisplayables;
