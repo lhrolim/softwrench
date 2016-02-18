@@ -74,7 +74,9 @@
     <property key="swdb_url" value="Data Source=10.1.17.109;Initial Catalog=SWDB_MaxDev;User Id=zSvc_Softwrench_D;password=tapes-hEmWKx8;" />  
     <property key="ldapServer" value="10.1.20.101"/>
     <property key="ldapPortNumber" value="389"/>
-    <property key="ldapBaseDn" value="OU=Users,OU=NorthAmerica,DC=FS,DC=LOCAL"/>
+    <property key="ldapBaseDn" value="DC=FS,DC=LOCAL"/>
+    <property key="mifcredentials.user" value="mxintadm"/>
+    <property key="mifcredentials.password" value="mxintadm"/>  
   </environment>
 
   
