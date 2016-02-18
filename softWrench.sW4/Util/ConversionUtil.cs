@@ -15,13 +15,14 @@ namespace softWrench.sW4.Util {
             if (type == "varchar" || type == "string") {
                 return stValue;
             }
-            if (type.EqualsAny("smallint","int","integer")) {
+            if (type.EqualsAny("smallint","int")) {
                 if (stValue.EqualsAny("True", "False")) {
                     return Convert.ToBoolean(stValue);
                 }
-                return Convert.ToInt32(stValue);
+                return Convert.ToInt64(stValue);
             }
-            if (type == "bigint") {
+            if (type == "bigint" || type== "integer") {
+                //moving int to BigInt to allow overflows, due to an error found on firstsolardev environemnt
                 return Convert.ToInt64(stValue);
             }
             if (type == "datetime" || type == "timestamp") {
