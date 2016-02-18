@@ -53,6 +53,7 @@ namespace softWrench.sW4.AUTH {
                     return new LdapAuthResult(false, "user not found");
                 }
             } catch (Exception ex) {
+                Log.Warn(ex.Message,ex);
                 return new LdapAuthResult(false, ex.Message);
             }
             return new LdapAuthResult(true, null);
