@@ -350,13 +350,26 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
     }
 
     $scope.onAfterCompositionResolved = function (event, compositiondata) {
-        if (!compositiondata[$scope.relationship]) {
+        if (!compositiondata || !compositiondata.hasOwnProperty($scope.relationship)) {
             //this is not the data this tab is interested
             return;
         }
+
         spinService.stop({ compositionSpin: true });
-        $scope.paginationData = compositiondata[$scope.relationship].paginationData;
-        $scope.compositiondata = compositiondata[$scope.relationship].list || compositiondata[$scope.relationship].resultList;
+        var thisCompData = compositiondata[$scope.relationship];
+        if (thisCompData == null) {
+            thisCompData = {
+                list : []
+            }
+        }
+        var list = thisCompData.list || thisCompData.resultList;
+
+        $log.get("compositionlist#resolved",["composition"]).debug("composition data refreshed for {0} | entries: {1}".format($scope.relationship,list.length));
+
+        $scope.paginationData = thisCompData.paginationData;
+        $scope.compositiondata = list;
+
+
         init();
         try {
             $scope.$digest();

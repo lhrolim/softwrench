@@ -28,74 +28,75 @@
           </commandbars>
         </list>
         <detail>
-          <field label="Name" attribute="name" />
-          <field label="Description" attribute="description" />
-          <tab label="Basic Roles" id="basicroles">
+          <section orientation="horizontal">
+            <field label="Name" attribute="name" />
+            <field label="Description" attribute="description" />
+          </section>
+          <tab label="Extra Permissions" id="basicroles">
             <composition detailschema="" fetchtype="eager"  relationship="#basicroles"  printschema="" inline="true">
               <collectionproperties allowcreation="false" listschema="rolerepresentation"/>
             </composition>
           </tab>
-          <optionfield attribute="application" providerattribute="topLevelApplications" label="Application">
-            <event type="afterchange" service="userProfileService" method="onApplicationChange"/>
-            <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>
-          </optionfield>
-          <section orientation="horizontal" showexpression="@application!=null">
+
+          <section orientation="horizontal">
+            <optionfield attribute="application" providerattribute="topLevelApplications" label="Application">
+              <event type="afterchange" service="userProfileService" method="onApplicationChange"/>
+              <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>
+            </optionfield>
+
+            <field attribute="#appallowcreation" label="Allow Creation" showexpression="@hasCreationSchema==true">
+              <renderer type="checkbox"/>
+            </field>
+            <field attribute="#appallowupdate" label="Allow Update">
+              <renderer type="checkbox"/>
+            </field>
+            <field attribute="#appallowview" label="Allow Only Visualization">
+              <renderer type="checkbox"/>
+            </field>
+
+          </section>
+
+          <section showexpression="@application!=null">
             <section orientation="horizontal">
-              <section>
-                <header displacement="ontop" label="Basic Setup"/>
-                <field attribute="#appallowcreation" label="Allow Creation" showexpression="@hasCreationSchema==true">
-                  <renderer type="checkbox"/>
-                </field>
-                <field attribute="#appallowupdate" label="Allow Update">
-                  <renderer type="checkbox"/>
-                </field>
-                <field attribute="#appallowview" label="Allow Only Visualization">
-                  <renderer type="checkbox"/>
-                </field>
-              </section>
-              <section>
-                <header displacement="ontop" label="Action Setup"/>
-                <section orientation="horizontal">
-                  <optionfield label="Mode" attribute="selectedmode" providerattribute="selectableModes" dependantfields="application">
-                    <event type="afterchange" service="userProfileService" method="afterModeChanged"/>
-                  </optionfield>
-                  <optionfield label="Schema" attribute="schema" providerattribute="schemas" dependantfields="application,selectedmode" showexpression="@showschemacombo" >
-                    <renderer type="combo" params="donotignoreeventsifhidden=true"/>
-                    <event type="providerloaded" service="userProfileService" method="afterSchemaListLoaded"/>
-                    <event type="afterchange" service="userProfileService" method="afterSchemaChanged"/>
-                  </optionfield>
-                </section>
-
-                <optionfield label="Tab/Table" attribute="#selectedtab" providerattribute="selectableTabs" dependantfields="selectedmode,schema" showexpression="@showtabscombo">
-                  <renderer type="combo" params="donotignoreeventsifhidden=true"/>
-                  <event type="providerloaded" service="userProfileService" method="afterTabsLoaded"/>
-                  <event type="afterchange" service="userProfileService" method="tabvaluechanged"/>
-                </optionfield>
-
-                <section showexpression="@iscompositiontab">
-                  <field attribute="#compallowcreation" label="Allow Creation">
-                    <renderer type="checkbox"/>
-                  </field>
-                  <field attribute="#compallowupdate" label="Allow Update">
-                    <renderer type="checkbox"/>
-                  </field>
-                  <field attribute="#compallowview" label="Allow Visualization">
-                    <renderer type="checkbox"/>
-                  </field>
-                </section>
-              </section>
+              <optionfield label="Mode" attribute="selectedmode" providerattribute="selectableModes" dependantfields="application">
+                <renderer type="combo" params="optionfield.forcefirstoption=true"/>
+                <event type="afterchange" service="userProfileService" method="afterModeChanged"/>
+                
+              </optionfield>
+              <optionfield label="Schema" attribute="schema" providerattribute="schemas" dependantfields="application,selectedmode" showexpression="@showschemacombo" >
+                <renderer type="combo" params="donotignoreeventsifhidden=true"/>
+                <event type="providerloaded" service="userProfileService" method="afterSchemaListLoaded"/>
+                <event type="afterchange" service="userProfileService" method="afterSchemaChanged"/>
+              </optionfield>
+              <optionfield label="Tab/Table" attribute="#selectedtab" providerattribute="selectableTabs" dependantfields="selectedmode,schema" showexpression="@showtabscombo">
+                <renderer type="combo" params="donotignoreeventsifhidden=true;optionfield.forcefirstoption=true"/>
+                <event type="providerloaded" service="userProfileService" method="afterTabsLoaded"/>
+                <event type="afterchange" service="userProfileService" method="tabvaluechanged"/>
+              </optionfield>
             </section>
 
-            <section showexpression="@#selectedtab !=null &amp;&amp; !@iscompositiontab">
-              <header displacement="ontop" label="Field Setup" />
-
-              <composition detailschema="" fetchtype="eager"  relationship="#fieldPermissions"  printschema="" inline="true">
-                <collectionproperties allowcreation="false" listschema="fieldRepresentation"/>
-              </composition>
-              
-              
-
+            <section showexpression="@iscompositiontab">
+              <field attribute="#compallowcreation" label="Allow Creation">
+                <renderer type="checkbox"/>
+              </field>
+              <field attribute="#compallowupdate" label="Allow Update">
+                <renderer type="checkbox"/>
+              </field>
+              <field attribute="#compallowview" label="Allow Visualization">
+                <renderer type="checkbox"/>
+              </field>
             </section>
+
+          <section orientation="horizontal">
+
+            <composition detailschema="" fetchtype="lazy"  relationship="#fieldPermissions"  printschema="" inline="true">
+              <collectionproperties allowcreation="false" listschema="fieldRepresentation"/>
+            </composition>
+
+            <composition detailschema="" fetchtype="lazy"  relationship="#actionPermissions"  printschema="" inline="true">
+              <collectionproperties allowcreation="false" listschema="actionRepresentation"/>
+            </composition>
+          </section>
 
           </section>
 
@@ -114,7 +115,6 @@
         </schema>
 
         <schema id="fieldRepresentation" stereotype="list">
-
           <event type="onload" service="userProfileService" method="availableFieldsRefreshed"/>
           <field hidden="true" attribute="#attribute"/>
           <field label="Field" attribute="#label" />
@@ -127,9 +127,12 @@
             <property key="list.paginationsize" value="10"/>
             <property key="list.paginationoptions" value="10"/>
           </properties>
-          
-          
-          
+        </schema>
+
+        <schema id="actionRepresentation" stereotype="list.selection" >
+          <event type="onload" service="userProfileService" method="availableActionsRefreshed"/>
+          <field hidden="true" attribute="actionid"/>
+          <field label="Action" attribute="#actionlabel" />
         </schema>
 
       </schemas>

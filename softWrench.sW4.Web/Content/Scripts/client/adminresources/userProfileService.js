@@ -40,6 +40,11 @@
         function tabvaluechanged(parameters) {
             var dm = parameters.fields;
             var tab = parameters.fields["#selectedtab"];
+            if (tab == null) {
+                //due to mode changes
+                return;
+            }
+
             var application = parameters.fields["application"];
             var schemaId = parameters.fields["schema"];
             dm["#fieldPermissions"] = [];
@@ -83,7 +88,8 @@
             var dm = parameters.fields;
             //cleaning up data
             simpleLog.debug("resting tab");
-            dm["#selectedtab"] = dm["iscompositiontab"] = null;
+            dm["schema"] = dm["#selectedtab"] = dm["iscompositiontab"] = null;
+            cleanUpCompositions();
         }
 
 
@@ -99,6 +105,15 @@
             }
         }
 
+        function cleanUpCompositions() {
+            //cleaning up compositions
+            var compositionData = {};
+            compositionData["#fieldPermissions_"] = null;
+            compositionData["#actionPermissions_"] = null;
+
+            $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
+        }
+
         function onApplicationChange(parameters) {
             var dm = parameters.fields;
             var nextApplication = dm["application"];
@@ -108,7 +123,15 @@
             crudContextHolderService.updateEagerAssociationOptions("selectableTabs", []);
             crudContextHolderService.updateEagerAssociationOptions("selectableModes", []);
             crudContextHolderService.updateEagerAssociationOptions("schemas", []);
+            cleanUpCompositions();
+
             var transientData = $rootScope["#transientprofiledata"];
+            if (!nextApplication) {
+                //scenario where user selects blank entry...
+                return $q.when();
+            }
+
+
             if (!!transientData[nextApplication]) {
                 simpleLog.debug("application has changed, but we already have local transient data. no need to fetch from the server");
                 var dmToRestore = transientData[nextApplication];
@@ -168,6 +191,31 @@
             //cleaning up data
             dm["#selectedtab"] = dm["iscompositiontab"] = null;
             crudContextHolderService.updateEagerAssociationOptions("selectableTabs", []);
+
+
+            var application = parameters.fields["application"];
+            var schemaId = parameters.fields["schema"];
+            if (schemaId == null) {
+                return;
+            }
+
+            simpleLog.debug("schema has been set to {0}, going to server for fetching available actions".format(schemaId));
+
+            var queryParameters = {
+                application: application,
+                schemaId: schemaId,
+                pageNumber: 1
+            }
+
+            restService.getPromise("UserProfile", "LoadAvailableActions", queryParameters).then(function (httpResponse) {
+                var compositionData = httpResponse.data.resultObject;
+
+                //TODO: merge permissions with local permissions
+                //                    result.forEach(function (value) {
+                //                    });
+                $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
+            });
+
         }
 
         //method called whenever the list of fields get changed, such as in a pagination event
@@ -183,8 +231,21 @@
 
         }
 
+        function availableActionsRefreshed(scope, schema, datamap, parameters) {
+            if (parameters.relationship === "#actionPermissions_") {
+                simpleLog.debug("list of fields changed for tab {0}".format(parameters.parentdata["#selectedtab"]));
+                var compositiondata = parameters.clonedCompositionData;
+                compositiondata.forEach(function (value) {
+                    //TODO: apply merge with transientdata
+                    //                    value["#permission"] = "readonly";
+                });
+            }
+
+        }
+
         var service = {
             availableFieldsRefreshed: availableFieldsRefreshed,
+            availableActionsRefreshed:availableActionsRefreshed,
             onSchemaLoad: onSchemaLoad,
             onApplicationChange: onApplicationChange,
             afterSchemaListLoaded: afterSchemaListLoaded,

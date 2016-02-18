@@ -9,6 +9,7 @@ using cts.commons.Util;
 using JetBrains.Annotations;
 using NHibernate;
 using log4net;
+using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -125,15 +126,15 @@ namespace softWrench.sW4.Security.Services {
             var fields = schema.NonHiddenFieldsOfTab(tab);
             var pageSize = 10;
             var applicationAttributeDisplayables = fields as IApplicationAttributeDisplayable[] ?? fields.ToArray();
-            int totalCount = applicationAttributeDisplayables.Count();
+            var totalCount = applicationAttributeDisplayables.Count();
             var fieldsToShow = applicationAttributeDisplayables.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             var compositionData = new EntityRepository.SearchEntityResult();
-            compositionData.PaginationData = new PaginatedSearchRequestDto(totalCount, pageNumber, 10, null, new List<int>() { 10 });
+            compositionData.PaginationData = new PaginatedSearchRequestDto(totalCount, pageNumber, pageSize, null, new List<int>() { pageSize });
             compositionData.ResultList = new List<Dictionary<string, object>>();
             foreach (var field in fieldsToShow) {
                 var dict = new Dictionary<string, object>();
-                dict["#label"] = field.Label;
+                dict["#label"] = field.Label ?? field.Attribute;
                 dict["#attribute"] = field.Attribute;
                 //enabled by default
                 dict["#permission"] = "fullcontrol";
@@ -142,7 +143,41 @@ namespace softWrench.sW4.Security.Services {
             return CompositionFetchResult.SingleCompositionInstance("#fieldPermissions_", compositionData);
         }
 
+        [CanBeNull]
+        public CompositionFetchResult LoadAvailableActionsAsComposition(ApplicationSchemaDefinition schema, int pageNumber) {
+            var pageSize = 8;
+            CommandBarDefinition commandBar;
+            schema.CommandSchema.ApplicationCommands.TryGetValue("#actions", out commandBar);
+            if (commandBar == null) {
+                return null;
+            }
 
+            var commands = commandBar.Commands;
+            var actionsToShow = commands.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var totalCount = commands.Count();
 
+            var compositionData = new EntityRepository.SearchEntityResult();
+            compositionData.PaginationData = new PaginatedSearchRequestDto(totalCount, pageNumber, pageSize, null, new List<int>() { pageSize });
+            compositionData.ResultList = new List<Dictionary<string, object>>();
+
+            AddActionsToComposition(actionsToShow, compositionData);
+            return CompositionFetchResult.SingleCompositionInstance("#actionPermissions_", compositionData);
+        }
+
+        private static void AddActionsToComposition(IEnumerable<ICommandDisplayable> actionsToShow, EntityRepository.SearchEntityResult compositionData) {
+            foreach (var action in actionsToShow) {
+                if (action is ContainerCommand) {
+                    var con = (ContainerCommand)action;
+                    AddActionsToComposition(con.Displayables, compositionData);
+                } else {
+                    var dict = new Dictionary<string, object>();
+                    dict["#actionlabel"] = action.Label;
+                    dict["actionid"] = action.Id;
+                    //enabled by default
+                    dict["_#selected"] = true;
+                    compositionData.ResultList.Add(dict);
+                }
+            }
+        }
     }
 }

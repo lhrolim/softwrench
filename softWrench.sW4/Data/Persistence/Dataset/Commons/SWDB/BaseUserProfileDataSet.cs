@@ -154,6 +154,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
                 var schema = app.Schema(new ApplicationMetadataSchemaKey(result.OriginalCruddata.GetStringAttribute("schema"), SchemaMode.None, ClientPlatform.Web));
                 return _userProfileManager.LoadAvailableFieldsAsCompositionData(schema, result.OriginalCruddata.GetStringAttribute("#selectedtab"), request.PaginatedSearch.PageNumber);
             }
+
+            if (request.CompositionList != null && request.CompositionList.Contains("#actionPermissions_") && request.CompositionList.Count == 1) {
+                var app = MetadataProvider.Application(result.OriginalCruddata.GetStringAttribute("application"));
+                var schema = app.Schema(new ApplicationMetadataSchemaKey(result.OriginalCruddata.GetStringAttribute("schema"), SchemaMode.None, ClientPlatform.Web));
+                return _userProfileManager.LoadAvailableActionsAsComposition(schema, request.PaginatedSearch.PageNumber);
+            }
+
             return result;
         }
 

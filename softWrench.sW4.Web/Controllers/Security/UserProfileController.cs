@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using cts.commons.portable.Util;
+using cts.commons.Util;
 using cts.commons.web.Attributes;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
@@ -52,6 +53,9 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         [HttpGet]
         public ApplicationPermissionResultDTO LoadApplicationPermissions(int profileId, string application) {
+            Validate.NotNull(application,"application");
+            Validate.NotNull(profileId, "profileId");
+
             var profile = _userProfileManager.FindById(profileId);
             if (profile == null) {
                 throw new InvalidOperationException("informed profile does not exist");
@@ -71,6 +75,14 @@ namespace softWrench.sW4.Web.Controllers.Security {
             var app = MetadataProvider.Application(application);
             var schema = app.Schema(new ApplicationMetadataSchemaKey(schemaId, SchemaMode.None, ClientPlatform.Web));
             return _userProfileManager.LoadAvailableFieldsAsCompositionData(schema, tab, pageNumber);
+        }
+
+
+        [HttpGet]
+        public CompositionFetchResult LoadAvailableActions(string application, string schemaId, int pageNumber) {
+            var app = MetadataProvider.Application(application);
+            var schema = app.Schema(new ApplicationMetadataSchemaKey(schemaId, SchemaMode.None, ClientPlatform.Web));
+            return _userProfileManager.LoadAvailableActionsAsComposition(schema, pageNumber);
         }
 
 

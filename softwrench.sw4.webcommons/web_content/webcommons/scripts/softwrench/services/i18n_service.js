@@ -182,15 +182,16 @@
 
         getI18nRecordLabel: function (schema, datamap) {
             if (datamap == null || datamap.fields == null || schema == null) {
-                return
+                return "";
             }
 
             var userIdFieldName = schema.userIdFieldName;
-            var userID = datamap.fields[userIdFieldName];
+            var userId = datamap.fields[userIdFieldName];
 
-            if (schema.idDisplayable && userID != null) {
-                return '{0} {1}'.format(schema.idDisplayable, userID);
+            if (schema.idDisplayable && userId != null) {
+                return '{0} {1}'.format(schema.idDisplayable, userId);
             }
+            return "";
         },
 
         getI18nTitle: function (schema) {
