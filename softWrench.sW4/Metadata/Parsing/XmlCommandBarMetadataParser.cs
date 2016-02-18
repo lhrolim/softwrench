@@ -83,6 +83,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var id = xElement.AttributeValue(XmlBaseSchemaConstants.IdAttribute, true);
             var role = xElement.AttributeValue(XmlBaseSchemaConstants.RoleAttribute);
             var showExpression = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute);
+            var permissionExpression = xElement.AttributeValue(XmlCommandSchema.PermissionExpression);
             var position = xElement.AttributeValue(cnst.PositionAttribute);
             if (xElement.IsNamed(cnst.ResourceCommand)) {
                 var path = xElement.AttributeValue(cnst.ResourceCommandPath);
@@ -98,7 +99,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var icon = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandIconAttribute);
                 var service = xElement.AttributeValue(XmlBaseSchemaConstants.ServiceAttribute);
                 var method = xElement.AttributeValue(XmlBaseSchemaConstants.MethodAttribute);
-                return new ContainerCommand(id, label, tooltip, role, position, icon, service, method, ParseCommandDisplayables(xElement.Elements()));
+                return new ContainerCommand(id, label, tooltip, role, position, icon, service, method, ParseCommandDisplayables(xElement.Elements()), permissionExpression);
             }
             if (xElement.IsNamed(cnst.RemoveCommand)) {
                 return new RemoveCommand(id);
@@ -148,14 +149,15 @@ namespace softWrench.sW4.Metadata.Parsing {
             var properties = xElement.AttributeValue(XmlBaseSchemaConstants.BasePropertiesAttribute);
             var cssClasses = xElement.AttributeValue(XmlBaseSchemaConstants.CssClassesAttribute);
             var primary = xElement.Attribute(XmlBaseSchemaConstants.PrimaryAttribute).ValueOrDefault(false);
+            var permissionExpression = xElement.AttributeValue(XmlCommandSchema.PermissionExpression);
 
             if (toggleChild) {
                 return new ToggleChildCommand(id, label, service, method, role, stereotype, showExpression, enableExpression,
-                successMessage, nextSchemaId, scopeParameters, properties, position, icon, tooltip, cssClasses, primary, togglePressed);
+                successMessage, nextSchemaId, scopeParameters, properties, position, icon, tooltip, cssClasses, primary, togglePressed, permissionExpression);
             }
 
             return new ApplicationCommand(id, label, service, method, role, stereotype, showExpression, enableExpression,
-            successMessage, nextSchemaId, scopeParameters, properties, position, icon, tooltip, cssClasses, primary);
+            successMessage, nextSchemaId, scopeParameters, properties, position, icon, tooltip, cssClasses, primary, permissionExpression);
         }
     }
 }

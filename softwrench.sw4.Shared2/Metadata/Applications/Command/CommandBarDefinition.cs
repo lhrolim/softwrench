@@ -56,7 +56,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
                 if (command is ContainerCommand) {
                     result = result || ((ContainerCommand)command).IsDynamic();
                 }
-                if (!string.IsNullOrEmpty(command.Role)) {
+                if (!string.IsNullOrEmpty(command.Role) || !string.IsNullOrEmpty(command.PermissionExpression)) {
                     Dynamic = true;
                     return true;
                 }
