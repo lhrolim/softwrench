@@ -276,17 +276,6 @@ app.directive('configAssociationListInputDatamap', function () {
             });
 
 
-            $scope.$on("sw.crud.relationship.serverresolved", function () {
-                $timeout(function () {
-                    $scope.$watch('datamap', function (newValue, oldValue) {
-                        if (newValue !== oldValue) {
-                            crudContextHolderService.setDirty();
-                        }
-                    }, true);
-                }, 0, false);
-            });
-
-
             /* Association (COMBO, AUTOCOMPLETECLIENT) functions */
 
 
