@@ -164,6 +164,7 @@
         <attribute name="vendor" type="varchar" required="false" />
         <attribute name="virtualenv" type="smallint" required="false" />
         <attribute name="wellname" type="varchar" required="false" />
+        <attribute name="attachments" type="int" query="(select count(*) from doclinks where ownertable = 'SR' and ownerid = !@ticketuid)" required="false"/>
       </attributes>
       <relationships>
         <relationship to="asset">
@@ -724,6 +725,7 @@
         <attribute name="vendor" type="varchar" required="false" />
         <attribute name="virtualenv" type="smallint" required="false" />
         <attribute name="wellname" type="varchar" required="false" />
+        <attribute name="attachments" type="int" query="(select count(*) from doclinks where ownertable = 'INCIDENT' and ownerid = !@ticketuid)" required="false"/>
       </attributes>
       <relationships>
         <relationship to="asset">
@@ -1228,6 +1230,9 @@
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="width=10%;grid=servicerequest;column=status" />
           </field>
+          <field attribute="attachments" tooltip="Attachments">
+            <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};"/>
+          </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
@@ -1258,6 +1263,9 @@
           <field attribute="ownergroup" label="Ass. Owner Group"></field>
           <field attribute="changedate" label="Changed Date">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=9%;showtime=false"/>
+          </field>
+          <field attribute="attachments" tooltip="Attachments">
+            <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
@@ -1291,6 +1299,9 @@
           <field attribute="owner" label="Owner">
             <renderer type="default" params="width=9%" />
           </field>
+          <field attribute="attachments" tooltip="Attachments">
+            <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};"/>
+          </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
             <property key="list.defaultorderby" value="sr.classificationid, sr.changedate"/>
@@ -1322,6 +1333,9 @@
           <field attribute="ownergroup" label="Ass. Owner Group"></field>
           <field attribute="changedate" label="Changed Date">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=9%;showtime=false"/>
+          </field>
+          <field attribute="attachments" tooltip="Attachments">
+            <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
@@ -1425,7 +1439,7 @@
               </field>
             </section>
             <section orientation="horizontal">
-              <renderer type="default" params="childinputsize=small" />
+              <renderer type="default" params="childinputsize=medium" />
               <field label="Target Start:" attribute="targetstart" readonly="true">
                 <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
               </field>
@@ -1543,7 +1557,7 @@
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command id="dispatchincident" icon="fa-tachometer" label="Create Incident"
+                <command id="dispatchincident" icon="fa-tachometer" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD"
                           parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
                 <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                      showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
@@ -1704,6 +1718,9 @@
           <field attribute="ownergroup" label="Owner Group"/>
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="grid=incident;column=status"/>
+          </field>
+          <field attribute="attachments" tooltip="Attachments">
+            <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>

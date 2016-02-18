@@ -70,7 +70,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         private readonly ApplicationCommandStereotype _stereotype;
 
         public ApplicationCommand(string id, string label, string service, string method, string role, string stereotype, string showExpression, string enableExpression, string successMessage,
-            string nextSchemaId, string scopeParameters, string properties, string defaultPosition, string icon, string tooltip, string cssClasses, bool primary) {
+            string nextSchemaId, string scopeParameters, string properties, string defaultPosition, string icon, string tooltip, string cssClasses, bool primary, string permissionExpression) {
             _id = id;
             Label = label;
             Service = service;
@@ -81,6 +81,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
             }
             ShowExpression = showExpression;
             EnableExpression = enableExpression ?? "true";
+            PermissionExpression = permissionExpression ?? "";
             _successMessage = successMessage;
             _nextSchemaId = nextSchemaId;
             if (scopeParameters != null) {
@@ -114,6 +115,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
                 return _role;
             }
         }
+
+        public string PermissionExpression { get; set; }
 
         public string ShowExpression { get; set; }
 
@@ -160,7 +163,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         }
 
         public static ApplicationCommand TestInstance(String id, string position = "", string label = null, string icon = null) {
-            return new ApplicationCommand(id, label, null, null, null, null, null, null, null, null, null, null, position, icon, null, null,false);
+            return new ApplicationCommand(id, label, null, null, null, null, null, null, null, null, null, null, position, icon, null, null,false,null);
         }
     }
 }

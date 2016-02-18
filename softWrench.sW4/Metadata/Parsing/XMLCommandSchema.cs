@@ -23,5 +23,6 @@
         public const string SuccessMessage = "successmessage";
         public const string NextSchemaId = "nextSchemaId";
         public static string ContainerCommand = "container";
+        public const string PermissionExpression = "permissionexpression";
     }
 }

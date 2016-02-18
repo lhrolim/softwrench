@@ -19,6 +19,14 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             get; set;
         }
 
+        public string ShowExpression {
+            get; set;
+        }
+
+        public string PermissionExpression {
+            get; set;
+        }
+
         private readonly IDictionary<string, object> _parameters;
 
         public IDictionary<string, object> Parameters {
