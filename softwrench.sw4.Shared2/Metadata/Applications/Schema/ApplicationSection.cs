@@ -22,6 +22,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string Label { get; set; }
         public string Attribute { get; set; }
         public IDictionary<string, object> Parameters { get; set; }
+
+        public string RequiredExpression {
+            get; set;
+        }
         [DefaultValue("true")] public string ShowExpression { get; set; }
         public string ToolTip { get; set; }
         public bool? ReadOnly {

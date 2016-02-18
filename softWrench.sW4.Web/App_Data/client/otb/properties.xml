@@ -40,6 +40,12 @@
   
   <environment key="dev">
     <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Cmt;User Id=sw;password=softwrench;" />
+
+    <property key="ldapServer" value="10.12.4.41"/>
+    <property key="ldapPortNumber" value="389"/>
+    <property key="ldapBaseDn" value="DC=GRC,DC=LOCAL"/>
+    <property key="ldap.allownonmaximousers" value="true"/>
+
   </environment>
   
    <environment key="dev_pr">

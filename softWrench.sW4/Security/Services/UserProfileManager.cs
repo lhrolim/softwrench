@@ -123,7 +123,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public CompositionFetchResult LoadAvailableFieldsAsCompositionData(ApplicationSchemaDefinition schema, string tab, int pageNumber) {
-            var fields = schema.NonHiddenFieldsOfTab(tab);
+            var fields = schema.NonHiddenFieldsOfTab(tab).Where(f=> !"true".Equals(f.RequiredExpression));
             var pageSize = 10;
             var applicationAttributeDisplayables = fields as IApplicationAttributeDisplayable[] ?? fields.ToArray();
             var totalCount = applicationAttributeDisplayables.Count();

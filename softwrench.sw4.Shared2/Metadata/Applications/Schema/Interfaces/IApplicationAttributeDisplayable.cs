@@ -11,6 +11,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces
 
         bool IsHidden { get; set; }
 
+        string RequiredExpression {get; set;}
 
     }
 }
