@@ -15,14 +15,17 @@ namespace softWrench.sW4.Util {
             if (type == "varchar" || type == "string") {
                 return stValue;
             }
-            if (type.EqualsAny("smallint","int")) {
+            if (type.EqualsAny("smallint", "int", "integer")) {
                 if (stValue.EqualsAny("True", "False")) {
                     return Convert.ToBoolean(stValue);
                 }
-                return Convert.ToInt64(stValue);
+                try {
+                    return Convert.ToInt32(stValue);
+                } catch (System.OverflowException e) {
+                    return Convert.ToInt64(stValue);
+                }
             }
-            if (type == "bigint" || type== "integer") {
-                //moving int to BigInt to allow overflows, due to an error found on firstsolardev environemnt
+            if (type == "bigint") {
                 return Convert.ToInt64(stValue);
             }
             if (type == "datetime" || type == "timestamp") {
@@ -61,7 +64,7 @@ namespace softWrench.sW4.Util {
                 return null;
             }
 
-            var kind = (ApplicationConfiguration.IsISM() || WsUtil.Is71() )? DateTimeKind.Utc : DateTimeKind.Local;
+            var kind = (ApplicationConfiguration.IsISM() || WsUtil.Is71()) ? DateTimeKind.Utc : DateTimeKind.Local;
             var user = SecurityFacade.CurrentUser(false);
             try {
                 var dateFromJson = Convert.ToDateTime(stValue);
