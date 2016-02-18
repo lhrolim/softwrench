@@ -624,7 +624,11 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
         if (fullServiceName != null) {
             var compositionschema = $scope.compositionschemadefinition['schemas']['detail'];
-            var shouldToggle = commandService.executeClickCustomCommand(fullServiceName, item, column, $scope.compositionlistschema);
+            // TODO: watch for siteid changes to recalculate the whole composition list
+            var clonedItem = angular.copy(item);
+            if (clonedItem.hasOwnProperty("siteid") && !clonedItem["siteid"]) clonedItem.siteid = $scope.parentdata.fields["siteid"];
+
+            var shouldToggle = commandService.executeClickCustomCommand(fullServiceName, clonedItem, column, $scope.compositionlistschema);
             if (shouldToggle && $scope.hasDetailSchema()) {
                 doToggle(compositionId, item, item);
             }
