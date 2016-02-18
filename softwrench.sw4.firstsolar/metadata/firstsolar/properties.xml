@@ -52,7 +52,7 @@
   </environment>
   
   <environment key="dev-uat">
-    <property key="defaultOrgId" value="ORG1"/>
+    <property key="defaultOrgId" value="ORG6"/>
     <property key="defaultSiteId" value="1803"/>
     <property key="defaultStoreloc" value="0010"/>
     <property key="basewsURL" value="http://10.1.16.236/meaweb/wsdl/" />
@@ -66,7 +66,7 @@
   </environment>
 
   <environment key="qa-uat">
-    <property key="defaultOrgId" value="ORG1"/>
+    <property key="defaultOrgId" value="ORG6"/>
     <property key="defaultSiteId" value="1803"/>
     <property key="defaultStoreloc" value="0010"/>
     <property key="basewsURL" value="http://10.1.16.236/meaweb/wsdl/" />
