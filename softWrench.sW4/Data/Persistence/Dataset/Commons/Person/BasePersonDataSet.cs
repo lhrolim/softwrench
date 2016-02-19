@@ -125,8 +125,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var lastName = json.GetValue("lastname").ToString();
             var isactive = json.GetValue("#isactive").ToString() == "1";
             var signature = json.GetValue("#signature").ToString();
+            var dbUser =_swdbDAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, username);
 
-            var user = UserManager.GetUserByUsername(username) ?? new User(null, username, isactive) {
+            var user = dbUser ?? new User(null, username, isactive) {
                 FirstName = firstName,
                 LastName = lastName
             };
