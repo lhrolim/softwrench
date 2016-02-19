@@ -278,7 +278,6 @@ app.directive('configAssociationListInputDatamap', function () {
 
             /* Association (COMBO, AUTOCOMPLETECLIENT) functions */
 
-
             $scope.haslookupModal = function (schema) {
                 return fieldService.getDisplayablesOfRendererTypes(schema.displayables, ['lookup']).length > 0;
             }

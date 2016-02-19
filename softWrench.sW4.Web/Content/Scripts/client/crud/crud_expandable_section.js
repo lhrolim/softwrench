@@ -129,7 +129,14 @@
                     // make sure compilation happens only once per $scope/directive instance
                     if (!$scope.config.compiled) {
                         compileTemplate();
-                        associationService.loadSchemaAssociations(crudContextHolderService.rootDataMap(), crudContextHolderService.currentSchema(), { avoidspin: true, showmore:true });
+                        // new data coming up: mark data as not resolved
+                        crudContextHolderService.clearDetailDataResolved();
+                        associationService
+                            .loadSchemaAssociations(crudContextHolderService.rootDataMap(), crudContextHolderService.currentSchema(), { avoidspin: true, showmore: true })
+                            .finally(function () {
+                                // data fetched or errored: mark as resolved
+                                crudContextHolderService.setDetailDataResolved();
+                            });
                     }
                     toggleExpansion();
                 };

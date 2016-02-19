@@ -70,6 +70,7 @@
             previousData: null,
             paginationData: null,
             isDirty: false,
+            detailDataResolved: false,
             needsServerRefresh: false,
             //list of profiles to show on screen, when there are multiple whereclauses registered for a given grid
             affectedProfiles: [],
@@ -201,7 +202,18 @@
                 context.tabRecordCount[tabId] = context.tabRecordCount[tabId] + 1;
             }
         }
+        
+        function setDetailDataResolved(panelid) {
+            getContext(panelid).detailDataResolved = true;
+        }
 
+        function clearDetailDataResolved(panelid) {
+            getContext(panelid).detailDataResolved = false;
+        }
+
+        function getDetailDataResolved(panelid) {
+            return getContext(panelid).detailDataResolved;
+        }
 
         //#endregion
 
@@ -518,7 +530,10 @@
             clearDirty: clearDirty,
             clearCrudContext: clearCrudContext,
             needsServerRefresh: needsServerRefresh,
-            rootDataMap: rootDataMap
+            rootDataMap: rootDataMap,
+            setDetailDataResolved: setDetailDataResolved,
+            getDetailDataResolved: getDetailDataResolved,
+            clearDetailDataResolved: clearDetailDataResolved
         };
 
         var associationServices = {
