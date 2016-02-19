@@ -44,6 +44,10 @@ namespace softwrench.sw4.activitystream.classes.Util {
             if (key.Equals("workorders")) {
                 return "workorder";
             }
+             if (key.Equals("incidents")) {
+                return "incident";
+            }
+            
             return key;
 
         }
