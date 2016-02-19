@@ -19,20 +19,14 @@ namespace softwrench.sw4.user.Migration {
                 .WithColumn("allowremoval").AsBoolean().WithDefaultValue(false);
 
 
-            Create.Table("SEC_SCHEMAGROUP_PER")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
-                .WithColumn("mode").AsString().NotNullable()
-                .WithColumn("schema").AsString()
-                .WithColumn("app_id").AsInt32().ForeignKey("fk_sg_ap", "SEC_APPLICATION_PER", "id").NotNullable();
-
-
             Create.Table("SEC_ACTION_PER")
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("creationdate").AsDateTime().NotNullable()
                 .WithColumn("updatedate").AsDateTime().NotNullable()
                 .WithColumn("createdby").AsInt32().ForeignKey("fk_secacpcrus", "sw_user2", "id").NotNullable()
                 .WithColumn("actionid").AsString().NotNullable()
-                .WithColumn("schemagroup_id").AsInt32().ForeignKey("fk_ap_sgp", "SEC_SCHEMAGROUP_PER", "id").NotNullable();
+                .WithColumn("schema").AsString().NotNullable()
+                .WithColumn("app_id").AsInt32().ForeignKey("fk_ap_ap", "SEC_APPLICATION_PER", "id").NotNullable();
 
 
             Create.Table("SEC_COMPOSITION_PER")
@@ -40,11 +34,11 @@ namespace softwrench.sw4.user.Migration {
                 .WithColumn("creationdate").AsDateTime().NotNullable()
                 .WithColumn("updatedate").AsDateTime().NotNullable()
                 .WithColumn("createdby").AsInt32().ForeignKey("fk_seccpcrus", "sw_user2", "id").NotNullable()
-                .WithColumn("compositionkey").AsString().NotNullable()
                 .WithColumn("allowcreation").AsBoolean().WithDefaultValue(false)
                 .WithColumn("allowupdate").AsBoolean().WithDefaultValue(false)
                 .WithColumn("allowremoval").AsBoolean().WithDefaultValue(false)
-                .WithColumn("schemagroup_id").AsInt32().ForeignKey("fk_cp_sgp", "SEC_SCHEMAGROUP_PER", "id").NotNullable();
+                .WithColumn("schema").AsString().NotNullable()
+                .WithColumn("app_id").AsInt32().ForeignKey("fk_cp_ap", "SEC_APPLICATION_PER", "id").NotNullable();
 
 
 
@@ -53,9 +47,10 @@ namespace softwrench.sw4.user.Migration {
                 .WithColumn("creationdate").AsDateTime().NotNullable()
                 .WithColumn("updatedate").AsDateTime().NotNullable()
                 .WithColumn("createdby").AsInt32().ForeignKey("fk_secspcrus", "sw_user2", "id").NotNullable()
-                .WithColumn("schemakey").AsString().NotNullable()
                 .WithColumn("readonly").AsBoolean().WithDefaultValue(false)
-                .WithColumn("schemagroup_id").AsInt32().ForeignKey("fk_sp_sgp", "SEC_SCHEMAGROUP_PER", "id").NotNullable();
+                .WithColumn("schema").AsString().NotNullable()
+                .WithColumn("app_id").AsInt32().ForeignKey("fk_sp_ap", "SEC_APPLICATION_PER", "id").NotNullable();
+
 
             Create.Table("SEC_FIELD_PER")
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()

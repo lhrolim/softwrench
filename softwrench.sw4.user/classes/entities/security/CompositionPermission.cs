@@ -36,6 +36,12 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
+        [Property]
+        public string Schema
+        {
+            get; set;
+        }
+
 
         [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
         [Key(1, Column = "composition_id")]
