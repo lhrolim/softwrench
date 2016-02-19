@@ -17,9 +17,6 @@
 	<DeploymentItem filename="softWrench.sW4.Web\App_Data\client\entegra" outputDirectory="Client\entegra" />
    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\firstsolar" outputDirectory="Client\firstsolar\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\otb" outputDirectory="Client\otb\" />
-    
-    
-    <DeploymentItem filename="softwrench.sw4.api\metadata\" />
   </Deployment>
   <NamingScheme baseName="testresults" appendTimeStamp="false" useDefault="false" />
   <Execution hostProcessPlatform="MSIL">
