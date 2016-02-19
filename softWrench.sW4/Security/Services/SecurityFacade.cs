@@ -56,7 +56,7 @@ namespace softWrench.sW4.Security.Services {
                 //no need to sync to maximo, since there´s no such maximoPersonId
                 return UserFound(dbUser, userTimezoneOffset);
             }
-            var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
+            var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.MaximoPersonId, dbUser.Id);
             maximoUser.MergeFromDBUser(dbUser);
 
 
