@@ -14,7 +14,6 @@
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\amex" outputDirectory="Client\amex" />
     <DeploymentItem filename="softwrench.sW4.test\bin\Debug\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\manchester" outputDirectory="Client\manchester\" />
-    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\amex" outputDirectory="Client\amex" />
 	<DeploymentItem filename="softWrench.sW4.Web\App_Data\client\entegra" outputDirectory="Client\entegra" />
    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\firstsolar" outputDirectory="Client\firstsolar\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\otb" outputDirectory="Client\otb\" />
