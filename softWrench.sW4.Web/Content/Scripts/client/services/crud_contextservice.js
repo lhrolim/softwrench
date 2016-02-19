@@ -253,7 +253,6 @@
             this.clearDirty(panelid);
             this.disposeDetail(panelid);
             getContext(panelid).needsServerRefresh = false;
-
         }
 
         function gridLoaded(applicationListResult, panelid) {
@@ -266,6 +265,7 @@
 
         function disposeDetail(panelid) {
             var context = getContext(panelid);
+            clearDetailDataResolved(panelid);
             context.tabRecordCount = {};
             context._eagerassociationOptions = { "#global": {} };
             _crudContext._lazyAssociationOptions = {};
@@ -591,7 +591,7 @@
     }
 
 
-    angular.module("sw_layout").factory("crudContextHolderService", ['$rootScope', "$log","$injector", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
+    angular.module("sw_layout").factory("crudContextHolderService", ["$rootScope", "$log", "$injector", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
 
 
 
