@@ -70,6 +70,7 @@
             previousData: null,
             paginationData: null,
             isDirty: false,
+            detailDataResolved: false,
             needsServerRefresh: false,
             //list of profiles to show on screen, when there are multiple whereclauses registered for a given grid
             affectedProfiles: [],
@@ -201,7 +202,18 @@
                 context.tabRecordCount[tabId] = context.tabRecordCount[tabId] + 1;
             }
         }
+        
+        function setDetailDataResolved(panelid) {
+            getContext(panelid).detailDataResolved = true;
+        }
 
+        function clearDetailDataResolved(panelid) {
+            getContext(panelid).detailDataResolved = false;
+        }
+
+        function getDetailDataResolved(panelid) {
+            return getContext(panelid).detailDataResolved;
+        }
 
         //#endregion
 
@@ -241,7 +253,6 @@
             this.clearDirty(panelid);
             this.disposeDetail(panelid);
             getContext(panelid).needsServerRefresh = false;
-
         }
 
         function gridLoaded(applicationListResult, panelid) {
@@ -254,6 +265,7 @@
 
         function disposeDetail(panelid) {
             var context = getContext(panelid);
+            clearDetailDataResolved(panelid);
             context.tabRecordCount = {};
             context._eagerassociationOptions = { "#global": {} };
             _crudContext._lazyAssociationOptions = {};
@@ -518,7 +530,10 @@
             clearDirty: clearDirty,
             clearCrudContext: clearCrudContext,
             needsServerRefresh: needsServerRefresh,
-            rootDataMap: rootDataMap
+            rootDataMap: rootDataMap,
+            setDetailDataResolved: setDetailDataResolved,
+            getDetailDataResolved: getDetailDataResolved,
+            clearDetailDataResolved: clearDetailDataResolved
         };
 
         var associationServices = {
@@ -576,7 +591,7 @@
     }
 
 
-    angular.module("sw_layout").factory("crudContextHolderService", ['$rootScope', "$log","$injector", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
+    angular.module("sw_layout").factory("crudContextHolderService", ["$rootScope", "$log", "$injector", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
 
 
 

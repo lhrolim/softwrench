@@ -528,7 +528,6 @@
                     });
                 };
                 
-                
 
                 function init(self) {
                     $injector.invoke(BaseController, self, {
