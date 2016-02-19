@@ -33,9 +33,9 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
-
         [Property]
-        public string SchemaKey {
+        public string Schema
+        {
             get; set;
         }
 

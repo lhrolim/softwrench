@@ -35,8 +35,18 @@ namespace softwrench.sw4.user.classes.entities.security {
 
         [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
         [Key(1, Column = "app_id")]
-        [OneToMany(2, ClassType = typeof(SchemaPermissionGroup))]
-        public ISet<SchemaPermissionGroup> SchemaGroups { get; set; }
+        [OneToMany(2, ClassType = typeof(SchemaPermission))]
+        public ISet<SchemaPermission> SchemaPermissions { get; set; }
+
+        [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
+        [Key(1, Column = "app_id")]
+        [OneToMany(2, ClassType = typeof(CompositionPermission))]
+        public ISet<CompositionPermission> CompositionPermissions { get; set; }
+
+        [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
+        [Key(1, Column = "app_id")]
+        [OneToMany(2, ClassType = typeof(ActionPermission))]
+        public ISet<ActionPermission> ActionPermissions { get; set; }
 
 
         [ComponentProperty]
