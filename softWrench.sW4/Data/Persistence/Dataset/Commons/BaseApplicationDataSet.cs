@@ -229,7 +229,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 }
             }
             if (compostionsToUse.Any()) {
-                GetCompositionData(application, new PreFetchedCompositionFetchRequest(new List<AttributeHolder> { dataMap }), null);
+                var preFetchedCompositionFetchRequest = new PreFetchedCompositionFetchRequest(new List<AttributeHolder> { dataMap });
+                preFetchedCompositionFetchRequest.CompositionList = new List<string>(compostionsToUse.Keys);
+                GetCompositionData(application, preFetchedCompositionFetchRequest, null);
             }
         }
 
