@@ -83,7 +83,6 @@
     <Compile Include="classes\entities\security\SchemaPermission.cs" />
     <Compile Include="classes\entities\security\FieldPermission.cs" />
     <Compile Include="classes\entities\security\ActionPermission.cs" />
-    <Compile Include="classes\entities\security\SchemaPermissionGroup.cs" />
     <Compile Include="classes\entities\security\CompositionPermission.cs" />
     <Compile Include="classes\entities\security\ApplicationPermission.cs" />
     <Compile Include="classes\entities\DataConstraint.cs" />
