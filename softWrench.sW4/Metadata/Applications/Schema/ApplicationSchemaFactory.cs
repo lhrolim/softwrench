@@ -20,6 +20,7 @@ using System.Linq;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.entities.security;
 using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Util;
 
@@ -233,7 +234,28 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             }
         }
 
-        private static List<IApplicationDisplayable> OnApplySecurityPolicy(ApplicationSchemaDefinition schema, IEnumerable<Role> userRoles, string schemaFieldsToDisplay) {
+        private static List<IApplicationDisplayable> OnApplySecurityPolicy(ApplicationSchemaDefinition schema, IEnumerable<Role> userRoles, string schemaFieldsToDisplay, NewUserProfile profile = null) {
+            // New security implementation
+            ApplicationPermission applicationPermission = profile.GetPermissionByApplication(schema.ApplicationName);
+            if (applicationPermission == null && schemaFieldsToDisplay == null)
+            {
+                return schema.Displayables;
+            }
+            SchemaPermissionGroup schemaGroup = applicationPermission.SchemaGroups.Where(g => g.Mode)
+            var fieldsToRetain = new HashSet<string>();
+            if (schemaFieldsToDisplay != null)
+            {
+                fieldsToRetain.AddAll(schemaFieldsToDisplay.Split(','));
+            }
+            var resultingFields = new List<IApplicationDisplayable>();
+            foreach (var field in schema.Displayables)
+            {
+                var appDisplayable = field as IApplicationAttributeDisplayable;
+                var isNotRetained = !fieldsToRetain.Any() || ((appDisplayable != null && fieldsToRetain.Any(f => appDisplayable.Attribute.EqualsIc(f))));
+            }
+
+
+            // Old implementation
             var activeFieldRoles = RoleManager.ActiveFieldRoles();
             if ((activeFieldRoles == null || activeFieldRoles.Count == 0) && schemaFieldsToDisplay == null) {
                 return schema.Displayables;
@@ -242,7 +264,6 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             if (schemaFieldsToDisplay != null) {
                 fieldsToRetain.AddAll(schemaFieldsToDisplay.Split(','));
             }
-
             var resultingFields = new List<IApplicationDisplayable>();
             foreach (var field in schema.Displayables) {
                 var appDisplayable = field as IApplicationAttributeDisplayable;

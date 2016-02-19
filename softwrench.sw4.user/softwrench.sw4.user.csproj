@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\config\UserConfigurationConstants.cs" />
+    <Compile Include="classes\entities\NewUserProfile.cs" />
     <Compile Include="classes\entities\security\CollectionCrudPermissions.cs" />
     <Compile Include="classes\entities\security\SchemaPermission.cs" />
     <Compile Include="classes\entities\security\FieldPermission.cs" />
