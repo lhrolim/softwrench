@@ -85,22 +85,6 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return _userProfileManager.LoadAvailableActionsAsComposition(schema, pageNumber);
         }
 
-
-        //        [HttpGet]
-        //        public SchemaPermissionGroup LoadSchemaGroupPermission(int profileId, string application, string mode, string schemaId) {
-        //            var profile = _userProfileManager.FindById(profileId);
-        //            if (profile == null) {
-        //                throw new InvalidOperationException("informed profile does not exist");
-        //            }
-        //            //force eager cache
-        //            MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, application);
-        //            var appPermission = profile.ApplicationPermission.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
-        //            if (appPermission != null) {
-        //                return appPermission.SchemaGroups.FirstOrDefault(f => f.Mode.EqualsIc(mode) && f.Schema.EqualsIc(schemaId));
-        //            }
-        //            return null;
-        //        }
-
         public class ApplicationPermissionResultDTO {
 
             public bool HasCreationSchema {
