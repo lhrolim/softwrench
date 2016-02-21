@@ -14,29 +14,21 @@ namespace softwrench.sw4.user.classes.entities.security {
     /// 
     /// </summary>
     [Class(Table = "SEC_APPLICATION_PER", Lazy = false)]
-    public class ApplicationPermission :IBaseAuditEntity{
+    public class ApplicationPermission :IBaseEntity{
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public int? Id { get; set; }
 
-        [Property]
-        public DateTime CreationDate { get; set; }
-
-        [Property]
-        public DateTime? UpdateDate { get; set; }
-
-        [Property]
-        public int? CreatedBy { get; set; }
-
+   
         [Property]
         public string ApplicationName { get; set; }
 
 
         [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
         [Key(1, Column = "app_id")]
-        [OneToMany(2, ClassType = typeof(SchemaPermission))]
-        public ISet<SchemaPermission> SchemaPermissions { get; set; }
+        [OneToMany(2, ClassType = typeof(ContainerPermission))]
+        public ISet<ContainerPermission> ContainerPermissions { get; set; }
 
         [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
         [Key(1, Column = "app_id")]

@@ -50,7 +50,7 @@
             <field attribute="#appallowupdate" label="Allow Update">
               <renderer type="checkbox"/>
             </field>
-            <field attribute="#appallowview" label="Allow Only Visualization">
+            <field attribute="#appallowviewonly" label="Allow Only Visualization">
               <renderer type="checkbox"/>
             </field>
 
@@ -61,17 +61,18 @@
               <optionfield label="Mode" attribute="selectedmode" providerattribute="selectableModes" dependantfields="application">
                 <renderer type="combo" params="optionfield.forcefirstoption=true"/>
                 <event type="afterchange" service="userProfileService" method="afterModeChanged"/>
-                
               </optionfield>
               <optionfield label="Schema" attribute="schema" providerattribute="schemas" dependantfields="application,selectedmode" showexpression="@showschemacombo" >
                 <renderer type="combo" params="donotignoreeventsifhidden=true"/>
                 <event type="providerloaded" service="userProfileService" method="afterSchemaListLoaded"/>
                 <event type="afterchange" service="userProfileService" method="afterSchemaChanged"/>
+                <event type="beforechange" service="userProfileService" method="beforeSchemaChange"/>
               </optionfield>
               <optionfield label="Tab/Table" attribute="#selectedtab" providerattribute="selectableTabs" dependantfields="selectedmode,schema" showexpression="@showtabscombo">
                 <renderer type="combo" params="donotignoreeventsifhidden=true;optionfield.forcefirstoption=true"/>
                 <event type="providerloaded" service="userProfileService" method="afterTabsLoaded"/>
                 <event type="afterchange" service="userProfileService" method="tabvaluechanged"/>
+                <event type="beforechange" service="userProfileService" method="beforeTabChange"/>
               </optionfield>
             </section>
 
@@ -82,7 +83,7 @@
               <field attribute="#compallowupdate" label="Allow Update">
                 <renderer type="checkbox"/>
               </field>
-              <field attribute="#compallowview" label="Allow Visualization">
+              <field attribute="#compallowviewonly" label="Allow Visualization">
                 <renderer type="checkbox"/>
               </field>
             </section>
@@ -116,9 +117,9 @@
 
         <schema id="fieldRepresentation" stereotype="list">
           <event type="onload" service="userProfileService" method="availableFieldsRefreshed"/>
-          <field hidden="true" attribute="#attribute"/>
+          <field hidden="true" attribute="fieldKey"/>
           <field label="Field" attribute="#label" />
-          <optionfield attribute="#permission" label="Permission">
+          <optionfield attribute="permission" label="Permission">
             <option label="Full Control" value="fullcontrol"/>
             <option label="None" value="none"/>
             <option label="Read Only" value="readonly"/>

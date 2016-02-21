@@ -9,8 +9,8 @@ namespace softwrench.sw4.user.classes.entities.security {
     /// Relates to anything which is not a collection-based container, such as a table, or any kind of composition renderer, but rather a container of displayables,
     /// such as the "#main" tab or to any generic tab
     /// </summary>
-    [Class(Table = "SEC_SCHEMA_PER", Lazy = false)]
-    public class SchemaPermission : IBaseAuditEntity {
+    [Class(Table = "SEC_CONTAINER_PER", Lazy = false)]
+    public class ContainerPermission : IBaseEntity {
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -18,24 +18,13 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
-        [Property]
-        public DateTime CreationDate {
+        [Property(Column = "schema_")]
+        public string Schema {
             get; set;
         }
 
         [Property]
-        public DateTime? UpdateDate {
-            get; set;
-        }
-
-        [Property]
-        public int? CreatedBy {
-            get; set;
-        }
-
-        [Property]
-        public string Schema
-        {
+        public string ContainerKey {
             get; set;
         }
 
