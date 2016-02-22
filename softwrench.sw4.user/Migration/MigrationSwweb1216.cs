@@ -48,8 +48,8 @@ namespace softwrench.sw4.user.Migration {
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("fieldkey").AsString().NotNullable()
                 .WithColumn("permission").AsString()
-                .WithColumn("schema_id").AsInt32().ForeignKey("fk_fp_sp", "SEC_CONTAINER_PER", "id")
-                .WithColumn("composition_id").AsInt32().ForeignKey("fk_fp_cp", "SEC_COMPOSITION_PER", "id");
+                .WithColumn("schema_id").AsInt32().Nullable().ForeignKey("fk_fp_sp", "SEC_CONTAINER_PER", "id")
+                .WithColumn("composition_id").AsInt32().Nullable().ForeignKey("fk_fp_cp", "SEC_COMPOSITION_PER", "id");
         }
 
         public override void Down() {
