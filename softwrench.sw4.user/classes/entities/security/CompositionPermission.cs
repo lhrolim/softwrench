@@ -34,8 +34,25 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
-        [ComponentProperty]
-        public CollectionCrudPermissions CollectionPermissions {
+        [Property]
+        public bool AllowCreation {
+            get; set;
+        }
+
+        [Property]
+        public bool AllowUpdate {
+            get; set;
+        }
+
+
+        [Property]
+        public bool AllowRemoval {
+            get; set;
+        }
+
+
+        [Property]
+        public bool AllowViewOnly {
             get; set;
         }
 

@@ -37,7 +37,16 @@
                     fieldKey: "location",
                     permission: "none"
                 }]
-            }
+            },
+              {
+                  schema: "detail",
+                  containerKey: "tab3",
+                  fieldPermissions: [
+                  {
+                      fieldKey: "f2",
+                      permission: "none"
+                  }]
+              }
 
         ],
 
@@ -53,7 +62,7 @@
     it("Test Merge datamap into transient after app change", (function () {
 
         rootScope[txProp] = {
-            "asset": assetObj
+            "asset": angular.copy(assetObj)
         };
 
         //simulating user was at main tab of application asset, changing to sr
@@ -62,8 +71,8 @@
             //changed from true to false
             "#appallowcreation": false,
             "#appallowupdate": true,
-            "#appallowviewOnly": true,
-            "#appallowRemoval": true,
+            "#appallowviewonly": true,
+            "#appallowremoval": true,
             "schema": "detail",
             iscompositiontab: false,
             "#selectedtab": "#main",
@@ -129,7 +138,6 @@
         expect(containerPermission.fieldPermissions.length).toBe(2);
 
         //location changed to readonly
-        debugger;
         expect(containerPermission.fieldPermissions[0].permission).toBe("readonly");
         expect(containerPermission.fieldPermissions[1].fieldKey).toBe("f3");
         expect(containerPermission.fieldPermissions[1].permission).toBe("none");
@@ -145,7 +153,7 @@
     it("Test Merge datamap into transient after app change: new composition", (function () {
 
         rootScope[txProp] = {
-            "asset": assetObj
+            "asset": angular.copy(assetObj)
         };
 
         //simulating user was at main tab of application asset, changing to sr
@@ -153,16 +161,16 @@
             application: "servicerequest",
             "#appallowcreation": true,
             "#appallowupdate": true,
-            "#appallowviewOnly": true,
-            "#appallowRemoval": true,
+            "#appallowviewonly": true,
+            "#appallowremoval": true,
             "schema": "detail",
             "#selectedtab": "spareparts",
             iscompositiontab: true,
             "#compallowcreation": false,
             "#compallowupdate": false,
             "#compallowviewonly": false,
-            "#actionPermissions_" : [],
-            "#fieldPermissions_" : [],
+            "#actionPermissions_": [],
+            "#fieldPermissions_": [],
         }
 
         crudContextHolderService.rootDataMap(null, screenDatamap);
@@ -204,6 +212,176 @@
     }));
 
 
+
+    it("Test Restore transient into datamap app changed", (function () {
+
+        rootScope[txProp] = {
+            "asset": angular.copy(assetObj)
+        };
+
+        rootScope[txProp].asset.allowCreation = false;
+
+
+        //simulating a change to an asset application, where basic setup should be restored
+        var screenDatamap = {
+            application: "asset",
+            "#appallowcreation": true,
+            "#appallowupdate": true,
+            "#appallowviewonly": true,
+            "#appallowremoval": true,
+            "schema": null,
+            "#selectedtab": null,
+            iscompositiontab: false,
+            "#actionPermissions_": [],
+            "#fieldPermissions_": [],
+        }
+
+        crudContextHolderService.rootDataMap(null, screenDatamap);
+
+
+        var dispatcher = {
+            application: "asset",
+        }
+
+        var updatedData = userProfileService.mergeTransientIntoDatamap(dispatcher);
+
+        expect(updatedData).toBe(crudContextHolderService.rootDataMap());
+
+        expect(updatedData["#appallowcreation"]).toBe(false);
+        expect(updatedData["#appallowupdate"]).toBe(true);
+        expect(updatedData["#appallowviewonly"]).toBe(true);
+        expect(updatedData["#appallowremoval"]).toBe(true);
+        //location changed to readonly
+    }));
+
+
+    it("Test Restore transient into datamap schema changed --> restore actions and comp flags", (function () {
+
+        rootScope[txProp] = {
+            "asset": angular.copy(assetObj)
+        };
+
+        rootScope[txProp].asset.allowCreation = false;
+
+
+        //simulating a change to the detail schema
+        var screenDatamap = {
+            application: "asset",
+            "#appallowcreation": true,
+            "#appallowupdate": true,
+            "#appallowviewonly": true,
+            "#appallowremoval": true,
+            "schema": "detail",
+            "#selectedtab": "subassembly",
+            iscompositiontab: true,
+            "#actionPermissions_": [
+              {
+                  "actionid": "xxx",
+                  "_#selected": true
+              },
+
+              {
+                  "actionid": "yyy",
+                  "_#selected": true
+              },
+
+              {
+                  "actionid": "zzz",
+                  "_#selected": true
+              },
+
+            ],
+            "#fieldPermissions_": [],
+        }
+
+        crudContextHolderService.rootDataMap(null, screenDatamap);
+
+
+        var dispatcher = {
+            schema: "detail",
+        }
+
+        var updatedData = userProfileService.mergeTransientIntoDatamap(dispatcher);
+
+        expect(updatedData).toBe(crudContextHolderService.rootDataMap());
+
+        //this action needs to be restored from transient data
+        var actionPermissions = updatedData["#actionPermissions_"];
+
+        //#region actionPermissions
+        expect(actionPermissions.length).toBe(3);
+        expect(actionPermissions[0].actionid).toBe("xxx");
+        //this will be restored
+        expect(actionPermissions[0]["_#selected"]).toBe(false);
+
+        expect(actionPermissions[1].actionid).toBe("yyy");
+        expect(actionPermissions[1]["_#selected"]).toBe(true);
+
+        expect(actionPermissions[2].actionid).toBe("zzz");
+        expect(actionPermissions[2]["_#selected"]).toBe(true);
+        //#endregion
+
+
+        expect(updatedData["#compallowcreation"]).toBe(true);
+        expect(updatedData["#compallowupdate"]).toBe(true);
+        expect(updatedData["#compallowremoval"]).toBe(false);
+
+
+    }));
+
+
+    it("Test Restore transient into datamap tab changed --> restore fields", (function () {
+
+        rootScope[txProp] = {
+            "asset": angular.copy(assetObj)
+        };
+
+        rootScope[txProp].asset.allowCreation = false;
+
+
+        //simulating a change to the detail schema
+        var screenDatamap = {
+            application: "asset",
+            "#appallowcreation": true,
+            "#appallowupdate": true,
+            "#appallowviewonly": true,
+            "#appallowremoval": true,
+            "schema": "detail",
+            "#selectedtab": "#main",
+            iscompositiontab: true,
+            "#fieldPermissions_": [
+             //this has been changed on screen
+             {
+                 fieldKey: "location",
+                 permission: "fullcontrol"
+             },
+             {
+                 //non existing permission, but full control --> do not store
+                 fieldKey: "f2",
+                 permission: "fullcontrol"
+             },
+            ]
+        }
+
+        crudContextHolderService.rootDataMap(null, screenDatamap);
+        var dispatcher = {
+            tab: "#main",
+        }
+        var updatedData = userProfileService.mergeTransientIntoDatamap(dispatcher);
+
+        expect(updatedData).toBe(crudContextHolderService.rootDataMap());
+        //restore only the fields present on screen
+        var fieldPermissions = updatedData["#fieldPermissions_"];
+        expect(fieldPermissions.length).toBe(2);
+
+        expect(fieldPermissions[0].fieldKey).toBe("location");
+        expect(fieldPermissions[0].permission).toBe("none");
+
+        expect(fieldPermissions[1].fieldKey).toBe("f2");
+        expect(fieldPermissions[1].permission).toBe("fullcontrol");
+
+
+    }));
 
 
 });

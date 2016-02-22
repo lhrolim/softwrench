@@ -62,6 +62,7 @@
             //allow creation/allow update flags only make sense for composition(collection)tabs
             var isCompositionTab = fullObject.extrafields["type"] === "ApplicationCompositionDefinition";
             dm["iscompositiontab"] = isCompositionTab;
+
             if (!isCompositionTab) {
                 var queryParameters = {
                     application: application,
@@ -70,26 +71,21 @@
                     pageNumber: 1
                 }
 
-                restService.getPromise("UserProfile", "LoadAvailableFields", queryParameters).then(function (httpResponse) {
+                restService.getPromise("UserProfile", "LoadAvailableFields", queryParameters).then(function(httpResponse) {
                     var compositionData = httpResponse.data.resultObject;
-
-                    //TODO: merge permissions with local permissions
-                    //                    result.forEach(function (value) {
-                    //                    });
                     $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
+                    mergeTransientIntoDatamap({ tab: tab });
                 });
+            } else {
+                mergeTransientIntoDatamap({ tab: tab });
             }
-
-
-
         }
 
         function afterModeChanged(parameters) {
             var dm = parameters.fields;
             //cleaning up data
             simpleLog.debug("resting tab");
-            dm["schema"] = dm["#selectedtab"] = dm["iscompositiontab"] = null;
-            cleanUpCompositions();
+            dm["schema"] =  null;
         }
 
 
@@ -158,24 +154,7 @@
 
             if (!!transientData[nextApplication]) {
                 simpleLog.info("application has changed to {0}, but we already have local transient data. no need to fetch from the server".format(nextApplication));
-                var dmToRestore = transientData[nextApplication].datamap;
-
-
-                //we already have local data regarding that application, let´s use it instead of hitting the server.
-                //otherwise, we would lose the local state upon app change
-                //                parameters.fields = transientData[nextApplication];
-
-                for (var attr in dmToRestore) {
-                    if (dmToRestore.hasOwnProperty(attr)) {
-                        //we need to keep the same object due to the existing bindings, but change its properties
-                        parameters.fields[attr] = dmToRestore[attr];
-                    }
-                }
-
-                dm["#currentloadedapplication"] = transientData[nextApplication].appPermission;
-
-
-                //                parameters.scope.datamap = parameters.fields;
+                mergeTransientIntoDatamap({ application: nextApplication });
                 return $q.when();
             }
 
@@ -204,12 +183,11 @@
                     return $q.when();
                 }
 
-                var permissions = appPermission.collectionPermissions;
+                transientData[nextApplication] = appPermission;
+                transientData[nextApplication]["hasCreationSchema"] = hasCreationSchema;
 
-                dm["#appallowcreation"] = hasCreationSchema && permissions.allowCreation;
-                dm["#appallowupdate"] = permissions.allowUpdate;
-                dm["#appallowremoval"] = permissions.allowRemoval;
-                dm["#appallowviewonly"] = permission.allowViewOnly;
+                mergeTransientIntoDatamap({ application: nextApplication });
+
             });
         }
 
@@ -217,6 +195,7 @@
             var dm = parameters.fields;
             //cleaning up data
             dm["#selectedtab"] = dm["iscompositiontab"] = null;
+            cleanUpCompositions();
             crudContextHolderService.updateEagerAssociationOptions("selectableTabs", []);
 
 
@@ -236,11 +215,8 @@
 
             restService.getPromise("UserProfile", "LoadAvailableActions", queryParameters).then(function (httpResponse) {
                 var compositionData = httpResponse.data.resultObject;
-
-                //TODO: merge permissions with local permissions
-                //                    result.forEach(function (value) {
-                //                    });
                 $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
+                mergeTransientIntoDatamap({ schema: schemaId });
             });
 
         }
@@ -455,8 +431,89 @@
             return transientData;
         }
 
-        function restoreFromTransientIntoDatamap(dispatcher) {
+        function mergeTransientIntoDatamap(dispatcher) {
+            var dm = crudContextHolderService.rootDataMap();
+            if (dm.fields) {
+                dm = dm.fields;
+            }
+            var application = dm.application;
+            var schema = dm.schema;
+            var tab = dm["#selectedtab"];
 
+            var transientAppData = $rootScope["#transientprofiledata"][application];
+            if (transientAppData == null) {
+                simpleLog.debug("no transient data found for app {0}".format(application));
+                return dm;
+            }
+
+            simpleLog.info("merge transiet into datamap for app {0}".format(application));
+
+            if (dispatcher.application) {
+
+                dm["hasCreationSchema"] = transientAppData.hasCreationSchema;
+                //no need to restore this data on every single operation
+                dm["#appallowcreation"] = transientAppData.allowCreation && transientAppData.hasCreationSchema;
+                dm["#appallowupdate"] = transientAppData.allowUpdate;
+                dm["#appallowremoval"] = transientAppData.allowRemoval;
+                dm["#appallowviewonly"] = transientAppData.allowViewOnly;
+                return dm;
+            }
+
+            function itemsOfSchema(item) {
+                return item.schema === schema;
+            }
+
+            //#region schema dispatcher --> action restoring
+            if (dispatcher.schema) {
+                transientAppData.actionPermissions.filter(itemsOfSchema)
+                    .forEach(function (item) {
+                        var idx = dm["#actionPermissions_"].findIndex(function (screenItem) {
+                            return screenItem.actionid === item.actionId;
+                        });
+                        if (idx !== -1) {
+                            simpleLog.debug("restoring permission of action {0} to false".format(item.actionId));
+                            dm["#actionPermissions_"][idx]["_#selected"] = false;
+                        }
+                    });
+
+                if (dm["iscompositiontab"] === true && tab) {
+                    var cmpData = transientAppData.compositionPermissions.firstOrDefault(function (item) {
+                        return item.schema === schema && item.compositionKey === tab;
+                    });
+                    if (cmpData) {
+                        dm["#compallowcreation"] = cmpData.allowCreation;
+                        dm["#compallowupdate"] = cmpData.allowUpdate;
+                        dm["#compallowremoval"] = cmpData.allowRemoval;
+                        dm["#compallowviewonly"] = cmpData.allowViewOnly;
+                    }
+                }
+            }
+
+            //#endregion
+
+            //#region field permission restore (tab or paginated dispatcher)
+            if (dispatcher.tab && transientAppData.containerPermissions) {
+                var container = transientAppData.containerPermissions.firstOrDefault(function(item) {
+                    return item.schema === schema && item.containerKey === tab;
+                });
+                if (container) {
+                    container.fieldPermissions.forEach(function (item) {
+
+                        var screenField = dm["#fieldPermissions_"].firstOrDefault(function (screenItem) {
+                            return screenItem.fieldKey === item.fieldKey;
+                        });
+                        if (screenField != null && screenField.permission !== item.permission) {
+                            simpleLog.debug("restoring permission of field {0} from {1} to {2}".format(screenField.fieldKey, screenField.permission, item.permission));
+                            screenField.permission = item.permission;
+                        }
+                    });
+                }
+            }
+            //#endregion
+
+
+
+            return dm;
         }
 
 
@@ -472,9 +529,9 @@
             beforeApplicationChange: beforeApplicationChange,
             beforeTabChange: beforeTabChange,
             beforeSchemaChange: beforeSchemaChange,
+            mergeTransientIntoDatamap: mergeTransientIntoDatamap,
             onSchemaLoad: onSchemaLoad,
             onApplicationChange: onApplicationChange,
-            restoreFromTransientIntoDatamap: restoreFromTransientIntoDatamap,
             storeFromDmIntoTransient: storeFromDmIntoTransient,
             tabvaluechanged: tabvaluechanged
         };
