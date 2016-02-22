@@ -135,9 +135,9 @@ namespace softWrench.sW4.Security.Services {
             foreach (var field in fieldsToShow) {
                 var dict = new Dictionary<string, object>();
                 dict["#label"] = field.Label ?? field.Attribute;
-                dict["#attribute"] = field.Attribute;
+                dict["fieldKey"] = field.Attribute;
                 //enabled by default
-                dict["#permission"] = "fullcontrol";
+                dict["permission"] = "fullcontrol";
                 compositionData.ResultList.Add(dict);
             }
             return CompositionFetchResult.SingleCompositionInstance("#fieldPermissions_", compositionData);

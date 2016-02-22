@@ -21,9 +21,9 @@ namespace softwrench.sw4.user.classes.entities
             return result;
         }
 
-        public IEnumerable<SchemaPermissionGroup> GetPermissionBySchema(string applicationName, string schemaId) {
+        public IEnumerable<ContainerPermission> GetPermissionBySchema(string applicationName, string schemaId) {
             var applicationPermission = GetPermissionByApplication(applicationName);
-            var schemaPermission = applicationPermission.SchemaGroups.Where(s => s.Schema.ToLower() == schemaId.ToLower());
+            var schemaPermission = applicationPermission.ContainerPermissions.Where(s => s.Schema.ToLower() == schemaId.ToLower());
             return schemaPermission;
         }
     }

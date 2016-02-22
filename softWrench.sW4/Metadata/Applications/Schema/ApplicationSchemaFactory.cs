@@ -236,23 +236,23 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
         private static List<IApplicationDisplayable> OnApplySecurityPolicy(ApplicationSchemaDefinition schema, IEnumerable<Role> userRoles, string schemaFieldsToDisplay, NewUserProfile profile = null) {
             // New security implementation
-            ApplicationPermission applicationPermission = profile.GetPermissionByApplication(schema.ApplicationName);
-            if (applicationPermission == null && schemaFieldsToDisplay == null)
-            {
-                return schema.Displayables;
-            }
-            SchemaPermissionGroup schemaGroup = applicationPermission.SchemaGroups.Where(g => g.Mode)
-            var fieldsToRetain = new HashSet<string>();
-            if (schemaFieldsToDisplay != null)
-            {
-                fieldsToRetain.AddAll(schemaFieldsToDisplay.Split(','));
-            }
-            var resultingFields = new List<IApplicationDisplayable>();
-            foreach (var field in schema.Displayables)
-            {
-                var appDisplayable = field as IApplicationAttributeDisplayable;
-                var isNotRetained = !fieldsToRetain.Any() || ((appDisplayable != null && fieldsToRetain.Any(f => appDisplayable.Attribute.EqualsIc(f))));
-            }
+            //ApplicationPermission applicationPermission = profile.GetPermissionByApplication(schema.ApplicationName);
+            //if (applicationPermission == null && schemaFieldsToDisplay == null)
+            //{
+            //    return schema.Displayables;
+            //}
+            //SchemaPermissionGroup schemaGroup = applicationPermission.SchemaGroups.Where(g => g.Mode)
+            //var fieldsToRetain = new HashSet<string>();
+            //if (schemaFieldsToDisplay != null)
+            //{
+            //    fieldsToRetain.AddAll(schemaFieldsToDisplay.Split(','));
+            //}
+            //var resultingFields = new List<IApplicationDisplayable>();
+            //foreach (var field in schema.Displayables)
+            //{
+            //    var appDisplayable = field as IApplicationAttributeDisplayable;
+            //    var isNotRetained = !fieldsToRetain.Any() || ((appDisplayable != null && fieldsToRetain.Any(f => appDisplayable.Attribute.EqualsIc(f))));
+            //}
 
 
             // Old implementation

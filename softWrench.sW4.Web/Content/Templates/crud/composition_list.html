@@ -195,7 +195,7 @@
                 </td>
             </tr>
         </tbody>
-        <tbody ng-show="isNoRecords">
+        <tbody ng-show="isNoRecords()">
             <tr>
                 <td colspan="100%">
                     <p class="no-results">
@@ -206,7 +206,7 @@
         </tbody>
     </table>
 
-    <div class="context clearfix" ng-if="showPagination">
+    <div class="context clearfix" ng-if="showPagination()">
         <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" />
     </div>
 
