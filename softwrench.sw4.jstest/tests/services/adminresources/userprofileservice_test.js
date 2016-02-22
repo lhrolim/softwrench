@@ -125,8 +125,10 @@
         var updatedData = userProfileService.storeFromDmIntoTransient(dispatcher);
 
         expect(updatedData).toBe(rootScope[txProp]);
+        
 
         var mergedData = updatedData["asset"];
+        expect(mergedData["_#isDirty"]).toBe(true);
         expect(mergedData.allowCreation).toBe(false);
         expect(mergedData.allowUpdate).toBe(true);
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using cts.commons.persistence;
+using cts.commons.web.Formatting;
 using Iesi.Collections.Generic;
+using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.user.classes.entities.security {
@@ -32,6 +34,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
         [Key(1, Column = "app_id")]
         [OneToMany(2, ClassType = typeof(ContainerPermission))]
+        [JsonConverter(typeof(IesiSetConverter<ContainerPermission>))]
         public ISet<ContainerPermission> ContainerPermissions {
             get; set;
         }
@@ -39,6 +42,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
         [Key(1, Column = "app_id")]
         [OneToMany(2, ClassType = typeof(CompositionPermission))]
+        [JsonConverter(typeof(IesiSetConverter<CompositionPermission>))]
         public ISet<CompositionPermission> CompositionPermissions {
             get; set;
         }
@@ -46,6 +50,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
         [Key(1, Column = "app_id")]
         [OneToMany(2, ClassType = typeof(ActionPermission))]
+        [JsonConverter(typeof(IesiSetConverter<ActionPermission>))]
         public ISet<ActionPermission> ActionPermissions {
             get; set;
         }

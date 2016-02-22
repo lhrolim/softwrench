@@ -29,8 +29,8 @@
         </list>
         <detail>
           <section orientation="horizontal">
-            <field label="Name" attribute="name" />
-            <field label="Description" attribute="description" />
+            <field label="Name" attribute="name" requiredexpression="true"/>
+            <field label="Description" attribute="description" requiredexpression="true"/>
           </section>
           <tab label="Extra Permissions" id="basicroles">
             <composition detailschema="" fetchtype="eager"  relationship="#basicroles"  printschema="" inline="true">
@@ -38,6 +38,7 @@
             </composition>
           </tab>
 
+          <!-- Application and basic setup  -->
           <section orientation="horizontal">
             <optionfield attribute="application" providerattribute="topLevelApplications" label="Application">
               <event type="afterchange" service="userProfileService" method="onApplicationChange"/>
@@ -56,7 +57,10 @@
 
           </section>
 
+
+          
           <section showexpression="@application!=null">
+            <!-- Mode/Schema/Tab selection  -->
             <section orientation="horizontal">
               <optionfield label="Mode" attribute="selectedmode" providerattribute="selectableModes" dependantfields="application">
                 <renderer type="combo" params="optionfield.forcefirstoption=true"/>
@@ -76,7 +80,8 @@
               </optionfield>
             </section>
 
-            <section showexpression="@iscompositiontab">
+            <!-- Composition selection  -->
+            <section showexpression="@iscompositiontab" orientation="horizontal">
               <field attribute="#compallowcreation" label="Allow Creation">
                 <renderer type="checkbox"/>
               </field>
@@ -88,6 +93,7 @@
               </field>
             </section>
 
+            <!-- Fields and Action selection  -->
           <section orientation="horizontal">
 
             <composition detailschema="" fetchtype="lazy"  relationship="#fieldPermissions"  printschema="" inline="true">
@@ -103,6 +109,14 @@
 
           <event type="onschemafullyloaded" method="onSchemaLoad" service="userProfileService"/>
 
+          <commandbars>
+            <commandgroup id="#detailform">
+              <removecommand id="print"/>
+              <command id="save" service="userProfileService" method="save"/>
+            </commandgroup>
+            
+          </commandbars>
+          
         </detail>
 
         <schema id="rolerepresentation" stereotype="list.selection">

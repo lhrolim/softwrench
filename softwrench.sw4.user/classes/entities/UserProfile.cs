@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence.Util;
+using cts.commons.web.Formatting;
 using Iesi.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHibernate.Linq.Visitors;
 using NHibernate.Mapping.Attributes;
@@ -37,7 +40,8 @@ namespace softwrench.sw4.user.classes.entities {
         Lazy = CollectionLazy.False)]
         [Key(1, Column = "profile_id")]
         [ManyToMany(2, Column = "role_id", ClassType = typeof(Role))]
-        public virtual ISet<Role> Roles {
+        [JsonConverter(typeof(IesiSetConverter<Role>))]
+        public virtual Iesi.Collections.Generic.ISet<Role> Roles {
             get; set;
         }
 
@@ -45,9 +49,15 @@ namespace softwrench.sw4.user.classes.entities {
         [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
         [Key(1, Column = "profile_id")]
         [OneToMany(2, ClassType = typeof(ApplicationPermission))]
-        public virtual ISet<ApplicationPermission> ApplicationPermission {
+        [JsonConverter(typeof(IesiSetConverter<ApplicationPermission>))]
+        public virtual Iesi.Collections.Generic.ISet<ApplicationPermission> ApplicationPermissions {
             get; set;
         }
+
+//        //due to a bug where IESI isets aren´t deserialized
+//        public virtual IEnumerable<ApplicationPermission> ScreenApplicationPermission {
+//            get; set;
+//        }
 
 
 

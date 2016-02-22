@@ -1,6 +1,8 @@
 ﻿using System;
 using cts.commons.persistence;
+using cts.commons.web.Formatting;
 using Iesi.Collections.Generic;
+using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.user.classes.entities.security {
@@ -32,7 +34,8 @@ namespace softwrench.sw4.user.classes.entities.security {
         [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
         [Key(1, Column = "schema_id")]
         [OneToMany(2, ClassType = typeof(FieldPermission))]
-        public virtual ISet<FieldPermission> FielsPermissions {
+        [JsonConverter(typeof(IesiSetConverter<FieldPermission>))]
+        public virtual ISet<FieldPermission> FieldPermissions {
             get; set;
         }
 

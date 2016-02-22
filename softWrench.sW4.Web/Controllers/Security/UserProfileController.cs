@@ -62,7 +62,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             }
             //force eager cache
             MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, application);
-            var loadApplicationPermissions = profile.ApplicationPermission.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
+            var loadApplicationPermissions = profile.ApplicationPermissions.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
 
             return new ApplicationPermissionResultDTO() {
                 AppPermission = loadApplicationPermissions,
@@ -84,6 +84,13 @@ namespace softWrench.sW4.Web.Controllers.Security {
             var schema = app.Schema(new ApplicationMetadataSchemaKey(schemaId, SchemaMode.None, ClientPlatform.Web));
             return _userProfileManager.LoadAvailableActionsAsComposition(schema, pageNumber);
         }
+
+
+        [HttpPost]
+        public BlankApplicationResponse Save(UserProfile screenUserProfile) {
+            return new BlankApplicationResponse();
+        }
+
 
         public class ApplicationPermissionResultDTO {
 
