@@ -38,7 +38,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly UserPreferences _userPreferences;
         private readonly IList<Role> _roles;
         private readonly ICollection<UserProfile> _profiles;
-        private readonly NewUserProfile _profile;
+        private readonly MergedUserProfile _profile;
         private readonly Iesi.Collections.Generic.ISet<PersonGroupAssociation> _personGroups;
         private readonly IList<DataConstraint> _dataConstraints;
         private IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
@@ -61,7 +61,7 @@ namespace softWrench.sW4.Metadata.Security {
             _dataConstraints = new List<DataConstraint>();
         }
 
-        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, GridPreferences gridPreferences, UserPreferences userPreferences, int? timezoneOffset, NewUserProfile mergedProfile = null) {
+        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, GridPreferences gridPreferences, UserPreferences userPreferences, int? timezoneOffset, MergedUserProfile mergedProfile = null) {
             DBUser = dbUser;
             _login = dbUser.UserName;
             SiteId = dbUser.Person.SiteId ?? dbUser.SiteId;

@@ -7,11 +7,11 @@ using softwrench.sw4.user.classes.entities.security;
 
 namespace softwrench.sw4.user.classes.entities
 {
-    public class NewUserProfile
+    public class MergedUserProfile
     {
         IList<ApplicationPermission> _permissions;
 
-        public NewUserProfile()
+        public MergedUserProfile()
         {
             
         }
