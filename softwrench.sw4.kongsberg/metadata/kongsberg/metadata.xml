@@ -1835,7 +1835,7 @@
             </field>
           </section>
           <section>
-            <renderer type="default" params="childinputsize=small" />
+            <renderer type="default" params="childinputsize=medium" />
             <field label="Target Start Date:" attribute="targetstart" readonly="true">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
             </field>
