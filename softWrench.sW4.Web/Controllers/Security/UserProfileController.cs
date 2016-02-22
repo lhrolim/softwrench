@@ -53,7 +53,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         [HttpGet]
         public ApplicationPermissionResultDTO LoadApplicationPermissions(int profileId, string application) {
-            Validate.NotNull(application,"application");
+            Validate.NotNull(application, "application");
             Validate.NotNull(profileId, "profileId");
 
             var profile = _userProfileManager.FindById(profileId);
@@ -88,7 +88,11 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         [HttpPost]
         public BlankApplicationResponse Save(UserProfile screenUserProfile) {
-            return new BlankApplicationResponse();
+            _userProfileManager.SaveUserProfile(screenUserProfile);
+
+            return new BlankApplicationResponse() {
+                SuccessMessage = "User Profile {0} successfully updated".Fmt(screenUserProfile.Name)
+            };
         }
 
 

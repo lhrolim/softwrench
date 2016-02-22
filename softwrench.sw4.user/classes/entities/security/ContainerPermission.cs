@@ -31,7 +31,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         }
 
 
-        [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
+        [Set(0, Inverse = true, Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "schema_id")]
         [OneToMany(2, ClassType = typeof(FieldPermission))]
         [JsonConverter(typeof(IesiSetConverter<FieldPermission>))]
