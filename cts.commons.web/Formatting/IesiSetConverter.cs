@@ -12,7 +12,9 @@ namespace cts.commons.web.Formatting {
     public class IesiSetConverter<T> : JsonConverter {
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
-            writer.WriteValue(value);
+            serializer.Serialize(writer,value);
+
+//            writer.WriteValue(value);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
@@ -32,7 +34,7 @@ namespace cts.commons.web.Formatting {
         }
 
         public override bool CanConvert(Type objectType) {
-            return true;
+            return false;
         }
     }
 }
