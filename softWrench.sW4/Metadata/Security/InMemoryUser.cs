@@ -16,6 +16,7 @@ using System.Security.Principal;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softwrench.sw4.user.classes.entities;
+using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
 
@@ -115,6 +116,7 @@ namespace softWrench.sW4.Metadata.Security {
             _gridPreferences = gridPreferences;
             _userPreferences = userPreferences;
             _signature = userPreferences != null ? userPreferences.Signature : "";
+            _profile = new MergedUserProfile();
         }
 
         private InMemoryUser(string mock) : this() {
@@ -309,6 +311,12 @@ namespace softWrench.sW4.Metadata.Security {
         public ICollection<UserProfile> Profiles {
             get {
                 return _profiles;
+            }
+        }
+
+        public MergedUserProfile Profile {
+            get {
+                return _profile;
             }
         }
 
