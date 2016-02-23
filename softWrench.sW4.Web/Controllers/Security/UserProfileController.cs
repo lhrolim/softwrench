@@ -5,6 +5,8 @@ using System.Web.Http;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using cts.commons.web.Attributes;
+using JetBrains.Annotations;
+using log4net;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.user.classes.entities;
@@ -32,6 +34,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private readonly SWDBHibernateDAO _dao;
 
         private readonly UserProfileManager _userProfileManager;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(UserProfileController));
 
         public UserProfileController(SWDBHibernateDAO dao, UserProfileManager userProfileManager) {
             _dao = dao;
@@ -61,7 +65,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             if (profileId == -1) {
                 //new security group scenario
                 return new ApplicationPermissionResultDTO() {
-                    AppPermission =null,
+                    AppPermission = null,
                     HasCreationSchema = hasCreationSchema
                 };
             }
@@ -103,6 +107,53 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return new BlankApplicationResponse() {
                 SuccessMessage = "User Profile {0} successfully updated".Fmt(screenUserProfile.Name)
             };
+        }
+
+
+        [HttpPost]
+        public BlankApplicationResponse BatchUpdate(int profileId, [FromBody]List<string> applications, bool allowCreation, bool allowUpdate, bool allowViewOnly) {
+            var allDefault = (true == allowCreation == allowUpdate == allowViewOnly);
+
+            var profile = _userProfileManager.FindById(profileId);
+            if (profile == null) {
+                throw new InvalidOperationException("informed profile does not exist");
+            }
+
+            var applicationsCreated = 0; var applicationsUpdated = 0;
+            var applicationsEnum = applications as IList<string> ?? applications.ToList();
+
+            foreach (var application in applicationsEnum) {
+                var appPermission = profile.ApplicationPermissions.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
+                if (appPermission == null) {
+                    if (allDefault) {
+                        Log.DebugFormat("ignoring application {0}, since user has set default permissions", application);
+                        continue;
+                    }
+                    appPermission = new ApplicationPermission() {
+
+                    };
+                    SetBasicPermissions(allowCreation, allowUpdate, allowViewOnly, appPermission);
+                    profile.ApplicationPermissions.Add(appPermission);
+                    applicationsCreated++;
+                } else {
+                    SetBasicPermissions(allowCreation, allowUpdate, allowViewOnly, appPermission);
+                    applicationsUpdated++;
+                }
+            }
+            _userProfileManager.SaveUserProfile(profile);
+            Log.InfoFormat("Finishing updating applications. {0} created | {1} updated ", applicationsCreated, applicationsUpdated);
+
+            return new BlankApplicationResponse() {
+                SuccessMessage = "{0} applications successfully updated".Fmt(applicationsEnum.Count())
+            };
+        }
+
+        private static void SetBasicPermissions(bool allowCreation, bool allowUpdate, bool allowViewOnly,
+            ApplicationPermission appPermission) {
+            appPermission.AllowCreation = allowCreation;
+            appPermission.AllowRemoval = false;
+            appPermission.AllowViewOnly = allowViewOnly;
+            appPermission.AllowUpdate = allowUpdate;
         }
 
 

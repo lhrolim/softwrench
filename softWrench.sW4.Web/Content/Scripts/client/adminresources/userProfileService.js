@@ -4,7 +4,7 @@
 
 
 
-    function userProfileService($q, $rootScope, $log, restService, contextService, crudContextHolderService) {
+    function userProfileService($q, $rootScope, $log, restService, contextService, crudContextHolderService, redirectService, alertService) {
 
         var simpleLog = $log.get("userProfileService", ["profile"]);
 
@@ -158,7 +158,7 @@
                 return $q.when();
             }
 
-          
+
             var queryParameters = {
                 profileId: dm["id"] ? dm["id"] : -1,
                 application: nextApplication
@@ -560,7 +560,7 @@
             var selectedRoles = dm["#basicroles_"].filter(function (role) {
                 return role["_#selected"];
             }).map(function (selectedRole) {
-                return { id: selectedRole.id, name:selectedRole.name };
+                return { id: selectedRole.id, name: selectedRole.name };
             });
 
 
@@ -577,10 +577,44 @@
 
         }
 
+        function batchUpdate() {
+            var dm = crudContextHolderService.rootDataMap();
+
+            var profileId = dm.fields.id;
+
+            if (!profileId) {
+                alertService.alert("Please save the profile before using this action");
+                return;
+            }
+
+
+            redirectService.openAsModal("_UserProfile", "batchupdate", {
+                title: "Batch Update",
+                savefn: function (modaData, modalSchema) {
+                    var modaldm = crudContextHolderService.rootDataMap("#modal");
+                    var selectedApps = modaldm.applications;
+                    if (!selectedApps || selectedApps.length === 0) {
+                        alertService.alert("please select at least one application to proceed");
+                        return $q.reject();
+                    }
+
+                    var params = {
+                        profileId: profileId,
+                        allowCreation: modaldm.allowcreation,
+                        allowUpdate: modaldm.allowupdate,
+                        allowViewOnly: modaldm.allowviewonly
+                    }
+
+                    return restService.postPromise("UserProfile", "BatchUpdate", params,selectedApps);
+
+
+                }
+            });
+        }
 
         //#endregion
 
-        var service = {
+        var hooks = {
             afterSchemaListLoaded: afterSchemaListLoaded,
             afterModeChanged: afterModeChanged,
             afterSchemaChanged: afterSchemaChanged,
@@ -590,18 +624,26 @@
             beforeApplicationChange: beforeApplicationChange,
             beforeTabChange: beforeTabChange,
             beforeSchemaChange: beforeSchemaChange,
-            mergeTransientIntoDatamap: mergeTransientIntoDatamap,
             onSchemaLoad: onSchemaLoad,
             onApplicationChange: onApplicationChange,
-            save: save,
-            storeFromDmIntoTransient: storeFromDmIntoTransient,
             tabvaluechanged: tabvaluechanged
         };
 
-        return service;
+        var api = {
+            mergeTransientIntoDatamap: mergeTransientIntoDatamap,
+            storeFromDmIntoTransient: storeFromDmIntoTransient,
+            save: save,
+        }
+
+        var actions = {
+            batchUpdate: batchUpdate
+        }
+
+        return angular.extend({}, hooks, api, actions);
+
     }
 
 
-    angular.module('sw_crudadmin').factory('userProfileService', ['$q', "$rootScope", "$log", 'restService', 'contextService', 'crudContextHolderService', userProfileService]);
+    angular.module('sw_crudadmin').factory('userProfileService', ['$q', "$rootScope", "$log", 'restService', 'contextService', 'crudContextHolderService', 'redirectService', 'alertService', userProfileService]);
 
 })(angular);

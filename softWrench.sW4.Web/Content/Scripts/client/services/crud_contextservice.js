@@ -415,8 +415,9 @@
             clearCrudContext("#modal");
         };
 
-        function modalLoaded() {
+        function modalLoaded(datamap) {
             _crudContext.showingModal = true;
+            rootDataMap("#modal", datamap);
         }
 
         function isShowingModal() {
