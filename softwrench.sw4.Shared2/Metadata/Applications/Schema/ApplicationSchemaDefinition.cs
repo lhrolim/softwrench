@@ -30,7 +30,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private readonly IDictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>> _cachedCompositions = new Dictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>>();
         private readonly IDictionary<string, IEnumerable<IApplicationAttributeDisplayable>> _cachedFieldsOfTab = new Dictionary<string, IEnumerable<IApplicationAttributeDisplayable>>();
 
-        private readonly IDictionary<SchemaFetchMode, IList<IApplicationIndentifiedDisplayable>> _cachedTabs= new Dictionary<SchemaFetchMode, IList<IApplicationIndentifiedDisplayable>>();
+        private readonly IDictionary<SchemaFetchMode, IList<IApplicationIndentifiedDisplayable>> _cachedTabs = new Dictionary<SchemaFetchMode, IList<IApplicationIndentifiedDisplayable>>();
 
         private readonly IDictionary<SchemaFetchMode, IList<OptionField>> _cachedOptionFields = new Dictionary<SchemaFetchMode, IList<OptionField>>();
         #endregion
@@ -355,12 +355,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         [NotNull]
-        public virtual IEnumerable<IApplicationAttributeDisplayable> NonHiddenFieldsOfTab(string tabId,SchemaFetchMode mode = SchemaFetchMode.All) {
+        public virtual IEnumerable<IApplicationAttributeDisplayable> NonHiddenFieldsOfTab(string tabId, SchemaFetchMode mode = SchemaFetchMode.All) {
             if (_cachedFieldsOfTab.ContainsKey(tabId)) {
                 return _cachedFieldsOfTab[tabId];
             }
-            var result = DisplayableUtil.GetDisplayable<IApplicationAttributeDisplayable>(new[] { typeof(IApplicationAttributeDisplayable) }, Displayables, mode, false,tabId == "main" ? null : tabId)
-                .Where(f=> !f.IsHidden && !f.Type.Equals(typeof(ApplicationSection).Name));
+            var result = DisplayableUtil.GetDisplayable<IApplicationAttributeDisplayable>(new[] { typeof(IApplicationAttributeDisplayable) }, Displayables, mode, false, tabId == "main" ? null : tabId)
+                .Where(f => !f.IsHidden && !f.Type.Equals(typeof(ApplicationSection).Name));
             var nonHiddenFieldsOfTab = result as IList<IApplicationAttributeDisplayable> ?? result.ToList();
             _cachedFieldsOfTab[tabId] = nonHiddenFieldsOfTab;
             return nonHiddenFieldsOfTab;
@@ -565,6 +565,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public ApplicationSchemaDefinition PaginationSize() {
             throw new NotImplementedException();
+        }
+
+        public bool IsCreation() {
+            return Stereotype.Equals(SchemaStereotype.DetailNew);
         }
     }
 }

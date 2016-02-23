@@ -396,7 +396,7 @@ namespace softWrench.sW4.Metadata {
             }
 
             application.CachedNonInternalSchemas = resultSchemas;
-            application.HasCreationSchema = resultSchemas.Any(s => (s.Stereotype.Equals(SchemaStereotype.DetailNew) || (s.StereotypeAttr != null && s.StereotypeAttr.StartsWith("detailnew"))) 
+            application.HasCreationSchema = resultSchemas.Any(s => (s.Stereotype.Equals(SchemaStereotype.DetailNew) || (s.StereotypeAttr != null && s.StereotypeAttr.StartsWith("detailnew")))
             || menuReacheableSchemas.Any(m => (m.Stereotype.Equals(SchemaStereotype.Detail) || (m.StereotypeAttr != null && m.StereotypeAttr.StartsWith("detail")))));
 
             return cachedNonInternalSchemas;
@@ -571,6 +571,15 @@ namespace softWrench.sW4.Metadata {
         public static EntityMetadata EntityByApplication(string applicationName) {
             var application = Application(applicationName);
             return Entity(application.Entity);
+        }
+
+        [CanBeNull]
+        public static ApplicationSchemaDefinition Schema(string application, string schema, ClientPlatform platform) {
+            var app = MetadataProvider.Application(application);
+            if (app == null) {
+                return null;
+            }
+            return app.Schema(new ApplicationMetadataSchemaKey(schema, SchemaMode.None, platform));
         }
     }
 }

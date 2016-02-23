@@ -81,6 +81,11 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
+        public bool HasNoPermissions {
+            //TODO: add AllowRemoval later...
+            get { return !AllowCreation && !AllowUpdate && !AllowViewOnly; }
+        }
+
 
         public void Merge(ApplicationPermission other) {
             AllowCreation = AllowCreation && other.AllowCreation;

@@ -41,12 +41,11 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly MergedUserProfile _mergedUserProfile;
         private readonly Iesi.Collections.Generic.ISet<PersonGroupAssociation> _personGroups;
         private readonly IList<DataConstraint> _dataConstraints;
-        private IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
+        internal IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
         private IDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>> _cachedBars = new ConcurrentDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>>();
         private IDictionary<string, object> _genericproperties = new Dictionary<string, object>();
 
-        private const string BlankUser = "menu is blank for user {0} review his security configuration";
-        private const string MenuNotFound = "menu not found for platform {0}. ";
+        
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(InMemoryUserExtensions));
 
@@ -266,50 +265,7 @@ namespace softWrench.sW4.Metadata.Security {
             }
         }
 
-        public MenuDefinition Menu(ClientPlatform platform, out Boolean fromCache) {
-            if (_cachedMenu.ContainsKey(platform)) {
-                fromCache = true;
-                return _cachedMenu[platform];
-            }
-            fromCache = false;
-
-            var unsecureMenu = MetadataProvider.Menu(platform);
-            if (unsecureMenu == null) {
-                Log.Warn(String.Format(MenuNotFound, platform));
-                return null;
-            }
-
-            var secureLeafs = new List<MenuBaseDefinition>();
-            if (unsecureMenu.Leafs != null) {
-                foreach (var leaf in unsecureMenu.Leafs) {
-                    if (!Login.Equals("swadmin") && leaf.Role != null &&
-                        (Roles == null || leaf.IsRestrictedByRole(this))) {
-                        Log.DebugFormat("ignoring leaf {0} for user {1} due to absence of role {2}", leaf.Id, Login, leaf.Role);
-                        continue;
-                    }
-                    if (leaf is MenuContainerDefinition) {
-                        var secured = ((MenuContainerDefinition)leaf).Secure(this);
-                        if (secured != null) {
-                            secureLeafs.Add(secured);
-                        }
-                    } else {
-                        secureLeafs.Add(leaf);
-                    }
-                }
-            }
-            if (!secureLeafs.Any()) {
-                Log.Warn(String.Format(BlankUser, Login));
-            }
-            var menuDefinition = new MenuDefinition(secureLeafs, unsecureMenu.MainMenuDisplacement.ToString(), unsecureMenu.ItemindexId);
-            try {
-                _cachedMenu.Add(platform, menuDefinition);
-                // ReSharper disable once EmptyGeneralCatchClause
-            } catch {
-                //No op
-            }
-            return menuDefinition;
-        }
-
+      
 
         [NotNull]
         public ICollection<UserProfile> Profiles {

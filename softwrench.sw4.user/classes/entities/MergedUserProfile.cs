@@ -15,6 +15,11 @@ namespace softwrench.sw4.user.classes.entities {
             get; set;
         }
 
+        public MergedUserProfile() {
+            Permissions = new List<ApplicationPermission>();
+            Roles = new List<Role>();
+        }
+
         public ApplicationPermission GetPermissionByApplication(string applicationName) {
             var result = Permissions.Single(p => p.ApplicationName.ToLower() == applicationName.ToLower());
             return result;
