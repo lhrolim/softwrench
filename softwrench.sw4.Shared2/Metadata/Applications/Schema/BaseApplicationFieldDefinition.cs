@@ -34,7 +34,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public abstract string RendererType { get; }
         public string Type { get { return GetType().Name; } }
         public string Role {
-            get { return ApplicationName + "." + Attribute; }
+            get { return Attribute; }
         }
 
         public BaseApplicationFieldDefinition() {

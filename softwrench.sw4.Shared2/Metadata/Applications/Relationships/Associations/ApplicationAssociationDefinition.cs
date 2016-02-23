@@ -346,7 +346,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public override string Role {
             get {
-                return From + "." + Target;
+                return Target;
             }
         }
 
