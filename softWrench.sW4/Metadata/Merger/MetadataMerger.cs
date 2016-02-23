@@ -2,6 +2,8 @@
 using System.Linq;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
+using log4net;
+using log4net.Core;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softWrench.sW4.Metadata.Entities;
 using softwrench.sW4.Shared2.Metadata;
@@ -13,7 +15,16 @@ using softWrench.sW4.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Metadata.Validator {
     class MetadataMerger {
+
+        private static ILog Log = LogManager.GetLogger(typeof(MetadataMerger));
+
+        public MetadataMerger() {
+            Log.Debug("init log...");
+        }
+
         private const string CustomizeAndRedeclare = "schemas using customizations must have redeclaring=false";
+
+
 
         public static IEnumerable<TR> Merge<TR>(IEnumerable<TR> sourceItems, IEnumerable<TR> overridenItems) {
             var enumerable = overridenItems as IList<TR> ?? overridenItems.ToList();
@@ -53,7 +64,7 @@ namespace softWrench.sW4.Metadata.Validator {
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> resultSchemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
             var resultComponents = MergeComponents(souceAplication, overridenApplication);
             var resultFilters = SchemaFilterBuilder.ApplyFilterCustomizations(souceAplication.AppFilters, overridenApplication.AppFilters);
-
+            Log.InfoFormat("applying merge for application {0}".Fmt(overridenApplication.ApplicationName));
 
             foreach (var schema in souceAplication.Schemas()) {
 

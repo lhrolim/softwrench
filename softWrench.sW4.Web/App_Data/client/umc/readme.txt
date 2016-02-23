@@ -1,1 +1,0 @@
-﻿Don´t forget to mark all the files on this folder as Embedded Resources (Right click on each file--> properties)
