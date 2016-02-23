@@ -245,6 +245,29 @@
             return schemaA.applicationName === schemaB.applicationName && schemaA.schemaId === schemaB.schemaId;
         }
 
+        function getAllDisplayables(fields, context) {
+            if (!fields) return [];
+            context = context || [];
+            fields.forEach(function (f) {
+                if (angular.isArray(f.displayables)) {
+                    getAllDisplayables(f.displayables, context);
+                } else {
+                    context.push(f);
+                }
+            });
+            return context;
+        }
+
+        /**
+         * Returns all displayable fields in a single array i.e. expands all sections.
+         * 
+         * @param {} schema 
+         * @returns Array<FieldMetadata> 
+         */
+        function allDisplayables(schema) {
+            return getAllDisplayables(schema.displayables);
+        }
+
         return {
             buildApplicationKey: buildApplicationKey,
             buildApplicationMetadataSchemaKey: buildApplicationMetadataSchemaKey,
@@ -261,7 +284,8 @@
             isStereotype: isStereotype,
             isDetail: isDetail,
             isList: isList,
-            isSameSchema: isSameSchema
+            isSameSchema: isSameSchema,
+            allDisplayables: allDisplayables
         };
 
     }]);
