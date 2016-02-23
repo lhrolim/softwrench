@@ -152,7 +152,12 @@ app.directive('crudInput', ["contextService", "associationService", function (co
                         if (newValue) {
                             log.trace("crudContextHolderService#dataResolved is true: start $dirty checking");
                             // detailData was resolved: start $dirty watching (if wasn't already registered)
-                            if (!angular.isFunction(dirtyWatcherDeregister)) dirtyWatcherDeregister = $scope.$watch("datamap", dirtyWatcher, true);
+                            if (!angular.isFunction(dirtyWatcherDeregister)) {
+                                dirtyWatcherDeregister = $scope.$watch("datamap", dirtyWatcher, true);
+                                log.trace("bluring current element and focusing on document.body -> trigger $watch on first change of the current input");
+                                document.activeElement.blur();
+                                $(document.body).focus();
+                            }
                         } else {
                             log.trace("crudContextHolderService#dataResolved is false: disable $dirty checking");
                             if (angular.isFunction(dirtyWatcherDeregister)) dirtyWatcherDeregister();
