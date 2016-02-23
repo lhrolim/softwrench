@@ -5,19 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using softwrench.sw4.user.classes.entities.security;
 
-namespace softwrench.sw4.user.classes.entities
-{
-    public class MergedUserProfile
-    {
-        IList<ApplicationPermission> _permissions;
+namespace softwrench.sw4.user.classes.entities {
+    public class MergedUserProfile {
+        public IEnumerable<ApplicationPermission> Permissions {
+            get; set;
+        }
 
-        public MergedUserProfile()
-        {
-            
+        public IEnumerable<Role> Roles {
+            get; set;
         }
 
         public ApplicationPermission GetPermissionByApplication(string applicationName) {
-            var result = _permissions.Single(p => p.ApplicationName.ToLower() == applicationName.ToLower());
+            var result = Permissions.Single(p => p.ApplicationName.ToLower() == applicationName.ToLower());
             return result;
         }
 

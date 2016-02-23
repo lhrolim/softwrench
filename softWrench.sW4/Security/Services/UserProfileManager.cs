@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Web.Security;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
+using Iesi.Collections.Generic;
 using JetBrains.Annotations;
 using NHibernate;
 using log4net;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.entities.security;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
@@ -20,6 +23,7 @@ using softWrench.sW4.Data.Persistence.Relational.DataConstraint;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
+using TypeHelperExtensionMethods = NHibernate.Linq.TypeHelperExtensionMethods;
 
 
 namespace softWrench.sW4.Security.Services {
@@ -123,7 +127,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public CompositionFetchResult LoadAvailableFieldsAsCompositionData(ApplicationSchemaDefinition schema, string tab, int pageNumber) {
-            var fields = schema.NonHiddenFieldsOfTab(tab).Where(f=> !"true".Equals(f.RequiredExpression));
+            var fields = schema.NonHiddenFieldsOfTab(tab).Where(f => !"true".Equals(f.RequiredExpression));
             var pageSize = 10;
             var applicationAttributeDisplayables = fields as IApplicationAttributeDisplayable[] ?? fields.ToArray();
             var totalCount = applicationAttributeDisplayables.Count();
@@ -178,6 +182,34 @@ namespace softWrench.sW4.Security.Services {
                     compositionData.ResultList.Add(dict);
                 }
             }
+        }
+
+        public MergedUserProfile BuildMergedProfile(List<UserProfile> profiles) {
+            var appPermissions = new HashedSet<ApplicationPermission>();
+
+            IDictionary<string, ApplicationPermission> permissionsDict = new Dictionary<string, ApplicationPermission>();
+
+            foreach (var profile in profiles) {
+                //let´s use the less restictive rule
+                foreach (var appPermission in profile.ApplicationPermissions) {
+                    if (!permissionsDict.ContainsKey(appPermission.ApplicationName)) {
+                        permissionsDict.Add(appPermission.ApplicationName, appPermission);
+                    } else {
+                        permissionsDict[appPermission.ApplicationName].Merge(appPermission);
+                    }
+                }
+            }
+
+            var roles = new HashedSet<Role>();
+
+            foreach (var profile in profiles) {
+                roles.AddAll(profile.Roles);
+            }
+
+            return new MergedUserProfile() {
+                Permissions = new HashedSet<ApplicationPermission>(permissionsDict.Values),
+                Roles = roles
+            };
         }
     }
 }

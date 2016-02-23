@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.web.Formatting;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json;
@@ -39,6 +41,38 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
+        protected bool Equals(ContainerPermission other) {
+            return string.Equals(Schema, other.Schema) && string.Equals(ContainerKey, other.ContainerKey);
+        }
 
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ContainerPermission)obj);
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                return ((Schema != null ? Schema.GetHashCode() : 0) * 397) ^ (ContainerKey != null ? ContainerKey.GetHashCode() : 0);
+            }
+        }
+
+        public void Merge(ContainerPermission other) {
+            if (other.FieldPermissions == null) {
+                return;
+            }
+
+
+            foreach (var otherField in other.FieldPermissions) {
+                var thisField = FieldPermissions.FirstOrDefault(
+                    f => f.FieldKey.EqualsIc(otherField.FieldKey));
+                if (thisField == null) {
+                    FieldPermissions.Add(otherField);
+                } else {
+                    thisField.Merge(otherField);
+                }
+            }
+        }
     }
 }

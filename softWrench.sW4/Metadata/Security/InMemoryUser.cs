@@ -38,7 +38,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly UserPreferences _userPreferences;
         private readonly IList<Role> _roles;
         private readonly ICollection<UserProfile> _profiles;
-        private readonly MergedUserProfile _profile;
+        private readonly MergedUserProfile _mergedUserProfile;
         private readonly Iesi.Collections.Generic.ISet<PersonGroupAssociation> _personGroups;
         private readonly IList<DataConstraint> _dataConstraints;
         private IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
@@ -61,7 +61,7 @@ namespace softWrench.sW4.Metadata.Security {
             _dataConstraints = new List<DataConstraint>();
         }
 
-        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, GridPreferences gridPreferences, UserPreferences userPreferences, int? timezoneOffset, MergedUserProfile mergedProfile = null) {
+        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, GridPreferences gridPreferences, UserPreferences userPreferences, int? timezoneOffset, MergedUserProfile mergedProfile) {
             DBUser = dbUser;
             _login = dbUser.UserName;
             SiteId = dbUser.Person.SiteId ?? dbUser.SiteId;
@@ -77,14 +77,12 @@ namespace softWrench.sW4.Metadata.Security {
             _timezoneOffset = timezoneOffset;
             _maximoPersonId = dbUser.MaximoPersonId;
             _personGroups = (dbUser.PersonGroups ?? new HashedSet<PersonGroupAssociation>());
-            _profile = mergedProfile;
+            _mergedUserProfile = mergedProfile;
             var userProfiles = initializedProfiles as UserProfile[] ?? initializedProfiles.ToArray();
             _profiles = userProfiles;
-            var roles = new List<Role>();
+            var roles = new List<Role>(mergedProfile.Roles);
             var dataConstraints = new List<DataConstraint>();
-            foreach (var profile in userProfiles) {
-                roles.AddRange(profile.Roles);
-            }
+
             if (dbUser.CustomRoles != null) {
                 foreach (var role in dbUser.CustomRoles) {
                     if (role.Exclusion) {
@@ -253,6 +251,14 @@ namespace softWrench.sW4.Metadata.Security {
             get; set;
         }
 
+        [JsonIgnore]
+        //used for security mech
+        public MergedUserProfile MergedUserProfile {
+            get {
+                return _mergedUserProfile;
+            }
+        }
+
 
         public IList<DataConstraint> DataConstraints {
             get {
@@ -316,7 +322,7 @@ namespace softWrench.sW4.Metadata.Security {
             if (IsSwAdmin()) {
                 return true;
             }
-            if (String.IsNullOrEmpty(role)) {
+            if (string.IsNullOrEmpty(role)) {
                 return true;
             }
 

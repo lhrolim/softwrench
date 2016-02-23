@@ -119,7 +119,9 @@ namespace softWrench.sW4.Security.Services {
                 GridFilters = _gridFilterManager.LoadAllOfUser(dbUser.Id)
             };
             var userPreferences = UserPreferenceManager.FindUserPreferences(dbUser);
-            var inMemoryUser = new InMemoryUser(dbUser, profiles, gridPreferences, userPreferences, userTimezoneOffsetInt);
+            var mergedProfile = _userProfileManager.BuildMergedProfile(profiles);
+
+            var inMemoryUser = new InMemoryUser(dbUser, profiles, gridPreferences, userPreferences, userTimezoneOffsetInt, mergedProfile);
             if (Users.ContainsKey(inMemoryUser.Login)) {
                 Users.Remove(inMemoryUser.Login);
             }

@@ -158,8 +158,9 @@
                 return $q.when();
             }
 
+          
             var queryParameters = {
-                profileId: dm["id"],
+                profileId: dm["id"] ? dm["id"] : -1,
                 application: nextApplication
             };
 

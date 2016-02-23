@@ -56,6 +56,16 @@ namespace softWrench.sW4.Web.Controllers.Security {
             Validate.NotNull(application, "application");
             Validate.NotNull(profileId, "profileId");
 
+            var hasCreationSchema = MetadataProvider.Application(application).HasCreationSchema;
+
+            if (profileId == -1) {
+                //new security group scenario
+                return new ApplicationPermissionResultDTO() {
+                    AppPermission =null,
+                    HasCreationSchema = hasCreationSchema
+                };
+            }
+
             var profile = _userProfileManager.FindById(profileId);
             if (profile == null) {
                 throw new InvalidOperationException("informed profile does not exist");
@@ -66,7 +76,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
             return new ApplicationPermissionResultDTO() {
                 AppPermission = loadApplicationPermissions,
-                HasCreationSchema = MetadataProvider.Application(application).HasCreationSchema
+                HasCreationSchema = hasCreationSchema
             };
         }
 

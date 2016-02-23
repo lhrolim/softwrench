@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.web.Formatting;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json;
@@ -32,7 +34,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         [Key(1, Column = "composition_id")]
         [OneToMany(2, ClassType = typeof(FieldPermission))]
         [JsonConverter(typeof(IesiSetConverter<FieldPermission>))]
-        public virtual ISet<FieldPermission> FieldsPermissions {
+        public virtual ISet<FieldPermission> FieldPermissions {
             get; set;
         }
 
@@ -59,7 +61,26 @@ namespace softwrench.sw4.user.classes.entities.security {
         }
 
 
+        public void Merge(CompositionPermission other) {
+            AllowCreation = AllowCreation && other.AllowCreation;
+            AllowUpdate = AllowUpdate && other.AllowUpdate;
+            AllowRemoval = AllowRemoval && other.AllowRemoval;
+            AllowViewOnly = AllowViewOnly && other.AllowViewOnly;
 
+            if (other.FieldPermissions == null) {
+                return;
+            }
 
+            foreach (var otherField in other.FieldPermissions) {
+                var thisField = FieldPermissions.FirstOrDefault(
+                    f => f.FieldKey.EqualsIc(otherField.FieldKey));
+                if (thisField == null) {
+                    FieldPermissions.Add(otherField);
+                } else {
+                    thisField.Merge(otherField);
+                }
+            }
+
+        }
     }
 }
