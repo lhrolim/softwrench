@@ -28,7 +28,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
         [DefaultValue("true")] public string ShowExpression { get; set; }
         public string ToolTip { get; set; }
-        public bool? ReadOnly {
+        public bool IsReadOnly {
             get { return false; }
             set { }
         }

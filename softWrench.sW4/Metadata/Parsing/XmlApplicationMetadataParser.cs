@@ -214,7 +214,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private static ReferenceDisplayable ParseReference(XElement xElement) {
             var id = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableIdAttribute).Value;
-            var readOnly = xElement.Attribute(XmlMetadataSchema.FieldAttributeReadOnly).ValueOrDefault((bool?)null);
+            var readOnly = xElement.Attribute(XmlMetadataSchema.FieldAttributeReadOnly).ValueOrDefault((bool)false);
 
             return new ReferenceDisplayable {
                 Id = id,
@@ -222,7 +222,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 Label = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableLabelAttribute).ValueOrDefault((string)null),
                 Attribute = xElement.Attribute(XmlMetadataSchema.AttributeElement).ValueOrDefault((string)null),
                 PropertiesString = xElement.Attribute(XmlMetadataSchema.ApplicationPropertiesElement).ValueOrDefault((string)null),
-                ReadOnly = readOnly,
+                IsReadOnly = readOnly,
                 EnableExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute).ValueOrDefault((string)null)
             };
         }

@@ -14,7 +14,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         [DefaultValue("")] public string Label { get; set; }
         public string Attribute { get; set; }
         [DefaultValue("false" )] public string RequiredExpression { get; set; }
-        public bool IsReadOnly { get; set; }
+//        public bool IsReadOnly { get; set; }
         public string DefaultValue { get; set; }
         public string Qualifier { get; set; }
         public abstract bool IsHidden { get; set; }
@@ -25,7 +25,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         [DefaultValue("true")] public string EnableExpression { get; set; }
 
         public string ToolTip { get; set; }
-        public bool? ReadOnly { get; set; }
+        public bool IsReadOnly { get; set; }
         public string AttributeToServer { get; set; }
 
         public string DefaultExpression { get; set; }

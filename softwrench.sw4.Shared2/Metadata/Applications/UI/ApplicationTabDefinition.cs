@@ -67,7 +67,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
         public string IdFieldName {
             get; set;
         }
-        public bool? ReadOnly {
+        public bool IsReadOnly {
             get {
                 return false;
             }

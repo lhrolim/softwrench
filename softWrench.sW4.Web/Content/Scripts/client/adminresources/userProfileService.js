@@ -572,7 +572,9 @@
                 roles: selectedRoles
             }
 
-            restService.postPromise("UserProfile", "Save", null, ob);
+            return restService.postPromise("UserProfile", "Save", null, ob).then(function(httpResponse) {
+                $rootScope["#transientprofiledata"] = {};
+            });
 
 
         }
@@ -605,7 +607,9 @@
                         allowViewOnly: modaldm.allowviewonly
                     }
 
-                    return restService.postPromise("UserProfile", "BatchUpdate", params,selectedApps);
+                    return restService.postPromise("UserProfile", "BatchUpdate", params,selectedApps).then(function(httpResponse) {
+                        $rootScope["#transientprofiledata"] = {};
+                    });
 
 
                 }

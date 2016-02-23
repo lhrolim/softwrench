@@ -72,8 +72,8 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
                 ((IApplicationAttributeDisplayable)applicationDisplayable).Attribute = GetPropertyValue(schema, reference, reference.Attribute);
             }
 
-            if (reference.ReadOnly != null) {
-                applicationDisplayable.ReadOnly = reference.ReadOnly;
+            if (reference.IsReadOnly != null) {
+                applicationDisplayable.IsReadOnly = reference.IsReadOnly;
             }
 
             // verify if the real reference is enabled
