@@ -245,7 +245,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             // If application is read only, return all fields as read only
             if (applicationPermission.AllowViewOnly) {
                 foreach (var applicationDisplayable in schema.Displayables) {
-                    applicationDisplayable.ReadOnly = true;
+                    ((BaseApplicationFieldDefinition)applicationDisplayable).IsReadOnly = true;
                     applicationDisplayables.Add(applicationDisplayable);
                 }
             } else {
@@ -326,7 +326,8 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             }
             if (permissions.Any(c => c.FieldPermissions.Any(f => displayable.Role.EqualsIc(f.FieldKey) && f.Permission.ToLower() == "readonly")))
             {
-                displayable.ReadOnly = true;
+
+                ((BaseApplicationFieldDefinition)displayable).IsReadOnly = true;
             }
         }
 

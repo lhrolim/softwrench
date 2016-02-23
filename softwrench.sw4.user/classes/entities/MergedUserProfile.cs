@@ -18,30 +18,7 @@ namespace softwrench.sw4.user.classes.entities
 
         public MergedUserProfile()
         {
-            FieldPermission fp = new FieldPermission();
-            fp.FieldKey = "owner";
-            fp.Permission = "readonly";
-            fp.Id = 1;
-            ContainerPermission cp = new ContainerPermission();
-            cp.Schema = "editdetail";
-            cp.ContainerKey = "main";
-            cp.Id = 1;
-            List<FieldPermission> fps = new List<FieldPermission>();
-            fps.Add(fp);
-            cp.FieldPermissions = new HashedSet<FieldPermission>(fps);
-            ApplicationPermission ap = new ApplicationPermission();
-            ap.ApplicationName = "servicerequest";
-            ap.Id = 1;
-            ap.AllowCreation = true;
-            ap.AllowRemoval = true;
-            ap.AllowUpdate = true;
-            ap.AllowViewOnly = false;
-            List<ContainerPermission> cps = new List<ContainerPermission>();
-            cps.Add(cp);
-            ap.ContainerPermissions = new HashedSet<ContainerPermission>(cps);
-            var permissions = new List<ApplicationPermission>();
-            permissions.Add(ap);
-            Permissions = permissions;
+            Permissions = new List<ApplicationPermission>();
             Roles = new List<Role>();
         }
 

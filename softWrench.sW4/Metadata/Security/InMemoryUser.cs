@@ -113,7 +113,7 @@ namespace softWrench.sW4.Metadata.Security {
             _gridPreferences = gridPreferences;
             _userPreferences = userPreferences;
             _signature = userPreferences != null ? userPreferences.Signature : "";
-            _mergedUserProfile = new MergedUserProfile();
+            _mergedUserProfile = mergedProfile;
         }
 
         private InMemoryUser(string mock) : this() {
