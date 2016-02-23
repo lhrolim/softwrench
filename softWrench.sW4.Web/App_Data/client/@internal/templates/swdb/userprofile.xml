@@ -28,6 +28,19 @@
           </commandbars>
         </list>
         <detail>
+
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate"/>
+              </container>
+            </commandgroup>
+            <commandgroup id="#detailform">
+              <removecommand id="print"/>
+              <command id="save" service="userProfileService" method="save"/>
+            </commandgroup>
+          </commandbars>
+
           <section orientation="horizontal">
             <field label="Name" attribute="name" requiredexpression="true"/>
             <field label="Description" attribute="description" requiredexpression="true"/>
@@ -58,7 +71,7 @@
           </section>
 
 
-          
+
           <section showexpression="@application!=null">
             <!-- Mode/Schema/Tab selection  -->
             <section orientation="horizontal">
@@ -94,29 +107,20 @@
             </section>
 
             <!-- Fields and Action selection  -->
-          <section orientation="horizontal">
+            <section orientation="horizontal">
 
-            <composition detailschema="" fetchtype="lazy"  relationship="#fieldPermissions"  printschema="" inline="true">
-              <collectionproperties allowcreation="false" listschema="fieldRepresentation"/>
-            </composition>
+              <composition detailschema="" fetchtype="lazy"  relationship="#fieldPermissions"  printschema="" inline="true">
+                <collectionproperties allowcreation="false" listschema="fieldRepresentation"/>
+              </composition>
 
-            <composition detailschema="" fetchtype="lazy"  relationship="#actionPermissions"  printschema="" inline="true">
-              <collectionproperties allowcreation="false" listschema="actionRepresentation"/>
-            </composition>
-          </section>
+              <composition detailschema="" fetchtype="lazy"  relationship="#actionPermissions"  printschema="" inline="true">
+                <collectionproperties allowcreation="false" listschema="actionRepresentation"/>
+              </composition>
+            </section>
 
           </section>
 
           <event type="onschemafullyloaded" method="onSchemaLoad" service="userProfileService"/>
-
-          <commandbars>
-            <commandgroup id="#detailform">
-              <removecommand id="print"/>
-              <command id="save" service="userProfileService" method="save"/>
-            </commandgroup>
-            
-          </commandbars>
-          
         </detail>
 
         <schema id="rolerepresentation" stereotype="list.selection">
@@ -150,6 +154,21 @@
           <field label="Action" attribute="#actionlabel" />
         </schema>
 
+        <schema id="batchupdate" stereotype="detail.modal">
+          <field attribute="profileid" hidden="true"/>
+          <optionfield attribute="applications" providerattribute="topLevelApplications" label="Application">
+            <renderer type="combo" params="multiple=true"/>
+          </optionfield>
+          <field attribute="allowcreation" label="Allow Creation">
+            <renderer type="checkbox"/>
+          </field>
+          <field attribute="allowupdate" label="Allow Update">
+            <renderer type="checkbox"/>
+          </field>
+          <field attribute="allowviewonly" label="Allow Only Visualization">
+            <renderer type="checkbox"/>
+          </field>
+        </schema>
       </schemas>
 
     </application>
