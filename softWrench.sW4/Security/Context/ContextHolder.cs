@@ -80,6 +80,8 @@ namespace softWrench.sW4.Security.Context {
             get; set;
         }
 
+        public bool MockSecurity { get; set; }
+
         public ConditionMatch ProfileMatches(int? storedProfile) {
             if (storedProfile == null) {
                 return ConditionMatch.Exact;

@@ -344,7 +344,7 @@
     <Compile Include="Metadata\Entities\Schema\EntityTargetSchema.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityAssociation.cs" />
     <Compile Include="Metadata\ClientChangeEvent.cs" />
-    <Compile Include="Metadata\Menu\MenuManager.cs" />
+    <Compile Include="Metadata\Menu\MenuSecurityManager.cs" />
     <Compile Include="Metadata\MetadataProviderInternalCache.cs" />
     <Compile Include="Metadata\Parsing\IXMLMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XElementExtensions.cs" />

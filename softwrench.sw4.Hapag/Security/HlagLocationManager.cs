@@ -297,7 +297,7 @@ namespace softwrench.sw4.Hapag.Security {
 
         public IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId) {
             var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
-            var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null, null, null));
+            var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null, null, null, null));
             var groupedLocation = result.GroupedLocations.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
             if (groupedLocation == null) {
                 return null;

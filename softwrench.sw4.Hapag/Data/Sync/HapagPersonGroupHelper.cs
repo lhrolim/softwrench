@@ -131,7 +131,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                 _dao.DeleteCollection(customRolesToDelete);
             }
 
-            return new InMemoryUser(dbUser, dbUser.Profiles,user.GridPreferences, user.UserPreferences, user.TimezoneOffset);
+            return new InMemoryUser(dbUser, dbUser.Profiles,user.GridPreferences, user.UserPreferences, user.TimezoneOffset, user.MergedUserProfile);
         }
 
         private bool isEndUserOrITC(InMemoryUser user) {

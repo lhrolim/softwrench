@@ -10,7 +10,7 @@ namespace softwrench.sw4.user.Migration {
 
             Create.Table("SEC_APPLICATION_PER")
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()
-                .WithColumn("profile_id").AsInt32().ForeignKey("fk_secapprid", "sw_userprofile", "id").NotNullable()
+                .WithColumn("profile_id").AsInt32().ForeignKey("fk_secapprid", "sw_userprofile", "id").Nullable()
                 .WithColumn("applicationname").AsString().NotNullable()
                 .WithColumn("allowcreation").AsBoolean().WithDefaultValue(true)
                 .WithColumn("allowupdate").AsBoolean().WithDefaultValue(true)
@@ -22,7 +22,7 @@ namespace softwrench.sw4.user.Migration {
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("actionid").AsString().NotNullable()
                 .WithColumn("schema_").AsString().NotNullable()
-                .WithColumn("app_id").AsInt32().ForeignKey("fk_ap_ap", "SEC_APPLICATION_PER", "id").NotNullable();
+                .WithColumn("app_id").AsInt32().ForeignKey("fk_ap_ap", "SEC_APPLICATION_PER", "id").Nullable();
 
 
             Create.Table("SEC_COMPOSITION_PER")
@@ -33,7 +33,7 @@ namespace softwrench.sw4.user.Migration {
                 .WithColumn("allowviewonly").AsBoolean().WithDefaultValue(false)
                 .WithColumn("schema_").AsString().NotNullable()
                 .WithColumn("compositionkey").AsString().NotNullable()
-                .WithColumn("app_id").AsInt32().ForeignKey("fk_cp_ap", "SEC_APPLICATION_PER", "id").NotNullable();
+                .WithColumn("app_id").AsInt32().ForeignKey("fk_cp_ap", "SEC_APPLICATION_PER", "id").Nullable();
 
 
 
@@ -41,15 +41,15 @@ namespace softwrench.sw4.user.Migration {
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("schema_").AsString().NotNullable()
                 .WithColumn("containerkey").AsString().NotNullable()
-                .WithColumn("app_id").AsInt32().ForeignKey("fk_sp_ap", "SEC_APPLICATION_PER", "id").NotNullable();
+                .WithColumn("app_id").AsInt32().ForeignKey("fk_sp_ap", "SEC_APPLICATION_PER", "id").Nullable();
 
 
             Create.Table("SEC_FIELD_PER")
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("fieldkey").AsString().NotNullable()
                 .WithColumn("permission").AsString()
-                .WithColumn("schema_id").AsInt32().Nullable().ForeignKey("fk_fp_sp", "SEC_CONTAINER_PER", "id")
-                .WithColumn("composition_id").AsInt32().Nullable().ForeignKey("fk_fp_cp", "SEC_COMPOSITION_PER", "id");
+                .WithColumn("schema_id").AsInt32().ForeignKey("fk_fp_sp", "SEC_CONTAINER_PER", "id").Nullable()
+                .WithColumn("composition_id").AsInt32().ForeignKey("fk_fp_cp", "SEC_COMPOSITION_PER", "id").Nullable();
         }
 
         public override void Down() {

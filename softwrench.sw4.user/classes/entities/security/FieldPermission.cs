@@ -1,5 +1,6 @@
 ﻿using System;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.user.classes.entities.security {
@@ -16,14 +17,24 @@ namespace softwrench.sw4.user.classes.entities.security {
 
 
         [Property]
-        public string Permission { get; set; }
-
-
-        [Property]
-        public string FieldKey{
+        public string Permission {
             get; set;
         }
 
 
+        [Property]
+        public string FieldKey {
+            get; set;
+        }
+
+
+        public void Merge(FieldPermission otherField) {
+            if (Permission.EqualsIc("fullcontrol")) {
+                //if we are on full control, let´s change to the other permission that will be more restrictive.
+                Permission = otherField.Permission;
+            } else if (Permission.EqualsIc("readonly")) {
+                Permission = otherField.Permission == "none" ? "none" : Permission;
+            }
+        }
     }
 }

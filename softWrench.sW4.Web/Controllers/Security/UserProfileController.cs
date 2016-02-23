@@ -53,8 +53,18 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         [HttpGet]
         public ApplicationPermissionResultDTO LoadApplicationPermissions(int profileId, string application) {
-            Validate.NotNull(application,"application");
+            Validate.NotNull(application, "application");
             Validate.NotNull(profileId, "profileId");
+
+            var hasCreationSchema = MetadataProvider.Application(application).HasCreationSchema;
+
+            if (profileId == -1) {
+                //new security group scenario
+                return new ApplicationPermissionResultDTO() {
+                    AppPermission =null,
+                    HasCreationSchema = hasCreationSchema
+                };
+            }
 
             var profile = _userProfileManager.FindById(profileId);
             if (profile == null) {
@@ -62,11 +72,11 @@ namespace softWrench.sW4.Web.Controllers.Security {
             }
             //force eager cache
             MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, application);
-            var loadApplicationPermissions = profile.ApplicationPermission.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
+            var loadApplicationPermissions = profile.ApplicationPermissions.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
 
             return new ApplicationPermissionResultDTO() {
                 AppPermission = loadApplicationPermissions,
-                HasCreationSchema = MetadataProvider.Application(application).HasCreationSchema
+                HasCreationSchema = hasCreationSchema
             };
         }
 
@@ -84,6 +94,17 @@ namespace softWrench.sW4.Web.Controllers.Security {
             var schema = app.Schema(new ApplicationMetadataSchemaKey(schemaId, SchemaMode.None, ClientPlatform.Web));
             return _userProfileManager.LoadAvailableActionsAsComposition(schema, pageNumber);
         }
+
+
+        [HttpPost]
+        public BlankApplicationResponse Save(UserProfile screenUserProfile) {
+            _userProfileManager.SaveUserProfile(screenUserProfile);
+
+            return new BlankApplicationResponse() {
+                SuccessMessage = "User Profile {0} successfully updated".Fmt(screenUserProfile.Name)
+            };
+        }
+
 
         public class ApplicationPermissionResultDTO {
 

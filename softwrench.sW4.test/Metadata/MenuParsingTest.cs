@@ -5,6 +5,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Util;
 using System.Diagnostics;
+using softWrench.sW4.Metadata.Menu;
 
 namespace softwrench.sW4.test.Metadata {
 
@@ -23,7 +24,8 @@ namespace softwrench.sW4.test.Metadata {
                 ApplicationConfiguration.TestclientName = clientName;
                 MetadataProvider.StubReset();
                 bool fromCache;
-                var menu = InMemoryUser.TestInstance("test").Menu(ClientPlatform.Web, out fromCache);
+                var user = InMemoryUser.TestInstance("test");
+                var menu = new MenuSecurityManager().Menu(user,ClientPlatform.Web, out fromCache);
                 Assert.IsNotNull(menu);
             }
 

@@ -119,7 +119,9 @@ namespace softWrench.sW4.Security.Services {
                 GridFilters = _gridFilterManager.LoadAllOfUser(dbUser.Id)
             };
             var userPreferences = UserPreferenceManager.FindUserPreferences(dbUser);
-            var inMemoryUser = new InMemoryUser(dbUser, profiles, gridPreferences, userPreferences, userTimezoneOffsetInt);
+            var mergedProfile = _userProfileManager.BuildMergedProfile(profiles);
+
+            var inMemoryUser = new InMemoryUser(dbUser, profiles, gridPreferences, userPreferences, userTimezoneOffsetInt, mergedProfile);
             if (Users.ContainsKey(inMemoryUser.Login)) {
                 Users.Remove(inMemoryUser.Login);
             }
@@ -239,7 +241,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
         //TODO: this could lead to concurrency problems
-        public static void ClearUserFromCache(String login = null, InMemoryUser userToPut = null) {
+        public static void ClearUserFromCache(string login = null, InMemoryUser userToPut = null) {
             //this means, an action that affects all the users, like updating a profile
             if (login == null) {
                 Users.Clear();

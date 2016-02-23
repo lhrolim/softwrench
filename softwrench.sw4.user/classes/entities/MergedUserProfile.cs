@@ -12,7 +12,9 @@ namespace softwrench.sw4.user.classes.entities
 {
     public class MergedUserProfile
     {
-        IList<ApplicationPermission> _permissions;
+        public IEnumerable<ApplicationPermission> Permissions {
+            get; set;
+        }
 
         public MergedUserProfile()
         {
@@ -26,7 +28,7 @@ namespace softwrench.sw4.user.classes.entities
             cp.Id = 1;
             List<FieldPermission> fps = new List<FieldPermission>();
             fps.Add(fp);
-            cp.FielsPermissions = new HashedSet<FieldPermission>(fps);
+            cp.FieldPermissions = new HashedSet<FieldPermission>(fps);
             ApplicationPermission ap = new ApplicationPermission();
             ap.ApplicationName = "servicerequest";
             ap.Id = 1;
@@ -37,15 +39,21 @@ namespace softwrench.sw4.user.classes.entities
             List<ContainerPermission> cps = new List<ContainerPermission>();
             cps.Add(cp);
             ap.ContainerPermissions = new HashedSet<ContainerPermission>(cps);
-            _permissions = new List<ApplicationPermission>();
-            _permissions.Add(ap);
+            var permissions = new List<ApplicationPermission>();
+            permissions.Add(ap);
+            Permissions = permissions;
+            Roles = new List<Role>();
+        }
+
+        public IEnumerable<Role> Roles {
+            get; set;
         }
 
         public ApplicationPermission GetPermissionByApplication(string applicationName) {
-            if (!_permissions.Any(p => p.ApplicationName.ToLower().EqualsIc(applicationName))) {
+            if (!Permissions.Any(p => p.ApplicationName.ToLower().EqualsIc(applicationName))) {
                 return null;
             }
-            var result = _permissions.Single(p => p.ApplicationName.ToLower() == applicationName.ToLower());
+            var result = Permissions.Single(p => p.ApplicationName.ToLower() == applicationName.ToLower());
             return result;
         }
 

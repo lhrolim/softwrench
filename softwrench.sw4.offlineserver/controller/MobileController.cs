@@ -19,6 +19,7 @@ using softwrench.sw4.offlineserver.services.util;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Offline;
+using softWrench.sW4.Metadata.Menu;
 
 namespace softwrench.sw4.offlineserver.controller {
 
@@ -43,14 +44,17 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly OffLineBatchService _offLineBatchService;
 
+        private MenuSecurityManager _menuManager;
+
         readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        public MobileController(SynchronizationManager syncManager, AppConfigurationProvider appConfigurationProvider, OffLineBatchService offLineBatchService) {
+        public MobileController(SynchronizationManager syncManager, AppConfigurationProvider appConfigurationProvider, OffLineBatchService offLineBatchService, MenuSecurityManager menuManager) {
             _syncManager = syncManager;
             _appConfigurationProvider = appConfigurationProvider;
             _offLineBatchService = offLineBatchService;
+            _menuManager = menuManager;
         }
 
         /// <summary>
@@ -72,7 +76,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
 
             bool fromCache;
-            var securedMenu = user.Menu(ClientPlatform.Mobile, out fromCache);
+            var securedMenu = _menuManager.Menu(user,ClientPlatform.Mobile, out fromCache);
 
             var response = new MobileMetadataDownloadResponseDefinition {
                 TopLevelMetadatasJson = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),

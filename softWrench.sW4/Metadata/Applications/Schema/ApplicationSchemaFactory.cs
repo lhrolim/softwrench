@@ -316,7 +316,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 return;
             }
             var isRetained = displayable != null && fieldsToRetain.Any(f => displayable.Role.EqualsIc(f));
-            if (permissions.Any(c => c.FielsPermissions.Any(f => displayable.Role.EqualsIc(f.FieldKey) && f.Permission.ToLower() == "none")))
+            if (permissions.Any(c => c.FieldPermissions.Any(f => displayable.Role.EqualsIc(f.FieldKey) && f.Permission.ToLower() == "none")))
             {
                 if (!isRetained)
                 {
@@ -324,7 +324,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 }
                 return;
             }
-            if (permissions.Any(c => c.FielsPermissions.Any(f => displayable.Role.EqualsIc(f.FieldKey) && f.Permission.ToLower() == "readonly")))
+            if (permissions.Any(c => c.FieldPermissions.Any(f => displayable.Role.EqualsIc(f.FieldKey) && f.Permission.ToLower() == "readonly")))
             {
                 displayable.ReadOnly = true;
             }

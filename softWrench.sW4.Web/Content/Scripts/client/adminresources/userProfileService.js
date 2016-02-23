@@ -71,7 +71,7 @@
                     pageNumber: 1
                 }
 
-                restService.getPromise("UserProfile", "LoadAvailableFields", queryParameters).then(function(httpResponse) {
+                restService.getPromise("UserProfile", "LoadAvailableFields", queryParameters).then(function (httpResponse) {
                     var compositionData = httpResponse.data.resultObject;
                     $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
                     mergeTransientIntoDatamap({ tab: tab });
@@ -85,7 +85,7 @@
             var dm = parameters.fields;
             //cleaning up data
             simpleLog.debug("resting tab");
-            dm["schema"] =  null;
+            dm["schema"] = null;
         }
 
 
@@ -158,8 +158,9 @@
                 return $q.when();
             }
 
+          
             var queryParameters = {
-                profileId: dm["id"],
+                profileId: dm["id"] ? dm["id"] : -1,
                 application: nextApplication
             };
 
@@ -227,7 +228,10 @@
                 simpleLog.debug("list of fields changed for tab {0}".format(parameters.parentdata["#selectedtab"]));
                 var compositionData = parameters.previousData;
                 if (compositionData && !!parameters.paginationApplied) {
+                    //first store old page
                     storeFromDmIntoTransient({ "#fieldPermissions_": compositionData });
+                    //now merge new page
+                    mergeTransientIntoDatamap({ "#fieldPermissions_": parameters.clonedCompositionData })
                 }
             }
         }
@@ -258,32 +262,55 @@
          * @returns updated transientData 
          */
         function storeFromDmIntoTransient(dispatcher) {
+            dispatcher = dispatcher || {};
 
             var dm = crudContextHolderService.rootDataMap();
             if (dm.fields) {
                 dm = dm.fields;
             }
 
+            var transientData = $rootScope["#transientprofiledata"];
+
             var application = dispatcher.application ? dispatcher.application : dm.application;
+            if (!application) {
+                //save method called on blank application
+                return transientData;
+            }
+
             var schema = dispatcher.schema ? dispatcher.schema : dm.schema;
             var tab = dispatcher.tab ? dispatcher.tab : dm["#selectedtab"];
             var isCompositionTab = dm["iscompositiontab"];
 
 
-            var transientData = $rootScope["#transientprofiledata"];
+
             var transientAppData = transientData[application];
             if (!transientAppData) {
                 //first time we´re changing to an app, no need to merge
-                transientAppData = {};
+                transientAppData = {
+                    applicationName: application
+                };
                 transientData[application] = transientAppData;
             }
             simpleLog.info("storing datamap into transiet data for app {0}".format(application));
 
+            function storeIfDiffers(transientPropName, propName, transientObj) {
+                transientObj = transientObj || transientAppData;
+
+                if (transientObj[transientPropName] !== dm[propName]) {
+                    transientObj[transientPropName] = dm[propName];
+                    transientObj["_#isDirty"] = true;
+                }
+
+            }
+
+
             //basic roles
-            transientAppData.allowCreation = dm["#appallowcreation"];
-            transientAppData.allowUpdate = dm["#appallowupdate"];
-            transientAppData.allowViewOnly = dm["#appallowviewonly"];
-            transientAppData.allowRemoval = dm["#appallowremoval"];
+
+            storeIfDiffers("allowCreation", "#appallowcreation");
+            storeIfDiffers("allowUpdate", "#appallowupdate");
+            storeIfDiffers("allowViewOnly", "#appallowviewonly");
+            storeIfDiffers("allowRemoval", "#appallowremoval");
+
 
 
             if (!schema) {
@@ -313,6 +340,7 @@
                         simpleLog.debug("removing action restriction {0} for application {1}".format(screenAction["#actionlabel"], application));
                         //if there was a previous action restriction, remove it
                         transientAppData.actionPermissions.splice(storedIdx, 1);
+                        transientAppData["_#isDirty"] = true;
                     }
                 } else if (storedIdx === -1) {
                     simpleLog.debug("adding new action restriction {0} for application {1}".format(screenAction["#actionlabel"], application));
@@ -320,6 +348,7 @@
                         schema: schema,
                         actionId: screenAction.actionid
                     });
+                    transientAppData["_#isDirty"] = true;
                 }
             });
 
@@ -384,6 +413,7 @@
                 });
 
                 if (hasAnyChange && containerIndex === -1) {
+                    transientAppData["_#isDirty"] = true;
                     transientAppData.containerPermissions.push(actualContainerPermission);
                 }
             }
@@ -410,24 +440,23 @@
                             allowViewOnly: compAllowViewOnly,
                             allowUpdate: compAllowUpdate,
                         });
+                        transientAppData["_#isDirty"] = true;
                     }
                 } else {
                     var currentCompositionEntry = transientAppData.compositionPermissions[cmpIndex];
                     if (allDefault) {
                         transientAppData.compositionPermissions.splice(cmpIndex, 1);
+                        transientAppData["_#isDirty"] = true;
                     } else {
-                        currentCompositionEntry.allowCreation = compAllowCreation;
-                        currentCompositionEntry.allowUpdate = compAllowUpdate;
-                        currentCompositionEntry.allowViewOnly = compAllowViewOnly
+
+                        storeIfDiffers("allowCreation", "#compallowcreation", currentCompositionEntry);
+                        storeIfDiffers("allowUpdate", "#compallowupdate", currentCompositionEntry);
+                        storeIfDiffers("allowViewOnly", "#compallowviewonly", currentCompositionEntry);
+                        storeIfDiffers("allowRemoval", "#compallowremoval", currentCompositionEntry);
                     }
                 }
                 //#endregion
             }
-
-
-
-
-
             return transientData;
         }
 
@@ -492,8 +521,8 @@
             //#endregion
 
             //#region field permission restore (tab or paginated dispatcher)
-            if (dispatcher.tab && transientAppData.containerPermissions) {
-                var container = transientAppData.containerPermissions.firstOrDefault(function(item) {
+            if ((dispatcher.tab || dispatcher["#fieldPermissions_"]) && transientAppData.containerPermissions) {
+                var container = transientAppData.containerPermissions.firstOrDefault(function (item) {
                     return item.schema === schema && item.containerKey === tab;
                 });
                 if (container) {
@@ -516,6 +545,38 @@
             return dm;
         }
 
+        function save() {
+            //last storal
+            storeFromDmIntoTransient();
+            var dm = crudContextHolderService.rootDataMap().fields;
+            var appPermissions = Object.keys($rootScope["#transientprofiledata"])
+                .map(function (key) {
+                    return $rootScope["#transientprofiledata"][key];
+                }).filter(function (ob) {
+                    return ob["_#isDirty"];
+                });
+
+            //TODO: add pagination support here
+            var selectedRoles = dm["#basicroles_"].filter(function (role) {
+                return role["_#selected"];
+            }).map(function (selectedRole) {
+                return { id: selectedRole.id, name:selectedRole.name };
+            });
+
+
+            var ob = {
+                id: dm["id"],
+                name: dm["name"],
+                description: dm["description"],
+                applicationPermissions: appPermissions,
+                roles: selectedRoles
+            }
+
+            restService.postPromise("UserProfile", "Save", null, ob);
+
+
+        }
+
 
         //#endregion
 
@@ -532,6 +593,7 @@
             mergeTransientIntoDatamap: mergeTransientIntoDatamap,
             onSchemaLoad: onSchemaLoad,
             onApplicationChange: onApplicationChange,
+            save: save,
             storeFromDmIntoTransient: storeFromDmIntoTransient,
             tabvaluechanged: tabvaluechanged
         };
