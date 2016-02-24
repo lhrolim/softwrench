@@ -188,8 +188,7 @@
 
         </schema>
 
-        <schema id="userselectlist" stereotype="list.selection.modal.filter" title="Users">
-
+        <schema id="userselectlist" stereotype="list.selection.modal" title="Users">
           <filters>
             <optionfilter attribute="maxuser_.active" allowblank="false" style="width:300px" eager="true">
               <f:option label="Active" value="1" />
@@ -208,11 +207,6 @@
             <renderer type="checkbox" />
           </field>
           <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>
-          <commandbars>
-            <commandgroup position="gridfilterbottom" platform="web">
-              <command id="apply" icon="fa-check" service="userProfileService" method="applyMultipleSave" label="Apply"/>
-            </commandgroup>
-          </commandbars>
         </schema>
       </schemas>
     </application>
