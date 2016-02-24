@@ -19,7 +19,7 @@
             return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, componentId, query);
         };
 
-        function testEmpty(label) {
+        function testEmptyExpression(label) {
             return "(!!" + label + " && " + label + " !== \'null\' && " + label + " !== \'undefined\')";
         }
 
@@ -31,8 +31,8 @@
 
             var label = "datamap." + fieldMetadata.labelFields[0];
 
-            return "(" + testEmpty(associationValueField) +  " ? " + associationValueField + " : \'\' ) + " + 
-                    "(" + testEmpty(label) + " ? (\' - \'  + "  + label + ") : \'\')";
+            return "(" + testEmptyExpression(associationValueField) +  " ? " + associationValueField + " : \'\' ) + " + 
+                    "(" + testEmptyExpression(label) + " ? (\' - \'  + "  + label + ") : \'\')";
         }
 
         $scope.getAssociationValueField = function (fieldMetadata) {
@@ -44,7 +44,7 @@
         }
 
         $scope.isFieldRequired = function (requiredExpression) {
-            if (requiredExpression != undefined) {
+            if (Boolean(requiredExpression)) {
                 return expressionService.evaluate(requiredExpression, $scope.datamap);
             }
             return requiredExpression;
