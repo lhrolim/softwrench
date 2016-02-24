@@ -109,7 +109,7 @@
 
         function beforeApplicationChange(parameters) {
             //before we change the application, let´s store its fresh data into the transientprofiledata object
-            if (!!parameters.oldValue) {
+            if (!!parameters.oldValue && !!parameters.newValue) {
                 simpleLog.debug("beforeAppChange:storing updated transient data for {0}".format(parameters.oldValue));
                 storeFromDmIntoTransient({
                     application: parameters.oldValue
@@ -572,8 +572,14 @@
                 roles: selectedRoles
             }
 
-            return restService.postPromise("UserProfile", "Save", null, ob).then(function(httpResponse) {
-                $rootScope["#transientprofiledata"] = {};
+            return restService.postPromise("UserProfile", "Save", null, ob).then(function (httpResponse) {
+                var resultObject = httpResponse.data.resultObject;
+                resultObject.forEach(function (resultDTO) {
+                    //updating so that id no longer null
+                    var app = resultDTO.appPermission;
+                    $rootScope["#transientprofiledata"][app.applicationName] = app;
+                    $rootScope["#transientprofiledata"][app.applicationName].hasCreationSchema = resultDTO.hasCreationSchema;
+                });
             });
 
 
@@ -607,8 +613,9 @@
                         allowViewOnly: modaldm.allowviewonly
                     }
 
-                    return restService.postPromise("UserProfile", "BatchUpdate", params,selectedApps).then(function(httpResponse) {
+                    return restService.postPromise("UserProfile", "BatchUpdate", params, selectedApps).then(function (httpResponse) {
                         $rootScope["#transientprofiledata"] = {};
+                        crudContextHolderService.rootDataMap()["fields"]["application"] = null;
                     });
 
 

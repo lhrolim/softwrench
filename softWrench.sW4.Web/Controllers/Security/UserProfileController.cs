@@ -101,12 +101,18 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
 
         [HttpPost]
-        public BlankApplicationResponse Save(UserProfile screenUserProfile) {
-            _userProfileManager.SaveUserProfile(screenUserProfile);
+        public IGenericResponseResult Save(UserProfile screenUserProfile) {
+            var profile = _userProfileManager.SaveUserProfile(screenUserProfile);
+            var listDto = new List<ApplicationPermissionResultDTO>();
+            foreach (var appPermission in profile.ApplicationPermissions) {
+                listDto.Add(new ApplicationPermissionResultDTO() {
+                    AppPermission = appPermission,
+                    HasCreationSchema = MetadataProvider.Application(appPermission.ApplicationName).HasCreationSchema
+                });
+            }
 
-            return new BlankApplicationResponse() {
-                SuccessMessage = "User Profile {0} successfully updated".Fmt(screenUserProfile.Name)
-            };
+
+            return new GenericResponseResult<IEnumerable<ApplicationPermissionResultDTO>>(listDto, "User Profile {0} successfully updated".Fmt(screenUserProfile.Name));
         }
 
 
@@ -130,7 +136,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
                         continue;
                     }
                     appPermission = new ApplicationPermission() {
-
+                        ApplicationName = application
                     };
                     SetBasicPermissions(allowCreation, allowUpdate, allowViewOnly, appPermission);
                     profile.ApplicationPermissions.Add(appPermission);

@@ -94,14 +94,23 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public UserProfile SaveUserProfile(UserProfile profile) {
+
+
             var isUpdate = profile.Id != null;
-            var sb = new StringBuilder();
-            if (sb.Length > 0) {
-                throw new InvalidOperationException(string.Format("Error saving constraints. Stack trace {0}", sb.ToString()));
+            if (profile.ApplicationPermissions != null) {
+                foreach (var permission in profile.ApplicationPermissions) {
+                    permission.Profile = profile;
+                }
+                _dao.BulkSave(profile.ApplicationPermissions);
             }
             profile = _dao.Save(profile);
-            if (isUpdate && ProfileCache.ContainsKey(profile.Id)) {
-                ProfileCache.Remove(profile.Id);
+            if (isUpdate) {
+                if (ProfileCache.ContainsKey(profile.Id)) {
+                    ProfileCache.Remove(profile.Id);
+                }
+                var storedProfile = _dao.EagerFindByPK<UserProfile>(typeof(UserProfile), profile.Id);
+                ProfileCache.Add(profile.Id, storedProfile);
+                return storedProfile;
             }
             ProfileCache.Add(profile.Id, profile);
             return profile;
@@ -138,7 +147,7 @@ namespace softWrench.sW4.Security.Services {
             compositionData.ResultList = new List<Dictionary<string, object>>();
             foreach (var field in fieldsToShow) {
                 var dict = new Dictionary<string, object>();
-                dict["#label"] = field.Label ?? field.Attribute;
+                dict["#label"] = string.IsNullOrEmpty(field.Label) ? field.Attribute : field.Attribute;
                 dict["fieldKey"] = field.Attribute;
                 //enabled by default
                 dict["permission"] = "fullcontrol";

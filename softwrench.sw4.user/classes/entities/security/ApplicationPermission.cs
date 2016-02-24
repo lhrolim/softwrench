@@ -58,6 +58,10 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
+        [JsonIgnore]
+        [ManyToOne(Column = "profile_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "all")]
+        public UserProfile Profile { get; set; }
+
 
         [Property]
         public bool AllowCreation {

@@ -46,7 +46,7 @@ namespace softwrench.sw4.user.classes.entities {
         }
 
 
-        [Set(0,  Lazy = CollectionLazy.False, Cascade = "all")]
+        [Set(0,  Lazy = CollectionLazy.False, Cascade = "none", Inverse = true)]
         [Key(1, Column = "profile_id")]
         [OneToMany(2, ClassType = typeof(ApplicationPermission))]
         [JsonConverter(typeof(IesiSetConverter<ApplicationPermission>))]

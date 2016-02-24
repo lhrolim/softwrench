@@ -27,11 +27,7 @@ namespace softwrench.sw4.user.classes.entities
         }
 
         public ApplicationPermission GetPermissionByApplication(string applicationName) {
-            if (!Permissions.Any(p => p.ApplicationName.ToLower().EqualsIc(applicationName))) {
-                return null;
-            }
-            var result = Permissions.Single(p => p.ApplicationName.ToLower() == applicationName.ToLower());
-            return result;
+            return Permissions.FirstOrDefault(p => p.ApplicationName.EqualsIc(applicationName));
         }
 
         public IEnumerable<ContainerPermission> GetPermissionBySchema(string applicationName, string schemaId) {
