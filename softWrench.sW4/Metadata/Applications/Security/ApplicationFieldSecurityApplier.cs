@@ -17,8 +17,9 @@ namespace softWrench.sW4.Metadata.Applications.Security {
 
         public static List<IApplicationDisplayable> OnApplySecurityPolicy(ApplicationSchemaDefinition schema,IEnumerable<Role> userRoles, string schemaFieldsToDisplay, MergedUserProfile profile) {
             var applicationPermission = profile.GetPermissionByApplication(schema.ApplicationName);
+
             if (schemaFieldsToDisplay == null) {
-                if (applicationPermission == null || applicationPermission.ContainerPermissions == null) {
+                if (applicationPermission == null || applicationPermission.ContainerPermissions == null || !applicationPermission.ContainerPermissions.Any(c => c.Schema.EqualsIc(schema.SchemaId))) {
                     //no restriction at all
                     return schema.Displayables;
                 }
@@ -36,7 +37,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             //                schema.Displayables);
 
             resultingFields.AddRange(GetAllowedFields(fieldsToRetain, schema.Displayables,
-                applicationPermission.ContainerPermissions, "main"));
+                applicationPermission.ContainerPermissions.Where(c=> c.Schema.EqualsIc(schema.SchemaId)), "main"));
 
             return resultingFields;
 
@@ -108,7 +109,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                 return true;
             }
             if (fieldPermission.Permission.EqualsIc("none")) {
-                return true;
+                return false;
             }
             if (fieldPermission.Permission.EqualsIc("readonly")) {
                 appDisplayable.IsReadOnly = true;
