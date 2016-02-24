@@ -148,6 +148,25 @@ namespace softWrench.sW4.Web.Controllers.Security {
             };
         }
 
+        [HttpPost]
+        public BlankApplicationResponse ApplyMultiple(int profileId, [FromBody]List<string> usernames) {
+            var newProfile = _userProfileManager.FindById(profileId);
+            var usersEnum = usernames as IList<string> ?? usernames.ToList();
+            foreach (var userString in usersEnum)
+            {
+                var user = UserManager.GetUserByUsername(userString);
+                var profile = user.Profiles.FirstOrDefault(p => p.Id.Equals(profileId));
+                if (profile != null) {
+                    continue;
+                }
+                user.Profiles.Add(newProfile);
+                UserManager.SaveUser(user);
+            }
+            return new BlankApplicationResponse() {
+                SuccessMessage = "{0} users successfully updated".Fmt(usersEnum.Count())
+            };
+        }
+
         private static void SetBasicPermissions(bool allowCreation, bool allowUpdate, bool allowViewOnly,
             ApplicationPermission appPermission) {
             appPermission.AllowCreation = allowCreation;

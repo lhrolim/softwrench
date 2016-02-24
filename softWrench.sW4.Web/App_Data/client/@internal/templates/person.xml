@@ -187,6 +187,33 @@
           </tab>
 
         </schema>
+
+        <schema id="userselectlist" stereotype="list.selection.modal.filter" title="Users">
+
+          <filters>
+            <optionfilter attribute="maxuser_.active" allowblank="false" style="width:300px" eager="true">
+              <f:option label="Active" value="1" />
+              <f:option label="Inactive" value="0" />
+            </optionfilter>
+          </filters>
+
+          <field attribute="personuid" hidden="true"/>
+          <field attribute="personid" label="Username"/>
+          <field attribute="firstname" label="First Name"/>
+          <field attribute="lastname" label="Last Name"/>
+          <field attribute="#isactive" label="Active (softWrench)" enableexpression="false" readonly="true">
+            <renderer type="checkbox"/>
+          </field>
+          <field attribute="maxuser_.active" label="Active (MAXIMO)" readonly="true" enableexpression="false">
+            <renderer type="checkbox" />
+          </field>
+          <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>
+          <commandbars>
+            <commandgroup position="gridfilterbottom" platform="web">
+              <command id="apply" icon="fa-check" service="userProfileService" method="applyMultipleSave" label="Apply"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
       </schemas>
     </application>
   </applications>

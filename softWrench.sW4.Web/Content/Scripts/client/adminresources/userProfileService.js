@@ -4,7 +4,7 @@
 
 
 
-    function userProfileService($q, $rootScope, $log, restService, contextService, crudContextHolderService, redirectService, alertService) {
+    function userProfileService($q, $rootScope, $log, restService, contextService, crudContextHolderService, redirectService, alertService, modalService) {
 
         var simpleLog = $log.get("userProfileService", ["profile"]);
 
@@ -616,6 +616,36 @@
             });
         }
 
+        function applyMultiple() {
+            var dm = crudContextHolderService.rootDataMap();
+            var profileId = dm.fields.id;
+            if (!profileId) {
+                alertService.alert("Please save the profile before using this action");
+                return;
+            }
+            redirectService.openAsModal("person", "userselectlist", { title: "Apply Profile to Users" });
+        }
+
+        function applyMultipleSave() {
+            var dm = crudContextHolderService.rootDataMap();
+            var profileId = dm.fields.id;
+            var selectedUsers = crudContextHolderService.getSelectionModel('#modal').selectionBuffer;
+            if (!selectedUsers || selectedUsers.length === 0) {
+                alertService.alert("please select at least one user to proceed");
+                return $q.reject();
+            }
+            var usernames = [];
+            for(var user in selectedUsers) {
+                usernames.push(user);
+            }
+            var params = {
+                profileId: profileId
+            }
+            return restService.postPromise("UserProfile", "applyMultiple", params, usernames).then(function (httpResponse) {
+                modalService.hide();
+            });
+        }
+
         //#endregion
 
         var hooks = {
@@ -637,10 +667,12 @@
             mergeTransientIntoDatamap: mergeTransientIntoDatamap,
             storeFromDmIntoTransient: storeFromDmIntoTransient,
             save: save,
+            applyMultipleSave: applyMultipleSave
         }
 
         var actions = {
-            batchUpdate: batchUpdate
+            batchUpdate: batchUpdate,
+            applyMultiple: applyMultiple
         }
 
         return angular.extend({}, hooks, api, actions);
@@ -648,6 +680,6 @@
     }
 
 
-    angular.module('sw_crudadmin').factory('userProfileService', ['$q', "$rootScope", "$log", 'restService', 'contextService', 'crudContextHolderService', 'redirectService', 'alertService', userProfileService]);
+    angular.module('sw_crudadmin').factory('userProfileService', ['$q', "$rootScope", "$log", 'restService', 'contextService', 'crudContextHolderService', 'redirectService', 'alertService', 'modalService', userProfileService]);
 
 })(angular);
