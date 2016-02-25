@@ -256,7 +256,7 @@ namespace softWrench.sW4.Metadata.Security {
         //used for security mech
         public MergedUserProfile MergedUserProfile {
             get {
-                return _mergedUserProfile;
+                return _mergedUserProfile ?? new MergedUserProfile();
             }
         }
 
@@ -273,12 +273,6 @@ namespace softWrench.sW4.Metadata.Security {
         public ICollection<UserProfile> Profiles {
             get {
                 return _profiles;
-            }
-        }
-
-        public MergedUserProfile Profile {
-            get {
-                return _mergedUserProfile;
             }
         }
 

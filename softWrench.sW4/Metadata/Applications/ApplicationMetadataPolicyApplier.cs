@@ -31,7 +31,7 @@ namespace softWrench.sW4.Metadata.Applications {
         private ApplicationMetadata ApplyImpl() {
             var schema = _application
                 .SchemaForPlatform(_schemaKey);
-            var securedSchema = schema.ApplyPolicy(_user.Roles, _platform,_schemaFieldsToDisplay, _user.Profile);
+            var securedSchema = schema.ApplyPolicy(_user.Roles, _platform,_schemaFieldsToDisplay, _user.MergedUserProfile);
 
             return ApplicationMetadata.CloneSecuring(_application, securedSchema);
 
