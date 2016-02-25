@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Web.Security;
+using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
@@ -37,9 +38,9 @@ namespace softWrench.sW4.Security.Services {
 
         private static readonly DataConstraintValidator ConstraintValidator = new DataConstraintValidator();
 
-        private readonly SWDBHibernateDAO _dao;
+        private readonly ISWDBHibernateDAO _dao;
 
-        public UserProfileManager(SWDBHibernateDAO dao) {
+        public UserProfileManager(ISWDBHibernateDAO dao) {
             _dao = dao;
         }
 
@@ -108,7 +109,7 @@ namespace softWrench.sW4.Security.Services {
                 if (ProfileCache.ContainsKey(profile.Id)) {
                     ProfileCache.Remove(profile.Id);
                 }
-                var storedProfile = _dao.EagerFindByPK<UserProfile>(typeof(UserProfile), profile.Id);
+                var storedProfile = ((SWDBHibernateDAO)_dao).EagerFindByPK<UserProfile>(typeof(UserProfile), profile.Id);
                 ProfileCache.Add(profile.Id, storedProfile);
                 return storedProfile;
             }
