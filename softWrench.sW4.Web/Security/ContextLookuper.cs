@@ -157,7 +157,7 @@ namespace softWrench.sW4.Web.Security {
             var uri = request.Url;
             if (!MemoryContext.ContainsKey("httpcontext"))
             {
-                string uriProperty = MetadataProvider.GlobalProperty("iiscontextpath ");
+                string uriProperty = MetadataProvider.GlobalProperty("iiscontextpath");
                 if (!uriProperty.IsNullOrWhiteSpace()) {
                     uri = new Uri(uriProperty);
                 }
