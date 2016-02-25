@@ -77,6 +77,7 @@
                     mergeTransientIntoDatamap({ tab: tab });
                 });
             } else {
+                dm["#compallowupdate"] = dm["#compallowcreation"] = dm["#compallowviewonly"] = true;
                 mergeTransientIntoDatamap({ tab: tab });
             }
         }
@@ -298,7 +299,7 @@
 
                 if (transientObj[transientPropName] !== dm[propName]) {
                     transientObj[transientPropName] = dm[propName];
-                    transientObj["_#isDirty"] = true;
+                    transientAppData["_#isDirty"] = true;
                 }
 
             }
@@ -425,7 +426,7 @@
                 var compAllowUpdate = dm["#compallowupdate"];
                 //                var compAllowRemoval = dm["#compallowremoval"];
 
-                var allDefault = compAllowCreation === compAllowViewOnly === compAllowUpdate === true;
+                var allDefault = compAllowCreation ===true && compAllowViewOnly ===true &&  compAllowUpdate === true;
                 transientAppData.compositionPermissions = transientAppData.compositionPermissions || [];
                 var cmpIndex = transientAppData.compositionPermissions.findIndex(function (item) {
                     return item.compositionKey === tab;
@@ -445,10 +446,9 @@
                 } else {
                     var currentCompositionEntry = transientAppData.compositionPermissions[cmpIndex];
                     if (allDefault) {
-                        transientAppData.compositionPermissions.splice(cmpIndex, 1);
                         transientAppData["_#isDirty"] = true;
+                        transientAppData.compositionPermissions.splice(cmpIndex, 1);
                     } else {
-
                         storeIfDiffers("allowCreation", "#compallowcreation", currentCompositionEntry);
                         storeIfDiffers("allowUpdate", "#compallowupdate", currentCompositionEntry);
                         storeIfDiffers("allowViewOnly", "#compallowviewonly", currentCompositionEntry);
@@ -504,18 +504,6 @@
                             dm["#actionPermissions_"][idx]["_#selected"] = false;
                         }
                     });
-
-                if (dm["iscompositiontab"] === true && tab) {
-                    var cmpData = transientAppData.compositionPermissions.firstOrDefault(function (item) {
-                        return item.schema === schema && item.compositionKey === tab;
-                    });
-                    if (cmpData) {
-                        dm["#compallowcreation"] = cmpData.allowCreation;
-                        dm["#compallowupdate"] = cmpData.allowUpdate;
-                        dm["#compallowremoval"] = cmpData.allowRemoval;
-                        dm["#compallowviewonly"] = cmpData.allowViewOnly;
-                    }
-                }
             }
 
             //#endregion
@@ -538,6 +526,22 @@
                     });
                 }
             }
+
+            if (dispatcher.tab && transientAppData.compositionPermissions) {
+                if (dm["iscompositiontab"] === true && tab) {
+                    var cmpData = transientAppData.compositionPermissions.firstOrDefault(function (item) {
+                        return item.schema === schema && item.compositionKey === tab;
+                    });
+                    if (cmpData) {
+                        dm["#compallowcreation"] = cmpData.allowCreation;
+                        dm["#compallowupdate"] = cmpData.allowUpdate;
+                        dm["#compallowremoval"] = cmpData.allowRemoval;
+                        dm["#compallowviewonly"] = cmpData.allowViewOnly;
+                    }
+                }
+            }
+
+
             //#endregion
 
 

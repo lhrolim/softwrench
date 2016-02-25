@@ -189,7 +189,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public virtual ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
+            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema,user);
             DataMap dataMap;
             if (request.IsEditionRequest) {
                 dataMap = (DataMap)Engine().FindById(entityMetadata, id, request.UserIdSitetuple);

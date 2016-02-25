@@ -125,7 +125,7 @@
         var updatedData = userProfileService.storeFromDmIntoTransient(dispatcher);
 
         expect(updatedData).toBe(rootScope[txProp]);
-        
+
 
         var mergedData = updatedData["asset"];
         expect(mergedData["_#isDirty"]).toBe(true);
@@ -257,7 +257,7 @@
     }));
 
 
-    it("Test Restore transient into datamap schema changed --> restore actions and comp flags", (function () {
+    it("Test Restore transient into datamap schema changed --> restore actions", (function () {
 
         rootScope[txProp] = {
             "asset": angular.copy(assetObj)
@@ -324,6 +324,65 @@
         //#endregion
 
 
+        //        expect(updatedData["#compallowcreation"]).toBe(true);
+        //        expect(updatedData["#compallowupdate"]).toBe(true);
+        //        expect(updatedData["#compallowremoval"]).toBe(false);
+
+
+    }));
+
+
+    it("Test Restore transient into datamap tab changed --> restore composition flags", (function () {
+
+        rootScope[txProp] = {
+            "asset": angular.copy(assetObj)
+        };
+
+        rootScope[txProp].asset.allowCreation = false;
+
+
+        //simulating a change to the detail schema
+        var screenDatamap = {
+            application: "asset",
+            "#appallowcreation": true,
+            "#appallowupdate": true,
+            "#appallowviewonly": true,
+            "#appallowremoval": true,
+            "schema": "detail",
+            "#selectedtab": "subassembly",
+            iscompositiontab: true,
+            "#actionPermissions_": [
+              {
+                  "actionid": "xxx",
+                  "_#selected": true
+              },
+
+              {
+                  "actionid": "yyy",
+                  "_#selected": true
+              },
+
+              {
+                  "actionid": "zzz",
+                  "_#selected": true
+              },
+
+            ],
+            "#fieldPermissions_": [],
+        }
+
+        crudContextHolderService.rootDataMap(null, screenDatamap);
+
+
+        var dispatcher = {
+            tab: "subassembly",
+        }
+
+        var updatedData = userProfileService.mergeTransientIntoDatamap(dispatcher);
+
+        expect(updatedData).toBe(crudContextHolderService.rootDataMap());
+
+        //this action needs to be restored from transient data
         expect(updatedData["#compallowcreation"]).toBe(true);
         expect(updatedData["#compallowupdate"]).toBe(true);
         expect(updatedData["#compallowremoval"]).toBe(false);
@@ -332,7 +391,7 @@
     }));
 
 
-    it("Test Restore transient into datamap tab changed --> restore fields", (function () {
+    it("Test Restore transient into datamap tab changed to main --> restore fields", (function () {
 
         rootScope[txProp] = {
             "asset": angular.copy(assetObj)

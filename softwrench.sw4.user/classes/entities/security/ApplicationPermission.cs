@@ -42,7 +42,7 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
-        [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
+        [Set(0, Lazy = CollectionLazy.False, Cascade = "all-delete-orphan")]
         [Key(1, Column = "app_id")]
         [OneToMany(2, ClassType = typeof(CompositionPermission))]
         [JsonConverter(typeof(IesiSetConverter<CompositionPermission>))]
@@ -50,7 +50,7 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
-        [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
+        [Set(0, Lazy = CollectionLazy.False, Cascade = "all-delete-orphan")]
         [Key(1, Column = "app_id")]
         [OneToMany(2, ClassType = typeof(ActionPermission))]
         [JsonConverter(typeof(IesiSetConverter<ActionPermission>))]

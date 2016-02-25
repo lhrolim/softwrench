@@ -60,6 +60,12 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
+        public bool HasNoPermission {
+            get {
+                return !AllowCreation && !AllowUpdate && !AllowViewOnly;
+            }
+        }
+
 
         public void Merge(CompositionPermission other) {
             AllowCreation = AllowCreation && other.AllowCreation;

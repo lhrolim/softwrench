@@ -5,10 +5,11 @@ using Newtonsoft.Json.Converters;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using System.Collections.Generic;
 using System.ComponentModel;
+using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions {
-    public class ApplicationCompositionSchema {
+    public class ApplicationCompositionSchema : IPCLCloneable {
 
         private string _detailSchema;
         private bool _inline;
@@ -16,26 +17,37 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         protected HashSet<string> _dependantFields = new HashSet<string>();
 
         [DefaultValue("detail")]
-        public string PrintSchema { get; set; }
+        public string PrintSchema {
+            get; set;
+        }
 
-        public ApplicationCompositionSchema() { }
+        public ApplicationCompositionSchema() {
+        }
 
-        public CompositionSchemas Schemas { get; set; }
+        public CompositionSchemas Schemas {
+            get; set;
+        }
 
         public IDictionary<string, ApplicationEvent> Events {
-            get { return _events; }
-            set { _events = value; }
+            get {
+                return _events;
+            }
+            set {
+                _events = value;
+            }
         }
-     
+
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
         private ISet<ApplicationEvent> _eventsSet;
         [JsonConverter(typeof(StringEnumConverter))]
         [DefaultValue(FetchType.Lazy)]
-        public FetchType FetchType { get; set;}
+        public FetchType FetchType {
+            get; set;
+        }
 
-        public ApplicationCompositionSchema(bool inline, string detailSchema, SchemaMode renderMode, CompositionFieldRenderer renderer, 
-            string printSchema, string dependantfields,FetchType fetchType, ISet<ApplicationEvent> events = null ) {
+        public ApplicationCompositionSchema(bool inline, string detailSchema, SchemaMode renderMode, CompositionFieldRenderer renderer,
+            string printSchema, string dependantfields, FetchType fetchType, ISet<ApplicationEvent> events = null) {
             _inline = inline;
             Renderer = renderer;
             _detailSchema = detailSchema;
@@ -52,37 +64,66 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
                     _dependantFields.Add(field);
                 }
             }
+
+            OriginalDependantfields = dependantfields;
+            OriginalEvents = events;
+        }
+
+        protected ISet<ApplicationEvent> OriginalEvents {
+            get; set;
+        }
+
+        public string OriginalDependantfields {
+            get; set;
         }
 
         [DefaultValue("detail")]
         public string DetailSchema {
-            get { return _detailSchema; }
-            set { _detailSchema = value; }
-        }        
+            get {
+                return _detailSchema;
+            }
+            set {
+                _detailSchema = value;
+            }
+        }
 
 
         public bool INLINE {
-            get { return _inline; }
-            set { _inline = value; }
+            get {
+                return _inline;
+            }
+            set {
+                _inline = value;
+            }
         }
 
-        public CompositionFieldRenderer Renderer { get; set; }
+        public CompositionFieldRenderer Renderer {
+            get; set;
+        }
 
         public IDictionary<string, object> RendererParameters {
-            get { return Renderer == null ? new Dictionary<string, object>() : Renderer.ParametersAsDictionary(); }
+            get {
+                return Renderer == null ? new Dictionary<string, object>() : Renderer.ParametersAsDictionary();
+            }
         }
         [DefaultValue(SchemaMode.None)]
-        public SchemaMode RenderMode { get; set; }
+        public SchemaMode RenderMode {
+            get; set;
+        }
 
 
         public HashSet<string> DependantFields {
-            get { return _dependantFields; }
+            get {
+                return _dependantFields;
+            }
         }
 
         public override string ToString() {
             return string.Format("DetailSchema: {0}, INLINE: {1}", _detailSchema, _inline);
         }
 
-
+        public virtual object Clone() {
+            return new ApplicationCompositionSchema(INLINE, DetailSchema, RenderMode, Renderer, PrintSchema, OriginalDependantfields, FetchType, OriginalEvents);
+        }
     }
 }

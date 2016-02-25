@@ -60,6 +60,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
             Validate.NotNull(application, "application");
             Validate.NotNull(profileId, "profileId");
 
+            //force eager cache
+            MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, application);
             var hasCreationSchema = MetadataProvider.Application(application).HasCreationSchema;
 
             if (profileId == -1) {
@@ -74,8 +76,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             if (profile == null) {
                 throw new InvalidOperationException("informed profile does not exist");
             }
-            //force eager cache
-            MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, application);
+          
             var loadApplicationPermissions = profile.ApplicationPermissions.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
 
             return new ApplicationPermissionResultDTO() {
