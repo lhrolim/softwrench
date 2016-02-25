@@ -623,7 +623,7 @@
                 alertService.alert("Please save the profile before using this action");
                 return;
             }
-            redirectService.openAsModal("person", "userselectlist", {
+            return redirectService.openAsModal("person", "userselectlist", {
                 title: "Apply Profile to Users",
                 savefn: function() {
                     var dm = crudContextHolderService.rootDataMap();
@@ -640,9 +640,7 @@
                     var params = {
                         profileId: profileId
                     }
-                    return restService.postPromise("UserProfile", "applyMultiple", params, usernames).then(function (httpResponse) {
-                        modalService.hide();
-                    });
+                    return restService.postPromise("UserProfile", "applyMultiple", params, usernames);
                 }
             });
         }
