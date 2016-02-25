@@ -549,7 +549,10 @@
 
                             $scope.datamap = responseDataMap;
                         }
-                        if (data.id && $scope.datamap.fields) {
+                        if (data.id && $scope.datamap.fields &&
+                            /* making sure not to update when it's not creation */
+                            (!$scope.datamap.fields.hasOwnProperty($scope.schema.idFieldName) || !$scope.datamap.fields[$scope.schema.idFieldName])
+                            ) {
                             //updating the id, useful when it´s a creation and we need to update value return from the server side
                             $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
                         }
@@ -569,7 +572,6 @@
                         }
                     });
                 };
-                
                 
 
                 function init(self) {

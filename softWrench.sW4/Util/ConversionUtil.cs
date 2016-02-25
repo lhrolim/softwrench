@@ -58,8 +58,8 @@ namespace softWrench.sW4.Util {
                 return null;
             }
 
-            int rowstamp;
-            if (int.TryParse(stValue, out rowstamp)) {
+            long rowstamp;
+            if (Int64.TryParse(stValue, out rowstamp)) {
                 //TODO: change the whole rowstamp chain here, that´s being coverted from maximo side
                 return null;
             }

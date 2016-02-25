@@ -3,7 +3,7 @@
 
     
 
-    function detailService($log, $q, $timeout, $rootScope, associationService, compositionService, fieldService, schemaService, contextService) {
+    function detailService($log, $q, $timeout, $rootScope, associationService, compositionService, fieldService, schemaService, contextService, crudContextHolderService) {
 
         function isEditDetail(schema, datamap) {
             return fieldService.getId(datamap, schema) != undefined;
@@ -57,15 +57,17 @@
         }
 
         function fetchRelationshipData(scope, result) {
-
-
+            crudContextHolderService.clearDetailDataResolved();
             var associationPromise = handleAssociations(scope, result);
             var compositionPromise = handleCompositions(scope, result);
-            $q.all([associationPromise, compositionPromise]).then(function (results) {
-                //ready to listen for dirty watchers
-                $log.get("detailService#fetchRelationshipData").info("associations and compositions fetched");
-                scope.$broadcast("sw.crud.relationship.serverresolved");
-            });
+            return $q.all([associationPromise, compositionPromise])
+                .then(function (results) {
+                    //ready to listen for dirty watchers
+                    $log.get("detailService#fetchRelationshipData").info("associations and compositions fetched");
+                })
+                .finally(function () {
+                    crudContextHolderService.setDetailDataResolved();
+                });
         };
 
         var api = {
@@ -78,6 +80,6 @@
 
     angular.module("sw_layout")
         .factory("detailService",
-            ["$log", "$q", "$timeout", "$rootScope", "associationService", "compositionService", "fieldService", "schemaService", "contextService", detailService]);
+            ["$log", "$q", "$timeout", "$rootScope", "associationService", "compositionService", "fieldService", "schemaService", "contextService", "crudContextHolderService", detailService]);
 
 })(angular);

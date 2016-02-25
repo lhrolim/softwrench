@@ -18,6 +18,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
 
         private readonly MaximoHibernateDAO _dao;
 
+        //TODO: Review wo status it's possible the right way is it to be on INPRG, APPR, WOEN, ENRV, HOLD or WAPPR  status.
         private const string BaseBatchLocationQuery = "select location,wonum from workorder where status not in('CLOSED','COMPLETED') and ({0})";
 
         private const string BaseSingleLocationProjectionQuery = "select wonum,description,status from workorder where ";

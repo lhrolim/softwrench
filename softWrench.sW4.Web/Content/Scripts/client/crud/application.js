@@ -89,6 +89,8 @@ function applicationController($scope, $http, $log, $timeout,
         if (crudContextHolderService.getDirty()) {
             alertService.confirmCancel(null, null, function () {
                 $scope.renderView(applicationName, schemaId, mode, title, parameters);
+                crudContextHolderService.clearDirty();
+                crudContextHolderService.clearDetailDataResolved();
                 $scope.$digest();
             }, msg, function () { return; });
         }
@@ -363,6 +365,8 @@ function applicationController($scope, $http, $log, $timeout,
         if (crudContextHolderService.getDirty()) {
             alertService.confirmCancel(null, null, function () {
                 $scope.toListSchema(data, schema);
+                crudContextHolderService.clearDirty();
+                crudContextHolderService.clearDetailDataResolved();
                 $scope.$digest();
             }, msg, function () { return; });
         }

@@ -343,6 +343,8 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                 if (crudContextHolderService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
                         menuService.goToApplication(leaf, null);
+                        crudContextHolderService.clearDirty();
+                        crudContextHolderService.clearDetailDataResolved();
                         $scope.$digest();
                     }, msg, function () { return; });
                 } else {
@@ -360,6 +362,8 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
                 if (crudContextHolderService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
                         menuService.doAction(leaf, null);
+                        crudContextHolderService.clearDirty();
+                        crudContextHolderService.clearDetailDataResolved();
                         $scope.$digest();
                     }, msg, function () { return; });
                 } else {

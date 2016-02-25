@@ -178,6 +178,8 @@ app.directive('menuItem', function (contextService) {
                 if (crudContextHolderService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
                         menuService.goToApplication(leaf, target);
+                        crudContextHolderService.clearDirty();
+                        crudContextHolderService.clearDetailDataResolved();
                         $scope.$digest();
                     }, msg, function () { return; });
                 }
@@ -195,6 +197,8 @@ app.directive('menuItem', function (contextService) {
                 if (crudContextHolderService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
                         menuService.doAction(leaf, target);
+                        crudContextHolderService.clearDirty();
+                        crudContextHolderService.clearDetailDataResolved();
                         $scope.$digest();
                     }, msg, function () { return; });
                 }
@@ -235,6 +239,8 @@ app.directive('menuItem', function (contextService) {
                     if (crudContextHolderService.getDirty()) {
                         alertService.confirmCancel(null, null, function () {
                             menuService.doAction(container, target);
+                            crudContextHolderService.clearDirty();
+                            crudContextHolderService.clearDetailDataResolved();
                             $scope.$digest();
                         }, msg, function () { return; });
                     }
