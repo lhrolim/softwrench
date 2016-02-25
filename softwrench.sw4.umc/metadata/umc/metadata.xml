@@ -47,6 +47,18 @@
         </schema>
       </schemas>
     </application>
+
+    <application name="labtrans" entity="labtrans" title="Labor">
+      <schemas>
+        <schema id="detail" redeclaring="false">
+          <customization position="transtype">
+            <field hidden="true" attribute="transtype" defaultexpression="71"/>
+          </customization>
+        </schema>
+        
+      </schemas>
+    </application>
+    
   </applications>
 
 </metadata>
