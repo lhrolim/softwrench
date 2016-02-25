@@ -15,7 +15,7 @@
   <applications>
     <application name="item" title="Item" entity="item" id="00000000-0000-0000-0000-000000000010">
       <properties>
-        <property key="mobile.userInteractionEnabled" value="false"/>
+        <!--<property key="mobile.userInteractionEnabled" value="false"/>-->
         <property key="mobile.fetchlimit" value="300"/>
       </properties>
       <schemas>

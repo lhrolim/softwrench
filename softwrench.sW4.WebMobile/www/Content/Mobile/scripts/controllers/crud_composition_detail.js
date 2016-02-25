@@ -20,11 +20,11 @@
         }
 
         $scope.getAssociationLabelField = function (fieldMetadata) {
-            return 'datamap.' + fieldMetadata.labelFields[0];
+            return offlineAssociationService.fieldLabelExpression(fieldMetadata);
         }
 
         $scope.getAssociationValueField = function (fieldMetadata) {
-            return 'datamap.' + fieldMetadata.valueField;
+            return offlineAssociationService.fieldValueExpression(fieldMetadata);
         }
 
         $scope.visibleFields = function () {

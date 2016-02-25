@@ -8,6 +8,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Util;
 
 namespace softWrench.sW4.Metadata {
@@ -106,6 +107,7 @@ namespace softWrench.sW4.Metadata {
 
             return result;
         }
-
+        
     }
+    
 }

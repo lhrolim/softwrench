@@ -19,24 +19,12 @@
             return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, componentId, query);
         };
 
-        function testEmptyExpression(label) {
-            return "(!!" + label + " && " + label + " !== \'null\' && " + label + " !== \'undefined\')";
-        }
-
         $scope.getAssociationLabelField = function (fieldMetadata) {
-            var associationValueField = this.getAssociationValueField(fieldMetadata);
-            if ("true" === fieldMetadata.hideDescription) {
-                return associationValueField;
-            }
-
-            var label = "datamap." + fieldMetadata.labelFields[0];
-
-            return "(" + testEmptyExpression(associationValueField) +  " ? " + associationValueField + " : \'\' ) + " + 
-                    "(" + testEmptyExpression(label) + " ? (\' - \'  + "  + label + ") : \'\')";
+            return offlineAssociationService.fieldLabelExpression(fieldMetadata);
         }
 
         $scope.getAssociationValueField = function (fieldMetadata) {
-            return 'datamap.' + fieldMetadata.valueField;
+            return offlineAssociationService.fieldValueExpression(fieldMetadata);
         }
 
         $scope.isFieldHidden = function (fieldMetadata) {

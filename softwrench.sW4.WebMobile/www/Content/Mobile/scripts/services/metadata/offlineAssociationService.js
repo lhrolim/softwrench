@@ -1,11 +1,31 @@
-﻿(function () {
+﻿(function (angular) {
     "use strict";
 
 mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", function (swdbDAO, fieldService) {
 
+    function testEmptyExpression(label) {
+        return "(!!" + label + " && " + label + " !== \'null\' && " + label + " !== \'undefined\')";
+    }
+
     return {
 
-        filterPromise: function (parentSchema,parentdatamap, associationName, filterText) {
+        fieldValueExpression: function(fieldMetadata) {
+            return "datamap." + fieldMetadata.valueField;
+        },
+
+        fieldLabelExpression: function(fieldMetadata) {
+            var associationValueField = this.fieldValueExpression(fieldMetadata);
+            if ("true" === fieldMetadata.hideDescription) {
+                return associationValueField;
+            }
+
+            var label = "datamap." + fieldMetadata.labelFields[0];
+
+            return "(" + testEmptyExpression(associationValueField) + " ? " + associationValueField + " : \'\' ) + " +
+                    "(" + testEmptyExpression(label) + " ? (\' - \'  + " + label + ") : \'\')";
+        },
+
+        filterPromise: function (parentSchema, parentdatamap, associationName, filterText) {
             var displayable = fieldService.getDisplayablesByAssociationKey(parentSchema, associationName)[0];
             
 
@@ -20,12 +40,10 @@ mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", 
             if (!nullOrEmpty(filterText)) {
                 baseQuery += " and datamap like '%{0}%' ".format(filterText);
             }
-            var entityDeclarationAttributes = displayable.entityAssociation.attributes;
-            
-            for (var i = 0; i < entityDeclarationAttributes.length; i++) {
-                var attribute = entityDeclarationAttributes[i];
+
+            angular.forEach(displayable.entityAssociation.attributes, function (attribute) {
                 if (attribute.primary) {
-                    continue;
+                    return;
                 }
                 var allowsNull = false;
                 var fromValue;
@@ -40,14 +58,14 @@ mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", 
                 if (allowsNull) {
                     baseQuery += ' and ( datamap like \'%"{0}":"{1}"%\' or datamap like \'%"{0}":null%\' )'.format(attribute.to, fromValue);
                 } else {
-                    baseQuery += ' and datamap like \'%"{0}":"{1}"%\''.format(attribute.to, fromValue);
+                    baseQuery += !!fromValue ? ' and datamap like \'%"{0}":"{1}"%\''.format(attribute.to, fromValue) : "";
                 }
-                
-            }
+            });
 
-            return swdbDAO.findByQuery("AssociationData", baseQuery,{projectionFields:["remoteId","datamap"]});
+            return swdbDAO.findByQuery("AssociationData", baseQuery, { projectionFields: ["remoteId", "datamap"] });
         }
 
     }
 }]);
-})();
+
+})(angular);
