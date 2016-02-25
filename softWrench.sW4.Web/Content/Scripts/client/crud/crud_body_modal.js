@@ -42,7 +42,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
         searchService, tabsService,
         fieldService, commandService, i18NService,
         submitService, redirectService,
-        associationService) {
+        associationService, gridSelectionService) {
         "ngInject";
 
         $scope.$name = "crudbodymodal";
@@ -75,6 +75,10 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
         $scope.$on('sw.modal.show', function(event, modaldata) {
             $scope.showModal(modaldata);
             $scope.modalshown = true;
+        });
+
+        $scope.$on("sw.crud.list.filter.modal.clear", function(event, args) {
+            gridSelectionService.clearSelection(null, null, modalService.panelid);
         });
 
         $scope.showModal = function(modaldata) {
@@ -165,6 +169,6 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
     return directive;
 }
 
-angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', crudBodyModal]);
+angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', 'gridSelectionService', crudBodyModal]);
 
 })(angular);
