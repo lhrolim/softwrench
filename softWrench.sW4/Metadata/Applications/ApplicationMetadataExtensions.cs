@@ -45,8 +45,9 @@ namespace softWrench.sW4.Metadata.Applications {
                 }
                 if (schemaId.Equals(ApplicationMetadataConstants.SyncSchema)) {
                     //using list for now
-                    var instance = application.SchemaForPlatform(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List));
-                    //                    var instance = ApplicationAssociationSchemaSyncFactory.GetInstance(application);
+                    var instance = application.SchemaForPlatform(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List)) ??
+                                   application.SchemaForPlatform(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.Detail));
+                    //  var instance = ApplicationAssociationSchemaSyncFactory.GetInstance(application);
                     application.Schemas().Add(metadataSchemaKey, instance);
                     return instance;
                 }

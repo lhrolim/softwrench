@@ -43,7 +43,7 @@
           <field attribute="transdate" label="Created Date"/>
         </list>
 
-        <detail platform="web">
+        <detail>
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>

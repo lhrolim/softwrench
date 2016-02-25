@@ -76,9 +76,7 @@ namespace softWrench.sW4.Metadata {
                             lookupTable.Add(association.ApplicationTo);
                             return new Tuple<string, string>(association.EntityAssociation.To, association.ApplicationTo);
                         });
-
                     names.AddRange(compositionAssociations);
-
                 }
             }
 
