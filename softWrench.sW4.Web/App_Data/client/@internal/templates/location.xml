@@ -78,6 +78,9 @@
           <field attribute="status" label="Status"/>
           <field attribute="siteid" label="Site"/>
           <field attribute="orgid" hidden="true"/>
+          <field attribute="workorders" label="Workorders">
+            <renderer type="icon" params="width=3%;expression={'#default':'fa-wrench','0':''};"/>
+          </field>
           <!--Child Locations-->
           <!--Open Work Orders-->
         </list>

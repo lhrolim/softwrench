@@ -847,6 +847,7 @@
         <attribute name="plusclploc" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="saddresscode" type="varchar" required="false" />
+        <attribute name="workorders" type="int" query="(select count(*) from workorder where status not in ('CAN', 'CLOSE', 'COMP') and assetnum = !@assetnum and siteid = !@siteid)"/>
       </attributes>
       <relationships>
         <relationship to="AssetUserCust" qualifier="primaryuser">
@@ -1097,6 +1098,7 @@
         <attribute name="billtoaddresscode" type="varchar" required="false" />
         <attribute name="shiptoaddresscode" type="varchar" required="false" />
         <attribute name="serviceaddresscode" type="varchar" required="false" />
+        <attribute name="workorders" type="int" query="(select count(*) from workorder where status not in ('CAN', 'CLOSE', 'COMP') and location = !@location and siteid = !@siteid)"/>
       </attributes>
       <relationships>
         <relationship to="address" qualifier="shipto">
