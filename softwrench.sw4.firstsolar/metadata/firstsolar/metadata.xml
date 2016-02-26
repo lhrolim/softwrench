@@ -38,6 +38,11 @@
         </list>
 
         <schema id="adetail" redeclaring="false" stereotype="detail">
+
+          <properties>
+            <property key="attachments.skiprelatedattachments" value="true"/>
+          </properties>
+          
           <customization position="location">
             <section orientation="horizontal">
               <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" requiredexpression="true">

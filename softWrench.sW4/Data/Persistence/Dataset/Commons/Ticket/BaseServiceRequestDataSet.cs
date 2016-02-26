@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Composition;
@@ -35,6 +36,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         }
 
         public SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
+
+            var appSchema = parameter.Schema.AppSchema;
+            if ("true".EqualsIc(appSchema.GetProperty("attachments.skiprelatedattachments"))) {
+                //let´s use ordinary query
+                return parameter.BASEDto;
+            }
+
             var originalEntity = parameter.OriginalEntity;
 
             var origrecordid = parameter.BASEDto.ValuesDictionary["ownerid"].Value;
