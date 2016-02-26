@@ -16,6 +16,7 @@ using System.Security.Principal;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
@@ -345,8 +346,8 @@ namespace softWrench.sW4.Metadata.Security {
             return Login.Equals("swadmin");
         }
 
-        public IDictionary<string, CommandBarDefinition> SecuredBars(ClientPlatform platform, IDictionary<string, CommandBarDefinition> commandBars) {
-            if (_cachedBars.ContainsKey(platform)) {
+        public IDictionary<string, CommandBarDefinition> SecuredBars(ClientPlatform platform, IDictionary<string, CommandBarDefinition> commandBars, ApplicationSchemaDefinition currentSchema = null) {
+            if (currentSchema == null && _cachedBars.ContainsKey(platform)) {
                 return _cachedBars[platform];
             }
             var commandBarDefinitions = ApplicationCommandUtils.SecuredBars(this, commandBars);
