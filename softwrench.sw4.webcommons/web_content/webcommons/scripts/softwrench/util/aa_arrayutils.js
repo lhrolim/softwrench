@@ -48,3 +48,17 @@ Array.prototype.firstOrDefault = function (fn) {
     }
     return null;
 }
+
+
+Array.prototype.findIndex = Array.prototype.findIndex || function (predicate, thisArg) {
+    "use strict";
+    //TODO: Check predicate is a function.
+    var lastIndex = -1;
+    if (!Array.prototype.some.call(this, function (val, index, arr) {
+        return predicate.call(thisArg, val, lastIndex = index, arr);
+    })) {
+        return -1;
+    }
+
+    return lastIndex;
+}
