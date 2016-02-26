@@ -84,7 +84,7 @@ namespace softWrench.sW4.Metadata.Applications.Command {
                         if (user.IsSwAdmin()) {
                             //sw admin sees it all
                             commands.Add(command);
-                        } else if (!command.Permitted(permissions)) {
+                        } else if (!command.Permitted(user,permissions)) {
                             Log.DebugFormat("ignoring command {0} due to abscence of role {1}", command.Id, command.Role);
                         } else {
                             commands.Add(command);

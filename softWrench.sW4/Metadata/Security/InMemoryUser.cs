@@ -40,14 +40,14 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly UserPreferences _userPreferences;
         private readonly IList<Role> _roles;
         private readonly ICollection<UserProfile> _profiles;
-        private readonly MergedUserProfile _mergedUserProfile;
+        private MergedUserProfile _mergedUserProfile;
         private readonly Iesi.Collections.Generic.ISet<PersonGroupAssociation> _personGroups;
         private readonly IList<DataConstraint> _dataConstraints;
         internal IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
         private IDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>> _cachedBars = new ConcurrentDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>>();
         private IDictionary<string, object> _genericproperties = new Dictionary<string, object>();
 
-        
+
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(InMemoryUserExtensions));
 
@@ -254,10 +254,14 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         [JsonIgnore]
+        [NotNull]
         //used for security mech
         public MergedUserProfile MergedUserProfile {
             get {
-                return _mergedUserProfile ?? new MergedUserProfile();
+                if (_mergedUserProfile == null) {
+                    _mergedUserProfile = new MergedUserProfile();
+                }
+                return _mergedUserProfile;
             }
         }
 
@@ -268,7 +272,7 @@ namespace softWrench.sW4.Metadata.Security {
             }
         }
 
-      
+
 
         [NotNull]
         public ICollection<UserProfile> Profiles {

@@ -12,7 +12,7 @@ namespace softwrench.sw4.user.classes.entities
 {
     public class MergedUserProfile
     {
-        public IEnumerable<ApplicationPermission> Permissions {
+        public ICollection<ApplicationPermission> Permissions {
             get; set;
         }
 
@@ -25,6 +25,7 @@ namespace softwrench.sw4.user.classes.entities
         public IEnumerable<Role> Roles {
             get; set;
         }
+
 
         public ApplicationPermission GetPermissionByApplication(string applicationName) {
             return Permissions.FirstOrDefault(p => p.ApplicationName.EqualsIc(applicationName));

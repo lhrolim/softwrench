@@ -12,14 +12,14 @@ namespace softWrench.sW4.Metadata.Applications.Command {
         public static ContainerCommand Secure(this ContainerCommand container, InMemoryUser user, IList<ActionPermission> permissions) {
             var secureLeafs = new List<ICommandDisplayable>();
             foreach (var leaf in container.Displayables) {
-                if (!leaf.Permitted(permissions)) {
+                if (!leaf.Permitted(user,permissions)) {
                     continue;
                 }
                 if (!user.IsSwAdmin() && leaf.Role != null && (user.Roles == null || !user.Roles.Any(r => r.Active && r.Name == leaf.Role))) {
                     continue;
                 }
                 if (leaf is ContainerCommand) {
-                    var secured = ((ContainerCommand)leaf).Secure(user,permissions);
+                    var secured = ((ContainerCommand)leaf).Secure(user, permissions);
                     if (secured != null) {
                         secureLeafs.Add(secured);
                     }
@@ -27,17 +27,17 @@ namespace softWrench.sW4.Metadata.Applications.Command {
                     secureLeafs.Add(leaf);
                 }
             }
-            return !secureLeafs.Any() ? null : new ContainerCommand(container.Id, container.Label, container.Tooltip, container.Role, container.Position,container.Icon,container.Service,container.Method, secureLeafs, container.PermissionExpression);
+            return !secureLeafs.Any() ? null : new ContainerCommand(container.Id, container.Label, container.Tooltip, container.Role, container.Position, container.Icon, container.Service, container.Method, secureLeafs, container.PermissionExpression);
         }
 
-        public static bool Permitted(this ICommandDisplayable command, IList<ActionPermission> permissions) {
+        public static bool Permitted(this ICommandDisplayable command, InMemoryUser user, IList<ActionPermission> permissions) {
             var expression = command.PermissionExpression;
             var rolePermitted = !permissions.Any(p => p.ActionId.EqualsIc(command.Id));
-
+            var externalRolePermitted = string.IsNullOrEmpty(command.Role) || user.IsInRole(command.Role);
             if (!string.IsNullOrEmpty(expression)) {
-                return GenericSwMethodInvoker.Invoke<bool>(null, expression) && rolePermitted;
+                return GenericSwMethodInvoker.Invoke<bool>(null, expression) && rolePermitted && externalRolePermitted;
             }
-            return rolePermitted;
+            return rolePermitted && externalRolePermitted;
         }
     }
 }
