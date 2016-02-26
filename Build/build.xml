@@ -168,7 +168,7 @@
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
       <arg value="/c"></arg>
-      <arg value="npm install"></arg>
+      <arg value="npm install --force"></arg>
     </exec>
     <!-- grunt toolchain -->
     <echo message="running grunt"></echo>
@@ -193,7 +193,7 @@
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
       <arg value="/c"></arg>
-      <arg value="npm install"></arg>
+      <arg value="npm install --force"></arg>
     </exec>
     <!-- grunt toolchain -->
     <echo message="running grunt"></echo>
