@@ -1,0 +1,34 @@
+﻿#crudsearch {
+    .pane .scroll {
+        width: 100%;
+        outline: none;
+    }
+
+    header {
+        h2 {
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 0;
+        }
+    }
+
+    .commandbar {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    fieldset {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    form {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .searchbutton {
+        float: right;
+        margin-right: 0px;
+    }
+}

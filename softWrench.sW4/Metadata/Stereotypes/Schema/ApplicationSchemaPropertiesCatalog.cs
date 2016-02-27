@@ -183,6 +183,10 @@
         /// </summary>
         public static string DetailEnabledFields = "detail.enabledfields";
 
+        /// <summary>
+        /// If "true" alows the focus on form to move backward.
+        /// </summary>
+        public static string DetailFocusAllowMoveBackward = "detail.focus.allowmovingbackward";
 
         /// <summary>
         /// If true all options fields of this schema will be rendered with no initial selection
@@ -193,5 +197,20 @@
         /// Type of the bottom command bar. For now only works for the detail stereotype.
         /// </summary>
         public static string CommandBarBottom = "commandbar.bottom";
+
+        /// <summary>
+        /// The search schema id of current schema.
+        /// </summary>
+        public static string SearchSchemaId = "search.schemaid";
+
+        /// <summary>
+        /// If "true" the crud search side panel will start expanded.
+        /// </summary>
+        public static string SearchStartExpanded = "search.startexpanded";
+
+        /// <summary>
+        /// The width of the search panel handle.
+        /// </summary>
+        public static string SearchHandleWidthExpanded = "search.handlewidth";
     }
 }

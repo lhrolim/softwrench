@@ -35,6 +35,9 @@
             <field attribute="classstructure_.description" label="Origination"></field>
           </customization>
 
+          <properties>
+            <property key="search.schemaid" value="search"/>
+          </properties>
         </list>
 
         <schema id="adetail" redeclaring="false" stereotype="detail">
@@ -71,6 +74,7 @@
           </customization>
           <properties>
             <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,newattachment"/>
+            <property key="search.schemaid" value="search"/>
           </properties>
         </schema>
 
@@ -80,6 +84,7 @@
           <customization position="tooltrans"/>
           <properties>
             <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,worklog,woactivity,commlog,attachment,assetmeter,locationmeter,relatedrecord"/>
+            <property key="search.schemaid" value="search"/>
           </properties>
         </schema>
         
@@ -148,6 +153,7 @@
             <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
             <property key="list.click.schema" value="batchLocationInlineEdit"/>
             <property key="list.click.popupmode" value="modal"/>
+            <property key="search.schemaid" value="search"/>
           </properties>
 
           <commandbars>
@@ -190,6 +196,7 @@
             <property key="list.click.service" value="batchWorkorderService.spreadSheetLineClick"/>
             <property key="list.click.schema" value="batchAssetInlineEdit"/>
             <property key="list.click.popupmode" value="modal"/>
+            <property key="search.schemaid" value="search"/>
           </properties>
 
           <commandbars>
@@ -263,6 +270,85 @@
           </commandbars>
         </schema>
 
+        <schema id="search" title="Location Search" stereotype="search">
+          <field attribute="status" hidden="true" default="INPRG,APPR,WOEN,ENRV,HOLD,WAPPR" searchoperation="eq"/>
+          <field attribute="fs_locationsearch" hidden="true" default="true"/>
+          <field attribute="fs_includesubloc" label="Include Sublocations" default="true" searchoperation="eq">
+            <renderer type="checkbox"/>
+          </field>
+          <optionfield attribute="fs_facility" label="Facility" requiredexpression="true" searchoperation="eq" default="">
+            <option label="ACS1"  value="ACS01"/>
+            <option label="AES1"  value="AES11"/>
+            <option label="AMH1"  value="AMH11"/>
+            <option label="AMH2"  value="AMR00"/>
+            <option label="ALM1"  value="ALM01"/>
+            <option label="ALP1"  value="ALP11"/>
+            <option label="AVS1"  value="AVS11"/>
+            <option label="AVV1"  value="AVV11"/>
+            <option label="BEL1"  value="BEL11"/>
+            <option label="BRS1"  value="BRS11"/>
+            <option label="BWS1"  value="BWS11"/>
+            <option label="CBLA"  value="CBLA1"/>
+            <option label="CCS1"  value="CCS11"/>
+            <option label="CGL1"  value="CGL11"/>
+            <option label="CID1"  value="CID11"/>
+            <option label="CIM1"  value="CIM01"/>
+            <option label="CVS1"  value="CVS11"/>
+            <option label="DSS1"  value="DSS11"/>
+            <option label="DSS1"  value="DSS21"/>
+            <option label="GAL1"  value="GAL01"/>
+            <option label="HON1"  value="HON01"/>
+            <option label="IVS1"  value="IVS11"/>
+            <option label="IVW1"  value="IVW11"/>
+            <option label="KBSA"  value="KBSA1"/>
+            <option label="KBSB"  value="KBSB1"/>
+            <option label="KNS1"  value="KNS11"/>
+            <option label="KNS1"  value="KSS11"/>
+            <option label="LHS1"  value="LHS11"/>
+            <option label="LMS1"  value="LMS01"/>
+            <option label="MAN1"  value="MAN11"/>
+            <option label="MLK1"  value="MLK11"/>
+            <option label="MSS1"  value="MSS11"/>
+            <option label="NSS1"  value="NSS11"/>
+            <option label="ORS1"  value="ORS11"/>
+            <option label="OTE1"  value="OTE11"/>
+            <option label="REE1"  value="REE01"/>
+            <option label="SAR1"  value="SAR01"/>
+            <option label="SAR1"  value="SAR02"/>
+            <option label="SAR1"  value="SAR03"/>
+            <option label="SAR1"  value="SAR04"/>
+            <option label="SAR1"  value="SAR05"/>
+            <option label="SAR1"  value="SAR06"/>
+            <option label="SAR1"  value="SAR07"/>
+            <option label="SAR1"  value="SAR08"/>
+            <option label="SDVL"  value="SDVL1"/>
+            <option label="SES1"  value="SES10"/>
+            <option label="SES2"  value="SES20"/>
+            <option label="SGAH"  value="SGAH1"/>
+            <option label="SGAK"  value="SGAK1"/>
+            <option label="SGSO"  value="SGSO1"/>
+            <option label="SLS1"  value="SLS11"/>
+            <option label="SSN1"  value="SSN01"/>
+            <option label="STT1"  value="STT01"/>
+            <option label="TIL1"  value="TIL02"/>
+            <option label="TPZ1"  value="TPZ11"/>
+            <event type="afterchange" service="advancedSearchService" method="facilitySelected"/>
+          </optionfield>
+          <optionfield attribute="fs_locint" label="Locations of Interest" providerattribute="_FsLocationsOfInterest" searchoperation="eq" requiredexpression="service:advancedSearchService.isLocationsOfInterestRequired">
+            <renderer type="combo" params="multiple=true"/>
+          </optionfield>
+          <optionfield attribute="fs_switchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq" requiredexpression="service:advancedSearchService.isSwitchgearLocationsRequired">
+            <renderer type="combo" params="multiple=true"/>
+          </optionfield>
+          <field attribute="fs_block" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired"/>
+          <field attribute="fs_pcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired"/>
+          <properties>
+            <property key="commandbar.bottom" value="search"/>
+            <property key="detail.focus.allowmovingbackward" value="true"/>
+            <property key="search.handlewidth" value="180"/>
+            <property key="crud.disableautofocus" value="true"/>
+          </properties>
+        </schema>
       </schemas>
     </application>
 
@@ -291,6 +377,96 @@
               </container>
             </commandgroup>
           </commandbars>
+
+          <properties>
+            <property key="search.schemaid" value="search"/>
+          </properties>
+        </schema>
+        
+        <schema id="locationdetail"  redeclaring="false" stereotype="detail">
+          <properties>
+            <property key="search.schemaid" value="search"/>
+          </properties>
+        </schema>
+
+        <schema id="search" title="Location Search" stereotype="search">
+          <field attribute="fs_locationsearch" hidden="true" default="true"/>
+          <field attribute="fs_includesubloc" label="Include Sublocations" default="true" searchoperation="eq">
+            <renderer type="checkbox"/>
+          </field>
+          <optionfield attribute="fs_facility" label="Facility" requiredexpression="true" searchoperation="eq" default="">
+            <option label="ACS1"  value="ACS01"/>
+            <option label="AES1"  value="AES11"/>
+            <option label="AMH1"  value="AMH11"/>
+            <option label="AMH2"  value="AMR00"/>
+            <option label="ALM1"  value="ALM01"/>
+            <option label="ALP1"  value="ALP11"/>
+            <option label="AVS1"  value="AVS11"/>
+            <option label="AVV1"  value="AVV11"/>
+            <option label="BEL1"  value="BEL11"/>
+            <option label="BRS1"  value="BRS11"/>
+            <option label="BWS1"  value="BWS11"/>
+            <option label="CBLA"  value="CBLA1"/>
+            <option label="CCS1"  value="CCS11"/>
+            <option label="CGL1"  value="CGL11"/>
+            <option label="CID1"  value="CID11"/>
+            <option label="CIM1"  value="CIM01"/>
+            <option label="CVS1"  value="CVS11"/>
+            <option label="DSS1"  value="DSS11"/>
+            <option label="DSS1"  value="DSS21"/>
+            <option label="GAL1"  value="GAL01"/>
+            <option label="HON1"  value="HON01"/>
+            <option label="IVS1"  value="IVS11"/>
+            <option label="IVW1"  value="IVW11"/>
+            <option label="KBSA"  value="KBSA1"/>
+            <option label="KBSB"  value="KBSB1"/>
+            <option label="KNS1"  value="KNS11"/>
+            <option label="KNS1"  value="KSS11"/>
+            <option label="LHS1"  value="LHS11"/>
+            <option label="LMS1"  value="LMS01"/>
+            <option label="MAN1"  value="MAN11"/>
+            <option label="MLK1"  value="MLK11"/>
+            <option label="MSS1"  value="MSS11"/>
+            <option label="NSS1"  value="NSS11"/>
+            <option label="ORS1"  value="ORS11"/>
+            <option label="OTE1"  value="OTE11"/>
+            <option label="REE1"  value="REE01"/>
+            <option label="SAR1"  value="SAR01"/>
+            <option label="SAR1"  value="SAR02"/>
+            <option label="SAR1"  value="SAR03"/>
+            <option label="SAR1"  value="SAR04"/>
+            <option label="SAR1"  value="SAR05"/>
+            <option label="SAR1"  value="SAR06"/>
+            <option label="SAR1"  value="SAR07"/>
+            <option label="SAR1"  value="SAR08"/>
+            <option label="SDVL"  value="SDVL1"/>
+            <option label="SES1"  value="SES10"/>
+            <option label="SES2"  value="SES20"/>
+            <option label="SGAH"  value="SGAH1"/>
+            <option label="SGAK"  value="SGAK1"/>
+            <option label="SGSO"  value="SGSO1"/>
+            <option label="SLS1"  value="SLS11"/>
+            <option label="SSN1"  value="SSN01"/>
+            <option label="STT1"  value="STT01"/>
+            <option label="TIL1"  value="TIL02"/>
+            <option label="TPZ1"  value="TPZ11"/>
+            <event type="afterchange" service="advancedSearchService" method="facilitySelected"/>
+          </optionfield>
+          <optionfield attribute="fs_locint" label="Locations of Interest" providerattribute="_FsLocationsOfInterest" searchoperation="eq" requiredexpression="service:advancedSearchService.isLocationsOfInterestRequired">
+            <renderer type="combo" params="multiple=true"/>
+          </optionfield>
+          <optionfield attribute="fs_switchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq" requiredexpression="service:advancedSearchService.isSwitchgearLocationsRequired">
+            <renderer type="combo" params="multiple=true"/>
+          </optionfield>
+          <field attribute="fs_block" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired"/>
+          <field attribute="fs_pcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired"/>
+          <properties>
+            <property key="commandbar.bottom" value="search"/>
+            <property key="search.startexpanded" value="true"/>
+            <property key="detail.focus.allowmovingbackward" value="true"/>
+            <property key="search.handlewidth" value="180"/>
+            <property key="crud.disableautofocus" value="true"/>
+          </properties>
         </schema>
       </schemas>
     </application>

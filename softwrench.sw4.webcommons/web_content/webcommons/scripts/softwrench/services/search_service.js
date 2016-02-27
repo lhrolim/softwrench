@@ -179,7 +179,7 @@ angular.module('sw_layout')
             var value = "";
             var beginAlreadySet = false;
             for (var data in searchData) {
-                if ((searchData[data] == null || searchData[data] === '' || data === "lastSearchedValues") &&
+                if ((searchData[data] == null || searchData[data] === "" || searchData[data].length === 0 || data === "lastSearchedValues") &&
                     (searchOperator[data] == null || searchOperator[data].id !== "BLANK")) {
                     continue;
                 }

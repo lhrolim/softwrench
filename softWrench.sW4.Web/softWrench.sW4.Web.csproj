@@ -719,6 +719,7 @@
     <Content Include="Content\styles\default\_crud-masterdetails.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
     <Content Include="Content\styles\default\_footer.scss" />
+    <Content Include="Content\styles\default\_crud-search.scss" />
     <None Include="Content\styles\default\_grid.scss" />
     <None Include="Content\styles\default\vendor\_jscrollpane.scss" />
     <Content Include="Content\styles\default\media\media.scss" />
@@ -750,6 +751,8 @@
     <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
+    <Content Include="Content\Scripts\client\crud\search\crud_search.js" />
+    <Content Include="Content\Templates\crud\search\crud_search.html" />
     <Content Include="Content\Templates\notifications.html" />
     <Content Include="Content\Templates\breadcrumbDropdown.html" />
     <Content Include="Content\Templates\breadcrumb.html" />

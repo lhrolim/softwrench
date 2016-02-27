@@ -17,6 +17,7 @@
         public const string BaseDisplayableLabelAttribute = "label";
         public const string BaseDisplayableIdAttribute = "id";
         public const string BaseDisplayableRequiredExpressionAttribute = "requiredexpression";
+        public const string BaseDisplayableSearchOperation = "searchoperation";
         public const string BaseParametersAttribute = "parameters";
         public const string BasePropertiesAttribute = "properties";
         public const string IconAttribute = "icon";

@@ -3,7 +3,7 @@
 
 modules.webcommons.factory('eventService', ["$log", "dispatcherService", "crudContextHolderService", function ($log, dispatcherService, crudContextHolderService) {
     var loadEvent = function(schema, eventName) {
-        if (schema.events === undefined) {
+        if (schema === undefined || schema.events === undefined) {
             return null;
         }
         var event = schema.events[eventName];

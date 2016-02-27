@@ -356,6 +356,7 @@ function applicationController($scope, $http, $log, $timeout,
         }
         $scope.requestpopup = null;
         $rootScope.$broadcast('sw_titlechanged', $scope.schema == null ? null : $scope.schema.title);
+        $rootScope.$broadcast("sw_applicationrendered", $scope.schema == null ? null : $scope.schema.applicationName, $scope.schema);
     };
 
 
