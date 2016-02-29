@@ -26,7 +26,7 @@
         padding: 0;
 
         .wrap {
-            padding: 0 20px;
+            /*padding: 0 20px;*/
 
             .panel {
                 .header {
@@ -45,8 +45,12 @@
                     -moz-border-radius-bottomright: 5px;
                     border-bottom-left-radius: 5px;
                     border-bottom-right-radius: 5px;
-                    min-height: 460px;
+                    /*min-height: 460px;*/
                     overflow: hidden;
+
+                    .sw.chart {
+                        padding: 10px;
+                    }
                 }
             }
         }

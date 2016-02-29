@@ -143,6 +143,7 @@
     <Content Include="web_content\dashboard\scripts\dashboardcontroller.js" />
     <None Include="web_content\dashboard\styles\dashboards.scss" />
     <Content Include="web_content\dashboard\scripts\graphicpanelserviceprovider.js" />
+    <Content Include="web_content\dashboard\scripts\swchartgraphicpanelservice.js" />
     <Content Include="web_content\dashboard\scripts\tableaugraphicpanelservice.js" />
     <Content Include="web_content\dashboard\templates\createnewpanelbutton.html" />
     <Content Include="web_content\dashboard\templates\dashboardgraphicpanel.html" />

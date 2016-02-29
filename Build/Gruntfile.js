@@ -125,6 +125,10 @@ module.exports = function (grunt) {
                     "moment.js": "moment/min/moment.min.js",
                     "spin.js": "spin.js/spin.min.js",
                     "lz-string.js": "lz-string/libs/lz-string.min.js",
+                    // devextreme
+                    "globalize.js": "globalize/lib/globalize.js",
+                    "dx.chartjs.js": "devextreme-web/js/dx.chartjs.js",
+                    "dx.vectormap.usa.js": "devextreme-web/js/vectormap-data/usa.js",
                     // unminified vendors
                     "raw/jquery-file-style.js": "jquery.filestyle/jquery.filestyle.js",
                     "raw/jquery-file-download.js": "jquery-file-download/src/Scripts/jquery.fileDownload.js",

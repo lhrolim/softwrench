@@ -177,6 +177,7 @@
           <optionfield label="Provider" attribute="provider"
                        tooltip="Name of the graphic storage service in which the graphic is located"
                        requiredexpression="true" default="">
+            <!--<option label="swChart" value="swChart" />-->
             <option label="Tableau" value="Tableau" />
             <event type="afterchange" method="setGraphicProvider" service="dashboardAuxService"/>
           </optionfield>
