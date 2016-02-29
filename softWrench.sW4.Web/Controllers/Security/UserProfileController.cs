@@ -76,7 +76,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             if (profile == null) {
                 throw new InvalidOperationException("informed profile does not exist");
             }
-          
+
             var loadApplicationPermissions = profile.ApplicationPermissions.FirstOrDefault(f => f.ApplicationName.EqualsIc(application));
 
             return new ApplicationPermissionResultDTO() {
@@ -111,9 +111,21 @@ namespace softWrench.sW4.Web.Controllers.Security {
                     HasCreationSchema = MetadataProvider.Application(appPermission.ApplicationName).HasCreationSchema
                 });
             }
+            var result = new UserProfileSaveDTO() {
+                Applications = listDto,
+                Id = profile.Id
+            };
 
+            return new GenericResponseResult<UserProfileSaveDTO>(result, "User Profile {0} successfully updated".Fmt(screenUserProfile.Name));
+        }
 
-            return new GenericResponseResult<IEnumerable<ApplicationPermissionResultDTO>>(listDto, "User Profile {0} successfully updated".Fmt(screenUserProfile.Name));
+        class UserProfileSaveDTO {
+            public IEnumerable<ApplicationPermissionResultDTO> Applications {
+                get; set;
+            }
+            public int? Id {
+                get; set;
+            }
         }
 
 

@@ -578,7 +578,9 @@
 
             return restService.postPromise("UserProfile", "Save", null, ob).then(function (httpResponse) {
                 var resultObject = httpResponse.data.resultObject;
-                resultObject.forEach(function (resultDTO) {
+                crudContextHolderService.rootDataMap().fields.id = resultObject.id;
+
+                resultObject.applications.forEach(function (resultDTO) {
                     //updating so that id no longer null
                     var app = resultDTO.appPermission;
                     $rootScope["#transientprofiledata"][app.applicationName] = app;
