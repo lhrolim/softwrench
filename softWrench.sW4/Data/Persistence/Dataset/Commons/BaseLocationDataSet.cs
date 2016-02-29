@@ -51,7 +51,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         {
             var result = base.GetApplicationDetail(application, user, request);
 
-            result.ResultObject.SetAttribute("parentlocation_.systemid", request.CustomParameters["parentlocation_.systemid"]);
+            if (request.CustomParameters != null && request.CustomParameters["parentlocation_.systemid"] != null) {
+                result.ResultObject.SetAttribute("parentlocation_.systemid", request.CustomParameters["parentlocation_.systemid"]);
+            }
 
             return result;
         }

@@ -281,6 +281,26 @@
                     if (id == undefined) {
                         return;
                     }
+                    // If the list click required a custom param, we must get it from the previous data using the id
+                    var customParams = {};
+                    if ($scope.$parent.previousschema.properties && $scope.$parent.previousschema.properties["list.click.customparams"]) {
+                        // Get the next/previous record that the params will be coming from
+                        var record = value.previousData.filter(function (obj) {
+                            return obj.fields[$scope.$parent.schema.idFieldName] == id;
+                        });
+
+                        // TODO: If the record is null (item not on page in previous data)????
+
+                        var customparamAttributes = $scope.$parent.previousschema.properties["list.click.customparams"].replace(" ", "").split(",");
+                        for (var param in customparamAttributes) {
+                            if (!customparamAttributes.hasOwnProperty(param)) {
+                                continue;
+                            }
+                            customParams[param] = {};
+                            customParams[param]["key"] = customparamAttributes[param];
+                            customParams[param]["value"] = record[0].fields[customparamAttributes[param]];
+                        }
+                    }
 
                     var mode = $scope.$parent.mode;
                     var popupmode = $scope.$parent.popupmode;
@@ -288,7 +308,7 @@
                     var applicationname = $scope.$parent.schema.applicationName;
                     var title = $scope.$parent.title
 
-                    $scope.$emit("sw_navigaterequest", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode });
+                    $scope.$emit("sw_navigaterequest", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode, customParameters: customParams });
 
                 };
 
