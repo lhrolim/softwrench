@@ -32,8 +32,10 @@
             redirectUrl = restService.getActionUrl(controller, action, parameters);
 
             if (!parameters || !parameters.popupmode) {
-                //let´s disregard popupmode here, otherwise F5 would refresh popup 
-                contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
+                if (controller !== "EntityMetadata" || action !== "Refresh") {
+                    //let´s disregard popupmode here, otherwise F5 would refresh popup 
+                    contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
+                }
             }
 
             return $http.get(redirectUrl).success(

@@ -24,7 +24,7 @@
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Active" value="INPRG,APPR,WOEN,ENRV,HOLD,WAPPR" preselected="true" displaycode="false" tooltip="The status of active work orders. Matchs any work order of &quot;INPRG&quot;, &quot;APPR&quot;, &quot;WOEN&quot;, &quot;ENRV&quot;, &quot;HOLD&quot; or &quot;WAPPR&quot; status."/>
             </optionfilter>
-            <optionfilter attribute="location" provider="@firstSolarPCSLocationHandler.HandlePCSLocationProvider" displaycode="false" 
+            <optionfilter attribute="location" provider="@firstSolarPCSLocationHandler.HandlePCSLocationProvider" displaycode="false"
                           advancedfilterschema="location.locationfilter" allowblank="true" whereclause="@firstSolarPCSLocationHandler.HandlePCSLocation"/>
             <optionfilter attribute="classstructure_.description" provider="classstructure_.description" allowblank="true" whereclause="classstructure_.classstructureid in (!@#value)"/>
             <!--<optionfilter attribute="classstructure_.classificationid" provider="@GetWOClassStructureType" allowblank="true"/>-->
@@ -45,7 +45,7 @@
           <properties>
             <property key="attachments.skiprelatedattachments" value="true"/>
           </properties>
-          
+
           <customization position="location">
             <section orientation="horizontal">
               <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" requiredexpression="true">
@@ -87,7 +87,7 @@
             <property key="search.schemaid" value="search"/>
           </properties>
         </schema>
-        
+
         <schema id="readonlyfixedlist" stereotype="list.modal.readonly">
           <field attribute="wonum" label="WO#" >
             <renderer type="default"/>
@@ -340,8 +340,18 @@
           <optionfield attribute="fs_switchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq" requiredexpression="service:advancedSearchService.isSwitchgearLocationsRequired">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
-          <field attribute="fs_block" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired"/>
-          <field attribute="fs_pcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired"/>
+
+          <!--                      <composition detailschema="" fetchtype="eager"  relationship="#basicroles"  printschema="" inline="true">-->
+
+          <composition inline="true" relationship="#pcs" label="PCS:" detailschema="" printschema="">
+            <collectionproperties listschema="pcslist" autocommit="false"/>
+            <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
+          </composition>
+
+
+
+          <!--          <field attribute="fs_block" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired"/>-->
+          <!--          <field attribute="fs_pcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired"/>-->
           <properties>
             <property key="commandbar.bottom" value="search"/>
             <property key="detail.focus.allowmovingbackward" value="true"/>
@@ -349,6 +359,17 @@
             <property key="crud.disableautofocus" value="true"/>
           </properties>
         </schema>
+
+        <schema id="pcslist" stereotype="list">
+          <field attribute="fs_block" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired">
+            <renderer type="default"  params="inputsize=small;editable=true" />
+          </field>
+          <field attribute="fs_pcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired">
+            <renderer type="default"  params="inputsize=small;editable=true" />
+          </field>
+        
+        </schema>
+
       </schemas>
     </application>
 
@@ -382,7 +403,7 @@
             <property key="search.schemaid" value="search"/>
           </properties>
         </schema>
-        
+
         <schema id="locationdetail"  redeclaring="false" stereotype="detail">
           <properties>
             <property key="search.schemaid" value="search"/>
