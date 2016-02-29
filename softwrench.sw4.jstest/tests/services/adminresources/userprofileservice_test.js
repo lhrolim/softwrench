@@ -59,6 +59,44 @@
         ]
     }
 
+
+    var srObj = {
+        allowCreation: true,
+        allowUpdate: true,
+        allowRemoval: true,
+        allowViewOnly: true,
+        containerPermissions: [
+            {
+                schema: "detail",
+                containerKey: "#main",
+                fieldPermissions: [
+                {
+                    fieldKey: "f1",
+                    permission: "none"
+                },
+                {
+                    fieldKey: "f2",
+                    permission: "none"
+                },
+                {
+                    fieldKey: "f3",
+                    permission: "none"
+                },
+
+
+                ]
+            },
+        ],
+
+        actionPermissions: [
+            {
+                //this means, actually, that we don´t have access to that action
+                schema: "detail",
+                actionId: "xxx"
+            }
+        ]
+    }
+
     it("Test Merge datamap into transient after app change", (function () {
 
         rootScope[txProp] = {
@@ -209,6 +247,80 @@
         expect(secondComposition.allowCreation).toBe(false);
         expect(secondComposition.allowUpdate).toBe(false);
         expect(secondComposition.allowViewOnly).toBe(false);
+
+
+    }));
+
+    it("Test Merge datamap into transient on save: field permission scenario", (function () {
+
+        rootScope[txProp] = {
+            "servicerequest": angular.copy(srObj)
+        };
+
+        //simulating user was at main tab of application asset, changing to sr
+        var screenDatamap = {
+            application: "servicerequest",
+            "#appallowcreation": true,
+            "#appallowupdate": true,
+            "#appallowviewonly": true,
+            "#appallowremoval": true,
+            "schema": "detail",
+            "#selectedtab": "#main",
+            iscompositiontab: false,
+            "#actionPermissions_": [],
+            "#fieldPermissions_": [
+            //this has been changed on screen
+            {
+                fieldKey: "f1",
+                permission: "fullcontrol"
+            },
+            {
+                fieldKey: "f2",
+                permission: "fullcontrol"
+            },
+            {
+                fieldKey: "f3",
+                permission: "fullcontrol"
+            },
+            {
+                fieldKey: "f4",
+                permission: "fullcontrol"
+            },
+            {
+                fieldKey: "f5",
+                permission: "fullcontrol"
+            },
+            {
+                fieldKey: "f6",
+                permission: "fullcontrol"
+            },
+            ],
+        }
+
+        crudContextHolderService.rootDataMap(null, screenDatamap);
+
+        //save scenario
+        var dispatcher = {}
+
+
+        var updatedData = userProfileService.storeFromDmIntoTransient(dispatcher);
+
+        expect(updatedData).toBe(rootScope[txProp]);
+
+        var mergedData = updatedData["servicerequest"];
+        expect(mergedData.allowCreation).toBe(true);
+        expect(mergedData.allowUpdate).toBe(true);
+
+        var containerPermission = mergedData.containerPermissions.filter(function (item) {
+            return item.schema === "detail" && item.containerKey === "#main";
+        })[0];
+
+        var fieldPermissions = containerPermission.fieldPermissions;
+
+        // the none needs to be added
+        expect(fieldPermissions.length).toBe(0);
+        expect(mergedData["_#isDirty"]).toBe(true);
+        
 
 
     }));

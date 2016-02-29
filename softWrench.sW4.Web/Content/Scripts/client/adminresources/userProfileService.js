@@ -413,7 +413,7 @@
                     }
                 });
 
-                if (hasAnyChange && containerIndex === -1) {
+                if (hasAnyChange || containerIndex === -1) {
                     transientAppData["_#isDirty"] = true;
                     transientAppData.containerPermissions.push(actualContainerPermission);
                 }
