@@ -12,6 +12,7 @@
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
     <template path="@woactivity.xml"/>
+    <template path="@multiassetlocci.xml"/>
   </templates>
 
   <entities>
@@ -96,6 +97,13 @@
         <relationship to="tooltrans" collection="true">
           <relationshipAttribute from="wonum" to="refwo" primary="true" />
           <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="multiassetlocci" collection="true">
+          <relationshipAttribute from="wonum" to="RECORDKEY" primary="true"/>
+          <relationshipAttribute from="woclass" to="RECORDCLASS" />
+          <relationshipAttribute from="siteid" to="worksiteid" />
+          <!--we need to exclde primary entries to keep consistency with maximo behaviour-->
+          <relationshipAttribute to="ISPRIMARY" literal="0"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -513,7 +521,10 @@
           </section>
 
           <!-- Adding target start finish date-->
-
+          <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
+            <collectionproperties listschema="newlist" autocommit="false"/>
+            <renderer type="TABLE" params="mode=batch;"/>
+          </composition>
 
           <!--Target Start Date Scheduled Start Date (required field) Actual Start Date  -->
           <section orientation="horizontal">

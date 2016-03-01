@@ -37,6 +37,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="metadata\chicago\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="metadata\chicago\readme.txt" />
     <Content Include="web_content\chicago\images\branding.png" />
     <Content Include="web_content\chicago\images\footer.jpg" />
