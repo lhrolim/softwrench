@@ -95,6 +95,15 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return _userProfileManager.LoadAvailableActionsAsComposition(schema, pageNumber);
         }
 
+        [HttpPost]
+        public IGenericResponseResult Delete(int? id) {
+
+            _userProfileManager.DeleteProfile(id);
+
+            return new BlankApplicationResponse() {
+                SuccessMessage = "User Profile Successfully Deleted"
+            };
+        }
 
         [HttpPost]
         public IGenericResponseResult Save(UserProfile screenUserProfile) {
@@ -255,10 +264,6 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return Get(false).ResultObject.Profiles;
         }
 
-        public ICollection<UserProfile> Put(UserProfile profile) {
-            SecurityFacade.DeleteProfile(profile);
-            return Get(false).ResultObject.Profiles;
-        }
 
 
     }

@@ -264,9 +264,6 @@ namespace softWrench.sW4.Security.Services {
             return _userProfileManager.FetchAllProfiles(eager);
         }
 
-        public void DeleteProfile(UserProfile profile) {
-            _userProfileManager.DeleteProfile(profile);
-        }
         public User SaveUser(User user, Iesi.Collections.Generic.ISet<UserProfile> profiles, Iesi.Collections.Generic.ISet<UserCustomRole> customRoles, Iesi.Collections.Generic.ISet<UserCustomConstraint> customConstraints) {
             user.Profiles = profiles;
             user.CustomRoles = customRoles;

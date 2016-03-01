@@ -24,16 +24,13 @@
                 <command label="Refresh Cache" tooltip="Refresh any database changes into application" id="refresh cache" service="userProfileService" method="refreshCache"/>
               </container>
             </commandgroup>
-          </commandbars>
-
-            <field label="Name" attribute="name" />
-          <field label="Description" attribute="description" />
-          <commandbars>
             <commandgroup position="gridtop">
               <command id="new" icon="fa-plus"
                        service="redirectService" method="goToApplicationView" parameters="_UserProfile,detail" label="New Security Group" tooltip="New Security Group" position="left"/>
             </commandgroup>
           </commandbars>
+          <field label="Name" attribute="name" />
+          <field label="Description" attribute="description" />
         </list>
         <detail>
 
@@ -47,6 +44,7 @@
             <commandgroup id="#detailform">
               <removecommand id="print"/>
               <command id="save" service="userProfileService" method="save"/>
+              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-remove" position="+save"/>
             </commandgroup>
           </commandbars>
 

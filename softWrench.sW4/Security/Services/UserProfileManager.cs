@@ -121,9 +121,14 @@ namespace softWrench.sW4.Security.Services {
         }
 
         //TODO: remove customUserRoles and customUSerCOnstraints which were exclusions from this profile ==> They don´t make sense anymore (tough,they are useless anyway)
-        public void DeleteProfile(UserProfile profile) {
+        public void DeleteProfile(int? profileId) {
             using (ISession session = SWDBHibernateDAO.GetInstance().GetSession()) {
                 using (session.BeginTransaction()) {
+                    var profile = FindById(profileId);
+                    if (profile == null) {
+                        return;
+                    }
+                    _dao.DeleteCollection(profile.ApplicationPermissions);
                     _dao.Delete(profile);
                     if (ProfileCache.ContainsKey(profile.Id)) {
                         ProfileCache.Remove(profile.Id);
