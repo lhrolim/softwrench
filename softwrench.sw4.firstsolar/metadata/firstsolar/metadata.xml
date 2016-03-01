@@ -333,7 +333,7 @@
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
 
-          <composition inline="true" relationship="#pcs" label="PCS:" detailschema="" printschema="">
+          <composition inline="true" relationship="#pcs" detailschema="" printschema="">
             <collectionproperties listschema="pcslist" autocommit="false"/>
             <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>
@@ -465,7 +465,7 @@
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
 
-          <composition inline="true" relationship="#pcs" label="PCS:" detailschema="" printschema="">
+          <composition inline="true" relationship="#pcs" detailschema="" printschema="">
             <collectionproperties listschema="pcslist" autocommit="false"/>
             <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>

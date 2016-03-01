@@ -9,7 +9,6 @@
             templateUrl: contextService.getResourceUrl("/Content/Templates/crud/search/crud_search.html"),
             scope: true,
             link: function() {
-                console.log("");
             },
             controller: ["$scope", "$rootScope", "$log", "$q", "$timeout", "sidePanelService", "schemaCacheService", "restService", "searchService", "redirectService", "applicationService", "$http", "validationService", "focusService", function ($scope, $rootScope, $log, $q, $timeout, sidePanelService, schemaCacheService, restService, searchService, redirectService, applicationService, $http, validationService, focusService) {
 
@@ -29,7 +28,8 @@
                     var panePaddingTop = parseInt($("#crudsearch .pane").css("padding-top"));
                     var panePaddingBottom = parseInt($("#crudsearch .pane").css("padding-bottom"));
 
-                    return $(window).height() - headerHeight - panePaddingTop - panePaddingBottom;
+                    var height = $(window).height() - headerHeight - panePaddingTop - panePaddingBottom;
+                    return height;
                 };
 
                 function setFocus(ctx) {
