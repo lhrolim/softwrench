@@ -2461,7 +2461,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="woactivity" idAttribute="workorderid" useridAttribute="wonum">
+    <entity name="woactivity" idAttribute="workorderid" useridAttribute="wonum" whereclause="historyflag = 0">
       <attributes>
         <attribute name="actfinish" type="timestamp" required="false" />
         <attribute name="actlabcost" type="decimal" required="true" />
