@@ -2,10 +2,8 @@
 (function (angular) {
     "use strict";
 
-    function advancedSearchService(restService, crudContextHolderService, $rootScope, searchService) {
+    function advancedSearchService(restService, crudContextHolderService, $rootScope, searchService, alertService) {
         //#region Utils
-        var locOfIntId = "fslocint";
-        var switchgearId = "fsswitchgear";
         var blockId = "fsblock";
         var pcsId = "fspcs";
         var facilityId = "fsfacility";
@@ -30,45 +28,13 @@
             });
         }
 
-        function hasLocationsOfInterest(datamap) {
-            return datamap[locOfIntId] && datamap[locOfIntId].length > 0;
-        }
-
-        function hasSwitchGear(datamap) {
-            return datamap[switchgearId] && datamap[switchgearId].length > 0;
-        }
-
-        function hasPcs(datamap) {
-            return hasPcsOrBlock(datamap, pcsId);
-        }
-
-        function hasBlock(datamap) {
-            return hasPcsOrBlock(datamap, blockId);
-        }
-
-        function hasPcsOrBlock(datamap, id) {
-            var pcsDatamap = datamap["#pcs_"];
-            var hasDatamap = pcsDatamap && pcsDatamap.length > 0;
-            var parameters = datamap[id];
-            var hasParameter = parameters && parameters.length > 0;
-            if (!hasDatamap && !hasParameter) {
-                return false;
+        var appendAlert = function (alert, fieldLabel, index) {
+            var innerAlert = alert;
+            if (innerAlert) {
+                innerAlert += ", ";
             }
-
-            var firstParameter;
-            if (hasDatamap) {
-                firstParameter = pcsDatamap.find(function(parameterRow) {
-                    return parameterRow[id] && true;
-                });
-            } else {
-                if (typeof parameters === "string") {
-                    return true;
-                }
-                firstParameter = parameters.find(function (parameter) {
-                    return parameter && true;
-                });
-            }
-            return firstParameter !== undefined;
+            innerAlert += "<b>" + fieldLabel + " (" + (index + 1) + ")</b> is required";
+            return innerAlert;
         }
         //#endregion
 
@@ -84,22 +50,6 @@
             updateOptions("GetSwitchgearLocations", parameters, "_FsSwitchgearLocations");
         }
 
-        function isLocationsOfInterestRequired(datamap) {
-            return !hasSwitchGear(datamap) && !hasPcs(datamap) && !hasBlock(datamap);
-        }
-
-        function isSwitchgearLocationsRequired(datamap) {
-            return !hasLocationsOfInterest(datamap) && !hasPcs(datamap) && !hasBlock(datamap);
-        }
-
-        function isBlockRequired(datamap) {
-            return (!hasSwitchGear(datamap) && !hasLocationsOfInterest(datamap)) || hasPcs(datamap);
-        }
-
-        function isPcsRequired(datamap) {
-            return (!hasSwitchGear(datamap) && !hasLocationsOfInterest(datamap)) || hasBlock(datamap);
-        }
-
         function search(schema, datamap) {
             var pcsDataMap = datamap["#pcs_"];
             if (!pcsDataMap) {
@@ -108,17 +58,39 @@
             }
 
             var blocks = [];
-            var pcs = [];
-            pcsDataMap.forEach(function(pcsDatamap) {
-                blocks.push(pcsDatamap[blockId]);
-                pcs.push(pcsDatamap[pcsId]);
+            var pcss = [];
+            var alertMsg = "";
+            pcsDataMap.forEach(function (pcsDatamap, index) {
+                console.log(index);
+                var block = pcsDatamap[blockId];
+                var pcs = pcsDatamap[pcsId];
+                if (!block && !pcs) {
+                    return;
+                }
+
+                if (block && pcs) {
+                    blocks.push(pcsDatamap[pcs]);
+                    pcss.push(pcsDatamap[blockId]);
+                }
+
+                if (!block) {
+                    alertMsg = appendAlert(alertMsg, "Block", index);
+                }
+                if (!pcs) {
+                    alertMsg = appendAlert(alertMsg, "PCS", index);
+                }
             });
+            if (alertMsg) {
+                alertService.notifymessage("error", alertMsg);
+                return;
+            }
+
             var searchOperator = {}
             var eqOperator = searchService.getSearchOperationById("EQ");
             searchOperator[blockId] = eqOperator;
             searchOperator[pcsId] = eqOperator;
             datamap[blockId] = blocks;
-            datamap[pcsId] = pcs;
+            datamap[pcsId] = pcss;
 
 
             $rootScope.$broadcast("sw.crud.search", [schema, datamap, searchOperator]);
@@ -128,10 +100,6 @@
         //#region Service Instance
         var service = {
             facilitySelected: facilitySelected,
-            isLocationsOfInterestRequired: isLocationsOfInterestRequired,
-            isSwitchgearLocationsRequired: isSwitchgearLocationsRequired,
-            isBlockRequired: isBlockRequired,
-            isPcsRequired: isPcsRequired,
             search: search
         };
         return service;
@@ -140,7 +108,7 @@
 
     //#region Service registration
 
-    angular.module("firstsolar").clientfactory("advancedSearchService", ["restService", "crudContextHolderService", "$rootScope", "searchService", advancedSearchService]);
+    angular.module("firstsolar").clientfactory("advancedSearchService", ["restService", "crudContextHolderService", "$rootScope", "searchService", "alertService", advancedSearchService]);
 
     //#endregion
 

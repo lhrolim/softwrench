@@ -326,10 +326,10 @@
             <option label="TPZ1"  value="TPZ11"/>
             <event type="afterchange" service="advancedSearchService" method="facilitySelected"/>
           </optionfield>
-          <optionfield attribute="fslocint" label="Locations of Interest" providerattribute="_FsLocationsOfInterest" searchoperation="eq" requiredexpression="service:advancedSearchService.isLocationsOfInterestRequired">
+          <optionfield attribute="fslocint" label="Locations of Interest" providerattribute="_FsLocationsOfInterest" searchoperation="eq">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
-          <optionfield attribute="fsswitchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq" requiredexpression="service:advancedSearchService.isSwitchgearLocationsRequired">
+          <optionfield attribute="fsswitchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
 
@@ -355,10 +355,10 @@
         </schema>
 
         <schema id="pcslist" stereotype="list">
-          <field attribute="fsblock" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired">
+          <field attribute="fsblock" label="Block">
             <renderer type="default"  params="inputsize=small;editable=true" />
           </field>
-          <field attribute="fspcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired">
+          <field attribute="fspcs" label="PCS">
             <renderer type="default"  params="inputsize=small;editable=true" />
           </field>
         </schema>
@@ -458,10 +458,10 @@
             <option label="TPZ1"  value="TPZ11"/>
             <event type="afterchange" service="advancedSearchService" method="facilitySelected"/>
           </optionfield>
-          <optionfield attribute="fslocint" label="Locations of Interest" providerattribute="_FsLocationsOfInterest" searchoperation="eq" requiredexpression="service:advancedSearchService.isLocationsOfInterestRequired">
+          <optionfield attribute="fslocint" label="Locations of Interest" providerattribute="_FsLocationsOfInterest" searchoperation="eq">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
-          <optionfield attribute="fsswitchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq" requiredexpression="service:advancedSearchService.isSwitchgearLocationsRequired">
+          <optionfield attribute="fsswitchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
 
@@ -487,10 +487,10 @@
         </schema>
 
         <schema id="pcslist" stereotype="list">
-          <field attribute="fsblock" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired">
+          <field attribute="fsblock" label="Block">
             <renderer type="default"  params="inputsize=small;editable=true" />
           </field>
-          <field attribute="fspcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired">
+          <field attribute="fspcs" label="PCS">
             <renderer type="default"  params="inputsize=small;editable=true" />
           </field>
         </schema>

@@ -58,7 +58,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             var pcs = searchDto.RemoveSearchParam(FsLocSearchPcsAttribute);
 
             if (block == null || pcs == null) {
-                searchDto.AppendWhereClause(advancedSearchClause.ToString());
+                FinishAdvancedSearch(advancedSearchClause.ToString(), searchDto, facilityList, tableName);
                 return;
             }
             var blockString = block.Value as string;
@@ -70,7 +70,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             var missingPcs = string.IsNullOrEmpty(pcsString) && pcsList == null;
 
             if (missingBlock && missingPcs) {
-                searchDto.AppendWhereClause(advancedSearchClause.ToString());
+                FinishAdvancedSearch(advancedSearchClause.ToString(), searchDto, facilityList, tableName);
                 return;
             }
             if (blockList == null) {
@@ -83,13 +83,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             var baseLocations = _advancedSearchPcsHandler.GetBaseLocations(facilityList, blockList, pcsList);
             var pcsLocationsClause = BuildAdvancedSearchWhereClause(baseLocations, tableName, includeSubloc);
             AppendWhereClause(advancedSearchClause, pcsLocationsClause);
-
-            if (advancedSearchClause.Length == 0) {
-                // forces no results
-                searchDto.AppendWhereClause("1=0");
-                return;
-            }
-            searchDto.AppendWhereClause(advancedSearchClause.ToString());
+            FinishAdvancedSearch(advancedSearchClause.ToString(), searchDto, facilityList, tableName);
         }
 
         public List<Dictionary<string, string>> GetLocationsOfInterest(List<string> facilities) {
@@ -145,6 +139,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
                 advancedSearchClause.Append(" OR ");
             }
             advancedSearchClause.Append(whereClause);
+        }
+
+        private static void FinishAdvancedSearch(string advancedWhereClause, SearchRequestDto searchDto, List<string> facilityList, string tableName) {
+            if (!string.IsNullOrEmpty(advancedWhereClause)) {
+                searchDto.AppendWhereClause(advancedWhereClause);
+                return;
+            }
+            var facilitiesClause = BuildAdvancedSearchWhereClause(facilityList, tableName, true);
+            searchDto.AppendWhereClause(facilitiesClause);
         }
     }
 }
