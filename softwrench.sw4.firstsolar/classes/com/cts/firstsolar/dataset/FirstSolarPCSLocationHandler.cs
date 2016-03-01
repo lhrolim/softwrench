@@ -8,36 +8,21 @@ using cts.commons.simpleinjector;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data;
-using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Metadata.Applications.Association;
-using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
     public class FirstSolarPCSLocationHandler : ISingletonComponent {
 
-        private const string FsLocSearchAttribute = "fs_locationsearch";
-        private const string FsLocSearchIncludeSublocAttribute = "fs_includesubloc";
-        private const string FsLocSearchFacilityAttribute = "fs_facility";
-        private const string FsLocSearchLocOfInterestAttribute = "fs_locint";
-        private const string FsLocSearchSwitchgearsAttribute = "fs_switchgear";
-        private const string FsLocSearchBlockAttribute = "fs_block";
-        private const string FsLocSearchPcsAttribute = "fs_pcs";
-
-        private const string BaseLocationQuery = "SELECT location, description FROM locations WHERE location LIKE ? AND LEN(locations.location) - LEN(REPLACE(locations.location, '-', '')) = ?";
-
         private readonly EntityRepository _entityRepository;
-        private readonly IMaximoHibernateDAO _maximoHibernateDao;
 
-        public FirstSolarPCSLocationHandler(EntityRepository entityRepository, IMaximoHibernateDAO maximoHibernateDao) {
+        public FirstSolarPCSLocationHandler(EntityRepository entityRepository) {
             _entityRepository = entityRepository;
-            _maximoHibernateDao = maximoHibernateDao;
         }
 
         public string HandlePCSLocation(FilterWhereClauseParameters whereClauseParameters) {
@@ -136,130 +121,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
 
             return "LEN({0}.location) - LEN(REPLACE({0}.location, '-', '')) = 4".Fmt(tableName);
-        }
-
-        private static void AddBaseLocation(ICollection<string> baseLocationList, IReadOnlyDictionary<string, string> baseLocationRow) {
-            var baseLocation = baseLocationRow["location"];
-            if (baseLocation == null) {
-                return;
-            }
-            baseLocationList.Add(baseLocation);
-        }
-
-        private List<string> GetBaseLocation(string baseLocationString) {
-            var baseLocations = _maximoHibernateDao.FindByNativeQuery(BaseLocationQuery, baseLocationString, 4);
-            var baseLocationList = new List<string>();
-            baseLocations.ForEach(l => AddBaseLocation(baseLocationList, l));
-            return baseLocationList;
-        }
-
-        private static void AddBaseLocationToClause(ref bool first, StringBuilder clause, string baseLocation, string tableName, bool includeSublocs) {
-            if (!first) {
-                clause.Append(" OR ");
-            }
-            first = false;
-            clause.Append(tableName).Append(".location = '").Append(baseLocation).Append("' ");
-            if (includeSublocs) {
-                clause.Append(" OR ").Append(tableName).Append(".location LIKE '").Append(baseLocation).Append("-%' ");
-            }
-        }
-
-        private static string BuildAdvancedSearchWhereClause(List<string> locations, string tableName, bool includeSublocs) {
-            if (locations == null || locations.Count == 0) {
-                return null;
-            }
-            var first = true;
-            var locationsClause = new StringBuilder("(");
-            locations.ForEach(l => AddBaseLocationToClause(ref first, locationsClause, l, tableName, includeSublocs));
-            locationsClause.Append(")");
-            return locationsClause.ToString();
-        }
-
-        private static string BuildAdvancedSearchWhereClause(SearchParameter sp, string tableName, bool includeSublocs) {
-            if (sp == null || sp.Value == null) {
-                return null;
-            }
-
-            var locList = sp.Value as List<string>;
-            var locString = sp.Value as string;
-            if (locString != null) {
-                locList = new List<string>() { locString };
-            }
-            return BuildAdvancedSearchWhereClause(locList, tableName, includeSublocs);
-        }
-
-        private static void AppendWhereClause(StringBuilder advancedSearchClause, string whereClause) {
-            if (string.IsNullOrEmpty(whereClause)) {
-                return;
-            }
-            if (advancedSearchClause.Length != 0) {
-                advancedSearchClause.Append(" OR ");
-            }
-            advancedSearchClause.Append(whereClause);
-        }
-
-        public bool IsAdvancedSearch(PaginatedSearchRequestDto searchDto) {
-            var parameters = searchDto.GetParameters();
-            return parameters != null && parameters.Any(p => FsLocSearchAttribute.Equals(p.Key));
-        }
-
-        public void AppendAdvancedSearchWhereClause(ApplicationMetadata application, PaginatedSearchRequestDto searchDto, string tableName) {
-            var advancedSearchClause = new StringBuilder();
-            searchDto.RemoveSearchParam(FsLocSearchAttribute);
-            var facility = searchDto.RemoveSearchParam(FsLocSearchFacilityAttribute);
-
-            var includeSublocSp = searchDto.RemoveSearchParam(FsLocSearchIncludeSublocAttribute);
-            var includeSubloc = "TRUE".Equals(includeSublocSp.Value);
-
-            var locOfInterestSp = searchDto.RemoveSearchParam(FsLocSearchLocOfInterestAttribute);
-            var locOfInterestClause = BuildAdvancedSearchWhereClause(locOfInterestSp, tableName, includeSubloc);
-            AppendWhereClause(advancedSearchClause, locOfInterestClause);
-
-            var switchgearsSp = searchDto.RemoveSearchParam(FsLocSearchSwitchgearsAttribute);
-            var switchgearsClause = BuildAdvancedSearchWhereClause(switchgearsSp, tableName, includeSubloc);
-            AppendWhereClause(advancedSearchClause, switchgearsClause);
-
-            var block = searchDto.RemoveSearchParam(FsLocSearchBlockAttribute);
-            var pcs = searchDto.RemoveSearchParam(FsLocSearchPcsAttribute);
-
-            if (block == null || pcs == null) {
-                searchDto.AppendWhereClause(advancedSearchClause.ToString());
-                return;
-            }
-            var blockString = block.Value as string;
-            var pcsString = pcs.Value as string;
-            if (string.IsNullOrEmpty(blockString) || string.IsNullOrEmpty(pcsString)) {
-                searchDto.AppendWhereClause(advancedSearchClause.ToString());
-                return;
-            }
-
-            var baseLocationSearchString = new StringBuilder();
-            baseLocationSearchString.Append(facility.Value).Append("-");
-            baseLocationSearchString.Append("%-").Append(blockString);
-            baseLocationSearchString.Append("-%-").Append(pcsString);
-
-            var baseLocations = GetBaseLocation(baseLocationSearchString.ToString());
-            var pcsLocationsClause = BuildAdvancedSearchWhereClause(baseLocations, tableName, includeSubloc);
-            AppendWhereClause(advancedSearchClause, pcsLocationsClause);
-
-            if (advancedSearchClause.Length == 0) {
-                // forces no results
-                searchDto.AppendWhereClause("1=0");
-                return;
-            }
-            searchDto.AppendWhereClause(advancedSearchClause.ToString());
-        }
-
-        public List<Dictionary<string, string>> GetLocationsOfInterest(string facility) {
-            var locationString = string.Format("{0}-%-00", facility);
-            var result = _maximoHibernateDao.FindByNativeQuery(BaseLocationQuery, locationString, 2);
-            return result;
-        }
-
-        public List<Dictionary<string, string>> GetSwitchgearLocations(string facility) {
-            var locationString = string.Format("{0}-%-%-00", facility);
-            var result = _maximoHibernateDao.FindByNativeQuery(BaseLocationQuery, locationString, 3);
-            return result;
         }
     }
 }

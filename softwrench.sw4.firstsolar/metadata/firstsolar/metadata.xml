@@ -272,15 +272,15 @@
 
         <schema id="search" title="Location Search" stereotype="search">
           <field attribute="status" hidden="true" default="INPRG,APPR,WOEN,ENRV,HOLD,WAPPR" searchoperation="eq"/>
-          <field attribute="fs_locationsearch" hidden="true" default="true"/>
-          <field attribute="fs_includesubloc" label="Include Sublocations" default="true" searchoperation="eq">
+          <field attribute="fslocationsearch" hidden="true" default="true"/>
+          <field attribute="fsincludesubloc" label="Include Sublocations" default="true" searchoperation="eq">
             <renderer type="checkbox"/>
           </field>
-          <optionfield attribute="fs_facility" label="Facility" requiredexpression="true" searchoperation="eq" default="">
+          <optionfield attribute="fsfacility" label="Facility" requiredexpression="true" searchoperation="eq" default="">
             <option label="ACS1"  value="ACS01"/>
             <option label="AES1"  value="AES11"/>
             <option label="AMH1"  value="AMH11"/>
-            <option label="AMH2"  value="AMR00"/>
+            <option label="AMH2"  value="AMR03,AMR04"/>
             <option label="ALM1"  value="ALM01"/>
             <option label="ALP1"  value="ALP11"/>
             <option label="AVS1"  value="AVS11"/>
@@ -294,8 +294,7 @@
             <option label="CID1"  value="CID11"/>
             <option label="CIM1"  value="CIM01"/>
             <option label="CVS1"  value="CVS11"/>
-            <option label="DSS1"  value="DSS11"/>
-            <option label="DSS1"  value="DSS21"/>
+            <option label="DSS1"  value="DSS11,DSS21"/>
             <option label="GAL1"  value="GAL01"/>
             <option label="HON1"  value="HON01"/>
             <option label="IVS1"  value="IVS11"/>
@@ -313,14 +312,7 @@
             <option label="ORS1"  value="ORS11"/>
             <option label="OTE1"  value="OTE11"/>
             <option label="REE1"  value="REE01"/>
-            <option label="SAR1"  value="SAR01"/>
-            <option label="SAR1"  value="SAR02"/>
-            <option label="SAR1"  value="SAR03"/>
-            <option label="SAR1"  value="SAR04"/>
-            <option label="SAR1"  value="SAR05"/>
-            <option label="SAR1"  value="SAR06"/>
-            <option label="SAR1"  value="SAR07"/>
-            <option label="SAR1"  value="SAR08"/>
+            <option label="SAR1"  value="SAR01,SAR02,SAR03,SAR04,SAR05,SAR06,SAR07,SAR08"/>
             <option label="SDVL"  value="SDVL1"/>
             <option label="SES1"  value="SES10"/>
             <option label="SES2"  value="SES20"/>
@@ -334,26 +326,28 @@
             <option label="TPZ1"  value="TPZ11"/>
             <event type="afterchange" service="advancedSearchService" method="facilitySelected"/>
           </optionfield>
-          <optionfield attribute="fs_locint" label="Locations of Interest" providerattribute="_FsLocationsOfInterest" searchoperation="eq" requiredexpression="service:advancedSearchService.isLocationsOfInterestRequired">
+          <optionfield attribute="fslocint" label="Locations of Interest" providerattribute="_FsLocationsOfInterest" searchoperation="eq" requiredexpression="service:advancedSearchService.isLocationsOfInterestRequired">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
-          <optionfield attribute="fs_switchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq" requiredexpression="service:advancedSearchService.isSwitchgearLocationsRequired">
+          <optionfield attribute="fsswitchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq" requiredexpression="service:advancedSearchService.isSwitchgearLocationsRequired">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
-
-          <!--                      <composition detailschema="" fetchtype="eager"  relationship="#basicroles"  printschema="" inline="true">-->
 
           <composition inline="true" relationship="#pcs" label="PCS:" detailschema="" printschema="">
             <collectionproperties listschema="pcslist" autocommit="false"/>
             <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>
 
-
-
-          <!--          <field attribute="fs_block" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired"/>-->
-          <!--          <field attribute="fs_pcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired"/>-->
+          <commandbars>
+            <commandgroup position="detailform" platform="web">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <removecommand id="cancel"/>
+              <command id="search" primary="true" cssclasses="searchbutton" icon="fa-search" service="advancedSearchService" method="search" label="Search" parameters="schema,datamap"/>
+            </commandgroup>
+          </commandbars>
+          
           <properties>
-            <property key="commandbar.bottom" value="search"/>
             <property key="detail.focus.allowmovingbackward" value="true"/>
             <property key="search.handlewidth" value="180"/>
             <property key="crud.disableautofocus" value="true"/>
@@ -361,13 +355,12 @@
         </schema>
 
         <schema id="pcslist" stereotype="list">
-          <field attribute="fs_block" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired">
+          <field attribute="fsblock" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired">
             <renderer type="default"  params="inputsize=small;editable=true" />
           </field>
-          <field attribute="fs_pcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired">
+          <field attribute="fspcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired">
             <renderer type="default"  params="inputsize=small;editable=true" />
           </field>
-        
         </schema>
 
       </schemas>
@@ -411,15 +404,15 @@
         </schema>
 
         <schema id="search" title="Location Search" stereotype="search">
-          <field attribute="fs_locationsearch" hidden="true" default="true"/>
-          <field attribute="fs_includesubloc" label="Include Sublocations" default="true" searchoperation="eq">
+          <field attribute="fslocationsearch" hidden="true" default="true"/>
+          <field attribute="fsincludesubloc" label="Include Sublocations" default="true" searchoperation="eq">
             <renderer type="checkbox"/>
           </field>
-          <optionfield attribute="fs_facility" label="Facility" requiredexpression="true" searchoperation="eq" default="">
+          <optionfield attribute="fsfacility" label="Facility" requiredexpression="true" searchoperation="eq" default="">
             <option label="ACS1"  value="ACS01"/>
             <option label="AES1"  value="AES11"/>
             <option label="AMH1"  value="AMH11"/>
-            <option label="AMH2"  value="AMR00"/>
+            <option label="AMH2"  value="AMR03,AMR04"/>
             <option label="ALM1"  value="ALM01"/>
             <option label="ALP1"  value="ALP11"/>
             <option label="AVS1"  value="AVS11"/>
@@ -433,8 +426,7 @@
             <option label="CID1"  value="CID11"/>
             <option label="CIM1"  value="CIM01"/>
             <option label="CVS1"  value="CVS11"/>
-            <option label="DSS1"  value="DSS11"/>
-            <option label="DSS1"  value="DSS21"/>
+            <option label="DSS1"  value="DSS11,DSS21"/>
             <option label="GAL1"  value="GAL01"/>
             <option label="HON1"  value="HON01"/>
             <option label="IVS1"  value="IVS11"/>
@@ -452,14 +444,7 @@
             <option label="ORS1"  value="ORS11"/>
             <option label="OTE1"  value="OTE11"/>
             <option label="REE1"  value="REE01"/>
-            <option label="SAR1"  value="SAR01"/>
-            <option label="SAR1"  value="SAR02"/>
-            <option label="SAR1"  value="SAR03"/>
-            <option label="SAR1"  value="SAR04"/>
-            <option label="SAR1"  value="SAR05"/>
-            <option label="SAR1"  value="SAR06"/>
-            <option label="SAR1"  value="SAR07"/>
-            <option label="SAR1"  value="SAR08"/>
+            <option label="SAR1"  value="SAR01,SAR02,SAR03,SAR04,SAR05,SAR06,SAR07,SAR08"/>
             <option label="SDVL"  value="SDVL1"/>
             <option label="SES1"  value="SES10"/>
             <option label="SES2"  value="SES20"/>
@@ -473,21 +458,41 @@
             <option label="TPZ1"  value="TPZ11"/>
             <event type="afterchange" service="advancedSearchService" method="facilitySelected"/>
           </optionfield>
-          <optionfield attribute="fs_locint" label="Locations of Interest" providerattribute="_FsLocationsOfInterest" searchoperation="eq" requiredexpression="service:advancedSearchService.isLocationsOfInterestRequired">
+          <optionfield attribute="fslocint" label="Locations of Interest" providerattribute="_FsLocationsOfInterest" searchoperation="eq" requiredexpression="service:advancedSearchService.isLocationsOfInterestRequired">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
-          <optionfield attribute="fs_switchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq" requiredexpression="service:advancedSearchService.isSwitchgearLocationsRequired">
+          <optionfield attribute="fsswitchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq" requiredexpression="service:advancedSearchService.isSwitchgearLocationsRequired">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
-          <field attribute="fs_block" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired"/>
-          <field attribute="fs_pcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired"/>
+
+          <composition inline="true" relationship="#pcs" label="PCS:" detailschema="" printschema="">
+            <collectionproperties listschema="pcslist" autocommit="false"/>
+            <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
+          </composition>
+
+          <commandbars>
+            <commandgroup position="detailform" platform="web">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <removecommand id="cancel"/>
+              <command id="search" primary="true" cssclasses="searchbutton" icon="fa-search" service="advancedSearchService" method="search" label="Search" parameters="schema,datamap"/>
+            </commandgroup>
+          </commandbars>
+
           <properties>
-            <property key="commandbar.bottom" value="search"/>
-            <property key="search.startexpanded" value="true"/>
-            <property key="detail.focus.allowmovingbackward" value="true"/>
             <property key="search.handlewidth" value="180"/>
             <property key="crud.disableautofocus" value="true"/>
+            <property key="search.startexpanded" value="true"/>
           </properties>
+        </schema>
+
+        <schema id="pcslist" stereotype="list">
+          <field attribute="fsblock" label="Block" requiredexpression="service:advancedSearchService.isBlockRequired">
+            <renderer type="default"  params="inputsize=small;editable=true" />
+          </field>
+          <field attribute="fspcs" label="PCS" requiredexpression="service:advancedSearchService.isPcsRequired">
+            <renderer type="default"  params="inputsize=small;editable=true" />
+          </field>
         </schema>
       </schemas>
     </application>

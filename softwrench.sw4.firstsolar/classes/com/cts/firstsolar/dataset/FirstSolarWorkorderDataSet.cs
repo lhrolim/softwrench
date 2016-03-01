@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using cts.commons.persistence;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
@@ -9,10 +10,10 @@ using softWrench.sW4.Metadata.Applications.DataSet;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
     public class FirstSolarWorkorderDataSet : BaseWorkorderDataSet {
-        private readonly FirstSolarPCSLocationHandler _pcsLocationHandler;
+        private readonly FirstSolarAdvancedSearchHandler _advancedSearchHandler;
 
-        public FirstSolarWorkorderDataSet(ISWDBHibernateDAO swdbDao, FirstSolarPCSLocationHandler pcsLocationHandler) : base(swdbDao) {
-            _pcsLocationHandler = pcsLocationHandler;
+        public FirstSolarWorkorderDataSet(ISWDBHibernateDAO swdbDao, FirstSolarAdvancedSearchHandler advancedSearchHandler) : base(swdbDao) {
+            _advancedSearchHandler = advancedSearchHandler;
         }
 
         public override string ClientFilter() {
@@ -20,8 +21,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         }
 
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
-            if (_pcsLocationHandler.IsAdvancedSearch(searchDto)) {
-                _pcsLocationHandler.AppendAdvancedSearchWhereClause(application, searchDto, "workorder");
+            if (_advancedSearchHandler.IsAdvancedSearch(searchDto)) {
+                _advancedSearchHandler.AppendAdvancedSearchWhereClause(application, searchDto, "workorder");
             }
             return base.GetList(application, searchDto);
         }

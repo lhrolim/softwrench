@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
@@ -7,16 +8,18 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
-    class FirstSolarLocationDataSet : BaseLocationDataSet {
+    public class FirstSolarLocationDataSet : BaseLocationDataSet {
 
         public override string ClientFilter() {
             return "firstsolar";
         }
 
         private readonly FirstSolarPCSLocationHandler _pcsLocationHandler;
+        private readonly FirstSolarAdvancedSearchHandler _advancedSearchHandler;
 
-        public FirstSolarLocationDataSet(FirstSolarPCSLocationHandler pcsLocationHandler) {
+        public FirstSolarLocationDataSet(FirstSolarPCSLocationHandler pcsLocationHandler, FirstSolarAdvancedSearchHandler advancedSearchHandler) {
             _pcsLocationHandler = pcsLocationHandler;
+            _advancedSearchHandler = advancedSearchHandler;
         }
 
 
@@ -24,8 +27,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var quickSearchData = searchDto.QuickSearchData;
 
             if (string.IsNullOrEmpty(quickSearchData)) {
-                if (_pcsLocationHandler.IsAdvancedSearch(searchDto)) {
-                    _pcsLocationHandler.AppendAdvancedSearchWhereClause(application, searchDto, "location");
+                if (_advancedSearchHandler.IsAdvancedSearch(searchDto)) {
+                    _advancedSearchHandler.AppendAdvancedSearchWhereClause(application, searchDto, "location");
                 }
                 return base.GetList(application, searchDto);
             }

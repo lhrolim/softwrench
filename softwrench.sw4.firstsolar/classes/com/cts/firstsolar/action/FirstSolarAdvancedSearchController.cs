@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using cts.commons.web.Attributes;
-using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
@@ -9,20 +9,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
     [SWControllerConfiguration]
     public class FirstSolarAdvancedSearchController : ApiController {
 
-        private readonly FirstSolarPCSLocationHandler _pcsLocationHandler;
+        private readonly FirstSolarAdvancedSearchHandler _advancedSearchHandler;
 
-        public FirstSolarAdvancedSearchController(FirstSolarPCSLocationHandler pcsLocationHandler) {
-            _pcsLocationHandler = pcsLocationHandler;
+        public FirstSolarAdvancedSearchController(FirstSolarAdvancedSearchHandler advancedSearchHandler) {
+            _advancedSearchHandler = advancedSearchHandler;
         }
 
         [HttpGet]
-        public List<Dictionary<string, string>> GetLocationsOfInterest([FromUri] string facility) {
-            return _pcsLocationHandler.GetLocationsOfInterest(facility);
+        public List<Dictionary<string, string>> GetLocationsOfInterest([FromUri] List<string> facilities) {
+            return _advancedSearchHandler.GetLocationsOfInterest(facilities);
         }
 
         [HttpGet]
-        public List<Dictionary<string, string>> GetSwitchgearLocations([FromUri] string facility) {
-            return _pcsLocationHandler.GetSwitchgearLocations(facility);
+        public List<Dictionary<string, string>> GetSwitchgearLocations([FromUri] List<string> facilities) {
+            return _advancedSearchHandler.GetSwitchgearLocations(facilities);
         }
     }
 }

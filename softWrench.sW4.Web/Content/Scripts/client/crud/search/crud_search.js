@@ -103,8 +103,8 @@
                     getSearchForm(applicationName, searchSchemaid);
                 });
 
-                function buildSearchOperators(searchData) {
-                    var searchOperator = {};
+                function buildSearchOperators(searchData, searchOperator) {
+                    searchOperator = searchOperator ? searchOperator : {};
                     if (!searchData || !$scope.schema.displayables) {
                         return searchOperator;
                     }
@@ -135,7 +135,8 @@
                     var searchdata = args[1];
                     var applicationName = $scope.schema.applicationName;
                     var extraParameters = {};
-                    extraParameters.searchOperator = buildSearchOperators(searchdata);
+                    var searchOperator = args[2];
+                    extraParameters.searchOperator = buildSearchOperators(searchdata, searchOperator);
                     redirectService.redirectWithData(applicationName, "list", searchdata, extraParameters);
                 });
             }]

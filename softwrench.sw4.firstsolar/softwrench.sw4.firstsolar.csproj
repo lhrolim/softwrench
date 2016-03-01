@@ -62,6 +62,14 @@
     <Compile Include="classes\com\cts\firstsolar\action\util\BatchRedirectionHelper.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarDatamapConverterUtil.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarWoValidationHelper.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\CustomizationContainer.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarAdvancedSearchPcsHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarBaseLocationFinder.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\AdvancedSearchCustomization.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarAdvancedSearchHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\Ses10Ses20Customization.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\Sar03Til08Customization.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\Sar01Sar02Customization.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarAssetDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarLocationDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPCSLocationHandler.cs" />
