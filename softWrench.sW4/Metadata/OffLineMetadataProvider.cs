@@ -34,7 +34,11 @@ namespace softWrench.sW4.Metadata {
             foreach (var app in MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user)) {
                 var mobileSchemas = app.Schemas().Where(a => a.Value.IsMobilePlatform());
                 foreach (var schema in mobileSchemas.Where(schema => schema.Value.IsMobilePlatform())) {
-                    names.AddRange(schema.Value.Compositions().Select(association => association.Relationship));
+                    names.AddRange(
+                        schema.Value.Compositions()
+                            .Where(composition => !composition.Inline) // TODO: !!!
+                            .Select(association => association.Relationship)
+                        );
                 }
             }
 
@@ -69,7 +73,8 @@ namespace softWrench.sW4.Metadata {
 
                     // resolve the associations of the compositions
                     var compositionAssociations = schema.Value.Compositions()
-                        .Select(composition => composition.Schema.Schemas.Sync.Associations())
+                        .Where(composition => !composition.Inline) // TODO: !!!
+                        .Select(composition =>  composition.Schema.Schemas.Sync.Associations())
                         .SelectMany(associations => associations)
                         .Where(association => !lookupTable.Contains(association.EntityAssociation.To) && !lookupTable.Contains(association.ApplicationTo))
                         .Select(association => {

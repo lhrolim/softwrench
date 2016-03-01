@@ -12,7 +12,7 @@
     "url": "https://github.com/controltechnologysolutions/softwrench.git"
   },
   "devDependencies": {
-    "cordova": "^5.1.1",
+    "cordova": "^5.4.1",
     "fs-extra": "^0.24.0",
     "grunt": "latest",
     "grunt-bowercopy": "^1.2.0",

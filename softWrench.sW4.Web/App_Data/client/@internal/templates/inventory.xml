@@ -512,7 +512,7 @@
         <property key="mobile.fetchlimit" value="300"/>
       </properties>
       <schemas>
-        <schema stereotype="list" id="invbalancesList" title="Inventory Grid" platform="web">
+        <schema stereotype="list" id="invbalancesList" title="Inventory Grid">
           <commandbars>
             <commandgroup position="gridtop">
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>

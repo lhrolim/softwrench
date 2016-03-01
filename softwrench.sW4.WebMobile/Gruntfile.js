@@ -1,3 +1,4 @@
+/// <binding BeforeBuild='copy, default' />
 module.exports = function (grunt) {
 
     // Project configuration.
@@ -379,7 +380,7 @@ module.exports = function (grunt) {
             build: {
                 // applies /overrides files
                 files: [
-                    { expand: true, src: ["**/*"], dest: "platforms/", cwd: "overrides/" }
+                    { expand: true, src: ["**/*", "!cordova.js"], dest: "platforms/", cwd: "overrides/" }
                 ]
             }
         },

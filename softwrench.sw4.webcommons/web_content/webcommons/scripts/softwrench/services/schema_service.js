@@ -78,12 +78,12 @@
          * @param {} path 
          * @returns {} 
          */
-        function locateJquerySectionElementByApp(schema,datamap, path) {
+        function locateJquerySectionElementByApp(schema, datamap, path) {
             
         }
 
         function nonTabFields(schema) {
-            return fieldService.nonTabFields(schema.displayables, true);
+            return flattenDisplayables(fieldService.nonTabFields(schema.displayables, true));
         };
 
         function hasAnyFieldOnMainTab(schema) {
@@ -191,16 +191,12 @@
                 return schema.jscache.editable;
             }
 
-            var displayables = schema.displayables;
-            for (var i = 0; i < displayables.length; i++) {
-                var dis = displayables[i];
-                if (fieldService.isPropertyTrue(dis, "editable")) {
-                    schema.jscache.editable = true;
-                    return true;
-                }
-            }
-            schema.jscache.editable = false;
-            return false;
+            var editable = allDisplayables(schema).some(function(displayable) {
+                return fieldService.isPropertyTrue(displayable, "editable");
+            }); 
+           
+            schema.jscache.editable = editable;
+            return editable;
         }
 
         /**
@@ -245,12 +241,12 @@
             return schemaA.applicationName === schemaB.applicationName && schemaA.schemaId === schemaB.schemaId;
         }
 
-        function getAllDisplayables(fields, context) {
+        function flattenDisplayables(fields, context) {
             if (!fields) return [];
             context = context || [];
             fields.forEach(function (f) {
                 if (angular.isArray(f.displayables)) {
-                    getAllDisplayables(f.displayables, context);
+                    flattenDisplayables(f.displayables, context);
                 } else {
                     context.push(f);
                 }
@@ -265,7 +261,7 @@
          * @returns Array<FieldMetadata> 
          */
         function allDisplayables(schema) {
-            return getAllDisplayables(schema.displayables);
+            return flattenDisplayables(schema.displayables);
         }
 
         return {
