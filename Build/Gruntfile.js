@@ -206,6 +206,10 @@ module.exports = function (grunt) {
                     // bootstrap
                     "<%= bowercopy.scripts.options.destPrefix %>/bootstrap.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/bootstrap-datetimepicker.js",
+                    // devextreme
+                    "<%= bowercopy.scripts.options.destPrefix %>/globalize.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/dx.chartjs.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/dx.vectormap.usa.js",
                     // angular
                     "<%= bowercopy.scripts.options.destPrefix %>/angular.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-sanitize.js",
