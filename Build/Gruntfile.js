@@ -89,7 +89,7 @@ module.exports = function (grunt) {
                     "font-awesome.css": "font-awesome/css/font-awesome.min.css",
                     // angular
                     "textAngular.css": "textAngular/dist/textAngular.css",
-                    "angular-ui-select.css": "ui-select/dist/select.min.css",
+                    "angular-ui-select.css": "ui-select/dist/select.min.css"
                 }
             },
             fonts: {
@@ -196,6 +196,10 @@ module.exports = function (grunt) {
                     separator: ";\n",
                 },
                 src: [
+                    // devextreme
+                    "<%= bowercopy.scripts.options.destPrefix %>/globalize.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/dx.chartjs.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/dx.vectormap.usa.js",
                      // utils
                     "<%= bowercopy.scripts.options.destPrefix %>/moment.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/spin.js",
