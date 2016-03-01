@@ -41,10 +41,11 @@
                 if (!scope.dashboard || !scope.dashboard.layout) {
                     return null;
                 }
+
                 var colNum = parseInt(scope.dashboard.layout.split(',')[row]);
                 var visibleColumns = 0;
                 for (var i = 0; i < colNum; i++) {
-                    if (this.isPanelVisible(row, i)) {
+                    if (scope.isPanelVisible(scope.getPanelDataFromMatrix(row, i))) {
                         visibleColumns++;
                     }
                 }

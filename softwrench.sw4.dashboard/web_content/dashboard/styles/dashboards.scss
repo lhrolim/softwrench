@@ -22,33 +22,38 @@
 .dash-header {
     padding: 20px 20px 0;
 
-    .column {
-        padding: 0;
+    .row {
+        margin-right: -15px;
+        margin-left: -15px;
 
-        .wrap {
-            /*padding: 0 20px;*/
+        .column {
+            padding: 0;
 
-            .panel {
-                .header {
-                    background: #5090c6;
-                    color: #fff;
-                    padding: 10px 20px 8px;
-                    -moz-border-radius-topleft: 5px;
-                    -moz-border-radius-topright: 5px;
-                    border-top-left-radius: 5px;
-                    border-top-right-radius: 5px;
-                }
+            .wrap {
+                padding: 0 20px;
 
-                .body {
-                    border: 2px solid #5090c6;
-                    -moz-border-radius-bottomleft: 5px;
-                    -moz-border-radius-bottomright: 5px;
-                    border-bottom-left-radius: 5px;
-                    border-bottom-right-radius: 5px;
-                    overflow: hidden;
+                .panel {
+                    .header {
+                        background: #5090c6;
+                        color: #fff;
+                        padding: 10px 20px 8px;
+                        -moz-border-radius-topleft: 5px;
+                        -moz-border-radius-topright: 5px;
+                        border-top-left-radius: 5px;
+                        border-top-right-radius: 5px;
+                    }
 
-                    .sw.chart {
-                        padding: 10px;
+                    .body {
+                        border: 2px solid #5090c6;
+                        -moz-border-radius-bottomleft: 5px;
+                        -moz-border-radius-bottomright: 5px;
+                        border-bottom-left-radius: 5px;
+                        border-bottom-right-radius: 5px;
+                        overflow: hidden;
+
+                        .sw.chart {
+                            padding: 10px;
+                        }
                     }
                 }
             }
@@ -59,7 +64,7 @@
 @media all and (min-width: 768px) {
     .container.desktop .dash-header {
         .listgrid-table {
-             margin-top: 83px !important;
+            margin-top: 83px !important;
         }
 
         .affix-pagination, .listgrid-thead {
