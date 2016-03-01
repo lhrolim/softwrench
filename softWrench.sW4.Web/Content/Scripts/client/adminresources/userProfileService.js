@@ -134,6 +134,11 @@
             });
         }
 
+        function allowUpdateChanged(parameters) {
+            if (!!parameters.fields["#appallowupdate"]) {
+                parameters.fields["#appallowviewonly"] = true;
+            }
+        }
 
         function onApplicationChange(parameters) {
             var dm = parameters.fields;
@@ -664,6 +669,7 @@
             afterModeChanged: afterModeChanged,
             afterSchemaChanged: afterSchemaChanged,
             afterTabsLoaded: afterTabsLoaded,
+            allowUpdateChanged:allowUpdateChanged,
             availableFieldsRefreshed: availableFieldsRefreshed,
             availableActionsRefreshed: availableActionsRefreshed,
             beforeApplicationChange: beforeApplicationChange,

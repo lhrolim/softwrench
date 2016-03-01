@@ -64,8 +64,9 @@
             </field>
             <field attribute="#appallowupdate" label="Allow Update">
               <renderer type="checkbox"/>
+              <event type="afterchange" service="userProfileService" method="allowUpdateChanged"/>
             </field>
-            <field attribute="#appallowviewonly" label="Allow Only Visualization">
+            <field attribute="#appallowviewonly" label="Allow Visualization">
               <renderer type="checkbox"/>
             </field>
 
