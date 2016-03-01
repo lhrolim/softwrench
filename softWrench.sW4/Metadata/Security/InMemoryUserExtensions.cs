@@ -20,22 +20,32 @@ namespace softWrench.sW4.Metadata.Security {
             return !isAppRoleActive || user.Roles.Any(r => r.Name == application.Role);
         }
 
-        public static bool VerifySecurityMode(this InMemoryUser user, string applicationName, DataRequestAdapter request) {
+        public enum SecurityModeCheckResult {
+            Block, Allow, OutPut
+        }
+
+
+        public static SecurityModeCheckResult VerifySecurityMode(this InMemoryUser user, string applicationName, DataRequestAdapter request) {
             var profile = user.MergedUserProfile;
             var permission = profile.GetPermissionByApplication(applicationName);
             if (permission == null) {
                 //no restriction to that particular application
-                return true;
+                return SecurityModeCheckResult.Allow;
             }
             var viewingExisting = request.Id != null || request.UserId != null;
 
-            if (viewingExisting && !permission.AllowUpdate && !permission.AllowView) {
-                return false;
-            } if (!viewingExisting && !permission.AllowCreation) {
-                return false;
+            if (viewingExisting) {
+                if (!permission.AllowUpdate && !permission.AllowView) {
+                    return SecurityModeCheckResult.Block;
+                } else if (!permission.AllowUpdate) {
+                    //users can view, but using output mode only
+                    return SecurityModeCheckResult.OutPut;
+                }
             }
-            return true;
-
+            if (!viewingExisting && !permission.AllowCreation) {
+                return SecurityModeCheckResult.Block;
+            }
+            return SecurityModeCheckResult.Allow;
         }
 
         [NotNull]

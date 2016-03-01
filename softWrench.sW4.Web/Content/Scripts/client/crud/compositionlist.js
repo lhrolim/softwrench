@@ -115,6 +115,7 @@
                 cancelfn: '&',
                 previousschema: '=',
                 previousdata: '=',
+                mode: '@',
                 inline: '@',
                 ismodal: '@',
                 tabid: '@'
@@ -150,6 +151,7 @@
                             "<composition-master-details data-cancelfn='cancel(data,schema)' " +
                             "data-compositiondata='compositiondata' data-compositionschemadefinition='compositionschemadefinition' " +
                             "data-parentdata='parentdata' parentschema='parentschema' " +
+                            "mode='{{mode}}' " +
                             "data-relationship='{{relationship}}' data-title='{{tabLabel}}' />");
                     } else {
                         element.append("<composition-list data-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
@@ -158,6 +160,7 @@
                             "compositiondata='compositiondata' " +
                             "metadatadeclaration='metadata' " +
                             "parentschema='parentschema' " +
+                            "mode='{{mode}}' "+
                             "parentdata='parentdata' " +
                             "cancelfn='cancel(data,schema)' " +
                             "previousschema='previousschema' " +
@@ -497,9 +500,19 @@
             return expressionService.evaluate($scope.collectionproperties.allowInsertion, $scope.parentdata) && $scope.collectionproperties.autoCommit;
         }
 
+        this.shouldShowSave = function () {
+            return $scope.mode !== "output";
+        }
+
+        $scope.shouldShowSave = function () {
+            return $scope.mode !== "output";
+        }
+
         $scope.shouldShowAdd = function () {
             return expressionService.evaluate($scope.collectionproperties.allowInsertion, $scope.parentdata) && $scope.collectionproperties.autoCommit;
         }
+
+
 
         this.getAddIcon = function () {
             var iconCompositionAddbutton = $scope.compositionschemadefinition.schemas.list.properties['icon.composition.addbutton'];

@@ -90,12 +90,14 @@
                                                       cancelfn="cancel(data,schema)"
                                                       previousschema="previousschema" previousdata="previousdata"
                                                       metadata="tab"
+                                                      mode="{{schema.mode}}"
                                                       tabid="{{tab.tabId}}"
                                                       ismodal="{{ismodal}}"/>
                         </div>
                         <div ng-switch-when="false">
                         </div>
                     </div>
+                    
                     <div class="tab-pane" ng-switch-when="ApplicationTabDefinition" ng-switch on="schema.mode.equalsAny('input', 'none')">
                         <div ng-switch-when="true">
                             <crud-input-wrapper ismodal="{{ismodal}}"

@@ -17,15 +17,16 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Metadata.Applications.Security {
     class ApplicationFieldSecurityApplier {
 
-        private static ILog Log = LogManager.GetLogger(typeof(ApplicationFieldSecurityApplier));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ApplicationFieldSecurityApplier));
 
 
         public static List<IApplicationDisplayable> OnApplySecurityPolicy(ApplicationSchemaDefinition schema, IEnumerable<Role> userRoles, string schemaFieldsToDisplay, MergedUserProfile profile) {
             var applicationPermission = profile.GetPermissionByApplication(schema.ApplicationName);
 
             if (schemaFieldsToDisplay == null) {
-                if (applicationPermission == null || applicationPermission.ContainerPermissions == null || !applicationPermission.ContainerPermissions.Any(c => c.Schema.EqualsIc(schema.SchemaId))) {
-                    //no restriction at all
+                if (applicationPermission == null || (!SchemaRequiresCompositionValidation(schema, applicationPermission) && (!applicationPermission.HasContainerPermissionOfSchema(schema.SchemaId)))) {
+                    //no restriction at all. If AllowUpdate isn´t granted, though, we need to modify the compositions
+                    Log.DebugFormat("schema {0} requires no further validation, returning all fields", schema.SchemaId);
                     return schema.Displayables;
                 }
             }
@@ -44,17 +45,25 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             var containerPermissions = applicationPermission.ContainerPermissions.Where(c => c.Schema.EqualsIc(schema.SchemaId));
             var compositionPermissions = applicationPermission.CompositionPermissions == null ? new List<CompositionPermission>()
                 : applicationPermission.CompositionPermissions.Where(c => c.Schema.EqualsIc(schema.SchemaId));
-            resultingFields.AddRange(GetAllowedFields(fieldsToRetain, schema.Displayables, compositionPermissions,
+            resultingFields.AddRange(GetAllowedFields(applicationPermission, fieldsToRetain, schema.Displayables, compositionPermissions,
                 containerPermissions, "main"));
 
             return resultingFields;
 
         }
 
+        private static bool SchemaRequiresCompositionValidation(ApplicationSchemaDefinition schema, ApplicationPermission applicationPermission) {
+            if (schema.Stereotype.Equals(SchemaStereotype.List) || schema.Stereotype.Equals(SchemaStereotype.CompositionList)) {
+                return false;
+            }
 
-        private static List<IApplicationDisplayable> GetAllowedFields(ISet<string> fieldsToRetain,
-            IEnumerable<IApplicationDisplayable> displayables, IEnumerable<CompositionPermission> compositionPermissions,
-            IEnumerable<ContainerPermission> containerPermissions, string currentContainerKey) {
+            return !applicationPermission.AllowUpdate;
+        }
+
+
+        private static List<IApplicationDisplayable> GetAllowedFields(ApplicationPermission applicationPermission,
+            ISet<string> fieldsToRetain, IEnumerable<IApplicationDisplayable> displayables,
+            IEnumerable<CompositionPermission> compositionPermissions, IEnumerable<ContainerPermission> containerPermissions, string currentContainerKey) {
             var permissions = containerPermissions as IList<ContainerPermission> ?? containerPermissions.ToList();
             var container = permissions.FirstOrDefault(c => c.ContainerKey.EqualsIc(currentContainerKey));
 
@@ -64,43 +73,58 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                 if (field is ApplicationTabDefinition) {
                     //tabs change the ApplicationContainer
                     var tab = (ApplicationTabDefinition)field;
-                    tab.Displayables = GetAllowedFields(fieldsToRetain, tab.Displayables, compositionPermissions, permissions, tab.TabId);
+                    tab.Displayables = GetAllowedFields(applicationPermission,
+                        fieldsToRetain, tab.Displayables, compositionPermissions, permissions, tab.TabId);
                     if (tab.Displayables.Any()) {
                         //if at least one field remained, let´s keep the tab
                         resultingFields.Add(tab);
                     }
                 } else {
                     if (field is ApplicationCompositionDefinition) {
-                        ApplicationCompositionDefinition comp = (ApplicationCompositionDefinition)field;
+                        var comp = (ApplicationCompositionDefinition)field;
                         var compPermission = compositionPermissions.FirstOrDefault(c => (c.CompositionKey + "_").EqualsIc(comp.TabId));
-                        if (compPermission == null) {
-                            resultingFields.Add(comp);
-                        } else if (compPermission.HasNoPermission) {
+
+                        if (applicationPermission.AllowUpdate) {
+                            if (compPermission == null) {
+                                //no specific composition permission, and application update allowed --> add composition with no modifications
+                                resultingFields.Add(comp);
+                                continue;
+                            }
+                        } else {
+                            // if top level application update is not granted, compositions should not be granted either
+                            compPermission = new CompositionPermission() {
+                                AllowUpdate = false,
+                                AllowCreation = false,
+                                AllowRemoval = false,
+                                AllowView = applicationPermission.AllowView
+                            };
+                        }
+
+                        if (compPermission.HasNoPermission) {
+                            //excluding the composition entirely
                             continue;
                         } else if (comp.Schema is ApplicationCompositionCollectionSchema) {
                             var cloned = (ApplicationCompositionDefinition)comp.Clone();
                             var collSchema = (ApplicationCompositionCollectionSchema)cloned.Schema;
-                            //these allowXXX can be expressions that would need to be evaluated at client side too, depending on the datamap
+                            //these allowXXX can be expressions that would need to be evaluated at client side too (that´s the reason of string instead of boolean),
                             //hence we can only mark them as false if the permissions are not granted, but we need to keep them intact otherwise
+                            //the application top-level update permission has to be granted however
                             if (!compPermission.AllowUpdate) {
                                 collSchema.CollectionProperties.AllowUpdate = "false";
                             }
                             if (!compPermission.AllowCreation) {
-                                collSchema.CollectionProperties.AllowInsertion= "false";
+                                collSchema.CollectionProperties.AllowInsertion = "false";
                             }
-
                             if (!compPermission.AllowRemoval) {
                                 collSchema.CollectionProperties.AllowRemoval = "false";
                             }
-
-
-                            collSchema.CollectionProperties.AllowRemoval = compPermission.AllowRemoval.ToString().ToLower();
                             resultingFields.Add(cloned);
                         }
                     } else if (field is ApplicationSection) {
                         var section = (ApplicationSection)field;
                         var numberOfFieldsBefore = section.Displayables.Count;
-                        section.Displayables = GetAllowedFields(fieldsToRetain, section.Displayables, compositionPermissions, permissions, currentContainerKey);
+                        section.Displayables = GetAllowedFields(applicationPermission,
+                            fieldsToRetain, section.Displayables, compositionPermissions, permissions, currentContainerKey);
                         if (section.Displayables.Any() && numberOfFieldsBefore != 0) {
                             //if at least one field remained, let´s keep the section, otherwise it would be discarded as well
                             //unless ít´s a section to import stuf

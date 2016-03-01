@@ -83,7 +83,7 @@
 
   <commandgroup position="compositionbottom" platform="web">
     <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Save"/>
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldShowSave"/>
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="parentschema,parentdatamap" label="Print" showexpression="$scope:shouldshowprint"/>
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>

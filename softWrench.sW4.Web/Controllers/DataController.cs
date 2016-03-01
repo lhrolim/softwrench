@@ -70,7 +70,9 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web, request.SchemaFieldsToDisplay);
 
-            if (!user.VerifySecurityMode(application,request)) {
+            var securityModeCheckResult = user.VerifySecurityMode(application, request);
+
+            if (securityModeCheckResult.Equals(InMemoryUserExtensions.SecurityModeCheckResult.Block)) {
                 throw new SecurityException("You do not have permission to access this application. Please contact your administrator");
             }
 
@@ -79,7 +81,11 @@ namespace softWrench.sW4.Web.Controllers {
             var response = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
+
             response.Mode = schemaMode.ToString().ToLower();
+            if (securityModeCheckResult.Equals(InMemoryUserExtensions.SecurityModeCheckResult.OutPut)) {
+                response.Mode = "output";
+            }
 
             return response;
         }

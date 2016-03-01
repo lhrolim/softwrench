@@ -94,6 +94,17 @@ namespace softwrench.sw4.user.classes.entities.security {
             }
         }
 
+        public bool AllDefault {
+            //TODO: add AllowRemoval later...
+            get {
+                return AllowCreation && AllowUpdate && AllowView;
+            }
+        }
+
+        public bool HasContainerPermissionOfSchema(string schema) {
+            return ContainerPermissions != null && ContainerPermissions.Any(c => c.Schema.EqualsIc(schema));
+        }
+
 
         public void Merge(ApplicationPermission other) {
             AllowCreation = AllowCreation && other.AllowCreation;

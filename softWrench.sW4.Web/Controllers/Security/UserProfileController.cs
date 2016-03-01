@@ -126,7 +126,12 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         [HttpPost]
         public BlankApplicationResponse BatchUpdate(int profileId, [FromBody]List<string> applications, bool allowCreation, bool allowUpdate, bool allowView) {
-            var allDefault = (true == allowCreation == allowUpdate == allowView);
+            if (allowUpdate) {
+                allowView = true;
+            }
+
+            var allDefault = allowCreation && allowUpdate;
+
 
             var profile = _userProfileManager.FindById(profileId);
             if (profile == null) {
@@ -183,8 +188,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
         [HttpPost]
-        public BlankApplicationResponse RefreshCache()
-        {
+        public BlankApplicationResponse RefreshCache() {
             _userProfileManager.ClearCache();
             _userProfileManager.FetchAllProfiles(true);
 
