@@ -344,6 +344,7 @@
               <removecommand id="print"/>
               <removecommand id="cancel"/>
               <command id="search" primary="true" cssclasses="searchbutton" icon="fa-search" service="advancedSearchService" method="search" label="Search" parameters="schema,datamap"/>
+              <command id="clear" cssclasses="searchbutton" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
             </commandgroup>
           </commandbars>
           
@@ -476,6 +477,7 @@
               <removecommand id="print"/>
               <removecommand id="cancel"/>
               <command id="search" primary="true" cssclasses="searchbutton" icon="fa-search" service="advancedSearchService" method="search" label="Search" parameters="schema,datamap"/>
+              <command id="clear" cssclasses="searchbutton" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
             </commandgroup>
           </commandbars>
 

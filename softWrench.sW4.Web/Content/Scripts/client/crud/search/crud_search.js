@@ -8,11 +8,12 @@
             restrict: "E",
             templateUrl: contextService.getResourceUrl("/Content/Templates/crud/search/crud_search.html"),
             scope: true,
-            link: function() {
+            link: function () {
             },
-            controller: ["$scope", "$rootScope", "$log", "$q", "$timeout", "sidePanelService", "schemaCacheService", "restService", "searchService", "redirectService", "applicationService", "$http", "validationService", "focusService", function ($scope, $rootScope, $log, $q, $timeout, sidePanelService, schemaCacheService, restService, searchService, redirectService, applicationService, $http, validationService, focusService) {
+            controller: ["$scope", "$rootScope", "$log", "$q", "$timeout", "sidePanelService", "schemaCacheService", "restService", "searchService", "redirectService", "applicationService", "$http", "validationService", "focusService", "crudContextHolderService", function ($scope, $rootScope, $log, $q, $timeout, sidePanelService, schemaCacheService, restService, searchService, redirectService, applicationService, $http, validationService, focusService, crudContextHolderService) {
 
                 $scope.panelid = $scope.$parent.panelid;
+                $scope.crudPanelid = "search";
 
                 var log = $log.getInstance("sw4.crudSearch");
                 var lastApplication = "";
@@ -61,9 +62,11 @@
 
                         sidePanelService.show($scope.panelid);
                         $scope.datamap = data.resultObject.fields;
+                        $scope.defaultDatamap = angular.copy($scope.datamap);
                         $scope.schema = schema;
                         $scope.title = schema.title;
 
+                        crudContextHolderService.applicationChanged(schema, $scope.datamap, $scope.crudPanelid);
                         var ctx = sidePanelService.getContext($scope.panelid);
                         ctx.toggleCallback = setFocus;
 
@@ -85,12 +88,14 @@
                 $rootScope.$on("sw_applicationrendered", function (event, applicationName, renderedSchema) {
                     if (!applicationName || !renderedSchema) {
                         sidePanelService.hide($scope.panelid);
+                        crudContextHolderService.clearCrudContext($scope.crudPanelid);
                         return;
                     }
 
                     var searchSchemaid = renderedSchema.properties ? renderedSchema.properties["search.schemaid"] : null;
                     if (!searchSchemaid) {
                         sidePanelService.hide($scope.panelid);
+                        crudContextHolderService.clearCrudContext($scope.crudPanelid);
                         return;
                     }
 
@@ -113,7 +118,7 @@
                         if (!searchData.hasOwnProperty(att) || !searchData[att]) {
                             continue;
                         }
-                        var displayable = $scope.schema.displayables.find(function(d) {
+                        var displayable = $scope.schema.displayables.find(function (d) {
                             return d.attribute === att;
                         });
                         if (!displayable || !displayable.searchOperation) {
@@ -138,6 +143,51 @@
                     var searchOperator = args[2];
                     extraParameters.searchOperator = buildSearchOperators(searchdata, searchOperator);
                     redirectService.redirectWithData(applicationName, "list", searchdata, extraParameters);
+                });
+
+                function clear(obj) {
+                    if (!obj) {
+                        return;
+                    }
+                    if (Array.isArray(obj)) {
+                        if (obj.length === 0) {
+                            return;
+                        }
+                        for (var i = obj.length - 1; i >= 0 ; i--) {
+                            if (typeof obj[i] === "object") {
+                                clear(obj[i]);
+                            } else {
+                                obj.splice(i, 1);
+                            }
+                        }
+                        return;
+                    }
+
+                    for (var key in obj) {
+                        if (!obj.hasOwnProperty(key)) {
+                            continue;
+                        }
+                        if (typeof obj[key] === "object") {
+                            clear(obj[key]);
+                        } else {
+                            obj[key] = null;
+                        }
+                    }
+                }
+
+                function copy(srcObj, destObj) {
+                    for (var key in srcObj) {
+                        if (!srcObj.hasOwnProperty(key)) {
+                            continue;
+                        }
+                        destObj[key] = srcObj[key];
+                    }
+                }
+
+                $scope.$on("sw.crud.search.clear", function (event, args) {
+                    $scope.datamap = crudContextHolderService.rootDataMap($scope.crudPanelid);
+                    clear($scope.datamap);
+                    copy($scope.defaultDatamap, $scope.datamap);
                 });
             }]
         }
