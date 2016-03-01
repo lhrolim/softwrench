@@ -356,6 +356,7 @@
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
+    <Compile Include="Metadata\Security\SecurityException.cs" />
     <Compile Include="Metadata\Security\SecurityGroupExtensions.cs" />
     <Compile Include="Metadata\Stereotypes\AComponentStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\ComponentStereotypeFactory.cs" />

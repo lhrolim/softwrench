@@ -5,19 +5,14 @@ using System.Web.Http;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using cts.commons.web.Attributes;
-using JetBrains.Annotations;
 using log4net;
 using Newtonsoft.Json.Linq;
-using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.entities.security;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
-using softWrench.sW4.Data.Pagination;
-using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
@@ -130,8 +125,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
 
         [HttpPost]
-        public BlankApplicationResponse BatchUpdate(int profileId, [FromBody]List<string> applications, bool allowCreation, bool allowUpdate, bool allowViewOnly) {
-            var allDefault = (true == allowCreation == allowUpdate == allowViewOnly);
+        public BlankApplicationResponse BatchUpdate(int profileId, [FromBody]List<string> applications, bool allowCreation, bool allowUpdate, bool allowView) {
+            var allDefault = (true == allowCreation == allowUpdate == allowView);
 
             var profile = _userProfileManager.FindById(profileId);
             if (profile == null) {
@@ -151,11 +146,11 @@ namespace softWrench.sW4.Web.Controllers.Security {
                     appPermission = new ApplicationPermission() {
                         ApplicationName = application
                     };
-                    SetBasicPermissions(allowCreation, allowUpdate, allowViewOnly, appPermission);
+                    SetBasicPermissions(allowCreation, allowUpdate, allowView, appPermission);
                     profile.ApplicationPermissions.Add(appPermission);
                     applicationsCreated++;
                 } else {
-                    SetBasicPermissions(allowCreation, allowUpdate, allowViewOnly, appPermission);
+                    SetBasicPermissions(allowCreation, allowUpdate, allowView, appPermission);
                     applicationsUpdated++;
                 }
             }
@@ -187,11 +182,23 @@ namespace softWrench.sW4.Web.Controllers.Security {
             };
         }
 
-        private static void SetBasicPermissions(bool allowCreation, bool allowUpdate, bool allowViewOnly,
+        [HttpPost]
+        public BlankApplicationResponse RefreshCache()
+        {
+            _userProfileManager.ClearCache();
+            _userProfileManager.FetchAllProfiles(true);
+
+            return new BlankApplicationResponse() {
+                SuccessMessage = "Cache updated successfully"
+            };
+        }
+
+
+        private static void SetBasicPermissions(bool allowCreation, bool allowUpdate, bool allowView,
             ApplicationPermission appPermission) {
             appPermission.AllowCreation = allowCreation;
             appPermission.AllowRemoval = false;
-            appPermission.AllowViewOnly = allowViewOnly;
+            appPermission.AllowView = allowView;
             appPermission.AllowUpdate = allowUpdate;
         }
 

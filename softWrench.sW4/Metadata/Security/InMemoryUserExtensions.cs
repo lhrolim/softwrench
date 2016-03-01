@@ -7,6 +7,7 @@ using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Data.API;
 
 namespace softWrench.sW4.Metadata.Security {
     public static class InMemoryUserExtensions {
@@ -17,6 +18,24 @@ namespace softWrench.sW4.Metadata.Security {
             var appRoles = RoleManager.ActiveApplicationRoles();
             bool isAppRoleActive = appRoles.Contains(application.Role);
             return !isAppRoleActive || user.Roles.Any(r => r.Name == application.Role);
+        }
+
+        public static bool VerifySecurityMode(this InMemoryUser user, string applicationName, DataRequestAdapter request) {
+            var profile = user.MergedUserProfile;
+            var permission = profile.GetPermissionByApplication(applicationName);
+            if (permission == null) {
+                //no restriction to that particular application
+                return true;
+            }
+            var viewingExisting = request.Id != null || request.UserId != null;
+
+            if (viewingExisting && !permission.AllowUpdate && !permission.AllowView) {
+                return false;
+            } if (!viewingExisting && !permission.AllowCreation) {
+                return false;
+            }
+            return true;
+
         }
 
         [NotNull]

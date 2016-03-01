@@ -18,7 +18,15 @@
     <application entity="UserProfile" name="UserProfile" title="Security Groups">
       <schemas>
         <list>
-          <field label="Name" attribute="name" />
+          <commandbars>
+            <commandgroup position="actions">
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+                <command label="Refresh Cache" tooltip="Refresh any database changes into application" id="refresh cache" service="userProfileService" method="refreshCache"/>
+              </container>
+            </commandgroup>
+          </commandbars>
+
+            <field label="Name" attribute="name" />
           <field label="Description" attribute="description" />
           <commandbars>
             <commandgroup position="gridtop">
@@ -66,7 +74,7 @@
               <renderer type="checkbox"/>
               <event type="afterchange" service="userProfileService" method="allowUpdateChanged"/>
             </field>
-            <field attribute="#appallowviewonly" label="Allow Visualization">
+            <field attribute="#appallowview" label="Allow Visualization">
               <renderer type="checkbox"/>
             </field>
 
@@ -103,7 +111,7 @@
               <field attribute="#compallowupdate" label="Allow Update">
                 <renderer type="checkbox"/>
               </field>
-              <field attribute="#compallowviewonly" label="Allow Visualization">
+              <field attribute="#compallowview" label="Allow Visualization">
                 <renderer type="checkbox"/>
               </field>
             </section>
@@ -167,7 +175,7 @@
           <field attribute="allowupdate" label="Allow Update">
             <renderer type="checkbox"/>
           </field>
-          <field attribute="allowviewonly" label="Allow Only Visualization">
+          <field attribute="allowview" label="Allow Visualization">
             <renderer type="checkbox"/>
           </field>
         </schema>

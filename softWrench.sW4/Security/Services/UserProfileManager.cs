@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Web.Security;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
@@ -15,16 +12,12 @@ using log4net;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.entities.security;
-using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Pagination;
-using softWrench.sW4.Data.Persistence.Relational.DataConstraint;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Metadata;
-using TypeHelperExtensionMethods = NHibernate.Linq.TypeHelperExtensionMethods;
 
 
 namespace softWrench.sW4.Security.Services {
@@ -34,9 +27,8 @@ namespace softWrench.sW4.Security.Services {
 
         private static readonly IDictionary<int?, UserProfile> ProfileCache = new Dictionary<int?, UserProfile>();
 
-        private static bool _cacheStarted = false;
+        private static bool _cacheStarted;
 
-        private static readonly DataConstraintValidator ConstraintValidator = new DataConstraintValidator();
 
         private readonly ISWDBHibernateDAO _dao;
 
@@ -44,6 +36,10 @@ namespace softWrench.sW4.Security.Services {
             _dao = dao;
         }
 
+        public void ClearCache() {
+            _cacheStarted = false;
+            ProfileCache.Clear();
+        }
 
 
         public UserProfile FindByName(string name) {
@@ -74,7 +70,7 @@ namespace softWrench.sW4.Security.Services {
             }
 
             using (var session = SWDBHibernateDAO.GetInstance().GetSession()) {
-                using (var transaction = session.BeginTransaction()) {
+                using (session.BeginTransaction()) {
                     var query = _dao.BuildQuery("from UserProfile", (object[])null, session);
                     var dbProfiles = query.List();
                     var profiles = new Dictionary<string, UserProfile>();
@@ -127,7 +123,7 @@ namespace softWrench.sW4.Security.Services {
         //TODO: remove customUserRoles and customUSerCOnstraints which were exclusions from this profile ==> They don´t make sense anymore (tough,they are useless anyway)
         public void DeleteProfile(UserProfile profile) {
             using (ISession session = SWDBHibernateDAO.GetInstance().GetSession()) {
-                using (ITransaction transaction = session.BeginTransaction()) {
+                using (session.BeginTransaction()) {
                     _dao.Delete(profile);
                     if (ProfileCache.ContainsKey(profile.Id)) {
                         ProfileCache.Remove(profile.Id);
@@ -148,7 +144,7 @@ namespace softWrench.sW4.Security.Services {
             compositionData.ResultList = new List<Dictionary<string, object>>();
             foreach (var field in fieldsToShow) {
                 var dict = new Dictionary<string, object>();
-                dict["#label"] = string.IsNullOrEmpty(field.Label) ? field.Attribute : field.Attribute;
+                dict["#label"] = string.IsNullOrEmpty(field.Label) ? field.Attribute : field.Label;
                 dict["fieldKey"] = field.Attribute;
                 //enabled by default
                 dict["permission"] = "fullcontrol";
@@ -195,9 +191,8 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public MergedUserProfile BuildMergedProfile(List<UserProfile> profiles) {
-            var appPermissions = new HashedSet<ApplicationPermission>();
 
-            IDictionary<string, ApplicationPermission> permissionsDict = new Dictionary<string, ApplicationPermission>();
+            var permissionsDict = new Dictionary<string, ApplicationPermission>();
 
             foreach (var profile in profiles) {
                 //let´s use the less restictive rule

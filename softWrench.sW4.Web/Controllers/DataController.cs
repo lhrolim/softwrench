@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
 using softwrench.sW4.audit.Interfaces;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Web.Util;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -68,6 +69,10 @@ namespace softWrench.sW4.Web.Controllers {
             var applicationMetadata = MetadataProvider
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web, request.SchemaFieldsToDisplay);
+
+            if (!user.VerifySecurityMode(application,request)) {
+                throw new SecurityException("You do not have permission to access this application. Please contact your administrator");
+            }
 
 
             ContextLookuper.FillContext(request.Key);
@@ -182,7 +187,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             if (!mockMaximo) {
                 maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
-                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation, operationDataRequest.Batch,new Tuple<string, string>(operationDataRequest.UserId,operationDataRequest.SiteId));
+                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation, operationDataRequest.Batch, new Tuple<string, string>(operationDataRequest.UserId, operationDataRequest.SiteId));
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
                 //mobile requests doesn´t have to handle success messages or redirections

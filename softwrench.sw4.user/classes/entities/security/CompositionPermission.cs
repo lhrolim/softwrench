@@ -56,13 +56,13 @@ namespace softwrench.sw4.user.classes.entities.security {
 
 
         [Property]
-        public bool AllowViewOnly {
+        public bool AllowView {
             get; set;
         }
 
         public bool HasNoPermission {
             get {
-                return !AllowCreation && !AllowUpdate && !AllowViewOnly;
+                return !AllowCreation && !AllowUpdate && !AllowView;
             }
         }
 
@@ -71,7 +71,7 @@ namespace softwrench.sw4.user.classes.entities.security {
             AllowCreation = AllowCreation && other.AllowCreation;
             AllowUpdate = AllowUpdate && other.AllowUpdate;
             AllowRemoval = AllowRemoval && other.AllowRemoval;
-            AllowViewOnly = AllowViewOnly && other.AllowViewOnly;
+            AllowView = AllowView && other.AllowView;
 
             if (other.FieldPermissions == null) {
                 return;

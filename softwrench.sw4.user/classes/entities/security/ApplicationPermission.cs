@@ -59,8 +59,10 @@ namespace softwrench.sw4.user.classes.entities.security {
         }
 
         [JsonIgnore]
-        [ManyToOne(Column = "profile_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "all")]
-        public UserProfile Profile { get; set; }
+        [ManyToOne(Column = "profile_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
+        public UserProfile Profile {
+            get; set;
+        }
 
 
         [Property]
@@ -81,20 +83,22 @@ namespace softwrench.sw4.user.classes.entities.security {
 
 
         [Property]
-        public bool AllowViewOnly {
+        public bool AllowView {
             get; set;
         }
 
         public bool HasNoPermissions {
             //TODO: add AllowRemoval later...
-            get { return !AllowCreation && !AllowUpdate && !AllowViewOnly; }
+            get {
+                return !AllowCreation && !AllowUpdate && !AllowView;
+            }
         }
 
 
         public void Merge(ApplicationPermission other) {
             AllowCreation = AllowCreation && other.AllowCreation;
             AllowUpdate = AllowCreation && other.AllowUpdate;
-            AllowViewOnly = AllowCreation && other.AllowViewOnly;
+            AllowView = AllowCreation && other.AllowView;
             AllowRemoval = AllowCreation && other.AllowRemoval;
             if (ActionPermissions == null) {
                 ActionPermissions = new HashedSet<ActionPermission>();
@@ -114,7 +118,7 @@ namespace softwrench.sw4.user.classes.entities.security {
                 other.ContainerPermissions = new HashedSet<ContainerPermission>();
             }
 
-            if (other.CompositionPermissions== null) {
+            if (other.CompositionPermissions == null) {
                 other.CompositionPermissions = new HashedSet<CompositionPermission>();
             }
 
@@ -147,6 +151,10 @@ namespace softwrench.sw4.user.classes.entities.security {
                 }
             }
 
+        }
+
+        public override string ToString() {
+            return string.Format("ApplicationName: {0}, AllowCreation: {1}, AllowUpdate: {2}, AllowView: {3}", ApplicationName, AllowCreation, AllowUpdate, AllowView);
         }
     }
 }

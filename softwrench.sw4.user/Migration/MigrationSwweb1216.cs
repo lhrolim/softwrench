@@ -15,7 +15,7 @@ namespace softwrench.sw4.user.Migration {
                 .WithColumn("allowcreation").AsBoolean().WithDefaultValue(true)
                 .WithColumn("allowupdate").AsBoolean().WithDefaultValue(true)
                 .WithColumn("allowremoval").AsBoolean().WithDefaultValue(true)
-                .WithColumn("allowviewonly").AsBoolean().WithDefaultValue(false);
+                .WithColumn("allowview").AsBoolean().WithDefaultValue(false);
 
 
             Create.Table("SEC_ACTION_PER")
@@ -30,7 +30,7 @@ namespace softwrench.sw4.user.Migration {
                 .WithColumn("allowcreation").AsBoolean().WithDefaultValue(true)
                 .WithColumn("allowupdate").AsBoolean().WithDefaultValue(true)
                 .WithColumn("allowremoval").AsBoolean().WithDefaultValue(true)
-                .WithColumn("allowviewonly").AsBoolean().WithDefaultValue(false)
+                .WithColumn("allowview").AsBoolean().WithDefaultValue(false)
                 .WithColumn("schema_").AsString().NotNullable()
                 .WithColumn("compositionkey").AsString().NotNullable()
                 .WithColumn("app_id").AsInt32().ForeignKey("fk_cp_ap", "SEC_APPLICATION_PER", "id").Nullable();

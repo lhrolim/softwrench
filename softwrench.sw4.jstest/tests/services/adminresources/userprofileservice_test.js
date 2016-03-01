@@ -18,7 +18,7 @@
         allowCreation: true,
         allowUpdate: true,
         allowRemoval: true,
-        allowViewOnly: true,
+        allowView: true,
         compositionPermissions: [
             {
                 schema: "detail",
@@ -64,7 +64,7 @@
         allowCreation: true,
         allowUpdate: true,
         allowRemoval: true,
-        allowViewOnly: true,
+        allowView: true,
         containerPermissions: [
             {
                 schema: "detail",
@@ -109,7 +109,7 @@
             //changed from true to false
             "#appallowcreation": false,
             "#appallowupdate": true,
-            "#appallowviewonly": true,
+            "#appallowview": true,
             "#appallowremoval": true,
             "schema": "detail",
             iscompositiontab: false,
@@ -201,14 +201,14 @@
             application: "servicerequest",
             "#appallowcreation": true,
             "#appallowupdate": true,
-            "#appallowviewonly": true,
+            "#appallowview": true,
             "#appallowremoval": true,
             "schema": "detail",
             "#selectedtab": "spareparts",
             iscompositiontab: true,
             "#compallowcreation": false,
             "#compallowupdate": false,
-            "#compallowviewonly": false,
+            "#compallowview": false,
             "#actionPermissions_": [],
             "#fieldPermissions_": [],
         }
@@ -246,7 +246,7 @@
         //location changed to readonly
         expect(secondComposition.allowCreation).toBe(false);
         expect(secondComposition.allowUpdate).toBe(false);
-        expect(secondComposition.allowViewOnly).toBe(false);
+        expect(secondComposition.allowView).toBe(false);
 
 
     }));
@@ -262,7 +262,7 @@
             application: "servicerequest",
             "#appallowcreation": true,
             "#appallowupdate": true,
-            "#appallowviewonly": true,
+            "#appallowview": true,
             "#appallowremoval": true,
             "schema": "detail",
             "#selectedtab": "#main",
@@ -341,7 +341,7 @@
             application: "asset",
             "#appallowcreation": true,
             "#appallowupdate": true,
-            "#appallowviewonly": true,
+            "#appallowview": true,
             "#appallowremoval": true,
             "schema": null,
             "#selectedtab": null,
@@ -363,7 +363,7 @@
 
         expect(updatedData["#appallowcreation"]).toBe(false);
         expect(updatedData["#appallowupdate"]).toBe(true);
-        expect(updatedData["#appallowviewonly"]).toBe(true);
+        expect(updatedData["#appallowview"]).toBe(true);
         expect(updatedData["#appallowremoval"]).toBe(true);
         //location changed to readonly
     }));
@@ -383,7 +383,7 @@
             application: "asset",
             "#appallowcreation": true,
             "#appallowupdate": true,
-            "#appallowviewonly": true,
+            "#appallowview": true,
             "#appallowremoval": true,
             "schema": "detail",
             "#selectedtab": "subassembly",
@@ -458,7 +458,7 @@
             application: "asset",
             "#appallowcreation": true,
             "#appallowupdate": true,
-            "#appallowviewonly": true,
+            "#appallowview": true,
             "#appallowremoval": true,
             "schema": "detail",
             "#selectedtab": "subassembly",
@@ -517,7 +517,7 @@
             application: "asset",
             "#appallowcreation": true,
             "#appallowupdate": true,
-            "#appallowviewonly": true,
+            "#appallowview": true,
             "#appallowremoval": true,
             "schema": "detail",
             "#selectedtab": "#main",

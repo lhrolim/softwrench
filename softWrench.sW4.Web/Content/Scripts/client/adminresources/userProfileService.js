@@ -77,7 +77,7 @@
                     mergeTransientIntoDatamap({ tab: tab });
                 });
             } else {
-                dm["#compallowupdate"] = dm["#compallowcreation"] = dm["#compallowviewonly"] = true;
+                dm["#compallowupdate"] = dm["#compallowcreation"] = dm["#compallowview"] = true;
                 mergeTransientIntoDatamap({ tab: tab });
             }
         }
@@ -136,7 +136,7 @@
 
         function allowUpdateChanged(parameters) {
             if (!!parameters.fields["#appallowupdate"]) {
-                parameters.fields["#appallowviewonly"] = true;
+                parameters.fields["#appallowview"] = true;
             }
         }
 
@@ -186,7 +186,7 @@
                 if (!appPermission) {
                     dm["#appallowcreation"] = hasCreationSchema;
                     //allowing everything by default
-                    dm["#appallowupdate"] = dm["#appallowremoval"] = dm["#appallowviewonly"] = true;
+                    dm["#appallowupdate"] = dm["#appallowremoval"] = dm["#appallowview"] = true;
                     return $q.when();
                 }
 
@@ -256,6 +256,11 @@
 
         //#region api methods for tests
 
+        function refreshCache() {
+            restService.postPromise("UserProfile", "RefreshCache");
+        }
+
+
         /**
          * At a given time the screen holds only a portion of the full data that will need to be submitted to the server side.
          * 
@@ -314,7 +319,7 @@
 
             storeIfDiffers("allowCreation", "#appallowcreation");
             storeIfDiffers("allowUpdate", "#appallowupdate");
-            storeIfDiffers("allowViewOnly", "#appallowviewonly");
+            storeIfDiffers("allowView", "#appallowview");
             storeIfDiffers("allowRemoval", "#appallowremoval");
 
 
@@ -427,11 +432,11 @@
             else {
                 //#region compositionhandling 
                 var compAllowCreation = dm["#compallowcreation"];
-                var compAllowViewOnly = dm["#compallowviewonly"];
+                var compAllowView = dm["#compallowview"];
                 var compAllowUpdate = dm["#compallowupdate"];
                 //                var compAllowRemoval = dm["#compallowremoval"];
 
-                var allDefault = compAllowCreation ===true && compAllowViewOnly ===true &&  compAllowUpdate === true;
+                var allDefault = compAllowCreation ===true && compAllowView ===true &&  compAllowUpdate === true;
                 transientAppData.compositionPermissions = transientAppData.compositionPermissions || [];
                 var cmpIndex = transientAppData.compositionPermissions.findIndex(function (item) {
                     return item.compositionKey === tab;
@@ -443,7 +448,7 @@
                             compositionKey: tab,
                             schema: schema,
                             allowCreation: compAllowCreation,
-                            allowViewOnly: compAllowViewOnly,
+                            allowView: compAllowView,
                             allowUpdate: compAllowUpdate,
                         });
                         transientAppData["_#isDirty"] = true;
@@ -456,7 +461,7 @@
                     } else {
                         storeIfDiffers("allowCreation", "#compallowcreation", currentCompositionEntry);
                         storeIfDiffers("allowUpdate", "#compallowupdate", currentCompositionEntry);
-                        storeIfDiffers("allowViewOnly", "#compallowviewonly", currentCompositionEntry);
+                        storeIfDiffers("allowView", "#compallowview", currentCompositionEntry);
                         storeIfDiffers("allowRemoval", "#compallowremoval", currentCompositionEntry);
                     }
                 }
@@ -489,7 +494,7 @@
                 dm["#appallowcreation"] = transientAppData.allowCreation && transientAppData.hasCreationSchema;
                 dm["#appallowupdate"] = transientAppData.allowUpdate;
                 dm["#appallowremoval"] = transientAppData.allowRemoval;
-                dm["#appallowviewonly"] = transientAppData.allowViewOnly;
+                dm["#appallowview"] = transientAppData.allowView;
                 return dm;
             }
 
@@ -541,7 +546,7 @@
                         dm["#compallowcreation"] = cmpData.allowCreation;
                         dm["#compallowupdate"] = cmpData.allowUpdate;
                         dm["#compallowremoval"] = cmpData.allowRemoval;
-                        dm["#compallowviewonly"] = cmpData.allowViewOnly;
+                        dm["#compallowview"] = cmpData.allowView;
                     }
                 }
             }
@@ -621,7 +626,7 @@
                         profileId: profileId,
                         allowCreation: modaldm.allowcreation,
                         allowUpdate: modaldm.allowupdate,
-                        allowViewOnly: modaldm.allowviewonly
+                        allowView: modaldm.allowview
                     }
 
                     return restService.postPromise("UserProfile", "BatchUpdate", params, selectedApps).then(function (httpResponse) {
@@ -682,6 +687,7 @@
 
         var api = {
             mergeTransientIntoDatamap: mergeTransientIntoDatamap,
+            refreshCache:refreshCache,
             storeFromDmIntoTransient: storeFromDmIntoTransient,
             save: save
         }
