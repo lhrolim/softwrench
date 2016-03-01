@@ -5,9 +5,8 @@
 
     function chartService($log) {
         var log = $log.getInstance('sw4.chartService');
-//        log.debug('running');
 
-        //service mehtods
+        //#region private mehtods
         function calcScale(total) {
             var scale = parseInt('1' + Array(total.toString().length).join('0'));
             return Math.ceil(total / scale) * scale;
@@ -26,8 +25,9 @@
 
             return total;
         }
+        //#endregion
 
-        //default options methods
+        //#region default options methods (return DexExtreme object format)
         function getGaugeDefaults(data) {
             var total = data.total;
             return {
@@ -169,8 +169,6 @@
         }
 
         function getRecordCountMapDefaults(data) {
-            //return {
-            //    case 'swRecordCountMap':
             var names = ['Open', 'Closed'];
             var markers = {
                 type: 'FeatureCollection',
@@ -272,8 +270,6 @@
 
         function getRecordCountPieDefaults(data) {
             return {
-                //case 'swRecordCountPie':
-                //chartDefaults = {
                 dataSource: data,
                 legend: {
                     visible: true
@@ -383,12 +379,9 @@
 
         function getSparklineDefaults(data) {
             return {
-                //case 'swSparkline':
-                //chartDefaults = {
                 dataSource: data,
                 argumentField: 'date',
                 ignoreEmptyPoints: true,
-                valueField: 'reported',
                 type: 'splinearea',
                 showMinMax: true,
                 tooltip: {
@@ -400,8 +393,9 @@
                 }
             };
         }
+        //#endregion
 
-        //addon methods (DexExtreme object format)
+        //#region addon methods (return DexExtreme object format)
         function addPieLabelAndCountLabels() {
             return {
                 series: {
@@ -420,7 +414,7 @@
                 series: {
                     label: {
                         customizeText: function (arg) {
-                            return arg.argument + ': ' + chartServiceDefaults.formatPercent(arg.percentText);
+                            return arg.argument + ': ' + formatPercent(arg.percentText);
                         },
                         visible: true
                     }
@@ -432,9 +426,8 @@
             return {
                 tooltip: {
                     customizeTooltip: function (arg) {
-                        console.log(arg);
                         return {
-                            text: chartServiceDefaults.formatPercent(arg.percentText)
+                            text: formatPercent(arg.percentText)
                         }
                     },
                     enabled: true
@@ -451,7 +444,7 @@
             if (data[property]) {
                 total = data[property];
             } else {
-                total = chartServiceDefaults.sumTotal(data, property);
+                total = sumTotal(data, property);
             }
 
             return {
@@ -460,15 +453,14 @@
                 }
             };
         }
+        //#endregion
 
-        //public methods
+        //#region public methods
         return {
             formatPercent: function (string) {
                 return formatPercent(string);
             },
-            sumTotal: function (data, property) {
-                return sumTotal(data, property);
-            },
+
             getAddonOptions: function (chartOptions, data) {
                 var addonOptions = {};
 
@@ -504,17 +496,27 @@
 
                 return addonOptions;
             },
-            getChartOptions: function (chartType, specificOptions, data) {
+
+            getChartOptions: function (chartType, options, data) {
                 var log = $log.getInstance('sw4.chartService.getChartOptions');
+
+                //convert the option string into an object
+                var specificOptions = {};
+                if (options) {
+                    specificOptions = JSON.parse(options);
+                }
 
                 //build the option objects
                 var chartDefaults = this.getDefaultOptions(chartType, data);
                 var defaultAddons = this.getAddonOptions(chartDefaults, data);
                 var specificAddons = this.getAddonOptions(specificOptions, data);
 
-                //combine the default, specific, and addon options
-                return $.extend(true, {}, chartDefaults, specificOptions, defaultAddons, specificAddons);
+                var combined = $.extend(true, {}, chartDefaults, specificOptions, defaultAddons, specificAddons);
+                //log.debug(combined);
+                
+                return combined;
             },
+
             getDefaultOptions: function (chartType, data) {
                 var log = $log.getInstance('sw4.chartService.getDefaultOptions');
                 var chartDefaults = {};
@@ -550,32 +552,12 @@
 
                 //combine the general and chart defaults
                 return $.extend(true, {}, getGeneralDefaults(), chartDefaults);
+            },
+
+            sumTotal: function (data, property) {
+                return sumTotal(data, property);
             }
         }
+        //#endregion
     }
 })(angular);
-
-
-
-
-
-//var app = angular.module('App');
-//app.service('chartService', ['$log', 'chartServiceAddons', 'chartServiceDefaults', function ($log, chartServiceAddons, chartServiceDefaults) {
-//    var log = $log.getInstance('chartService');
-//    log.debug('running');
-
-//    //public methods
-//    return {
-//        getChartOptions: function (chartType, specificOptions, data) {
-//            var log = $log.getInstance('chartService.getChartOptions');
-
-//            //build the option objects
-//            var chartDefaults = chartServiceDefaults.getDefaultOptions(chartType, data);
-//            var defaultAddons = chartServiceAddons.getAddonOptions(chartDefaults, data);
-//            var specificAddons = chartServiceAddons.getAddonOptions(specificOptions, data);
-
-//            //combine the default, specific, and addon options
-//            return $.extend(true, {}, chartDefaults, specificOptions, defaultAddons, specificAddons);
-//        }
-//    }
-//}]);
