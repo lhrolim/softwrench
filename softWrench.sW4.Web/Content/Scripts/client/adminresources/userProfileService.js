@@ -254,7 +254,17 @@
         }
 
 
+
+
         //#region api methods for tests
+
+        function filterAvailablePermissions(item) {
+            var dm = crudContextHolderService.rootDataMap().fields;
+            if (!dm["selectedmode"] || dm["selectedmode"] !== "grid") {
+                return true;
+            }
+            return item.value !== "readonly";
+        }
 
         function refreshCache() {
             restService.postPromise("UserProfile", "RefreshCache");
@@ -436,7 +446,7 @@
                 var compAllowUpdate = dm["#compallowupdate"];
                 //                var compAllowRemoval = dm["#compallowremoval"];
 
-                var allDefault = compAllowCreation ===true && compAllowView ===true &&  compAllowUpdate === true;
+                var allDefault = compAllowCreation === true && compAllowView === true && compAllowUpdate === true;
                 transientAppData.compositionPermissions = transientAppData.compositionPermissions || [];
                 var cmpIndex = transientAppData.compositionPermissions.findIndex(function (item) {
                     return item.compositionKey === tab;
@@ -648,7 +658,7 @@
             }
             return redirectService.openAsModal("person", "userselectlist", {
                 title: "Apply Profile to Users",
-                savefn: function() {
+                savefn: function () {
                     var dm = crudContextHolderService.rootDataMap();
                     var profileId = dm.fields.id;
                     var selectedUsers = crudContextHolderService.getSelectionModel('#modal').selectionBuffer;
@@ -670,9 +680,9 @@
         //#endregion
 
         function deleteProfile() {
-            return alertService.confirm2("Are you sure you want to delete this security group? This operation cannot be undone").then(function() {
+            return alertService.confirm2("Are you sure you want to delete this security group? This operation cannot be undone").then(function () {
                 var id = crudContextHolderService.rootDataMap().fields["id"];
-                return restService.postPromise("UserProfile", "Delete", { id: id }).then(function(httpResponse) {
+                return restService.postPromise("UserProfile", "Delete", { id: id }).then(function (httpResponse) {
                     return redirectService.goToApplicationView("_UserProfile", "list");
                 });
             });
@@ -683,7 +693,7 @@
             afterModeChanged: afterModeChanged,
             afterSchemaChanged: afterSchemaChanged,
             afterTabsLoaded: afterTabsLoaded,
-            allowUpdateChanged:allowUpdateChanged,
+            allowUpdateChanged: allowUpdateChanged,
             availableFieldsRefreshed: availableFieldsRefreshed,
             availableActionsRefreshed: availableActionsRefreshed,
             beforeApplicationChange: beforeApplicationChange,
@@ -696,8 +706,9 @@
 
         var api = {
             'delete': deleteProfile,
+            filterAvailablePermissions: filterAvailablePermissions,
             mergeTransientIntoDatamap: mergeTransientIntoDatamap,
-            refreshCache:refreshCache,
+            refreshCache: refreshCache,
             storeFromDmIntoTransient: storeFromDmIntoTransient,
             save: save
         }

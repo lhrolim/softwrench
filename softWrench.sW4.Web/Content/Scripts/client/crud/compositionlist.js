@@ -448,25 +448,6 @@
             return result;
         };
 
-        $scope.GetAssociationOptions = function (fieldMetadata) {
-            if (fieldMetadata.type === "OptionField") {
-                return $scope.GetOptionFieldOptions(fieldMetadata);
-            }
-            var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-            return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
-        }
-        $scope.GetOptionFieldOptions = function (optionField) {
-            if (optionField.providerAttribute == null) {
-                return optionField.options;
-            }
-            var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-            return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData);
-        }
-
-        $scope.i18NOptionField = function (option, fieldMetadata, schema) {
-            return i18NService.getI18nOptionField(option, fieldMetadata, schema);
-        };
-
 
         $scope.compositionProvider = function () {
             var localCommands = {};

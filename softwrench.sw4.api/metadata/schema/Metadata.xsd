@@ -526,9 +526,10 @@
   </complexType>
 
   <complexType name="Filter">
-    <attribute name="operation" type="string" use="required"></attribute>
+    <attribute name="operation" type="string"></attribute>
     <attribute name="params" type="string"></attribute>
     <attribute name="default" type="string"></attribute>
+    <attribute name="clientfunction" type="string"></attribute>
   </complexType>
 
   <complexType name="Lookup">

@@ -145,7 +145,8 @@
           <event type="onload" service="userProfileService" method="availableFieldsRefreshed"/>
           <field hidden="true" attribute="fieldKey"/>
           <field label="Field" attribute="#label" />
-          <optionfield attribute="permission" label="Permission">
+          <optionfield attribute="permission" label="Permission" >
+            <filter clientfunction="userProfileService.filterAvailablePermissions" />
             <option label="Full Control" value="fullcontrol"/>
             <option label="None" value="none"/>
             <option label="Read Only" value="readonly"/>

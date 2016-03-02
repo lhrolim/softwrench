@@ -480,20 +480,7 @@ app.directive('configAssociationListInputDatamap', function () {
                 }
                 return lengthclass;
             };
-            $scope.GetAssociationOptions = function (fieldMetadata) {
-                if (fieldMetadata.type === "OptionField") {
-                    return $scope.GetOptionFieldOptions(fieldMetadata);
-                }
-                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
-            }
-            $scope.GetOptionFieldOptions = function (optionField) {
-                if (optionField.providerAttribute == null) {
-                    return optionField.options;
-                }
-                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute,contextData);
-            }
+         
             $scope.contextPath = function (path) {
                 return url(path);
             };
