@@ -11,7 +11,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             _baseLocationFinder = baseLocationFinder;
         }
 
-        public List<string> GetBaseLocations(List<string> facilities, IEnumerable<string> blocks, IReadOnlyList<string> pcs) {
+        /// <summary>
+        /// Finds the pcs locations with the combination of facility from the list and a pair of block and pcs.
+        /// </summary>
+        public List<string> GetBaseLocations(List<string> facilities, List<string> blocks, List<string> pcs) {
+            if (!blocks.Any() || !pcs.Any()) {
+                return new List<string>();
+            }
+
             var baseLikes = blocks.Select((t, i) => BuildPcsBaseLike(t, pcs[i])).ToList();
             var baseLocations = _baseLocationFinder.FindBaseLocations(facilities, baseLikes);
             var baseLocationList = new List<string>();
@@ -19,6 +26,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             return baseLocationList;
         }
 
+        /// <summary>
+        /// Adds a left zero if needed.
+        /// </summary>
         private static string FormatBlockOrPcs(string parameter) {
             switch (parameter.Length) {
                 case 1:
@@ -30,6 +40,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             }
         }
 
+        /// <summary>
+        /// Builds the default end part of like clauses (without the facility) for pcs locations.
+        /// </summary>
         private static string BuildPcsBaseLike(string block, string pcs) {
             var baseLocationParameter = new StringBuilder("-");
             baseLocationParameter.Append("%-").Append(FormatBlockOrPcs(block));

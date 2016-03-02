@@ -10,7 +10,7 @@
             scope: true,
             link: function () {
             },
-            controller: ["$scope", "$rootScope", "$log", "$q", "$timeout", "sidePanelService", "schemaCacheService", "restService", "searchService", "redirectService", "applicationService", "$http", "validationService", "focusService", "crudContextHolderService", function ($scope, $rootScope, $log, $q, $timeout, sidePanelService, schemaCacheService, restService, searchService, redirectService, applicationService, $http, validationService, focusService, crudContextHolderService) {
+            controller: ["$scope", "$rootScope", "$log", "$q", "$timeout", "sidePanelService", "schemaCacheService", "restService", "searchService", "redirectService", "applicationService", "$http", "validationService", "focusService", "crudContextHolderService", "fieldService", function ($scope, $rootScope, $log, $q, $timeout, sidePanelService, schemaCacheService, restService, searchService, redirectService, applicationService, $http, validationService, focusService, crudContextHolderService, fieldService) {
 
                 $scope.panelid = $scope.$parent.panelid;
                 $scope.crudPanelid = "search";
@@ -19,9 +19,16 @@
                 var lastApplication = "";
                 var lastSchemaId = "";
 
+                // workaround - if the schemaCacheService.getCachedSchema is used before $http.get(applicationService.getApplicationUrl(...))
+                // the null schema result is considered cached and the server don't build the correct schema after that
+                // only the key is cached here to avoid invoke schemaCacheService.getCachedSchema first
+                // TODO Fix schemaCacheService.getCachedSchema + $http.get(applicationService.getApplicationUrl(...))
+                var schemacache = {};
+
                 sidePanelService.hide($scope.panelid);
                 sidePanelService.setIcon($scope.panelid, "fa-search");
 
+                // calcs the crudsearch panel height - used on scroll pane
                 $scope.setPaneHeight = function () {
                     log.debug("setPaneHeight");
 
@@ -37,31 +44,52 @@
                     if (!ctx.opened) {
                         return;
                     }
+
+                    log.debug("setFocus start");
                     $timeout(function () {
                         //time for the components to be rendered
                         focusService.setFocusToFirstField($scope.schema, $scope.datamap);
+                        log.debug("setFocus end");
                     }, 1000, false);
                 }
 
-                function getSearchForm(applicationName, schemaId) {
-                    var redirectUrl = applicationService.getApplicationUrl(applicationName, schemaId, "input");
-                    $http.get(redirectUrl).then(function (httpResponse) {
-                        var data = httpResponse.data;
+                function getSearchSchema(applicationName, schemaId) {
+                    if (!applicationName || !schemaId) {
+                        log.debug("getSearchSchema  - no applicationName ({0}) or schemaId ({1})".format(applicationName, schemaId));
+                        return $q.when(null);
+                    }
 
-                        var schema = data.schema;
-                        if (data.cachedSchemaId) {
-                            schema = schemaCacheService.getCachedSchema(applicationName, data.cachedSchemaId);
-                        } else {
-                            schemaCacheService.addSchemaToCache(schema);
+                    if (schemacache[applicationName + "." + schemaId]) {
+                        log.debug("getSearchSchema  - cache hit on applicationName ({0}) and  schemaId ({1})".format(applicationName, schemaId));
+                        return $q.when(schemaCacheService.getCachedSchema(applicationName, schemaId));
+                    }
+
+                    var redirectUrl = applicationService.getApplicationUrl(applicationName, schemaId, "input");
+                    return $http.get(redirectUrl).then(function (httpResponse) {
+                        log.debug("getSearchSchema - server response on applicationName ({0}) and  schemaId ({1})".format(applicationName, schemaId));
+                        var schema = httpResponse.data.schema;
+                        schemaCacheService.addSchemaToCache(schema);
+                        schemacache[applicationName + "." + schemaId] = true;
+                        return schema;
+                    });
+                }
+
+                function updateSearchForm(applicationName, schemaId) {
+                    getSearchSchema(applicationName, schemaId).then(function (schema) {
+                        if (!schema) {
+                            sidePanelService.hide($scope.panelid);
+                            crudContextHolderService.clearCrudContext($scope.crudPanelid);
+                            return;
                         }
 
                         sidePanelService.setTitle($scope.panelid, schema.title);
 
-                        var handleWidth = schema.properties ? schema.properties["search.handlewidth"] : null;
+                        var handleWidth = schema.properties ? schema.properties["search.panelwidth"] : null;
                         sidePanelService.setHandleWidth($scope.panelid, handleWidth);
 
                         sidePanelService.show($scope.panelid);
-                        $scope.datamap = data.resultObject.fields;
+                        $scope.datamap = {};
+                        fieldService.fillDefaultValues(schema.displayables, $scope.datamap);
                         $scope.defaultDatamap = angular.copy($scope.datamap);
                         $scope.schema = schema;
                         $scope.title = schema.title;
@@ -87,6 +115,7 @@
 
                 $rootScope.$on("sw_applicationrendered", function (event, applicationName, renderedSchema) {
                     if (!applicationName || !renderedSchema) {
+                        log.debug("no applicationName ({0}) or renderedSchema ({1})".format(applicationName, renderedSchema));
                         sidePanelService.hide($scope.panelid);
                         crudContextHolderService.clearCrudContext($scope.crudPanelid);
                         return;
@@ -94,20 +123,23 @@
 
                     var searchSchemaid = renderedSchema.properties ? renderedSchema.properties["search.schemaid"] : null;
                     if (!searchSchemaid) {
+                        log.debug("no searchSchemaid on applicationName ({0}) and renderedSchema ({1})".format(applicationName, renderedSchema));
                         sidePanelService.hide($scope.panelid);
                         crudContextHolderService.clearCrudContext($scope.crudPanelid);
                         return;
                     }
 
                     if (lastApplication === applicationName && lastSchemaId === searchSchemaid) {
+                        log.debug("search panel already rendered for applicationName ({0}) and schemaid ({1})".format(applicationName, searchSchemaid));
                         return;
                     }
                     lastApplication = applicationName;
                     lastSchemaId = searchSchemaid;
 
-                    getSearchForm(applicationName, searchSchemaid);
+                    updateSearchForm(applicationName, searchSchemaid);
                 });
 
+                // recovers the set search operator for each field of searchData
                 function buildSearchOperators(searchData, searchOperator) {
                     searchOperator = searchOperator ? searchOperator : {};
                     if (!searchData || !$scope.schema.displayables) {
@@ -133,6 +165,7 @@
                 }
 
                 $scope.$on("sw.crud.search", function (event, args) {
+                    log.debug("search panel search");
                     var validation = validationService.validate($scope.schema, $scope.schema.displayables, $scope.datamap);
                     if (validation.length > 0) {
                         return;
@@ -145,6 +178,7 @@
                     redirectService.redirectWithData(applicationName, "list", searchdata, extraParameters);
                 });
 
+                // clears a obj - used for clearing the datamap on a clear form call
                 function clear(obj) {
                     if (!obj) {
                         return;
@@ -175,6 +209,7 @@
                     }
                 }
 
+                // copies a object into another - used after a form clear to copy the default datamap (datamap with only default values)
                 function copy(srcObj, destObj) {
                     for (var key in srcObj) {
                         if (!srcObj.hasOwnProperty(key)) {
@@ -185,6 +220,7 @@
                 }
 
                 $scope.$on("sw.crud.search.clear", function (event, args) {
+                    log.debug("search panel clear");
                     $scope.datamap = crudContextHolderService.rootDataMap($scope.crudPanelid);
                     clear($scope.datamap);
                     copy($scope.defaultDatamap, $scope.datamap);

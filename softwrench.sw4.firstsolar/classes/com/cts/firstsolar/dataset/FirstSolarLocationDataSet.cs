@@ -41,10 +41,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return base.GetList(application, searchDto);
         }
 
+        /// <summary>
+        /// Kind of a dummy. The real list is got from FirstSolarAdvancedSearchController when a facility is selected.
+        /// </summary>
         public IEnumerable<IAssociationOption> GetFsLocationsOfInterest(OptionFieldProviderParameters parameters) {
             return new List<IAssociationOption>();
         }
 
+        /// <summary>
+        /// Kind of a dummy. The real list is got from FirstSolarAdvancedSearchController when a facility is selected.
+        /// </summary>
         public IEnumerable<IAssociationOption> GetFsSwitchgearLocations(OptionFieldProviderParameters parameters) {
             return new List<IAssociationOption>();
         }

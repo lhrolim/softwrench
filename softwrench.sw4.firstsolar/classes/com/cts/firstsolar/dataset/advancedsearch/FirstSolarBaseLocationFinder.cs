@@ -2,10 +2,12 @@
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
+using log4net;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch.customizations;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch {
     public class FirstSolarBaseLocationFinder : ISingletonComponent {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarBaseLocationFinder));
         private const string BaseLocationQuery = "SELECT location, description FROM locations WHERE {0} ORDER BY description ASC";
         private const string BaseLocationClause = "(location LIKE ? AND LEN(location) - LEN(REPLACE(location, '-', '')) = ?)";
 
@@ -31,8 +33,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             clauses.Add(BaseLocationClause);
         }
 
+        /// <summary>
+        /// Find locations combining facilities and a list of like clauses without the beginning facility.
+        /// </summary>
+        /// <param name="facilities"></param>
+        /// <param name="baseLikes"></param>
+        /// <returns></returns>
         public List<Dictionary<string, string>> FindBaseLocations(List<string> facilities, List<string> baseLikes) {
+            Log.Debug("Searching for locations...");
             if (facilities == null || !facilities.Any() || baseLikes == null || !baseLikes.Any()) {
+                Log.Debug("No facilities or like clauses.");
                 return new List<Dictionary<string, string>>();
             }
 
@@ -40,6 +50,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             var parameters = new List<object>();
             baseLikes.ForEach(bl => AddLocationClause(clauses, parameters, facilities, bl));
             var baseLocationQuery = string.Format(BaseLocationQuery, string.Join(" OR ", clauses));
+            Log.Debug(string.Format("Clauses to search: {0}", string.Join(", ", parameters)));
             return _maximoHibernateDao.FindByNativeQuery(baseLocationQuery, parameters.ToArray());
         }
     }

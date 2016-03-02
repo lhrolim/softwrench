@@ -252,6 +252,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 sidePanelService.toggle($scope.panelid);
             };
 
+            // returns the style of the indicator of unread activities
             $scope.getUnreadStyle = function() {
                 return { top: sidePanelService.getContext($scope.panelid).top - 70 + "px" };
             }

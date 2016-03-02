@@ -24,12 +24,16 @@
             controller: ["$scope", "$http", "$log", "sidePanelService", function ($scope, $http, $log, sidePanelService) {
                 var log = $log.getInstance("sw4.crudSearch");
 
+                // register the current side panel on service
+                // the next registers need this to know the panel handle top value
                 sidePanelService.registerPanel($scope.panelid, $scope.handlewidth);
 
-                $scope.toggle = function() {
+                // toggles expanded - collapsed
+                $scope.toggle = function () {
                     sidePanelService.toggle($scope.panelid);
                 }
 
+                // calcs the style of side panel handle
                 $scope.handleStyle = function () {
                     var style = {};
                     var ctx = sidePanelService.getContext($scope.panelid);
@@ -47,6 +51,7 @@
                     style["-o-transform"] = trasform;
                     style["transform"] = trasform;
 
+                    log.debug("side panel style: top ({0}), handle width ({1}), transform ({2})", style["top"], style["min-width"], style["transform"]);
                     return style;
                 }
 

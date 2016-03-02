@@ -211,6 +211,6 @@
         /// <summary>
         /// The width of the search panel handle.
         /// </summary>
-        public static string SearchHandleWidthExpanded = "search.handlewidth";
+        public static string SearchHandleWidthExpanded = "search.panelwidth";
     }
 }

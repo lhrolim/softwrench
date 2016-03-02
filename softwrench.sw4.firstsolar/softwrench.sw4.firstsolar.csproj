@@ -63,6 +63,7 @@
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarDatamapConverterUtil.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarWoValidationHelper.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\CustomizationContainer.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarAdvancedSearchDtoUtils.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarAdvancedSearchPcsHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarBaseLocationFinder.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\AdvancedSearchCustomization.cs" />

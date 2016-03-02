@@ -17,14 +17,23 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             }
         }
 
+        /// <summary>
+        /// Builds the like clause of locations of interest.
+        /// </summary>
         protected virtual string LocationOfInterest(string facility, string baseLike) {
             return facility + baseLike;
         }
 
+        /// <summary>
+        /// Builds the like clause of switchgears locations.
+        /// </summary>
         protected virtual string Switchgear(string facility, string baseLike) {
             return facility + baseLike;
         }
 
+        /// <summary>
+        /// Builds the like clause of pcs locations.
+        /// </summary>
         protected virtual string Pcs(string facility, string baseLike, string block, string pcs) {
             return facility + baseLike;
         }

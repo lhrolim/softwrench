@@ -15,11 +15,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             _advancedSearchHandler = advancedSearchHandler;
         }
 
+        /// <summary> 
+        /// </summary>
+        /// <param name="facilities">The list of selected facilities (right now one facility can represent a list).</param>
+        /// <returns>The list of locations of interest.</returns>
         [HttpGet]
         public List<Dictionary<string, string>> GetLocationsOfInterest([FromUri] List<string> facilities) {
             return _advancedSearchHandler.GetLocationsOfInterest(facilities);
         }
 
+        /// <summary> 
+        /// </summary>
+        /// <param name="facilities">The list of selected facilities (right now one facility can represent a list).</param>
+        /// <returns>The list of switchgear locations.</returns>
         [HttpGet]
         public List<Dictionary<string, string>> GetSwitchgearLocations([FromUri] List<string> facilities) {
             return _advancedSearchHandler.GetSwitchgearLocations(facilities);

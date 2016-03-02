@@ -84,6 +84,8 @@
             return openedPanel != null;
         }
 
+        // register the side panel - creates context and all
+        // the next registers need this to know the panel handle top value
         function registerPanel(panelid, handleWidth) {
             var sidePanelContext = angular.copy(sidePanelContextTemplate);
 
@@ -141,7 +143,7 @@
             }
 
             //resize/position elements
-            $(window).trigger('resize');
+            $(window).trigger("resize");
 
             // callback
             if (ctx.toggleCallback) {
@@ -149,7 +151,7 @@
             }
         }
 
-        // hide panel completely from view (not colapse/expand)
+        // hides panel completely from view (not collapse/expand)
         function hide(panelid) {
             // colapses if expanded
             if (openedPanel === panelid) {
@@ -160,11 +162,13 @@
             recalcAllTops();
         }
 
+        // unhides panel (not colapse/expand)
         function show(panelid) {
             getContext(panelid).hidden = false;
             recalcAllTops();
         }
 
+        // used on other screen parts to know if handles are covering important stuff
         function getNumberOfVisiblePanels() {
             var number = 0;
             for (var otherPanelid in sidePanelsContext) {
@@ -179,6 +183,7 @@
             return number;
         }
 
+        // used on other screen parts to know if handles are covering important stuff
         function getTotalHandlesWidth() {
             return sidePanelHandlesWidth;
         }
