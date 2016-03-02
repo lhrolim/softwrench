@@ -111,7 +111,7 @@ app.directive('configAssociationListInputDatamap', function () {
             outerassociationdescription: '=',
             issection: '@',
             ismodal: '@',
-
+            panelid: '='
         },
 
         link: function (scope, element, attrs) {
@@ -200,7 +200,7 @@ app.directive('configAssociationListInputDatamap', function () {
                     return fieldMetadata.options;
                 }
                 var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
+                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
             }
             $scope.isPositionLeft = function (fieldMetadata) {
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
@@ -484,14 +484,14 @@ app.directive('configAssociationListInputDatamap', function () {
                     return $scope.GetOptionFieldOptions(fieldMetadata);
                 }
                 var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
+                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
             }
             $scope.GetOptionFieldOptions = function (optionField) {
                 if (optionField.providerAttribute == null) {
                     return optionField.options;
                 }
                 var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute,contextData);
+                return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData, $scope.panelid);
             }
             $scope.contextPath = function (path) {
                 return url(path);

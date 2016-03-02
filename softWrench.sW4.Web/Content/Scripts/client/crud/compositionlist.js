@@ -317,7 +317,7 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
 
                 $scope.$watch("compositiondata[{0}]".format(index), function (newValue, oldValue) {
                     //make sure any change on the composition marks it as dirty
-                    if (oldValue !== newValue) {
+                    if (oldValue !== newValue && $scope.compositiondata[index]) {
                         $scope.compositiondata[index]["#isDirty"] = true;
                     }
                 }, true);
@@ -716,10 +716,16 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables, fakeNegativeId);
         $scope.$watch("compositiondata[{0}]".format(idx), function (newValue, oldValue) {
             //make sure any change on the composition marks it as dirty
-            if (oldValue !== newValue) {
+            if (oldValue !== newValue && $scope.compositiondata[idx]) {
                 $scope.compositiondata[idx]["#isDirty"] = true;
             }
         }, true);
+
+        // if inside a scroll pane - to update pane size
+        $timeout(function () {
+            //time for the components to be rendered
+            $(window).trigger("resize");
+        }, 1000, false);
     }
 
     $scope.isItemExpanded = function (item) {
@@ -734,6 +740,12 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
 
     $scope.removeBatchItem = function (rowindex) {
         $scope.compositionData().splice(rowindex, 1);
+
+        // if inside a scroll pane - to update pane size
+        $timeout(function () {
+            //time for the components to be rendered
+            $(window).trigger("resize");
+        }, 1000, false);
     }
 
     /***************END Batch functions **************************************/

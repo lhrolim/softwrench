@@ -99,7 +99,7 @@
                 submitService, redirectService,
                 associationService, crudContextHolderService, alertService,
                 validationService, schemaService, $timeout, $interval, eventService, $log, expressionService, focusService, modalService,
-                compositionService, attachmentService) {
+                compositionService, attachmentService, sidePanelService) {
 
                 $(document).on("sw_autocompleteselected", function (event, key) {
                     focusService.resetFocusToCurrent($scope.schema, key);
@@ -530,7 +530,15 @@
                         }
                     });
                 };
-                
+
+                // adds a padding right to not be behind side panels handles
+                $scope.sidePanelStyle = function () {
+                    var style = {};
+                    if (sidePanelService.getTotalHandlesWidth() > 210) {
+                        style["padding-right"] = "24px";
+                    }
+                    return style;
+                }
 
                 function init(self) {
                     $injector.invoke(BaseController, self, {

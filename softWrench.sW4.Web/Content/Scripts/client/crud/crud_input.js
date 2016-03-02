@@ -26,7 +26,8 @@ app.directive('crudInputWrapper', function (contextService, $compile) {
             elementid: '@',
             isMainTab: '@',
             tabid: '@',
-            ismodal: '@'
+            ismodal: '@',
+            panelid: '@'
         },
 
         link: function (scope, element, attrs) {
@@ -36,7 +37,7 @@ app.directive('crudInputWrapper', function (contextService, $compile) {
                   "datamap='datamap'  blockedassociations='blockedassociations'" +
                   "association-schemas='associationSchemas'cancelfn='cancel(data,schema)' displayables='displayables'" +
                   "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' " +
-                  "parentschema='parentschema' parentdata='parentdata'  ismodal='{{ismodal}}'/>"
+                  "parentschema='parentschema' parentdata='parentdata'  ismodal='{{ismodal}}' panelid='panelid'/>"
                );
                 $compile(element.contents())(scope);
                 scope.loaded = true;
@@ -86,7 +87,8 @@ app.directive('crudInput', ["contextService", "associationService", function (co
             title: '=',
             elementid: '@',
             composition: '@',
-            ismodal: '@'
+            ismodal: '@',
+            panelid: '='
         },
 
         controller: ["$scope", "$http", "$injector", "$element", "alertService", "printService", "compositionService", "commandService", "fieldService", "i18NService", "formatService", "crudContextHolderService", "$log",

@@ -21,7 +21,7 @@
         </div>
 
         <div class="hiddenonprint detail-body">
-            <div class="detail-header clearfix" ng-if="hasTabs(schema)">
+            <div class="detail-header clearfix" ng-if="hasTabs(schema)" ng-style="sidePanelStyle()">
                 <ul class="nav nav-tabs compositiondetailtab hapag-composition">
                     <li ng-if="hasAnyFieldOnMainTab(schema)" ng-class="{'active': hasAnyFieldOnMainTab(schema)}">
                         <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i>&ensp;{{getDetailTabTitle(schema, datamap)}}</a>

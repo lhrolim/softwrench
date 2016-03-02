@@ -5,12 +5,10 @@ using cts.commons.simpleinjector;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data;
-using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {

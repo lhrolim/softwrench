@@ -33,7 +33,7 @@
     <div ng-controller="LayoutController" class="container {{clientName}} {{deviceType}}">
         <notifications></notifications>
         <div class="vertical-menu clearfix" ng-if="menu.displacement == 'vertical'">
-            <menu-wrapper menu="menu" popupmode="{{popupmode}}" class="menu-primary" />
+            <menu-wrapper menu="menu" popupmode="{{popupmode}}" class="menu-primary"/>
         </div>
         <header class="site-header navbar-fixed-top hiddenonprint">
             <admin-menu is-client-admin="isClientAdmin"
@@ -64,7 +64,7 @@
                     <i class="fa fa-bars"></i> Menu
                 </div>
                 <div class="menu-items">
-                    <menu-wrapper menu="menu" popupmode="{{popupmode}}" class="menu-primary" />
+                    <menu-wrapper menu="menu" popupmode="{{popupmode}}" class="menu-primary"/>
                 </div>
             </div>
         </header>
@@ -73,11 +73,17 @@
         </div>
         <footer class="site-footer hiddenonprint">
             <div class="page-overlay">
-                <div class="logo"><img ng-src="{{resourceUrl('/Content/Images/logo-footer.png')}}"></div>
+                <div class="logo"><img ng-src="{{resourceUrl('/Content/Images/logo-footer.png')}}">
+                </div>
             </div>
         </footer>
     </div>
-    <activitystream activities="activities" />
+    <sidepanel panelid="activitystream" handleicon="fa-rss" handletitle="sW&ensp;Activity" handlewidth="128">
+        <activitystream></activitystream>
+    </sidepanel>
+    <sidepanel panelid="crudsearch">
+        <crudsearch></crudsearch>
+    </sidepanel>
     <script type="text/javascript">
         $(document).on('touch click', '*[data-calendericon="true"]', function (e) {
             $('input[type="text"]', $(this).parent()).focus();
