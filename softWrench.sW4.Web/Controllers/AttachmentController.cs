@@ -30,5 +30,12 @@ namespace softWrench.sW4.Web.Controllers {
                 return null;
             }
         }
+
+        [HttpGet]
+        public string DownloadUrl(string id) {
+            var file = _attachmentHandler.Dao().ById(id);
+            var docinfoURL = (string)file.GetAttribute("urlname");
+            return _attachmentHandler.GetFileUrl(docinfoURL);
+        }
     }
 }
