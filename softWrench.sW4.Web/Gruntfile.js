@@ -1,4 +1,4 @@
-/// <binding BeforeBuild='copyAll' ProjectOpened='watch' />
+/// <binding BeforeBuild='copyAll' ProjectOpened='watch, sass:dev' />
 module.exports = function (grunt) {
     grunt.initConfig({
         //#region global app config 
