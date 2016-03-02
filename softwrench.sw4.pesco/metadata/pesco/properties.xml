@@ -39,7 +39,7 @@
   <!-- end tableau -->
 
   <environment key="prod">
-    <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=sw;User Id=sw;password=swadmin;" />
+    <property key="swdb_url" value="Data Source=xx.xx.xx.xx;Initial Catalog=sw;User Id=sw;password=swadmin;" />
   </environment>
   
   <environment key="dev">
@@ -47,7 +47,7 @@
   </environment>
   
   <environment key="qa">
-    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX;User Id=sw;password=softwrench;" />
+    <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=sw;User Id=sw;password=swadmin;" />
   </environment>
 
   <environment key="demo">
