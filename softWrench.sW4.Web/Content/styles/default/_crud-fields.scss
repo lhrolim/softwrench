@@ -419,7 +419,7 @@ input[type="date"], input[type="time"] {
 }
 
 [ng-if="noupdateallowed"] {
-    .form-control  {
+    .form-control {
         background: #e5e5e5;
     }
 }
@@ -436,3 +436,15 @@ input[type="date"], input[type="time"] {
         object-fit: contain;
     }
 }
+
+.inline-checkbox {
+    padding-top: 28px;
+
+    [ng-switch-when="checkbox"] {
+        .control-label {
+            top: -2px;
+            position: relative;
+        }
+    }
+}
+

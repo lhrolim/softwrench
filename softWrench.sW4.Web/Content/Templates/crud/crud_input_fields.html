@@ -70,12 +70,26 @@
                         </tr>
                     </table>
                     <div ng-if="fieldMetadata.type !== 'OptionField'" style="min-width: 200px;">
+                        <label class="control-label"
+                               rel="{{showLabelTooltip(fieldMetadata)}}"
+                               data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
+                               ng-class="getCheckboxLabelLeftClass(fieldMetadata)">
+                            <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
+                            {{i18NInputLabel(fieldMetadata)}}
+                        </label>
                         <input type="checkbox"
                                id="checkbox"
                                ng-model="datamap[fieldMetadata.attribute]"
                                ng-init="initCheckbox(fieldMetadata)"
                                ng-enabled="isModifiableEnabled(fieldMetadata)"
                                ng-true-value="'true'" ng-false-value="'false'" />
+                        <label class="control-label"
+                               rel="{{showLabelTooltip(fieldMetadata)}}"
+                               data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
+                               ng-class="getCheckboxLabelRightClass(fieldMetadata)">
+                            <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
+                            {{i18NInputLabel(fieldMetadata)}}
+                        </label>
                     </div>
                 </div>
 
@@ -146,12 +160,26 @@
                         </tr>
                     </table>
                     <div ng-if="fieldMetadata.type !== 'OptionField'" style="min-width: 200px;">
+                        <label class="control-label"
+                               rel="{{showLabelTooltip(fieldMetadata)}}"
+                               data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
+                               ng-class="getCheckboxLabelLeftClass(fieldMetadata)">
+                            <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
+                            {{i18NInputLabel(fieldMetadata)}}
+                        </label>
                         <input type="checkbox"
                                id="checkbox"
                                ng-model="datamap[fieldMetadata.attribute]"
                                ng-init="initCheckbox(fieldMetadata)"
                                ng-enabled="isModifiableEnabled(fieldMetadata)"
                                ng-true-value="'true'" ng-false-value="'false'" />
+                        <label class="control-label"
+                               rel="{{showLabelTooltip(fieldMetadata)}}"
+                               data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
+                               ng-class="getCheckboxLabelRightClass(fieldMetadata)">
+                            <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
+                            {{i18NInputLabel(fieldMetadata)}}
+                        </label>
                     </div>
                 </div>
                 <div ng-switch-when="autocompleteclient">
