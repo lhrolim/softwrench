@@ -473,6 +473,44 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
 
     //#region attachments
 
+    $scope.draggableValue = function() {
+        return $scope.relationship.contains("attachment") ? "true" : "false";
+    };
+
+    // drag-out file download
+    (function () {
+        // drag-out download only works in Chrome
+        if (!isChrome()) return;
+        if (!$scope.relationship.contains("attachment")) return;
+
+        function dragStartListener(event) {
+            // resolve composition item from the event
+            var evt = (event.originalEvent || event);
+            var src = evt.srcElement;
+            var item = angular.element(src).scope().compositionitem;
+            if (!item) return;
+
+            // add extension to fileName if it does't have
+            var fileName = item["document"];
+            if (fileName.lastIndexOf(".") < 0) {
+                var fileUrl = item["docinfo_.urlname"];
+                var extension = fileUrl.substring(fileUrl.lastIndexOf(".") + 1);
+                fileName += ("." + extension);
+            }
+
+            // download = '<mime_type>:<file_name_on_save>:<file_download_url>'
+            var downloadData = "application/octet-stream:" + fileName + ":" + item["download_url"];
+            evt.dataTransfer.setData("DownloadURL", downloadData);
+        }
+        // adding the listener to the parent element so it still triggers on pagination
+        var list = $element[0].querySelector("#compositionlistgrid");
+        angular.element(list).on("dragstart", dragStartListener);
+        $scope.$on("$destroy", function () {
+            angular.element(list).off("dragstart", dragStartListener);
+        });
+
+    })();
+
     function onAttachmentFileDropped(event, file) {
         // remove preview element if a new file is added
         getFileUploadFields().forEach(function(field) {
