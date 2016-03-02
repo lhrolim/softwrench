@@ -65,16 +65,17 @@
               <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>
             </optionfield>
 
-            <field attribute="#appallowcreation" label="Allow Creation" showexpression="@hasCreationSchema==true">
-              <renderer type="checkbox"/>
+            <field attribute="#appallowcreation" label="Allow Creation?" showexpression="@hasCreationSchema==true">
+              <renderer type="checkbox" params="layout=left"/>
             </field>
-            <field attribute="#appallowupdate" label="Allow Update">
-              <renderer type="checkbox"/>
+            <field attribute="#appallowupdate" label="Allow Update?">
+              <renderer type="checkbox" params="layout=left"/>
               <event type="afterchange" service="userProfileService" method="allowUpdateChanged"/>
             </field>
-            <field attribute="#appallowview" label="Allow Visualization">
-              <renderer type="checkbox"/>
+            <field attribute="#appallowview" label="Allow Visualization?">
+              <renderer type="checkbox" params="layout=left"/>
             </field>
+            
 
           </section>
 
@@ -103,14 +104,14 @@
 
             <!-- Composition selection  -->
             <section showexpression="@iscompositiontab" orientation="horizontal">
-              <field attribute="#compallowcreation" label="Allow Creation">
-                <renderer type="checkbox"/>
+              <field attribute="#compallowcreation" label="Allow Creation?">
+                <renderer type="checkbox" params="layout=left"/>
               </field>
-              <field attribute="#compallowupdate" label="Allow Update">
-                <renderer type="checkbox"/>
+              <field attribute="#compallowupdate" label="Allow Update?">
+                <renderer type="checkbox" params="layout=left"/>
               </field>
-              <field attribute="#compallowview" label="Allow Visualization">
-                <renderer type="checkbox"/>
+              <field attribute="#compallowview" label="Allow Visualization?">
+                <renderer type="checkbox" params="layout=left"/>
               </field>
             </section>
 
@@ -167,14 +168,14 @@
           <optionfield attribute="applications" providerattribute="topLevelApplications" label="Application">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
-          <field attribute="allowcreation" label="Allow Creation">
-            <renderer type="checkbox"/>
+          <field attribute="allowcreation" label="Allow Creation?">
+            <renderer type="checkbox" params="layout=left"/>
           </field>
-          <field attribute="allowupdate" label="Allow Update">
-            <renderer type="checkbox"/>
+          <field attribute="allowupdate" label="Allow Update?">
+            <renderer type="checkbox" params="layout=left"/>
           </field>
-          <field attribute="allowview" label="Allow Visualization">
-            <renderer type="checkbox"/>
+          <field attribute="allowview" label="Allow Visualization?">
+            <renderer type="checkbox" params="layout=left"/>
           </field>
         </schema>
       </schemas>
