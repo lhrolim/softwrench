@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-angular.module('sw_layout')
+angular.module('webcommons_services')
     .factory('physicalInventoryService', ["formatService", function (formatService) {
 
     var physicalCount = function (schema, datamap, type) {

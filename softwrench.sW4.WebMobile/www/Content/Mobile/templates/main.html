@@ -31,14 +31,16 @@
                     <!-- container -->
                     <div ng-switch-when="MenuContainerDefinition" ng-init="collapsed = true" ng-click="collapsed = !collapsed">
                         <div class="item item-divider icon" ng-class="{ 'ion-arrow-down-b': collapsed, 'ion-arrow-up-b': !collapsed }">
-                            &nbsp;{{leaf.title}}  
+                            &nbsp;{{leaf.title}}
                         </div>
-                        <!-- container's subitems -->
-                        <a ng-repeat="subleaf in leaf.leafs" 
-                           ng-click="loadApplication(subleaf)" ng-show="!collapsed"
-                           class="item icon {{subleaf.icon}}" >
-                            &nbsp;{{subleaf.title}}
-                        </a>
+                        <div ng-show="!collapsed">
+                            <!-- container's subitems -->
+                            <a ng-repeat="subleaf in leaf.leafs"
+                               ng-click="loadApplication(subleaf)" 
+                               class="item icon {{subleaf.icon}}">
+                                &nbsp;{{subleaf.title}}
+                            </a>
+                        </div>
                     </div>
                     <!-- exploded items -->
                     <a ng-switch-default class="item icon {{leaf.icon}}" ng-click="loadApplication(leaf)">

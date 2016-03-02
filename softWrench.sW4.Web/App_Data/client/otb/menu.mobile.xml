@@ -2,10 +2,10 @@
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="vertical" indexitem="WO">
   <application id="WO" title="Work Order" ref="workorder" schema="list" icon="ion-gear-b"/>
 
-  <container title="Inventory" icon="ion-cube" id="Inventory" role="inventory" >
+  <container title="Inventory" id="Inventory" role="inventory">
     <application id="IN" icon="ion-cube" title="Inventory" ref="invbalances" schema="invbalancesList" />
-    <application id="IRG" icon="ion-arrow-swap" title="Issues and Returns" ref="invissue" schema="invIssueList" />
-    <application id="ITG" icon="ion-arrow-right-c" title="Inventory Transfer" ref="matrectransTransfers" schema="matrectransTransfersList" />
+    <!--<application id="IRG" icon="ion-arrow-swap" title="Issues and Returns" ref="invissue" schema="invIssueList" />-->
+    <!--<application id="ITG" icon="ion-arrow-right-c" title="Inventory Transfer" ref="matrectransTransfers" schema="matrectransTransfersList" />-->
     <application id="PC" icon="ion-filing" title="Physical Count" ref="physicalcount" schema="physicalcountList" />
   </container>
 

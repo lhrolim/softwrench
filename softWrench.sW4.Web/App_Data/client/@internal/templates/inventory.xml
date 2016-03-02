@@ -265,7 +265,7 @@
 
     <application name="physicalcount" entity="physicalCount" title="Physical Count">
       <schemas>
-        <schema stereotype="list" id="physicalcountList" title="Physical Count Grid">
+        <schema stereotype="list" id="physicalcountList" title="Physical Count Grid" platform="web">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/PhysicalCount/ScanBar"/>
           </properties>
@@ -280,6 +280,17 @@
           <field attribute="location" label="Storeroom"/>
           <field attribute="binnum" label="Bin"/>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
+        </schema>
+
+        <schema stereotype="list" id="physicalcountList" title="Physical Count Grid" platform="mobile">
+          <properties>
+            <property key="config.fullKey" value="/Global/Grids/PhysicalCount/ScanBar"/>
+          </properties>
+          <field attribute="invbalancesid" hidden="true"/>
+          <field attribute="itemnum" label="Item" qualifier="title" />
+          <field attribute="inventory_.siteid" label="Site" qualifier="featured" />
+          <field attribute="location" label="Storeroom" qualifier="subtitle"/>
+          <field attribute="binnum" label="Bin" qualifier="excerpt" />
         </schema>
 
 
@@ -512,7 +523,7 @@
         <property key="mobile.fetchlimit" value="300"/>
       </properties>
       <schemas>
-        <schema stereotype="list" id="invbalancesList" title="Inventory Grid">
+        <schema stereotype="list" id="invbalancesList" title="Inventory Grid" platform="web">
           <commandbars>
             <commandgroup position="gridtop">
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
@@ -551,6 +562,17 @@
           </field>
           <field attribute="invbalancesid" hidden="true"/>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
+          <properties>
+            <property key="list.click.schema" value="invbalancesdetail"/>
+            <property key="config.fullKey" value="/Global/Grids/InvBalances/ScanBar"/>
+          </properties>
+        </schema>
+
+        <schema stereotype="list" id="invbalancesList" title="Inventory Grid" platform="mobile">
+          <field attribute="itemnum" label="Item" qualifier="title"/>
+          <field attribute="item_.description" label="Description" qualifier="subtitle" />
+          <field attribute="location" label="Storeroom" qualifier="excerpt"/>
+          <field attribute="curbal" label="Balance" qualifier="featured" />
           <properties>
             <property key="list.click.schema" value="invbalancesdetail"/>
             <property key="config.fullKey" value="/Global/Grids/InvBalances/ScanBar"/>

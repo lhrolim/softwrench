@@ -97,7 +97,7 @@
 
         function locateAttributeByQualifier(schema, qualifier) {
             schema.jscache = schema.jscache || {};
-            if (schema.jscache.qualifiercache) {
+            if (schema.jscache.qualifiercache && schema.jscache.qualifiercache[qualifier]) {
                 //already cached
                 return schema.jscache.qualifiercache[qualifier].attribute;
             }
