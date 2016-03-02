@@ -99,7 +99,9 @@
 
                     <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
                         <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>
-                        <select class="hidden-phone form-control combobox"
+
+                        <select ng-if="!fieldMetadata.rendererParameters['multiple']"
+                                class="hidden-phone form-control combobox"
                                 ng-model="datamap[fieldMetadata.target]"
                                 number-to-string
                                 ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
@@ -108,6 +110,19 @@
                                 data-field="{{fieldMetadata.associationKey}}">
                             <option value=""></option>
                         </select>
+
+                        <select ng-if="fieldMetadata.rendererParameters['multiple']"
+                                multiple
+                                class="hidden-phone form-control combobox"
+                                ng-model="datamap[fieldMetadata.target]"
+                                number-to-string
+                                ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
+                                ng-enabled="isSelectEnabled(fieldMetadata)"
+                                ng-init="initField(fieldMetadata)"
+                                data-field="{{fieldMetadata.associationKey}}">
+                            <option value=""></option>
+                        </select>
+
                         <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
                     </div>
 
@@ -225,16 +240,25 @@
                                   />
                 </div>
 
-              
+
 
                 <fieldset ng-switch-when="radio">
-                    <label ng-repeat="option in fieldMetadata.options" class="checkbox-inline">
+                    <label ng-if="fieldMetadata.rendererParameters['vertical']==null" ng-repeat="option in fieldMetadata.options" class="checkbox-inline">
                         <input type="radio"
                                name="{{fieldMetadata.attribute}}"
                                value="{{option.value}}"
                                ng-model="datamap[fieldMetadata.associationKey]">
                         {{i18NOptionField(option,fieldMetadata,schema)}}
                     </label>
+                    <div  ng-if="fieldMetadata.rendererParameters['vertical']!=null" class="radio" ng-repeat="option in fieldMetadata.options">
+                        <label>
+                            <input type="radio"
+                                   name="{{fieldMetadata.attribute}}"
+                                   value="{{option.value}}"
+                                   ng-model="datamap[fieldMetadata.associationKey]">
+                            {{i18NOptionField(option,fieldMetadata,schema)}}
+                        </label>
+                    </div>
                 </fieldset>
                 <div ng-switch-when="textarea">
                     <textarea ng-model="datamap[fieldMetadata.attribute]" class="form-control" cols="120" rows="10" wrap="hard"

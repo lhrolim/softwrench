@@ -322,6 +322,11 @@
                     //is this the current field?
                     var fieldMetadata = displayables[i];
 
+                    // also verifies if the field is actualy displayed on screen
+                    if ($('[data-field="' + fieldMetadata.attribute + '"]').is(":hidden")) {
+                        continue;
+                    }
+
                     //if the current field is found, get the next visible and editable field
                     if (!this.isFieldHidden(datamap, schema, fieldMetadata) && !this.isFieldReadOnly(datamap, schema, fieldMetadata)) {
                         $log.getInstance("fieldService#getNextVisibleDisplayable").debug('found', fieldMetadata.attribute, fieldMetadata);

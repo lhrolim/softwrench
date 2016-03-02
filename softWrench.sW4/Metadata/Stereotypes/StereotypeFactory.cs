@@ -1,8 +1,5 @@
 ﻿using System;
-using cts.commons.portable.Util;
-using softWrench.sW4.Security.Init;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Metadata.Stereotypes.Schema;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
@@ -23,6 +20,9 @@ namespace softWrench.sW4.Metadata.Stereotypes {
                 }
                 if (stereotypeAttr.Contains("list")) {
                     return SchemaStereotype.List;
+                }
+                if (stereotypeAttr.Contains("search")) {
+                    return SchemaStereotype.Search;
                 }
             }
             return stereotype;

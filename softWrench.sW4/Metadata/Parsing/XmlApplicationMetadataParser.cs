@@ -135,6 +135,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var enableExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute).ValueOrDefault("true");
             var enableDefault = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableDefaultAttribute).ValueOrDefault("true");
             var evalExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEvalExpressionAttribute).ValueOrDefault((string)null);
+            var searchOperation = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableSearchOperation).ValueOrDefault((string)null);
             // Flag for fields coming from attributes that use subqueries
             var fieldAttributeMetadata = entityMetadata.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(attribute));
             var fieldEntityQuery = fieldAttributeMetadata == null ? null : fieldAttributeMetadata.Query;
@@ -144,7 +145,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
             var fieldObj = new ApplicationFieldDefinition(applicationName, attribute, datatype, label, requiredExpression, isReadOnly, isHidden, renderer,
                 ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault,
-                defaultExpression, declaredAsQueryOnEntity);
+                defaultExpression, declaredAsQueryOnEntity, searchOperation);
 
             AddPrimaryAttribute(fieldObj, entityMetadata);
 
@@ -326,6 +327,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var qualifier = xElement.Attribute(XmlMetadataSchema.FieldAttributeQualifier).ValueOrDefault((string)null);
             var rendererElement = xElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement);
             var evalExpression = xElement.Attribute(XmlMetadataSchema.BaseDisplayableEvalExpressionAttribute).ValueOrDefault((string)null);
+            var searchOperation = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableSearchOperation).ValueOrDefault((string)null);
             var renderer = new OptionFieldRenderer();
             if (rendererElement != null) {
                 renderer = (OptionFieldRenderer)ParseRendererNew(rendererElement, attribute, FieldRendererType.OPTION);
@@ -334,7 +336,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var events = ParseEvents(xElement);
             return new OptionField(applicationName, label, attribute, qualifier, requiredExpression, isReadOnly, isHidden, renderer, ParseFilterNew(filterElement, attribute),
                                    xElement.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.OptionElement).Select(ParseOption).ToList(),
-                                   defaultValue, sort, showExpression, toolTip, attributeToServer, events, providerAttribute, dependantFields, enableExpression, evalExpression, extraParameter, defaultExpression);
+                                   defaultValue, sort, showExpression, toolTip, attributeToServer, events, providerAttribute, dependantFields, enableExpression, evalExpression, extraParameter, defaultExpression, searchOperation);
         }
 
         private static IAssociationOption ParseOption(XElement xElement) {
