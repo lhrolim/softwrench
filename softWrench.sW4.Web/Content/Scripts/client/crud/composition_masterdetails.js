@@ -16,8 +16,8 @@
                 title: '@'
             },
 
-            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "controllerInheritanceService", "fieldService", "$timeout",
-                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, controllerInheritanceService, fieldService, $timeout) {
+            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "controllerInheritanceService", "fieldService", "$timeout", "richTextService",
+                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, controllerInheritanceService, fieldService, $timeout, richTextService) {
 
                     var log = $log.getInstance('sw4.composition.master/detail');
 
@@ -63,14 +63,16 @@
                         return $scope.compositionschemadefinition.schemas.list;
                     };
 
-                    $scope.getFormattedValue = function (value, column, datamap) {
+                    $scope.formattedValue = function (value, column, datamap) {
                         var formattedValue = formatService.format(value, column, datamap);
                         if (formattedValue === "-666" || formattedValue === -666) {
                             //this magic number should never be displayed! 
                             //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
                             return null;
                         }
-                        return formattedValue;
+                        return (column.rendererType === "richtext")
+                            ? richTextService.getDecodedValue(formattedValue)
+                            : formattedValue;
                     };
 
                     $scope.getScrollSpaceMaster = function () {
@@ -181,7 +183,7 @@
                             string = string.substring(0, 200) + "...";
                         }
 
-                        string = $scope.getFormattedValue(string, field, entry);
+                        string = $scope.formattedValue(string, field, entry);
 
                         if (string == 'null') {
                             string = '';
