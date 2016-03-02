@@ -1050,6 +1050,10 @@
             return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
         };
 
+        $scope.i18NInputLabel =function(fieldMetadata) {
+            return i18NService.getI18nInputLabel(fieldMetadata, $scope.compositiondetailschema);
+        };
+
         //#region pagination
         $scope.selectPage = function (pageNumber, pageSize, printMode) {
             if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {

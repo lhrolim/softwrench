@@ -16,13 +16,11 @@ function BaseController($scope,$log, i18NService, fieldService, commandService, 
         return i18NService.getI18nLabel(fieldMetadata, $scope.schema);
     };
 
-    $scope.i18NInputLabel = function (fieldMetadata) {
+    $scope.i18NInputLabel = $scope.i18NInputLabel || function (fieldMetadata) {
         return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema);
     };
 
-    $scope.i18NInputLabel = function (fieldMetadata) {
-        return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema);
-    };
+
 
     $scope.i18NOptionField = function (option, fieldMetadata, schema) {
         return i18NService.getI18nOptionField(option, fieldMetadata, schema);
