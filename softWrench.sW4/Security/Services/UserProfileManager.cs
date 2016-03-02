@@ -94,6 +94,13 @@ namespace softWrench.sW4.Security.Services {
 
 
             var isUpdate = profile.Id != null;
+            if (!isUpdate) {
+                var tempList = profile.ApplicationPermissions;
+                profile.ApplicationPermissions = null;
+                profile = _dao.Save(profile);
+                profile.ApplicationPermissions = tempList;
+            }
+
             if (profile.ApplicationPermissions != null) {
                 foreach (var permission in profile.ApplicationPermissions) {
                     permission.Profile = profile;
@@ -120,7 +127,7 @@ namespace softWrench.sW4.Security.Services {
             return dbUser.Profiles.Select(profile => ProfileCache[profile.Id]).ToList();
         }
 
-      
+
 
         //TODO: remove customUserRoles and customUSerCOnstraints which were exclusions from this profile ==> They don´t make sense anymore (tough,they are useless anyway)
         public void DeleteProfile(int? profileId) {

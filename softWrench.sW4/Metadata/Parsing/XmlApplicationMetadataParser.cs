@@ -102,11 +102,12 @@ namespace softWrench.sW4.Metadata.Parsing {
                 return null;
             }
 
-            var operation = renderer.Attribute(XmlMetadataSchema.FilterOperationType).Value;
+            var operation = renderer.AttributeValue(XmlMetadataSchema.FilterOperationType);
             var parameters = renderer.Attribute(XmlMetadataSchema.FilterAttributeParams).ValueOrDefault((string)null);
             var defaultValue = renderer.Attribute(XmlMetadataSchema.FilterAttributeDefault).ValueOrDefault((string)null);
+            var clientFunction = renderer.AttributeValue("clientfunction");
 
-            return new FieldFilter(operation, parameters, defaultValue, targetName);
+            return new FieldFilter(operation, parameters, defaultValue, targetName,clientFunction);
         }
 
         /// <summary>

@@ -25,14 +25,18 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
 
-        public static SecurityModeCheckResult VerifySecurityMode(this InMemoryUser user, string applicationName, DataRequestAdapter request) {
+        public static SecurityModeCheckResult VerifySecurityMode(this InMemoryUser user, ApplicationMetadata application, DataRequestAdapter request) {
             var profile = user.MergedUserProfile;
-            var permission = profile.GetPermissionByApplication(applicationName);
+            var permission = profile.GetPermissionByApplication(application.Name);
             if (permission == null) {
                 //no restriction to that particular application
                 return SecurityModeCheckResult.Allow;
             }
             var viewingExisting = request.Id != null || request.UserId != null;
+            var isList = application.Schema.Stereotype == SchemaStereotype.List || request.SearchDTO != null;
+            if (isList && permission.AllowView) {
+                return SecurityModeCheckResult.Allow;
+            }
 
             if (viewingExisting) {
                 if (!permission.AllowUpdate && !permission.AllowView) {

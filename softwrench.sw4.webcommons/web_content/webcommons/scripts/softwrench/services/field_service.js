@@ -164,12 +164,12 @@
 
             isInlineComposition: function (displayable) {
                 var type = displayable.type;
-                return type == "ApplicationCompositionDefinition" && displayable.inline;
+                return type === "ApplicationCompositionDefinition" && displayable.inline;
             },
 
             isListOnlyComposition: function (displayable) {
                 var type = displayable.type;
-                return type == "ApplicationCompositionDefinition" && displayable.schema.schemas.detail == null;
+                return type === "ApplicationCompositionDefinition" && displayable.schema.schemas.detail == null;
             },
 
             isTabOrComposition: function (displayable) {

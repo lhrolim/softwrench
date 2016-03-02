@@ -3,8 +3,8 @@
 
 angular.module("sw_layout").controller("BaseController", BaseController);
     //idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-BaseController.$inject = ["$scope", "i18NService", "fieldService", "commandService", "formatService", "layoutservice", "expressionService"];
-function BaseController($scope, i18NService, fieldService, commandService, formatService, layoutservice,expressionService) {
+BaseController.$inject = ["$scope","$log", "i18NService", "fieldService", "commandService", "formatService", "layoutservice", "expressionService", "crudContextHolderService", "dispatcherService"];
+function BaseController($scope,$log, i18NService, fieldService, commandService, formatService, layoutservice, expressionService, crudContextHolderService, dispatcherService) {
 
     /* i18N functions */
     $scope.i18NLabelTooltip = function (fieldMetadata) {
@@ -16,13 +16,11 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
         return i18NService.getI18nLabel(fieldMetadata, $scope.schema);
     };
 
-    $scope.i18NInputLabel = function (fieldMetadata) {
+    $scope.i18NInputLabel = $scope.i18NInputLabel || function (fieldMetadata) {
         return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema);
     };
 
-    $scope.i18NInputLabel = function (fieldMetadata) {
-        return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema);
-    };
+
 
     $scope.i18NOptionField = function (option, fieldMetadata, schema) {
         return i18NService.getI18nOptionField(option, fieldMetadata, schema);
@@ -43,7 +41,7 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
         return i18NService.getTabLabel(tab, $scope.schema);
     };
 
-    $scope.getFormattedValue = function (value, column, datamap) {
+    $scope.getFormattedValue = $scope.getFormattedValue || function (value, column, datamap) {
         return formatService.format(value, column, datamap);
     };
 
@@ -118,6 +116,35 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
         }
         return null;
     };
+
+    function applyFilter(filter,options) {
+        if (filter && filter.clientFunction) {
+            var fn = dispatcherService.loadServiceByString(filter.clientFunction);
+            if (fn == null) {
+                $log.get("baselist#getoptionfields", ["association", "optionfield"]).warn("method {0} not found. review your metadata".format(filter.clientFunction));
+                return options;
+            }
+            return options.filter(fn);
+        }
+        return options;
+    }
+
+    $scope.GetAssociationOptions = function (fieldMetadata) {
+        if (fieldMetadata.type === "OptionField") {
+            return $scope.GetOptionFieldOptions(fieldMetadata);
+        }
+        var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+        var rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
+        return applyFilter(fieldMetadata.filter, rawOptions);
+    }
+    $scope.GetOptionFieldOptions = function (optionField) {
+        if (optionField.providerAttribute == null) {
+            return applyFilter(optionField.filter, optionField.options);
+        }
+        var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+        var options = crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData);
+        return applyFilter(optionField.filter, options);
+    }
 
 
     $scope.getFieldClass = function (fieldMetadata) {
