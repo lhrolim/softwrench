@@ -4,7 +4,7 @@
                 <scroll-pane data-available-fn="getScrollSpaceMaster">
                     <div class="scroll">
                         <div class="entries">
-                            <div ng-repeat="entry in compositiondata" ng-class="[$odd ? 'odd' : 'even', getMaster(entry).open ? 'current' : '']" ng-click="displayDetails(entry)" class="entry clearfix">
+                            <div ng-repeat="entry in compositiondata track by $index" ng-class="[$odd ? 'odd' : 'even', getMaster(entry).open ? 'current' : '']" ng-click="displayDetails(entry)" class="entry clearfix">
                                 <div class="icons">
                                     <div ng-repeat="icon in getMaster(entry).icons" ng-show="icon" class="icon">
                                         <i class="fa {{icon}}"></i>
@@ -15,22 +15,6 @@
                                     <div class="tag" ng-show="getMaster(entry).tag">{{getMaster(entry).tag}}</div>
                                     <div class="subtitle" ng-show="getMaster(entry).subtitle">{{getMaster(entry).subtitle}}</div>
                                     <div class="message" ng-show="getMaster(entry).message">{{getMaster(entry).message}}</div>
-                                </div>
-                                <div class="details" ng-class="{'open': getMaster(entry).open }">
-                                    <div ng-if="!!compositiondata" class="fields">
-                                        <!-- TODO: !!! USE CRUD_INPUT_FIELDS !!! -->
-                                        <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
-                                            <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
-                                            <label class="form-control" ng-bind-html="formattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
-                                        </div>
-                                    </div>
-                                    <div ng-if="!!compositiondata" class="commands">
-                                        <div ng-controller="CommLogActionsController" class="buttons">
-                                            <button class="btn btn-default fa fa-mail-reply" ng-click="reply(getDetailDatamap)" title="Reply"></button>
-                                            <button class="btn btn-default fa fa-mail-reply-all" ng-click="replyAll(getDetailDatamap)" title="Reply all"></button>
-                                            <button class="btn btn-default fa fa-mail-forward" ng-click="forward(getDetailDatamap)" title="Forward"></button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -43,7 +27,7 @@
             <div class="details col-xs-12 col-sm-8 hidden-xs">
                 <scroll-pane data-available-fn="getScrollSpaceDetails">
                     <div class="scroll">
-                        <div ng-if="!!compositiondata" class="fields">
+                        <div ng-if="!!getDetailDatamap" class="fields">
                             <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
                                 <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
                                 <label class="form-control" ng-bind-html="formattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
@@ -51,7 +35,7 @@
                         </div>
                     </div>
                 </scroll-pane>
-                <div ng-if="!!compositiondata" class="commands">
+                <div ng-if="!!getDetailDatamap" class="commands">
                     <div ng-controller="CommLogActionsController" class="buttons">
                         <button class="btn btn-default fa fa-mail-reply" ng-click="reply(getDetailDatamap)" title="Reply"></button>
                         <button class="btn btn-default fa fa-mail-reply-all" ng-click="replyAll(getDetailDatamap)" title="Reply all"></button>

@@ -27,6 +27,7 @@
         <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="issendfail" type="smallint" required="true" />
         <attribute name="keepfailed" type="smallint" required="true" />
+        <attribute name="summary_message" type="text" query="SUBSTRING(!@message, 1, 50)" />
         <attribute name="ccflag" query="CASE WHEN !@cc is not null THEN 'true' ELSE 'false' end " type="bool"/>
         <attribute name="bccflag" query="CASE WHEN !@bcc is not null THEN 'true' ELSE 'false' end " type="bool"/>
       </attributes>
@@ -96,7 +97,7 @@
           <field attribute="subject" label="Subject" qualifier="subtitle">
             <renderer type="default"/>
           </field>
-          <field attribute="message" label="Message" qualifier="message">
+          <field attribute="summary_message" label="Message" qualifier="message">
             <renderer type="default"/>
           </field>          
         </schema>
