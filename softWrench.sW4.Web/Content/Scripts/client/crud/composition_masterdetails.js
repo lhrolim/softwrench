@@ -16,10 +16,12 @@
                 title: '@'
             },
 
-            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "controllerInheritanceService", "fieldService", "$timeout",
-                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, controllerInheritanceService, fieldService, $timeout) {
+            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "controllerInheritanceService", "fieldService", "$timeout", "richTextService",
+                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, controllerInheritanceService, fieldService, $timeout, richTextService) {
 
                     var log = $log.getInstance('sw4.composition.master/detail');
+
+                    var masterMap = {};
 
                     $scope.compositionlistschema = $scope.compositionschemadefinition.schemas.list;
                     $scope.compositiondetailschema = $scope.compositionschemadefinition.schemas.detail;
@@ -30,7 +32,8 @@
 
                     $scope.displayDetails = function (entry) {
                         //close the current record
-                        $scope.getDetailDatamap.open = false;
+                        var currentMaster = $scope.getMaster($scope.getDetailDatamap);
+                        currentMaster.open = false;
 
                         //update the first message if another message is viewed
                         if (!$scope.getDetailDatamap.read) {
@@ -39,7 +42,7 @@
 
                         //display the selected details
                         $scope.getDetailDatamap = entry;
-                        entry.open = true;
+                        $scope.getMaster(entry).open = true;
 
                         if (!entry.read) {
                             $scope.onViewDetail(entry);
@@ -63,14 +66,16 @@
                         return $scope.compositionschemadefinition.schemas.list;
                     };
 
-                    $scope.getFormattedValue = function (value, column, datamap) {
+                    $scope.formattedValue = function (value, column, datamap) {
                         var formattedValue = formatService.format(value, column, datamap);
                         if (formattedValue === "-666" || formattedValue === -666) {
                             //this magic number should never be displayed! 
                             //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
                             return null;
                         }
-                        return formattedValue;
+                        return (column.rendererType === "richtext")
+                            ? richTextService.getDecodedValue(formattedValue)
+                            : formattedValue;
                     };
 
                     $scope.getScrollSpaceMaster = function () {
@@ -104,6 +109,11 @@
                         return i18NService.get18nValue(key, defaultValue, paramArray);
                     };
 
+                    $scope.getMaster = function(entry) {
+                        var id = schemaService.getId(entry, $scope.compositionlistschema);
+                        return masterMap[id];
+                    }
+
                     $scope.mapMaster = function (compositiondata, schema) {
                         if (!compositiondata) return;
 
@@ -131,17 +141,19 @@
                             });
 
                             //add the master info
-                            entry.master = master;
+                            var id = schemaService.getId(entry, $scope.compositionlistschema);
+                            masterMap[id] = master;
                         });
                     };
 
                     $scope.onViewDetail = function (entry) {
                         log.debug('mark as read', entry);
 
+                        var master = $scope.getMaster(entry);
                         //remove the read icon
-                        angular.forEach(entry.master.icons, function (icon, index) {
+                        angular.forEach(master.icons, function (icon, index) {
                             if (icon.indexOf("read") >= 0) {
-                                entry.master.icons[index] = "";
+                                master.icons[index] = "";
                             }
                         });
 
@@ -157,18 +169,11 @@
                     };
 
                     $scope.showDetailField = function (fieldMetadata) {
-                        if ($scope.getDetailDatamap == undefined) {
-                            return;
-                        }
-
-                        //don't show if hidden
-                        if (fieldMetadata.isHidden) {
-                            return false;
-                        }
-
-                        //don't show if field is empty
-                        var dataValue = $scope.getDetailDatamap[fieldMetadata.attribute];
-                        return !!dataValue;
+                        return !!$scope.getDetailDatamap
+                            && !fieldMetadata.isHidden
+                            /* TODO: !!! remove this after adding CRUD_INPUT_FIELDS !!! */
+                            && !(fieldMetadata.rendererType && fieldMetadata.rendererType.endsWith("upload"))
+                            && !(fieldMetadata.rendererType && fieldMetadata.rendererType.endsWith("lookup"));
                     };
 
                     /* Directvie Methods */
@@ -181,7 +186,7 @@
                             string = string.substring(0, 200) + "...";
                         }
 
-                        string = $scope.getFormattedValue(string, field, entry);
+                        string = $scope.formattedValue(string, field, entry);
 
                         if (string == 'null') {
                             string = '';

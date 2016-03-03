@@ -129,11 +129,19 @@ function BaseController($scope, i18NService, fieldService, commandService, forma
     }
 
     $scope.getLabelClass = function (fieldMetadata) {
-        return layoutservice.getLabelClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() })
+        return layoutservice.getLabelClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
     }
 
     $scope.getInputClass = function (fieldMetadata) {
-        return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() })
+        return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
+    }
+
+    $scope.getCheckboxLabelLeftClass = function (fieldMetadata) {
+        return layoutservice.getCheckboxLabelLeftClass(fieldMetadata);
+    }
+
+    $scope.getCheckboxLabelRightClass = function (fieldMetadata) {
+        return layoutservice.getCheckboxLabelRightClass(fieldMetadata);
     }
 
     ///

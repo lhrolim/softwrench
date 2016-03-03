@@ -40,6 +40,7 @@ using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -82,6 +83,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         private IWhereClauseFacade _whereClauseFacade;
         private FilterWhereClauseHandler _filterWhereClauseHandler;
         private QuickSearchWhereClauseHandler _quickSearchWhereClauseHandler;
+        private AttachmentHandler _attachmentHandler;
 
         internal BaseApplicationDataSet() {
         }
@@ -137,6 +139,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 _quickSearchWhereClauseHandler =
                     SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchWhereClauseHandler>(typeof(QuickSearchWhereClauseHandler));
                 return _quickSearchWhereClauseHandler;
+            }
+        }
+
+        protected AttachmentHandler AttachmentHandler {
+            get {
+                return _attachmentHandler ?? (_attachmentHandler = new AttachmentHandler());
             }
         }
 
@@ -236,7 +244,24 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         }
 
         public virtual CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
+            var data = DoGetCompositionData(application, request, currentData);
 
+            // SWWEB-2046: adding download url to the datamap
+            // fetching url at drag-time does not work
+            if (!data.ResultObject.ContainsKey("attachment_")) {
+                return data;
+            }
+            var attachments = data.ResultObject["attachment_"].ResultList;
+            foreach (var attachment in attachments) {
+                if (attachment.ContainsKey("docinfo_.urlname")) {
+                    var docInfoURL = (string)attachment["docinfo_.urlname"];
+                    attachment["download_url"] = AttachmentHandler.GetFileUrl(docInfoURL);
+                }
+            }
+            return data;
+        }
+
+        private CompositionFetchResult DoGetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
             var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
@@ -258,9 +283,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 return new CompositionFetchResult(result, listOfEntities.FirstOrDefault());
             }
 
-
-            var cruddata = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata,
-               application, currentData, request.Id);
+            var cruddata = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata, application, currentData, request.Id);
 
             result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
 

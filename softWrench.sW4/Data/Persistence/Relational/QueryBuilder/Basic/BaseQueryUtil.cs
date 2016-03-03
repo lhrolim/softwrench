@@ -32,7 +32,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         public static string GenerateInString(IEnumerable<string> items) {
             var sb = new StringBuilder();
             foreach (var item in items) {
-                sb.Append("'").Append(item).Append("'");
+                var escapedItem = item.Replace("'", "''");
+                sb.Append("'").Append(escapedItem).Append("'");
                 sb.Append(",");
             }
             return sb.ToString(0, sb.Length - 1);
@@ -41,10 +42,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         public static string GenerateOrLikeString(string columnName, IEnumerable<string> items) {
             var sb = new StringBuilder();
             foreach (var item in items) {
-                if (item.Contains("%")) {
-                    sb.AppendFormat(" {0} like '{1}'", columnName, item);
+                var escapedItem = item.Replace("'", "''");
+                if (escapedItem.Contains("%")) {
+                    sb.AppendFormat(" {0} like '{1}'", columnName, escapedItem);
                 } else {
-                    sb.AppendFormat(" {0} = '{1}'", columnName, item);
+                    sb.AppendFormat(" {0} = '{1}'", columnName, escapedItem);
                 }
                 sb.Append(" or ");
             }
