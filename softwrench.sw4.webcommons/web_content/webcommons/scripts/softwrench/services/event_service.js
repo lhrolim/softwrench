@@ -21,6 +21,17 @@
             loadEvent: function (schema, eventName) {
                 return loadEvent(schema, eventName);
             },
+
+            dispatchEvent: function (schema, eventName, parameters) {
+                var fn = loadEvent(schema, eventName);
+                if (fn) {
+                    if (parameters) {
+                        return fn(parameters);
+                    }
+                    return fn();
+                }
+            },
+
             onload: function (scope, schema, datamap, parameters) {
                 var fn = loadEvent(schema, 'onload');
                 if (!fn) {

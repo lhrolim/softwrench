@@ -337,11 +337,10 @@
 
                     $scope.$watch("compositiondata[{0}]".format(index), function (newValue, oldValue) {
                         //make sure any change on the composition marks it as dirty
-                        if (oldValue !== newValue) {
+                        if (oldValue !== newValue && $scope.compositiondata[index]) {
                             $scope.compositiondata[index]["#isDirty"] = true;
                         }
                     }, true);
-
 
                 });
 
@@ -366,12 +365,7 @@
                 });
         }
 
-        $scope.$watch("compositiondata[{0}]".format(index), function (newValue, oldValue) {
-            //make sure any change on the composition marks it as dirty
-            if (oldValue !== newValue && $scope.compositiondata[index]) {
-                $scope.compositiondata[index]["#isDirty"] = true;
-            }
-        }, true);
+     
 
         $scope.onAfterCompositionResolved = function (event, compositiondata) {
             if (!compositiondata || !compositiondata.hasOwnProperty($scope.relationship)) {

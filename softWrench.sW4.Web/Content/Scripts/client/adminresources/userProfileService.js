@@ -4,7 +4,7 @@
 
 
 
-    function userProfileService($q, $rootScope, $log, restService, contextService, crudContextHolderService, redirectService, alertService, modalService) {
+    function userProfileService($q, $rootScope, $log, restService, validationService, contextService, crudContextHolderService, redirectService, alertService, modalService) {
 
         var simpleLog = $log.get("userProfileService", ["profile"]);
 
@@ -570,6 +570,12 @@
         }
 
         function save() {
+            var validationArray = validationService.validateCurrent();
+            if (validationArray.length > 0) {
+                return $q.reject();
+            }
+
+
             //last storal
             storeFromDmIntoTransient();
             var dm = crudContextHolderService.rootDataMap().fields;
@@ -723,6 +729,6 @@
     }
 
 
-    angular.module('sw_crudadmin').factory('userProfileService', ['$q', "$rootScope", "$log", 'restService', 'contextService', 'crudContextHolderService', 'redirectService', 'alertService', 'modalService', userProfileService]);
+    angular.module('sw_crudadmin').factory('userProfileService', ['$q', "$rootScope", "$log", 'restService', 'validationService', 'contextService', 'crudContextHolderService', 'redirectService', 'alertService', 'modalService', userProfileService]);
 
 })(angular);

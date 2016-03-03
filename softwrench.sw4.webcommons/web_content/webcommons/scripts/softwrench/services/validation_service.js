@@ -1,9 +1,9 @@
 (function (angular) {
     'use strict';
 
-    angular.module('webcommons_services').factory('validationService', ['$log', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionCommons', 'schemaService', 'alertService', validationService]);
+    angular.module('webcommons_services').factory('validationService', ['$log', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionCommons', 'schemaService', 'alertService','crudContextHolderService' , validationService]);
 
-    function validationService($log, i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService, compositionCommons, schemaService, alertService) {
+    function validationService($log, i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService, compositionCommons, schemaService, alertService, crudContextHolderService) {
 
       
 
@@ -55,7 +55,15 @@
             return result;
         }
 
+        function validateCurrent(panelId) {
+            var schema = crudContextHolderService.currentSchema(panelId);
+            var datamap = crudContextHolderService.rootDataMap(panelId);
+            if (datamap.fields) {
+                datamap = datamap.fields;
+            }
 
+            return this.validate(schema, schema.displayables, datamap);
+        }
 
         function validate(schema, displayables, datamap, angularformerrors, innerValidation) {
             angularformerrors = instantiateIfUndefined(angularformerrors);
@@ -133,6 +141,7 @@
         var service = {
             getInvalidLabels: getInvalidLabels,
             validate: validate,
+            validateCurrent :validateCurrent,
             validateInlineComposition: validateInlineComposition,
 
         };
