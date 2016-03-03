@@ -55,23 +55,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null).Select(a => new AssociationOption(a.ApplicationName, a.ApplicationName));
         }
 
-        [UsedImplicitly]
-        public IEnumerable<IAssociationOption> GetSelectableModes(OptionFieldProviderParameters parameters) {
-            var entity = parameters.OriginalEntity;
-            var allowCreation = "true".EqualsIc(entity.GetStringAttribute("#appallowcreation"));
-            var allowUpdate = "true".EqualsIc(entity.GetStringAttribute("#appallowupdate"));
-
-            //TODO: include logic based on permissions
-            var enumOptions = new List<SchemaPermissionMode>(Enum.GetValues(typeof(SchemaPermissionMode)).Cast<SchemaPermissionMode>());
-            if (!allowCreation) {
-                enumOptions.Remove(SchemaPermissionMode.Creation);
-            }
-            if (!allowUpdate) {
-                enumOptions.Remove(SchemaPermissionMode.Update);
-            }
-            var options = enumOptions.Select(i => new PriorityBasedAssociationOption(i.GetName(), i.Label(), i.Priority()));
-            return options.OrderBy(a => a.Priority);
-        }
+//        [UsedImplicitly]
+//        public IEnumerable<IAssociationOption> GetSelectableModes(OptionFieldProviderParameters parameters) {
+//            var entity = parameters.OriginalEntity;
+//            var allowCreation = "true".EqualsIc(entity.GetStringAttribute("#appallowcreation"));
+//            var allowUpdate = "true".EqualsIc(entity.GetStringAttribute("#appallowupdate"));
+//
+//            //TODO: include logic based on permissions
+//            var enumOptions = new List<SchemaPermissionMode>(Enum.GetValues(typeof(SchemaPermissionMode)).Cast<SchemaPermissionMode>());
+//           
+//            var options = enumOptions.Select(i => new PriorityBasedAssociationOption(i.GetName(), i.Label(), i.Priority()));
+//            return options.OrderBy(a => a.Priority);
+//        }
 
         /// <summary>
         /// This method just need to return a non null value if more than one schema is available for selection, otherwise, just by selecting the mode, it should be enough for the user
@@ -101,7 +96,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
                     //if there are output schemas present, use them
                     return applicationSchemaDefinitions;
                 }
-                return null;
+                //otherwise fallback to detail implementation
+                return completeApplicationMetadataDefinition.NonInternalSchemasByStereotype("detail");
             }
             if (SchemaPermissionMode.Creation.Equals(schemaMode)) {
                 return completeApplicationMetadataDefinition.NonInternalSchemasByStereotype("detailnew");

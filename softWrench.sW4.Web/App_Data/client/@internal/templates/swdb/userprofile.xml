@@ -65,27 +65,36 @@
               <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>
             </optionfield>
 
+            <field attribute="#appallowview" label="Allow Visualization?">
+              <renderer type="checkbox" params="layout=left"/>
+              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
+            </field>
+
             <field attribute="#appallowcreation" label="Allow Creation?" showexpression="@hasCreationSchema==true">
               <renderer type="checkbox" params="layout=left"/>
+              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
             </field>
             <field attribute="#appallowupdate" label="Allow Update?">
               <renderer type="checkbox" params="layout=left"/>
-              <event type="afterchange" service="userProfileService" method="allowUpdateChanged"/>
+              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
             </field>
-            <field attribute="#appallowview" label="Allow Visualization?">
-              <renderer type="checkbox" params="layout=left"/>
-            </field>
-            
+
+
 
           </section>
 
 
 
-          <section showexpression="@application!=null">
+          <section showexpression="@application!=null &amp;&amp; @anybasicpermission">
             <!-- Mode/Schema/Tab selection  -->
             <section orientation="horizontal">
-              <optionfield label="Mode" attribute="selectedmode" providerattribute="selectableModes" dependantfields="application">
+              <optionfield label="Mode" attribute="selectedmode">
+                <option label="Grid" value="grid"/>
+                <option label="Creation" value="creation"/>
+                <option label="Update" value="update"/>
+                <option label="View" value="view"/>
                 <renderer type="combo" params="optionfield.forcefirstoption=true"/>
+                <filter clientfunction ="userProfileService.filterAvailableModes"/>
                 <event type="afterchange" service="userProfileService" method="afterModeChanged"/>
               </optionfield>
               <optionfield label="Schema" attribute="schema" providerattribute="schemas" dependantfields="application,selectedmode" showexpression="@showschemacombo" >
@@ -104,19 +113,22 @@
 
             <!-- Composition selection  -->
             <section showexpression="@iscompositiontab" orientation="horizontal">
+
+              <field attribute="#compallowview" label="Allow Visualization?">
+                <renderer type="checkbox" params="layout=left"/>
+              </field>
+
               <field attribute="#compallowcreation" label="Allow Creation?">
                 <renderer type="checkbox" params="layout=left"/>
               </field>
               <field attribute="#compallowupdate" label="Allow Update?">
                 <renderer type="checkbox" params="layout=left"/>
               </field>
-              <field attribute="#compallowview" label="Allow Visualization?">
-                <renderer type="checkbox" params="layout=left"/>
-              </field>
+       
             </section>
 
             <!-- Fields and Action selection  -->
-            <section orientation="horizontal">
+            <section orientation="horizontal" showexpression="@schema!=null &amp;&amp; @#selectedtab!=null">
 
               <composition detailschema="" fetchtype="lazy"  relationship="#fieldPermissions"  printschema="" inline="true">
                 <collectionproperties allowcreation="false" listschema="fieldRepresentation"/>

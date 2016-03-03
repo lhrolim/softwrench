@@ -381,7 +381,7 @@ app.directive('configAssociationListInputDatamap', function () {
                             displayables: $scope.displayables,
                             scope: $scope,
                             'continue': function () {
-                                fieldService.postFieldChange(field, $scope);
+                                fieldService.postFieldChange(field, $scope,oldValue,newValue);
                                 try {
                                     $scope.$digest();
                                 } catch (ex) {

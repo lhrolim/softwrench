@@ -118,7 +118,7 @@ function BaseController($scope,$log, i18NService, fieldService, commandService, 
     };
 
     function applyFilter(filter,options) {
-        if (filter && filter.clientFunction) {
+        if (options && filter && filter.clientFunction) {
             var fn = dispatcherService.loadServiceByString(filter.clientFunction);
             if (fn == null) {
                 $log.get("baselist#getoptionfields", ["association", "optionfield"]).warn("method {0} not found. review your metadata".format(filter.clientFunction));

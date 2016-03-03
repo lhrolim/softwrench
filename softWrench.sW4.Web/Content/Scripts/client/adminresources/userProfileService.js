@@ -134,10 +134,23 @@
             });
         }
 
-        function allowUpdateChanged(parameters) {
-            if (!!parameters.fields["#appallowupdate"]) {
-                parameters.fields["#appallowview"] = true;
+        function basicRoleChanged(parameters) {
+            var fields = parameters.fields;
+
+            if (parameters.target.attribute === "#appallowview") {
+                if (parameters.oldValue === true && parameters.newValue === false) {
+                    fields["#appallowcreation"] = false;
+                    fields["#appallowupdate"] = false;
+                }
             }
+
+            if (!!fields["#appallowupdate"] || !!fields["#appallowcreation"]) {
+                fields["#appallowview"] = true;
+            }
+
+
+            fields["anybasicpermission"] = fields["#appallowview"] || fields["#appallowupdate"] || fields["#appallowcreation"];
+
         }
 
         function onApplicationChange(parameters) {
@@ -264,6 +277,28 @@
                 return true;
             }
             return item.value !== "readonly";
+        }
+
+        function filterAvailableModes(item) {
+            var dm = crudContextHolderService.rootDataMap().fields;
+
+            var allowCreation = dm["#appallowcreation"];
+            var allowUpdate = dm["#appallowupdate"];
+            var allowView = dm["#appallowview"];
+            if (allowCreation && allowUpdate && allowView) {
+                return true;
+            }
+
+            if (!allowCreation && item.value === "creation") {
+                return false;
+            }
+
+            if (!allowUpdate && item.value === "update") {
+                return false;
+            }
+
+            return true;
+
         }
 
         function refreshCache() {
@@ -505,6 +540,7 @@
                 dm["#appallowupdate"] = transientAppData.allowUpdate;
                 dm["#appallowremoval"] = transientAppData.allowRemoval;
                 dm["#appallowview"] = transientAppData.allowView;
+                dm["anybasicpermission"] = dm["#appallowview"] || dm["#appallowupdate"] || dm["#appallowcreation"];
                 return dm;
             }
 
@@ -699,10 +735,10 @@
             afterModeChanged: afterModeChanged,
             afterSchemaChanged: afterSchemaChanged,
             afterTabsLoaded: afterTabsLoaded,
-            allowUpdateChanged: allowUpdateChanged,
             availableFieldsRefreshed: availableFieldsRefreshed,
             availableActionsRefreshed: availableActionsRefreshed,
             beforeApplicationChange: beforeApplicationChange,
+            basicRoleChanged: basicRoleChanged,
             beforeTabChange: beforeTabChange,
             beforeSchemaChange: beforeSchemaChange,
             onSchemaLoad: onSchemaLoad,
@@ -713,6 +749,7 @@
         var api = {
             'delete': deleteProfile,
             filterAvailablePermissions: filterAvailablePermissions,
+            filterAvailableModes: filterAvailableModes,
             mergeTransientIntoDatamap: mergeTransientIntoDatamap,
             refreshCache: refreshCache,
             storeFromDmIntoTransient: storeFromDmIntoTransient,
