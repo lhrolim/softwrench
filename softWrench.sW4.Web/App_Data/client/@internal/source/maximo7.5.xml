@@ -190,7 +190,7 @@
                    query="cast(case 
                    when !@status='ACTIVE' then 1 
                    when !@status='INACTIVE' or !@status is null then 0 
-                   end as bit)" />
+                   end as int)" />
       </attributes>
       <relationships>
         <relationship to="person">
