@@ -1049,6 +1049,7 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
             $scope.paginationData.pageNumber = pageNumber;
             return;
         }
+        crudContextHolderService.clearDetailDataResolved();
         return compositionService
             .getCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields, pageNumber, $scope.paginationData.pageSize)
             .then(function (result) {
@@ -1057,6 +1058,9 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
                 $scope.compositiondata = result[$scope.relationship].list;
                 $scope.paginationData = result[$scope.relationship].paginationData;
                 init();
+            })
+            .finally(function() {
+                crudContextHolderService.setDetailDataResolved();
             });
     };
     //#endregion

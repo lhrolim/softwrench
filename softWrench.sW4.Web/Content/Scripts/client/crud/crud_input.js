@@ -138,8 +138,23 @@ app.directive('crudInput', ["contextService", "associationService", function (co
                     if (log.isLevelEnabled("trace")) {
                         Object.keys(newDatamap)
                             .forEach(function (k) {
-                                if (!angular.equals(newDatamap[k], oldDatamap[k]))
-                                    log.trace("changed", k,"from", oldDatamap[k], "to", newDatamap[k]);
+                                if (angular.equals(newDatamap[k], oldDatamap[k])) return;
+                                if (!angular.isArray(newDatamap[k]) && !angular.isArray(oldDatamap[k])) {
+                                    log.trace("changed", k, "from", oldDatamap[k], "to", newDatamap[k]);
+                                    return;
+                                }
+                                for (var i = 0; i < newDatamap[k].length; i++) {
+                                    var newArrayItem = newDatamap[k][i], oldArrayItem = oldDatamap[k][i];
+                                    if (angular.equals(newArrayItem, oldArrayItem)) continue;
+                                    if (!angular.isObject(newArrayItem) && !angular.isObject(oldArrayItem)) {
+                                        log.trace("changed", "[" + k + "," + i + "]", "from", oldArrayItem, "to", newArrayItem);
+                                        return;
+                                    }
+                                    Object.keys(newArrayItem).forEach(function (ki) {
+                                        if (angular.equals(newArrayItem[ki], oldArrayItem[ki])) return;
+                                        log.trace("changed", "[" + k + "," + i + "," + ki + "]", "from", oldArrayItem[ki], "to", newArrayItem[ki]);
+                                    });
+                                }
                             });
                     }
                     crudContextHolderService.setDirty();
