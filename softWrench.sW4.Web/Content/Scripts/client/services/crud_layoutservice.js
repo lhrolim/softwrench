@@ -108,7 +108,6 @@
             return columnCount;
         };
 
-
         function getFieldClass (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
@@ -149,6 +148,13 @@
             cssclass += getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params);
             cssclass += ' row';
 
+            //if the field is a checkbox with a layout
+            if (fieldMetadata.rendererType == 'checkbox') {
+                if (fieldMetadata.rendererParameters.layout == 'left' || fieldMetadata.rendererParameters.layout == 'right') {
+                    cssclass += ' inline-checkbox';
+                }
+            }
+
             return cssclass;
         };
 
@@ -182,6 +188,14 @@
         function getLabelClass (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
+            if (fieldMetadata.rendererType == 'checkbox') {
+                //console.log(fieldMetadata.rendererParameters.layout);
+                //console.log(fieldMetadata, datamap, schema, displayables, params);
+                if (fieldMetadata.rendererParameters.layout == 'left' || fieldMetadata.rendererParameters.layout == 'right') {
+                    return 'ng-hide';
+                }
+            }
+
             if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['labelclass'] != null) {
                 cssclass += fieldMetadata.rendererParameters['labelclass'];
             } else {
@@ -209,6 +223,19 @@
             return cssclass + ' ' + returnClass;
         };
 
+        function getCheckboxLabelLeftClass(fieldMetadata) {
+            if (fieldMetadata.rendererParameters.layout != 'right') {
+                return 'ng-hide';
+            }
+        }
+
+        function getCheckboxLabelRightClass(fieldMetadata) {
+            if (fieldMetadata.rendererParameters.layout != 'left') {
+                return 'ng-hide';
+            }
+        }
+
+
         function hasSameLineLabel (fieldMetadata) {
             return (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop') ||
             (fieldMetadata.header == null);
@@ -220,7 +247,9 @@
             getFieldClass: getFieldClass,
             getInputClass:getInputClass,
             getLabelClass:getLabelClass,
-            hasSameLineLabel:hasSameLineLabel
+            hasSameLineLabel: hasSameLineLabel,
+            getCheckboxLabelLeftClass: getCheckboxLabelLeftClass,
+            getCheckboxLabelRightClass: getCheckboxLabelRightClass
         };
 
         return service;
