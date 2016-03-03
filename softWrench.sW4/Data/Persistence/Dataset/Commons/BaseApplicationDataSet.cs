@@ -143,7 +143,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         }
 
         protected AttachmentHandler AttachmentHandler {
-            get { return _attachmentHandler ?? (_attachmentHandler = new AttachmentHandler()); }
+            get {
+                return _attachmentHandler ?? (_attachmentHandler = new AttachmentHandler());
+            }
         }
 
         protected abstract IConnectorEngine Engine();
@@ -251,8 +253,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
             var attachments = data.ResultObject["attachment_"].ResultList;
             foreach (var attachment in attachments) {
-                var docInfoURL = (string)attachment["docinfo_.urlname"];
-                attachment["download_url"] = AttachmentHandler.GetFileUrl(docInfoURL);
+                if (attachment.ContainsKey("docinfo_.urlname")) {
+                    var docInfoURL = (string)attachment["docinfo_.urlname"];
+                    attachment["download_url"] = AttachmentHandler.GetFileUrl(docInfoURL);
+                }
             }
             return data;
         }
