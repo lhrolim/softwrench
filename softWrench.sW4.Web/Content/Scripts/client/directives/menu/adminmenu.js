@@ -1,7 +1,8 @@
 ﻿(function (app) {
     "use strict";
 
-app.directive('adminMenu', function (contextService, menuService, redirectService, i18NService, schemaCacheService, adminMenuService) {
+    app.directive('adminMenu', ["contextService", "menuService", "redirectService", "i18NService", "schemaCacheService", "adminMenuService", "sidePanelService",
+    function (contextService, menuService, redirectService, i18NService, schemaCacheService, adminMenuService, sidePanelService) {
     "ngInject";
 
     return {
@@ -60,9 +61,18 @@ app.directive('adminMenu', function (contextService, menuService, redirectServic
             scope.showClassicMenu = function () {
                 return contextService.fetchFromContext('UIShowClassicAdminMenu', false, true);
             };
+
+            // adds a padding right to not be behind side panels handles
+            scope.sidePanelStyle = function () {
+                var style = {};
+                if (sidePanelService.getNumberOfVisiblePanels() > 0) {
+                    style["padding-right"] = "30px";
+                }
+                return style;
+            }
         }
     };
-});
+}]);
 
 app.directive('menuExpander', function () {
     return {

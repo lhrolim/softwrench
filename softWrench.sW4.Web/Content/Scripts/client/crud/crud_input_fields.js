@@ -111,7 +111,7 @@ app.directive('configAssociationListInputDatamap', function () {
             outerassociationdescription: '=',
             issection: '@',
             ismodal: '@',
-
+            panelid: '='
         },
 
         link: function (scope, element, attrs) {
@@ -200,7 +200,7 @@ app.directive('configAssociationListInputDatamap', function () {
                     return fieldMetadata.options;
                 }
                 var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
+                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
             }
             $scope.isPositionLeft = function (fieldMetadata) {
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);

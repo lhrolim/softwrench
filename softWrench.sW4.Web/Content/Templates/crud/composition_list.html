@@ -45,7 +45,8 @@
         <tbody ng-show="compositionData().length > 0">
             <tr ng-repeat-start="(rowindex, compositionitem) in compositionData() track by rowindex"
                 ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
-                ng-class="$odd ? 'odd' : 'even'">
+                ng-class="$odd ? 'odd' : 'even'"
+                draggable="{{ draggableValue() }}">
                 <td ng-if="hasDetailSchema()">
                     <button class="btn" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
                         <i class="fa fa-caret-right" ng-hide="isItemExpanded(compositionitem)"></i>

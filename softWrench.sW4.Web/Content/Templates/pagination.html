@@ -8,7 +8,7 @@
             <i class="fa fa-chevron-right"></i>
         </a>
     </div>
-    <div class="part total" ng-if="layout.simple">
+    <div class="part total" ng-if="layout.simple" ng-style="sidePanelStyle()">
         <label ng-if="isHapag()">{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
         <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Items: {0}",[paginationData.totalCount])}}</label>
     </div>

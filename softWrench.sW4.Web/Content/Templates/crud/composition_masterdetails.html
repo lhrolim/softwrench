@@ -20,7 +20,7 @@
                                     <div ng-if="!!compositiondata" class="fields">
                                         <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
                                             <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
-                                            <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
+                                            <label class="form-control" ng-bind-html="formattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
                                         </div>
                                     </div>
                                     <div ng-if="!!compositiondata" class="commands">
@@ -45,7 +45,7 @@
                         <div ng-if="!!compositiondata" class="fields">
                             <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
                                 <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
-                                <label class="form-control" ng-bind-html="getFormattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
+                                <label class="form-control" ng-bind-html="formattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
                             </div>
                         </div>
                     </div>

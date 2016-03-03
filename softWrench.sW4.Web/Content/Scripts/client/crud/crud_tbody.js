@@ -273,7 +273,14 @@
                                 var classtoLoad = "fa " + scope.innerLoadIcon(i, j);
                                 html += "<div>";
                                 html += " <i class=\"{0}\"".format(classtoLoad);
-                                html += "rel=\"tooltip\" data-original-title=\"{0}\"></i>".format(column.toolTip);
+
+                                //create html tooltip with label and count
+                                var toolTip = "<span style='white-space: nowrap;'>";
+                                toolTip += column.toolTip ? column.toolTip : column.label;
+                                toolTip += ': ' + dm.fields[column.attribute];
+                                toolTip += '</span>';
+
+                                html += "rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
                             }
 
                             else if (column.type === 'ApplicationFieldDefinition') {

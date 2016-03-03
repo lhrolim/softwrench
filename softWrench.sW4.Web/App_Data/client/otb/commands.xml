@@ -102,5 +102,9 @@
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
 
+  <commandgroup position="search" platform="web">
+    <command id="search" primary="true" cssclasses="searchbutton" icon="fa-search" service="dispatcherService" method="dispatchevent" label="Search" parameters="sw.crud.search,schema,datamap"/>
+    <command id="clear" cssclasses="searchbutton" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
+  </commandgroup>
 
 </commands>

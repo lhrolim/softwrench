@@ -18,9 +18,9 @@
                 if (angular.isArray(scope.displayables)) {
                     element.append(
                         "<crud-output schema='schema'" +
-                                    "datamap='datamap'" +
-                                    "displayables='displayables'" +
-                                    "cancelfn='cancelfn()'></crud-output>"
+                        "datamap='datamap'" +
+                        "displayables='displayables'" +
+                        "cancelfn='cancelfn()'></crud-output>"
                     );
                     $compile(element.contents())(scope);
                 }
@@ -46,10 +46,10 @@
                 if (angular.isArray(scope.displayables)) {
                     element.append(
                         "<crud-input schema='schema'" +
-                                    "datamap='datamap'" +
-                                    "displayables='displayables'" +
-                                    "savefn='savefn()'" +
-                                    "cancelfn='cancelfn()'></crud-input>"
+                        "datamap='datamap'" +
+                        "displayables='displayables'" +
+                        "savefn='savefn()'" +
+                        "cancelfn='cancelfn()'></crud-input>"
                     );
                     $compile(element.contents())(scope);
                 }
@@ -82,18 +82,18 @@
                     fieldService.fillDefaultValues(scope.displayables, scope.datamap, scope);
                     element.append(
                         "<crud-input schema='schema' " +
-                                    "datamap='datamap' " +
-                                    "displayables='displayables' " +
-                                    "elementid='crudInputNewItemComposition' " +
-                                    "association-schemas='associationSchemas' " +
-                                    "blockedassociations='blockedassociations' " +
-                                    "parentdata='parentdata' " +
-                                    "parentschema='parentschema' " +
-                                    "previousdata='previousdata' " +
-                                    "previouschema='previousschema' " +
-                                    "savefn='savefn()' " +
-                                    "cancelfn='cancelfn()' " +
-                                    "composition='true'></crud-input>"
+                        "datamap='datamap' " +
+                        "displayables='displayables' " +
+                        "elementid='crudInputNewItemComposition' " +
+                        "association-schemas='associationSchemas' " +
+                        "blockedassociations='blockedassociations' " +
+                        "parentdata='parentdata' " +
+                        "parentschema='parentschema' " +
+                        "previousdata='previousdata' " +
+                        "previouschema='previousschema' " +
+                        "savefn='savefn()' " +
+                        "cancelfn='cancelfn()' " +
+                        "composition='true'></crud-input>"
                     );
                     $compile(element.contents())(scope);
                 }
@@ -160,7 +160,7 @@
                             "compositiondata='compositiondata' " +
                             "metadatadeclaration='metadata' " +
                             "parentschema='parentschema' " +
-                            "mode='{{mode}}' "+
+                            "mode='{{mode}}' " +
                             "parentdata='parentdata' " +
                             "cancelfn='cancel(data,schema)' " +
                             "previousschema='previousschema' " +
@@ -203,9 +203,9 @@
     });
 
     function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
-            formatService, fieldService, commandService, compositionService, validationService, dispatcherService,
-            expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
-            schemaService, contextService) {
+        formatService, fieldService, commandService, compositionService, validationService, dispatcherService,
+        expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
+        schemaService, contextService) {
 
         $scope.lookupObj = {};
 
@@ -215,7 +215,6 @@
         $scope.setForm = function (form) {
             $scope.crudform = form;
         };
-
 
 
         $scope.showTableHover = function () {
@@ -367,10 +366,12 @@
                 });
         }
 
-        $scope.getApplicationPah = function (datamap, fieldMetadata) {
-            var path = fieldMetadata.applicationPath + schemaService.getId(datamap, $scope.compositionlistschema);
-            return replaceAll(path, "\\.", "_");
-        }
+        $scope.$watch("compositiondata[{0}]".format(index), function (newValue, oldValue) {
+            //make sure any change on the composition marks it as dirty
+            if (oldValue !== newValue && $scope.compositiondata[index]) {
+                $scope.compositiondata[index]["#isDirty"] = true;
+            }
+        }, true);
 
         $scope.onAfterCompositionResolved = function (event, compositiondata) {
             if (!compositiondata || !compositiondata.hasOwnProperty($scope.relationship)) {
@@ -441,8 +442,6 @@
         }
 
 
-
-
         $scope.isModifiableEnabled = function (fieldMetadata, item) {
             var result = expressionService.evaluate(fieldMetadata.enableExpression, compositionService.buildMergedDatamap(item, $scope.parentdata), $scope);
             return result;
@@ -494,7 +493,6 @@
         }
 
 
-
         this.getAddIcon = function () {
             var iconCompositionAddbutton = $scope.compositionschemadefinition.schemas.list.properties['icon.composition.addbutton'];
             if (!iconCompositionAddbutton) {
@@ -512,6 +510,10 @@
             $scope.edit({});
         };
 
+        $scope.draggableValue = function () {
+            return $scope.relationship.contains("attachment") ? "true" : "false";
+        };
+
         this.save = function () {
             return $scope.save();
         }
@@ -521,6 +523,7 @@
             if (GetPopUpMode() == 'browser') {
                 close();
             }
+
             $scope.cancelfn({ data: $scope.previousdata, schema: $scope.previousschema });
             $scope.$emit('sw_cancelclicked');
         };
@@ -533,6 +536,43 @@
                 field.rendererParameters["showImagePreview"] = false;
             });
         }
+
+
+        // drag-out file download
+        (function () {
+            // drag-out download only works in Chrome
+            if (!isChrome()) return;
+            if (!$scope.relationship.contains("attachment")) return;
+
+            function dragStartListener(event) {
+                // resolve composition item from the event
+                var evt = (event.originalEvent || event);
+                var src = evt.srcElement;
+                var item = angular.element(src).scope().compositionitem;
+                if (!item) return;
+
+                // add extension to fileName if it does't have
+                var fileName = item["document"];
+                if (fileName.lastIndexOf(".") < 0) {
+                    var fileUrl = item["docinfo_.urlname"];
+                    var extension = fileUrl.substring(fileUrl.lastIndexOf(".") + 1);
+                    fileName += ("." + extension);
+
+
+                    // download = '<mime_type>:<file_name_on_save>:<file_download_url>'
+                    var downloadData = "application/octet-stream:" + fileName + ":" + item["download_url"];
+                    evt.dataTransfer.setData("DownloadURL", downloadData);
+                }
+                // adding the listener to the parent element so it still triggers on pagination
+                var list = $element[0].querySelector("#compositionlistgrid");
+                angular.element(list).on("dragstart", dragStartListener);
+                $scope.$on("$destroy", function () {
+                    angular.element(list).off("dragstart", dragStartListener);
+                });
+
+            }
+        })();
+
 
         function getFileUploadFields() {
             return $scope.compositiondetailschema.displayables
@@ -548,10 +588,10 @@
 
             // set file on the datamap
             getFileUploadFields()
-                 .forEach(function (field) { // set file
-                     datamap[field.attribute] = file.file;
-                     field.rendererParameters["showImagePreview"] = true;
-                 });
+                .forEach(function (field) { // set file
+                    datamap[field.attribute] = file.file;
+                    field.rendererParameters["showImagePreview"] = true;
+                });
             // open create form
             $timeout(function () {
                 $scope.edit(datamap);
@@ -759,8 +799,14 @@
                 //used to make a differentiation between a compositionitem datamap and a regular datamap
                 '#datamaptype': "compositionitem",
                 '#datamapidx': idx
+            }
+            // if inside a scroll pane - to update pane size
+            $timeout(function () {
+                //time for the components to be rendered
+                $(window).trigger("resize");
+            }, 1000, false);
 
-            };
+
             fieldService.fillDefaultValues($scope.compositionlistschema.displayables, newItem, $scope);
             //this id will be placed on the entity so that angular can use it to track. 
             //It has to be negative to indicate its not a maximo Id, and also a unique value to avoid collisions
@@ -774,6 +820,13 @@
                     $scope.compositiondata[idx]["#isDirty"] = true;
                 }
             }, true);
+
+            // if inside a scroll pane - to update pane size
+            $timeout(function () {
+                //time for the components to be rendered
+                $(window).trigger("resize");
+            }, 1000, false);
+
         }
 
         $scope.isItemExpanded = function (item) {
@@ -795,7 +848,6 @@
         $scope.newDetailFn = function () {
             $scope.edit({});
         };
-
 
 
         $scope.cancelComposition = function () {
@@ -822,8 +874,7 @@
 
                 if ($scope.clonedData[key] == null) {
                     return false;
-                }
-                else if ($scope.clonedData[key].data[attribute] !== $scope.detailData[key].data[attribute]) {
+                } else if ($scope.clonedData[key].data[attribute] !== $scope.detailData[key].data[attribute]) {
                     return true;
                 }
             }
@@ -1050,7 +1101,7 @@
             return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
         };
 
-        $scope.i18NInputLabel =function(fieldMetadata) {
+        $scope.i18NInputLabel = function (fieldMetadata) {
             return i18NService.getI18nInputLabel(fieldMetadata, $scope.compositiondetailschema);
         };
 
@@ -1076,9 +1127,10 @@
                     $scope.compositiondata = compositionData.list;
                     $scope.paginationData = compositionData.paginationData;
 
-                    init(previousData,true);
+                    init(previousData, true);
                 });
         };
+
         //#endregion
 
         //#region modal helpers
@@ -1090,6 +1142,7 @@
             var crudModalForm = document.querySelector("#crudmodal").querySelector("#crudbodyform");
             return !crudModalForm ? null : angular.element(crudModalForm).scope()["crudbodyform"];
         }
+
         //#endregion
 
         init();

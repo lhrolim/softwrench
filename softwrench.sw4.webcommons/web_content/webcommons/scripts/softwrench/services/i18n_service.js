@@ -110,10 +110,16 @@
             if (defaultValue == undefined) {
                 defaultValue = fieldMetadata.label;
             }
+        
             var value = doGetValue(key, defaultValue);
+
+            //if the tooltip and label are the same, don't show tooltips
+            if (value == fieldMetadata.label) {
+                value = '';
+            }
+
             return valueConsideringSchemas(value, schema);
         },
-
 
         getI18nOptionField: function (option, fieldMetadata, schema) {
             if (fieldMetadata.type != "OptionField" || fieldMetadata.providerAttribute != null) {

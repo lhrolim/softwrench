@@ -61,6 +61,9 @@
           <field attribute="parent" label="Parent"/>
           <field attribute="status" label="Status"/>
           <field attribute="siteid" label="Site ID"/>
+          <field attribute="workorders" label="Workorders">
+            <renderer type="icon" params="width=3%;expression={'#default':'fa-wrench','0':''};"/>
+          </field>
         </schema>
         <schema id="detail" title="Asset Detail" stereotype="detail" platform="web">
           <commandbars>

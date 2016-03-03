@@ -114,10 +114,14 @@
     </None>
     <None Include="packages.config" />
     <None Include="shared.placeholder" />
+    <Content Include="web_content\activitystream\styles\sidePanel.scss" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="web_content\activitystream\scripts\activitystream.js" />
+    <Content Include="web_content\activitystream\templates\sidePanel.html" />
     <None Include="web_content\activitystream\styles\activitystream.scss" />
+    <Content Include="web_content\activitystream\scripts\sidePanel.js" />
+    <Content Include="web_content\activitystream\scripts\sidePanelService.js" />
     <Content Include="web_content\activitystream\templates\activitystream.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

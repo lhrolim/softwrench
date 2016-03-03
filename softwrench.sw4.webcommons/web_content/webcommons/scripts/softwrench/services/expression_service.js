@@ -371,7 +371,8 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
                 var realServiceDefinition = expression.substr(8);
                 var targetFunction = dispatcherService.loadServiceByString(realServiceDefinition);
                 // If the service.function is not found
-                return targetFunction(datamap, scope.schema, displayable);
+                var schema = scope ? scope.schema : null;
+                return targetFunction(datamap, schema, displayable);
             }
 
             expression = expression.replace(/\$/g, 'scope');

@@ -3,7 +3,7 @@
 
     modules.webcommons.factory('eventService', ["$log", "dispatcherService", "crudContextHolderService", function ($log, dispatcherService, crudContextHolderService) {
         var loadEvent = function (schema, eventName) {
-            if (schema.events === undefined) {
+            if (!schema || schema.events === undefined) {
                 return null;
             }
             var event = schema.events[eventName];
@@ -21,20 +21,7 @@
             loadEvent: function (schema, eventName) {
                 return loadEvent(schema, eventName);
             },
-
-
-            dispatchEvent: function (schema, eventName, parameters) {
-                var fn = loadEvent(schema, eventName);
-                if (fn) {
-                    if (parameters) {
-                        return fn(parameters);
-                    }
-                    return fn();
-                }
-            },
-
             onload: function (scope, schema, datamap, parameters) {
-                //TODO:REVIEW
                 var fn = loadEvent(schema, 'onload');
                 if (!fn) {
                     return;

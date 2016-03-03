@@ -102,6 +102,10 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
             return ApplicationConfiguration.DBConnectionString(DBType.Swdb);
         }
 
+        protected override bool IsMaximo() {
+            return false;
+        }
+
         protected override IEnumerable<Assembly> GetListOfAssemblies() {
             return AssemblyLocator.GetSWAssemblies();
         }

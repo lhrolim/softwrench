@@ -3,14 +3,15 @@
 
     var staticvalidFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png", "lic"];
 
-    angular.module("sw_layout").factory("attachmentService", ["$rootScope", "$q", "$timeout", "contextService", "fieldService", "schemaService", "alertService", "i18NService", "searchService", "tabsService", "redirectService", attachmentService]);
+    angular.module("sw_layout").factory("attachmentService", ["$rootScope", "$q", "$timeout", "contextService", "fieldService", "schemaService", "alertService", "i18NService", "searchService", "tabsService", "redirectService", "$http", attachmentService]);
 
-    function attachmentService($rootScope, $q, $timeout, contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService) {
+    function attachmentService($rootScope, $q, $timeout, contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService, $http) {
 
         var service = {
             isValid: isValid,
             downloadFile: downloadFile,
             selectAttachment: selectAttachment,
+            fetchDownloadUrl: fetchDownloadUrl,
             redirectToAttachmentView: redirectToAttachmentView,
             createAttachmentFromFile: createAttachmentFromFile,
             createAttachmentFromElement: createAttachmentFromElement
@@ -18,10 +19,20 @@
 
         return service;
 
+        function fetchDownloadUrl(item) {
+            var id = item["docinfoid"];
+            var params = { id: id };
+            var serviceUrl = url("/Attachment/DownloadUrl?" + $.param(params));
+
+            return $http.get(serviceUrl, { avoidspin: true }).then(function (response) {
+                return response.data;
+            });
+        }
+
         function downloadFile(item, column, schema) {
 
             var parameters = {};
-            var id = item['docinfoid'];
+            var id = item["docinfoid"];
             parameters.id = id;
             parameters.mode = "http";
 

@@ -294,5 +294,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             _baseMaximoPath = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksPath) ?? _baseMaximoPath;
             _baseMaximoURL = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksURLPath) ?? _baseMaximoURL;
         }
+
+        public AttachmentDao Dao() {
+            return AttachmentDao;
+        } 
+
     }
 }

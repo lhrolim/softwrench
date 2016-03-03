@@ -2,7 +2,7 @@
     'use strict';
 
 
-    function redirectService($http, $rootScope, $log, $q, contextService, fixHeaderService, restService, applicationService, alertService,modalService,schemaCacheService, $timeout) {
+    function redirectService($http, $rootScope, $log, $q, contextService, fixHeaderService, restService, applicationService, alertService, modalService, schemaCacheService, $timeout, searchService) {
 
 
         function getActionUrl(controller, action, parameters) {
@@ -37,7 +37,7 @@
                     contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
                 }
             }
-            
+
             return $http.get(redirectUrl).success(
                 function (data) {
                     if (data.type !== "BlankApplicationResponse") {
@@ -80,7 +80,7 @@
         };
 
 
-        function redirectWithData(applicationName, schemaId, mode, searchData, extraParameters) {
+        function redirectWithData(applicationName, schemaId, searchData, extraParameters) {
             /// <summary>
             /// Shortcut method to redirect to an application with search data 
             /// </summary>
@@ -92,32 +92,40 @@
             if (!searchData) {
                 searchData = {};
             }
-            var log = $log.getInstance('redirectService#redirectWithData');
+            if (!schemaId) {
+                schemaId = "list";
+            }
 
-            var searchDTO = this.buildSearchDTO(searchData, {}, {}, null);
+            var searchOperator = {};
+            if (extraParameters.searchOperator) {
+                searchOperator = extraParameters.searchOperator;
+            }
+
+            var mode = extraParameters.mode ? extraParameters.mode : "none";
+
+            var log = $log.getInstance("redirectService#redirectWithData");
+
+            var searchDTO = searchService.buildSearchDTO(searchData, {}, searchOperator);
             searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
             searchDTO.totalCount = 0;
             searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
 
             var restParameters = {
                 key: {
-                    schemaId: schema ? schema : "list",
-                    mode: extraParameters.mode ? extraParameters.mode : 'none',
+                    schemaId: schemaId,
+                    mode: mode,
                     platform: "web"
                 },
                 SearchDTO: searchDTO
             };
             var queryString = $.param(restParameters);
-            var urlToUse = url("/api/Data/{0}?{1}".format(application, queryString));
+            var urlToUse = url("/api/Data/{0}?{1}".format(applicationName, queryString));
             log.info("invoking url {0}".format(urlToUse));
             var jsonData = {};
             $http.get(urlToUse).success(function (data) {
                 jsonData = data;
-                this.goToApplicationView(applicationName, schemaId, null, null, null, jsonData);
-            }).
-                error(function (data) {
-
-                });
+                innerGoToApplicationGet(data, null, null, mode, applicationName, null, extraParameters);
+            }). error(function (data) { });
         };
 
         /**
@@ -131,7 +139,7 @@
         function openAsModal(applicationName, schemaId, parameters, jsonData) {
             parameters = parameters || {};
             parameters.popupmode = "modal";
-            return this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData).then(function(resultObject) {
+            return this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData).then(function (resultObject) {
                 return contextService.insertIntoContext("grid_refreshdata", { data: resultObject, panelid: "#modal" }, true);
             });
         };
@@ -157,7 +165,7 @@
         function goToApplicationView(applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook, type) {
             var log = $log.getInstance('redirectService#goToApplication', ["redirect"]);
             parameters = parameters || {};
-            
+
             $rootScope.$broadcast('sw_applicationredirected', parameters);
 
             //let´s exclude savefn from possible parameters, otherwise it would be evaluated by $.param
@@ -194,17 +202,7 @@
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
                 return $http.get(redirectUrl).then(function (httpResponse) {
                     var data = httpResponse.data;
-
-                    if (popupMode !== "modal") {
-                        contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
-                        $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
-                    } else {
-                        contextService.insertIntoContext("grid_refreshdata", { data: data.resultObject, panelid: "#modal" }, true);
-                        modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject.fields,parameters);
-                    }
-                    if (afterRedirectHook != null) {
-                        afterRedirectHook();
-                    }
+                    innerGoToApplicationGet(data, popupMode, redirectUrl, mode, applicationName, afterRedirectHook, parameters);
                     return $q.when(data);
                 });
             } else {
@@ -224,6 +222,21 @@
                 });
             }
         };
+
+        function innerGoToApplicationGet(data, popupMode, redirectUrl, mode, applicationName, afterRedirectHook, parameters) {
+            if (popupMode !== "modal") {
+                if (redirectUrl) {
+                    contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
+                }
+                $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
+            } else {
+                contextService.insertIntoContext("grid_refreshdata", { data: data.resultObject, panelid: "#modal" }, true);
+                modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject.fields, parameters);
+            }
+            if (afterRedirectHook != null) {
+                afterRedirectHook();
+            }
+        }
 
         function redirectNewWindow(newWindowURL, needReload, initialData) {
 
@@ -266,7 +279,7 @@
             goToApplication: goToApplication,
             redirectFromServerResponse: redirectFromServerResponse,
             goToApplicationView: goToApplicationView,
-            openAsModal:openAsModal,
+            openAsModal: openAsModal,
             redirectNewWindow: redirectNewWindow,
             redirectToAction: redirectToAction,
             redirectToHome: redirectToHome,
@@ -279,7 +292,7 @@
 
     angular
     .module('sw_layout')
-    .factory('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService','modalService','schemaCacheService', '$timeout', redirectService]);
+    .factory('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService', 'modalService', 'schemaCacheService', '$timeout', 'searchService', redirectService]);
 
 })(angular);
 

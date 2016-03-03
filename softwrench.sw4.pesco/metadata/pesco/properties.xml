@@ -4,18 +4,17 @@
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
   <property key="wsprovider" value="mif" />
-  <property key="basewsURL" value="http://10.50.100.194:9080/meaweb/wsdl/" />
-  <property key="basewfURL" value="http://10.50.100.194:9080/meaweb/wf/" />
-  <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=UMC76DEV;User Id=MAXIMO;password=MAXIMO;" />
+  <property key="basewsURL" value="http://52.36.55.169:9080/meaweb/wsdl/" />
+  <property key="basewfURL" value="http://52.36.55.169:9080/meaweb/wf/" />
+  <property key="maximo_DB_url" value="Data Source=172.31.18.171;Initial Catalog=PSCCD;User Id=MAXIMO;password=MAXIMO;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
   <property key="maxAttachmentSize" value="10"/> <!--in MB-->
   <property key="maxScreenshotSize" value="5"/> <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
-  <property key="defaultOrgId" value="UMCORG"/>
-  <property key="defaultSiteId" value="UMCSITE"/>  
-
-  <property key="defaultStoreloc" value="ENG"/>
+  <property key="defaultOrgId" value="PESCO"/>
+  <property key="defaultSiteId" value="PVDISTRIBUTED"/>
+  <property key="defaultStoreloc" value="CENTRAL"/>
   <property key="sourcemapping" value="maximo7.5"/>
   <!--
       maximoutc property set to the full name of the timezone the maximo 
@@ -27,33 +26,36 @@
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>
-  <property key="dashboard.enabled" value="false"/>
+  <property key="dashboard.enabled" value="true"/>
   <property key="ui.adminmenu.showclassic" value="false"/>
+  <property key="iiscontextpath" value=""/>
 
   <!-- tableau -->
-  <!--
   <property key="tableau_server" value="http://10.50.100.171" />
   <property key="tableau_username" value="swadmin" />
   <property key="tableau_password" value="sw@dm1n" />
   <property key="tableau_site" value="default" />
-  -->
+  
   <!-- end tableau -->
+
+  <environment key="prod">
+    <property key="swdb_url" value="Data Source=xx.xx.xx.xx;Initial Catalog=sw;User Id=sw;password=swadmin;" />
+  </environment>
   
   <environment key="dev">
-    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=UMC76DEV;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_UMC76DEV;User Id=sw;password=softwrench;" />
+    <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=sw;User Id=sw;password=swadmin;" />
   </environment>
   
   <environment key="qa">
-    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=UMC76DEV;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_UMC76DEV_QA;User Id=sw;password=softwrench;" /> 
+    <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=sw;User Id=sw;password=swadmin;" />
   </environment>
 
-  <environment key="prod">
-    <property key="basewsURL" value="http://10.50.100.159:9080/meaweb/wsdl/" />
-    <property key="basewfURL" value="http://10.50.100.159:9080/meaweb/wf/" />
-    <property key="maximo_DB_url" value="Data Source=10.50.100.40;Initial Catalog=UMC76MAX;User Id=MAXIMO;password=Max7506;" />
-    <property key="swdb_url" value="Data Source=10.50.100.40;Initial Catalog=SWDB_UMC76MAX;User Id=sw;password=$0ftWr3nch;" />
+  <environment key="demo">
+    <property key="swdb_provider" value="System.Data.SQL"/>
+    <property key="basewsURL" value="http://10.50.100.101:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.101;Initial Catalog=CTS75MAX;User Id=MAXIMO;password=maximo1;" />
+    <property key="swdb_url" value="Data Source=10.50.100.101;Initial Catalog=SWDB_CTS75MAX;User Id=sw;password=softwrench;" />
   </environment>
+
 
 </Properties>

@@ -19,6 +19,7 @@ softWrench.sW4.Web/Content/Customers/*
 softWrench.sW4.Web/App_Data/client/amex/
 softWrench.sW4.Web/App_Data/client/apachegold/
 softWrench.sW4.Web/App_Data/client/bering/
+softWrench.sW4.Web/App_Data/client/chicago/
 softWrench.sW4.Web/App_Data/client/classic/
 softWrench.sW4.Web/App_Data/client/deltadental/
 softWrench.sW4.Web/App_Data/client/entegra/
@@ -36,6 +37,7 @@ softWrench.sW4.Web/App_Data/client/southern_reg/
 softWrench.sW4.Web/App_Data/client/southern_unreg/
 softWrench.sW4.Web/App_Data/client/swgas/
 softWrench.sW4.Web/App_Data/client/tgcs/
+softWrench.sW4.Web/App_Data/client/umc/
 softWrench.sW4.Web/App_Data/client/yavapai/
 softWrench.sW4.Web/Content/Shared/
 softWrench.sW4.Web/Content/Scripts/softwrench/shared
