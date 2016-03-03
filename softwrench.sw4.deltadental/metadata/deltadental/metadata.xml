@@ -297,10 +297,10 @@
       </filters>
       -->
       <filters>
-        <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true">
+        <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true" whereclause="!@owner in (!@#value)">
           <f:option label="Current User" value="@username"/>
         </optionfilter>
-        <optionfilter attribute="reportedbyp_.displayname" provider="reportedbyp_.displayname" allowblank="true">
+        <optionfilter attribute="reportedbyp_.displayname" provider="reportedbyp_.displayname" allowblank="true" whereclause="!@reportedby in (!@#value)">
           <f:option label="Current User" value="@username"/>
         </optionfilter>
       </filters>
@@ -340,10 +340,10 @@
       </filters>
       -->
       <filters>
-        <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true">
+        <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true" whereclause="!@owner in (!@#value)">
           <f:option label="Current User" value="@username"/>
         </optionfilter>
-        <optionfilter attribute="reportedbyp_.displayname" provider="reportedbyp_.displayname" allowblank="true">
+        <optionfilter attribute="reportedbyp_.displayname" provider="reportedbyp_.displayname" allowblank="true" whereclause="!@reportedby in (!@#value)">
           <f:option label="Current User" value="@username"/>
         </optionfilter>
       </filters>
@@ -358,7 +358,7 @@
             </field>
           </customization>
           <customization position="owner">
-            <field attribute="owner" hidden="true" label="Owner"/>
+            <field attribute="owner" hidden="true" label="Owner Hidden"/>
             <field attribute="ownerperson_.displayname" label="Owner">
               <renderer type="default" params="width=15%" />
             </field>

@@ -63,7 +63,7 @@ namespace softWrench.sW4.log4net {
                 if (ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsLocal()) {
                     rollingFileAppender.File = rollingFileAppender.File.Replace("\\logs\\",
                         "\\logs\\{0}\\".Fmt(ApplicationConfiguration.ClientName));
-                } else if (!ApplicationConfiguration.IsDev()) {
+                } else if (!ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsQA()) {
                     ChangeLevel("MAXIMO.SQL", "WARN", null);
                     ChangeLevel("SWDB.SQL", "WARN", null);
                 }
