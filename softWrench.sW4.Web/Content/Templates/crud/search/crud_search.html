@@ -1,0 +1,10 @@
+﻿<header class="clearfix">
+    <div class="pull-left">
+        <h2>{{title}}</h2>
+    </div>
+</header>
+<scroll-pane data-available-fn="setPaneHeight" data-prevent-window-scroll="true">
+    <div class="scroll">
+        <crud-input-wrapper ng-if="schema" ismodal="false" schema="schema" datamap="datamap" displayables="schema.displayables" tabid="main" is-main-tab="true" panelid="search"/>
+    </div>
+</scroll-pane>

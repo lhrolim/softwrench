@@ -33,13 +33,13 @@ namespace cts.commons.persistence {
 
 
         [SuppressMessage("ReSharper", "DoNotCallOverridableMethodsInConstructor")]
-        protected BaseHibernateDAO([NotNull]IApplicationConfiguration applicationConfiguration,HibernateUtil hibernateUtil) {
+        protected BaseHibernateDAO([NotNull]IApplicationConfiguration applicationConfiguration, HibernateUtil hibernateUtil) {
             _applicationConfiguration = applicationConfiguration;
             HibernateUtil = hibernateUtil;
             _sessionManager = new SessionManagerWrapper(GetConnectionString(), GetDriverName(), GetDialect(), GetListOfAssemblies());
         }
 
-        
+
         [CanBeNull]
         protected virtual IEnumerable<Assembly> GetListOfAssemblies() {
             return new[] { Assembly.GetCallingAssembly() };
@@ -51,6 +51,8 @@ namespace cts.commons.persistence {
 
         [NotNull]
         protected abstract string GetConnectionString();
+
+        protected abstract bool IsMaximo();
 
 
         public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false, string queryAlias = null) {
@@ -100,9 +102,21 @@ namespace cts.commons.persistence {
             return query;
         }
 
+        private DBType GetDBType() {
+            return IsMaximo() ? DBType.Maximo : DBType.Swdb;
+        }
+
+        private bool ShouldCustomPaginate(IPaginationData paginationData) {
+            return paginationData != null && _applicationConfiguration.IsDB2(GetDBType());
+        }
+
+        private bool ShouldPaginate(IPaginationData paginationData) {
+            return paginationData != null && !_applicationConfiguration.IsDB2(GetDBType());
+        }
+
         public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, IPaginationData paginationData = null, string queryAlias = null) {
             LogQuery(queryst, queryAlias, parameters);
-            if (paginationData != null && _applicationConfiguration.IsDB2(DBType.Maximo)) {
+            if (ShouldCustomPaginate(paginationData)) {
                 //nhibernate pagination breaks in some scenarios, at least in DB2, keeping others intact for now
                 queryst = NHibernatePaginationUtil.ApplyManualPaging(queryst, paginationData);
             }
@@ -110,7 +124,7 @@ namespace cts.commons.persistence {
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
 
-            if (!_applicationConfiguration.IsDB2(DBType.Maximo) && paginationData != null) {
+            if (ShouldPaginate(paginationData)) {
                 var pageSize = paginationData.PageSize;
                 query.SetMaxResults(pageSize);
                 query.SetFirstResult((paginationData.PageNumber - 1) * pageSize);

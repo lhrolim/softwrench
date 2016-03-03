@@ -11,16 +11,20 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
     public abstract class BaseApplicationFieldDefinition : BaseDefinition, IApplicationAttributeDisplayable, IDefaultValueApplicationDisplayable {
 
         public string ApplicationName { get; set; }
-        [DefaultValue("")] public string Label { get; set; }
+        [DefaultValue("")]
+        public string Label { get; set; }
         public string Attribute { get; set; }
-        [DefaultValue("false" )] public string RequiredExpression { get; set; }
+        [DefaultValue("false")]
+        public string RequiredExpression { get; set; }
         public bool IsReadOnly { get; set; }
         public string DefaultValue { get; set; }
         public string Qualifier { get; set; }
         [JsonIgnore]
         public bool DeclaredAsQueryOnEntity { get; set; }
-        [DefaultValue("true")] public string ShowExpression { get; set; }
-        [DefaultValue("true")] public string EnableExpression { get; set; }
+        [DefaultValue("true")]
+        public string ShowExpression { get; set; }
+        [DefaultValue("true")]
+        public string EnableExpression { get; set; }
 
         public string ToolTip { get; set; }
         public bool? ReadOnly { get; set; }
@@ -35,6 +39,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get { return ApplicationName + "." + Attribute; }
         }
 
+        public string SearchOperation { get; set; }
+
         public BaseApplicationFieldDefinition() {
 
         }
@@ -43,7 +49,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             string attribute, string requiredExpression, bool isReadOnly,
             string defaultValue, string qualifier, string showExpression, string toolTip,
             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression,
-            string defaultExpression, bool declaredAsQueryOnEntity) {
+            string defaultExpression, bool declaredAsQueryOnEntity, string searchOperation) {
             if (attribute == null) {
                 throw new ArgumentNullException("attribute", String.Format("check {0} metadata config", applicationName));
             }
@@ -64,6 +70,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
             EnableExpression = enableExpression;
             DeclaredAsQueryOnEntity = declaredAsQueryOnEntity;
+            SearchOperation = searchOperation;
             }
 
         public IDictionary<String, ApplicationEvent> Events {

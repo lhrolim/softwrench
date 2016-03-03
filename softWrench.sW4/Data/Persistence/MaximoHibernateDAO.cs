@@ -44,6 +44,10 @@ namespace softWrench.sW4.Data.Persistence {
             return ApplicationConfiguration.DBConnectionString(DBType.Maximo);
         }
 
+        protected override bool IsMaximo() {
+            return true;
+        }
+
         protected override ILog GetLog() {
             return Log;
         }

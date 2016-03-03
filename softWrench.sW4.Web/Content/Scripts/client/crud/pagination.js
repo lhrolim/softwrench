@@ -21,7 +21,7 @@ app.directive('pagination', ['contextService', '$log', function (contextService,
             panelid: '='
         },
 
-        controller: ["$scope", "$http", "$rootScope", "$timeout", "printService", "searchService", "i18NService", "crudContextHolderService", function ($scope, $http, $rootScope, $timeout, printService, searchService, i18NService, crudContextHolderService) {
+        controller: ["$scope", "$http", "$rootScope", "$timeout", "printService", "searchService", "i18NService", "crudContextHolderService", "sidePanelService", function ($scope, $http, $rootScope, $timeout, printService, searchService, i18NService, crudContextHolderService, sidePanelService) {
             log.debug($scope.paginationData);
 
             $scope.showPagination = true;
@@ -141,6 +141,15 @@ app.directive('pagination', ['contextService', '$log', function (contextService,
                 }          
 
                 return tooltip;
+            }
+
+            // adds a padding right to not be behind side panels handles
+            $scope.sidePanelStyle = function() {
+                var style = {};
+                if ("#modal" !== $scope.panelid && sidePanelService.getTotalHandlesWidth() > 210) {
+                    style["padding-right"] = "16px";
+                }
+                return style;
             }
 
             function init() {

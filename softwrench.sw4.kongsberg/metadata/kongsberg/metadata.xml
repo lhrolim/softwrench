@@ -1559,8 +1559,8 @@
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
                 <command id="dispatchincident" icon="fa-tachometer" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD"
                           parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
-                <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                     showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
+<!--                <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"-->
+<!--                     showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>-->
               </container>
             </commandgroup>
           </commandbars>
@@ -2374,8 +2374,8 @@
         </list>
 
 
-        <list stereotype="compositionlist" platform="web">
 
+        <list stereotype="compositionlist" platform="web">
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
@@ -2386,6 +2386,9 @@
           <field attribute="ownertable">
             <renderer type="icon" params="expression={'COMMLOG':'fa-envelope','SR':''};width=3%"/>
           </field>
+          <field hidden="true" attribute="docinfo_.urlname"/>
+          <field hidden="true" attribute="docinfo_.urltype"/>
+          
           <section label="Document" attribute="document"
 									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>
           <field label="Created Date" attribute="createdate">

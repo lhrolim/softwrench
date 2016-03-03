@@ -1,0 +1,61 @@
+﻿.sidepanel {
+    background: #f2f2f2;
+    position: fixed;
+    z-index: 1030;
+    height: 100%;
+    width: 0;
+    top: 0;
+    right: 0;
+    float: right;
+    border-left: 1px solid #bfbfbf;
+    -webkit-box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
+    -moz-box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
+    box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
+
+    &.expanded {
+        width: 325px;
+    }
+
+    &.open {
+        z-index: 1040 !important;
+    }
+
+    &.hidden {
+        display : none;
+    }
+
+    .handle {
+        -ms-transform: translate(-20px, -18px) rotate(-90deg);
+        -webkit-transform: translate(-20px, -18px) rotate(-90deg);
+        -moz-transform: translate(-20px, -18px) rotate(-90deg);
+        -o-transform: translate(-20px, -18px) rotate(-90deg);
+        transform: translate(-20px, -18px) rotate(-90deg);
+        background: #f2f2f2;
+        text-align: center;
+        display: inline-block;
+        position: absolute;
+        left: -18px;
+        max-height: 36px;
+        min-height: 36px;
+        min-width: 40px;
+        max-width: 40px;
+        padding: 12px 15px 5px;
+        text-transform: uppercase;
+        border-top: 1px solid #bfbfbf;
+        border-left: 1px solid #bfbfbf;
+        border-right: 1px solid #bfbfbf;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+    .pane {
+        padding: 20px 20px 0 20px;
+        visibility: hidden;
+    }    
+
+    &.open .pane {
+        visibility: visible;
+    }
+}

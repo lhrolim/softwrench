@@ -226,6 +226,10 @@
     margin-right: 0;
     margin-bottom: 0;
 
+    .radio, .checkbox {
+        position: initial;
+    }
+
     .ticketid {
         margin-top: 0;
     }
@@ -434,6 +438,7 @@ table .detaildata {
         }
     }
 }
+
 .quick-search {
     float: left;
     padding-top: 4px;
@@ -534,15 +539,15 @@ table .detaildata {
 #listgrid, #compositionlistgrid {
     [ng-show="isNoRecords"] {
         /*background: #f00;*/
-    tr {
-        cursor: default;
+        tr {
+            cursor: default;
 
-        &:hover {
-            background: transparent;
+            &:hover {
+                background: transparent;
+            }
         }
     }
 }
-    }
 
 .table-hover > [ng-show="isNoRecords"] > tr:hover {
     & > td, & > th {
