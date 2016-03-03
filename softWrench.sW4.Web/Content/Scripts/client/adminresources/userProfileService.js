@@ -273,7 +273,7 @@
 
         function filterAvailablePermissions(item) {
             var dm = crudContextHolderService.rootDataMap().fields;
-            if (!dm["selectedmode"] || dm["selectedmode"] !== "grid") {
+            if (!dm["selectedmode"] || !dm["selectedmode"].equalsAny("grid","view")) {
                 return true;
             }
             return item.value !== "readonly";
