@@ -281,9 +281,9 @@
                     if (id == undefined) {
                         return;
                     }
-                    // If the list click required a custom param, we must get it from the previous data using the id
+                    // If the detail crawl has a custom param, we need to get it from the pagination list
                     var customParams = {};
-                    if ($scope.$parent.previousschema.properties && $scope.$parent.previousschema.properties["list.click.customparams"]) {
+                    if ($scope.$parent.schema.properties && $scope.$parent.schema.properties["detail.crawl.customparams"]) {
                         // Get the next/previous record that the params will be coming from
                         var record = value.previousData.filter(function (obj) {
                             return obj.fields[$scope.$parent.schema.idFieldName] == id;
@@ -291,7 +291,7 @@
 
                         // TODO: If the record is null (item not on page in previous data)????
 
-                        var customparamAttributes = $scope.$parent.previousschema.properties["list.click.customparams"].replace(" ", "").split(",");
+                        var customparamAttributes = $scope.$parent.schema.properties["detail.crawl.customparams"].replace(" ", "").split(",");
                         for (var param in customparamAttributes) {
                             if (!customparamAttributes.hasOwnProperty(param)) {
                                 continue;
@@ -306,7 +306,7 @@
                     var popupmode = $scope.$parent.popupmode;
                     var schemaid = $scope.$parent.schema.schemaId;
                     var applicationname = $scope.$parent.schema.applicationName;
-                    var title = $scope.$parent.title
+                    var title = $scope.$parent.title;
 
                     $scope.$emit("sw_navigaterequest", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode, customParameters: customParams });
 
