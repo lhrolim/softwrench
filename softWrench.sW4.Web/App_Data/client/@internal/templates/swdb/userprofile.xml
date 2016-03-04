@@ -65,16 +65,16 @@
               <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>
             </optionfield>
 
-            <field attribute="#appallowview" label="Allow Visualization?">
+            <field attribute="#appallowview" label="Allow Visualization?" showexpression="@application!=null">
               <renderer type="checkbox" params="layout=left"/>
               <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
             </field>
 
-            <field attribute="#appallowcreation" label="Allow Creation?" showexpression="@hasCreationSchema==true">
+            <field attribute="#appallowcreation" label="Allow Creation?" showexpression="@application!=null &amp;&amp; @hasCreationSchema==true">
               <renderer type="checkbox" params="layout=left"/>
               <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
             </field>
-            <field attribute="#appallowupdate" label="Allow Update?">
+            <field attribute="#appallowupdate" label="Allow Update?" showexpression="@application!=null">
               <renderer type="checkbox" params="layout=left"/>
               <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
             </field>
@@ -116,13 +116,16 @@
 
               <field attribute="#compallowview" label="Allow Visualization?">
                 <renderer type="checkbox" params="layout=left"/>
+                <event type="afterchange" service="userProfileService" method="cmpRoleChanged"/>
               </field>
 
               <field attribute="#compallowcreation" label="Allow Creation?">
                 <renderer type="checkbox" params="layout=left"/>
+                <event type="afterchange" service="userProfileService" method="cmpRoleChanged"/>
               </field>
               <field attribute="#compallowupdate" label="Allow Update?">
                 <renderer type="checkbox" params="layout=left"/>
+                <event type="afterchange" service="userProfileService" method="cmpRoleChanged"/>
               </field>
        
             </section>

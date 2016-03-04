@@ -32,8 +32,8 @@ namespace softWrench.sW4.Metadata.Menu.Containers {
                 var appLeaf = (ApplicationMenuItemDefinition)leaf;
                 var application = mergedUserProfile.GetPermissionByApplication(appLeaf.Application);
                 if (application == null) {
-                    //allowed by default, no restriction applies
-                    return true;
+                    //not allowed by default, no permission rule
+                    return false;
                 }
                 if (application.HasNoPermissions) {
                     return false;

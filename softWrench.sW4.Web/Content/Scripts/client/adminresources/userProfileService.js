@@ -153,6 +153,24 @@
 
         }
 
+
+        function cmpRoleChanged(parameters) {
+            var fields = parameters.fields;
+
+            if (parameters.target.attribute === "#compallowview") {
+                if (parameters.oldValue === true && parameters.newValue === false) {
+                    fields["#compallowcreation"] = false;
+                    fields["#compallowupdate"] = false;
+                }
+            }
+
+            if (!!fields["#compallowupdate"] || !!fields["#compallowcreation"]) {
+                fields["#compallowview"] = true;
+            }
+
+        }
+
+
         function onApplicationChange(parameters) {
             var dm = parameters.fields;
             var nextApplication = dm["application"];
@@ -197,9 +215,9 @@
                 dm["#currentloadedapplication"] = appPermission;
 
                 if (!appPermission) {
-                    dm["#appallowcreation"] = hasCreationSchema;
-                    //allowing everything by default
-                    dm["#appallowupdate"] = dm["#appallowremoval"] = dm["#appallowview"] = true;
+                    dm["#appallowcreation"] = false;
+                    //blocking everything by default
+                    dm["#appallowupdate"] = dm["#appallowremoval"] = dm["#appallowview"] = false;
                     return $q.when();
                 }
 
@@ -738,6 +756,7 @@
             availableFieldsRefreshed: availableFieldsRefreshed,
             availableActionsRefreshed: availableActionsRefreshed,
             beforeApplicationChange: beforeApplicationChange,
+            cmpRoleChanged:cmpRoleChanged,
             basicRoleChanged: basicRoleChanged,
             beforeTabChange: beforeTabChange,
             beforeSchemaChange: beforeSchemaChange,

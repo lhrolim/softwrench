@@ -97,7 +97,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         public bool AllDefault {
             //TODO: add AllowRemoval later...
             get {
-                return AllowCreation && AllowUpdate && AllowView;
+                return HasNoPermissions;
             }
         }
 
@@ -107,10 +107,10 @@ namespace softwrench.sw4.user.classes.entities.security {
 
 
         public void Merge(ApplicationPermission other) {
-            AllowCreation = AllowCreation && other.AllowCreation;
-            AllowUpdate = AllowCreation && other.AllowUpdate;
-            AllowView = AllowCreation && other.AllowView;
-            AllowRemoval = AllowCreation && other.AllowRemoval;
+            AllowCreation = AllowCreation || other.AllowCreation;
+            AllowUpdate = AllowCreation || other.AllowUpdate;
+            AllowView = AllowCreation || other.AllowView;
+            AllowRemoval = AllowCreation || other.AllowRemoval;
             if (ActionPermissions == null) {
                 ActionPermissions = new HashedSet<ActionPermission>();
             }

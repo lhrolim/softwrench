@@ -68,10 +68,10 @@ namespace softwrench.sw4.user.classes.entities.security {
 
 
         public void Merge(CompositionPermission other) {
-            AllowCreation = AllowCreation && other.AllowCreation;
-            AllowUpdate = AllowUpdate && other.AllowUpdate;
-            AllowRemoval = AllowRemoval && other.AllowRemoval;
-            AllowView = AllowView && other.AllowView;
+            AllowCreation = AllowCreation || other.AllowCreation;
+            AllowUpdate = AllowUpdate || other.AllowUpdate;
+            AllowRemoval = AllowRemoval || other.AllowRemoval;
+            AllowView = AllowView || other.AllowView;
 
             if (other.FieldPermissions == null) {
                 return;

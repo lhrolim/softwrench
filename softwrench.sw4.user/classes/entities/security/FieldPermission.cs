@@ -29,11 +29,11 @@ namespace softwrench.sw4.user.classes.entities.security {
 
 
         public void Merge(FieldPermission otherField) {
-            if (Permission.EqualsIc("fullcontrol")) {
-                //if we are on full control, let´s change to the other permission that will be more restrictive.
+            if (Permission.EqualsIc("none")) {
+                //if we are on none, let´s change to the other permission that will be more permissive.
                 Permission = otherField.Permission;
             } else if (Permission.EqualsIc("readonly")) {
-                Permission = otherField.Permission == "none" ? "none" : Permission;
+                Permission = otherField.Permission == "fullcontrol" ? "fullcontrol" : Permission;
             }
         }
     }

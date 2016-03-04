@@ -26,11 +26,17 @@ namespace softWrench.sW4.Metadata.Security {
 
 
         public static SecurityModeCheckResult VerifySecurityMode(this InMemoryUser user, ApplicationMetadata application, DataRequestAdapter request) {
+            if (user.IsSwAdmin() || application.Name.StartsWith("_")) {
+                //SWDB apps have their own rule as for now.
+                return SecurityModeCheckResult.Allow;
+            }
+
+
             var profile = user.MergedUserProfile;
             var permission = profile.GetPermissionByApplication(application.Name);
             if (permission == null) {
-                //no restriction to that particular application
-                return SecurityModeCheckResult.Allow;
+                //no permission to that particular application
+                return SecurityModeCheckResult.Block;
             }
             var viewingExisting = request.Id != null || request.UserId != null;
             var isList = application.Schema.Stereotype == SchemaStereotype.List || request.SearchDTO != null;

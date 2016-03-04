@@ -282,7 +282,11 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public bool IsInRole(string role) {
-            if (IsSwAdmin()) {
+            return IsInRolInternal(role);
+        }
+
+        public bool IsInRolInternal(string role, bool checkSwAdmin = true) {
+            if (checkSwAdmin && IsSwAdmin()) {
                 return true;
             }
             if (string.IsNullOrEmpty(role)) {
@@ -347,7 +351,7 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public bool IsSwAdmin() {
-            return Login.Equals("swadmin");
+            return Login.Equals("swadmin") || (IsInRolInternal(Role.SysAdmin, false) && IsInRolInternal(Role.ClientAdmin, false));
         }
 
         public IDictionary<string, CommandBarDefinition> SecuredBars(ClientPlatform platform, IDictionary<string, CommandBarDefinition> commandBars, ApplicationSchemaDefinition currentSchema = null) {
@@ -372,6 +376,6 @@ namespace softWrench.sW4.Metadata.Security {
             return null;
         }
 
-        
+
     }
 }
