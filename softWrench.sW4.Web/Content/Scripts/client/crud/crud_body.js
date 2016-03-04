@@ -26,9 +26,13 @@
                 if (scope.$last === false) {
                     return;
                 }
-
                 var log = $log.getInstance('tabsrendered');
                 log.debug("finished rendering tabs of detail screen");
+                if (scope.$last === undefined) {
+                    //0 tabs scenario
+                    return $rootScope.$broadcast("sw_alltabsloaded");
+                }
+                
                 $timeout(function () {
                     var firstTabId = null;
                     $('.compositiondetailtab li>a').each(function () {
@@ -91,9 +95,8 @@
                 scope.$name = 'crudbody';
             },
 
-            controller: function ($scope, $element, $rootScope,
-                $http, $filter, $injector,
-                formatService, fixHeaderService,
+                controller: function ($scope, $http,$q,$element, $rootScope, $filter, $injector,
+                formatService, fixHeaderService,dispatcherService,
                 searchService, tabsService,
                 fieldService, commandService, i18NService,
                 submitService, redirectService,
@@ -120,7 +123,7 @@
                         //time for the components to be rendered
                         focusService.setFocusToFirstField($scope.schema, $scope.datamap);
                     }, 1000, false);
-
+                    eventService.dispatchEvent($scope.schema, "onschemafullyloaded");
                 });
 
                 $scope.getTabRecordCount = function (tab) {
@@ -136,6 +139,42 @@
                 };
 
                 // Listeners region
+
+                /**
+                * Listener responsible for invoking providerloaded events.
+                *  
+                */
+                $rootScope.$on("sw.crud.associations.updateeageroptions", function (event, associationKey, options, contextData) {
+                    var displayables = fieldService.getDisplayablesByAssociationKey(crudContextHolderService.currentSchema(), associationKey);
+                    var promiseArray = [];
+
+                    for (var i = 0; i < displayables.length; i++) {
+                        var displayable = displayables[i];
+                        var providerLoadedEvent = displayable.events["providerloaded"];
+
+                        if (providerLoadedEvent != undefined) {
+                            var fn = dispatcherService.loadService(providerLoadedEvent.service, providerLoadedEvent.method);
+                            if (fn != undefined) {
+                                var fields = crudContextHolderService.rootDataMap();
+                                if (fields && fields.fields) {
+                                    fields = fields.fields;
+                                }
+                                var providerLoadedParameters = {
+                                    fields: fields,
+                                    options: options,
+                                };
+                                $log.getInstance('crudinputfieldcommons#updateeager', ["lifecycle"]).debug('invoking post load service {0} method {1} for association {2}|{3}'
+                                    .format(providerLoadedEvent.service, providerLoadedEvent.method, displayable.target, displayable.associationKey));
+                                promiseArray.push($q.when(fn(providerLoadedParameters)));
+                            }
+                        }
+                    }
+                    if (promiseArray.length > 0) {
+                        return $q.all(promiseArray);
+                    }
+                    return $q.when();
+                }
+            );
 
                 $scope.$on("sw_submitdata", function (event, parameters) {
                     $scope.save(parameters);
@@ -156,6 +195,9 @@
                     if (onLoadMessage) {
                         alertService.notifymessage('success', onLoadMessage);
                     }
+
+                    
+                    
                 });
 
                 $scope.setActiveTab = function (tabId) {
@@ -517,7 +559,7 @@
                             // handle the case where the datamap had lazy compositions already fetched
                             // and the response does not have them (for performance reasons)
                             var compositions = compositionService.getLazyCompositions($scope.schema, $scope.datamap.fields);
-                            compositions.forEach(function(composition) {
+                            compositions.forEach(function (composition) {
                                 var currentValue = $scope.datamap.fields[composition];
                                 var updatedValue = responseDataMap.fields[composition];
                                 // has previous data but has no updated data: not safe to update -> hydrate with previous value

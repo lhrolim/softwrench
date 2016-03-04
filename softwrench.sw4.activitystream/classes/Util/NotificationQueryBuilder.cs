@@ -17,14 +17,17 @@ namespace softwrench.sw4.activitystream.classes.Util {
     public class NotificationQueryBuilder : ISingletonComponent {
         private readonly IWhereClauseFacade _whereClauseFacade;
         private readonly ILog _log = LogManager.GetLogger(typeof(NotificationQueryBuilder));
+        private UserProfileManager _userProfileManager;
 
-        public NotificationQueryBuilder(IWhereClauseFacade whereClauseFacade) {
+        public NotificationQueryBuilder(IWhereClauseFacade whereClauseFacade, UserProfileManager userProfileManager)
+        {
             _whereClauseFacade = whereClauseFacade;
+            _userProfileManager = userProfileManager;
         }
 
         public Dictionary<string, string> BuildNotificationsQueries() {
             Dictionary<string, string> notificationQueries = new Dictionary<string, string>();
-            var securityGroups = UserProfileManager.FetchAllProfiles(true);
+            var securityGroups = _userProfileManager.FetchAllProfiles(true);
             foreach (var securityGroup in securityGroups) {
                 var notificationsQuery = BuildNotificationsQuery(securityGroup);
                 if (!notificationsQuery.Value.IsNullOrWhiteSpace()) {

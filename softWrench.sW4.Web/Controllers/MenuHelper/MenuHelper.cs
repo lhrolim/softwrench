@@ -9,16 +9,23 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Menu;
+using softWrench.sW4.Metadata.Menu;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Models.Home;
+using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers.MenuHelper {
     public class MenuHelper : ISingletonComponent {
 
         private readonly IEnumerable<IMenuManager> _managers;
+        private readonly MenuSecurityManager _menuSecurityManager;
+        private ContextLookuper _contextLookuper;
 
-        public MenuHelper(Container container) {
+        public MenuHelper(Container container, MenuSecurityManager menuSecurityManager, ContextLookuper contextLookuper)
+        {
+            _menuSecurityManager = menuSecurityManager;
+            _contextLookuper = contextLookuper;
             _managers = container.GetAllInstances<IMenuManager>();
         }
 
@@ -26,10 +33,10 @@ namespace softWrench.sW4.Web.Controllers.MenuHelper {
         public MenuModel BuildMenu(ClientPlatform platform) {
             try {
                 var user = SecurityFacade.CurrentUser();
-                var isSysAdmin = user.IsInRole("sysadmin") || ApplicationConfiguration.IsLocal();
-                var isClientAdmin = user.IsInRole("clientadmin") || ApplicationConfiguration.IsLocal();
+                var isSysAdmin = user.IsInRole("sysadmin") ||  (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
+                var isClientAdmin = user.IsInRole("clientadmin") || (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
                 bool fromCache;
-                var securedMenu = user.Menu(platform, out fromCache);
+                var securedMenu = _menuSecurityManager.Menu(user,platform, out fromCache);
                 if (!user.Genericproperties.ContainsKey("menumanagerscached")) {
                     //to avoid adding items multiple times
                     foreach (var menuManager in _managers) {

@@ -164,12 +164,12 @@
 
             isInlineComposition: function (displayable) {
                 var type = displayable.type;
-                return type == "ApplicationCompositionDefinition" && displayable.inline;
+                return type === "ApplicationCompositionDefinition" && displayable.inline;
             },
 
             isListOnlyComposition: function (displayable) {
                 var type = displayable.type;
-                return type == "ApplicationCompositionDefinition" && displayable.schema.schemas.detail == null;
+                return type === "ApplicationCompositionDefinition" && displayable.schema.schemas.detail == null;
             },
 
             isTabOrComposition: function (displayable) {
@@ -427,7 +427,7 @@
                     event.continue();
                 }
             },
-            postFieldChange: function (field, scope) {
+            postFieldChange: function (field, scope,oldValue,newValue) {
                 var eventType = "afterchange";
                 var afterChangeEvent = field.events[eventType];
                 var fn = eventService.loadEvent(field, eventType);
@@ -441,9 +441,12 @@
 
                 var afterchangeEvent = {
                     fields: fields,
-                    scope: scope
+                    target: field,
+                    scope: scope,
+                    oldValue: oldValue,
+                    newValue : newValue
                 };
-                $log.getInstance('sw4.fieldservice#postfieldchange').debug('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
+                $log.get('sw4.fieldservice#postfieldchange',["event","field","afterchange"]).debug('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
                 fn(afterchangeEvent);
             },
 

@@ -1,5 +1,13 @@
 ﻿namespace softWrench.sW4.Metadata.Stereotypes.Schema {
     public class ApplicationSchemaPropertiesCatalog {
+
+        /// <summary>
+        /// Marks a schema as a non internal
+        /// <seealso cref="MetadataProvider.FetchNonInternalSchemas"/>
+        /// </summary>
+        public const string NonInternalSchema = "schema.noninternal";
+
+
         /// <summary>
         /// Use this property to invoke a custom service upon click on the list page. Value should be on the format serviceName.methodName (ex: changeService.open), 
         /// and have 2 parameters:

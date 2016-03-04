@@ -18,6 +18,8 @@ namespace softwrench.sw4.user.classes.entities {
         public const string UserByMaximoPersonIds = "from User where MaximoPersonId in (:p0)";
         public const string UserByMaximoPersonId = "from User where lower(MaximoPersonId) = lower(?)";
 
+        public const string UserHaving = "from User where lower(MaximoPersonId) = lower(?)";
+
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public int? Id {

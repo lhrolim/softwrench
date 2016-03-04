@@ -43,6 +43,10 @@ namespace softwrench.sW4.Shared2.Data {
             return result;
         }
 
+        public virtual string GetStringAttribute(string attributeName, bool remove = false, bool throwException = false) {
+            return GetAttribute(attributeName, remove, throwException) as string;
+        }
+
         public void SetAttribute(string attributeName, object value) {
             if (Attributes.ContainsKey(attributeName)) {
                 Attributes.Remove(attributeName);
@@ -56,20 +60,18 @@ namespace softwrench.sW4.Shared2.Data {
 
         public abstract string HolderName();
 
-        public static TestAttributeHolder TestInstance(IDictionary<string, object> attributes,string holderName="") {
-            return new TestAttributeHolder(attributes,holderName);
+        public static TestAttributeHolder TestInstance(IDictionary<string, object> attributes, string holderName = "") {
+            return new TestAttributeHolder(attributes, holderName);
         }
 
         public class TestAttributeHolder : AttributeHolder {
             private readonly string _holderName;
 
-            public TestAttributeHolder(IDictionary<string, object> attributes, string holderName) : base(attributes)
-            {
+            public TestAttributeHolder(IDictionary<string, object> attributes, string holderName) : base(attributes) {
                 _holderName = holderName;
             }
 
-            public override string HolderName()
-            {
+            public override string HolderName() {
                 return _holderName;
             }
         }

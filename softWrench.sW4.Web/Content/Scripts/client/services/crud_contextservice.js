@@ -14,7 +14,8 @@
             currentSchema: null,
             rootDataMap: null,
             currentApplicationName: null,
-
+            //a datamap that could be used in a transient fashion but that would have the same lifecycle as the main one, i.e, would get cleaned automatically upon app redirect
+            auxDataMap:null,
             /*{
             #global:{
              eagerassociation1_ :[],
@@ -150,8 +151,12 @@
             return getContext(panelid).currentSchema;
         }
 
-        function rootDataMap(panelid) {
-            return getContext(panelid).rootDataMap;
+        function rootDataMap(panelid,datamap) {
+            var context = getContext(panelid);
+            if (datamap) {
+                context.rootDataMap = datamap;
+            }
+            return context.rootDataMap;
         }
 
         function getAffectedProfiles(panelid) {
@@ -366,6 +371,11 @@
 
 
         function updateEagerAssociationOptions(associationKey, options, contextData, panelid) {
+            if (options == null) {
+                //case for dependant associations
+                return;
+            }
+
             var context = getContext(panelid);
             if (context.showingModal) {
                 contextData = { schemaId: "#modal" };
@@ -390,6 +400,7 @@
             context._eagerassociationOptions[schemaId][entryId][associationKey] = options;
 
             log.info("update eager list for {0}. Size: {1}".format(associationKey, options.length));
+
 
             $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData);
 
@@ -416,8 +427,9 @@
             clearCrudContext("#modal");
         };
 
-        function modalLoaded() {
+        function modalLoaded(datamap) {
             _crudContext.showingModal = true;
+            rootDataMap("#modal", datamap);
         }
 
         function isShowingModal() {

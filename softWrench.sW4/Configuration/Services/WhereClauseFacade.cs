@@ -25,6 +25,10 @@ namespace softWrench.sW4.Configuration.Services {
         private readonly IContextLookuper _contextLookuper;
         private readonly SWDBHibernateDAO _dao;
         private bool _appStarted;
+
+        private readonly UserProfileManager _userProfileManager;
+
+
         private readonly IList<Tuple<string, string, WhereClauseRegisterCondition>> _toRegister = new List<Tuple<string, string, WhereClauseRegisterCondition>>();
         private static readonly ILog Log = LogManager.GetLogger(typeof(WhereClauseFacade));
 
@@ -32,10 +36,11 @@ namespace softWrench.sW4.Configuration.Services {
         private const string WcConfig = "/{0}/{1}/whereclause";
         private const string AppNotFoundEx = "Application/Entity {0} not found, unable to register whereclause";
 
-        public WhereClauseFacade(ConfigurationService configurationService, IContextLookuper contextLookuper, SWDBHibernateDAO dao) {
+        public WhereClauseFacade(ConfigurationService configurationService, IContextLookuper contextLookuper, SWDBHibernateDAO dao, UserProfileManager userProfileManager) {
             _configurationService = configurationService;
             _contextLookuper = contextLookuper;
             _dao = dao;
+            _userProfileManager = userProfileManager;
         }
 
         public WhereClauseResult Lookup(string applicationName, ApplicationLookupContext lookupContext = null, ContextHolder contextHolder = null) {
@@ -173,7 +178,7 @@ namespace softWrench.sW4.Configuration.Services {
 
             var profile = new UserProfile();
             if (condition.UserProfile != null) {
-                profile = UserProfileManager.FindByName(condition.UserProfile);
+                profile = _userProfileManager.FindByName(condition.UserProfile);
                 if (condition.UserProfile != null && profile == null) {
                     Log.Warn(String.Format("unable to register definition as profile {0} does not exist",
                         condition.UserProfile));

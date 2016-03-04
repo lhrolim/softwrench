@@ -9,6 +9,10 @@ using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
+using log4net;
+using softWrench.sW4.Metadata.Applications.Security;
+using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Data.Relationship.Composition {
 
@@ -17,17 +21,19 @@ namespace softWrench.sW4.Data.Relationship.Composition {
 
 
 
-        public static IDictionary<string, ApplicationCompositionSchema> InitializeCompositionSchemas(ApplicationSchemaDefinition schema) {
+        public static IDictionary<string, ApplicationCompositionSchema> InitializeCompositionSchemas(ApplicationSchemaDefinition schema, InMemoryUser user = null) {
             if (schema.CachedCompositions != null) {
-                return schema.CachedCompositions;
+                return ApplicationCompositionSecurityApplier.ApplySecurity(schema, schema.CachedCompositions, user);
             }
             var compositionMetadatas = new Dictionary<string, ApplicationCompositionSchema>();
             foreach (var composition in schema.Compositions()) {
                 compositionMetadatas.Add(composition.Relationship, DoInitializeCompositionSchemas(schema, composition, new IdentitySet()));
             }
             schema.CachedCompositions = compositionMetadatas;
-            return compositionMetadatas;
+            return ApplicationCompositionSecurityApplier.ApplySecurity(schema, schema.CachedCompositions, user);
         }
+
+
 
         private static ApplicationCompositionSchema DoInitializeCompositionSchemas(ApplicationSchemaDefinition schema, ApplicationCompositionDefinition composition, IdentitySet checkedCompositions) {
             var relationship = composition.Relationship;

@@ -166,6 +166,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\BaseMultiassetlocciDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\GenericSWMethodInvoker.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseProblemDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\BaseTicketDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\CommlogHelper.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\DispatchOperationHandler.cs" />
@@ -207,12 +208,14 @@
     <Compile Include="Data\Persistence\WS\Commons\PaeAssetCrudConnector.cs" />
     <Compile Include="Metadata\Applications\Association\ApplicationAssociationSyncSchemaFactory.cs" />
     <Compile Include="Metadata\Applications\Classification\ClassificationDataSet.cs" />
-    <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseProblemDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseUserProfileDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\WoActivityDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderReadingDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseCommLogDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\FilterWhereClauseParameters.cs" />
     <Compile Include="Metadata\Applications\Schema\SchemaFilterBuilder.cs" />
+    <Compile Include="Metadata\Applications\Security\ApplicationCompositionSecurityApplier.cs" />
+    <Compile Include="Metadata\Applications\Security\ApplicationFieldSecurityApplier.cs" />
     <Compile Include="Metadata\Applications\Validator\ApplicationMetadataValidator.cs" />
     <Compile Include="Metadata\Menu\MenuCatalogMerger.cs" />
     <Compile Include="Metadata\Menu\XMLMenuParserCommons.cs" />
@@ -343,7 +346,7 @@
     <Compile Include="Metadata\Entities\Schema\EntityTargetSchema.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityAssociation.cs" />
     <Compile Include="Metadata\ClientChangeEvent.cs" />
-    <Compile Include="Metadata\Menu\MenuManager.cs" />
+    <Compile Include="Metadata\Menu\MenuSecurityManager.cs" />
     <Compile Include="Metadata\MetadataProviderInternalCache.cs" />
     <Compile Include="Metadata\Parsing\IXMLMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XElementExtensions.cs" />
@@ -353,6 +356,7 @@
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
+    <Compile Include="Metadata\Security\SecurityException.cs" />
     <Compile Include="Metadata\Security\SecurityGroupExtensions.cs" />
     <Compile Include="Metadata\Stereotypes\AComponentStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\ComponentStereotypeFactory.cs" />

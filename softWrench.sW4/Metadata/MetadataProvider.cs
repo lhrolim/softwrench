@@ -29,6 +29,7 @@ using System.Net;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Metadata.Stereotypes;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 
 namespace softWrench.sW4.Metadata {
     public class MetadataProvider {
@@ -308,7 +309,7 @@ namespace softWrench.sW4.Metadata {
         }
 
 
-        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchTopLevelApps(ClientPlatform platform, ISWUser user) {
+        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchTopLevelApps(ClientPlatform platform, [CanBeNull]ISWUser user) {
             var watch = Stopwatch.StartNew();
             var result = new HashSet<CompleteApplicationMetadataDefinition>();
             var menu = Menu(platform);
@@ -316,7 +317,7 @@ namespace softWrench.sW4.Metadata {
             foreach (var menuBaseDefinition in leafs) {
                 if (menuBaseDefinition is ApplicationMenuItemDefinition) {
                     var application = Application((menuBaseDefinition as ApplicationMenuItemDefinition).Application);
-                    if (user.IsInRole(application.Role) || (user.IsInRole(menuBaseDefinition.Role))) {
+                    if (user == null || user.IsInRole(application.Role) || (user.IsInRole(menuBaseDefinition.Role))) {
                         result.Add(application);
                     }
                 }
@@ -325,6 +326,81 @@ namespace softWrench.sW4.Metadata {
             Log.DebugFormat("fetching top level apps took: {0} ", LoggingUtil.MsDelta(watch));
             //TODO: add hidden menu items
             return result;
+        }
+
+        /// <summary>
+        /// Return all schemas that are considered non internal for a given application. A schema can be considered non internal if it´s either referenced on the menu, or if it holds the 
+        /// <see cref="ApplicationSchemaPropertiesCatalog.NonInternalSchema" /> property
+        /// </summary>
+        /// <param name="platform"></param>
+        /// <param name="applicationName"></param>
+        /// <returns></returns>
+        /// 
+        /// 
+        [NotNull]
+        public static IEnumerable<ApplicationSchemaDefinition> FetchNonInternalSchemas(ClientPlatform platform, string applicationName) {
+            var application = Application(applicationName);
+
+            if (application.CachedNonInternalSchemas != null) {
+                return application.CachedNonInternalSchemas;
+            }
+
+            ISet<string> schemaSet = new HashSet<string>();
+
+            var menu = Menu(platform);
+            var leafs = menu.ExplodedLeafs;
+            foreach (var menuBaseDefinition in leafs) {
+                if (menuBaseDefinition is ApplicationMenuItemDefinition) {
+                    var menuApplication = menuBaseDefinition as ApplicationMenuItemDefinition;
+                    if (menuApplication.Application.EqualsIc(applicationName)) {
+                        schemaSet.Add(menuApplication.Schema);
+                    }
+                }
+            }
+
+            var menuReacheableSchemas = application.SchemasList.Where(s => schemaSet.Contains(s.SchemaId));
+            var internalReacheableSchemas = application.SchemasList.Where(s => "true" == s.GetProperty(ApplicationSchemaPropertiesCatalog.NonInternalSchema));
+
+            var cachedNonInternalSchemas = new List<ApplicationSchemaDefinition>(menuReacheableSchemas);
+            cachedNonInternalSchemas.AddRange(internalReacheableSchemas);
+
+
+
+
+            var resultSchemas = new HashSet<ApplicationSchemaDefinition>(cachedNonInternalSchemas);
+
+
+            var singleDetailSchema = application.SchemaByStereotype("detail");
+            if (singleDetailSchema != null) {
+                //if there´s only one schema marked with detail stereotype it will be used automatically upon grid routing, so let´s add it
+                resultSchemas.Add(singleDetailSchema);
+            }
+
+            foreach (var schema in cachedNonInternalSchemas) {
+                //adding also schemas referenced by list schemas via metadata properties
+                if (!SchemaStereotype.List.Equals(schema.Stereotype) || (schema.StereotypeAttr != null && !schema.StereotypeAttr.StartsWith("list"))) {
+                    continue;
+                }
+                if (schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.ListClickSchema)) {
+                    var applicationSchemaDefinition = application.SchemasList.FirstOrDefault(s => s.SchemaId == schema.Properties[ApplicationSchemaPropertiesCatalog.ListClickSchema]);
+                    if (applicationSchemaDefinition != null) {
+                        resultSchemas.Add(applicationSchemaDefinition);
+                    }
+                }
+                if (schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.RoutingNextSchemaId)) {
+                    var applicationSchemaDefinition = application.SchemasList.FirstOrDefault(s => s.SchemaId == schema.Properties[ApplicationSchemaPropertiesCatalog.RoutingNextSchemaId]);
+                    if (applicationSchemaDefinition != null) {
+                        resultSchemas.Add(applicationSchemaDefinition);
+                    }
+                }
+            }
+
+            application.CachedNonInternalSchemas = resultSchemas;
+            application.HasCreationSchema = resultSchemas.Any(s => (s.Stereotype.Equals(SchemaStereotype.DetailNew) || (s.StereotypeAttr != null && s.StereotypeAttr.StartsWith("detailnew")))
+            || menuReacheableSchemas.Any(m => (m.Stereotype.Equals(SchemaStereotype.Detail) || (m.StereotypeAttr != null && m.StereotypeAttr.StartsWith("detail")))));
+
+            return cachedNonInternalSchemas;
+
         }
 
         [NotNull]
@@ -420,7 +496,7 @@ namespace softWrench.sW4.Metadata {
 
         [NotNull]
         public static IStereotype Stereotype([CanBeNull]string id) {
-            if (id != null &&_mergedStereotypes.ContainsKey(id)) {
+            if (id != null && _mergedStereotypes.ContainsKey(id)) {
                 return _mergedStereotypes[id];
             }
             return new BlankStereotype();
@@ -495,6 +571,15 @@ namespace softWrench.sW4.Metadata {
         public static EntityMetadata EntityByApplication(string applicationName) {
             var application = Application(applicationName);
             return Entity(application.Entity);
+        }
+
+        [CanBeNull]
+        public static ApplicationSchemaDefinition Schema(string application, string schema, ClientPlatform platform) {
+            var app = MetadataProvider.Application(application);
+            if (app == null) {
+                return null;
+            }
+            return app.Schema(new ApplicationMetadataSchemaKey(schema, SchemaMode.None, platform));
         }
     }
 }

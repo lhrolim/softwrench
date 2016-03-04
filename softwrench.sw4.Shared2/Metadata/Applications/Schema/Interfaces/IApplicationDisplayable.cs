@@ -23,6 +23,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces {
         [DefaultValue("")]
         string Label { get; }
 
-        bool? ReadOnly { get; set; }
+        bool IsReadOnly { get; set; }
     }
 }

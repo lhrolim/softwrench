@@ -615,7 +615,7 @@
       </schemas>
     </application>
 
-    <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfer">
+    <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfer Grid">
       <schemas>
         <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfer Grid">
           <properties>

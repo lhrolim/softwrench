@@ -155,13 +155,21 @@ namespace softWrench.sW4.Web.Security {
                 return;
             }
             var uri = request.Url;
-            if (!MemoryContext.ContainsKey("httpcontext"))
-            {
-                string uriProperty = MetadataProvider.GlobalProperty("iiscontextpath");
-                if (!uriProperty.IsNullOrWhiteSpace()) {
+            if (!MemoryContext.ContainsKey("httpcontext")) {
+                var uriProperty = MetadataProvider.GlobalProperty("iiscontextpath");
+                if (string.IsNullOrWhiteSpace(uriProperty)) {
+                    //falling back to a trailing whitespace version due to the fact that some releases got that
+                    uriProperty = MetadataProvider.GlobalProperty("iiscontextpath ");
+                }
+                if (!string.IsNullOrWhiteSpace(uriProperty)) {
                     uri = new Uri(uriProperty);
                 }
-                MemoryContext.Add("httpcontext", new SwHttpContext(uri.Scheme, uri.Host, uri.Port, uri.AbsolutePath));
+                try {
+                    MemoryContext.Add("httpcontext", new SwHttpContext(uri.Scheme, uri.Host, uri.Port, uri.AbsolutePath));
+                } catch {
+                    Log.Warn("http context already present, due to some sort of concurrent issue");
+                }
+
             }
 
         }

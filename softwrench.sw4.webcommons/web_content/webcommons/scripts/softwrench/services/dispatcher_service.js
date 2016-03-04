@@ -57,6 +57,8 @@
             return this.invokeService(serviceArray[0], serviceArray[1], parameters);
         },
 
+
+
         /// <summary>
         /// use to create a default instance of the deferred/promise instance, useful for transforming sync methods into async ones, and for chaining them.
         /// 

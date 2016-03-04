@@ -49,6 +49,8 @@
     <property key="list.disabledetails" value="true"/>
     <property key="list.selectionmodebydefault" value="true" />
     <property key="list.paginationsize" value="10"/>
+    <property key="commandbar.bottom" value="detailfilter"/>
+    <property key="commandbar.top" value="gridfiltertop"/>
   </stereotype>
 
   <stereotype id="list.selection.modal.filter">

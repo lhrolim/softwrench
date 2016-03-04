@@ -3,9 +3,9 @@
 
     angular.module('sw_layout').factory('crud_inputcommons', factory);
 
-    factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', '$parse', "$rootScope"];
+    factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService','dispatcherService', '$parse', "$rootScope", "$q"];
 
-    function factory($log, associationService, contextService, cmpfacade, fieldService, $timeout, expressionService, $parse, $rootScope) {
+    function factory($log, associationService, contextService, cmpfacade, fieldService, $timeout, expressionService,dispatcherService, $parse, $rootScope,$q) {
 
         var api = {
             configureAssociationChangeEvents: configureAssociationChangeEvents,
@@ -62,7 +62,7 @@
                 var shouldDoWatch = true;
                 var isMultiValued = association.multiValued;
                 $scope.$watch('{0}["{1}"]'.format(datamappropertiesName, association.attribute), function (newValue, oldValue) {
-                    if (oldValue === newValue || !shouldDoWatch) {
+                    if (oldValue == newValue || !shouldDoWatch) {
                         return;
                     }
 
@@ -73,9 +73,12 @@
                         return;
                     }
                     if (!expressionService.evaluate(association.showExpression, datamap)) {
-                        //if the association is hidden, there´s no sense in executing any hook methods of it
-                        $log.get("crud_inputcommons#configureAssociationChangeEvents").debug("ignoring hidden association {0}".format(association.associationKey));
-                        return;
+
+                        if (!association.rendererParameters || "true" !== association.rendererParameters["donotignoreeventsifhidden"]) {
+                            //if the association is hidden, there´s no sense in executing any hook methods of it
+                            $log.get("crud_inputcommons#configureAssociationChangeEvents").debug("ignoring hidden association {0}".format(association.associationKey));
+                            return;
+                        }
                     }
 
 
@@ -108,24 +111,27 @@
                             if (isMultiValued && association.rendererType !== 'lookup') {
                                 associationService.updateUnderlyingAssociationObject(association, null, $scope);
                             }
-                            var result = associationService.updateAssociations(association, $scope);
-                            if (result != undefined && result == false) {
-                                var resolved = contextService.fetchFromContext("associationsresolved", false, true);
-                                var phase = resolved ? 'configured' : 'initial';
-                                var dispatchedbytheuser = resolved ? true : false;
-                                if ($scope.compositionlistschema) {
-                                    //workaround for compositions
+                            var resolved = contextService.fetchFromContext("associationsresolved", false, true);
+                            var phase = resolved ? 'configured' : 'initial';
+                            var dispatchedbytheuser = resolved ? true : false;
+                            var hook = associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser });
+                            hook.then(function(hookResult) {
+                                var result = associationService.updateAssociations(association, $scope);
+                                if (result != undefined && result === false) {
+                                    if ($scope.compositionlistschema) {
+                                        //workaround for compositions
 
-                                    $scope.datamap = datamap;
-                                    $scope.schema = $scope.compositionlistschema;
+                                        $scope.datamap = datamap;
+                                        $scope.schema = $scope.compositionlistschema;
+                                    }
+
                                 }
-                                associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser });
-                            }
-                            try {
-                                $scope.$digest();
-                            } catch (ex) {
-                                //nothing to do, just checking if digest was already in place or not
-                            }
+                                try {
+                                    $scope.$digest();
+                                } catch (ex) {
+                                    //nothing to do, just checking if digest was already in place or not
+                                }
+                            });
                         },
                         interrupt: function () {
                             $parse(datamappropertiesName)($scope)[association.attribute] = oldValue;

@@ -13,6 +13,7 @@
                 parentdata: '=',
                 parentschema: '=',
                 relationship: '@',
+                mode:'@',
                 title: '@'
             },
 

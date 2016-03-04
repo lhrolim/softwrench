@@ -12,11 +12,17 @@ using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Metadata.Parsing {
-    class XmlTemplateHandler : ISingletonComponent {
+    class XmlTemplateHandler {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(XmlTemplateHandler));
 
-        private static List<TR> DoHandleTemplates<TR, T>(XContainer templates, ISet<string> alreadyParsedTemplates, IXmlMetadataParser<T> parser) {
+        private readonly bool _isSWDB;
+
+        public XmlTemplateHandler(bool isSWDB) {
+            _isSWDB = isSWDB;
+        }
+
+        private List<TR> DoHandleTemplates<TR, T>(XContainer templates, ISet<string> alreadyParsedTemplates, IXmlMetadataParser<T> parser) {
             if (alreadyParsedTemplates == null) {
                 alreadyParsedTemplates = new HashSet<string>();
             }
@@ -53,24 +59,24 @@ namespace softWrench.sW4.Metadata.Parsing {
 
 
         [NotNull]
-        public static List<EntityMetadata> HandleTemplatesForEntities(XContainer templates, bool isSWDB, ISet<string> alreadyParsedTemplates) {
+        public List<EntityMetadata> HandleTemplatesForEntities(XContainer templates, bool isSWDB, ISet<string> alreadyParsedTemplates) {
             return DoHandleTemplates<EntityMetadata, Tuple<IEnumerable<EntityMetadata>, EntityQueries>>(templates, alreadyParsedTemplates,
-                new XmlEntitySourceMetadataParser(isSWDB,true));
+                new XmlEntitySourceMetadataParser(isSWDB, true));
         }
 
         [NotNull]
-        public static List<CompleteApplicationMetadataDefinition> HandleTemplatesForApplications(XContainer templates,
+        public List<CompleteApplicationMetadataDefinition> HandleTemplatesForApplications(XContainer templates,
             [NotNull] IEnumerable<EntityMetadata> entityMetadata, IDictionary<string, CommandBarDefinition> commandBars, Boolean isSWDB, ISet<string> alreadyParsedTemplates) {
             return DoHandleTemplates<CompleteApplicationMetadataDefinition, IEnumerable<CompleteApplicationMetadataDefinition>>(templates, alreadyParsedTemplates,
              new XmlApplicationMetadataParser(entityMetadata, commandBars, isSWDB, true));
         }
 
-        private static Tuple<String, string> RealPath(XElement template) {
+        private Tuple<String, string> RealPath(XElement template) {
             var path = template.Attribute(XmlMetadataSchema.TemplatePathAttribute).Value;
             if (!path.EndsWith(".xml")) {
                 path = path + ".xml";
             }
-            return new Tuple<string, string>(path, MetadataParsingUtils.GetTemplateInternalPath(path));
+            return new Tuple<string, string>(path, MetadataParsingUtils.GetTemplateInternalPath(path, _isSWDB));
 
         }
 

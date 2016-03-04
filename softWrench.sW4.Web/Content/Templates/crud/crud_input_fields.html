@@ -82,7 +82,7 @@
                                ng-model="datamap[fieldMetadata.attribute]"
                                ng-init="initCheckbox(fieldMetadata)"
                                ng-enabled="isModifiableEnabled(fieldMetadata)"
-                               ng-true-value="'true'" ng-false-value="'false'" />
+                               ng-true-value="true" ng-false-value="false" />
                         <label class="control-label"
                                rel="{{showLabelTooltip(fieldMetadata)}}"
                                data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
@@ -113,15 +113,15 @@
 
                     <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
                         <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>
-
-                        <select ng-if="!fieldMetadata.rendererParameters['multiple']"
-                                class="hidden-phone form-control combobox"
-                                ng-model="datamap[fieldMetadata.target]"
-                                number-to-string
-                                ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
-                                ng-enabled="isSelectEnabled(fieldMetadata)"
-                                ng-init="initField(fieldMetadata)"
-                                data-field="{{fieldMetadata.associationKey}}">
+                        <select
+                            ng-if="!fieldMetadata.rendererParameters['multiple']"
+                            class="hidden-phone form-control combobox"
+                            ng-model="datamap[fieldMetadata.target]"
+                            number-to-string
+                            ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
+                            ng-enabled="isSelectEnabled(fieldMetadata)"
+                            ng-init="initField(fieldMetadata)"
+                            data-field="{{fieldMetadata.associationKey}}">
                             <option value=""></option>
                         </select>
 
@@ -172,7 +172,7 @@
                                ng-model="datamap[fieldMetadata.attribute]"
                                ng-init="initCheckbox(fieldMetadata)"
                                ng-enabled="isModifiableEnabled(fieldMetadata)"
-                               ng-true-value="'true'" ng-false-value="'false'" />
+                               ng-true-value="true" ng-false-value="false" />
                         <label class="control-label"
                                rel="{{showLabelTooltip(fieldMetadata)}}"
                                data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"

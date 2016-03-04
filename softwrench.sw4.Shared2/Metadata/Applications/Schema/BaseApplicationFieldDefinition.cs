@@ -16,9 +16,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string Attribute { get; set; }
         [DefaultValue("false")]
         public string RequiredExpression { get; set; }
-        public bool IsReadOnly { get; set; }
+//        public bool IsReadOnly { get; set; }
         public string DefaultValue { get; set; }
         public string Qualifier { get; set; }
+        public abstract bool IsHidden { get; set; }
+
         [JsonIgnore]
         public bool DeclaredAsQueryOnEntity { get; set; }
         [DefaultValue("true")]
@@ -27,7 +29,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string EnableExpression { get; set; }
 
         public string ToolTip { get; set; }
-        public bool? ReadOnly { get; set; }
+        public bool IsReadOnly { get; set; }
         public string AttributeToServer { get; set; }
 
         public string DefaultExpression { get; set; }
@@ -36,7 +38,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public abstract string RendererType { get; }
         public string Type { get { return GetType().Name; } }
         public string Role {
-            get { return ApplicationName + "." + Attribute; }
+            get { return Attribute; }
         }
 
         public string SearchOperation { get; set; }

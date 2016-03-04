@@ -20,7 +20,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
         public string Attribute { get; set; }
         public string Label { get; set; }
 
-        public bool? ReadOnly { get; set; }
+        public bool IsReadOnly { get; set; }
 
         public string EnableExpression { get; set; }
 

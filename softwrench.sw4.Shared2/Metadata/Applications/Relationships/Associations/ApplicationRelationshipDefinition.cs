@@ -15,7 +15,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public abstract string Role { get; }
         [DefaultValue("true")] public string ShowExpression { get; set; }
         public string ToolTip { get; set; }
-        public bool? ReadOnly { get; set; }
+        public bool IsReadOnly { get; set; }
 
 
         protected Lazy<EntityAssociation> LazyEntityAssociation;

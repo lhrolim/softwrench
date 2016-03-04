@@ -96,7 +96,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                     _hapagHelper.AddHapagMatchingRolesAndProfiles(personGroup, user.DBUser);
                 }
                 user.DBUser = DAO.Save(user.DBUser);
-                user = new InMemoryUser(user.DBUser, user.DBUser.Profiles, user.GridPreferences, user.UserPreferences, user.TimezoneOffset);
+                user = new InMemoryUser(user.DBUser, user.DBUser.Profiles, user.GridPreferences, user.UserPreferences, user.TimezoneOffset, user.MergedUserProfile);
             }
 
             user = _hapagHelper.RemoveOrphanEntities(user);

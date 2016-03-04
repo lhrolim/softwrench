@@ -526,9 +526,10 @@
   </complexType>
 
   <complexType name="Filter">
-    <attribute name="operation" type="string" use="required"></attribute>
+    <attribute name="operation" type="string"></attribute>
     <attribute name="params" type="string"></attribute>
     <attribute name="default" type="string"></attribute>
+    <attribute name="clientfunction" type="string"></attribute>
   </complexType>
 
   <complexType name="Lookup">
@@ -1235,6 +1236,13 @@
             <restriction base="string">
               <enumeration value="afterchange"></enumeration>
               <enumeration value="beforechange"></enumeration>
+              <enumeration value="providerloaded">
+                <annotation>
+                  <documentation>
+                    Hook to invoke a service right after the list of available options of a given association has been loaded
+                  </documentation>
+                </annotation>
+              </enumeration>
             </restriction>
           </simpleType>
         </attribute>
@@ -1249,7 +1257,9 @@
           <simpleType>
             <restriction base="string">
               <enumeration value="onviewdetail"></enumeration>
+              <!-- TODO:review called multiple times-->
               <enumeration value="onload"></enumeration>
+              <enumeration value="onschemafullyloaded"></enumeration>
               <enumeration
 								value="beforesubmit.onvalidation">
               </enumeration>

@@ -17,15 +17,18 @@ namespace softwrench.sw4.activitystream.classes.Util {
         public static Dictionary<string, Dictionary<string, long>> MaxIdCache = new Dictionary<string, Dictionary<string, long>>();
 
         private readonly MaximoHibernateDAO _maxDAO;
+        private UserProfileManager _userProfileManager;
 
-        public NotificationResponseBuilder(MaximoHibernateDAO maxDAO) {
+        public NotificationResponseBuilder(MaximoHibernateDAO maxDAO, UserProfileManager userProfileManager)
+        {
             _maxDAO = maxDAO;
+            _userProfileManager = userProfileManager;
         }
 
 
         public void InitMaxIdCache() {
             MaxIdCache.Add(ActivityStreamConstants.DefaultStreamName, new Dictionary<string, long>());
-            var securityGroups = UserProfileManager.FetchAllProfiles(true);
+            var securityGroups = _userProfileManager.FetchAllProfiles(true);
             var query = ActivityStreamConstants.BaseIdCacheQuery;
             var result = _maxDAO.FindByNativeQuery(query, null);
             foreach (var record in result) {
