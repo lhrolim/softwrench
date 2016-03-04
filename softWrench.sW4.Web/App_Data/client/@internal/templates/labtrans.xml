@@ -85,9 +85,17 @@
       </schemas>
     </application>
 
+    <application entity="laborcraftrate" name="laborcraftrate" title="Craft">
+      <schemas>
+        <list platform="mobile">
+          <field attribute="craft" />
+          <field attribute="rate" />
+          <field attribute="laborcode" />
+          <field attribute="orgid" />
+        </list>
+      </schemas>
+    </application>
+
   </applications>
-
-
-
 
 </metadata>
