@@ -567,7 +567,7 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         $scope.collapseAll();
     };
 
-    var doToggle = function (id, item, originalListItem, forcedState) {
+    $scope.doToggle = function (id, item, originalListItem, forcedState) {
         if ($scope.clonedData[id] == undefined) {
             $scope.clonedData[id] = {};
             $scope.clonedData[id].data = formatService.doContentStringConversion(jQuery.extend(true, {}, item));
@@ -668,7 +668,7 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
 
             var shouldToggle = commandService.executeClickCustomCommand(fullServiceName, clonedItem, column, $scope.compositionlistschema);
             if (shouldToggle && $scope.hasDetailSchema()) {
-                doToggle(compositionId, item, item);
+                $scope.doToggle(compositionId, item, item);
             }
             return;
         };
@@ -690,7 +690,7 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
         var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
         if (!needServerFetching || $scope.isBatch()) {
             //batches should always pick details locally, therefore make sure to adjust extraprojectionfields on list schema
-            doToggle(compositionId, item, item);
+            $scope.doToggle(compositionId, item, item);
             return;
         }
 
@@ -701,21 +701,9 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
             return;
         }
 
-        var compositiondetailschema = $scope.compositiondetailschema;
-        var applicationName = compositiondetailschema.applicationName;
-        var parameters = {};
-        var request = {};
-        var key = {};
-        parameters.request = request;
-        request.id = compositionId;
-        request.key = key;
-        key.schemaId = compositiondetailschema.schemaId;
-        key.mode = compositiondetailschema.mode;
-        key.platform = "web";
-        var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
-        $http.get(urlToCall).success(
-            function (result) {
-                doToggle(compositionId, result.resultObject.fields, item);
+        compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema)
+            .then(function (result) {
+                $scope.doToggle(compositionId, result.resultObject.fields, item);
                 //this timeout is here to avoid a strange exception exception: digest alredy in place
                 //TODO: investigate further
                 $timeout(function () {
@@ -1017,7 +1005,7 @@ function CompositionListController($scope, $q, $log, $timeout, $filter, $injecto
             $.each(result.resultObject[$scope.relationship], function (key, value) {
                 //TODO: This function is not utilizing the needServerFetching optimization as found in the toggleDetails function
                 var itemId = value[$scope.compositiondetailschema.idFieldName];
-                doToggle(itemId, value, compositionListData[itemId], true);
+                $scope.doToggle(itemId, value, compositionListData[itemId], true);
             });
             $scope.wasExpandedBefore = true;
         });

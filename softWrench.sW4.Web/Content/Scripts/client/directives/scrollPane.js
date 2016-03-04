@@ -55,7 +55,7 @@
                     return pane;
                 }
 
-                function setSrcollHeight() {
+                function setScrollHeight() {
                     var contentHeight = getContentHeight(scrollElement, scope.availableFn()());
 
                     if (contentHeight != null) {
@@ -78,7 +78,7 @@
                 }
                 stopWindowScroll(scope.preventWindowScroll);
 
-                var lazyLayout = window.debounce(setSrcollHeight, 100);
+                var lazyLayout = window.debounce(setScrollHeight, 100);
                 $(window).resize(lazyLayout);
 
             }
