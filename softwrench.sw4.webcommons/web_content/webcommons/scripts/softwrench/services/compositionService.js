@@ -1,4 +1,4 @@
-﻿(function (angular) {
+﻿(function (angular, $) {
     "use strict";
 
     var app = angular.module('sw_layout');
@@ -225,10 +225,32 @@
                 var dto = buildFetchRequestDTO(schema, datamap, [composition], pageRequest);
                 return fetchCompositions(dto, datamap, true);
             }
+             
+            /**
+             * Fetches the composition item with the specified id
+             * 
+             * @param String|Number compositionId item's id
+             * @param {} compositiondetailschema composition's detail schema 
+             * @returns Promise resolved with response's body 
+             */
+            function getCompositionDetailItem(compositionId, compositiondetailschema) {
+                var parameters = {};
+                var request = {};
+                var key = {};
+                var applicationName = compositiondetailschema.applicationName;
+                parameters.request = request;
+                request.id = compositionId;
+                request.key = key;
+                key.schemaId = compositiondetailschema.schemaId;
+                key.mode = compositiondetailschema.mode;
+                key.platform = "web";
+                var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
+                return $http.get(urlToCall).then(function (result) {
+                    return result.data;
+                });
+            }
 
         //#endregion
-
-
 
             var api = {
                 locatePrintSchema: locatePrintSchema,
@@ -239,7 +261,8 @@
                 populateWithCompositionData: populateWithCompositionData,
                 getCompositionList: getCompositionList,
                 isCompositionLodaded: isCompositionLodaded,
-                getLazyCompositions: getLazyCompositions
+                getLazyCompositions: getLazyCompositions,
+                getCompositionDetailItem: getCompositionDetailItem
             };
 
             return api;
@@ -247,4 +270,4 @@
 
         }]);
 
-})(angular);
+})(angular, jQuery);

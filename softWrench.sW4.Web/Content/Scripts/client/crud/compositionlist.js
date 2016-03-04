@@ -365,7 +365,7 @@
                 });
         }
 
-     
+
 
         $scope.onAfterCompositionResolved = function (event, compositiondata) {
             if (!compositiondata || !compositiondata.hasOwnProperty($scope.relationship)) {
@@ -617,7 +617,7 @@
             $scope.collapseAll();
         };
 
-        var doToggle = function (id, item, originalListItem, forcedState) {
+        $scope.doToggle = function (id, item, originalListItem, forcedState) {
             if ($scope.clonedData[id] == undefined) {
                 $scope.clonedData[id] = {};
                 $scope.clonedData[id].data = formatService.doContentStringConversion(jQuery.extend(true, {}, item));
@@ -740,7 +740,7 @@
             var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
             if (!needServerFetching || $scope.isBatch()) {
                 //batches should always pick details locally, therefore make sure to adjust extraprojectionfields on list schema
-                doToggle(compositionId, item, item);
+                $scope.doToggle(compositionId, item, item);
                 return;
             }
 
@@ -751,27 +751,14 @@
                 return;
             }
 
-            var compositiondetailschema = $scope.compositiondetailschema;
-            var applicationName = compositiondetailschema.applicationName;
-            var parameters = {};
-            var request = {};
-            var key = {};
-            parameters.request = request;
-            request.id = compositionId;
-            request.key = key;
-            key.schemaId = compositiondetailschema.schemaId;
-            key.mode = compositiondetailschema.mode;
-            key.platform = "web";
-            var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
-            $http.get(urlToCall).success(
-                function (result) {
-                    doToggle(compositionId, result.resultObject.fields, item);
-                    //this timeout is here to avoid a strange exception exception: digest alredy in place
-                    //TODO: investigate further
-                    $timeout(function () {
-                        $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
-                    }, 0, false);
-                });
+            compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
+                $scope.doToggle(compositionId, result.resultObject.fields, item);
+                $timeout(function () {
+                    $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
+                }, 0, false);
+            });
+
+
         };
 
 
@@ -1069,7 +1056,7 @@
                 $.each(result.resultObject[$scope.relationship], function (key, value) {
                     //TODO: This function is not utilizing the needServerFetching optimization as found in the toggleDetails function
                     var itemId = value[$scope.compositiondetailschema.idFieldName];
-                    doToggle(itemId, value, compositionListData[itemId], true);
+                    $scope.doToggle(itemId, value, compositionListData[itemId], true);
                 });
                 $scope.wasExpandedBefore = true;
             });
@@ -1107,7 +1094,7 @@
             }
 
             var fields = $scope.parentdata.fields || $scope.parentdata;
-
+            crudContextHolderService.clearDetailDataResolved();
             return compositionService
                 .getCompositionList($scope.relationship, $scope.parentschema, fields, pageNumber, $scope.paginationData.pageSize)
                 .then(function (result) {
@@ -1122,6 +1109,8 @@
                     $scope.paginationData = compositionData.paginationData;
 
                     init(previousData, true);
+                }).finally(function () {
+                    crudContextHolderService.setDetailDataResolved();
                 });
         };
 

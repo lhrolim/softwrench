@@ -17,10 +17,12 @@
                 title: '@'
             },
 
-            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "controllerInheritanceService", "fieldService", "$timeout", "richTextService",
-                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, controllerInheritanceService, fieldService, $timeout, richTextService) {
+            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "controllerInheritanceService", "fieldService", "$timeout", "richTextService", "$q", "compositionService",
+                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, controllerInheritanceService, fieldService, $timeout, richTextService, $q, compositionService) {
 
                     var log = $log.getInstance('sw4.composition.master/detail');
+
+                    var masterMap = {};
 
                     $scope.compositionlistschema = $scope.compositionschemadefinition.schemas.list;
                     $scope.compositiondetailschema = $scope.compositionschemadefinition.schemas.detail;
@@ -29,31 +31,41 @@
                         return i18NService.getI18nInputLabel(fieldMetadata, $scope.compositiondetailschema);
                     };
 
-                    $scope.displayDetails = function (entry) {
+                    function onDetailDataResolved(selectedEntry, resolvedDetailData) {
                         //close the current record
-                        $scope.getDetailDatamap.open = false;
-
-                        //update the first message if another message is viewed
-                        if (!$scope.getDetailDatamap.read) {
-                            $scope.onViewDetail($scope.getDetailDatamap);
+                        if ($scope.getDetailDatamap) {
+                            var currentMaster = $scope.getMaster($scope.getDetailDatamap);
+                            currentMaster.open = false;
+                            //update the first message if another message is viewed
+                            if (!$scope.getDetailDatamap.read) {
+                                $scope.onViewDetail($scope.getDetailDatamap);
+                            }
                         }
 
                         //display the selected details
-                        $scope.getDetailDatamap = entry;
-                        entry.open = true;
+                        $scope.getDetailDatamap = resolvedDetailData;
+                        $scope.getMaster(selectedEntry).open = true;
 
-                        if (!entry.read) {
-                            $scope.onViewDetail(entry);
+                        if (!selectedEntry.read) {
+                            $scope.onViewDetail(selectedEntry);
                         }
 
-                        // scroll to the detail:
-                        $(document.body).animate({ scrollTop: 0 });
+                        return $scope.getDetailDatamap;
+                    }
 
-                        log.debug('$scope.displayDetails', entry);
+                    $scope.displayDetails = function (entry) {
+                        var compositionId = schemaService.getId(entry, $scope.compositionlistschema);
+                        // hit cache first
+                        if ($scope.detailData && $scope.detailData[compositionId]) {
+                            return $q.when(onDetailDataResolved(entry, $scope.detailData[compositionId].data));
+                        }
 
-                        $timeout(function () {
-                            $(window).resize();
-                        }, false);
+                        // hit server
+                        return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema)
+                            .then(function(result) {
+                                $scope.doToggle(compositionId, result.resultObject.fields, entry);
+                                return onDetailDataResolved(entry, $scope.detailData[compositionId].data);
+                            });
                     };
 
                     $scope.getDetailDisplayables = function () {
@@ -107,6 +119,11 @@
                         return i18NService.get18nValue(key, defaultValue, paramArray);
                     };
 
+                    $scope.getMaster = function(entry) {
+                        var id = schemaService.getId(entry, $scope.compositionlistschema);
+                        return masterMap[id];
+                    }
+
                     $scope.mapMaster = function (compositiondata, schema) {
                         if (!compositiondata) return;
 
@@ -134,21 +151,23 @@
                             });
 
                             //add the master info
-                            entry.master = master;
+                            var id = schemaService.getId(entry, $scope.compositionlistschema);
+                            masterMap[id] = master;
                         });
                     };
 
                     $scope.onViewDetail = function (entry) {
                         log.debug('mark as read', entry);
 
+                        var master = $scope.getMaster(entry);
                         //remove the read icon
-                        angular.forEach(entry.master.icons, function (icon, index) {
+                        angular.forEach(master.icons, function (icon, index) {
                             if (icon.indexOf("read") >= 0) {
-                                entry.master.icons[index] = "";
+                                master.icons[index] = "";
                             }
                         });
 
-                        //update the read flag on the server
+                        // update the read flag on the server
                         var parameters = {};
                         parameters.compositionItemId = entry.commloguid;
                         parameters.compositionItemData = entry;
@@ -160,18 +179,11 @@
                     };
 
                     $scope.showDetailField = function (fieldMetadata) {
-                        if ($scope.getDetailDatamap == undefined) {
-                            return;
-                        }
-
-                        //don't show if hidden
-                        if (fieldMetadata.isHidden) {
-                            return false;
-                        }
-
-                        //don't show if field is empty
-                        var dataValue = $scope.getDetailDatamap[fieldMetadata.attribute];
-                        return !!dataValue;
+                        return !!$scope.getDetailDatamap
+                            && !fieldMetadata.isHidden
+                            /* TODO: !!! remove this after adding CRUD_INPUT_FIELDS !!! */
+                            && !(fieldMetadata.rendererType && fieldMetadata.rendererType.endsWith("upload"))
+                            && !(fieldMetadata.rendererType && fieldMetadata.rendererType.endsWith("lookup"));
                     };
 
                     /* Directvie Methods */
@@ -217,15 +229,13 @@
 
                     //init directive
                     function prepareData() {
-                        //add master info to the record data
+                        // add master info to the record data
                         $scope.mapMaster($scope.compositiondata, $scope.getListSchema());
 
-                        //display the first record
-                        $scope.getDetailDatamap = $scope.compositiondata[0];
-
-                        if ($scope.getDetailDatamap) {
-                            //make sure the first record is marked as read
-                            $scope.displayDetails($scope.getDetailDatamap);
+                        // display the first record
+                        var entry = $scope.compositiondata[0];
+                        if (entry) {
+                            $scope.displayDetails(entry);
                         }
                     }
 
@@ -250,7 +260,12 @@
                             .overrides()
                             .scope($scope, "selectPage", prepareDataProxy)
                             .scope($scope, "onSaveError", prepareDataProxy)
-                            .scope($scope, "onAfterCompositionResolved", prepareDataProxy);
+                            .scope($scope, "onAfterCompositionResolved", prepareDataProxy)
+                            .scope($scope, "doToggle", function (original, params, context) {
+                                original.apply(context, params);
+                                // scroll to the detail:
+                                $(document.body).animate({ scrollTop: 0 });
+                            });
 
                         log.debug($scope, $scope.compositiondata);
                     }
