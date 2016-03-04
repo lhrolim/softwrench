@@ -12,12 +12,16 @@ using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using cts.commons.persistence.Event;
 using cts.commons.persistence.Util;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.app;
 using cts.commons.Util;
 using JetBrains.Annotations;
+using Microsoft.SqlServer.Server;
+using NHibernate.Linq;
+using NHibernate.Util;
 using FlushMode = NHibernate.FlushMode;
 
 namespace cts.commons.persistence {
@@ -102,16 +106,20 @@ namespace cts.commons.persistence {
             return query;
         }
 
+        private bool IsDb2() {
+            return _applicationConfiguration.IsDB2(GetDBType());
+        }
+
         private DBType GetDBType() {
             return IsMaximo() ? DBType.Maximo : DBType.Swdb;
         }
 
         private bool ShouldCustomPaginate(IPaginationData paginationData) {
-            return paginationData != null && _applicationConfiguration.IsDB2(GetDBType());
+            return paginationData != null && IsDb2();
         }
 
         private bool ShouldPaginate(IPaginationData paginationData) {
-            return paginationData != null && !_applicationConfiguration.IsDB2(GetDBType());
+            return paginationData != null && !IsDb2();
         }
 
         public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, IPaginationData paginationData = null, string queryAlias = null) {
@@ -121,6 +129,10 @@ namespace cts.commons.persistence {
                 queryst = NHibernatePaginationUtil.ApplyManualPaging(queryst, paginationData);
             }
             LogPaginationQuery(queryst, queryAlias, parameters);
+
+            if (IsDb2()) {
+                queryst = Db2Helper.FixNamedParameters(queryst, parameters);
+            }
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
 
@@ -183,7 +195,7 @@ namespace cts.commons.persistence {
         }
 
 
-        public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, IPaginationData paginationData = null, string queryAlias = null) {
+        public IList<dynamic> FindByNativeQuery(string queryst, ExpandoObject parameters, IPaginationData paginationData = null, string queryAlias = null) {
             var before = Stopwatch.StartNew();
             using (var session = GetSession()) {
                 using (session.BeginTransaction()) {
