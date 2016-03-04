@@ -52,7 +52,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
 
         [UsedImplicitly]
         public IEnumerable<IAssociationOption> GetTopLevelApplications(OptionFieldProviderParameters parameters) {
-            return MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null).Select(a => new AssociationOption(a.ApplicationName, a.ApplicationName));
+            return MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null).Select(a => new AssociationOption(a.ApplicationName, a.Title));
         }
 
 //        [UsedImplicitly]
