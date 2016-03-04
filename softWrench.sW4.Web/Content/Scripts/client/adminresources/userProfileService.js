@@ -384,7 +384,7 @@
             storeIfDiffers("allowUpdate", "#appallowupdate");
             storeIfDiffers("allowView", "#appallowview");
             storeIfDiffers("allowRemoval", "#appallowremoval");
-
+            transientAppData["hasCreationSchema"] = dm["hasCreationSchema"];
 
 
             if (!schema) {
