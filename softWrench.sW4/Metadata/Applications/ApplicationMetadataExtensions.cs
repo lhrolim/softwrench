@@ -84,7 +84,7 @@ namespace softWrench.sW4.Metadata.Applications {
             }
         }
 
-
+        [NotNull]
         public static IEnumerable<ApplicationSchemaDefinition> NonInternalSchemasByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName, ClientPlatform platform = ClientPlatform.Web) {
             var schemas = MetadataProvider.FetchNonInternalSchemas(platform, application.ApplicationName);
             if (stereotypeName == "detail") {

@@ -85,9 +85,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             Enum.TryParse(mode, true, out schemaMode);
             var completeApplicationMetadataDefinition = MetadataProvider.Application(application);
             var resultSchemas = DoGetSchemas(completeApplicationMetadataDefinition, schemaMode);
-            return resultSchemas == null ? null : resultSchemas.Select(s => new AssociationOption(s.SchemaId, s.Title));
+            //TODO: allow for mobile
+            return resultSchemas.Where(s => ClientPlatform.Mobile != s.Platform).Select(s => new AssociationOption(s.SchemaId, s.Title));
         }
 
+        [NotNull]
         private IEnumerable<ApplicationSchemaDefinition> DoGetSchemas(CompleteApplicationMetadataDefinition completeApplicationMetadataDefinition, SchemaPermissionMode schemaMode) {
             if (SchemaPermissionMode.View.Equals(schemaMode)) {
                 var outputSchemas = completeApplicationMetadataDefinition.Schemas().Values.Where(s => s.Mode == SchemaMode.output);
@@ -118,7 +120,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             Enum.TryParse(mode, true, out schemaMode);
             var completeApplicationMetadataDefinition = MetadataProvider.Application(application);
             ApplicationSchemaDefinition schema =
-                completeApplicationMetadataDefinition.Schema(new ApplicationMetadataSchemaKey(schemaId));
+                completeApplicationMetadataDefinition.Schema(new ApplicationMetadataSchemaKey(schemaId, SchemaMode.None, ClientPlatform.Web));
             var results = new List<PriorityBasedAssociationOption>();
             results.Add(new PriorityBasedAssociationOption("main", "Main", 0, new Dictionary<string, object> { { "type", "main" } }));
             results.AddRange(schema.Tabs().Select(c => new PriorityBasedAssociationOption(c.Attribute, c.Label, 1, new Dictionary<string, object> { { "type", c.Type } })));
