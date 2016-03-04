@@ -16,6 +16,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
         private const string CurrentModuleKey = "currentmodule";
         private const string CurrentMetadataKey = "currentmetadata";
         private const string CurrentMetadataParameterKey = "currentmetadataparameter";
+        private const string MockSecurity = "mocksecurity";
 
         public void OnActionExecuting(ActionExecutingContext actionContext) {
             if (!actionContext.HttpContext.User.Identity.IsAuthenticated) {
@@ -23,14 +24,19 @@ namespace softWrench.sW4.Web.SPF.Filters {
             }
             var currentModule = GetValue(actionContext, CurrentModuleKey);
             var currentMetadataId = GetValue(actionContext, CurrentMetadataKey);
+            var mockSecurity = "true"==GetValue(actionContext, MockSecurity);
             var currentMetadataParameter = GetValue(actionContext, CurrentMetadataParameterKey);
             ApplicationLookupContext appCtx = null;
             if (currentMetadataId != null) {
                 appCtx = new ApplicationLookupContext { MetadataId = currentMetadataId };
             }
             var instance = ContextLookuper.GetInstance();
-            instance.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx, MetadataParameters= PropertyUtil.ConvertToDictionary(currentMetadataParameter)},true);
-//            instance.RegisterHttpContext(actionContext.HttpContext.re);
+            instance.AddContext(new ContextHolder() {
+                Module = currentModule, ApplicationLookupContext = appCtx,
+                MetadataParameters = PropertyUtil.ConvertToDictionary(currentMetadataParameter),
+                MockSecurity = mockSecurity
+            }, true);
+            //            instance.RegisterHttpContext(actionContext.HttpContext.re);
         }
 
         private static string GetValue(ActionExecutingContext actionContext, string key) {

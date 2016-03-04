@@ -16,6 +16,8 @@ using System.Security.Principal;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
 
@@ -38,14 +40,14 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly UserPreferences _userPreferences;
         private readonly IList<Role> _roles;
         private readonly ICollection<UserProfile> _profiles;
+        private MergedUserProfile _mergedUserProfile;
         private readonly Iesi.Collections.Generic.ISet<PersonGroupAssociation> _personGroups;
         private readonly IList<DataConstraint> _dataConstraints;
-        private IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
+        internal IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
         private IDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>> _cachedBars = new ConcurrentDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>>();
         private IDictionary<string, object> _genericproperties = new Dictionary<string, object>();
 
-        private const string BlankUser = "menu is blank for user {0} review his security configuration";
-        private const string MenuNotFound = "menu not found for platform {0}. ";
+
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(InMemoryUserExtensions));
 
@@ -60,7 +62,7 @@ namespace softWrench.sW4.Metadata.Security {
             _dataConstraints = new List<DataConstraint>();
         }
 
-        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, GridPreferences gridPreferences, UserPreferences userPreferences, int? timezoneOffset) {
+        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, GridPreferences gridPreferences, UserPreferences userPreferences, int? timezoneOffset, MergedUserProfile mergedProfile) {
             DBUser = dbUser;
             _login = dbUser.UserName;
             SiteId = dbUser.Person.SiteId ?? dbUser.SiteId;
@@ -76,13 +78,12 @@ namespace softWrench.sW4.Metadata.Security {
             _timezoneOffset = timezoneOffset;
             _maximoPersonId = dbUser.MaximoPersonId;
             _personGroups = (dbUser.PersonGroups ?? new HashedSet<PersonGroupAssociation>());
+            _mergedUserProfile = mergedProfile;
             var userProfiles = initializedProfiles as UserProfile[] ?? initializedProfiles.ToArray();
             _profiles = userProfiles;
-            var roles = new List<Role>();
+            var roles = new List<Role>(mergedProfile.Roles);
             var dataConstraints = new List<DataConstraint>();
-            foreach (var profile in userProfiles) {
-                roles.AddRange(profile.Roles);
-            }
+
             if (dbUser.CustomRoles != null) {
                 foreach (var role in dbUser.CustomRoles) {
                     if (role.Exclusion) {
@@ -113,6 +114,7 @@ namespace softWrench.sW4.Metadata.Security {
             _gridPreferences = gridPreferences;
             _userPreferences = userPreferences;
             _signature = userPreferences != null ? userPreferences.Signature : "";
+            _mergedUserProfile = mergedProfile;
         }
 
         private InMemoryUser(string mock) : this() {
@@ -251,6 +253,18 @@ namespace softWrench.sW4.Metadata.Security {
             get; set;
         }
 
+        [JsonIgnore]
+        [NotNull]
+        //used for security mech
+        public MergedUserProfile MergedUserProfile {
+            get {
+                if (_mergedUserProfile == null) {
+                    _mergedUserProfile = new MergedUserProfile();
+                }
+                return _mergedUserProfile;
+            }
+        }
+
 
         public IList<DataConstraint> DataConstraints {
             get {
@@ -258,49 +272,6 @@ namespace softWrench.sW4.Metadata.Security {
             }
         }
 
-        public MenuDefinition Menu(ClientPlatform platform, out Boolean fromCache) {
-            if (_cachedMenu.ContainsKey(platform)) {
-                fromCache = true;
-                return _cachedMenu[platform];
-            }
-            fromCache = false;
-
-            var unsecureMenu = MetadataProvider.Menu(platform);
-            if (unsecureMenu == null) {
-                Log.Warn(String.Format(MenuNotFound, platform));
-                return null;
-            }
-
-            var secureLeafs = new List<MenuBaseDefinition>();
-            if (unsecureMenu.Leafs != null) {
-                foreach (var leaf in unsecureMenu.Leafs) {
-                    if (!Login.Equals("swadmin") && leaf.Role != null &&
-                        (Roles == null || leaf.IsRestrictedByRole(this))) {
-                        Log.DebugFormat("ignoring leaf {0} for user {1} due to absence of role {2}", leaf.Id, Login, leaf.Role);
-                        continue;
-                    }
-                    if (leaf is MenuContainerDefinition) {
-                        var secured = ((MenuContainerDefinition)leaf).Secure(this);
-                        if (secured != null) {
-                            secureLeafs.Add(secured);
-                        }
-                    } else {
-                        secureLeafs.Add(leaf);
-                    }
-                }
-            }
-            if (!secureLeafs.Any()) {
-                Log.Warn(String.Format(BlankUser, Login));
-            }
-            var menuDefinition = new MenuDefinition(secureLeafs, unsecureMenu.MainMenuDisplacement.ToString(), unsecureMenu.ItemindexId);
-            try {
-                _cachedMenu.Add(platform, menuDefinition);
-                // ReSharper disable once EmptyGeneralCatchClause
-            } catch {
-                //No op
-            }
-            return menuDefinition;
-        }
 
 
         [NotNull]
@@ -311,10 +282,14 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public bool IsInRole(string role) {
-            if (IsSwAdmin()) {
+            return IsInRolInternal(role);
+        }
+
+        public bool IsInRolInternal(string role, bool checkSwAdmin = true) {
+            if (checkSwAdmin && IsSwAdmin()) {
                 return true;
             }
-            if (String.IsNullOrEmpty(role)) {
+            if (string.IsNullOrEmpty(role)) {
                 return true;
             }
 
@@ -376,11 +351,11 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public bool IsSwAdmin() {
-            return Login.Equals("swadmin");
+            return Login.Equals("swadmin") || (IsInRolInternal(Role.SysAdmin, false) && IsInRolInternal(Role.ClientAdmin, false));
         }
 
-        public IDictionary<string, CommandBarDefinition> SecuredBars(ClientPlatform platform, IDictionary<string, CommandBarDefinition> commandBars) {
-            if (_cachedBars.ContainsKey(platform)) {
+        public IDictionary<string, CommandBarDefinition> SecuredBars(ClientPlatform platform, IDictionary<string, CommandBarDefinition> commandBars, ApplicationSchemaDefinition currentSchema = null) {
+            if (currentSchema == null && _cachedBars.ContainsKey(platform)) {
                 return _cachedBars[platform];
             }
             var commandBarDefinitions = ApplicationCommandUtils.SecuredBars(this, commandBars);
@@ -400,5 +375,7 @@ namespace softWrench.sW4.Metadata.Security {
             }
             return null;
         }
+
+
     }
 }

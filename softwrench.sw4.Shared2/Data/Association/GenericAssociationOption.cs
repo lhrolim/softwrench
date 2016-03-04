@@ -17,7 +17,7 @@ namespace softwrench.sw4.Shared2.Data.Association {
             Label = label;
         }
 
-        public int CompareTo(GenericAssociationOption other) {
+        public virtual int CompareTo(GenericAssociationOption other) {
             return System.String.Compare(Label, other.Label, System.StringComparison.Ordinal);
         }
 

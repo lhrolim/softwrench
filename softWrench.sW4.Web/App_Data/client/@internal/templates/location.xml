@@ -101,6 +101,9 @@
         </list>
         
         <schema id="locationdetail" title="Location Detail" stereotype="detail">
+          <properties>
+            <property key="detail.crawl.customparams" value="parentlocation_.systemid"/>
+          </properties>
           <field attribute="orgid" showexpression="false"/>
           <section orientation="horizontal">
             <field attribute="location" label="Location:" readonly="true"/>

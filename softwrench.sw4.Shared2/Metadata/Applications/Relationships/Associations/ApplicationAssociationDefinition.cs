@@ -47,10 +47,19 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
         [DefaultValue("false")]
-        public string RequiredExpression { get; set; }
+        public string RequiredExpression {
+            get; set;
+        }
 
         public string Qualifier {
             get; set;
+        }
+
+        public bool IsHidden {
+            get {
+                return false;
+            }
+            set { }
         }
 
         private ApplicationAssociationSchemaDefinition _applicationAssociationSchema;
@@ -337,12 +346,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public override string Role {
             get {
-                return From + "." + Target;
+                return Target;
             }
         }
 
         //exacttly as it comes from metadata parsing
-        public string OriginalLabelField { get; set; }
+        public string OriginalLabelField {
+            get; set;
+        }
 
         public void SetLazyRendererParametersResolver(Lazy<IDictionary<string, object>> resolver) {
             LazyRendererParametersResolver = resolver;

@@ -86,7 +86,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-        public bool IsHidden {
+        public override bool IsHidden {
             get; set;
         }
 

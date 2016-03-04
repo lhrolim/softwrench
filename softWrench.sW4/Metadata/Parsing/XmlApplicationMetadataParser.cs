@@ -54,6 +54,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             _commandBars = commandBars;
             _isSWDB = isSWDB;
             _isTemplateParsing = isTemplateParsing;
+            _xmlTemplateHandler = new XmlTemplateHandler(_isSWDB);
         }
 
 
@@ -101,11 +102,12 @@ namespace softWrench.sW4.Metadata.Parsing {
                 return null;
             }
 
-            var operation = renderer.Attribute(XmlMetadataSchema.FilterOperationType).Value;
+            var operation = renderer.AttributeValue(XmlMetadataSchema.FilterOperationType);
             var parameters = renderer.Attribute(XmlMetadataSchema.FilterAttributeParams).ValueOrDefault((string)null);
             var defaultValue = renderer.Attribute(XmlMetadataSchema.FilterAttributeDefault).ValueOrDefault((string)null);
+            var clientFunction = renderer.AttributeValue("clientfunction");
 
-            return new FieldFilter(operation, parameters, defaultValue, targetName);
+            return new FieldFilter(operation, parameters, defaultValue, targetName,clientFunction);
         }
 
         /// <summary>
@@ -214,7 +216,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private static ReferenceDisplayable ParseReference(XElement xElement) {
             var id = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableIdAttribute).Value;
-            var readOnly = xElement.Attribute(XmlMetadataSchema.FieldAttributeReadOnly).ValueOrDefault((bool?)null);
+            var readOnly = xElement.Attribute(XmlMetadataSchema.FieldAttributeReadOnly).ValueOrDefault((bool)false);
 
             return new ReferenceDisplayable {
                 Id = id,
@@ -222,7 +224,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 Label = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableLabelAttribute).ValueOrDefault((string)null),
                 Attribute = xElement.Attribute(XmlMetadataSchema.AttributeElement).ValueOrDefault((string)null),
                 PropertiesString = xElement.Attribute(XmlMetadataSchema.ApplicationPropertiesElement).ValueOrDefault((string)null),
-                ReadOnly = readOnly,
+                IsReadOnly = readOnly,
                 EnableExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute).ValueOrDefault((string)null)
             };
         }
@@ -750,6 +752,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private readonly IEnumerable<EntityMetadata> _entityMetadata;
         private readonly IDictionary<string, CommandBarDefinition> _commandBars;
+        private XmlTemplateHandler _xmlTemplateHandler;
 
         /// <summary>
         ///     Parses the XML document provided by the specified
@@ -771,7 +774,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
             var applications = enumerable.FirstOrDefault(f => f.IsNamed(XmlMetadataSchema.ApplicationsElement));
             var templates = enumerable.FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.TemplatesElement));
-            result.AddRange(XmlTemplateHandler.HandleTemplatesForApplications(templates, _entityMetadata, _commandBars, _isSWDB, alreadyParsedTemplates));
+            result.AddRange(_xmlTemplateHandler.HandleTemplatesForApplications(templates, _entityMetadata, _commandBars, _isSWDB, alreadyParsedTemplates));
 
 
             if (null == applications) {

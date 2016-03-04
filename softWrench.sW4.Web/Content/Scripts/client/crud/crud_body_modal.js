@@ -42,7 +42,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
         searchService, tabsService,
         fieldService, commandService, i18NService,
         submitService, redirectService,
-        associationService) {
+        associationService, gridSelectionService) {
         "ngInject";
 
         $scope.$name = "crudbodymodal";
@@ -77,6 +77,10 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             $scope.modalshown = true;
         });
 
+        $scope.$on("sw.crud.list.filter.modal.clear", function(event, args) {
+            gridSelectionService.clearSelection(null, null, modalService.panelid);
+        });
+
         $scope.showModal = function(modaldata) {
             var schema = modaldata.schema;
             var datamap = modaldata.datamap;
@@ -102,7 +106,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             $("#crudmodal").draggable();
             $rootScope.showingModal = true;
             //TODO: review this decision here it might not be suitable for all the scenarios
-            crudContextHolderService.modalLoaded();
+            crudContextHolderService.modalLoaded(datamapToUse);
 
             associationService.loadSchemaAssociations(datamapToUse, schema).then(function () {
                 if (modaldata.onloadfn) {
@@ -165,6 +169,6 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
     return directive;
 }
 
-angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', crudBodyModal]);
+angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', 'gridSelectionService', crudBodyModal]);
 
 })(angular);

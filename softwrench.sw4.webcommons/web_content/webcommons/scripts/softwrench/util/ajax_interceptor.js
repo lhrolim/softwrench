@@ -13,6 +13,7 @@ angular.module('sw_layout')
             config.headers['currentmetadata'] = config.headers['currentmetadata'] || contextService.retrieveFromContext('currentmetadata');
             config.headers['mockerror'] = sessionStorage['mockerror'];
             config.headers['mockmaximo'] = sessionStorage['mockmaximo'];
+            config.headers['mocksecurity'] = sessionStorage['mocksecurity'];
             config.headers['requesttime'] = new Date().getTime();
             config.headers['cachedschemas'] = schemaCacheService.getSchemaCacheKeys();
             var log = $log.getInstance('sw4.ajaxint#started');

@@ -99,6 +99,15 @@ namespace cts.commons.persistence {
             }
         }
 
+        public T EagerFindByPK<T>(Type type, object id) {
+            using (var session = GetSession()) {
+                using (session.BeginTransaction()) {
+                    var ob = session.Get(type, id);
+                    return (T)ob;
+                }
+            }
+        }
+
 
         public T FindSingleByQuery<T>(string queryst, params object[] parameters) {
             using (var session = GetSession()) {

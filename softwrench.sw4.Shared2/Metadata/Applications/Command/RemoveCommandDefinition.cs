@@ -29,6 +29,8 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             get; set;
         }
 
+        public string Label { get; set; }
+
         public ICommandDisplayable KeepingOriginalData(ICommandDisplayable originalCommand) {
             return this;
         }

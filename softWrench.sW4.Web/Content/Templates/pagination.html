@@ -16,7 +16,10 @@
         <div class="form-inline">
             <div class="form-group">
                 <label class="control-label">{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
-                <select class="form-control input-sm"
+                <label ng-if="paginationData.paginationOptions.length==1" class="control-label">{{paginationData.pageSize}}</label>
+                <select
+                        ng-if="paginationData.paginationOptions.length > 1"
+                        class="form-control input-sm"
                         id="pagesize"
                         ng-model="paginationData.pageSize"
                         ng-options="option as option for option in paginationData.paginationOptions"
@@ -25,4 +28,3 @@
         </div>
     </div>
 </div>
-

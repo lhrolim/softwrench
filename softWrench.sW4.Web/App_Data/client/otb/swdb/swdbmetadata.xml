@@ -2,7 +2,7 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
-    
+    <template path="@userprofile.xml"/>
   </templates>
   
   <entities>
@@ -315,5 +315,8 @@
         </schema>
       </schemas>
     </application>
+    
+    
+    
   </applications>
 </metadata>

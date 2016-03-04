@@ -32,8 +32,15 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }
             var application = ApplicationMetadata.FromSchema(schema);
             var associationOptions = (IEnumerable<IAssociationOption>)mi.Invoke(dataSet, new object[] { new OptionFieldProviderParameters { OriginalEntity = dataMap, ApplicationMetadata = application, OptionField = optionField } });
-            if (optionField.Sort) {
-                associationOptions = associationOptions.OrderBy(f => f.Label);
+            if (associationOptions!= null && optionField.Sort) {
+                var enumerable = associationOptions as IAssociationOption[] ?? associationOptions.ToArray();
+                if (enumerable.First() is PriorityBasedAssociationOption) {
+                    associationOptions = enumerable.OrderBy(f => ((PriorityBasedAssociationOption)f).Priority);
+                } else {
+                    associationOptions = enumerable.OrderBy(f => f.Label);
+                }
+
+
             }
             return associationOptions;
         }

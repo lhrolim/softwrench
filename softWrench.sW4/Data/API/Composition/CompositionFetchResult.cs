@@ -15,17 +15,29 @@ namespace softWrench.sW4.Data.API.Composition {
         /// and any new data to the parent entry shall be passed on a custom and controlled basis
         /// </summary>
         [JsonIgnore]
-        public AttributeHolder OriginalCruddata { get; set; }
+        public AttributeHolder OriginalCruddata {
+            get; set;
+        }
 
         /// <summary>
         /// Use this dictionary to fill any fields that should been modified on the parent datamap
         /// </summary>
-        public IDictionary<string, object> ParentModifiedFields { get; set; }
+        public IDictionary<string, object> ParentModifiedFields {
+            get; set;
+        }
 
         public CompositionFetchResult(IDictionary<string, EntityRepository.SearchEntityResult> compositions, AttributeHolder originalCruddata)
             : base(compositions) {
             OriginalCruddata = originalCruddata;
             ParentModifiedFields = new Dictionary<string, object>();
+        }
+
+
+        public static CompositionFetchResult SingleCompositionInstance(string compositionKey, EntityRepository.SearchEntityResult compositionData, AttributeHolder originalCruddata = null) {
+            var dict = new Dictionary<string, EntityRepository.SearchEntityResult>();
+            dict[compositionKey] = compositionData;
+            return new CompositionFetchResult(dict, originalCruddata);
+
         }
 
     }

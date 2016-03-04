@@ -197,7 +197,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public virtual ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
+            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema,user);
             DataMap dataMap;
             if (request.IsEditionRequest) {
                 dataMap = (DataMap)Engine().FindById(entityMetadata, id, request.UserIdSitetuple);
@@ -635,7 +635,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     tasks.Add(Task.Factory.NewThread(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
                         var data = _dynamicOptionFieldResolver.ResolveOptions(application.Schema, optionField, cruddata);
-                        resultObject.Add(optionField.AssociationKey, new LookupOptionsFetchResultDTO(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                        if (data != null) {
+                            resultObject.Add(optionField.AssociationKey, new LookupOptionsFetchResultDTO(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                        }
                     }, ctx));
                 } else {
                     var associationApplicationMetadata =

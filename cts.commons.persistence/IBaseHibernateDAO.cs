@@ -21,5 +21,6 @@ namespace cts.commons.persistence {
         T FindSingleByNativeQuery<T>(string queryst, params object[] parameters) where T : class;
 
         int CountByNativeQuery(string queryst, ExpandoObject parameters, string queryAlias = null);
+
     }
 }

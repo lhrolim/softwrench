@@ -381,7 +381,7 @@ app.directive('configAssociationListInputDatamap', function () {
                             displayables: $scope.displayables,
                             scope: $scope,
                             'continue': function () {
-                                fieldService.postFieldChange(field, $scope);
+                                fieldService.postFieldChange(field, $scope,oldValue,newValue);
                                 try {
                                     $scope.$digest();
                                 } catch (ex) {
@@ -422,8 +422,9 @@ app.directive('configAssociationListInputDatamap', function () {
                         log.debug("ignoring first value of field {0}".format(optionfield.associationKey));
                         continue;
                     }
+                    var shouldUseFirstOption = optionfield.providerAttribute == null || fieldService.isPropertyTrue(optionfield, "optionfield.forcefirstoption");
 
-                    if ($scope.datamap[optionfield.target] == null && optionfield.providerAttribute == null && optionfield.rendererType !== 'checkbox') {
+                    if ($scope.datamap[optionfield.target] == null && shouldUseFirstOption && optionfield.rendererType !== 'checkbox') {
                         var values = $scope.GetOptionFieldOptions(optionfield);
                         if (values != null && values.length > 0) {
                             $scope.datamap[optionfield.target] = values[0].value;
@@ -479,20 +480,7 @@ app.directive('configAssociationListInputDatamap', function () {
                 }
                 return lengthclass;
             };
-            $scope.GetAssociationOptions = function (fieldMetadata) {
-                if (fieldMetadata.type === "OptionField") {
-                    return $scope.GetOptionFieldOptions(fieldMetadata);
-                }
-                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
-            }
-            $scope.GetOptionFieldOptions = function (optionField) {
-                if (optionField.providerAttribute == null) {
-                    return optionField.options;
-                }
-                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData, $scope.panelid);
-            }
+         
             $scope.contextPath = function (path) {
                 return url(path);
             };

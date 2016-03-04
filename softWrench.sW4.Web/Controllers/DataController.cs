@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
 using softwrench.sW4.audit.Interfaces;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Web.Util;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -69,12 +70,22 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web, request.SchemaFieldsToDisplay);
 
+            var securityModeCheckResult = user.VerifySecurityMode(applicationMetadata, request);
+
+            if (securityModeCheckResult.Equals(InMemoryUserExtensions.SecurityModeCheckResult.Block)) {
+                throw new SecurityException("You do not have permission to access this application. Please contact your administrator");
+            }
+
 
             ContextLookuper.FillContext(request.Key);
             var response = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
+
             response.Mode = schemaMode.ToString().ToLower();
+            if (securityModeCheckResult.Equals(InMemoryUserExtensions.SecurityModeCheckResult.OutPut)) {
+                response.Mode = "output";
+            }
 
             return response;
         }
@@ -182,7 +193,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             if (!mockMaximo) {
                 maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
-                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation, operationDataRequest.Batch,new Tuple<string, string>(operationDataRequest.UserId,operationDataRequest.SiteId));
+                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation, operationDataRequest.Batch, new Tuple<string, string>(operationDataRequest.UserId, operationDataRequest.SiteId));
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
                 //mobile requests doesn´t have to handle success messages or redirections

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using softwrench.sw4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Util;
@@ -8,14 +9,21 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions {
 
-    public class ApplicationCompositionDefinition : ApplicationRelationshipDefinition, IDependableField {
+    public class ApplicationCompositionDefinition : ApplicationRelationshipDefinition, IDependableField, IPCLCloneable {
 
 
         private string _relationship;
-        public bool isHidden { get; set; }
-        [DefaultValue(true)] public bool isPrintEnabled { get; set; }
+        public bool isHidden {
+            get; set;
+        }
+        [DefaultValue(true)]
+        public bool isPrintEnabled {
+            get; set;
+        }
         private ApplicationCompositionSchema _schema;
-        public ApplicationHeader Header { get; set; }
+        public ApplicationHeader Header {
+            get; set;
+        }
 
         /// <summary>
         /// if this is true, then the composition is not really a relationship to another application, but rather one 
@@ -26,7 +34,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         /// The list and detail schemas shall point to the same application in that case.
         /// 
         /// </summary>
-        public Boolean IsSelfRelationship { get { return Relationship.StartsWith("#"); } }
+        public Boolean IsSelfRelationship {
+            get {
+                return Relationship.StartsWith("#");
+            }
+        }
 
         private Boolean _isCollection = false;
 
@@ -47,12 +59,16 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
                 _schema.DetailSchema = "";
             }
             _isCollection = schema is ApplicationCompositionCollectionSchema;
-            }
+        }
 
 
         public string Relationship {
-            get { return EntityUtil.GetRelationshipName(_relationship); }
-            set { _relationship = value; }
+            get {
+                return EntityUtil.GetRelationshipName(_relationship);
+            }
+            set {
+                _relationship = value;
+            }
         }
 
         public override string RendererType {
@@ -62,33 +78,69 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
         public override string Role {
-            get { return From + "." + Relationship; }
+            get {
+                return From + "." + Relationship;
+            }
         }
 
-        public override string Attribute { get { return _relationship; } set { } }
+        public override string Attribute {
+            get {
+                return _relationship;
+            }
+            set {
+            }
+        }
 
 
         public ApplicationCompositionSchema Schema {
-            get { return _schema; }
-            set { _schema = value; }
+            get {
+                return _schema;
+            }
+            set {
+                _schema = value;
+            }
         }
 
         public Boolean Inline {
-            get { return _schema.INLINE; }
+            get {
+                return _schema.INLINE;
+            }
         }
 
         public override string ToString() {
             return string.Format("From: {0}, To: {1} , Collection: {2}", From, EntityAssociation, Collection);
         }
 
-        public string TabId { get { return Relationship; } }
-
-        public ISet<string> DependantFields {
-            get { return _schema.DependantFields; }
+        public string TabId {
+            get {
+                return Relationship;
+            }
         }
 
-        public override bool Collection { get { return _isCollection; } }
+        public ISet<string> DependantFields {
+            get {
+                return _schema.DependantFields;
+            }
+        }
 
-        public string AssociationKey { get { return Relationship; } }
+        public override bool Collection {
+            get {
+                return _isCollection;
+            }
+        }
+
+        public string AssociationKey {
+            get {
+                return Relationship;
+            }
+        }
+
+
+        public object Clone() {
+            var cloned = new ApplicationCompositionDefinition(From, Relationship, Label, Schema, ShowExpression, ToolTip, isHidden, isPrintEnabled, Header);
+            cloned.SetLazyResolver(LazyEntityAssociation);
+            return cloned;
+
+        }
     }
 }

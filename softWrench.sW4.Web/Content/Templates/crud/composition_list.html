@@ -58,11 +58,8 @@
                     <!--Multiselect-->
                     <!-- TODO: Move style to css -->
                     <input type="checkbox"
-                           name="compositionlistschema.properties['list.selectionstyle']"
-                           value="{{option.value}}"
-                           ng-checked="isCheckboxSelected(option,column.associationKey)"
-                           ng-click="toggleCheckboxSelection(option,column.associationKey)"
-                           ng-true-value="1" ng-false-value="0">
+                           ng-model="compositionitem['_#selected']"
+                           ng-true-value="true" ng-false-value="false">
                 </td>
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                     <input type="radio" ng-model="compositionitem['#selected']" value="true" name="radio" ng-click="toggleDetails(compositionitem,column,'singleselection',$event,rowindex)">
@@ -71,7 +68,7 @@
                     ng-repeat="column in compositionlistschema.displayables"
                     ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,compositionitem)"
                     ng-click="toggleDetails(compositionitem,column,'row',$event,rowindex)"
-                   data-title="{{column.label}}">
+                    data-title="{{column.label}}">
                     <ng-switch on="column.type">
 
                         <div ng-switch-when="ApplicationAssociationDefinition">
@@ -81,11 +78,25 @@
                                                   datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
                                                   disabledassociations="disabledassociations" blockedassociations="blockedassociations"
                                                   mode="composition"
-                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}"
-                                                  />
+                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}" />
                                 </div>
                             </ng-switch>
                         </div>
+
+                        <div ng-switch-when="OptionField">
+                            <div ng-class="{'input-group': column.rendererParameters['prepend'] || column.rendererParameters['append'] }">
+                                <span class="input-group-addon" ng-if="column.rendererParameters['prepend']!=null">{{column.rendererParameters['prepend']}}</span>
+                                <select class="hidden-phone form-control combobox"
+                                        ng-model="compositionitem[column.target]"
+                                        number-to-string
+                                        ng-options="option.value as i18NOptionField(option,column,compositionlistschema) for option in GetAssociationOptions(column)"
+                                        data-field="{{fieldMetadata.associationKey}}">
+                                    <option value="" ng-if="false"></option>
+                                </select>
+                                <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
+                            </div>
+                        </div>
+
                         <div ng-switch-when="ApplicationSection">
                             <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%" />
                         </div>
@@ -185,7 +196,7 @@
                 </td>
             </tr>
         </tbody>
-        <tbody ng-show="isNoRecords">
+        <tbody ng-show="isNoRecords()">
             <tr>
                 <td colspan="100%">
                     <p class="no-results">
@@ -196,7 +207,7 @@
         </tbody>
     </table>
 
-    <div class="context clearfix" ng-if="showPagination">
+    <div class="context clearfix" ng-if="showPagination()">
         <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" />
     </div>
 
