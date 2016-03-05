@@ -64,7 +64,6 @@
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarWoValidationHelper.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\CustomizationContainer.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarAdvancedSearchDtoUtils.cs" />
-    <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarAdvancedSearchPcsHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarBaseLocationFinder.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\AdvancedSearchCustomization.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarAdvancedSearchHandler.cs" />
@@ -78,10 +77,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\firstsolar\htmls\advancedSearchPcsButtons.html" />
     <Content Include="web_content\firstsolar\scripts\aaa_firstsolarmodule.js" />
     <Content Include="web_content\firstsolar\scripts\advancedSearchService.js" />
     <Content Include="web_content\firstsolar\scripts\assetService.js" />
     <Content Include="web_content\firstsolar\scripts\batchWorkorderService.js" />
+    <Content Include="web_content\firstsolar\scripts\advancedSearchPcsButtons.js" />
     <Content Include="web_content\firstsolar\scripts\locationService.js" />
     <Content Include="web_content\firstsolar\scripts\location_filter.js" />
     <EmbeddedResource Include="metadata\firstsolar\deploy.xml" />
@@ -116,7 +117,6 @@
     <Folder Include="classes\com\cts\firstsolar\configuration\" />
     <Folder Include="classes\com\cts\firstsolar\connector\" />
     <Folder Include="classes\com\cts\firstsolar\migration\" />
-    <Folder Include="web_content\firstsolar\htmls\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">

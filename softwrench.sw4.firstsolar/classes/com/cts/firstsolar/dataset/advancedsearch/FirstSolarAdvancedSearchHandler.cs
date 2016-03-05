@@ -12,14 +12,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
         private static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarAdvancedSearchHandler));
 
         private const string FsLocSearchAttribute = "fslocationsearch";
-        private const string FsLocSearchPcsFormAttribute = "pcs_";
+        private const string FsLocSearchPcsAvailableAttribute = "fspcsavailable";
+        private const string FsLocSearchBlockAttribute = "fsblock";
+        private const string FsLocSearchPcsAttribute = "fspcs";
 
         private readonly FirstSolarBaseLocationFinder _baseLocationFinder;
-        private readonly FirstSolarAdvancedSearchPcsHandler _advancedSearchPcsHandler;
 
-        public FirstSolarAdvancedSearchHandler(FirstSolarBaseLocationFinder baseLocationFinder, FirstSolarAdvancedSearchPcsHandler advancedSearchPcsHandler) {
+        public FirstSolarAdvancedSearchHandler(FirstSolarBaseLocationFinder baseLocationFinder) {
             _baseLocationFinder = baseLocationFinder;
-            _advancedSearchPcsHandler = advancedSearchPcsHandler;
         }
 
         /// <summary>
@@ -35,7 +35,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
         public void AppendAdvancedSearchWhereClause(ApplicationMetadata application, PaginatedSearchRequestDto searchDto, string tableName) {
             var advancedSearchClause = new StringBuilder();
             searchDto.RemoveSearchParam(FsLocSearchAttribute);
-            searchDto.RemoveSearchParam(FsLocSearchPcsFormAttribute);
+            searchDto.RemoveSearchParam(FsLocSearchPcsAvailableAttribute);
+            searchDto.RemoveSearchParam(FsLocSearchBlockAttribute);
+            searchDto.RemoveSearchParam(FsLocSearchPcsAttribute);
 
             var facilityList = FirstSolarAdvancedSearchDtoUtils.GetFacilityList(searchDto);
             var includeSubloc = FirstSolarAdvancedSearchDtoUtils.GetIncludeSubLocations(searchDto);
@@ -51,10 +53,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             AppendWhereClause(advancedSearchClause, switchgearsClause);
 
             Log.Debug("Building pcs where clause");
-            var blockList = FirstSolarAdvancedSearchDtoUtils.GetBlocks(searchDto);
-            var pcsList = FirstSolarAdvancedSearchDtoUtils.GetPcsList(searchDto);
-            var baseLocations = _advancedSearchPcsHandler.GetBaseLocations(facilityList, blockList, pcsList);
-            var pcsLocationsClause = BuildAdvancedSearchWhereClause(baseLocations, tableName, includeSubloc);
+            var selectedPcsLocations = FirstSolarAdvancedSearchDtoUtils.GetSelectedPcsLocations(searchDto);
+            var pcsLocationsClause = BuildAdvancedSearchWhereClause(selectedPcsLocations, tableName, includeSubloc);
             AppendWhereClause(advancedSearchClause, pcsLocationsClause);
 
             FinishAdvancedSearch(advancedSearchClause.ToString(), searchDto, facilityList, tableName);
@@ -75,6 +75,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
         /// <returns>The list of switchgear locations.</returns>
         public List<Dictionary<string, string>> GetSwitchgearLocations(List<string> facilities) {
             var baseLikes = new List<string> { "-%-%-00" };
+            return _baseLocationFinder.FindBaseLocations(facilities, baseLikes);
+        }
+
+        /// <summary> 
+        /// </summary>
+        /// <param name="facilities">The list of selected facilities (right now one facility can represent a list).</param>
+        /// <returns>The list of pcs locations.</returns>
+        public List<Dictionary<string, string>> GetAvailablePcsLocations(List<string> facilities) {
+            var baseLikes = new List<string> { "-%-%-%-%" };
             return _baseLocationFinder.FindBaseLocations(facilities, baseLikes);
         }
 
@@ -105,7 +114,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             first = false;
             clause.Append(tableName).Append(".location = '").Append(baseLocation).Append("' ");
             if (includeSublocs) {
-                clause.Append(" OR ").Append(tableName).Append(".location LIKE '").Append(baseLocation).Append("-%' ");
+                clause.Append(" OR ").Append(tableName).Append(".location LIKE '").Append(baseLocation).Append("%' ");
             }
         }
 

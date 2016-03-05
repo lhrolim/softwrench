@@ -2,13 +2,16 @@
 (function (angular) {
     "use strict";
 
-    function advancedSearchService(restService, crudContextHolderService, crudSearchService, searchService, alertService, $log) {
+    function advancedSearchService(restService, crudContextHolderService, crudSearchService, searchService, $log) {
         var log = $log.getInstance("sw4.advancedSearchService");
 
         //#region Utils
-        var blockId = "fsblock";
-        var pcsId = "fspcs";
+        var searchPanelId = "search";
         var facilityId = "fsfacility";
+        var availablePcsId = "fspcsavailable";
+        var selectedPcsId = "fspcsselected";
+        var pcsFilterId = "fspcs";
+        var blockFilterId = "fsblock";
 
         var updateOptions = function(controllerMethod, parameters, associationKey) {
             var promise = restService.getPromise("FirstSolarAdvancedSearch", controllerMethod, parameters);
@@ -20,17 +23,42 @@
                         "label": dbData["description"] ? dbData["description"] : dbData["location"] + " - No Description"
                     }
                 });
-                crudContextHolderService.updateEagerAssociationOptions(associationKey, options, null, "search");
+                crudContextHolderService.updateEagerAssociationOptions(associationKey, options, null, searchPanelId);
             });
         }
 
-        var appendAlert = function (alert, fieldLabel, index) {
-            var innerAlert = alert;
-            if (innerAlert) {
-                innerAlert += ", ";
+        // filters pcs location by pcs
+        var filterByPcs = function (datamap, optionValue) {
+            var pcs = datamap[pcsFilterId];
+            if (!pcs) {
+                return true;
             }
-            innerAlert += "<b>" + fieldLabel + " (" + (index + 1) + ")</b> is required";
-            return innerAlert;
+
+            if (!optionValue) {
+                return false;
+            }
+
+            var tokens = optionValue.split("-");
+            return tokens[tokens.length - 1].contains(pcs);
+        }
+
+        // filters pcs location by block
+        var filterByBlock = function (datamap, optionValue) {
+            var block = datamap[blockFilterId];
+            if (!block) {
+                return true;
+            }
+
+            if (!optionValue) {
+                return false;
+            }
+
+            var dashNumber = (optionValue.match(/-/g) || []).length;
+            if (dashNumber === 4 || dashNumber === 3) {
+                return optionValue.split("-")[2].contains(block);
+            }
+
+            return true;
         }
         //#endregion
 
@@ -46,67 +74,103 @@
             updateOptions("GetLocationsOfInterest", parameters, "_FsLocationsOfInterest");
             log.debug("Updating switchgears for facilities: {0}".format(facilities));
             updateOptions("GetSwitchgearLocations", parameters, "_FsSwitchgearLocations");
+            log.debug("Updating available pcs locations for facilities: {0}".format(facilities));
+            updateOptions("GetAvailablePcsLocations", parameters, "_FsAvailablePcsLocations");
         }
 
         function search(schema, datamap) {
-            var pcsDataMap = datamap["#pcs_"];
-            if (!pcsDataMap) {
+            log.debug("search - Searching ...");
+            var selectedOptions = crudContextHolderService.fetchEagerAssociationOptions("_FsSelectedPcsLocations", null, searchPanelId) || [];
+            if (selectedOptions.length === 0) {
+                log.debug("search - No pcs options selected.");
                 crudSearchService.search(schema, datamap);
                 return;
             }
 
-            // gets the blocks and pcs from each row of composition
-            // and build an array of blocks and an array of pcs
-            // because the server is not ready to receive compositions as searchdata
-            // so thore arrays are added as two new fields on datamp
-            var blocks = [];
-            var pcss = [];
-            var alertMsg = "";
-            pcsDataMap.forEach(function (pcsDatamap, index) {
-                var block = pcsDatamap[blockId];
-                var pcs = pcsDatamap[pcsId];
-                if (!block && !pcs) {
-                    // if the full row is empty returns
+            // get all selected pcs options and adds to the datamap as a array of values
+            var selectedValues = [];
+            var eqOperator = searchService.getSearchOperationById("EQ");
+
+            selectedOptions.forEach(function(selectedOption) {
+                selectedValues.push(selectedOption.value);
+            });
+
+            var searchOperator = {}
+            searchOperator[selectedPcsId] = eqOperator;
+            datamap[selectedPcsId] = selectedValues;
+            crudSearchService.search(schema, datamap, searchOperator);
+        }
+
+        // adds pcs location options from available list to the selected one
+        function addPcsLocations(datamap) {
+            log.debug("addPcsLocations - Adding pcs location options from available list to the selected one.");
+            var availablePcsSelected = datamap[availablePcsId];
+            if (!availablePcsSelected || availablePcsSelected.length === 0) {
+                log.debug("addPcsLocations - No pcs locations selected.");
+                return;
+            }
+            var availableOptions = crudContextHolderService.fetchEagerAssociationOptions("_FsAvailablePcsLocations", null, searchPanelId);
+            var selectedOptions = crudContextHolderService.fetchEagerAssociationOptions("_FsSelectedPcsLocations", null, searchPanelId) || [];
+            
+            availablePcsSelected.forEach(function (selectedLocationValue) {
+                // if option already selected just continues.
+                var alreadySelectedOption = selectedOptions.find(function (option) { return option.value === selectedLocationValue });
+                if (alreadySelectedOption) {
                     return;
                 }
 
-                if (block && pcs) {
-                    // if the full row is filled the data is added to the arrays
-                    blocks.push(pcsDatamap[blockId]);
-                    pcss.push(pcsDatamap[pcsId]);
-                }
-
-                // otherwise a required allert is added
-                if (!block) {
-                    alertMsg = appendAlert(alertMsg, "Block", index);
-                }
-                if (!pcs) {
-                    alertMsg = appendAlert(alertMsg, "PCS", index);
-                }
+                // gets the available option and adds to the selected 
+                var selectedOption = availableOptions.find(function (option) { return option.value === selectedLocationValue });
+                selectedOptions.push(selectedOption);
             });
+            crudContextHolderService.updateEagerAssociationOptions("_FsSelectedPcsLocations", selectedOptions, null, searchPanelId);
+        }
 
-            // if alert message is not empty some pcs or blocks are missing - no search is done
-            if (alertMsg) {
-                alertService.notifymessage("error", alertMsg);
+        // removes pcs locations from the selected list
+        function removePcsLocations(datamap) {
+            log.debug("removePcsLocations - Removing pcs location options from selected list.");
+            var selectedPcsSelected = datamap[selectedPcsId];
+            if (!selectedPcsSelected || selectedPcsSelected.length === 0) {
+                log.debug("removePcsLocations - No pcs locations selected.");
                 return;
             }
+            var selectedOptions = crudContextHolderService.fetchEagerAssociationOptions("_FsSelectedPcsLocations", null, searchPanelId) || [];
 
-            // add the arrays to  the datamap and do the search
-            var searchOperator = {}
-            var eqOperator = searchService.getSearchOperationById("EQ");
-            searchOperator[blockId] = eqOperator;
-            searchOperator[pcsId] = eqOperator;
-            datamap[blockId] = blocks;
-            datamap[pcsId] = pcss;
+            selectedPcsSelected.forEach(function (selectedPcsValue) {
+                selectedOptions.forEach(function(selectedPcsOption, index, array) {
+                    if (selectedPcsOption.value === selectedPcsValue) {
+                        array.splice(index, 1);
+                    }
+                });
+            });
+            crudContextHolderService.updateEagerAssociationOptions("_FsSelectedPcsLocations", selectedOptions, null, searchPanelId);
+        }
 
-            crudSearchService.search(schema, datamap, searchOperator);
+        // clears the pcs locations options selected list
+        function clearPcsLocations() {
+            log.debug("clearPcsLocations - Clearing selected pcs location options from selected list.");
+            crudContextHolderService.updateEagerAssociationOptions("_FsSelectedPcsLocations", [], null, searchPanelId);
+        }
+
+        function filterAvailablePcsLocations(option) {
+            log.debug("filterAvailablePcsLocations - Filtering: {0}".format(option.value));
+            var datamap = crudContextHolderService.rootDataMap(searchPanelId);
+            var pcsOk = filterByPcs(datamap, option.value);
+            var blockOk = filterByBlock(datamap, option.value);
+            var isOk = pcsOk && blockOk;
+            log.debug("filterAvailablePcsLocations - {0} filter result is {1}".format(option.value, isOk));
+            return isOk;
         }
         //#endregion
 
         //#region Service Instance
         var service = {
             facilitySelected: facilitySelected,
-            search: search
+            search: search,
+            addPcsLocations: addPcsLocations,
+            removePcsLocations: removePcsLocations,
+            clearPcsLocations: clearPcsLocations,
+            filterAvailablePcsLocations: filterAvailablePcsLocations
         };
         return service;
         //#endregion
@@ -114,7 +178,7 @@
 
     //#region Service registration
 
-    angular.module("firstsolar").clientfactory("advancedSearchService", ["restService", "crudContextHolderService", "crudSearchService", "searchService", "alertService", "$log", advancedSearchService]);
+    angular.module("sw_layout").factory("advancedSearchService", ["restService", "crudContextHolderService", "crudSearchService", "searchService", "$log", advancedSearchService]);
 
     //#endregion
 

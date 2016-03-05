@@ -12,8 +12,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
                 case 3:
                     return Switchgear(facility, baseLike);
                 default:
-                    var tokens = baseLike.Split('-');
-                    return Pcs(facility, baseLike, tokens[2], tokens[4]);
+                    return Pcs(facility, baseLike);
             }
         }
 
@@ -34,7 +33,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
         /// <summary>
         /// Builds the like clause of pcs locations.
         /// </summary>
-        protected virtual string Pcs(string facility, string baseLike, string block, string pcs) {
+        protected virtual string Pcs(string facility, string baseLike) {
             return facility + baseLike;
         }
 
