@@ -64,22 +64,29 @@ softwrench.directive('crudInputFields', ["$log", "fieldService", "crudContextSer
         },
 
         controller: ["$scope", function ($scope) {
-            $scope.getDisplayables = function() {
+
+            $scope.dateHandler = (function() {
+                function getMaxDateValue (field) {
+                    var rendererParameters = field.rendererParameters;
+                    return (rendererParameters.hasOwnProperty("allowfuture")
+                        && (rendererParameters.allowfuture === "false" || rendererParameters.allowfuture === false))
+                            ? new Date()
+                            : "";
+                }
+                function getMinDateValue(field) {
+                    return "";
+                }
+
+                return {
+                    getMaxDateValue: getMaxDateValue,
+                    getMinDateValue: getMinDateValue
+                };
+            })();
+
+            $scope.getDisplayables = function () {
                 return $scope.displayables;
             };
-
-            $scope.getMaxDateValue = function(field) {
-                var rendererParameters = field.rendererParameters;
-                return (rendererParameters.hasOwnProperty("allowfuture") 
-                    && (rendererParameters.allowfuture === "false" || rendererParameters.allowfuture === false)) 
-                        ? new Date().toISOString() 
-                        : "";
-            };
-
-            $scope.getMinDateValue = function(field) {
-                return "";
-            };
-
+           
         }]
     }
 }]);
