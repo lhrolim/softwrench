@@ -6,16 +6,12 @@
 
     <ion-nav-title>
         <div ng-show="!isSearching()">{{title()}}
-            
             <div class="buttons" style="position: absolute; right: 5px; top:5px" ng-show="isList()">
                 <button class="button icon ion-android-more-vertical" ng-click="showFilterOptions($event)"></button>
             </div>
         </div>
 
         <div class="bar bar-header item-input-inset" ng-show="isSearching() && isList()">
-            
-            
-
             <label class="item-input-wrapper">
                 <i class="icon ion-navicon ion-search placeholder-icon"></i>
                 <input type="search" class="ion-autocomplete-search" ng-model="searchQuery" ng-change="filter(this)" placeholder="Search" />
@@ -25,7 +21,6 @@
 
    
     <ion-nav-buttons side="right">
-
         <button class="button-icon ion-android-cancel" ng-show="isList() && isSearching()" ng-click="disableSearch()"></button>
         <!--this ng-show is needed due to a possible bug on ionic/ angular ui-router where the button shows on detail-->
         <button class="button-icon ion-search" ng-show="isList() && !isSearching()" ng-click="enableSearch()"></button>
@@ -36,7 +31,6 @@
         <ion-list class="has-header">
 
             <ion-item ng-repeat="item in list()" ng-class="{'pending': isPending(item),'missingsync': isDirty(item)  }" item="item">
-
 
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">
@@ -53,20 +47,16 @@
                     </div>
                 </div>
 
-
             </ion-item>
 
         </ion-list>
 
         <ion-infinite-scroll ng-if="moreItemsAvailable" on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>
 
-
-
     </ion-content>
 
     <button class="button button-float" ng-click="createItem()" ng-if="hasNewSchemaAvailable()">
         <i class="icon ion-plus"></i>
     </button>
-
 
 </ion-view>

@@ -1,4 +1,4 @@
-/// <binding BeforeBuild='copy, default' />
+/// <binding />
 module.exports = function (grunt) {
 
     // Project configuration.
