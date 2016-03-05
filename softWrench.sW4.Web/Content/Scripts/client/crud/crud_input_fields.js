@@ -338,9 +338,9 @@ app.directive('configAssociationListInputDatamap', function () {
             $scope.initCheckbox = function (fieldMetadata) {
                 var content = $scope.datamap[fieldMetadata.attribute];
                 if (content === "1" || content === "true" || content === true) {
-                    content = "true";
+                    content = true;
                 } else {
-                    content = "false";
+                    content = false;
                 }
                 $scope.datamap[fieldMetadata.attribute] = content;
             }

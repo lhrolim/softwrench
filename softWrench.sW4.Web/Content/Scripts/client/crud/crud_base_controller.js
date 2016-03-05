@@ -134,7 +134,7 @@ function BaseController($scope,$log, i18NService, fieldService, commandService, 
             return $scope.GetOptionFieldOptions(fieldMetadata);
         }
         var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-        var rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
+        var rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
         return applyFilter(fieldMetadata.filter, rawOptions);
     }
     $scope.GetOptionFieldOptions = function (optionField) {
@@ -142,7 +142,7 @@ function BaseController($scope,$log, i18NService, fieldService, commandService, 
             return applyFilter(optionField.filter, optionField.options);
         }
         var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-        var options = crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData);
+        var options = crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData, $scope.panelid);
         return applyFilter(optionField.filter, options);
     }
 
