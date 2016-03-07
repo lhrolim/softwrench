@@ -49,6 +49,7 @@
           </commandbars>
 
           <section orientation="horizontal">
+            <header displacement="ontop" label="General" params="fieldset=true" />
             <field label="Name" attribute="name" requiredexpression="true"/>
             <field label="Description" attribute="description" requiredexpression="true"/>
           </section>
@@ -60,39 +61,35 @@
 
           <!-- Application and basic setup  -->
           <section orientation="horizontal">
+            <header displacement="ontop" label="Application Settings" params="fieldset=true" />
             <optionfield attribute="application" providerattribute="topLevelApplications" label="Application">
               <event type="afterchange" service="userProfileService" method="onApplicationChange"/>
               <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>
             </optionfield>
-
             <field attribute="#appallowview" label="Read Only?" showexpression="@application!=null">
               <renderer type="checkbox" params="layout=left"/>
               <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
             </field>
 
-            <field attribute="#appallowcreation" label="Allow Creation?" showexpression="@application!=null &amp;&amp; @hasCreationSchema==true">
+            <field attribute="#appallowcreation" label="Create Records?" showexpression="@application!=null &amp;&amp; @hasCreationSchema==true">
               <renderer type="checkbox" params="layout=left"/>
               <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
             </field>
-            <field attribute="#appallowupdate" label="Allow Update?" showexpression="@application!=null">
+            <field attribute="#appallowupdate" label="Update Records?" showexpression="@application!=null">
               <renderer type="checkbox" params="layout=left"/>
               <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
             </field>
-
-
-
           </section>
 
-
-
           <section showexpression="@application!=null &amp;&amp; @anybasicpermission">
+            <header displacement="ontop" label="Mode Settings" params="fieldset=true" />
             <!-- Mode/Schema/Tab selection  -->
             <section orientation="horizontal">
               <optionfield label="Mode" attribute="selectedmode">
-                <option label="Grid" value="grid"/>
-                <option label="Creation" value="creation"/>
-                <option label="Update" value="update"/>
-                <option label="Details (Read Only)" value="view"/>
+                <option label="Grid View" value="grid"/>
+                <option label="Detail View" value="view"/>
+                <option label="Create Records" value="creation"/>
+                <option label="Update Records" value="update"/>
                 <renderer type="combo" params="optionfield.forcefirstoption=true"/>
                 <filter clientfunction ="userProfileService.filterAvailableModes" />
                 <event type="afterchange" service="userProfileService" method="afterModeChanged"/>
@@ -103,7 +100,7 @@
                 <event type="afterchange" service="userProfileService" method="afterSchemaChanged"/>
                 <event type="beforechange" service="userProfileService" method="beforeSchemaChange"/>
               </optionfield>
-              <optionfield label="Tab/Table" attribute="#selectedtab" providerattribute="selectableTabs" dependantfields="selectedmode,schema" showexpression="@showtabscombo">
+              <optionfield label="Tab" attribute="#selectedtab" providerattribute="selectableTabs" dependantfields="selectedmode,schema" showexpression="@showtabscombo">
                 <renderer type="combo" params="donotignoreeventsifhidden=true;optionfield.forcefirstoption=true"/>
                 <event type="providerloaded" service="userProfileService" method="afterTabsLoaded"/>
                 <event type="afterchange" service="userProfileService" method="tabvaluechanged"/>
@@ -113,27 +110,22 @@
 
             <!-- Composition selection  -->
             <section showexpression="@iscompositiontab" orientation="horizontal">
-
-
               <field attribute="#compallowview" label="Read Only?">
                 <renderer type="checkbox" params="layout=left"/>
                 <event type="afterchange" service="userProfileService" method="cmpRoleChanged"/>
               </field>
-
-              <field attribute="#compallowcreation" label="Allow Creation?">
+              <field attribute="#compallowcreation" label="Create Records?">
                 <renderer type="checkbox" params="layout=left"/>
                 <event type="afterchange" service="userProfileService" method="cmpRoleChanged"/>
               </field>
-              <field attribute="#compallowupdate" label="Allow Update?">
+              <field attribute="#compallowupdate" label="Update Records?">
                 <renderer type="checkbox" params="layout=left"/>
                 <event type="afterchange" service="userProfileService" method="cmpRoleChanged"/>
               </field>
-
-       
             </section>
 
             <!-- Fields and Action selection  -->
-            <section orientation="horizontal" showexpression="@schema!=null &amp;&amp; @#selectedtab!=null">
+            <section orientation="horizontal" showexpression="@schema!=null &amp;&amp; @#selectedtab=='main'">
 
               <composition detailschema="" fetchtype="lazy"  relationship="#fieldPermissions"  printschema="" inline="true">
                 <collectionproperties allowcreation="false" listschema="fieldRepresentation"/>
@@ -186,17 +178,15 @@
           <optionfield attribute="applications" providerattribute="topLevelApplications" label="Application">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
-
           <field attribute="allowview" label="Read Only?">
             <renderer type="checkbox" params="layout=left"/>
           </field>
-          <field attribute="allowcreation" label="Allow Creation?">
+          <field attribute="allowupdate" label="Update Records?">
             <renderer type="checkbox" params="layout=left"/>
           </field>
-          <field attribute="allowupdate" label="Allow Update?">
+          <field attribute="allowview" label="View Records?">
             <renderer type="checkbox" params="layout=left"/>
           </field>
-          
         </schema>
       </schemas>
 

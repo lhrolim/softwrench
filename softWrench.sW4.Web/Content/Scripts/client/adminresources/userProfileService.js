@@ -30,6 +30,7 @@
             var dm = parameters.fields;
             var options = parameters.options;
             dm["showtabscombo"] = options.length > 1;
+
             if (options.length === 1) {
                 simpleLog.debug("only one tab, selecting it by default");
                 dm["#selectedtab"] = options[0].value;
@@ -81,6 +82,9 @@
                 cleanUpCompositions(false);
                 mergeTransientIntoDatamap({ tab: tab });
             }
+
+            //resize/position elements
+            $(window).trigger("resize");
         }
 
         function afterModeChanged(parameters) {
