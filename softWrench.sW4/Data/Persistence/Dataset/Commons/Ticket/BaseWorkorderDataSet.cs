@@ -29,7 +29,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
         public SearchRequestDto FilterStatusCodes(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
+            var user = SecurityFacade.CurrentUser();
+            var onLaborerGroup = user.Profiles.Any(p => p.Name.EqualsIc("laborers"));
+
             filter.AppendWhereClauseFormat("( MAXVALUE != 'HISTEDIT' )");
+            if (onLaborerGroup) {
+                filter.AppendWhereClauseFormat("VALUE not in ('FIELD WORK COMP','Comp')");
+            }
+
             return filter;
         }
 
