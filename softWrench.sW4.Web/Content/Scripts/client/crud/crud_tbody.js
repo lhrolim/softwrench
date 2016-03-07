@@ -94,7 +94,7 @@
     window.parseBooleanValue = parseBooleanValue;
 
     app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
-    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService) {
+    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService, classificationColorService) {
         "ngInject";
 
         return {
@@ -113,6 +113,10 @@
                 scope.cursortype = function () {
                     var editDisabled = scope.schema.properties['list.disabledetails'];
                     return "true" !== editDisabled ? "pointer" : "default";
+                };
+
+                scope.classificationColor = function (classification, gridname) {
+                    return classificationColorService.getColor(classification, scope.schema.applicationName);
                 };
 
                 scope.statusColor = function (status, gridname) {
@@ -202,6 +206,12 @@
                     var cursortype = scope.cursortype();
                     var openCalendarTooltip = i18NService.get18nValue('calendar.date_tooltip', 'Open the calendar popup');
 
+                    //console.log(datamap);
+                    //if (column.rendererType === 'color') {
+                    //    var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
+                    //    html += "<div class='statuscolumncolor' style='background-color:{0}'>".format(color);
+                    //}
+
                     for (var i = 0; i < datamap.length; i++) {
                         var rowst = "datamap[{0}]".format(i);
 
@@ -210,7 +220,13 @@
                             rowClass = 'even';
                         }
 
-                        html += "<tr class='{0}' style='cursor: {1}' listtablerendered rel='hideRow'>".format(rowClass, cursortype);
+                        //console.log(datamap[i]);
+                        //classstructureid
+                        //var rowTextColor = scope.classificationColor(datamap[i].fields.classstructureid, schema.applicationName);
+                        var rowTextColor = scope.classificationColor(datamap[i].fields.classstructureid, schema.applicationName);
+                        //console.log(color);
+
+                        html += "<tr class='{0}' style='cursor: {1};color: {2}' listtablerendered rel='hideRow'>".format(rowClass, cursortype, rowTextColor);
                         needsWatchers = hasMultipleSelector;
 
                         html += "<td class='select-multiple' {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
@@ -221,6 +237,8 @@
                         html += '<td class="select-single" style="display:none">';
                         //TODO: to be implemented
                         html += '</td>';
+
+                        //console.log(datamap[i]);
 
                         var dm = datamap[i];
                         for (j = 0; j < schema.displayables.length; j++) {

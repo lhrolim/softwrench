@@ -165,6 +165,9 @@
           <field attribute="asset_.description" label="Asset">
             <renderer type="default" params="width=25%" />
           </field>
+          <field attribute="classstructureid" label="classstructureid" hidden="true">
+            <renderer type="default" />
+          </field>
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="width=15%;grid=workorder;column=status" />
           </field>

@@ -1,0 +1,10 @@
+﻿servicerequest: {
+    1333: #e59323,
+    wappr: #e59323,
+    close: #39b54a
+},
+workorder: {
+    new: #e59323,
+    wappr: #e59323,
+    close: #39b54a
+}

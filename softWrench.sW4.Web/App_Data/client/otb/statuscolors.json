@@ -9,7 +9,8 @@
     histedit: #39b54a,
     wmatl: #f65752,
     applm: #4488f2
-}, workorder: {
+},
+workorder: {
     new: #e59323,
     wappr: #e59323,
     close: #39b54a

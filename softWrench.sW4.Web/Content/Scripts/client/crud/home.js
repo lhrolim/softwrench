@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService, redirectService) {
+    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService) {
 
     $scope.$name = 'HomeController';
 
@@ -16,6 +16,9 @@ function HomeController($scope, $http, $templateCache, $rootScope, $timeout, con
         i18NService.load(homeModel.I18NJsons, userLanguage);
         statuscolorService.load(homeModel.StatusColorJson);
 
+        //console.log(homeModel.ClassificationColorJson);
+        //console.log(classificationColorService.getColor('null', 'sr'));
+        classificationColorService.load(homeModel.ClassificationColorJson);
 
         $scope.$emit("sw_loadmenu", menuModel);
 
@@ -68,7 +71,7 @@ function HomeController($scope, $http, $templateCache, $rootScope, $timeout, con
     initController();
 }
 
-app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", HomeController]);
+    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", HomeController]);
 window.HomeController = HomeController;
 
 })(angular);
