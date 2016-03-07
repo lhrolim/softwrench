@@ -28,13 +28,12 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var compositeWhereBuilder = GetCompositeBuilder(entityMetadata, queryParameter);
             var cacheKey = GetCacheKey(queryParameter, queryMode);
             if (!entityMetadata.QueryStringCache.TryGetValue(cacheKey, out queryString) || !queryParameter.Cacheable()) {
-                queryString = DoBuildQueryString(entityMetadata, queryParameter, queryMode, compositeWhereBuilder,
-                    cacheKey);
+                queryString = DoBuildQueryString(entityMetadata, queryParameter, queryMode, compositeWhereBuilder, cacheKey);
             } else {
                 //where clauses should always be rebuild independent of cache, due to context variation, like modules, profiles, etc...
                 var whereBuilder = SimpleInjectorGenericFactory.Instance.GetObject<DataConstraintsWhereBuilder>(typeof(DataConstraintsWhereBuilder));
                 var whereConstraint = whereBuilder.BuildWhereClause(entityMetadata.Name, queryParameter.SearchDTO);
-                queryString = String.Format(queryString, whereConstraint);
+                queryString = string.Format(queryString, whereConstraint);
             }
             if (entityMetadata.HasUnion()) {
                 return HandleUnion(entityMetadata as SlicedEntityMetadata, queryParameter, queryString, queryMode, compositeWhereBuilder.GetParameters());

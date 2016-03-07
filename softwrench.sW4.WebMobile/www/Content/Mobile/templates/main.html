@@ -25,7 +25,29 @@
                 <div class="item item-divider icon ion-android-apps">
                     Applications
                 </div>
-                <a class="item icon {{leaf.icon}}" ng-repeat="leaf in menuleafs()" ng-click="loadApplication(leaf)">&nbsp;{{leaf.title}}</a>
+
+                <!-- apps -->
+                <ng-switch ng-repeat="leaf in menuleafs()" on="leaf.type">
+                    <!-- container -->
+                    <div ng-switch-when="MenuContainerDefinition" ng-init="collapsed = true" ng-click="collapsed = !collapsed">
+                        <div class="item item-divider icon" ng-class="{ 'ion-arrow-down-b': collapsed, 'ion-arrow-up-b': !collapsed }">
+                            &nbsp;{{leaf.title}}
+                        </div>
+                        <div ng-show="!collapsed">
+                            <!-- container's subitems -->
+                            <a ng-repeat="subleaf in leaf.leafs"
+                               ng-click="loadApplication(subleaf)" 
+                               class="item icon {{subleaf.icon}}">
+                                &nbsp;{{subleaf.title}}
+                            </a>
+                        </div>
+                    </div>
+                    <!-- exploded items -->
+                    <a ng-switch-default class="item icon {{leaf.icon}}" ng-click="loadApplication(leaf)">
+                        &nbsp;{{leaf.title}}
+                    </a>
+                </ng-switch>
+                
 
                 <div class="item item-divider icon ion-android-archive">
                     Admin

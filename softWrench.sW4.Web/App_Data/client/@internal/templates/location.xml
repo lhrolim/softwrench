@@ -62,7 +62,7 @@
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="type"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
-        <list>
+        <list platform="web">
           <properties>
             <property key="list.click.schema" value="locationdetail"/>
             <property key="list.click.customparams" value="parentlocation_.systemid"/>
@@ -84,6 +84,22 @@
           <!--Child Locations-->
           <!--Open Work Orders-->
         </list>
+        
+        <list platform="mobile">
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="classstructure_.description" label="Class Structure"/>
+          <field attribute="assets" label="Assets"/>
+          <field attribute="type" label="Type"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="siteid" label="Site"/>
+          <field attribute="orgid" hidden="true"/>
+          <!-- TODO: support for field exclusion based on platform -->
+          <!--<field attribute="parentlocation_.parent" label="Parent Location"/>-->
+          <!--<field attribute="parentlocation_.systemid" label="System"/>-->
+          <!--<field attribute="children" label="Child Locations"/>-->
+        </list>
+        
         <schema id="locationdetail" title="Location Detail" stereotype="detail">
           <properties>
             <property key="detail.crawl.customparams" value="parentlocation_.systemid"/>

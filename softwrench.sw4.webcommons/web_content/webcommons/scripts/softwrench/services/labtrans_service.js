@@ -2,8 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('labtranService', ["$http", "contextService", "redirectService", "modalService", "restService", "searchService", "alertService", 
-        function ($http, contextService, redirectService, modalService, restService, searchService, alertService) {
+    .factory('labtranService', ["alertService", function (alertService) {
     
     return {
         afterlaborchange: function (event) {

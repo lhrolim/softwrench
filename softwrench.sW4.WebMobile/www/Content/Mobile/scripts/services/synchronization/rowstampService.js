@@ -27,15 +27,13 @@
                     }).then(function (queryResults) {
                         var rowstampMap = {};
                         if (shouldUseFullStrategy) {
-                            var resultItems = [];
-                            for (var i = 0; i < queryResults.length; i++) {
-                                var item = queryResults[i];
-                                var rowstampItem = {
+                            var resultItems = queryResults.map(function(item) {
+                                return {
                                     id: item.remoteId,
                                     rowstamp: item.rowstamp
                                 }
-                                resultItems.push(rowstampItem);
-                            }
+                            });
+                            
                             rowstampMap.items = resultItems;
                             var end = new Date().getTime();
                             log.debug("generated rowstampmap for application {0} with {1} entries. Ellapsed {2} ms".format(application, resultItems.length, (end - start)));

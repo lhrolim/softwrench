@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="vertical" indexitem="WO">
-  <!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
-  <application id="WO" title="Work Order" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid" icon="ion-ios-gear"/>
+  <application id="WO" title="Work Order" ref="workorder" schema="list" icon="ion-gear-b"/>
+
+  <container title="Inventory" id="Inventory" role="inventory">
+    <application id="IN" icon="ion-cube" title="Inventory" ref="invbalances" schema="invbalancesList" />
+    <!--<application id="IRG" icon="ion-arrow-swap" title="Issues and Returns" ref="invissue" schema="invIssueList" />-->
+    <!--<application id="ITG" icon="ion-arrow-right-c" title="Inventory Transfer" ref="matrectransTransfers" schema="matrectransTransfersList" />-->
+    <application id="PC" icon="ion-filing" title="Physical Count" ref="physicalcount" schema="physicalcountList" />
+  </container>
+
 </Menu>

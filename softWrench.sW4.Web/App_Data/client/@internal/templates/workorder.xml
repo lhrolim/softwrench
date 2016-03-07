@@ -543,7 +543,7 @@
 
         <schema id="newdetail" platform="mobile" stereotype="detailnew">
           <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
-          <field attribute="wopriority" label="Priority" requiredexpression="true" default="1" >
+          <field attribute="wopriority" label="Priority">
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             <number decimals="0" min="0" max="999" />
           </field>
@@ -557,9 +557,9 @@
           <composition relationship="labtrans" label="Labor">
             <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
           </composition>
-          <composition relationship="attachment" label="Attachments" />
+          <!--<composition relationship="attachment" label="Attachments" />-->
           <field attribute="description" label="Description"  />
-          <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
+          <field label="Details" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
 
@@ -584,12 +584,10 @@
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>
 
-          <field attribute="wopriority" label="Priority" requiredexpression="true" default="1" >
-
+          <field attribute="wopriority" label="Priority">
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             <number decimals="0" min="0" max="999" />
           </field>
-
 
           <association label="Location" target="location" labelfield="location.description" />
 
@@ -602,11 +600,11 @@
           <composition relationship="labtrans" label="Labor">
             <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
           </composition>
-          <composition relationship="attachment" label="Attachments">
+          <!--<composition relationship="attachment" label="Attachments">
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-          </composition>
+          </composition>-->
           <field attribute="description" label="Description"  />
-          <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
+          <field label="Details" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
         </detail>

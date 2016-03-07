@@ -53,8 +53,7 @@ namespace softwrench.sw4.offlineserver.services {
 
         public AssociationSynchronizationResultDto GetAssociationData(InMemoryUser currentUser, JObject rowstampMap, string applicationToFetch = null) {
             var watch = Stopwatch.StartNew();
-            IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch =
-                new List<CompleteApplicationMetadataDefinition>();
+            IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch;
             if (applicationToFetch == null) {
                 //let´s bring all the associations
                 applicationsToFetch = OffLineMetadataProvider.FetchAssociationApps(currentUser);

@@ -14,12 +14,12 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.4.5",
-    "angular-animate": "~1.4.5",
-    "angular-sanitize": "~1.4.3",
+    "angular": "^1.5.0",
+    "angular-animate": "^1.5.0",
+    "angular-sanitize": "^1.5.0",
     "angular-ui-router": "~0.2.13",
     "ion-autocomplete": "~0.2.3",
-    "ionic": "~1.1.0",
+    "ionic": "1.1.1",
     "jquery": "~2.1.3",
     "moment": "~2.8.1",
     "ngCordova": "~0.1.20-alpha",
@@ -28,7 +28,8 @@
   },
   "resolutions": {
     "angular": ">= 1.4.5",
-    "angular-animate": "~1.4.5"
+    "angular-animate": "^1.5.0",
+    "angular-sanitize": "^1.5.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.5"

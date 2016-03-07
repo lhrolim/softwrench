@@ -136,6 +136,9 @@
       <HintPath>..\packages\WcfSamples.DynamicProxy.1.0.0.0\lib\net45\WcfSamples.DynamicProxy.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WebGrease">
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="XDesigner.RTF">
       <HintPath>Dependencies\XDesigner.RTF.dll</HintPath>

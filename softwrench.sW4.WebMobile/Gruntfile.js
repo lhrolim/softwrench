@@ -1,3 +1,4 @@
+/// <binding />
 module.exports = function (grunt) {
 
     // Project configuration.
@@ -48,6 +49,7 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/storage/localstorageservice.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/data/datamapSanitize_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/notificationService.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/physicalinventory_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"
     ];
@@ -379,7 +381,7 @@ module.exports = function (grunt) {
             build: {
                 // applies /overrides files
                 files: [
-                    { expand: true, src: ["**/*"], dest: "platforms/", cwd: "overrides/" }
+                    { expand: true, src: ["**/*", "!cordova.js"], dest: "platforms/", cwd: "overrides/" }
                 ]
             }
         },

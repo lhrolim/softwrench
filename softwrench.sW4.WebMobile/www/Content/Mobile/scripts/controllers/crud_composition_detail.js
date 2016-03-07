@@ -1,12 +1,12 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller('CrudCompositionDetailController', ["$log", "$scope", "$rootScope", "crudContextService", "fieldService", "offlineCompositionService", "offlineAssociationService",
-    function ($log, $scope, $rootScope, crudContextService, fieldService, offlineCompositionService, offlineAssociationService) {
+    softwrench.controller('CrudCompositionDetailController', ["$log", "$scope", "$rootScope", "crudContextService", "fieldService", "offlineCompositionService", "offlineAssociationService", "schemaService",
+    function ($log, $scope, $rootScope, crudContextService, fieldService, offlineCompositionService, offlineAssociationService, schemaService) {
 
         function init() {
             $scope.schema = crudContextService.getCompositionDetailSchema();
-            $scope.displayables = $scope.schema.displayables;
+            $scope.displayables =  schemaService.allDisplayables($scope.schema);
             $scope.datamap = crudContextService.getCompositionDetailItem();
             $scope.allowsUpdate = offlineCompositionService.allowsUpdate(crudContextService.getCompositionDetailItem(), crudContextService.getCompositionListSchema());
         }
@@ -20,11 +20,11 @@
         }
 
         $scope.getAssociationLabelField = function (fieldMetadata) {
-            return 'datamap.' + fieldMetadata.labelFields[0];
+            return offlineAssociationService.fieldLabelExpression(fieldMetadata);
         }
 
         $scope.getAssociationValueField = function (fieldMetadata) {
-            return 'datamap.' + fieldMetadata.valueField;
+            return offlineAssociationService.fieldValueExpression(fieldMetadata);
         }
 
         $scope.visibleFields = function () {

@@ -37,7 +37,7 @@
 
     <ion-content has-header="true" has-subheader="true" on-swipe-left="onSwipeLeft()" on-swipe-right="onSwipeRight()">
         <div class="header-item h4" ng-click="loadMainTab()" style="padding-left: 10px">
-            {{detailSummary()}}
+            {{tabTitle() || detailSummary()}}
         </div>
         
 

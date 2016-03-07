@@ -1,7 +1,7 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    mobileServices.factory('menuModelService', ["$q", "swdbDAO", "$log", "offlineEntities", function ($q, swdbDAO, $log, offlineEntities) {
+    mobileServices.factory("menuModelService", ["swdbDAO", "$log", "offlineEntities", function (dao, $log, offlineEntities) {
 
         var initialMenuModel = {
             dbData: {},
@@ -19,36 +19,29 @@
             },
 
             updateMenu: function (serverMenu) {
-                var defer = $q.defer();
-
-                swdbDAO.instantiate("Menu", menuModel.dbData).then(function (menu) {
+                return dao.instantiate("Menu", menuModel.dbData).then(function (menu) {
                     menu.data = serverMenu;
-                    swdbDAO.save(menu).then(function (item) {
+                    return dao.save(menu).then(function (item) {
                         menuModel.dbData.data = serverMenu;
-                        menuModel.listItems = serverMenu.explodedLeafs;
-                        defer.resolve();
+                        menuModel.listItems = serverMenu.leafs;
+                        return item;
                     });
-
                 });
-
-                return defer.promise;
             },
 
             initAndCacheFromDB: function () {
                 var log = $log.getInstance("menuModelService#initAndCacheFromDB");
-                var defer = $q.defer();
-                swdbDAO.findUnique("Menu").then(function (menu) {
+                return dao.findUnique("Menu").then(function (menu) {
+                    menuModel.dbData = menu;
                     if (!menu) {
                         menu = new entities.Menu();
-                        swdbDAO.save(menu);
-                        log.info('creating first menu');
+                        log.info("creating first menu");
+                        return dao.save(menu);
                     } else if (menu.data) {
-                        menuModel.listItems = menu.data.explodedLeafs;
+                        menuModel.listItems = menu.data.leafs;
                     }
-                    menuModel.dbData = menu;
-                    defer.resolve();
+                    return menu;
                 });
-                return defer.promise;
             },
 
             reset: function () {

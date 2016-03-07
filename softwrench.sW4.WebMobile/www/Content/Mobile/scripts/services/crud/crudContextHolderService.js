@@ -121,7 +121,6 @@
         }
 
         function currentSchema() {
-            var result = [];
             var listSchema = _crudContext.currentListSchema;
             var detailSchema = _crudContext.currentDetailSchema;
             if (!listSchema) {

@@ -371,5 +371,25 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             cloned.SetLazyRendererParametersResolver(LazyRendererParametersResolver);
             return cloned;
         }
+
+        protected bool Equals(ApplicationAssociationDefinition other) {
+            return string.Equals(Role, other.Role) && string.Equals(AssociationKey, other.AssociationKey);
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((ApplicationAssociationDefinition)obj);
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ (Role != null ? Role.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (AssociationKey != null ? AssociationKey.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
 }

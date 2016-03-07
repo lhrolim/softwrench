@@ -1,9 +1,9 @@
-﻿<div ng-repeat="it in displayables" ng-show="!isFieldHidden(it)" class="crud-fields-wrapper">
+﻿<div ng-repeat="it in displayables" class="crud-fields-wrapper">
     <!-- group inputs 2-by-2 in landscape tablets: -->
     <!-- http://stackoverflow.com/questions/27239735/ionic-framwork-gridlayout-with-multiple-rows-and-column-on-which-buttons-placed -->
     <!-- http://stackoverflow.com/questions/23779773/angularjs-loops-and-formatting/27080632#27080632 -->
     <div ng-if="$index % 2 == 0" class="row responsive-lg row-wrap" ng-init="fieldIndex = $index">
-        <div ng-repeat="i in [0,1]" ng-if="(fieldIndex + i) < displayables.length" class="col-50" ng-init="field = displayables[fieldIndex+i]">
+        <div ng-repeat="i in [0,1]" ng-if="(fieldIndex + i) < displayables.length" class="col-50" ng-init="field = displayables[fieldIndex+i]" ng-show="!isFieldHidden(field)">
             
             <label class="item item-input">
                 <span ng-show="isFieldRequired(field.requiredExpression)" class="requiredfieldmark">* </span>
@@ -14,13 +14,14 @@
                                           component-id="{{field.associationKey}}"
                                           items-method="associationSearch(query,componentId)"
                                           item-value-key="{{getAssociationValueField(field)}}"
-                                          item-view-value-key="{{getAssociationLabelField(field)}}" association-description />
+                                          item-view-value-key="{{getAssociationLabelField(field)}}" 
+                                          association-description />
 
                     </div>
                     <div ng-switch-when="OptionField">
                         {{datamap[field.target]}}
                         <option-field header-text="{{field.label}}"
-                                      allow-empty='false'
+                                      allow-empty="false"
                                       value="datamap[field.target]"
                                       text="Choose"
                                       items="field.options" />
@@ -35,14 +36,22 @@
                                   maxlength="{{field.rendererParameters['maxlength']}}" ng-required="isFieldRequired(field.requiredExpression)"></textarea>
 
                         <input ng-switch-when="numericinput" type="number" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly"
-                               min="{{fieldMetadata.rendererParameters['min']}}"
-                               max="{{setMaxNumericInput(datamap,fieldMetadata)}}" ng-required="isFieldRequired(field.requiredExpression)" />
+                               min="{{field.rendererParameters['min']}}"
+                               max="{{setMaxNumericInput(datamap,field)}}" ng-required="isFieldRequired(field.requiredExpression)" />
 
-                        <input ng-switch-when="date" type="date" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" dateconverter />
+                        <input ng-switch-when="date" type="date" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" 
+                               dateconverter
+                               max="{{ dateHandler.getMaxDateValue(field) | date:'yyyy-MM-dd' }}"
+                               min="{{ dateHandler.getMinDateValue(field) | date:'yyyy-MM-dd' }}"
+                               />
 
                         <input ng-switch-when="time" type="time" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" dateconverter />
 
-                        <input ng-switch-when="datetime" type="datetime-local" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" dateconverter />
+                        <input ng-switch-when="datetime" type="datetime-local" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" 
+                               dateconverter 
+                               max="{{ dateHandler.getMaxDateValue(field) | date:'yyyy-MM-dd' }}"
+                               min="{{ dateHandler.getMinDateValue(field) | date:'yyyy-MM-dd' }}"
+                               />
 
                         <input ng-switch-default type="text" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" />
                     </div>

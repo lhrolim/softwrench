@@ -37,7 +37,7 @@
           <field attribute="itemnum" label="Item"/>
           <field attribute="description" label="Description"/>
         </schema>
-        <schema id="assetsparepartlist" stereotype="compositionlist" platform="web">
+        <schema id="assetsparepartlist" stereotype="compositionlist">
           <field attribute="itemnum" label="Item" readonly="true"/>
           <field attribute="item_.description" label="Description" readonly="true"/>
           <field attribute="quantity" label="Quantity" readonly="true"/>

@@ -78,12 +78,12 @@
          * @param {} path 
          * @returns {} 
          */
-        function locateJquerySectionElementByApp(schema,datamap, path) {
+        function locateJquerySectionElementByApp(schema, datamap, path) {
             
         }
 
         function nonTabFields(schema) {
-            return fieldService.nonTabFields(schema.displayables, true);
+            return flattenDisplayables(fieldService.nonTabFields(schema.displayables, true));
         };
 
         function hasAnyFieldOnMainTab(schema) {
@@ -191,16 +191,12 @@
                 return schema.jscache.editable;
             }
 
-            var displayables = schema.displayables;
-            for (var i = 0; i < displayables.length; i++) {
-                var dis = displayables[i];
-                if (fieldService.isPropertyTrue(dis, "editable")) {
-                    schema.jscache.editable = true;
-                    return true;
-                }
-            }
-            schema.jscache.editable = false;
-            return false;
+            var editable = allDisplayables(schema).some(function(displayable) {
+                return fieldService.isPropertyTrue(displayable, "editable");
+            }); 
+           
+            schema.jscache.editable = editable;
+            return editable;
         }
 
         /**
@@ -245,6 +241,29 @@
             return schemaA.applicationName === schemaB.applicationName && schemaA.schemaId === schemaB.schemaId;
         }
 
+        function flattenDisplayables(fields, context) {
+            if (!fields) return [];
+            context = context || [];
+            fields.forEach(function (f) {
+                if (angular.isArray(f.displayables)) {
+                    flattenDisplayables(f.displayables, context);
+                } else {
+                    context.push(f);
+                }
+            });
+            return context;
+        }
+
+        /**
+         * Returns all displayable fields in a single array i.e. expands all sections.
+         * 
+         * @param {} schema 
+         * @returns Array<FieldMetadata> 
+         */
+        function allDisplayables(schema) {
+            return flattenDisplayables(schema.displayables);
+        }
+
         return {
             buildApplicationKey: buildApplicationKey,
             buildApplicationMetadataSchemaKey: buildApplicationMetadataSchemaKey,
@@ -261,7 +280,8 @@
             isStereotype: isStereotype,
             isDetail: isDetail,
             isList: isList,
-            isSameSchema: isSameSchema
+            isSameSchema: isSameSchema,
+            allDisplayables: allDisplayables
         };
 
     }]);

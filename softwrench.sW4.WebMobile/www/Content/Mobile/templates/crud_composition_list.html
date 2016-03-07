@@ -5,7 +5,9 @@
             <div class="row" ng-click="loadCompositionDetail(item)">
                 <div class="col">
                     <ul>
-                        <li ng-repeat="field in visibleFields()">{{fieldLabel(item,field)}}</li>
+                        <li ng-repeat="field in visibleFields()" ng-init="value = fieldValue(item, field)" ng-show="!!value">
+                            {{field.label}} : {{value}}
+                        </li>
                     </ul>
                 </div>
             </div>
