@@ -11,30 +11,6 @@
             $scope.allowsUpdate = offlineCompositionService.allowsUpdate(crudContextService.getCompositionDetailItem(), crudContextService.getCompositionListSchema());
         }
 
-        $scope.fieldLabel = function (item, field) {
-            return field.label + ":" + item[field.attribute];
-        }
-
-        $scope.associationSearch = function (query, componentId) {
-            return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query);
-        }
-
-        $scope.getAssociationLabelField = function (fieldMetadata) {
-            return offlineAssociationService.fieldLabelExpression(fieldMetadata);
-        }
-
-        $scope.getAssociationValueField = function (fieldMetadata) {
-            return offlineAssociationService.fieldValueExpression(fieldMetadata);
-        }
-
-        $scope.visibleFields = function () {
-            var schema = crudContextService.compositionListSchema();
-            return fieldService.getVisibleDisplayables({}, schema);
-        }
-        $scope.isFieldHidden = function (fieldMetadata) {
-            return fieldService.isFieldHidden($scope.datamap, $scope.schema, fieldMetadata);
-        }
-
         $rootScope.$on('$stateChangeSuccess',
         function (event, toState, toParams, fromState, fromParams) {
             if (toState.name.startsWith("main.cruddetail.compositiondetail")) {

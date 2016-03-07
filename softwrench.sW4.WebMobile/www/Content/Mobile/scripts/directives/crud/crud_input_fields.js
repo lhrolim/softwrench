@@ -44,13 +44,11 @@ softwrench.directive('sectionElementInput', ["$compile", function ($compile) {
     }
 }]);
 
-
-
-softwrench.directive('crudInputFields', ["$log", "fieldService", "crudContextService", "expressionService", function ($log, fieldService, crudContextService, expressionService) {
+softwrench.directive('crudInputFields', [function () {
 
     return {
         restrict: 'E',
-        replace: true,
+        replace: false,
         templateUrl: 'Content/Mobile/templates/directives/crud/crud_input_fields.html',
         scope: {
             schema: '=',
@@ -59,34 +57,34 @@ softwrench.directive('crudInputFields', ["$log", "fieldService", "crudContextSer
         },
 
         link: function (scope, element, attrs) {
-            scope.name = 'crud_input_fields';
-
+            scope.name = "crud_input_fields";
         },
 
-        controller: ["$scope", function ($scope) {
-
-            $scope.dateHandler = (function() {
-                function getMaxDateValue (field) {
-                    var rendererParameters = field.rendererParameters;
-                    return (rendererParameters.hasOwnProperty("allowfuture")
-                        && (rendererParameters.allowfuture === "false" || rendererParameters.allowfuture === false))
-                            ? new Date()
-                            : "";
-                }
-                function getMinDateValue(field) {
-                    return "";
-                }
-
-                return {
-                    getMaxDateValue: getMaxDateValue,
-                    getMinDateValue: getMinDateValue
-                };
-            })();
-
-            $scope.getDisplayables = function () {
-                return $scope.displayables;
+        controller: ["$scope", "offlineAssociationService", "fieldService", "expressionService", function ($scope, offlineAssociationService, fieldService, expressionService) {
+            
+            $scope.associationSearch = function (query, componentId) {
+                return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query);
             };
-           
+
+            $scope.getAssociationLabelField = function (fieldMetadata) {
+                return offlineAssociationService.fieldLabelExpression(fieldMetadata);
+            }
+
+            $scope.getAssociationValueField = function (fieldMetadata) {
+                return offlineAssociationService.fieldValueExpression(fieldMetadata);
+            }
+
+            $scope.isFieldHidden = function (fieldMetadata) {
+                return fieldService.isFieldHidden($scope.datamap, $scope.schema, fieldMetadata);
+            }
+
+            $scope.isFieldRequired = function (requiredExpression) {
+                if (Boolean(requiredExpression)) {
+                    return expressionService.evaluate(requiredExpression, $scope.datamap);
+                }
+                return requiredExpression;
+            };
+
         }]
     }
 }]);

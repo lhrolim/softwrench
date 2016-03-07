@@ -9,35 +9,6 @@
             $scope.compositionpopover = popover;
         });
 
-
-        //$scope.$on("sw_validationerrors", function (event, validationArray) {
-
-        //});
-
-
-        $scope.associationSearch = function(query, componentId) {
-            return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, componentId, query);
-        };
-
-        $scope.getAssociationLabelField = function (fieldMetadata) {
-            return offlineAssociationService.fieldLabelExpression(fieldMetadata);
-        }
-
-        $scope.getAssociationValueField = function (fieldMetadata) {
-            return offlineAssociationService.fieldValueExpression(fieldMetadata);
-        }
-
-        $scope.isFieldHidden = function (fieldMetadata) {
-            return fieldService.isFieldHidden($scope.datamap, $scope.schema, fieldMetadata);
-        }
-
-        $scope.isFieldRequired = function (requiredExpression) {
-            if (Boolean(requiredExpression)) {
-                return expressionService.evaluate(requiredExpression, $scope.datamap);
-            }
-            return requiredExpression;
-        };
-
     }]);
     
 })(angular);
