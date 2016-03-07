@@ -7,6 +7,10 @@ angular.module('sw_layout')
 
     var objCache = {};
 
+    function isEmpty(value) {
+        return value == null || value === "" || value.length === 0;
+    }
+
     function getSearchValue(value) {
         if (!value) {
             return null;
@@ -73,9 +77,7 @@ angular.module('sw_layout')
                 continue;
             }
 
-            if ((searchData[data] != null && searchData[data] != '') ||
-                (searchOperator[data] != null && searchOperator[data].id == "BLANK")) {
-
+            if (!isEmpty(searchData[data]) || (searchOperator[data] != null && searchOperator[data].id === "BLANK")) {
                 if (data.indexOf('___') != -1) {
                     // this case is only for "BETWEEN" operator
                     data = data.substring(0, data.indexOf('___'));
@@ -179,7 +181,7 @@ angular.module('sw_layout')
             var value = "";
             var beginAlreadySet = false;
             for (var data in searchData) {
-                if ((searchData[data] == null || searchData[data] === "" || searchData[data].length === 0 || data === "lastSearchedValues") &&
+                if ((isEmpty(searchData[data]) || data === "lastSearchedValues") &&
                     (searchOperator[data] == null || searchOperator[data].id !== "BLANK")) {
                     continue;
                 }

@@ -147,7 +147,7 @@
                     }
 
                     for (var att in searchData) {
-                        if (!searchData.hasOwnProperty(att) || !searchData[att]) {
+                        if (!searchData.hasOwnProperty(att) || searchData[att] === null || searchData[att] === "") {
                             continue;
                         }
                         var displayable = $scope.schema.displayables.find(function (d) {

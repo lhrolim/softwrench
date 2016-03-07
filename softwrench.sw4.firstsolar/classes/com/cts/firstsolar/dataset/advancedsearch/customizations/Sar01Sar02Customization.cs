@@ -13,8 +13,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             return facility + "-02";
         }
 
-        protected override string Pcs(string facility, string baseLike, string block, string pcs) {
-            return string.Format("{0}-%-{1}-{2}", facility, block, pcs);
+        protected override string Pcs(string facility, string baseLike) {
+            return facility + "-%-%-%";
         }
 
         public override List<string> FacilitiesToCustomize() {
