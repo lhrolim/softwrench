@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using NHibernate.Criterion;
+using NHibernate.Util;
+using Quartz.Util;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.services;
 using softwrench.sw4.user.classes.services.setup;
@@ -41,11 +45,21 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var query = MetadataProvider.GlobalProperty(SwUserConstants.PersonUserQuery);
+            if (application.Schema.SchemaId == "userremovelist")
+            {
+                var profileId = searchDto.CustomParameters["profileId"];
+                var validUsernamesList = _swdbDAO.FindByNativeQuery("SELECT MAXIMOPERSONID FROM SW_USER2 WHERE ID IN (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {0})".FormatInvariant(profileId)).ToList();
+                var usernameString = "'" + string.Join("', '", validUsernamesList.SelectMany(u => u.Values)) + "'";
+                if (query == null) {
+                    query = "person.personid in ({0})".FormatInvariant(usernameString);
+                }
+            }
             if (query != null) {
                 searchDto.WhereClause = query;
             }
             // get is active for each of the users
             var result = base.GetList(application, searchDto);
+
             var usernames = result.ResultObject.Select(str => str.GetAttribute("personid").ToString()).ToList();
             if (!usernames.Any()) {
                 return result;
@@ -170,7 +184,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         }
 
 
-        public ISet<UserProfile> LoadProfiles(JObject json) {
+        public Iesi.Collections.Generic.ISet<UserProfile> LoadProfiles(JObject json) {
             var result = new HashedSet<UserProfile>();
             var profiles = json.GetValue("#profiles");
             if (profiles == null) {
