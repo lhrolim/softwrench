@@ -65,7 +65,7 @@
               <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>
             </optionfield>
 
-            <field attribute="#appallowview" label="Allow Visualization?" showexpression="@application!=null">
+            <field attribute="#appallowview" label="Read Only?" showexpression="@application!=null">
               <renderer type="checkbox" params="layout=left"/>
               <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
             </field>
@@ -92,9 +92,9 @@
                 <option label="Grid" value="grid"/>
                 <option label="Creation" value="creation"/>
                 <option label="Update" value="update"/>
-                <option label="View" value="view"/>
+                <option label="Details (Read Only)" value="view"/>
                 <renderer type="combo" params="optionfield.forcefirstoption=true"/>
-                <filter clientfunction ="userProfileService.filterAvailableModes"/>
+                <filter clientfunction ="userProfileService.filterAvailableModes" />
                 <event type="afterchange" service="userProfileService" method="afterModeChanged"/>
               </optionfield>
               <optionfield label="Schema" attribute="schema" providerattribute="schemas" dependantfields="application,selectedmode" showexpression="@showschemacombo" >
@@ -114,7 +114,8 @@
             <!-- Composition selection  -->
             <section showexpression="@iscompositiontab" orientation="horizontal">
 
-              <field attribute="#compallowview" label="Allow Visualization?">
+
+              <field attribute="#compallowview" label="Read Only?">
                 <renderer type="checkbox" params="layout=left"/>
                 <event type="afterchange" service="userProfileService" method="cmpRoleChanged"/>
               </field>
@@ -127,6 +128,7 @@
                 <renderer type="checkbox" params="layout=left"/>
                 <event type="afterchange" service="userProfileService" method="cmpRoleChanged"/>
               </field>
+
        
             </section>
 
@@ -184,15 +186,17 @@
           <optionfield attribute="applications" providerattribute="topLevelApplications" label="Application">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
+
+          <field attribute="allowview" label="Read Only?">
+            <renderer type="checkbox" params="layout=left"/>
+          </field>
           <field attribute="allowcreation" label="Allow Creation?">
             <renderer type="checkbox" params="layout=left"/>
           </field>
           <field attribute="allowupdate" label="Allow Update?">
             <renderer type="checkbox" params="layout=left"/>
           </field>
-          <field attribute="allowview" label="Allow Visualization?">
-            <renderer type="checkbox" params="layout=left"/>
-          </field>
+          
         </schema>
       </schemas>
 

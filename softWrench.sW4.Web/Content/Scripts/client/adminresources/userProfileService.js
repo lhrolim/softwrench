@@ -77,7 +77,8 @@
                     mergeTransientIntoDatamap({ tab: tab });
                 });
             } else {
-                dm["#compallowupdate"] = dm["#compallowcreation"] = dm["#compallowview"] = true;
+                dm["#compallowupdate"] = dm["#compallowcreation"] = true;
+                cleanUpCompositions(false);
                 mergeTransientIntoDatamap({ tab: tab });
             }
         }
@@ -118,11 +119,13 @@
             }
         }
 
-        function cleanUpCompositions() {
+        function cleanUpCompositions(cleanUpActions) {
             //cleaning up compositions
             var compositionData = {};
             compositionData["#fieldPermissions_"] = null;
-            compositionData["#actionPermissions_"] = null;
+            if (false !== cleanUpActions) {
+                compositionData["#actionPermissions_"] = null;
+            }
 
             $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
         }
@@ -138,14 +141,14 @@
             var fields = parameters.fields;
 
             if (parameters.target.attribute === "#appallowview") {
-                if (parameters.oldValue === true && parameters.newValue === false) {
+                if (parameters.oldValue === false && parameters.newValue === true) {
                     fields["#appallowcreation"] = false;
                     fields["#appallowupdate"] = false;
                 }
             }
 
-            if (!!fields["#appallowupdate"] || !!fields["#appallowcreation"]) {
-                fields["#appallowview"] = true;
+            if (fields["#appallowupdate"] || fields["#appallowcreation"]) {
+                fields["#appallowview"] = false;
             }
 
 
@@ -158,14 +161,14 @@
             var fields = parameters.fields;
 
             if (parameters.target.attribute === "#compallowview") {
-                if (parameters.oldValue === true && parameters.newValue === false) {
+                if (parameters.oldValue === false && parameters.newValue === true) {
                     fields["#compallowcreation"] = false;
                     fields["#compallowupdate"] = false;
                 }
             }
 
-            if (!!fields["#compallowupdate"] || !!fields["#compallowcreation"]) {
-                fields["#compallowview"] = true;
+            if (fields["#compallowupdate"] || fields["#compallowcreation"]) {
+                fields["#compallowview"] = false;
             }
 
         }
@@ -303,15 +306,20 @@
             var allowCreation = dm["#appallowcreation"];
             var allowUpdate = dm["#appallowupdate"];
             var allowView = dm["#appallowview"];
-            if (allowCreation && allowUpdate && allowView) {
-                return true;
-            }
+
+//            if (allowCreation && allowUpdate && allowView) {
+//                return true;
+//            }
 
             if (!allowCreation && item.value === "creation") {
                 return false;
             }
 
             if (!allowUpdate && item.value === "update") {
+                return false;
+            }
+
+            if (!allowView && item.value === "view") {
                 return false;
             }
 

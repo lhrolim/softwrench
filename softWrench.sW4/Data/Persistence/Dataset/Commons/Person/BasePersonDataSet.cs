@@ -64,6 +64,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var detail = base.GetApplicationDetail(application, user, request);
             var personId = detail.ResultObject.GetAttribute("personid") as string;
+            var maxActive = Convert.ToBoolean(detail.ResultObject.GetAttribute("maxuser_.active"));
             var swUser = new User();
             var dataMap = detail.ResultObject;
             UserStatistics statistics = null;
@@ -114,6 +115,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             dataMap.SetAttribute("statistics", statistics);
             dataMap.SetAttribute("activationlink", activationLink);
             dataMap.SetAttribute("#userid", swUser.Id);
+            dataMap.SetAttribute("#maxactive",maxActive);
             return detail;
         }
 
