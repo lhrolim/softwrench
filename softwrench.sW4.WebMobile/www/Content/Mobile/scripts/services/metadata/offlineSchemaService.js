@@ -1,9 +1,9 @@
 ﻿(function (angular) {
     'use strict';
 
-    angular.module('sw_mobile_services').factory('offlineSchemaService', ['$log', 'fieldService', 'schemaService', 'securityService', offlineSchemaService]);
+    angular.module("sw_mobile_services").factory("offlineSchemaService", ["$log", "fieldService", "schemaService", "securityService", "dispatcherService", offlineSchemaService]);
 
-    function offlineSchemaService($log, fieldService, schemaService, securityService) {
+    function offlineSchemaService($log, fieldService, schemaService, securityService, dispatcherService) {
 
         var service = {
             loadDetailSchema: loadDetailSchema,
@@ -15,9 +15,12 @@
 
         return service;
 
-        function loadDetailSchema(currentListSchema, currentApplication) {
+        function loadDetailSchema(currentListSchema, currentApplication, selectedItem) {
             var detailSchemaId = "detail";
-            var overridenSchema = schemaService.getProperty(currentListSchema, "list.click.schema");
+            var schemaDetailService = schemaService.getProperty(currentListSchema, "list.click.service");
+            var overridenSchema =  !!schemaDetailService && !!selectedItem
+                                    ? dispatcherService.invokeServiceByString(schemaDetailService, [currentApplication, currentListSchema, selectedItem]) 
+                                    : schemaService.getProperty(currentListSchema, "list.click.schema");
             if (overridenSchema) {
                 detailSchemaId = overridenSchema;
             }
