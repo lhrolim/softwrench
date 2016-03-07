@@ -215,7 +215,7 @@ app.directive('configAssociationListInputDatamap', function () {
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
                 eventService.onload($scope.schema, $scope.datamap);
-                var bodyElement = $('#' + parentElementId);
+                var bodyElement = $('#' + parentElementId + "[schemaid=" + $scope.schema.schemaId + "]");
                 if (bodyElement.length <= 0) {
                     return;
                 }

@@ -41,12 +41,6 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
- /**
- Customizations made for CTS:
- - On buildFilter (~840) the original placeholder is considered on custom filter input
- - On buildFilter (~895) added the filterfunction feature
- */
 !function ($) {
     "use strict";// jshint ;_;
 
@@ -838,10 +832,13 @@
                 if (this.$select.find('option').length >= enableFilterLength) {
 
                     this.$filter = $(this.options.templates.filter);
+
+                    //#region cts:emesquita existing placeholder consideration
                     var existingPlaceHolder = $('input', this.$filter).attr('placeholder');
                     if(!existingPlaceHolder){
                         $('input', this.$filter).attr('placeholder', this.options.filterPlaceholder);
                     }
+                    //#endregion
                     
                     // Adds optional filter clear button
                     if(this.options.includeFilterClearBtn){
@@ -894,6 +891,7 @@
                                         // interesting for this search.
                                         var showElement = false;
 
+                                        //#region cts:emesquita custom filter function
                                         var filterFunction = this.options.filterFunction;
                                         if (filterFunction) {
                                             showElement = filterFunction(value, text, event.target);
@@ -905,6 +903,7 @@
                                                 showElement = true;
                                             }
                                         }
+                                        //#endregion
 
                                         // Toggle current element (group or group item) according to showElement boolean.
                                         $(element).toggle(showElement).toggleClass('filter-hidden', !showElement);
@@ -1403,6 +1402,14 @@
         return this.each(function() {
             var data = $(this).data('multiselect');
             var options = typeof option === 'object' && option;
+
+            //#region cts:emesquita custom rebuild only with data
+            // before that a rebuild could start the component without the custom options
+            // leaving it in an inconsistent state
+            if (!data && option === "rebuild") {
+                return;
+            }
+            //#endregion
 
             // Initialize the multiselect.
             if (!data) {

@@ -450,7 +450,6 @@
           <properties>
             <property key="search.panelwidth" value="180"/>
             <property key="crud.disableautofocus" value="true"/>
-            <property key="search.startexpanded" value="true"/>
             <property key="commandbar.bottom" value="search"/>
           </properties>
         </schema>

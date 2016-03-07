@@ -56,7 +56,7 @@ angular.module('sw_layout')
             $timeout(
                 function () {
 
-                    $(".multiselect", bodyElement).each(function (index) {
+                    $("select.multiselect", bodyElement).each(function (index) {
                         var element = $(this);
                         var associationKey = element.data('associationkey');
                         var fieldMetadata = fieldService.getDisplayablesByAssociationKey(schema, associationKey)[0];
