@@ -1,11 +1,4 @@
-﻿servicerequest: {
-    orange: #e59323,
-    yellow: #fde62f,
-    red: #f65752,
-    blue: #4488f2,
-    green: #39b54a
-},
-workorder: {
+﻿default: {
     orange: #e59323,
     yellow: #fde62f,
     red: #f65752,
