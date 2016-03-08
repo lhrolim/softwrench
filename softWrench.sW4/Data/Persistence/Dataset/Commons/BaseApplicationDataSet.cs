@@ -197,7 +197,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public virtual ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema,user);
+            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema, user);
             DataMap dataMap;
             if (request.IsEditionRequest) {
                 dataMap = (DataMap)Engine().FindById(entityMetadata, id, request.UserIdSitetuple);
@@ -251,15 +251,22 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             if (!data.ResultObject.ContainsKey("attachment_")) {
                 return data;
             }
+            HandleAttachments(data);
+            return data;
+        }
+
+        private void HandleAttachments(CompositionFetchResult data) {
             var attachments = data.ResultObject["attachment_"].ResultList;
             foreach (var attachment in attachments) {
                 if (attachment.ContainsKey("docinfo_.urlname")) {
                     var docInfoURL = (string)attachment["docinfo_.urlname"];
                     attachment["download_url"] = AttachmentHandler.GetFileUrl(docInfoURL);
+                    AttachmentHandler.BuildParsedURLName(attachment);
                 }
             }
-            return data;
         }
+
+      
 
         private CompositionFetchResult DoGetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);

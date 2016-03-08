@@ -7,6 +7,7 @@
     <template path="@solution.xml"/>
     <template path="@person.xml"/>
     <template path="@commlogs.xml"/>
+    <template path="@attachments.xml"/>
   </templates>
   <entities>
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
@@ -2375,25 +2376,12 @@
 
 
 
-        <list stereotype="compositionlist" platform="web">
-          <properties>
-            <property key="detail.cancel.lbl" value="Close"/>
-            <property key="expansible" value="false"/>
-          </properties>
-          <field label="Id" hidden="true" attribute="docinfoid"/>
-          <field hidden="true" attribute="doclinksid"/>
-          <field label="Document" hidden="true" attribute="document"/>
-          <field attribute="ownertable">
-            <renderer type="icon" params="expression={'COMMLOG':'fa-envelope','SR':''};width=3%"/>
-          </field>
-          <field hidden="true" attribute="docinfo_.urlname"/>
-          <field hidden="true" attribute="docinfo_.urltype"/>
-          
-          <section label="Document" attribute="document"
-									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>
-          <field label="Created Date" attribute="createdate">
-            <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false"/>
-          </field>
+        <list stereotype="compositionlist" platform="web" redeclaring="false">
+          <customization position="ownertable">
+            <field attribute="ownertable" >
+              <renderer type="icon" params="expression={'COMMLOG':'fa-envelope','SR':''};width=3%;"/>
+            </field>
+          </customization>
         </list>
 
         <schema id="faqAttachments" stereotype="compositionlist" platform="web">
