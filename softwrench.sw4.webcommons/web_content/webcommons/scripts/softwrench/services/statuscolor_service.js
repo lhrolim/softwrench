@@ -8,6 +8,7 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
         if (status.equalsAny("NEW", "WAPPR", "WSCH", "ACTIVE")) {
             return "#e59323"; //orange
         }
+
         if (status.equalsAny("QUEUED", "CANTREPROD", "WAITONINFO", "PENDING", "WMATL", "WORKING", "null")) {
             return "#fde62f"; //yellow
         }
@@ -19,9 +20,11 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
         if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "APPFM", "APPLM", "BY DESIGN", "AUTHORIZED", "DUPLICATE", "AUTH", "FIXED", "HOLDINPRG",  "INPROG", "INPRG", "PLANNED", "ACC_CAT", "ASSESSES")) {
             return "#4488f2"; //blue
         }
+
         if (status.equalsAny("CLOSED", "IMPLEMENTED", "RESOLVCONF", "IMPL", "REVIEW", "CLOSE", "HISTEDIT", "COMP", "COMPLETED", "INPRG", "PLANNED")) {
             return "#39b54a"; //green
         }
+
         if (status.equalsAny("DRAFT")) {
             return "white";
         }
