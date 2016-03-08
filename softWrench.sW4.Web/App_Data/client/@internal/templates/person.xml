@@ -189,6 +189,9 @@
         </schema>
         
         <schema id="userselectlist" stereotype="list.selection.modal" title="Users">
+          <properties>
+            <property key="schema.customparamprovider" value="userProfileService.getProfileId"/>
+          </properties>
           <filters>
             <optionfilter attribute="maxuser_.active" allowblank="false" style="width:300px" eager="true">
               <f:option label="Active" value="1" />

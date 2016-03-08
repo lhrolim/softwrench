@@ -18,6 +18,7 @@ using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -45,11 +46,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var query = MetadataProvider.GlobalProperty(SwUserConstants.PersonUserQuery);
-            if (application.Schema.SchemaId == "userremovelist")
+            if (application.Schema.SchemaId == "userselectlist" || application.Schema.SchemaId == "userremovelist")
             {
+                var inclusion = application.Schema.SchemaId.EqualsIc("userselectlist") ? " NOT IN " : " IN ";
                 var profileId = searchDto.CustomParameters["profileId"];
-                var validUsernamesList = _swdbDAO.FindByNativeQuery("SELECT MAXIMOPERSONID FROM SW_USER2 WHERE ID IN (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {0})".FormatInvariant(profileId)).ToList();
-                var usernameString = "'" + string.Join("', '", validUsernamesList.SelectMany(u => u.Values)) + "'";
+                var validUsernamesList = _swdbDAO.FindByNativeQuery("SELECT MAXIMOPERSONID FROM SW_USER2 WHERE MAXIMOPERSONID IS NOT NULL AND ID {0} (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {1})".FormatInvariant(inclusion, profileId)).ToList();
+                var userList = validUsernamesList.SelectMany(u => u.Values).ToArray();
+                var usernameString = BaseQueryUtil.GenerateInString(userList);
                 if (query == null) {
                     query = "person.personid in ({0})".FormatInvariant(usernameString);
                 }

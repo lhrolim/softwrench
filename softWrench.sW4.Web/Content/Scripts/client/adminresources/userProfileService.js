@@ -762,12 +762,15 @@
                 alertService.alert("Please save the profile before using this action");
                 return;
             }
+            var customParameters = {};
+            customParameters[0] = {};
+            customParameters[0]["key"] = "profileId";
+            customParameters[0]["value"] = profileId;
             return redirectService.openAsModal("person", "userselectlist", {
                 title: "Apply Profile to Users",
                 SearchDTO: {
-                    CustomParameters: {
-                        profileId: profileId
-                    }
+                    pageSize: 10,
+                    customParameters: customParameters
                 },
                 savefn: function () {
                     var dm = crudContextHolderService.rootDataMap();
