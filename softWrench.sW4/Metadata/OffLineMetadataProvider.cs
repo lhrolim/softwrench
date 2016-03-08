@@ -8,24 +8,18 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
-using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Util;
 
 namespace softWrench.sW4.Metadata {
     public class OffLineMetadataProvider {
 
+        //key = ordered list of comma separated list of roles
+        //public static IDictionary<string, CompleteApplicationMetadataDefinition> AssociationsCache = new Dictionary<string, CompleteApplicationMetadataDefinition>();
 
         //key = ordered list of comma separated list of roles
-        public static IDictionary<string, CompleteApplicationMetadataDefinition> AssociationsCache = new Dictionary<string, CompleteApplicationMetadataDefinition>();
-
-        //key = ordered list of comma separated list of roles
-        public static IDictionary<string, CompleteApplicationMetadataDefinition> CompositionsCache = new Dictionary<string, CompleteApplicationMetadataDefinition>();
-
+        //public static IDictionary<string, CompleteApplicationMetadataDefinition> CompositionsCache = new Dictionary<string, CompleteApplicationMetadataDefinition>();
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(OffLineMetadataProvider));
-
-
-
 
         public static IEnumerable<CompleteApplicationMetadataDefinition> FetchCompositionApps(InMemoryUser user) {
             //TODO: cache

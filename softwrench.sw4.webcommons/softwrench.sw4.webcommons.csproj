@@ -53,6 +53,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\asset_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_shared.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\workorder\workorder_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\modalFilter_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\notificationService.js" />

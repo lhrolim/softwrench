@@ -1,5 +1,4 @@
-﻿
-(function () {
+﻿(function () {
     'use strict';
 
     angular.module('sw_layout').factory('inventoryServiceCommons', ['searchService', 'alertService', inventoryServiceCommons]);

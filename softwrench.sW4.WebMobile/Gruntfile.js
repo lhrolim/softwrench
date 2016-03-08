@@ -31,6 +31,7 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/statuscolor_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/aa_arrayutils.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/object_util.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/context_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/tabs_service.js",
@@ -51,7 +52,8 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/notificationService.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/physicalinventory_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",
-        "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"
+        "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/applications/inventory/inventory_service_shared.js"
     ];
 
     /** app scripts: required for bootstraping the app */
