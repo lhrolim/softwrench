@@ -22,6 +22,7 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using System.Text;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 
 
@@ -42,7 +43,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         /// Path where the files are stored in the maximo´s server fs, must be removed from the url path
         /// </summary>
         private string _baseMaximoPath;
-        
+
 
         //        public delegate byte[] Base64Delegate(string attachmentData);
 
@@ -155,7 +156,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValue(docLink, "UPLOAD", true);
             w.SetValue(docLink, "DOCTYPE", "Attachments");
             //w.SetValue(docLink, "DOCUMENT", FileUtils.GetNameFromPath(attachmentPath, GetMaximoLength()));
-            w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength())); 
+            w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
             w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? String.Empty);
         }
 
@@ -193,6 +194,27 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             return 100;
         }
 
+        [NotNull]
+        public static string BuildParsedURLName(IDictionary<string, object> attachmentDataMap) {
+            string docInfoURL = "";
+            if (attachmentDataMap.ContainsKey("urlname")) {
+                //either comes from the application itself, or else, the composition
+                docInfoURL = (string)attachmentDataMap["urlname"];
+            } else {
+                docInfoURL = (string)attachmentDataMap["docinfo_.urlname"];
+            }
+
+
+
+            var lastIndexOf = docInfoURL.LastIndexOf("\\", StringComparison.Ordinal);
+            if (lastIndexOf != -1) {
+                //SWWEB-2125
+                attachmentDataMap["#parsedurl"] = docInfoURL.Substring(lastIndexOf + 1);
+            } else {
+                attachmentDataMap["#parsedurl"] = docInfoURL;
+            }
+            return (string)attachmentDataMap["#parsedurl"];
+        }
 
 
         public Tuple<Byte[], string> DownloadViaHttpById(string docinfoId) {
@@ -203,6 +225,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (finalURL == null) {
                 return null;
             }
+
             using (var client = new WebClient()) {
                 try {
                     ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
@@ -211,12 +234,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                         var extension = docinfoURL.Substring(docinfoURL.LastIndexOf(".") + 1);
 
                         // Attach extension to the file name for file association; however, if the extension exist, then don't add extension
-                        if (!fileName.ToLower().EndsWith(extension))
-                            fileName = String.Format("{0}.{1}", fileName, extension);
+                        //                        if (!fileName.ToLower().EndsWith(extension)) {
+                        //                            fileName = String.Format("{0}.{1}", fileName, extension);
+                        //                        }
+                        fileName = BuildParsedURLName(file.Attributes);
+
                     }
                     return Tuple.Create(fileBytes, fileName);
                 } catch (Exception exception) {
-                    Log.ErrorFormat("Error Attachment Handler: {0} - {1}", exception.Message, exception.InnerException == null ? "No Internal Error Message" : exception.InnerException.Message);   
+                    Log.ErrorFormat("Error Attachment Handler: {0} - {1}", exception.Message, exception.InnerException == null ? "No Internal Error Message" : exception.InnerException.Message);
                     return null;
                 }
             }
@@ -228,8 +254,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var user = SecurityFacade.CurrentUser();
             var applicationMetadata = MetadataProvider
                 .Application(parentApplication)
-                .ApplyPolicies(new ApplicationMetadataSchemaKey(parentSchemaId), user, ClientPlatform.Web,null);
-            var response = _dataSetProvider.LookupDataSet(parentApplication, applicationMetadata.Schema.SchemaId).Execute(applicationMetadata, new JObject(), parentId,  OperationConstants.CRUD_FIND_BY_ID,false,null);
+                .ApplyPolicies(new ApplicationMetadataSchemaKey(parentSchemaId), user, ClientPlatform.Web, null);
+            var response = _dataSetProvider.LookupDataSet(parentApplication, applicationMetadata.Schema.SchemaId).Execute(applicationMetadata, new JObject(), parentId, OperationConstants.CRUD_FIND_BY_ID, false, null);
 
             var parent = response.ResultObject;
             if (parent != null) {
@@ -254,25 +280,25 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 BuildMaximoURL();
             }
 
-            Log.DebugFormat("Setting _baseMaximoPath to {0}", _baseMaximoPath); 
-            Log.DebugFormat("Setting _baseMaximoURL to {0}", _baseMaximoURL); 
+            Log.DebugFormat("Setting _baseMaximoPath to {0}", _baseMaximoPath);
+            Log.DebugFormat("Setting _baseMaximoURL to {0}", _baseMaximoURL);
 
-            Log.DebugFormat("Setting docInfoURL to {0}", docInfoURL);   
+            Log.DebugFormat("Setting docInfoURL to {0}", docInfoURL);
 
             if (_baseMaximoPath.Contains("<PATH>")) {
                 // Use regular expression to replace remove the starting string - ? prevents it from going greedy and getting all words matching symbol and ^ requires the expression to be at the beginning
-                var regExpression = "^" + _baseMaximoPath.Replace("<PATH>", ".*?"); 
+                var regExpression = "^" + _baseMaximoPath.Replace("<PATH>", ".*?");
                 Regex strRegex = new Regex(regExpression, RegexOptions.None);
 
-                docInfoURL = strRegex.Replace(docInfoURL, ""); 
+                docInfoURL = strRegex.Replace(docInfoURL, "");
             }
 
-            Log.DebugFormat("Updated docInfoURL to {0}", docInfoURL);   
+            Log.DebugFormat("Updated docInfoURL to {0}", docInfoURL);
 
             docInfoURL = docInfoURL.Replace("\\", "/");
 
             var finalURL = _baseMaximoURL != null && _baseMaximoURL.EndsWith("/") ? String.Format("{0}{1}", _baseMaximoURL.Remove(_baseMaximoURL.Length - 1), docInfoURL) : String.Format("{0}{1}", _baseMaximoURL, docInfoURL);
- 
+
             Log.DebugFormat("Final URL attachment: {0}", finalURL);
 
             return finalURL;
@@ -297,7 +323,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public AttachmentDao Dao() {
             return AttachmentDao;
-        } 
+        }
 
     }
 }
