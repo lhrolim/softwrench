@@ -4,14 +4,6 @@
     var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "crudContextHolderService",
         function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, crudContextHolderService) {
 
-    $scope.layout = {
-        label: true
-    };
-
-    $scope.setShowLabel = function(show) {
-        $scope.layout.label = show;
-    };
-
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
         var methodname = expr.substr(7);
         var fn = $scope.ctrlfns[methodname];
@@ -53,7 +45,8 @@
     }
 
     $scope.showLabel = function () {
-        return $scope.layout.label;
+        //use global property to hide/show labels
+        return contextService.getFromContext("UIShowToolbarLabels", false, true);
     }
 
     $scope.commandLabel = function (command) {
@@ -218,7 +211,7 @@ app.directive('gridtoolbar', ["contextService", function (contextService) {
                 if(angular.isFunction(fn)) scope.ctrlfns[name] = fn;
             });
 
-            scope.setShowLabel(false);
+            //scope.setShowLabel(false);
         },
 
         controller: sharedController
