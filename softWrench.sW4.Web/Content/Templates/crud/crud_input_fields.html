@@ -371,13 +371,13 @@
                                 ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                 ng-enabled="isSelectEnabled(fieldMetadata)"
                                 custombuttontext="">
-                            <option value=""></option>
+<!--                            <option value=""></option>-->
                         </select>
                         <div ng-if="fieldMetadata.rendererParameters['showvaluesbelow'] == 'true'">
                             <table>
                                 <tbody>
                                     <tr ng-repeat="selected in getSelectedTexts(fieldMetadata)">
-                                        <td>{{selected}}</td>
+                                        <td><span rel="tooltip" data-original-title="{{selected}}">{{formatLabel(selected, fieldMetadata)}}</span></td>
                                     </tr>
                                 </tbody>
                             </table>

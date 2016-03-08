@@ -44,14 +44,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         /// <summary>
         /// Kind of a dummy. The real list is got from FirstSolarAdvancedSearchController when a facility is selected.
         /// </summary>
-        public IEnumerable<IAssociationOption> GetFsAvailablePcsLocations(OptionFieldProviderParameters parameters) {
-            return new List<IAssociationOption>();
-        }
-
-        /// <summary>
-        /// Kind of a dummy. The real list is builded on advancedSearchService.js.
-        /// </summary>
-        public IEnumerable<IAssociationOption> GetFsSelectedPcsLocations(OptionFieldProviderParameters parameters) {
+        public IEnumerable<IAssociationOption> GetFsPcsLocations(OptionFieldProviderParameters parameters) {
             return new List<IAssociationOption>();
         }
     }

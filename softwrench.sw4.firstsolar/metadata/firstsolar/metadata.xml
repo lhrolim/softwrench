@@ -332,37 +332,14 @@
           <optionfield attribute="fsswitchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
-
-          <field attribute="fsblock" label="Block">
-            <renderer type="default"  params="inputsize=small;editable=true" />
-          </field>
-          <field attribute="fspcs" label="PCS">
-            <renderer type="default"  params="inputsize=small;editable=true" />
-          </field>
-
-          <optionfield attribute="fspcsavailable" label="Available PCS Locations" providerattribute="_FsAvailablePcsLocations">
-            <renderer type="combo" params="multiple=true"/>
-            <filter clientfunction="advancedSearchService.filterAvailablePcsLocations"/>
-          </optionfield>
-          <section resourcepath="/Content/Customers/firstsolar/htmls/advancedSearchPcsButtons.html">
-          </section>
-          <optionfield attribute="fspcsselected" label="Selected PCS Locations" providerattribute="_FsSelectedPcsLocations">
-            <renderer type="combo" params="multiple=true"/>
+          <optionfield attribute="fspcslocations" providerattribute="_FsPcsLocations" searchoperation="eq">
+            <renderer type="combodropdown" params="multiple=true;showvaluesbelow=true;buttontext=Select PCS(s);maxheight=300;labelmaxlength=30;customdropdownfunction=advancedSearchService.customizeComboDropdown"/>
           </optionfield>
 
-          <commandbars>
-            <commandgroup position="detailform" platform="web">
-              <removecommand id="save"/>
-              <removecommand id="print"/>
-              <removecommand id="cancel"/>
-              <command id="search" primary="true" cssclasses="searchbutton" icon="fa-search" service="advancedSearchService" method="search" label="Search" parameters="schema,datamap"/>
-              <command id="clear" cssclasses="searchbutton" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
-            </commandgroup>
-          </commandbars>
-          
           <properties>
             <property key="search.panelwidth" value="180"/>
             <property key="crud.disableautofocus" value="true"/>
+            <property key="commandbar.bottom" value="search"/>
           </properties>
         </schema>
       </schemas>
@@ -466,38 +443,15 @@
           <optionfield attribute="fsswitchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq">
             <renderer type="combo" params="multiple=true"/>
           </optionfield>
-
-          <field attribute="fsblock" label="Block">
-            <renderer type="default"  params="inputsize=small;editable=true" />
-          </field>
-          <field attribute="fspcs" label="PCS">
-            <renderer type="default"  params="inputsize=small;editable=true" />
-          </field>
-
-          <optionfield attribute="fspcsavailable" label="Available PCS Locations" providerattribute="_FsAvailablePcsLocations">
-            <renderer type="combo" params="multiple=true"/>
-            <filter clientfunction="advancedSearchService.filterAvailablePcsLocations"/>
+          <optionfield attribute="fspcslocations" providerattribute="_FsPcsLocations" searchoperation="eq">
+            <renderer type="combodropdown" params="multiple=true;showvaluesbelow=true;buttontext=Select PCS(s);maxheight=300;labelmaxlength=30;customdropdownfunction=advancedSearchService.customizeComboDropdown"/>
           </optionfield>
-          <section resourcepath="/Content/Customers/firstsolar/htmls/advancedSearchPcsButtons.html">
-          </section>
-          <optionfield attribute="fspcsselected" label="Selected PCS Locations" providerattribute="_FsSelectedPcsLocations">
-            <renderer type="combo" params="multiple=true"/>
-          </optionfield>
-
-          <commandbars>
-            <commandgroup position="detailform" platform="web">
-              <removecommand id="save"/>
-              <removecommand id="print"/>
-              <removecommand id="cancel"/>
-              <command id="search" primary="true" cssclasses="searchbutton" icon="fa-search" service="advancedSearchService" method="search" label="Search" parameters="schema,datamap"/>
-              <command id="clear" cssclasses="searchbutton" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
-            </commandgroup>
-          </commandbars>
 
           <properties>
             <property key="search.panelwidth" value="180"/>
             <property key="crud.disableautofocus" value="true"/>
             <property key="search.startexpanded" value="true"/>
+            <property key="commandbar.bottom" value="search"/>
           </properties>
         </schema>
       </schemas>

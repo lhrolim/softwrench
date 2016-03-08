@@ -436,6 +436,14 @@ app.directive('configAssociationListInputDatamap', function () {
                 return cmpComboDropdown.getSelectedTexts(fieldMetadata);
             };
 
+            $scope.formatLabel = function(text, fieldMetadata) {
+                var maxLength = fieldMetadata.rendererParameters["labelmaxlength"];
+                if (!maxLength || text.length <= maxLength) {
+                    return text;
+                }
+                return text.substring(0, maxLength) + "...";
+            }
+
             $scope.opendetails = function (fieldMetadata) {
                 if ($scope.enabletoopendetails(fieldMetadata)) {
                     var parameters = { id: $scope.paramstopendetails.idtopendetails, popupmode: 'browser' };

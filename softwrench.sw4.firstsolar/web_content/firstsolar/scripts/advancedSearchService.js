@@ -2,16 +2,14 @@
 (function (angular) {
     "use strict";
 
-    function advancedSearchService(restService, crudContextHolderService, crudSearchService, searchService, $log) {
+    function advancedSearchService(restService, crudContextHolderService, searchService, $log) {
         var log = $log.getInstance("sw4.advancedSearchService");
 
         //#region Utils
         var searchPanelId = "search";
         var facilityId = "fsfacility";
-        var availablePcsId = "fspcsavailable";
-        var selectedPcsId = "fspcsselected";
-        var pcsFilterId = "fspcs";
-        var blockFilterId = "fsblock";
+        var pcsFilterId = "#fspcs";
+        var blockFilterId = "#fsblock";
 
         var updateOptions = function(controllerMethod, parameters, associationKey) {
             var promise = restService.getPromise("FirstSolarAdvancedSearch", controllerMethod, parameters);
@@ -20,16 +18,16 @@
                     return {
                         "type": "AssociationOption",
                         "value": dbData["location"],
-                        "label": dbData["description"] ? dbData["description"] : dbData["location"] + " - No Description"
-                    }
+                        "label": dbData["description"] ? dbData["description"] : dbData["location"]
+                }
                 });
                 crudContextHolderService.updateEagerAssociationOptions(associationKey, options, null, searchPanelId);
             });
         }
 
         // filters pcs location by pcs
-        var filterByPcs = function (datamap, optionValue) {
-            var pcs = datamap[pcsFilterId];
+        var filterByPcs = function (optionValue) {
+            var pcs = $(pcsFilterId).val();
             if (!pcs) {
                 return true;
             }
@@ -43,8 +41,8 @@
         }
 
         // filters pcs location by block
-        var filterByBlock = function (datamap, optionValue) {
-            var block = datamap[blockFilterId];
+        var filterByBlock = function (optionValue) {
+            var block = $(blockFilterId).val();
             if (!block) {
                 return true;
             }
@@ -75,102 +73,48 @@
             log.debug("Updating switchgears for facilities: {0}".format(facilities));
             updateOptions("GetSwitchgearLocations", parameters, "_FsSwitchgearLocations");
             log.debug("Updating available pcs locations for facilities: {0}".format(facilities));
-            updateOptions("GetAvailablePcsLocations", parameters, "_FsAvailablePcsLocations");
+            updateOptions("GetAvailablePcsLocations", parameters, "_FsPcsLocations");
         }
 
-        function search(schema, datamap) {
-            log.debug("search - Searching ...");
-            var selectedOptions = crudContextHolderService.fetchEagerAssociationOptions("_FsSelectedPcsLocations", null, searchPanelId) || [];
-            if (selectedOptions.length === 0) {
-                log.debug("search - No pcs options selected.");
-                crudSearchService.search(schema, datamap);
-                return;
+        function customizeComboDropdown(fieldMetadata, selectElement, dropdownOptions) {
+            dropdownOptions["templates"] = {
+                filter : '<li class="multiselect-item filter">' +
+                '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>' +
+                '<input id="fsblock" class="form-control multiselect-search" placeholder="Block" type="text">' +
+                '<input id="fspcs" class="form-control multiselect-search" placeholder="PCS" type="text"></div></li>'
             }
 
-            // get all selected pcs options and adds to the datamap as a array of values
-            var selectedValues = [];
-            var eqOperator = searchService.getSearchOperationById("EQ");
-
-            selectedOptions.forEach(function(selectedOption) {
-                selectedValues.push(selectedOption.value);
-            });
-
-            var searchOperator = {}
-            searchOperator[selectedPcsId] = eqOperator;
-            datamap[selectedPcsId] = selectedValues;
-            crudSearchService.search(schema, datamap, searchOperator);
-        }
-
-        // adds pcs location options from available list to the selected one
-        function addPcsLocations(datamap) {
-            log.debug("addPcsLocations - Adding pcs location options from available list to the selected one.");
-            var availablePcsSelected = datamap[availablePcsId];
-            if (!availablePcsSelected || availablePcsSelected.length === 0) {
-                log.debug("addPcsLocations - No pcs locations selected.");
-                return;
+            dropdownOptions["filterFunction"] = function(optionValue, optionText, filterInput) {
+                log.debug("filterAvailablePcsLocations - Filtering: {0}".format(optionValue));
+                var pcsOk = filterByPcs(optionValue);
+                var blockOk = filterByBlock(optionValue);
+                var isOk = pcsOk && blockOk;
+                log.debug("filterAvailablePcsLocations - {0} filter result is {1}".format(optionValue, isOk));
+                return isOk;
             }
-            var availableOptions = crudContextHolderService.fetchEagerAssociationOptions("_FsAvailablePcsLocations", null, searchPanelId);
-            var selectedOptions = crudContextHolderService.fetchEagerAssociationOptions("_FsSelectedPcsLocations", null, searchPanelId) || [];
-            
-            availablePcsSelected.forEach(function (selectedLocationValue) {
-                // if option already selected just continues.
-                var alreadySelectedOption = selectedOptions.find(function (option) { return option.value === selectedLocationValue });
-                if (alreadySelectedOption) {
-                    return;
+
+            // recalcs scroll pane height - considering the added or removed values
+            dropdownOptions["onChange"] = function () {
+                if (fieldMetadata.rendererParameters["showvaluesbelow"] === "true") {
+                    // adds the tooltips on below values
+                    $(".multiselect-div [rel=tooltip]").tooltip();
                 }
-
-                // gets the available option and adds to the selected 
-                var selectedOption = availableOptions.find(function (option) { return option.value === selectedLocationValue });
-                selectedOptions.push(selectedOption);
-            });
-            crudContextHolderService.updateEagerAssociationOptions("_FsSelectedPcsLocations", selectedOptions, null, searchPanelId);
-        }
-
-        // removes pcs locations from the selected list
-        function removePcsLocations(datamap) {
-            log.debug("removePcsLocations - Removing pcs location options from selected list.");
-            var selectedPcsSelected = datamap[selectedPcsId];
-            if (!selectedPcsSelected || selectedPcsSelected.length === 0) {
-                log.debug("removePcsLocations - No pcs locations selected.");
-                return;
+                $(window).trigger("resize");
             }
-            var selectedOptions = crudContextHolderService.fetchEagerAssociationOptions("_FsSelectedPcsLocations", null, searchPanelId) || [];
 
-            selectedPcsSelected.forEach(function (selectedPcsValue) {
-                selectedOptions.forEach(function(selectedPcsOption, index, array) {
-                    if (selectedPcsOption.value === selectedPcsValue) {
-                        array.splice(index, 1);
-                    }
-                });
-            });
-            crudContextHolderService.updateEagerAssociationOptions("_FsSelectedPcsLocations", selectedOptions, null, searchPanelId);
-        }
-
-        // clears the pcs locations options selected list
-        function clearPcsLocations() {
-            log.debug("clearPcsLocations - Clearing selected pcs location options from selected list.");
-            crudContextHolderService.updateEagerAssociationOptions("_FsSelectedPcsLocations", [], null, searchPanelId);
-        }
-
-        function filterAvailablePcsLocations(option) {
-            log.debug("filterAvailablePcsLocations - Filtering: {0}".format(option.value));
-            var datamap = crudContextHolderService.rootDataMap(searchPanelId);
-            var pcsOk = filterByPcs(datamap, option.value);
-            var blockOk = filterByBlock(datamap, option.value);
-            var isOk = pcsOk && blockOk;
-            log.debug("filterAvailablePcsLocations - {0} filter result is {1}".format(option.value, isOk));
-            return isOk;
+            // calcs the margin top to open the dropdown upward
+            dropdownOptions["onDropdownShow"] = function () {
+                var multiselectContainer = selectElement.closest(".multiselect-div").find("ul.multiselect-container");
+                var containerHeight = multiselectContainer.height();
+                multiselectContainer.css({ 'margin-top': "-" + (containerHeight + 34) + "px" });
+            }
         }
         //#endregion
 
         //#region Service Instance
         var service = {
             facilitySelected: facilitySelected,
-            search: search,
-            addPcsLocations: addPcsLocations,
-            removePcsLocations: removePcsLocations,
-            clearPcsLocations: clearPcsLocations,
-            filterAvailablePcsLocations: filterAvailablePcsLocations
+            customizeComboDropdown: customizeComboDropdown
         };
         return service;
         //#endregion
@@ -178,7 +122,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("advancedSearchService", ["restService", "crudContextHolderService", "crudSearchService", "searchService", "$log", advancedSearchService]);
+    angular.module("sw_layout").factory("advancedSearchService", ["restService", "crudContextHolderService", "searchService", "$log", advancedSearchService]);
 
     //#endregion
 

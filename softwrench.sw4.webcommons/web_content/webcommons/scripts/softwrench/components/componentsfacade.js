@@ -51,7 +51,7 @@
                     var value = scope.datamap[displayable.target];
                     cmpAutocompleteClient.refreshFromAttribute(scope,displayable, value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
                 } else if (rendererType === 'combodropdown') {
-                    cmpComboDropdown.refreshFromAttribute(attribute);
+                    cmpComboDropdown.refreshList(attribute);
                 } else if (rendererType === 'combo') {
                     var value = scope.datamap[displayable.target];
                     cmpCombo.refreshFromAttribute(value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
@@ -149,7 +149,7 @@
         function init(bodyElement, scope) {
             var datamap = scope.datamap;
             var schema = scope.schema;
-            cmpComboDropdown.init(bodyElement);
+            cmpComboDropdown.init(bodyElement,schema);
             cmpAutocompleteClient.init(bodyElement, datamap, schema, scope);
             //deprecating autocompleteservers
 //            cmpAutocompleteServer.init(bodyElement, datamap, schema, scope);
