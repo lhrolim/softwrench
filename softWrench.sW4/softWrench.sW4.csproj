@@ -624,6 +624,7 @@
     <Compile Include="Util\ReportUtil.cs" />
     <Compile Include="Util\RTFUtil.cs" />
     <Compile Include="Util\Scripting\ScriptingUtil.cs" />
+    <Compile Include="Util\ClassificationColorResolver.cs" />
     <Compile Include="Util\StatusColorResolver.cs" />
     <Compile Include="Util\StreamUtils.cs" />
     <Compile Include="Util\SwConstants.cs" />

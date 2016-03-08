@@ -347,6 +347,7 @@
         </relationship>
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="locationsite" to="siteid"/>
           <relationshipAttribute to="type" query="!@type != 'STOREROOM'"/>
         </relationship>
       </relationships>

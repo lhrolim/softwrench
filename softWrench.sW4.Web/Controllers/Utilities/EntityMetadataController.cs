@@ -83,8 +83,18 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
 
         }
         [HttpGet]
+        [SPFRedirect("Classification Color Editor", "_headermenu.classificationcoloreditor", "EntityMetadataEditor")]
+        public IGenericResponseResult ClassificationColorEditor()
+        {
+            using (var reader = new MetadataProvider().GetStream("classificationcolors.json"))
+            {
+                var result = reader.ReadToEnd();
+                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "classificationcolors"));
+            }
+        }
+        [HttpGet]
         [SPFRedirect("Status Color Editor", "_headermenu.statuscoloreditor", "EntityMetadataEditor")]
-        public IGenericResponseResult StatuscolorEditor() {
+        public IGenericResponseResult StatusColorEditor() {
             using (var reader = new MetadataProvider().GetStream("statuscolors.json")) {
                 var result = reader.ReadToEnd();
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "statuscolors"));
