@@ -35,7 +35,8 @@
           </field>
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="docinfo_.urltype"/>
-          <field label="Document"  attribute="document"/>
+          <field  attribute="document" hidden="true"/>
+          <field label="Document"  attribute="#parsedurl"/>
 <!--          <section attribute="document"-->
 <!--									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>-->
           <field label="Created Date" attribute="createdate"/>
