@@ -220,5 +220,10 @@
         /// The width of the search panel handle.
         /// </summary>
         public static string SearchHandleWidthExpanded = "search.panelwidth";
+
+        /// <summary>
+        /// Used to specify a service.function() on a schema that is currently called when changing pages in pagination to add custom parameters to the call.
+        /// </summary>
+        public static string SchemaCustomParamProvider = "schema.customparamprovider";
     }
 }
