@@ -108,7 +108,7 @@ app.directive('crudInput', ["contextService", "associationService", function (co
 
             this.shouldshowprint = function () {
                 return $scope.composition != "true";
-            }
+            };
 
             $scope.isEditing = function (schema, datamap) {
                 var id = datamap[schema.idFieldName];
@@ -125,7 +125,7 @@ app.directive('crudInput', ["contextService", "associationService", function (co
                     return "detail.primary";
                 }
                 return schema.properties["commandbar.bottom"];
-            }
+            };
 
             //#region command interception
             (function(self) {

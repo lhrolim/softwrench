@@ -4,6 +4,14 @@
     var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "crudContextHolderService",
         function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, crudContextHolderService) {
 
+    $scope.layout = {
+        label: true
+    };
+
+    $scope.setShowLabel = function(show) {
+        $scope.layout.label = show;
+    };
+
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
         var methodname = expr.substr(7);
         var fn = $scope.ctrlfns[methodname];
@@ -27,11 +35,11 @@
         var tooltip = command.tooltip;
 
         //if the label and tooltip are the same, only show the tooltip if the labels are hidden
-        //if (tooltip == command.label) {
-        //    if ($scope.showLabel()) {
-        //        return;
-        //    }
-        //}
+        if (tooltip === command.label) {
+            if ($scope.showLabel()) {
+                return "";
+            }
+        }
 
         if (tooltip == null) {
             return $scope.commandLabel(command);
@@ -44,17 +52,17 @@
         return i18NService.get18nValue('_bars.gridtop' + command.id, tooltip);
     }
 
-    //$scope.showLabel = function () {
-    //    return contextService.fetchFromContext('UIShowToolbarLabels', false, true);
-    //}
+    $scope.showLabel = function () {
+        return $scope.layout.label;
+    }
 
     $scope.commandLabel = function (command) {
         var label = command.label;
 
-        //hide the labels if needed
-        //if (!$scope.showLabel()) {
-        //    return '';
-        //}
+        // the labels if needed
+        if (!$scope.showLabel()) {
+            return "";
+        }
 
         if (label == null) {
             return null;
@@ -209,6 +217,8 @@ app.directive('gridtoolbar', ["contextService", function (contextService) {
             angular.forEach(ctrl, function (fn, name) {
                 if(angular.isFunction(fn)) scope.ctrlfns[name] = fn;
             });
+
+            scope.setShowLabel(false);
         },
 
         controller: sharedController
