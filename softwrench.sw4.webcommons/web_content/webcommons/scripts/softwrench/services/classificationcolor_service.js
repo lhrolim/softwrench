@@ -3,33 +3,33 @@
 
     modules.webcommons.factory('classificationColorService', ["$rootScope", "contextService", function ($rootScope, contextService) {
 
-    var fallbackFunction = function (status, applicationname) {
-        if (status.equalsAny("1097")) {
-            return "#e59323"; //orange
-        }
+    //var fallbackFunction = function (status, applicationname) {
+    //    if (status.equalsAny("DSME")) {
+    //        return "#e59323"; //orange
+    //    }
 
-        //if (status.equalsAny("")) {
-        //    return "#fde62f"; //yellow
-        //}
+    //    if (status.equalsAny("")) {
+    //        return "#fde62f"; //yellow
+    //    }
 
-        //if (status.equalsAny("")) {
-        //    return "#f65752"; //red
-        //}
+    //    if (status.equalsAny("")) {
+    //        return "#f65752"; //red
+    //    }
 
-        //if (status.equalsAny("")) {
-        //    return "#4488f2"; //blue
-        //}
+    //    if (status.equalsAny("")) {
+    //        return "#4488f2"; //blue
+    //    }
 
-        //if (status.equalsAny("")) {
-        //    return "#39b54a"; //green
-        //}
+    //    if (status.equalsAny("")) {
+    //        return "#39b54a"; //green
+    //    }
 
-        //if (status.equalsAny("")) {
-        //    return "white";
-        //}
+    //    if (status.equalsAny("")) {
+    //        return "white";
+    //    }
 
-        return "";
-    };
+    //    return "";
+    //};
 
     return {
 

@@ -206,12 +206,6 @@
                     var cursortype = scope.cursortype();
                     var openCalendarTooltip = i18NService.get18nValue('calendar.date_tooltip', 'Open the calendar popup');
 
-                    //console.log(datamap);
-                    //if (column.rendererType === 'color') {
-                    //    var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
-                    //    html += "<div class='statuscolumncolor' style='background-color:{0}'>".format(color);
-                    //}
-
                     for (var i = 0; i < datamap.length; i++) {
                         var rowst = "datamap[{0}]".format(i);
 
@@ -220,11 +214,7 @@
                             rowClass = 'even';
                         }
 
-                        //console.log(datamap[i]);
-                        //classstructureid
-                        //var rowTextColor = scope.classificationColor(datamap[i].fields.classstructureid, schema.applicationName);
-                        var rowTextColor = scope.classificationColor(datamap[i].fields.classstructureid, schema.applicationName);
-                        //console.log(color);
+                        var rowTextColor = scope.classificationColor(datamap[i].fields.classificationid, schema.applicationName);
 
                         html += "<tr class='{0}' style='cursor: {1};color: {2}' listtablerendered rel='hideRow'>".format(rowClass, cursortype, rowTextColor);
                         needsWatchers = hasMultipleSelector;
