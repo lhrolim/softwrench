@@ -44,10 +44,17 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
             if (statuscolorJson == null) {
                 return fallbackFunction(status, applicationname);
             }
+
             var applicationObject = statuscolorJson[applicationname];
             if (applicationObject == null) {
-                return fallbackFunction(status, applicationname);
+
+                //since the application was not found, check for a customer default colors
+                var applicationObject = statuscolorJson["default"];
+                if (applicationObject == null) {
+                    return fallbackFunction(status, applicationname);
+                }
             }
+
             if (status.toLowerCase() in applicationObject) {
                 return applicationObject[status.toLowerCase()];
             }
