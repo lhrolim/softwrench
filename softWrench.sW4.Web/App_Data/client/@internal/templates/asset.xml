@@ -21,6 +21,12 @@
   </entities>
   <applications>
     <application name="asset" title="Asset" entity="asset" id="00000000-0000-0000-0000-000000000001" >
+      <filters>
+        <optionfilter attribute="location" provider="location_.description" displaycode="true" allowblank="true"/>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
+        <optionfilter attribute="parent" provider="parentasset_.description" displaycode="true"/>
+        <optionfilter attribute="siteid" provider="site_.siteid"/>
+      </filters>
       <properties>
         <property key="mobile.fetchlimit" value="30"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
@@ -55,6 +61,9 @@
           <field attribute="parent" label="Parent"/>
           <field attribute="status" label="Status"/>
           <field attribute="siteid" label="Site ID"/>
+          <field attribute="workorders" label="Workorders">
+            <renderer type="icon" params="width=3%;expression={'#default':'fa-wrench','0':''};"/>
+          </field>
         </schema>
         <schema id="detail" title="Asset Detail" stereotype="detail" platform="web">
           <commandbars>
@@ -71,7 +80,7 @@
             <field attribute="assetnum" label="Asset" readonly="true"/>  
             <field attribute="description" label="Description" readonly="true"/>
             <field attribute="status" label="Status" readonly="true"/>
-            <field attribute="siteid" readonly="true" hidden="true"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
           </section>
           
           <section orientation="horizontal">

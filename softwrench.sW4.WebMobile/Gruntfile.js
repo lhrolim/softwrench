@@ -1,3 +1,4 @@
+/// <binding />
 module.exports = function (grunt) {
 
     // Project configuration.
@@ -30,6 +31,7 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/statuscolor_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/aa_arrayutils.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/object_util.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/context_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/tabs_service.js",
@@ -46,8 +48,12 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/user_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/composition_commons.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/storage/localstorageservice.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/data/datamapSanitize_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/notificationService.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/physicalinventory_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",
-        "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"
+        "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/applications/inventory/inventory_service_shared.js"
     ];
 
     /** app scripts: required for bootstraping the app */
@@ -123,6 +129,7 @@ module.exports = function (grunt) {
             vendors: vendorScripts
         },
 
+        //#region clean directories
         clean: {
             vendor: [
                 "www/Content/Vendor/scripts/",
@@ -131,7 +138,9 @@ module.exports = function (grunt) {
             temp: ["tmp/"],
             pub: ["www/Content/public/"]
         },
+        //#endregion
 
+        //#region copy bower dependencies
         bowercopy: {
             dev: {
                 options: {
@@ -201,7 +210,9 @@ module.exports = function (grunt) {
                 }
             }
         },
+        //#endregion
 
+        //#region generating imports in /index.html
         tags: {
             /* 
                 DEV: tags doesn't work with an outer object around the actual tasks
@@ -306,7 +317,9 @@ module.exports = function (grunt) {
             }
             /* END RELEASE */
         },
+        //#endregion
 
+        //#region concat
         concat: {
             appScripts: {
                 options: {
@@ -336,7 +349,9 @@ module.exports = function (grunt) {
                 dest: "www/Content/public/vendor/vendor.min.css" // already minified by vendors
             }
         },
+        //#endregion
 
+        //#region minify javascript
         uglify: {
             options: {
                 mangle: {
@@ -350,7 +365,9 @@ module.exports = function (grunt) {
                 }
             }
         },
+        //#endregion
 
+        //#region minify css
         cssmin: {
             release: {
                 // minify the result of concat
@@ -359,16 +376,20 @@ module.exports = function (grunt) {
                 }
             }
         },
+        //#endregion
 
+        //#region copy
         copy: {
             build: {
                 // applies /overrides files
                 files: [
-                    { expand: true, src: ["**/*"], dest: "platforms/", cwd: "overrides/" }
+                    { expand: true, src: ["**/*", "!cordova.js"], dest: "platforms/", cwd: "overrides/" }
                 ]
             }
         },
+        //#endregion
 
+        //#region karma
         karma: {
             options: {
                 configFile: "karma.conf.js",
@@ -395,10 +416,10 @@ module.exports = function (grunt) {
                 }]
             }
         }
-
+        //#endregion
     });
 
-
+    //#region grunt plugins
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-clean");
@@ -407,19 +428,16 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
     grunt.loadNpmTasks("grunt-karma");
+    //#endregion
 
-    // Default task(s).
-
+    //#region dev tasks
     grunt.registerTask("cleanall", ["clean:vendor", "clean:temp", "clean:pub"]);
-
-    // dev
-
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
     grunt.registerTask("fulldev", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "tagsdev"]);
     grunt.registerTask("default", ["fulldev"]);
+    //#endregion
 
-    // release: prepare
-
+    //#region release:prepare tasks
     grunt.registerTask("tagsrelease", ["tags:buildReleaseScripts", "tags:buildReleaseVendorScripts", "tags:buildReleaseLinks", "tags:buildReleaseVendorLinks"]);
     grunt.registerTask("concatall", ["concat:appScripts", "concat:vendorScripts", "concat:appStyles", "concat:vendorStyles"]);
     grunt.registerTask("minify", ["uglify:release", "cssmin:release"]);
@@ -431,11 +449,9 @@ module.exports = function (grunt) {
         "minify", // uglyfies scripts and minifies stylesheets
         "tagsrelease" // generates import tags for the prepared files in main template file (layout.html)
     ]);
+    //#endregion
 
-
-    // ****************************
-    // ** BUILD DEVICE ARTIFACTS **
-    // ****************************
+    //#region ** BUILD DEVICE ARTIFACTS **
     var fs = require("fs-extra");
     var path = require("path");
     var Q = require("q");
@@ -552,8 +568,5 @@ module.exports = function (grunt) {
         }
     });
 
-    // ********************************
-    // ** END BUILD DEVICE ARTIFACTS **
-    // ********************************
-
+    //#endregion
 };

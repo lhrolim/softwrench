@@ -99,7 +99,7 @@
       </components>
 
       <schemas>
-        <schema stereotype="list" id="invIssueList" title="Issues and Returns Grid">
+        <schema stereotype="list" id="invIssueList" title="Issues and Returns Grid" platform="web">
           <properties>
             <property key="list.click.service" value="invissueService.invissuelistclick"/>
             <property key="config.fullKey" value="/Global/Grids/InvIssue/Scanbar"/>
@@ -165,6 +165,21 @@
           </section>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
+
+        <schema stereotype="list" id="invIssueList" title="Issues and Returns Grid" platform="mobile">
+          <properties>
+            <!-- TODO: change to nextInvIssueDetailSchema when invissue 'creation' is supported -->
+            <property key="list.click.service" value="inventorySharedService.nextReadOnlyInvIssueDetailSchema"/>
+          </properties>
+          <field attribute="itemnum" label="Item" qualifier="title" />
+          <field attribute="quantity" label="Qty" qualifier="featured" />
+          <field attribute="location" label="Location" qualifier="subtitle" />
+          <field attribute="siteid" label="Site" qualifier="excerpt"/>
+          <field attribute="issuetype" label="Issue Type" />
+          <field attribute="qtyreturned" label="Qty Rtn" />
+        </schema>
+        
+        
         <schema id="itemlist" stereotype="compositionlist">
           <properties>
             <property key="list.click.popup" value="modal"/>
@@ -195,7 +210,7 @@
           </section>
         </schema>
             
-        <schema id="viewinvreturndetail" stereotype="detail" mode="input" title="Return Details">
+        <schema id="viewinvreturndetail" stereotype="detail" mode="input" title="Return Details" platform="web">
           <field attribute="matusetransid" hidden="true"/>
           <section>
             <renderer type="default" params="childinputsize=medium" />
@@ -247,7 +262,7 @@
           </properties>
         </schema>
 
-        <schema id="viewinvissuedetail" stereotype="detail" mode="input" title="Issue Details">
+        <schema id="viewinvissuedetail" stereotype="detail" mode="input" title="Issue Details" platform="web">
           <section>
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="matusetransid" hidden="true"/>
@@ -296,8 +311,54 @@
             <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
           </properties>
         </schema>
+        
+        <!-- -->
+        <schema id="viewinvreturndetail" stereotype="detail" mode="input" title="Return Details" platform="mobile">
+          <field attribute="enterby" label="Entered By" readonly="true"/>
+          <field attribute="issuetype" label="Issue Type" readonly="true"/>
+          <field attribute="issueto" label="Issued To" readonly="true"/>
+          <field attribute="siteid" label="Site" readonly="true"/>
+          <field attribute="storeloc" label="Storeroom" readonly="true"/>
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
+          <field attribute="rotassetnum" label="Rotating Asset" readonly="true"/>
+          <field attribute="item_.rotating" label="Rotating" readonly="true" />
+          <field attribute="item_.iskit" label="Kit" readonly="true" />
+          <field attribute="binnum" label="Bin" readonly="true"/>
+          <field attribute="lotnum" label="Lot" readonly="true"/>
+          <field attribute="quantity" label="Quantity Returned" readonly="true" />
+          <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
+          <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          <field attribute="refwo" label="Work Order" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="assetnum" label="Asse" readonly="true"/>
+          <field attribute="gldebitacct" label="GL Debit Account" readonly="true"/>
+        </schema>
 
-        <schema id="batchitemline">
+        <schema id="viewinvissuedetail" stereotype="detail" mode="input" title="Issue Details" platform="mobile">
+          <field attribute="issueto" label="Issued To" readonly="true" showexpression="@issueto != null"/>
+          <field attribute="enterby" label="Entered By" readonly="true"/>
+          <field attribute="issuetype" label="Issue Type" readonly="true"/>
+          <field attribute="siteid" label="Site" readonly="true"/>
+          <field attribute="storeloc" label="Storeroom" readonly="true"/>
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.description" label="Description" readonly="true"/>
+          <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
+          <field attribute="rotassetnum" showexpression="@rotassetnum != null" readonly="true" label="Rotating Asset"/>
+          <field attribute="binnum" label="Bin" readonly="true"/>
+          <field attribute="lotnum" label="Lot" readonly="true"/>
+          <field attribute="quantity" label="Quantity Issued" readonly="true" />
+          <field attribute="qtyreturned" label="Quantity Returned" readonly="true" />
+          <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
+          <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          <field attribute="refwo" label="Work Order" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="gldebitacct" label="GL Debit Account" readonly="true"/>
+        </schema>
+        <!-- -->
+
+        <schema id="batchitemline" platform="web">
           <reference id="issuestoreloc"/>
           <reference id="issuebin"/>
           <reference id="rotasset" showexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1" />
@@ -307,7 +368,7 @@
           <reference id="issuequantity"/>
         </schema>
 
-        <schema id="batchitemlinedetail">
+        <schema id="batchitemlinedetail" platform="web">
           <section orientation="horizontal">
             <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
             <field label="Lot" attribute="binbalances_.lotnum" readonly="true"/>
@@ -317,7 +378,7 @@
           </section>
         </schema>
         
-        <schema title="New Issue" id="newInvIssueDetail" mode="input" stereotype="detailnew">
+        <schema title="New Issue" id="newInvIssueDetail" mode="input" stereotype="detailnew" platform="web">
           <field attribute="mode" label="Mode" qualifier="batchselector" hidden="true" default="batch"></field>
 
 <!--          <optionfield  attribute="mode" label="Mode" qualifier="batchselector">-->
@@ -500,7 +561,7 @@
           </properties>
         </schema>
 
-        <schema id="newitem" stereotype="compositiondetail" mode="input" title="New Issue">
+        <schema id="newitem" stereotype="compositiondetail" mode="input" title="New Issue" platform="web">
           <section>
             <field attribute="matusetransid" hidden="true"/>
             <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
@@ -524,7 +585,7 @@
             <field attribute="inventory_.item_.iskit" label="Kit" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
-            <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="@inventory_.item_.rotating==0">
+            <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="@.item_.rotating==0">
               <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
               <dataprovider prefilterfunction="FilterBins"/>

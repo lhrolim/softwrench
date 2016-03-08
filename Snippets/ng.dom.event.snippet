@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Attach event listeners on DOM elements</Title>
+      <Author>Rodrigo Botti</Author>
+      <Description>Template for adding event listeners to a DOM element and de-register the listener after the scope is destroyed/disposed</Description>
+      <Shortcut>ngdomevt</Shortcut>
+    </Header>
+    <Snippet>
+        <Declarations>
+        <Literal>
+          <ID>event</ID>
+          <ToolTip>Event name</ToolTip>
+          <Default>click</Default>
+        </Literal>
+        <Literal>
+          <ID>element</ID>
+          <ToolTip>DOM element</ToolTip>
+          <Default>window</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="JavaScript">
+        <![CDATA[
+        function $event$Listener(event) {
+
+        }
+        angular.element($element$).on("$event$", $event$Listener);
+        $$scope.$$on("$$destroy", function() {
+          angular.element($element$).off("$event$", $event$Listener);
+        });
+        ]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

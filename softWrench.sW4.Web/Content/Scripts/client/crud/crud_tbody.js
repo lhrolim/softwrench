@@ -270,16 +270,24 @@
                                 }
                             }
                             else if (column.rendererType === "icon") {
-                                var classtoLoad = "'fa ' + innerLoadIcon({0}, {1})".format(i, j);
+                                var classtoLoad = "fa " + scope.innerLoadIcon(i, j);
                                 html += "<div>";
-                                html += " <i class=\"{{{0}}}\"".format(classtoLoad);
-                                html += "rel=\"tooltip\" data-original-title=\"{0}\"></i>".format(column.toolTip);
+                                html += " <i class=\"{0}\"".format(classtoLoad);
+
+                                //create html tooltip with label and count
+                                var toolTip = "<span style='white-space: nowrap;'>";
+                                toolTip += column.toolTip ? column.toolTip : column.label;
+                                toolTip += ': ' + dm.fields[column.attribute];
+                                toolTip += '</span>';
+
+                                html += "rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
                             }
 
                             else if (column.type === 'ApplicationFieldDefinition') {
                                 if (!editable) {
                                     if (column.rendererType === 'statuscolor') {
-                                        var background = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
+                                        
+                                        var background = scope.statusColor(dm.fields[column.attribute], schema.applicationName);
                                         var foreground = statuscolorService.foregroundColor(background);
 
                                         html += defaultAppending(formattedText, updatable, rowst, column, background, foreground);

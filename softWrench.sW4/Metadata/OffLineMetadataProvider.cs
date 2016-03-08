@@ -13,18 +13,13 @@ using softwrench.sW4.Shared2.Util;
 namespace softWrench.sW4.Metadata {
     public class OffLineMetadataProvider {
 
+        //key = ordered list of comma separated list of roles
+        //public static IDictionary<string, CompleteApplicationMetadataDefinition> AssociationsCache = new Dictionary<string, CompleteApplicationMetadataDefinition>();
 
         //key = ordered list of comma separated list of roles
-        public static IDictionary<string, CompleteApplicationMetadataDefinition> AssociationsCache = new Dictionary<string, CompleteApplicationMetadataDefinition>();
-
-        //key = ordered list of comma separated list of roles
-        public static IDictionary<string, CompleteApplicationMetadataDefinition> CompositionsCache = new Dictionary<string, CompleteApplicationMetadataDefinition>();
-
+        //public static IDictionary<string, CompleteApplicationMetadataDefinition> CompositionsCache = new Dictionary<string, CompleteApplicationMetadataDefinition>();
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(OffLineMetadataProvider));
-
-
-
 
         public static IEnumerable<CompleteApplicationMetadataDefinition> FetchCompositionApps(InMemoryUser user) {
             //TODO: cache
@@ -32,10 +27,12 @@ namespace softWrench.sW4.Metadata {
             var names = new List<string>();
             foreach (var app in MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user)) {
                 var mobileSchemas = app.Schemas().Where(a => a.Value.IsMobilePlatform());
-                foreach (var schema in mobileSchemas) {
-                    if (schema.Value.IsMobilePlatform()) {
-                        names.AddRange(schema.Value.Compositions().Select(association => association.Relationship));
-                    }
+                foreach (var schema in mobileSchemas.Where(schema => schema.Value.IsMobilePlatform())) {
+                    names.AddRange(
+                        schema.Value.Compositions()
+                            .Where(composition => !composition.Inline) // TODO: !!!
+                            .Select(association => association.Relationship)
+                        );
                 }
             }
 
@@ -53,12 +50,33 @@ namespace softWrench.sW4.Metadata {
             //TODO: cache
             var watch = Stopwatch.StartNew();
             var names = new List<Tuple<string, string>>();
+            var lookupTable = new HashSet<string>(); // control: don't add the same association more than once
+
             foreach (var app in MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user)) {
                 var mobileSchemas = app.Schemas().Where(a => a.Value.IsMobilePlatform());
-                foreach (var schema in mobileSchemas) {
-                    if (schema.Value.IsMobilePlatform()) {
-                        names.AddRange(schema.Value.Associations().Select(association => new Tuple<string, string>(association.EntityAssociation.To, association.ApplicationTo)));
-                    }
+                foreach (var schema in mobileSchemas.Where(schema => schema.Value.IsMobilePlatform())) {
+
+                    // resolve the associations
+                    var topAssociations = schema.Value.Associations()
+                        .Select(association => {
+                            lookupTable.Add(association.EntityAssociation.To);
+                            lookupTable.Add(association.ApplicationTo);
+                            return new Tuple<string, string>(association.EntityAssociation.To, association.ApplicationTo);
+                        });
+                    names.AddRange(topAssociations);
+
+                    // resolve the associations of the compositions
+                    var compositionAssociations = schema.Value.Compositions()
+                        .Where(composition => !composition.Inline) // TODO: !!!
+                        .Select(composition =>  composition.Schema.Schemas.Sync.Associations())
+                        .SelectMany(associations => associations)
+                        .Where(association => !lookupTable.Contains(association.EntityAssociation.To) && !lookupTable.Contains(association.ApplicationTo))
+                        .Select(association => {
+                            lookupTable.Add(association.EntityAssociation.To);
+                            lookupTable.Add(association.ApplicationTo);
+                            return new Tuple<string, string>(association.EntityAssociation.To, association.ApplicationTo);
+                        });
+                    names.AddRange(compositionAssociations);
                 }
             }
 
@@ -88,6 +106,7 @@ namespace softWrench.sW4.Metadata {
 
             return result;
         }
-
+        
     }
+    
 }

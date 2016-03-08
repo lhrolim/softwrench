@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<metadata xmlns="http://www.controltechnologysolutions.com/metadata" 
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata"
           xmlns:f="http://www.controltechnologysolutions.com/filters">
   <templates>
     <!--Email-->
@@ -37,7 +37,7 @@
               <f:option label="Inactive" value="0" />
             </optionfilter>
           </filters>
-          
+
           <field attribute="personuid" hidden="true"/>
           <field attribute="personid" label="Username"/>
           <field attribute="firstname" label="First Name"/>
@@ -48,7 +48,7 @@
           <field attribute="maxuser_.active" label="Active (MAXIMO)" readonly="true" enableexpression="false">
             <renderer type="checkbox" />
           </field>
-          
+
           <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>
 
           <commandbars>
@@ -63,7 +63,7 @@
           <event type="beforesubmit.onvalidation" service="personService" method="validatePerson"/>
 
           <section id="statistics" resourcepath="/Content/Templates/usersetup/userstatistics.html"></section>
-          
+
           <field attribute="personuid" label="Person ID" showexpression="false"/>
           <field attribute="personid" label="Username" requiredexpression="true" readonly="true"/>
 
@@ -89,7 +89,10 @@
           <field attribute="#isactive" label="Active (softWrench)">
             <renderer type="checkbox"/>
           </field>
-          <field attribute="maxuser_.active" label="Active (MAXIMO)" readonly="true" enableexpression="false">
+
+          <field attribute="maxuser_.active" hidden="true"/>
+
+          <field attribute="#maxactive" label="Active (MAXIMO)" readonly="true" enableexpression="false">
             <renderer type="checkbox" />
           </field>
 
@@ -123,7 +126,7 @@
 
           </commandbars>
         </schema>
-        
+
         <schema id="newPersonDetail" stereotype="detailnew" title="New User" mode="input">
           <event type="beforesubmit.onvalidation" service="personService" method="validatePerson"/>
           <field attribute="personuid" label="Person ID" showexpression="false" default="-1"/>
@@ -133,7 +136,7 @@
           <field attribute="personid" label="Username" showexpression="@personuid != -1" readonly="true" />
           <field attribute="#primaryemail" requiredexpression="true" label="Primary Email" tooltip="The user will receive a confirmation link on this email"/>
 
-          <optionfield attribute="passwordmode" default="auto" label="Password Generation" showexpression="!@ldapEnabled" 
+          <optionfield attribute="passwordmode" default="auto" label="Password Generation" showexpression="!@ldapEnabled"
                        tooltip="If Automatic an email with a link will be sent to the new users where they will be able to select a password. 
                        On manual mode the user will receive the assigned password via email">
             <renderer type="radio"/>
@@ -186,6 +189,27 @@
             </section>
           </tab>
 
+        </schema>
+
+        <schema id="userselectlist" stereotype="list.selection.modal" title="Users">
+          <filters>
+            <optionfilter attribute="maxuser_.active" allowblank="false" style="width:300px" eager="true">
+              <f:option label="Active" value="1" />
+              <f:option label="Inactive" value="0" />
+            </optionfilter>
+          </filters>
+
+          <field attribute="personuid" hidden="true"/>
+          <field attribute="personid" label="Username"/>
+          <field attribute="firstname" label="First Name"/>
+          <field attribute="lastname" label="Last Name"/>
+          <field attribute="#isactive" label="Active (softWrench)" enableexpression="false" readonly="true">
+            <renderer type="checkbox"/>
+          </field>
+          <field attribute="maxuser_.active" label="Active (MAXIMO)" readonly="true" enableexpression="false">
+            <renderer type="checkbox" />
+          </field>
+          <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>
         </schema>
       </schemas>
     </application>

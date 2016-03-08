@@ -163,7 +163,7 @@
           </section>
         </schema>
         
-        <schema parentschema="adetail" id="newdetail" title="New Change">
+        <schema parentschema="adetail" id="newdetail" title="New Change" stereotype="detailnew">
           <section id="remainingflieds">
             <field attribute="estdur"            default="0" hidden="true"/>
             <field attribute="estlabhrs"         default="0" hidden="true"/>

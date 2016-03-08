@@ -1,6 +1,5 @@
-﻿
-(function (angular) {
-    'use strict';
+﻿(function (angular) {
+    "use strict";
 
 
     function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService) {
@@ -49,16 +48,15 @@
             if (selectedValue == null) {
                 return null;
             } else if (Array.isArray(selectedValue)) {
-                var ObjectArray = [];
-
                 // Extract each item into an array object
-                for (var i = 0; i < selectedValue.length; i++) {
-                    var Object = doGetFullObject(associationFieldMetadata, selectedValue[i], contextData);
-                    ObjectArray = ObjectArray.concat(Object);
-                }
+                var objectArray = selectedValue
+                    .map(function (value) {
+                        return doGetFullObject(associationFieldMetadata, value, contextData);
+                    })
+                    .flatten();
 
                 // Return results for multi-value selection
-                return ObjectArray;
+                return objectArray;
             }
 
             // we need to locate the value from the list of association options
@@ -106,7 +104,7 @@
             return "(" + item.value + ")" + " - " + item.label;
         };
 
-        function getFullObject(associationFieldMetadata, datamap) {
+        function getFullObject(associationFieldMetadata, datamap, contextData) {
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
             var target = associationFieldMetadata.target;
@@ -115,7 +113,7 @@
             if (selectedValue == null) {
                 return null;
             }
-            var resultValue = doGetFullObject(associationFieldMetadata, selectedValue);
+            var resultValue = doGetFullObject(associationFieldMetadata, selectedValue, contextData);
             if (resultValue == null) {
                 $log.getInstance('associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
             }
@@ -164,35 +162,36 @@
         ///dispatchedbyuser: the method could be called after a user action (changing a field), or internally after a value has been set programatically 
         function postAssociationHook(associationMetadata, scope, triggerparams) {
             if (associationMetadata.events == undefined) {
-                return;
+                return $q.when();
             }
-            var afterChangeEvent = associationMetadata.events['afterchange'];
+            var afterChangeEvent = associationMetadata.events["afterchange"];
             if (afterChangeEvent == undefined) {
-                return;
+                return $q.when();
             }
             var fn = dispatcherService.loadService(afterChangeEvent.service, afterChangeEvent.method);
             if (fn == undefined) {
                 //this should not happen, it indicates a metadata misconfiguration
-                return;
+                return $q.when();
             }
             var fields = scope.datamap;
             if (scope.datamap.fields != undefined) {
                 fields = scope.datamap.fields;
             }
 
-            var afterchangeEvent = {
+            var params = {
                 fields: fields,
                 scope: scope,
-                parentdata: scope.parentdata,
+                parentdata: scope.parentdata || /* when trigerring event from modal */ crudContextHolderService.rootDataMap(), 
                 triggerparams: instantiateIfUndefined(triggerparams)
             };
             $log.getInstance('sw4.associationservice#postAssociationHook').debug('invoking post hook service {0} method {1} from association {2}|{3}'
                 .format(afterChangeEvent.service, afterChangeEvent.method, associationMetadata.target, associationMetadata.associationKey));
-            fn(afterchangeEvent);
+            var promise = $q.when(fn(params));
+            return promise;
         };
 
 
-        function updateAssociationOptionsRetrievedFromServer(scope, serverOptions, datamap) {
+        function updateAssociationOptionsRetrievedFromServer(scope, serverOptions, datamap, postAssociationHookFN) {
             /// <summary>
             ///  Callback of the updateAssociations call, in which the values returned from the server would update the scope variables, 
             /// to be shown on screen
@@ -206,6 +205,7 @@
             scope.blockedassociations = scope.blockedassociations || {};
             scope.associationSchemas = scope.associationSchemas || {};
             scope.disabledassociations = scope.disabledassociations || {};
+            postAssociationHookFN = postAssociationHookFN || this.postAssociationHookFN;
 
             for (var dependantFieldName in serverOptions) {
 
@@ -285,8 +285,8 @@
                                     //previous selected, but after angular has updadted the list properly
                                     datamap[value.target] = String(associationOption.value);
                                     doUpdateExtraFields(value, fullObject, datamap);
-                                    if (fn.postAssociationHook) {
-                                        fn.postAssociationHook(value, scope, { phase: 'initial', dispatchedbytheuser: false });
+                                    if (postAssociationHookFN) {
+                                        postAssociationHookFN(value, scope, { phase: 'initial', dispatchedbytheuser: false });
                                     }
                                     try {
                                         $rootScope.$digest();
@@ -298,8 +298,8 @@
                                 //let´s remove the complexity of non ie9 solutions, calling the code outside of the timeout since it´s not needed
                                 datamap[value.target] = String(datamapTargetValue);
                                 doUpdateExtraFields(value, fullObject, datamap);
-                                if (fn.postAssociationHook) {
-                                    fn.postAssociationHook(value, scope, { phase: 'initial', dispatchedbytheuser: false });
+                                if (postAssociationHookFN) {
+                                    postAssociationHookFN(value, scope, { phase: 'initial', dispatchedbytheuser: false });
                                 }
                             }
 
@@ -479,10 +479,10 @@
             return $http.post(urlToUse, jsonString, config).success(function(data) {
                 var options = data.resultObject;
                 log.info('associations returned {0}'.format($.keys(options)));
-                updateAssociationOptionsRetrievedFromServer(scope, options, fields);
+                updateAssociationOptionsRetrievedFromServer(scope, options, fields, postAssociationHook);
                 if (association.attribute !== "#eagerassociations") {
                     //this means we´re not getting the eager associations, see method above
-                    postAssociationHook(association, scope, { dispatchedbytheuser: true, phase: 'configured' });
+//                    postAssociationHook(association, scope, { dispatchedbytheuser: true, phase: 'configured' });
                 } else {
                     $timeout(function() {
                         //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, 

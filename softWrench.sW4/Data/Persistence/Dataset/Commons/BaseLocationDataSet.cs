@@ -47,11 +47,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         /// <param name="user"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request)
-        {
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var result = base.GetApplicationDetail(application, user, request);
 
-            result.ResultObject.SetAttribute("parentlocation_.systemid", request.CustomParameters["parentlocation_.systemid"]);
+            if (request.CustomParameters != null) {
+                result.ResultObject.SetAttribute("parentlocation_.systemid", request.CustomParameters["parentlocation_.systemid"]);
+            }
 
             return result;
         }
@@ -90,17 +91,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             JObject currentData) {
 
             var result = base.GetCompositionData(application, request, currentData);
-            var locationspecList = result.ResultObject["locationspec_"].ResultList;
-            if (locationspecList.Any())
-            {
-                var classificationids =
-                    locationspecList.Select(value => value["classstructure_.classificationid"].ToString()).ToList();
-                var classhierarchys = GetClassstructureHierarchyPath(classificationids);
-                foreach (var locationspec in locationspecList)
-                {
-                    var classificationid = locationspec["classstructure_.classificationid"].ToString();
-                    var path = classhierarchys.Single(p => p["id"] == classificationid)["hierarchypath"];
-                    locationspec.Add("classstructure_.hierarchypath", path);
+            if (result.ResultObject.ContainsKey("locationspec_")) {
+                var locationspecList = result.ResultObject["locationspec_"].ResultList;
+                if (locationspecList.Any()) {
+                    var classificationids =
+                        locationspecList.Select(value => value["classstructure_.classificationid"].ToString()).ToList();
+                    var classhierarchys = GetClassstructureHierarchyPath(classificationids);
+                    foreach (var locationspec in locationspecList) {
+                        var classificationid = locationspec["classstructure_.classificationid"].ToString();
+                        var path = classhierarchys.Single(p => p["id"] == classificationid)["hierarchypath"];
+                        locationspec.Add("classstructure_.hierarchypath", path);
+                    }
                 }
             }
             return result;
@@ -111,8 +112,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public SearchRequestDto FilterLocationHierarchy(CompositionPreFilterFunctionParameters parameter)
-        {
+        public SearchRequestDto FilterLocationHierarchy(CompositionPreFilterFunctionParameters parameter) {
             var systemid = parameter.OriginalEntity.GetAttribute("parentlocation_.systemid");
             var where = "systemid = '{0}'".FormatInvariant(systemid);
             parameter.BASEDto.AppendWhereClause(where);

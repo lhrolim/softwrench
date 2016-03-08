@@ -297,10 +297,10 @@
       </filters>
       -->
       <filters>
-        <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true">
+        <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true" whereclause="!@owner in (!@#value)">
           <f:option label="Current User" value="@username"/>
         </optionfilter>
-        <optionfilter attribute="reportedbyp_.displayname" provider="reportedbyp_.displayname" allowblank="true">
+        <optionfilter attribute="reportedbyp_.displayname" provider="reportedbyp_.displayname" allowblank="true" whereclause="!@reportedby in (!@#value)">
           <f:option label="Current User" value="@username"/>
         </optionfilter>
       </filters>
@@ -340,10 +340,10 @@
       </filters>
       -->
       <filters>
-        <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true">
+        <optionfilter attribute="ownerperson_.displayname" provider="ownerperson_.displayname" allowblank="true" whereclause="!@owner in (!@#value)">
           <f:option label="Current User" value="@username"/>
         </optionfilter>
-        <optionfilter attribute="reportedbyp_.displayname" provider="reportedbyp_.displayname" allowblank="true">
+        <optionfilter attribute="reportedbyp_.displayname" provider="reportedbyp_.displayname" allowblank="true" whereclause="!@reportedby in (!@#value)">
           <f:option label="Current User" value="@username"/>
         </optionfilter>
       </filters>
@@ -358,7 +358,7 @@
             </field>
           </customization>
           <customization position="owner">
-            <field attribute="owner" hidden="true" label="Owner"/>
+            <field attribute="owner" hidden="true" label="Owner Hidden"/>
             <field attribute="ownerperson_.displayname" label="Owner">
               <renderer type="default" params="width=15%" />
             </field>
@@ -552,7 +552,7 @@
 
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" orderbyfield="modifydate desc"/>
             </composition>
 
             <composition relationship="commlog" label="Communications">
@@ -707,25 +707,6 @@
             <renderer type="lookup"/>
           </association>
         </detail>
-      </schemas>
-    </application>
-
-    <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
-      <schemas>
-        <detail platform="web" redeclaring="false">
-          <customization position="itemnum">
-            <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
-              <dataprovider prefilterfunction="filterPlannedMaterials"/>
-              <renderer type="lookup"/>
-              <event type="afterchange" service="matusetranService" method="afteritemchange"/>
-            </association>
-          </customization>
-          <customization position="gldebitacct">
-            <association label="GL Debit Account:" target="gldebitacct" labelfield="glcomponents_.comptext">
-              <renderer type="lookup"/>
-            </association>
-          </customization>
-      </detail>
       </schemas>
     </application>
 

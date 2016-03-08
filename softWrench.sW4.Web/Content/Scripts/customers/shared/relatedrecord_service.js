@@ -15,21 +15,27 @@ angular.module('sw_layout')
         });
     };
 
+    function appName(app) {
+        if (app.equalsIc("sr")) {
+            return "servicerequest";
+        } else if (app.equalsIc("incident")) {
+            return "incident";
+        }
+        return app;
+    }
+
     return {
 
         open: function (datamap, columnmetadata) {
-            var app = datamap['relatedrecclass'];
-            var userid = datamap['relatedreckey'];
-            var siteid = datamap['siteid'];
+            var app = datamap["relatedrecclass"];
+            var key = datamap["relatedreckey"];
+            var siteid = datamap["siteid"];
 
-            var swApp = app.equalsIc("sr") ? "servicerequest" : app;
-            
-            if (app.equalsAny('SR','WORKORDER')) {
-                redirectService.goToApplicationView(swApp, "editdetail", "input", null, { userid: userid, siteid: siteid });
-            }
-            else {
-                redirectService.goToApplicationView(app, "detail", "input", null, { userid: userid, siteid: siteid });
-            }
+            var swApp = appName(app);
+            var schemaId = app.equalsAny("SR", "WORKORDER", "INCIDENT") ? "editdetail" : "detail";
+            var params = swApp.equalsIc("incident") ? { id: key, siteid: siteid } : { userid: key, siteid: siteid };
+
+            return redirectService.goToApplicationView(swApp, schemaId, "input", null, params);
         },
 
         saveBatch: function (event) {

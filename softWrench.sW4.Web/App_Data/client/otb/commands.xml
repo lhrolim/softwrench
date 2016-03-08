@@ -86,10 +86,32 @@
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
 
+  
+
+  <commandgroup position="compositionbottom" platform="web">
+    <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldShowSave"/>
+    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="parentschema,parentdatamap" label="Print" showexpression="$scope:shouldshowprint"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
+  </commandgroup>
+
+
+  <commandgroup position="compositiontop" platform="web">
+    <command icon="fa-plus" label="Expand All" id="expandall" service="$scope" method="expandAll" showexpression="$scope:showExpansionCommands"/>
+    <command icon="fa-minus" label="Collapse All" id="collapseall" service="$scope" method="collapseAll" showexpression="$scope:showExpansionCommands"/>
+    <command icon="fa-refresh" label="Refresh" id="refresh" service="$scope" method="refresh" />
+
+  </commandgroup>
+
   <commandgroup position="detailfilter" platform="web">
     <command id="apply" icon="fa-check" service="$scope" method="save" label="Apply"/>
     <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
+  </commandgroup>
+
+  <commandgroup position="search" platform="web">
+    <command id="search" primary="true" cssclasses="searchbutton" icon="fa-search" service="dispatcherService" method="dispatchevent" label="Search" parameters="sw.crud.search,schema,datamap"/>
+    <command id="clear" cssclasses="searchbutton" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
   </commandgroup>
 
 </commands>

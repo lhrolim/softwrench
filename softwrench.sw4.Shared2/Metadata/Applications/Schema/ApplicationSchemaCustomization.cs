@@ -69,6 +69,6 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
         public string ShowExpression { get; set; }
         public string ToolTip { get; private set; }
         public string Label { get; private set; }
-        public bool? ReadOnly { get; set; }
+        public bool IsReadOnly { get; set; }
     }
 }

@@ -15,6 +15,7 @@ using cts.commons.simpleinjector.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 using softwrench.sw4.user.classes.entities;
 
 namespace softwrench.sw4.Hapag.Security {
@@ -31,7 +32,7 @@ namespace softwrench.sw4.Hapag.Security {
 
         private readonly EntityRepository _repository;
 
-        private readonly SWDBHibernateDAO _dao;
+        private readonly ISWDBHibernateDAO _dao;
 
         private readonly IContextLookuper _contextLookuper;
 
@@ -42,7 +43,7 @@ namespace softwrench.sw4.Hapag.Security {
 
         private readonly EntityMetadata _personEntity;
 
-        public HlagLocationManager(SWDBHibernateDAO dao, EntityRepository repository, IContextLookuper contextLookuper) {
+        public HlagLocationManager(ISWDBHibernateDAO dao, EntityRepository repository, IContextLookuper contextLookuper) {
             _dao = dao;
             _repository = repository;
             _personEntity = MetadataProvider.Entity("person");
@@ -296,7 +297,7 @@ namespace softwrench.sw4.Hapag.Security {
 
         public IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId) {
             var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
-            var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null, null, null));
+            var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null, null, null, null));
             var groupedLocation = result.GroupedLocations.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
             if (groupedLocation == null) {
                 return null;

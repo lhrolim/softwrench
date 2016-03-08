@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using log4net;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
+using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.entities.security;
 
 namespace softWrench.sW4.Metadata.Applications.Command {
     public class ApplicationCommandUtils {
@@ -30,11 +34,39 @@ namespace softWrench.sW4.Metadata.Applications.Command {
             return overridenCommand as ApplicationCommand;
         }
 
+        private static IList<ActionPermission> LocateActionPermissions(MergedUserProfile profile, string barKey) {
+            if (barKey.GetNumberOfItems("_") < 2 || !barKey.Contains("actions")) {
+                //only actions are customizable at this point
+                return new List<ActionPermission>();
+            }
+            var applicationFinalDelimiter = 1;
+            if (barKey.StartsWith("_")){
+                //swdb applications start with _
+                applicationFinalDelimiter = 2;
+            }
+
+            //format: application_schema_mode#barid
+            var applicationIdx = barKey.GetNthIndex('_', applicationFinalDelimiter);
+            var modeIdx = barKey.GetNthIndex('_', applicationFinalDelimiter+1);
+            var applicationName = barKey.Substring(0, applicationIdx);
+            var schemaName = barKey.Substring(applicationIdx + 1, modeIdx - (applicationIdx +1));
+            var applicationPermission = profile.GetPermissionByApplication(applicationName);
+            if (applicationPermission == null) {
+                return new List<ActionPermission>();
+            }
+            return new List<ActionPermission>(applicationPermission.ActionPermissions.Where(s => s.Schema.EqualsIc(schemaName)));
+        }
+
+
         public static IDictionary<string, CommandBarDefinition> SecuredBars(InMemoryUser user, IDictionary<string, CommandBarDefinition> commandBars) {
             var result = new Dictionary<string, CommandBarDefinition>();
             foreach (var commandBar in commandBars) {
+
+                var commandbarKey = commandBar.Key;
+                var permissions = LocateActionPermissions(user.MergedUserProfile, commandbarKey);
+
                 var commandBarDefinition = commandBar.Value;
-                if (!commandBarDefinition.IsDynamic()) {
+                if (!commandBarDefinition.IsDynamic() && !permissions.Any()) {
                     //if there are no roles, simply add it. this will also trigger a cache on the bar for the next user
                     result[commandBar.Key] = commandBarDefinition;
                     Log.DebugFormat("returning bar {0} due to abscence of roles on it", commandBar.Key);
@@ -43,37 +75,26 @@ namespace softWrench.sW4.Metadata.Applications.Command {
                 var commands = new List<ICommandDisplayable>();
 
                 foreach (var command in commandBarDefinition.Commands) {
-                    if (command.Role == null) {
-                        commands.Add(command);
-                        continue;
-                    }
-
-                    if (!user.IsInRole(command.Role) && !user.IsSwAdmin()) {
-                        //if not in role, just skip it (unless swadmin that can see everything...)
-                        Log.DebugFormat("ignoring command {0} due to abscence of role {1}", command.Id, command.Role);
-                        continue;
-                    }
-
                     if (command is ContainerCommand) {
-                        var secured = ((ContainerCommand)command).Secure(user);
+                        var secured = ((ContainerCommand)command).Secure(user, permissions);
                         if (secured != null) {
                             commands.Add(secured);
                         }
                     } else {
-                        commands.Add(command);
+                        if (user.IsSwAdmin()) {
+                            //sw admin sees it all
+                            commands.Add(command);
+                        } else if (!command.Permitted(user,permissions)) {
+                            Log.DebugFormat("ignoring command {0} due to abscence of role {1}", command.Id, command.Role);
+                        } else {
+                            commands.Add(command);
+                        }
+
                     }
-
-
                 }
-
                 result[commandBar.Key] = new CommandBarDefinition(commandBarDefinition.Id, commandBarDefinition.Position, commandBarDefinition.ExcludeUndeclared, commands);
             }
-
-
-
             return result;
         }
-
-
     }
 }

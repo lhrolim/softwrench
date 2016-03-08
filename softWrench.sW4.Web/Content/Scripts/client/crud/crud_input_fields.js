@@ -111,7 +111,7 @@ app.directive('configAssociationListInputDatamap', function () {
             outerassociationdescription: '=',
             issection: '@',
             ismodal: '@',
-
+            panelid: '='
         },
 
         link: function (scope, element, attrs) {
@@ -200,7 +200,7 @@ app.directive('configAssociationListInputDatamap', function () {
                     return fieldMetadata.options;
                 }
                 var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
+                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
             }
             $scope.isPositionLeft = function (fieldMetadata) {
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
@@ -276,19 +276,7 @@ app.directive('configAssociationListInputDatamap', function () {
             });
 
 
-            $scope.$on("sw.crud.relationship.serverresolved", function () {
-                $timeout(function () {
-                    $scope.$watch('datamap', function (newValue, oldValue) {
-                        if (newValue !== oldValue) {
-                            crudContextHolderService.setDirty();
-                        }
-                    }, true);
-                }, 0, false);
-            });
-
-
             /* Association (COMBO, AUTOCOMPLETECLIENT) functions */
-
 
             $scope.haslookupModal = function (schema) {
                 return fieldService.getDisplayablesOfRendererTypes(schema.displayables, ['lookup']).length > 0;
@@ -350,9 +338,9 @@ app.directive('configAssociationListInputDatamap', function () {
             $scope.initCheckbox = function (fieldMetadata) {
                 var content = $scope.datamap[fieldMetadata.attribute];
                 if (content === "1" || content === "true" || content === true) {
-                    content = "true";
+                    content = true;
                 } else {
-                    content = "false";
+                    content = false;
                 }
                 $scope.datamap[fieldMetadata.attribute] = content;
             }
@@ -393,7 +381,7 @@ app.directive('configAssociationListInputDatamap', function () {
                             displayables: $scope.displayables,
                             scope: $scope,
                             'continue': function () {
-                                fieldService.postFieldChange(field, $scope);
+                                fieldService.postFieldChange(field, $scope,oldValue,newValue);
                                 try {
                                     $scope.$digest();
                                 } catch (ex) {
@@ -434,8 +422,9 @@ app.directive('configAssociationListInputDatamap', function () {
                         log.debug("ignoring first value of field {0}".format(optionfield.associationKey));
                         continue;
                     }
+                    var shouldUseFirstOption = optionfield.providerAttribute == null || fieldService.isPropertyTrue(optionfield, "optionfield.forcefirstoption");
 
-                    if ($scope.datamap[optionfield.target] == null && optionfield.providerAttribute == null && optionfield.rendererType !== 'checkbox') {
+                    if ($scope.datamap[optionfield.target] == null && shouldUseFirstOption && optionfield.rendererType !== 'checkbox') {
                         var values = $scope.GetOptionFieldOptions(optionfield);
                         if (values != null && values.length > 0) {
                             $scope.datamap[optionfield.target] = values[0].value;
@@ -491,26 +480,12 @@ app.directive('configAssociationListInputDatamap', function () {
                 }
                 return lengthclass;
             };
-            $scope.GetAssociationOptions = function (fieldMetadata) {
-                if (fieldMetadata.type === "OptionField") {
-                    return $scope.GetOptionFieldOptions(fieldMetadata);
-                }
-                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData);
-            }
-            $scope.GetOptionFieldOptions = function (optionField) {
-                if (optionField.providerAttribute == null) {
-                    return optionField.options;
-                }
-                var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                return crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute,contextData);
-            }
+         
             $scope.contextPath = function (path) {
                 return url(path);
             };
             $scope.isIE = function () {
-                //TODO: is this needed for all ieversions or only 9 and, in this case replace function for aa_utils
-                return isIe9();
+                return isIE();
             };
             $scope.getLabelStyle = function (fieldMetadata) {
                 var rendererColor = styleService.getLabelStyle(fieldMetadata, 'color');
@@ -665,6 +640,7 @@ app.directive('configAssociationListInputDatamap', function () {
             $scope.isFieldRequired = function (fieldMetadata) {
                 return fieldService.isFieldRequired(fieldMetadata, $scope.datamap);
             };
+
         }]
     }
 }])

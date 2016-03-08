@@ -3,68 +3,19 @@
 }
 
 #activitystream {
-    background: #f2f2f2;
-    position: fixed;
-    z-index: 1030;
-    width: 0;
-    top: 0;
-    right: 0;
-    float: right;
-    border-left: 1px solid #bfbfbf;
-    -webkit-box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
-    -moz-box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
-    box-shadow: -3px 3px 20px 0 rgba(0,0,0,0.25);
-
-    &.open {
-        width: 325px;
-    }
-
-    .handle {
-        -ms-transform: rotate(-90deg);
-        -webkit-transform: rotate(-90deg);
-        -moz-transform: rotate(-90deg);
-        -o-transform: rotate(-90deg);
-        transform: rotate(-90deg);
-        background: #f2f2f2;
-        text-align: center;
-        display: inline-block;
-        position: absolute;
-        top: 58px;
-        left: -80px;
-        min-width: 128px;
-        padding: 12px 15px 5px;
-        text-transform: uppercase;
-        border-top: 1px solid #bfbfbf;
-        border-left: 1px solid #bfbfbf;
-        border-right: 1px solid #bfbfbf;
-        border-top-left-radius: 3px;
-        border-top-right-radius: 3px;
-        cursor: pointer;
-        font-size: 12px;
-    }
-
     .unread {
         position: absolute;
-        top: 4px;
         left: -46px;
+        visibility: visible;
     }
 
     .badge {
         background: #cf4044;
     }
 
-    .pane {
-        padding: 20px 20px 0 20px;
-        display: none;
-
-        .scroll {
-            width: 100%;
-            outline: none;
-        }
-    }
-
-    &.open .pane {
-        display: block;
+    .pane .scroll {
+        width: 100%;
+        outline: none;
     }
 
     header {
@@ -122,20 +73,11 @@
         .filter .button {
             padding: 0;
         }
-
-        .filter .clearer {
-            position: absolute;
-            top: 46px;
-            right: 18px;
-            width: 34px;
-            height: 34px;
-            line-height: 34px;
-            text-align: center;
-        }
     }
 
     .messages {
         clear: both;
+        overflow: hidden;
     }
 
     .message {

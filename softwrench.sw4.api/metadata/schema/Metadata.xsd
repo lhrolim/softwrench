@@ -509,6 +509,14 @@
     <attribute name="default" type="string"></attribute>
     <attribute name="defaultexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
+    <attribute name="preventnoresultscarry" type="boolean">
+      <annotation>
+        <documentation>
+          During a search of no results a creation can be started.
+          If this atribute is set to true no search data of this field will be carried.
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="Renderer">
@@ -518,9 +526,10 @@
   </complexType>
 
   <complexType name="Filter">
-    <attribute name="operation" type="string" use="required"></attribute>
+    <attribute name="operation" type="string"></attribute>
     <attribute name="params" type="string"></attribute>
     <attribute name="default" type="string"></attribute>
+    <attribute name="clientfunction" type="string"></attribute>
   </complexType>
 
   <complexType name="Lookup">
@@ -789,6 +798,13 @@
     <attribute name="sort" type="boolean"></attribute>
     <attribute name="dependantfields" type="string"></attribute>
     <attribute name="qualifier" type="string"></attribute>
+    <attribute name="skipvalidation" type="boolean">
+      <annotation>
+        <documentation>
+          If true skips the validation of "provideratribute" attribute.
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="OptionType">
@@ -1220,6 +1236,13 @@
             <restriction base="string">
               <enumeration value="afterchange"></enumeration>
               <enumeration value="beforechange"></enumeration>
+              <enumeration value="providerloaded">
+                <annotation>
+                  <documentation>
+                    Hook to invoke a service right after the list of available options of a given association has been loaded
+                  </documentation>
+                </annotation>
+              </enumeration>
             </restriction>
           </simpleType>
         </attribute>
@@ -1234,7 +1257,9 @@
           <simpleType>
             <restriction base="string">
               <enumeration value="onviewdetail"></enumeration>
+              <!-- TODO:review called multiple times-->
               <enumeration value="onload"></enumeration>
+              <enumeration value="onschemafullyloaded"></enumeration>
               <enumeration
 								value="beforesubmit.onvalidation">
               </enumeration>

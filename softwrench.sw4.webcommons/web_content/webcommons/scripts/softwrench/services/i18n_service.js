@@ -110,10 +110,16 @@
             if (defaultValue == undefined) {
                 defaultValue = fieldMetadata.label;
             }
+        
             var value = doGetValue(key, defaultValue);
+
+            //if the tooltip and label are the same, don't show tooltips
+            if (value == fieldMetadata.label) {
+                value = '';
+            }
+
             return valueConsideringSchemas(value, schema);
         },
-
 
         getI18nOptionField: function (option, fieldMetadata, schema) {
             if (fieldMetadata.type != "OptionField" || fieldMetadata.providerAttribute != null) {
@@ -182,15 +188,16 @@
 
         getI18nRecordLabel: function (schema, datamap) {
             if (datamap == null || datamap.fields == null || schema == null) {
-                return
+                return "";
             }
 
             var userIdFieldName = schema.userIdFieldName;
-            var userID = datamap.fields[userIdFieldName];
+            var userId = datamap.fields[userIdFieldName];
 
-            if (schema.idDisplayable && userID != null) {
-                return '{0} {1}'.format(schema.idDisplayable, userID);
+            if (schema.idDisplayable && userId != null) {
+                return '{0} {1}'.format(schema.idDisplayable, userId);
             }
+            return "";
         },
 
         getI18nTitle: function (schema) {

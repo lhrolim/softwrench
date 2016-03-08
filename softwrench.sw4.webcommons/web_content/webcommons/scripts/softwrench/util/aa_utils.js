@@ -209,24 +209,18 @@ String.prototype.nullOrEmpty = String.prototype.f = function () {
 String.prototype.isEqual = String.prototype.f = function (other, ignoreCase) {
     var s = this;
     if (!ignoreCase) {
-        return s == other;
+        return s === other;
     }
     if (other == null) {
         return false;
     }
-    return s.toLowerCase() == other.toLowerCase();
+    return s.toLowerCase() === other.toLowerCase();
 };
 
 String.prototype.contains = function(str) {
     return this.indexOf(str) >= 0;
 };
 
-Array.prototype.subarray = function (start, end) {
-    if (!end) {
-        end = -1;
-    }
-    return this.slice(start, this.length + 1 - (end * -1));
-}
 
 function nullOrCommaSplit(value) {
     if (value == null || value === "") {
@@ -376,19 +370,33 @@ function capitaliseFirstLetter(string) {
     return returnstring;
 }
 
-function isIe9() {
-    if ("true" == sessionStorage.mockie9) {
-        return true;
+// http://stackoverflow.com/questions/17907445/how-to-detect-ie11
+function isIE11() {
+    if (navigator.appName !== "Netscape") {
+        return false;
     }
-    return BrowserDetect.browser == "Explorer" && (BrowserDetect.version == '9' || BrowserDetect.version == '8' || BrowserDetect.version == '7');
+    var ua = navigator.userAgent;
+    var re = new RegExp("Trident/.*rv:([0-9]{1,}[\.0-9]{0,})");
+    return re.exec(ua) != null;
+}
+
+function isIE() {
+    return BrowserDetect.browser === "Explorer" || isIE11();
+}
+
+function isIe9() {
+    var mockie9 = sessionStorage["mockie9"];
+    return (mockie9 === true || "true" === mockie9)
+        ? true
+        : isIE() && (BrowserDetect.version == '9' || BrowserDetect.version == '8' || BrowserDetect.version == '7');
 };
 
 function isChrome() {
-    return BrowserDetect.browser == "Chrome";
+    return BrowserDetect.browser === "Chrome";
 };
 
 function isFirefox() {
-    return BrowserDetect.browser == "Firefox";
+    return BrowserDetect.browser === "Firefox";
 };
 
 $.extend({

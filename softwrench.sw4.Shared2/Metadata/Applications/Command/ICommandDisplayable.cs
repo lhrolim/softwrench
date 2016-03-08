@@ -5,13 +5,20 @@ using System.Text;
 
 namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
     public interface ICommandDisplayable {
-        String Id { get; }
+        string Id { get; }
 
-        String Role { get; }
+        string Role { get; }
 
-        String Position { get; }
+        string Position { get; }
 
-        String Type { get; }
+        string Type { get; }
+
+        string ShowExpression { get; }
+
+        string PermissionExpression { get; }
+
+        string Label { get; }
+
         ICommandDisplayable KeepingOriginalData(ICommandDisplayable originalCommand);
     }
 }

@@ -10,13 +10,14 @@ using softWrench.sW4.Metadata.Applications.DataSet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagNewChangeDataSet : HapagBaseApplicationDataSet {
 
         #region PrefilterFunctions
 
-        public HapagNewChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
+        public HapagNewChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, IMaximoHibernateDAO maxDao)
             : base(locationManager, entityRepository, maxDao) {
         }
 

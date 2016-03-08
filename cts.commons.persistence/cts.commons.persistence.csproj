@@ -41,8 +41,9 @@
       <HintPath>..\packages\cts.commons.simpleinjector.1.0.1.0\lib\net45\cts.commons.simpleinjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentMigrator">
-      <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
+    <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="FluentMigrator.Runner">
       <HintPath>..\softWrench.sW4.Web\Dependencies\FluentMigrator.Runner.dll</HintPath>
@@ -67,9 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseHibernateDAO.cs" />
+    <Compile Include="Db2Helper.cs" />
     <Compile Include="Event\RestartDBEvent.cs" />
     <Compile Include="IBaseAuditEntity.cs" />
     <Compile Include="IBaseEntity.cs" />
+    <Compile Include="IBaseHibernateDAO.cs" />
+    <Compile Include="IMaximoHibernateDAO.cs" />
     <Compile Include="ISWDBHibernateDAO.cs" />
     <Compile Include="ReadWriteHibernateDAO.cs" />
     <Compile Include="SessionManagerWrapper.cs" />
@@ -83,6 +87,7 @@
     <Compile Include="Util\UTCDateTime.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="cts.commons.persistence.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>

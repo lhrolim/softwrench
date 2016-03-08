@@ -1,5 +1,13 @@
 ﻿namespace softWrench.sW4.Metadata.Stereotypes.Schema {
     public class ApplicationSchemaPropertiesCatalog {
+
+        /// <summary>
+        /// Marks a schema as a non internal
+        /// <seealso cref="MetadataProvider.FetchNonInternalSchemas"/>
+        /// </summary>
+        public const string NonInternalSchema = "schema.noninternal";
+
+
         /// <summary>
         /// Use this property to invoke a custom service upon click on the list page. Value should be on the format serviceName.methodName (ex: changeService.open), 
         /// and have 2 parameters:
@@ -101,6 +109,16 @@
         /// </summary>
         public const string PaginationOptions = "list.paginationoptions";
 
+        /// <summary>
+        ///  Destination schema of the new button of empty list.
+        /// </summary>
+        public const string NoResultsNewSchema = "list.noresultsnewschema";
+
+        /// <summary>
+        ///  Property to prevent the adition of the new button of empty list.
+        /// </summary>
+        public const string PreventNoResultsNew = "list.preventnoresultsnew";
+
 
 
         /// <summary>
@@ -164,6 +182,19 @@
         /// </summary>
         public static string DetailPreFetchCompositions = "detail.prefetchcompositions";
 
+        /// <summary>
+        /// If present:
+        ///    - Only the given fields and options (attributes separated by comma) will not be read only.
+        ///    - Only the given associations(targets separated by comma) will be enabled.
+        ///    - Only the given compositions(relationships separated by comma) will allow insertions e updates.
+        ///    - Only the given references (ids separated by comma) will not be read only.
+        /// </summary>
+        public static string DetailEnabledFields = "detail.enabledfields";
+
+        /// <summary>
+        /// If "true" alows the focus on form to move backward.
+        /// </summary>
+        public static string DetailFocusAllowMoveBackward = "detail.focus.allowmovingbackward";
 
         /// <summary>
         /// If true all options fields of this schema will be rendered with no initial selection
@@ -174,5 +205,20 @@
         /// Type of the bottom command bar. For now only works for the detail stereotype.
         /// </summary>
         public static string CommandBarBottom = "commandbar.bottom";
+
+        /// <summary>
+        /// The search schema id of current schema.
+        /// </summary>
+        public static string SearchSchemaId = "search.schemaid";
+
+        /// <summary>
+        /// If "true" the crud search side panel will start expanded.
+        /// </summary>
+        public static string SearchStartExpanded = "search.startexpanded";
+
+        /// <summary>
+        /// The width of the search panel handle.
+        /// </summary>
+        public static string SearchHandleWidthExpanded = "search.panelwidth";
     }
 }

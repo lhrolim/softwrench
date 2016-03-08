@@ -6,7 +6,7 @@
         function dispatchWO(schema, datamap) {
 
 
-            redirectService.goToApplication("workorder", "newdetail", null, { "location": datamap.fields["location"] });
+            redirectService.goToApplication("workorder", "newdetail", null, { "location": datamap.fields["location"], "siteid": datamap.fields["siteid"] });
         }
         var service = {
             dispatchWO: dispatchWO

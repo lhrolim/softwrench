@@ -40,6 +40,7 @@ using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -82,6 +83,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         private IWhereClauseFacade _whereClauseFacade;
         private FilterWhereClauseHandler _filterWhereClauseHandler;
         private QuickSearchWhereClauseHandler _quickSearchWhereClauseHandler;
+        private AttachmentHandler _attachmentHandler;
 
         internal BaseApplicationDataSet() {
         }
@@ -140,6 +142,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
         }
 
+        protected AttachmentHandler AttachmentHandler {
+            get {
+                return _attachmentHandler ?? (_attachmentHandler = new AttachmentHandler());
+            }
+        }
+
         protected abstract IConnectorEngine Engine();
 
 
@@ -189,7 +197,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public virtual ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
+            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema,user);
             DataMap dataMap;
             if (request.IsEditionRequest) {
                 dataMap = (DataMap)Engine().FindById(entityMetadata, id, request.UserIdSitetuple);
@@ -229,16 +237,35 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 }
             }
             if (compostionsToUse.Any()) {
-                GetCompositionData(application, new PreFetchedCompositionFetchRequest(new List<AttributeHolder> { dataMap }), null);
+                var preFetchedCompositionFetchRequest = new PreFetchedCompositionFetchRequest(new List<AttributeHolder> { dataMap });
+                preFetchedCompositionFetchRequest.CompositionList = new List<string>(compostionsToUse.Keys);
+                GetCompositionData(application, preFetchedCompositionFetchRequest, null);
             }
         }
 
         public virtual CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
+            var data = DoGetCompositionData(application, request, currentData);
 
+            // SWWEB-2046: adding download url to the datamap
+            // fetching url at drag-time does not work
+            if (!data.ResultObject.ContainsKey("attachment_")) {
+                return data;
+            }
+            var attachments = data.ResultObject["attachment_"].ResultList;
+            foreach (var attachment in attachments) {
+                if (attachment.ContainsKey("docinfo_.urlname")) {
+                    var docInfoURL = (string)attachment["docinfo_.urlname"];
+                    attachment["download_url"] = AttachmentHandler.GetFileUrl(docInfoURL);
+                }
+            }
+            return data;
+        }
+
+        private CompositionFetchResult DoGetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
             var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            Dictionary<string, EntityRepository.SearchEntityResult> result;
+            IDictionary<string, EntityRepository.SearchEntityResult> result;
 
             if (request.CompositionList != null) {
                 foreach (var compositionKey in request.CompositionList.Where(applicationCompositionSchemas.ContainsKey)) {
@@ -256,9 +283,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 return new CompositionFetchResult(result, listOfEntities.FirstOrDefault());
             }
 
-
-            var cruddata = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata,
-               application, currentData, request.Id);
+            var cruddata = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata, application, currentData, request.Id);
 
             result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
 
@@ -329,6 +354,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             Log.DebugFormat("BaseApplicationDataSet#GetList calling Find method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, ctx);
             entities = Engine().Find(entityMetadata, dto, applicationCompositionSchemata);
 
+
             // Get the composition data for the list, only in the case of detailed list (like printing details), otherwise, this is unecessary
             if (applicationCompositionSchemata.Count > 0) {
                 var request = new PreFetchedCompositionFetchRequest(entities) {
@@ -360,7 +386,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             if (associationsToFetch.IsNone) {
                 return result;
             }
-
 
             IDictionary<string, IEnumerable<IAssociationOption>>
                 eagerFetchedOptions = new ConcurrentDictionary<string, IEnumerable<IAssociationOption>>();
@@ -610,7 +635,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     tasks.Add(Task.Factory.NewThread(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
                         var data = _dynamicOptionFieldResolver.ResolveOptions(application.Schema, optionField, cruddata);
-                        resultObject.Add(optionField.AssociationKey, new LookupOptionsFetchResultDTO(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                        if (data != null) {
+                            resultObject.Add(optionField.AssociationKey, new LookupOptionsFetchResultDTO(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                        }
                     }, ctx));
                 } else {
                     var associationApplicationMetadata =

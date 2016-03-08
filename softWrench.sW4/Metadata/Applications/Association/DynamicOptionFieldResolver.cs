@@ -19,8 +19,6 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }
             var attribute = optionField.ProviderAttribute;
             var extraParameter = optionField.ExtraParameter;
-            attribute = attribute.Replace("#", "");
-            attribute = attribute.Replace("_", "");
 
 
             var methodName = GetMethodName(attribute);
@@ -34,21 +32,31 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }
             var application = ApplicationMetadata.FromSchema(schema);
             var associationOptions = (IEnumerable<IAssociationOption>)mi.Invoke(dataSet, new object[] { new OptionFieldProviderParameters { OriginalEntity = dataMap, ApplicationMetadata = application, OptionField = optionField } });
-            if (optionField.Sort) {
-                associationOptions = associationOptions.OrderBy(f => f.Label);
+            if (associationOptions!= null && optionField.Sort) {
+                var enumerable = associationOptions as IAssociationOption[] ?? associationOptions.ToArray();
+                if (enumerable.First() is PriorityBasedAssociationOption) {
+                    associationOptions = enumerable.OrderBy(f => ((PriorityBasedAssociationOption)f).Priority);
+                } else {
+                    associationOptions = enumerable.OrderBy(f => f.Label);
+                }
+
+
             }
             return associationOptions;
         }
 
-        private static string GetMethodName(string attribute) {
-            if (char.IsNumber(attribute[0])) {
+        public static string GetMethodName(string attribute) {
+            var internalAttribute = attribute.Replace("#", "");
+            internalAttribute = internalAttribute.Replace("_", "");
+
+            if (char.IsNumber(internalAttribute[0])) {
                 //deprecated: using on the final of string to avoid angular errors
-                return "Get" + StringUtil.FirstLetterToUpper(attribute.Substring(1));
+                return "Get" + StringUtil.FirstLetterToUpper(internalAttribute.Substring(1));
             }
-            if (char.IsNumber(attribute[attribute.Length - 1])) {
-                return "Get" + StringUtil.FirstLetterToUpper(attribute.Substring(0, attribute.Length - 1));
+            if (char.IsNumber(internalAttribute[internalAttribute.Length - 1])) {
+                return "Get" + StringUtil.FirstLetterToUpper(internalAttribute.Substring(0, internalAttribute.Length - 1));
             }
-            return "Get" + StringUtil.FirstLetterToUpper(attribute);
+            return "Get" + StringUtil.FirstLetterToUpper(internalAttribute);
         }
     }
 }

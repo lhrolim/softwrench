@@ -314,7 +314,7 @@ namespace softWrench.sW4.Metadata.Entities {
         }
 
         public bool SWEntity() {
-            return this._name.StartsWith("_");
+            return this._name.EndsWith("_");
         }
     }
 }

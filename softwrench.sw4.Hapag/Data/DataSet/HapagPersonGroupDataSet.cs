@@ -13,11 +13,12 @@ using softWrench.sW4.Security.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
 
     class HapagPersonGroupDataSet : HapagBaseApplicationDataSet {
-        public HapagPersonGroupDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) 
+        public HapagPersonGroupDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, IMaximoHibernateDAO maxDao) 
             : base(locationManager, entityRepository, maxDao)
         {
         }

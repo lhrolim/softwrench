@@ -12,6 +12,7 @@
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
     <template path="@woactivity.xml"/>
+    <template path="@multiassetlocci.xml"/>
   </templates>
 
   <entities>
@@ -72,7 +73,7 @@
           <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
         </relationship>
         <!--COMSW 51 Reverse Lookup of Service Address (Lazy Fetch)-->
-        <relationship to="woaddress" reverselookupattribute="addresscode" >
+        <relationship to="woaddress" reverselookupattribute="addresscode" >ele
           <relationshipAttribute from="wonum" to="woserviceaddress_.wonum" primary="true"/>
         </relationship>
         <relationship to="woserviceaddress">
@@ -80,7 +81,7 @@
           <relationshipAttribute from="orgid" to="orgid"/>
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="synstatus">
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
         </relationship>
@@ -96,6 +97,13 @@
         <relationship to="tooltrans" collection="true">
           <relationshipAttribute from="wonum" to="refwo" primary="true" />
           <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="multiassetlocci" collection="true">
+          <relationshipAttribute from="wonum" to="RECORDKEY" primary="true"/>
+          <relationshipAttribute from="woclass" to="RECORDCLASS" />
+          <relationshipAttribute from="siteid" to="worksiteid" />
+          <!--we need to exclde primary entries to keep consistency with maximo behaviour-->
+          <relationshipAttribute to="ISPRIMARY" literal="0"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -330,7 +338,7 @@
 
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" orderbyfield="modifydate desc"  />
             </composition>
 
             <composition relationship="commlog" label="Communications">
@@ -513,7 +521,10 @@
           </section>
 
           <!-- Adding target start finish date-->
-
+          <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
+            <collectionproperties listschema="newlist" autocommit="false"/>
+            <renderer type="TABLE" params="mode=batch;"/>
+          </composition>
 
           <!--Target Start Date Scheduled Start Date (required field) Actual Start Date  -->
           <section orientation="horizontal">
@@ -592,7 +603,7 @@
           </section>
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" />
+              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" orderbyfield="modifydate desc" />
             </composition>
             <composition relationship="woactivity" label="WO Tasks">
               <collectionproperties allowupdate="false" allowcreation="false"  />

@@ -195,16 +195,22 @@
 				percentInViewH = contentWidth / paneWidth;
 				percentInViewV = contentHeight / paneHeight;
 				isScrollableV = percentInViewV > 1;
-
 				isScrollableH = percentInViewH > 1;
 
-				//console.log(paneWidth, paneHeight, contentWidth, contentHeight, percentInViewH, percentInViewV, isScrollableH, isScrollableV);
+                //override scrollbars based on settings
+			    if (settings.hideVerticalScroll) {
+			        isScrollableV = false;
+			    }
+
+			    if (settings.hideHorizontalScroll) {
+			        isScrollableH = false;
+			    }
 
 				if (!(isScrollableH || isScrollableV)) {
 					elem.removeClass('jspScrollable');
 					pane.css({
-            top: 0,
-            left: 0,
+                        top: 0,
+                        left: 0,
 						width: container.width() - originalPaddingTotalWidth
 					});
 					removeMousewheel();
@@ -1430,7 +1436,9 @@
 	};
 
 	$.fn.jScrollPane.defaults = {
-		showArrows					: false,
+	    showArrows                  : false,
+	    hideHorizontalScroll        : true,
+	    hideVerticalScroll          : false,
 		maintainPosition			: true,
 		stickToBottom				: false,
 		stickToRight				: false,

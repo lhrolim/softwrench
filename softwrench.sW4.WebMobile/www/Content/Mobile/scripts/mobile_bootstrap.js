@@ -16,14 +16,15 @@ document.addEventListener("deviceready", function () {
  */
 var $s = function (element) {
     var elementWrapper = angular.element(element);
-    if (typeof (elementWrapper['scope']) !== "function") {
+    if (typeof (elementWrapper["scope"]) !== "function") {
         return null;
     }
     var scope = elementWrapper.scope();
-    if (!scope || !scope['$parent']) {
-        return scope;
-    }
-    return scope.$parent;
+    //if (!scope || !scope['$parent']) {
+    //    return scope;
+    //}
+    //return scope.$parent;
+    return scope;
 };
 //#endregion
 
@@ -55,9 +56,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
         function initDataBaseDebuggingHelpers() {
             // DataBase debug mode: set swdbDAO service as global variable
-            if (!!persistence.debug) {
-                window.swdbDAO = swdbDAO;
-            }
+            if (!!persistence.debug) window.swdbDAO = swdbDAO;
         }
 
         function disableRipplePopup() {

@@ -47,10 +47,19 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
         [DefaultValue("false")]
-        public string RequiredExpression { get; set; }
+        public string RequiredExpression {
+            get; set;
+        }
 
         public string Qualifier {
             get; set;
+        }
+
+        public bool IsHidden {
+            get {
+                return false;
+            }
+            set { }
         }
 
         private ApplicationAssociationSchemaDefinition _applicationAssociationSchema;
@@ -337,12 +346,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public override string Role {
             get {
-                return From + "." + Target;
+                return Target;
             }
         }
 
         //exacttly as it comes from metadata parsing
-        public string OriginalLabelField { get; set; }
+        public string OriginalLabelField {
+            get; set;
+        }
 
         public void SetLazyRendererParametersResolver(Lazy<IDictionary<string, object>> resolver) {
             LazyRendererParametersResolver = resolver;
@@ -359,6 +370,26 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             cloned.SetLazyResolver(LazyEntityAssociation);
             cloned.SetLazyRendererParametersResolver(LazyRendererParametersResolver);
             return cloned;
+        }
+
+        protected bool Equals(ApplicationAssociationDefinition other) {
+            return string.Equals(Role, other.Role) && string.Equals(AssociationKey, other.AssociationKey);
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((ApplicationAssociationDefinition)obj);
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ (Role != null ? Role.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (AssociationKey != null ? AssociationKey.GetHashCode() : 0);
+                return hashCode;
+            }
         }
     }
 }

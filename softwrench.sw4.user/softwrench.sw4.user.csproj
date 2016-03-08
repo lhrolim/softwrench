@@ -39,8 +39,8 @@
       <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentMigrator, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
+    <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
@@ -65,9 +65,25 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\config\UserConfigurationConstants.cs" />
+    <Compile Include="classes\entities\MergedUserProfile.cs" />
+    <Compile Include="classes\entities\security\ContainerPermission.cs" />
+    <Compile Include="classes\entities\security\FieldPermission.cs" />
+    <Compile Include="classes\entities\security\ActionPermission.cs" />
+    <Compile Include="classes\entities\security\CompositionPermission.cs" />
+    <Compile Include="classes\entities\security\ApplicationPermission.cs" />
     <Compile Include="classes\entities\DataConstraint.cs" />
     <Compile Include="classes\entities\Person.cs" />
     <Compile Include="classes\entities\PersonGroup.cs" />
@@ -75,6 +91,8 @@
     <Compile Include="classes\entities\Role.cs" />
     <Compile Include="classes\entities\RoleGroup.cs" />
     <Compile Include="classes\entities\RoleWithErrorMessage.cs" />
+    <Compile Include="classes\entities\security\SchemaPermissionMode.cs" />
+    <Compile Include="classes\entities\security\SecurityEntityExtensions.cs" />
     <Compile Include="classes\entities\UserPreferences.cs" />
     <Compile Include="classes\entities\User.cs" />
     <Compile Include="classes\entities\UserStatistics.cs" />
@@ -86,6 +104,7 @@
     <Compile Include="classes\services\setup\UserSetupEmailService.cs" />
     <Compile Include="classes\services\setup\UserLinkManager.cs" />
     <Compile Include="classes\services\UserStatisticsService.cs" />
+    <Compile Include="Migration\MigrationSwweb1216.cs" />
     <Compile Include="Migration\MigrationSwweb1340.cs" />
     <Compile Include="Migration\MigrationSwweb1331.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -98,6 +117,10 @@
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841B4DEA-A209-4AA8-A73C-29C33E01EEE0}</Project>
       <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.web\cts.commons.web.csproj">
+      <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
+      <Name>cts.commons.web</Name>
     </ProjectReference>
     <ProjectReference Include="..\cts.commons\cts.commons.csproj">
       <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>

@@ -18,9 +18,13 @@ namespace softWrench.sW4.Metadata.Parsing {
     internal sealed class XmlEntitySourceMetadataParser : IXmlMetadataParser<Tuple<IEnumerable<EntityMetadata>, EntityQueries>> {
 
         private readonly Boolean _isSWDDB = false;
+        private bool _isTemplateParsing;
+        private XmlTemplateHandler _xmlTemplateHandler;
 
-        public XmlEntitySourceMetadataParser(bool isSWDB) {
+        public XmlEntitySourceMetadataParser(bool isSWDB, bool isTemplateParsing) {
             _isSWDDB = isSWDB;
+            _isTemplateParsing = isTemplateParsing;
+            _xmlTemplateHandler = new XmlTemplateHandler(_isSWDDB);
         }
 
         /// <summary>
@@ -31,14 +35,14 @@ namespace softWrench.sW4.Metadata.Parsing {
         private EntityMetadata ParseEntity(XElement entity) {
             var name = entity.Attribute(XmlMetadataSchema.EntityAttributeName).Value;
             if (_isSWDDB) {
-                name = "_" + name;
+                name = name + "_";
             }
             var idAttributeName = entity.Attribute(XmlMetadataSchema.EntityAttributeIdAttribute).Value;
             var useridAttributeName = entity.Attribute(XmlMetadataSchema.EntityAttributeUserIdAttribute).ValueOrDefault(idAttributeName);
             var whereClause = entity.Attribute(XmlMetadataSchema.EntityAttributeWhereClause).ValueOrDefault((string)null);
             var parentEntity = entity.Attribute(XmlMetadataSchema.EntityAttributeParentEntity).ValueOrDefault((string)null);
             if (_isSWDDB && parentEntity != null) {
-                parentEntity = "_" + parentEntity;
+                parentEntity = parentEntity + "_";
             }
             var associations = XmlAssociationsParser.Parse(name, entity);
             return new EntityMetadata(name,
@@ -56,7 +60,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// <param name="stream">The input stream containing the XML representation of the metadata file.</param>
         /// <param name="alreadyParsedTemplates"></param>
         [NotNull]
-        public Tuple<IEnumerable<EntityMetadata>, EntityQueries> Parse([NotNull] TextReader stream, ISet<string> alreadyParsedTemplates = null) {
+        public Tuple<IEnumerable<EntityMetadata>, EntityQueries> Parse([NotNull] TextReader stream,  ISet<string> alreadyParsedTemplates = null) {
             Validate.NotNull(stream, "stream");
             var document = XDocument.Load(stream);
             if (null == document.Root) throw new InvalidDataException();
@@ -71,7 +75,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var entityMetadatas = new List<EntityMetadata>();
             var result = new Tuple<IEnumerable<EntityMetadata>, EntityQueries>(entityMetadatas, new EntityQueries(new Dictionary<string, string>()));
 
-            entityMetadatas.AddRange(XmlTemplateHandler.HandleTemplatesForEntities(templates, _isSWDDB, alreadyParsedTemplates));
+            entityMetadatas.AddRange(_xmlTemplateHandler.HandleTemplatesForEntities(templates, _isSWDDB, alreadyParsedTemplates));
 
 
             var entities = enumerable.FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.EntitiesElement));

@@ -5,7 +5,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
 
 
         /// <summary>
-        /// Can be either xxx_.yyy (an association labelfield), or @xxx --> a method invocation on the Application DataSet object
+        /// Can be either xxx_.yyy (an association labelfield), or @xxx --> a method invocation on the Application DataSet object, or @xxx.yyy any simpleinjector method
         /// </summary>
         public string Provider {
             get; set;

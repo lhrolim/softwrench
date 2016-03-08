@@ -29,6 +29,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
 
             fields["classstructureid"] = sharedData.Classificationid;
             fields["ld_.ldtext"] = sharedData.Details;
+            fields["worktype"] = sharedData.WorkType;
 
             var keyFieldName = batchType.GetUserIdName();
 
@@ -45,6 +46,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
                 if (specificData.Classification != null) {
                     fields["classstructureid"] = specificData.Classificationid;
                 }
+                fields["worktype"] = specificData.WorkType ?? sharedData.WorkType;
                 //asset batches will also specify the location of the item (which should be the same location as the asset itself)
                 var assetBatchSpecificData = specificData as AssetBatchSpecificData;
                 if (assetBatchSpecificData != null) {
@@ -78,6 +80,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             fields[userIdFieldName] = item.Value;
             fields["userIdFieldName"] = userIdFieldName;
             fields["specificLabel"] = string.IsNullOrEmpty(item.Label) ? item.Value : item.Label;
+            fields["worktype"] = batchSharedData.WorkType;
             var multiValueOption = item;
 
             if (multiValueOption.Extrafields != null) {

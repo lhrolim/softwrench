@@ -29,6 +29,16 @@
 
         public string Position { get; set; }
 
+        public string ShowExpression {
+            get; set;
+        }
+
+        public string PermissionExpression {
+            get; set;
+        }
+
+        public string Label { get; set; }
+
         public string Type {
             get {
                 return typeof(ToggleCommand).Name;

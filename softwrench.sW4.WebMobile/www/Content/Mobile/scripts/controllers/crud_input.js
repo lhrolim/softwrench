@@ -9,40 +9,6 @@
             $scope.compositionpopover = popover;
         });
 
-
-        $scope.$on("sw_validationerrors", function (event, validationArray) {
-
-        });
-
-     
-
-        $scope.associationSearch = function (query, componentId) {
-            return offlineAssociationService.filterPromise(crudContextService.currentDetailSchema(), $scope.datamap, componentId, query);
-        }
-
-        $scope.getAssociationLabelField = function (fieldMetadata) {
-            var associationValueField = this.getAssociationValueField(fieldMetadata);
-            if ("true" === fieldMetadata.hideDescription) {
-                return associationValueField;
-            }
-            return associationValueField +  "+' - '+"  + "datamap." + fieldMetadata.labelFields[0];
-        }
-
-        $scope.getAssociationValueField = function (fieldMetadata) {
-            return 'datamap.' + fieldMetadata.valueField;
-        }
-
-        $scope.isFieldHidden = function (fieldMetadata) {
-            return fieldService.isFieldHidden($scope.datamap, $scope.schema, fieldMetadata);
-        }
-
-        $scope.isFieldRequired = function (requiredExpression) {
-            if (requiredExpression != undefined) {
-                return expressionService.evaluate(requiredExpression, $scope.datamap);
-            }
-            return requiredExpression;
-        };
-
     }]);
     
 })(angular);

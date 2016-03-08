@@ -2,6 +2,7 @@
     z-index: 8000;
     overflow-y: auto !important;
     outline: none;
+    max-height: 90%;
 }
 
 .smallmodal {
@@ -31,10 +32,14 @@
 
 // lookup modals that have crud content inside (input fields)
 .crud-lookup-modal {
-    width: 500px !important;
+    width: 800px !important;
 
     @media (max-width: 500px) {
         width: 350px !important;
+    }
+
+    @media (max-width: 800px) {
+        width: 500px !important;
     }
 }
 

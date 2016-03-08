@@ -389,7 +389,7 @@
                 /// <param name="item"></param>
                 /// <returns type=""></returns>
                 if (!crudContext.currentDetailSchema) {
-                    crudContext.currentDetailSchema = offlineSchemaService.loadDetailSchema(crudContext.currentListSchema, crudContext.currentApplication);
+                    crudContext.currentDetailSchema = offlineSchemaService.loadDetailSchema(crudContext.currentListSchema, crudContext.currentApplication, item);
                 }
 
                 var fields = this.mainDisplayables();

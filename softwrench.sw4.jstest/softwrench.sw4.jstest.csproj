@@ -1438,6 +1438,7 @@
     <Content Include="tests\controllers\grid_filter_test.js" />
     <Content Include="tests\customers\firstsolar\services\batchWoService_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
+    <Content Include="tests\services\adminresources\userprofileservice_test.js" />
     <Content Include="tests\services\crud_contextservice_test.js" />
     <Content Include="tests\services\gridSelection_service_test.js" />
     <Content Include="tests\services\menu_service_test.js" />

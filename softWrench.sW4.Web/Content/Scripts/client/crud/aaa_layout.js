@@ -1,24 +1,25 @@
 ﻿(function (angular) {
     "use strict";
 
-var app = window.app = angular.module('sw_layout',
-    ['pasvaz.bindonce',
-     'angularTreeview',
-     'ngSanitize',
-     'textAngular',
-     'angularFileUpload',
-     'angular-clipboard',
-     "xeditable",
-     'sw_lookup',
-     'sw_typeahead',
-     "sw_scan",
-     'webcommons_services',
-     'maximo_applications',
-     'selectize',
-     'ngAnimate',
-     'omr.angularFileDnD']);
+    var app = window.app = angular.module('sw_layout',
+        ['pasvaz.bindonce',
+         'angularTreeview',
+         'ngSanitize',
+         'textAngular',
+         'angularFileUpload',
+         'angular-clipboard',
+         "xeditable",
+         'sw_lookup',
+         'sw_typeahead',
+         "sw_scan",
+         "sw_crudadmin",
+         'webcommons_services',
+         'maximo_applications',
+         'selectize',
+         'ngAnimate',
+         'omr.angularFileDnD']);
 
-angular.module('sw_prelogin', []);
+    angular.module('sw_prelogin', []);
 
     //angular 1.3 migration reference
     //app.config(['$controllerProvider', function ($controllerProvider) {
@@ -29,9 +30,9 @@ angular.module('sw_prelogin', []);
     //    uiSelectConfig.theme = "bootstrap";
     //});
 
-    app.run(function (editableOptions) {
+    app.run(["editableOptions", function (editableOptions) {
         editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-    });
+    }]);
 
 
     //#region extra directives
@@ -134,20 +135,34 @@ angular.module('sw_prelogin', []);
         };
     });
 
-
+    app.directive('numberToString', function () {
+        return {
+            require: 'ngModel',
+            link: function (scope, element, attrs, ngModel) {
+                // Some non-string values coming from the rootdatamap are breaking the string binding, so we need to format them to string
+                // https://controltechnologysolutions.atlassian.net/browse/SWWEB-2042 : first issue
+                ngModel.$formatters.push(function (value) {
+                    if (value == null) {
+                        return null;
+                    }
+                    return '' + value;
+                });
+            }
+        };
+    });
 
     //#endregion
 
 
 
-    function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService, schemaCacheService, logoutService, crudContextHolderService) {
+    function LayoutController($scope, $http, $log, $templateCache, $q, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService, schemaCacheService, logoutService, crudContextHolderService) {
 
         $scope.$name = 'LayoutController';
         var log = $log.getInstance('sw4.LayoutController');
 
         schemaCacheService.wipeSchemaCacheIfNeeded();
 
-     
+
 
         $scope.isDesktop = function () {
             return isDesktop();
@@ -164,6 +179,9 @@ angular.module('sw_prelogin', []);
 
 
         //#region listeners
+
+
+   
 
         $rootScope.$on('sw_ajaxinit', function (ajaxinitevent) {
             var savingMain = true === $rootScope.savingMain;
@@ -329,6 +347,6 @@ angular.module('sw_prelogin', []);
         initController();
     }
 
-    app.controller("LayoutController", ["$scope", "$http", "$log", "$templateCache", "$rootScope", "$timeout", "fixHeaderService", "redirectService", "i18NService", "menuService", "contextService", "spinService", "schemaCacheService", "logoutService", "crudContextHolderService", LayoutController]);
+    app.controller("LayoutController", ["$scope", "$http", "$log", "$templateCache", "$q", "$rootScope", "$timeout", "fixHeaderService", "redirectService", "i18NService", "menuService", "contextService", "spinService", "schemaCacheService", "logoutService", "crudContextHolderService", LayoutController]);
 
 })(angular);

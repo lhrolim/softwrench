@@ -14,7 +14,8 @@
             currentSchema: null,
             rootDataMap: null,
             currentApplicationName: null,
-
+            //a datamap that could be used in a transient fashion but that would have the same lifecycle as the main one, i.e, would get cleaned automatically upon app redirect
+            auxDataMap:null,
             /*{
             #global:{
              eagerassociation1_ :[],
@@ -70,6 +71,7 @@
             previousData: null,
             paginationData: null,
             isDirty: false,
+            detailDataResolved: false,
             needsServerRefresh: false,
             //list of profiles to show on screen, when there are multiple whereclauses registered for a given grid
             affectedProfiles: [],
@@ -149,8 +151,12 @@
             return getContext(panelid).currentSchema;
         }
 
-        function rootDataMap(panelid) {
-            return getContext(panelid).rootDataMap;
+        function rootDataMap(panelid,datamap) {
+            var context = getContext(panelid);
+            if (datamap) {
+                context.rootDataMap = datamap;
+            }
+            return context.rootDataMap;
         }
 
         function getAffectedProfiles(panelid) {
@@ -195,6 +201,24 @@
             return context.tabRecordCount && context.tabRecordCount[tab.tabId];
         }
 
+        function incrementTabRecordCount(tabId, panelId) {
+            var context = getContext(panelId);
+            if (context.tabRecordCount && context.tabRecordCount[tabId]) {
+                context.tabRecordCount[tabId] = context.tabRecordCount[tabId] + 1;
+            }
+        }
+        
+        function setDetailDataResolved(panelid) {
+            getContext(panelid).detailDataResolved = true;
+        }
+
+        function clearDetailDataResolved(panelid) {
+            getContext(panelid).detailDataResolved = false;
+        }
+
+        function getDetailDataResolved(panelid) {
+            return getContext(panelid).detailDataResolved;
+        }
 
         //#endregion
 
@@ -234,7 +258,6 @@
             this.clearDirty(panelid);
             this.disposeDetail(panelid);
             getContext(panelid).needsServerRefresh = false;
-
         }
 
         function gridLoaded(applicationListResult, panelid) {
@@ -247,6 +270,7 @@
 
         function disposeDetail(panelid) {
             var context = getContext(panelid);
+            clearDetailDataResolved(panelid);
             context.tabRecordCount = {};
             context._eagerassociationOptions = { "#global": {} };
             _crudContext._lazyAssociationOptions = {};
@@ -307,9 +331,10 @@
                 //when we have a reverse relationship, let´s add it to the parentdatamap, to make "life" easier for the outer components, such as the angulartypeahead, 
                 //and/or expressions
                 var displayable = displayables[0];
-                if (displayable.reverse) {
+                var key = Object.keys(options)[0];
+                if (displayable.reverse && key) {
                     //Object.keys(options)[0] --> this would be the key of the association
-                    _crudContext.rootDataMap.fields[displayable.target] = Object.keys(options)[0].toLowerCase();
+                    _crudContext.rootDataMap.fields[displayable.target] = key.toLowerCase();
                 }
             }
 
@@ -327,9 +352,9 @@
 
         function fetchEagerAssociationOptions(associationKey, contextData, panelid) {
             var context = getContext(panelid);
-            if (context.showingModal) {
-                contextData = { schemaId: "#modal" };
-            }
+            //if (context.showingModal) {
+            //    contextData = { schemaId: "#modal" };
+            //}
 
             if (contextData == null) {
                 return context._eagerassociationOptions["#global"][associationKey];
@@ -346,6 +371,11 @@
 
 
         function updateEagerAssociationOptions(associationKey, options, contextData, panelid) {
+            if (options == null) {
+                //case for dependant associations
+                return;
+            }
+
             var context = getContext(panelid);
             if (context.showingModal) {
                 contextData = { schemaId: "#modal" };
@@ -370,6 +400,7 @@
             context._eagerassociationOptions[schemaId][entryId][associationKey] = options;
 
             log.info("update eager list for {0}. Size: {1}".format(associationKey, options.length));
+
 
             $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData);
 
@@ -396,8 +427,9 @@
             clearCrudContext("#modal");
         };
 
-        function modalLoaded() {
+        function modalLoaded(datamap) {
             _crudContext.showingModal = true;
+            rootDataMap("#modal", datamap);
         }
 
         function isShowingModal() {
@@ -497,6 +529,7 @@
             getActiveTab: getActiveTab,
             setActiveTab: setActiveTab,
             getTabRecordCount: getTabRecordCount,
+            incrementTabRecordCount: incrementTabRecordCount,
             shouldShowRecordCount: shouldShowRecordCount,
             getCurrentSelectedProfile: getCurrentSelectedProfile,
             setCurrentSelectedProfile: setCurrentSelectedProfile,
@@ -509,7 +542,10 @@
             clearDirty: clearDirty,
             clearCrudContext: clearCrudContext,
             needsServerRefresh: needsServerRefresh,
-            rootDataMap: rootDataMap
+            rootDataMap: rootDataMap,
+            setDetailDataResolved: setDetailDataResolved,
+            getDetailDataResolved: getDetailDataResolved,
+            clearDetailDataResolved: clearDetailDataResolved
         };
 
         var associationServices = {
@@ -567,7 +603,7 @@
     }
 
 
-    angular.module("sw_layout").factory("crudContextHolderService", ['$rootScope', "$log","$injector", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
+    angular.module("sw_layout").factory("crudContextHolderService", ["$rootScope", "$log", "$injector", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
 
 
 

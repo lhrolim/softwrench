@@ -1,4 +1,4 @@
-﻿(function (angular) {
+﻿(function (angular, $) {
     "use strict";
 
     var app = angular.module('sw_layout');
@@ -10,7 +10,7 @@
 
             var config = {
                 defaultPageSize: 10,
-                defaultOptions: [10, 30, "all"],
+                defaultOptions: [10, 30, 100],
                 defaultRequestOptions: [0, 10, 30]
             };
 
@@ -29,24 +29,7 @@
                 return dto;
             };
 
-            function getLazyCompositions(schema, datamap) {
-                if (!schema || !schema["cachedCompositions"]) {
-                    return null;
-                }
-                var compositions = [];
-                var cachedCompositions = schema.cachedCompositions;
-                for (var composition in cachedCompositions) {
-                    if (!cachedCompositions.hasOwnProperty(composition)) {
-                        continue;
-                    }
-                    if ("lazy".equalsIc(cachedCompositions[composition].fetchType)) {
-                        compositions.push(composition);
-                    } else if ("eager".equalsIc(cachedCompositions[composition].fetchType)) {
-                        compositionContext[composition] = datamap[composition];
-                    }
-                }
-                return compositions;
-            };
+            
 
             function fetchCompositions(requestDTO, datamap, showLoading) {
                 var log = $log.getInstance('compositionservice#fetchCompositions');
@@ -77,7 +60,7 @@
 
                             var paginationData = compositionArray[composition].paginationData;
                             // enforce composition pagination options
-                            paginationData.paginationOptions = config.defaultOptions;
+                            paginationData.paginationOptions = paginationData.paginationOptions || config.defaultOptions;
                             //setting this case the tabs have not yet been loaded so that they can fetch from here
                             contextService.insertIntoContext("compositionpagination_{0}".format(composition), paginationData, true);
                             compositionContext[composition] = compositionArray[composition];
@@ -138,7 +121,26 @@
 
             //#endregion
 
-            //#region Public methods
+            //#region Public 
+
+            function getLazyCompositions(schema, datamap) {
+                if (!schema || !schema["cachedCompositions"]) {
+                    return null;
+                }
+                var compositions = [];
+                var cachedCompositions = schema.cachedCompositions;
+                for (var composition in cachedCompositions) {
+                    if (!cachedCompositions.hasOwnProperty(composition)) {
+                        continue;
+                    }
+                    if ("lazy".equalsIc(cachedCompositions[composition].fetchType)) {
+                        compositions.push(composition);
+                    } else if ("eager".equalsIc(cachedCompositions[composition].fetchType)) {
+                        compositionContext[composition] = datamap[composition];
+                    }
+                }
+                return compositions;
+            };
 
             function isCompositionLodaded(relationship) {
                 return compositionContext[relationship] != null;
@@ -223,10 +225,32 @@
                 var dto = buildFetchRequestDTO(schema, datamap, [composition], pageRequest);
                 return fetchCompositions(dto, datamap, true);
             }
+             
+            /**
+             * Fetches the composition item with the specified id
+             * 
+             * @param String|Number compositionId item's id
+             * @param {} compositiondetailschema composition's detail schema 
+             * @returns Promise resolved with response's body 
+             */
+            function getCompositionDetailItem(compositionId, compositiondetailschema) {
+                var parameters = {};
+                var request = {};
+                var key = {};
+                var applicationName = compositiondetailschema.applicationName;
+                parameters.request = request;
+                request.id = compositionId;
+                request.key = key;
+                key.schemaId = compositiondetailschema.schemaId;
+                key.mode = compositiondetailschema.mode;
+                key.platform = "web";
+                var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
+                return $http.get(urlToCall).then(function (result) {
+                    return result.data;
+                });
+            }
 
         //#endregion
-
-
 
             var api = {
                 locatePrintSchema: locatePrintSchema,
@@ -236,7 +260,9 @@
                 buildMergedDatamap: buildMergedDatamap,
                 populateWithCompositionData: populateWithCompositionData,
                 getCompositionList: getCompositionList,
-                isCompositionLodaded: isCompositionLodaded
+                isCompositionLodaded: isCompositionLodaded,
+                getLazyCompositions: getLazyCompositions,
+                getCompositionDetailItem: getCompositionDetailItem
             };
 
             return api;
@@ -244,4 +270,4 @@
 
         }]);
 
-})(angular);
+})(angular, jQuery);

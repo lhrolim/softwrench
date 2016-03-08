@@ -13,6 +13,7 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Metadata.Applications.Schema;
+using softWrench.sW4.Metadata.Applications.Validator;
 
 namespace softWrench.sW4.Metadata.Validator {
     class SchemaMerger {
@@ -38,7 +39,9 @@ namespace softWrench.sW4.Metadata.Validator {
             var customizations = GetCustomizations(overridenSchema);
             var fieldsThatShouldBeCustomized = customizations.Count();
             var customizationsActuallyApplied = new HashSet<int>();
-            original.Stereotype = overridenSchema.Stereotype;
+            original.Stereotype = overridenSchema.Stereotype == SchemaStereotype.None
+                ? original.Stereotype
+                : overridenSchema.Stereotype;
             original.CommandSchema.Merge(overridenSchema.CommandSchema);
 
 
@@ -130,6 +133,9 @@ namespace softWrench.sW4.Metadata.Validator {
                     var resolvedDisplayables = DisplayableUtil.PerformReferenceReplacement(customization.Displayables,
                         overridenSchema, overridenSchema.ComponentDisplayableResolver, components);
                     resultDisplayables.AddRange(resolvedDisplayables);
+
+                    // removes the replaced displayable from validation
+                    ApplicationMetadataValidator.RemoveDisplaybleToValidateIfNeeded(overridenSchema, displayable);
                 }
             }
             if (customizationsActuallyApplied.Count != fieldsThatShouldBeCustomized && (original is ApplicationSchemaDefinition)) {

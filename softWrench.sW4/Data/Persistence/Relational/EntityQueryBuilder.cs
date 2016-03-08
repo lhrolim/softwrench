@@ -27,7 +27,9 @@ namespace softWrench.sW4.Data.Persistence.Relational {
         }
 
         public BindedEntityQuery AllRowsForSync(EntityMetadata entityMetadata, Rowstamps rowstamp) {
-            return TemplateQueryBuild(entityMetadata, new InternalQueryRequest { Rowstamps = rowstamp, SearchDTO = new SearchRequestDto() }, QueryCacheKey.QueryMode.Sync);
+            // no minimum rowstamp for sync -> sort by 'rowstamp' descending
+            var searcDto = string.IsNullOrWhiteSpace(rowstamp.Lowerlimit) ? new SearchRequestDto() { SearchSort = "rowstamp desc" } : new SearchRequestDto();
+            return TemplateQueryBuild(entityMetadata, new InternalQueryRequest { Rowstamps = rowstamp, SearchDTO = searcDto }, QueryCacheKey.QueryMode.Sync);
         }
 
         public BindedEntityQuery CountRows(EntityMetadata entityMetadata, SearchRequestDto searchDto) {

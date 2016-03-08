@@ -87,7 +87,7 @@ namespace softWrench.sW4.Metadata.Validator {
             var metadataPath = MetadataPath();
             using (var stream = MetadataParsingUtils.GetStreamImpl(metadataPath, streamValidator: streamValidator)) {
                 if (stream != null) {
-                    var parsingResult = new XmlEntitySourceMetadataParser(IsSWDB()).Parse(stream);
+                    var parsingResult = new XmlEntitySourceMetadataParser(IsSWDB(),false).Parse(stream);
                     clientEntities = parsingResult.Item1;
                     Queries = parsingResult.Item2;
                 } else if (!IsSWDB()) {

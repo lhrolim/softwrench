@@ -2,6 +2,8 @@
 using System.Linq;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
+using log4net;
+using log4net.Core;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softWrench.sW4.Metadata.Entities;
 using softwrench.sW4.Shared2.Metadata;
@@ -13,7 +15,16 @@ using softWrench.sW4.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Metadata.Validator {
     class MetadataMerger {
+
+        private static ILog Log = LogManager.GetLogger(typeof(MetadataMerger));
+
+        public MetadataMerger() {
+            Log.Debug("init log...");
+        }
+
         private const string CustomizeAndRedeclare = "schemas using customizations must have redeclaring=false";
+
+
 
         public static IEnumerable<TR> Merge<TR>(IEnumerable<TR> sourceItems, IEnumerable<TR> overridenItems) {
             var enumerable = overridenItems as IList<TR> ?? overridenItems.ToList();
@@ -52,10 +63,11 @@ namespace softWrench.sW4.Metadata.Validator {
         private static CompleteApplicationMetadataDefinition DoMergeApplication([NotNull]CompleteApplicationMetadataDefinition souceAplication, [NotNull]CompleteApplicationMetadataDefinition overridenApplication) {
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> resultSchemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
             var resultComponents = MergeComponents(souceAplication, overridenApplication);
-            var resultFilters =SchemaFilterBuilder.ApplyFilterCustomizations(souceAplication.AppFilters,overridenApplication.AppFilters);
-
+            var resultFilters = SchemaFilterBuilder.ApplyFilterCustomizations(souceAplication.AppFilters, overridenApplication.AppFilters);
+            Log.InfoFormat("applying merge for application {0}".Fmt(overridenApplication.ApplicationName));
 
             foreach (var schema in souceAplication.Schemas()) {
+
                 ApplicationSchemaDefinition overridenSchema;
                 overridenApplication.Schemas().TryGetValue(schema.Key, out overridenSchema);
 
@@ -67,8 +79,13 @@ namespace softWrench.sW4.Metadata.Validator {
                     //this is for adding the base schemas that have no redeclaration (i.e. they exist only on the templates)
                     resultSchemas.Add(schema.Key, schema.Value);
                 } else {
+
                     if (overridenSchema.Stereotype.Equals(SchemaStereotype.List)) {
                         overridenSchema.DeclaredFilters.Merge(resultFilters);
+                        if (overridenSchema.FiltersResolved) {
+                            //second pass
+                            overridenSchema.SchemaFilters = resultFilters;
+                        }
                     }
 
                     if (!overridenSchema.RedeclaringSchema) {
@@ -106,11 +123,11 @@ namespace softWrench.sW4.Metadata.Validator {
 
             return new CompleteApplicationMetadataDefinition(souceAplication.Id, souceAplication.ApplicationName,
                 title, entity, idFieldName, userIdFieldName,
-                overridenParameters, resultSchemas, souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), mergedFilters, service,role, auditEnabled);
+                overridenParameters, resultSchemas, souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), mergedFilters, service, role, auditEnabled);
 
         }
 
-      
+
 
         private static List<DisplayableComponent> MergeComponents(CompleteApplicationMetadataDefinition souceAplication,
             CompleteApplicationMetadataDefinition overridenApplication) {

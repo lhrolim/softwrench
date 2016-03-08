@@ -31,7 +31,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentMigrator">
-      <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
+      <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentMigrator.Runner">
+      <HintPath>..\packages\FluentMigrator.Runner.1.6.1\lib\40\FluentMigrator.Runner.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -39,12 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\com\cts\manchester\dataset\ComMatusetransDataSet.cs" />
-    <Compile Include="classes\com\cts\manchester\migration\Migration20150331Comsw74.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\manchester\configuration\" />
     <Folder Include="classes\com\cts\manchester\connector\" />
+    <Folder Include="classes\com\cts\manchester\migration\" />
     <Folder Include="web_content\manchester\htmls\" />
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +113,7 @@
     <Content Include="web_content\manchester\images\logo-main.png" />
     <Content Include="web_content\manchester\images\signin-branding.png" />
     <Content Include="web_content\manchester\images\signin.jpg" />
+    <None Include="packages.config" />
     <None Include="web_content\manchester\styles\branding.scss" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

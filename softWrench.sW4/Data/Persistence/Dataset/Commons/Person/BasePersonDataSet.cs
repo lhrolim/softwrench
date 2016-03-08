@@ -28,12 +28,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         private readonly UserSetupEmailService _userSetupEmailService;
         private readonly UserLinkManager _userLinkManager;
         private readonly UserStatisticsService _userStatisticsService;
+        private readonly UserProfileManager _userProfileManager;
 
-        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService) {
+        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService, UserProfileManager userProfileManager) {
             _swdbDAO = swdbDAO;
             _userSetupEmailService = userSetupEmailService;
             _userLinkManager = userLinkManager;
             _userStatisticsService = userStatisticsService;
+            _userProfileManager = userProfileManager;
         }
 
 
@@ -62,6 +64,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var detail = base.GetApplicationDetail(application, user, request);
             var personId = detail.ResultObject.GetAttribute("personid") as string;
+            var maxActive = Convert.ToBoolean(detail.ResultObject.GetAttribute("maxuser_.active"));
             var swUser = new User();
             var dataMap = detail.ResultObject;
             UserStatistics statistics = null;
@@ -100,7 +103,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             }
 
             dataMap.SetAttribute("#profiles", swUser.Profiles);
-            var availableprofiles = UserProfileManager.FetchAllProfiles(true).ToList();
+            var availableprofiles = _userProfileManager.FetchAllProfiles(true).ToList();
             foreach (var profile in swUser.Profiles) {
                 availableprofiles.Remove(profile);
             }
@@ -112,6 +115,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             dataMap.SetAttribute("statistics", statistics);
             dataMap.SetAttribute("activationlink", activationLink);
             dataMap.SetAttribute("#userid", swUser.Id);
+            dataMap.SetAttribute("#maxactive",maxActive);
             return detail;
         }
 
@@ -125,8 +129,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var lastName = json.GetValue("lastname").ToString();
             var isactive = json.GetValue("#isactive").ToString() == "1";
             var signature = json.GetValue("#signature").ToString();
+            var dbUser =_swdbDAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, username);
 
-            var user = UserManager.GetUserByUsername(username) ?? new User(null, username, isactive) {
+            var user = dbUser ?? new User(null, username, isactive) {
                 FirstName = firstName,
                 LastName = lastName
             };

@@ -442,6 +442,14 @@
                         return !$scope.selectionModel.showOnlySelected && "true" !== $scope.schema.properties["list.disablepagination"];
                     }
 
+                    $scope.noRecordsNewButtonLabel = function () {
+                        var create = i18NService.get18nValue("_grid.filter.noresultWithNewCreate", "Create");
+                        return create + " " + $scope.schema.applicationTitle;
+                    }
+
+                    $scope.noRecordsNewClick = function () {
+                        redirectService.goToApplication($scope.schema.applicationName, $scope.schema.noResultsNewSchema);
+                    }
 
 
                     //#region eventlisteners

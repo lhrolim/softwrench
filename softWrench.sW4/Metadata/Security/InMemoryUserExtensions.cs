@@ -7,6 +7,7 @@ using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Data.API;
 
 namespace softWrench.sW4.Metadata.Security {
     public static class InMemoryUserExtensions {
@@ -17,6 +18,44 @@ namespace softWrench.sW4.Metadata.Security {
             var appRoles = RoleManager.ActiveApplicationRoles();
             bool isAppRoleActive = appRoles.Contains(application.Role);
             return !isAppRoleActive || user.Roles.Any(r => r.Name == application.Role);
+        }
+
+        public enum SecurityModeCheckResult {
+            Block, Allow, OutPut
+        }
+
+
+        public static SecurityModeCheckResult VerifySecurityMode(this InMemoryUser user, ApplicationMetadata application, DataRequestAdapter request) {
+            if (user.IsSwAdmin() || application.Name.StartsWith("_")) {
+                //SWDB apps have their own rule as for now.
+                return SecurityModeCheckResult.Allow;
+            }
+
+
+            var profile = user.MergedUserProfile;
+            var permission = profile.GetPermissionByApplication(application.Name);
+            if (permission == null) {
+                //no permission to that particular application
+                return SecurityModeCheckResult.Block;
+            }
+            var viewingExisting = request.Id != null || request.UserId != null;
+            var isList = application.Schema.Stereotype == SchemaStereotype.List || request.SearchDTO != null;
+            if (isList && permission.AllowView) {
+                return SecurityModeCheckResult.Allow;
+            }
+
+            if (viewingExisting) {
+                if (!permission.AllowUpdate && !permission.AllowView) {
+                    return SecurityModeCheckResult.Block;
+                } else if (!permission.AllowUpdate) {
+                    //users can view, but using output mode only
+                    return SecurityModeCheckResult.OutPut;
+                }
+            }
+            if (!viewingExisting && !permission.AllowCreation) {
+                return SecurityModeCheckResult.Block;
+            }
+            return SecurityModeCheckResult.Allow;
         }
 
         [NotNull]

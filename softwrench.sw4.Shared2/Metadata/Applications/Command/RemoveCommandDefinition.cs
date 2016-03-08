@@ -20,6 +20,17 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
                 return typeof(RemoveCommand).Name;
             }
         }
+
+        public string ShowExpression {
+            get; set;
+        }
+
+        public string PermissionExpression {
+            get; set;
+        }
+
+        public string Label { get; set; }
+
         public ICommandDisplayable KeepingOriginalData(ICommandDisplayable originalCommand) {
             return this;
         }

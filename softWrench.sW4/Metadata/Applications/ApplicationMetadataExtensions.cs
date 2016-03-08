@@ -6,6 +6,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace softWrench.sW4.Metadata.Applications {
@@ -45,8 +46,9 @@ namespace softWrench.sW4.Metadata.Applications {
                 }
                 if (schemaId.Equals(ApplicationMetadataConstants.SyncSchema)) {
                     //using list for now
-                    var instance = application.SchemaForPlatform(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List));
-                    //                    var instance = ApplicationAssociationSchemaSyncFactory.GetInstance(application);
+                    var instance = application.SchemaForPlatform(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List)) ??
+                                   application.SchemaForPlatform(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.Detail));
+                    //  var instance = ApplicationAssociationSchemaSyncFactory.GetInstance(application);
                     application.Schemas().Add(metadataSchemaKey, instance);
                     return instance;
                 }
@@ -81,6 +83,29 @@ namespace softWrench.sW4.Metadata.Applications {
                 }
                 return null;
             }
+        }
+
+        [NotNull]
+        public static IEnumerable<ApplicationSchemaDefinition> NonInternalSchemasByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName, ClientPlatform platform = ClientPlatform.Web) {
+            var schemas = MetadataProvider.FetchNonInternalSchemas(platform, application.ApplicationName);
+            if (stereotypeName == "detail") {
+                return schemas.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && schema.StereotypeAttr.ToLower() != "detailnew" && !schema.Abstract));
+            }
+
+            return schemas.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && !schema.Abstract));
+        }
+
+
+        public static ApplicationSchemaDefinition PreferredSchemaByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName) {
+
+
+            var schemas = application.Schemas().Values.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && !schema.Abstract));
+
+            var applicationSchemaDefinitions = schemas as ApplicationSchemaDefinition[] ?? schemas.ToArray();
+            if (applicationSchemaDefinitions.Count() > 1) {
+                return null;
+            }
+            return applicationSchemaDefinitions.FirstOrDefault();
         }
     }
 }

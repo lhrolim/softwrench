@@ -15,11 +15,15 @@ namespace softWrench.sW4.Util {
             if (type == "varchar" || type == "string") {
                 return stValue;
             }
-            if (type.EqualsAny("smallint","int","integer")) {
+            if (type.EqualsAny("smallint", "int", "integer")) {
                 if (stValue.EqualsAny("True", "False")) {
                     return Convert.ToBoolean(stValue);
                 }
-                return Convert.ToInt32(stValue);
+                try {
+                    return Convert.ToInt32(stValue);
+                } catch (System.OverflowException e) {
+                    return Convert.ToInt64(stValue);
+                }
             }
             if (type == "bigint") {
                 return Convert.ToInt64(stValue);
@@ -54,13 +58,13 @@ namespace softWrench.sW4.Util {
                 return null;
             }
 
-            int rowstamp;
-            if (int.TryParse(stValue, out rowstamp)) {
+            long rowstamp;
+            if (Int64.TryParse(stValue, out rowstamp)) {
                 //TODO: change the whole rowstamp chain here, that´s being coverted from maximo side
                 return null;
             }
 
-            var kind = (ApplicationConfiguration.IsISM() || WsUtil.Is71() )? DateTimeKind.Utc : DateTimeKind.Local;
+            var kind = (ApplicationConfiguration.IsISM() || WsUtil.Is71()) ? DateTimeKind.Utc : DateTimeKind.Local;
             var user = SecurityFacade.CurrentUser(false);
             try {
                 var dateFromJson = Convert.ToDateTime(stValue);

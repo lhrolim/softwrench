@@ -7,8 +7,21 @@ angular.module('sw_layout')
 
     var objCache = {};
 
+    function isEmpty(value) {
+        return value == null || value === "" || value.length === 0;
+    }
+
     function getSearchValue(value) {
-        value = replaceAll(value, '%', '');
+        if (!value) {
+            return null;
+        }
+        //remove leading and trailing wildcards, but not all of them
+        if (value[0] === "%") {
+            value = value.substring(1);
+        }
+        if (value[value.length - 1] === "%") {
+            value = value.substring(0,value.length-1);
+        }
         value = replaceAll(value, '>', '');
         value = replaceAll(value, '=', '');
         value = replaceAll(value, '<', '');
@@ -64,9 +77,7 @@ angular.module('sw_layout')
                 continue;
             }
 
-            if ((searchData[data] != null && searchData[data] != '') ||
-                (searchOperator[data] != null && searchOperator[data].id == "BLANK")) {
-
+            if (!isEmpty(searchData[data]) || (searchOperator[data] != null && searchOperator[data].id === "BLANK")) {
                 if (data.indexOf('___') != -1) {
                     // this case is only for "BETWEEN" operator
                     data = data.substring(0, data.indexOf('___'));
@@ -170,8 +181,8 @@ angular.module('sw_layout')
             var value = "";
             var beginAlreadySet = false;
             for (var data in searchData) {
-                if ((searchData[data] == null || searchData[data] == '' || data == "lastSearchedValues") &&
-                    (searchOperator[data] == null || searchOperator[data].id != "BLANK")) {
+                if ((isEmpty(searchData[data]) || data === "lastSearchedValues") &&
+                    (searchOperator[data] == null || searchOperator[data].id !== "BLANK")) {
                     continue;
                 }
 
@@ -182,16 +193,16 @@ angular.module('sw_layout')
                 if (searchOperator[data] == null) {
                     searchOperator[data] = this.defaultSearchOperation();
                 }
-                if (searchOperator[data].begin != '' && !beginAlreadySet) {
+                if (searchOperator[data].begin !== '' && !beginAlreadySet) {
                     value = searchOperator[data].begin + value;
-                    if (searchOperator[data].id == 'BTW') {
+                    if (searchOperator[data].id === 'BTW') {
                         beginAlreadySet = true;
                         resultString += value + "___";
                         continue;
                     }
                 }
-                if (searchOperator[data].end != '') {
-                    if (searchOperator[data].id == 'BTW') {
+                if (searchOperator[data].end !== '') {
+                    if (searchOperator[data].id === 'BTW') {
                         value = searchOperator[data].end + value;
                         beginAlreadySet = false;
                     }
@@ -199,7 +210,7 @@ angular.module('sw_layout')
                         value = value + searchOperator[data].end;
                     }
                 }
-                if (searchOperator[data] != null && searchOperator[data].id == 'BLANK') {
+                if (searchOperator[data] != null && searchOperator[data].id === 'BLANK') {
                     value = '!@BLANK';
                 }
 
@@ -248,8 +259,8 @@ angular.module('sw_layout')
         },
 
         buildReportSearchDTO: function (searchDto, searchData, searchSort, searchOperator, filterFixedWhereClause) {
-            if (searchDto == null || searchDto == undefined) {
-                var searchDto = {};
+            if (searchDto == null) {
+                searchDto = {};
                 searchDto.searchParams = buildSearchParamsString(searchData, searchOperator);
                 searchDto.searchValues = this.buildSearchValuesString(searchData, searchOperator);
             }

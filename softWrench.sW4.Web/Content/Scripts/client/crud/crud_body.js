@@ -26,9 +26,13 @@
                 if (scope.$last === false) {
                     return;
                 }
-
                 var log = $log.getInstance('tabsrendered');
                 log.debug("finished rendering tabs of detail screen");
+                if (scope.$last === undefined) {
+                    //0 tabs scenario
+                    return $rootScope.$broadcast("sw_alltabsloaded");
+                }
+                
                 $timeout(function () {
                     var firstTabId = null;
                     $('.compositiondetailtab li>a').each(function () {
@@ -91,13 +95,14 @@
                 scope.$name = 'crudbody';
             },
 
-            controller: function ($scope, $http, $rootScope, $filter, $injector,
-                formatService, fixHeaderService,
+                controller: function ($scope, $http,$q,$element, $rootScope, $filter, $injector,
+                formatService, fixHeaderService,dispatcherService,
                 searchService, tabsService,
                 fieldService, commandService, i18NService,
                 submitService, redirectService,
                 associationService, crudContextHolderService, alertService,
-                validationService, schemaService, $timeout, eventService, $log, expressionService, focusService, modalService) {
+                validationService, schemaService, $timeout, $interval, eventService, $log, expressionService, focusService, modalService,
+                compositionService, attachmentService, sidePanelService) {
 
                 $(document).on("sw_autocompleteselected", function (event, key) {
                     focusService.resetFocusToCurrent($scope.schema, key);
@@ -118,7 +123,7 @@
                         //time for the components to be rendered
                         focusService.setFocusToFirstField($scope.schema, $scope.datamap);
                     }, 1000, false);
-
+                    eventService.dispatchEvent($scope.schema, "onschemafullyloaded");
                 });
 
                 $scope.getTabRecordCount = function (tab) {
@@ -134,6 +139,42 @@
                 };
 
                 // Listeners region
+
+                /**
+                * Listener responsible for invoking providerloaded events.
+                *  
+                */
+                $rootScope.$on("sw.crud.associations.updateeageroptions", function (event, associationKey, options, contextData) {
+                    var displayables = fieldService.getDisplayablesByAssociationKey(crudContextHolderService.currentSchema(), associationKey);
+                    var promiseArray = [];
+
+                    for (var i = 0; i < displayables.length; i++) {
+                        var displayable = displayables[i];
+                        var providerLoadedEvent = displayable.events["providerloaded"];
+
+                        if (providerLoadedEvent != undefined) {
+                            var fn = dispatcherService.loadService(providerLoadedEvent.service, providerLoadedEvent.method);
+                            if (fn != undefined) {
+                                var fields = crudContextHolderService.rootDataMap();
+                                if (fields && fields.fields) {
+                                    fields = fields.fields;
+                                }
+                                var providerLoadedParameters = {
+                                    fields: fields,
+                                    options: options,
+                                };
+                                $log.getInstance('crudinputfieldcommons#updateeager', ["lifecycle"]).debug('invoking post load service {0} method {1} for association {2}|{3}'
+                                    .format(providerLoadedEvent.service, providerLoadedEvent.method, displayable.target, displayable.associationKey));
+                                promiseArray.push($q.when(fn(providerLoadedParameters)));
+                            }
+                        }
+                    }
+                    if (promiseArray.length > 0) {
+                        return $q.all(promiseArray);
+                    }
+                    return $q.when();
+                }
+            );
 
                 $scope.$on("sw_submitdata", function (event, parameters) {
                     $scope.save(parameters);
@@ -154,6 +195,9 @@
                     if (onLoadMessage) {
                         alertService.notifymessage('success', onLoadMessage);
                     }
+
+                    
+                    
                 });
 
                 $scope.setActiveTab = function (tabId) {
@@ -274,19 +318,40 @@
                 };
 
                 $scope.crawl = function (direction) {
+                    var schema = crudContextHolderService.currentSchema();
                     var value = contextService.fetchFromContext("crud_context", true);
                     var id = direction == 1 ? value.detail_previous : value.detail_next;
                     if (id == undefined) {
                         return;
                     }
+                    // If the detail crawl has a custom param, we need to get it from the pagination list
+                    var customParams = {};
+                    if (schema.properties && schema.properties["detail.crawl.customparams"]) {
+                        // Get the next/previous record that the params will be coming from
+                        var record = value.previousData.filter(function (obj) {
+                            return obj.fields[schema.idFieldName] == id;
+                        });
+
+                        // TODO: If the record is null (item not on page in previous data)????
+
+                        var customparamAttributes = schema.properties["detail.crawl.customparams"].replace(" ", "").split(",");
+                        for (var param in customparamAttributes) {
+                            if (!customparamAttributes.hasOwnProperty(param)) {
+                                continue;
+                            }
+                            customParams[param] = {};
+                            customParams[param]["key"] = customparamAttributes[param];
+                            customParams[param]["value"] = record[0].fields[customparamAttributes[param]];
+                        }
+                    }
 
                     var mode = $scope.$parent.mode;
                     var popupmode = $scope.$parent.popupmode;
-                    var schemaid = $scope.$parent.schema.schemaId;
-                    var applicationname = $scope.$parent.schema.applicationName;
-                    var title = $scope.$parent.title
+                    var schemaid = schema.schemaId;
+                    var applicationname = schema.applicationName;
+                    var title = $scope.$parent.title;
 
-                    $scope.$emit("sw_navigaterequest", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode });
+                    $scope.$emit("sw_navigaterequest", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode, customParameters: customParams });
 
                 };
 
@@ -337,7 +402,7 @@
                     }
 
 
-                    var modalSavefn = modalService.getSaveFn();
+                    var modalSavefn = $scope.ismodal === "true" ? modalService.getSaveFn() : null;
                     //if there´s a custom modal service, let´s use it instead of the ordinary crud savefn
                     if (modalSavefn) {
                         var errorForm = $scope.crudform ? $scope.crudform.$error : {};
@@ -488,13 +553,31 @@
                         crudContextHolderService.afterSave();
 
 
-                        if (data.type !== 'BlankApplicationResponse') {
-                            $scope.datamap = data.resultObject;
+                        if (data.type !== "BlankApplicationResponse") {
+                            var responseDataMap = data.resultObject;
+
+                            // handle the case where the datamap had lazy compositions already fetched
+                            // and the response does not have them (for performance reasons)
+                            var compositions = compositionService.getLazyCompositions($scope.schema, $scope.datamap.fields);
+                            compositions.forEach(function (composition) {
+                                var currentValue = $scope.datamap.fields[composition];
+                                var updatedValue = responseDataMap.fields[composition];
+                                // has previous data but has no updated data: not safe to update -> hydrate with previous value
+                                if (!!currentValue && (!responseDataMap.fields.hasOwnProperty(composition) || !angular.isArray(updatedValue))) {
+                                    responseDataMap.fields[composition] = currentValue;
+                                }
+                            });
+
+                            $scope.datamap = responseDataMap;
                         }
-                        if (data.id && $scope.datamap.fields) {
+                        if (data.id && $scope.datamap.fields &&
+                            /* making sure not to update when it's not creation */
+                            (!$scope.datamap.fields.hasOwnProperty($scope.schema.idFieldName) || !$scope.datamap.fields[$scope.schema.idFieldName])
+                            ) {
                             //updating the id, useful when it´s a creation and we need to update value return from the server side
                             $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
                         }
+
 
                         if (successCbk == null || applyDefaultSuccess) {
                             defaultSuccessFunction(data);
@@ -511,15 +594,92 @@
                     });
                 };
 
+                // adds a padding right to not be behind side panels handles
+                $scope.sidePanelStyle = function () {
+                    var style = {};
+                    if (sidePanelService.getTotalHandlesWidth() > 210) {
+                        style["padding-right"] = "24px";
+                    }
+                    return style;
+                }
 
+                function init(self) {
+                    $injector.invoke(BaseController, self, {
+                        $scope: $scope,
+                        i18NService: i18NService,
+                        fieldService: fieldService,
+                        commandService: commandService,
+                        formatService: formatService
+                    });
+                    
+                    //#region screenshot paste handling
+                    // `contenteditable` element
+                    var pasteCatcher = $element[0].querySelector(".js_crud_pastecatcher");
 
-                $injector.invoke(BaseController, this, {
-                    $scope: $scope,
-                    i18NService: i18NService,
-                    fieldService: fieldService,
-                    commandService: commandService,
-                    formatService: formatService,
-                });
+                    // 'paste' event listener -> 
+                    // if image create an attachment with the clipboard data as the image
+                    function pasteListener($event) {
+                        var items = !window.clipboardData
+                            ? ($event.clipboardData || $event.originalEvent.clipboardData).items // chrome: image comes from the event
+                            : window.clipboardData.files; // IE: image comes from global object
+
+                        // FF: has to wait for the image to be appended to a `contenteditable` element (as an image node) 
+                        if (!items) {
+                            $(pasteCatcher).focus();
+                            attachmentService.createAttachmentFromElement(pasteCatcher, $scope.schema);
+                            return true;
+                        }
+
+                        // look for image
+                        var image = Array.prototype.slice
+                            .call(items)
+                            .filter(function (item) {
+                                return item.type.startsWith("image");
+                            });
+                        // has no image: default behavior
+                        if (image === undefined || image === null || image.length <= 0) return true;
+                        // has image but is pasting inside richtext element
+                        if ($event.target.tagName.equalIc("br") || $($event.target).parents("[text-angular]").length > 0) return true;
+                        // can create the attachment
+                        image = image[0];
+                        attachmentService.createAttachmentFromFile(image, $scope.schema);
+                        // prevent bubbling and default behavior
+                        $event.stopPropagation();
+                        $event.preventDefault();
+                        return false;
+                    };
+
+                    $element.on("paste", pasteListener);
+                    $scope.$on("$destroy", function () {
+                        $element.off("paste", pasteListener);
+                    });
+
+                    function isBackground(element) {
+                        return !!element // not null
+                            && !["input", "textarea", "select", "button", "a", "selectize"].some(function (tag) { //not input
+                                return element.tagName.equalIc(tag);
+                            })
+                            && !$(element).parents("[text-angular]").length > 0 // not inside richtext
+                            && !$(element).hasClass("js_crud_pastecatcher"); // no the pasteCatcher
+                    }
+
+                    if (!isChrome()) {
+                        // polls the current focused element:
+                        // if its 'background' set focus on the pasteCatcher so it can capture `paste`
+                        var interval = $interval(function () {
+                            var focused = document.activeElement;
+                            if (isBackground(focused)) {
+                                $(pasteCatcher).focus();
+                            }
+                        }, 2000, 0, false);
+
+                        $scope.$on("$destroy", function () {
+                            $interval.cancel(interval);
+                        });
+                    }
+                    //#endregion
+                }
+                init(this);
 
 
             }

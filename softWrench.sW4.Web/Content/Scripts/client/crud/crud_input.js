@@ -1,4 +1,4 @@
-﻿(function (app) {
+﻿(function (app, angular) {
     "use strict";
 
 app.directive('crudInputWrapper', function (contextService, $compile) {
@@ -26,7 +26,8 @@ app.directive('crudInputWrapper', function (contextService, $compile) {
             elementid: '@',
             isMainTab: '@',
             tabid: '@',
-            ismodal: '@'
+            ismodal: '@',
+            panelid: '@'
         },
 
         link: function (scope, element, attrs) {
@@ -36,7 +37,7 @@ app.directive('crudInputWrapper', function (contextService, $compile) {
                   "datamap='datamap'  blockedassociations='blockedassociations'" +
                   "association-schemas='associationSchemas'cancelfn='cancel(data,schema)' displayables='displayables'" +
                   "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' " +
-                  "parentschema='parentschema' parentdata='parentdata'  ismodal='{{ismodal}}'/>"
+                  "parentschema='parentschema' parentdata='parentdata'  ismodal='{{ismodal}}' panelid='panelid'/>"
                );
                 $compile(element.contents())(scope);
                 scope.loaded = true;
@@ -64,8 +65,7 @@ app.directive('crudInputWrapper', function (contextService, $compile) {
     }
 });
 
-app.directive('crudInput', function (contextService, associationService) {
-    "ngInject";
+app.directive('crudInput', ["contextService", "associationService", function (contextService, associationService) {
 
     return {
         restrict: 'E',
@@ -87,10 +87,12 @@ app.directive('crudInput', function (contextService, associationService) {
             title: '=',
             elementid: '@',
             composition: '@',
-            ismodal: '@'
+            ismodal: '@',
+            panelid: '='
         },
 
-        controller: function ($scope, $http, $injector, $element, alertService, printService, compositionService, commandService, fieldService, i18NService, formatService) {
+        controller: ["$scope", "$http", "$injector", "$element", "alertService", "printService", "compositionService", "commandService", "fieldService", "i18NService", "formatService", "crudContextHolderService", "$log",
+            function ($scope, $http, $injector, $element, alertService, printService, compositionService, commandService, fieldService, i18NService, formatService, crudContextHolderService, $log) {
 
             $scope.$name = 'crudinput';
 
@@ -125,6 +127,67 @@ app.directive('crudInput', function (contextService, associationService) {
                 return schema.properties["commandbar.bottom"];
             }
 
+            //#region $dirty checking
+            function handleDirtyChecking() {
+                var log = $log.get("crud_input#dirtychecking", ["datamap", "dirtycheck"]);
+                var dirtyWatcherDeregister;
+
+                function dirtyWatcher(newDatamap, oldDatamap) {
+                    if (newDatamap === oldDatamap || !crudContextHolderService.getDetailDataResolved()) return;
+
+                    if (log.isLevelEnabled("trace")) {
+                        Object.keys(newDatamap)
+                            .forEach(function (k) {
+                                if (angular.equals(newDatamap[k], oldDatamap[k])) return;
+                                if (!angular.isArray(newDatamap[k]) && !angular.isArray(oldDatamap[k])) {
+                                    log.trace("changed", k, "from", oldDatamap[k], "to", newDatamap[k]);
+                                    return;
+                                }
+                                for (var i = 0; i < newDatamap[k].length; i++) {
+                                    var newArrayItem = newDatamap[k][i], oldArrayItem = oldDatamap[k][i];
+                                    if (angular.equals(newArrayItem, oldArrayItem)) continue;
+                                    if (!angular.isObject(newArrayItem) && !angular.isObject(oldArrayItem)) {
+                                        log.trace("changed", "[" + k + "," + i + "]", "from", oldArrayItem, "to", newArrayItem);
+                                        return;
+                                    }
+                                    Object.keys(newArrayItem).forEach(function (ki) {
+                                        if (angular.equals(newArrayItem[ki], oldArrayItem[ki])) return;
+                                        log.trace("changed", "[" + k + "," + i + "," + ki + "]", "from", oldArrayItem[ki], "to", newArrayItem[ki]);
+                                    });
+                                }
+                            });
+                    }
+                    crudContextHolderService.setDirty();
+                }
+
+                $scope.$watch(
+                    function () {
+                        return crudContextHolderService.getDetailDataResolved();
+                    },
+                    debounce(function (newValue, oldValue) {
+                        if (newValue === oldValue) return;
+                        if (newValue) {
+                            log.trace("crudContextHolderService#dataResolved is true: start $dirty checking");
+                            // detailData was resolved: start $dirty watching (if wasn't already registered)
+                            if (!angular.isFunction(dirtyWatcherDeregister)) {
+                                dirtyWatcherDeregister = $scope.$watch("datamap", dirtyWatcher, true);
+                                log.trace("bluring current element and focusing on document.body -> trigger $watch on first change of the current input");
+                                document.activeElement.blur();
+                                $(document.body).focus();
+                            }
+                        } else {
+                            log.trace("crudContextHolderService#dataResolved is false: disable $dirty checking");
+                            if (angular.isFunction(dirtyWatcherDeregister)) dirtyWatcherDeregister();
+                            dirtyWatcherDeregister = null;
+                        }
+                    }));
+
+            }
+
+            handleDirtyChecking();
+            //#endregion
+            
+
             $injector.invoke(BaseController, this, {
                 $scope: $scope,
                 i18NService: i18NService,
@@ -132,8 +195,8 @@ app.directive('crudInput', function (contextService, associationService) {
                 commandService: commandService,
                 formatService: formatService
             });
-        }
+        }]
     };
-});
+}]);
 
-})(app);
+})(app, angular);

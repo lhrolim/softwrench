@@ -13,15 +13,17 @@
 
 
   <target name="exec">
-    <loadtasks assembly="../Build/NAntContribTask/NAnt.Contrib.Tasks.dll" />
-    <echo message="* Connecting to ${property::get-value(property::get-value('image'))}"/>
-    <sql  connstring="${property::get-value(property::get-value('image'))}"
-          delimiter="go"
-          delimstyle="Line"
-          batch="false"
-          source="${droptables}"
-         >
-    </sql>
+    <if test="${image != 'dev_prdb2'}">
+      <loadtasks assembly="../Build/NAntContribTask/NAnt.Contrib.Tasks.dll" />
+      <echo message="* Connecting to ${property::get-value(property::get-value('image'))}"/>
+      <sql  connstring="${property::get-value(property::get-value('image'))}"
+            delimiter="go"
+            delimstyle="Line"
+            batch="false"
+            source="${droptables}"
+          >
+      </sql>
+    </if>
   </target>
 
  

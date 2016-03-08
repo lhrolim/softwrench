@@ -8,8 +8,10 @@ using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
+using Microsoft.Ajax.Utilities;
 using softwrench.sw4.api.classes.fwk.context;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
@@ -154,7 +156,20 @@ namespace softWrench.sW4.Web.Security {
             }
             var uri = request.Url;
             if (!MemoryContext.ContainsKey("httpcontext")) {
-                MemoryContext.Add("httpcontext", new SwHttpContext(uri.Scheme, uri.Host, uri.Port, request.ApplicationPath));
+                var uriProperty = MetadataProvider.GlobalProperty("iiscontextpath");
+                if (string.IsNullOrWhiteSpace(uriProperty)) {
+                    //falling back to a trailing whitespace version due to the fact that some releases got that
+                    uriProperty = MetadataProvider.GlobalProperty("iiscontextpath ");
+                }
+                if (!string.IsNullOrWhiteSpace(uriProperty)) {
+                    uri = new Uri(uriProperty);
+                }
+                try {
+                    MemoryContext.Add("httpcontext", new SwHttpContext(uri.Scheme, uri.Host, uri.Port, uri.AbsolutePath));
+                } catch {
+                    Log.Warn("http context already present, due to some sort of concurrent issue");
+                }
+
             }
 
         }

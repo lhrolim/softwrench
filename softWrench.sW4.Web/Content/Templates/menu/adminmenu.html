@@ -5,7 +5,7 @@
         </div>
 
         <div class="admin-menu">
-            <div ng-if="!showClassicMenu()" class="modern">
+            <div ng-if="!showClassicMenu()" ng-style="sidePanelStyle()" class="modern">
                 <a data-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-cog"></i>
                 </a>
@@ -36,7 +36,7 @@
                                 <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-lock fa-fw"></i>&ensp;Security</a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#" ng-click="loadApplication('Person','list')"><i class="fa fa-user fa-fw"></i>&ensp;{{i18N('_headermenu.usersetup','Users')}}</a></li>
-                                    <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event)"><i class="fa fa-users fa-fw"></i>&ensp;{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
+                                    <li><a href="#" ng-click="loadApplication('_UserProfile','list')"><i class="fa fa-users fa-fw"></i>&ensp;{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
                                     <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event)"><i class="fa fa-user-secret fa-fw"></i>&ensp;{{i18N('_headermenu.rolesetup','Application Permissions')}}</a></li>
                                 </ul>
                             </li>
@@ -104,7 +104,7 @@
                                     <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-lock fa-fw"></i>&ensp;Security</a>
                                     <ul class="dropdown-menu" role="menu">
                                         <li><a href="#" ng-click="loadApplication('Person','list')"><i class="fa fa-user fa-fw"></i>&ensp;{{i18N('_headermenu.usersetup','Users')}}</a></li>
-                                        <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event)"><i class="fa fa-users fa-fw"></i>&ensp;{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
+                                        <li><a href="#" ng-click="loadApplication('_UserProfile','list')"><i class="fa fa-users fa-fw"></i>&ensp;{{i18N('_headermenu.userprofilesetup','Security Groups')}}</a></li>
                                         <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event)"><i class="fa fa-user-secret fa-fw"></i>&ensp;{{i18N('_headermenu.rolesetup','Application Permissions')}}</a></li>
                                     </ul>
                                 </li>

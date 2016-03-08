@@ -12,14 +12,14 @@ namespace softwrench.sw4.api.classes.application {
         public virtual T LookupItem(String applicationName, string schemaId, string clientName) {
             var storage = LocateStorageByName(applicationName);
             //first we try a perfect match: app + client + schema
-            var key = LookUp(applicationName, schemaId, clientName,storage);
+            var key = LookUp(applicationName, schemaId, clientName, storage);
             //if not found return the default
-            return storage.ContainsKey(key) ? storage[key] : LocateDefaultItem(applicationName, schemaId,clientName);
+            return storage.ContainsKey(key) ? storage[key] : LocateDefaultItem(applicationName, schemaId, clientName);
         }
 
 
 
-        protected abstract T LocateDefaultItem(string applicationName,string schemaId,string clientName);
+        protected abstract T LocateDefaultItem(string applicationName, string schemaId, string clientName);
 
 
         protected ApplicationFiltereableKey LookUp(string applicationName, string schemaId, string clientName, IDictionary<ApplicationFiltereableKey, T> storageToUse = null) {
@@ -70,24 +70,22 @@ namespace softwrench.sw4.api.classes.application {
                 var storageToUse = LocateStorage(dataSet);
 
                 var clientFilter = dataSet.ClientFilter();
-                foreach (string applicationName in applicationNames.Split(','))
-                {
-                    if (clientFilter != null)
-                    {
+                foreach (string applicationName in applicationNames.Split(',')) {
+                    if (clientFilter != null) {
                         var strings = clientFilter.Split(',');
-                        foreach (var client in strings)
-                        {
+                        foreach (var client in strings) {
                             storageToUse.Add(new ApplicationFiltereableKey(applicationName, client, schemaId), dataSet);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         storageToUse.Add(new ApplicationFiltereableKey(applicationName, null, schemaId), dataSet);
                     }
                 }
             }
         }
 
+        public virtual void Clear() {
+            _defaultStorage.Clear();
+        }
 
         protected virtual IDictionary<ApplicationFiltereableKey, T> LocateStorageByName(string applicationName) {
             return _defaultStorage;

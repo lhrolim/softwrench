@@ -190,7 +190,7 @@
                    query="cast(case 
                    when !@status='ACTIVE' then 1 
                    when !@status='INACTIVE' or !@status is null then 0 
-                   end as bit)" />
+                   end as int)" />
       </attributes>
       <relationships>
         <relationship to="person">
@@ -556,6 +556,7 @@
         <attribute name="ticketuid" type="bigint" required="true" />
         <attribute name="urgency" type="int" required="false" />
         <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="attachments" type="int" query="(select count(*) from doclinks where ownertable = 'SR' and ownerid = !@ticketuid)" required="false"/>
       </attributes>
       <relationships>
         <relationship to="asset">
@@ -846,6 +847,7 @@
         <attribute name="plusclploc" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="saddresscode" type="varchar" required="false" />
+        <attribute name="workorders" type="int" query="(select count(*) from workorder where status not in ('CAN', 'CLOSE', 'COMP') and assetnum = !@assetnum and siteid = !@siteid)"/>
       </attributes>
       <relationships>
         <relationship to="AssetUserCust" qualifier="primaryuser">
@@ -1096,6 +1098,7 @@
         <attribute name="billtoaddresscode" type="varchar" required="false" />
         <attribute name="shiptoaddresscode" type="varchar" required="false" />
         <attribute name="serviceaddresscode" type="varchar" required="false" />
+        <attribute name="workorders" type="int" query="(select count(*) from workorder where status not in ('CAN', 'CLOSE', 'COMP') and location = !@location and siteid = !@siteid)"/>
       </attributes>
       <relationships>
         <relationship to="address" qualifier="shipto">
@@ -1784,6 +1787,7 @@
         <attribute name="vendoraddress3" type="varchar" required="false" />
         <attribute name="vendoraddress4" type="varchar" required="false" />
         <attribute name="division" type="varchar" required="false" />
+        <attribute name="attachments" type="int" query="(select count(*) from doclinks where ownertable = 'WORKORDER' and ownerid = !@workorderid)" required="false"/>
       </attributes>
       <relationships>
         <relationship to="worklog" collection="true">
@@ -1968,6 +1972,7 @@
         <attribute name="ticketuid" type="bigint" required="true" />
         <attribute name="urgency" type="int" required="false" />
         <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="attachments" type="int" query="(select count(*) from doclinks where ownertable = 'INCIDENT' and ownerid = !@ticketuid)" required="false"/>
       </attributes>
       <relationships>
         <relationship to="asset">
@@ -2456,7 +2461,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="woactivity" idAttribute="workorderid" useridAttribute="wonum">
+    <entity name="woactivity" idAttribute="workorderid" useridAttribute="wonum" whereclause="historyflag = 0">
       <attributes>
         <attribute name="actfinish" type="timestamp" required="false" />
         <attribute name="actlabcost" type="decimal" required="true" />

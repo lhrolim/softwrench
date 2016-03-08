@@ -23,12 +23,14 @@ namespace softwrench.sW4.test.Metadata.Entities {
 
         [TestMethod]
         public void TestSWDBSlicedEntity() {
-            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("_Problem"), _schema);
+            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("Problem_"), _schema);
             IApplicationDisplayable rowstamp = new ApplicationFieldDefinition("_SoftwrenchError", "rowstamp", "rowstamp");
             Assert.IsFalse(sliced.AppSchema.Displayables.Contains(rowstamp));
             Assert.IsFalse(sliced.AppSchema.Displayables.Contains(null));
             Assert.AreNotEqual(sliced, null);
         }
-        
+
+
+
     }
 }

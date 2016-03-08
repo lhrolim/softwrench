@@ -13,8 +13,12 @@
             return crudContextService.compositionList();
         }
 
-        $scope.fieldLabel = function (item, field) {
-            return field.label + ":" + formatService.format(item[field.attribute], field, item);
+        //$scope.fieldLabel = function (item, field) {
+        //    return field.label + ":" + formatService.format(item[field.attribute], field, item);
+        //}
+
+        $scope.fieldValue = function(item, field) {
+            return formatService.format(item[field.attribute], field, item);
         }
 
         $scope.visibleFields = function () {

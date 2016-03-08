@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using cts.commons.portable.Util;
+using JetBrains.Annotations;
 
 namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
 
@@ -33,7 +34,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
             get; set;
         }
 
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public bool Remove {
             get; set;
         }
@@ -67,11 +68,13 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
         /// 
         /// 1. a vanilla string using !@ as a placeholder for the current value (!@value)
         /// 2. a @xxx.yyy string that will be evaluated to either a SimpleInjector(online) or a service method (mobile)
+        /// 2.1 a @xxx string will be evaluated to a standard DataSet method (i.e there needs to exist such method on the DataSet)
         /// 
         /// Note: There´s no way to validate whereclauses of type 2 on server side unless the schema is marked as web
         /// Note: to get the value submited by the client use !@#value placeholder
         /// 
         /// </summary>
+        [CanBeNull]
         public string WhereClause {
             get; set;
         }

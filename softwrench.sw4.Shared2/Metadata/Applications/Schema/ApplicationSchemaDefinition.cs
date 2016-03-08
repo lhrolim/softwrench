@@ -14,6 +14,7 @@ using System.ComponentModel;
 using System.Linq;
 using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
+using softwrench.sw4.Shared2.Metadata.Applications.UI;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
@@ -27,6 +28,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         #region cache
         private readonly IDictionary<SchemaFetchMode, IList<ApplicationAssociationDefinition>> _cachedAssociations = new Dictionary<SchemaFetchMode, IList<ApplicationAssociationDefinition>>();
         private readonly IDictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>> _cachedCompositions = new Dictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>>();
+        private readonly IDictionary<string, IEnumerable<IApplicationAttributeDisplayable>> _cachedFieldsOfTab = new Dictionary<string, IEnumerable<IApplicationAttributeDisplayable>>();
+
+        private readonly IDictionary<SchemaFetchMode, IList<IApplicationIndentifiedDisplayable>> _cachedTabs = new Dictionary<SchemaFetchMode, IList<IApplicationIndentifiedDisplayable>>();
+
         private readonly IDictionary<SchemaFetchMode, IList<OptionField>> _cachedOptionFields = new Dictionary<SchemaFetchMode, IList<OptionField>>();
         #endregion
 
@@ -90,6 +95,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+        public string ApplicationTitle {
+            get; set;
+        }
+
         public string EntityName {
             get; set;
         }
@@ -139,9 +148,15 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+        public string NoResultsNewSchema {
+            get; set;
+        }
+
         private bool _lazyFksResolved;
 
-        private bool _filtersResolved;
+        public bool FiltersResolved {
+            get; private set;
+        }
 
         private bool _referencesResolved;
 
@@ -170,7 +185,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public ApplicationSchemaDefinition(string entityName,
-            string applicationName, string title, string schemaId, bool redeclaringSchema,string streotypeAttr, SchemaStereotype stereotype,
+            string applicationName, string title, string schemaId, bool redeclaringSchema, string streotypeAttr, SchemaStereotype stereotype,
             SchemaMode? mode, ClientPlatform? platform, bool @abstract,
             List<IApplicationDisplayable> displayables, SchemaFilters declaredFilters, IDictionary<string, string> schemaProperties,
             ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema,
@@ -186,7 +201,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             PrintSchema = printSchema;
             SchemaId = schemaId;
             Stereotype = stereotype;
-            StereotypeAttr = streotypeAttr;
+            StereotypeAttr = streotypeAttr ?? stereotype.ToString().ToLower();
             Abstract = @abstract;
             Mode = mode;
             CommandSchema = commandSchema;
@@ -207,7 +222,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             DeclaredFilters = declaredFilters ?? SchemaFilters.BlankInstance();
         }
 
-        public string StereotypeAttr { get; set; }
+        public string StereotypeAttr {
+            get; set;
+        }
 
 
         [JsonIgnore]
@@ -239,19 +256,27 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
+        public IEnumerable<ApplicationFieldDefinition> HiddenFields {
+            get {
+                return Fields.Where(f => f.IsHidden);
+            }
+        }
+
+
+
 
         [CanBeNull]
         public SchemaFilters SchemaFilters {
             get {
                 if (Stereotype != SchemaStereotype.List) {
                     //only resolve it for list schemas
-                    _filtersResolved = true;
+                    FiltersResolved = true;
                     return _schemaFilters;
                 }
 
-                if (SchemaFilterResolver != null && !_filtersResolved) {
+                if (SchemaFilterResolver != null && !FiltersResolved) {
                     _schemaFilters = SchemaFilterResolver(this);
-                    _filtersResolved = true;
+                    FiltersResolved = true;
                 }
                 return _schemaFilters;
             }
@@ -298,6 +323,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return Associations(isShowMoreMode ? SchemaFetchMode.SecondaryContent : SchemaFetchMode.MainContent);
         }
 
+        [NotNull]
         public virtual IList<ApplicationAssociationDefinition> Associations(SchemaFetchMode mode = SchemaFetchMode.All) {
             if (_cachedAssociations.ContainsKey(mode)) {
                 return _cachedAssociations[mode];
@@ -307,6 +333,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return result;
         }
 
+        [NotNull]
         public virtual IList<ApplicationCompositionDefinition> Compositions(SchemaFetchMode mode = SchemaFetchMode.All) {
             if (_cachedCompositions.ContainsKey(mode)) {
                 return _cachedCompositions[mode];
@@ -314,6 +341,29 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             var result = GetDisplayable<ApplicationCompositionDefinition>(typeof(ApplicationCompositionDefinition), mode);
             _cachedCompositions[mode] = result;
             return result;
+        }
+
+
+        [NotNull]
+        public virtual IList<IApplicationIndentifiedDisplayable> Tabs(SchemaFetchMode mode = SchemaFetchMode.All) {
+            if (_cachedTabs.ContainsKey(mode)) {
+                return _cachedTabs[mode];
+            }
+            var result = DisplayableUtil.GetDisplayable<IApplicationIndentifiedDisplayable>(new[] { typeof(ApplicationTabDefinition), typeof(ApplicationCompositionDefinition) }, Displayables, mode, false);
+            _cachedTabs[mode] = result;
+            return result;
+        }
+
+        [NotNull]
+        public virtual IEnumerable<IApplicationAttributeDisplayable> NonHiddenFieldsOfTab(string tabId, SchemaFetchMode mode = SchemaFetchMode.All) {
+            if (_cachedFieldsOfTab.ContainsKey(tabId)) {
+                return _cachedFieldsOfTab[tabId];
+            }
+            var result = DisplayableUtil.GetDisplayable<IApplicationAttributeDisplayable>(new[] { typeof(IApplicationAttributeDisplayable) }, Displayables, mode, false, tabId == "main" ? null : tabId)
+                .Where(f => !f.IsHidden && !f.Type.Equals(typeof(ApplicationSection).Name));
+            var nonHiddenFieldsOfTab = result as IList<IApplicationAttributeDisplayable> ?? result.ToList();
+            _cachedFieldsOfTab[tabId] = nonHiddenFieldsOfTab;
+            return nonHiddenFieldsOfTab;
         }
 
 
@@ -413,12 +463,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-        public IDictionary<string, string> Properties
-        {
+        public IDictionary<string, string> Properties {
             get {
                 return _properties;
             }
-            set { _properties = value; }
+            set {
+                _properties = value;
+            }
         }
 
 
@@ -455,7 +506,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 int hashCode = (SchemaId != null ? SchemaId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ Mode.GetHashCode();
                 hashCode = (hashCode * 397) ^ (ApplicationName != null ? ApplicationName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (int)Platform;
                 return hashCode;
             }
         }
@@ -507,7 +557,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public string GetProperty(string propertyKey) {
-            if (!Properties.ContainsKey(propertyKey)) {
+            if (Properties == null || !Properties.ContainsKey(propertyKey)) {
                 return null;
             }
             return Properties[propertyKey];
@@ -515,6 +565,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public ApplicationSchemaDefinition PaginationSize() {
             throw new NotImplementedException();
+        }
+
+        public bool IsCreation() {
+            return Stereotype.Equals(SchemaStereotype.DetailNew);
         }
     }
 }

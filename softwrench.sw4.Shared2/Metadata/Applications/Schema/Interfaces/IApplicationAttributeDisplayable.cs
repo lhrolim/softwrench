@@ -9,8 +9,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces
 
         string Qualifier { get;}
 
-      
-     
+        bool IsHidden { get; set; }
+
+        string RequiredExpression {get; set;}
 
     }
 }

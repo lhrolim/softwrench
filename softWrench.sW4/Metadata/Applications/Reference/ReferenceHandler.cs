@@ -9,6 +9,9 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Util;
+using softWrench.sW4.Metadata.Applications.Validator;
+using softWrench.sW4.Metadata.Parsing;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.Reference {
@@ -69,9 +72,15 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
                 ((IApplicationAttributeDisplayable)applicationDisplayable).Attribute = GetPropertyValue(schema, reference, reference.Attribute);
             }
 
-            if (reference.ReadOnly != null) {
-                applicationDisplayable.ReadOnly = reference.ReadOnly;
+            if (reference.IsReadOnly != null) {
+                applicationDisplayable.IsReadOnly = reference.IsReadOnly;
             }
+
+            // verify if the real reference is enabled
+            XmlEnabledFieldsVerifier.VerifyEnabledField(schema, applicationDisplayable);
+
+            // add real displayable to validate if needed
+            ApplicationMetadataValidator.AddDisplaybleToValidateIfNeeded(schema, applicationDisplayable);
         }
 
         private static object CloneAndResolve([NotNull]IPCLCloneable declaredDisplayable, ApplicationSchemaDefinition schema, ReferenceDisplayable reference) {

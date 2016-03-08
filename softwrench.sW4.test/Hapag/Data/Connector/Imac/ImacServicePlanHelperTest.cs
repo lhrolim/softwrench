@@ -6,21 +6,21 @@ using softwrench.sw4.Hapag.Data.Connector.Imac;
 namespace softwrench.sW4.test.Hapag.Data.Connector.Imac {
     [TestClass]
     public class ImacServicePlanHelperTest {
-        [TestMethod]
-        public void TestMethod1() {
-            var result = ImacServicePlanHelper.DoLoadFromFile("HLAADDCOMH");
-            Assert.IsNotNull(result);
-            var activities = result as Activity[] ?? result.ToArray();
-            Assert.AreEqual(activities.Count(), 4);
-            var first = activities.First();
-            Assert.AreEqual("WOActivity", first.type);
-            Assert.AreEqual("Add subcomponent", first.ActionLogSummary);
-            Assert.IsNotNull(first.FlexFields);
-            Assert.AreEqual(3, first.FlexFields.Count());
-            var firstFlexField =first.FlexFields.First();
-            Assert.IsNotNull(firstFlexField.mappedTo);
-
-        }
+//        [TestMethod]
+//        public void TestMethod1() {
+//            var result = ImacServicePlanHelper.DoLoadFromFile("HLAADDCOMH");
+//            Assert.IsNotNull(result);
+//            var activities = result as Activity[] ?? result.ToArray();
+//            Assert.AreEqual(activities.Count(), 4);
+//            var first = activities.First();
+//            Assert.AreEqual("WOActivity", first.type);
+//            Assert.AreEqual("Add subcomponent", first.ActionLogSummary);
+//            Assert.IsNotNull(first.FlexFields);
+//            Assert.AreEqual(3, first.FlexFields.Count());
+//            var firstFlexField =first.FlexFields.First();
+//            Assert.IsNotNull(firstFlexField.mappedTo);
+//
+//        }
 
 //        [TestMethod]
 //        public void Test2() {

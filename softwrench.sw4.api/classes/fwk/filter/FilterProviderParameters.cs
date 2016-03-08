@@ -3,10 +3,10 @@
 namespace softwrench.sw4.api.classes.fwk.filter {
     public class FilterProviderParameters {
 
-        public FilterProviderParameters(string inputSearch, string filterAttribute, ApplicationMetadataSchemaKey schemaKey) {
+        public FilterProviderParameters(string inputSearch, string filterAttribute, ApplicationSchemaDefinition schema) {
             InputSearch = inputSearch;
             FilterAttribute = filterAttribute;
-            SchemaKey = schemaKey;
+            ParentSchema = schema;
         }
 
         public string InputSearch {
@@ -17,7 +17,9 @@ namespace softwrench.sw4.api.classes.fwk.filter {
             get; set;
         }
 
-        public ApplicationMetadataSchemaKey SchemaKey { get; set; }
+        public ApplicationSchemaDefinition ParentSchema {
+            get; set;
+        }
 
     }
 }

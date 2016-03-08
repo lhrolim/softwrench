@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softwrench.sw4.Shared2.Metadata.Applications.UI;
 
 namespace softwrench.sW4.Shared2.Util {
 
@@ -16,16 +18,27 @@ namespace softwrench.sW4.Shared2.Util {
 
 
         public static IList<T> GetDisplayable<T>(Type displayableType, IEnumerable<IApplicationDisplayable> originalDisplayables,
-            SchemaFetchMode schemaFetchMode = SchemaFetchMode.All, bool insideSecondary = false) {
+            SchemaFetchMode schemaFetchMode = SchemaFetchMode.All, bool insideSecondary = false, Type[] typesToCheck = null) {
+            return GetDisplayable<T>(new[] { displayableType }, originalDisplayables, schemaFetchMode, insideSecondary);
+        }
+
+        public static IList<T> GetDisplayable<T>(Type[] typesToCheck,
+            IEnumerable<IApplicationDisplayable> originalDisplayables, SchemaFetchMode schemaFetchMode,
+            bool insideSecondary, string tabOfInterest = null, string tabContext = null) {
             var resultingDisplayables = new List<T>();
 
             foreach (IApplicationDisplayable displayable in originalDisplayables) {
-                if (displayableType.IsInstanceOfType(displayable)) {
+
+                if (typesToCheck.Any(typeToCheck => typeToCheck.IsInstanceOfType(displayable))) {
                     if (schemaFetchMode != SchemaFetchMode.SecondaryContent || insideSecondary) {
-                        resultingDisplayables.Add((T)displayable);
+                        if (tabOfInterest == null || tabOfInterest.Equals(tabContext)) {
+                            resultingDisplayables.Add((T)displayable);
+                        }
                     }
                 }
-                if (displayable is IApplicationDisplayableContainer && SchemaFetchMode.FirstLevelOnly != schemaFetchMode) {
+
+                if (displayable is IApplicationDisplayableContainer &&
+                        SchemaFetchMode.FirstLevelOnly != schemaFetchMode) {
                     var container = displayable as IApplicationDisplayableContainer;
                     var section = container as ApplicationSection;
                     var isSecondarySection = section != null && section.SecondaryContent;
@@ -33,7 +46,17 @@ namespace softwrench.sW4.Shared2.Util {
                         //under some circustances we might not be interested in returning the secondary content displayables
                         continue;
                     }
-                    resultingDisplayables.AddRange(GetDisplayable<T>(displayableType, container.Displayables, schemaFetchMode, insideSecondary || isSecondarySection));
+                    var tabDefinition = container as ApplicationTabDefinition;
+                    //                    if (tabDefinition != null && tabOfInterest != null && tabDefinition.TabId != tabOfInterest) {
+                    //                        
+                    //                    }
+                    if (tabDefinition != null) {
+                        tabContext = tabDefinition.TabId;
+                    }
+
+                    resultingDisplayables.AddRange(GetDisplayable<T>(typesToCheck, container.Displayables,
+                        schemaFetchMode,
+                        insideSecondary || isSecondarySection, tabOfInterest, tabContext));
                 }
             }
             return resultingDisplayables;

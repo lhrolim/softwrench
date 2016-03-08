@@ -1,8 +1,8 @@
 ﻿.affix-pagination {
     width: 100%;
 
-    .pagination-pager a:hover {
-        text-decoration: none;
+    pagination {
+        float: right;
     }
 }
 
@@ -41,7 +41,6 @@
 
         label {
             font-weight: normal;
-        }
 
         .buttons {
             display: inline-block;
@@ -78,11 +77,8 @@
 @media all and (min-width: 480px) {
     .container {
         .context {
-            padding: 5px 40px 5px 10px;
-
             .group {
                 float: left;
-                /*min-height: 34px;*/
             }
         }
     }
@@ -97,22 +93,6 @@
         .context {
             .hidden-xs {
                 display: inline-block !important;
-            }
-
-            .group {
-                margin: 5px 10px 0;
-
-                &.total {
-                    height: auto;
-
-                    label {
-                        margin: 0;
-                    }
-                }
-            }
-
-            .right .group {
-                float: right;
             }
         }
     }
@@ -137,12 +117,6 @@
     }
 }
 
-@media all and (min-width: 1170px) {
-    .container .context .group.total {
-        display: block;
-    }
-}
-
 .gridtop .applicationcommand {
     display: none;
 }
@@ -151,4 +125,9 @@
     .gridtop .applicationcommand {
         display: inline-block;
     }
+}
+
+#affixpagination1 {
+    border-bottom: none;
+    border-top: #000 1px solid;
 }

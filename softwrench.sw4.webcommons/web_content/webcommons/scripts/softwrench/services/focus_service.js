@@ -23,7 +23,7 @@ angular.module('sw_layout')
                 if (displayable.rendererParameters && "true" === displayable.rendererParameters['avoidautofocus']) {
                     continue;
                 }
-                if (!acceptFilled && realdatamap[displayable.attribute] == null) {
+                if (!acceptFilled && (realdatamap[displayable.attribute] == null || realdatamap[displayable.attribute] === "" || realdatamap[displayable.attribute].length === 0)) {
                     return i;
                 } else if (acceptFilled) {
                     return i;
@@ -53,6 +53,10 @@ angular.module('sw_layout')
         setFocusOnIdx: function (schema, datamap, idx, parameters) {
             var log = $log.get("focusService#setFocusOnIdx");
             parameters = parameters || {};
+            if (schema.properties && schema.properties["detail.focus.allowmovingbackward"] === "true") {
+                parameters.allowmovingbackward = true;
+            }
+
             if (parameters.reset) {
                 currentFocusedIdx = 0;
             }

@@ -22,9 +22,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string Label { get; set; }
         public string Attribute { get; set; }
         public IDictionary<string, object> Parameters { get; set; }
+
+        public string RequiredExpression {
+            get; set;
+        }
         [DefaultValue("true")] public string ShowExpression { get; set; }
         public string ToolTip { get; set; }
-        public bool? ReadOnly {
+        public bool IsReadOnly {
             get { return false; }
             set { }
         }
@@ -55,6 +59,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string Qualifier { get; set; }
 
         public bool SecondaryContent { get; set; }
+
+        public bool IsHidden {
+            get; set;
+        }
 
         public ApplicationSection() {
 

@@ -1,4 +1,4 @@
-﻿(function (modules) {
+﻿(function (angular, modules) {
     "use strict";
 
     modules.webcommons.factory('fieldService', ["$injector", "$log", "$filter", "expressionService", "eventService", "userService", "formatService", function ($injector, $log, $filter, expressionService, eventService, userService, formatService) {
@@ -164,12 +164,12 @@
 
             isInlineComposition: function (displayable) {
                 var type = displayable.type;
-                return type == "ApplicationCompositionDefinition" && displayable.inline;
+                return type === "ApplicationCompositionDefinition" && displayable.inline;
             },
 
             isListOnlyComposition: function (displayable) {
                 var type = displayable.type;
-                return type == "ApplicationCompositionDefinition" && displayable.schema.schemas.detail == null;
+                return type === "ApplicationCompositionDefinition" && displayable.schema.schemas.detail == null;
             },
 
             isTabOrComposition: function (displayable) {
@@ -322,6 +322,11 @@
                     //is this the current field?
                     var fieldMetadata = displayables[i];
 
+                    // also verifies if the field is actualy displayed on screen
+                    if ($('[data-field="' + fieldMetadata.attribute + '"]').is(":hidden")) {
+                        continue;
+                    }
+
                     //if the current field is found, get the next visible and editable field
                     if (!this.isFieldHidden(datamap, schema, fieldMetadata) && !this.isFieldReadOnly(datamap, schema, fieldMetadata)) {
                         $log.getInstance("fieldService#getNextVisibleDisplayable").debug('found', fieldMetadata.attribute, fieldMetadata);
@@ -422,7 +427,7 @@
                     event.continue();
                 }
             },
-            postFieldChange: function (field, scope) {
+            postFieldChange: function (field, scope,oldValue,newValue) {
                 var eventType = "afterchange";
                 var afterChangeEvent = field.events[eventType];
                 var fn = eventService.loadEvent(field, eventType);
@@ -436,9 +441,12 @@
 
                 var afterchangeEvent = {
                     fields: fields,
-                    scope: scope
+                    target: field,
+                    scope: scope,
+                    oldValue: oldValue,
+                    newValue : newValue
                 };
-                $log.getInstance('sw4.fieldservice#postfieldchange').debug('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
+                $log.get('sw4.fieldservice#postfieldchange',["event","field","afterchange"]).debug('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
                 fn(afterchangeEvent);
             },
 
@@ -447,6 +455,56 @@
             /// </summary>
             currentDate: function () {
                 return new Date();
+            },
+
+            getQualifier: function(field, datamap) {
+                var qualifier = field.qualifier;
+                if (!qualifier || !qualifier.startsWith("expression=")) return qualifier;
+
+                var expression = qualifier.replace("expression=", "");
+                expression = replaceAll(expression, "\'", "\"");
+
+                var expressionObject;
+                try {
+                    expressionObject = JSON.parse(expression);
+                } catch (e) {
+                    console.error("Invalid qualifier expression for field", field, ":", expression);
+                    throw e;
+                }
+
+                var currentValue = datamap[field.attribute];
+
+                // immediate lookup
+                if (expressionObject.hasOwnProperty(currentValue)) {
+                    return expressionObject[currentValue];
+                }
+
+                for (var key in expressionObject) {
+                    if (!expressionObject.hasOwnProperty(key)) continue;
+
+                    var attribute = key.match(/@.+/g);
+                    if (!attribute) continue;
+
+                    // number of '!' is even (or zero)
+                    var affirmative = (key.match(/!/g) || []).length % 2 === 0;
+
+                    // attribute name from expression (without @ and !)
+                    // TODO: add support for expressions with boolean operators (===, >=, <=, etc)
+                    attribute = attribute[0].replace("@", "");
+                    attribute = replaceAll(attribute, "!", "");
+                    
+                    var evaluated = datamap[attribute];
+                    evaluated = [false, 0, undefined, null, "false"].indexOf(evaluated) >= 0 ? false : true;
+
+                    var value = expressionObject[key];
+                    if (affirmative && evaluated) {
+                        return value;
+                    } else if (!affirmative && !evaluated) {
+                        return value;
+                    }
+                }
+
+                return expressionObject["#default"];
             }
         };
 
@@ -456,4 +514,4 @@
 
     }]);
 
-})(modules);
+})(angular, modules);

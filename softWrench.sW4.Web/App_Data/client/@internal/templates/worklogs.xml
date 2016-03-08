@@ -19,8 +19,11 @@
           <field attribute="modifydate" label="Last Changed Date" qualifier="subtitle">
             <renderer type="datetime" params="format=MM/dd/yyyy"/>
           </field>
-          <field attribute="synonymdomain_.description" label="Log Type"/>
           <field attribute="description" label="Summary" qualifier="title"/>
+          <field attribute="synonymdomain_.description" label="Log Type"/>
+          <field attribute="clientviewable" label="Client Viewable">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
         </schema>
 
         <detail stereotype="compositiondetail">

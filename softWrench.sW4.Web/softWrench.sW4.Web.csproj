@@ -30,10 +30,14 @@
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <TargetFrameworkProfile />
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -70,13 +74,17 @@
       <HintPath>Dependencies\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentMigrator, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
+    <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="FluentMigrator.Runner, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+    <Reference Include="FluentMigrator.Runner, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.Runner.1.6.1\lib\40\FluentMigrator.Runner.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IBM.Data.DB2, Version=9.0.0.2, Culture=neutral, PublicKeyToken=7c307b91aa13d208, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependencies\FluentMigrator.Runner.dll</HintPath>
+      <HintPath>.\IBM.Data.DB2.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
@@ -115,7 +123,7 @@
     </Reference>
     <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NHibernate.3.3.1.4000\lib\Net35\NHibernate.dll</HintPath>
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.Mapping.Attributes, Version=3.2.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -308,8 +316,18 @@
     <Compile Include="DB_Migration\4.2.0\Migration201506241200Swweb1166Part3.cs" />
     <Compile Include="DB_Migration\4.2.0\Migration201507201700Swweb1166Part4.cs" />
     <Compile Include="DB_Migration\4.4.1\20150723_SWWEB_1275.cs" />
+    <Compile Include="DB_Migration\5.3.0\20160127_SWWEB_2020.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\ColumnBase.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2Column.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2DbFactory.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2Generator.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2Processor.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2ProcessorFactory.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2Quoter.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\Db2TypeMap.cs" />
+    <Compile Include="DB_Migration\DB2 FluentMigrator\EmptyDescriptionGenerator.cs" />
     <Compile Include="Formatting\JsonDateTimeConverter.cs" />
     <Compile Include="Formatting\LeanJsonContractResolver.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
@@ -416,6 +434,7 @@
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
     <Content Include="App_Data\Client\%40internal\templates\sparepart.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\swdb\userprofile.xml" />
     <Content Include="App_Data\Client\%40internal\templates\synstatus.xml" />
     <Content Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
     <Content Include="App_Data\Client\%40internal\templates\woactivity.xml" />
@@ -442,11 +461,11 @@
     </Content>
     <Content Include="App_Data\Client\otb\deploy.xml" />
     <Content Include="App_Data\Client\otb\menu.mobile.xml" />
-    <Content Include="App_Data\Client\otb\commands.xml">
+    <Content Include="App_Data\Client\otb\stereotypes.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Client\otb\stereotypes.xml">
+    <Content Include="App_Data\Client\otb\commands.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -528,17 +547,24 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\client\adminresources\adminmodule_setup.js" />
+    <Content Include="Content\Scripts\client\crud\composition_masterdetails.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_dropdown.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_multioptions.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_bar.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_viewmodel.js" />
     <Content Include="Content\Scripts\client\crud\crud_expandable_section.js" />
+    <Content Include="Content\Scripts\client\crud\search\crudSearchService.js" />
+    <Content Include="Content\Scripts\client\directives\scrollPane.js" />
+    <Content Include="Content\Scripts\client\directives\searchbox.js" />
     <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\directives\stringtonumber.js" />
+    <Content Include="Content\Scripts\client\services\controllerinheritanceservice.js" />
     <Content Include="Content\Scripts\client\services\notificationService.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
     <Content Include="Content\Scripts\client\services\recursionHelper_service.js" />
     <Content Include="Content\Scripts\client\services\gridSelection_service.js" />
+    <Content Include="Content\Scripts\client\adminresources\userProfileService.js" />
     <Content Include="Content\Scripts\client\UserStatisticsController.js" />
     <Content Include="Content\Scripts\client\SignInController.js" />
     <Content Include="Content\Scripts\client\noMenuLayoutController.js" />
@@ -652,6 +678,8 @@
     <Content Include="Content\styles\default\vendor\vendor.scss" />
     <Content Include="Content\styles\default\_define-password.scss" />
     <Content Include="Content\styles\default\_notifications.scss" />
+    <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js.map" />
+    <Content Include="Content\styles\default\_searchbox.scss" />
     <Content Include="bower.json" />
     <Content Include="Content\styles\default\_bootbox.scss" />
     <None Include="Content\styles\default\_button.scss" />
@@ -696,8 +724,10 @@
     <Content Include="Content\customVendor\scripts\angular\textAngular.js" />
     <Content Include="Content\customVendor\scripts\angular\textAngular-sanitize.js" />
     <None Include="Content\styles\default\_context-bar.scss" />
+    <Content Include="Content\styles\default\_crud-masterdetails.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
     <Content Include="Content\styles\default\_footer.scss" />
+    <Content Include="Content\styles\default\_crud-search.scss" />
     <None Include="Content\styles\default\_grid.scss" />
     <None Include="Content\styles\default\vendor\_jscrollpane.scss" />
     <Content Include="Content\styles\default\media\media.scss" />
@@ -724,10 +754,14 @@
     <None Include="Content\styles\default\_tooltips.scss" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
+    <Content Include="Content\Templates\crud\composition_masterdetails.html" />
     <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
+    <Content Include="Content\Scripts\client\crud\search\crud_search.js" />
+    <Content Include="Content\Templates\crud\search\crud_search.html" />
+    <Content Include="Content\Templates\crud\security\userprofile_permission.html" />
     <Content Include="Content\Templates\notifications.html" />
     <Content Include="Content\Templates\breadcrumbDropdown.html" />
     <Content Include="Content\Templates\breadcrumb.html" />
@@ -763,12 +797,15 @@
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />
     <Content Include="Content\Templates\otb\commlogaction.html" />
     <Content Include="Content\Templates\otb\receiving.html" />
+    <Content Include="Content\Templates\pagination-pages.html" />
     <Content Include="Content\Templates\samelinepickers.html" />
     <Content Include="Content\Templates\hapag\conditionalfield.html" />
     <Content Include="Content\Templates\configConditionModal.html" />
     <Content Include="Content\Templates\printModal.html" />
     <Content Include="Content\modules\lookup\templates\lookupModal.html" />
+    <Content Include="Content\Templates\searchbox.html" />
     <Content Include="Content\Templates\usefulFaqLinks.html" />
+    <Content Include="Content\styles\default\_pagination.scss" />
     <None Include="Content\styles\default\_treeview.scss" />
     <Content Include="Content\Templates\downloadattachment.html" />
     <Content Include="Content\Templates\usersetup\userstatistics.html" />
@@ -793,6 +830,7 @@
     <Content Include="Dependencies\softWrench.sW4.Controls.ActiveX.dll" />
     <Content Include="App_Data\Client\hapag\i18n\de\labels.json" />
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
+    <None Include="Doc\securitygroup.md" />
     <Content Include="Doc\scanner.txt" />
     <Content Include="Gruntfile.js" />
     <Content Include="IBM.Data.DB2.dll" />

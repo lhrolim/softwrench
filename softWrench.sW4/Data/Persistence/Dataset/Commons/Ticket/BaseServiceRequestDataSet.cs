@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using cts.commons.persistence;
+using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Composition;
@@ -15,14 +17,14 @@ using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
     public class BaseServiceRequestDataSet : BaseTicketDataSet {
-        private readonly SWDBHibernateDAO _swdbDao;
+        private readonly ISWDBHibernateDAO _swdbDao;
         /* Need to add this prefilter function for the problem codes !! 
         public SearchRequestDto FilterProblemCodes(AssociationPreFilterFunctionParameters parameters)
         {
 
         }*/
 
-        public BaseServiceRequestDataSet(SWDBHibernateDAO swdbDao) {
+        public BaseServiceRequestDataSet(ISWDBHibernateDAO swdbDao) {
             _swdbDao = swdbDao;
         }
 
@@ -34,6 +36,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         }
 
         public SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
+
+            var appSchema = parameter.Schema.AppSchema;
+            if ("true".EqualsIc(appSchema.GetProperty("attachments.skiprelatedattachments"))) {
+                //let´s use ordinary query
+                return parameter.BASEDto;
+            }
+
             var originalEntity = parameter.OriginalEntity;
 
             var origrecordid = parameter.BASEDto.ValuesDictionary["ownerid"].Value;

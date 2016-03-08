@@ -78,9 +78,9 @@
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="FluentMigrator, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
+    <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
@@ -136,6 +136,9 @@
       <HintPath>..\packages\WcfSamples.DynamicProxy.1.0.0.0\lib\net45\WcfSamples.DynamicProxy.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WebGrease">
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="XDesigner.RTF">
       <HintPath>Dependencies\XDesigner.RTF.dll</HintPath>
@@ -164,7 +167,9 @@
     <Compile Include="Data\Persistence\Dataset\Commons\BaseAssetDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseLocationDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseMultiassetlocciDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\GenericSWMethodInvoker.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseProblemDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\BaseTicketDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\CommlogHelper.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\DispatchOperationHandler.cs" />
@@ -206,15 +211,20 @@
     <Compile Include="Data\Persistence\WS\Commons\PaeAssetCrudConnector.cs" />
     <Compile Include="Metadata\Applications\Association\ApplicationAssociationSyncSchemaFactory.cs" />
     <Compile Include="Metadata\Applications\Classification\ClassificationDataSet.cs" />
-    <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseProblemDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseUserProfileDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\WoActivityDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderReadingDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseCommLogDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\FilterWhereClauseParameters.cs" />
     <Compile Include="Metadata\Applications\Schema\SchemaFilterBuilder.cs" />
+    <Compile Include="Metadata\Applications\Security\ApplicationCompositionSecurityApplier.cs" />
+    <Compile Include="Metadata\Applications\Security\ApplicationFieldSecurityApplier.cs" />
+    <Compile Include="Metadata\Applications\Validator\ApplicationMetadataValidator.cs" />
     <Compile Include="Metadata\Menu\MenuCatalogMerger.cs" />
     <Compile Include="Metadata\Menu\XMLMenuParserCommons.cs" />
     <Compile Include="Metadata\Menu\XmlTemplateMenuMetadataParser.cs" />
     <Compile Include="Metadata\OffLineMetadataProvider.cs" />
+    <Compile Include="Metadata\Parsing\XmlEnabledFieldsVerifier.cs" />
     <Compile Include="Metadata\Parsing\XmlFilterMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlFilterSchema.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
@@ -339,7 +349,7 @@
     <Compile Include="Metadata\Entities\Schema\EntityTargetSchema.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityAssociation.cs" />
     <Compile Include="Metadata\ClientChangeEvent.cs" />
-    <Compile Include="Metadata\Menu\MenuManager.cs" />
+    <Compile Include="Metadata\Menu\MenuSecurityManager.cs" />
     <Compile Include="Metadata\MetadataProviderInternalCache.cs" />
     <Compile Include="Metadata\Parsing\IXMLMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XElementExtensions.cs" />
@@ -349,6 +359,7 @@
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
+    <Compile Include="Metadata\Security\SecurityException.cs" />
     <Compile Include="Metadata\Security\SecurityGroupExtensions.cs" />
     <Compile Include="Metadata\Stereotypes\AComponentStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\ComponentStereotypeFactory.cs" />
@@ -438,6 +449,7 @@
     <Compile Include="Security\Interfaces\IRoleEvaluator.cs" />
     <Compile Include="Security\Services\ClearMenuEvent.cs" />
     <Compile Include="Security\Services\ClearCacheEvent.cs" />
+    <Compile Include="Security\Services\MaximoVersionEvaluator.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />
     <Compile Include="Security\Services\UserPreferenceManager.cs" />
     <Compile Include="Security\UserType.cs" />

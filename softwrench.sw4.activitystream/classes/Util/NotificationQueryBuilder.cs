@@ -10,20 +10,24 @@ using softWrench.sW4.Security.Services;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Context;
 
 namespace softwrench.sw4.activitystream.classes.Util {
     public class NotificationQueryBuilder : ISingletonComponent {
         private readonly IWhereClauseFacade _whereClauseFacade;
         private readonly ILog _log = LogManager.GetLogger(typeof(NotificationQueryBuilder));
+        private UserProfileManager _userProfileManager;
 
-        public NotificationQueryBuilder(IWhereClauseFacade whereClauseFacade) {
+        public NotificationQueryBuilder(IWhereClauseFacade whereClauseFacade, UserProfileManager userProfileManager)
+        {
             _whereClauseFacade = whereClauseFacade;
+            _userProfileManager = userProfileManager;
         }
 
         public Dictionary<string, string> BuildNotificationsQueries() {
             Dictionary<string, string> notificationQueries = new Dictionary<string, string>();
-            var securityGroups = UserProfileManager.FetchAllProfiles(true);
+            var securityGroups = _userProfileManager.FetchAllProfiles(true);
             foreach (var securityGroup in securityGroups) {
                 var notificationsQuery = BuildNotificationsQuery(securityGroup);
                 if (!notificationsQuery.Value.IsNullOrWhiteSpace()) {
@@ -31,7 +35,10 @@ namespace softwrench.sw4.activitystream.classes.Util {
                 }
             }
             var defaultQuery = GetDefaultQuery();
-            notificationQueries.Add(defaultQuery.Key, defaultQuery.Value);
+            if (!string.IsNullOrEmpty(defaultQuery)) {
+                notificationQueries.Add(ActivityStreamConstants.DefaultStreamName, defaultQuery);
+            }
+
             return notificationQueries;
         }
 
@@ -88,15 +95,30 @@ namespace softwrench.sw4.activitystream.classes.Util {
             return ActivityStreamConstants.BaseQueries.Single(q => q.Key.EqualsIc(key)).Value;
         }
 
-        private KeyValuePair<string, string> GetDefaultQuery() {
+        private string GetDefaultQuery() {
             var notificationsQuery = "";
-            notificationsQuery += AppendQuery("sr", null);
-            notificationsQuery += AppendQuery("incident", null);
-            notificationsQuery += AppendQuery("workorders", null);
+
+            if (MetadataProvider.IsApplicationEnabled("servicerequest")) {
+                notificationsQuery += AppendQuery("sr", null);
+            }
+
+            if (MetadataProvider.IsApplicationEnabled("incident")) {
+                notificationsQuery += AppendQuery("incident", null);
+            }
+
+            if (MetadataProvider.IsApplicationEnabled("workorder")) {
+                notificationsQuery += AppendQuery("workorders", null);
+            }
+
+
             if (notificationsQuery.EndsWith(" UNION ")) {
                 notificationsQuery = notificationsQuery.Substring(0, notificationsQuery.Length - " UNION ".Length);
             }
-            return new KeyValuePair<string, string>(ActivityStreamConstants.DefaultStreamName, notificationsQuery);
+            if (string.IsNullOrEmpty(notificationsQuery)) {
+                return null;
+            }
+
+            return notificationsQuery;
         }
     }
 }

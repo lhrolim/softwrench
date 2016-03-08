@@ -14,7 +14,7 @@ using System.Reflection;
 namespace softWrench.sW4.Data.Persistence {
 
 
-    public class MaximoHibernateDAO : BaseHibernateDAO {
+    public class MaximoHibernateDAO : BaseHibernateDAO, IMaximoHibernateDAO {
 
         private static readonly ILog Log = LogManager.GetLogger(SwConstants.SQL_LOG);
 
@@ -42,6 +42,10 @@ namespace softWrench.sW4.Data.Persistence {
 
         protected override string GetConnectionString() {
             return ApplicationConfiguration.DBConnectionString(DBType.Maximo);
+        }
+
+        protected override bool IsMaximo() {
+            return true;
         }
 
         protected override ILog GetLog() {

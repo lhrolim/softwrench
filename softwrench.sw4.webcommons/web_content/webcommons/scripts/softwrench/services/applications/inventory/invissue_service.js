@@ -2,9 +2,9 @@
 (function (angular) {
     'use strict';
 
-    angular.module('sw_layout').factory('invissueService', ["$rootScope", "$log", 'searchService', "inventoryServiceCommons", "redirectService", 'alertService', invissueService]);
+    angular.module('sw_layout').factory('invissueService', ["$rootScope", "$log", 'searchService', "inventoryServiceCommons", "redirectService", "alertService", "inventorySharedService", invissueService]);
 
-    function invissueService($rootScope, $log, searchService, inventoryServiceCommons, redirectService, alertService) {
+    function invissueService($rootScope, $log, searchService, inventoryServiceCommons, redirectService, alertService, inventorySharedService) {
 
         var service = {
             afterChangeBin: afterChangeBin,
@@ -28,39 +28,10 @@
             var param = {};
             param.id = datamap['matusetransid'];
             var application = schema.applicationName;
-            var schemaId;
             var mode = 'input';
+            var schemaId = inventorySharedService.nextInvIssueDetailSchema(schema.applicationName, schema, datamap);
 
-            //Logic to determine whether the record is an ISSUE
-            //and whether all of the issued items have been returned
-            if (datamap['issuetype'] != 'ISSUE') {
-                //if it´s not an issue redirecting to return screen
-                redirectService.goToApplicationView(application, 'viewinvreturndetail', mode, null, param, null);
-                return;
-            }
-
-
-            //Sets qtyreturned to 0 if null
-            //Parses the qtyreturned if its in a strng format
-            var qtyreturned = 0;
-            if (typeof datamap['qtyreturned'] === "string") {
-                qtyreturned = parseInt(datamap['qtyreturned']);
-            } else if (datamap['qtyreturned'] != null) {
-                qtyreturned = datamap['qtyreturned'];
-            }
-
-            //For an issue, the quantity will be a negative number, representing the # of items issued
-            //The below if statement will add the positive quantityreturned to the negative quantity.
-            //If the result is negative, then are still items to be returned
-            if (qtyreturned + datamap['quantity'] >= 0) {
-                //If all of the items have been returned, show the viewdetail page for 'ISSUE' records
-                redirectService.goToApplicationView(application, 'viewinvissuedetail', mode, null, param, null);
-                return;
-            }
-
-            if (qtyreturned + datamap['quantity'] != -1) {
-                //There are still items to be returned
-                schemaId = application == "invreturn" ? 'editinvreturndetail' : 'editinvissuedetail';
+            if (!!schemaId) {
                 redirectService.goToApplicationView(application, schemaId, mode, null, param, null);
                 return;
             }

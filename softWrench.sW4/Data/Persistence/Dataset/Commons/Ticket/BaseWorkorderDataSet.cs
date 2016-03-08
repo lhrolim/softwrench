@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using cts.commons.persistence;
+using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
@@ -14,19 +16,27 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
     public class BaseWorkorderDataSet : BaseTicketDataSet {
-        private readonly SWDBHibernateDAO _swdbDao;
+        private readonly ISWDBHibernateDAO _swdbDao;
 
-        public BaseWorkorderDataSet(SWDBHibernateDAO swdbDao) {
+        public BaseWorkorderDataSet(ISWDBHibernateDAO swdbDao) {
             _swdbDao = swdbDao;
         }
 
         public SearchRequestDto FilterStatusCodes(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
+            var user = SecurityFacade.CurrentUser();
+            var onLaborerGroup = user.Profiles.Any(p => p.Name.EqualsIc("laborers"));
+
             filter.AppendWhereClauseFormat("( MAXVALUE != 'HISTEDIT' )");
+            if (onLaborerGroup) {
+                filter.AppendWhereClauseFormat("VALUE not in ('FIELD WORK COMP','Comp')");
+            }
+
             return filter;
         }
 
@@ -82,6 +92,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         }
 
         public SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
+
+            var appSchema = parameter.Schema.AppSchema;
+            if ("true".EqualsIc(appSchema.GetProperty("attachments.skiprelatedattachments"))) {
+                //let´s use ordinary query
+                return parameter.BASEDto;
+            }
+
+
             var originalEntity = parameter.OriginalEntity;
             var siteId = originalEntity.GetAttribute("siteid");
             var orgid = originalEntity.GetAttribute("orgid");

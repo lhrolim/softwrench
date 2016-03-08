@@ -16,6 +16,7 @@
         </div>
         <div class="right">
             <div class="group pagination">
+				<a ng-click="toConfirmBack(previousdata,previousschema)" rel="tooltip" data-original-title="Back to Grid"><i class="fa fa-table"></i></a>&ensp;
                 <a ng-click="crawl(0)" ng-disabled="!disableNavigationButton(0)" href="#" rel="tooltip" data-original-title="Previous"><i class="fa fa-chevron-down"></i></a>&ensp;
                 <a ng-click="crawl(1)" ng-disabled="!disableNavigationButton(1)" href="#" rel="tooltip" data-original-title="Next"><i class="fa fa-chevron-up"></i></a>
             </div>
@@ -43,7 +44,12 @@
         </div>
 
         <div class="hiddenonprint detail-body">
-            <div class="detail-header clearfix" ng-if="hasTabs(schema)">
+            <!--Adding this div, just to dispatch the tabsrendered event, making the framework consistent for the 0 tab scenario-->
+            <div ng-if="!hasTabs(schema)" tabsrendered/>
+
+            
+
+            <div class="detail-header clearfix" ng-if="hasTabs(schema)" ng-style="sidePanelStyle()">
                 <ul class="nav nav-tabs compositiondetailtab hapag-composition">
                     <li ng-if="hasAnyFieldOnMainTab(schema)" ng-class="{'active': hasAnyFieldOnMainTab(schema)}">
                         <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i>&ensp;{{getDetailTabTitle(schema, datamap)}}</a>
@@ -78,14 +84,14 @@
                                                 cancelfn="cancel(data,schema)"
                                                 savefn="save(selecteditem, parameters)"
                                                 previousschema="previousschema" previousdata="previousdata"
-                                                is-main-tab='true' tabid="main" />
+                                                is-main-tab='true' tabid="main"/>
 
                         </div>
                         <div ng-switch-when="false">
                             <crud-output-wrapper extraparameters="extraparameters"
                                                  schema="schema" datamap="datamap.fields"
                                                  displayables="schema.displayables"
-                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="main" />
+                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="main"/>
                         </div>
                     </ng-switch>
                 </div>
@@ -97,12 +103,14 @@
                                                       cancelfn="cancel(data,schema)"
                                                       previousschema="previousschema" previousdata="previousdata"
                                                       metadata="tab"
+                                                      mode="{{schema.mode}}"
                                                       tabid="{{tab.tabId}}"
-                                                      ismodal="{{ismodal}}" />
+                                                      ismodal="{{ismodal}}"/>
                         </div>
                         <div ng-switch-when="false">
                         </div>
                     </div>
+                    
                     <div class="tab-pane" ng-switch-when="ApplicationTabDefinition" ng-switch on="schema.mode.equalsAny('input', 'none')">
                         <div ng-switch-when="true">
                             <crud-input-wrapper ismodal="{{ismodal}}"
@@ -114,13 +122,13 @@
                                                 blockedassociations="blockedassociations"
                                                 cancelfn="cancel(data,schema)"
                                                 savefn="save(selecteditem, parameters)"
-                                                previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
+                                                previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}"/>
                         </div>
                         <div ng-switch-when="false">
                             <crud-output-wrapper extraparameters="extraparameters"
                                                  schema="schema" datamap="datamap.fields"
                                                  displayables="tab.displayables"
-                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
+                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}"/>
                         </div>
                     </div>
                 </div>
@@ -134,7 +142,17 @@
         <print-modal schema="schema" datamap="datamap" />
     </div>
     <div ng-if="schema != null">
-        <print-section schema="schema" datamap="datamap" />
+        <print-section schema="schema" datamap="datamap"/>
     </div>
+
+    <!--
+    paste catcher element:
+    - IE: wont trigger 'paste' unless focused on contenteditable
+    - FF: won't paste clicpboard content unless focused on contenteditable
+    - Chrome: guarantee that if the user is not focused on this directive's $element it will still catch the paste event
+    positioned at a coordinate in which the focus will not cause the scroll to jump
+    -->
+    <div class="js_crud_pastecatcher" contenteditable="true" style="opacity: 0; height: 0; width: 0; position: fixed; top: 20%"></div>
+
 </div>
 

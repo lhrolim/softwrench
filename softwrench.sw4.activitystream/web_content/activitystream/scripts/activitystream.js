@@ -1,30 +1,6 @@
 (function (angular) {
     "use strict";
 
-function handleResize() {
-    var activityWidth = 0;
-
-    //if pane is open get width
-    if ($('#activitystream').hasClass('open')) {
-        activityWidth = $('#activitystream').width();
-    }
-
-    //var gridOffset = activityWidth + gridPadding;
-    //var headerOffset = activityWidth;
-
-    //update widths
-    $('.site-header').width($('.site-header').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-
-    if ($('.site-header').css('position') == 'fixed') {
-        $('#affixpagination').width($('#affixpagination').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-    } else {
-        $('#affixpagination').width($('#affixpagination').css('width', '100%'));
-    }
-
-    $('.listgrid-thead').width($('.listgrid-thead').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-    $('.content').width($('.content').css('width', 'calc(100% - ' + activityWidth + 'px)'));
-}
-
 angular.module('sw_layout').directive('activitystream', function (contextService) {
     "ngInject";
 
@@ -48,31 +24,24 @@ angular.module('sw_layout').directive('activitystream', function (contextService
 
         link: function (scope) {
             scope.$name = 'crudbody';
-
-            var handler = window.debounce(handleResize, 300);
-            angular.element(window).on("resize", handler);
-            scope.$on("$destroy", function () {
-                angular.element(window).off("resize", handler);
-            });
         },
 
-        controller: function ($scope, $http, $log, $interval, $timeout, redirectService,
-            contextService, $rootScope, alertService) {
+        controller: ["$scope", "$http", "$log", "$interval", "$timeout", "redirectService", "contextService", "$rootScope", "alertService", "sidePanelService",
+            function ($scope, $http, $log, $interval, $timeout, redirectService, contextService, $rootScope, alertService, sidePanelService) {
 
             var log = $log.getInstance('sw4.activityStream');
-            var jScrollPaneAPI;
-            var throttleTimeout;
+
+            $scope.panelid = "activitystream";
             $scope.hiddenToggle = false;
             $scope.enableFilter = false;
             $scope.availableProfiles = [];
 
-
-            $scope.activityStreamEnabled = function () {
+            var activityStreamEnabled = function () {
                 return contextService.fetchFromContext('activityStreamFlag', false, true);
             };
 
-            if ($scope.activityStreamEnabled()) {
-                $('html').addClass('activitystream');
+            if (!activityStreamEnabled()) {
+                sidePanelService.hide($scope.panelid);
             };
 
 
@@ -248,10 +217,6 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         //TODO: remove for production
                         //$scope.activities = demoNotifications;
 
-                        //resize the scroll pane if needed
-                        if (typeof jScrollPaneAPI !== 'undefined') {
-                            jScrollPaneAPI.reinitialise();
-                        }
                         log.debug($scope.activities);
                     });
             };
@@ -263,14 +228,15 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 var panePaddingTop = parseInt($('#activitystream .pane').css('padding-top'));
                 var panePaddingBottom = parseInt($('#activitystream .pane').css('padding-bottom'));
 
-                $('#activitystream .scroll').height($(window).height() - headerHeight - panePaddingTop - panePaddingBottom);
+                return $(window).height() - headerHeight - panePaddingTop - panePaddingBottom;
             };
 
             $scope.toggleFilter = function () {
                 log.debug('toggleFilter');
 
                 $scope.enableFilter = !$scope.enableFilter;
-                $scope.clearFilter();
+                $scope.filterText = '';
+                $(window).trigger('resize');
             };
 
             $scope.toggleHidden = function () {
@@ -278,49 +244,18 @@ angular.module('sw_layout').directive('activitystream', function (contextService
 
                 $scope.hiddenToggle = !$scope.hiddenToggle;
 
-                //resize the scroll pane if needed
-                if (typeof jScrollPaneAPI !== 'undefined') {
-                    $timeout(function () {
-                        jScrollPaneAPI.reinitialise();
-                    }, 0);
-                }
+                //resize/position elements
+                $(window).trigger('resize');
             };
 
             $scope.toggleActivityStream = function () {
-                //open and close activity pane
-                $('#activitystream').toggleClass('open');
-
-                //resize/position elements
-                $(window).trigger('resize');
-
-                //reclac the activity pane height
-                $scope.setPaneHeight();
-                jScrollPaneAPI = $('#activitystream .scroll').jScrollPane().data('jsp');
+                sidePanelService.toggle($scope.panelid);
             };
 
-            //set window height and reinitialize scroll pane if windows is resized
-            $(window).bind('resize', window.debounce(function () {
-                // IE fires multiple resize events while you are dragging the browser window which
-                // causes it to crash if you try to update the scrollpane on every one. So we need
-                // to throttle it to fire a maximum of once every 50 milliseconds...
-                if (typeof jScrollPaneAPI !== 'undefined') {
-                    if (!throttleTimeout) {
-                        throttleTimeout = setTimeout(function () {
-                            $scope.setPaneHeight();
-
-                            jScrollPaneAPI.reinitialise();
-                            throttleTimeout = null;
-                        }, 50);
-                    }
-                }
-            }, 300));
-
-            //prevent window scrolling after reaching end of navigation pane 
-            $(document).on('mousewheel', '#activitystream .scroll', function (e) {
-                var delta = e.originalEvent.wheelDelta;
-                this.scrollTop += (delta < 0 ? 1 : -1) * 30;
-                e.preventDefault();
-            });
+            // returns the style of the indicator of unread activities
+            $scope.getUnreadStyle = function() {
+                return { top: sidePanelService.getContext($scope.panelid).top - 70 + "px" };
+            }
 
             $scope.$watch('filterText', function () {
                 $(window).trigger('resize');
@@ -375,7 +310,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             //    var newObject = $.extend({}, newNotification);
             //    demoNotifications.push(newObject);
             //}
-        }
+        }]
     }
 });
 

@@ -2,7 +2,7 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
-    
+    <template path="@userprofile.xml"/>
   </templates>
   
   <entities>
@@ -29,7 +29,7 @@
               <option label="Personal" value="personal"/>
               <option label="Shared" value="shared"/>
             </optionfield>
-            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'">
+            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'" skipvalidation="true">
               <renderer type="checkbox"/>
             </optionfield>
           </section>
@@ -102,13 +102,13 @@
 
           <section orientation="horizontal" showexpression="@paneltype==='dashboardgrid'">
             <header label="Select Widget" displacement="sameline"/>
-            <optionfield attribute="panel" providerattribute="availablepanels" />
+            <optionfield attribute="panel" providerattribute="availablepanels" skipvalidation="true"/>
             <section resourcepath="/Content/Shared/dashboard/templates/createnewpanelbutton.html"/>
           </section>
           
           <section orientation="horizontal" showexpression="@paneltype==='dashboardgraphic'">
             <header label="Select Graphic" displacement="sameline"/>
-            <optionfield attribute="panel" providerattribute="availablepanels" />
+            <optionfield attribute="panel" providerattribute="availablepanels" skipvalidation="true"/>
             <section resourcepath="/Content/Shared/dashboard/templates/createnewpanelbutton.html"/>
           </section>
           
@@ -131,17 +131,17 @@
         <detail>
           <field label="Alias" attribute="alias" requiredexpression="true" tooltip="How this panel can be located"/>
           <field label="Title" attribute="title" requiredexpression="true" tooltip="The Panel title"/>
-          <optionfield label="Application" attribute="application" providerattribute="applications" requiredexpression="true">
+          <optionfield label="Application" attribute="application" providerattribute="applications" requiredexpression="true" skipvalidation="true">
             <renderer type="autocompleteclient"/>
             <event type="afterchange" method="lookupFields" service="dashboardAuxService"/>
           </optionfield>
           <section showexpression="@application!=null">
 
-            <optionfield label="Fields" attribute="fields" providerattribute="appfields" >
+            <optionfield label="Fields" attribute="fields" providerattribute="appfields" skipvalidation="true">
               <renderer type="checkbox"/>
             </optionfield>
 
-            <optionfield label="Sort By" attribute="sortby" providerattribute="appfields">
+            <optionfield label="Sort By" attribute="sortby" providerattribute="appfields" skipvalidation="true">
               <renderer type="autocompleteclient"/>
             </optionfield>
 
@@ -185,14 +185,14 @@
             <optionfield label="Workbook"
                          attribute="workbook" providerattribute="workbooks"
                          requiredexpression="true"
-                         default="" >
+                         default="" skipvalidation="true">
               <event type="afterchange" service="tableauGraphicPanelService" method="onWorkbookSelected" />
             </optionfield>
             <optionfield showexpression="@workbook!==null &amp;&amp; @workbook!==''" 
                          label="View"
                          attribute="view" providerattribute="views"
                          requiredexpression="true" 
-                         default=""/>
+                         default="" skipvalidation="true"/>
           </section>
           
           <commandbars>
@@ -315,5 +315,8 @@
         </schema>
       </schemas>
     </application>
+    
+    
+    
   </applications>
 </metadata>

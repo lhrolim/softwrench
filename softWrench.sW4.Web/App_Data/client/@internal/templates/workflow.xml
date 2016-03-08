@@ -35,7 +35,7 @@
       <schemas>
         <schema id="workflowselection">
           <field attribute="wfprocessid" hidden="true" />
-          <optionfield attribute="processname" label="Process Name" providerattribute="workflows" requiredexpression="true">
+          <optionfield attribute="processname" label="Process Name" providerattribute="workflows" requiredexpression="true" skipvalidation="true">
             
           </optionfield>
           <commandbars>
