@@ -3,10 +3,10 @@
   <application id="WO" title="Work Order" ref="workorder" schema="list" icon="ion-gear-b"/>
 
   <container title="Inventory" id="Inventory" role="inventory">
-    <application id="IN" icon="ion-cube" title="Inventory" ref="invbalances" schema="invbalancesList" />
-    <!--<application id="IRG" icon="ion-arrow-swap" title="Issues and Returns" ref="invissue" schema="invIssueList" />-->
-    <!--<application id="ITG" icon="ion-arrow-right-c" title="Inventory Transfer" ref="matrectransTransfers" schema="matrectransTransfersList" />-->
-    <application id="PC" icon="ion-filing" title="Physical Count" ref="physicalcount" schema="physicalcountList" />
+    <application id="IN"  schema="invbalancesList"          title="Inventory"          ref="invbalances"          icon="ion-cube" />
+    <application id="IRG" schema="invIssueList"             title="Issues and Returns" ref="invissue"             icon="ion-arrow-swap" />
+    <application id="ITG" schema="matrectransTransfersList" title="Inventory Transfer" ref="matrectransTransfers" icon="ion-arrow-right-c" />
+    <application id="PC"  schema="physicalcountList"        title="Physical Count"     ref="physicalcount"        icon="ion-filing" />
   </container>
 
 </Menu>

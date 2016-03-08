@@ -639,7 +639,7 @@
 
     <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfer Grid">
       <schemas>
-        <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfer Grid">
+        <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfer Grid" platform="web">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/InventoryTransfer/ScanBar"/>
           </properties>
@@ -678,9 +678,21 @@
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
 
+
+        <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfer Grid" platform="mobile">
+          <field attribute="itemnum" label="Item" qualifier="title"/>
+          <field attribute="quantity" label="Quantity" qualifier="featured" />
+          <field attribute="fromstoreloc" label="From Storeroom" qualifier="subtitle"/>
+          <field attribute="tostoreloc" label="To Storeroom" qualifier="excerpt" />
+          <properties>
+            <property key="list.click.schema" value="detail"/>
+          </properties>
+        </schema>
+
+
         <schema id="detail" title="Inventory Transfer Details">
           <field attribute="matrectransid" hidden="true"></field>
-          
+
           <field attribute="itemnum" label="Item" readonly="true">
             <renderer type="default" params="inputsize=medium" />
           </field>
@@ -703,7 +715,7 @@
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
           </section>
-        <commandbars>
+          <commandbars>
             <commandgroup position="detailform" removeundeclared="false">
               <removecommand id="save"/>
             </commandgroup>

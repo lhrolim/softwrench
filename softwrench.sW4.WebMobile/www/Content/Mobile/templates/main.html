@@ -21,12 +21,11 @@
         <ion-content has-header="true">
 
             <ul class="list">
-
-                <div class="item item-divider icon ion-android-apps">
+                <!-- apps -->
+                <div ng-show="menuleafs().length" class="item item-divider icon ion-android-apps">
                     Applications
                 </div>
 
-                <!-- apps -->
                 <ng-switch ng-repeat="leaf in menuleafs()" on="leaf.type">
                     <!-- container -->
                     <div ng-switch-when="MenuContainerDefinition" ng-init="collapsed = true" ng-click="collapsed = !collapsed">
