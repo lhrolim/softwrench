@@ -790,6 +790,12 @@
         }
         //#endregion
 
+        function getProfileId() {
+            var dm = crudContextHolderService.rootDataMap();
+            var profileId = dm.fields.id;
+            return [{ "key": "profileId", "value": profileId }];
+        }
+
         function deleteProfile() {
             return alertService.confirm2("Are you sure you want to delete this security group? This operation cannot be undone").then(function () {
                 var id = crudContextHolderService.rootDataMap().fields["id"];
@@ -824,7 +830,8 @@
             mergeTransientIntoDatamap: mergeTransientIntoDatamap,
             refreshCache: refreshCache,
             storeFromDmIntoTransient: storeFromDmIntoTransient,
-            save: save
+            save: save,
+            getProfileId: getProfileId
         }
 
         var actions = {
