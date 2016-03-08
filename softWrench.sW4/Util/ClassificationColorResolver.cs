@@ -52,7 +52,7 @@ namespace softWrench.sW4.Util {
                 }
                 catch (Exception)
                 {
-                    Log.Error("Error reading Status Color JSON");
+                    Log.Error("Error reading Classification Color JSON");
                     colorJson = new JObject();
                 }
                 _cachedCatalogs = colorJson;

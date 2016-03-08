@@ -15,14 +15,9 @@
 
         i18NService.load(homeModel.I18NJsons, userLanguage);
         statuscolorService.load(homeModel.StatusColorJson);
-
-        //console.log(homeModel.ClassificationColorJson);
-        //console.log(classificationColorService.getColor('null', 'sr'));
         classificationColorService.load(homeModel.ClassificationColorJson);
 
         $scope.$emit("sw_loadmenu", menuModel);
-
-        
 
         var sessionRedirectURL = contextService.fetchFromContext("swGlobalRedirectURL",false,false);
         if (sessionRedirectURL != null && ((redirectUrl.indexOf("popupmode=browser") < 0) && (redirectUrl.indexOf("MakeSWAdmin") < 0))) {
