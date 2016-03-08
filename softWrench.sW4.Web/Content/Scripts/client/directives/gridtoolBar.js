@@ -27,11 +27,11 @@
         var tooltip = command.tooltip;
 
         //if the label and tooltip are the same, only show the tooltip if the labels are hidden
-        if (tooltip == command.label) {
-            if ($scope.showLabel()) {
-                return;
-            }
-        }
+        //if (tooltip == command.label) {
+        //    if ($scope.showLabel()) {
+        //        return;
+        //    }
+        //}
 
         if (tooltip == null) {
             return $scope.commandLabel(command);
@@ -44,17 +44,17 @@
         return i18NService.get18nValue('_bars.gridtop' + command.id, tooltip);
     }
 
-    $scope.showLabel = function () {
-        return contextService.fetchFromContext('UIShowToolbarLabels', false, true);
-    }
+    //$scope.showLabel = function () {
+    //    return contextService.fetchFromContext('UIShowToolbarLabels', false, true);
+    //}
 
     $scope.commandLabel = function (command) {
         var label = command.label;
 
         //hide the labels if needed
-        if (!$scope.showLabel()) {
-            return '';
-        }
+        //if (!$scope.showLabel()) {
+        //    return '';
+        //}
 
         if (label == null) {
             return null;
@@ -83,8 +83,17 @@
         securityService.validateRoleWithErrorMessage(command.role);
     }
 
+    $scope.executeScopeCommand = function (command) {
+        var fn = $scope.ctrlfns[command.method];
+        if (!angular.isFunction(fn)) {
+            $log.get("gridtoolBar#executeScopeCommand", ["command"])
+                .warn("method", command.method, "not found in the outer scope");
+            return;
+        }
+        fn();
+    };
+
     $scope.executeService = function (command, toggleParentCommand) {
-        var log = $log.get("gridtoolBar#executeService");
 
         // if toggle parent command is passed toggles it state
         if (toggleParentCommand) {
@@ -92,24 +101,17 @@
         }
 
         $timeout(function () {
-            $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
-            $('.no-touch [rel=tooltip]').tooltip('hide');
+            $(".no-touch [rel=tooltip]").tooltip({ container: "body", trigger: "hover" });
+            $(".no-touch [rel=tooltip]").tooltip("hide");
 
             //update header/footer layout
-            $(window).trigger('resize');
+            $(window).trigger("resize");
         }, false);
 
-        if (command.service === "$scope") {
-            var fn = $scope.ctrlfns[command.method];
-            if (fn != null) {
-                fn();
-            }
-
-            return;
-        }
-
-        commandService.doCommand($scope, command);
-    }
+        return command.service === "$scope"
+            ? $scope.executeScopeCommand(command)
+            : commandService.doCommand($scope, command);
+    };
 
     $scope.shouldShowCommand = function (command) {
         var showExpression = command.showExpression;
@@ -164,11 +166,8 @@
         if (command.pressed) {
             classes += "active ";
         }
-        if (command.primary || $scope.position.equalsAny('detail.primary', 'applyfilter')) {
-            return classes + command.cssClasses;
-        }
         return classes + command.cssClasses;
-    }
+    };
 
     // verifies if it is a toggle command and returns the correct child command
     $scope.getCommand = function(command) {
@@ -315,18 +314,18 @@ app.directive('inputdetailtoolbar', ["contextService", function (contextService)
     };
 }]);
 
-app.directive('crudbodydetailtoolbar', ["contextService", function (contextService) {
+app.directive("crudbodydetailtoolbar", ["contextService", function (contextService) {
     return {
-        restrict: 'E',
+        restrict: "E",
         replace: true,
-        templateUrl: contextService.getResourceUrl('/Content/Templates/directives/gridtoolbar.html'),
-        require: '^crudBody',
+        templateUrl: contextService.getResourceUrl("/Content/Templates/directives/gridtoolbar.html"),
+        require: "^crudBody",
         scope: {
             /*only appliable for compositions, otherwise this will be null*/
-            schema: '=',
-            mode: '@',
-            position: '@',
-            datamap: '=',
+            schema: "=",
+            mode: "@",
+            position: "@",
+            datamap: "="
         },
 
         link: function (scope, element, attrs, ctrl) {
@@ -336,33 +335,22 @@ app.directive('crudbodydetailtoolbar', ["contextService", function (contextServi
             });
         },
 
-        controller: sharedController
+        controller: ["$scope", "controllerInheritanceService", function($scope, controllerInheritanceService) {
 
-    };
-}]);
-
-app.directive('outputdetailtoolbar', ["contextService", function (contextService) {
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: contextService.getResourceUrl('/Content/Templates/directives/gridtoolbar.html'),
-        require: '^crudOutput',
-        scope: {
-            /*only appliable for compositions, otherwise this will be null*/
-            schema: '=',
-            mode: '@',
-            position: '@',
-            datamap: '=',
-        },
-
-        link: function (scope, element, attrs, ctrl) {
-            scope.ctrlfns = {};
-            angular.forEach(ctrl, function(fn, name) {
-                if (angular.isFunction(fn)) scope.ctrlfns[name] = fn;
-            });
-        },
-
-        controller: sharedController
+            controllerInheritanceService.begin(this)
+                .inherit(sharedController, { $scope: $scope })
+                .overrides()
+                .scope($scope, "executeScopeCommand", function (original, params, context) {
+                    var command = params[0];
+                    var method = $scope.ctrlfns[command.method];
+                    // command can be execute in the current scope
+                    if (angular.isFunction(method)) {
+                        return original.apply(context, params);
+                    }
+                    // $broadcast event so it can be intercepted and executed in the correct scope
+                    return $scope.$root.$broadcast("sw:command:scope", command.method);
+                });
+        }]
 
     };
 }]);

@@ -1086,6 +1086,17 @@
             return i18NService.getI18nInputLabel(fieldMetadata, $scope.compositiondetailschema);
         };
 
+        //#region command interception
+        (function(self) {
+            $scope.$on("sw:command:scope", function($event, method) {
+                var selectedTab = crudContextHolderService.getActiveTab();
+                if (selectedTab === $scope.relationship) {
+                    self[method]();
+                }
+            });
+        })(this);
+        //#endregion
+
         //#region pagination
         $scope.selectPage = function (pageNumber, pageSize, printMode) {
             if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {

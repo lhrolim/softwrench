@@ -10,7 +10,7 @@
                 rel="tooltip"
                 data-container="body"
                 class="applicationcommand btn-context">
-            <i class="fa" ng-class="commandIcon(getCommand(command))"></i><span ng-show="commandLabel(getCommand(command))">&ensp;{{commandLabel(getCommand(command))}}</span>
+            <i class="fa" ng-class="commandIcon(getCommand(command))"></i><span>&ensp;{{commandLabel(getCommand(command))}}</span>
         </button>
 
         <div ng-if="command.type == 'ResourceCommand'" ng-click="validateRole(command)">
@@ -27,11 +27,13 @@
                         data-original-title="{{commandtooltip(command)}}"
                         rel="tooltip"
                         data-container="body">
-                    <i class="fa" ng-class="command.icon"></i><span>&ensp;{{command.label}}</span>
+                    <i class="fa" ng-class="command.icon"></i>
+                    <span>&ensp;{{command.label}}</span>
                 </button>
 
                 <button type="button" class="btn btn-context dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
-                    <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i><span ng-show="showLabel()">&ensp;{{command.label}}</span>
+                    <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i>
+                    <span>&ensp;{{command.label}}</span>
                     <span class="caret"></span>
                 </button>
 

@@ -127,6 +127,18 @@ app.directive('crudInput', ["contextService", "associationService", function (co
                 return schema.properties["commandbar.bottom"];
             }
 
+            //#region command interception
+            (function(self) {
+                $scope.$on("sw:command:scope", function ($event, method) {
+                    var selectedTab = crudContextHolderService.getActiveTab();
+                    // null tab -> detail is the target scope
+                    if (!selectedTab) {
+                        self[method]();
+                    }
+                });
+            })(this);
+            //#endregion
+
             //#region $dirty checking
             function handleDirtyChecking() {
                 var log = $log.get("crud_input#dirtychecking", ["datamap", "dirtycheck"]);

@@ -18,9 +18,6 @@
 
   <commandgroup position="detail.secondary" platform="web">
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint"/>
-    <command icon="fa-plus" label="Expand All" id="expandall" service="$scope" method="expandAll" showexpression="$scope:showExpansionCommands"/>
-    <command icon="fa-minus" label="Collapse All" id="collapseall" service="$scope" method="collapseAll" showexpression="$scope:showExpansionCommands"/>
-    <command icon="fa-refresh" label="Refresh" id="refresh" service="$scope" method="refresh" />
   </commandgroup>
   
   <commandgroup position="gridtop.selection" platform="web">
@@ -86,17 +83,8 @@
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
 
-  
-
-  <commandgroup position="compositionbottom" platform="web">
-    <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldShowSave"/>
-    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="parentschema,parentdatamap" label="Print" showexpression="$scope:shouldshowprint"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
-  </commandgroup>
-
-
   <commandgroup position="compositiontop" platform="web">
+    <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />
     <command icon="fa-plus" label="Expand All" id="expandall" service="$scope" method="expandAll" showexpression="$scope:showExpansionCommands"/>
     <command icon="fa-minus" label="Collapse All" id="collapseall" service="$scope" method="collapseAll" showexpression="$scope:showExpansionCommands"/>
     <command icon="fa-refresh" label="Refresh" id="refresh" service="$scope" method="refresh" />

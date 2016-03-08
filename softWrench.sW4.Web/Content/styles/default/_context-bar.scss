@@ -42,35 +42,36 @@
         label {
             font-weight: normal;
 
-        .buttons {
-            display: inline-block;
-            margin: 0 5px 5px 0;
+            .buttons {
+                display: inline-block;
+                margin: 0 5px 5px 0;
 
 
-            .btn-context {
-                background: transparent;
+                .btn-context {
+                    background: transparent;
 
-                &:hover {
-                    background: #ddd;
+                    &:hover {
+                        background: #ddd;
+                    }
                 }
             }
         }
-    }
 
-    &.mobile .context .group.pagination a {
-        padding: 8px 6px;
-    }
-
-    .pagination {
-        a {
-            font-size: 16px;
+        &.mobile .context .group.pagination a {
+            padding: 8px 6px;
         }
-    }
 
-    #affixpagination1 {
-        padding-top: 0px;
-        padding-bottom: 8px;
-        border-bottom: none;
+        .pagination {
+            a {
+                font-size: 16px;
+            }
+        }
+
+        #affixpagination1 {
+            padding-top: 0px;
+            padding-bottom: 8px;
+            border-bottom: none;
+        }
     }
 }
 

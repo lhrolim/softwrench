@@ -1161,6 +1161,8 @@
           <enumeration value="gridrows"></enumeration>
           <enumeration value="compositiontop"></enumeration>
           <enumeration value="detailform"></enumeration>
+          <enumeration value="detail.primary"></enumeration>
+          <enumeration value="detail.secondary"></enumeration>
           <enumeration value="actions"></enumeration>
           <enumeration value="compositionbottom"></enumeration>
           <enumeration value="filter"></enumeration>
