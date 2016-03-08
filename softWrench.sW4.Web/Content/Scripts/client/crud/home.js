@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService, redirectService) {
+    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService) {
 
     $scope.$name = 'HomeController';
 
@@ -15,11 +15,9 @@ function HomeController($scope, $http, $templateCache, $rootScope, $timeout, con
 
         i18NService.load(homeModel.I18NJsons, userLanguage);
         statuscolorService.load(homeModel.StatusColorJson);
-
+        classificationColorService.load(homeModel.ClassificationColorJson);
 
         $scope.$emit("sw_loadmenu", menuModel);
-
-        
 
         var sessionRedirectURL = contextService.fetchFromContext("swGlobalRedirectURL",false,false);
         if (sessionRedirectURL != null && ((redirectUrl.indexOf("popupmode=browser") < 0) && (redirectUrl.indexOf("MakeSWAdmin") < 0))) {
@@ -68,7 +66,7 @@ function HomeController($scope, $http, $templateCache, $rootScope, $timeout, con
     initController();
 }
 
-app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", HomeController]);
+    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", HomeController]);
 window.HomeController = HomeController;
 
 })(angular);

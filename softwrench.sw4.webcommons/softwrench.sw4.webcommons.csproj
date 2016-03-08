@@ -57,6 +57,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\workorder\workorder_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\modalFilter_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\notificationService.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\classificationcolor_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\workflowService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\data\datamapSanitize_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\email_service.js" />

@@ -94,7 +94,7 @@
     window.parseBooleanValue = parseBooleanValue;
 
     app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
-    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService) {
+    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService, classificationColorService) {
         "ngInject";
 
         return {
@@ -113,6 +113,10 @@
                 scope.cursortype = function () {
                     var editDisabled = scope.schema.properties['list.disabledetails'];
                     return "true" !== editDisabled ? "pointer" : "default";
+                };
+
+                scope.classificationColor = function (classification, gridname) {
+                    return classificationColorService.getColor(classification, scope.schema.applicationName);
                 };
 
                 scope.statusColor = function (status, gridname) {
@@ -210,7 +214,9 @@
                             rowClass = 'even';
                         }
 
-                        html += "<tr class='{0}' style='cursor: {1}' listtablerendered rel='hideRow'>".format(rowClass, cursortype);
+                        var rowTextColor = scope.classificationColor(datamap[i].fields.classificationid, schema.applicationName);
+
+                        html += "<tr class='{0}' style='cursor: {1};color: {2}' listtablerendered rel='hideRow'>".format(rowClass, cursortype, rowTextColor);
                         needsWatchers = hasMultipleSelector;
 
                         html += "<td class='select-multiple' {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
@@ -221,6 +227,8 @@
                         html += '<td class="select-single" style="display:none">';
                         //TODO: to be implemented
                         html += '</td>';
+
+                        //console.log(datamap[i]);
 
                         var dm = datamap[i];
                         for (j = 0; j < schema.displayables.length; j++) {
