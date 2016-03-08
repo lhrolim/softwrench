@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using NHibernate.Criterion;
+using NHibernate.Util;
+using Quartz.Util;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.services;
 using softwrench.sw4.user.classes.services.setup;
@@ -14,6 +18,7 @@ using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -41,11 +46,24 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var query = MetadataProvider.GlobalProperty(SwUserConstants.PersonUserQuery);
+            // When getting the person list for the Apply/Remove profile action, we need to filter the list from maximo based on the usernames of the SW users who do/don't have the profile
+            if (application.Schema.SchemaId == "userselectlist" || application.Schema.SchemaId == "userremovelist")
+            {
+                var inclusion = application.Schema.SchemaId.EqualsIc("userselectlist") ? " NOT IN " : " IN ";
+                var profileId = searchDto.CustomParameters["profileId"];
+                var validUsernamesList = _swdbDAO.FindByNativeQuery("SELECT MAXIMOPERSONID FROM SW_USER2 WHERE MAXIMOPERSONID IS NOT NULL AND ID {0} (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {1})".FormatInvariant(inclusion, profileId)).ToList();
+                var userList = validUsernamesList.SelectMany(u => u.Values).ToArray();
+                var usernameString = BaseQueryUtil.GenerateInString(userList);
+                if (query == null) {
+                    query = "person.personid in ({0})".FormatInvariant(usernameString);
+                }
+            }
             if (query != null) {
                 searchDto.WhereClause = query;
             }
             // get is active for each of the users
             var result = base.GetList(application, searchDto);
+
             var usernames = result.ResultObject.Select(str => str.GetAttribute("personid").ToString()).ToList();
             if (!usernames.Any()) {
                 return result;
@@ -172,7 +190,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         }
 
 
-        public ISet<UserProfile> LoadProfiles(JObject json) {
+        public Iesi.Collections.Generic.ISet<UserProfile> LoadProfiles(JObject json) {
             var result = new HashedSet<UserProfile>();
             var profiles = json.GetValue("#profiles");
             if (profiles == null) {

@@ -291,7 +291,16 @@
 
         }
 
+        //function activeUsersRefreshed(scope, schema, datamap, parameters) {
+        //    if (parameters.relationship === "#users_") {
+        //        simpleLog.debug("list of users changed for tab {0}".format(parameters.parentdata["#selectedtab"]));
+        //        var compositionData = parameters.previousData;
+        //        if (compositionData && !!parameters.paginationApplied) {
+        //            storeFromDmIntoTransient({ "#users_": compositionData });
+        //        }
+        //    }
 
+        //}
 
 
         //#region api methods for tests
@@ -659,7 +668,6 @@
                 return { id: selectedRole.id, name: selectedRole.name };
             });
 
-
             var ob = {
                 id: dm["id"],
                 name: dm["name"],
@@ -721,6 +729,44 @@
             });
         }
 
+        function removeMultiple() {
+            var dm = crudContextHolderService.rootDataMap();
+            var profileId = dm.fields.id;
+            if (!profileId) {
+                alertService.alert("Please save the profile before using this action");
+                return;
+            }
+            var customParameters = {};
+            customParameters[0] = {};
+            customParameters[0]["key"] = "profileId";
+            customParameters[0]["value"] = profileId;
+            
+            return redirectService.openAsModal("person", "userremovelist", {
+                title: "Remove Profile from Users",
+                searchDTO: {
+                    pageSize: 10,
+                    customParameters: customParameters
+                },
+                savefn: function () {
+                    var dm = crudContextHolderService.rootDataMap();
+                    var profileId = dm.fields.id;
+                    var selectedUsers = crudContextHolderService.getSelectionModel('#modal').selectionBuffer;
+                    if (!selectedUsers || selectedUsers.length === 0) {
+                        alertService.alert("please select at least one user to proceed");
+                        return $q.reject();
+                    }
+                    var usernames = [];
+                    for (var user in selectedUsers) {
+                        usernames.push(user);
+                    }
+                    var params = {
+                        profileId: profileId
+                    }
+                    return restService.postPromise("UserProfile", "removeMultiple", params, usernames);
+                }
+            });
+        }
+
         function applyMultiple() {
             var dm = crudContextHolderService.rootDataMap();
             var profileId = dm.fields.id;
@@ -728,8 +774,16 @@
                 alertService.alert("Please save the profile before using this action");
                 return;
             }
+            var customParameters = {};
+            customParameters[0] = {};
+            customParameters[0]["key"] = "profileId";
+            customParameters[0]["value"] = profileId;
             return redirectService.openAsModal("person", "userselectlist", {
                 title: "Apply Profile to Users",
+                SearchDTO: {
+                    pageSize: 10,
+                    customParameters: customParameters
+                },
                 savefn: function () {
                     var dm = crudContextHolderService.rootDataMap();
                     var profileId = dm.fields.id;
@@ -751,6 +805,12 @@
         }
         //#endregion
 
+        function getProfileId() {
+            var dm = crudContextHolderService.rootDataMap();
+            var profileId = dm.fields.id;
+            return [{ "key": "profileId", "value": profileId }];
+        }
+
         function deleteProfile() {
             return alertService.confirm2("Are you sure you want to delete this security group? This operation cannot be undone").then(function () {
                 var id = crudContextHolderService.rootDataMap().fields["id"];
@@ -767,6 +827,7 @@
             afterTabsLoaded: afterTabsLoaded,
             availableFieldsRefreshed: availableFieldsRefreshed,
             availableActionsRefreshed: availableActionsRefreshed,
+            //activeUsersRefreshed: activeUsersRefreshed,
             beforeApplicationChange: beforeApplicationChange,
             cmpRoleChanged:cmpRoleChanged,
             basicRoleChanged: basicRoleChanged,
@@ -784,12 +845,14 @@
             mergeTransientIntoDatamap: mergeTransientIntoDatamap,
             refreshCache: refreshCache,
             storeFromDmIntoTransient: storeFromDmIntoTransient,
-            save: save
+            save: save,
+            getProfileId: getProfileId
         }
 
         var actions = {
             batchUpdate: batchUpdate,
-            applyMultiple: applyMultiple
+            applyMultiple: applyMultiple,
+            removeMultiple: removeMultiple
         }
 
         return angular.extend({}, hooks, api, actions);

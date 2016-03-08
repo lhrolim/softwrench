@@ -35,13 +35,15 @@
                 "searchService", "tabsService",
                 "fieldService", "commandService", "i18NService", "modalService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
-                "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService", "checkpointService", "schemaCacheService",
+                "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
+                "checkpointService", "schemaCacheService", "dispatcherService",
                 function ($scope, $http, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService,
                     searchService, tabsService,
                     fieldService, commandService, i18NService, modalService,
                     validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
-                    associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService, schemaCacheService) {
+                    associationService, statuscolorService, contextService, eventService, iconService, expressionService,
+                    checkpointService, schemaCacheService, dispatcherService) {
 
                     $scope.$name = "crudlist";
 
@@ -357,6 +359,27 @@
                         searchDTO.pageSize = pageSize;
                         searchDTO.paginationOptions = $scope.paginationData.paginationOptions;
                         searchDTO.quickSearchData = $scope.vm.quickSearchData;
+
+                        // Check for custom param provider
+                        if ($scope.schema.properties && $scope.schema.properties['schema.customparamprovider']) {
+                            var customParamProviderString = $scope.schema.properties['schema.customparamprovider'];
+                            var customParamProvider = dispatcherService.loadServiceByString(customParamProviderString);
+                            if (customParamProvider != null) {
+                                var customParams = customParamProvider();
+                                if (customParams != null) {
+                                    var customParameters = {};
+                                    for (var param in customParams) {
+                                        if (!customParams.hasOwnProperty(param)) {
+                                            continue;
+                                        }
+                                        customParameters[param] = {};
+                                        customParameters[param]["key"] = customParams[param]["key"];
+                                        customParameters[param]["value"] = customParams[param]["value"];
+                                    }
+                                    searchDTO.CustomParameters = customParameters;
+                                }
+                            }
+                        }
 
                         //avoids table flickering
                         fixHeaderService.unfix();

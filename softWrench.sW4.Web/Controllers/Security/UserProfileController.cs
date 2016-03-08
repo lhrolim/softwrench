@@ -197,6 +197,26 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
         [HttpPost]
+        public BlankApplicationResponse RemoveMultiple(int profileId, [FromBody]List<string> usernames) {
+            var usersEnum = usernames as IList<string> ?? usernames.ToList();
+            var users = new List<User>();
+            foreach (var userString in usersEnum) {
+                var user = UserManager.GetUserByUsername(userString);
+                var profile = user.Profiles.FirstOrDefault(p => p.Id.Equals(profileId));
+                if (profile == null)
+                {
+                    continue;
+                }
+                user.Profiles.Remove(profile);
+                users.Add(user);
+            }
+            SWDBHibernateDAO.GetInstance().BulkSave(users);
+            return new BlankApplicationResponse() {
+                SuccessMessage = "{0} users successfully updated".Fmt(usersEnum.Count())
+            };
+        }
+
+        [HttpPost]
         public BlankApplicationResponse RefreshCache() {
             _userProfileManager.ClearCache();
             _userProfileManager.FetchAllProfiles(true);
