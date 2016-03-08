@@ -1,4 +1,4 @@
-﻿servicerequest:{
+﻿default: {
     new: green,
     wappr: orange,
     closed: green,
@@ -26,10 +26,4 @@
     completed: green,
 	spam: red,
     wsch: orange
-},
-
-workorder:{
-    new: orange,
-    wappr: orange,
-    close: green
 }

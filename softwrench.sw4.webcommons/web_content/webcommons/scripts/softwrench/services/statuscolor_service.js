@@ -8,7 +8,8 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
         if (status.equalsAny("NEW", "WAPPR", "WSCH", "ACTIVE")) {
             return "#e59323"; //orange
         }
-        if (status.equalsAny("QUEUED", "INPROG", "CANTREPROD", "WAITONINFO", "PENDING", "WMATL", "WORKING", "null")) {
+
+        if (status.equalsAny("QUEUED", "CANTREPROD", "WAITONINFO", "PENDING", "WMATL", "WORKING", "null")) {
             return "#fde62f"; //yellow
         }
 
@@ -16,16 +17,18 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
             return "#f65752"; //red
         }
 
-        if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "APPFM", "APPLM", "BY DESIGN", "AUTHORIZED", "DUPLICATE", "AUTH", "FIXED", "HOLDINPRG", "INPRG", "PLANNED", "ACC_CAT", "ASSESSES")) {
+        if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "APPFM", "APPLM", "BY DESIGN", "AUTHORIZED", "DUPLICATE", "AUTH", "FIXED", "HOLDINPRG",  "INPROG", "INPRG", "PLANNED", "ACC_CAT", "ASSESSES")) {
             return "#4488f2"; //blue
         }
+
         if (status.equalsAny("CLOSED", "IMPLEMENTED", "RESOLVCONF", "IMPL", "REVIEW", "CLOSE", "HISTEDIT", "COMP", "COMPLETED", "INPRG", "PLANNED")) {
             return "#39b54a"; //green
         }
+
         if (status.equalsAny("DRAFT")) {
             return "white";
         }
-        return "transparent";
+        return "#4488f2";
     };
 
     return {
@@ -44,17 +47,26 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
             if (statuscolorJson == null) {
                 return fallbackFunction(status, applicationname);
             }
+
             var applicationObject = statuscolorJson[applicationname];
             if (applicationObject == null) {
-                return fallbackFunction(status, applicationname);
+
+                //since the application was not found, check for a customer default colors
+                var applicationObject = statuscolorJson["default"];
+                if (applicationObject == null) {
+                    return fallbackFunction(status, applicationname);
+                }
             }
+
             if (status.toLowerCase() in applicationObject) {
                 return applicationObject[status.toLowerCase()];
             }
+
             if (status in applicationObject) {
                 return applicationObject[status];
             }
-            return "transparent";
+
+            return "#4488f2";
         },
 
         load: function (jsonString) {

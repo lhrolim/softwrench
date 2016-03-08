@@ -74,6 +74,7 @@
     <Content Include="web_content\kongsberg\images\logo-main-mobile.png" />
     <Content Include="web_content\kongsberg\images\logo-main.png" />
     <Content Include="web_content\kongsberg\scripts\aaa_kongsbergmodule.js" />
+    <Content Include="metadata\kongsberg\classificationcolors.json" />
     <None Include="web_content\kongsberg\styles\branding.scss" />
     <Content Include="web_content\kongsberg\images\signin.jpg" />
     <Content Include="web_content\kongsberg\scripts\sr_service.js" />

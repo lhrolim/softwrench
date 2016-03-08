@@ -29,6 +29,7 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly IConfigurationFacade _facade;
         private readonly I18NResolver _i18NResolver;
         private readonly StatusColorResolver _statusColorResolver;
+        private readonly ClassificationColorResolver _classificationColorResolver;
         private readonly ContextLookuper _lookuper;
         private MenuHelper.MenuHelper _menuHelper;
 
@@ -37,13 +38,14 @@ namespace softWrench.sW4.Web.Controllers {
 
 
 
-        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver, StatusColorResolver statusColorResolver, ContextLookuper lookuper, MenuHelper.MenuHelper menuHelper) {
+        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver, StatusColorResolver statusColorResolver, ContextLookuper lookuper, MenuHelper.MenuHelper menuHelper, ClassificationColorResolver classificationColorResolver) {
             //            _controllerFactory = (IAPIControllerFactory)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IAPIControllerFactory));
             _facade = facade;
             _i18NResolver = i18NResolver;
             _statusColorResolver = statusColorResolver;
             _lookuper = lookuper;
             _menuHelper = menuHelper;
+            _classificationColorResolver = classificationColorResolver;
         }
 
         public ActionResult Index() {
@@ -81,7 +83,7 @@ namespace softWrench.sW4.Web.Controllers {
                 FormsAuthentication.SignOut();
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f&forbidden=true".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
-            model = new HomeModel(url, title, FetchConfigs(), menuModel, user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
+            model = new HomeModel(url, title, FetchConfigs(), menuModel, user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), _classificationColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
             return View(model);
         }
 
@@ -150,7 +152,7 @@ namespace softWrench.sW4.Web.Controllers {
             var windowTitle = GetWindowTitle(redirectURL);
             var hasPopupLogo = HasPopupLogo(application, popupmode);
             var menuModel = _menuHelper.BuildMenu(ClientPlatform.Web);
-            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), menuModel, user, hasPopupLogo, _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(),
+            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), menuModel, user, hasPopupLogo, _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), _classificationColorResolver.FetchCatalogs(),
                 ApplicationConfiguration.ClientName, windowTitle, message));
         }
 

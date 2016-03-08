@@ -67,6 +67,7 @@ namespace softWrench.sW4.Metadata {
 
         private const string Metadata = "metadata.xml";
         private const string StatusColor = "statuscolors.json";
+        private const string ClassificationColor = "classificationcolors.json";
         private const string MenuPattern = "menu.{0}.xml";
         public static bool FinishedParsing {
             get; set;
