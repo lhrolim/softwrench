@@ -37,7 +37,7 @@ namespace softWrench.sW4.Metadata.Menu.Containers {
                     //this means for instance, that a menu protecting a workorder application could be activated by a role name called workorder, regardless of the the name of the role property of the menu itself
                     applicationBasedRole = applicationRef;
                 }
-            } else if (leaf.RoleDefinedByParent) {
+            } else if (leaf.RoleDefinedByParent && leaf is ApplicationMenuItemDefinition) {
                 applicationBasedRole = ((ApplicationMenuItemDefinition)leaf).Application;
             }
 
