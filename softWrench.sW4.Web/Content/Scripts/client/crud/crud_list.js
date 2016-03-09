@@ -471,7 +471,16 @@
                     }
 
                     $scope.noRecordsNewClick = function () {
-                        redirectService.goToApplication($scope.schema.applicationName, $scope.schema.noResultsNewSchema);
+                        // calls the preaction function if needed and pass the created datamap to the next schema
+                        var noResultsPreAction = $scope.schema.properties["list.noresultspreaction"];
+                        var datamap = null;
+                        if (noResultsPreAction) {
+                            var preAction = dispatcherService.loadServiceByString(noResultsPreAction);
+                            if (preAction) {
+                                datamap = preAction();
+                            }
+                        }
+                        redirectService.goToApplication($scope.schema.applicationName, $scope.schema.noResultsNewSchema, null, datamap);
                     }
 
 
