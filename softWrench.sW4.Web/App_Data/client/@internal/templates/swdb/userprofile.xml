@@ -203,7 +203,7 @@
           <field attribute="allowupdate" label="Update Records?">
             <renderer type="checkbox" params="layout=left"/>
           </field>
-          <field attribute="allowview" label="View Records?">
+          <field attribute="allowcreation" label="Create Records?">
             <renderer type="checkbox" params="layout=left"/>
           </field>
         </schema>

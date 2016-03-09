@@ -33,7 +33,7 @@ namespace softWrench.sW4.Metadata.Security {
 
 
             var profile = user.MergedUserProfile;
-            var permission = profile.GetPermissionByApplication(application.Name);
+            var permission = profile.GetPermissionByApplication(application.Name, MetadataProvider.RoleByApplication(application.Name));
             if (permission == null) {
                 //no permission to that particular application
                 return SecurityModeCheckResult.Block;

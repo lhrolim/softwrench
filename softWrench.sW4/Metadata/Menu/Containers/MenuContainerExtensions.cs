@@ -28,6 +28,26 @@ namespace softWrench.sW4.Metadata.Menu.Containers {
         //        }
 
         public static bool PassesSecurityCheck(MenuBaseDefinition leaf, MergedUserProfile mergedUserProfile, ClientPlatform platform) {
+
+            #region legacy support
+            string applicationBasedRole = null;
+            if (leaf is MenuContainerDefinition) {
+                var applicationRef = ((MenuContainerDefinition)leaf).ApplicationContainer;
+                if (MetadataProvider.ApplicationRoleAlias.ContainsKey(applicationRef)) {
+                    //this means for instance, that a menu protecting a workorder application could be activated by a role name called workorder, regardless of the the name of the role property of the menu itself
+                    applicationBasedRole = applicationRef;
+                }
+            } else if (leaf.RoleDefinedByParent) {
+                applicationBasedRole = ((ApplicationMenuItemDefinition)leaf).Application;
+            }
+
+            var legacyRolePresent =
+                mergedUserProfile.Roles.Any(r => r.Active && (r.Name.EqualsIc(leaf.Role) || (applicationBasedRole != null && r.Name.EqualsIc(applicationBasedRole))));
+            if (legacyRolePresent) {
+                return true;
+            }
+            #endregion
+
             if (leaf is ApplicationMenuItemDefinition) {
                 var appLeaf = (ApplicationMenuItemDefinition)leaf;
                 var application = mergedUserProfile.GetPermissionByApplication(appLeaf.Application);
