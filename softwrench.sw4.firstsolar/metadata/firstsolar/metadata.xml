@@ -37,6 +37,7 @@
 
           <properties>
             <property key="search.schemaid" value="search"/>
+            <property key="list.noresultspreaction" value="advancedSearchService.woNoResultsPreAction"/>
           </properties>
         </list>
 

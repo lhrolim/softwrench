@@ -8,18 +8,21 @@
         //#region Utils
         var searchPanelId = "search";
         var facilityId = "fsfacility";
+        var locOfInterestId = "fslocint";
+        var switchgearLocationsId = "fsswitchgear";
+        var pcsLocationsId = "fspcslocations";
         var pcsFilterId = "#fspcs";
         var blockFilterId = "#fsblock";
 
-        var updateOptions = function(controllerMethod, parameters, associationKey) {
+        var updateOptions = function (controllerMethod, parameters, associationKey) {
             var promise = restService.getPromise("FirstSolarAdvancedSearch", controllerMethod, parameters);
             promise.then(function (response) {
-                var options = response.data.map(function(dbData) {
+                var options = response.data.map(function (dbData) {
                     return {
                         "type": "AssociationOption",
                         "value": dbData["location"],
                         "label": dbData["description"] ? dbData["description"] : dbData["location"]
-                }
+                    }
                 });
                 crudContextHolderService.updateEagerAssociationOptions(associationKey, options, null, searchPanelId);
             });
@@ -78,14 +81,14 @@
 
         function customizeComboDropdown(fieldMetadata, selectElement, dropdownOptions) {
             dropdownOptions["templates"] = {
-                filter : '<li class="multiselect-item filter">' +
+                filter: '<li class="multiselect-item filter">' +
                 '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>' +
                 '<input id="fsblock" class="form-control multiselect-search" placeholder="Block" type="text">' +
                 '<input id="fspcs" class="form-control multiselect-search" placeholder="PCS" type="text"></div></li>',
                 filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" type="button"><i class="fa fa-eraser"></i></button></span>'
             }
 
-            dropdownOptions["filterFunction"] = function(optionValue, optionText, filterInput) {
+            dropdownOptions["filterFunction"] = function (optionValue, optionText, filterInput) {
                 log.debug("filterAvailablePcsLocations - Filtering: {0}".format(optionValue));
                 var pcsOk = filterByPcs(optionValue);
                 var blockOk = filterByBlock(optionValue);
@@ -110,12 +113,53 @@
                 multiselectContainer.css({ 'margin-top': "-" + (containerHeight + 34) + "px" });
             }
         }
+
+        function woNoResultsPreAction() {
+            var location = null;
+            var searchDatamap = crudContextHolderService.rootDataMap(searchPanelId);
+
+            // tries to get a single location from selected  locations of interest,
+            // switchgear locations or pcs locations, if more than one location is
+            // found just returns null
+            var locsOfInterest = searchDatamap[locOfInterestId];
+            if (locsOfInterest && locsOfInterest.length > 0) {
+                if (locsOfInterest.length > 1) {
+                    return null;
+                }
+                location = locsOfInterest[0];
+            }
+
+            var switchgearLocations = searchDatamap[switchgearLocationsId];
+            if (switchgearLocations && switchgearLocations.length > 0) {
+                if (switchgearLocations.length > 1 || location) {
+                    return null;
+                }
+                location = switchgearLocations[0];
+            }
+
+            var pcsLocations = searchDatamap[pcsLocationsId];
+            if (pcsLocations && pcsLocations.length > 0) {
+                if (pcsLocations.length > 1 || location) {
+                    return null;
+                }
+                location = pcsLocations[0];
+            }
+
+            // also if no location is found returs null
+            if (!location) {
+                return null;
+            }
+
+            // if finally just a single location is found, creates a datamap with it
+            return { location: location };
+        }
         //#endregion
 
         //#region Service Instance
         var service = {
             facilitySelected: facilitySelected,
-            customizeComboDropdown: customizeComboDropdown
+            customizeComboDropdown: customizeComboDropdown,
+            woNoResultsPreAction: woNoResultsPreAction
         };
         return service;
         //#endregion
