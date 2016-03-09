@@ -353,6 +353,11 @@
 
         }
 
+        $scope.getApplicationPah = function (datamap, fieldMetadata) {
+            var path = fieldMetadata.applicationPath + schemaService.getId(datamap, $scope.compositionlistschema);
+            return replaceAll(path, "\\.", "_");
+        }
+
         $scope.isNoRecords = function () {
             return $scope.compositiondata.length <= 0;
         }

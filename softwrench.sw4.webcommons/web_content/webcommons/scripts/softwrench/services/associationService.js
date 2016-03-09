@@ -161,6 +161,8 @@
 
         ///dispatchedbyuser: the method could be called after a user action (changing a field), or internally after a value has been set programatically 
         function postAssociationHook(associationMetadata, scope, triggerparams) {
+            triggerparams = triggerparams || {};
+
             if (associationMetadata.events == undefined) {
                 return $q.when();
             }
@@ -173,9 +175,14 @@
                 //this should not happen, it indicates a metadata misconfiguration
                 return $q.when();
             }
-            var fields = scope.datamap;
-            if (scope.datamap.fields != undefined) {
-                fields = scope.datamap.fields;
+
+            var fields = triggerparams.fields;
+
+            if (!fields) {
+                fields = scope.datamap;
+                if (fields && fields.fields != undefined) {
+                    fields = scope.datamap.fields;
+                }
             }
 
             var params = {
