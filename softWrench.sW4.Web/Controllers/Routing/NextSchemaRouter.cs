@@ -67,7 +67,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
 
             var dataSet = _dataSetProvider.LookupDataSet(applicationName, nextMetadata.Schema.SchemaId);
 
-            if (routerParameter.NoApplicationRedirectDetected && targetResult != null) {
+            if (routerParameter.NoApplicationRedirectDetected && targetResult != null && targetResult.ResultObject != null) {
                 return new GenericApplicationResponse {
                     Id = id,
                     TimeStamp = DateTime.Now.FromServerToRightKind(),
