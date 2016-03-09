@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using log4net;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
@@ -10,6 +11,7 @@ using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Data;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 
@@ -50,12 +52,13 @@ namespace softWrench.sW4.Web.Controllers.Routing {
         public IApplicationResponse RedirectToNextSchema(RouterParameters routerParameter) {
             var nextMetadata = routerParameter.NextApplication;
             var targetMocked = routerParameter.TargetMocked;
+            var targetResult = routerParameter.TargetResult;
             string id = null;
             Tuple<string, string> userIdSiteTuple = null;
-            if (routerParameter.TargetResult != null) {
-                id = routerParameter.TargetResult.Id;
+            if (targetResult != null) {
+                id = targetResult.Id;
                 if (id == null) {
-                    userIdSiteTuple = new Tuple<string, string>(routerParameter.TargetResult.UserId, routerParameter.TargetResult.SiteId);
+                    userIdSiteTuple = new Tuple<string, string>(targetResult.UserId, targetResult.SiteId);
                 }
             }
 
@@ -64,7 +67,15 @@ namespace softWrench.sW4.Web.Controllers.Routing {
 
             var dataSet = _dataSetProvider.LookupDataSet(applicationName, nextMetadata.Schema.SchemaId);
 
-            if (routerParameter.NoApplicationRedirectDetected) {
+            if (routerParameter.NoApplicationRedirectDetected && targetResult != null) {
+                return new GenericApplicationResponse {
+                    Id = id,
+                    TimeStamp = DateTime.Now.FromServerToRightKind(),
+                    ResultObject = targetResult.ResultObject
+                };
+            }
+
+            if (routerParameter.NoApplicationRedirectDetected ) {
 
                 if (routerParameter.DispatcherComposition != null) {
                     var detailRequest = new DetailRequest(nextMetadata.Schema.GetSchemaKey(), null) { Id = id,UserIdSitetuple = userIdSiteTuple,CompositionsToFetch = routerParameter.DispatcherComposition };
@@ -89,7 +100,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             }
 
             var nextSchema = nextMetadata.Schema;
-
+            
 
             if (nextSchema.Stereotype == SchemaStereotype.Detail || nextSchema.Stereotype == SchemaStereotype.DetailNew) {
                 if (targetMocked) {

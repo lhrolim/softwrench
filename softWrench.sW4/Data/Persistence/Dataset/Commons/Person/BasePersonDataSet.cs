@@ -152,12 +152,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             user.UserPreferences.Signature = signature;
             user.Profiles = LoadProfiles(json);
             UserManager.SaveUser(user);
+            var targetResult = Engine().Execute(operationWrapper);
             // Upate the in memory user if the change is for the currently logged in user
             var currentUser = SecurityFacade.CurrentUser();
             if (user.UserName.EqualsIc(currentUser.Login)) {
-                SecurityFacade.UpdateUserCache(user, currentUser.TimezoneOffset.ToString());
+                targetResult.ResultObject = SecurityFacade.UpdateUserCache(user, currentUser.TimezoneOffset.ToString());
             }
-            var targetResult = Engine().Execute(operationWrapper);
             if (isCreation && isactive) {
                 _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
             }
