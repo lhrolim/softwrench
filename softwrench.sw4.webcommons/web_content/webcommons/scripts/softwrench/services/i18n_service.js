@@ -194,8 +194,11 @@
             var userIdFieldName = schema.userIdFieldName;
             var userId = datamap.fields[userIdFieldName];
 
-            if (schema.idDisplayable && userId != null) {
-                return '{0} {1}'.format(schema.idDisplayable, userId);
+            if (userId != null) {
+                if (schema.idDisplayable) {
+                    return '{0} {1}'.format(schema.idDisplayable, userId);
+                }
+                return ' ' + userId;
             }
             return "";
         },
