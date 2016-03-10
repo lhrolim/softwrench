@@ -1562,6 +1562,10 @@
                           parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
 <!--                <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"-->
 <!--                     showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>-->
+                <command id="createrelated"
+                         service="srService" method="startRelatedSRCreation" parameters="schema,datamap"
+                         label="Create Related Request" icon="fa-ticket" />
+
               </container>
             </commandgroup>
           </commandbars>
