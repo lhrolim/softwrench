@@ -40,21 +40,27 @@
             this.digestAndrefresh(displayable, scope);
         };
 
-        function updateEagerOptions(scope, displayable) {
+        function updateEagerOptions(scope, displayable,options,contextData) {
             var log = $log.getInstance("cmpfacade#updateEagerOptions",["association"]);
             var attribute = displayable.attribute;
             var rendererType = displayable.rendererType;
-            var contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+            if (!contextData) {
+                contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+            }
+            if (!options) {
+                options = crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData);
+            }
+
             var fn = function doRefresh() {
                 log.debug("updating list for component {0}".format(attribute));
                 if (rendererType === 'autocompleteclient') {
                     var value = scope.datamap[displayable.target];
-                    cmpAutocompleteClient.refreshFromAttribute(scope,displayable, value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
+                    cmpAutocompleteClient.refreshFromAttribute(scope,displayable, value,options);
                 } else if (rendererType === 'combodropdown') {
                     cmpComboDropdown.refreshList(attribute);
                 } else if (rendererType === 'combo') {
                     var value = scope.datamap[displayable.target];
-                    cmpCombo.refreshFromAttribute(value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
+                    cmpCombo.refreshFromAttribute(value, options);
                 }
             }
 

@@ -157,7 +157,7 @@
                         if ($scope.schema) {
                             var displayables = fieldService.getDisplayablesByAssociationKey($scope.schema, associationKey);
                             for (var i = 0; i < displayables.length; i++) {
-                                cmpfacade.updateEagerOptions($scope, displayables[i]);
+                                cmpfacade.updateEagerOptions($scope, displayables[i],options, contextData);
                             }
                         }
                     }, 0, false);
