@@ -40,7 +40,7 @@
             this.digestAndrefresh(displayable, scope);
         };
 
-        function updateEagerOptions(scope, displayable,options,contextData) {
+        function updateEagerOptions(scope, displayable, options, contextData, datamapId) {
             var log = $log.getInstance("cmpfacade#updateEagerOptions",["association"]);
             var attribute = displayable.attribute;
             var rendererType = displayable.rendererType;
@@ -55,7 +55,7 @@
                 log.debug("updating list for component {0}".format(attribute));
                 if (rendererType === 'autocompleteclient') {
                     var value = scope.datamap[displayable.target];
-                    cmpAutocompleteClient.refreshFromAttribute(scope,displayable, value,options);
+                    cmpAutocompleteClient.refreshFromAttribute(scope, displayable, value, options, datamapId);
                 } else if (rendererType === 'combodropdown') {
                     cmpComboDropdown.refreshList(attribute);
                 } else if (rendererType === 'combo') {
@@ -82,7 +82,7 @@
 
         }
 
-        function digestAndrefresh(displayable, scope, newValue,datamapId) {
+        function digestAndrefresh(displayable, scope, newValue, datamapId) {
             var rendererType = displayable.rendererType;
             if (rendererType !== 'autocompleteclient' && rendererType !== 'autocompleteserver' && rendererType !== 'combodropdown' && rendererType !== 'lookup' && rendererType !== 'modal') {
                 return;
@@ -142,7 +142,13 @@
             log.debug(msg.format(displayable.attribute, rendererType, valueToLog));
 
             if (rendererType === 'autocompleteclient') {
-                cmpAutocompleteClient.refreshFromAttribute(scope,displayable, valueToLog, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey));
+                var contextData = null;
+                if (scope.datamap && scope.datamap["#datamaptype"] === "compositionitem") {
+                    contextData = { schemaId: scope.schema.schemaId }
+                    contextData["entryId"] = "compositionitem_" + scope.datamap[scope.schema.idFieldName];
+                }
+                var options = crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData);
+                cmpAutocompleteClient.refreshFromAttribute(scope, displayable, valueToLog, options, datamapId);
             } else if (rendererType === 'autocompleteserver') {
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType === 'combodropdown') {

@@ -7,7 +7,8 @@
                     ng-model="datamap[fieldMetadata.target]"
                     number-to-string
                     ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
-                    data-associationkey="{{fieldMetadata.associationKey}}">
+                    data-associationkey="{{fieldMetadata.associationKey}}"
+                    data-displayablepath="{{displayablepath}}">
                 <option value=""></option>
             </select>
         </div>
@@ -18,7 +19,8 @@
                     ng-model="datamap[fieldMetadata.target]"
                     number-to-string
                     ng-options="option.value as option.label for option in GetAssociationOptions(fieldMetadata)"
-                    data-associationkey="{{fieldMetadata.associationKey}}">
+                    data-associationkey="{{fieldMetadata.associationKey}}"
+                    data-displayablepath="{{displayablepath}}">
                 <option value=""></option>
             </select>
         </div>

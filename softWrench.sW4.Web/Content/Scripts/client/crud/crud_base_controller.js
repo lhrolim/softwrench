@@ -140,7 +140,7 @@ function BaseController($scope,$log, i18NService, fieldService, commandService, 
             if (!contextData) {
                 contextData = { schemaId: $scope.schema.schemaId }
             }
-            contextData["entryId"] = "compositionitem_" + $scope.datamap["#datamapidx"];
+            contextData["entryId"] = "compositionitem_" + $scope.datamap[$scope.schema.idFieldName];
         }
         var rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
         return applyFilter(fieldMetadata.filter, rawOptions);

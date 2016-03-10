@@ -155,9 +155,14 @@
                 $scope.$on("sw.crud.associations.updateeageroptions", function (event, associationKey, options, contextData) {
                     $timeout(function () {
                         if ($scope.schema) {
+                            // if it is a composition list and have datamapId - the datamapId id from field should be the same from the event
+                            if (datamapId && $scope.datamap && $scope.datamap[$scope.schema.idFieldName] !== datamapId) {
+                                return;
+                            }
+
                             var displayables = fieldService.getDisplayablesByAssociationKey($scope.schema, associationKey);
                             for (var i = 0; i < displayables.length; i++) {
-                                cmpfacade.updateEagerOptions($scope, displayables[i],options, contextData);
+                                cmpfacade.updateEagerOptions($scope, displayables[i], options, contextData, datamapId);
                             }
                         }
                     }, 0, false);

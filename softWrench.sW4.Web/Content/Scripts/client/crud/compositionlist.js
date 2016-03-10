@@ -203,7 +203,7 @@
     });
 
     function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
-        formatService, fieldService, commandService, compositionService, validationService, dispatcherService,
+        formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient,
         expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
         schemaService, contextService) {
 
@@ -809,9 +809,15 @@
                 }
             }, true);
 
-            // if inside a scroll pane - to update pane size
+            //time for the components to be rendered
             $timeout(function () {
-                //time for the components to be rendered
+                // inits autocomplete clients if needed
+                var bodyElement = $("[composition-list-key='{0}'][composition-list-index='{1}']".format($scope.getCompositionListKey(), idx));
+                if (bodyElement.length > 0) {
+                    cmpAutocompleteClient.init(bodyElement, null, $scope.compositionlistschema);
+                }
+
+                // if inside a scroll pane - to update pane size
                 $(window).trigger("resize");
             }, 1000, false);
 
@@ -1084,6 +1090,10 @@
                 $scope.compositionlistschema.properties.expansible == 'true');
         };
 
+        $scope.getCompositionListKey = function() {
+            return $scope.compositionlistschema ? $scope.compositionlistschema.applicationName + "." + $scope.compositionlistschema.schemaId : "";
+        }
+
         //overriden function
         $scope.i18NLabel = function (fieldMetadata) {
             return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
@@ -1139,7 +1149,7 @@
     };
 
     CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService",
-            "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService",
+            "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient",
             "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
             "schemaService", "contextService"];
 

@@ -70,7 +70,7 @@
             contextData = contextData || {};
             if (datamap && datamap["#datamaptype"] === "compositionitem") {
                 contextData = { schemaId: schema.schemaId }
-                contextData["entryId"] = "compositionitem_" + datamap["#datamapidx"];
+                contextData["entryId"] = "compositionitem_" + datamap[schema.idFieldName];
             }
             var listToSearch = crudContextHolderService.fetchEagerAssociationOptions(key, contextData);
 
@@ -235,7 +235,7 @@
                 var contextData = null;
                 if (scope.datamap && scope.datamap["#datamaptype"] === "compositionitem") {
                     contextData = { schemaId: scope.schema.schemaId }
-                    contextData["entryId"] = "compositionitem_" + scope.datamap["#datamapidx"];
+                    contextData["entryId"] = "compositionitem_" + scope.datamap[scope.schema.idFieldName];
                 }
 
                 crudContextHolderService.updateEagerAssociationOptions(dependantFieldName, array.associationData, contextData);
