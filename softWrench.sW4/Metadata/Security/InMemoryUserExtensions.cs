@@ -40,7 +40,7 @@ namespace softWrench.sW4.Metadata.Security {
             }
             var viewingExisting = request.Id != null || request.UserId != null;
             var isList = application.Schema.Stereotype == SchemaStereotype.List || request.SearchDTO != null;
-            if (isList && permission.AllowView) {
+            if (isList && !permission.HasNoPermissions) {
                 return SecurityModeCheckResult.Allow;
             }
 
