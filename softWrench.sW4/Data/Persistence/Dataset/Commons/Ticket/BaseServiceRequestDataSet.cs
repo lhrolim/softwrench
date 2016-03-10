@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -5,15 +6,22 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sW4.Shared2.Metadata.Applications;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog;
+using softWrench.sW4.Data.Persistence.Engine;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
     public class BaseServiceRequestDataSet : BaseTicketDataSet {
@@ -106,6 +114,31 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             parameter.BASEDto.AppendWhereClause(sb.ToString());
 
             return parameter.BASEDto;
+        }
+
+        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
+            if (!string.Equals(operation, OperationConstants.CRUD_CREATE) || isBatch) {
+                return base.Execute(application, json, id, operation, isBatch, userIdSite);
+            }
+
+            var relatedOriginId = json.StringValue("#relatedrecord_recordkey");
+
+            return string.IsNullOrEmpty(relatedOriginId)
+                // regular CREATE 
+                ? base.Execute(application, json, id, operation, isBatch, userIdSite) 
+                // CREATE as relatedrecord
+                : CreateAsRelated(application, json, relatedOriginId);
+        }
+
+        private TargetResult CreateAsRelated(ApplicationMetadata application, JObject srToCreate, string relatedSrTicketId) {
+            // regular crudoperationdata building
+            var entityMetadata = MetadataProvider.Entity(application.Entity);
+            var operationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof (CrudOperationData), entityMetadata, application, srToCreate);
+            // adding related record data
+            operationData.SetAttribute("origrecordid", relatedSrTicketId);
+            operationData.SetAttribute("origrecordclass", "SR");
+            // creating SR with related record data -> WS will automatically create the 'relatedrecord' entries
+            return (TargetResult)((MaximoConnectorEngine)Engine()).Create(operationData);
         }
 
 

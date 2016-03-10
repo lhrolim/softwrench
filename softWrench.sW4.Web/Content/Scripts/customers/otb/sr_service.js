@@ -91,7 +91,10 @@ angular.module('sw_layout')
 
         startRelatedSRCreation: function (schema, datamap) {
             var localDatamap = datamap.fields || datamap;
-            var relatedDatamap = { status: "NEW" };
+            var relatedDatamap = {
+                'status': "NEW",
+                '#relatedrecord_recordkey': localDatamap[schema.userIdFieldName]
+            };
             var clonedFields = [
                 "affectedemail", "affectedperson", "affectedphone", "assetnum", "assetditeid",
                 "cinum", "classstructureid", "commodity", "commoditygroup",
