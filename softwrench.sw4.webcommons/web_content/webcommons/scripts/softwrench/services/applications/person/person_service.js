@@ -2,14 +2,15 @@
 (function () {
     'use strict';
 
-    angular.module('maximo_applications').factory('personService', ['alertService','redirectService', personService]);
+    angular.module('maximo_applications').factory('personService', ['alertService','redirectService', 'applicationService', 'contextService', personService]);
 
-    function personService(alertService, redirectService) {
+    function personService(alertService, redirectService, applicationService, contextService) {
 
         var service = {
             afterChangeUsername: afterChangeUsername,
             validatePerson: validatePerson,
-            cancelEdition:cancelEdition
+            cancelEdition: cancelEdition,
+            submitPerson: submitPerson
         };
 
         return service;
@@ -34,6 +35,21 @@
             }
 
             return errors;
+        }
+
+        function submitPerson(schema, datamap) {
+            applicationService.submitData(
+                function(response) {
+                    var ro = response.resultObject;
+                    contextService.loadUserContext(ro);
+                },
+                function (response) {
+                    var res = response;
+                },
+                {
+                    isComposition: false,
+                    refresh: true
+                });
         }
 
     }
