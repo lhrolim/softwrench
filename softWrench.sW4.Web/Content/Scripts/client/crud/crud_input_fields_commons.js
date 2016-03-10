@@ -3,9 +3,9 @@
 
     angular.module('sw_layout').factory('crud_inputcommons', factory);
 
-    factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService','dispatcherService', '$parse', "$rootScope", "$q"];
+    factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', 'dispatcherService', '$parse', "$rootScope", "$q"];
 
-    function factory($log, associationService, contextService, cmpfacade, fieldService, $timeout, expressionService,dispatcherService, $parse, $rootScope,$q) {
+    function factory($log, associationService, contextService, cmpfacade, fieldService, $timeout, expressionService, dispatcherService, $parse, $rootScope, $q) {
 
         var api = {
             configureAssociationChangeEvents: configureAssociationChangeEvents,
@@ -111,6 +111,11 @@
                         displayables: displayables,
                         scope: $scope,
                         'continue': function () {
+                            if ($scope.compositionlistschema) {
+                                //workaround for compositions
+                                $scope.datamap = datamap;
+                                $scope.schema = $scope.compositionlistschema;
+                            }
                             if (isMultiValued && association.rendererType !== 'lookup') {
                                 associationService.updateUnderlyingAssociationObject(association, null, $scope);
                             }
@@ -118,17 +123,8 @@
                             var phase = resolved ? 'configured' : 'initial';
                             var dispatchedbytheuser = resolved ? true : false;
                             var hook = associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser, fields: fields });
-                            hook.then(function(hookResult) {
-                                var result = associationService.updateAssociations(association, $scope);
-                                if (result != undefined && result === false) {
-                                    if ($scope.compositionlistschema) {
-                                        //workaround for compositions
-
-                                        $scope.datamap = datamap;
-                                        $scope.schema = $scope.compositionlistschema;
-                                    }
-
-                                }
+                            hook.then(function (hookResult) {
+                                associationService.updateAssociations(association, $scope);
                                 try {
                                     $scope.$digest();
                                 } catch (ex) {

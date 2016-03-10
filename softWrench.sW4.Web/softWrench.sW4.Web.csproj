@@ -542,8 +542,10 @@
     <Content Include="Content\Images\tree-node-expanded.png" />
     <Content Include="Content\modules\components\angulartypeahead\angulartypeahead.js" />
     <Content Include="Content\modules\components\angulartypeahead\templates\angulartypeahead.html" />
+    <Content Include="Content\modules\components\autocompleteclient\autocompleteClientInput.js" />
     <Content Include="Content\modules\lookup\aa_lookupmoduledef.js" />
     <Content Include="Content\modules\lookup\lookupcomponent.js" />
+    <Content Include="Content\modules\components\autocompleteclient\templates\autocompleteClientInput.html" />
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />

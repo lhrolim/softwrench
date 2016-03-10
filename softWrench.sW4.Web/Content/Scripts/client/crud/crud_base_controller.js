@@ -134,6 +134,14 @@ function BaseController($scope,$log, i18NService, fieldService, commandService, 
             return $scope.GetOptionFieldOptions(fieldMetadata);
         }
         var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+
+        // special case of a composition list
+        if ($scope.datamap && $scope.datamap["#datamaptype"] === "compositionitem") {
+            if (!contextData) {
+                contextData = { schemaId: $scope.schema.schemaId }
+            }
+            contextData["entryId"] = "compositionitem_" + $scope.datamap["#datamapidx"];
+        }
         var rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
         return applyFilter(fieldMetadata.filter, rawOptions);
     }
@@ -188,6 +196,13 @@ function BaseController($scope,$log, i18NService, fieldService, commandService, 
         return isVisible && (isFieldSet === legendEvaluationMode);
     }
 
+    $scope.formatId = function (id) {
+        return RemoveSpecialChars(id);
+    }
+
+    $scope.isDesktop = function () {
+        return isDesktop();
+    };
 }
 
 window.BaseController = BaseController;

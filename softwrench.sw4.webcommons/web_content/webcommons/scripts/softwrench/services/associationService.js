@@ -44,14 +44,14 @@
             };
         }
 
-        var doGetFullObject = function(associationFieldMetadata, selectedValue, contextData) {
+        var doGetFullObject = function (associationFieldMetadata, selectedValue, datamap, schema, contextData) {
             if (selectedValue == null) {
                 return null;
             } else if (Array.isArray(selectedValue)) {
                 // Extract each item into an array object
                 var objectArray = selectedValue
                     .map(function (value) {
-                        return doGetFullObject(associationFieldMetadata, value, contextData);
+                        return doGetFullObject(associationFieldMetadata, value, datamap, schema, contextData);
                     })
                     .flatten();
 
@@ -67,7 +67,11 @@
                 return crudContextHolderService.fetchLazyAssociationOption(key, selectedValue);
             }
 
-
+            contextData = contextData || {};
+            if (datamap && datamap["#datamaptype"] === "compositionitem") {
+                contextData = { schemaId: schema.schemaId }
+                contextData["entryId"] = "compositionitem_" + datamap["#datamapidx"];
+            }
             var listToSearch = crudContextHolderService.fetchEagerAssociationOptions(key, contextData);
 
             if (listToSearch == null) {
@@ -104,7 +108,7 @@
             return "(" + item.value + ")" + " - " + item.label;
         };
 
-        function getFullObject(associationFieldMetadata, datamap, contextData) {
+        function getFullObject(associationFieldMetadata, datamap, schema, contextData) {
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
             var target = associationFieldMetadata.target;
@@ -113,7 +117,7 @@
             if (selectedValue == null) {
                 return null;
             }
-            var resultValue = doGetFullObject(associationFieldMetadata, selectedValue, contextData);
+            var resultValue = doGetFullObject(associationFieldMetadata, selectedValue, datamap, schema, contextData);
             if (resultValue == null) {
                 $log.getInstance('associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
             }
@@ -129,7 +133,7 @@
 
 
             var key = associationFieldMetadata.associationKey;
-            var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.associationOptions);
+            var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.schema);
 
 
             crudContextHolderService.updateLazyAssociationOption(key, underlyingValue, true);
@@ -228,7 +232,13 @@
                 scope.blockedassociations[dependantFieldName] = zeroEntriesFound;
                 scope.associationSchemas[dependantFieldName] = array.associationSchemaDefinition;
 
-                crudContextHolderService.updateEagerAssociationOptions(dependantFieldName, array.associationData);
+                var contextData = null;
+                if (scope.datamap && scope.datamap["#datamaptype"] === "compositionitem") {
+                    contextData = { schemaId: scope.schema.schemaId }
+                    contextData["entryId"] = "compositionitem_" + scope.datamap["#datamapidx"];
+                }
+
+                crudContextHolderService.updateEagerAssociationOptions(dependantFieldName, array.associationData, contextData);
 
                 var associationFieldMetadatas = fieldService.getDisplayablesByAssociationKey(scope.schema, dependantFieldName);
                 if (associationFieldMetadatas == null) {

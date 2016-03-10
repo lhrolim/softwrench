@@ -78,7 +78,14 @@
                                                   datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
                                                   disabledassociations="disabledassociations" blockedassociations="blockedassociations"
                                                   mode="composition"
-                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}" />
+                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}"/>
+                                </div>
+                                <div ng-switch-when="autocompleteclient" class="row">
+                                    <autocomplete-client-input parentdata="parentdata"
+                                                  datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
+                                                  disabledassociations="disabledassociations" blockedassociations="blockedassociations"
+                                                  mode="composition"
+                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}"/>
                                 </div>
                             </ng-switch>
                         </div>

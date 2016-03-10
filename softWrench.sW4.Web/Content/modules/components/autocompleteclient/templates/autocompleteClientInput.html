@@ -1,0 +1,26 @@
+﻿<div ng-switch on="fieldMetadata.type">
+    <div ng-if="fieldMetadata.rendererParameters['opendetails'] != 'true'">
+        <div ng-switch-when="OptionField">
+            <select id="{{formatId(fieldMetadata.target)}}"
+                    class="hidden-phone form-control combobox"
+                    ng-class="{'combobox-dynamic' : isDesktop()}"
+                    ng-model="datamap[fieldMetadata.target]"
+                    number-to-string
+                    ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
+                    data-associationkey="{{fieldMetadata.associationKey}}">
+                <option value=""></option>
+            </select>
+        </div>
+        <div ng-switch-default>
+            <select id="{{formatId(fieldMetadata.target)}}"
+                    class="hidden-phone form-control combobox"
+                    ng-class="{'combobox-dynamic' : isDesktop()}"
+                    ng-model="datamap[fieldMetadata.target]"
+                    number-to-string
+                    ng-options="option.value as option.label for option in GetAssociationOptions(fieldMetadata)"
+                    data-associationkey="{{fieldMetadata.associationKey}}">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+</div>
