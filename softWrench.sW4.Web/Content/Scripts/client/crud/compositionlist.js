@@ -604,6 +604,14 @@
 
         $scope.edit = function (datamap, actionTitle) {
             if (shouldEditInModal()) {
+                // Check that main tab has all required fields filled before opening modal
+                var parentDatamap = crudContextHolderService.rootDataMap();
+                var parentSchema = crudContextHolderService.currentSchema();
+                if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap.fields).length > 0) {
+                    //crudContextHolderService.setActiveTab(null);
+                    redirectService.redirectToTab('main');
+                    return;
+                }
                 modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, $scope.save, null, $scope.parentdata, $scope.parentschema);
             } else {
                 //TODO: switch to edit
@@ -709,6 +717,7 @@
 
             var compositionId = item[$scope.compositionlistschema.idFieldName];
             var updating = $scope.collectionproperties.allowUpdate;
+
             var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
             if (fullServiceName != null) {
                 var compositionschema = $scope.compositionschemadefinition['schemas']['detail'];
@@ -752,15 +761,26 @@
             }
 
             compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
-                $scope.doToggle(compositionId, result.resultObject.fields, item);
-                $timeout(function () {
-                    $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
-                }, 0, false);
+                if (!shouldEditInModal()) {
+                    $scope.doToggle(compositionId, result.resultObject.fields, item);
+                    $timeout(function() {
+                        $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
+                    }, 0, false);
+                }
+
+                // Check that main tab has all required fields filled before opening modal
+                var parentDatamap = crudContextHolderService.rootDataMap();
+                var parentSchema = crudContextHolderService.currentSchema();
+                if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap.fields).length > 0) {
+                    //crudContextHolderService.setActiveTab(null);
+                    redirectService.redirectToTab('main');
+                    return;
+                }
+                modalService.show($scope.compositiondetailschema, result.resultObject.fields, {}, $scope.save, null, $scope.parentdata, $scope.parentschema);
             });
 
 
         };
-
 
         /***************Batch functions **************************************/
 
@@ -881,7 +901,7 @@
             var detailSchema = $scope.compositionschemadefinition.schemas.detail;
             var validationErrors;
             if (selecteditem != undefined) {
-                var crudFormCtrl = shouldEditInModal() ? getModalCrudFormController() : $scope.crudform;
+                var crudFormCtrl = getModalCrudFormController();
                 validationErrors = validationService.validate(detailSchema, detailSchema.displayables, selecteditem, crudFormCtrl.$error);
                 if (validationErrors.length > 0) {
                     //interrupting here, can´t be done inside service
@@ -1118,7 +1138,7 @@
 
         //#region modal helpers
         function shouldEditInModal() {
-            return $scope.compositionlistschema.properties && "modal" === $scope.compositionlistschema.properties["list.click.popup"];
+            return !($scope.compositionlistschema.properties && "true" === $scope.compositionlistschema.properties["list.click.openinline"]);
         }
 
         function getModalCrudFormController() {

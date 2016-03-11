@@ -8,6 +8,7 @@
         <property key="mobile.fetchlimit" value="300"/>
         <property key="list.schema.mode" value="input"/>
         <property key ="icon.composition.tab" value="fa fa-gavel ion-ios-chatbubble-outline"/>
+        <!--<property key="list.click.service" value="worklogService.editWorklog"/>-->
       </properties>
       <schemas>
         <schema id="list"  stereotype="compositionlist">
@@ -26,7 +27,7 @@
           </field>
         </schema>
 
-        <detail stereotype="compositiondetail">
+        <detail stereotype="detail">
           <field attribute="description" label="Summary" requiredexpression="true">
             <renderer type="default" params="maxlength=100"/>
           </field>
