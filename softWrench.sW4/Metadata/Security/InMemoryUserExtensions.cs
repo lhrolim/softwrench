@@ -32,14 +32,14 @@ namespace softWrench.sW4.Metadata.Security {
                 return SecurityModeCheckResult.Allow;
             }
 
-            var isTopLevelAPP = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, user)
+            var isTopLevelApp = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null)
                 .Any(a => a.ApplicationName.EqualsIc(application.Name));
 
 
             var profile = user.MergedUserProfile;
             var permission = profile.GetPermissionByApplication(application.Name, MetadataProvider.RoleByApplication(application.Name));
             if (permission == null) {
-                if (isTopLevelAPP) {
+                if (isTopLevelApp) {
                     //no permission to that particular application
                     return SecurityModeCheckResult.Block;
                 }
