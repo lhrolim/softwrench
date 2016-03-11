@@ -43,10 +43,12 @@
 
         </thead>
         <tbody ng-show="compositionData().length > 0">
-            <tr ng-repeat-start="(rowindex, compositionitem) in compositionData() track by rowindex"
+            <tr ng-repeat-start="(rowindex, compositionitem) in compositionData()"
                 ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
                 ng-class="$odd ? 'odd' : 'even'"
-                draggable="{{ draggableValue() }}">
+                draggable="{{ draggableValue() }}"
+                composition-list-key="{{getCompositionListKey()}}"
+                composition-list-index="{{rowindex}}">
                 <td ng-if="hasDetailSchema()">
                     <button class="btn" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
                         <i class="fa fa-caret-right" ng-hide="isItemExpanded(compositionitem)"></i>
@@ -78,7 +80,13 @@
                                                   datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
                                                   disabledassociations="disabledassociations" blockedassociations="blockedassociations"
                                                   mode="composition"
-                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}" />
+                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}"/>
+                                </div>
+                                <div ng-switch-when="autocompleteclient" class="row">
+                                    <autocomplete-client-input parentdata="parentdata"
+                                                  datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
+                                                  mode="composition"
+                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}"/>
                                 </div>
                             </ng-switch>
                         </div>
@@ -103,12 +111,12 @@
                         <div ng-switch-when="ApplicationFieldDefinition">
                             <ng-switch on="column.rendererType">
                                 <div ng-switch-when="checkbox" style="text-align: center;">
-                                    <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'" />
+                                    <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'"/>
                                     <input type="checkbox" ng-if="column.rendererParameters['editable'] == 'true'" ng-model="compositionitem[column.attribute]"
                                            ng-checked="compositionitem[column.attribute] == 1"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            ng-click="invokeCustomCheckBoxService(column,compositionitem,$event)"
-                                           ng-true-value="'true'" ng-false-value="'false'" />
+                                           ng-true-value="'true'" ng-false-value="'false'"/>
                                 </div>
 
                                 <div ng-switch-when="numericinput">
@@ -120,7 +128,7 @@
                                            max="{{setMaxNumericInput(compositionitem,column)}}"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            data-field="{{column.attribute+rowindex}}"
-                                           number-spinner />
+                                           number-spinner/>
                                 </div>
                                 <div ng-switch-when="icon">
                                     <i class="fa" ng-class="loadIcon(compositionitem[column.attribute],column)"></i>
@@ -158,7 +166,7 @@
                                                maxlength="{{column.rendererParameters['maxlength']}}"
                                                placeholder="{{column.rendererParameters['placeholder']}}"
                                                ng-init="initField(column)"
-                                               dynamic-name="column.attribute" />
+                                               dynamic-name="column.attribute"/>
                                         <span class="input-group-addon" ng-if="column.rendererParameters['append']!=null">{{column.rendererParameters['append']}}</span>
                                     </div>
 

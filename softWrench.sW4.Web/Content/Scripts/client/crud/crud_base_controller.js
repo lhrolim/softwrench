@@ -3,8 +3,8 @@
 
 angular.module("sw_layout").controller("BaseController", BaseController);
     //idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-BaseController.$inject = ["$scope","$log", "i18NService", "fieldService", "commandService", "formatService", "layoutservice", "expressionService", "crudContextHolderService", "dispatcherService"];
-function BaseController($scope,$log, i18NService, fieldService, commandService, formatService, layoutservice, expressionService, crudContextHolderService, dispatcherService) {
+BaseController.$inject = ["$scope", "$log", "i18NService", "fieldService", "commandService", "formatService", "layoutservice", "expressionService", "crudContextHolderService", "dispatcherService", "compositionService"];
+function BaseController($scope, $log, i18NService, fieldService, commandService, formatService, layoutservice, expressionService, crudContextHolderService, dispatcherService, compositionService) {
 
     /* i18N functions */
     $scope.i18NLabelTooltip = function (fieldMetadata) {
@@ -134,6 +134,11 @@ function BaseController($scope,$log, i18NService, fieldService, commandService, 
             return $scope.GetOptionFieldOptions(fieldMetadata);
         }
         var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+
+        // special case of a composition list
+        if (compositionService.isCompositionListItem($scope.datamap)) {
+            contextData = compositionService.buildCompositionListItemContext(contextData, $scope.datamap, $scope.schema);
+        }
         var rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
         return applyFilter(fieldMetadata.filter, rawOptions);
     }
@@ -188,6 +193,13 @@ function BaseController($scope,$log, i18NService, fieldService, commandService, 
         return isVisible && (isFieldSet === legendEvaluationMode);
     }
 
+    $scope.formatId = function (id) {
+        return RemoveSpecialChars(id);
+    }
+
+    $scope.isDesktop = function () {
+        return isDesktop();
+    };
 }
 
 window.BaseController = BaseController;
