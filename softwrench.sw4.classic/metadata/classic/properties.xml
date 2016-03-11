@@ -27,13 +27,13 @@
   <property key="notifications.activityStream.enabled" value="true"/>
   <property key="dashboard.enabled" value="true"/>
   <property key="ui.adminmenu.showclassic" value="true"/>
+  <property key="ui.toolbars.showlabels" value="true"/>
 
   <!-- tableau -->
   <property key="tableau_server" value="http://10.50.100.171" />
   <property key="tableau_username" value="swadmin" />
   <property key="tableau_password" value="sw@dm1n" />
   <property key="tableau_site" value="default" />
-  
   <!-- end tableau -->
   
   <environment key="dev">
