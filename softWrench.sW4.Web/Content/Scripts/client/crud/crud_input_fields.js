@@ -215,7 +215,7 @@ app.directive('configAssociationListInputDatamap', function () {
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
                 eventService.onload($scope.schema, $scope.datamap);
-                var bodyElement = $('#' + parentElementId);
+                var bodyElement = $('#' + parentElementId + "[schemaid=" + $scope.schema.schemaId + "]");
                 if (bodyElement.length <= 0) {
                     return;
                 }
@@ -435,6 +435,14 @@ app.directive('configAssociationListInputDatamap', function () {
             $scope.getSelectedTexts = function (fieldMetadata) {
                 return cmpComboDropdown.getSelectedTexts(fieldMetadata);
             };
+
+            $scope.formatLabel = function(text, fieldMetadata) {
+                var maxLength = fieldMetadata.rendererParameters["labelmaxlength"];
+                if (!maxLength || text.length <= maxLength) {
+                    return text;
+                }
+                return text.substring(0, maxLength) + "...";
+            }
 
             $scope.opendetails = function (fieldMetadata) {
                 if ($scope.enabletoopendetails(fieldMetadata)) {

@@ -91,7 +91,6 @@ module.exports = function (grunt) {
                     "jquery/jquery-file-upload.js": "blueimp-file-upload/js/jquery.fileupload.js",
                     // bootstrap
                     "bootstrap/bootstrap.js": "bootstrap/dist/js/bootstrap.js",
-                    "bootstrap/bootstrap-multiselect.js": "bootstrap-multiselect/dist/js/bootstrap-multiselect.js",
                     // angular
                     "angular/angular.js": "angular/angular.js",
                     "angular/angular-sanitize.js": "angular-sanitize/angular-sanitize.js",

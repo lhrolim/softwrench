@@ -3,6 +3,10 @@
 }
 
 #activitystream {
+    .jspVerticalBar {
+        width: 4px;
+    }
+
     .unread {
         position: absolute;
         left: -46px;

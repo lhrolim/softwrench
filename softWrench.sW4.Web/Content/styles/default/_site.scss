@@ -275,3 +275,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 [rel="tooltip"].fa-question-circle {
     color: #3276b1;
 }
+
+.multiselect-container{
+    max-width:275px !important;
+}

@@ -51,10 +51,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             var switchgears = FirstSolarAdvancedSearchDtoUtils.GetSwitchgears(searchDto);
             var switchgearsClause = BuildAdvancedSearchWhereClause(switchgears, tableName, includeSubloc);
             AppendWhereClause(advancedSearchClause, switchgearsClause);
-
             Log.Debug("Building pcs where clause");
-            var selectedPcsLocations = FirstSolarAdvancedSearchDtoUtils.GetSelectedPcsLocations(searchDto);
-            var pcsLocationsClause = BuildAdvancedSearchWhereClause(selectedPcsLocations, tableName, includeSubloc);
+            var pcsLocations = FirstSolarAdvancedSearchDtoUtils.GetPcsLocations(searchDto);
+            var pcsLocationsClause = BuildAdvancedSearchWhereClause(pcsLocations, tableName, includeSubloc);
             AppendWhereClause(advancedSearchClause, pcsLocationsClause);
 
             FinishAdvancedSearch(advancedSearchClause.ToString(), searchDto, facilityList, tableName);

@@ -38,8 +38,7 @@
     "moment": "~2.11.0",
     "textAngular": "~1.4.6",
     "bootstrap-combobox": "1.1.5",
-    "lz-string": "~1.4.4",
-    "bootstrap-multiselect": "~0.9.13"
+    "lz-string": "~1.4.4"
   },
   "devDependencies": {},
   "resolutions": {

@@ -813,6 +813,7 @@
     <Content Include="Content\Templates\usersetup\forgotpassword.html" />
     <Content Include="Content\Templates\usersetup\welcomeemail_manualpassword.html" />
     <Content Include="Content\Templates\usersetup\welcomeemail_automaticpassword.html" />
+    <Content Include="Content\vendor\scripts\bootstrap-multiselect.js" />
     <Content Include="Dependencies\DocumentFormat.OpenXml.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -919,7 +920,6 @@
     <Folder Include="App_Data\Client\shared\" />
     <Folder Include="Content\Scripts\softwrench\" />
     <Folder Include="Content\vendor\css\fonts\" />
-    <Folder Include="Content\vendor\scripts\" />
     <Folder Include="Controllers\Mobile\" />
     <Folder Include="Views\HapagHome\" />
     <Folder Include="Views\SchedulerSetup\" />
