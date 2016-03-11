@@ -259,6 +259,15 @@
             crud_inputcommons.initField($scope, fieldMetadata, "compositiondata[{0}]".format(idx), idx);
         };
 
+        function watchForDirty(index) {
+            $scope.$watch("compositiondata[{0}]".format(index), function (newValue, oldValue) {
+                //make sure any change on the composition marks it as dirty
+                if (oldValue !== newValue && $scope.compositiondata[index]) {
+                    $scope.compositiondata[index]["#isDirty"] = true;
+                }
+            }, true);
+        }
+
         function init(previousCompositionData, isPaginationRefresh) {
             if (!$scope.compositionschemadefinition.schemas) {
                 //this means that we recevived only the list schema, for inline compositions
@@ -334,16 +343,7 @@
                     crud_inputcommons.configureAssociationChangeEvents($scope,
                         "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables, id);
 
-
-                    $scope.$watch("compositiondata[{0}]".format(index), function (newValue, oldValue) {
-                        //make sure any change on the composition marks it as dirty
-                        if (oldValue !== newValue && $scope.compositiondata[index]) {
-                            if ($scope.compositiondata[index]) {
-                                $scope.compositiondata[index]["#isDirty"] = true;
-                            }
-                        }
-                    }, true);
-
+                    watchForDirty(index);
                 });
 
                 if (fieldService.isPropertyTrue($scope.metadatadeclaration.schema, "composition.inline.startwithentry")) {
@@ -775,6 +775,8 @@
 
 
             var idx = $scope.compositionData().length;
+
+            // validates the last row
             if (idx !== 0) {
                 var itemMap = $scope.compositionData()[idx - 1];
                 var mergedDataMap = compositionService.buildMergedDatamap(itemMap, $scope.parentdata);
@@ -783,6 +785,7 @@
                     return;
                 }
             }
+
             var newItem = {
                 //used to make a differentiation between a compositionitem datamap and a regular datamap
                 '#datamaptype': "compositionitem",
@@ -802,12 +805,7 @@
             newItem[$scope.compositionlistschema.idFieldName] = fakeNegativeId;
             $scope.compositionData().push(newItem);
             crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables, fakeNegativeId);
-            $scope.$watch("compositiondata[{0}]".format(idx), function (newValue, oldValue) {
-                //make sure any change on the composition marks it as dirty
-                if (oldValue !== newValue) {
-                    $scope.compositiondata[idx]["#isDirty"] = true;
-                }
-            }, true);
+            watchForDirty(idx);
 
             //time for the components to be rendered
             $timeout(function () {
