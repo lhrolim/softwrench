@@ -129,7 +129,7 @@
 
 
             var key = associationFieldMetadata.associationKey;
-            var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.associationOptions);
+            var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap);
 
 
             crudContextHolderService.updateLazyAssociationOption(key, underlyingValue, true);
