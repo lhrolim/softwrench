@@ -11,9 +11,10 @@
     <div id="affixpagination" class="hiddenonprint grid-header" ng-class="{'affix-pagination' : ismodal !== 'true' }">
         <div class="context clearfix header-menu" ng-if="isDetail">
             <div class="left">
-                <crudbodydetailtoolbar datamap="datamap" position="detail.primary" schema="schema" />
+                <crudbodydetailtoolbar datamap="datamap" position="detail.primary" schema="schema"/>
+                <div class="separator">&nbsp;</div>
+                <crudbodydetailtoolbar datamap="datamap" position="detail.secondary" schema="schema"/>
                 <crudbodydetailtoolbar datamap="datamap" mode="'input'" position="actions" schema="schema" />
-                <crudbodydetailtoolbar datamap="datamap" position="detail.secondary" schema="schema" />
             </div>
             <div class="right">
                 <div class="group pagination">
