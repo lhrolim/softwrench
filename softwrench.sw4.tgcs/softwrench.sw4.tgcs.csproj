@@ -37,6 +37,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="metadata\tgcs\deploy.xml" />
+    <EmbeddedResource Include="metadata\tgcs\properties.xml" />
     <Content Include="metadata\tgcs\readme.txt" />
     <Content Include="web_content\tgcs\images\footer.jpg" />
     <Content Include="web_content\tgcs\images\header-email.jpg" />
