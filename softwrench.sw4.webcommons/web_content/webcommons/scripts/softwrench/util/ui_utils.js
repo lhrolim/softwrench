@@ -50,8 +50,6 @@ $(function () {
         var containerHeight = $('[ng-controller="LayoutController"]').height();
         var windowHeight = $(window).height();
 
-        console.log(containerHeight > windowHeight);
-
         //adjust footer position
         if (containerHeight > windowHeight) {
             $('.site-footer').css('position', 'static');
