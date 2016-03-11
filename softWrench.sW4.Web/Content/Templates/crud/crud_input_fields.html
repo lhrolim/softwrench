@@ -316,7 +316,7 @@
                 </div>
                 <div ng-switch-when="dndupload">
                     <input id="uploadFile" ng-model="datamap.newattachment_path" class="form-control" placeholder="No file chosen" disabled="disabled" />
-                    <div file-dropzone="pdf, zip, txt, doc, docx, dwg, gif, jpg, csv, xls, xlsx, ppt, xml, xsl, bmp, html, png, lic"
+                    <div file-dropzone="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] || 'pdf,zip,txt,doc,docx,dwg,gif,jpg,csv,xls,xlsx,ppt,xml,xsl,bmp,html,png,lic' }} "
                          class="dropzone form-control" data-file-name="datamap.newattachment_path" data-file="datamap[fieldMetadata.attribute]"
                          data-dropzone-hover-class="file-over"
                          data-field="fieldMetadata">
@@ -330,10 +330,14 @@
                         </i>
                         &ensp;You can also use 'Print Screen' and 'Ctrl+V' to attach a screenshot
                     </div>
-                    <div ng-if="fieldMetadata.rendererParameters['showImagePreview']" class="imagepreview">
+                    <div ng-if="!!datamap[fieldMetadata.attribute] && (fieldMetadata.rendererParameters['showImagePreview'] === true || fieldMetadata.rendererParameters['showImagePreview'] === 'true')" 
+                         class="imagepreview">
                         <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
                     </div>
                 </div>
+                <!--<div ng-switch-on="imagepreview" class="imagepreview">
+                    <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
+                </div>-->
                 <div ng-switch-when="multipleupload">
                     <div class="input-group" id="{{fieldMetadata.attribute}}">
                         <div class="input-group-addon fileUpload" data-upload="files">

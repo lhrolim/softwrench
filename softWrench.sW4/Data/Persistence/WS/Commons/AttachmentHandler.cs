@@ -97,6 +97,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     }
                 }
             }
+
+            // worklogs
+            var worklogs = entity.GetRelationship("worklog");
+            if (worklogs == null) return;
+            foreach (var worklog in ((IEnumerable<CrudOperationData>)worklogs)) {
+                var path = worklog.GetUnMappedAttribute("newattachment_path");
+                var content = worklog.GetUnMappedAttribute("newattachment");
+                if (string.IsNullOrWhiteSpace(content) || string.IsNullOrWhiteSpace(path)) continue;
+                var attachmentParam = new AttachmentDTO() {
+                    Data = entity.GetUnMappedAttribute("newattachment"),
+                    Path = entity.GetUnMappedAttribute("newattachment_path")
+                };
+                AddAttachment(worklog, attachmentParam);
+            }
         }
 
         /// <summary>
