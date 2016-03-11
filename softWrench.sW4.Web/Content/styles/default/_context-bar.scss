@@ -3,6 +3,7 @@
 
     pagination {
         float: right;
+        margin-top: 5px;
     }
 }
 
@@ -11,7 +12,11 @@
         width: 100%;
         background: #eee;
         border-bottom: #000 1px solid;
-        padding: 5px 40px 10px 10px;
+        padding: 5px 40px 3px 10px;
+
+        .right {
+            float: right;
+        }
 
         a {
             color: #555;
@@ -31,7 +36,7 @@
             }
 
             &.pagination {
-                padding-top: 7px;
+                padding-top: 5px;
             }
 
             &.total {
@@ -41,18 +46,18 @@
 
         label {
             font-weight: normal;
+        }
 
-            .buttons {
-                display: inline-block;
-                margin: 0 5px 5px 0;
+        .buttons {
+            display: inline-block;
+            margin: 0 5px 5px 0;
 
+            .btn-context {
+                background: transparent;
+                padding: 7px 12px 5px;
 
-                .btn-context {
-                    background: transparent;
-
-                    &:hover {
-                        background: #ddd;
-                    }
+                &:hover {
+                    background: #ddd;
                 }
             }
         }
@@ -101,7 +106,6 @@
 
 @media all and (min-width: 992px) {
     .container {
-
         .context {
             .group {
                 margin: 5px 0 0;
@@ -118,7 +122,7 @@
     }
 }
 
-.gridtop .applicationcommand {
+/*.gridtop .applicationcommand {
     display: none;
 }
 
@@ -126,7 +130,7 @@
     .gridtop .applicationcommand {
         display: inline-block;
     }
-}
+}*/
 
 #affixpagination1 {
     border-bottom: none;
