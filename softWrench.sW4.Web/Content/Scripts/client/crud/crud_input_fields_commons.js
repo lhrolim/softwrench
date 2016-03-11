@@ -58,10 +58,13 @@
 
 
             var associations = fieldService.getDisplayablesOfTypes(displayables, ['OptionField', 'ApplicationAssociationDefinition']);
+
+            var createdWatches = [];
+
             $.each(associations, function (key, association) {
                 var shouldDoWatch = true;
                 var isMultiValued = association.multiValued;
-                $scope.$watch('{0}["{1}"]'.format(datamappropertiesName, association.attribute), function (newValue, oldValue) {
+                createdWatches.push($scope.$watch('{0}["{1}"]'.format(datamappropertiesName, association.attribute), function (newValue, oldValue) {
                     if (oldValue == newValue || !shouldDoWatch) {
                         return;
                     }
@@ -148,7 +151,7 @@
                         newValue = null;
                     }
                     cmpfacade.digestAndrefresh(association, $scope, newValue, datamapId);
-                });
+                }));
 
                 $log.getInstance("associationService#configureAssociationChangeEvents", ["association"]).debug("initing watchers for {0} ".format(association.attribute));
 
@@ -175,6 +178,9 @@
 
 
             });
+
+            return createdWatches;
+
 
         }
     }

@@ -43,7 +43,7 @@
 
         </thead>
         <tbody ng-show="compositionData().length > 0">
-            <tr ng-repeat-start="(rowindex, compositionitem) in compositionData() track by rowindex"
+            <tr ng-repeat-start="(rowindex, compositionitem) in compositionData()"
                 ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
                 ng-class="$odd ? 'odd' : 'even'"
                 draggable="{{ draggableValue() }}"

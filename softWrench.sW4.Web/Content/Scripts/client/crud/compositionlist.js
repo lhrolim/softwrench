@@ -260,7 +260,7 @@
         };
 
         function watchForDirty(index) {
-            $scope.$watch("compositiondata[{0}]".format(index), function (newValue, oldValue) {
+            return $scope.$watch("compositiondata[{0}]".format(index), function (newValue, oldValue) {
                 //make sure any change on the composition marks it as dirty
                 if (oldValue !== newValue && $scope.compositiondata[index]) {
                     $scope.compositiondata[index]["#isDirty"] = true;
@@ -337,13 +337,18 @@
                 }
             } else {
 
+                $scope.unWatcherArray = [];
+
                 $scope.compositionData().forEach(function (value, index, array) {
                     //for eventually already existing items
                     var id = schemaService.getId(value, $scope.compositionlistschema);
-                    crud_inputcommons.configureAssociationChangeEvents($scope,
+                    var watches =crud_inputcommons.configureAssociationChangeEvents($scope,
                         "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables, id);
+                    watches.push(watchForDirty(index));
 
-                    watchForDirty(index);
+                    $scope.unWatcherArray = watches;
+
+
                 });
 
                 if (fieldService.isPropertyTrue($scope.metadatadeclaration.schema, "composition.inline.startwithentry")) {
@@ -789,7 +794,6 @@
             var newItem = {
                 //used to make a differentiation between a compositionitem datamap and a regular datamap
                 '#datamaptype': "compositionitem",
-                '#datamapidx': idx
             }
             // if inside a scroll pane - to update pane size
             $timeout(function () {
@@ -804,8 +808,10 @@
             var fakeNegativeId = -Date.now().getTime();
             newItem[$scope.compositionlistschema.idFieldName] = fakeNegativeId;
             $scope.compositionData().push(newItem);
-            crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables, fakeNegativeId);
-            watchForDirty(idx);
+            var watches = crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables, fakeNegativeId);
+            watches.push(watchForDirty(idx));
+
+            $scope.unWatcherArray = $scope.unWatcherArray.concat(watches);
 
             //time for the components to be rendered
             $timeout(function () {
@@ -832,7 +838,31 @@
         }
 
         $scope.removeBatchItem = function (rowindex) {
-            $scope.compositionData().splice(rowindex, 1);
+            var compositionData = $scope.compositionData();
+            var item = compositionData[rowindex];
+            var id = item[$scope.compositionlistschema.idFieldName];
+
+            //since the watchers were created using the composition index, we need to regenerate them once the item is fully removed
+            //otherwise the index would be out of sync with the data (ex: add 2 items, delete item[0] , add item[1] again --> there would be two watchers at item 1)
+            $scope.unWatcherArray.forEach(function(unwatcher) {
+                unwatcher();
+            });
+
+            $scope.unWatcherArray = [];
+
+            compositionData.splice(rowindex, 1);
+
+            //readding the necessary watches
+            $scope.compositionData().forEach(function (value, index, array) {
+                //for eventually already existing items
+                var itemId = schemaService.getId(value, $scope.compositionlistschema);
+                var watches = crud_inputcommons.configureAssociationChangeEvents($scope,
+                    "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables, itemId);
+                watches.push(watchForDirty(index));
+
+                $scope.unWatcherArray = watches;
+            });
+
         }
 
         /***************END Batch functions **************************************/
