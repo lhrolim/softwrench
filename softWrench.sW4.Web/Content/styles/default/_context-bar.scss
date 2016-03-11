@@ -52,6 +52,10 @@
             display: inline-block;
             margin: 0 5px 5px 0;
 
+            .btn {
+                font-size: 12px;
+            }
+
             .btn-context {
                 background: transparent;
                 padding: 7px 12px 5px;
@@ -78,6 +82,25 @@
             border-bottom: none;
         }
     }
+}
+
+.compositiontoolbar, .compositiontop  {
+    .buttons {
+            display: inline-block;
+            margin: 0 5px 5px 0;
+
+            .btn {
+                font-size: 12px;
+            }
+
+            .btn-context {
+                padding: 7px 12px 5px;
+
+                &:hover {
+                    background: #ddd;
+                }
+            }
+        }
 }
 
 @media all and (min-width: 480px) {

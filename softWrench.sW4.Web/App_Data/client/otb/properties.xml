@@ -28,8 +28,8 @@
   <property key="notifications.activityStream.enabled" value="true"/>
   <property key="dashboard.enabled" value="true"/>
   <property key="ui.adminmenu.showclassic" value="false"/>
+  <property key="ui.toolbars.showlabels" value="true"/>
   <property key="iiscontextpath" value=""/>
-  <property key="ui.toolbars.showlabels" value="false"/>
 
   <!-- tableau -->
   <property key="tableau_server" value="http://10.50.100.171" />

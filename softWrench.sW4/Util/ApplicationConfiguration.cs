@@ -348,7 +348,7 @@ namespace softWrench.sW4.Util {
             get
             {
                 var flagStr = MetadataProvider.GlobalProperty("ui.toolbars.showlabels");
-                var flag = false;
+                var flag = true;
                 bool.TryParse(flagStr, out flag);
                 return flag;
             }
