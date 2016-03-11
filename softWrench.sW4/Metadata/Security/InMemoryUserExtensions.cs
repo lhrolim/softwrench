@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
@@ -31,12 +32,19 @@ namespace softWrench.sW4.Metadata.Security {
                 return SecurityModeCheckResult.Allow;
             }
 
+            var isTopLevelApp = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null)
+                .Any(a => a.ApplicationName.EqualsIc(application.Name));
+
 
             var profile = user.MergedUserProfile;
             var permission = profile.GetPermissionByApplication(application.Name, MetadataProvider.RoleByApplication(application.Name));
             if (permission == null) {
-                //no permission to that particular application
-                return SecurityModeCheckResult.Block;
+                if (isTopLevelApp) {
+                    //no permission to that particular application
+                    return SecurityModeCheckResult.Block;
+                }
+                return SecurityModeCheckResult.Allow;
+
             }
             var viewingExisting = request.Id != null || request.UserId != null;
             var isList = application.Schema.Stereotype == SchemaStereotype.List || request.SearchDTO != null;

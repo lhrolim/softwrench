@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{83D9B360-0879-487F-B03C-62044846192C}</ProjectGuid>
+    <ProjectGuid>{73899BA2-3611-4FEF-B44D-C869A5E065EE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>softwrench.sw4.tgcs</RootNamespace>
-    <AssemblyName>softwrench.sw4.tgcs</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>softwrench.sw4.toshiba</RootNamespace>
+    <AssemblyName>softwrench.sw4.toshiba</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -32,38 +32,37 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="metadata\tgcs\deploy.xml" />
-    <EmbeddedResource Include="metadata\tgcs\properties.xml" />
-    <Content Include="metadata\tgcs\readme.txt" />
-    <Content Include="web_content\tgcs\images\footer.jpg" />
-    <Content Include="web_content\tgcs\images\header-email.jpg" />
-    <Content Include="web_content\tgcs\images\header.jpg" />
-    <Content Include="web_content\tgcs\images\logo-byline.png" />
-    <Content Include="web_content\tgcs\images\logo-main.png" />
-    <Content Include="web_content\tgcs\images\signin-lg.jpg" />
-    <Content Include="web_content\tgcs\images\signin-md.jpg" />
-    <Content Include="web_content\tgcs\images\signin-sm.jpg" />
-    <Content Include="web_content\tgcs\images\signin-xs.jpg" />
-    <Content Include="web_content\tgcs\images\signin-xxs.jpg" />
+    <Content Include="metadata\toshiba\readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <EmbeddedResource Include="metadata\toshiba\deploy.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="metadata\toshiba\properties.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="customer.placeholder" />
-    <None Include="packages.config" />
-    <None Include="web_content\tgcs\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\tgcs\configuration\" />
-    <Folder Include="classes\com\cts\tgcs\connector\" />
-    <Folder Include="classes\com\cts\tgcs\dataset\" />
-    <Folder Include="classes\com\cts\tgcs\migration\" />
-    <Folder Include="web_content\tgcs\htmls\" />
-    <Folder Include="web_content\tgcs\scripts\" />
+    <Folder Include="classes\com\cts\toshiba\configuration\" />
+    <Folder Include="classes\com\cts\toshiba\connector\" />
+    <Folder Include="classes\com\cts\toshiba\dataset\" />
+    <Folder Include="classes\com\cts\toshiba\migration\" />
+    <Folder Include="web_content\toshiba\htmls\" />
+    <Folder Include="web_content\toshiba\images\" />
+    <Folder Include="web_content\toshiba\scripts\" />
+    <Folder Include="web_content\toshiba\styles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

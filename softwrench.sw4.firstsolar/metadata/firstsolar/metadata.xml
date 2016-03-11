@@ -46,7 +46,16 @@
           <properties>
             <property key="attachments.skiprelatedattachments" value="true"/>
           </properties>
-
+          
+          <customization position="assetnum">
+            <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" requiredexpression="true">
+              <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+              <dataprovider prefilterfunction="FilterAssets"/>
+              <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
+            </association>
+          </customization>
+          
+          
           <customization position="location">
             <section orientation="horizontal">
               <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" requiredexpression="true">
@@ -60,6 +69,9 @@
               <renderer type="autocompleteclient" params="inputsize=large" />
             </optionfield>
           </customization>
+          
+          
+          
           <customization position="worktype">
             <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
               <renderer type="lookup" params="inputsize=small"/>
@@ -74,7 +86,7 @@
             </optionfield>
           </customization>
           <properties>
-            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,newattachment"/>
+            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,newattachment,assetnum"/>
             <property key="search.schemaid" value="search"/>
           </properties>
         </schema>
