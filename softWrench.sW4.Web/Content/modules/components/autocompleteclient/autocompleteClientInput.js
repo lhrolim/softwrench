@@ -14,8 +14,6 @@
                     parentdata: '=',
                     schema: '=',
                     fieldMetadata: '=',
-                    disabledassociations: '=',
-                    blockedassociations: '=',
                     displayablepath: '@',
                     mode: '@'
                 },

@@ -55,11 +55,14 @@
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
 
-          <composition inline="true" relationship="#laborlist" label="Labors"  detailschema="" printschema="">
+          <composition inline="true" relationship="#laborlist" label="Labors"  detailschema="" printschema="" showexpression="@_iscreation">
             <collectionproperties listschema="labors" autocommit="false"/>
             <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>
 
+          <!--Shows only on line expand -->
+          <field label="Labor" attribute="laborcode" showexpression="!@_iscreation"/>
+          <field label="Craft" attribute="craft" showexpression="!@_iscreation"/>
 
           <field label="Start Date" requiredexpression="true" attribute="startdate">
             <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />

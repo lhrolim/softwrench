@@ -4,7 +4,7 @@
 
 
 
-    function cmpfacade($timeout, $log, cmpComboDropdown, cmpCombo, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService, crudContextHolderService) {
+    function cmpfacade($timeout, $log, cmpComboDropdown, cmpCombo, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService, crudContextHolderService, compositionService) {
 
 
         function unblock(displayable, scope) {
@@ -143,9 +143,9 @@
 
             if (rendererType === 'autocompleteclient') {
                 var contextData = null;
-                if (scope.datamap && scope.datamap["#datamaptype"] === "compositionitem") {
-                    contextData = { schemaId: scope.schema.schemaId }
-                    contextData["entryId"] = "compositionitem_" + scope.datamap[scope.schema.idFieldName];
+                // special case of a composition list
+                if (compositionService.isCompositionListItem(scope.datamap)) {
+                    contextData = compositionService.buildCompositionListItemContext(contextData, scope.datamap, scope.schema);
                 }
                 var options = crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData);
                 cmpAutocompleteClient.refreshFromAttribute(scope, displayable, valueToLog, options, datamapId);
@@ -204,7 +204,7 @@
 
     angular
       .module('sw_layout')
-      .factory('cmpfacade', ['$timeout', '$log', 'cmpComboDropdown', 'cmpCombo', 'cmplookup', 'cmpAutocompleteClient', 'cmpAutocompleteServer', 'screenshotService', 'fieldService', 'crudContextHolderService', cmpfacade]);
+      .factory('cmpfacade', ['$timeout', '$log', 'cmpComboDropdown', 'cmpCombo', 'cmplookup', 'cmpAutocompleteClient', 'cmpAutocompleteServer', 'screenshotService', 'fieldService', 'crudContextHolderService', 'compositionService', cmpfacade]);
 
 })(angular);
 

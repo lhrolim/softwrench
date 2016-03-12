@@ -2,7 +2,7 @@
     "use strict";
 
 
-    function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService) {
+    function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService) {
 
 
         var doUpdateExtraFields = function(associationFieldMetadata, underlyingValue, datamap) {
@@ -67,10 +67,9 @@
                 return crudContextHolderService.fetchLazyAssociationOption(key, selectedValue);
             }
 
-            contextData = contextData || {};
-            if (datamap && datamap["#datamaptype"] === "compositionitem") {
-                contextData = { schemaId: schema.schemaId }
-                contextData["entryId"] = "compositionitem_" + datamap[schema.idFieldName];
+            // special case of a composition list
+            if (compositionService.isCompositionListItem(datamap)) {
+                contextData = compositionService.buildCompositionListItemContext(contextData, datamap, schema);
             }
             var listToSearch = crudContextHolderService.fetchEagerAssociationOptions(key, contextData);
 
@@ -233,9 +232,9 @@
                 scope.associationSchemas[dependantFieldName] = array.associationSchemaDefinition;
 
                 var contextData = null;
-                if (scope.datamap && scope.datamap["#datamaptype"] === "compositionitem") {
-                    contextData = { schemaId: scope.schema.schemaId }
-                    contextData["entryId"] = "compositionitem_" + scope.datamap[scope.schema.idFieldName];
+                // special case of a composition list
+                if (compositionService.isCompositionListItem(scope.datamap)) {
+                    contextData = compositionService.buildCompositionListItemContext(contextData, scope.datamap, scope.schema);
                 }
 
                 crudContextHolderService.updateEagerAssociationOptions(dependantFieldName, array.associationData, contextData);
@@ -675,7 +674,7 @@
 
     angular
     .module('sw_layout')
-    .factory('associationService', ['dispatcherService', '$http', '$q', '$timeout', '$log', '$rootScope', 'submitService', 'fieldService', 'contextService', 'searchService', 'crudContextHolderService', 'schemaService','datamapSanitizeService',
+    .factory('associationService', ['dispatcherService', '$http', '$q', '$timeout', '$log', '$rootScope', 'submitService', 'fieldService', 'contextService', 'searchService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService',
         associationService]);
 
 })(angular);

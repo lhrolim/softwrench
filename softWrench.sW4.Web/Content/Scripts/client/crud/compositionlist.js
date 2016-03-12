@@ -78,6 +78,7 @@
             },
             template: "<div></div>",
             link: function (scope, element, attrs) {
+                scope.datamap["_iscreation"] = true;
                 if (angular.isArray(scope.displayables)) {
                     fieldService.fillDefaultValues(scope.displayables, scope.datamap, scope);
                     element.append(

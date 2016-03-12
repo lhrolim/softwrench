@@ -418,7 +418,9 @@
     <Content Include="App_Data\Client\%40internal\templates\inventory_maximo7.1.xml" />
     <Content Include="App_Data\Client\%40internal\templates\item.xml" />
     <Content Include="App_Data\Client\%40internal\templates\labor.xml" />
-    <Content Include="App_Data\Client\%40internal\templates\labtrans.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\labtrans.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\location.xml">
       <SubType>Designer</SubType>
     </Content>

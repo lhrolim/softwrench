@@ -250,6 +250,18 @@
                 });
             }
 
+            function isCompositionListItem(datamap) {
+                return datamap && datamap["#datamaptype"] === "compositionitem";
+            }
+
+            function buildCompositionListItemContext(contextData, datamap, schema) {
+                contextData = contextData || {};
+                if (!contextData["schemaId"]) {
+                    contextData = { schemaId: schema.schemaId }
+                }
+                contextData["entryId"] = "compositionitem_" + datamap[schema.idFieldName];
+                return contextData;
+            }
         //#endregion
 
             var api = {
@@ -262,7 +274,9 @@
                 getCompositionList: getCompositionList,
                 isCompositionLodaded: isCompositionLodaded,
                 getLazyCompositions: getLazyCompositions,
-                getCompositionDetailItem: getCompositionDetailItem
+                getCompositionDetailItem: getCompositionDetailItem,
+                isCompositionListItem: isCompositionListItem,
+                buildCompositionListItemContext: buildCompositionListItemContext
             };
 
             return api;

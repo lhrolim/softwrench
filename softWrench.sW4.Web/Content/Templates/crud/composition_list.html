@@ -113,12 +113,12 @@
                         <div ng-switch-when="ApplicationFieldDefinition">
                             <ng-switch on="column.rendererType">
                                 <div ng-switch-when="checkbox" style="text-align: center;">
-                                    <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'" />
+                                    <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'"/>
                                     <input type="checkbox" ng-if="column.rendererParameters['editable'] == 'true'" ng-model="compositionitem[column.attribute]"
                                            ng-checked="compositionitem[column.attribute] == 1"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            ng-click="invokeCustomCheckBoxService(column,compositionitem,$event)"
-                                           ng-true-value="'true'" ng-false-value="'false'" />
+                                           ng-true-value="'true'" ng-false-value="'false'"/>
                                 </div>
 
                                 <div ng-switch-when="numericinput">
@@ -130,7 +130,7 @@
                                            max="{{setMaxNumericInput(compositionitem,column)}}"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            data-field="{{column.attribute+rowindex}}"
-                                           number-spinner />
+                                           number-spinner/>
                                 </div>
                                 <div ng-switch-when="icon">
                                     <i class="fa" ng-class="loadIcon(compositionitem[column.attribute],column)"></i>
@@ -168,7 +168,7 @@
                                                maxlength="{{column.rendererParameters['maxlength']}}"
                                                placeholder="{{column.rendererParameters['placeholder']}}"
                                                ng-init="initField(column)"
-                                               dynamic-name="column.attribute" />
+                                               dynamic-name="column.attribute"/>
                                         <span class="input-group-addon" ng-if="column.rendererParameters['append']!=null">{{column.rendererParameters['append']}}</span>
                                     </div>
 
