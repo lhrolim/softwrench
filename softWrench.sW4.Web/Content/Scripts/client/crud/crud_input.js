@@ -108,7 +108,7 @@ app.directive('crudInput', ["contextService", "associationService", function (co
 
             this.shouldshowprint = function () {
                 return $scope.composition != "true";
-            }
+            };
 
             $scope.isEditing = function (schema, datamap) {
                 var id = datamap[schema.idFieldName];
@@ -120,12 +120,28 @@ app.directive('crudInput', ["contextService", "associationService", function (co
                 associationService.loadSchemaAssociations($scope.datamap, $scope.schema, { avoidspin: true });
             }
 
-            $scope.getPosition = function (schema) {
+            $scope.getPosition = function (schema, defaultPosition) {
+                if (!defaultPosition) {
+                    defaultPosition = "detail.primary";
+                }
+
                 if (!schema.properties || !schema.properties["commandbar.bottom"]) {
-                    return "detailform";
+                    return defaultPosition;
                 }
                 return schema.properties["commandbar.bottom"];
-            }
+            };
+
+            //#region command interception
+            (function(self) {
+                $scope.$on("sw:command:scope", function ($event, method) {
+                    var selectedTab = crudContextHolderService.getActiveTab();
+                    // null tab -> detail is the target scope
+                    if (!selectedTab) {
+                        self[method]();
+                    }
+                });
+            })(this);
+            //#endregion
 
             //#region $dirty checking
             function handleDirtyChecking() {

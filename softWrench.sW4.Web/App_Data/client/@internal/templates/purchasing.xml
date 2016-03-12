@@ -238,7 +238,7 @@
             <renderer type="default" params="width=4%"/>
           </section>
           <commandbars>
-            <commandgroup position="compositiontop" removeundeclared="false">
+            <commandgroup position="detail.secondary" removeundeclared="false">
               <command id ="Complete" icon="fa-thumbs-o-up" service="poreceivingService" method="completeReceipts" label="Complete Receipts" parameters="schema,datamap,parentdata" />
             </commandgroup>
           </commandbars>
@@ -253,7 +253,7 @@
           </field>
           <commandbars>
 
-            <commandgroup position="detailform" removeundeclared="true">
+            <commandgroup position="detail.primary" removeundeclared="true">
               <command id="Receive" icon="fa-check" service="poreceivingService" method="submitMatrecTrans" label="Save" parameters="schema,datamap"/>
               <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
             </commandgroup>
@@ -342,7 +342,7 @@
           <section id="compositions">
             <composition relationship="prline" label="PR Lines" ></composition>
             <commandbars>
-              <commandgroup position="detailform">
+              <commandgroup position="detail.primary">
                 <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                          showexpression="@status=='NEW'" successmessage="Purchase Request Deleted" position="left"/>
               </commandgroup>

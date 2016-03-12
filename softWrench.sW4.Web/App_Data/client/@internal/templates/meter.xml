@@ -53,7 +53,7 @@
 <!--            <renderer type="lookup" params="editable=true;width=10%"/>-->
 <!--          </association>-->
           <commandbars>
-            <commandgroup position="compositionbottom">
+            <commandgroup position="detail.primary">
               <removecommand id="additem"/>
               <removecommand id="print"/>
             </commandgroup>
@@ -129,7 +129,7 @@
             <renderer type="default" params="formatter=numberToBoolean"/>
           </field>
           <commandbars>
-            <commandgroup position="compositionbottom">
+            <commandgroup position="detail.primary">
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>
@@ -198,7 +198,7 @@
             <renderer type="lookup"  params="editable=true"/>
           </association>
           <commandbars>
-            <commandgroup position="compositionbottom">
+            <commandgroup position="detail.primary">
               <removecommand id="additem"/>
               <removecommand id="print"/>
             </commandgroup>

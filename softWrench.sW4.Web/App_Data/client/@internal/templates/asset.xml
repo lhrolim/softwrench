@@ -214,7 +214,7 @@
           </field>
           <field attribute="calnum" label="Calendar"/>
           <commandbars>
-            <commandgroup position="compositionbottom">
+            <commandgroup position="detail.primary">
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>

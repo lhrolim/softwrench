@@ -15,7 +15,7 @@
           <field attribute="fromparent" label="From Parent"/>
           <field attribute="toparent" label="To Parent"/>
           <commandbars>
-            <commandgroup position="compositionbottom">
+            <commandgroup position="detail.primary">
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>

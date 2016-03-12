@@ -576,10 +576,10 @@
                           parameters="schema,datamap" service="dispatchService" method="dispatchWO"/>
               </container>
             </commandgroup>
-            <commandgroup position="detailform">
-              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="left"/>
-            </commandgroup>
+<!--            <commandgroup position="detailform">-->
+<!--              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"-->
+<!--                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="left"/>-->
+<!--            </commandgroup>-->
           </commandbars>
         </schema>
       </schemas>

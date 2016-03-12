@@ -1,5 +1,6 @@
 <div>
-    <div class="context clearfix" data-class="commandbar" style="background: none; border-bottom: none" ng-show="!inline && ismodal=='false'">
+
+    <div style="background: none; border-bottom: none" ng-show="!inline && ismodal=='false'">
 
         <compositiontoolbar position="compositiontop"
                             schema="compositionlistschema"
@@ -191,7 +192,8 @@
                         <expanded-item-output displayables="compositiondetailschema.displayables"
                                               schema="compositiondetailschema"
                                               datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
-                                              cancelfn="cancelComposition()">
+                                              cancelfn="cancelComposition()"
+                                              class="clearfix">
                         </expanded-item-output>
                     </div>
                     <div class="expanded-item-composition" ng-if="!noupdateallowed">
@@ -199,7 +201,8 @@
                                              schema="compositiondetailschema"
                                              datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
                                              cancelfn="cancelComposition()"
-                                             savefn="save()">
+                                             savefn="save()"
+                                             class="clearfix">
                         </expanded-item-input>
                     </div>
                 </td>
@@ -230,27 +233,6 @@
 
         </div>
     </div>
-
-    <div class="form-actions hidden-phone form-group hiddenonprint commandbar" data-class="commandbar" ng-show="selecteditem==null && !inline">
-        <div class="spinner" data-class="spinner" id="detailspinner" ng-if="!inline"></div>
-        <table style="width: 100%;">
-            <tr>
-                <td style="text-align: center; vertical-align: middle;" data-class="commandbar">
-                    <compositiontoolbar position="compositionbottom"
-                                        schema="compositionlistschema"
-                                        parentschema="parentschema"
-                                        datamap="compositiondata"
-                                        parentdatamap="parentdata"
-                                        pagination-data="paginationData"
-                                        search-data="searchData"
-                                        search-sort="searchSort"
-                                        search-operator="searchOperator"
-                                        mode="{{mode}}" />
-                </td>
-            </tr>
-        </table>
-    </div>
-
     <div ng-if="newDetail" style="margin-top: 10px">
         <form name="compositionform">
             <div ng-init="setForm(compositionform)"></div>
@@ -266,6 +248,4 @@
                             parentschema="parentschema" />
         </form>
     </div>
-
-
 </div>
