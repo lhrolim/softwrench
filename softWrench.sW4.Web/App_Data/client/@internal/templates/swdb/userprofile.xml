@@ -42,7 +42,7 @@
                 <command icon="fa-users" label="Remove from Users" tooltip="Remove the current profile from multiple user accounts at once" id="removemultiple" service="userProfileService" method="removeMultiple"/>
               </container>
             </commandgroup>
-            <commandgroup id="#detailform">
+            <commandgroup position="detail.primary">
               <removecommand id="print"/>
               <command id="save" service="userProfileService" method="save"/>
               <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-remove" position="+save"/>

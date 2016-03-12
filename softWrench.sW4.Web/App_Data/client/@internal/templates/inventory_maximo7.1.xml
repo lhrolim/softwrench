@@ -229,7 +229,7 @@
             <property key="detail.navigationbuttons.disabled" value="true"/>
           </properties>
           <commandbars>
-            <commandgroup position="detailform" removeundeclared="true">
+            <commandgroup position="detail.primary" removeundeclared="true">
               <command id="additemtobatchissue" label="Add Item" service="inventoryService" method="displayNewIssueModal" parameters="schema,datamap"/>
               <command id="submitnewbatchissue" label="Submit" service="inventoryService" method="submitNewBatchIssue" parameters="schema,datamap" />
               <command id="cancelnewbatchissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" />
@@ -420,7 +420,7 @@
             <field attribute="gldebitacct" label="GL Debit Account" readonly="true"/>
           </section>
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>
@@ -466,7 +466,7 @@
             <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
           </section>
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>
@@ -520,7 +520,7 @@
             <field attribute="issueid" hidden="true"/>
           </section>
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <!--<removecommand id="save"/>-->
               <removecommand id="cancel"/>
               <!--<command id="return" position="&lt;print" label="Submit" service="inventoryService" method="returnInvIssue" parameters="datamap,$scope" successmessage="Return created"/>-->
@@ -602,7 +602,7 @@
           </section>
           <field attribute="issuetype" hidden="true"/>
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <removecommand id="cancel"/>
               <removecommand id="print"/>
               <removecommand id="save"/>
@@ -642,7 +642,7 @@
             <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
           </association>
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <command id="start_issuing" label="Next" service="inventoryService" position="&lt;save" method="navToBatchIssueDetail" parameters="schema,datamap" />
               <removecommand id="save"/>
               <removecommand id="print"/>
@@ -721,7 +721,7 @@
             </association>
           </section>
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <removecommand id="cancel"/>
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position=">print"/>
               <command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>
@@ -940,7 +940,7 @@
           </section>
           <event type="onload" service="inventoryService" method="onloadReservation"/>
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <removecommand id="save"/>
               <removecommand id="print"/>
               <command id="saveIssue" icon="fa fa-check" label="Save" service="inventoryService" method="submitReservedInventoryIssue" position="left" parameters="schema,datamap"/>

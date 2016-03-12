@@ -42,10 +42,10 @@
           <field label="Created Date" attribute="createdate"/>
           <field label="Type" attribute="doctype" hidden="true"/>
           <commandbars>
-            <commandgroup position="compositionbottom" removeundeclared="true">
+            <commandgroup position="detail.primary" removeundeclared="true">
               <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd"/>
-              <command id="save" icon="fa-check" service="$scope" method="save" label="Save" />
-              <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" />
+              <!--<command id="save" icon="fa-check" service="$scope" method="save" label="Save" />-->
+              <!--<command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" />-->
             </commandgroup>
           </commandbars>
         </list>
@@ -71,7 +71,7 @@
           <!--          <field hidden="true" attribute="ownertable"/>-->
           <field hidden="true" attribute="createdate"/>
           <commandbars>
-            <commandgroup position="compositionbottom"  >
+            <commandgroup position="detail.primary"  >
               <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                        showexpression="@status=='NEW'" successmessage="Attachment deleted"/>
             </commandgroup>

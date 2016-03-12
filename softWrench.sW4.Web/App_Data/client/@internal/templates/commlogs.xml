@@ -139,7 +139,7 @@
           </field>
 
           <commandbars>
-            <commandgroup position="detailform" removeundeclared="false">
+            <commandgroup position="detail.primary" removeundeclared="false">
               <command id="save" icon="fa-check" service="$scope" method="save" label="Send" />
             </commandgroup>
           </commandbars>

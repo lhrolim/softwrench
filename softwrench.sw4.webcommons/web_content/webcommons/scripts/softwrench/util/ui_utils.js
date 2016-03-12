@@ -11,12 +11,14 @@ $(function () {
             var headerHeight = $('.site-header').height();
             var paginationHeight = $('.affix-pagination').height();
             var theaderHeight = $('.listgrid-thead').height();
+            var offsetMargin = paginationHeight + theaderHeight - 1;
 
             $('.content').css('margin-top', headerHeight);
 
-            //only adjust if table header is fixed 
+            //only adjust if toolbar is fixed 
             if ($('.affix-pagination').css('position') == 'fixed') {
                 $('.affix-pagination').css('top', headerHeight);
+                $('#crudbodyform').css('margin-top', offsetMargin);
             }
 
             //only adjust if table header is fixed
@@ -28,7 +30,6 @@ $(function () {
                 }
 
                 var offsetTop = headerHeight + paginationHeight - adjustment - 1;
-                var offsetMargin = paginationHeight + theaderHeight - 1;
 
                 $('.listgrid-thead').css('top', offsetTop);
                 $('.listgrid-table').css('margin-top', offsetMargin);

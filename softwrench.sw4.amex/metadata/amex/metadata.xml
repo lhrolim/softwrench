@@ -122,7 +122,7 @@
           </field>
           
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.secondary">
               <removecommand id="print"/>
             </commandgroup>
           </commandbars>

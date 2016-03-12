@@ -195,7 +195,7 @@
         //$scope, $log, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService, dispatcherService, controllerInheritanceService
 
         controllerInheritanceService
-            .begin(self)
+            .begin(this)
             .inherit(BaseController, {
                 $scope: $scope,
                 $log: $log,
