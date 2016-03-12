@@ -33,14 +33,19 @@ namespace softWrench.sW4.Metadata.Security {
 
 
             var profile = user.MergedUserProfile;
-            var permission = profile.GetPermissionByApplication(application.Name);
+            var permission = profile.GetPermissionByApplication(application.Name, MetadataProvider.RoleByApplication(application.Name));
             if (permission == null) {
                 //no permission to that particular application
                 return SecurityModeCheckResult.Block;
             }
             var viewingExisting = request.Id != null || request.UserId != null;
             var isList = application.Schema.Stereotype == SchemaStereotype.List || request.SearchDTO != null;
-            if (isList && permission.AllowView) {
+            if (application.Schema.Stereotype.Equals(SchemaStereotype.Search)) {
+                //TODO: think about this in the future
+                return SecurityModeCheckResult.Allow;
+            }
+
+            if (isList && !permission.HasNoPermissions) {
                 return SecurityModeCheckResult.Allow;
             }
 

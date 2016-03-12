@@ -8,7 +8,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
         private const string FsLocSearchFacilityAttribute = "fsfacility";
         private const string FsLocSearchLocOfInterestAttribute = "fslocint";
         private const string FsLocSearchSwitchgearsAttribute = "fsswitchgear";
-        private const string FsLocSearchSelectedPcsAttribute = "fspcsselected";
+        private const string FsLocSearchSelectedPcsAttribute = "fspcslocations";
 
         /// <summary>
         /// Recovers the facility list from searchDto.
@@ -48,7 +48,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
         /// <summary>
         /// Recovers the list of selected pcs locations from searchDto.
         /// </summary>
-        public static List<string> GetSelectedPcsLocations(SearchRequestDto searchDto) {
+        public static List<string> GetPcsLocations(SearchRequestDto searchDto) {
             return AttributeToList(FsLocSearchSelectedPcsAttribute, searchDto);
         }
 

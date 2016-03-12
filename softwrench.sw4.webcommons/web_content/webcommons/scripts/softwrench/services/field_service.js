@@ -135,6 +135,9 @@
                                 if (displayable.rendererType == "numericinput" && parsedUserValue) {
                                     parsedUserValue = parseInt(parsedUserValue);
                                 }
+                                if (displayable.rendererType === "checkbox" && parsedUserValue) {
+                                    parsedUserValue = parseBooleanValue(parsedUserValue);
+                                }
                                 datamap[target] = parsedUserValue;
                             }
                         }

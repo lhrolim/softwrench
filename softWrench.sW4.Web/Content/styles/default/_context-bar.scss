@@ -3,6 +3,7 @@
 
     pagination {
         float: right;
+        margin-top: 5px;
     }
 }
 
@@ -11,7 +12,11 @@
         width: 100%;
         background: #eee;
         border-bottom: #000 1px solid;
-        padding: 5px 40px 10px 10px;
+        padding: 5px 40px 3px 0;
+
+        .right {
+            float: right;
+        }
 
         a {
             color: #555;
@@ -31,7 +36,7 @@
             }
 
             &.pagination {
-                padding-top: 7px;
+                padding-top: 5px;
             }
 
             &.total {
@@ -39,20 +44,32 @@
             }
         }
 
+        .separator {
+            float: left;
+            margin: 9px 10px 0 5px;
+            border-left: 1px solid #bbb;
+            width: 1px;
+            padding: 2px 0;
+        }
+
         label {
             font-weight: normal;
+        }
 
-            .buttons {
-                display: inline-block;
-                margin: 0 5px 5px 0;
+        .buttons {
+            display: inline-block;
+            margin: 0 5px 5px 0;
 
+            .btn {
+                font-size: 12px;
+            }
 
-                .btn-context {
-                    background: transparent;
+            .btn-context {
+                background: transparent;
+                padding: 7px 12px 5px;
 
-                    &:hover {
-                        background: #ddd;
-                    }
+                &:hover {
+                    background: #ddd;
                 }
             }
         }
@@ -71,6 +88,17 @@
             padding-top: 0px;
             padding-bottom: 8px;
             border-bottom: none;
+        }
+    }
+}
+
+.compositiontoolbar, .compositiontop {
+    .buttons {
+        display: inline-block;
+        margin: 0 5px 5px 0;
+
+        .btn {
+            font-size: 12px;
         }
     }
 }
@@ -101,13 +129,12 @@
 
 @media all and (min-width: 992px) {
     .container {
-
         .context {
             .group {
                 margin: 5px 0 0;
 
                 &:first-child {
-                    margin-left: 10px;
+                    margin-left: 5px;
                 }
             }
         }
@@ -118,7 +145,7 @@
     }
 }
 
-.gridtop .applicationcommand {
+/*.gridtop .applicationcommand {
     display: none;
 }
 
@@ -126,7 +153,7 @@
     .gridtop .applicationcommand {
         display: inline-block;
     }
-}
+}*/
 
 #affixpagination1 {
     border-bottom: none;

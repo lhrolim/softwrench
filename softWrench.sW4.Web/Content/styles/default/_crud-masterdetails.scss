@@ -1,7 +1,8 @@
 .composition {
     &.master-details {
-        .jspVerticalBar {
-            width: 8px;
+        .row {
+            margin-left: -15px;
+            margin-right: -15px;
         }
 
         .master {

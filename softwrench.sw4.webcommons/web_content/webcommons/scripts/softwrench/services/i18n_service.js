@@ -196,6 +196,13 @@
 
             if (schema.idDisplayable && userId != null) {
                 return '{0} {1}'.format(schema.idDisplayable, userId);
+
+                //TODO: evaluate returning the userId as fallback, unless a schema property is set to hide the id lable
+                //if (userId != null) {
+                //    if (schema.idDisplayable) {
+                //        return '{0} {1}'.format(schema.idDisplayable, userId);
+                //    }
+                //    return ' ' + userId;
             }
             return "";
         },

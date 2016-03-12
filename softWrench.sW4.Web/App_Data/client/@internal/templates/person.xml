@@ -53,9 +53,8 @@
 
           <commandbars>
             <commandgroup position="gridtop">
-              <command id="new" icon="fa-plus" service="redirectService" method="goToApplicationView" parameters="person,newPersonDetail" label="New User" tooltip="New User" position="&lt;filter"/>
+              <command id="new" icon="fa-plus" service="redirectService" method="goToApplicationView" parameters="person,newPersonDetail" label="New User" tooltip="New User" position="left"/>
             </commandgroup>
-
           </commandbars>
         </schema>
 
@@ -115,6 +114,12 @@
             </field>
           </tab>
 
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <removecommand id="save"/>
+              <command id="savePerson" icon="fa fa-check" label="Save" service="personService" method="submitPerson" position="left" parameters="schema,datamap"/>
+            </commandgroup>
+          </commandbars>
         </schema>
 
         <schema id="myprofiledetail" parentschema="detail" title="Edit My Profile">
@@ -190,8 +195,35 @@
           </tab>
 
         </schema>
-
+        
         <schema id="userselectlist" stereotype="list.selection.modal" title="Users">
+          <properties>
+            <property key="schema.customparamprovider" value="userProfileService.getProfileId"/>
+          </properties>
+          <filters>
+            <optionfilter attribute="maxuser_.active" allowblank="false" style="width:300px" eager="true">
+              <f:option label="Active" value="1" />
+              <f:option label="Inactive" value="0" />
+            </optionfilter>
+          </filters>
+
+          <field attribute="personuid" hidden="true"/>
+          <field attribute="personid" label="Username"/>
+          <field attribute="firstname" label="First Name"/>
+          <field attribute="lastname" label="Last Name"/>
+          <field attribute="#isactive" label="Active (softWrench)" enableexpression="false" readonly="true">
+            <renderer type="checkbox"/>
+          </field>
+          <field attribute="maxuser_.active" label="Active (MAXIMO)" readonly="true" enableexpression="false">
+            <renderer type="checkbox" />
+          </field>
+          <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>
+        </schema>
+
+        <schema id="userremovelist" stereotype="list.selection.modal" title="Users">
+          <properties>
+            <property key="schema.customparamprovider" value="userProfileService.getProfileId"/>
+          </properties>
           <filters>
             <optionfilter attribute="maxuser_.active" allowblank="false" style="width:300px" eager="true">
               <f:option label="Active" value="1" />

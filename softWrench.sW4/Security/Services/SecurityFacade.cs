@@ -106,8 +106,7 @@ namespace softWrench.sW4.Security.Services {
             return dbUser.Password.Equals(encryptedPassword);
         }
 
-        private static InMemoryUser UserFound(User dbUser, string userTimezoneOffset) {
-
+        public static InMemoryUser UpdateUserCache(User dbUser, string userTimezoneOffset) {
             int? userTimezoneOffsetInt = null;
             int tmp;
             if (int.TryParse(userTimezoneOffset, out tmp)) {
@@ -130,6 +129,11 @@ namespace softWrench.sW4.Security.Services {
             } catch {
                 Log.Warn("Duplicate user should not happen here " + inMemoryUser.Login);
             }
+            return inMemoryUser;
+        }
+
+        private static InMemoryUser UserFound(User dbUser, string userTimezoneOffset) {
+            var inMemoryUser = UpdateUserCache(dbUser, userTimezoneOffset);
             _eventDispatcher.Dispatch(new UserLoginEvent(inMemoryUser));
             if (Log.IsDebugEnabled) {
                 Log.Debug(String.Format("user:{0} logged in with roles {1}; profiles {2}; locations {3}",

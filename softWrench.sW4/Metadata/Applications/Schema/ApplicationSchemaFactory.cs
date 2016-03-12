@@ -97,20 +97,15 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         }
 
         private static void SetTitle(string applicationName, List<IApplicationDisplayable> displayables, ApplicationSchemaDefinition schema) {
-            if (schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.DetailTitleId)) {
-                schema.IdDisplayable = schema.Properties[ApplicationSchemaPropertiesCatalog.DetailTitleId];
-            } else {
-                foreach (var t in displayables) {
-                    if (typeof(ApplicationSection).IsAssignableFrom(t.GetType())) {
-                        SetTitle(applicationName, ((ApplicationSection)t).Displayables, schema);
-                    } else {
-                        if (t.Role == applicationName + "." + schema.UserIdFieldName) {
-                            schema.IdDisplayable = t.Label;
-                            return;
-                        }
-                    }
-                }
+            if (schema.IdDisplayable != null) {
+                return;
             }
+            var fields = DisplayableUtil.GetDisplayable<ApplicationFieldDefinition>(typeof(ApplicationFieldDefinition), displayables);
+            var userIdField = fields.FirstOrDefault(f => f.Attribute.EqualsIc(schema.UserIdFieldName));
+            if (userIdField == null) {
+                return;
+            }
+            schema.IdDisplayable = userIdField.Label;
         }
 
         private static void MergeWithParentProperties(ApplicationSchemaDefinition schema) {

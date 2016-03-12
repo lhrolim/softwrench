@@ -7,6 +7,7 @@ using Iesi.Collections.Generic;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Quartz.Util;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.entities.security;
@@ -47,6 +48,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
                 profileOb = _userProfileManager.FindByName(profileDatamap.GetAttribute("name") as string);
             }
             HandleBasicRoles(profileOb, profileDatamap);
+            //HandleUsers(profileOb, profileDatamap);
             return result;
         }
 
@@ -55,18 +57,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null).Select(a => new AssociationOption(a.ApplicationName, a.Title));
         }
 
-//        [UsedImplicitly]
-//        public IEnumerable<IAssociationOption> GetSelectableModes(OptionFieldProviderParameters parameters) {
-//            var entity = parameters.OriginalEntity;
-//            var allowCreation = "true".EqualsIc(entity.GetStringAttribute("#appallowcreation"));
-//            var allowUpdate = "true".EqualsIc(entity.GetStringAttribute("#appallowupdate"));
-//
-//            //TODO: include logic based on permissions
-//            var enumOptions = new List<SchemaPermissionMode>(Enum.GetValues(typeof(SchemaPermissionMode)).Cast<SchemaPermissionMode>());
-//           
-//            var options = enumOptions.Select(i => new PriorityBasedAssociationOption(i.GetName(), i.Label(), i.Priority()));
-//            return options.OrderBy(a => a.Priority);
-//        }
+        //        [UsedImplicitly]
+        //        public IEnumerable<IAssociationOption> GetSelectableModes(OptionFieldProviderParameters parameters) {
+        //            var entity = parameters.OriginalEntity;
+        //            var allowCreation = "true".EqualsIc(entity.GetStringAttribute("#appallowcreation"));
+        //            var allowUpdate = "true".EqualsIc(entity.GetStringAttribute("#appallowupdate"));
+        //
+        //            //TODO: include logic based on permissions
+        //            var enumOptions = new List<SchemaPermissionMode>(Enum.GetValues(typeof(SchemaPermissionMode)).Cast<SchemaPermissionMode>());
+        //           
+        //            var options = enumOptions.Select(i => new PriorityBasedAssociationOption(i.GetName(), i.Label(), i.Priority()));
+        //            return options.OrderBy(a => a.Priority);
+        //        }
 
         /// <summary>
         /// This method just need to return a non null value if more than one schema is available for selection, otherwise, just by selecting the mode, it should be enough for the user
@@ -143,9 +145,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             profileDatamap.SetAttribute("#basicroles_", basicRoles);
         }
 
+        //private void HandleUsers(UserProfile profileOb, DataMap profileDatamap) {
+        //    var users = SWDAO.FindByNativeQuery("SELECT * FROM SW_USER2 WHERE ID IN (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {0})".FormatInvariant(profileOb.Id));
+        //    // Get additinal information about each user from maximo database (firstname, lastname)
+        //    profileDatamap.SetAttribute("#users_", users);
+        //}
 
-        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
-            JObject currentData) {
+        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var result = base.GetCompositionData(application, request, currentData);
             if (request.CompositionList != null && request.CompositionList.Contains("#fieldPermissions_") && request.CompositionList.Count == 1) {
                 var app = MetadataProvider.Application(result.OriginalCruddata.GetStringAttribute("application"));
@@ -162,14 +168,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return result;
         }
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch,
-            Tuple<string, string> userIdSite) {
-
+        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
             var profile = UserProfile.FromJson(json);
             SecurityFacade.GetInstance().SaveUserProfile(profile);
-
-
-
             return new TargetResult("" + profile.Id, "" + profile.Name, profile);
         }
 

@@ -517,6 +517,13 @@
         </documentation>
       </annotation>
     </attribute>
+    <attribute name="searchoperation" type="string">
+      <annotation>
+        <documentation>
+          The id of the search operator to be used on a search for this field.
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="Renderer">
@@ -805,6 +812,13 @@
         </documentation>
       </annotation>
     </attribute>
+    <attribute name="searchoperation" type="string">
+      <annotation>
+        <documentation>
+          The id of the search operator to be used on a search for this field.
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="OptionType">
@@ -847,6 +861,7 @@
       <enumeration value="compositionlist"></enumeration>
       <enumeration value="compositiondetail"></enumeration>
       <enumeration value="detail.modal"></enumeration>
+      <enumeration value="search"></enumeration>
     </restriction>
   </simpleType>
 

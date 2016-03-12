@@ -100,10 +100,13 @@
                             return;
                         }
                     }
+                    var fields = $parse(datamappropertiesName)($scope);
+
+
                     var eventToDispatch = {
                         oldValue: oldValue,
                         newValue: newValue,
-                        fields: $parse(datamappropertiesName)($scope),
+                        fields: fields,
                         parentdata: $scope.parentdata,
                         displayables: displayables,
                         scope: $scope,
@@ -114,7 +117,7 @@
                             var resolved = contextService.fetchFromContext("associationsresolved", false, true);
                             var phase = resolved ? 'configured' : 'initial';
                             var dispatchedbytheuser = resolved ? true : false;
-                            var hook = associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser });
+                            var hook = associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser, fields: fields });
                             hook.then(function(hookResult) {
                                 var result = associationService.updateAssociations(association, $scope);
                                 if (result != undefined && result === false) {

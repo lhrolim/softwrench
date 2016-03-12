@@ -105,17 +105,23 @@
         public const string DisableDetails = "list.disabledetails";
 
         /// <summary>
-        ///  property for specifying the options of the pagination
+        /// property for specifying the options of the pagination
         /// </summary>
         public const string PaginationOptions = "list.paginationoptions";
 
         /// <summary>
-        ///  Destination schema of the new button of empty list.
+        /// Destination schema of the new button of empty list.
         /// </summary>
         public const string NoResultsNewSchema = "list.noresultsnewschema";
 
         /// <summary>
-        ///  Property to prevent the adition of the new button of empty list.
+        /// Function to be executed before the create new page to be opened from no results button.
+        /// Can return a datamap to be pre filled on the create new page.
+        /// </summary>
+        public const string NoResultsPreAction = "list.noresultspreaction";
+
+        /// <summary>
+        /// Property to prevent the adition of the new button of empty list.
         /// </summary>
         public const string PreventNoResultsNew = "list.preventnoresultsnew";
 
@@ -220,5 +226,10 @@
         /// The width of the search panel handle.
         /// </summary>
         public static string SearchHandleWidthExpanded = "search.panelwidth";
+
+        /// <summary>
+        /// Used to specify a service.function() on a schema that is currently called when changing pages in pagination to add custom parameters to the call.
+        /// </summary>
+        public static string SchemaCustomParamProvider = "schema.customparamprovider";
     }
 }

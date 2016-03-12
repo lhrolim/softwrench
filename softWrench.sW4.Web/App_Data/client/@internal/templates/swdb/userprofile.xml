@@ -37,8 +37,9 @@
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate"/>
-                <command label="Apply to Users" tooltip="Apply the current profile to multiple user accounts at once" id="applymultiple" service="userProfileService" method="applyMultiple"/>
+                <command icon="fa-clone" label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate"/>
+                <command icon="fa-users" label="Apply to Users" tooltip="Apply the current profile to multiple user accounts at once" id="applymultiple" service="userProfileService" method="applyMultiple"/>
+                <command icon="fa-users" label="Remove from Users" tooltip="Remove the current profile from multiple user accounts at once" id="removemultiple" service="userProfileService" method="removeMultiple"/>
               </container>
             </commandgroup>
             <commandgroup position="detail.primary">
@@ -137,7 +138,12 @@
             </section>
 
           </section>
-
+          <!--<tab label="Users" id="users">
+            <composition detailschema="" fetchtype="lazy" relationship="#users" printschema="" inline="true">
+              <collectionproperties allowcreation="false" listschema="userRepresentation" />
+            </composition>
+          </tab>-->
+          
           <event type="onschemafullyloaded" method="onSchemaLoad" service="userProfileService"/>
         </detail>
 
@@ -173,6 +179,19 @@
           <field label="Action" attribute="#actionlabel" />
         </schema>
 
+        <!--<schema id="userRepresentation" stereotype="list.selection" >
+          <event type="onload" service="userProfileService" method="activeUsersRefreshed"/>
+          <field hidden="true" attribute="userid"/>
+          <field label="User" attribute="username" />
+          --><!--<field label="First Name" attribute="firstname"/>--><!--
+          --><!--<field label="Last Name" attribute="lastname"/>--><!--
+          <properties>
+            <property key="list.paginationsize" value="10"/>
+            <property key="list.paginationoptions" value="10"/>
+            <property key="list.selectionmodebydefault" value="true"/>
+          </properties>
+        </schema>-->
+
         <schema id="batchupdate" stereotype="detail.modal">
           <field attribute="profileid" hidden="true"/>
           <optionfield attribute="applications" providerattribute="topLevelApplications" label="Application">
@@ -184,7 +203,7 @@
           <field attribute="allowupdate" label="Update Records?">
             <renderer type="checkbox" params="layout=left"/>
           </field>
-          <field attribute="allowview" label="View Records?">
+          <field attribute="allowcreation" label="Create Records?">
             <renderer type="checkbox" params="layout=left"/>
           </field>
         </schema>

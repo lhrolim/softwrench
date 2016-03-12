@@ -183,7 +183,8 @@
                         <expanded-item-output displayables="compositiondetailschema.displayables"
                                               schema="compositiondetailschema"
                                               datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
-                                              cancelfn="cancelComposition()">
+                                              cancelfn="cancelComposition()"
+                                              class="clearfix">
                         </expanded-item-output>
                     </div>
                     <div class="expanded-item-composition" ng-if="!noupdateallowed">
@@ -191,7 +192,8 @@
                                              schema="compositiondetailschema"
                                              datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
                                              cancelfn="cancelComposition()"
-                                             savefn="save()">
+                                             savefn="save()"
+                                             class="clearfix">
                         </expanded-item-input>
                     </div>
                 </td>
