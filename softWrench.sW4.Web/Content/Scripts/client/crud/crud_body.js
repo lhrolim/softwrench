@@ -391,6 +391,10 @@
                         });
                 };
 
+                this.cancel = function(data, schema) {
+                    return $scope.cancel(data, schema);
+                }
+
                 $scope.cancel = function (data, schema) {
                     var previousDataToUse = data;
                     //https://controltechnologysolutions.atlassian.net/browse/SWWEB-1717
