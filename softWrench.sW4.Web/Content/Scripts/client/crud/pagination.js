@@ -89,7 +89,7 @@ app.directive('pagination', ['contextService', '$log', function (contextService,
             }
 
             $scope.shouldShowPagination = function() {
-                return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected;
+                return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected && ($scope.paginationData && $scope.paginationData.pageCount > 1);
             }
 
             $scope.getDirectionClass = function (direction) {

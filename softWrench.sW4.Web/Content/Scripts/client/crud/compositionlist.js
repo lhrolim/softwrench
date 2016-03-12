@@ -365,9 +365,7 @@
         $scope.showPagination = function () {
             return !$scope.isNoRecords() && // has items to show
                 !!$scope.paginationData && // has paginationdata
-                $scope.paginationData.paginationOptions.some(function (option) { // totalCount is bigger than at least one option
-                    return $scope.paginationData.totalCount > option;
-                });
+                $scope.paginationData.pageCount > 1;
         }
 
 
@@ -617,7 +615,9 @@
                     redirectService.redirectToTab('main');
                     return;
                 }
-                modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, $scope.save, null, $scope.parentdata, $scope.parentschema);
+                modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, function saveCallBack(datamap) {
+                    $scope.save(datamap);
+                }, null, $scope.parentdata, $scope.parentschema);
             } else {
                 //TODO: switch to edit
                 $scope.newDetail = true;
@@ -768,7 +768,7 @@
             compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
                 if (!shouldEditInModal()) {
                     $scope.doToggle(compositionId, result.resultObject.fields, item);
-                    $timeout(function() {
+                    $timeout(function () {
                         $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
                     }, 0, false);
                 }
@@ -985,7 +985,9 @@
             $scope.selecteditem = null;
             $scope.collapseAll();
             // select first page
-            return $scope.selectPage(1);
+            return $scope.selectPage(1).then(function (result) {
+                crudContextHolderService.setTabRecordCount($scope.relationship, null, $scope.paginationData.totalCount);
+            });
         };
 
 
@@ -1112,8 +1114,8 @@
         };
 
         //#region command interception
-        (function(self) {
-            $scope.$on("sw:command:scope", function($event, method) {
+        (function (self) {
+            $scope.$on("sw:command:scope", function ($event, method) {
                 var selectedTab = crudContextHolderService.getActiveTab();
                 if (selectedTab === $scope.relationship) {
                     self[method]();
