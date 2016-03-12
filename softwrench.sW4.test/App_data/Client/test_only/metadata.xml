@@ -861,7 +861,7 @@
           <customization position="classstructureid"></customization>
 
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <command id="customizationtest" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="right"/>
             </commandgroup>

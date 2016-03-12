@@ -19,6 +19,12 @@
   <commandgroup position="detail.secondary" platform="web">
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint"/>
   </commandgroup>
+
+
+
+  <commandgroup position="detailform" platform="web">
+    
+  </commandgroup>
   
   <commandgroup position="gridtop.selection" platform="web">
     <togglecommand id="toggleselectionmode" position="+profiles" initialstateexpression="$scope:toggleSelectionModeInitialValue">

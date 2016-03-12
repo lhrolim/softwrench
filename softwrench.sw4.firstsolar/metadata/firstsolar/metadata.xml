@@ -351,7 +351,7 @@
           </optionfield>
 
           <commandbars>
-            <commandgroup position="detailform" platform="web">
+            <commandgroup position="detail.primary" platform="web">
               <removecommand id="save"/>
               <removecommand id="print"/>
               <removecommand id="cancel"/>
