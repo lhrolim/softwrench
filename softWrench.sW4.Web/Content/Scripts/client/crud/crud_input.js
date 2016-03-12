@@ -120,9 +120,13 @@ app.directive('crudInput', ["contextService", "associationService", function (co
                 associationService.loadSchemaAssociations($scope.datamap, $scope.schema, { avoidspin: true });
             }
 
-            $scope.getPosition = function (schema) {
+            $scope.getPosition = function (schema, defaultPosition) {
+                if (!defaultPosition) {
+                    defaultPosition = "detail.primary";
+                }
+
                 if (!schema.properties || !schema.properties["commandbar.bottom"]) {
-                    return "detail.primary";
+                    return defaultPosition;
                 }
                 return schema.properties["commandbar.bottom"];
             };

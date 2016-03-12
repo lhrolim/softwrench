@@ -343,14 +343,9 @@ namespace softWrench.sW4.Util {
             }
         }
 
-        public static bool UIShowToolbarLabels
-        {
-            get
-            {
-                var flagStr = MetadataProvider.GlobalProperty("ui.toolbars.showlabels");
-                var flag = true;
-                bool.TryParse(flagStr, out flag);
-                return flag;
+        public static bool UIShowToolbarLabels {
+            get {
+                return !"false".EqualsIc(MetadataProvider.GlobalProperty("ui.toolbars.showlabels"));
             }
         }
 
@@ -506,8 +501,8 @@ namespace softWrench.sW4.Util {
                     return swdbConnectionString;
                 }
                 //need to assure that we use the real swdb_urls, in order for it to work on pr environments
-                var url = MetadataProvider.GlobalProperty(MetadataProperties.SWDBUrl, true,false,true);
-                var provider = MetadataProvider.GlobalProperty(MetadataProperties.SWDBProvider, true,false, true);
+                var url = MetadataProvider.GlobalProperty(MetadataProperties.SWDBUrl, true, false, true);
+                var provider = MetadataProvider.GlobalProperty(MetadataProperties.SWDBProvider, true, false, true);
 
 
                 return new ConnectionStringSettings("swdb", url, provider);
