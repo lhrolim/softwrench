@@ -16,10 +16,32 @@
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>    
   </commandgroup>
 
+
+
+
   <commandgroup position="detail.secondary" platform="web">
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint"/>
   </commandgroup>
 
+
+  <!-- Modal commands-->
+  
+  <commandgroup position="modal.detail.primary" platform="web">
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" primary="true"/>
+    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
+  </commandgroup>
+
+
+  <commandgroup position="modal.detail.secondary" platform="web">
+
+  </commandgroup>
+
+  <commandgroup position="modal.actions" platform="web">
+
+  </commandgroup>
+
+
+  <!-- End modal regions-->
 
 
   <commandgroup position="detailform" platform="web">
@@ -86,7 +108,7 @@
 
   <commandgroup position="detailform_modal" platform="web">
     <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave" primary="true"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
+    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.crud.list.filter.modal.cancel,schema"/>
   </commandgroup>
 
   <commandgroup position="compositiontop" platform="web">

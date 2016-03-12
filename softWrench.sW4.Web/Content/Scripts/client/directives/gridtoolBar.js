@@ -342,17 +342,17 @@ app.directive("crudbodydetailtoolbar", ["contextService", function (contextServi
 
             controllerInheritanceService.begin(this)
                 .inherit(sharedController, { $scope: $scope })
-                .overrides()
-                .scope($scope, "executeScopeCommand", function (original, params, context) {
-                    var command = params[0];
-                    var method = $scope.ctrlfns[command.method];
-                    // command can be execute in the current scope
-                    if (angular.isFunction(method)) {
-                        return original.apply(context, params);
-                    }
-                    // $broadcast event so it can be intercepted and executed in the correct scope
-                    return $scope.$root.$broadcast("sw:command:scope", command.method);
-                });
+//                .overrides()
+//                .scope($scope, "executeScopeCommand", function (original, params, context) {
+//                    var command = params[0];
+//                    var method = $scope.ctrlfns[command.method];
+//                    // command can be execute in the current scope
+//                    if (angular.isFunction(method)) {
+//                        return original.apply(context, params);
+//                    }
+//                    // $broadcast event so it can be intercepted and executed in the correct scope
+//                    return $scope.$root.$broadcast("sw:command:scope", command.method);
+//                });
         }]
 
     };

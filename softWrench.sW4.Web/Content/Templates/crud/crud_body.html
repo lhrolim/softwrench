@@ -11,12 +11,12 @@
     <div id="affixpagination" class="hiddenonprint grid-header" ng-class="{'affix-pagination' : ismodal !== 'true' }">
         <div class="context clearfix header-menu" ng-if="isDetail">
             <div class="left">
-                <crudbodydetailtoolbar datamap="datamap" position="detail.primary" schema="schema"/>
-                <div class="separator">&nbsp;</div>
-                <crudbodydetailtoolbar datamap="datamap" position="detail.secondary" schema="schema"/>
-                <crudbodydetailtoolbar datamap="datamap" mode="'input'" position="actions" schema="schema" />
+                <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.primary','detail.primary')}}" schema="schema"/>
+                <div class="separator" ng-if="ismodal !== 'true'">&nbsp;</div>
+                <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.secondary','detail.secondary')}}" schema="schema"/>
+                <crudbodydetailtoolbar datamap="datamap" mode="'input'" position="{{getPosition(schema,'toolbar.detail.actions','actions')}}" schema="schema" />
             </div>
-            <div class="right">
+            <div class="right" ng-if="ismodal !== 'true'">
                 <div class="group pagination">
                     <a ng-click="crawl(0)" ng-disabled="!disableNavigationButton(0)" href="#" rel="tooltip" data-original-title="Previous"><i class="fa fa-chevron-down"></i></a>&ensp;
                     <a ng-click="crawl(1)" ng-disabled="!disableNavigationButton(1)" href="#" rel="tooltip" data-original-title="Next"><i class="fa fa-chevron-up"></i></a>
