@@ -142,7 +142,7 @@
             log.debug(msg.format(displayable.attribute, rendererType, valueToLog));
 
             if (rendererType === 'autocompleteclient') {
-                var contextData = null;
+                var contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
                 // special case of a composition list
                 if (compositionService.isCompositionListItem(scope.datamap)) {
                     contextData = compositionService.buildCompositionListItemContext(contextData, scope.datamap, scope.schema);

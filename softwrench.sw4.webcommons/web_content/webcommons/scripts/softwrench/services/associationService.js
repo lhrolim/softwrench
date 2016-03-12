@@ -132,7 +132,8 @@
 
 
             var key = associationFieldMetadata.associationKey;
-            var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.schema);
+            var contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+            var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.schema, contextData);
 
 
             crudContextHolderService.updateLazyAssociationOption(key, underlyingValue, true);
@@ -231,7 +232,7 @@
                 scope.blockedassociations[dependantFieldName] = zeroEntriesFound;
                 scope.associationSchemas[dependantFieldName] = array.associationSchemaDefinition;
 
-                var contextData = null;
+                var contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
                 // special case of a composition list
                 if (compositionService.isCompositionListItem(scope.datamap)) {
                     contextData = compositionService.buildCompositionListItemContext(contextData, scope.datamap, scope.schema);

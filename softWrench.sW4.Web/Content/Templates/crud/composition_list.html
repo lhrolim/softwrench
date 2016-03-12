@@ -25,6 +25,10 @@
                     <!--batchMode-->
                 </th>
 
+                <th ng-if="showEditButton()">
+                    <!--batchMode-->
+                </th>
+
                 <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multiple'">
                     <!--Multiselect-->
                 </th>
@@ -54,6 +58,12 @@
                     <button class="btn" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
                         <i class="fa fa-caret-right" ng-hide="isItemExpanded(compositionitem)"></i>
                         <i class="fa fa-caret-down" ng-show="isItemExpanded(compositionitem)"></i>
+                    </button>
+                </td>
+
+                <td ng-if="showEditButton()">
+                    <button class="btn" ng-click="toggleDetails(compositionitem,column,'edit',$event,rowindex)">
+                        <i class="fa fa-edit"></i>
                     </button>
                 </td>
 
@@ -87,7 +97,7 @@
                                     <autocomplete-client-input parentdata="parentdata"
                                                   datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
                                                   disabledassociations="disabledassociations" blockedassociations="blockedassociations"
-                                                  mode="composition"
+                                                  mode="composition" ismodal="ismodal"
                                                   displayablepath="{{getApplicationPah(compositionitem,column)}}"/>
                                 </div>
                             </ng-switch>
@@ -188,7 +198,7 @@
             </tr>
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
                 <td colspan="100%" style="background-color: white" class="detaildata">
-                    <div class="expanded-item-composition" ng-if="noupdateallowed">
+                    <div class="expanded-item-composition" ng-if="isExpandReadOnly()">
                         <expanded-item-output displayables="compositiondetailschema.displayables"
                                               schema="compositiondetailschema"
                                               datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
@@ -196,7 +206,7 @@
                                               class="clearfix">
                         </expanded-item-output>
                     </div>
-                    <div class="expanded-item-composition" ng-if="!noupdateallowed">
+                    <div class="expanded-item-composition" ng-if="!isExpandReadOnly()">
                         <expanded-item-input displayables="compositiondetailschema.displayables"
                                              schema="compositiondetailschema"
                                              datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"

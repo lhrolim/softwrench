@@ -15,7 +15,8 @@
                     schema: '=',
                     fieldMetadata: '=',
                     displayablepath: '@',
-                    mode: '@'
+                    mode: '@',
+                    ismodal: '='
                 },
 
 

@@ -511,6 +511,7 @@
         }
 
         this.newDetailFn = function () {
+            $scope.isUpdate = true;
             var datamap = {
                 _iscreation: true
             }
@@ -704,6 +705,8 @@
         /// <param name="column">the specific column clicked,might be used by different implementations</param>
         $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex) {
 
+            $scope.isUpdate = columnMode === "edit";
+
             // if there is a custom list click action, do it
             var customAction = $scope.compositionlistschema.properties["list.click.event"];
             if (customAction) {
@@ -731,7 +734,9 @@
             }
 
             var compositionId = item[$scope.compositionlistschema.idFieldName];
-            var updating = $scope.collectionproperties.allowUpdate;
+
+
+            var updating = parseBooleanValue($scope.collectionproperties.allowUpdate);
 
             var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
             if (fullServiceName != null) {
@@ -761,10 +766,15 @@
                 $(window).trigger('resize');
             }, false);
 
-            var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
-            if (!needServerFetching || $scope.isBatch()) {
+            if ($scope.isBatch()) {
                 //batches should always pick details locally, therefore make sure to adjust extraprojectionfields on list schema
                 $scope.doToggle(compositionId, item, item);
+                return;
+            }
+
+            var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
+            if (!needServerFetching) {
+                $scope.innerToggleDetails(false, compositionId, item, item);
                 return;
             }
 
@@ -776,26 +786,42 @@
             }
 
             compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
-                if (!shouldEditInModal()) {
-                    $scope.doToggle(compositionId, result.resultObject.fields, item);
-                    $timeout(function () {
+                $scope.innerToggleDetails(true, compositionId, result.resultObject.fields, item);
+            });
+        };
+
+        $scope.innerToggleDetails = function (fromServer, id, item, originalListItem) {
+            if (!shouldEditInModal()) {
+                $scope.doToggle(id, item, originalListItem);
+                if (fromServer) {
+                    $timeout(function() {
                         $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
                     }, 0, false);
                 }
+                return;
+            }
 
-                // Check that main tab has all required fields filled before opening modal
-                var parentDatamap = crudContextHolderService.rootDataMap();
-                var parentSchema = crudContextHolderService.currentSchema();
-                if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap.fields).length > 0) {
-                    //crudContextHolderService.setActiveTab(null);
-                    redirectService.redirectToTab('main');
-                    return;
-                }
-                modalService.show($scope.compositiondetailschema, result.resultObject.fields, {}, $scope.save, null, $scope.parentdata, $scope.parentschema);
-            });
+            // Check that main tab has all required fields filled before opening modal
+            var parentDatamap = crudContextHolderService.rootDataMap();
+            var parentSchema = crudContextHolderService.currentSchema();
+            if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap.fields).length > 0) {
+                //crudContextHolderService.setActiveTab(null);
+                redirectService.redirectToTab('main');
+                return;
+            }
+            modalService.show($scope.compositiondetailschema, item, {}, $scope.save, null, $scope.parentdata, $scope.parentschema);
+        }
 
+        $scope.isUpdate = false;
 
-        };
+        // TODO: decide what is better for batch
+        $scope.isExpandReadOnly = function() {
+            return ($scope.noupdateallowed || !$scope.isUpdate) && !$scope.isBatch();
+        }
+
+        $scope.showEditButton = function() {
+            return $scope.hasDetailSchema() && !$scope.noupdateallowed && !$scope.isBatch();
+        }
 
         /***************Batch functions **************************************/
 
@@ -891,6 +917,7 @@
         /***************END Batch functions **************************************/
 
         $scope.newDetailFn = function () {
+            $scope.isUpdate = true;
             var datamap = {
                 _iscreation: true
             }
@@ -1202,7 +1229,8 @@
 
         //#region modal helpers
         function shouldEditInModal() {
-            return !($scope.compositionlistschema.properties && "true" === $scope.compositionlistschema.properties["list.click.openinline"]);
+            var openInLine = $scope.compositionlistschema.properties && "true" === $scope.compositionlistschema.properties["list.click.openinline"];
+            return !openInLine && $scope.isUpdate;
         }
 
         function getModalCrudFormController() {
