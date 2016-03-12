@@ -1275,5 +1275,4 @@
             controller: CompositionListController
         };
     }]);
-
 })(angular, app);
