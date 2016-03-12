@@ -78,7 +78,6 @@
             },
             template: "<div></div>",
             link: function (scope, element, attrs) {
-                scope.datamap["_iscreation"] = true;
                 if (angular.isArray(scope.displayables)) {
                     fieldService.fillDefaultValues(scope.displayables, scope.datamap, scope);
                     element.append(
@@ -514,7 +513,10 @@
         }
 
         this.newDetailFn = function () {
-            $scope.edit({});
+            var datamap = {
+                _iscreation: true
+            }
+            $scope.edit(datamap);
         };
 
         $scope.draggableValue = function () {
@@ -889,7 +891,10 @@
         /***************END Batch functions **************************************/
 
         $scope.newDetailFn = function () {
-            $scope.edit({});
+            var datamap = {
+                _iscreation: true
+            }
+            $scope.edit(datamap);
         };
 
 
