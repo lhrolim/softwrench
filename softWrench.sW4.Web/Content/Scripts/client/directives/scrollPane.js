@@ -45,12 +45,15 @@
                 }
 
                 function initScrollPane(pane, scroll) {
-                    //create the scrollPane or reset it
+                    //create the scrollPane
                     if (pane == null) {
                         pane = scroll.jScrollPane().data('jsp');
-                    } else {
+                    } 
+
+                    //add a delay to resize the scroll panes (to account for opening the sidePanels)
+                    $timeout(function() {
                         pane.reinitialise();
-                    }
+                    }, 200, false);
 
                     return pane;
                 }
