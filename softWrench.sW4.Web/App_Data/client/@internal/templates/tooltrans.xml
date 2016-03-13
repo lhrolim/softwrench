@@ -86,22 +86,37 @@
             <field attribute="transdate" hidden="true" />
             <field attribute="toolrate" hidden="true" />
 
-            <association label="Tool" target="itemnum" labelfield="tool_.description" requiredexpression="true" extraprojectionvalues="itemnum, itemsetid">
-              <dataprovider prefilterfunction="FilterRotating"/>
-              <renderer type="lookup"/>
-              <event type="afterchange" service="tooltranService" method="aftertoolchange"/>
-            </association>
+            <composition inline="true" relationship="#toollist" label="Tools"  detailschema="" printschema="" showexpression="@_iscreation">
+              <collectionproperties listschema="tools" autocommit="false"/>
+              <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
+            </composition>
+
+            <!--Shows only on line expand -->
+            <field label="Tool" attribute="itemnum" showexpression="!@_iscreation"/>
+            
             <field label="Quantity" attribute="toolqty" requiredexpression="true">
               <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
             </field>
             <field label="Hour" attribute="toolhrs" requiredexpression="true" default="8">
               <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
             </field>
-            <field label="Rate" attribute="toolrate" readonly="true"/>
+
+            <!--Shows only on line expand -->
+            <field label="Rate" attribute="toolrate" readonly="true" showexpression="!@_iscreation"/>
+
             <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
               <renderer type="lookup"/>
             </association>
           </detail>
+
+          <schema id="tools" stereotype="list">
+            <association label="Tool" target="itemnum" labelfield="tool_.description" requiredexpression="true" extraprojectionvalues="itemnum, itemsetid">
+              <dataprovider prefilterfunction="FilterRotating"/>
+              <renderer type="lookup"/>
+              <event type="afterchange" service="tooltranService" method="aftertoolchange"/>
+            </association>
+            <field label="Rate" attribute="toolrate" readonly="true"/>
+          </schema>
         </schemas>
     </application>
   </applications>

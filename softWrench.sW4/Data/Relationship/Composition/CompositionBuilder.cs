@@ -60,8 +60,9 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 //sometimes,we don´t have a detail schema, just a list one
                 foreach (var innerComposition in compositionResult.Detail.Compositions()) {
                     if (!checkedCompositions.Contains(innerComposition.Relationship)) {
+                        var fromSchema = innerComposition.IsSelfRelationship ? compositionResult.Detail : schema;
                         //to avod infinte loop
-                        DoInitializeCompositionSchemas(schema, innerComposition, checkedCompositions);
+                        DoInitializeCompositionSchemas(fromSchema, innerComposition, checkedCompositions);
                     }
                 }
             }

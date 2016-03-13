@@ -6,7 +6,7 @@
                 <div ng-include="contextPath(metadata.schema.rendererParameters.resourcepath)" href="#" />
             </div>
             <div ng-switch-default>
-                <composition-list-wrapper metadata="metadata" parentdata="parentdata" parentschema="parentschema" />
+                <composition-list-wrapper metadata="metadata" parentdata="parentdata" parentschema="parentschema" ismodal="{{ismodal}}"/>
             </div>
         </ng-switch>
 

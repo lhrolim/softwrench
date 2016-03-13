@@ -49,5 +49,15 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             get { return EntityMetadata.GetTableName().ToUpper(); }
         }
 
+        public CrudOperationData Clone() {
+            var atributes = new Dictionary<string, object>(Attributes);
+            var assocAtributes = new Dictionary<string, object>(AssociationAttributes);
+            var clone = new CrudOperationData(Id, atributes, assocAtributes, EntityMetadata, ApplicationMetadata)
+            {
+                SiteId = SiteId,
+                OperationType = OperationType
+            };
+            return clone;
+        }
     }
 }

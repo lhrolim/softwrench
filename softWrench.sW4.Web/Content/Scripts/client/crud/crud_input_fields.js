@@ -589,9 +589,6 @@ app.directive('configAssociationListInputDatamap', function () {
                 return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type === 'ApplicationSection' && fieldMetadata.resourcepath == null;
             };
 
-            $scope.formatId = function (id) {
-                return RemoveSpecialChars(id);
-            }
             $scope.nonTabFields = function (displayables) {
                 return fieldService.nonTabFields(displayables);
             };
@@ -639,10 +636,6 @@ app.directive('configAssociationListInputDatamap', function () {
 
             $scope.isMobile = function () {
                 return isMobile();
-            };
-
-            $scope.isDesktop = function () {
-                return isDesktop();
             };
 
             $scope.isFieldRequired = function (fieldMetadata) {

@@ -15,7 +15,8 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
             parentdata: '=',
             metadata: '=',
             parentschema:'=',
-            mode: '@'
+            mode: '@',
+            ismodal: '@'
         },
 
         link: function (scope, element, attrs) {
@@ -25,7 +26,7 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
                 scope.compositiondata = scope.parentdata[scope.metadata.relationship];
                 element.append(
                     "<inline-composition-list parentdata='parentdata' parentschema='parentschema'" +
-                    "metadata='metadata' iscollection='iscollection' compositionschemadefinition='compositionschemadefinition' compositiondata='compositiondata' mode='mode'/>"
+                    "metadata='metadata' iscollection='iscollection' compositionschemadefinition='compositionschemadefinition' compositiondata='compositiondata' mode='mode' ismodal='ismodal'/>"
                 );
                 $compile(element.contents())(scope);
                 scope.loaded = true;
@@ -58,7 +59,8 @@ app.directive('inlineCompositionList', function (contextService) {
             compositionschemadefinition: '=',
             compositiondata: '=',
             parentschema: '=',
-            mode: '@'
+            mode: '=',
+            ismodal: '='
         },
 
         controller: function ($scope) {

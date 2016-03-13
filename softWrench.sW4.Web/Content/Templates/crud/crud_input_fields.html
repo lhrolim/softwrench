@@ -194,7 +194,8 @@
                                             number-to-string
                                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                                            data-associationkey="{{fieldMetadata.associationKey}}">
+                                            data-associationkey="{{fieldMetadata.associationKey}}"
+                                            data-displayablepath="{{getApplicationPah(fieldMetadata)}}">
                                         <option value=""></option>
                                     </select>
                                 </div>
@@ -208,7 +209,8 @@
                                             number-to-string
                                             ng-options="option.value as option.label for option in GetAssociationOptions(fieldMetadata)"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                                            data-associationkey="{{fieldMetadata.associationKey}}">
+                                            data-associationkey="{{fieldMetadata.associationKey}}"
+                                            data-displayablepath="{{getApplicationPah(fieldMetadata)}}">
                                         <option value=""></option>
                                     </select>
                                 </div>
@@ -228,7 +230,8 @@
                                         number-to-string
                                         ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
-                                        data-associationkey="{{fieldMetadata.associationKey}}">
+                                        data-associationkey="{{fieldMetadata.associationKey}}"
+                                        data-displayablepath="{{getApplicationPah(fieldMetadata)}}">
                                     <option value=""></option>
                                 </select>
                             </div>
@@ -240,7 +243,8 @@
                                         number-to-string
                                         ng-options="option.value as option.label for option in GetAssociationOptions(fieldMetadata)"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
-                                        data-associationkey="{{fieldMetadata.associationKey}}">
+                                        data-associationkey="{{fieldMetadata.associationKey}}"
+                                        data-displayablepath="{{getApplicationPah(fieldMetadata)}}">
                                     <option value=""></option>
                                 </select>
                             </div>
@@ -485,7 +489,8 @@
                             <inline-composition-list-wrapper parentschema="schema"
                                                              parentdata="datamap"
                                                              metadata="fieldMetadata"
-                                                             iscollection="fieldMetadata.collection" />
+                                                             iscollection="fieldMetadata.collection" 
+                                                             ismodal="{{ismodal}}"/>
                         </div>
                         <div ng-switch-default>
                             <div ng-switch on="fieldMetadata.isHidden">

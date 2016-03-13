@@ -378,7 +378,8 @@
 
             var context = getContext(panelid);
             if (context.showingModal) {
-                contextData = { schemaId: "#modal" };
+                contextData = contextData || {};
+                contextData.schemaId = "#modal";
             }
             var log = $log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
 
