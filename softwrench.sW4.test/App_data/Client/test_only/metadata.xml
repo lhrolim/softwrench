@@ -547,11 +547,11 @@
         <property key="mobile.userInteractionEnabled" value="false"/>
       </properties>
       <schemas>
-        <list>
-          <field attribute="assetnum" label="Asset" qualifier="title"/>
-          <field attribute="location" label="Location" qualifier="subtitle"/>
-          <field attribute="vendor" label="Vendor"  qualifier="featured"/>
-        </list>
+<!--        <list>-->
+<!--          <field attribute="assetnum" label="Asset" qualifier="title"/>-->
+<!--          <field attribute="location" label="Location" qualifier="subtitle"/>-->
+<!--          <field attribute="vendor" label="Vendor"  qualifier="featured"/>-->
+<!--        </list>-->
         <detail>
           <field attribute="assetid" label="ID"  requiredexpression="true" />
           <field attribute="assetnum" label="Asset"  requiredexpression="true" />
