@@ -32,14 +32,14 @@
         <property key="mobile.userInteractionEnabled" value="false"/>
       </properties>
       <schemas>
-        <list>
+        <schema id="list" platform="mobile">
           <properties>
             <property key="list.click.schema" value="assetdetail"/>
           </properties>
           <field attribute="assetnum" label="Asset" qualifier="title"/>
           <field attribute="location" label="Location" qualifier="subtitle"/>
           <field attribute="vendor" label="Vendor"  qualifier="featured"/>
-        </list>
+        </schema>
         <!--<schema id="detail" stereotype="detail">
           <field attribute="assetid" label="ID"  requiredexpression="true" />
           <field attribute="assetnum" label="Asset"  requiredexpression="true" />
@@ -50,7 +50,7 @@
           <field attribute="priority" label="Priority"  />
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
         </schema>-->
-        <schema id="assetlist" title="Asset Grid" stereotype="list"  platform="web">
+        <schema id="list" title="Asset Grid" stereotype="list"  platform="web">
           <properties>
             <property key="routing.nextapplication" value="asset"/>
             <property key="nextschema.schemaid" value="assetdetail"/>
