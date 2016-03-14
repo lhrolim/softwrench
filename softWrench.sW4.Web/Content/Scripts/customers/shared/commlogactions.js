@@ -38,7 +38,7 @@
         }
 
         function dispatchEvent(clonedItem, title) {
-            $scope.$emit("sw.composition.edit", clonedItem, title);
+            $scope.$emit("sw.composition.edit", clonedItem, title, true);
             return clonedItem;
         }
 

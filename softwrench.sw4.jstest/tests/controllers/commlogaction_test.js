@@ -70,7 +70,7 @@
         mockScope[actionfn]({});
         //this is needed to trigger the promises resolutions!
         _rootScope.$digest();
-        expect(mockScope.$emit).toHaveBeenCalledWith('sw.composition.edit', outputData, actionTitle);
+        expect(mockScope.$emit).toHaveBeenCalledWith('sw.composition.edit', outputData, actionTitle, true);
     }
 
     it("Reply All, with default email not present, with system default", function () {

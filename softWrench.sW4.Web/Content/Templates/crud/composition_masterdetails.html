@@ -1,17 +1,19 @@
 <div class="composition master-details clearfix">
+
+    <masterdetailtoolbar position="compositiontop"
+                         class="compositiontop"
+                         schema="compositionlistschema"
+                         parentschema="parentschema"
+                         datamap="compositiondata"
+                         parentdatamap="parentdata"
+                         pagination-data="paginationData"
+                         search-data="searchData"
+                         search-sort="searchSort"
+                         search-operator="searchOperator"
+                         mode="{{mode}}" />
+
     <div ng-show="hasRecords()" class="clearfix">
 
-        <masterdetailtoolbar position="compositiontop"
-                             class="compositiontop"
-                             schema="compositionlistschema"
-                             parentschema="parentschema"
-                             datamap="compositiondata"
-                             parentdatamap="parentdata"
-                             pagination-data="paginationData"
-                             search-data="searchData"
-                             search-sort="searchSort"
-                             search-operator="searchOperator"
-                             mode="{{mode}}" />
         <div class="row">
             <div class="master col-xs-12 col-sm-4">
                 <scroll-pane data-available-fn="getScrollSpaceMaster">
@@ -33,8 +35,8 @@
                         </div>
                     </div>
                 </scroll-pane>
-                <div class="context swpagination clearfix" ng-if="showPagination">
-                    <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" />
+                <div class="context swpagination clearfix" ng-if="showPagination()">
+                    <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)"/>
                 </div>
             </div>
             <div class="details col-xs-12 col-sm-8 hidden-xs">
@@ -61,8 +63,8 @@
             </div>
         </div>
     </div>
-        <div ng-hide="hasRecords()" class="no-records col-xs-12">
-            <i class="fa fa-info-circle"></i>&ensp;No records to display.
-        </div>
-        
+    <div ng-hide="hasRecords()" class="no-records col-xs-12">
+        <i class="fa fa-info-circle"></i>&ensp;No records to display.
+    </div>
+
 </div>
