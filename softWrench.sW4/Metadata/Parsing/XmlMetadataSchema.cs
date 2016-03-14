@@ -126,6 +126,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationCompositionPrintAttribute = "printschema";
         public const string ApplicationCompositionFetchType = "fetchtype";
         public const string ApplicationCompositionDependantFieldsAttribute = "dependantfields";
+        public const string ApplicationCompositionRequiredRelationshipAttribute = "requiredrelationshipexpression";
 
         public const string ApplicationCompositionCollectionPropertiesElement = "collectionproperties";
 

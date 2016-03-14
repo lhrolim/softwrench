@@ -757,6 +757,13 @@
     </attribute>
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
+    <attribute name="requiredrelationshipexpression" type="string" use="optional">
+      <annotation>
+        <documentation>
+          The expression that if resolved true tells the a composition with list needs at least one row present.
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="OptionField">

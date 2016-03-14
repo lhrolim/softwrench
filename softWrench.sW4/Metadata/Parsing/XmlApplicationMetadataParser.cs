@@ -435,7 +435,9 @@ namespace softWrench.sW4.Metadata.Parsing {
             var toolTip = composition.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
             var hidden = composition.Attribute(XmlBaseSchemaConstants.BaseDisplayableHiddenAttribute).ValueOrDefault(false);
             var printEnabled = composition.Attribute(XmlBaseSchemaConstants.BaseDisplayablePrintEnabledAttribute).ValueOrDefault(true);
+            var requiredRelationshipExpression = composition.Attribute(XmlMetadataSchema.ApplicationCompositionRequiredRelationshipAttribute).ValueOrDefault((string)null);
             var schema = ParseCompositionSchema(entityName, applicationName, sourceSchemaId, relationship, composition);
+            schema.RequiredRelationshipExpression = requiredRelationshipExpression;
             return ApplicationCompositionFactory.GetInstance(applicationName, relationship, label, schema, showExpression, toolTip, hidden, printEnabled, ParseHeader(composition));
         }
 
