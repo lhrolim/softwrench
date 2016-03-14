@@ -53,7 +53,7 @@
                 ng-class="$odd ? 'odd' : 'even'"
                 draggable="{{ draggableValue() }}"
                 composition-list-key="{{getCompositionListKey()}}"
-                composition-list-index="{{rowindex}}">
+                composition-list-id="{{compositionitem[compositionlistschema.idFieldName]}}">
                 <td ng-if="hasDetailSchema()">
                     <button class="btn" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
                         <i class="fa fa-caret-right" ng-hide="isItemExpanded(compositionitem)"></i>

@@ -865,7 +865,7 @@
             //time for the components to be rendered
             $timeout(function () {
                 // inits autocomplete clients if needed
-                var bodyElement = $("[composition-list-key='{0}'][composition-list-index='{1}']".format($scope.getCompositionListKey(), idx));
+                var bodyElement = $("[composition-list-key='{0}'][composition-list-id='{1}']".format($scope.getCompositionListKey(), fakeNegativeId));
                 if (bodyElement.length > 0) {
                     cmpAutocompleteClient.init(bodyElement, null, $scope.compositionlistschema);
                 }
