@@ -1151,6 +1151,10 @@
         <relationship to="person" qualifier="createdbyperson" >
           <relationshipAttribute from="createby" to="personid" primary="true"/>
         </relationship>
+        <relationship to="DOCLINKS" qualifier="attachment" collection="false">
+          <relationshipAttribute from="worklogid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="WORKLOG" quoteLiteral="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="mea_integration_interface" value="ISW_WL" />

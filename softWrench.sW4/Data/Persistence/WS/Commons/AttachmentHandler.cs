@@ -98,18 +98,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 }
             }
 
-            // worklogs
+            // worklogs: setting array on parent, but each attachment has the worklog as owner
             var worklogs = entity.GetRelationship("worklog");
             if (worklogs == null) return;
-            foreach (var worklog in ((IEnumerable<CrudOperationData>)worklogs)) {
-                var path = worklog.GetUnMappedAttribute("newattachment_path");
+            foreach (var worklog in ((IEnumerable<CrudOperationData>)worklogs).Where(worklog => worklog.Id == null)) {
                 var content = worklog.GetUnMappedAttribute("newattachment");
+                var path = worklog.GetUnMappedAttribute("newattachment_path");
                 if (string.IsNullOrWhiteSpace(content) || string.IsNullOrWhiteSpace(path)) continue;
                 var attachmentParam = new AttachmentDTO() {
-                    Data = entity.GetUnMappedAttribute("newattachment"),
-                    Path = entity.GetUnMappedAttribute("newattachment_path")
+                    Data = content,
+                    Path = path,
+                    Owner = "WORKLOG",
+                    OwnerId = 3805L
                 };
-                AddAttachment(worklog, attachmentParam);
+                AddAttachment(maximoObj, attachmentParam);
             }
         }
 
@@ -152,6 +154,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValue(docLink, "DOCTYPE", "Attachments");
             w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
             w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? String.Empty);
+            if (!string.IsNullOrEmpty(attachment.Owner)) {
+                w.SetValue(docLink, "OWNERTABLE", attachment.Owner);
+            }
+            if (attachment.OwnerId != null) {
+                w.SetValue(docLink, "OWNERID", attachment.OwnerId);
+            }
             HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path);
         }
 

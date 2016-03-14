@@ -9,5 +9,9 @@
         public string Path { get; set; }
 
         public string Data { get; set; }
+
+        public object OwnerId { get; set; }
+
+        public string Owner { get; set; }
     }
 }
