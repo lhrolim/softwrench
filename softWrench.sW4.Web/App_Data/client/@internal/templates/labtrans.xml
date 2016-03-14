@@ -55,7 +55,7 @@
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
 
-          <composition inline="true" relationship="#laborlist" label="Labors"  detailschema="" printschema="" showexpression="@_iscreation">
+          <composition inline="true" relationship="#laborlist" label="Labors"  detailschema="" printschema="" showexpression="@_iscreation" requiredrelationshipexpression="true">
             <collectionproperties listschema="labors" autocommit="false"/>
             <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>

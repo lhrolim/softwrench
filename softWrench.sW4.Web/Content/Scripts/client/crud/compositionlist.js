@@ -247,6 +247,14 @@
             return expressionService.evaluate(requiredExpression, item);
         };
 
+        function isCompositionRequired() {
+            return expressionService.evaluate($scope.compositionschemadefinition.requiredRelationshipExpression, null, $scope);
+        }
+
+        $scope.hideRemoveBatchItem = function (compositionitem, rowindex) {
+            return compositionitem[$scope.compositionlistschema.idFieldName] > 0 || ($scope.compositionData().length === 1 && isCompositionRequired());
+        }
+
         $scope.isCompositionItemFieldHidden = function (application, fieldMetadata, item) {
             var datamap = item == null ? $scope.parentdata : compositionService.buildMergedDatamap(item, $scope.parentdata);
 
