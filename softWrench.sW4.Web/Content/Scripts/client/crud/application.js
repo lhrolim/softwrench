@@ -376,7 +376,7 @@ function applicationController($scope, $http, $log, $timeout,
         }
 
         //update the crud context to update the breadcrumbs 
-        crudContextHolderService.updateCrudContext(schema, data);
+//        crudContextHolderService.updateCrudContext(schema, data);
     }
 
     $scope.toConfirmCancel = function (data, schema) {

@@ -121,6 +121,11 @@ app.directive('crudInput', ["contextService", "associationService", function (co
             }
 
             $scope.getPosition = function (schema, defaultPosition) {
+                if ("true" === $scope.ismodal) {
+                    //modals will be handled by crud_body_modal.html call, to position toolbar on the footer
+                    return "none";
+                }
+
                 if (!defaultPosition) {
                     defaultPosition = "detail.primary";
                 }

@@ -317,6 +317,31 @@ app.directive('inputdetailtoolbar', ["contextService", function (contextService)
     };
 }]);
 
+app.directive('generictoolbar', ["contextService", function (contextService) {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: contextService.getResourceUrl('/Content/Templates/directives/gridtoolbar.html'),
+        scope: {
+//            /*only appliable for compositions, otherwise this will be null*/
+            schema: '=',
+            mode: '@',
+            position: '@',
+            datamap: '=',
+        },
+
+//        link: function (scope, element, attrs, ctrl) {
+//            scope.ctrlfns = {};
+//            angular.forEach(ctrl, function (fn, name) {
+//                if (angular.isFunction(fn)) scope.ctrlfns[name] = fn;
+//            });
+//        },
+
+        controller: sharedController
+
+    };
+}]);
+
 app.directive("crudbodydetailtoolbar", ["contextService", function (contextService) {
     return {
         restrict: "E",

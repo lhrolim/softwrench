@@ -27,7 +27,7 @@
   <!-- Modal commands-->
   
   <commandgroup position="modal.detail.primary" platform="web">
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" primary="true"/>
+    <command id="save" icon="fa-check" service="applicationService" method="save" label="Save" primary="true"/>
     <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
   </commandgroup>
 
@@ -83,6 +83,12 @@
     <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
     <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.crud.list.filter.modal.cancel,schema"/>
   </commandgroup>
+
+  <commandgroup position="detailfilter" platform="web">
+    <command id="apply" icon="fa-check" service="applicationService" method="save" label="Apply" primary="true"/>
+    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
+  </commandgroup>
   
   <commandgroup position="gridbottom" platform="web">
 
@@ -98,17 +104,12 @@
   <commandgroup position="none" platform="web"/>
 
   <commandgroup position="bottom.cancelonly" platform="web">
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
+    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
   </commandgroup>
 
   <commandgroup position="bottom.confirmation" platform="web">
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Confirm" showexpression="$scope:shouldshowsave" primary="true"/>
+    <command id="save" icon="fa-check" service="applicationService" method="save" label="Confirm" primary="true"/>
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
-  </commandgroup>
-
-  <commandgroup position="detailform_modal" platform="web">
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave" primary="true"/>
-    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.crud.list.filter.modal.cancel,schema"/>
   </commandgroup>
 
   <commandgroup position="compositiontop" platform="web">
@@ -119,11 +120,7 @@
 
   </commandgroup>
 
-  <commandgroup position="detailfilter" platform="web">
-    <command id="apply" icon="fa-check" service="$scope" method="save" label="Apply"/>
-    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
-  </commandgroup>
+
 
   <commandgroup position="search" platform="web">
     <command id="search" primary="true" icon="fa-search" service="dispatcherService" method="dispatchevent" label="Search" parameters="sw.crud.search,schema,datamap"/>

@@ -8,7 +8,7 @@
                    />
     </section>
 
-    <div id="affixpagination" class="hiddenonprint grid-header" ng-class="{'affix-pagination' : ismodal !== 'true' }">
+    <div id="affixpagination" class="hiddenonprint grid-header" ng-class="{'affix-pagination' : ismodal !== 'true' }" ng-if="ismodal !== 'true'">
         <div class="context clearfix header-menu" ng-if="isDetail">
             <div class="left">
                 <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.primary','detail.primary')}}" schema="schema"/>
@@ -29,6 +29,7 @@
           class="form-horizontal clearfix"
           data-application="{{schema.applicationName}}"
           data-schema="{{schema.schemaId}}"
+          data-modal="{{ismodal}}"
           method="post"
           enctype="multipart/form-data"
           ng-if="isDetail">

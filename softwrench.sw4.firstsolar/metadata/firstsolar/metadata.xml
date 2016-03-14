@@ -96,7 +96,7 @@
           <customization position="labtrans"/>
           <customization position="tooltrans"/>
           <properties>
-            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,worklog,woactivity,commlog,attachment,assetmeter,locationmeter,relatedrecord"/>
+            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,worklog,woactivity,commlog,attachment,assetmeter,locationmeter,relatedrecord,assetnum"/>
             <property key="search.schemaid" value="search"/>
           </properties>
         </schema>
