@@ -612,12 +612,12 @@
 
         //#endregion
 
-        $scope.$on("sw.composition.edit", function (event, datamap, actionTitle) {
-            $scope.edit(datamap, actionTitle);
+        $scope.$on("sw.composition.edit", function (event, datamap, actionTitle, forceModal) {
+            $scope.edit(datamap, actionTitle, forceModal);
         });
 
-        $scope.edit = function (datamap, actionTitle) {
-            if (shouldEditInModal()) {
+        $scope.edit = function (datamap, actionTitle, forceModal) {
+            if (!!forceModal || shouldEditInModal()) {
                 // Check that main tab has all required fields filled before opening modal
                 var parentDatamap = crudContextHolderService.rootDataMap();
                 var parentSchema = crudContextHolderService.currentSchema();

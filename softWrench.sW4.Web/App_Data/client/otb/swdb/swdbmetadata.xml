@@ -35,9 +35,8 @@
           </section>
 
           <commandbars>
-            <commandgroup position="detail.primary">
+            <commandgroup position="modal.detail.primary">
               <removecommand id="save"/>
-              <removecommand id="print"/>
               <command id="save" icon="fa-check" parameters="datamap" service="dashboardAuxService" method="saveDashboard" label="Confirm" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
@@ -113,9 +112,8 @@
           </section>
           
           <commandbars>
-            <commandgroup position="detail.primary">
+            <commandgroup position="modal.detail.primary">
               <removecommand id="save"/>
-              <removecommand id="print"/>
               <command id="save" icon="fa-check" enableexpression="@panel!=null" service="dashboardAuxService" parameters="datamap" method="selectPanel" label="Select Panel" tooltip="Add Panel" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
@@ -151,9 +149,8 @@
 
           </section>
           <commandbars>
-            <commandgroup position="detail.primary">
+            <commandgroup position="modal.detail.primary">
               <removecommand id="save"/>
-              <removecommand id="print"/>
               <command id="save" icon="fa-check" service="dashboardAuxService" method="createAndAssociateGridPanel"
                        parameters="datamap"
                        label="Add Panel" tooltip="Add Widget" position="&lt;cancel" />
@@ -196,9 +193,8 @@
           </section>
           
           <commandbars>
-            <commandgroup position="detail.primary">
+            <commandgroup position="modal.detail.primary">
               <removecommand id="save"/>
-              <removecommand id="print"/>
               <command id="save" icon="fa-check" label="Add Panel" tooltip="Add Widget" position="&lt;cancel"
                        service="dashboardAuxService" method="createAndAssociateGraphicPanel"
                        parameters="datamap" />

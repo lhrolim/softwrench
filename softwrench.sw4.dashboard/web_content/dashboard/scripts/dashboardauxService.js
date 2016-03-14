@@ -52,26 +52,29 @@
         }
 
         function createAndAssociateGridPanel(datamap) {
-            restService.postPromise('Dashboard', 'CreateGridPanel', null, datamap).then(panelCreated(datamap));
+            var local = datamap.fields || datamap;
+            restService.postPromise('Dashboard', 'CreateGridPanel', null, local).then(panelCreated(local));
         }
 
         function saveDashboard(datamap, policy) {
-            datamap.creationDateSt = datamap.creationDate;
-            if (datamap.panels == null) {
+            var localDatamap = datamap.fields || datamap;
+            localDatamap.creationDateSt = localDatamap.creationDate;
+            if (!!localDatamap.panels) {
                 //this will avoid wrong serialization
                 delete datamap.panels;
             }
 
-            restService.postPromise('Dashboard', 'SaveDashboard', null, datamap).then(function (response) {
+            restService.postPromise('Dashboard', 'SaveDashboard', null, localDatamap).then(function (response) {
                 var data = response.data;
                 $rootScope.$broadcast('dash_dashsaved', data.resultObject);
             });
         }
 
         function selectPanel(datamap) {
-            restService.getPromise("Dashboard", "LoadPanel", { panel: datamap.panel }).then(function (response) {
+            var local = datamap.fields || datamap;
+            restService.getPromise("Dashboard", "LoadPanel", { panel: local.panel }).then(function (response) {
                 var data = response.data;
-                $rootScope.$broadcast('dash_panelassociated', data.resultObject, datamap.row, datamap.column);
+                $rootScope.$broadcast('dash_panelassociated', data.resultObject, local.row, local.column);
             });
         }
 
@@ -140,7 +143,8 @@
             return instance.onProviderSelected(event);
         }
 
-        function createAndAssociateGraphicPanel(datamap) {
+        function createAndAssociateGraphicPanel(paramDatamap) {
+            var datamap = paramDatamap.fields || paramDatamap;
             var instance = graphicPanelServiceProvider.getService(datamap.provider);
             instance.onBeforeAssociatePanel(datamap);
             restService.postPromise("Dashboard", "CreateGraphicPanel", null, datamap).then(panelCreated(datamap));

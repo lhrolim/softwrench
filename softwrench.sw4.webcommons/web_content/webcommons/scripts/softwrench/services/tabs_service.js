@@ -3,18 +3,6 @@
         
     modules.webcommons.factory('tabsService', ["fieldService", "i18NService", function (fieldService, i18NService) {
 
-    var getCompositionSchema = function (baseSchema, compositionKey, schemaId) {
-        var schemas = nonInlineCompositionsDict(baseSchema);
-        var thisSchema = schemas[compositionKey];
-        schemas = thisSchema.schema.schemas;
-        return schemaId === "print" ? schemas.print : schemas.list;
-    };
-
-    var getCompositionIdName = function (baseSchema, compositionKey, schemaId) {
-        return getCompositionSchema(baseSchema, compositionKey, schemaId).idFieldName;
-    };
-
-
     var buildTabObjectForPrint = function (datamap, tabSchema, schema) {
         var result = {};        
 
@@ -27,6 +15,17 @@
     };
 
     return {
+
+        getCompositionSchema: function (baseSchema, compositionKey, schemaId) {
+            var schemas = this.nonInlineCompositionsDict(baseSchema);
+            var thisSchema = schemas[compositionKey];
+            schemas = thisSchema.schema.schemas;
+            return schemaId === "print" ? schemas.print : schemas.list;
+        },
+
+        getCompositionIdName:  function (baseSchema, compositionKey, schemaId) {
+            return this.getCompositionSchema(baseSchema, compositionKey, schemaId).idFieldName;
+        },
 
         hasTabs: function (schema) {
             if (schema.hasTabs != undefined) {
@@ -92,7 +91,7 @@
                 return schema.nonInlineCompositionsDict;
             }
             var resultDict = {};
-            var allTabs = tabsDisplayables(schema);
+            var allTabs = this.tabsDisplayables(schema);
             allTabs.forEach(function(tab) {
                 resultDict[tab.relationship] = tab;
             });
@@ -113,6 +112,7 @@
             if (compositionsToExpandObj == null) {
                 return "";
             }
+            var self = this;
             $.each(compositionsToExpandObj, function (key, obj) {
                 if (obj.value == false) {
                     return;
@@ -134,7 +134,7 @@
                 }
 
                 //now, we are retrieving data for printing
-                var currentSchema = getCompositionSchema(schema, key, obj.schema);
+                var currentSchema = self.getCompositionSchema(schema, key, obj.schema);
                 if (currentSchema.properties.expansible != undefined && currentSchema.properties.expansible == "false") {
                     if (notExpansible != undefined && compositionData.length > 0) {
                         //only adding if there´s actual at least one element of this nonExpansible composition
@@ -143,7 +143,7 @@
                     return;
                 }
 
-                var compositionIdField = getCompositionIdName(schema, key, schemaId);
+                var compositionIdField = self.getCompositionIdName(schema, key, schemaId);
                 var compositionIdArray = [];
 
                 for (var i = 0; i < compositionData.length; i++) {
