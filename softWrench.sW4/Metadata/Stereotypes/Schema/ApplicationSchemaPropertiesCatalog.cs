@@ -218,6 +218,11 @@
         public static string SearchSchemaId = "search.schemaid";
 
         /// <summary>
+        /// The the target schema id of current  search schema. If not preent "list" will be used
+        /// </summary>
+        public static string SearchTargetSchemaId = "search.target.schemaid";
+
+        /// <summary>
         /// If "true" the crud search side panel will start expanded.
         /// </summary>
         public static string SearchStartExpanded = "search.startexpanded";
