@@ -53,9 +53,6 @@
   <ItemGroup>
     <Content Include="web_content\bering\images\footer.jpg" />
     <Content Include="web_content\bering\images\header-email.jpg" />
-    <EmbeddedResource Include="metadata\bering\commands.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="metadata\bering\deploy.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

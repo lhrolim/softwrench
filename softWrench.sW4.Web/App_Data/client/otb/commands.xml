@@ -4,12 +4,50 @@
   <commandgroup position="gridtop" platform="web">
     <!--    <command id="new" icon="fa-plus" service="applicationService" method="newitem" label="$scope." tooltip="New Item"/>-->
     <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
-    <command id="print" icon="fa-print" service="printService" method="printList" parameters="paginationData,schema" tooltip="Print" showexpression="" />
-    <command id="export" icon="fa-file-text-o" service="excelService" method="exporttoexcel" parameters="schema,searchData,searchSort,searchOperator,paginationData"
+    <command id="print" icon="fa-print" label="Print" service="printService" method="printList" parameters="paginationData,schema" tooltip="Print" showexpression=""/>
+    <command id="export" icon="fa-file-text-o" label="Export" service="excelService" method="exporttoexcel" parameters="schema,searchData,searchSort,searchOperator,paginationData"
              tooltip="Export to Excel" showexpression=""/>
     <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
   </commandgroup>
 
+  <commandgroup position="detail.primary" platform="web">
+    <!--<command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />-->
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>    
+  </commandgroup>
+
+
+
+
+  <commandgroup position="detail.secondary" platform="web">
+    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint"/>
+  </commandgroup>
+
+
+  <!-- Modal commands-->
+  
+  <commandgroup position="modal.detail.primary" platform="web">
+    <command id="save" icon="fa-check" service="applicationService" method="save" label="Save" primary="true"/>
+    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
+  </commandgroup>
+
+
+  <commandgroup position="modal.detail.secondary" platform="web">
+
+  </commandgroup>
+
+  <commandgroup position="modal.actions" platform="web">
+
+  </commandgroup>
+
+
+  <!-- End modal regions-->
+
+
+  <commandgroup position="detailform" platform="web">
+    
+  </commandgroup>
+  
   <commandgroup position="gridtop.selection" platform="web">
     <togglecommand id="toggleselectionmode" position="+profiles" initialstateexpression="$scope:toggleSelectionModeInitialValue">
       <oncommand id="ontoggleselectionmode" icon="fa-mouse-pointer" service="dispatcherService" method="dispatchevent" tooltip="To Details on Line Click" parameters="sw.crud.list.toggleselectionmode,panelid"/>
@@ -29,7 +67,6 @@
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
 
-
   <commandgroup position="gridfiltertop" platform="web">
     <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
     <togglecommand id="toggleselected" position="+profiles">
@@ -46,8 +83,13 @@
     <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
     <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.crud.list.filter.modal.cancel,schema"/>
   </commandgroup>
-  
 
+  <commandgroup position="detailfilter" platform="web">
+    <command id="apply" icon="fa-check" service="applicationService" method="save" label="Apply" primary="true"/>
+    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
+  </commandgroup>
+  
   <commandgroup position="gridbottom" platform="web">
 
   </commandgroup>
@@ -62,45 +104,23 @@
   <commandgroup position="none" platform="web"/>
 
   <commandgroup position="bottom.cancelonly" platform="web">
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
+    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
   </commandgroup>
 
   <commandgroup position="bottom.confirmation" platform="web">
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Confirm" showexpression="$scope:shouldshowsave" primary="true"/>
+    <command id="save" icon="fa-check" service="applicationService" method="save" label="Confirm" primary="true"/>
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
-
-  <commandgroup position="detailform" platform="web">
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave"/>
-    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
-  </commandgroup>
-
-  <commandgroup position="detailform_modal" platform="web">
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave" primary="true"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
-  </commandgroup>
-
-  <commandgroup position="compositionbottom" platform="web">
-    <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldShowSave"/>
-    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="parentschema,parentdatamap" label="Print" showexpression="$scope:shouldshowprint"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
-  </commandgroup>
-
 
   <commandgroup position="compositiontop" platform="web">
+    <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />
     <command icon="fa-plus" label="Expand All" id="expandall" service="$scope" method="expandAll" showexpression="$scope:showExpansionCommands"/>
     <command icon="fa-minus" label="Collapse All" id="collapseall" service="$scope" method="collapseAll" showexpression="$scope:showExpansionCommands"/>
     <command icon="fa-refresh" label="Refresh" id="refresh" service="$scope" method="refresh" />
 
   </commandgroup>
 
-  <commandgroup position="detailfilter" platform="web">
-    <command id="apply" icon="fa-check" service="$scope" method="save" label="Apply"/>
-    <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
-  </commandgroup>
+
 
   <commandgroup position="search" platform="web">
     <command id="search" primary="true" icon="fa-search" service="dispatcherService" method="dispatchevent" label="Search" parameters="sw.crud.search,schema,datamap"/>

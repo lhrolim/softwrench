@@ -10,8 +10,8 @@ body {
     font-size: 13px;
 }
 
-.btn, button, div {
-    &:focus, &:focus:active  {
+.btn, button {
+    &:focus, &:active:focus {
         outline: none;
     }
 }

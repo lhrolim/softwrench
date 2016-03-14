@@ -22,7 +22,7 @@
                         class="form-control input-sm"
                         id="pagesize"
                         ng-model="paginationData.pageSize"
-                        ng-options="option as option for option in paginationData.paginationOptions"
+                        ng-options="option as option for option in getPaginationOptions()"
                         ng-change="selectPage(1)"></select>
             </div>
         </div>

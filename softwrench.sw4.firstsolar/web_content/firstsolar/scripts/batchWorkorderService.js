@@ -9,6 +9,10 @@
 
         // save method of inline wo edit modal
         function woInlineEditSave(saveDataMap, schema) {
+            if (saveDataMap.fields) {
+                saveDataMap = saveDataMap.fields;
+            }
+
             var validationErrors = validationService.validate(schema, schema.displayables, saveDataMap, {});
             if (validationErrors.length > 0) {
                 return;

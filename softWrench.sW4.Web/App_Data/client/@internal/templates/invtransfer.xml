@@ -103,7 +103,7 @@
 
 
           <commandbars>
-            <commandgroup position="detailform" removeundeclared="false">
+            <commandgroup position="detail.primary" removeundeclared="false">
               <removecommand id="print"/>
               <removecommand id="cancel"/>
               <command id="cancelTransfer" icon="fa fa-times" label="Cancel" service="invtransferService" method="cancel"/>

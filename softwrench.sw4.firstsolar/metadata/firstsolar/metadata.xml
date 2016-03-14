@@ -96,7 +96,7 @@
           <customization position="labtrans"/>
           <customization position="tooltrans"/>
           <properties>
-            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,worklog,woactivity,commlog,attachment,assetmeter,locationmeter,relatedrecord"/>
+            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,worklog,woactivity,commlog,attachment,assetmeter,locationmeter,relatedrecord,assetnum"/>
             <property key="search.schemaid" value="search"/>
           </properties>
         </schema>
@@ -153,7 +153,7 @@
           <field attribute="details" label="Details:" requiredexpression="true">
             <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
-          <field attribute="classification" label="Origination">
+          <field attribute="classificationid" label="Origination">
             <renderer type="default" params="updatable=true"/>
           </field>
           <field attribute="worktype" label="Work Type">
@@ -195,7 +195,7 @@
           <field attribute="details" label="Details:" requiredexpression="true">
             <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
-          <field attribute="classification" label="Origination">
+          <field attribute="classificationid" label="Origination">
             <renderer type="default" params="updatable=true"/>
           </field>
           <field attribute="worktype" label="Work Type">
@@ -215,7 +215,7 @@
           <commandbars>
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
-              <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,assetlist"/>
+              <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,list"/>
               <command id="save" service="batchWorkorderService" method="submitBatch" parameters="asset" primary="true"/>
             </commandgroup>
           </commandbars>
@@ -246,7 +246,7 @@
           </properties>
 
           <commandbars>
-            <commandgroup position="detailform_modal" platform="web">
+            <commandgroup position="modal.detail.primary">
               <command id="save" icon="fa-check" service="batchWorkorderService" method="woInlineEditSave" parameters="datamap,schema" label="Save" primary="true"/>
             </commandgroup>
           </commandbars>
@@ -277,7 +277,7 @@
           </properties>
 
           <commandbars>
-            <commandgroup position="detailform_modal" platform="web">
+            <commandgroup position="modal.detail.primary">
               <command id="save" icon="fa-check" service="batchWorkorderService" method="woInlineEditSave" parameters="datamap,schema" label="Save" primary="true"/>
             </commandgroup>
           </commandbars>
@@ -349,6 +349,16 @@
             <renderer type="combodropdown" params="multiple=true;showvaluesbelow=true;buttontext=Select PCS(s);maxheight=300;labelmaxlength=30;customdropdownfunction=advancedSearchService.customizeComboDropdown"/>
           </optionfield>
 
+          <commandbars>
+            <commandgroup position="detailform" platform="web">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <removecommand id="cancel"/>
+              <command id="search" primary="true" cssclasses="searchbutton" icon="fa-search" service="advancedSearchService" method="search" label="Search" parameters="schema,datamap"/>
+              <command id="clear" cssclasses="searchbutton" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
+            </commandgroup>
+          </commandbars>
+          
           <properties>
             <property key="search.panelwidth" value="180"/>
             <property key="crud.disableautofocus" value="true"/>
@@ -478,7 +488,7 @@
       </filters>
 
       <schemas>
-        <schema id="assetlist"  redeclaring="false" stereotype="list.selection">
+        <schema id="list"  redeclaring="false" stereotype="list.selection" platform="web">
           <customization position="+siteid">
             <field attribute="openwo" label="Work Orders"/>
           </customization>

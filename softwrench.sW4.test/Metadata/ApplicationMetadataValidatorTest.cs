@@ -1,9 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softwrench.sW4.test.Util;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 using System.Diagnostics;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using Moq;
@@ -31,7 +33,11 @@ namespace softwrench.sW4.test.Metadata {
 
                 ApplicationMetadataValidator.Clear();
 
-                MetadataProvider.StubReset();
+                try {
+                    MetadataProvider.StubReset();
+                } catch (Exception e) {
+                    throw new Exception("client {0} failed".Fmt(clientName), e);
+                }
 
                 var swdbMock = new Mock<ISWDBHibernateDAO>();
                 var maximodbMock = new Mock<IMaximoHibernateDAO>();
