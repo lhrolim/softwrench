@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.portable.Util;
+using Iesi.Collections.Generic;
 using log4net;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
@@ -12,7 +13,9 @@ using softwrench.sw4.user.classes.entities.security;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
 using softWrench.sW4.Util;
+using Role = softwrench.sw4.user.classes.entities.Role;
 
 namespace softWrench.sW4.Metadata.Applications.Security {
     class ApplicationFieldSecurityApplier {
@@ -42,6 +45,13 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             //            DisplayableUtil.GetDisplayable<IApplicationDisplayable>(typeof(IApplicationDisplayable),
             //                schema.Displayables);
 
+            if (schemaFieldsToDisplay != null && applicationPermission == null) {
+                //dashboard scenario
+                applicationPermission = new ApplicationPermission();
+                applicationPermission.ContainerPermissions = new HashedSet<ContainerPermission>();
+            }
+
+
             var containerPermissions = applicationPermission.ContainerPermissions.Where(c => c.Schema.EqualsIc(schema.SchemaId));
             var compositionPermissions = applicationPermission.CompositionPermissions == null ? new List<CompositionPermission>()
                 : applicationPermission.CompositionPermissions.Where(c => c.Schema.EqualsIc(schema.SchemaId));
@@ -61,8 +71,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
         }
 
 
-        private static List<IApplicationDisplayable> GetAllowedFields(ApplicationPermission applicationPermission,
-            ISet<string> fieldsToRetain, IEnumerable<IApplicationDisplayable> displayables,
+        private static List<IApplicationDisplayable> GetAllowedFields(ApplicationPermission applicationPermission, System.Collections.Generic.ISet<string> fieldsToRetain, IEnumerable<IApplicationDisplayable> displayables,
             IEnumerable<CompositionPermission> compositionPermissions, IEnumerable<ContainerPermission> containerPermissions, string currentContainerKey) {
             var permissions = containerPermissions as IList<ContainerPermission> ?? containerPermissions.ToList();
             var container = permissions.FirstOrDefault(c => c.ContainerKey.EqualsIc(currentContainerKey));
@@ -152,7 +161,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
         }
 
 
-        private static FieldPermission DoApplyFieldPermission(ISet<string> fieldsToRetain, IApplicationDisplayable field,
+        private static FieldPermission DoApplyFieldPermission(System.Collections.Generic.ISet<string> fieldsToRetain, IApplicationDisplayable field,
             ContainerPermission container) {
             var appDisplayable = field as IApplicationIndentifiedDisplayable;
             if (appDisplayable == null) {
