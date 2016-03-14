@@ -181,8 +181,8 @@ namespace softwrench.sW4.test.Metadata {
             Assert.IsTrue(commandSchema.ApplicationCommands.ContainsKey("#actions"));
             Assert.AreEqual(1, commandSchema.ApplicationCommands["#actions"].Commands.Count);
 
-            Assert.IsTrue(commandSchema.ApplicationCommands.ContainsKey("#detailform"));
-            Assert.IsTrue(commandSchema.ApplicationCommands["#detailform"].Commands.Any(c => c.Id.Equals("customizationtest")));
+            Assert.IsTrue(commandSchema.ApplicationCommands.ContainsKey("#detail.primary"));
+            Assert.IsTrue(commandSchema.ApplicationCommands["#detail.primary"].Commands.Any(c => c.Id.Equals("customizationtest")));
 
 
         }

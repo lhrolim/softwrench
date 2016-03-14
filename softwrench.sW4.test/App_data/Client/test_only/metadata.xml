@@ -547,11 +547,11 @@
         <property key="mobile.userInteractionEnabled" value="false"/>
       </properties>
       <schemas>
-        <list>
-          <field attribute="assetnum" label="Asset" qualifier="title"/>
-          <field attribute="location" label="Location" qualifier="subtitle"/>
-          <field attribute="vendor" label="Vendor"  qualifier="featured"/>
-        </list>
+<!--        <list>-->
+<!--          <field attribute="assetnum" label="Asset" qualifier="title"/>-->
+<!--          <field attribute="location" label="Location" qualifier="subtitle"/>-->
+<!--          <field attribute="vendor" label="Vendor"  qualifier="featured"/>-->
+<!--        </list>-->
         <detail>
           <field attribute="assetid" label="ID"  requiredexpression="true" />
           <field attribute="assetnum" label="Asset"  requiredexpression="true" />
@@ -861,7 +861,7 @@
           <customization position="classstructureid"></customization>
 
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <command id="customizationtest" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="right"/>
             </commandgroup>

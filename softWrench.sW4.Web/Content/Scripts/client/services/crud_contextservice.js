@@ -201,10 +201,10 @@
             return context.tabRecordCount && context.tabRecordCount[tab.tabId];
         }
 
-        function incrementTabRecordCount(tabId, panelId) {
+        function setTabRecordCount(tabId, panelId,count) {
             var context = getContext(panelId);
             if (context.tabRecordCount && context.tabRecordCount[tabId]) {
-                context.tabRecordCount[tabId] = context.tabRecordCount[tabId] + 1;
+                context.tabRecordCount[tabId] = count;
             }
         }
         
@@ -378,7 +378,8 @@
 
             var context = getContext(panelid);
             if (context.showingModal) {
-                contextData = { schemaId: "#modal" };
+                contextData = contextData || {};
+                contextData.schemaId = "#modal";
             }
             var log = $log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
 
@@ -529,7 +530,7 @@
             getActiveTab: getActiveTab,
             setActiveTab: setActiveTab,
             getTabRecordCount: getTabRecordCount,
-            incrementTabRecordCount: incrementTabRecordCount,
+            setTabRecordCount: setTabRecordCount,
             shouldShowRecordCount: shouldShowRecordCount,
             getCurrentSelectedProfile: getCurrentSelectedProfile,
             setCurrentSelectedProfile: setCurrentSelectedProfile,

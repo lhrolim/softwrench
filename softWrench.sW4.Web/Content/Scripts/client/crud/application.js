@@ -376,7 +376,7 @@ function applicationController($scope, $http, $log, $timeout,
         }
 
         //update the crud context to update the breadcrumbs 
-        crudContextHolderService.updateCrudContext(schema, data);
+//        crudContextHolderService.updateCrudContext(schema, data);
     }
 
     $scope.toConfirmCancel = function (data, schema) {
@@ -384,6 +384,14 @@ function applicationController($scope, $http, $log, $timeout,
     };
 
     $scope.toSchema = function (data, schema) {
+        if (schema == null) {
+            var currentSchema = crudContextHolderService.currentSchema();
+            if (!currentSchema.stereotype.equalsIc("list")) {
+                return $scope.toListSchema(data, schema);
+            }
+        }
+
+
         if (schema.stereotype.equalsIc("list")) {
             $scope.toListSchema(data, schema);
         } else {

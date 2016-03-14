@@ -4,7 +4,7 @@
 
 
 
-    function cmpfacade($timeout, $log, cmpComboDropdown, cmpCombo, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService, crudContextHolderService) {
+    function cmpfacade($timeout, $log, cmpComboDropdown, cmpCombo, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService, crudContextHolderService, compositionService) {
 
 
         function unblock(displayable, scope) {
@@ -40,21 +40,27 @@
             this.digestAndrefresh(displayable, scope);
         };
 
-        function updateEagerOptions(scope, displayable) {
+        function updateEagerOptions(scope, displayable, options, contextData, datamapId) {
             var log = $log.getInstance("cmpfacade#updateEagerOptions",["association"]);
             var attribute = displayable.attribute;
             var rendererType = displayable.rendererType;
-            var contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+            if (!contextData) {
+                contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+            }
+            if (!options) {
+                options = crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData);
+            }
+
             var fn = function doRefresh() {
                 log.debug("updating list for component {0}".format(attribute));
                 if (rendererType === 'autocompleteclient') {
                     var value = scope.datamap[displayable.target];
-                    cmpAutocompleteClient.refreshFromAttribute(scope,displayable, value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
+                    cmpAutocompleteClient.refreshFromAttribute(scope, displayable, value, options, datamapId);
                 } else if (rendererType === 'combodropdown') {
                     cmpComboDropdown.refreshList(attribute);
                 } else if (rendererType === 'combo') {
                     var value = scope.datamap[displayable.target];
-                    cmpCombo.refreshFromAttribute(value, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData));
+                    cmpCombo.refreshFromAttribute(value, options);
                 }
             }
 
@@ -76,7 +82,7 @@
 
         }
 
-        function digestAndrefresh(displayable, scope, newValue,datamapId) {
+        function digestAndrefresh(displayable, scope, newValue, datamapId) {
             var rendererType = displayable.rendererType;
             if (rendererType !== 'autocompleteclient' && rendererType !== 'autocompleteserver' && rendererType !== 'combodropdown' && rendererType !== 'lookup' && rendererType !== 'modal') {
                 return;
@@ -136,7 +142,13 @@
             log.debug(msg.format(displayable.attribute, rendererType, valueToLog));
 
             if (rendererType === 'autocompleteclient') {
-                cmpAutocompleteClient.refreshFromAttribute(scope,displayable, valueToLog, crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey));
+                var contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+                // special case of a composition list
+                if (compositionService.isCompositionListItem(scope.datamap)) {
+                    contextData = compositionService.buildCompositionListItemContext(contextData, scope.datamap, scope.schema);
+                }
+                var options = crudContextHolderService.fetchEagerAssociationOptions(displayable.associationKey, contextData);
+                cmpAutocompleteClient.refreshFromAttribute(scope, displayable, valueToLog, options, datamapId);
             } else if (rendererType === 'autocompleteserver') {
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType === 'combodropdown') {
@@ -192,7 +204,7 @@
 
     angular
       .module('sw_layout')
-      .factory('cmpfacade', ['$timeout', '$log', 'cmpComboDropdown', 'cmpCombo', 'cmplookup', 'cmpAutocompleteClient', 'cmpAutocompleteServer', 'screenshotService', 'fieldService', 'crudContextHolderService', cmpfacade]);
+      .factory('cmpfacade', ['$timeout', '$log', 'cmpComboDropdown', 'cmpCombo', 'cmplookup', 'cmpAutocompleteClient', 'cmpAutocompleteServer', 'screenshotService', 'fieldService', 'crudContextHolderService', 'compositionService', cmpfacade]);
 
 })(angular);
 

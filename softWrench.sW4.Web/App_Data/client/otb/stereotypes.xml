@@ -65,7 +65,9 @@
 
   <stereotype id="detail.modal">
     <property key="show.printcommand" value="editonly"/>
-    <property key="commandbar.bottom" value="detailform_modal"/>
+    <property key="commandbar.bottom" value="modal.detail.primary"/>
+    <property key="toolbar.detail.secondary" value="none"/>
+    <property key="actions" value="none"/>
   </stereotype>
 
 

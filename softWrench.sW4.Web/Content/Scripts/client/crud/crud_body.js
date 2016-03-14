@@ -32,7 +32,7 @@
                     //0 tabs scenario
                     return $rootScope.$broadcast("sw_alltabsloaded");
                 }
-                
+
                 $timeout(function () {
                     var firstTabId = null;
                     $('.compositiondetailtab li>a').each(function () {
@@ -95,14 +95,14 @@
                 scope.$name = 'crudbody';
             },
 
-                controller: function ($scope, $http,$q,$element, $rootScope, $filter, $injector,
-                formatService, fixHeaderService,dispatcherService,
-                searchService, tabsService,
-                fieldService, commandService, i18NService,
-                submitService, redirectService,
-                associationService, crudContextHolderService, alertService,
-                validationService, schemaService, $timeout, $interval, eventService, $log, expressionService, focusService, modalService,
-                compositionService, attachmentService, sidePanelService) {
+            controller: function ($scope, $http, $q, $element, $rootScope, $filter, $injector,
+            formatService, fixHeaderService, dispatcherService,
+            searchService, tabsService,
+            fieldService, commandService, i18NService,
+            submitService, redirectService,
+            associationService, crudContextHolderService, alertService,
+            validationService, schemaService, $timeout, $interval, eventService, $log, expressionService, focusService, modalService,
+            compositionService, attachmentService, sidePanelService) {
 
                 $(document).on("sw_autocompleteselected", function (event, key) {
                     focusService.resetFocusToCurrent($scope.schema, key);
@@ -136,6 +136,17 @@
 
                 $scope.setForm = function (form) {
                     $scope.crudform = form;
+                };
+
+                $scope.getPosition = function (schema, propertyName, defaultPosition) {
+                    if (!schema.properties || !schema.properties[propertyName]) {
+                        if ("true" === $scope.ismodal) {
+                            return "modal." + defaultPosition;
+
+                        }
+                        return defaultPosition;
+                    }
+                    return schema.properties[propertyName];
                 };
 
                 // Listeners region
@@ -177,6 +188,9 @@
             );
 
                 $scope.$on("sw_submitdata", function (event, parameters) {
+                    if ($scope.ismodal !== "true" && !!parameters.dispatchedByModal) {
+                        return;
+                    }
                     $scope.save(parameters);
                 });
 
@@ -196,8 +210,8 @@
                         alertService.notifymessage('success', onLoadMessage);
                     }
 
-                    
-                    
+
+
                 });
 
                 $scope.setActiveTab = function (tabId) {
@@ -380,6 +394,10 @@
                         });
                 };
 
+                this.cancel = function(data, schema) {
+                    return $scope.cancel(data, schema);
+                }
+
                 $scope.cancel = function (data, schema) {
                     var previousDataToUse = data;
                     //https://controltechnologysolutions.atlassian.net/browse/SWWEB-1717
@@ -391,6 +409,9 @@
                 }
 
 
+                this.save = function (parameters) {
+                    return $scope.save();
+                }
 
                 $scope.save = function (parameters) {
                     var log = $log.getInstance('crudbody#save');
@@ -611,7 +632,7 @@
                         commandService: commandService,
                         formatService: formatService
                     });
-                    
+
                     //#region screenshot paste handling
                     // `contenteditable` element
                     var pasteCatcher = $element[0].querySelector(".js_crud_pastecatcher");

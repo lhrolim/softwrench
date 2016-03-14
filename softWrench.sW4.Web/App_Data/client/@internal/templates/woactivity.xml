@@ -22,7 +22,7 @@
           <field attribute="reportdate" label="Reported Date"/>
           <!--<section resourcepath="/Content/Templates/otb/WotaskchangeStatus.html"/>-->
           <commandbars>
-            <commandgroup position="compositionbottom">
+            <commandgroup position="detail.primary">
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>
@@ -47,7 +47,7 @@
             <renderer type="textarea"/>
           </field>
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <removecommand id="print"/>
             </commandgroup>
           </commandbars>

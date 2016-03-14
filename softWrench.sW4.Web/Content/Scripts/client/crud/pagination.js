@@ -89,7 +89,18 @@ app.directive('pagination', ['contextService', '$log', function (contextService,
             }
 
             $scope.shouldShowPagination = function() {
-                return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected;
+                return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected && ($scope.paginationData && $scope.paginationData.pageCount > 1);
+            }
+
+            $scope.getPaginationOptions = function () {
+                
+                if (!$scope.paginationData.paginationOptions) {
+                    return null;
+                }
+                //TODO investigate this further, why are these duplications coming in first place?
+                return $scope.paginationData.paginationOptions.filter(function(value,index,self) {
+                    return value !== 0 && self.indexOf(value) === index ;
+                });
             }
 
             $scope.getDirectionClass = function (direction) {
@@ -197,6 +208,8 @@ app.directive('paginationPages', ['contextService', '$log', '$timeout', function
             $scope.getLastPage = function () {
                 return $scope.paginationData.pageCount;
             }
+
+          
 
             $scope.getPageArray = function () {
                 //fix undefined error in modal

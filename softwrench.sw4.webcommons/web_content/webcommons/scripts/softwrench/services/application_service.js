@@ -4,7 +4,7 @@
 
 
 
-    angular.module('webcommons_services').factory('applicationService', ['$http', '$rootScope','contextService', applicationService]);
+    angular.module('webcommons_services').factory('applicationService', ["$q", '$http', '$rootScope', 'contextService', "crudContextHolderService", applicationService]);
 
     function fillApplicationParameters(parameters, applicationName,schemaId, mode) {
         /// <returns type=""></returns>
@@ -21,7 +21,7 @@
         return parameters;
     };
 
-    function applicationService($http, $rootScope, contextService) {
+    function applicationService($q, $http, $rootScope, contextService, crudContextHolderService) {
 
         var buildApplicationURLForBrowser = function (applicationName, parameters) {
             var crudUrl = $(routes_homeurl)[0].value;
@@ -45,6 +45,33 @@
         };
 
 
+        function save() {
+            var deferred = $q.defer();
+
+            var successCallBack = function(data) {
+                deferred.resolve(data);
+            }
+
+            var failureCallback = function (data) {
+                deferred.reject(data);
+            }
+
+            var isComposition = crudContextHolderService.getActiveTab() !== null;
+
+            var dispatchedByModal = crudContextHolderService.isShowingModal();
+
+            //TODO: refactor it entirely to use promises instead
+            $rootScope.$broadcast("sw_submitdata", {
+                successCbk: successCallBack,
+                failureCbk: failureCallback,
+                isComposition: isComposition,
+                nextSchemaObj: {},
+                dispatchedByModal: dispatchedByModal,
+                refresh: false
+            });
+
+            return deferred.promise;
+        }
 
         /// <summary>
         ///  refactor to use promises
@@ -157,7 +184,8 @@
             invokeOperation: invokeOperation,
             getApplicationDataPromise: getApplicationDataPromise,
             getApplicationWithInitialDataPromise: getApplicationWithInitialDataPromise,
-            submitData: submitData
+            submitData: submitData,
+            save: save
         };
 
         return service;

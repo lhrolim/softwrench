@@ -3,9 +3,9 @@
 
     angular.module('sw_layout').factory('crud_inputcommons', factory);
 
-    factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService','dispatcherService', '$parse', "$rootScope", "$q"];
+    factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', 'dispatcherService', '$parse', "$rootScope", "$q"];
 
-    function factory($log, associationService, contextService, cmpfacade, fieldService, $timeout, expressionService,dispatcherService, $parse, $rootScope,$q) {
+    function factory($log, associationService, contextService, cmpfacade, fieldService, $timeout, expressionService, dispatcherService, $parse, $rootScope, $q) {
 
         var api = {
             configureAssociationChangeEvents: configureAssociationChangeEvents,
@@ -58,10 +58,13 @@
 
 
             var associations = fieldService.getDisplayablesOfTypes(displayables, ['OptionField', 'ApplicationAssociationDefinition']);
+
+            var createdWatches = [];
+
             $.each(associations, function (key, association) {
                 var shouldDoWatch = true;
                 var isMultiValued = association.multiValued;
-                $scope.$watch('{0}["{1}"]'.format(datamappropertiesName, association.attribute), function (newValue, oldValue) {
+                createdWatches.push($scope.$watch('{0}["{1}"]'.format(datamappropertiesName, association.attribute), function (newValue, oldValue) {
                     if (oldValue == newValue || !shouldDoWatch) {
                         return;
                     }
@@ -111,6 +114,11 @@
                         displayables: displayables,
                         scope: $scope,
                         'continue': function () {
+                            if ($scope.compositionlistschema) {
+                                //workaround for compositions
+                                $scope.datamap = datamap;
+                                $scope.schema = $scope.compositionlistschema;
+                            }
                             if (isMultiValued && association.rendererType !== 'lookup') {
                                 associationService.updateUnderlyingAssociationObject(association, null, $scope);
                             }
@@ -118,17 +126,8 @@
                             var phase = resolved ? 'configured' : 'initial';
                             var dispatchedbytheuser = resolved ? true : false;
                             var hook = associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser, fields: fields });
-                            hook.then(function(hookResult) {
-                                var result = associationService.updateAssociations(association, $scope);
-                                if (result != undefined && result === false) {
-                                    if ($scope.compositionlistschema) {
-                                        //workaround for compositions
-
-                                        $scope.datamap = datamap;
-                                        $scope.schema = $scope.compositionlistschema;
-                                    }
-
-                                }
+                            hook.then(function (hookResult) {
+                                associationService.updateAssociations(association, $scope);
                                 try {
                                     $scope.$digest();
                                 } catch (ex) {
@@ -152,16 +151,21 @@
                         newValue = null;
                     }
                     cmpfacade.digestAndrefresh(association, $scope, newValue, datamapId);
-                });
+                }));
 
                 $log.getInstance("associationService#configureAssociationChangeEvents", ["association"]).debug("initing watchers for {0} ".format(association.attribute));
 
                 $scope.$on("sw.crud.associations.updateeageroptions", function (event, associationKey, options, contextData) {
                     $timeout(function () {
                         if ($scope.schema) {
+                            // if it is a composition list and have datamapId - the datamapId id from field should be the same from the event
+                            if (datamapId && $scope.datamap && $scope.datamap[$scope.schema.idFieldName] !== datamapId) {
+                                return;
+                            }
+
                             var displayables = fieldService.getDisplayablesByAssociationKey($scope.schema, associationKey);
                             for (var i = 0; i < displayables.length; i++) {
-                                cmpfacade.updateEagerOptions($scope, displayables[i]);
+                                cmpfacade.updateEagerOptions($scope, displayables[i], options, contextData, datamapId);
                             }
                         }
                     }, 0, false);
@@ -174,6 +178,9 @@
 
 
             });
+
+            return createdWatches;
+
 
         }
     }

@@ -28,7 +28,7 @@
           </field>
           <field attribute="#isDirty" defaultexpression="true" showexpression="false" hidden="true"/>
           <commandbars>
-            <commandgroup position="compositionbottom" removeundeclared="true">
+            <commandgroup position="detail.primary" removeundeclared="true">
             </commandgroup>
           </commandbars>
         </schema>
@@ -52,7 +52,7 @@
             <renderer type="checkbox"/>
           </field>
           <commandbars>
-            <commandgroup position="compositionbottom" removeundeclared="true">
+            <commandgroup position="detail.primary" removeundeclared="true">
             </commandgroup>
           </commandbars>
         </schema>

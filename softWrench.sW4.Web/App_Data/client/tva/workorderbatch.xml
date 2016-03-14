@@ -106,7 +106,7 @@
         <schema id="editbatch" title="Work Order Grid" platform="web" stereotype="compositionlist" mode="output">
 
           <commandbars>
-            <commandgroup position="compositiontop" removeundeclared="true">
+            <commandgroup position="detail.secondary" removeundeclared="true">
               <resourcecommand id="batches" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches" parameters="showbutton=false"/>
             </commandgroup>
           </commandbars>

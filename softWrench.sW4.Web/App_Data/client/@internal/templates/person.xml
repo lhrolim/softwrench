@@ -53,9 +53,8 @@
 
           <commandbars>
             <commandgroup position="gridtop">
-              <command id="new" icon="fa-plus" service="redirectService" method="goToApplicationView" parameters="person,newPersonDetail" label="New User" tooltip="New User" position="&lt;filter"/>
+              <command id="new" icon="fa-plus" service="redirectService" method="goToApplicationView" parameters="person,newPersonDetail" label="New User" tooltip="New User" position="left"/>
             </commandgroup>
-
           </commandbars>
         </schema>
 
@@ -116,7 +115,7 @@
           </tab>
 
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <removecommand id="save"/>
               <command id="savePerson" icon="fa fa-check" label="Save" service="personService" method="submitPerson" position="left" parameters="schema,datamap"/>
             </commandgroup>
@@ -126,7 +125,7 @@
         <schema id="myprofiledetail" parentschema="detail" title="Edit My Profile">
           <!-- Fix for SWWEB-1245-->
           <commandbars>
-            <commandgroup position="detailform">
+            <commandgroup position="detail.primary">
               <command id="cancel" icon="fa-times" service="personService" method="cancelEdition" label="Cancel" tooltip="Cancel"/>
             </commandgroup>
 

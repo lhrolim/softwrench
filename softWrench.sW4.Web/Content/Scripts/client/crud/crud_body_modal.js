@@ -50,6 +50,13 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             $scope.savefn({ selecteditem: selecteditem });
         };
 
+        $scope.getPosition = function (schema, propertyName, defaultPosition) {
+            if (!schema.properties || !schema.properties[propertyName]) {
+                return defaultPosition;
+            }
+            return schema.properties[propertyName];
+        };
+
         $scope.$on('sw.modal.hide', function(event) {
             crudContextHolderService.clearCrudContext(modalService.panelid);
             $scope.closeModal();

@@ -654,13 +654,16 @@
           <field attribute="labor_.orgid" hidden="true" />
 
           <field attribute="defaultrate" hidden="true" defaultexpression="@user.defaultcraftrate"/>
-          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="ctx:getUserData().login.toUpperCase()" extraprojectionvalues="worksite,orgid">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
-          </association>
-          <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate" default="@user.defaultcraft">
-            <event type="afterchange" service="labtranService" method="aftercraftchange"/>
-          </association>
+
+          <composition inline="true" relationship="#laborlist" label="Labors"  detailschema="" printschema="" showexpression="@_iscreation">
+            <collectionproperties listschema="labors" autocommit="false"/>
+            <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
+          </composition>
+
+          <!--Shows only on line expand -->
+          <field label="Labor" attribute="laborcode" showexpression="!@_iscreation"/>
+          <field label="Craft" attribute="craft" showexpression="!@_iscreation"/>
+
           <field label="Start Date:" requiredexpression="true" attribute="startdate" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
           </field>
@@ -669,6 +672,17 @@
             <renderer type="lookup"/>
           </association>
         </detail>
+
+        <schema id="labors" stereotype="list">
+          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="ctx:getUserData().login.toUpperCase()" extraprojectionvalues="worksite, orgid">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
+          </association>
+          <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate" default="@user.defaultcraft">
+            <renderer type="autocompleteclient" />
+            <event type="afterchange" service="labtranService" method="aftercraftchange"/>
+          </association>
+        </schema>
       </schemas>
     </application>
 
