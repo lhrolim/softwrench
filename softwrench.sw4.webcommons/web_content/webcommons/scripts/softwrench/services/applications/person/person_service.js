@@ -2,9 +2,9 @@
 (function () {
     'use strict';
 
-    angular.module('maximo_applications').factory('personService', ['alertService','redirectService', 'applicationService', 'contextService', personService]);
+    angular.module('maximo_applications').factory('personService', ['$rootScope','alertService', 'redirectService', 'applicationService', 'contextService', 'crudContextHolderService','dispatcherService', personService]);
 
-    function personService(alertService, redirectService, applicationService, contextService) {
+    function personService($rootScope,alertService, redirectService, applicationService, contextService, crudContextHolderService,dispatcherService) {
 
         var service = {
             afterChangeUsername: afterChangeUsername,
@@ -16,7 +16,11 @@
         return service;
 
         function cancelEdition() {
-            redirectService.redirectToHome();
+            var schema = crudContextHolderService.currentSchema();
+            if (schema.schemaId === 'myprofiledetail') {
+                return redirectService.redirectToHome();
+            }
+            return redirectService.goToApplication("Person","list");
         };
 
         function afterChangeUsername(datamap) {

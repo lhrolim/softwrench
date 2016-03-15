@@ -3,6 +3,9 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Applications.Command;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Metadata;
+using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata.Applications.Command {
     [TestClass]
@@ -118,6 +121,20 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             Assert.AreEqual(1, commandBarDefinition.Commands.Count());
             var commandDisplayable = (ApplicationCommand)commandBarDefinition.Commands[0];
             Assert.AreEqual("c4", commandDisplayable.Id);
+        }
+
+
+        [TestMethod]
+        public void TestMergeWithParent() {
+            ApplicationConfiguration.TestclientName = "otb";
+            MetadataProvider.StubReset();
+            var schema = MetadataProvider.Application("person").Schema(new ApplicationMetadataSchemaKey("myprofiledetail"));
+            Assert.IsTrue(schema.CommandSchema.HasDeclaration);
+            var primaryBar = schema.CommandSchema.ApplicationCommands["#detail.primary"];
+            var saveCommand = primaryBar.Commands.First(f => f.Id.Equals("save"));
+            var comm = (ApplicationCommand) saveCommand;
+            Assert.AreEqual(comm.Service, "personService");
+            Assert.AreEqual(comm.Method, "submitPerson");
         }
 
 

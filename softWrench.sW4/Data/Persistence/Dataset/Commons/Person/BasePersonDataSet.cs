@@ -5,6 +5,7 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Iesi.Collections.Generic;
+using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using NHibernate.Criterion;
 using NHibernate.Util;
@@ -47,8 +48,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var query = MetadataProvider.GlobalProperty(SwUserConstants.PersonUserQuery);
             // When getting the person list for the Apply/Remove profile action, we need to filter the list from maximo based on the usernames of the SW users who do/don't have the profile
-            if (application.Schema.SchemaId == "userselectlist" || application.Schema.SchemaId == "userremovelist")
-            {
+            if (application.Schema.SchemaId == "userselectlist" || application.Schema.SchemaId == "userremovelist") {
                 var inclusion = application.Schema.SchemaId.EqualsIc("userselectlist") ? " NOT IN " : " IN ";
                 var profileId = searchDto.CustomParameters["profileId"];
                 var validUsernamesList = _swdbDAO.FindByNativeQuery("SELECT MAXIMOPERSONID FROM SW_USER2 WHERE MAXIMOPERSONID IS NOT NULL AND ID {0} (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {1})".FormatInvariant(inclusion, profileId)).ToList();
@@ -133,11 +133,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             dataMap.SetAttribute("statistics", statistics);
             dataMap.SetAttribute("activationlink", activationLink);
             dataMap.SetAttribute("#userid", swUser.Id);
-            dataMap.SetAttribute("#maxactive",maxActive);
+            dataMap.SetAttribute("#maxactive", maxActive);
             return detail;
         }
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string,string>userIdSite ) {
+        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
 
@@ -147,7 +147,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var lastName = json.GetValue("lastname").ToString();
             var isactive = json.GetValue("#isactive").ToString() == "1";
             var signature = json.GetValue("#signature").ToString();
-            var dbUser =_swdbDAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, username);
+            var dbUser = _swdbDAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, username);
 
             var user = dbUser ?? new User(null, username, isactive) {
                 FirstName = firstName,
@@ -168,7 +168,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 };
             }
             user.UserPreferences.Signature = signature;
-            user.Profiles = LoadProfiles(json);
+            var screenSecurityGroups = LoadProfiles(json);
+            
+
+            var validSecurityGroupOperation = ValidateSecurityGroups(application.Schema.SchemaId, dbUser, screenSecurityGroups);
+            if (!validSecurityGroupOperation) {
+                throw new SecurityException("you do not have enough permissions to perform this operation");
+            }
+
+            user.Profiles = screenSecurityGroups;
+
             UserManager.SaveUser(user);
             var targetResult = Engine().Execute(operationWrapper);
             // Upate the in memory user if the change is for the currently logged in user
@@ -183,6 +192,26 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             return targetResult;
         }
 
+        private bool ValidateSecurityGroups(String schemaId, User dbUser, Iesi.Collections.Generic.ISet<UserProfile> screenProfiles) {
+            if (!schemaId.EqualsIc("myprofiledetail")) {
+                return true;
+            }
+            var isSysAdmin = SecurityFacade.CurrentUser().IsInRole(Role.SysAdmin);
+            var dbProfiles = dbUser.Profiles ?? new HashedSet<UserProfile>();
+
+            if (screenProfiles.Count != dbProfiles.Count) {
+                return isSysAdmin;
+            }
+
+            var hasProfileChange = screenProfiles.Any(p => dbProfiles.All(d => d.Id != p.Id));
+
+            return isSysAdmin || !hasProfileChange;
+
+
+
+        }
+
+
         private static string HandlePassword(JObject json, User user) {
             JToken password;
             json.TryGetValue("#password", out password);
@@ -194,7 +223,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             return passwordString;
         }
 
-
+        [NotNull]
         public Iesi.Collections.Generic.ISet<UserProfile> LoadProfiles(JObject json) {
             var result = new HashedSet<UserProfile>();
             var profiles = json.GetValue("#profiles");

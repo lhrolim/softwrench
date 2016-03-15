@@ -14,7 +14,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             }
             foreach (var barKey in schemaCommands.Keys) {
                 if (!originalCommandBars.ContainsKey(barKey)) {
-                    //non need to merge here
+                    //no need to merge here
                     originalCommandBars[barKey] = schemaCommands[barKey];
                     continue;
                 }
@@ -32,6 +32,17 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             if (schemaCommands == null) {
                 return result;
             }
+
+            if (commandBars == null) {
+                commandBars = new Dictionary<string, CommandBarDefinition>();
+            }
+
+            foreach (var barKey in commandBars.Keys) {
+                if (!schemaCommands.ContainsKey(barKey)) {
+                    schemaCommands.Add(barKey,commandBars[barKey]);
+                }
+            }
+
             foreach (var barKey in schemaCommands.Keys) {
                 if (!commandBars.ContainsKey(barKey)) {
                     throw new MetadataException(
