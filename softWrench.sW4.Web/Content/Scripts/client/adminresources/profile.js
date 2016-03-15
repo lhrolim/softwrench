@@ -9,7 +9,7 @@
 
         $scope.canAssignSecurity = function () {
             var schema = crudContextHolderService.currentSchema();
-            return schema.schemaId !== 'myprofiledetail' || userService.HasRole("sysadmin");
+            return schema.schemaId !== 'myprofiledetail' || userService.HasRole(["sysadmin"]);
         }
 
         $scope.addSelectedProfiles = function (selectedavailableprofiles) {
