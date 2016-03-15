@@ -247,6 +247,14 @@
             return expressionService.evaluate(requiredExpression, item);
         };
 
+        function isCompositionRequired() {
+            return expressionService.evaluate($scope.compositionschemadefinition.requiredRelationshipExpression, null, $scope);
+        }
+
+        $scope.hideRemoveBatchItem = function (compositionitem, rowindex) {
+            return compositionitem[$scope.compositionlistschema.idFieldName] > 0 || ($scope.compositionData().length === 1 && isCompositionRequired());
+        }
+
         $scope.isCompositionItemFieldHidden = function (application, fieldMetadata, item) {
             var datamap = item == null ? $scope.parentdata : compositionService.buildMergedDatamap(item, $scope.parentdata);
 
@@ -865,7 +873,7 @@
             //time for the components to be rendered
             $timeout(function () {
                 // inits autocomplete clients if needed
-                var bodyElement = $("[composition-list-key='{0}'][composition-list-index='{1}']".format($scope.getCompositionListKey(), idx));
+                var bodyElement = $("[composition-list-key='{0}'][composition-list-id='{1}']".format($scope.getCompositionListKey(), fakeNegativeId));
                 if (bodyElement.length > 0) {
                     cmpAutocompleteClient.init(bodyElement, null, $scope.compositionlistschema);
                 }

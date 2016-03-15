@@ -18,9 +18,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
         //        transclude: false,
 
         templateUrl: contextService.getResourceUrl('/Content/Shared/activitystream/templates/activitystream.html'),
-        scope: {
-            activities: '='
-        },
+        scope: true,
 
         link: function (scope) {
             scope.$name = 'crudbody';
