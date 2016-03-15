@@ -812,6 +812,15 @@
             modalService.show($scope.compositiondetailschema, item, {}, $scope.save, null, $scope.parentdata, $scope.parentschema);
         }
 
+        $scope.delete = function (item, column, $event, rowIndex) {
+            var compositionId = item[$scope.compositionlistschema.idFieldName];
+            compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
+                var compositionItem = result.resultObject.fields;
+                compositionItem["#deleted"] = 1;
+                $scope.save(compositionItem);
+            });
+        }
+
         $scope.isUpdate = false;
 
         // TODO: decide what is better for batch
@@ -821,6 +830,10 @@
 
         $scope.showEditButton = function() {
             return $scope.hasDetailSchema() && !$scope.noupdateallowed && !$scope.isBatch();
+        }
+
+        $scope.showDeleteButton = function() {
+            return !$scope.nodeleteallowed;
         }
 
         /***************Batch functions **************************************/
@@ -974,7 +987,7 @@
             // Validation should happen before adding items to the composition list to allow invalid data to pass into the system.
             var detailSchema = $scope.compositionschemadefinition.schemas.detail;
             var validationErrors;
-            if (selecteditem != undefined) {
+            if (selecteditem != undefined && selecteditem["#deleted"] != 1) {
                 var crudFormCtrl = getModalCrudFormController();
                 validationErrors = validationService.validate(detailSchema, detailSchema.displayables, selecteditem, crudFormCtrl.$error);
                 if (validationErrors.length > 0) {

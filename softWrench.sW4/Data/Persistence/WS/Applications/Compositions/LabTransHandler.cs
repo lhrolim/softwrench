@@ -28,9 +28,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             // Filter work order materials for any new entries where matusetransid is null
             var labors = (IEnumerable<CrudOperationData>)entity.GetRelationship("labtrans");
             var newLabors = labors.Where(r => r.GetAttribute("labtransid") == null);
+            var deletedLabors = labors.Where(r => r.GetAttribute("labtransid") != null && r.GetAttribute("#deleted").ToString() == "1");
+            var modifiedLabors = newLabors.Concat(deletedLabors);
 
             // Convert collection into array, if any are available
-            var crudOperationData = newLabors as CrudOperationData[] ?? newLabors.ToArray();
+            //var crudOperationData = newLabors as CrudOperationData[] ?? newLabors.ToArray();
+            var crudOperationData = modifiedLabors as CrudOperationData[] ?? modifiedLabors.ToArray();
 
             var parsedOperationData = new List<CrudOperationData>();
             HandlerParseUtil.ParseUnmappedCompositionInline(crudOperationData, parsedOperationData, "#laborlist_",
@@ -42,44 +45,54 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
             WsUtil.CloneArray(parsedOperationData, wo, "LABTRANS",
                 delegate (object integrationObject, CrudOperationData crudData) {
+                    // If deleted, 
+                    if (crudData.ContainsAttribute("#deleted") && crudData.GetAttribute("#deleted").ToString() == "1") {
+                        var payRate = GetPayRate(crudData);
+                        WsUtil.SetValueIfNull(integrationObject, "PAYRATE", payRate);
+                        WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
+                            true);
+                        WsUtil.SetValue(integrationObject, "ENTERDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
+                            true);
+                        ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Delete.ToString());
+                    } else {
+                        var transType = "WORK";
+                        if (crudData.ContainsAttribute("transtype")) {
+                            transType = crudData.GetStringAttribute("transtype");
+                        }
 
-                    var transType = "WORK";
-                    if (crudData.ContainsAttribute("transtype")) {
-                        transType = crudData.GetStringAttribute("transtype");
+                        WsUtil.SetValue(integrationObject, "LABTRANSID", -1);
+                        WsUtil.SetValue(integrationObject, "REFWO", recordKey);
+                        WsUtil.SetValue(integrationObject, "TRANSTYPE", transType);
+
+
+                        WsUtil.SetValue(integrationObject, "ORGID", entity.GetAttribute("orgid"));
+                        WsUtil.SetValue(integrationObject, "SITEID", entity.GetAttribute("siteid"));
+
+
+                        WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
+                            true);
+                        WsUtil.SetValue(integrationObject, "ENTERDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
+                            true);
+                        WsUtil.SetValueIfNull(integrationObject, "LABORCODE", user.Login.ToUpper());
+                        WsUtil.SetValueIfNull(integrationObject, "ENTERBY", user.Login.ToUpper());
+                        var payRate = GetPayRate(crudData);
+
+
+                        WsUtil.SetValueIfNull(integrationObject, "PAYRATE", payRate);
+                        // Maximo 7.6 Changes
+                        DateTime startdateentered;
+                        var jsonDate = crudData.GetAttribute("startdate");
+                        var parsedDate = jsonDate as DateTime?;
+                        if (parsedDate != null) {
+                            //if already a date, it was parsed on ConversionUTIL
+                            WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", parsedDate, true);
+                        } else if (jsonDate != null && DateTime.TryParse(jsonDate.ToString(), out startdateentered)) {
+                            WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED",
+                                DateUtil.BeginOfDay(startdateentered).FromServerToRightKind(), true);
+                        }
+                        ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
+                        FillLineCostLabor(integrationObject);
                     }
-
-                    WsUtil.SetValue(integrationObject, "LABTRANSID", -1);
-                    WsUtil.SetValue(integrationObject, "REFWO", recordKey);
-                    WsUtil.SetValue(integrationObject, "TRANSTYPE", transType);
-
-
-                    WsUtil.SetValue(integrationObject, "ORGID", entity.GetAttribute("orgid"));
-                    WsUtil.SetValue(integrationObject, "SITEID", entity.GetAttribute("siteid"));
-
-
-                    WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
-                        true);
-                    WsUtil.SetValue(integrationObject, "ENTERDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
-                        true);
-                    WsUtil.SetValueIfNull(integrationObject, "LABORCODE", user.Login.ToUpper());
-                    WsUtil.SetValueIfNull(integrationObject, "ENTERBY", user.Login.ToUpper());
-                    var payRate = GetPayRate(crudData);
-
-
-                    WsUtil.SetValueIfNull(integrationObject, "PAYRATE", payRate);
-                    // Maximo 7.6 Changes
-                    DateTime startdateentered;
-                    var jsonDate = crudData.GetAttribute("startdate");
-                    var parsedDate = jsonDate as DateTime?;
-                    if (parsedDate != null) {
-                        //if already a date, it was parsed on ConversionUTIL
-                        WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", parsedDate, true);
-                    } else if (jsonDate != null && DateTime.TryParse(jsonDate.ToString(), out startdateentered)) {
-                        WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED",
-                            DateUtil.BeginOfDay(startdateentered).FromServerToRightKind(), true);
-                    }
-                    ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
-                    FillLineCostLabor(integrationObject);
                 });
         }
 
