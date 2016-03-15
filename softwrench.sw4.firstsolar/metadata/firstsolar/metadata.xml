@@ -122,6 +122,18 @@
           </properties>
         </schema>
 
+
+        <schema id="workordercreationmodal" title="Fill In Workorder Details" stereotype="detail.modal" redeclaring="false">
+          <customization position="classstructureid">
+            <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true">
+              <renderer type="autocompleteclient" />
+            </optionfield>
+            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+        </schema>
+
         <schema id="batchshared" title="Workorder Common Fields" stereotype="detail.modal">
           <field attribute="summary" label="Summary:" requiredexpression="true"/>
           <field attribute="details" label="Details:">
@@ -511,6 +523,7 @@
           <properties>
             <property key="search.schemaid" value="search"/>
           </properties>
+
         </schema>
 
         <schema id="search" title="Location Search" stereotype="search">

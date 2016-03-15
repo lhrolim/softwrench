@@ -4,7 +4,7 @@
 
 
 
-    function workorderService($log, redirectService) {
+    function workorderService($log, redirectService, crudContextHolderService) {
 
 
 
@@ -15,20 +15,24 @@
             redirectService.goToApplication("workorder", "editdetail", params, null);
         }
 
-        function openNewDetailModal(parentdatamap) {
+        function openNewDetailModal(modalschemaId) {
             var params = {
                 popupmode: "modal",
 //                title: "Work Order"
             };
 
-            var assetData = parentdatamap.fields;
+            var datamap = crudContextHolderService.rootDataMap();
+
+            var assetData = datamap.fields;
+
+            var schema = modalschemaId ? modalschemaId : "workordercreationmodal";
 
             var jsondata = {
                 assetnum: assetData["assetnum"],
                 location: assetData["location"],
                 classstructureid: assetData["classstructureid"]
             };
-            return redirectService.goToApplication("workorder", "workordercreationmodal", params, jsondata);
+            return redirectService.goToApplication("workorder", schema, params, jsondata);
         }
 
         var service = {
@@ -41,6 +45,6 @@
 
 
 
-    angular.module('sw_layout').factory('workorderService', ["$log", "redirectService", workorderService]);
+    angular.module('sw_layout').factory('workorderService', ["$log", "redirectService", 'crudContextHolderService', workorderService]);
 }
 )(angular);
