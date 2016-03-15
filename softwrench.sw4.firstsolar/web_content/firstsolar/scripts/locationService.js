@@ -44,14 +44,14 @@
             return restService.getPromise("FirstSolarWorkorderBatch", "GetListOfRelatedWorkorders", queryParams).then(function (httpResponse) {
                 var appResponse = httpResponse.data;
                 if (appResponse.type === "BlankApplicationResponse") {
-                    return workorderservice.openNewDetailModal(datamap);
+                    return workorderservice.openNewDetailModal();
 //                    return redirectService.goToApplication("workorder", "newdetail", null, { "location": datamap.fields["location"] });
                 }
 
                 contextService.insertIntoContext("grid_refreshdata", { data: appResponse, panelid: "#modal" }, true);
                 crudContextHolderService.setFixedWhereClause("#modal", appResponse.pageResultDto.filterFixedWhereClause);
                 return modalService.show(appResponse.schema, appResponse.resultObject, { title: "There are already related workorders. Proceed?" }, function () {
-                    workorderservice.openNewDetailModal(datamap);
+                    workorderservice.openNewDetailModal();
                 });
 
             });
