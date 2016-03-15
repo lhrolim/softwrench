@@ -7,5 +7,11 @@ using System.Threading.Tasks;
 namespace softWrench.sW4.Data.API.Response {
     public class GenericApplicationResponse : BlankApplicationResponse {
         public object ResultObject { get; set; }
+
+        public override string Type {
+            get {
+                return typeof(GenericApplicationResponse).Name;
+            }
+        }
     }
 }

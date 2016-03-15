@@ -69,7 +69,7 @@
           <commandbars>
             <commandgroup position="actions">
               <container id="actioncontainer" icon="fa-bolt" label="Actions">
-                <command id="createWO" service="workorderService" method="openNewDetailModal" parameters="datamap" label="Create Work Order" icon="fa-tachometer"/>
+                <command id="createWO" service="workorderService" method="openNewDetailModal"  label="Create Work Order" icon="fa-tachometer"/>
               </container>
             </commandgroup>
           </commandbars>

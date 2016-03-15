@@ -117,19 +117,20 @@
           <commandbars>
             <commandgroup position="detail.primary">
               <removecommand id="save"/>
-              <command id="savePerson" icon="fa fa-check" label="Save" service="personService" method="submitPerson" position="left" parameters="schema,datamap"/>
+              <command id="save" icon="fa fa-check" label="Save" service="personService" method="submitPerson" position="left" parameters="schema,datamap"/>
+              <command id="cancel" icon="fa-times" service="personService" method="cancelEdition" label="Cancel" tooltip="Cancel"/>
             </commandgroup>
           </commandbars>
         </schema>
 
         <schema id="myprofiledetail" parentschema="detail" title="Edit My Profile">
           <!-- Fix for SWWEB-1245-->
-          <commandbars>
-            <commandgroup position="detail.primary">
-              <command id="cancel" icon="fa-times" service="personService" method="cancelEdition" label="Cancel" tooltip="Cancel"/>
-            </commandgroup>
-
-          </commandbars>
+<!--          <commandbars>-->
+<!--            <commandgroup position="detail.primary">-->
+<!--              -->
+<!--            </commandgroup>-->
+<!---->
+<!--          </commandbars>-->
         </schema>
 
         <schema id="newPersonDetail" stereotype="detailnew" title="New User" mode="input">
