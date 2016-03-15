@@ -30,7 +30,13 @@
                     getDataTransfer(event).effectAllowed = "copy";
                     return false;
                 };
-                validMimeTypes = !!attrs.fileDropzone ? attrs.fileDropzone.split(",").map(e => e.trim()) : null;
+
+                validMimeTypes = !attrs.fileDropzone
+                                    ? null
+                                    : attrs.fileDropzone.split(",").map(function (e) {
+                                        return e.trim();
+                                    });
+
                 checkSize = function (size) {
                     var _ref;
                     if (((_ref = attrs.maxFileSize) === (void 0) || _ref === "") || (size / 1024) / 1024 < attrs.maxFileSize) {
