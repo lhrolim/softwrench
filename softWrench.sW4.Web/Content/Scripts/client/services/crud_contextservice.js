@@ -256,19 +256,19 @@
 
         function detailLoaded(panelid) {
             this.clearDirty(panelid);
-            this.disposeDetail(panelid);
+            this.disposeDetail(panelid,false);
             getContext(panelid).needsServerRefresh = false;
         }
 
         function gridLoaded(applicationListResult, panelid) {
-            this.disposeDetail(panelid);
+            this.disposeDetail(panelid,true);
             this.setActiveTab(null, panelid);
             var context = getContext(panelid);
             context.affectedProfiles = applicationListResult.affectedProfiles;
             context.currentSelectedProfile = applicationListResult.currentSelectedProfile;
         }
 
-        function disposeDetail(panelid) {
+        function disposeDetail(panelid, clearTab) {
             var context = getContext(panelid);
             clearDetailDataResolved(panelid);
             context.tabRecordCount = {};
@@ -276,7 +276,9 @@
             _crudContext._lazyAssociationOptions = {};
             context.compositionLoadComplete = false;
             context.associationsResolved = false;
-            contextService.setActiveTab(null);
+            if (!!clearTab) {
+                contextService.setActiveTab(null);
+            }
         }
 
         function compositionsLoaded(result, panelid) {
