@@ -82,7 +82,7 @@
                                ng-model="datamap[fieldMetadata.attribute]"
                                ng-init="initCheckbox(fieldMetadata)"
                                ng-enabled="isModifiableEnabled(fieldMetadata)"
-                               ng-true-value="true" ng-false-value="false" />
+                               ng-true-value="true" ng-false-value="false"/>
                         <label class="control-label"
                                rel="{{showLabelTooltip(fieldMetadata)}}"
                                data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
@@ -92,6 +92,11 @@
                         </label>
                     </div>
                 </div>
+
+                <div ng-switch-when="imagepreview" class="imagepreview">
+                    <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
+                </div>
+
 
                 <input type="text"
                        class="form-control"
@@ -339,9 +344,7 @@
                         <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
                     </div>
                 </div>
-                <!--<div ng-switch-on="imagepreview" class="imagepreview">
-                    <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
-                </div>-->
+               
                 <div ng-switch-when="multipleupload">
                     <div class="input-group" id="{{fieldMetadata.attribute}}">
                         <div class="input-group-addon fileUpload" data-upload="files">

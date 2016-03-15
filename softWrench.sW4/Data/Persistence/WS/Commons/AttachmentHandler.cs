@@ -63,17 +63,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var entity = (CrudOperationData)maximoTemplateData.OperationData;
             var maximoObj = maximoTemplateData.IntegrationObject;
             // Attachment from a newly created ticket or work order
-            if (!String.IsNullOrWhiteSpace(entity.GetUnMappedAttribute("newattachment")) && !String.IsNullOrWhiteSpace(entity.GetUnMappedAttribute("newattachment_path"))) {
+            var data = entity.GetUnMappedAttribute("newattachment");
+            var path = entity.GetUnMappedAttribute("newattachment_path");
+            if (!string.IsNullOrWhiteSpace(data) && !string.IsNullOrWhiteSpace(path)) {
                 var attachmentParam = new AttachmentDTO() {
-                    Data = entity.GetUnMappedAttribute("newattachment"),
-                    Path = entity.GetUnMappedAttribute("newattachment_path")
+                    Data = data,
+                    Path = path
                 };
                 AddAttachment(maximoObj, attachmentParam);
             }
             // Screenshot
-            if (!String.IsNullOrWhiteSpace(entity.GetUnMappedAttribute("newscreenshot"))) {
+            var screenshot = entity.GetUnMappedAttribute("newscreenshot");
+            if (!string.IsNullOrWhiteSpace(screenshot)) {
                 var screenshotParam = new AttachmentDTO() {
-                    Data = entity.GetUnMappedAttribute("newscreenshot"),
+                    Data = screenshot,
                     Path = "screen" + DateTime.Now.ToUserTimezone(user).ToString("yyyyMMdd") + ".png"
                 };
                 AddAttachment(maximoObj, screenshotParam);
@@ -97,22 +100,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     }
                 }
             }
-
-            // worklogs: setting array on parent, but each attachment has the worklog as owner
-            var worklogs = entity.GetRelationship("worklog");
-            if (worklogs == null) return;
-            foreach (var worklog in ((IEnumerable<CrudOperationData>)worklogs).Where(worklog => worklog.Id == null)) {
-                var content = worklog.GetUnMappedAttribute("newattachment");
-                var path = worklog.GetUnMappedAttribute("newattachment_path");
-                if (string.IsNullOrWhiteSpace(content) || string.IsNullOrWhiteSpace(path)) continue;
-                var attachmentParam = new AttachmentDTO() {
-                    Data = content,
-                    Path = path,
-                    Owner = "WORKLOG",
-                    OwnerId = 3805L
-                };
-                AddAttachment(maximoObj, attachmentParam);
-            }
         }
 
         /// <summary>
@@ -123,7 +110,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public void AddAttachment(object maximoObj, AttachmentDTO attachment) {
             var user = SecurityFacade.CurrentUser();
             // Exit function - do not add attachment
-            if (String.IsNullOrEmpty(attachment.Data)) {
+            if (string.IsNullOrEmpty(attachment.Data)) {
                 return;
             }
             // Check if file was rich text file - needed to convert it to word document.
@@ -153,13 +140,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValue(docLink, "UPLOAD", true);
             w.SetValue(docLink, "DOCTYPE", "Attachments");
             w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
-            w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? String.Empty);
-            if (!string.IsNullOrEmpty(attachment.Owner)) {
-                w.SetValue(docLink, "OWNERTABLE", attachment.Owner);
-            }
-            if (attachment.OwnerId != null) {
-                w.SetValue(docLink, "OWNERID", attachment.OwnerId);
-            }
+            w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? string.Empty);
+
             HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path);
         }
 
@@ -218,7 +200,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         [NotNull]
         public static string BuildParsedURLName(IDictionary<string, object> attachmentDataMap) {
-            string docInfoURL = "";
+            var docInfoURL = "";
             if (attachmentDataMap.ContainsKey("urlname")) {
                 //either comes from the application itself, or else, the composition
                 docInfoURL = (string)attachmentDataMap["urlname"];
@@ -239,7 +221,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
 
-        public Tuple<Byte[], string> DownloadViaHttpById(string docinfoId) {
+        public Tuple<byte[], string> DownloadViaHttpById(string docinfoId) {
             var file = AttachmentDao.ById(docinfoId);
             var fileName = (string)file.GetAttribute("document");
             var docinfoURL = (string)file.GetAttribute("urlname");
@@ -270,7 +252,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
         }
 
-        public Tuple<Byte[], string> DownloadViaParentWS(string id, string parentId, string parentApplication, string parentSchemaId) {
+        public Tuple<byte[], string> DownloadViaParentWS(string id, string parentId, string parentApplication, string parentSchemaId) {
 
             // Get the parent entity executing a FindById operation in the respective WS
             var user = SecurityFacade.CurrentUser();
@@ -287,7 +269,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     if (id.Equals(attachmentId)) {
 
                         var fileBytes = w.GetRealValue(attachment, "DOCUMENTDATA") as byte[];
-                        var fileName = w.GetRealValue(attachment, "DESCRIPTION") as String;
+                        var fileName = w.GetRealValue(attachment, "DESCRIPTION") as string;
 
                         return Tuple.Create(fileBytes, fileName);
                     }
@@ -297,7 +279,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             return null;
         }
 
-        public string GetFileUrl(String docInfoURL) {
+        public string GetFileUrl(string docInfoURL) {
             if (_baseMaximoURL == null) {
                 BuildMaximoURL();
             }

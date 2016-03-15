@@ -8,16 +8,23 @@ using System;
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Worklog {
     public class BaseWorklogDataSet : MaximoApplicationDataSet {
 
+
+        private static string TOP_ATTACHMENT_URL_BY_WORKLOGID = @"select top(1) I.urlname from docinfo I
+	                                                                inner join doclinks L
+		                                                                on I.docinfoid = L.docinfoid
+	                                                                where L.ownertable='WORKLOG' and L.ownerid=?
+	                                                                order by L.createdate desc";
+
         public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var result = base.GetApplicationDetail(application, user, request);
             var datamap = result.ResultObject.Fields;
 
-            var docinfolist = MaximoHibernateDAO.GetInstance().FindByNativeQuery("select top(1) docinfoid from DOCLINKS where ownertable=? and ownerid=? order by createdate desc", "WORKORDER", datamap[application.IdFieldName]);
-            if (!docinfolist.Any()) return result;
+            var docinfourllist = MaximoHibernateDAO.GetInstance().FindByNativeQuery(TOP_ATTACHMENT_URL_BY_WORKLOGID, datamap[application.IdFieldName]);
+            if (!docinfourllist.Any()) return result;
 
-            var docinfoid = docinfolist.First()["docinfoid"];
-            var file = AttachmentHandler.DownloadViaHttpById(docinfoid);
-            datamap.Add("attachment_content", Convert.ToBase64String(file.Item1, Base64FormattingOptions.None));
+            var docinfourl = docinfourllist.First()["urlname"];
+            var fileUrl = AttachmentHandler.GetFileUrl(docinfourl);
+            datamap.Add("attachment_url", fileUrl);
 
             return result;
         }

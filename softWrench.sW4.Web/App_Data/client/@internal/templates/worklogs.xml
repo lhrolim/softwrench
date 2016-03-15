@@ -59,12 +59,15 @@
             </optionfield>
           </section>
           
+          <!-- image attachment -->
           <section orientation="horizontal">
-            <field attribute="newattachment" label="New Image" showexpression="!@worklogid">
+            <!-- upload image -->
+            <field attribute="newattachment" label="Image" showexpression="!@worklogid">
               <renderer type="dndupload" params="acceptedFileExtensions=jpg,jpeg,png,bmp" />
             </field>
-            <field attribute="attachment_content" label="Current Image" enableexpression="false" showexpression="!!@worklogid &amp;&amp; !!@attachment_content">
-              <renderer type="screenshot"/>
+            <!-- display image preview -->
+            <field attribute="attachment_url" label="Image" readonly="true" showexpression="!!@worklogid &amp;&amp; !!@attachment_url">
+              <renderer type="imagepreview"/>
             </field>
           </section>
         
