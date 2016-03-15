@@ -98,7 +98,7 @@ angular.module('sw_layout')
             var clonedFields = [
                 "affectedemail", "affectedperson", "affectedphone", "assetnum", "assetditeid",
                 "cinum", "classstructureid", "commodity", "commoditygroup",
-                "description", "longdescription_.ldtext", "longdescription_.longdescriptionid", "longdescription_.rowstamp",
+                "description", "longdescription_.ldtext",
                 "glaccount",
                 "location",
                 "orgig",
@@ -111,7 +111,14 @@ angular.module('sw_layout')
                 relatedDatamap[field] = localDatamap[field];
             });
 
-            var params = {};
+            var params = {
+                postProcessFn: function(data) {
+                    angular.forEach(relatedDatamap, function(value, key) {
+                        data.resultObject.fields[key] = value;
+                    });
+                }
+            };
+
             return redirectService.goToApplication(schema.applicationName, "newdetail", params, relatedDatamap);
         }
 
