@@ -175,7 +175,9 @@
                     var extraParameters = {};
                     var searchOperator = args[2];
                     extraParameters.searchOperator = buildSearchOperators(searchdata, searchOperator);
-                    redirectService.redirectWithData(applicationName, "list", searchdata, extraParameters);
+
+                    var targetSchemaId = $scope.schema.properties["search.target.schemaid"] || "list";
+                    redirectService.redirectWithData(applicationName, targetSchemaId, searchdata, extraParameters);
                 });
 
                 // clears a obj - used for clearing the datamap on a clear form call

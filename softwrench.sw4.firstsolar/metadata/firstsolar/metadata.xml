@@ -501,6 +501,88 @@
               </container>
             </commandgroup>
           </commandbars>
+
+          <properties>
+            <property key="search.schemaid" value="search"/>
+          </properties>
+        </schema>
+
+        <schema id="detail"  redeclaring="false" stereotype="detail">
+          <properties>
+            <property key="search.schemaid" value="search"/>
+          </properties>
+        </schema>
+
+        <schema id="search" title="Location Search" stereotype="search">
+          <field attribute="fslocationsearch" hidden="true" default="true"/>
+          <field attribute="fsincludesubloc" label="Include Sublocations" default="true" searchoperation="eq">
+            <renderer type="checkbox"/>
+          </field>
+          <optionfield attribute="fsfacility" label="Facility" requiredexpression="true" searchoperation="eq" default="">
+            <option label="ACS1"  value="ACS01"/>
+            <option label="AES1"  value="AES11"/>
+            <option label="AMH1"  value="AMH11"/>
+            <option label="AMH2"  value="AMR03,AMR04"/>
+            <option label="ALM1"  value="ALM01"/>
+            <option label="ALP1"  value="ALP11"/>
+            <option label="AVS1"  value="AVS11"/>
+            <option label="AVV1"  value="AVV11"/>
+            <option label="BEL1"  value="BEL11"/>
+            <option label="BRS1"  value="BRS11"/>
+            <option label="BWS1"  value="BWS11"/>
+            <option label="CBLA"  value="CBLA1"/>
+            <option label="CCS1"  value="CCS11"/>
+            <option label="CGL1"  value="CGL11"/>
+            <option label="CID1"  value="CID11"/>
+            <option label="CIM1"  value="CIM01"/>
+            <option label="CVS1"  value="CVS11"/>
+            <option label="DSS1"  value="DSS11,DSS21"/>
+            <option label="GAL1"  value="GAL01"/>
+            <option label="HON1"  value="HON01"/>
+            <option label="IVS1"  value="IVS11"/>
+            <option label="IVW1"  value="IVW11"/>
+            <option label="KBSA"  value="KBSA1"/>
+            <option label="KBSB"  value="KBSB1"/>
+            <option label="KNS1"  value="KNS11"/>
+            <option label="KNS1"  value="KSS11"/>
+            <option label="LHS1"  value="LHS11"/>
+            <option label="LMS1"  value="LMS01"/>
+            <option label="MAN1"  value="MAN11"/>
+            <option label="MLK1"  value="MLK11"/>
+            <option label="MSS1"  value="MSS11"/>
+            <option label="NSS1"  value="NSS11"/>
+            <option label="ORS1"  value="ORS11"/>
+            <option label="OTE1"  value="OTE11"/>
+            <option label="REE1"  value="REE01"/>
+            <option label="SAR1"  value="SAR01,SAR02,SAR03,SAR04,SAR05,SAR06,SAR07,SAR08"/>
+            <option label="SDVL"  value="SDVL1"/>
+            <option label="SES1"  value="SES10"/>
+            <option label="SES2"  value="SES20"/>
+            <option label="SGAH"  value="SGAH1"/>
+            <option label="SGAK"  value="SGAK1"/>
+            <option label="SGSO"  value="SGSO1"/>
+            <option label="SLS1"  value="SLS11"/>
+            <option label="SSN1"  value="SSN01"/>
+            <option label="STT1"  value="STT01"/>
+            <option label="TIL1"  value="TIL02"/>
+            <option label="TPZ1"  value="TPZ11"/>
+            <event type="afterchange" service="advancedSearchService" method="facilitySelected"/>
+          </optionfield>
+          <optionfield attribute="fslocint" label="Locations of Interest" providerattribute="_FsLocationsOfInterest" searchoperation="eq">
+            <renderer type="combo" params="multiple=true"/>
+          </optionfield>
+          <optionfield attribute="fsswitchgear" label="Switchgear Locations" providerattribute="_FsSwitchgearLocations" searchoperation="eq">
+            <renderer type="combo" params="multiple=true"/>
+          </optionfield>
+          <optionfield attribute="fspcslocations" providerattribute="_FsPcsLocations" searchoperation="eq">
+            <renderer type="combodropdown" params="multiple=true;showvaluesbelow=true;buttontext=Select PCS(s);maxheight=300;labelmaxlength=30;customdropdownfunction=advancedSearchService.customizeComboDropdown"/>
+          </optionfield>
+
+          <properties>
+            <property key="search.panelwidth" value="180"/>
+            <property key="crud.disableautofocus" value="true"/>
+            <property key="commandbar.bottom" value="search"/>
+          </properties>
         </schema>
       </schemas>
     </application>
