@@ -2,9 +2,9 @@
 (function () {
     'use strict';
 
-    angular.module('maximo_applications').factory('personService', ['$rootScope','alertService', 'redirectService', 'applicationService', 'contextService', 'crudContextHolderService','dispatcherService', personService]);
+    angular.module('maximo_applications').factory('personService', ['$rootScope', 'alertService', 'redirectService', 'applicationService', 'contextService', 'crudContextHolderService', 'dispatcherService', personService]);
 
-    function personService($rootScope,alertService, redirectService, applicationService, contextService, crudContextHolderService,dispatcherService) {
+    function personService($rootScope, alertService, redirectService, applicationService, contextService, crudContextHolderService, dispatcherService) {
 
         var service = {
             afterChangeUsername: afterChangeUsername,
@@ -20,7 +20,7 @@
             if (schema.schemaId === 'myprofiledetail') {
                 return redirectService.redirectToHome();
             }
-            return redirectService.goToApplication("Person","list");
+            return redirectService.goToApplication("Person", "list");
         };
 
         function afterChangeUsername(datamap) {
@@ -42,18 +42,13 @@
         }
 
         function submitPerson(schema, datamap) {
-            applicationService.submitData(
-                function(response) {
-                    var ro = response.resultObject;
+            var currentSchema = crudContextHolderService.currentSchema();
+            applicationService.save().then(function (response) {
+                var ro = response.resultObject;
+                if (currentSchema.schemaId === "myprofiledetail" && ro) {
                     contextService.loadUserContext(ro);
-                },
-                function (response) {
-                    var res = response;
-                },
-                {
-                    isComposition: false,
-                    refresh: true
-                });
+                }
+            });
         }
 
     }
