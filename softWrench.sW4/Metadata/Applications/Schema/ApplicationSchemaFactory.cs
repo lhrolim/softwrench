@@ -123,7 +123,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 return;
             }
             var childDefinition = schema.CommandSchema.ApplicationCommands;
-            schema.CommandSchema.ApplicationCommands = ApplicationCommandMerger.MergeCommands(childDefinition, parentDefinitions);
+            schema.CommandSchema.ApplicationCommands = ApplicationCommandMerger.MergeCommands(childDefinition, parentDefinitions,true);
         }
 
         private static List<IApplicationDisplayable> MergeParentSchemaDisplayables(ApplicationSchemaDefinition childSchema, IApplicationDisplayableContainer parentContainer) {
