@@ -27,7 +27,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
 
 
         public static IDictionary<string, CommandBarDefinition> MergeCommands(
-            IDictionary<string, CommandBarDefinition> schemaCommands, IDictionary<string, CommandBarDefinition> commandBars) {
+            IDictionary<string, CommandBarDefinition> schemaCommands, IDictionary<string, CommandBarDefinition> commandBars, bool applyingParentMerge = false) {
             var result = new Dictionary<string, CommandBarDefinition>();
             if (schemaCommands == null) {
                 return result;
@@ -37,11 +37,14 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
                 commandBars = new Dictionary<string, CommandBarDefinition>();
             }
 
-            foreach (var barKey in commandBars.Keys) {
-                if (!schemaCommands.ContainsKey(barKey)) {
-                    schemaCommands.Add(barKey,commandBars[barKey]);
+            if (applyingParentMerge) {
+                foreach (var barKey in commandBars.Keys) {
+                    if (!schemaCommands.ContainsKey(barKey)) {
+                        schemaCommands.Add(barKey, commandBars[barKey]);
+                    }
                 }
             }
+
 
             foreach (var barKey in schemaCommands.Keys) {
                 if (!commandBars.ContainsKey(barKey)) {
