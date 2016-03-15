@@ -16,11 +16,18 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         public virtual string FullStackTrace { get { return RootCause.StackTrace + "\n" + ImmediateCause.StackTrace + "\n" + StackTrace; } }
         public virtual string OutlineInformation {
             get {
-                var immediateLine = ExceptionUtil.LastStackTraceLine(ImmediateCause);
-                var rootLine = ExceptionUtil.LastStackTraceLine(RootCause);
-                return string.Format("[immediate]:\n{0}\n [root]:\n{1}", immediateLine, rootLine);
+                var outline = "";
+                if (ImmediateCause != null) {
+                    outline += ("[immediate]:\n" + ExceptionUtil.LastStackTraceLine(ImmediateCause) + "\n");
+                }
+                if (RootCause != null) {
+                    outline += ("[root]:\n" + ExceptionUtil.LastStackTraceLine(RootCause) + "\n");
+                }
+                return outline;
             }
         }
+
+        public MaximoException([NotNull]string message) : base(message) { }
 
         /// <summary>
         /// Creates a MaximoException instance setting rootCause as this.RootCause 

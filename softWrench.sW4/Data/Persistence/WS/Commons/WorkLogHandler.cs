@@ -58,7 +58,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     };
                     try {
                         AttachmentHandlerInstance().AddAttachment(integrationObject, attachmentParam);
-                    } catch (Exception e) {
+                    } catch (MaximoException e) {
                         throw new MaximoException("Could not attach image file. Please contact support about 'Installation Task [SWWEB-2156]'", e, ExceptionUtil.DigRootException(e));
                     }
                 }
