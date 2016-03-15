@@ -174,7 +174,6 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\BaseTicketDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\CommlogHelper.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\DispatchOperationHandler.cs" />
-    <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Worklog\BaseWorklogDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\ProgressMultiAssetHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\MeterReadingOperationHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderToolTransDataSet.cs" />

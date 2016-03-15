@@ -1,19 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
-  <entities>
-    <entity name="worklog" idAttribute="worklogid">
-      <relationships>
-        <relationship to="DOCLINKS" qualifier="attachment" collection="false">
-          <relationshipAttribute from="worklogid" to="ownerid" primary="true"/>
-          <relationshipAttribute to="ownertable" literal="WORKLOG" quoteLiteral="true"/>
-        </relationship>
-      </relationships>
-    </entity>
-  </entities>
-
   <applications>
-    <application name="worklog" title="Work Logs"  entity="worklog" id="00000000-0000-0000-0000-000000000008">
+    <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008">
       <properties>
         <property key="mobile.userInteractionEnabled" value="false"/>
         <property key="mobile.fetchlimit" value="300"/>
@@ -44,7 +33,6 @@
           <field attribute="wld_.ldtext" label="Details" >
             <renderer type="richtext"/>
           </field>
-
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <optionfield attribute="logtype" label="Log Type" default="CLIENTNOTE">
@@ -59,18 +47,10 @@
             </optionfield>
           </section>
           
-          <!-- image attachment -->
-          <section orientation="horizontal">
-            <!-- upload image -->
-            <field attribute="newattachment" label="Image" showexpression="!@worklogid">
-              <renderer type="dndupload" params="acceptedFileExtensions=jpg,jpeg,png,bmp" />
-            </field>
-            <!-- display image preview -->
-            <field attribute="attachment_url" label="Image" readonly="true" showexpression="!!@worklogid &amp;&amp; !!@attachment_url">
-              <renderer type="imagepreview"/>
-            </field>
-          </section>
-        
+          <!-- attachment placeholder -->
+          <!-- TODO: use section+id instead of field when it's eventually possible -->
+          <field attribute="position_attachment" hidden="true"></field>
+          
         </detail>
         
       </schemas>

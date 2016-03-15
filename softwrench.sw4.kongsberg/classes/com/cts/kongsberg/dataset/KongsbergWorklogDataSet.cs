@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
-using System;
 
-namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Worklog {
-    public class BaseWorklogDataSet : MaximoApplicationDataSet {
-
+namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
+    public class KongsbergWorklogDataSet : MaximoApplicationDataSet {
 
         private static string TOP_ATTACHMENT_URL_BY_WORKLOGID = @"select top(1) I.urlname from docinfo I
 	                                                                inner join doclinks L
@@ -35,6 +35,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Worklog {
 
         public override string SchemaId() {
             return "detail";
+        }
+
+        public override string ClientFilter() {
+            return "kongsberg";
         }
     }
 }

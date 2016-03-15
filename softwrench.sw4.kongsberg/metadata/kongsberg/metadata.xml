@@ -2875,5 +2875,26 @@
         </schema>
       </schemas>
     </application>
+
+    <application name="worklog" entity="worklog" title="worklogs">
+      <schemas>
+        <detail stereotype="compositiondetail" redeclaring="false">
+          <customization position="+position_attachment">
+            <!-- image attachment -->
+            <section orientation="horizontal">
+              <!-- upload image -->
+              <field attribute="newattachment" label="Image" showexpression="!@worklogid">
+                <renderer type="dndupload" params="acceptedFileExtensions=jpg,jpeg,png,bmp" />
+              </field>
+              <!-- display image preview -->
+              <field attribute="attachment_url" label="Image" readonly="true" showexpression="!!@worklogid &amp;&amp; !!@attachment_url">
+                <renderer type="imagepreview"/>
+              </field>
+            </section>
+          </customization>
+        </detail>
+      </schemas>
+    </application>
+    
   </applications>
 </metadata>
