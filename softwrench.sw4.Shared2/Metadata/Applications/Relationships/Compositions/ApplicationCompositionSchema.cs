@@ -118,6 +118,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             }
         }
 
+        public string RequiredRelationshipExpression { get; set; }
+
         public override string ToString() {
             return string.Format("DetailSchema: {0}, INLINE: {1}", _detailSchema, _inline);
         }
