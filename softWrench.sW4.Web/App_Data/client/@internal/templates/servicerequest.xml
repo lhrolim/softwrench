@@ -256,7 +256,7 @@
         <schema id="editdetail" parentschema="adetail" title="Service Request Details">
           <section id="ticketidsection">
             <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true">
-              <renderer type="combo" />
+              <renderer type="lookup" />
             </association>
             <field label="Site" attribute="siteid" readonly="true"/>
           </section>
@@ -400,7 +400,9 @@
             <field attribute="description" label="Summary" requiredexpression="true">
               <renderer type="default" params="maxlength=100" />
             </field>
-            <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false"/>
+            <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
+              <renderer type="lookup"/>
+            </association>
           </section>
 
           <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
