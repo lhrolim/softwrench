@@ -5,11 +5,11 @@
   <reference id="servicereq"/>
   <reference id="qservicereq"/>
   <reference id="workorder"/>
-  <reference id="solution"/>
+<!--  <reference id="solution"/>
   <reference id="change"/>
   <reference id="purchase"/>
   <reference id="Incident"/>
-  <reference id="Inventory"/>
+  <reference id="Inventory"/> -->
   <reference id="asset"/>
   <reference id="location"/>
 
