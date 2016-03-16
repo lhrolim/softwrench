@@ -261,7 +261,7 @@
           <field attribute="qtyrequested" label="Quantity" requiredexpression="true" qualifier="quantity">
             <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
           </field>
-          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="true">
+          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
             <renderer type="lookup"/>
           </association>
         </detail>

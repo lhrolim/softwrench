@@ -81,7 +81,7 @@
             <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
           </field>
           <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8"/>
-          <association label="GL Debit Account" requiredexpression="true" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
+          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
           </association>
         </detail>
