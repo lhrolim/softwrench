@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
+using NHibernate.Linq;
 using softwrench.sw4.api.classes.email;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -41,10 +43,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private const string Bcc = "bcc";
 
 
-        private static ISWDBHibernateDAO _dao;
+        private readonly ISWDBHibernateDAO _dao;
+        private readonly AttachmentHandler _attachmentHandler;
+
 
         public CommLogHandler() {
             _dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>(typeof(ISWDBHibernateDAO));
+            _attachmentHandler = new AttachmentHandler();
         }
 
         public void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
@@ -76,20 +81,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 w.CopyFromRootEntity(rootObject, integrationObject, Modifydate, DateTime.Now.FromServerToRightKind());
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                HandleAttachments(crudData, rootObject, maximoTemplateData.ApplicationMetadata);
                 if (w.GetRealValue(integrationObject, Sendto) != null) {
                     maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
                 } else {
-                    throw new System.ArgumentNullException("To:");
+                    throw new ArgumentNullException("To:");
                 }
+                HandleAttachments(crudData, rootObject, maximoTemplateData.ApplicationMetadata);
                 var username = user.Login;
                 var allAddresses = GetListOfAllAddressesUsed(integrationObject);
-                // TODO: Move this call off to a separate thread to speed up return time. User does not need to wait for the email addresses to be processed and stored.
                 _updateEmailHistory(username, allAddresses.ToLower().Split(','));
             });
         }
 
-        private static string GetListOfAllAddressesUsed(object integrationObject) {
+        private string GetListOfAllAddressesUsed(object integrationObject) {
             var recipientEmail = w.GetRealValue(integrationObject, Sendto).ToString();
             var ccEmail = w.GetRealValue(integrationObject, Cc);
             var bccEmail = w.GetRealValue(integrationObject, Bcc);
@@ -100,7 +104,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             return allAddresses;
         }
 
-        private static void HandleArrayOfOptions(AttributeHolder commLog, string propertyName) {
+        private void HandleArrayOfOptions(AttributeHolder commLog, string propertyName) {
             var stringOrArray = commLog.GetAttribute(propertyName);
             if (stringOrArray == null) {
                 return;
@@ -123,67 +127,59 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             commLog.SetAttribute(propertyName, sendToArray.Length > 1 ? string.Join(",", sendToArray) : sendToArray[0]);
         }
 
-        private static void HandleAttachments(CrudOperationData data, [NotNull] object maximoObj,
-            [NotNull] Metadata.Applications.ApplicationMetadata applicationMetadata) {
-            if (maximoObj == null)
-                throw new ArgumentNullException("maximoObj");
-            if (applicationMetadata == null)
-                throw new ArgumentNullException("applicationMetadata");
-            // Check if Attachment is present and make arrays of attachment paths and attachments 
-            var attachmentData = data.GetUnMappedAttribute("attachment");
-            var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
+        private void HandleAttachments(CrudOperationData data, [NotNull] object maximoObj, [NotNull] Metadata.Applications.ApplicationMetadata applicationMetadata) {
+            if (maximoObj == null) throw new ArgumentNullException("maximoObj");
+            if (applicationMetadata == null) throw new ArgumentNullException("applicationMetadata");
 
-            if (!string.IsNullOrWhiteSpace(attachmentData) && !string.IsNullOrWhiteSpace(attachmentPath)) {
-                var attachmentsData = data.GetUnMappedAttribute("attachment").Split(',');
-                var attachmentsPath = attachmentPath.Split(',');
-                var attachment = new AttachmentHandler();
-                for (int i = 0, j = 0; i < attachmentsPath.Length; i++) {
-                    var content = new AttachmentDTO() {
-                        Data = attachmentsData[j] + ',' + attachmentsData[j + 1],
-                        Path = attachmentPath.ToString()
-                    };
-                    attachment.AddAttachment(maximoObj, content);
-                    j = j + 2;
-                }
-
-            }
+            GetAttachments(data).ForEach(attachment => _attachmentHandler.AddAttachment(maximoObj, attachment));
         }
 
         private EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData) {
-            var attachments = new List<EmailAttachment>();
-            if (!string.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("attachment")) &&
-                !string.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("newattachment_path"))) {
-                var attachmentsData = crudData.GetUnMappedAttribute("attachment").Split(',');
-                var attachmentsPath = crudData.GetUnMappedAttribute("newattachment_path").Split(',');
-                for (int i = 0, j = 0; i < attachmentsPath.Length; i++) {
-                    var attachment = new EmailAttachment(attachmentsData[j] + ',' + attachmentsData[j + 1], attachmentsPath[i]);
-                    attachments.Add(attachment);
-                    j = j + 2;
-                }
-            }
+            var attachments = GetAttachments(crudData).Select(dto => new EmailAttachment(dto.Data, dto.Path)).ToList();
 
-            return new EmailData(w.GetRealValue<string>(integrationObject, Sendfrom),
+            return new EmailData(
+                w.GetRealValue<string>(integrationObject, Sendfrom),
                 w.GetRealValue<string>(integrationObject, Sendto),
                 w.GetRealValue<string>(integrationObject, Subject),
                 w.GetRealValue<string>(integrationObject, Message), attachments) {
-                Cc = w.GetRealValue<string>(integrationObject, Cc),
-                BCc = w.GetRealValue<string>(integrationObject, Bcc)
-            };
-
-
+                    Cc = w.GetRealValue<string>(integrationObject, Cc),
+                    BCc = w.GetRealValue<string>(integrationObject, Bcc)
+                };
         }
 
-        private void _updateEmailHistory(string userId, string[] emailAddresses) {
+        private IEnumerable<AttachmentDTO> GetAttachments(CrudOperationData commlog) {
+            var attachmentData = commlog.GetUnMappedAttribute("attachment");
+            var attachmentPath = commlog.GetUnMappedAttribute("newattachment_path");
 
-            string[] userIds = { userId.ToLower() };
-            var emailRecords = _dao.FindByQuery<EmailHistory>(EmailHistory.byUserIdEmailAddess, userIds, emailAddresses).ToList();
-            var newRecords = new List<EmailHistory>();
-            foreach (var emailAddress in emailAddresses) {
-                if (!emailRecords.Any(t => t.EmailAddress.EqualsIc(emailAddress))) {
-                    newRecords.Add(new EmailHistory(null, userId, emailAddress));
-                }
+            if (string.IsNullOrWhiteSpace(attachmentData) || string.IsNullOrWhiteSpace(attachmentPath)) {
+                return Enumerable.Empty<AttachmentDTO>();
             }
-            _dao.BulkSave(newRecords);
+
+            var attachmentsData = attachmentData.Split(',');
+            var attachmentsPath = attachmentPath.Split(',');
+            var dtos = new List<AttachmentDTO>(attachmentsPath.Length);
+            for (int i = 0, j = 0; i < attachmentsPath.Length; i++, j += 2) {
+                var dto = new AttachmentDTO() {
+                    Data = attachmentsData[j] + ',' + attachmentsData[j + 1],
+                    Path = attachmentsPath[i]
+                };
+                dtos.Add(dto);
+            }
+            return dtos;
+        }
+
+        private async void _updateEmailHistory(string userId, string[] emailAddresses) {
+            await Task.Factory.NewThread(() => {
+                string[] userIds = { userId.ToLower() };
+                var emailRecords = _dao.FindByQuery<EmailHistory>(EmailHistory.byUserIdEmailAddess, userIds, emailAddresses).ToList();
+
+                var newRecords = emailAddresses
+                    .Where(address => !emailRecords.Any(email => email.EmailAddress.EqualsIc(address)))
+                    .Select(address => new EmailHistory(null, userId, address))
+                    .ToList();
+                
+                _dao.BulkSave(newRecords);
+            });
         }
 
     }
