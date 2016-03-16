@@ -31,7 +31,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             WsUtil.CloneArray(worklogs, rootObject, "WORKLOG", delegate (object integrationObject, CrudOperationData crudData) {
                 // Filter work order materials for any modified entries.  This is done by using the modifydate.  
                 // Modifydate is null when detail schema is passed, which designate the record as updated or changed.  
-                if (crudData.GetAttribute("modifydate") == null) {
+                if (crudData.UnmappedAttributes.ContainsKey("#isDirty")) {
                     WsUtil.SetValueIfNull(integrationObject, "worklogid", -1);
                     WsUtil.SetValue(integrationObject, "recordkey", recordKey);
                     WsUtil.SetValueIfNull(integrationObject, "class", entity.TableName);

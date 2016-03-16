@@ -971,6 +971,9 @@
                 selecteditem = $scope.selecteditem;
             }
 
+            //enforcing the dirtyness of the item
+            selecteditem["#isDirty"] = true;
+
             if (selecteditem == undefined && !$scope.collectionproperties.allowUpdate) {
                 //this is for the call to submit without having any item on composition selected, due to having the submit as the default button
                 $log.getInstance("compositionlist#save").debug("calling save on server without composition selected");
@@ -1063,6 +1066,10 @@
             $scope.collapseAll();
             // select first page
             return $scope.selectPage(1).then(function (result) {
+                $scope.compositionData().forEach(function (item) {
+                    delete item["#isDirty"];
+                });
+                $scope.parentdata.fields[$scope.relationship] = [];
                 crudContextHolderService.setTabRecordCount($scope.relationship, null, $scope.paginationData.totalCount);
             });
         };

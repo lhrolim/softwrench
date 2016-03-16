@@ -6,8 +6,11 @@ angular.module('sw_layout')
         var activeRequests = 0;
         var activeRequestsArr = [];
         var started = function (config) {
-            lockCommandBars();
-            lockTabs();
+            var spinAvoided = config.avoidspin || false;
+            if (!spinAvoided) {
+                lockCommandBars();
+                lockTabs();
+            }
             config.headers['currentmodule'] = config.headers['currentmodule'] || contextService.retrieveFromContext('currentmodule');
             config.headers['currentprofile'] = config.headers['currentprofile'] || crudContextHolderService.getCurrentSelectedProfile();
             config.headers['currentmetadata'] = config.headers['currentmetadata'] || contextService.retrieveFromContext('currentmetadata');
@@ -17,13 +20,13 @@ angular.module('sw_layout')
             config.headers['requesttime'] = new Date().getTime();
             config.headers['cachedschemas'] = schemaCacheService.getSchemaCacheKeys();
             var log = $log.getInstance('sw4.ajaxint#started');
-            var spinAvoided = false;
+           
             if (config.url.indexOf("/Content/") < 0) {
                 //let´s ignore angularjs templates loading, that would pass through here as well
                 if (!log.isLevelEnabled('trace')) {
                     log.info("started request {0}".format(config.url));
                 }
-                spinAvoided = config.avoidspin;
+                
                 if (!spinAvoided) {
                     activeRequests++;
                     $rootScope.$broadcast('sw_ajaxinit');
@@ -46,8 +49,12 @@ angular.module('sw_layout')
             log.trace("status :{0}, url: {1} ".format(response.status, response.config.url));
             if (activeRequests <= 0) {
                 activeRequests = 0;
-                unLockCommandBars();
-                unLockTabs();
+                if (!spinAvoided) {
+                    unLockCommandBars();
+                    unLockTabs();
+                }
+                
+                
                 log.info("Requests ended");
                 $rootScope.$broadcast('sw_ajaxend', response.data);
                 successMessageHandler(response.data);
