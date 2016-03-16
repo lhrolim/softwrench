@@ -169,6 +169,14 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             var modalData = $rootScope.modalTempData;
             modalService.show(modalData);
             $rootScope.modalTempData = null;
+
+            scope.setPaneHeight = function () {
+                var headerHeight = $('.modal-header:visible', element).outerHeight(true);
+                var footerHeight = $('.modal-footer:visible', element).outerHeight(true);
+                var contentHeight = $('.modal-content', element).height();
+
+                return contentHeight - headerHeight - footerHeight;
+            };
         },
         controller: controller
     };
