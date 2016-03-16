@@ -46,27 +46,10 @@ $(function () {
         }
     };
 
-    function setFooterPosition () {
-        //make sure the height includes the footer
-        $('.site-footer').css('position', 'static');
-
-        var containerHeight = $('[ng-controller="LayoutController"]').height();
-        var windowHeight = $(window).height();
-
-        //adjust footer position
-        if (containerHeight > windowHeight) {
-            $('.site-footer').css('position', 'static');
-        } else {
-            $('.site-footer').css('position', 'absolute');
-        }
-    };
-
     setHeaderPosition();
-    setFooterPosition();
 
     //register layout functions, debounced to stop repeated calls while resizing the browser window
     $(window).resize(window.debounce(setHeaderPosition, 300));
-    $(window).resize(window.debounce(setFooterPosition, 300));
 
     //show or hide the menu when the expand button is clicked
     $('.menu-expand').click(function () {
