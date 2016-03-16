@@ -32,7 +32,7 @@
           <optionfield attribute="type" label="Type" providerattribute="_EmailTypeOptions">
             <renderer type="autocompleteclient" />
           </optionfield>
-          <field attribute="isprimary" label="Primary">
+          <field attribute="isprimary" label="Primary" enableexpression="service:emailService.hasPrimary" defaultexpression="service:emailService.isPrimary">
             <renderer type="checkbox"/>
           </field>
         </schema>
