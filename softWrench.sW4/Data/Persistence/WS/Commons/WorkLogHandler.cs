@@ -23,7 +23,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
 
             // Filter work order materials for any modified entries.  This is done by using the modifydate.  
             // Modifydate is null when detail schema is passed, which designate the record as updated or changed.  
-            var Worklogs = ((IEnumerable<CrudOperationData>)entity.GetRelationship("worklog")).Where(w => w.UnmappedAttributes["#isDirty"] != null).ToArray();
+            var Worklogs = ((IEnumerable<CrudOperationData>)entity.GetRelationship("worklog")).Where(w => w.UnmappedAttributes.ContainsKey("#isDirty")).ToArray();
             WsUtil.CloneArray(Worklogs, rootObject, "WORKLOG", delegate(object integrationObject, CrudOperationData crudData) {
                 WsUtil.SetValueIfNull(integrationObject, "worklogid", -1);
                 WsUtil.SetValue(integrationObject, "recordkey", recordKey);

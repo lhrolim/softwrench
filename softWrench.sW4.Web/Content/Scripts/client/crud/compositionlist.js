@@ -1066,6 +1066,10 @@
             $scope.collapseAll();
             // select first page
             return $scope.selectPage(1).then(function (result) {
+                $scope.compositionData().forEach(function (item) {
+                    delete item["#isDirty"];
+                });
+                $scope.parentdata.fields[$scope.relationship] = [];
                 crudContextHolderService.setTabRecordCount($scope.relationship, null, $scope.paginationData.totalCount);
             });
         };
