@@ -167,10 +167,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public static bool Validate(string attachmentPath, string attachmentData) {
             var allowedFiles = ApplicationConfiguration.AllowedFilesExtensions;
 
-            if (attachmentPath != null && attachmentPath.IndexOf('.') != -1 &&
-                !allowedFiles.Contains(attachmentPath.Substring(attachmentPath.LastIndexOf('.') + 1).ToLower())) {
-                throw new Exception(String.Format(
-                    "Invalid Attachment extension. Accepted extensions are: {0}.", String.Join(",", allowedFiles)));
+            if (attachmentPath != null && attachmentPath.IndexOf('.') != -1) {
+                var extension = attachmentPath.Substring(attachmentPath.LastIndexOf('.') + 1).ToLower();
+                if (!allowedFiles.Any(s => s.Equals(extension, StringComparison.OrdinalIgnoreCase))) {
+                    throw new Exception(string.Format("Invalid Attachment extension. Accepted extensions are: {0}.", string.Join(",", allowedFiles)));
+                }
             }
 
             var maxAttSizeInBytes = ApplicationConfiguration.MaxAttachmentSize * 1024 * 1024;
