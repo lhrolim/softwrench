@@ -312,7 +312,7 @@ function insertOrUpdateArray(arr, item, property) {
 }
 
 function lockCommandBars() {
-    var bars = $('[data-class=commandbar]');
+    var bars = $('[data-classplaceholder=commandbar]');
     bars.each(function (index, element) {
         var buttons = $(element).find('button');
         for (var i = 0; i < buttons.length; i++) {
@@ -328,7 +328,7 @@ function lockCommandBars() {
 }
 
 function unLockCommandBars() {
-    var bars = $('[data-class=commandbar]');
+    var bars = $('[data-classplaceholder=commandbar]');
     bars.each(function (index, element) {
         var buttons = $(element).find('button');
         for (var i = 0; i < buttons.length; i++) {
