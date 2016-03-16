@@ -326,7 +326,7 @@
           </section>
           <section id="statussection">
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
-              <renderer type="combo" />
+              <renderer type="lookup" />
             </association>
           </section>
           <section id="sraddresssection">

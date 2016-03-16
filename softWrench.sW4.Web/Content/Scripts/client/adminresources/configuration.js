@@ -57,7 +57,7 @@ app.directive('conditionmodal', function (contextService) {
                 $timeout(function () {
                     $("#applicationsautocmpmodal").combobox({
                         minLength: 2,
-                        pageSize: 50
+                        pageSize: 100
                     });
                 }, 0, false);
 
@@ -183,7 +183,7 @@ function configController($scope, $http, $timeout, i18NService, alertService) {
         $timeout(function() {
             $("#applicationsautocmp").combobox({
                 minLength: 2,
-                pageSize: 50
+                pageSize: 100
             });
         },0,false);
 
