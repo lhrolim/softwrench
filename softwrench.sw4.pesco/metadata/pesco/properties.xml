@@ -26,17 +26,9 @@
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>
-  <property key="dashboard.enabled" value="true"/>
-  <property key="ui.adminmenu.showclassic" value="false"/>
+  <property key="dashboard.enabled" value="false"/>
+  <property key="ui.adminmenu.showclassic" value="true"/>
   <property key="iiscontextpath" value=""/>
-
-  <!-- tableau -->
-  <property key="tableau_server" value="http://10.50.100.171" />
-  <property key="tableau_username" value="swadmin" />
-  <property key="tableau_password" value="sw@dm1n" />
-  <property key="tableau_site" value="default" />
-  
-  <!-- end tableau -->
 
   <environment key="prod">
     <property key="swdb_url" value="Data Source=xx.xx.xx.xx;Initial Catalog=sw;User Id=sw;password=swadmin;" />
@@ -48,6 +40,8 @@
   
   <environment key="qa">
     <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=sw;User Id=sw;password=swadmin;" />
+    <property key="mifcredentials.user" value='mxintadm' />
+    <property key="mifcredentials.password" value='mxintadm' />
   </environment>
 
   <environment key="demo">
