@@ -176,7 +176,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 @media all and (min-width: 1px) {
     .container .content {
         margin-top: 0;
-        flex: 1;
+        flex: 1 0 0;
     }
 
     .affix-pagination {
