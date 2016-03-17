@@ -501,9 +501,6 @@
 
       <schemas>
         <schema id="list"  redeclaring="false" stereotype="list.selection" platform="web">
-          <customization position="+siteid">
-            <field attribute="openwo" label="Work Orders"/>
-          </customization>
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
