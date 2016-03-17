@@ -35,7 +35,7 @@ angular.module('sw_layout')
     }
 });
 
-function crudBodyModal($rootScope, modalService, crudContextHolderService, schemaService) {
+function crudBodyModal($rootScope, modalService, crudContextHolderService, schemaService, $timeout) {
 
     var controller = function($scope, $http, $filter, $injector,
         formatService, fixHeaderService,
@@ -120,6 +120,11 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
                     modaldata.onloadfn($scope);
                 }
             });
+
+            //make sure the scroll is sized correctly
+            $timeout(function () {
+                $(window).trigger("resize");
+            }, 400, false);
         };
 
         $scope.save = function(selecteditem) {
@@ -169,6 +174,14 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             var modalData = $rootScope.modalTempData;
             modalService.show(modalData);
             $rootScope.modalTempData = null;
+
+            scope.setPaneHeight = function () {
+                var headerHeight = $('.modal-header:visible', element).outerHeight(true);
+                var footerHeight = $('.modal-footer:visible', element).outerHeight(true);
+                var contentHeight = $(element).outerHeight(true);
+
+                return contentHeight - headerHeight - footerHeight - 2;
+            };
         },
         controller: controller
     };
@@ -176,6 +189,6 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
     return directive;
 }
 
-angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', 'gridSelectionService', crudBodyModal]);
+angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', '$timeout', 'gridSelectionService', crudBodyModal]);
 
 })(angular);

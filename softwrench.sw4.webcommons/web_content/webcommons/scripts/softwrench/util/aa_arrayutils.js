@@ -38,7 +38,7 @@ Array.prototype.flatten = function () {
 };
 
 
-Array.prototype.firstOrDefault = function (fn) {
+Array.prototype.find = Array.prototype.find || function(fn) {
     var arr = this;
     for (var i = 0; i < arr.length; i++) {
         var item = arr[i];
@@ -50,15 +50,27 @@ Array.prototype.firstOrDefault = function (fn) {
 }
 
 
-Array.prototype.findIndex = Array.prototype.findIndex || function (predicate, thisArg) {
-    "use strict";
-    //TODO: Check predicate is a function.
-    var lastIndex = -1;
-    if (!Array.prototype.some.call(this, function (val, index, arr) {
-        return predicate.call(thisArg, val, lastIndex = index, arr);
-    })) {
-        return -1;
+Array.prototype.firstOrDefault = function (fn) {
+        var arr = this;
+        for (var i = 0; i < arr.length; i++) {
+            var item = arr[i];
+            if (fn(item)) {
+                return item;
+            }
+        }
+        return null;
     }
 
-    return lastIndex;
-}
+
+    Array.prototype.findIndex = Array.prototype.findIndex || function (predicate, thisArg) {
+        "use strict";
+        //TODO: Check predicate is a function.
+        var lastIndex = -1;
+        if (!Array.prototype.some.call(this, function (val, index, arr) {
+            return predicate.call(thisArg, val, lastIndex = index, arr);
+        })) {
+            return -1;
+        }
+
+        return lastIndex;
+    }
