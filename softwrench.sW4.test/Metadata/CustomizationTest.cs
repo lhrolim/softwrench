@@ -72,7 +72,7 @@ namespace softwrench.sW4.test.Metadata {
             var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
             var displayables = detailSchema.Fields;
             //parent fields=3 (auto-generated); customizations=2
-            Assert.AreEqual(5, displayables.Count);
+            Assert.AreEqual(6, displayables.Count);
 
             Assert.IsNull(displayables.FirstOrDefault(f => f.Attribute.Equals("description")));
 
