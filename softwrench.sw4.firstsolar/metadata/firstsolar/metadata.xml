@@ -513,6 +513,7 @@
 
           <properties>
             <property key="search.schemaid" value="search"/>
+            <property key="list.selectionstyle" value="multiple"/>
           </properties>
         </schema>
 
