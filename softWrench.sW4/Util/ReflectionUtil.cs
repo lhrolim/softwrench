@@ -7,6 +7,7 @@ using System.Web.Http;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json;
+using softWrench.sW4.Data.Persistence.WS.API;
 
 namespace softWrench.sW4.Util {
     public static class ReflectionUtil {
@@ -232,6 +233,11 @@ namespace softWrench.sW4.Util {
                 return null;
             }
             PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
+
+            if (prop == null) {
+                throw new MaximoException(propertyName + " does not exist on the integration object. Make sure the wsdl declares this property.");
+            }
+
             Type type = prop.PropertyType;
             if (!type.IsArray) {
                 throw new ArgumentException(String.Format("property {0} is not an array", propertyName));

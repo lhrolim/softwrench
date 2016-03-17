@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('srService', ["alertService", function (alertService) {
+    .factory('srService', ["alertService", "redirectService", function (alertService, redirectService) {
 
     return {
         beforeChangeLocation: function (event) {
@@ -88,6 +88,40 @@ angular.module('sw_layout')
                 alertService.alert("You may select an Owner or an Owner Group; not both");
             }
         },
+
+        startRelatedSRCreation: function (schema, datamap) {
+            var localDatamap = datamap.fields || datamap;
+            var relatedDatamap = {
+                'status': "NEW",
+                '#relatedrecord_recordkey': localDatamap[schema.userIdFieldName]
+            };
+            var clonedFields = [
+                "affectedemail", "affectedperson", "affectedphone", "assetnum", "assetditeid",
+                "cinum", "classstructureid", "commodity", "commoditygroup",
+                "description", "longdescription_.ldtext",
+                "glaccount",
+                "location",
+                "orgig",
+                "reportedby", "reportedemail", "reportedphone", "reportedpriority",
+                "siteid", "source",
+                "virtualenv"
+            ];
+            clonedFields.forEach(function(field) {
+                if (!localDatamap.hasOwnProperty(field)) return;
+                relatedDatamap[field] = localDatamap[field];
+            });
+
+            var params = {
+                postProcessFn: function(data) {
+                    angular.forEach(relatedDatamap, function(value, key) {
+                        data.resultObject.fields[key] = value;
+                    });
+                }
+            };
+
+            return redirectService.goToApplication(schema.applicationName, "newdetail", params, relatedDatamap);
+        }
+
     };
 
 }]);

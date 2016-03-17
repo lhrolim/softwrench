@@ -441,7 +441,9 @@
     <Content Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
     <Content Include="App_Data\Client\%40internal\templates\woactivity.xml" />
     <Content Include="App_Data\Client\%40internal\templates\wochange.xml" />
-    <Content Include="App_Data\Client\%40internal\templates\worklogs.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\worklogs.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\workorder.xml">
       <SubType>Designer</SubType>
     </Content>

@@ -1,8 +1,8 @@
 ﻿(function (app, angular) {
     "use strict";
 
-    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "crudContextHolderService",
-        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, crudContextHolderService) {
+    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "fixHeaderService", "crudContextHolderService",
+        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, fixHeaderService, crudContextHolderService) {
 
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
         var methodname = expr.substr(7);
@@ -106,7 +106,7 @@
             $(".no-touch [rel=tooltip]").tooltip("hide");
 
             //update header/footer layout
-            $(window).trigger("resize");
+            fixHeaderService.callWindowResize();
         }, false);
 
         return command.service === "$scope"
