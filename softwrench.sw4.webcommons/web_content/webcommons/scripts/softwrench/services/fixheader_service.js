@@ -35,7 +35,6 @@ angular.module('sw_layout')
     };
 
     function setHeaderPosition() {
-        console.log('setHeaderPosition');
         var siteHeaderElements = $('.site-header');
         var affixPaginationElements = $('.affix-pagination');
         var listTheadElement = $('.listgrid-thead');
