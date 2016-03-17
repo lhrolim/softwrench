@@ -1063,12 +1063,20 @@
             $scope.collapseAll();
             // select first page
             return $scope.selectPage(1).then(function (result) {
-                $scope.compositionData().forEach(function (item) {
-                    delete item["#isDirty"];
-                });
-                $scope.parentdata.fields[$scope.relationship] = [];
+                $scope.clearNewCompositionData();
                 crudContextHolderService.setTabRecordCount($scope.relationship, null, $scope.paginationData.totalCount);
             });
+        };
+
+        $scope.$on('sw.modal.hide', function(event) {
+            $scope.clearNewCompositionData();
+        });
+
+        $scope.clearNewCompositionData = function() {
+            $scope.compositionData().forEach(function(item) {
+                delete item["#isDirty"];
+            });
+            $scope.parentdata.fields[$scope.relationship] = [];
         };
 
 
