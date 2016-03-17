@@ -18,7 +18,6 @@ using softWrench.sW4.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.wsWorkorder;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
-using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class CommLogHandler {
@@ -66,6 +65,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var ownerid = entity.Id;
 
             w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate (object integrationObject, CrudOperationData crudData) {
+                var sendTo = w.GetRealValue(integrationObject, Sendto);
+                if(sendTo == null) throw new ArgumentNullException("To:");
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
                 var id = MaximoHibernateDAO.GetInstance().FindSingleByNativeQuery<object>("Select MAX(commlog.commlogid) from commlog", null);
                 var rnd = new Random();
@@ -81,15 +82,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 w.CopyFromRootEntity(rootObject, integrationObject, Modifydate, DateTime.Now.FromServerToRightKind());
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                if (w.GetRealValue(integrationObject, Sendto) != null) {
-                    maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
-                } else {
-                    throw new ArgumentNullException("To:");
-                }
-                HandleAttachments(crudData, rootObject, maximoTemplateData.ApplicationMetadata);
+                maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
+                HandleAttachments(crudData, integrationObject, maximoTemplateData.ApplicationMetadata);
                 var username = user.Login;
                 var allAddresses = GetListOfAllAddressesUsed(integrationObject);
-                _updateEmailHistory(username, allAddresses.ToLower().Split(','));
+                UpdateEmailHistoryAsync(username, allAddresses.ToLower().Split(','));
             });
         }
 
@@ -168,7 +165,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             return dtos;
         }
 
-        private async void _updateEmailHistory(string userId, string[] emailAddresses) {
+        private async void UpdateEmailHistoryAsync(string userId, string[] emailAddresses) {
             await Task.Factory.NewThread(() => {
                 string[] userIds = { userId.ToLower() };
                 var emailRecords = _dao.FindByQuery<EmailHistory>(EmailHistory.byUserIdEmailAddess, userIds, emailAddresses).ToList();
