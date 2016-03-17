@@ -1,31 +1,29 @@
 <div class="modal fade container {{cssclass}}" id="crudmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div>
+    <scroll-pane data-available-fn="setPaneHeight">
         <div class="modal-content">
-            <scroll-pane data-available-fn="setPaneHeight">
             <div class="modal-header">
                 <button type="button" class="close" aria-hidden="true" ng-click="closeModal()">&times;</button>
                 <h3>{{modaltitle}}</h3>
             </div>
-                <div class="scroll">
-                    <div class="modal-body" ng-if="modalshown">
-                        <crud-body cancelfn="cancel()"
-                                   ismodal="true"
-                                   schema="schema"
-                                   datamap="datamap"
-                                   original-datamap="originalDatamap"
-                                   association-schemas="associationSchemas"
-                                   blockedassociations="blockedassociations"
-                                   title="title"
-                                   is-list="isList"
-                                   is-detail="isDetail"
-                                   previousdata="previousdata"
-                                   previousschema="previousschema" />
-                    </div>
+            <div class="scroll">
+                <div class="modal-body" ng-show="modalshown">
+                    <crud-body cancelfn="cancel()"
+                               ismodal="true"
+                               schema="schema"
+                               datamap="datamap"
+                               original-datamap="originalDatamap"
+                               association-schemas="associationSchemas"
+                               blockedassociations="blockedassociations"
+                               title="title"
+                               is-list="isList"
+                               is-detail="isDetail"
+                               previousdata="previousdata"
+                               previousschema="previousschema" />
                 </div>
-                <div class="modal-footer">
-                    <generictoolbar datamap="datamap" position="{{getPosition(schema,'commandbar.bottom','modal.detail.primary')}}" schema="schema"/>
-                </div>
-            </scroll-pane>
+            </div>
+            <div class="modal-footer">
+                <generictoolbar datamap="datamap" position="{{getPosition(schema,'commandbar.bottom','modal.detail.primary')}}" schema="schema" />
+            </div>
         </div>
-    </div>
+    </scroll-pane>
 </div>
