@@ -57,7 +57,7 @@ app.directive('filterrowrendered', function ($timeout) {
 app.controller("ApplicationController", applicationController);
 function applicationController($scope, $http, $log, $timeout,
     fixHeaderService, $rootScope, associationService, validationService,
-    contextService, searchService, alertService, schemaService,
+    contextService, searchService, alertService, schemaService, userPreferencesService, 
     checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService) {
     "ngInject";
 
@@ -423,6 +423,18 @@ function applicationController($scope, $http, $log, $timeout,
             open(location, '_self').close();
         }
         var parameters = {};
+
+        var pageSize;
+        if (schema) {
+            pageSize = userPreferencesService.getSchemaPreference("pageSize", schema.applicationName, schema.schemaId);
+        } else {
+            pageSize = userPreferencesService.getSchemaPreference("pageSize", $scope.applicationname, "list");
+        }
+        if (pageSize) {
+            parameters["SearchDTO"] = parameters["SearchDTO"] || {};
+            parameters["SearchDTO"].pageSize = pageSize;
+        }
+
         if (schema != null && data != null) {
             $scope.schema = schema;
             $scope.datamap = data;

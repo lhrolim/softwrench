@@ -4,7 +4,7 @@
 
 
 
-    angular.module('webcommons_services').factory('applicationService', ["$q", '$http', '$rootScope', 'contextService', "crudContextHolderService", applicationService]);
+    angular.module('webcommons_services').factory('applicationService', ["$q", '$http', '$rootScope', 'contextService', "crudContextHolderService", "userPreferencesService", applicationService]);
 
     function fillApplicationParameters(parameters, applicationName,schemaId, mode) {
         /// <returns type=""></returns>
@@ -21,7 +21,7 @@
         return parameters;
     };
 
-    function applicationService($q, $http, $rootScope, contextService, crudContextHolderService) {
+    function applicationService($q, $http, $rootScope, contextService, crudContextHolderService, userPreferencesService) {
 
         var buildApplicationURLForBrowser = function (applicationName, parameters) {
             var crudUrl = $(routes_homeurl)[0].value;
@@ -107,8 +107,13 @@
             /// <param name="title"></param>
             /// <param name="parameters">@deprecated --></param>
             /// <param name="jsonData"></param>
-            parameters = fillApplicationParameters(parameters,applicationName, schemaId, mode);
+            parameters = fillApplicationParameters(parameters, applicationName, schemaId, mode);
 
+            var pageSize = userPreferencesService.getSchemaPreference("pageSize", applicationName, schemaId);
+            if (pageSize) {
+                parameters["SearchDTO"] = parameters["SearchDTO"] || {};
+                parameters["SearchDTO"].pageSize = pageSize;
+            }
 
             if (parameters.popupmode === "browser") {
                 return buildApplicationURLForBrowser(applicationName, parameters);

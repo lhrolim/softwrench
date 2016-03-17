@@ -279,6 +279,10 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             };
             refreshLoop();
 
+            if (sidePanelService.getExpandedPanelFromPreference() === $scope.panelid && !sidePanelService.isOpened($scope.panelid)) {
+                $scope.toggleActivityStream();
+            }
+
             //open notification pane by default, TODO: remove for production
             //$timeout(function() {
             //    $('#activitystream .handle').trigger('click');

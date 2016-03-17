@@ -25,7 +25,7 @@
                 // TODO Fix schemaCacheService.getCachedSchema + $http.get(applicationService.getApplicationUrl(...))
                 var schemacache = {};
 
-                sidePanelService.hide($scope.panelid);
+                sidePanelService.hide($scope.panelid, true);
                 sidePanelService.setIcon($scope.panelid, "fa-search");
 
                 // calcs the crudsearch panel height - used on scroll pane
@@ -40,8 +40,8 @@
                     return height;
                 };
 
-                function setFocus(ctx) {
-                    if (!ctx.opened) {
+                function setFocus(newState) {
+                    if (!newState) {
                         return;
                     }
 
@@ -101,13 +101,14 @@
                         // controls the initial state of side panel
                         var startExpanded = schema.properties && schema.properties["search.startexpanded"] === "true";
                         if (startExpanded) {
-                            if (!ctx.opened) {
+                            if (!sidePanelService.isOpened($scope.panelid)) {
                                 sidePanelService.toggle($scope.panelid);
                             } else {
                                 setFocus(ctx);
                             }
                         }
-                        else if (ctx.opened) {
+
+                        if (sidePanelService.getExpandedPanelFromPreference() === $scope.panelid && !sidePanelService.isOpened($scope.panelid)) {
                             sidePanelService.toggle($scope.panelid);
                         }
                     });

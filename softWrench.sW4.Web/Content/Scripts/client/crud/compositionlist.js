@@ -203,7 +203,7 @@
     });
 
     function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
-        formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient,
+        formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient, userPreferencesService, 
         expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
         schemaService, contextService, fixHeaderService) {
 
@@ -329,6 +329,10 @@
             if (!$scope.paginationData) {
                 //case the tab is loaded after the event result, the event would not be present on the screen
                 $scope.paginationData = contextService.get("compositionpagination_{0}".format($scope.relationship), true, true);
+            }
+
+            if ($scope.paginationData) {
+                userPreferencesService.syncSchemaPreference($scope.paginationData, "pageSize", "compositionPageSize", $scope.parentschema.applicationName, $scope.parentschema.schemaId);
             }
 
             if (!$scope.isBatch()) {
@@ -1264,7 +1268,7 @@
     };
 
     CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService",
-            "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient",
+            "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient", "userPreferencesService", 
             "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
             "schemaService", "contextService", "fixHeaderService"];
 

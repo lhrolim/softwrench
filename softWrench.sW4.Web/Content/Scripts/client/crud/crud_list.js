@@ -32,14 +32,14 @@
 
             controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log",
                 "formatService", "fixHeaderService", "alertService",
-                "searchService", "tabsService",
+                "searchService", "tabsService", "userPreferencesService", 
                 "fieldService", "commandService", "i18NService", "modalService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
                 "checkpointService", "schemaCacheService", "dispatcherService",
                 function ($scope, $http, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService,
-                    searchService, tabsService,
+                    searchService, tabsService, userPreferencesService, 
                     fieldService, commandService, i18NService, modalService,
                     validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
                     associationService, statuscolorService, contextService, eventService, iconService, expressionService,
@@ -156,6 +156,8 @@
                                 //if the data is not coming from the server, let´s restore the latest, this is due to a cancel click
                                 $scope.paginationData = contextService.fetchFromContext("crud_context", true).paginationData;
                             }
+
+                            userPreferencesService.syncCrudPreference($scope.paginationData, "pageSize", "pageSize", $scope.panelid);
 
                             $scope.searchData = {};
                             $scope.searchOperator = {};
@@ -401,7 +403,8 @@
                             searchDTO: searchDTO,
                             printMode: printMode,
                             schemaFieldsToDisplay: $scope.fieldstodisplay,
-                            metadataid: $scope.metadataid
+                            metadataid: $scope.metadataid,
+                            saveSwGlobalRedirectURL: typeof $scope.panelid === "undefined" && $scope.ismodal !== "true"
                         });
 
                         searchPromise.success(function (data) {
@@ -659,6 +662,11 @@
                             var searchDTO = {};
                             if (fixedWhereClause) {
                                 searchDTO.filterFixedWhereClause = fixedWhereClause;
+                            }
+
+                            var pageSize = userPreferencesService.getSchemaPreference("pageSize", $scope.schema.applicationName, $scope.schema.schemaId, $scope.panelid);
+                            if (pageSize) {
+                                searchDTO.pageSize = pageSize;
                             }
 
                             var searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, $scope.schema.schemaId, {

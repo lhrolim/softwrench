@@ -5,8 +5,8 @@
 
     app.factory('compositionService',
         ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitService", "schemaService", "searchService", "$q", "fieldService",
-            "compositionCommons", "crudContextHolderService","tabsService",
-    function ($log, $http, $rootScope, $timeout, contextService, submitService, schemaService, searchService, $q, fieldService, compositionCommons, crudContextHolderService, tabsService) {
+            "compositionCommons", "crudContextHolderService","tabsService", "userPreferencesService", 
+    function ($log, $http, $rootScope, $timeout, contextService, submitService, schemaService, searchService, $q, fieldService, compositionCommons, crudContextHolderService, tabsService, userPreferencesService) {
 
             var config = {
                 defaultPageSize: 10,
@@ -98,6 +98,12 @@
                     }
                     delete fieldsTosubmit[composition];
                 });
+
+                var pageSize = userPreferencesService.getSchemaPreference("compositionPageSize", schema.applicationName, schema.schemaId);
+                if (pageSize && paginatedSearch && paginatedSearch.pageSize !== 0) {
+                    paginatedSearch.pageSize = pageSize;
+                }
+
                 var parameters = {
                     key: {
                         schemaId: schema.schemaId,
@@ -105,7 +111,7 @@
                         platform: platform()
                     },
                     id: schemaService.getId(datamap, schema),
-                    paginatedSearch: paginatedSearch || buildPaginatedSearchDTO()
+                    paginatedSearch: paginatedSearch || buildPaginatedSearchDTO(null, pageSize)
                 };
                 parameters.compositionList = compositionNames;
 

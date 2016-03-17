@@ -2,9 +2,10 @@
 (function (angular) {
     "use strict";
 
-    function sidePanelService(fixHeaderService) {
+    function sidePanelService(fixHeaderService, userPreferencesService) {
         //#region Utils
         var openedPanel = null;
+        var expandedPanelPreferenceKey = "expandedSidePanel";
 
         // the sum of all handles and spaces between (including the first space)
         var sidePanelHandlesWidth = 0;
@@ -118,12 +119,16 @@
             recalcAllTops();
         }
 
-        function toggle(panelid) {
+        function isOpened(panelid) {
+            return openedPanel === panelid;
+        }
+
+        function toggle(panelid, mantainPreference) {
             var ctx = getContext(panelid);
 
             // the panel with the given id was open
             // side panels have to colapse
-            if (openedPanel === panelid) {
+            if (isOpened(panelid)) {
                 openedPanel = null;
                 ctx.opened = false;
             }
@@ -145,17 +150,29 @@
             //resize/position elements
             fixHeaderService.callWindowResize();
             $(window).trigger('resize')
+
+            var newState = isOpened(panelid);
+            if (!mantainPreference) {
+                userPreferencesService.setPreference(expandedPanelPreferenceKey, openedPanel);
+            }
+
             // callback
             if (ctx.toggleCallback) {
-                ctx.toggleCallback(ctx);
+                ctx.toggleCallback(newState);
             }
+
+            return newState;
+        }
+
+        function getExpandedPanelFromPreference() {
+            return userPreferencesService.getPreference(expandedPanelPreferenceKey);
         }
 
         // hides panel completely from view (not collapse/expand)
-        function hide(panelid) {
+        function hide(panelid, mantainPreference) {
             // colapses if expanded
-            if (openedPanel === panelid) {
-                toggle(panelid);
+            if (isOpened(panelid)) {
+                toggle(panelid, mantainPreference);
             }
 
             getContext(panelid).hidden = true;
@@ -197,11 +214,13 @@
             setTitle: setTitle,
             setHandleWidth: setHandleWidth,
             getContext: getContext,
+            isOpened : isOpened,
             toggle: toggle,
             hide: hide,
             show: show,
             getNumberOfVisiblePanels: getNumberOfVisiblePanels,
-            getTotalHandlesWidth: getTotalHandlesWidth
+            getTotalHandlesWidth: getTotalHandlesWidth,
+            getExpandedPanelFromPreference: getExpandedPanelFromPreference
         };
         return service;
         //#endregion
@@ -209,7 +228,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("sidePanelService", ["fixHeaderService", sidePanelService]);
+    angular.module("sw_layout").factory("sidePanelService", ["fixHeaderService", "userPreferencesService", sidePanelService]);
 
     //#endregion
 
