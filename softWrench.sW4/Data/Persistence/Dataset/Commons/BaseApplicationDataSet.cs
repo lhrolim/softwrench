@@ -258,11 +258,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         private void HandleAttachments(CompositionFetchResult data) {
             var attachments = data.ResultObject["attachment_"].ResultList;
             foreach (var attachment in attachments) {
-                if (attachment.ContainsKey("docinfo_.urlname")) {
-                    var docInfoURL = (string)attachment["docinfo_.urlname"];
-                    attachment["download_url"] = AttachmentHandler.GetFileUrl(docInfoURL);
-                    AttachmentHandler.BuildParsedURLName(attachment);
-                }
+                if (!attachment.ContainsKey("docinfo_.urlname")) continue;
+                var docInfoURL = (string)attachment["docinfo_.urlname"];
+                attachment["download_url"] = AttachmentHandler.GetFileUrl(docInfoURL);
+                AttachmentHandler.BuildParsedURLName(attachment);
             }
         }
 

@@ -13,6 +13,30 @@
  *
  */
 (function ($) {
+    // Modified from http://stackoverflow.com/questions/5001608/how-to-know-if-the-text-in-a-textbox-is-selected
+    function getSelection(textbox) {
+        var selectedRange = null;
+        var activeElement = document.activeElement;
+
+        // all browsers (including IE9 and up), except IE before version 9 
+        if (window.getSelection && activeElement &&
+            (activeElement.tagName.toLowerCase() == "textarea" || (activeElement.tagName.toLowerCase() == "input" && activeElement.type.toLowerCase() == "text")) &&
+            activeElement === textbox) {
+            var startIndex = textbox.selectionStart;
+            var endIndex = textbox.selectionEnd;
+
+            if (endIndex - startIndex > 0) {
+                selectedRange = { startOffset: startIndex, endOffset: endIndex };
+            }
+        }
+        else if (document.selection && document.selection.type == "Text" && document.selection.createRange) // All Internet Explorer
+        {
+            selectedRange = document.selection.createRange();
+        }
+
+        return selectedRange;
+    }
+
     $.fn.scannerDetection = function (options) {
 
         if (options === null) {
@@ -78,7 +102,14 @@
                     }
                     $self.trigger('scannerDetectionError', { string: stringWriting });
                     if (focusedInput) {
-                        var newValue = $(focusedInput).val() + stringWriting;
+                        var selectedRange = getSelection(focusedInput);
+                        var newValue;
+                        if (selectedRange) {
+                            var originalText = $(focusedInput).val();
+                            newValue = originalText.slice(0, selectedRange.startOffset) + stringWriting + originalText.slice(selectedRange.endOffset);
+                        } else {
+                            newValue = $(focusedInput).val() + stringWriting;
+                        }
                         $(focusedInput).val(newValue);
                         $(focusedInput).trigger('input');
                         charBuffer = '';

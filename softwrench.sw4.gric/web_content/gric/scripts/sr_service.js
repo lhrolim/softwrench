@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('srService', function (alertService) {
+    .factory('gric.srService', function (alertService) {
     "ngInject";
 
     return {

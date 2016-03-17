@@ -34,6 +34,51 @@ angular.module('sw_layout')
         }
     };
 
+    function setHeaderPosition() {
+        var siteHeaderElements = $('.site-header');
+        var affixPaginationElements = $('.affix-pagination');
+        var listTheadElement = $('.listgrid-thead');
+
+        if (siteHeaderElements.css('position') === 'fixed') {
+            //if the header is fixed to the top of the page, set the location of the content, context menu, grid header and filter bar
+            var headerHeight = siteHeaderElements.height();
+            var paginationHeight = affixPaginationElements.height();
+            var theaderHeight = listTheadElement.height();
+            var offsetMargin = paginationHeight + theaderHeight - 1;
+
+            $('.content').css('margin-top', headerHeight);
+
+            //only adjust if toolbar is fixed 
+            if (affixPaginationElements.css('position') === 'fixed') {
+                affixPaginationElements.css('top', headerHeight);
+                $('#crudbodyform:not([data-modal="true"])').css('margin-top', offsetMargin);
+            }
+
+            //only adjust if table header is fixed
+            if (listTheadElement.css('position') === 'fixed') {
+                //move fixed listgrid header up in IE9
+                var adjustment = 0;
+                if (isIe9()) {
+                    adjustment = 135;
+                }
+
+                var offsetTop = headerHeight + paginationHeight - adjustment - 1;
+
+                listTheadElement.css('top', offsetTop);
+                $('.listgrid-table').css('margin-top', offsetMargin);
+            }
+        } else {
+            //reset the lcoation of the content, context menu, grid header and filter bar
+            $('.content').css('margin-top', 'auto');
+            affixPaginationElements.css('top', 'auto');
+            listTheadElement.css('top', 'auto');
+            $('.listgrid-table').css('margin-top', 'auto');
+        }
+    };
+
+    //register layout functions, debounced to stop repeated calls while resizing the browser window
+    $(window).resize(window.debounce(setHeaderPosition, 300));
+
     var topMessageAddClass = function (div) {
         div.addClass("affix-thead");
         div.addClass("topMessageAux");
@@ -181,9 +226,9 @@ angular.module('sw_layout')
 
             //trigger resize to postition fixed header elements
             $timeout(function () {
-                $(window).trigger('resize');
+                log.debug('callWindowResize');
+                setHeaderPosition();
             }, 0, false);
-
         }, 300),
 
         activateResizeHandler: function () {
