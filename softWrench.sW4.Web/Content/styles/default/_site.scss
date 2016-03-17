@@ -37,6 +37,9 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     padding: 0;
     width: 100%;
     max-width: none;
+}
+
+body > .container {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
