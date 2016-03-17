@@ -205,7 +205,7 @@
     function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
         formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient,
         expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
-        schemaService, contextService) {
+        schemaService, contextService, fixHeaderService) {
 
         $scope.lookupObj = {};
 
@@ -852,12 +852,9 @@
                 //used to make a differentiation between a compositionitem datamap and a regular datamap
                 '#datamaptype': "compositionitem",
             }
-            // if inside a scroll pane - to update pane size
-            $timeout(function () {
-                //time for the components to be rendered
-                $(window).trigger("resize");
-            }, 1000, false);
 
+            // if inside a scroll pane - to update pane size
+            fixHeaderService.callWindowResize();
 
             fieldService.fillDefaultValues($scope.compositionlistschema.displayables, newItem, $scope);
             //this id will be placed on the entity so that angular can use it to track. 
@@ -879,7 +876,7 @@
                 }
 
                 // if inside a scroll pane - to update pane size
-                $(window).trigger("resize");
+                fixHeaderService.callWindowResize();
             }, 1000, false);
 
         }
@@ -1261,7 +1258,7 @@
     CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService",
             "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient",
             "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
-            "schemaService", "contextService"];
+            "schemaService", "contextService", "fixHeaderService"];
 
     window.CompositionListController = CompositionListController;
 
