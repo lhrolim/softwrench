@@ -144,7 +144,7 @@
 
             //resize/position elements
             fixHeaderService.callWindowResize();
-
+            $(window).trigger('resize')
             // callback
             if (ctx.toggleCallback) {
                 ctx.toggleCallback(ctx);
