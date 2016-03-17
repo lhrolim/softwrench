@@ -4,7 +4,7 @@
 
 
 
-    function userProfileService($q, $rootScope, $log, restService, validationService, contextService, crudContextHolderService, redirectService, alertService, modalService) {
+    function userProfileService($q, $rootScope, $log, restService, validationService, contextService, crudContextHolderService, redirectService, alertService, modalService, fixHeaderService) {
 
         var simpleLog = $log.get("userProfileService", ["profile"]);
 
@@ -84,7 +84,7 @@
             }
 
             //resize/position elements
-            $(window).trigger("resize");
+            fixHeaderService.callWindowResize();
         }
 
         function afterModeChanged(parameters) {
@@ -860,6 +860,6 @@
     }
 
 
-    angular.module('sw_crudadmin').factory('userProfileService', ['$q', "$rootScope", "$log", 'restService', 'validationService', 'contextService', 'crudContextHolderService', 'redirectService', 'alertService', 'modalService', userProfileService]);
+    angular.module('sw_crudadmin').factory('userProfileService', ['$q', "$rootScope", "$log", 'restService', 'validationService', 'contextService', 'crudContextHolderService', 'redirectService', 'alertService', 'modalService', 'fixHeaderService', userProfileService]);
 
 })(angular);
