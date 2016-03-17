@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -37,6 +38,7 @@
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergIncidentDataSet.cs" />
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergServiceRequestDataSet.cs" />
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergSolutionDataSet.cs" />
+    <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergWorklogDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

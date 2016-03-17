@@ -60,16 +60,20 @@
             });
         }
 
-        function isValid(value) {
-            if (value == null) {
-                return false;
-            }
-
-            var fileName = value.match(/[^\/\\]+$/);
-            var validFileTypes = contextService.fetchFromContext("allowedfiles", true);
-            if (!validFileTypes) {
-                validFileTypes = staticvalidFileTypes;
-            }
+        /**
+         * Returns whether or not the file has a valid type by checking it's extension against a list of valid extensions.
+         * If no list is provided, will compare against a list stored in contextService['allowedfiles'].
+         * If the list in contextService does not exist, will compare against a static list of validTypes
+         * (["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png", "lic"]).
+         * 
+         * @param String value file extension or filename
+         * @param Array<String> types optional list of valid extensions
+         * @returns Boolean 
+         */
+        function isValid(value, types) {
+            if (!value) return false;
+            // var fileName = value.match(/[^\/\\]+$/);
+            var validFileTypes = types || contextService.fetchFromContext("allowedfiles", true) || staticvalidFileTypes;
             var extensionIdx = value.lastIndexOf(".");
             var extension = value.substring(extensionIdx + 1).toLowerCase();
             return $.inArray(extension, validFileTypes) !== -1;

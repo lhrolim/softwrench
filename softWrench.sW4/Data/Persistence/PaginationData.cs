@@ -7,7 +7,7 @@ namespace softWrench.sW4.Data.Persistence {
     public class PaginationData :IPaginationData{
        
 
-        private PaginationData(int pageSize, int pageNumber, string qualifiedSortColumn) {
+        public PaginationData(int pageSize, int pageNumber, string qualifiedSortColumn) {
             PageSize = pageSize;
             PageNumber = pageNumber;
             QualifiedOrderByColumn = qualifiedSortColumn;
