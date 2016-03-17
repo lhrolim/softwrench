@@ -43,10 +43,10 @@
                 <scroll-pane data-available-fn="getScrollSpaceDetails">
                     <div class="scroll">
                         <div ng-if="!!getDetailDatamap" class="fields">
-                            <div class="field" ng-repeat="fieldMetadata in compositiondetailschema.displayables" ng-show="showDetailField(fieldMetadata)">
-                                <label class="control-label">{{i18NInputLabel(fieldMetadata)}}</label>
-                                <label class="form-control" ng-bind-html="formattedValue(getDetailDatamap[fieldMetadata.attribute], fieldMetadata, getDetailDatamap)"></label>
-                            </div>
+                            <crud-output schema="compositiondetailschema"
+                                         datamap="getDetailDatamap"
+                                         displayables="compositiondetailschema.displayables"
+                                         cancelfn="cancelfn()" />
                         </div>
                     </div>
                 </scroll-pane>

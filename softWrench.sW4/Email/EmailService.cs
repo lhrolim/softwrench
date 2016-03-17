@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using cts.commons.Util;
 using softWrench.sW4.Metadata;
 using Common.Logging;
@@ -51,11 +52,27 @@ namespace softWrench.sW4.Email {
             return objsmtpClient;
         }
 
+        public async void SendEmailAsync(EmailData emailData) {
+            var smtpClient = ConfiguredSmtpClient();
+            var email = BuildMailMessage(emailData);
+            // Send the email message asynchronously
+            await smtpClient.SendMailAsync(email)
+                .ContinueWith(e => Log.Error(e), TaskContinuationOptions.OnlyOnFaulted);
+        }
+
         public void SendEmail(EmailData emailData) {
+            var smtpClient = ConfiguredSmtpClient();
+            var email = BuildMailMessage(emailData);
+            // Send the email message synchronously
+            try {
+                smtpClient.Send(email);
+            } catch (Exception ex) {
+                Log.Error(ex);
+                throw;
+            }
+        }
 
-            var objsmtpClient = ConfiguredSmtpClient();
-
-            // Send the email message
+        private MailMessage BuildMailMessage(EmailData emailData) {
             var email = new MailMessage() {
                 From = new MailAddress(emailData.SendFrom ?? MetadataProvider.GlobalProperty("defaultEmail")),
                 Subject = emailData.Subject,
@@ -66,7 +83,8 @@ namespace softWrench.sW4.Email {
             var anyAddressSet = false;
 
             if (!string.IsNullOrEmpty((emailData.SendTo))) {
-                foreach (var emailaddress in emailData.SendTo.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries)) {
+                foreach (
+                    var emailaddress in emailData.SendTo.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries)) {
                     if (AllowedToAdd(emailaddress)) {
                         email.To.Add(emailaddress.Trim());
                         anyAddressSet = true;
@@ -75,7 +93,9 @@ namespace softWrench.sW4.Email {
             }
 
             if (!anyAddressSet) {
-                throw new InvalidOperationException("Email cannot be sent to {0}. Dev environments limit the domain which can be sent to avoid sending unadvertised test emails".Fmt(emailData.SendTo));
+                throw new InvalidOperationException(
+                    "Email cannot be sent to {0}. Dev environments limit the domain which can be sent to avoid sending unadvertised test emails"
+                        .Fmt(emailData.SendTo));
             }
 
 
@@ -99,13 +119,7 @@ namespace softWrench.sW4.Email {
             if (emailData.Attachments != null) {
                 HandleAttachments(emailData.Attachments, email);
             }
-
-            try {
-                objsmtpClient.Send(email);
-            } catch (Exception ex) {
-                Log.Error(ex);
-                throw ex;
-            }
+            return email;
         }
 
         private static Boolean AllowedToAdd(string emailaddress) {
@@ -132,12 +146,7 @@ namespace softWrench.sW4.Email {
                 byte[] bytes = Convert.FromBase64String(encodedAttachment);
                 email.Attachments.Add(new Attachment(new MemoryStream(bytes), attachment.AttachmentName));
             }
-
         }
-
-
-
-
 
     }
 }

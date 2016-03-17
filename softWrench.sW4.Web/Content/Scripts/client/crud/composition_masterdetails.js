@@ -54,7 +54,7 @@
                     }
 
                     $scope.displayDetails = function (entry) {
-                        var compositionId = schemaService.getId(entry, $scope.compositionlistschema);
+                        var compositionId = schemaService.getId(entry, $scope.compositionlistschema);   
                         // hit cache first
                         if ($scope.detailData && $scope.detailData[compositionId]) {
                             return $q.when(onDetailDataResolved(entry, $scope.detailData[compositionId].data));
@@ -176,14 +176,6 @@
                         eventService.onviewdetail($scope.compositionschemadefinition, parameters);
 
                         entry.read = true;
-                    };
-
-                    $scope.showDetailField = function (fieldMetadata) {
-                        return !!$scope.getDetailDatamap
-                            && !fieldMetadata.isHidden
-                            /* TODO: !!! remove this after adding CRUD_INPUT_FIELDS !!! */
-                            && !(fieldMetadata.rendererType && fieldMetadata.rendererType.endsWith("upload"))
-                            && !(fieldMetadata.rendererType && fieldMetadata.rendererType.endsWith("lookup"));
                     };
 
                     /* Directvie Methods */
