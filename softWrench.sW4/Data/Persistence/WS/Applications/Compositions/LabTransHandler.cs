@@ -37,7 +37,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             // Filter work order materials for any new entries where matusetransid is null
             var labors = (IEnumerable<CrudOperationData>)entity.GetRelationship("labtrans");
             var newLabors = labors.Where(r => r.GetAttribute("labtransid") == null);
-            var deletedLabors = labors.Where(r => r.GetAttribute("labtransid") != null && r.GetAttribute("#deleted").ToString() == "1");
+            var deletedLabors = labors.Where(r => r.GetAttribute("labtransid") != null && r.ContainsAttribute("#deleted"));
             var modifiedLabors = newLabors.Concat(deletedLabors);
 
             // Convert collection into array, if any are available
