@@ -730,7 +730,7 @@
     <Content Include="Content\customVendor\scripts\jquery\jquery.scannerdetection.js" />
     <Content Include="Content\customVendor\scripts\angular\textAngular.js" />
     <Content Include="Content\customVendor\scripts\angular\textAngular-sanitize.js" />
-    <None Include="Content\styles\default\_context-bar.scss" />
+    <None Include="Content\styles\default\_toolbar.scss" />
     <Content Include="Content\styles\default\_crud-masterdetails.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
     <Content Include="Content\styles\default\_footer.scss" />

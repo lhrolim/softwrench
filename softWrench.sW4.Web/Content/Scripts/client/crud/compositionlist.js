@@ -1049,7 +1049,7 @@
             //TODO: refactor this, using promises
             $scope.$emit("sw_submitdata", {
                 successCbk: afterSaveListener("onAfterSave", alwaysrefresh),
-                failureCbk: afterSaveListener("onSaveError"),
+                failureCbk: afterSaveListener("onSaveError", selecteditem),
                 dispatcherComposition: $scope.relationship,
                 isComposition: true,
                 nextSchemaObj: { schemaId: crudContextHolderService.currentSchema().schemaId },
@@ -1063,7 +1063,7 @@
             }
         };
 
-        $scope.onSaveError = function (data, extra) {
+        $scope.onSaveError = function (data, selecteditem) {
             $scope.clearNewCompositionData();
             var idx = $scope.compositiondata.indexOf(selecteditem);
             if (idx !== -1) {
