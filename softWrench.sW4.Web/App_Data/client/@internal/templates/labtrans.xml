@@ -81,12 +81,12 @@
             <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
           </field>
           <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8"/>
-          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
+          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.fields.glaccount">
             <renderer type="lookup"/>
           </association>
         </detail>
 
-        <schema id="labors" stereotype="list">
+        <schema id="labors" stereotype="compositionlist">
           <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>

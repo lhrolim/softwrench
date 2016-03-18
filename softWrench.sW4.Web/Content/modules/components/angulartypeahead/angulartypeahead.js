@@ -93,7 +93,7 @@
             }
             var associationOption = crudContextHolderService.fetchLazyAssociationOption(scope.provider, scope.datamap[scope.attribute]);
 
-            var label = associationService.getLabelText(associationOption, scope.hideDescription);
+            var label = associationService.getLabelText(associationOption, scope.hideDescription, attributeValue);
             scope.log.debug("setting initial text of typeahead component {0} to {1}".format(scope.displayablepath, label));
             element.typeahead('val', label);
         }
