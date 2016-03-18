@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
+using cts.commons.simpleinjector;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -12,13 +13,21 @@ using softWrench.sW4.Util;
 using WebGrease.Css.Extensions;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
-    class LabTransHandler {
+    public class LabTransHandler : ISingletonComponent {
 
         private const string LaborAttribute = "laborcode";
         private const string CraftAttribute = "craft";
         private const string PayRateAttribute = "payrate";
 
-        public static void HandleLabors(CrudOperationData entity, object wo) {
+        private readonly MaximoHibernateDAO _maxDAO;
+
+        public LabTransHandler() {
+            _maxDAO = SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
+        }
+
+
+
+        public void HandleLabors(CrudOperationData entity, object wo) {
             // Use to obtain security information from current user
             var user = SecurityFacade.CurrentUser();
 
@@ -43,17 +52,26 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     newcrudOperationData.Fields[PayRateAttribute] = jsonObject.Value<double>(PayRateAttribute);
                 });
 
+            var deletion = false;
+
             WsUtil.CloneArray(parsedOperationData, wo, "LABTRANS",
                 delegate (object integrationObject, CrudOperationData crudData) {
                     // If deleted, 
                     if (crudData.ContainsAttribute("#deleted") && crudData.GetAttribute("#deleted").ToString() == "1") {
-                        var payRate = GetPayRate(crudData);
-                        WsUtil.SetValueIfNull(integrationObject, "PAYRATE", payRate);
-                        WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
-                            true);
-                        WsUtil.SetValue(integrationObject, "ENTERDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
-                            true);
-                        ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Delete.ToString());
+                        //TODO:Workaround while we´re figuring out how to do it via WebServices
+                        deletion = true;
+                        _maxDAO.ExecuteSql("delete from labtrans where labtransid = ? ", crudData.GetAttribute("labtransid"));
+
+                        //                        var payRate = GetPayRate(crudData);
+                        //                        WsUtil.SetValueIfNull(integrationObject, "PAYRATE", payRate);
+                        //                        WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
+                        //                            true);
+                        //                        WsUtil.SetValue(integrationObject, "ENTERDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
+                        //                            true);
+                        //                        ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Delete.ToString());
+
+
+
                     } else {
                         var transType = "WORK";
                         if (crudData.ContainsAttribute("transtype")) {
@@ -94,6 +112,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                         FillLineCostLabor(integrationObject);
                     }
                 });
+            if (deletion)
+            {
+                ReflectionUtil.SetProperty(wo, "LABTRANS", null);
+//                WsUtil.SetValue(wo, "LABTRANS", null);
+            }
+
         }
 
         private static void FillSiteId(CrudOperationData crudData, InMemoryUser user, object integrationObject) {

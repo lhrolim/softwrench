@@ -219,7 +219,7 @@
         }
     });
 
-    function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
+    function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,alertService,
         formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient,
         expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
         schemaService, contextService, fixHeaderService) {
@@ -838,12 +838,17 @@
         }
 
         $scope.delete = function (item, column, $event, rowIndex) {
-            var compositionId = item[$scope.compositionlistschema.idFieldName];
-            compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
-                var compositionItem = result.resultObject.fields;
-                compositionItem["#deleted"] = 1;
-                $scope.save(compositionItem);
+            alertService.confirm2("Are you sure you want to delete this entry").then(function() {
+                var compositionId = item[$scope.compositionlistschema.idFieldName];
+                compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
+                    var compositionItem = result.resultObject.fields;
+                    compositionItem["#deleted"] = 1;
+                    $scope.save(compositionItem);
+                });
             });
+
+
+            
         }
 
         $scope.isUpdate = false;
@@ -1293,7 +1298,7 @@
         init();
     };
 
-    CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService",
+    CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService","alertService",
             "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient",
             "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
             "schemaService", "contextService", "fixHeaderService"];
