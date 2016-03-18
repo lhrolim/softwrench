@@ -60,7 +60,7 @@
 
                             var paginationData = compositionArray[composition].paginationData;
                             // enforce composition pagination options
-                            paginationData.paginationOptions = paginationData.paginationOptions || config.defaultOptions;
+                            paginationData.paginationOptions = paginationData.paginationOptions ?  paginationData.paginationOptions : config.defaultOptions;
                             //setting this case the tabs have not yet been loaded so that they can fetch from here
                             contextService.insertIntoContext("compositionpagination_{0}".format(composition), paginationData, true);
                             compositionContext[composition] = compositionArray[composition];
