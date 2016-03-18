@@ -521,7 +521,7 @@
         <schema id="newdetail" parentschema="adetail" title="New Service Request" stereotype="detailnew" >
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
-            <association target="siteid" label="Site:" labelfield="site_.description" default="DPW" requiredexpression="true">
+            <association target="siteid" label="Site:" labelfield="site_.description" default="SF" requiredexpression="true">
               <renderer type="lookup"/>
             </association>
           </section>
