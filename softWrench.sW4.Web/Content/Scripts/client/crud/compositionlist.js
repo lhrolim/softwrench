@@ -1076,7 +1076,11 @@
             $scope.compositionData().forEach(function(item) {
                 delete item["#isDirty"];
             });
-            $scope.parentdata.fields[$scope.relationship] = [];
+            if ($scope.parentdata.fields) {
+                $scope.parentdata.fields[$scope.relationship] = [];
+            } else {
+                $scope.parentdata[$scope.relationship] = [];
+            }
         };
 
 

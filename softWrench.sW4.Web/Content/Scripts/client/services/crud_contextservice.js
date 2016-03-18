@@ -203,7 +203,7 @@
 
         function setTabRecordCount(tabId, panelId,count) {
             var context = getContext(panelId);
-            if (context.tabRecordCount && context.tabRecordCount[tabId]) {
+            if (context.tabRecordCount) {
                 context.tabRecordCount[tabId] = count;
             }
         }
