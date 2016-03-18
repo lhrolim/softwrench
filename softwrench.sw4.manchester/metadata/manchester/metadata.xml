@@ -668,7 +668,7 @@
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
           </field>
           <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
-          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.previousdata.fields['glaccount']">
+          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.parentdata.fields.glaccount">
             <renderer type="lookup"/>
           </association>
         </detail>
@@ -715,7 +715,7 @@
       <schemas>
         <detail platform="web" redeclaring="false">
           <customization position="gldebitacct">
-            <association label="GL Debit Account:"  target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.previousdata.fields['glaccount']">
+            <association label="GL Debit Account:"  target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.parentdata.fields.glaccount">
               <renderer type="lookup"/>
             </association>
           </customization>

@@ -251,9 +251,9 @@ function buildCSSselector(columnIndex, columnClass, element, schema) {
 
     //if css class found, build selector using class, else use nth-child as a fallback
     if (columnClass) {
-        return '#' + gridtype + '[data-application="' + schema.applicationName + '"] ' + element + '.' + columnClass;
+        return '#' + gridtype + '[data-application="' + schema.applicationName + '"][data-schema="' + schema.schemaId + '"] ' + element + '.' + columnClass;
     } else {
-        return '#' + gridtype + '[data-application="' + schema.applicationName + '"] ' + element + ':nth-child(' + columnIndex + ')';
+        return '#' + gridtype + '[data-application="' + schema.applicationName + '"][data-schema="' + schema.schemaId + '"] ' + element + ':nth-child(' + columnIndex + ')';
     }
 }
 

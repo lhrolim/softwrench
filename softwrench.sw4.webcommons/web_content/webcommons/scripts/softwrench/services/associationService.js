@@ -96,9 +96,12 @@
         };
 
 
-        function getLabelText(item, hideDescription) {
+        function getLabelText(item, hideDescription, value) {
             if (item == null) {
-                return null;
+                if (value == null) {
+                    return null;
+                }
+                return "true" === hideDescription || true === hideDescription ? value : "(" + value + ")";
             }
 
             if ("true" === hideDescription || true === hideDescription || item.label==null) {
