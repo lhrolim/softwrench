@@ -57,15 +57,16 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             return schema.properties[propertyName];
         };
 
-        $scope.$on('sw.modal.hide', function(event) {
+        $scope.$on('sw.modal.hide', function(event, selfThrown) {
             crudContextHolderService.clearCrudContext(modalService.panelid);
-            $scope.closeModal();
+            if(selfThrown !== true) $scope.closeModal();
         });
 
         $scope.closeModal = function() {
             $scope.modalshown = false;
-            $('#crudmodal').modal('hide');
+            $('#crudmodal').modal("hide");
             $rootScope.showingModal = false;
+            $rootScope.$broadcast("sw.modal.hide", true);
 
             $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
             $('.no-touch [rel=tooltip]').tooltip('hide');
