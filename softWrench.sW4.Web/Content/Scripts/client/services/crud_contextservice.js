@@ -147,8 +147,12 @@
             return getContext(panelid).currentApplicationName;
         }
 
-        function currentSchema(panelid) {
-            return getContext(panelid).currentSchema;
+        function currentSchema(panelid,schema) {
+            var context = getContext(panelid);
+            if (schema) {
+                context.currentSchema = schema;
+            }
+            return context.currentSchema;
         }
 
         function rootDataMap(panelid,datamap) {
@@ -430,9 +434,10 @@
             clearCrudContext("#modal");
         };
 
-        function modalLoaded(datamap) {
+        function modalLoaded(datamap,schema) {
             _crudContext.showingModal = true;
             rootDataMap("#modal", datamap);
+            currentSchema("#modal", schema);
         }
 
         function isShowingModal() {

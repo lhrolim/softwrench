@@ -214,6 +214,13 @@
 
                 });
 
+                $scope.getMainTabId = function() {
+                    if ($scope.ismodal === "true") {
+                        return "modalmain";
+                    }
+                    return "main";
+                }
+
                 $scope.setActiveTab = function (tabId) {
                     crudContextHolderService.setActiveTab(tabId);
                 };

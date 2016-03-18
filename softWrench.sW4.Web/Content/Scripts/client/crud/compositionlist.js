@@ -185,6 +185,23 @@
                     scope.cancelfn({ data: data, schema: schema });
                 }
 
+                scope.$on("sw.modal.show", function (event, modalData) {
+                    if (scope.ismodal === "true") {
+                        //inline compositions inside of the modal need to be refreshed (relinked)
+                        var datamap = modalData.datamap;
+                        scope.parentdata = datamap;
+                        doLoad();
+                    }
+                });
+
+                scope.$on("sw.modal.hide", function (event) {
+                    if (scope.ismodal === "true") {
+                        $log.get('compositionlistwrapper#doLoad',["composition","inline"]).debug('wiping <composition-list> directive due to modal disposal');
+                        //inline compositions inside of the modal need to be refreshed (relinked)
+                        element.empty();
+                    }
+                });
+
                 scope.$on("sw_lazyloadtab", function (event, tabid) {
                     if (scope.tabid == tabid) {
                         if (!compositionService.isCompositionLodaded(scope.tabid)) {
@@ -1047,6 +1064,7 @@
         };
 
         $scope.onSaveError = function (data, extra) {
+            $scope.clearNewCompositionData();
             var idx = $scope.compositiondata.indexOf(selecteditem);
             if (idx !== -1) {
                 $scope.compositiondata.splice(idx, 1);
@@ -1068,19 +1086,14 @@
             });
         };
 
-        $scope.$on('sw.modal.hide', function(event) {
-            $scope.clearNewCompositionData();
-        });
-
+     
         $scope.clearNewCompositionData = function() {
             $scope.compositionData().forEach(function(item) {
                 delete item["#isDirty"];
             });
-            if ($scope.parentdata.fields) {
-                $scope.parentdata.fields[$scope.relationship] = [];
-            } else {
-                $scope.parentdata[$scope.relationship] = [];
-            }
+            //TODO: there´s a bug in potential here, after we´re adding an item to a composition the parentdata is getting inconsistent
+            //but it´s rather on the save fn
+            $scope.parentdata.fields[$scope.relationship] = [];
         };
 
 
