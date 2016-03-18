@@ -196,6 +196,7 @@
 
                 scope.$on("sw.modal.hide", function (event) {
                     if (scope.ismodal === "true") {
+                        $log.get('compositionlistwrapper#doLoad',["composition","inline"]).debug('wiping <composition-list> directive due to modal disposal');
                         //inline compositions inside of the modal need to be refreshed (relinked)
                         element.empty();
                     }
