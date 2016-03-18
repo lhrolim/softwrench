@@ -86,6 +86,10 @@
                     }
                     return $scope.handleicon;
                 }
+
+                if (sidePanelService.getExpandedPanelFromPreference() === $scope.panelid && !sidePanelService.isOpened($scope.panelid)) {
+                    sidePanelService.toggle($scope.panelid);
+                }
             }]
         }
     });

@@ -58,6 +58,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\modalFilter_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\notificationService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\classificationcolor_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\userPreferencesService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\workflowService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\data\datamapSanitize_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\email_service.js" />
@@ -133,7 +134,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\submit_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\tabs_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\tooltrans_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\userpreference_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\gridPreferenceService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\validation_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\clientawareserviceprovider.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\log_enhacer.js" />
