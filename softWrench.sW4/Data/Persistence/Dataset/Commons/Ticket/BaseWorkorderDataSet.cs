@@ -6,6 +6,7 @@ using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog;
@@ -47,12 +48,19 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
         private SearchRequestDto ProblemCodeFilterByFailureClassFunction(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
-            var failurecodeid = parameters.OriginalEntity.GetAttribute("failurelist_.failurelist");
+            var failurecodeid = FailureCodeId(parameters.OriginalEntity);
             if (failurecodeid == null) {
                 return filter;
             }
-            filter.AppendSearchEntry("parent", failurecodeid.ToString());
+            filter.AppendSearchEntry("parent", failurecodeid);
             return filter;
+        }
+
+        private string FailureCodeId(AttributeHolder entity) {
+            var extrafields = ((Entity)entity).GetUnMappedAttribute("extrafields");
+            if (extrafields == null) return null;
+            dynamic fields = JObject.Parse(extrafields);
+            return fields["failurelist_.failurelist"].Value.ToString();
         }
 
         public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
