@@ -176,10 +176,14 @@
             }
         };
 
-        function doContentStringConversion (datamap) {
-            for (var record in datamap) {
-                datamap[record] = datamap[record] == null ? null : datamap[record].toString();
-            }
+        function doContentStringConversion(datamap) {
+            angular.forEach(datamap, function(value, index) {
+                datamap[index] = value == null
+                   ? null
+                   : angular.isArray(value)
+                       ? value
+                       : value.toString();
+            });
 
             return datamap;
         }
