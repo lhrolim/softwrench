@@ -113,7 +113,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             $("#crudmodal").draggable();
             $rootScope.showingModal = true;
             //TODO: review this decision here it might not be suitable for all the scenarios
-            crudContextHolderService.modalLoaded(datamapToUse);
+            crudContextHolderService.modalLoaded(datamapToUse,schema);
 
             associationService.loadSchemaAssociations(datamapToUse, schema).then(function () {
                 if (modaldata.onloadfn) {

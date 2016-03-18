@@ -79,7 +79,7 @@
          * @returns {} 
          */
         function locateJquerySectionElementByApp(schema, datamap, path) {
-            
+
         }
 
         function nonTabFields(schema) {
@@ -191,10 +191,10 @@
                 return schema.jscache.editable;
             }
 
-            var editable = allDisplayables(schema).some(function(displayable) {
+            var editable = allDisplayables(schema).some(function (displayable) {
                 return fieldService.isPropertyTrue(displayable, "editable");
-            }); 
-           
+            });
+
             schema.jscache.editable = editable;
             return editable;
         }
@@ -209,7 +209,7 @@
             var stereotype = schema.stereotype;
             if (!stereotype || stereotype === "None") return emptyAsTrue || false;
             if (!angular.isArray(values)) return stereotype.contains(values);
-            return values.some(function(value) {
+            return values.some(function (value) {
                 return stereotype.contains(value);
             });
         }
@@ -230,6 +230,18 @@
          */
         function isList(schema, emptyAsTrue) {
             return isStereotype(schema, ["list", "List"], emptyAsTrue);
+        }
+
+        function areTheSame(schema1, schema2) {
+            if (schema1 == null) {
+                return schema2 == null;
+            }
+
+            else if (schema2 == null) {
+                return false;
+            }
+
+            return this.buildApplicationKey(schema1) === this.buildApplicationKey(schema2);
         }
 
         /**
@@ -265,6 +277,7 @@
         }
 
         return {
+            areTheSame: areTheSame,
             buildApplicationKey: buildApplicationKey,
             buildApplicationMetadataSchemaKey: buildApplicationMetadataSchemaKey,
             getId: getId,
@@ -274,7 +287,7 @@
             hasEditableProperty: hasEditableProperty,
             isPropertyTrue: isPropertyTrue,
             locateDisplayableByQualifier: locateDisplayableByQualifier,
-            locateJquerySectionElementByApp:locateJquerySectionElementByApp,
+            locateJquerySectionElementByApp: locateJquerySectionElementByApp,
             nonTabFields: nonTabFields,
             parseAppAndSchema: parseAppAndSchema,
             isStereotype: isStereotype,

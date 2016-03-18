@@ -1047,6 +1047,7 @@
         };
 
         $scope.onSaveError = function (data, extra) {
+            $scope.clearNewCompositionData();
             var idx = $scope.compositiondata.indexOf(selecteditem);
             if (idx !== -1) {
                 $scope.compositiondata.splice(idx, 1);
@@ -1068,14 +1069,13 @@
             });
         };
 
-        $scope.$on('sw.modal.hide', function(event) {
-            $scope.clearNewCompositionData();
-        });
-
+     
         $scope.clearNewCompositionData = function() {
             $scope.compositionData().forEach(function(item) {
                 delete item["#isDirty"];
             });
+            //TODO: there´s a bug in potential here, after we´re adding an item to a composition the parentdata is getting inconsistent
+            //but it´s rather on the save fn
             $scope.parentdata.fields[$scope.relationship] = [];
         };
 
