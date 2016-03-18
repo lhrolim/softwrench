@@ -8,7 +8,6 @@ using softwrench.sw4.Shared2.Metadata.Exception;
 namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
     public class ApplicationCommandSchema {
 
-        private bool _hasDeclaration;
         private readonly ISet<string> _toExclude = new HashSet<string>();
         private readonly ISet<string> _toInclude = new HashSet<string>();
 
@@ -18,10 +17,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         public ApplicationCommandSchema(IDictionary<string, CommandBarDefinition> applicationCommands,
             IDictionary<string, CommandBarDefinition> commandBars) {
             if (!applicationCommands.Any()) {
-                _hasDeclaration = false;
                 return;
             }
-            _hasDeclaration = true;
             _applicationCommands = ApplicationCommandMerger.MergeCommands(applicationCommands, commandBars);
         }
 
@@ -50,7 +47,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
 
         public bool HasDeclaration {
             get {
-                return _hasDeclaration;
+                return ApplicationCommands.Any();
             }
         }
 
@@ -60,7 +57,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
 
         public void Merge(ApplicationCommandSchema commandSchema) {
             _applicationCommands = ApplicationCommandMerger.MergeCommandsWithCustomizedSchema(commandSchema.ApplicationCommands,_applicationCommands);
-            _hasDeclaration = _applicationCommands.Any();
         }
     }
 }

@@ -3,6 +3,10 @@
 }
 
 .page-signin {
+    .container {
+        display: block;
+    }
+
     .shadow {
         max-width: 800px;
         margin: 0 auto;
@@ -136,7 +140,6 @@
             padding-bottom: 50px;
         }
 
-        
         .logo.main img {
             padding: 0;
         }

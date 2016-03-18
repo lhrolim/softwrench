@@ -28,7 +28,7 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
         if (status.equalsAny("DRAFT")) {
             return "white";
         }
-        return "#4488f2";
+        return "#777";
     };
 
     return {
@@ -66,7 +66,7 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
                 return applicationObject[status];
             }
 
-            return "#4488f2";
+            return "#777";
         },
 
         load: function (jsonString) {

@@ -6,11 +6,15 @@
 
     //#region Service registration
 
-    angular.module("sw_scan").factory("scanningCommonsService", ["crudContextHolderService", scanningCommonsService]);
+    angular.module("sw_scan").factory("scanningCommonsService", ["$rootScope", "crudContextHolderService", scanningCommonsService]);
 
     //#endregion
 
-    function scanningCommonsService(crudContextHolderService) {
+    function scanningCommonsService($rootScope, crudContextHolderService) {
+
+        $rootScope.$on("sw.crud.applicationchanged", function() {
+            $(document).scannerDetection(null);
+        });
 
         //#region Utils
 

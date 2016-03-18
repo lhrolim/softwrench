@@ -378,7 +378,7 @@
               <section id="siteidsection"/>
               <section id="statussection">
                 <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
-                  <renderer type="combo" />
+                  <renderer type="lookup" />
                   <event type="afterchange" service="srService" method="onStatusChanged"/>
                 </association>
               </section>
@@ -545,7 +545,7 @@
           </section>
           <section id="statussection">
           <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
-              <renderer type="combo" />
+              <renderer type="lookup" />
               <event type="afterchange" service="srService" method="onStatusChanged"/>
             </association>
           </section>

@@ -1151,6 +1151,10 @@
         <relationship to="person" qualifier="createdbyperson" >
           <relationshipAttribute from="createby" to="personid" primary="true"/>
         </relationship>
+        <relationship to="DOCLINKS" qualifier="attachment" collection="false">
+          <relationshipAttribute from="worklogid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="WORKLOG" quoteLiteral="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="mea_integration_interface" value="ISW_WL" />
@@ -1560,8 +1564,15 @@
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
                 <command id="dispatchincident" icon="fa-tachometer" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD"
                           parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
-<!--                <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"-->
-<!--                     showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>-->
+                
+                <!--<command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                      showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>-->
+
+                <!-- Create new SR as Related Record -->
+                <command id="createrelated"
+                         service="srService" method="startRelatedSRCreation" parameters="schema,datamap"
+                         label="Create Related Request" icon="fa-ticket" />
+
               </container>
             </commandgroup>
           </commandbars>
@@ -2871,5 +2882,26 @@
         </schema>
       </schemas>
     </application>
+
+    <application name="worklog" entity="worklog" title="worklogs">
+      <schemas>
+        <detail stereotype="compositiondetail" redeclaring="false">
+          <customization position="+position_attachment">
+            <!-- image attachment -->
+            <section orientation="horizontal">
+              <!-- upload image -->
+              <field attribute="newattachment" label="Image" showexpression="!@worklogid">
+                <renderer type="dndupload" params="acceptedFileExtensions=jpg,jpeg,png,bmp" />
+              </field>
+              <!-- display image preview -->
+              <field attribute="attachment_url" label="Image" readonly="true" showexpression="!!@worklogid &amp;&amp; !!@attachment_url">
+                <renderer type="imagepreview"/>
+              </field>
+            </section>
+          </customization>
+        </detail>
+      </schemas>
+    </application>
+    
   </applications>
 </metadata>

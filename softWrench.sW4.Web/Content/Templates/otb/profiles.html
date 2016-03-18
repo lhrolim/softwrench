@@ -5,8 +5,8 @@
             <select multiple="multiple" ng-model="selectedprofiles" ng-options="profile.name for profile in profiles"
                     class="form-control" />
             <div class="buttons">
-                <button class="btn btn-sm btn-defualt" ng-click="addSelectedProfiles(selectedavailableprofiles)"><i class="fa fa-plus"></i>&ensp;ADD</button>
-                <button class="btn btn-sm btn-defualt" ng-click="removeSelectedProfiles(selectedprofiles)"><i class="fa fa-minus"></i>&ensp;DELETE</button>
+                <button class="btn btn-sm btn-defualt" ng-click="addSelectedProfiles(selectedavailableprofiles)" ng-if="canAssignSecurity()"><i class="fa fa-plus"></i>&ensp;ADD</button>
+                <button class="btn btn-sm btn-defualt" ng-click="removeSelectedProfiles(selectedprofiles)" ng-if="canAssignSecurity()"><i class="fa fa-minus"></i>&ensp;DELETE</button>
             </div>
         </div>
         <div class="right col-sm-5">

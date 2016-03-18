@@ -39,6 +39,12 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     max-width: none;
 }
 
+body > .container {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
 .content .container {
     padding: 0;
     margin: 0;
@@ -173,6 +179,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 @media all and (min-width: 1px) {
     .container .content {
         margin-top: 0;
+        flex: 1 0 0;
     }
 
     .affix-pagination {
@@ -276,6 +283,6 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     color: #3276b1;
 }
 
-.multiselect-container{
-    max-width:275px !important;
+.multiselect-container {
+    max-width: 275px !important;
 }

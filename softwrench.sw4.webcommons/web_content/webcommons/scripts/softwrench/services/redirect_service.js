@@ -168,12 +168,15 @@
 
             $rootScope.$broadcast('sw_applicationredirected', parameters);
 
-            //let´s exclude savefn from possible parameters, otherwise it would be evaluated by $.param
+            // let´s exclude functions from possible parameters, otherwise it would be evaluated by $.param
             var savefn = parameters.savefn;
-            parameters.savefn = null;
+            var postProcessFn = parameters.postProcessFn;
+            delete parameters.savefn;
+            delete parameters.postProcessFn;
             var redirectUrl = applicationService.getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData, type);
             //including back savefn param
             parameters.savefn = savefn;
+            parameters.postProcessFn = postProcessFn;
 
             var popupMode = parameters.popupmode;
 
@@ -202,6 +205,9 @@
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
                 return $http.get(redirectUrl).then(function (httpResponse) {
                     var data = httpResponse.data;
+                    if (angular.isFunction(parameters.postProcessFn)) {
+                        parameters.postProcessFn(data);
+                    }
                     innerGoToApplicationGet(data, popupMode, redirectUrl, mode, applicationName, afterRedirectHook, parameters);
                     return $q.when(data);
                 });
@@ -212,6 +218,9 @@
                 }
                 return $http.post(redirectUrl, jsonString).then(function (httpResponse) {
                     var data = httpResponse.data;
+                    if (angular.isFunction(parameters.postProcessFn)) {
+                        parameters.postProcessFn(data);
+                    }
                     if (popupMode !== "modal") {
                         $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
                     } else {

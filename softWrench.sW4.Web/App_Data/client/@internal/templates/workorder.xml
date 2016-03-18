@@ -617,7 +617,7 @@
           <field attribute="ld_.ldtext" label="Details:" requiredexpression="false">
             <renderer type="textarea"/>
           </field>
-          <optionfield attribute="classificationid" label="Classification" providerattribute="_WOClassStructureType">
+          <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
           <field attribute="assetnum" label="Asset" readonly="true" hidden="true"/>

@@ -214,6 +214,13 @@
 
                 });
 
+                $scope.getMainTabId = function() {
+                    if ($scope.ismodal === "true") {
+                        return "modalmain";
+                    }
+                    return "main";
+                }
+
                 $scope.setActiveTab = function (tabId) {
                     crudContextHolderService.setActiveTab(tabId);
                 };
@@ -413,7 +420,11 @@
                     return $scope.save();
                 }
 
+                // flag to block multiple save calls while one is still executing
+                var _executingSave = false; 
                 $scope.save = function (parameters) {
+                    if (_executingSave) return;
+                    _executingSave = true;
                     var log = $log.getInstance('crudbody#save');
                     parameters = parameters || {};
 
@@ -430,15 +441,19 @@
                         var validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, $scope.datamap.fields, errorForm);
                         if (validationErrors.length > 0) {
                             //interrupting here, can´t be done inside service
+                            _executingSave = false;
                             return;
                         }
                         var result = modalSavefn($scope.datamap.fields, schemaToSave);
                         if (result && result.then) {
-                            result.then(function () {
+                            result.then(function() {
                                 modalService.hide();
+                            }).finally(function() {
+                                _executingSave = false;
                             });
+                        } else {
+                            _executingSave = false;
                         }
-
                         return;
                     }
 
@@ -470,6 +485,7 @@
                     if (eventResult === false) {
                         //this means that the custom service should call the continue method
                         log.debug('waiting on custom prevalidation to invoke the continue function');
+                        _executingSave = false;
                         return;
                     }
 
@@ -485,6 +501,7 @@
                         var validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, transformedFields, $scope.crudform.$error);
                         if (validationErrors.length > 0) {
                             //interrupting here, can´t be done inside service
+                            _executingSave = false;
                             return;
                         }
                     }
@@ -505,6 +522,7 @@
                     if (eventResult == false) {
                         //this means that the custom postvalidator should call the continue method
                         log.debug('waiting on custom postvalidator to invoke the continue function');
+                        _executingSave = false;
                         return;
                     }
 
@@ -556,6 +574,7 @@
                         if (formToSubmitId != null) {
                             var form = $(formToSubmitId);
                             submitService.submitForm(form, submissionParameters, jsonString, applicationName);
+                            _executingSave = false;
                             return;
                         }
                     }
@@ -570,9 +589,9 @@
                     var urlToUse = url("/api/data/" + applicationName + "/");
                     var command = id == null ? $http.post : $http.put;
 
-                    command(urlToUse, jsonString).success(function (data) {
+                    command(urlToUse, jsonString).then(function (result) {
                         crudContextHolderService.afterSave();
-
+                        var data = result.data;
 
                         if (data.type !== "BlankApplicationResponse") {
                             var responseDataMap = data.resultObject;
@@ -593,8 +612,7 @@
                         }
                         if (data.id && $scope.datamap.fields &&
                             /* making sure not to update when it's not creation */
-                            (!$scope.datamap.fields.hasOwnProperty($scope.schema.idFieldName) || !$scope.datamap.fields[$scope.schema.idFieldName])
-                            ) {
+                            (!$scope.datamap.fields.hasOwnProperty($scope.schema.idFieldName) || !$scope.datamap.fields[$scope.schema.idFieldName])) {
                             //updating the id, useful when it´s a creation and we need to update value return from the server side
                             $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
                         }
@@ -608,10 +626,13 @@
                         }
 
                         $scope.$emit('sw.crud.detail.savecompleted', data);
-                    }).error(function (data) {
+                    }).catch(function (result) {
+                        var data = result.data;
                         if (failureCbk != null) {
                             failureCbk(data);
                         }
+                    }).finally(function() {
+                        _executingSave = false;
                     });
                 };
 

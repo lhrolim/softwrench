@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function sidePanelService() {
+    function sidePanelService(fixHeaderService) {
         //#region Utils
         var openedPanel = null;
 
@@ -143,8 +143,8 @@
             }
 
             //resize/position elements
-            $(window).trigger("resize");
-
+            fixHeaderService.callWindowResize();
+            $(window).trigger('resize')
             // callback
             if (ctx.toggleCallback) {
                 ctx.toggleCallback(ctx);
@@ -209,7 +209,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("sidePanelService", [sidePanelService]);
+    angular.module("sw_layout").factory("sidePanelService", ["fixHeaderService", sidePanelService]);
 
     //#endregion
 

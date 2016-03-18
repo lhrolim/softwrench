@@ -86,7 +86,7 @@
             <field attribute="transdate" hidden="true" />
             <field attribute="toolrate" hidden="true" />
 
-            <composition inline="true" relationship="#toollist" label="Tools"  detailschema="" printschema="" showexpression="@_iscreation">
+            <composition inline="true" relationship="#toollist" label="Tools"  detailschema="" printschema="" showexpression="@_iscreation" requiredrelationshipexpression="true">
               <collectionproperties listschema="tools" autocommit="false"/>
               <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
             </composition>

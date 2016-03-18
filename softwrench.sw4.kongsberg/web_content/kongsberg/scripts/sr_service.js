@@ -1,4 +1,7 @@
-﻿kongsbergmod.clientfactory('srService', ['srService', 'crudContextHolderService', function (srService, crudContextHolderService) {
+﻿(function (angular) {
+    "use strict";
+
+angular.module("sw_layout").factory('kongsberg.srService', ['srService', 'crudContextHolderService', function (srService, crudContextHolderService) {
 
     return {
 
@@ -33,3 +36,5 @@
     };
 
 }]);
+
+})(angular);

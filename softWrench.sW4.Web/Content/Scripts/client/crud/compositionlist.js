@@ -185,6 +185,23 @@
                     scope.cancelfn({ data: data, schema: schema });
                 }
 
+                scope.$on("sw.modal.show", function (event, modalData) {
+                    if (scope.ismodal === "true") {
+                        //inline compositions inside of the modal need to be refreshed (relinked)
+                        var datamap = modalData.datamap;
+                        scope.parentdata = datamap;
+                        doLoad();
+                    }
+                });
+
+                scope.$on("sw.modal.hide", function (event) {
+                    if (scope.ismodal === "true") {
+                        $log.get('compositionlistwrapper#doLoad',["composition","inline"]).debug('wiping <composition-list> directive due to modal disposal');
+                        //inline compositions inside of the modal need to be refreshed (relinked)
+                        element.empty();
+                    }
+                });
+
                 scope.$on("sw_lazyloadtab", function (event, tabid) {
                     if (scope.tabid == tabid) {
                         if (!compositionService.isCompositionLodaded(scope.tabid)) {
@@ -205,7 +222,7 @@
     function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
         formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient,
         expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
-        schemaService, contextService) {
+        schemaService, contextService, fixHeaderService) {
 
         $scope.lookupObj = {};
 
@@ -246,6 +263,14 @@
         $scope.isFieldRequired = function (item, requiredExpression) {
             return expressionService.evaluate(requiredExpression, item);
         };
+
+        function isCompositionRequired() {
+            return expressionService.evaluate($scope.compositionschemadefinition.requiredRelationshipExpression, null, $scope);
+        }
+
+        $scope.hideRemoveBatchItem = function (compositionitem, rowindex) {
+            return compositionitem[$scope.compositionlistschema.idFieldName] > 0 || ($scope.compositionData().length === 1 && isCompositionRequired());
+        }
 
         $scope.isCompositionItemFieldHidden = function (application, fieldMetadata, item) {
             var datamap = item == null ? $scope.parentdata : compositionService.buildMergedDatamap(item, $scope.parentdata);
@@ -612,12 +637,12 @@
 
         //#endregion
 
-        $scope.$on("sw.composition.edit", function (event, datamap, actionTitle) {
-            $scope.edit(datamap, actionTitle);
+        $scope.$on("sw.composition.edit", function (event, datamap, actionTitle, forceModal) {
+            $scope.edit(datamap, actionTitle, forceModal);
         });
 
-        $scope.edit = function (datamap, actionTitle) {
-            if (shouldEditInModal()) {
+        $scope.edit = function (datamap, actionTitle, forceModal) {
+            if (!!forceModal || shouldEditInModal()) {
                 // Check that main tab has all required fields filled before opening modal
                 var parentDatamap = crudContextHolderService.rootDataMap();
                 var parentSchema = crudContextHolderService.currentSchema();
@@ -857,12 +882,9 @@
                 //used to make a differentiation between a compositionitem datamap and a regular datamap
                 '#datamaptype': "compositionitem",
             }
-            // if inside a scroll pane - to update pane size
-            $timeout(function () {
-                //time for the components to be rendered
-                $(window).trigger("resize");
-            }, 1000, false);
 
+            // if inside a scroll pane - to update pane size
+            fixHeaderService.callWindowResize();
 
             fieldService.fillDefaultValues($scope.compositionlistschema.displayables, newItem, $scope);
             //this id will be placed on the entity so that angular can use it to track. 
@@ -878,13 +900,13 @@
             //time for the components to be rendered
             $timeout(function () {
                 // inits autocomplete clients if needed
-                var bodyElement = $("[composition-list-key='{0}'][composition-list-index='{1}']".format($scope.getCompositionListKey(), idx));
+                var bodyElement = $("[composition-list-key='{0}'][composition-list-id='{1}']".format($scope.getCompositionListKey(), fakeNegativeId));
                 if (bodyElement.length > 0) {
                     cmpAutocompleteClient.init(bodyElement, null, $scope.compositionlistschema);
                 }
 
                 // if inside a scroll pane - to update pane size
-                $(window).trigger("resize");
+                fixHeaderService.callWindowResize();
             }, 1000, false);
 
         }
@@ -976,6 +998,9 @@
                 selecteditem = $scope.selecteditem;
             }
 
+            //enforcing the dirtyness of the item
+            selecteditem["#isDirty"] = true;
+
             if (selecteditem == undefined && !$scope.collectionproperties.allowUpdate) {
                 //this is for the call to submit without having any item on composition selected, due to having the submit as the default button
                 $log.getInstance("compositionlist#save").debug("calling save on server without composition selected");
@@ -1052,6 +1077,7 @@
         };
 
         $scope.onSaveError = function (data, extra) {
+            $scope.clearNewCompositionData();
             var idx = $scope.compositiondata.indexOf(selecteditem);
             if (idx !== -1) {
                 $scope.compositiondata.splice(idx, 1);
@@ -1068,8 +1094,19 @@
             $scope.collapseAll();
             // select first page
             return $scope.selectPage(1).then(function (result) {
+                $scope.clearNewCompositionData();
                 crudContextHolderService.setTabRecordCount($scope.relationship, null, $scope.paginationData.totalCount);
             });
+        };
+
+     
+        $scope.clearNewCompositionData = function() {
+            $scope.compositionData().forEach(function(item) {
+                delete item["#isDirty"];
+            });
+            //TODO: there´s a bug in potential here, after we´re adding an item to a composition the parentdata is getting inconsistent
+            //but it´s rather on the save fn
+            $scope.parentdata.fields[$scope.relationship] = [];
         };
 
 
@@ -1259,7 +1296,7 @@
     CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService",
             "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient",
             "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
-            "schemaService", "contextService"];
+            "schemaService", "contextService", "fixHeaderService"];
 
     window.CompositionListController = CompositionListController;
 

@@ -441,7 +441,9 @@
     <Content Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
     <Content Include="App_Data\Client\%40internal\templates\woactivity.xml" />
     <Content Include="App_Data\Client\%40internal\templates\wochange.xml" />
-    <Content Include="App_Data\Client\%40internal\templates\worklogs.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\worklogs.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\workorder.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -728,7 +730,7 @@
     <Content Include="Content\customVendor\scripts\jquery\jquery.scannerdetection.js" />
     <Content Include="Content\customVendor\scripts\angular\textAngular.js" />
     <Content Include="Content\customVendor\scripts\angular\textAngular-sanitize.js" />
-    <None Include="Content\styles\default\_context-bar.scss" />
+    <None Include="Content\styles\default\_toolbar.scss" />
     <Content Include="Content\styles\default\_crud-masterdetails.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
     <Content Include="Content\styles\default\_footer.scss" />
@@ -953,6 +955,10 @@
     <ProjectReference Include="..\softwrench.sw4.liggett\softwrench.sw4.liggett.csproj">
       <Project>{dafd4db9-7f56-46ed-91d7-96c95685362a}</Project>
       <Name>softwrench.sw4.liggett</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.sodexo\softwrench.sw4.sodexo.csproj">
+      <Project>{ee5325f6-2bab-4241-b7fb-0e1556a88e23}</Project>
+      <Name>softwrench.sw4.sodexo</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.xerox\softwrench.sw4.xerox.csproj">
       <Project>{d704fc33-6b04-44a1-b12f-a8c196127a08}</Project>

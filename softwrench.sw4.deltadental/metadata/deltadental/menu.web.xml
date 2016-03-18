@@ -4,6 +4,7 @@
   <reference id="servicereq"/>
   <reference id="qservicereq"/>
   <reference id="workorder"/>
+  <reference id="solution"/>
   
   <link icon="fa fa-arrows" title="Move Request" link="https://secure.spaceplanfm.com/deltadental/default.asp" parameters="email=@user.email;target=Request.asp"/>
   <link icon="fa fa-map-o" title="Floor Plans" link="https://www.manhattan-online.com/DeltaDental_CorpMap/default.asp?App=CorpMap" />
