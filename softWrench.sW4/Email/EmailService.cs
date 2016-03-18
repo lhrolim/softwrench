@@ -56,8 +56,7 @@ namespace softWrench.sW4.Email {
             var smtpClient = ConfiguredSmtpClient();
             var email = BuildMailMessage(emailData);
             // Send the email message asynchronously
-            await smtpClient.SendMailAsync(email)
-                .ContinueWith(e => Log.Error(e), TaskContinuationOptions.OnlyOnFaulted);
+            await Task.Factory.NewThread(() => smtpClient.Send(email));
         }
 
         public void SendEmail(EmailData emailData) {
