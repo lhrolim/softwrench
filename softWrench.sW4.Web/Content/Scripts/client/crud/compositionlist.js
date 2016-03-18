@@ -185,6 +185,22 @@
                     scope.cancelfn({ data: data, schema: schema });
                 }
 
+                scope.$on("sw.modal.show", function (event, modalData) {
+                    if (scope.ismodal === "true") {
+                        //inline compositions inside of the modal need to be refreshed (relinked)
+                        var datamap = modalData.datamap;
+                        scope.parentdata = datamap;
+                        doLoad();
+                    }
+                });
+
+                scope.$on("sw.modal.hide", function (event) {
+                    if (scope.ismodal === "true") {
+                        //inline compositions inside of the modal need to be refreshed (relinked)
+                        element.empty();
+                    }
+                });
+
                 scope.$on("sw_lazyloadtab", function (event, tabid) {
                     if (scope.tabid == tabid) {
                         if (!compositionService.isCompositionLodaded(scope.tabid)) {
