@@ -840,10 +840,21 @@
         $scope.delete = function (item, column, $event, rowIndex) {
             alertService.confirm2("Are you sure you want to delete this entry").then(function() {
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
+
                 compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
+                    //TODO: generate composition deletion method
                     var compositionItem = result.resultObject.fields;
-                    compositionItem["#deleted"] = 1;
-                    $scope.save(compositionItem);
+                    var event = $scope.compositionlistschema.events["onremoval.validation"];
+                    if (event) {
+                        var fn = dispatcherService.loadService(event.service, event.method);
+                        fn(compositionItem, $scope.compositionlistschema).then(function() {
+                            compositionItem["#deleted"] = 1;
+                            $scope.save(compositionItem);
+                        });
+                    } else {
+                        compositionItem["#deleted"] = 1;
+                        $scope.save(compositionItem);
+                    }
                 });
             });
 

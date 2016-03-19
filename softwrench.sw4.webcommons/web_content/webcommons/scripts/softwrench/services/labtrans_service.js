@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('labtranService', ["alertService", function (alertService) {
+    .factory('labtranService', ["$q", "alertService", function ($q,alertService) {
     
     return {
         afterlaborchange: function (event) {
@@ -49,7 +49,18 @@ angular.module('sw_layout')
                 // set the labor hours
                 event.fields['regularhrs'] = hours;
             }
+        },
+
+        validateRemoval: function (datamap, schema) {
+            if (datamap["genapprservreceipt"] === 1) {
+                alertService.alert("Cannot remove already approved labor transactions");
+                return $q.reject();
+            }
+            return $q.when();
+
         }
+
+
     };
 }]);
 

@@ -37,7 +37,11 @@
 
         function getPersonId() {
             var user = contextService.getUserData();
-            return user.maximoPersonId;
+            var personId = user.maximoPersonId;
+            if (!personId && contextService.isLocal() && "swadmin".equalsIc(user.login)) {
+                return "SWADMIN";
+            }
+            return personId;
         }
 
         function hasRole(roleArray) {

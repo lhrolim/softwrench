@@ -3,9 +3,9 @@
 
     var staticvalidFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png", "lic"];
 
-    angular.module("sw_layout").factory("attachmentService", ["$rootScope", "$q", "$timeout", "contextService", "fieldService", "schemaService", "alertService", "i18NService", "searchService", "tabsService", "redirectService", "$http", attachmentService]);
+    angular.module("sw_layout").factory("attachmentService", ["$rootScope", "$q", "$timeout", "contextService", "fieldService", "schemaService", "alertService", "i18NService", "searchService", "tabsService", "redirectService", "$http", "userService", attachmentService]);
 
-    function attachmentService($rootScope, $q, $timeout, contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService, $http) {
+    function attachmentService($rootScope, $q, $timeout, contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService, $http, userService) {
 
         var service = {
             isValid: isValid,
@@ -14,7 +14,8 @@
             fetchDownloadUrl: fetchDownloadUrl,
             redirectToAttachmentView: redirectToAttachmentView,
             createAttachmentFromFile: createAttachmentFromFile,
-            createAttachmentFromElement: createAttachmentFromElement
+            createAttachmentFromElement: createAttachmentFromElement,
+            validateRemoval: validateRemoval
         };
 
         return service;
@@ -240,6 +241,18 @@
                 });
             })
             .then(broadCastAttachmentLoaded);
+        }
+
+
+        function validateRemoval(datamap, schema) {
+            if (datamap["createby"] === userService.getPersonId()) {
+                return $q.when();
+            }
+
+            alertService.alert("Cannot delete an attachment that was created by another user");
+            return $q.reject();
+
+
         }
 
     }

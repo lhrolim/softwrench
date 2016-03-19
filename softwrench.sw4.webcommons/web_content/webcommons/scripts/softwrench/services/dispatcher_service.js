@@ -50,6 +50,7 @@
         },
 
         invokeServiceByString: function (serviceString, parameters) {
+
             var serviceArray = serviceString.split(".");
             if (serviceArray.length != 2) {
                 return null;

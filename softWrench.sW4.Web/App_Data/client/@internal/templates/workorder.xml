@@ -477,7 +477,8 @@
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'"  />
             </composition>
             <composition relationship="labtrans" label="Labor">
-              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" />
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" />
+              
             </composition>
             <composition relationship="tooltrans" label="Tools">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
