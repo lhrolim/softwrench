@@ -22,6 +22,7 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using System.Text;
 using System.Collections.Generic;
+using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 
@@ -43,6 +44,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         /// Path where the files are stored in the maximo´s server fs, must be removed from the url path
         /// </summary>
         private string _baseMaximoPath;
+
+        private MaximoHibernateDAO _maxDAO;
+
+        public AttachmentHandler() {
+            _maxDAO = SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
+        }
 
 
         //        public delegate byte[] Base64Delegate(string attachmentData);
@@ -99,6 +106,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                         AddAttachment(maximoObj, content);
                     }
                 }
+
+                foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.ContainsAttribute("#deleted"))) {
+                    _maxDAO.ExecuteSql("delete from doclinks where doclinksid = ?", attachment.GetAttribute("doclinksid"));
+                }
+
             }
         }
 
