@@ -21,8 +21,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
         private readonly MaximoHibernateDAO _maxDAO;
 
-        public LabTransHandler() {
-            _maxDAO = SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
+        public LabTransHandler(MaximoHibernateDAO maxDAO) {
+            _maxDAO = maxDAO;
         }
 
 
@@ -112,10 +112,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                         FillLineCostLabor(integrationObject);
                     }
                 });
-            if (deletion)
-            {
+            if (deletion) {
                 ReflectionUtil.SetProperty(wo, "LABTRANS", null);
-//                WsUtil.SetValue(wo, "LABTRANS", null);
+                //                WsUtil.SetValue(wo, "LABTRANS", null);
             }
 
         }
