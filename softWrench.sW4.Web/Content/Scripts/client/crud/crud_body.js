@@ -190,6 +190,8 @@
                 $scope.$on("sw_submitdata", function (event, parameters) {
                     if ($scope.ismodal !== "true" && !!parameters.dispatchedByModal) {
                         return;
+                    } else if ($scope.ismodal === "true" && !parameters.dispatchedByModal) {
+                        return;
                     }
                     $scope.save(parameters);
                 });
