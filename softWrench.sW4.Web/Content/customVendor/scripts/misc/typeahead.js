@@ -1179,7 +1179,7 @@
             return $(el).data(datumKey);
         };
         _.mixin(Dataset.prototype, EventEmitter, {
-            _render: function render(query, suggestions) {
+            _render: function render(query, suggestions, initalValue) {
                 if (!this.$el) {
                     return;
                 }
@@ -1212,6 +1212,9 @@
                     function getSuggestionNode(suggestion) {
                         var $el;
                         $el = $(html.suggestion).append(that.templates.suggestion(suggestion)).data(datasetKey, that.name).data(valueKey, that.displayFn(suggestion)).data(datumKey, suggestion);
+                        if ($el[0].innerText == initalValue) {
+                            $el.addClass('current');
+                        }
                         $el.children().each(function () {
                             $(this).css(css.suggestionChild);
                         });
@@ -1234,14 +1237,14 @@
             getRoot: function getRoot() {
                 return this.$el;
             },
-            update: function update(query) {
+            update: function update(query, initalValue) {
                 var that = this;
                 this.query = query;
                 this.canceled = false;
                 this.source(query, render);
                 function render(suggestions) {
                     if (!that.canceled && query === that.query) {
-                        that._render(query, suggestions);
+                        that._render(query, suggestions, initalValue);
                     }
                 }
             },
@@ -1413,10 +1416,10 @@
             getDatumForTopSuggestion: function getDatumForTopSuggestion() {
                 return this.getDatumForSuggestion(this._getSuggestions().first());
             },
-            update: function update(query) {
+            update: function update(query, input) {
                 _.each(this.datasets, updateDataset);
                 function updateDataset(dataset) {
-                    dataset.update(query);
+                    dataset.update(query, input.initalValue);
                 }
             },
             empty: function empty() {
@@ -1551,12 +1554,12 @@
             },
             _onUpKeyed: function onUpKeyed() {
                 var query = this.input.getQuery();
-                this.dropdown.isEmpty && query.length >= this.minLength ? this.dropdown.update(query) : this.dropdown.moveCursorUp();
+                this.dropdown.isEmpty && query.length >= this.minLength ? this.dropdown.update(query, this.input) : this.dropdown.moveCursorUp();
                 this.dropdown.open();
             },
             _onDownKeyed: function onDownKeyed() {
                 var query = this.input.getQuery();
-                this.dropdown.isEmpty && query.length >= this.minLength ? this.dropdown.update(query) : this.dropdown.moveCursorDown();
+                this.dropdown.isEmpty && query.length >= this.minLength ? this.dropdown.update(query, this.input) : this.dropdown.moveCursorDown();
                 this.dropdown.open();
             },
             _onLeftKeyed: function onLeftKeyed() {
@@ -1567,7 +1570,7 @@
             },
             _onQueryChanged: function onQueryChanged(e, query) {
                 this.input.clearHintIfInvalid();
-                query.length >= this.minLength ? this.dropdown.update(query) : this.dropdown.empty();
+                query.length >= this.minLength ? this.dropdown.update(query, this.input) : this.dropdown.empty();
                 this.dropdown.open();
                 this._setLanguageDirection();
             },
@@ -1752,6 +1755,7 @@
                     if (typeahead = $input.data(typeaheadKey)) {
                         typeahead.setVal(newVal);
                     }
+                    typeahead.input.initalValue = newVal;
                 }
                 function getVal($input) {
                     var typeahead, query;

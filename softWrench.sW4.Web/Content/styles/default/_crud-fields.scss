@@ -452,3 +452,13 @@ input[type="date"], input[type="time"] {
     }
 }
 
+.tt-suggestion {
+    cursor: pointer;
+}
+
+.tt-suggestion.current {
+    background-color: #357ebd;
+    background-image: linear-gradient(to bottom, #428bca 0, #357ebd 100%);
+    background-repeat: repeat-x;
+    color: #fff;
+}
