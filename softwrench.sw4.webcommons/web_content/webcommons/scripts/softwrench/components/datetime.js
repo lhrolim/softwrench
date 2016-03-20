@@ -95,7 +95,7 @@ angular.module('sw_layout')
                     //timeout to avoid $digest is already in progress exception... using false keyword postergates this to next digest loop
                     // element.datetimepicker({
                     var elementToUse = !attrs.attachDatepickerToParent ? element : element.parent();
-                    elementToUse.datetimepicker({
+                    var datetimepicker = elementToUse.datetimepicker({
                         format: dateFormat,
                         locale: attrs.language,
                         maxDate: endDate,
@@ -106,6 +106,21 @@ angular.module('sw_layout')
                         useCurrent: false
                         //debug: true
                     });
+
+                    if (isIE()) {
+                        //https://controltechnologysolutions.atlassian.net/browse/SWWEB-2198
+                        datetimepicker.on("dp.change", function (e) {
+                            scope.$apply(function() {
+                                ngModel.$modelValue = e.formattedDate;
+                                var value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
+                                if (datamap != undefined && scope.fieldMetadata != undefined) {
+                                    datamap[scope.fieldMetadata.attribute] = value;
+                                }
+//                                updateView(ngModel, scope, element, datamap, angularDateFormat);
+                            });
+
+                        });
+                    }
                 }, 0, false);
             }
 
