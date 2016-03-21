@@ -64,22 +64,26 @@
           <field label="Labor" attribute="laborcode" showexpression="!@_iscreation"/>
           <field label="Craft" attribute="craft" showexpression="!@_iscreation"/>
 
-          <field label="Start Date" requiredexpression="true" attribute="startdate">
-            <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
-            <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
-          </field>
-          <field label="Start Time" attribute="starttime" >
-            <renderer type="time" params="format=HH:mm;showdate=false" />
-            <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
-          </field>
-          <field label="End Date" attribute="finishdate">
-            <renderer type="date" params="format=MM/dd/yyyy;showtime=false" />
-            <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
-          </field>
-          <field label="End Time" attribute="finishtime" >
-            <renderer type="time" params="format=HH:mm;showdate=false" />
-            <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
-          </field>
+          <section orientation="horizontal">
+            <field label="Start Date" requiredexpression="true" attribute="startdate">
+              <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
+              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+            </field>
+            <field label="Start Time" attribute="starttime" >
+              <renderer type="time" params="format=HH:mm;showdate=false" />
+              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+            </field>
+          </section>
+          <section orientation="horizontal">
+            <field label="End Date" attribute="finishdate">
+              <renderer type="date" params="format=MM/dd/yyyy;showtime=false" />
+              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+            </field>
+            <field label="End Time" attribute="finishtime" >
+              <renderer type="time" params="format=HH:mm;showdate=false" />
+              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+            </field>
+          </section>
           <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8"/>
           <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.fields.glaccount">
             <renderer type="lookup"/>
