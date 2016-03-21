@@ -328,9 +328,17 @@
         items = $(items).map(function (i, item) {
             i = $(that.options.item).attr('data-value', item);
             i.find('a').html(that.highlighter(item));
-            if (that.$element.val() == this.trim()) {
+
+            //get the key of the initial value
+            var defaultValue = that.$target[0].defaultValue;
+            var keyMap = that.map;
+            var key = Object.keys(keyMap).filter(function (key) { return keyMap[key] === defaultValue })[0];
+
+            //highlight the current value
+            if (this == key) {
                 $(i).addClass('current');
             }
+
             return i[0];
         });
         if (appendItems) {
