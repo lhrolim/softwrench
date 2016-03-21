@@ -45,10 +45,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         private SearchRequestDto ProblemCodeFilterByFailureClassFunction(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             var failurecodeid = FailureCodeId(parameters.OriginalEntity);
-            if (failurecodeid == null) {
-                return filter;
+            if (string.IsNullOrEmpty(failurecodeid)) {
+                filter.ForceEmptyResult = true;
+            } else {
+                filter.AppendSearchEntry("parent", failurecodeid);
             }
-            filter.AppendSearchEntry("parent", failurecodeid);
             return filter;
         }
 
