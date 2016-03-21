@@ -819,7 +819,8 @@
                     notifyEvent({
                         type: 'dp.change',
                         date: false,
-                        oldDate: oldDate
+                        oldDate: oldDate,
+                        formattedDate: date.format(actualFormat)
                     });
                     update();
                     return;
@@ -837,18 +838,21 @@
 
 
 
-                    //console.log(date, date.format(actualFormat));
-                    //console.log(actualFormat);
+                    //CTS:LUIZ --> fix for https://controltechnologysolutions.atlassian.net/browse/SWWEB-2198
+                    var formattedDate = date.format(actualFormat);
 
                     input.val(date.format(actualFormat));
                     input.trigger('input');
-                    element.data('date', date.format(actualFormat));
+
+                    element.data('date', formattedDate);
                     unset = false;
                     update();
                     notifyEvent({
                         type: 'dp.change',
                         date: date.clone(),
-                        oldDate: oldDate
+                        oldDate: oldDate,
+                        //CTS:LUIZ --> fix for https://controltechnologysolutions.atlassian.net/browse/SWWEB-2198
+                        formattedDate: formattedDate
                     });
                 } else {
                     if (!options.keepInvalid) {

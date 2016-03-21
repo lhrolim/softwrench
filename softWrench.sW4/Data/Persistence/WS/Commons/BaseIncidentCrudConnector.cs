@@ -4,6 +4,8 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
+using System.Collections.Generic;
+using cts.commons.portable.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
@@ -36,10 +38,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             //    } WsUtil.SetValue(sr, "STATUSIFACE", false);
             //}
+
+            // [SWWEB-1194]: not sending status if not chenged
+            var hasStatusChange = crudData.GetUnMappedAttribute("#hasstatuschange");
+            if (!"true".EqualsIc(hasStatusChange)) {
+                ReflectionUtil.SetProperty(sr, "STATUS", null);
+            }
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
 
             //Handle Commlogs
-//            CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
+            // CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 
             // Update or create attachments
             _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);

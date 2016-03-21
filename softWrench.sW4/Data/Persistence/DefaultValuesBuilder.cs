@@ -41,18 +41,11 @@ namespace softWrench.sW4.Data.Persistence {
             }
 
             var user = SecurityFacade.CurrentUser();
-            if (fields.Any(f => f.Attribute == "orgid")) {
-                dictionary["orgid"] = user.OrgId;
-            }
-            if (fields.Any(f => f.Attribute == "siteid")) {
-                dictionary["siteid"] = user.SiteId;
-            }
-            if (fields.Any(f => f.Attribute == "storeloc")) {
-                dictionary["storeloc"] = user.Storeloc;
-            }
-            if (fields.Any(f => f.Attribute == "fromstoreloc")) {
-                dictionary["fromstoreloc"] = user.Storeloc;
-            }
+            ChangeFromDBIfNeeded(dictionary, fields, user, "orgid", user.OrgId);
+            ChangeFromDBIfNeeded(dictionary, fields, user, "siteid", user.SiteId);
+            ChangeFromDBIfNeeded(dictionary, fields, user, "storeloc", user.Storeloc);
+            ChangeFromDBIfNeeded(dictionary, fields, user, "fromstoreloc", user.Storeloc);
+
             var schemaDefaultValues = new DataMap(application.Name, dictionary, mappingType);
             if (initialValues != null) {
                 MergeWithPrefilledValues(schemaDefaultValues, initialValues);
@@ -60,11 +53,16 @@ namespace softWrench.sW4.Data.Persistence {
             return schemaDefaultValues;
         }
 
+        private static void ChangeFromDBIfNeeded(IDictionary<string, object> dictionary,
+            IEnumerable<ApplicationFieldDefinition> fields, InMemoryUser user, string attributeName, object newValue) {
+            if (fields.Any(f => f.Attribute == attributeName) && dictionary[attributeName] == null) {
+                dictionary[attributeName] = newValue;
+            }
+        }
+
         //TODO: Modify to have a flag that will determine whether the existingDataMap attribute should be overwritten if attribute already exist in initialValues
-        public static DataMap AddMissingInitialValues(DataMap existingDataMap, DataMap initialValues)
-        {
-            foreach (var attribute in initialValues.Attributes)
-            {
+        public static DataMap AddMissingInitialValues(DataMap existingDataMap, DataMap initialValues) {
+            foreach (var attribute in initialValues.Attributes) {
                 var key = attribute.Key;
                 if (!existingDataMap.ContainsAttribute(key)) {
                     existingDataMap.Attributes.Add(key, attribute.Value);
