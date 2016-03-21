@@ -103,7 +103,7 @@
             var minLength = scope.minLength || 2;
 
             //initing typeahead itself
-            element.typeahead({ minLength: minLength }, {
+            element.typeahead({ minLength: minLength, highlight: true }, {
                 displayKey: function (item) {
                     return associationService.getLabelText(item, scope.hideDescription);
                 },
