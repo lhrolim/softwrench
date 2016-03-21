@@ -372,6 +372,11 @@ namespace softWrench.sW4.Data.Search {
             return (SearchRequestDto)MemberwiseClone();
         }
 
+        /// <summary>
+        /// True: query should not be made returning a ampty result list instead and count = 0
+        /// False: default. Normal behavior
+        /// </summary>
+        public bool ForceEmptyResult { get; set; }
 
     }
 }

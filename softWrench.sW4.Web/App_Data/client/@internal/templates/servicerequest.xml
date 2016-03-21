@@ -178,6 +178,7 @@
                   <renderer type="default" params="childinputsize=large" />
                   <!--<section id ="siteidsection"/>-->
                   <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" >
+                    <renderer type="lookup"/>
                     <event type="beforechange" service="srService" method="beforeChangeLocation"/>
                   </association>
                   <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">

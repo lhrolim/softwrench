@@ -152,6 +152,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
 
         private IEnumerable<dynamic> Query(EntityMetadata entityMetadata, BindedEntityQuery query, SearchRequestDto searchDTO) {
+            if (searchDTO.ForceEmptyResult) {
+                return Enumerable.Empty<dynamic>();
+            }
             //TODO: hack to avoid garbage data and limit size of list queries.
             var paginationData = PaginationData.GetInstance(searchDTO, entityMetadata);
             var rows = GetDao(entityMetadata).FindByNativeQuery(query.Sql, query.Parameters, paginationData, searchDTO.QueryAlias);
@@ -159,6 +162,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         }
 
         private IEnumerable<dynamic> Query(EntityMetadata entityMetadata, BindedEntityQuery query, long rowstamp, SearchRequestDto searchDto) {
+            if (searchDto.ForceEmptyResult) {
+                return Enumerable.Empty<dynamic>();
+            }
             var sqlAux = query.Sql.Replace("1=1", RowStampUtil.RowstampWhereCondition(entityMetadata, rowstamp, searchDto));
             var rows = GetDao(entityMetadata).FindByNativeQuery(sqlAux, query.Parameters, null, searchDto.QueryAlias);
             return rows;
@@ -237,6 +243,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         public int Count([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
             if (searchDto == null) throw new ArgumentNullException("searchDto");
+            if (searchDto.ForceEmptyResult) {
+                return 0;
+            }
             var query = _entityQueryBuilder.CountRows(entityMetadata, searchDto);
 
             return GetDao(entityMetadata).CountByNativeQuery(query.Sql, query.Parameters, searchDto.QueryAlias);
