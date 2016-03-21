@@ -219,7 +219,7 @@
         }
     });
 
-    function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
+    function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,alertService,
         formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient, userPreferencesService, 
         expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
         schemaService, contextService, fixHeaderService) {
@@ -655,9 +655,11 @@
                     redirectService.redirectToTab('main');
                     return;
                 }
+                
                 modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, function saveCallBack(datamap) {
                     $scope.save(datamap);
                 }, null, $scope.parentdata, $scope.parentschema);
+                
             } else {
                 //TODO: switch to edit
                 $scope.newDetail = true;
@@ -736,6 +738,19 @@
 
             $scope.isUpdate = columnMode === "edit";
 
+            var event = $scope.compositionlistschema.events["onedit.validation"];
+            if (event) {
+                var fn = dispatcherService.loadService(event.service, event.method);
+                fn(item, $scope.compositionlistschema).then(function () {
+                    $scope.executeToggleDetails(item, column, columnMode, $event, rowIndex);
+                });
+            } else {
+                $scope.executeToggleDetails(item, column, columnMode, $event, rowIndex);
+            }
+
+            
+        };
+        $scope.executeToggleDetails = function (item, column, columnMode, $event, rowIndex) {
             // if there is a custom list click action, do it
             var customAction = $scope.compositionlistschema.properties["list.click.event"];
             if (customAction) {
@@ -815,7 +830,11 @@
             }
 
             compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
-                $scope.innerToggleDetails(true, compositionId, result.resultObject.fields, item);
+                var datamap = result.resultObject.fields;
+                if ($scope.isUpdate) {
+                    datamap["#edited"] = 1;
+                }
+                $scope.innerToggleDetails(true, compositionId, datamap, item);
             });
         };
 
@@ -841,6 +860,31 @@
             modalService.show($scope.compositiondetailschema, item, {}, $scope.save, null, $scope.parentdata, $scope.parentschema);
         }
 
+        $scope.delete = function (item, column, $event, rowIndex) {
+            alertService.confirm2("Are you sure you want to delete this entry").then(function() {
+                var compositionId = item[$scope.compositionlistschema.idFieldName];
+
+                compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
+                    //TODO: generate composition deletion method
+                    var compositionItem = result.resultObject.fields;
+                    var event = $scope.compositionlistschema.events["onremoval.validation"];
+                    if (event) {
+                        var fn = dispatcherService.loadService(event.service, event.method);
+                        fn(compositionItem, $scope.compositionlistschema).then(function() {
+                            compositionItem["#deleted"] = 1;
+                            $scope.save(compositionItem);
+                        });
+                    } else {
+                        compositionItem["#deleted"] = 1;
+                        $scope.save(compositionItem);
+                    }
+                });
+            });
+
+
+            
+        }
+
         $scope.isUpdate = false;
 
         // TODO: decide what is better for batch
@@ -850,6 +894,10 @@
 
         $scope.showEditButton = function() {
             return $scope.hasDetailSchema() && !$scope.noupdateallowed && !$scope.isBatch();
+        }
+
+        $scope.showDeleteButton = function() {
+            return !$scope.nodeleteallowed;
         }
 
         /***************Batch functions **************************************/
@@ -1003,7 +1051,7 @@
             // Validation should happen before adding items to the composition list to allow invalid data to pass into the system.
             var detailSchema = $scope.compositionschemadefinition.schemas.detail;
             var validationErrors;
-            if (selecteditem != undefined) {
+            if (selecteditem != undefined && selecteditem["#deleted"] != 1) {
                 var crudFormCtrl = getModalCrudFormController();
                 validationErrors = validationService.validate(detailSchema, detailSchema.displayables, selecteditem, crudFormCtrl.$error);
                 if (validationErrors.length > 0) {
@@ -1284,7 +1332,7 @@
         init();
     };
 
-    CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService",
+    CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService","alertService",
             "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient", "userPreferencesService", 
             "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
             "schemaService", "contextService", "fixHeaderService"];

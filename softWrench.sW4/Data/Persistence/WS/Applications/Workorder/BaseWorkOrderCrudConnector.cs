@@ -23,6 +23,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
         //        private const string _notFoundLog = "{0} {1} not found. Impossible to generate FollowUp Workorder";
 
         protected AttachmentHandler _attachmentHandler;
+        protected LabTransHandler LabTransHandler;
         protected CommLogHandler _commlogHandler;
         protected MaximoHibernateDAO _maxHibernate;
 
@@ -33,6 +34,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             _commlogHandler = new CommLogHandler();
             _maxHibernate = MaximoHibernateDAO.GetInstance();
             _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
+            LabTransHandler = SimpleInjectorGenericFactory.Instance.GetObject<LabTransHandler>(typeof(LabTransHandler));
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {

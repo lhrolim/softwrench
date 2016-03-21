@@ -33,6 +33,7 @@
           <field label="Application" attribute="ownertable" >
             <renderer type="icon" params="expression={'COMMLOG':'fa-envelope','SR':''};width=10%;showattribute=true"/>
           </field>
+          <field attribute="createby" hidden="true"/>
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="docinfo_.urltype"/>
           <field  attribute="document" hidden="true"/>
@@ -41,6 +42,9 @@
 <!--									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>-->
           <field label="Created Date" attribute="createdate"/>
           <field label="Type" attribute="doctype" hidden="true"/>
+
+          <event type="onremoval.validation" service="attachmentService" method="validateRemoval"/>
+
           <commandbars>
             <commandgroup position="detail.primary" removeundeclared="true">
               <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd"/>
@@ -62,6 +66,7 @@
           <field hidden="true" attribute="ownerid"/>
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field label="Title" attribute="document" requiredexpression="true" />
+          <field attribute="createby" hidden="true"/>
           <!--Description is not a required field - please fix for expand all / collapse all-->
           <field label="Description" attribute="docinfo_.description" />
           <field label="Attachment" attribute="newattachment" requiredexpression="true">
@@ -76,6 +81,9 @@
                        showexpression="@status=='NEW'" successmessage="Attachment deleted"/>
             </commandgroup>
           </commandbars>
+
+          
+          
         </schema>
 
       </schemas>

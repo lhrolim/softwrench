@@ -51,6 +51,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         /// </summary>
         private string _baseMaximoPath;
 
+        private MaximoHibernateDAO _maxDAO;
+
+        public AttachmentHandler() {
+            _maxDAO = SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
+        }
+
 
         //        public delegate byte[] Base64Delegate(string attachmentData);
 
@@ -106,6 +112,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                         AddAttachment(maximoObj, content);
                     }
                 }
+
+                foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.ContainsAttribute("#deleted"))) {
+                    _maxDAO.ExecuteSql("delete from doclinks where doclinksid = ?", attachment.GetAttribute("doclinksid"));
+                }
+
             }
         }
 
