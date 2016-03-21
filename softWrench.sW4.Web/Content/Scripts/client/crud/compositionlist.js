@@ -728,7 +728,7 @@
         /// </summary>
         /// <param name="item">the row entry, datamap</param>
         /// <param name="column">the specific column clicked,might be used by different implementations</param>
-        $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex) {
+        $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex, edit) {
 
             $scope.isUpdate = columnMode === "edit";
 
@@ -811,7 +811,11 @@
             }
 
             compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
-                $scope.innerToggleDetails(true, compositionId, result.resultObject.fields, item);
+                var datamap = result.resultObject.fields;
+                if ($scope.isUpdate) {
+                    datamap["#edited"] = 1;
+                }
+                $scope.innerToggleDetails(true, compositionId, datamap, item);
             });
         };
 

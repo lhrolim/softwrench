@@ -28,17 +28,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
 
         public void HandleLabors(CrudOperationData entity, object wo) {
-            // Use to obtain security information from current user
-            var user = SecurityFacade.CurrentUser();
-
-            // Workorder id used for data association
-            var recordKey = entity.UserId;
+            
 
             // Filter work order materials for any new entries where matusetransid is null
             var labors = (IEnumerable<CrudOperationData>)entity.GetRelationship("labtrans");
             var newLabors = labors.Where(r => r.GetAttribute("labtransid") == null);
             var deletedLabors = labors.Where(r => r.GetAttribute("labtransid") != null && r.ContainsAttribute("#deleted"));
-            var modifiedLabors = newLabors.Concat(deletedLabors);
+            var editedLabors = labors.Where(r => r.GetAttribute("labtransid") != null && r.ContainsAttribute("#edited"));
+            if (editedLabors.Any()) {
+                editedLabors.ForEach(e => e.UnmappedAttributes.Remove("#laborlist_"));
+            }
+            var modifiedLabors = newLabors.Concat(deletedLabors).Concat(editedLabors);
 
             // Convert collection into array, if any are available
             //var crudOperationData = newLabors as CrudOperationData[] ?? newLabors.ToArray();
@@ -60,7 +60,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     if (crudData.ContainsAttribute("#deleted") && crudData.GetAttribute("#deleted").ToString() == "1") {
                         //TODO:Workaround while we´re figuring out how to do it via WebServices
                         deletion = true;
-                        _maxDAO.ExecuteSql("delete from labtrans where labtransid = ? ", crudData.GetAttribute("labtransid"));
+                        DeleteLabtrans(crudData.GetStringAttribute("labtransid"));
 
                         //                        var payRate = GetPayRate(crudData);
                         //                        WsUtil.SetValueIfNull(integrationObject, "PAYRATE", payRate);
@@ -72,44 +72,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
 
 
+                    } else if (crudData.ContainsAttribute("#edited") && crudData.GetAttribute("#edited").ToString() == "1") {
+                        DeleteLabtrans(crudData.GetAttribute("labtransid").ToString());
+                        AddLabtrans(entity, integrationObject, crudData);
                     } else {
-                        var transType = "WORK";
-                        if (crudData.ContainsAttribute("transtype")) {
-                            transType = crudData.GetStringAttribute("transtype");
-                        }
-
-                        WsUtil.SetValue(integrationObject, "LABTRANSID", -1);
-                        WsUtil.SetValue(integrationObject, "REFWO", recordKey);
-                        WsUtil.SetValue(integrationObject, "TRANSTYPE", transType);
-
-
-                        WsUtil.SetValue(integrationObject, "ORGID", entity.GetAttribute("orgid"));
-                        WsUtil.SetValue(integrationObject, "SITEID", entity.GetAttribute("siteid"));
-
-
-                        WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
-                            true);
-                        WsUtil.SetValue(integrationObject, "ENTERDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
-                            true);
-                        WsUtil.SetValueIfNull(integrationObject, "LABORCODE", user.Login.ToUpper());
-                        WsUtil.SetValueIfNull(integrationObject, "ENTERBY", user.Login.ToUpper());
-                        var payRate = GetPayRate(crudData);
-
-
-                        WsUtil.SetValueIfNull(integrationObject, "PAYRATE", payRate);
-                        // Maximo 7.6 Changes
-                        DateTime startdateentered;
-                        var jsonDate = crudData.GetAttribute("startdate");
-                        var parsedDate = jsonDate as DateTime?;
-                        if (parsedDate != null) {
-                            //if already a date, it was parsed on ConversionUTIL
-                            WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", parsedDate, true);
-                        } else if (jsonDate != null && DateTime.TryParse(jsonDate.ToString(), out startdateentered)) {
-                            WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED",
-                                DateUtil.BeginOfDay(startdateentered).FromServerToRightKind(), true);
-                        }
-                        ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
-                        FillLineCostLabor(integrationObject);
+                        AddLabtrans(entity, integrationObject, crudData);
                     }
                 });
             if (deletion) {
@@ -173,6 +140,55 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             } catch {
                 WsUtil.SetValue(integrationObject, "LINECOST", null);
             }
+        }
+
+        private void DeleteLabtrans(string labtransid) {
+            _maxDAO.ExecuteSql("delete from labtrans where labtransid = ? ", labtransid);
+        }
+
+        private void AddLabtrans(CrudOperationData entity, object integrationObject, CrudOperationData crudData) {
+            // Use to obtain security information from current user
+            var user = SecurityFacade.CurrentUser();
+            // Workorder id used for data association
+            var recordKey = entity.UserId;
+
+            var transType = "WORK";
+            if (crudData.ContainsAttribute("transtype")) {
+                transType = crudData.GetStringAttribute("transtype");
+            }
+
+            WsUtil.SetValue(integrationObject, "LABTRANSID", -1);
+            WsUtil.SetValue(integrationObject, "REFWO", recordKey);
+            WsUtil.SetValue(integrationObject, "TRANSTYPE", transType);
+
+
+            WsUtil.SetValue(integrationObject, "ORGID", entity.GetAttribute("orgid"));
+            WsUtil.SetValue(integrationObject, "SITEID", entity.GetAttribute("siteid"));
+
+
+            WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
+                true);
+            WsUtil.SetValue(integrationObject, "ENTERDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
+                true);
+            WsUtil.SetValueIfNull(integrationObject, "LABORCODE", user.Login.ToUpper());
+            WsUtil.SetValueIfNull(integrationObject, "ENTERBY", user.Login.ToUpper());
+            var payRate = GetPayRate(crudData);
+
+
+            WsUtil.SetValueIfNull(integrationObject, "PAYRATE", payRate);
+            // Maximo 7.6 Changes
+            DateTime startdateentered;
+            var jsonDate = crudData.GetAttribute("startdate");
+            var parsedDate = jsonDate as DateTime?;
+            if (parsedDate != null) {
+                //if already a date, it was parsed on ConversionUTIL
+                WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", parsedDate, true);
+            } else if (jsonDate != null && DateTime.TryParse(jsonDate.ToString(), out startdateentered)) {
+                WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED",
+                    DateUtil.BeginOfDay(startdateentered).FromServerToRightKind(), true);
+            }
+            ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
+            FillLineCostLabor(integrationObject);
         }
     }
 }

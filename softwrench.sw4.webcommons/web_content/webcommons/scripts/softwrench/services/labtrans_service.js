@@ -58,8 +58,11 @@ angular.module('sw_layout')
             }
             return $q.when();
 
-        }
+        },
 
+        editLabtrans: function() {
+            
+        }
 
     };
 }]);
