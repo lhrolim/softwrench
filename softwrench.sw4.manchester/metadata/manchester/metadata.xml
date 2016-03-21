@@ -424,7 +424,7 @@
             </optionfield>
           </section>
 
-          <field label="Details:" attribute="longdescription_.ldtext" >
+          <field label="Details:" attribute="longdescription_.ldtext" enableexpression="['WAPPR', 'WMATL', 'WSCH'].indexOf(@status) != -1">
             <renderer type="richtext"/>
           </field>
 

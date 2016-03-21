@@ -307,7 +307,7 @@
                 <div ng-switch-when="richtext">
                     <div class="richtext image-holder"
                          text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]"
-                         ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isSelectEnabled(fieldMetadata)"></div>
+                         ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isModifiableEnabled(fieldMetadata)"></div>
                 </div>
                 <div ng-switch-when="upload">
                     <div class="input-group" id="{{fieldMetadata.attribute}}">
