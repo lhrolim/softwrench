@@ -651,9 +651,11 @@
                     redirectService.redirectToTab('main');
                     return;
                 }
+                
                 modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, function saveCallBack(datamap) {
                     $scope.save(datamap);
                 }, null, $scope.parentdata, $scope.parentschema);
+                
             } else {
                 //TODO: switch to edit
                 $scope.newDetail = true;
@@ -732,6 +734,19 @@
 
             $scope.isUpdate = columnMode === "edit";
 
+            var event = $scope.compositionlistschema.events["onedit.validation"];
+            if (event) {
+                var fn = dispatcherService.loadService(event.service, event.method);
+                fn(item, $scope.compositionlistschema).then(function () {
+                    $scope.executeToggleDetails(item, column, columnMode, $event, rowIndex);
+                });
+            } else {
+                $scope.executeToggleDetails(item, column, columnMode, $event, rowIndex);
+            }
+
+            
+        };
+        $scope.executeToggleDetails = function (item, column, columnMode, $event, rowIndex) {
             // if there is a custom list click action, do it
             var customAction = $scope.compositionlistschema.properties["list.click.event"];
             if (customAction) {

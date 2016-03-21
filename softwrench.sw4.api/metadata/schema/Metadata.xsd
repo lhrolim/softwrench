@@ -1285,6 +1285,7 @@
               <enumeration value="onload"></enumeration>
               <enumeration value="onschemafullyloaded"></enumeration>
               <enumeration value="onremoval.validation"></enumeration>
+              <enumeration value="onedit.validation"></enumeration>
               <enumeration
 								value="beforesubmit.onvalidation">
               </enumeration>

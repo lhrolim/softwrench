@@ -57,7 +57,14 @@ angular.module('sw_layout')
                 return $q.reject();
             }
             return $q.when();
+        },
 
+        validateEdit: function(datamap, schema) {
+            if (datamap["genapprservreceipt"] === 1) {
+                alertService.alert("Cannot edit already approved labor transactions");
+                return $q.reject();
+            }
+            return $q.when();
         }
 
     };

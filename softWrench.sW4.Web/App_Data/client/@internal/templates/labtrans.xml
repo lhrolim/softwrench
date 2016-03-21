@@ -44,6 +44,7 @@
           <field attribute="transdate" label="Created Date"/>
           <field attribute="genapprservreceipt" hidden="true"/>
           <event type="onremoval.validation" service="labtranService" method="validateRemoval"/>
+          <event type="onedit.validation" service="labtranService" method="validateEdit"/>
         </list>
 
         <detail>
