@@ -1179,7 +1179,7 @@
             return $(el).data(datumKey);
         };
         _.mixin(Dataset.prototype, EventEmitter, {
-            _render: function render(query, suggestions, initalValue) {
+            _render: function render(query, suggestions, initialValue) {
                 if (!this.$el) {
                     return;
                 }
@@ -1212,7 +1212,7 @@
                     function getSuggestionNode(suggestion) {
                         var $el;
                         $el = $(html.suggestion).append(that.templates.suggestion(suggestion)).data(datasetKey, that.name).data(valueKey, that.displayFn(suggestion)).data(datumKey, suggestion);
-                        if ($el[0].innerText == initalValue) {
+                        if ($el[0].innerText == initialValue) {
                             $el.addClass('current');
                         }
                         $el.children().each(function () {
@@ -1237,14 +1237,14 @@
             getRoot: function getRoot() {
                 return this.$el;
             },
-            update: function update(query, initalValue) {
+            update: function update(query, initialValue) {
                 var that = this;
                 this.query = query;
                 this.canceled = false;
                 this.source(query, render);
                 function render(suggestions) {
                     if (!that.canceled && query === that.query) {
-                        that._render(query, suggestions, initalValue);
+                        that._render(query, suggestions, initialValue);
                     }
                 }
             },
@@ -1419,7 +1419,7 @@
             update: function update(query, input) {
                 _.each(this.datasets, updateDataset);
                 function updateDataset(dataset) {
-                    dataset.update(query, input.initalValue);
+                    dataset.update(query, input.initialValue);
                 }
             },
             empty: function empty() {
@@ -1495,6 +1495,7 @@
             _onSuggestionClicked: function onSuggestionClicked(type, $el) {
                 var datum;
                 if (datum = this.dropdown.getDatumForSuggestion($el)) {
+                    this.input.initialValue = datum.value;
                     this._select(datum);
                 }
             },
@@ -1755,7 +1756,7 @@
                     if (typeahead = $input.data(typeaheadKey)) {
                         typeahead.setVal(newVal);
                     }
-                    typeahead.input.initalValue = newVal;
+                    typeahead.input.initialValue = newVal;
                 }
                 function getVal($input) {
                     var typeahead, query;
