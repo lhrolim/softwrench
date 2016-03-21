@@ -34,7 +34,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         private readonly MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
-        private static readonly AttachmentDao AttachmentDao = new AttachmentDao();
+
+        private AttachmentDao _attachmentDao;
+        public AttachmentDao AttachmentDao {
+            get {
+                return _attachmentDao ?? (_attachmentDao = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentDao>(typeof(AttachmentDao)));
+            }
+        }
 
         /// <summary>
         /// url specifying where the attachments could be downloaded from maximo in the http mode
@@ -336,10 +342,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // override existing value file is located on a different server - reusing exisitng property field name
             _baseMaximoPath = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksPath) ?? _baseMaximoPath;
             _baseMaximoURL = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksURLPath) ?? _baseMaximoURL;
-        }
-
-        public AttachmentDao Dao() {
-            return AttachmentDao;
         }
 
     }

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
-using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
@@ -11,10 +10,11 @@ using softWrench.sW4.Metadata.Security;
 namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
     public class KongsbergWorklogDataSet : MaximoApplicationDataSet {
 
-        private static string TOP_ATTACHMENT_URL_BY_WORKLOGID = @"select I.urlname from docinfo I
-	                                                                inner join doclinks L
-		                                                                on I.docinfoid = L.docinfoid
-	                                                                where L.ownertable='WORKLOG' and L.ownerid=:OWNERID";
+        private readonly AttachmentDao _attachmentDAO;
+
+        public KongsbergWorklogDataSet(AttachmentDao attachmentDAO) {
+            _attachmentDAO = attachmentDAO;
+        }
 
         public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var result = base.GetApplicationDetail(application, user, request);
@@ -35,8 +35,8 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
             var parameterCollection = (ICollection<KeyValuePair<string, object>>)parameters;
             parameterCollection.Add(new KeyValuePair<string, object>("OWNERID", worklogid));
 
-            var docinfourllist = MaxDAO.FindByNativeQuery(TOP_ATTACHMENT_URL_BY_WORKLOGID, parameters, new PaginationData(1, 1, "L.createdate desc"));
-            return docinfourllist.Any() ? docinfourllist.First().urlname : null;
+            var attachment = _attachmentDAO.SingleByOwner("WORKLOG", worklogid);
+            return attachment != null ? attachment.urlname : null;
         }
 
         public override string ApplicationName() {

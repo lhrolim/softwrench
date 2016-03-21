@@ -88,7 +88,7 @@
               , source = []
               , selected = false
               , selectedValue = '';
-            this.$source.find('option').each(function () {
+            this.$source.find('option').each(function() {
                 var option = $(this);
                 if (option.val() === '') {
                     that.options.placeholder = option.text();
@@ -101,7 +101,7 @@
                     selected = description;
                     selectedValue = option.val();
                 }
-            })
+            });
             this.map = map;
             if (selected) {
                 this.$element.val(selected);
@@ -317,10 +317,10 @@
 
     , highlighter: function (item) {
         var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
-        return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+        return item.replace(new RegExp('(' + query + ')', 'ig'), function($1, match) {
             return '<strong>' + match + '</strong>';
-        })
-    }
+        });
+        }
 
     , render: function (items, appendItems) {
         var that = this;
@@ -328,6 +328,17 @@
         items = $(items).map(function (i, item) {
             i = $(that.options.item).attr('data-value', item);
             i.find('a').html(that.highlighter(item));
+
+            //get the key of the initial value
+            var defaultValue = that.$target[0].defaultValue;
+            var keyMap = that.map;
+            var key = Object.keys(keyMap).filter(function (key) { return keyMap[key] === defaultValue })[0];
+
+            //highlight the current value
+            if (this == key) {
+                $(i).addClass('current');
+            }
+
             return i[0];
         });
         if (appendItems) {

@@ -108,6 +108,11 @@
                     focusService.resetFocusToCurrent($scope.schema, key);
                 });
 
+                $scope.$on("sw.modal.show", function(event, modalData) {
+                    if ($scope.ismodal === "true") {
+                        $rootScope.$broadcast("sw_alltabsloaded");
+                    }
+                });
 
                 $scope.$on("sw_alltabsloaded", function (event, firstTabId) {
                     if (!$scope.schema) {
@@ -189,6 +194,8 @@
 
                 $scope.$on("sw_submitdata", function (event, parameters) {
                     if ($scope.ismodal !== "true" && !!parameters.dispatchedByModal) {
+                        return;
+                    } else if ($scope.ismodal === "true" && !parameters.dispatchedByModal) {
                         return;
                     }
                     $scope.save(parameters);

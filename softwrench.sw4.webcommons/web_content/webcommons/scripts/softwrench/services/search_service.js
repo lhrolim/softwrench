@@ -431,6 +431,10 @@ angular.module('sw_layout')
             var urlToUse = url("/api/Data/{0}?{1}".format(application, queryString));
             log.info("invoking url {0}".format(urlToUse));
 
+            if (extraParameters.saveSwGlobalRedirectURL) {
+                contextService.insertIntoContext("swGlobalRedirectURL", urlToUse, false);
+            }
+
             if (extraParameters.metadataid != null) {
                 return $http.get(urlToUse, {
                     headers: {

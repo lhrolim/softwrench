@@ -125,7 +125,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             //make sure the scroll is sized correctly
             $timeout(function () {
                 $(window).trigger("resize");
-            }, 400, false);
+            }, 310, false);
         };
 
         $scope.save = function(selecteditem) {

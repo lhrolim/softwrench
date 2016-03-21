@@ -104,18 +104,20 @@
             <!--Shows only on line expand -->
             <field label="Rate" attribute="toolrate" readonly="true" showexpression="!@_iscreation"/>
 
-            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
+            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.fields.glaccount">
               <renderer type="lookup"/>
             </association>
           </detail>
 
-          <schema id="tools" stereotype="list">
+          <schema id="tools" stereotype="compositionlist">
             <association label="Tool" target="itemnum" labelfield="tool_.description" requiredexpression="true" extraprojectionvalues="itemnum, itemsetid">
               <dataprovider prefilterfunction="FilterRotating"/>
               <renderer type="lookup"/>
               <event type="afterchange" service="tooltranService" method="aftertoolchange"/>
             </association>
-            <field label="Rate" attribute="toolrate" readonly="true"/>
+            <field label="Rate" attribute="toolrate" readonly="true">
+              <renderer type="default" params="compositionrenderinput=true"/>
+            </field>
           </schema>
         </schemas>
     </application>

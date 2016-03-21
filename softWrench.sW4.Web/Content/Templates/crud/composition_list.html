@@ -174,10 +174,17 @@
                                                dynamic-name="column.attribute"/>
                                         <span class="input-group-addon" ng-if="column.rendererParameters['append']!=null">{{column.rendererParameters['append']}}</span>
                                     </div>
-
-                                    <a ng-if="column.rendererParameters['editable'] != 'true'" style="vertical-align: middle">
-                                        {{getFormattedValue(compositionitem[column.attribute],column,compositionData())}}
-                                    </a>
+                                    <div ng-if="column.rendererParameters['editable'] != 'true'">
+                                        <a ng-if="column.rendererParameters['compositionrenderinput'] != 'true'" style="vertical-align: middle">
+                                            {{getFormattedValue(compositionitem[column.attribute],column,compositionData())}}
+                                        </a>
+                                        <input ng-if="column.rendererParameters['compositionrenderinput'] == 'true'"
+                                                type="text"
+                                                class="form-control"
+                                                ng-readonly="true"
+                                                ng-init="initField(column)"
+                                                ng-model="compositionitem[column.attribute]"/>
+                                    </div>
                                 </div>
                             </ng-switch>
                         </div>

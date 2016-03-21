@@ -452,3 +452,34 @@ input[type="date"], input[type="time"] {
     }
 }
 
+.tt-suggestion {
+    cursor: pointer;
+
+    &:hover {
+        background: #ddd;
+    }
+}
+
+.tt-suggestion.current, .typeahead.dropdown-menu .current {
+    background-color: #357ebd;
+    background-image: linear-gradient(to bottom, #428bca 0, #357ebd 100%);
+    background-repeat: repeat-x;
+    color: #fff;
+
+    a {
+        color: #fff;
+    }
+}
+
+.typeahead.dropdown-menu .active a, .combobox-container .active {
+    background: #ddd;
+    border-color: transparent;
+    color: #333;
+}
+
+.typeahead.dropdown-menu .current.active a {
+    background-color: #357ebd;
+    background-image: linear-gradient(to bottom, #428bca 0, #357ebd 100%);
+    background-repeat: repeat-x;
+    color: #fff;
+}

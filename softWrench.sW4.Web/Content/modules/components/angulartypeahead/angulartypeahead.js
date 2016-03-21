@@ -93,7 +93,7 @@
             }
             var associationOption = crudContextHolderService.fetchLazyAssociationOption(scope.provider, scope.datamap[scope.attribute]);
 
-            var label = associationService.getLabelText(associationOption, scope.hideDescription);
+            var label = associationService.getLabelText(associationOption, scope.hideDescription, attributeValue);
             scope.log.debug("setting initial text of typeahead component {0} to {1}".format(scope.displayablepath, label));
             element.typeahead('val', label);
         }
@@ -103,7 +103,7 @@
             var minLength = scope.minLength || 2;
 
             //initing typeahead itself
-            element.typeahead({ minLength: minLength }, {
+            element.typeahead({ minLength: minLength, highlight: true }, {
                 displayKey: function (item) {
                     return associationService.getLabelText(item, scope.hideDescription);
                 },

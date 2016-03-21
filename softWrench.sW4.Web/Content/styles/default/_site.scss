@@ -1,16 +1,19 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
     overflow-y: scroll;
     -webkit-transition: all 0.5s;
     -ms-overflow-style: scrollbar;
+}
+
+body, .small {
+  font-size: 13px;
 }
 
 .btn {
     font-size: 13px;
 }
 
-.btn, button {
+.btn, button, div {
     &:focus, &:active:focus {
         outline: none;
     }

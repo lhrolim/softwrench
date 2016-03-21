@@ -75,7 +75,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             if (maximoTemplateData.Properties.ContainsKey("mailObject")) {
-                _emailService.SendEmail((EmailData)maximoTemplateData.Properties["mailObject"]);
+                _emailService.SendEmailAsync((EmailData)maximoTemplateData.Properties["mailObject"]);
             }
 
             //TODO: Delete the failed commlog entry or marked as failed : Input from JB needed 
