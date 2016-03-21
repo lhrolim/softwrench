@@ -60,7 +60,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     if (crudData.ContainsAttribute("#deleted") && crudData.GetAttribute("#deleted").ToString() == "1") {
                         //TODO:Workaround while we´re figuring out how to do it via WebServices
                         deletion = true;
-                        DeleteLabtrans(crudData.GetStringAttribute("labtransid"));
+                        DeleteLabtrans(crudData.GetAttribute("labtransid").ToString());
 
                         //                        var payRate = GetPayRate(crudData);
                         //                        WsUtil.SetValueIfNull(integrationObject, "PAYRATE", payRate);
