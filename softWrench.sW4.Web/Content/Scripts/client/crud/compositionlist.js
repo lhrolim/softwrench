@@ -728,7 +728,7 @@
         /// </summary>
         /// <param name="item">the row entry, datamap</param>
         /// <param name="column">the specific column clicked,might be used by different implementations</param>
-        $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex, edit) {
+        $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex) {
 
             $scope.isUpdate = columnMode === "edit";
 
