@@ -380,7 +380,7 @@ function applicationController($scope, $http, $log, $timeout,
     }
 
     $scope.toConfirmCancel = function (data, schema) {
-        $scope.doConfirmCancel(data, schema, "Are you sure you want to cancel ?");
+        $scope.doConfirmCancel(data, schema, "Are you sure you want to cancel?");
     };
 
     $scope.toSchema = function (data, schema) {
