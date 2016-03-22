@@ -348,6 +348,14 @@
         }
     }
 
+    tr.batchadd {
+        border-bottom: 2px solid #ddd;
+
+        td {
+            padding-bottom: 10px;
+        }
+    }
+
     tr:hover {
         td.progress {
             background: #d6d6d6;

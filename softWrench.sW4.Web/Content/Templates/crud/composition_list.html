@@ -17,7 +17,6 @@
 
     <!--build responsive css rules based on metadata-->
     <style column-widths schema="compositionlistschema"></style>
-    <button ng-if="isBatch() && collectionproperties.allowInsertion == 'true'" class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;Add</button>
     <table class="table" ng-class="showTableHover() ? 'table-hover' : 'no-hover'" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
         <thead>
             <tr class="hapag-table-header">
@@ -40,11 +39,8 @@
                 <th ng-if="showEditButton()">
                     <!-- edit button -->
                 </th>
-                <th ng-if="showDeleteButton()">
+                <th ng-if="showDeleteButton() || isBatch()">
                     <!-- delete button -->
-                </th>
-                <th ng-if="isBatch()">
-                    <!-- batch delete button -->
                 </th>
             </tr>
         </thead>
@@ -197,38 +193,43 @@
                         <i class="fa fa-edit"></i>
                     </button>
                 </td>
-                <td class="rowedit" ng-if="showDeleteButton()" data-title="Delete">
-                    <button class="btn btn-primary" ng-click="delete(compositionitem, column, $event, rowindex)">
+                <td class="rowedit" ng-if="showDeleteButton() || isBatch()" data-title="Delete">
+                    <button class="btn btn-primary" ng-click="delete(compositionitem, column, $event, rowindex)" ng-show="hideRemoveBatchItem(compositionitem)">
                         <i class="fa fa-trash"></i>
                     </button>
-                </td>
-                <td class="rowedit" ng-if="isBatch()"  data-title="Delete">
+
+                    <!-- batch delete -->
                     <button class="btn btn-primary" ng-click="removeBatchItem(rowindex)" ng-hide="hideRemoveBatchItem(compositionitem)">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>
             </tr>
-            <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
-                <td colspan="100%" style="background-color: white" class="detaildata">
-                    <div class="expanded-item-composition" ng-if="isExpandReadOnly()">
-                        <expanded-item-output displayables="compositiondetailschema.displayables"
-                                              schema="compositiondetailschema"
-                                              datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
-                                              cancelfn="cancelComposition()"
-                                              class="clearfix">
-                        </expanded-item-output>
-                    </div>
-                    <div class="expanded-item-composition" ng-if="!isExpandReadOnly()">
-                        <expanded-item-input displayables="compositiondetailschema.displayables"
-                                             schema="compositiondetailschema"
-                                             datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
-                                             cancelfn="cancelComposition()"
-                                             savefn="save()"
-                                             class="clearfix">
-                        </expanded-item-input>
-                    </div>
-                </td>
-            </tr>
+        <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
+            <td colspan="100%" style="background-color: white" class="detaildata">
+                <div class="expanded-item-composition" ng-if="isExpandReadOnly()">
+                    <expanded-item-output displayables="compositiondetailschema.displayables"
+                                          schema="compositiondetailschema"
+                                          datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
+                                          cancelfn="cancelComposition()"
+                                          class="clearfix">
+                    </expanded-item-output>
+                </div>
+                <div class="expanded-item-composition" ng-if="!isExpandReadOnly()">
+                    <expanded-item-input displayables="compositiondetailschema.displayables"
+                                         schema="compositiondetailschema"
+                                         datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
+                                         cancelfn="cancelComposition()"
+                                         savefn="save()"
+                                         class="clearfix">
+                    </expanded-item-input>
+                </div>
+            </td>
+        </tr>
+        <tr class="batchadd">
+            <td colspan="100%">
+                <button ng-if="isBatch() && collectionproperties.allowInsertion == 'true'" class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;Add Item</button>
+            </td>
+        </tr>
         </tbody>
         <tbody ng-show="isNoRecords()">
             <tr>
@@ -240,7 +241,6 @@
             </tr>
         </tbody>
     </table>
-
     <div class="context clearfix" ng-if="showPagination()">
         <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" />
     </div>

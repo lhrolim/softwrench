@@ -946,7 +946,8 @@
 
                 // if inside a scroll pane - to update pane size
                 fixHeaderService.callWindowResize();
-            }, 1000, false);
+                $(window).trigger('resize');
+            }, 400, false);
 
         }
 
