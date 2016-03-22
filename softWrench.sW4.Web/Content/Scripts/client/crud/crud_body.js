@@ -675,7 +675,7 @@
                         // FF: has to wait for the image to be appended to a `contenteditable` element (as an image node) 
                         if (!items) {
                             $(pasteCatcher).focus();
-                            attachmentService.createAttachmentFromElement(pasteCatcher, $scope.schema);
+                            attachmentService.createAttachmentFromElement(pasteCatcher, crudContextHolderService.currentSchema());
                             return true;
                         }
 
@@ -691,7 +691,7 @@
                         if ($event.target.tagName.equalIc("br") || $($event.target).parents("[text-angular]").length > 0) return true;
                         // can create the attachment
                         image = image[0];
-                        attachmentService.createAttachmentFromFile(image, $scope.schema);
+                        attachmentService.createAttachmentFromFile(image, crudContextHolderService.currentSchema());
                         // prevent bubbling and default behavior
                         $event.stopPropagation();
                         $event.preventDefault();
