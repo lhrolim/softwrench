@@ -10,7 +10,7 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
         }
 
         if (status.equalsAny("QUEUED", "CANTREPROD", "WAITONINFO", "PENDING", "WMATL", "WORKING", "null")) {
-            return "#fde62f"; //yellow
+            return "#f2d935"; //yellow
         }
 
         if (status.equalsAny("CANCELLED", "FAIL", "CAN", "FAILPIR", "REJECTED", "NOTREQ", "WONT FIX", "WONTIMPLNT", "WONTRESPND", "POSTPONED", "SPAM" )) {
