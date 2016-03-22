@@ -315,6 +315,7 @@
             $scope.detailData = $scope.clonedData = {};
 
             $scope.noupdateallowed = !$scope.isBatch() && !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
+            $scope.nodeleteallowed = !expressionService.evaluate($scope.collectionproperties.allowRemoval, $scope.parentdata);
             $scope.expanded = $scope.wasExpandedBefore = false;
 
             $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
@@ -621,7 +622,9 @@
 
         function onAttachmentFileLoaded(event, file) {
             if (!$scope.relationship.contains("attachment")) return;
-            var datamap = { 'newattachment_path': file.name };
+
+            var datamap = crudContextHolderService.rootDataMap("#modal") || {};
+            datamap["newattachment_path"] = file.name ;
 
             // set file on the datamap
             getFileUploadFields()
@@ -631,7 +634,11 @@
                 });
             // open create form
             $timeout(function () {
-                $scope.edit(datamap);
+                if (crudContextHolderService.isShowingModal()) {
+                    crudContextHolderService.rootDataMap("#modal", datamap);
+                } else {
+                    $scope.edit(datamap, "New Attachment", true);
+                }
             });
         }
 

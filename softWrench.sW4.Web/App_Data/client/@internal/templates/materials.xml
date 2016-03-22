@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
@@ -204,7 +204,7 @@
           <field attribute="qtyrequested" label="Quantity" qualifier="subtitle"/>
         </list>
 
-        <detail title="Material Details">
+        <schema id="detail" stereotype="detail" title="Material Details">
           <event type="onload" service="scannerdetectionService" method="initMaterialScanningListener" />
           <field attribute="matusetransid" hidden="true" />
           <field attribute="orgid" defaultexpression="$.previousdata.fields['orgid']" hidden="true" />
@@ -264,7 +264,7 @@
           <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
             <renderer type="lookup"/>
           </association>
-        </detail>
+        </schema>
       </schemas>
     </application>
   </applications>

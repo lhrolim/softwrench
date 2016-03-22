@@ -111,6 +111,9 @@
                         if (sidePanelService.getExpandedPanelFromPreference() === $scope.panelid && !sidePanelService.isOpened($scope.panelid)) {
                             sidePanelService.toggle($scope.panelid);
                         }
+                        setTimeout(function () {
+                            $(window).trigger("resize");
+                        }, 1000);
                     });
                 }
 

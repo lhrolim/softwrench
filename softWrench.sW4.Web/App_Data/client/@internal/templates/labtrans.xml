@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
@@ -47,7 +47,7 @@
           <event type="onedit.validation" service="labtranService" method="validateEdit"/>
         </list>
 
-        <detail title="Labor Details">
+        <schema id="detail" stereotype="detail" title="Labor Details">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
@@ -93,7 +93,7 @@
           <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.fields.glaccount">
             <renderer type="lookup"/>
           </association>
-        </detail>
+        </schema>
 
         <schema id="labors" stereotype="compositionlist">
           <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
