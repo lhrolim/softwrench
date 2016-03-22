@@ -632,7 +632,7 @@
                 });
             // open create form
             $timeout(function () {
-                $scope.edit(datamap);
+                $scope.edit(datamap, "New Attachment", true);
             });
         }
 
