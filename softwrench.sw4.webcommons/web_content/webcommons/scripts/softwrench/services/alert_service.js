@@ -91,9 +91,16 @@
 
                     bootbox.setDefaults({ locale: i18NService.getCurrentLanguage() });
                     bootbox.alert({
+                        templates: {
+                            header:
+                              "<div class='modal-header'>" +
+                                "<i class='fa fa-times-circle'></i>" +
+                                "<h4 class='modal-title'></h4>" +
+                              "</div>"
+                        },
                         message: msg,
-                        title: i18NService.get18nValue('general.defaultcommands._alert', 'Alert'),
-                        className: 'smallmodal',
+                        title: i18NService.get18nValue('general.defaultcommands._alert', 'Sorry...'),
+                        className: 'smallmodal error',
                         callback: function () {
                             deferred.resolve();
                         }

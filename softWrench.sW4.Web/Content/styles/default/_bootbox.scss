@@ -55,5 +55,30 @@
                 }
             }
         }
+
+        &.error {
+            .modal-content {
+                border: 2px solid $cts_red;
+
+                .modal-header {
+                    i {
+                        color: $cts_red;
+                    }
+                }
+
+                .modal-footer {
+                    text-align: center;
+
+                    .btn {
+                        margin-left: 0;
+
+                        &.btn-primary {
+                            background: $cts_red;
+                            border-color: $cts_red;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
