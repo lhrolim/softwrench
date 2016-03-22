@@ -81,7 +81,7 @@ angular.module('sw_layout')
                 $scope.moreInfo = notificationViewModel.getMoreInfo(message);
 
                 $('#errorModal').modal('show');
-                $('#errorModal').draggable();
+                //$('#errorModal').draggable();
             };
 
             //push test messages
