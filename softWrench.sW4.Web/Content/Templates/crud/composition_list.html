@@ -37,11 +37,16 @@
                     <span ng-show="isFieldRequired(column,column.requiredExpression)" class="requiredfieldmark">* </span>
                     <span class="add-on">{{i18NLabel(column)}}</span>
                 </th>
-                <th ng-if="showEditButton() || showDeleteButton()">
-                    <!--batchMode-->
+                <th ng-if="showEditButton()">
+                    <!-- edit button -->
+                </th>
+                <th ng-if="showDeleteButton()">
+                    <!-- delete button -->
+                </th>
+                <th ng-if="isBatch()">
+                    <!-- batch delete button -->
                 </th>
             </tr>
-
         </thead>
         <tbody ng-show="compositionData().length > 0">
             <tr ng-repeat-start="(rowindex, compositionitem) in compositionData()"
@@ -81,14 +86,14 @@
                                                   datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
                                                   disabledassociations="disabledassociations" blockedassociations="blockedassociations"
                                                   mode="composition"
-                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}"/>
+                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}" />
                                 </div>
                                 <div ng-switch-when="autocompleteclient" class="row">
                                     <autocomplete-client-input parentdata="parentdata"
-                                                  datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
-                                                  disabledassociations="disabledassociations" blockedassociations="blockedassociations"
-                                                  mode="composition" ismodal="ismodal"
-                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}"/>
+                                                               datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
+                                                               disabledassociations="disabledassociations" blockedassociations="blockedassociations"
+                                                               mode="composition" ismodal="ismodal"
+                                                               displayablepath="{{getApplicationPah(compositionitem,column)}}" />
                                 </div>
                             </ng-switch>
                         </div>
@@ -113,12 +118,12 @@
                         <div ng-switch-when="ApplicationFieldDefinition">
                             <ng-switch on="column.rendererType">
                                 <div ng-switch-when="checkbox" style="text-align: center;">
-                                    <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'"/>
+                                    <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'" />
                                     <input type="checkbox" ng-if="column.rendererParameters['editable'] == 'true'" ng-model="compositionitem[column.attribute]"
                                            ng-checked="compositionitem[column.attribute] == 1"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            ng-click="invokeCustomCheckBoxService(column,compositionitem,$event)"
-                                           ng-true-value="'true'" ng-false-value="'false'"/>
+                                           ng-true-value="'true'" ng-false-value="'false'" />
                                 </div>
 
                                 <div ng-switch-when="numericinput">
@@ -130,7 +135,7 @@
                                            max="{{setMaxNumericInput(compositionitem,column)}}"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            data-field="{{column.attribute+rowindex}}"
-                                           number-spinner/>
+                                           number-spinner />
                                 </div>
                                 <div ng-switch-when="icon">
                                     <i class="fa" ng-class="loadIcon(compositionitem[column.attribute],column)"></i>
@@ -168,7 +173,7 @@
                                                maxlength="{{column.rendererParameters['maxlength']}}"
                                                placeholder="{{column.rendererParameters['placeholder']}}"
                                                ng-init="initField(column)"
-                                               dynamic-name="column.attribute"/>
+                                               dynamic-name="column.attribute" />
                                         <span class="input-group-addon" ng-if="column.rendererParameters['append']!=null">{{column.rendererParameters['append']}}</span>
                                     </div>
                                     <div ng-if="column.rendererParameters['editable'] != 'true'">
@@ -176,28 +181,32 @@
                                             {{getFormattedValue(compositionitem[column.attribute],column,compositionData())}}
                                         </a>
                                         <input ng-if="column.rendererParameters['compositionrenderinput'] == 'true'"
-                                                type="text"
-                                                class="form-control"
-                                                ng-readonly="true"
-                                                ng-init="initField(column)"
-                                                ng-model="compositionitem[column.attribute]"/>
+                                               type="text"
+                                               class="form-control"
+                                               ng-readonly="true"
+                                               ng-init="initField(column)"
+                                               ng-model="compositionitem[column.attribute]" />
                                     </div>
                                 </div>
                             </ng-switch>
                         </div>
-
-
                     </ng-switch>
                 </td>
-                <td ng-if="showEditButton() || showDeleteButton()">
-                    <button ng-if="showEditButton()" class="btn" ng-click="toggleDetails(compositionitem, column, 'edit', $event, rowindex)">
+                <td class="rowedit" ng-if="showEditButton()" data-title="Edit">
+                    <button class="btn btn-primary" ng-click="toggleDetails(compositionitem, column, 'edit', $event, rowindex)">
                         <i class="fa fa-edit"></i>
                     </button>
-                    <button ng-if="showDeleteButton()" class="btn" ng-click="delete(compositionitem, column, $event, rowindex)">
+                </td>
+                <td class="rowedit" ng-if="showDeleteButton()" data-title="Delete">
+                    <button class="btn btn-primary" ng-click="delete(compositionitem, column, $event, rowindex)">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>
-
+                <td class="rowedit" ng-if="isBatch()"  data-title="Delete">
+                    <button class="btn btn-primary" ng-click="removeBatchItem(rowindex)" ng-hide="hideRemoveBatchItem(compositionitem)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
             </tr>
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
                 <td colspan="100%" style="background-color: white" class="detaildata">
