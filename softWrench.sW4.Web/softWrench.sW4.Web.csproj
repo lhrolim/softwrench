@@ -560,11 +560,13 @@
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_bar.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_viewmodel.js" />
     <Content Include="Content\Scripts\client\crud\crud_expandable_section.js" />
+    <Content Include="Content\Scripts\client\directives\swChart.js" />
     <Content Include="Content\Scripts\client\crud\search\crudSearchService.js" />
     <Content Include="Content\Scripts\client\directives\scrollPane.js" />
     <Content Include="Content\Scripts\client\directives\searchbox.js" />
     <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\directives\stringtonumber.js" />
+    <Content Include="Content\Scripts\client\services\chartService.js" />
     <Content Include="Content\Scripts\client\services\controllerinheritanceservice.js" />
     <Content Include="Content\Scripts\client\services\notificationService.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
@@ -684,7 +686,6 @@
     <Content Include="Content\styles\default\vendor\vendor.scss" />
     <Content Include="Content\styles\default\_define-password.scss" />
     <Content Include="Content\styles\default\_notifications.scss" />
-    <Content Include="Content\Scripts\vendor\angular\components\angular-animate.js.map" />
     <Content Include="Content\styles\default\_searchbox.scss" />
     <Content Include="bower.json" />
     <Content Include="Content\styles\default\_bootbox.scss" />
@@ -766,6 +767,8 @@
     <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
+    <Content Include="Content\Templates\directives\swChartLabel.html" />
+    <Content Include="Content\Templates\directives\swChart.html" />
     <Content Include="Content\Scripts\client\crud\search\crud_search.js" />
     <Content Include="Content\Templates\crud\search\crud_search.html" />
     <Content Include="Content\Templates\crud\security\userprofile_permission.html" />

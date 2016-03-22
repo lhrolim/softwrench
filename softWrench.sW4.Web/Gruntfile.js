@@ -99,6 +99,10 @@ module.exports = function (grunt) {
                     "angular/angular-xeditable.js": "angular-xeditable/dist/js/xeditable.js",
                     "angular/angular-file-upload.js": "angular-file-upload/angular-file-upload.js",
                     "angular/angular-bindonce.js": "angular-bindonce/bindonce.js",
+                    // devextreme
+                    "devextreme/globalize.js": "globalize/lib/globalize.js",
+                    "devextreme/dx.chartjs.js": "devextreme-web/js/dx.chartjs.js",
+                    "devextreme/vectormap/usa.js": "devextreme-web/js/vectormap-data/usa.js",
                     // utils
                     "utils/a-moment.js": "moment/min/moment.min.js",
                     "utils/moment-locale-de.js": "moment/locale/de.js",

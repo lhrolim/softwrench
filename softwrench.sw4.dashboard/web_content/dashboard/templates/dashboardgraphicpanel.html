@@ -3,6 +3,7 @@
     
     <div class="body">
         <div class="js_graphic_container">
+            <sw-chart ng-if="data.graphic.chartType" data-chart-type="data.graphic.chartType" data-data="data.graphic.data" data-options="data.graphic.options"></sw-chart>
             <div ng-if="data.hasError" style="padding-top: 30px; text-align: center;">
                 <p>An error happened while loading the graphic</p>
                 <button type="button"

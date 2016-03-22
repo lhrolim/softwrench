@@ -1,4 +1,4 @@
-﻿(function (angular) {
+(function (angular) {
     "use strict";
 
 angular.module("sw_layout").directive("dashboard", ["contextService", function (contextService) {
@@ -43,7 +43,7 @@ angular.module("sw_layout").directive("dashboard", ["contextService", function (
                 var colNum = parseInt($scope.dashboard.layout.split(",")[row]);
                 var visibleColumns = 0;
                 for (var i = 0; i < colNum; i++) {
-                    if (this.isPanelVisible(row, i)) {
+                    if ($scope.isPanelVisible($scope.getPanelDataFromMatrix(row, i))) {
                         visibleColumns++;
                     }
                 }

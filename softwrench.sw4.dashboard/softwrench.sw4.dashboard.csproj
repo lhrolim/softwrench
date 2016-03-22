@@ -83,6 +83,7 @@
     <Compile Include="classes\model\ManageDashBoardsDTO.cs" />
     <Compile Include="classes\model\migration\Migration20150224Swweb792.cs" />
     <Compile Include="classes\model\migration\Migration20151021Swweb1840.cs" />
+    <Compile Include="classes\model\migration\Migration20160301swweb1652.cs" />
     <Compile Include="classes\service\graphic\exception\GraphicStorageSystemException.cs" />
     <Compile Include="classes\service\graphic\GraphicStorageSystemFacadeProvider.cs" />
     <Compile Include="classes\service\graphic\IGraphicStorageSystemAuthDto.cs" />
@@ -143,6 +144,7 @@
     <Content Include="web_content\dashboard\scripts\dashboardcontroller.js" />
     <None Include="web_content\dashboard\styles\dashboards.scss" />
     <Content Include="web_content\dashboard\scripts\graphicpanelserviceprovider.js" />
+    <Content Include="web_content\dashboard\scripts\swchartgraphicpanelservice.js" />
     <Content Include="web_content\dashboard\scripts\tableaugraphicpanelservice.js" />
     <Content Include="web_content\dashboard\templates\createnewpanelbutton.html" />
     <Content Include="web_content\dashboard\templates\dashboardgraphicpanel.html" />
