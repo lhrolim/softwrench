@@ -102,7 +102,7 @@
           </field>          
         </schema>
 
-        <schema id="detail" stereotype="compositiondetail">
+        <schema id="detail" stereotype="compositiondetail" title="Communication">
           <event type="onschemafullyloaded" service="commlogService" method="addSignature"/>
           <field attribute="commlogid" hidden="true" />
           <field attribute="ownertable" defaultexpression="$.parentdata.fields['class']" hidden="true"/>

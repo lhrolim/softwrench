@@ -78,7 +78,7 @@
             <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
           </list>
 
-          <detail platform="web">
+          <detail platform="web" title="Tool">
             <field attribute="tooltransid" hidden="true" />
             <field attribute="orgid" hidden="true" />
             <field attribute="siteid" hidden="true" />
