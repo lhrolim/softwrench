@@ -51,8 +51,8 @@
                 draggable="{{ draggableValue() }}"
                 composition-list-key="{{getCompositionListKey()}}"
                 composition-list-id="{{compositionitem[compositionlistschema.idFieldName]}}">
-                <td ng-if="hasDetailSchema()">
-                    <button class="btn" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
+                <td ng-if="hasDetailSchema()" class="rowexpand">
+                    <button class="btn btn-default" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
                         <i class="fa fa-caret-right" ng-hide="isItemExpanded(compositionitem)"></i>
                         <i class="fa fa-caret-down" ng-show="isItemExpanded(compositionitem)"></i>
                     </button>
@@ -194,7 +194,7 @@
                     </button>
                 </td>
                 <td class="rowedit" ng-if="showDeleteButton() || isBatch()" data-title="Delete">
-                    <button class="btn btn-primary" ng-click="delete(compositionitem, column, $event, rowindex)" ng-show="hideRemoveBatchItem(compositionitem)">
+                    <button class="btn btn-primary" ng-click="delete(compositionitem, column, $event, rowindex)" ng-show="!isBatch() && showDeleteButton()">
                         <i class="fa fa-trash"></i>
                     </button>
 
@@ -225,9 +225,9 @@
                 </div>
             </td>
         </tr>
-        <tr class="batchadd">
+        <tr class="batchadd" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'">
             <td colspan="100%">
-                <button ng-if="isBatch() && collectionproperties.allowInsertion == 'true'" class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;Add Item</button>
+                <button class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;Add Item</button>
             </td>
         </tr>
         </tbody>

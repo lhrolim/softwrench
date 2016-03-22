@@ -341,6 +341,10 @@
         word-break: break-word;
         padding: 10px 15px 6px;
 
+        &.rowexpand, &.rowedit {
+            width: 39px;
+        }
+
         &.rowedit {
             padding-left: 5px;
             padding-right: 5px;
