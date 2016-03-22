@@ -17,7 +17,7 @@
 
     <!--build responsive css rules based on metadata-->
     <style column-widths schema="compositionlistschema"></style>
-
+    <button ng-if="isBatch() && collectionproperties.allowInsertion == 'true'" class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;Add</button>
     <table class="table" ng-class="showTableHover() ? 'table-hover' : 'no-hover'" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
         <thead>
             <tr class="hapag-table-header">
@@ -36,9 +36,6 @@
                     ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,null)">
                     <span ng-show="isFieldRequired(column,column.requiredExpression)" class="requiredfieldmark">* </span>
                     <span class="add-on">{{i18NLabel(column)}}</span>
-                </th>
-                <th ng-if="isBatch()">
-                    <button ng-if="collectionproperties.allowInsertion == 'true'" class="fa fa-plus btn btn-primary" ng-click="addBatchItem()"></button>
                 </th>
                 <th ng-if="showEditButton() || showDeleteButton()">
                     <!--batchMode-->
@@ -191,9 +188,6 @@
 
 
                     </ng-switch>
-                </td>
-                <td ng-if="isBatch()" ng-hide="hideRemoveBatchItem(compositionitem)">
-                    <button class="fa fa-trash btn" ng-click="removeBatchItem(rowindex)"></button>
                 </td>
                 <td ng-if="showEditButton() || showDeleteButton()">
                     <button ng-if="showEditButton()" class="btn" ng-click="toggleDetails(compositionitem, column, 'edit', $event, rowindex)">

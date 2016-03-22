@@ -331,7 +331,7 @@
 
 #listgrid, #compositionlistgrid {
     th {
-        padding: 13px 0 9px;
+        padding: 13px 15px 9px;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
     }
@@ -339,7 +339,7 @@
     td {
         word-break: break-all;
         word-break: break-word;
-        padding: 10px 0 6px;
+        padding: 10px 15px 6px;
     }
 
     tr:hover {

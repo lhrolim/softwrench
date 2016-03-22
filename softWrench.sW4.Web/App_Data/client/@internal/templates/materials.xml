@@ -204,7 +204,7 @@
           <field attribute="qtyrequested" label="Quantity" qualifier="subtitle"/>
         </list>
 
-        <detail>
+        <detail title="Material Details">
           <event type="onload" service="scannerdetectionService" method="initMaterialScanningListener" />
           <field attribute="matusetransid" hidden="true" />
           <field attribute="orgid" defaultexpression="$.previousdata.fields['orgid']" hidden="true" />
