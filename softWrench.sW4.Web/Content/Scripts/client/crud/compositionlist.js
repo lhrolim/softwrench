@@ -315,6 +315,7 @@
             $scope.detailData = $scope.clonedData = {};
 
             $scope.noupdateallowed = !$scope.isBatch() && !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
+            $scope.nodeleteallowed = !expressionService.evaluate($scope.collectionproperties.allowRemoval, $scope.parentdata);
             $scope.expanded = $scope.wasExpandedBefore = false;
 
             $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
