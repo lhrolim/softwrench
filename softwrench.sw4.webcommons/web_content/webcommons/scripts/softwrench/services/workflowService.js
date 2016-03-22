@@ -2,7 +2,9 @@
 (function (angular) {
     'use strict';
 
-    function workflowService($http, restService, crudContextHolderService, modalService, alertService) {
+    function workflowService($q,$http, restService, crudContextHolderService, modalService, alertService) {
+
+
         var initiateWorkflow = function (schema, datamap, workflowName) {
             var httpParameters = {
                 entityName: schema.entityName,
@@ -34,13 +36,54 @@
             });
         };
 
+        var stopWorkflow = function (wfInstanceId) {
+            var datamap = crudContextHolderService.rootDataMap();
+            var schema = crudContextHolderService.currentSchema();
+
+            var httpParameters = {
+                entityName: schema.entityName,
+                id: datamap["fields"][schema.idFieldName],
+                userid: datamap["fields"][schema.userIdFieldName],
+                siteid: datamap["fields"]["siteid"],
+                wfInstanceId: wfInstanceId
+            };
+
+            return restService.postPromise("Workflow", "StopWorkflow", httpParameters).then(function(response) {
+                var appResponse = response.data;
+                if (appResponse.errorMessage) {
+                    alertService.alert(response.data.errorMessage);
+                    return $q.when();
+                }
+
+                // If the response does not have a list of workflows, it has sucessfully found and executed one
+
+                if (appResponse.resultObject) {
+                    modalService.show(response.data.resultObject.schema, {}, {
+                        title: "Select Workflow",
+                        cssclass: "dashboardmodal",
+                        onloadfn: function() {
+                            crudContextHolderService.updateEagerAssociationOptions("workflows", response.data.resultObject.workflows);
+                        }
+                    }, function(datamap) {
+                        return stopWorkflow(datamap["processname"]);
+                    });
+                } else {
+                    //closing the modal
+                    return $q.when();
+                }
+
+            });
+
+        }
+
         var service = {
-            initiateWorkflow: initiateWorkflow
+            initiateWorkflow: initiateWorkflow,
+            stopWorkflow: stopWorkflow
         };
 
         return service;
 
     };
 
-    angular.module('webcommons_services').factory('workflowService', ['$http', 'restService', 'crudContextHolderService', 'modalService', 'alertService', workflowService]);
+    angular.module('webcommons_services').factory('workflowService', ["$q",'$http', 'restService', 'crudContextHolderService', 'modalService', 'alertService', workflowService]);
 })(angular);

@@ -518,7 +518,9 @@
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command id="initiateWorkflow" icon="fa-play" label="Initiate Workflow" parameters="schema,datamap" service="workflowService" method="initiateWorkflow"/>
+                <command id="initiateWorkflow" icon="fa-play" label="Initiate Workflow" parameters="schema,datamap" service="workflowService" method="initiateWorkflow" />
+                <command id="routeWorkflow" icon="fa-step-forward" label="Route Workflow" service="workflowService" method="routeWorkflow"/>
+                <command id="stopWorkflow" icon="fa-stop" label="Stop WorkFlow" service="workflowService" method="stopWorkflow"/>
               </container>
             </commandgroup>
           </commandbars>

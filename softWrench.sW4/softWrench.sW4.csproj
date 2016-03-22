@@ -164,6 +164,7 @@
     <Compile Include="Data\Entities\Commlog\EmailCounterHandler.cs" />
     <Compile Include="Data\Entities\Labor\UserLaborCraftFetcher.cs" />
     <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />
+    <Compile Include="Data\Entities\Workflow\MaximoWorkflowException.cs" />
     <Compile Include="Data\Filter\FilterWhereClauseHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseAssetDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseLocationDataSet.cs" />
