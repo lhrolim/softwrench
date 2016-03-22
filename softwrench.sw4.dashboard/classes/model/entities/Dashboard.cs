@@ -46,8 +46,8 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         /// <summary>
         /// comma separated list of columns. (3,1,2 means 3 columns on first row, 1 on the second and 2 on the third).
         /// </summary>
-        [Property]
-        public string Layout { get; set; }
+        //[Property]
+        //public string Layout { get; set; }
 
         [Set(0, Table = "DASH_DASHBOARDREL",
         Lazy = CollectionLazy.False, Cascade = "all")]

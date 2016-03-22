@@ -21,12 +21,8 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         public virtual DashboardBasePanel Panel { get; set; }
 
         //actually ONETOONE, but who cares, since NHIB doesnt seem to work fine with it
-//        [ManyToOne(Column = "dashboard_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
-//        public virtual Dashboard DashBoard { get; set; }
-
-
-
-
+        // [ManyToOne(Column = "dashboard_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
+        // public virtual Dashboard DashBoard { get; set; }
 
     }
 }

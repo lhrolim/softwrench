@@ -29,10 +29,10 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         public virtual int? Id { get; set; }
 
         [Property(Column = "alias_")]
-        public virtual String Alias { get; set; }
+        public virtual string Alias { get; set; }
 
         [Property]
-        public virtual String Title { get; set; }
+        public virtual string Title { get; set; }
 
         private bool _visible = true;
 
@@ -45,6 +45,16 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         public DateTime? UpdateDate { get; set; }
         [Property]
         public int? CreatedBy { get; set; }
+
+        private int _size = 12;
+        [Property]
+        public int Size {
+            get { return _size; }
+            set {
+                if (value > 12 || value <= 0) throw new ArgumentException("value must be lesser than or equal to 12 and greater than 0");
+                _size = value;
+            }
+        }
 
         /// <summary>
         /// Transient property that can make the panel invisible due to a presence of a role blocking it, for instance, or some other business logic

@@ -89,7 +89,8 @@
             <option label="Graphic" value="dashboardgraphic"/>
             <event type="afterchange" service="dashboardAuxService" method="loadPanels"/>
           </optionfield>
-          <section showexpression="@numberofpanels>0">
+          
+          <!--<section showexpression="@numberofpanels>0">
             <header label="Position" displacement="ontop"/>
             <field attribute="row" label="Row">
               <renderer type="numericinput" params="minvalue=1"/>
@@ -97,7 +98,7 @@
             <field attribute="column" label="Column">
               <renderer type="numericinput" params="minvalue=1"/>
             </field>
-          </section>
+          </section>-->
 
           <section orientation="horizontal" showexpression="@paneltype==='dashboardgrid'">
             <header label="Select Widget" displacement="sameline"/>
