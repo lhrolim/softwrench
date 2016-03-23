@@ -331,7 +331,7 @@
 
 #listgrid, #compositionlistgrid {
     th {
-        padding: 13px 15px 9px;
+        padding: 13px 0 9px;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
     }
@@ -339,7 +339,7 @@
     td {
         word-break: break-all;
         word-break: break-word;
-        padding: 10px 15px 6px;
+        padding: 10px 0 6px;
 
         &.rowexpand, &.rowedit {
             width: 39px;
@@ -383,6 +383,16 @@
         display: table-cell;
         margin-top: 0;
         margin-bottom: 0;
+    }
+}
+
+#compositionlistgrid {
+    th {
+        padding: 13px 15px 9px;
+    }
+
+    td {
+        padding: 10px 15px 6px;
     }
 }
 
