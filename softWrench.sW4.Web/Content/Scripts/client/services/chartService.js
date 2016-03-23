@@ -1,29 +1,24 @@
-(function (angular) {
-    'use strict';
+(function (angular, DevExpress) {
+    "use strict";
 
-    angular.module('sw_layout').service('chartService', ['$log', chartService]);
+    angular.module("sw_layout").service("chartService", ["$log", chartService]);
 
     function chartService($log) {
-        var log = $log.getInstance('sw4.chartService');
 
         //#region private mehtods
         function calcScale(total) {
-            var scale = parseInt('1' + Array(total.toString().length).join('0'));
+            var scale = parseInt("1" + Array(total.toString().length).join("0"));
             return Math.ceil(total / scale) * scale;
         }
 
         function formatPercent(string) {
-            return string.replace(/\s+/g, '');
+            return string.replace(/\s+/g, "");
         }
 
         function sumTotal(data, property) {
-            var total = 0;
-
-            data.forEach(function (item) {
-                total += item[property];
-            });
-
-            return total;
+            return data.reduce(function (sum, current) {
+                return sum + current[property];
+            }, 0);
         }
         //#endregion
 
@@ -32,10 +27,10 @@
             var total = data.total;
             return {
                 geometry: {
-                    orientation: 'vertical'
+                    orientation: "vertical"
                 },
                 rangeContainer: {
-                    backgroundColor: '#d9d9d9'
+                    backgroundColor: "#d9d9d9"
                 },
                 scale: {
                     startValue: 0,
@@ -43,11 +38,11 @@
                     tickInterval: calcScale(total) / 4
                 },
                 title: {
-                    text: 'Total: ' + total.toLocaleString()
+                    text: "Total: " + total.toLocaleString()
                 },
                 value: total,
                 valueIndicator: {
-                    color: '#f05b41'
+                    color: "#f05b41"
                 }
             };
         }
@@ -55,9 +50,9 @@
         function getGeneralDefaults() {
             return {
                 legend: {
-                    horizontalAlignment: 'center',
-                    itemTextPosition: 'bottom',
-                    verticalAlignment: 'bottom',
+                    horizontalAlignment: "center",
+                    itemTextPosition: "bottom",
+                    verticalAlignment: "bottom",
                     visible: false
                 },
                 loadingIndicator: {
@@ -67,23 +62,23 @@
                     font: {
                         size: 18
                     },
-                    horizontalAlignment: 'center',
-                    position: 'bottom-center',
-                    verticalAlignment: 'bottom'
+                    horizontalAlignment: "center",
+                    position: "bottom-center",
+                    verticalAlignment: "bottom"
                 }
             };
         }
 
         function getLabelDefaults(data) {
             return {
-                background: '#f65752',
-                color: '#fff',
+                background: "#f65752",
+                color: "#fff",
                 title: {
-                    text: 'Title'
+                    text: "Title"
                 },
                 value: data.total.toLocaleString(),
                 units: {
-                    text: 'Units'
+                    text: "Units"
                 }
             };
         }
@@ -91,7 +86,7 @@
         function getMapDefaults() {
             return {
                 background: {
-                    borderColor: 'transparent'
+                    borderColor: "transparent"
                 },
                 center: [-98.583333, 38.333333],
                 controlBar: {
@@ -111,25 +106,25 @@
         }
 
         function getRecordCountChartDefaults(data) {
-            var total = sumTotal(data, 'total');
+            var total = sumTotal(data, "total");
             return {
                 dataSource: data,
                 series: {
-                    argumentField: 'argument',
-                    color: '#4488f2',
+                    argumentField: "argument",
+                    color: "#4488f2",
                     label: {
                         visible: true,
-                        format: 'fixedPoint'
+                        format: "fixedPoint"
                     },
-                    type: 'bar',
-                    valueField: 'total'
+                    type: "bar",
+                    valueField: "total"
                 },
                 tooltip: {
                     enabled: true,
                     customizeTooltip: function (arg) {
                         var percentage = (arg.value / total) * 100;
                         return {
-                            text: Math.round(percentage) + '%'
+                            text: Math.round(percentage) + "%"
                         }
                     }
                 }
@@ -143,12 +138,12 @@
                         {
                             startValue: 0,
                             endValue: data.opened,
-                            color: '#39b54a'
+                            color: "#39b54a"
                         },
                         {
                             startValue: data.opened,
                             endValue: data.opened + data.closed,
-                            color: '#f65752'
+                            color: "#f65752"
                         }
                     ],
                     width: 20
@@ -159,8 +154,8 @@
                     }
                 },
                 title: {
-                    text: '<b>Total: ' + data.total.toLocaleString() + '</b>',
-                    subtitle: 'Open: ' + data.opened.toLocaleString() + '<br />Closed: ' + data.closed.toLocaleString()
+                    text: "<b>Total: " + data.total.toLocaleString() + "</b>",
+                    subtitle: "Open: " + data.opened.toLocaleString() + "<br />Closed: " + data.closed.toLocaleString()
                 },
                 valueIndicator: {
                     offset: 30
@@ -169,14 +164,14 @@
         }
 
         function getRecordCountMapDefaults(data) {
-            var names = ['Open', 'Closed'];
+            var names = ["Open", "Closed"];
             var markers = {
-                type: 'FeatureCollection',
+                type: "FeatureCollection",
                 features: $.map(data, function (point) {
                     return {
-                        type: 'Feature',
+                        type: "Feature",
                         geometry: {
-                            type: 'Point',
+                            type: "Point",
                             coordinates: point.coordinates
                         },
                         properties: {
@@ -190,10 +185,10 @@
 
             return {
                 layers: [{}, {
-                    name: 'bubbles',
+                    name: "bubbles",
                     data: markers,
-                    elementType: 'bubble',
-                    dataField: 'value',
+                    elementType: "bubble",
+                    dataField: "value",
                     minSize: 20,
                     maxSize: 60,
                     sizeGroups: [0, 1000, 3000, 5000, 10000]
@@ -201,13 +196,13 @@
                 tooltip: {
                     enabled: true,
                     customizeTooltip: function (arg) {
-                        var name = arg.attribute('text'),
-                            total = arg.attribute('value');
+                        var name = arg.attribute("text"),
+                            total = arg.attribute("value");
 
                         if (name) {
-                            var node = $('<div>')
-                                .append('<h5><b>' + name + ':</b> ' + total.toLocaleString() + '</h5>')
-                                .append('<div id="dxtt-chart" style="width: 150px; height: 125px;"></div>');
+                            var node = $("<div>")
+                                .append("<h5><b>" + name + ":</b> " + total.toLocaleString() + "</h5>")
+                                .append("<div id=\"dxtt-chart\" style=\"width: 150px; height: 125px;\"></div>");
 
                             return {
                                 html: node.html()
@@ -220,11 +215,11 @@
                     var data = [
                         {
                             "status": names[0],
-                            "total": e.target.attribute('values')[0]
+                            "total": e.target.attribute("values")[0]
                         },
                         {
                             "status": names[1],
-                            "total": e.target.attribute('values')[1]
+                            "total": e.target.attribute("values")[1]
                         }
                     ];
 
@@ -235,7 +230,7 @@
                         commonSeriesSettings: {
                             label: {
                                 visible: true,
-                                format: 'fixedPoint',
+                                format: "fixedPoint",
                                 customizeText: function (args) {
                                     return args.value + "%";
                                 }
@@ -250,13 +245,13 @@
                             visible: false
                         },
                         series: {
-                            argumentField: 'status',
-                            valueField: 'total',
-                            type: 'bar',
-                            color: '#e59323',
+                            argumentField: "status",
+                            valueField: "total",
+                            type: "bar",
+                            color: "#e59323",
                             label: {
                                 visible: true,
-                                format: 'fixedPoint'
+                                format: "fixedPoint"
                             }
                         },
                         valueAxis: {
@@ -274,9 +269,9 @@
                 legend: {
                     visible: true
                 },
-                resolveLabelOverlapping: 'shift',
+                resolveLabelOverlapping: "shift",
                 series: {
-                    argumentField: 'argument',
+                    argumentField: "argument",
                     label: {
                         visible: false,
                         connector: {
@@ -284,11 +279,11 @@
                         }
                     },
                     smallValuesGrouping: {
-                        groupName: 'OTHERS',
-                        mode: 'topN',
+                        groupName: "OTHERS",
+                        mode: "topN",
                         topCount: 6
                     },
-                    valueField: 'total'
+                    valueField: "total"
                 },
                 tooltip: {
                     enabled: true,
@@ -305,18 +300,18 @@
             var defaults = {
                 dataSource: data,
                 argumentAxis: {
-                    discreteAxisDivisionMode: 'crossLabels',
+                    discreteAxisDivisionMode: "crossLabels",
                     grid: {
                         visible: true
                     },
                     valueMarginsEnabled: false
                 },
                 commonSeriesSettings: {
-                    argumentField: 'date',
-                    type: 'spline',
+                    argumentField: "date",
+                    type: "spline",
                     label: {
                         visible: true,
-                        format: 'fixedPoint',
+                        format: "fixedPoint",
                         precision: 0
                     }
                 },
@@ -380,14 +375,14 @@
         function getSparklineDefaults(data) {
             return {
                 dataSource: data,
-                argumentField: 'date',
+                argumentField: "date",
                 ignoreEmptyPoints: true,
-                type: 'splinearea',
+                type: "splinearea",
                 showMinMax: true,
                 tooltip: {
                     customizeTooltip: function (sparkline) {
                         return {
-                            html: '<strong>Min:</strong> ' + sparkline.minValue + '<br /><strong>Max:</strong> ' + sparkline.maxValue
+                            html: "<strong>Min:</strong> " + sparkline.minValue + "<br /><strong>Max:</strong> " + sparkline.maxValue
                         };
                     }
                 }
@@ -401,7 +396,7 @@
                 series: {
                     label: {
                         customizeText: function (arg) {
-                            return arg.argumentText + ': ' + arg.originalValue.toLocaleString();
+                            return arg.argumentText + ": " + arg.originalValue.toLocaleString();
                         },
                         visible: true
                     }
@@ -414,7 +409,7 @@
                 series: {
                     label: {
                         customizeText: function (arg) {
-                            return arg.argument + ': ' + formatPercent(arg.percentText);
+                            return arg.argument + ": " + formatPercent(arg.percentText);
                         },
                         visible: true
                     }
@@ -437,7 +432,7 @@
 
         function addRecordTotalTitle(data, property) {
             //get the default values
-            property = property != undefined ? property : 'total';
+            property = property != undefined ? property : "total";
             var total = 0;
 
             //if the data (object) has a total property, sum the array
@@ -449,7 +444,7 @@
 
             return {
                 title: {
-                    text: 'Total: ' + total.toLocaleString()
+                    text: "Total: " + total.toLocaleString()
                 }
             };
         }
@@ -476,16 +471,16 @@
 
                         //call the correct addon method
                         switch (key) {
-                            case 'addPiePercentageTooltips':
+                            case "addPiePercentageTooltips":
                                 addon = addPiePercentageTooltips();
                                 break;
-                            case 'addPieLabelAndCountLabels':
+                            case "addPieLabelAndCountLabels":
                                 addon = addPieLabelAndCountLabels();
                                 break;
-                            case 'addPieLabelAndPercentageLabels':
+                            case "addPieLabelAndPercentageLabels":
                                 addon = addPieLabelAndPercentageLabels();
                                 break;
-                            case 'addRecordTotalTitle':
+                            case "addRecordTotalTitle":
                                 addon = addRecordTotalTitle(data, swChartOptions.addRecordTotalTitle.property);
                                 break;
                         }
@@ -498,7 +493,7 @@
             },
 
             getChartOptions: function (chartType, options, data) {
-                var log = $log.getInstance('sw4.chartService.getChartOptions');
+                var log = $log.getInstance("sw4.chartService.getChartOptions");
 
                 //convert the option string into an object
                 var specificOptions = {};
@@ -518,34 +513,33 @@
             },
 
             getDefaultOptions: function (chartType, data) {
-                var log = $log.getInstance('sw4.chartService.getDefaultOptions');
                 var chartDefaults = {};
 
                 //get default chart options
                 switch (chartType) {
-                    case 'swCircularGauge':
-                    case 'swLinearGauge':
+                    case "swCircularGauge":
+                    case "swLinearGauge":
                         chartDefaults = getGaugeDefaults(data);
                         break;
-                    case 'swLabel':
+                    case "swLabel":
                         chartDefaults = getLabelDefaults(data);
                         break;
-                    case 'swRecordCountChart':
+                    case "swRecordCountChart":
                         chartDefaults = getRecordCountChartDefaults(data);
                         break;
-                    case 'swRecordCountGauge':
+                    case "swRecordCountGauge":
                         chartDefaults = $.extend(true, {}, getGaugeDefaults(data), getRecordCountGaugeDefaults(data));
                         break;
-                    case 'swRecordCountMap':
+                    case "swRecordCountMap":
                         chartDefaults = $.extend(true, {}, getMapDefaults(), getRecordCountMapDefaults(data));
                         break;
-                    case 'swRecordCountPie':
+                    case "swRecordCountPie":
                         chartDefaults = getRecordCountPieDefaults(data);
                         break;
-                    case 'swRecordTrends':
+                    case "swRecordTrends":
                         chartDefaults = getRecordTrendsDefaults(data);
                         break;
-                    case 'swSparkline':
+                    case "swSparkline":
                         chartDefaults = getSparklineDefaults(data);
                         break;
                 }
@@ -560,4 +554,4 @@
         }
         //#endregion
     }
-})(angular);
+})(angular, DevExpress);
