@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+
+    <application name="SoftwrenchError" entity="Problem" title="Softwrench Error">
+      <schemas>
+        <schema id="list" stereotype="list" title="Softwrench Errors">
+          <field attribute="id" hidden="true"/>
+          <field attribute="recordtype" label="Error Type"/>
+          <field attribute="recordid" label="Record ID"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="createddate" label="Error Date"/>
+          <field attribute="createdby" label="Created By"/>
+          <field attribute="assignee" label="Assignee"/>
+          <field attribute="priority" label="Priority"/>
+          <field attribute="status" label="Status"/>
+        </schema>
+
+        <schema id="detail" stereotype="detail" mode="input" title="Softwrench Error Detail">
+          <field attribute="id" hidden="true"/>
+          <field attribute="recordtype" label="Error Type" readonly="true"/>
+          <field attribute="recordid" label="Record ID" readonly="true"/>
+          <field attribute="description" label="Description" readonly="true"/>
+          <field attribute="data" hidden="true"/>
+          <field attribute="#dataasstring" label="Data">
+            <renderer type="textarea"/>
+          </field>
+          <commandbars>
+            <commandgroup position="detail.primary" removeundeclared="true">
+              <command id="submit" label="Submit" position="&lt;cancel"/>
+              <command id="resolve" label="Resolve" position="&lt;cancel"/>
+              <command id="cancel" label="Cancel" stereotype="cancel"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+
+  </applications>
+</metadata>
