@@ -2795,9 +2795,9 @@
           <field attribute="classstructure_.classificationid" label="Classification">
             <renderer type="default"/>
           </field>
-          <field attribute="siteid" label="Site">
+          <!--<field attribute="siteid" label="Site">
             <renderer type="default"/>
-          </field>
+          </field>-->
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="grid=solution;column=status" />
           </field>
@@ -2839,9 +2839,9 @@
           <section>
             <header displacement="ontop" label="Solution Details" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <association label="Site" target="siteid" labelfield="site_.description" hideDescription="true">
+            <!--<association label="Site" target="siteid" labelfield="site_.description" hideDescription="true">
               <renderer type="lookup" />
-            </association>
+            </association>-->
             <association label="Asset" target="assetnum" labelfield="asset_.description" hideDescription="true">
               <renderer type="lookup" />
             </association>
