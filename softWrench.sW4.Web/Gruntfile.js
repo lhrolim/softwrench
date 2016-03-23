@@ -145,6 +145,9 @@ module.exports = function (grunt) {
                     "<%= app.vendor %>/scripts/angular/*!(angular).js",
                     "<%= app.vendor %>/scripts/utils/**/*.js",
                     "<%= app.vendor %>/scripts/bootstrap/**/*.js",
+                    "<%= app.vendor %>/scripts/devextreme/globalize.js",
+                    "<%= app.vendor %>/scripts/devextreme/dx.chartjs.js",
+                    "<%= app.vendor %>/scripts/devextreme/vectormap/usa.js",
 
                     // custom vendors
                     "<%= app.customVendor %>/scripts/**/*.js",

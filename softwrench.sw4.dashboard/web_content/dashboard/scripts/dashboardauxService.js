@@ -6,11 +6,7 @@
         function panelCreated(datamap) {
             return function(response) {
                 var data = response.data;
-                if (datamap.row && datamap.column) {
-                    $rootScope.$broadcast('dash_panelassociated', data.resultObject, datamap.row, datamap.column);
-                } else {
-                    $rootScope.$broadcast('dash_panelcreated', data.resultObject);
-                }
+                $rootScope.$broadcast('dash_panelassociated', data.resultObject);
             };
         }
         //#endregion
@@ -38,19 +34,6 @@
             });
         }
 
-        function locatePanelFromMatrix(dashboard, row, column) {
-            var rows = dashboard.layout.split(',');
-            var newPosition = 0;
-
-            // Convert 2D coordinate to 1D array. 
-            for (var i = 0; i < row; i++) {
-                newPosition += parseInt(rows[i]);
-            }
-            newPosition += column;
-
-            return dashboard.panels[newPosition];
-        }
-
         function createAndAssociateGridPanel(datamap) {
             var local = datamap.fields || datamap;
             restService.postPromise('Dashboard', 'CreateGridPanel', null, local).then(panelCreated(local));
@@ -74,7 +57,7 @@
             var local = datamap.fields || datamap;
             restService.getPromise("Dashboard", "LoadPanel", { panel: local.panel }).then(function (response) {
                 var data = response.data;
-                $rootScope.$broadcast('dash_panelassociated', data.resultObject, local.row, local.column);
+                $rootScope.$broadcast('dash_panelassociated', data.resultObject);
             });
         }
 
@@ -86,55 +69,6 @@
                 var data = response.data;
                 crudContextHolderService.updateEagerAssociationOptions("availablepanels", data.resultObject);
             });
-        }
-
-        function readjustLayout(dashboard, row, column) {
-            var log = $log.getInstance("dashboardauxService#adjustLayout");
-            if (!dashboard.layout) {
-                //first will be whole line
-                dashboard.layout = "1";
-                log.debug("adding first line to layout");
-                return dashboard.layout;
-            }
-            var rows = dashboard.layout.split(',');
-            if (row > rows.length) {
-                dashboard.layout += ',' + column;
-                log.debug("adding new line at column 1");
-                if (column !== 1) {
-                    log.error("trying to add a new line on a column different than 1");
-                    throw new Error("unexpected behaviour");
-                }
-                return dashboard.layout;
-            }
-            var rowLayout = parseInt(rows[row - 1]);
-            rows[row - 1] = "" + ++rowLayout;
-            dashboard.layout = rows.join(',');
-            return dashboard.layout;
-        }
-
-        function readjustPositions(dashboard, panel, row, column) {
-            var rows = dashboard.layout.split(',');
-            var newPosition = 0;
-            for (var i = 0; i < row - 1; i++) {
-                newPosition += parseInt(rows[i]);
-            }
-            newPosition += column - 1;
-
-            //var newPosition = (row * column) - 1;
-
-            var panelAssociation = {
-                position: newPosition,
-                panel: panel
-
-            };
-            dashboard.panels = dashboard.panels || [];
-
-            dashboard.panels.splice(newPosition, 0, panelAssociation);
-
-            angular.forEach(dashboard.panels, function (p, index) {
-                p.position = index;
-            });
-            return dashboard;
         }
 
         function setGraphicProvider(event) {
@@ -154,13 +88,10 @@
         //#region Service Instance
         var service = {
             lookupFields: lookupFields,
-            locatePanelFromMatrix: locatePanelFromMatrix,
             createAndAssociateGridPanel: createAndAssociateGridPanel,
             saveDashboard: saveDashboard,
             selectPanel: selectPanel,
             loadPanels: loadPanels,
-            readjustLayout: readjustLayout,
-            readjustPositions: readjustPositions,
             setGraphicProvider: setGraphicProvider,
             createAndAssociateGraphicPanel: createAndAssociateGraphicPanel
         };

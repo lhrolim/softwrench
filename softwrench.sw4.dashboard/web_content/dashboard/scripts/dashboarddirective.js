@@ -11,54 +11,22 @@ angular.module("sw_layout").directive("dashboard", ["contextService", function (
             dashboard: "="
         },
 
-        controller: ["$scope", "dashboardAuxService", function ($scope, dashboardAuxService) {
+        controller: ["$scope", function ($scope) {
 
-            $scope.getRows = function () {
-                if (!$scope.dashboard || !$scope.dashboard.layout) {
-                    return 0;
-                }
-                var arr = [];
-                for (var i = 0; i < $scope.dashboard.layout.split(",").length; i++) {
-                    arr.push(i);
-                }
-                return arr;
-            };
-
-            $scope.getColumnsOfRow = function (row) {
-                if (!$scope.dashboard || !$scope.dashboard.layout) {
-                    return 0;
-                }
-                var colNum = parseInt($scope.dashboard.layout.split(",")[row]);
-                var arr = [];
-                for (var i = 0; i < colNum; i++) {
-                    arr.push(i);
-                }
-                return arr;
-            },
-
-            $scope.getClassByNumberOfColumns = function (row) {
-                if (!$scope.dashboard || !$scope.dashboard.layout) {
-                    return null;
-                }
-                var colNum = parseInt($scope.dashboard.layout.split(",")[row]);
-                var visibleColumns = 0;
-                for (var i = 0; i < colNum; i++) {
-                    if ($scope.isPanelVisible($scope.getPanelDataFromMatrix(row, i))) {
-                        visibleColumns++;
-                    }
-                }
-
-                var suffix = 12 / visibleColumns;
-                return "col-sm-" + suffix;
-            };
-
-            $scope.getPanelDataFromMatrix = function (row, column) {
-                return dashboardAuxService.locatePanelFromMatrix($scope.dashboard, row, column);
-            };
-
-            $scope.isPanelVisible = function (panelDataSource) {
+            function isPanelVisible(panelDataSource) {
                 return !!panelDataSource && !!panelDataSource.panel && !!panelDataSource.panel.visible;
             };
+            
+            function positionComparator(panelA, panelB) {
+                return panelA.position - panelB.position;
+            }
+
+            $scope.visiblePanels = function() {
+                return $scope.dashboard.panels
+                    .filter(isPanelVisible)
+                    .sort(positionComparator);
+            }
+            
         }],
 
         link: function (scope, element, attrs) {
