@@ -235,12 +235,12 @@ namespace softWrench.sW4.Util {
             PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
 
             if (prop == null) {
-                throw new MaximoException(propertyName + " does not exist on the integration object. Make sure the wsdl declares this property.");
+                throw new MaximoException(string.Format("Array {0} is not declared in object {1}. Please contact support.", propertyName, baseObject.GetType()));
             }
 
             Type type = prop.PropertyType;
             if (!type.IsArray) {
-                throw new ArgumentException(String.Format("property {0} is not an array", propertyName));
+                throw new ArgumentException(string.Format("property {0} is not an array", propertyName));
             }
             Type elementType = type.GetElementType();
             object element = InstanceFromType(elementType);

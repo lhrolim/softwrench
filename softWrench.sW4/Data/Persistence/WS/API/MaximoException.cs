@@ -13,7 +13,16 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         
         public Exception ImmediateCause { get { return _immediate; } }
         public Exception RootCause { get { return _root; } }
-        public virtual string FullStackTrace { get { return RootCause.StackTrace + "\n" + ImmediateCause.StackTrace + "\n" + StackTrace; } }
+
+        public virtual string FullStackTrace {
+            get {
+                return 
+                    (RootCause != null ? (RootCause.StackTrace + "\n") : "") +
+                    (ImmediateCause != null ? (ImmediateCause.StackTrace + "\n") : "") + 
+                    StackTrace;
+            }
+        }
+
         public virtual string OutlineInformation {
             get {
                 var outline = "";

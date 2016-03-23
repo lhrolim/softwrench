@@ -436,6 +436,10 @@
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
     <Content Include="App_Data\Client\%40internal\templates\sparepart.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\swdb\audit.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\swdb\batch.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\swdb\dashboard.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\swdb\swerror.xml" />
     <Content Include="App_Data\Client\%40internal\templates\swdb\userprofile.xml" />
     <Content Include="App_Data\Client\%40internal\templates\synstatus.xml" />
     <Content Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
