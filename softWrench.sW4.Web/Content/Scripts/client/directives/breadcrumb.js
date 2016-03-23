@@ -117,7 +117,7 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
 
                                 //if the lcurrent leaf is likely the parent
                                 var possibleParent = leafs[id].application == schema.applicationName;
-                                possibleParent = possibleParent && leafs[id].schema.toLowerCase().indexOf('list') > -1;
+                                possibleParent = possibleParent && (leafs[id].schema.toLowerCase().indexOf('list') > -1 || leafs[id].schema.toLowerCase().indexOf('grid') > -1);
                                 possibleParent = possibleParent && leafs[id].title != schema.title;
 
                                 if ((isParent || possibleParent) && childPage == null) {
