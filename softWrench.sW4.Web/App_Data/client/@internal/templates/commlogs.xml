@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
@@ -102,7 +102,7 @@
           </field>          
         </schema>
 
-        <schema id="detail" stereotype="compositiondetail" title="Communication">
+        <schema id="detail" stereotype="compositiondetail" title="Communication Details">
           <event type="onschemafullyloaded" service="commlogService" method="addSignature"/>
           <field attribute="commlogid" hidden="true" />
           <field attribute="ownertable" defaultexpression="$.parentdata.fields['class']" hidden="true"/>

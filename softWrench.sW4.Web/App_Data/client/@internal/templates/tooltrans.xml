@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
@@ -77,8 +77,8 @@
             <field attribute="toolhrs" label="Hours" qualifier="subtitle"/>
             <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
           </list>
-
-          <detail platform="web" title="Tool">
+          
+          <detail platform="web" title="Tool Details">
             <field attribute="tooltransid" hidden="true" />
             <field attribute="orgid" hidden="true" />
             <field attribute="siteid" hidden="true" />
@@ -86,7 +86,7 @@
             <field attribute="transdate" hidden="true" />
             <field attribute="toolrate" hidden="true" />
 
-            <composition inline="true" relationship="#toollist" label="Tools"  detailschema="" printschema="" showexpression="@_iscreation" requiredrelationshipexpression="true">
+            <composition inline="true" relationship="#toollist"  detailschema="" printschema="" showexpression="@_iscreation" requiredrelationshipexpression="true">
               <collectionproperties listschema="tools" autocommit="false"/>
               <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
             </composition>

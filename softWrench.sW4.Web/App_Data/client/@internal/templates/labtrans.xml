@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
@@ -47,7 +47,7 @@
           <event type="onedit.validation" service="labtranService" method="validateEdit"/>
         </list>
 
-        <schema id="detail" stereotype="detail" title="Labor">
+        <schema id="detail" stereotype="detail" title="Labor Details">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
@@ -60,7 +60,7 @@
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
 
-          <composition inline="true" relationship="#laborlist" label="Labors"  detailschema="" printschema="" showexpression="@_iscreation" requiredrelationshipexpression="true">
+          <composition inline="true" relationship="#laborlist"  detailschema="" printschema="" showexpression="@_iscreation" requiredrelationshipexpression="true">
             <collectionproperties listschema="labors" autocommit="false"/>
             <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>
