@@ -927,6 +927,7 @@
             var newItem = {
                 //used to make a differentiation between a compositionitem datamap and a regular datamap
                 '#datamaptype': "compositionitem",
+                '#datamapidx': idx
             }
 
             // if inside a scroll pane - to update pane size
