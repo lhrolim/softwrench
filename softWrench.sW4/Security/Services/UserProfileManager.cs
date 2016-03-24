@@ -12,6 +12,7 @@ using log4net;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.entities.security;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Data.API.Composition;
@@ -162,7 +163,18 @@ namespace softWrench.sW4.Security.Services {
                 dict["#label"] = string.IsNullOrEmpty(field.Label) ? field.Attribute : field.Label;
                 dict["fieldKey"] = field.Attribute;
                 //enabled by default
-                dict["permission"] = "fullcontrol";
+                if (field.IsReadOnly) {
+                    dict["permission"] = "readonly";
+                } else {
+                    dict["permission"] = "fullcontrol";
+                }
+                if (field is ApplicationAssociationDefinition) {
+                    var ass = (ApplicationAssociationDefinition)field;
+                    if (ass.EnableExpression == "false") {
+                        dict["permission"] = "readonly";
+                    }
+                }
+
                 compositionData.ResultList.Add(dict);
             }
             return CompositionFetchResult.SingleCompositionInstance("#fieldPermissions_", compositionData);
