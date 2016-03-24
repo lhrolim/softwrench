@@ -139,7 +139,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 allowView = true;
             }
 
-            var allDefault = allowCreation && allowUpdate;
+            var allDefault = !allowView && !allowCreation;
 
 
             var profile = _userProfileManager.FindById(profileId);
