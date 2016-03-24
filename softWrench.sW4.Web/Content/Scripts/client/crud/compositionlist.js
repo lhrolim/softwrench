@@ -220,7 +220,7 @@
     });
 
     function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,alertService,
-        formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient, userPreferencesService, 
+        formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient, userPreferencesService, associationService, 
         expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
         schemaService, contextService, fixHeaderService) {
 
@@ -932,7 +932,7 @@
             // if inside a scroll pane - to update pane size
             fixHeaderService.callWindowResize();
 
-            fieldService.fillDefaultValues($scope.compositionlistschema.displayables, newItem, $scope);
+            
             //this id will be placed on the entity so that angular can use it to track. 
             //It has to be negative to indicate its not a maximo Id, and also a unique value to avoid collisions
             var fakeNegativeId = -Date.now().getTime();
@@ -942,6 +942,14 @@
             watches.push(watchForDirty(idx));
 
             $scope.unWatcherArray = $scope.unWatcherArray.concat(watches);
+
+            // to allow watchers to be triggered by setting default values
+            $timeout(function() {
+                fieldService.fillDefaultValues($scope.compositionlistschema.displayables, newItem, $scope);
+                if (idx === 0) {
+                    associationService.loadSchemaAssociations(newItem, $scope.compositionlistschema);
+                }
+            }, 0, false);
 
             //time for the components to be rendered
             $timeout(function () {
@@ -1341,7 +1349,7 @@
     };
 
     CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService","alertService",
-            "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient", "userPreferencesService", 
+            "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient", "userPreferencesService", "associationService", 
             "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
             "schemaService", "contextService", "fixHeaderService"];
 
