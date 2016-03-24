@@ -36,7 +36,8 @@
             var label = null;
             if (newValue != null) {
                 var option = crudContextHolderService.fetchLazyAssociationOption(associationKey, newValue);
-                label = associationService.getLabelText(option, fieldMetadata.hideDescription, newValue);
+                var customValue = fieldMetadata.rendererParameters["allowcustomvalue"] === "true" ? newValue : null;
+                label = associationService.getLabelText(option, fieldMetadata.hideDescription, customValue);
             }
             var key = fieldMetadata.applicationPath;
             if (datamapId) {

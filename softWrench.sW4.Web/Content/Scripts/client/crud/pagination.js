@@ -92,6 +92,10 @@ app.directive('pagination', ['contextService', '$log', function (contextService,
                 return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected && ($scope.paginationData && $scope.paginationData.pageCount > 1);
             }
 
+            $scope.shouldShowPagesize = function () {
+                return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected && $scope.paginationData;
+            }
+
             $scope.getPaginationOptions = function () {
                 
                 if (!$scope.paginationData.paginationOptions) {

@@ -655,7 +655,7 @@
 
           <field attribute="defaultrate" hidden="true" defaultexpression="@user.defaultcraftrate"/>
 
-          <composition inline="true" relationship="#laborlist" label="Labors"  detailschema="" printschema="" showexpression="@_iscreation">
+          <composition inline="true" relationship="#laborlist" label="Labors"  detailschema="" printschema="" showexpression="@_iscreation" requiredrelationshipexpression="true">
             <collectionproperties listschema="labors" autocommit="false"/>
             <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>
@@ -674,7 +674,7 @@
         </detail>
 
         <schema id="labors" stereotype="list">
-          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="ctx:getUserData().login.toUpperCase()" extraprojectionvalues="worksite, orgid">
+          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="@#datamapidx == 0 ? ctx:getUserData().login.toUpperCase() : null" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>
           </association>
