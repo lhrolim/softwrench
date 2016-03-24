@@ -25,6 +25,7 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Util;
@@ -35,15 +36,14 @@ namespace softWrench.sW4.Web.Controllers {
 
 
 
-    public class WorkflowController : ApiController
-    {
+    public class WorkflowController : ApiController {
 
-        private static ILog Log = LogManager.GetLogger(typeof (WorkflowController));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WorkflowController));
 
 
         #region scripts 
-        ////considerations:
-        //// strings are java.lang.strings, not javascript strings --> do not use ===, and check for java documentation rather than javascript´s
+        //considerations:
+        // strings are java.lang.strings, not javascript strings --> do not use ===, and check for java documentation rather than javascript´s
 
         //function afterMboData(ctx) {
 
@@ -53,9 +53,11 @@ namespace softWrench.sW4.Web.Controllers {
 
 
         //    //using random fields wojp1, wojp2 and wojp3 as the holders for workflow logic
-        //    var action = ctx.getData().getCurrentData("WOJP1");
-        //    var wfId = ctx.getData().getCurrentData("WOJP2");
-        //    var wfActionId = ctx.getData().getCurrentData("WOJP3");
+        //    var action = ctx.getData().getCurrentData("WOEQ8");
+        //    var wfId = ctx.getData().getCurrentData("WOEQ9");
+        //    var wfActionId = ctx.getData().getCurrentData("WOEQ10");
+        //    var memo = ctx.getData().getCurrentData("WOEQ11");
+        //    var wfAssignmentId = ctx.getData().getCurrentData("WOEQ12");
 
 
         //    if (action == null || wfId == null) {
@@ -65,7 +67,7 @@ namespace softWrench.sW4.Web.Controllers {
         //    }
 
 
-        //    ctx.log("[WorkOrder Workflow]-- Initing action " + action + " on workflow instance " + wfId);
+        //    ctx.log("[WorkOrder Workflow]-- Initing action " + action + " on workflow instance " + wfId + " action: " + wfActionId);
 
         //    //fetch active workflows of the workorder
         //    var wfInstanceSet = mbo.getMboSet("ACTIVEWORKFLOW");
@@ -91,8 +93,11 @@ namespace softWrench.sW4.Web.Controllers {
         //                }
         //                mbo.setModified(false);
         //                ctx.log("[WorkOrder Workflow]-- Routing workflow " + wfId + " to action " + wfActionId);
-        //                wfInst.applyWorkflowAction(wfActionId)
-        //                 ctx.log("[WorkOrder Workflow]--  Workflow Routed");
+        //                ctx.log("wfinst: " + wfInst);
+        //                ctx.log("user: " + ctx.getUserInfo().getPersonId());
+        //                wfInst.completeWorkflowAssignment(wfAssignmentId, wfActionId, memo);
+
+        //                ctx.log("[WorkOrder Workflow]--  Workflow Routed");
         //                ctx.skipTxn();
         //            }
 
@@ -106,11 +111,14 @@ namespace softWrench.sW4.Web.Controllers {
         //    ctx.log("[WorkOrder Workflow]-- Active workflow " + wfId + " not found, no action performed ");
 
         //}
+        //}
 
         #endregion
 
 
         private readonly MaximoConnectorEngine _maximoConnectorEngine;
+
+        private readonly MaximoWorkflowManager _workflowManager;
 
         private readonly MaximoHibernateDAO _maximoDao;
         // {0} - workflowName, {1} - entity, {2} - key attribute, {3} - siteid
@@ -132,9 +140,10 @@ namespace softWrench.sW4.Web.Controllers {
 
         readonly ApplicationSchemaDefinition _workflowSchema;
 
-        public WorkflowController(MaximoHibernateDAO dao, MaximoConnectorEngine maximoConnectorEngine) {
+        public WorkflowController(MaximoHibernateDAO dao, MaximoConnectorEngine maximoConnectorEngine, MaximoWorkflowManager workflowManager) {
             _maximoDao = dao;
             _maximoConnectorEngine = maximoConnectorEngine;
+            _workflowManager = workflowManager;
             _workflowSchema = MetadataProvider.Application("workflow").Schema(new ApplicationMetadataSchemaKey("workflowselection"));
         }
 
@@ -170,12 +179,12 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
 
-        public async Task<IGenericResponseResult> StopWorkflow(string entityName, string id, string userId, string siteid, Int32? wfInstanceId) {
+        public IGenericResponseResult StopWorkflow(string entityName, string id, string userId, string siteid, Int32? wfInstanceId) {
             if (wfInstanceId != null) {
                 var wfsToStop = _maximoDao.FindByNativeQuery(WorkFlowById, wfInstanceId);
-                Log.InfoFormat("Stopping workflow {0} for app {1}",wfInstanceId,entityName);
+                Log.InfoFormat("Stopping workflow {0} for app {1}", wfInstanceId, entityName);
                 if (wfsToStop.Any()) {
-                    return DoStopWorkFlow(id, userId, siteid, wfsToStop[0]);
+                    return _workflowManager.DoStopWorkFlow(id, userId, siteid, wfsToStop[0]);
                 }
             }
 
@@ -198,31 +207,37 @@ namespace softWrench.sW4.Web.Controllers {
             //otherwise, let´s stop the only one found
             var workflow = workflows[0];
 
-            return DoStopWorkFlow(id, userId, siteid, workflow);
+            return _workflowManager.DoStopWorkFlow(id, userId, siteid, workflow);
         }
 
-        private IGenericResponseResult DoStopWorkFlow(string id, string userId, string siteid, Dictionary<string, string> workflow) {
-            var appMetadata =
-                MetadataProvider.Application("workorder")
-                    .ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("editdetail"));
-
-            var entityMetadata = MetadataProvider.Entity("workorder");
-
-            IDictionary<string, object> attributes = new Dictionary<string, object>();
-            attributes.Add("wonum", userId);
-            attributes.Add("siteid", siteid);
-
-            attributes.Add("wojp1", "stop");
-            attributes.Add("wojp2", workflow["wfid"]);
-
-            _maximoConnectorEngine.Update(new CrudOperationData(id, attributes, new Dictionary<string, object>(), entityMetadata,
-                appMetadata));
-
-
-            return new BlankApplicationResponse() {
-                SuccessMessage = "Workflow {0} stopped successfully".Fmt(workflow["processname"])
+        public IGenericResponseResult InitRouteWorkflow(string entityName, string id, string appuserId, string siteid) {
+            var user = SecurityFacade.CurrentUser();
+            var assignments = _workflowManager.LocateAssignmentsToRoute(entityName, id, user);
+            if (!assignments.Any()) {
+                return new BlankApplicationResponse() { ErrorMessage = "There are no active assignments on this workflow for your user" };
+            }
+            if (assignments.Count() == 1) {
+                return _workflowManager.LocateWfActionsToRoute(assignments[0].Value, user);
+            }
+            var dto = new WorkflowDTO() {
+                Workflows = assignments,
+                Schema = _workflowSchema
             };
+            return new GenericResponseResult<WorkflowDTO>(dto);
         }
+
+        public IGenericResponseResult InitRouteWorkflowSelected(string wfAssignmentId) {
+            var user = SecurityFacade.CurrentUser();
+            return _workflowManager.LocateWfActionsToRoute(wfAssignmentId, user);
+        }
+
+        [HttpPost]
+        public IGenericResponseResult DoRouteWorkflow([FromBody]MaximoWorkflowManager.RouteWorkflowDTO routeWorkflowDTO) {
+            var user = SecurityFacade.CurrentUser();
+            return _workflowManager.DoRouteWorkFlow(routeWorkflowDTO);
+        }
+
+
 
 
         private string BuildKeyAttributeString(string entityName, string applicationItemId) {
