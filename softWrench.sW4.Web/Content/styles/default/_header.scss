@@ -32,8 +32,12 @@
                     float: right;
                     font-size: 14px;
 
-                    i.fa-cog {
+                    a.main {
                         color: #fff;
+
+                        &:hover {
+                            text-decoration: none;
+                        }
                     }
 
                     .dropdown-menu {
