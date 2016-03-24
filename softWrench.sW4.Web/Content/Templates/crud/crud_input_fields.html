@@ -331,7 +331,7 @@
                          data-field="fieldMetadata">
                         <i class="fa fa-dot-circle-o"></i>&ensp;Drag and drop a file here to upload, or
                         <input id="uploadInput" type="file" fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"/>
-                        <a href="" id="uploadInputLink">browse</a>
+                        <a href="" id="uploadInputLink" ng-click="browseFile($event)">browse</a>
                         <br/>
                         <i class="fa fa-question-circle" style="color: inherit"
                            rel="tooltip"
