@@ -223,7 +223,6 @@
 
         //#region Service Instance
         var service = {
-            renderGraphic: renderGraphic,
             loadGraphic: loadGraphic,
             resizeGraphic: resizeGraphic,
             onProviderSelected: onProviderSelected,

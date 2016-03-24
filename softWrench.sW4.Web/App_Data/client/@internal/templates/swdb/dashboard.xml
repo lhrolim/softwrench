@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
-
+  
   <applications>
 
     <application entity="Dashboard" name="dashboard" title="Dashboard">
@@ -74,7 +74,7 @@
         </schema>
       </schemas>
     </application>
-
+  
     <application entity="DashboardGridPanel" name="dashboardgrid" title="DashBoardGrid">
       <schemas>
         <detail>
@@ -96,6 +96,10 @@
 
             <field attribute="limit" label="Limit" default="30" defaultexpression="30">
               <renderer type="numericinput"/>
+            </field>
+
+            <field label="Size" attribute="size" requiredexpression="true" tooltip="Panel's width">
+              <renderer type="numericinput" params="min=1;max=12" />
             </field>
 
           </section>
@@ -128,7 +132,7 @@
             <option label="Tableau" value="Tableau" />
             <event type="afterchange" method="setGraphicProvider" service="dashboardAuxService"/>
           </optionfield>
-
+          
           <section showexpression="@provider==='swChart'">
             
             <optionfield label="Application"
@@ -188,6 +192,10 @@
                          requiredexpression="true"
                          default="" skipvalidation="true"/>
           </section>
+
+          <field label="Size" attribute="size" requiredexpression="true" tooltip="Panel's width">
+            <renderer type="numericinput" params="min=1;max=12" />
+          </field>
 
           <commandbars>
             <commandgroup position="modal.detail.primary">
