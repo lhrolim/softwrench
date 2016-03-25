@@ -6,12 +6,10 @@
 
         var config = {
             // swchart's template -> sw-chart directive
-            template: 
-                "<sw-chart"                                         +
-                    "data-chart-type=\"data.graphic.chartType\""    +
-                    "data-data=\"data.graphic.data\""               +
-                    "data-options=\"data.graphic.options\">"        +
-                "</sw-chart>"
+            template: "<sw-chart "                          +
+                        "data-chart-type=\"chartType\" "    +
+                        "data-data=\"data\" "               +
+                        "data-options=\"options\" />"        
         };
 
         //TODO: replace with real data
@@ -191,7 +189,7 @@
             $scope.options = panel.configurationDictionary.options;
             // compile the template with the isolated scope
             var graphic = $compile(config.template)($scope);
-            element.append(graphic);
+            $(element).append(graphic);
             // Promise resolved with the graphic element
             return $q.when(graphic);
         }

@@ -6,7 +6,7 @@
         function panelCreated(datamap) {
             return function(response) {
                 var data = response.data;
-                $rootScope.$broadcast('dash_panelassociated', data.resultObject);
+                $rootScope.$broadcast("dash_panelassociated", data.resultObject);
             };
         }
         //#endregion
@@ -17,16 +17,16 @@
             if (application == null) {
                 return;
             }
-            restService.getPromise('Dashboard', 'LoadFields', { applicationName: application }).then(function (response) {
+            restService.getPromise("Dashboard", "LoadFields", { applicationName: application }).then(function (response) {
                 var data = response.data;
                 crudContextHolderService.updateEagerAssociationOptions("appfields", data.resultObject);
-                event.scope.datamap['appfields'] = "";
+                event.scope.datamap["appfields"] = "";
                 $.each(data.resultObject, function (key, value) {
-                    event.scope.datamap['appfields'] += value.value + ",";
+                    event.scope.datamap["appfields"] += value.value + ",";
                 });
-                var selectedFields = event.scope.datamap['appfields'];
+                var selectedFields = event.scope.datamap["appfields"];
                 if (selectedFields) {
-                    event.scope.datamap['appfields'] = selectedFields.substring(0, selectedFields.length - 1);
+                    event.scope.datamap["appfields"] = selectedFields.substring(0, selectedFields.length - 1);
                 }
 
                 //data.resultObject.unshift({value:"#allfields",label:"All Fields"});
@@ -36,20 +36,20 @@
 
         function createAndAssociateGridPanel(datamap) {
             var local = datamap.fields || datamap;
-            restService.postPromise('Dashboard', 'CreateGridPanel', null, local).then(panelCreated(local));
+            restService.postPromise("Dashboard", "CreateGridPanel", null, local).then(panelCreated(local));
         }
 
         function saveDashboard(datamap, policy) {
             var localDatamap = datamap.fields || datamap;
             localDatamap.creationDateSt = localDatamap.creationDate;
-            if (!!localDatamap.panels) {
+            if (!localDatamap.panels) {
                 //this will avoid wrong serialization
                 delete datamap.panels;
             }
 
-            restService.postPromise('Dashboard', 'SaveDashboard', null, localDatamap).then(function (response) {
+            restService.postPromise("Dashboard", "SaveDashboard", null, localDatamap).then(function (response) {
                 var data = response.data;
-                $rootScope.$broadcast('dash_dashsaved', data.resultObject);
+                $rootScope.$broadcast("dash_dashsaved", data.resultObject);
             });
         }
 
@@ -57,7 +57,7 @@
             var local = datamap.fields || datamap;
             restService.getPromise("Dashboard", "LoadPanel", { panel: local.panel }).then(function (response) {
                 var data = response.data;
-                $rootScope.$broadcast('dash_panelassociated', data.resultObject);
+                $rootScope.$broadcast("dash_panelassociated", data.resultObject);
             });
         }
 
@@ -65,10 +65,23 @@
             var paneltype = event.fields.paneltype;
             if (!paneltype) return;
 
-            restService.getPromise('Dashboard', 'LoadPanels', { paneltype: paneltype }).then(function (response) {
+            restService.getPromise("Dashboard", "LoadPanels", { paneltype: paneltype }).then(function (response) {
                 var data = response.data;
                 crudContextHolderService.updateEagerAssociationOptions("availablepanels", data.resultObject);
             });
+        }
+
+        function addPanelToDashboard(dashboard, panel) {
+            var hasPanels = angular.isArray(dashboard.panels);
+            var position = hasPanels ? dashboard.panels.length : 0;
+
+            var panelAssociation = { position: position, panel: panel }
+
+            hasPanels
+                ? dashboard.panels.push(panelAssociation)
+                : dashboard.panels = [panelAssociation];
+
+            return dashboard;
         }
 
         function setGraphicProvider(event) {
@@ -93,14 +106,16 @@
             selectPanel: selectPanel,
             loadPanels: loadPanels,
             setGraphicProvider: setGraphicProvider,
-            createAndAssociateGraphicPanel: createAndAssociateGraphicPanel
+            createAndAssociateGraphicPanel: createAndAssociateGraphicPanel,
+            addPanelToDashboard: addPanelToDashboard
         };
         return service;
         //#endregion
     }
 
     //#region Service registration
-    angular.module("sw_layout").factory("dashboardAuxService", ["$rootScope", "$log", "contextService", "restService", "graphicPanelServiceProvider", "crudContextHolderService", dashboardAuxService]);
+    angular.module("sw_layout").factory("dashboardAuxService",
+        ["$rootScope", "$log", "contextService", "restService", "graphicPanelServiceProvider", "crudContextHolderService", dashboardAuxService]);
     //#endregion
 
 })(angular);
