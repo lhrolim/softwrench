@@ -17,7 +17,6 @@
 
     <!--build responsive css rules based on metadata-->
     <style column-widths schema="compositionlistschema"></style>
-
     <table class="table" ng-class="showTableHover() ? 'table-hover' : 'no-hover'" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
         <thead>
             <tr class="hapag-table-header">
@@ -37,14 +36,13 @@
                     <span ng-show="isFieldRequired(column,column.requiredExpression)" class="requiredfieldmark">* </span>
                     <span class="add-on">{{i18NLabel(column)}}</span>
                 </th>
-                <th ng-if="isBatch()">
-                    <button ng-if="collectionproperties.allowInsertion == 'true'" class="fa fa-plus btn btn-primary" ng-click="addBatchItem()"></button>
+                <th ng-if="showEditButton()">
+                    <!-- edit button -->
                 </th>
-                <th ng-if="showEditButton() || showDeleteButton()">
-                    <!--batchMode-->
+                <th ng-if="showDeleteButton() || isBatch()">
+                    <!-- delete button -->
                 </th>
             </tr>
-
         </thead>
         <tbody ng-show="compositionData().length > 0">
             <tr ng-repeat-start="(rowindex, compositionitem) in compositionData()"
@@ -53,8 +51,8 @@
                 draggable="{{ draggableValue() }}"
                 composition-list-key="{{getCompositionListKey()}}"
                 composition-list-id="{{compositionitem[compositionlistschema.idFieldName]}}">
-                <td ng-if="hasDetailSchema()">
-                    <button class="btn" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
+                <td ng-if="hasDetailSchema()" class="rowexpand">
+                    <button class="btn btn-default" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
                         <i class="fa fa-caret-right" ng-hide="isItemExpanded(compositionitem)"></i>
                         <i class="fa fa-caret-down" ng-show="isItemExpanded(compositionitem)"></i>
                     </button>
@@ -84,14 +82,14 @@
                                                   datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
                                                   disabledassociations="disabledassociations" blockedassociations="blockedassociations"
                                                   mode="composition"
-                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}"/>
+                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}" />
                                 </div>
                                 <div ng-switch-when="autocompleteclient" class="row">
                                     <autocomplete-client-input parentdata="parentdata"
-                                                  datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
-                                                  disabledassociations="disabledassociations" blockedassociations="blockedassociations"
-                                                  mode="composition" ismodal="ismodal"
-                                                  displayablepath="{{getApplicationPah(compositionitem,column)}}"/>
+                                                               datamap="compositionitem" field-metadata="column" schema="compositionlistschema"
+                                                               disabledassociations="disabledassociations" blockedassociations="blockedassociations"
+                                                               mode="composition" ismodal="ismodal"
+                                                               displayablepath="{{getApplicationPah(compositionitem,column)}}" />
                                 </div>
                             </ng-switch>
                         </div>
@@ -116,12 +114,12 @@
                         <div ng-switch-when="ApplicationFieldDefinition">
                             <ng-switch on="column.rendererType">
                                 <div ng-switch-when="checkbox" style="text-align: center;">
-                                    <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'"/>
+                                    <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'" />
                                     <input type="checkbox" ng-if="column.rendererParameters['editable'] == 'true'" ng-model="compositionitem[column.attribute]"
                                            ng-checked="compositionitem[column.attribute] == 1"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            ng-click="invokeCustomCheckBoxService(column,compositionitem,$event)"
-                                           ng-true-value="'true'" ng-false-value="'false'"/>
+                                           ng-true-value="'true'" ng-false-value="'false'" />
                                 </div>
 
                                 <div ng-switch-when="numericinput">
@@ -133,7 +131,7 @@
                                            max="{{setMaxNumericInput(compositionitem,column)}}"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            data-field="{{column.attribute+rowindex}}"
-                                           number-spinner/>
+                                           number-spinner />
                                 </div>
                                 <div ng-switch-when="icon">
                                     <i class="fa" ng-class="loadIcon(compositionitem[column.attribute],column)"></i>
@@ -171,7 +169,7 @@
                                                maxlength="{{column.rendererParameters['maxlength']}}"
                                                placeholder="{{column.rendererParameters['placeholder']}}"
                                                ng-init="initField(column)"
-                                               dynamic-name="column.attribute"/>
+                                               dynamic-name="column.attribute" />
                                         <span class="input-group-addon" ng-if="column.rendererParameters['append']!=null">{{column.rendererParameters['append']}}</span>
                                     </div>
                                     <div ng-if="column.rendererParameters['editable'] != 'true'">
@@ -179,53 +177,59 @@
                                             {{getFormattedValue(compositionitem[column.attribute],column,compositionData())}}
                                         </a>
                                         <input ng-if="column.rendererParameters['compositionrenderinput'] == 'true'"
-                                                type="text"
-                                                class="form-control"
-                                                ng-readonly="true"
-                                                ng-init="initField(column)"
-                                                ng-model="compositionitem[column.attribute]"/>
+                                               type="text"
+                                               class="form-control"
+                                               ng-readonly="true"
+                                               ng-init="initField(column)"
+                                               ng-model="compositionitem[column.attribute]" />
                                     </div>
                                 </div>
                             </ng-switch>
                         </div>
-
-
                     </ng-switch>
                 </td>
-                <td ng-if="isBatch()" ng-hide="hideRemoveBatchItem(compositionitem)">
-                    <button class="fa fa-trash btn" ng-click="removeBatchItem(rowindex)"></button>
-                </td>
-                <td ng-if="showEditButton() || showDeleteButton()">
-                    <button ng-if="showEditButton()" class="btn" ng-click="toggleDetails(compositionitem, column, 'edit', $event, rowindex)">
+                <td class="rowedit" ng-if="showEditButton()" data-title="Edit">
+                    <button class="btn btn-primary" ng-click="toggleDetails(compositionitem, column, 'edit', $event, rowindex)">
                         <i class="fa fa-edit"></i>
                     </button>
-                    <button ng-if="showDeleteButton()" class="btn" ng-click="delete(compositionitem, column, $event, rowindex)">
+                </td>
+                <td class="rowedit" ng-if="showDeleteButton() || isBatch()" data-title="Delete">
+                    <button class="btn btn-primary" ng-click="delete(compositionitem, column, $event, rowindex)" ng-show="!isBatch() && showDeleteButton()">
+                        <i class="fa fa-trash"></i>
+                    </button>
+
+                    <!-- batch delete -->
+                    <button class="btn btn-primary" ng-click="removeBatchItem(rowindex)" ng-hide="hideRemoveBatchItem(compositionitem)">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>
-
             </tr>
-            <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
-                <td colspan="100%" style="background-color: white" class="detaildata">
-                    <div class="expanded-item-composition" ng-if="isExpandReadOnly()">
-                        <expanded-item-output displayables="compositiondetailschema.displayables"
-                                              schema="compositiondetailschema"
-                                              datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
-                                              cancelfn="cancelComposition()"
-                                              class="clearfix">
-                        </expanded-item-output>
-                    </div>
-                    <div class="expanded-item-composition" ng-if="!isExpandReadOnly()">
-                        <expanded-item-input displayables="compositiondetailschema.displayables"
-                                             schema="compositiondetailschema"
-                                             datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
-                                             cancelfn="cancelComposition()"
-                                             savefn="save()"
-                                             class="clearfix">
-                        </expanded-item-input>
-                    </div>
-                </td>
-            </tr>
+        <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
+            <td colspan="100%" style="background-color: white" class="detaildata">
+                <div class="expanded-item-composition" ng-if="isExpandReadOnly()">
+                    <expanded-item-output displayables="compositiondetailschema.displayables"
+                                          schema="compositiondetailschema"
+                                          datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
+                                          cancelfn="cancelComposition()"
+                                          class="clearfix">
+                    </expanded-item-output>
+                </div>
+                <div class="expanded-item-composition" ng-if="!isExpandReadOnly()">
+                    <expanded-item-input displayables="compositiondetailschema.displayables"
+                                         schema="compositiondetailschema"
+                                         datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
+                                         cancelfn="cancelComposition()"
+                                         savefn="save()"
+                                         class="clearfix">
+                    </expanded-item-input>
+                </div>
+            </td>
+        </tr>
+        <tr class="batchadd" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'">
+            <td colspan="100%">
+                <button class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;Add Item</button>
+            </td>
+        </tr>
         </tbody>
         <tbody ng-show="isNoRecords()">
             <tr>
@@ -237,7 +241,6 @@
             </tr>
         </tbody>
     </table>
-
     <div class="context clearfix" ng-if="showPagination()">
         <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" />
     </div>

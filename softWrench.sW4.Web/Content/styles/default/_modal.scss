@@ -82,6 +82,16 @@
     width: 300px;
 }
 
+.modal-body {
+    [data-class="commandbar"] {
+        padding: 0;
+    }
+
+    .commandbar {
+        margin-top: 0;
+    }
+}
+
 @media all and (min-width: 480px) {
     .smallmodal {
         width: 360px;

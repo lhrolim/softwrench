@@ -10,6 +10,7 @@ using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.entities.security;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
@@ -142,7 +143,28 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                     } else {
                         var result = DoApplyFieldPermission(fieldsToRetain, field, container);
                         if (FieldPermission.FullControl.Equals(result)) {
-                            resultingFields.Add(field);
+                            var ass = field as ApplicationAssociationDefinition;
+                            if (field.IsReadOnly) {
+                                Log.InfoFormat("adding cloned non-readonly version of field {0}", field.Role);
+                                var clone = (IApplicationDisplayable)((IPCLCloneable)field).Clone();
+                                clone.IsReadOnly = false;
+                                resultingFields.Add(clone);
+                            } else if (ass != null && "false".Equals(ass.EnableExpression)) {
+                                Log.InfoFormat("adding cloned non-readonly version of field {0}", field.Role);
+                                var clone = (ApplicationAssociationDefinition)((IPCLCloneable)field).Clone();
+                                clone.IsReadOnly = false;
+                                clone.EnableExpression = "true";
+                                resultingFields.Add(clone);
+                            } else {
+                                resultingFields.Add(field);
+                            }
+
+
+
+
+
+
+
                         } else if (FieldPermission.ReadOnly.Equals(result) && field is IPCLCloneable) {
                             Log.InfoFormat("adding cloned readonly version of field {0}", field.Role);
                             var clone = (IApplicationDisplayable)((IPCLCloneable)field).Clone();

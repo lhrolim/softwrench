@@ -220,7 +220,7 @@
     });
 
     function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,alertService,
-        formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient, userPreferencesService, 
+        formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient, userPreferencesService, associationService, 
         expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
         schemaService, contextService, fixHeaderService) {
 
@@ -315,6 +315,7 @@
             $scope.detailData = $scope.clonedData = {};
 
             $scope.noupdateallowed = !$scope.isBatch() && !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
+            $scope.nodeleteallowed = !expressionService.evaluate($scope.collectionproperties.allowRemoval, $scope.parentdata);
             $scope.expanded = $scope.wasExpandedBefore = false;
 
             $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
@@ -621,7 +622,9 @@
 
         function onAttachmentFileLoaded(event, file) {
             if (!$scope.relationship.contains("attachment")) return;
-            var datamap = { 'newattachment_path': file.name };
+
+            var datamap = crudContextHolderService.rootDataMap("#modal") || {};
+            datamap["newattachment_path"] = file.name ;
 
             // set file on the datamap
             getFileUploadFields()
@@ -631,7 +634,11 @@
                 });
             // open create form
             $timeout(function () {
-                $scope.edit(datamap);
+                if (crudContextHolderService.isShowingModal()) {
+                    crudContextHolderService.rootDataMap("#modal", datamap);
+                } else {
+                    $scope.edit(datamap, "New Attachment", true);
+                }
             });
         }
 
@@ -920,12 +927,13 @@
             var newItem = {
                 //used to make a differentiation between a compositionitem datamap and a regular datamap
                 '#datamaptype': "compositionitem",
+                '#datamapidx': idx
             }
 
             // if inside a scroll pane - to update pane size
             fixHeaderService.callWindowResize();
 
-            fieldService.fillDefaultValues($scope.compositionlistschema.displayables, newItem, $scope);
+            
             //this id will be placed on the entity so that angular can use it to track. 
             //It has to be negative to indicate its not a maximo Id, and also a unique value to avoid collisions
             var fakeNegativeId = -Date.now().getTime();
@@ -935,6 +943,14 @@
             watches.push(watchForDirty(idx));
 
             $scope.unWatcherArray = $scope.unWatcherArray.concat(watches);
+
+            // to allow watchers to be triggered by setting default values
+            $timeout(function() {
+                fieldService.fillDefaultValues($scope.compositionlistschema.displayables, newItem, $scope);
+                if (idx === 0) {
+                    associationService.loadSchemaAssociations(newItem, $scope.compositionlistschema);
+                }
+            }, 0, false);
 
             //time for the components to be rendered
             $timeout(function () {
@@ -946,7 +962,8 @@
 
                 // if inside a scroll pane - to update pane size
                 fixHeaderService.callWindowResize();
-            }, 1000, false);
+                $(window).trigger('resize');
+            }, 400, false);
 
         }
 
@@ -1333,7 +1350,7 @@
     };
 
     CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService","alertService",
-            "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient", "userPreferencesService", 
+            "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient", "userPreferencesService", "associationService", 
             "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
             "schemaService", "contextService", "fixHeaderService"];
 

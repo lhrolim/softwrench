@@ -1,7 +1,7 @@
 ﻿pagination {
     .part {
         display: inline-block;
-        margin-right: 20px;
+        margin-left: 20px;
 
         a {
             color: #555;
@@ -15,7 +15,7 @@
         }
 
         &.pagination {
-            margin: 7px 20px 3px 10px;
+            margin: 7px 0 3px 10px;
 
             .direction {
                 &.prev {
@@ -72,6 +72,7 @@
         &.pagesize {
             position: relative;
             top: -4px;
+            margin: 7px 0 1px 20px;
         }
     }
 }

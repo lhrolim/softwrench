@@ -93,7 +93,8 @@
             }
             var associationOption = crudContextHolderService.fetchLazyAssociationOption(scope.provider, scope.datamap[scope.attribute]);
 
-            var label = associationService.getLabelText(associationOption, scope.hideDescription, attributeValue);
+            var customValue = scope.allowCustomValue === "true" ? attributeValue : null;
+            var label = associationService.getLabelText(associationOption, scope.hideDescription, customValue);
             scope.log.debug("setting initial text of typeahead component {0} to {1}".format(scope.displayablepath, label));
             element.typeahead('val', label);
         }
@@ -241,9 +242,9 @@
                 keyup: '&',
                 //function to handle corresponding jquery event
                 keydown: '&',
-                onFocus: '&'
-
-
+                onFocus: '&',
+                // if the a value is set that is not an option adds it anyway (with the value as label)
+                allowCustomValue : '@'
             }
         };
 

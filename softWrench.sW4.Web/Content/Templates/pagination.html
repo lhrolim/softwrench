@@ -1,4 +1,4 @@
-<div class="" ng-show="isPaginationEnabled()">
+<div ng-show="isPaginationEnabled()">
     <div class="part pagination" ng-show="shouldShowPagination()">
         <a ng-click="previousPage()" ng-class="getDirectionClass('prev')" href="#" class="direction prev" rel="tooltip" data-original-title="{{getTooltip('prev', layout.simple)}}">
             <i class="fa fa-chevron-left"></i>
@@ -12,7 +12,7 @@
         <label ng-if="isHapag()">{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
         <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Items: {0}",[paginationData.totalCount])}}</label>
     </div>
-    <div class="part pagesize" ng-show="shouldShowPagination()" ng-if="!layout.simple">
+    <div class="part pagesize" ng-show="shouldShowPagesize()" ng-if="!layout.simple">
         <div class="form-inline">
             <div class="form-group">
                 <label class="control-label">{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
