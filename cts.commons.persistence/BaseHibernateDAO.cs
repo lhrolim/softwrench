@@ -12,15 +12,12 @@ using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using cts.commons.persistence.Event;
 using cts.commons.persistence.Util;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.app;
 using cts.commons.Util;
 using JetBrains.Annotations;
-using Microsoft.SqlServer.Server;
-using NHibernate.Linq;
 using NHibernate.Util;
 using FlushMode = NHibernate.FlushMode;
 

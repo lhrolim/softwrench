@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.simpleinjector.Events;
 using cts.commons.web.Attributes;
-using Newtonsoft.Json.Linq;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.dashboard.classes.service.graphic;

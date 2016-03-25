@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
-  
+
   <applications>
 
     <application entity="Dashboard" name="dashboard" title="Dashboard">
@@ -74,7 +74,7 @@
         </schema>
       </schemas>
     </application>
-  
+
     <application entity="DashboardGridPanel" name="dashboardgrid" title="DashBoardGrid">
       <schemas>
         <detail>
@@ -115,9 +115,9 @@
             <property key="associationstoprefetch" value="#none"/>
           </properties>
         </detail>
-      
+
       </schemas>
-      
+
     </application>
 
     <application entity="DashboardGraphicPanel" name="dashboardgraphic" title="DashBoardGraphic">
@@ -132,51 +132,49 @@
             <option label="Tableau" value="Tableau" />
             <event type="afterchange" method="setGraphicProvider" service="dashboardAuxService"/>
           </optionfield>
-          
+
           <section showexpression="@provider==='swChart'">
-            
+
             <optionfield label="Application"
                          attribute="application"
                          requiredexpression="false"
                          default=""
                          skipvalidation="true">
               <renderer type="combo"/>
-              <option label="Service Request" value="sr"/>
+              <option label="Service Request" value="sr" />
+              <option label="Work Order" value="workorder" />
             </optionfield>
-            
-            <optionfield label="Field"
-              attribute="field"
-              default=""
-              requiredexpression="false"
-              skipvalidation="true">
+
+            <optionfield label="Field" attribute="field"
+                         default="" requiredexpression="false"
+                         skipvalidation="true">
               <renderer type="combo"/>
-              <option label="Owner" value="owner"/>
-              <option label="Priority" value="priority"/>
-              <option label="Reporter" value="reporter"/>
-              <option label="Status" value="status"/>
+              <option label="Owner"     value="owner"/>
+              <option label="Priority"  value="priority"/>
+              <option label="Reporter"  value="reportedby"/>
+              <option label="Status"    value="status"/>
             </optionfield>
-            
-            <optionfield label="Type"
-                         attribute="type"
+
+            <optionfield label="Type" attribute="type"
                          requiredexpression="false"
                          default=""
                          skipvalidation="true">
-              <option label="Record Count Bar Chart" value="swRecordCountChart"/>
-              <option label="Record Count Gauge" value="swRecordCountGauge"/>
-              <option label="Record Count Map" value="swRecordCountMap"/>
-              <option label="Record Count Pie Chart" value="swRecordCountPie"/>
-              <option label="Record Trends" value="swRecordTrends"/>
-              <option label="Sparkline" value="swSparkline"/>
+              <option label="Record Count Bar Chart"  value="swRecordCountChart" />
+              <option label="Record Count Gauge"      value="swRecordCountGauge" />
+              <option label="Record Count Map"        value="swRecordCountMap" />
+              <option label="Record Count Pie Chart"  value="swRecordCountPie" />
+              <option label="Record Trends"           value="swRecordTrends" />
+              <option label="Sparkline"               value="swSparkline" />
             </optionfield>
-            
-            <field label="Options"
+
+            <!--<field label="Options"
                          attribute="options"
                          requiredexpression="false"
                          default=""
                          skipvalidation="true">
               <renderer type="textarea"/>
-            </field>
-          
+            </field>-->
+
           </section>
 
           <section showexpression="@provider==='Tableau'">
@@ -212,10 +210,10 @@
         </detail>
 
       </schemas>
-      
+
     </application>
 
 
   </applications>
-  
+
 </metadata>
