@@ -1040,7 +1040,7 @@
 
                 if ($scope.clonedData[key] == null) {
                     return false;
-                } else if ($scope.clonedData[key].data[attribute] !== $scope.detailData[key].data[attribute]) {
+                } else if ($scope.clonedData[key].data[attribute]== $scope.detailData[key].data[attribute]) {
                     return true;
                 }
             }
