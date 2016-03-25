@@ -6,10 +6,12 @@
 
 
         var initiateWorkflow = function(schema, datamap, workflowName) {
+            var fields = datamap["fields"];
             var httpParameters = {
                 entityName: schema.entityName,
-                applicationItemId: datamap["fields"][schema.userIdFieldName],
-                siteid: datamap["fields"]["siteid"],
+                applicationItemId: fields[schema.userIdFieldName],
+                siteid: fields["siteid"],
+                id: fields[schema.idFieldName],
                 workflowName: workflowName
             };
             restService.postPromise("Workflow", "InitiateWorkflow", httpParameters).then(function(response) {

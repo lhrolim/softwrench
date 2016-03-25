@@ -130,7 +130,7 @@ namespace softWrench.sW4.Web.Controllers {
                                                      </{1}>
                                                    </{1}MboKey>
                                                  </Initiate{0}>";
-        private const string WFQueryString = "select wfprocessid, processname from wfprocess where active = 1 and enabled = 1 and {0} = '{1}'";
+        private const string WFQueryString = "select wfprocessid, processname from wfprocess p where active = 1 and enabled = 1 and {0} = '{1}' and not exists(select 1 from wfinstance i where i.processname = p.processname and i.active = 1 and i.ownertable = '{2}' and i.ownerid = '{3}')";
 
         private const string ActiveInstanceQuery = "select wfid,processname from wfinstance where ownertable = ? and ownerid = ? and active = 1";
 
@@ -148,11 +148,11 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
-        public async Task<IGenericResponseResult> InitiateWorkflow(string entityName, string applicationItemId, string siteid, string workflowName) {
+        public async Task<IGenericResponseResult> InitiateWorkflow(string entityName, string id, string applicationItemId, string siteid, string workflowName) {
             List<Dictionary<string, string>> workflows;
             var queryString = workflowName != null
-                ? WFQueryString.FormatInvariant("processname", workflowName)
-                : WFQueryString.FormatInvariant("objectname", entityName);
+                ? WFQueryString.FormatInvariant("processname", workflowName,entityName, id)
+                : WFQueryString.FormatInvariant("objectname", entityName, entityName, id);
             workflows = _maximoDao.FindByNativeQuery(queryString);
             // If there are no work flows
             if (!workflows.Any()) {
