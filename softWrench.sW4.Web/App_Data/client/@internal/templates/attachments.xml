@@ -8,6 +8,7 @@
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
         <property key ="icon.composition.tab" value="fa fa-paperclip"/>
+        <property key ="add.button.label" value="Add Attachment"/>
       </properties>
       <schemas>
         <list stereotype="compositionlist" platform="mobile">
@@ -33,13 +34,14 @@
           <field label="Application" attribute="ownertable" >
             <renderer type="icon" params="expression={'COMMLOG':'fa-envelope','SR':''};width=10%;showattribute=true"/>
           </field>
-          <field attribute="createby" hidden="true"/>
+          
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="docinfo_.urltype"/>
           <field  attribute="document" hidden="true"/>
           <field label="Document"  attribute="#parsedurl"/>
 <!--          <section attribute="document"-->
 <!--									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>-->
+          <field attribute="createby" hidden="true"/>
           <field label="Created Date" attribute="createdate"/>
           <field label="Type" attribute="doctype" hidden="true"/>
 

@@ -200,6 +200,7 @@
       <properties>
         <!--will need to change the icon later-->
         <property key ="icon.composition.tab" value="fa fa-clipboard"/>
+        <property key ="add.button.label" value="Add PO Line"/>
       </properties>
       <schemas>
 
@@ -357,6 +358,7 @@
     <application entity="prline" name="prline" title="Purchase Request Line">
       <properties>
         <property key ="icon.composition.tab" value="fa fa-money"/>
+        <property key ="add.button.label" value="Add PR Line"/>
       </properties>
       <schemas>
         <schema id="list" stereotype="compositionlist">

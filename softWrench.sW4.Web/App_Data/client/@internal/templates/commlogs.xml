@@ -72,6 +72,7 @@
         <property key ="icon" value="fa fa-envelope-o"/>
         <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
         <property key="list.click.popup" value="modal"/>
+        <property key ="add.button.label" value="Add Communication"/>
       </properties>
       <schemas>
         <schema id="list" stereotype="compositionlist">
