@@ -6,7 +6,7 @@
 
 
     function angularTypeahead(restService, $timeout, $log,
-        contextService, associationService, crudContextHolderService, schemaService, datamapSanitizeService,compositionService) {
+        contextService, associationService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, expressionService) {
         /// <summary>
         /// This directive integrates with bootsrap-typeahead 0.10.X
         /// </summary>
@@ -190,6 +190,11 @@
                 setInitialText(element, scope);
             });
 
+            scope.isModifiableEnabled = function (fieldMetadata) {
+                var result = expressionService.evaluate(fieldMetadata.enableExpression, scope.datamap);
+                return result;
+            };
+
         };
 
 
@@ -198,16 +203,17 @@
             restrict: 'E',
             replace: true,
             template: '<div class="input-group lazy-search">' +
-                '<input type="search" class="hidden-phone form-control typeahead" placeholder="Find {{placeholder}}" ' +
+                '<input type="search" class="hidden-phone form-control typeahead" ng-enabled="isModifiableEnabled(fieldMetadata)" placeholder="Find {{placeholder}}" ' +
                 'data-association-key="{{provider}}" data-displayablepath="{{displayablepath}}"/>' +
                 '<span class="input-group-addon last" ng-click="executeMagnetSearch()">' +
-                '<i class="fa fa-search"></i>' +
+                '<i class="fa fa-search" ng-enabled="isModifiableEnabled(fieldMetadata)"></i>' +
                 '</span>'+
             '<div></div><!--stop addon from moving on hover-->'+
             '</div>',
             scope: {
                 schema: '=',
                 datamap: '=',
+                fieldMetadata: "=",
                 //the 
                 attribute: '=',
                 provider: '=',
@@ -236,7 +242,7 @@
                 //function to be called when an item gets selected
                 magnetClicked: '&',
 
-                isEnabled: '&',
+                //isEnabled: '&',
 
                 //function to handle corresponding jquery event
                 keyup: '&',
@@ -253,7 +259,7 @@
         return directive;
     }
 
-    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', angularTypeahead]);
+    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', 'expressionService', angularTypeahead]);
 
 })(angular, Bloodhound);
 
