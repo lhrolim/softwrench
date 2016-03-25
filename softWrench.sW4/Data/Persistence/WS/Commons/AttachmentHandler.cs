@@ -147,9 +147,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
             var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
             w.SetValue(docLink, "ADDINFO", true);
-            w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
+            w.SetValue(docLink, "CREATEBY", user.MaximoPersonId);
+            w.SetValue(docLink, "CHANGEBY", user.MaximoPersonId);
+
+            //TODO: remove these lines
+            w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.MaximoPersonId, "reportedby",true);
+            w.CopyFromRootEntity(maximoObj, docLink, "CHANGEBY", user.MaximoPersonId, "reportedby", true);
+
             w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());
-            w.CopyFromRootEntity(maximoObj, docLink, "CHANGEBY", user.Login, "reportedby");
             w.CopyFromRootEntity(maximoObj, docLink, "CHANGEDATE", DateTime.Now.FromServerToRightKind());
             w.CopyFromRootEntity(maximoObj, docLink, "SITEID", user.SiteId);
             w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
