@@ -123,6 +123,7 @@
         var stopWorkflow = function (wfInstanceId) {
             var datamap = crudContextHolderService.rootDataMap();
             var schema = crudContextHolderService.currentSchema();
+            
 
             var httpParameters = {
                 entityName: schema.entityName,

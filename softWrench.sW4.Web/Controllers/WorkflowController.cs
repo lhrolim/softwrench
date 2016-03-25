@@ -207,7 +207,7 @@ namespace softWrench.sW4.Web.Controllers {
             //otherwise, let´s stop the only one found
             var workflow = workflows[0];
 
-            return _workflowManager.DoStopWorkFlow(id, userId, siteid, workflow);
+            return _workflowManager.DoStopWorkFlow(id, userId, siteid,  workflow);
         }
 
         public IGenericResponseResult InitRouteWorkflow(string entityName, string id, string appuserId, string siteid) {

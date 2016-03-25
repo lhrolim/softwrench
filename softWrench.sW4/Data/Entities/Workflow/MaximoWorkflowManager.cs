@@ -76,7 +76,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
         [NotNull]
         public IList<AssociationOption> LocateAssignmentsToRoute(string entityName, string entityId, InMemoryUser user) {
-            var results = _maxDAO.FindByNativeQuery(WfAssignmentsQuery, entityName, entityId, user.MaximoPersonId,user.MaximoPersonId, user.MaximoPersonId);
+            var results = _maxDAO.FindByNativeQuery(WfAssignmentsQuery, entityName, entityId, user.MaximoPersonId, user.MaximoPersonId, user.MaximoPersonId);
             return results.Select(r => new AssociationOption(r["assignid"], r["processname"])).ToList();
         }
 
@@ -105,15 +105,33 @@ namespace softWrench.sW4.Data.Entities.Workflow {
         }
 
         public class RouteWorkflowDTO {
-            public string OwnerId {get; set;}
-            public string OwnerTable {get; set;}
-            public string AppUserId {get; set;}
-            public string SiteId {get; set;}
-            public string WfId {get; set;}
-            public string ProcessName {get; set;}
-            public string Memo {get; set;}
-            public string ActionId {get; set;}
-            public string AssignmentId {get; set;}
+            public string OwnerId {
+                get; set;
+            }
+            public string OwnerTable {
+                get; set;
+            }
+            public string AppUserId {
+                get; set;
+            }
+            public string SiteId {
+                get; set;
+            }
+            public string WfId {
+                get; set;
+            }
+            public string ProcessName {
+                get; set;
+            }
+            public string Memo {
+                get; set;
+            }
+            public string ActionId {
+                get; set;
+            }
+            public string AssignmentId {
+                get; set;
+            }
 
         }
 
@@ -127,16 +145,12 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
             //TODO: make it workorder agnostic
 
+
+
             IDictionary<string, object> attributes = new Dictionary<string, object>();
             attributes.Add("wonum", routeWorkflowDTO.AppUserId);
             attributes.Add("siteid", routeWorkflowDTO.SiteId);
-
-            attributes.Add("woeq8", "route");
-            attributes.Add("woeq4", SecurityFacade.CurrentUser().MaximoPersonId);
-            attributes.Add("woeq9", routeWorkflowDTO.WfId);
-            attributes.Add("woeq10", routeWorkflowDTO.ActionId);
-            attributes.Add("woeq11", routeWorkflowDTO.Memo);
-            attributes.Add("woeq12", Int32.Parse(routeWorkflowDTO.AssignmentId));
+            attributes.Add("workflowinfo", BuildWorkflowInfo(routeWorkflowDTO));
 
             _maximoConnectorEngine.Update(new CrudOperationData(routeWorkflowDTO.OwnerId, attributes, new Dictionary<string, object>(), entityMetadata,
                 appMetadata));
@@ -147,7 +161,12 @@ namespace softWrench.sW4.Data.Entities.Workflow {
             };
         }
 
-        public IGenericResponseResult DoStopWorkFlow(string id, string userId, string siteid, Dictionary<string, string> workflow) {
+        //protocol: personid;actiontype;wfid;wfactionid;wfassignmentid;memo;
+        private static string BuildWorkflowInfo(RouteWorkflowDTO routeWorkflowDTO) {
+            return SecurityFacade.CurrentUser().MaximoPersonId + ";route;" + routeWorkflowDTO.WfId + ";" + routeWorkflowDTO.ActionId + ";" + routeWorkflowDTO.AssignmentId + ";" + routeWorkflowDTO.Memo;
+        }
+
+        public IGenericResponseResult DoStopWorkFlow(string id, string userId, string siteid,  Dictionary<string, string> workflow) {
             var appMetadata =
                 MetadataProvider.Application("workorder")
                     .ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("editdetail"));
@@ -158,8 +177,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
             attributes.Add("wonum", userId);
             attributes.Add("siteid", siteid);
 
-            attributes.Add("woeq8", "stop");
-            attributes.Add("woeq9", workflow["wfid"]);
+            attributes.Add("workflowinfo", SecurityFacade.CurrentUser().MaximoPersonId + ";stop;" + workflow["wfid"] + ";;;");
 
             _maximoConnectorEngine.Update(new CrudOperationData(id, attributes, new Dictionary<string, object>(), entityMetadata,
                 appMetadata));
