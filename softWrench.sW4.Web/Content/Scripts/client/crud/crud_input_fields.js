@@ -212,6 +212,7 @@ app.directive('configAssociationListInputDatamap', function () {
                     $scope.associationOptions = associationoptions;
                 }
             });
+
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
                 eventService.onload($scope.schema, $scope.datamap);
@@ -250,30 +251,27 @@ app.directive('configAssociationListInputDatamap', function () {
                     datepickers.disable();
                 }
 
-
-                // Configure input files
-                $('#uploadBtn').on('change', function (e) {
-                    var fileName = this.value.match(/[^\/\\]+$/);
-                    var isValid = attachmentService.isValid(this.value);
-                    if (!isValid) {
-                        $('#uploadFile').attr("value", "");
-                        if (isIe9()) {
-                            //hacky around ie9 -- HAP-894
-                            $('#uploadFile').attr("value", "");
-                            $(this).replaceWith($(this).clone(true));
-                        } else {
-                            $('#uploadFile').val('');
+                (function () {
+                    // Configure input files
+                    $("#uploadBtn").on("change", function (e) {
+                        var fileName = this.value.match(/[^\/\\]+$/);
+                        var isValid = attachmentService.isValid(this.value);
+                        if (!isValid) {
+                            $("#uploadFile").attr("value", "");
+                            $("#uploadFile").val("");
+                            return;
                         }
-                        return;
-                    }
-                    $('#uploadFile').attr("value", fileName);
-                });
+                        $("#uploadFile").attr("value", fileName);
+                    });
+                })();
 
-                $("#uploadInputLink").on('click', function (e) {
-                    e.preventDefault();
-                    $("#uploadInput").trigger('click');
-                });
             });
+
+
+            $scope.browseFile = function($event) {
+                $event.preventDefault();
+                $("#uploadInput").trigger("click");
+            };
 
 
             /* Association (COMBO, AUTOCOMPLETECLIENT) functions */
