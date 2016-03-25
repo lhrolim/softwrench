@@ -66,6 +66,7 @@
     <application name="tooltrans" entity="tooltrans" title="Tools">
       <properties>
         <property key ="icon.composition.tab" value="fa fa-wrench"/>
+        <property key ="add.button.label" value="Add Tool"/>
       </properties>
         <schemas>
           <list stereotype="compositionlist">
