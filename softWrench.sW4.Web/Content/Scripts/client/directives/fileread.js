@@ -10,9 +10,13 @@ app.directive("fileread", function ($log, alertService, attachmentService) {
             path: "="
         },
 
-        link: function (scope, element, attributes) {
+        link: function (scope, element, attrs) {
 
-            var validFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png", "lic"];
+            var validExtensions = !attrs.acceptedExtensions
+                                ? null
+                                : attrs.acceptedExtensions.split(",").map(function (e) {
+                                    return e.trim();
+                                });
 
             var readFiles = function (changeEvent, fileRead, reader, current) {
                 var fileNew = changeEvent.target.files[current]; // get the first from queue and store in file
@@ -34,7 +38,7 @@ app.directive("fileread", function ($log, alertService, attachmentService) {
 
                 var log = $log.getInstance('fileread#change');
                 log.debug('file change detected');
-                if (!attachmentService.isValid(this.value)) {
+                if (!attachmentService.isValid(this.value, validExtensions)) {
                     alert("Invalid file. Please choose another one.");
                     return;
                 }
@@ -52,9 +56,9 @@ app.directive("fileread", function ($log, alertService, attachmentService) {
                 //Getting the File extension.
                 for (var i = 0; i < changeEvent.target.files.length; i++) {
                     var temp = changeEvent.target.files[i].name.split(".").pop().toLowerCase();
-                    if (validFileTypes.indexOf(temp) == -1) {
+                    if (!attachmentService.isValid(temp, validExtensions)) {
                         changeEvent.currentTarget.value = "";
-                        alertService.alert("Invalid file type. Allowed file types are:" + validFileTypes.join(', '));
+                        alertService.alert("Invalid file type. Allowed file types are:" + validExtensions.join(", "));
                         //Updating the model
                         scope.$apply(function () {
                             scope.fileread = undefined;
@@ -67,13 +71,13 @@ app.directive("fileread", function ($log, alertService, attachmentService) {
                 var fileRead = [];
 
                 readFiles(changeEvent, fileRead, reader, 0);
-                for (var i = 0; i < changeEvent.target.files.length; i++) {
-                    file = changeEvent.target.files[i];
+                for (var j = 0; j < changeEvent.target.files.length; j++) {
+                    file = changeEvent.target.files[j];
                     fileName.push(file.name);
                 }
 
                 scope.path = fileName;
-                $('[data-upload=files]')[0].value = fileName;
+                $("[data-upload=files]")[0].value = fileName;
             });;
         }
     };
