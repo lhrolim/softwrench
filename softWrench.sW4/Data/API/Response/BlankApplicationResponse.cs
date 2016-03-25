@@ -7,6 +7,8 @@ namespace softWrench.sW4.Data.API.Response {
     /// Use this response when no action is required on the client side.
     /// </summary>
     public class BlankApplicationResponse : IApplicationResponse {
+
+
         public string RedirectURL { get; set; }
         public string Title { get; set; }
         public string CrudSubTemplate { get; set; }

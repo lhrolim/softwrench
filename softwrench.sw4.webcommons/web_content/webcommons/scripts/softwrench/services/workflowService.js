@@ -5,43 +5,46 @@
     function workflowService($q, $http, restService, redirectService, crudContextHolderService, modalService, alertService) {
 
 
-        var initiateWorkflow = function(schema, datamap, workflowName) {
+        var initiateWorkflow = function (schema, datamap, workflowName) {
             var fields = datamap["fields"];
             var httpParameters = {
-                entityName: schema.entityName,
-                applicationItemId: fields[schema.userIdFieldName],
+                appName: schema.applicationName,
+                appId: fields[schema.idFieldName],
+                appUserId: fields[schema.userIdFieldName],
                 siteid: fields["siteid"],
-                id: fields[schema.idFieldName],
                 workflowName: workflowName
             };
-            restService.postPromise("Workflow", "InitiateWorkflow", httpParameters).then(function(response) {
-                // If the response is null, no workflows were found
-                if (response.data == "null") {
-                    alertService.notifymessage('warn', 'There are no active and enabled Workflows for this record type.');
+
+            return restService.postPromise("Workflow", "InitiateWorkflow", httpParameters).then(function (response) {
+                var appResponse = response.data;
+
+                if (appResponse.errorMessage) {
+                    alertService.alert(appResponse.errorMessage);
+                    return $q.when();
                 }
+
                 // If the response does not have a list of workflows, it has sucessfully found and executed one
-                if (!response.data.resultObject.hasOwnProperty("workflows")) {
-                    modalService.hide();
-                    return;
+                if (appResponse.resultObject) {
+                    modalService.show(response.data.resultObject.schema, {}, {
+                        title: "Select Workflow to Initialize",
+                        cssclass: "dashboardmodal",
+                        onloadfn: function() {
+                            crudContextHolderService.updateEagerAssociationOptions("workflows", response.data.resultObject.workflows);
+                        }
+                    }, function(datamap) {
+                        var parentDatamap = crudContextHolderService.rootDataMap();
+                        var parentSchema = crudContextHolderService.currentSchema();
+                        return initiateWorkflow(parentSchema, parentDatamap, datamap["processname"]);
+                    });
+                } else {
+                    return $q.when();
                 }
-                modalService.show(response.data.resultObject.schema, {}, {
-                    title: "Select Workflow to Initialize",
-                    cssclass: "dashboardmodal",
-                    onloadfn: function() {
-                        crudContextHolderService.updateEagerAssociationOptions("workflows", response.data.resultObject.workflows);
-                    }
-                }, function(datamap) {
-                    var parentDatamap = crudContextHolderService.rootDataMap();
-                    var parentSchema = crudContextHolderService.currentSchema();
-                    initiateWorkflow(parentSchema, parentDatamap, datamap["processname"]);
-                });
-            }).catch(function(response) {
-                alertService.error(response.data.errorMessage);
+                
             });
         };
 
 
-        var routeWorkflow = function() {
+        var routeWorkflow = function () {
             var rootDatamap = crudContextHolderService.rootDataMap().fields;
             var schema = crudContextHolderService.currentSchema();
 
@@ -53,7 +56,7 @@
                 siteid: rootDatamap.siteid,
             };
 
-            return restService.postPromise("Workflow", "InitRouteWorkflow", httpParameters).then(function(response) {
+            return restService.postPromise("Workflow", "InitRouteWorkflow", httpParameters).then(function (response) {
                 var appResponse = response.data;
                 if (appResponse.errorMessage) {
                     alertService.alert(response.data.errorMessage);
@@ -68,10 +71,10 @@
                     modalService.show(appResponse.schema, appResponse.resultObject.fields, {
                         title: "Complete Workflow Assignment",
                         cssclass: "dashboardmodal",
-                        onloadfn: function() {
+                        onloadfn: function () {
                             crudContextHolderService.updateEagerAssociationOptions("taskoptions", appResponse.associationOptions.eagerOptions["#taskoptions"]);
                         }
-                    }, function(datamap) {
+                    }, function (datamap) {
                         var fields = datamap.fields || datamap;
                         var data = {
                             ownerId: rootDatamap[schema.idFieldName],
@@ -84,15 +87,15 @@
                             actionId: fields["#taskoption"],
                             assignmentId: fields["#wfassignmentid"],
                         }
-                        restService.postPromise("Workflow", "DoRouteWorkflow", null, data).then(function() {
+                        restService.postPromise("Workflow", "DoRouteWorkflow", null, data).then(function () {
                             deferred.resolve();
                             modalService.hide();
                         });
-                        
+
 
                     });
                 } else {
-                    
+
                     modalService.show(appResponse.resultObject.schema, appResponse.datamap, {
                         title: "Select Workflow to Route",
                         cssclass: "dashboardmodal",
@@ -104,11 +107,11 @@
                         var httpParameters = {
                             wfAssignmentId: datamap["processname"],
                         }
-                        restService.postPromise("Workflow", "InitRouteWorkflowSelected", httpParameters).then(function() {
+                        restService.postPromise("Workflow", "InitRouteWorkflowSelected", httpParameters).then(function () {
                             deferred.resolve();
                             modalService.hide();
                         });
-                        
+
                     });
 
                 }
@@ -118,14 +121,14 @@
 
 
             });
-        
 
-};
+
+        };
 
         var stopWorkflow = function (wfInstanceId) {
             var datamap = crudContextHolderService.rootDataMap();
             var schema = crudContextHolderService.currentSchema();
-            
+
 
             var httpParameters = {
                 entityName: schema.entityName,
@@ -135,7 +138,7 @@
                 wfInstanceId: wfInstanceId
             };
 
-            return restService.postPromise("Workflow", "StopWorkflow", httpParameters).then(function(response) {
+            return restService.postPromise("Workflow", "StopWorkflow", httpParameters).then(function (response) {
                 var appResponse = response.data;
                 if (appResponse.errorMessage) {
                     alertService.alert(response.data.errorMessage);
@@ -148,10 +151,10 @@
                     modalService.show(response.data.resultObject.schema, {}, {
                         title: "Select Workflow to Stop",
                         cssclass: "dashboardmodal",
-                        onloadfn: function() {
+                        onloadfn: function () {
                             crudContextHolderService.updateEagerAssociationOptions("workflows", response.data.resultObject.workflows);
                         }
-                    }, function(datamap) {
+                    }, function (datamap) {
                         return stopWorkflow(datamap["processname"]);
                     });
                 } else {
@@ -166,12 +169,12 @@
         var service = {
             initiateWorkflow: initiateWorkflow,
             stopWorkflow: stopWorkflow,
-            routeWorkflow : routeWorkflow
+            routeWorkflow: routeWorkflow
         };
 
         return service;
 
     };
 
-    angular.module('webcommons_services').factory('workflowService', ["$q",'$http', 'restService','redirectService', 'crudContextHolderService', 'modalService', 'alertService', workflowService]);
+    angular.module('webcommons_services').factory('workflowService', ["$q", '$http', 'restService', 'redirectService', 'crudContextHolderService', 'modalService', 'alertService', workflowService]);
 })(angular);
