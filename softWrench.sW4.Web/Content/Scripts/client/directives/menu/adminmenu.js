@@ -70,6 +70,11 @@
                 }
                 return style;
             }
+
+            scope.showLabel = function () {
+                //use global property to hide/show labels
+                return contextService.getFromContext("UIShowToolbarLabels", false, true);
+            }
         }
     };
 }]);

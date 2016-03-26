@@ -6,8 +6,8 @@
 
         <div class="admin-menu">
             <div ng-if="!showClassicMenu()" ng-style="sidePanelStyle()" class="modern">
-                <a data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-cog"></i>
+                <a class="main" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-cog"></i><span ng-show="showLabel()">&ensp;Settings</span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="user"><a>{{userInfo()}}</a></li>
