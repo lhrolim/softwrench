@@ -1,175 +1,162 @@
 ﻿(function (angular, $) {
     "use strict";
 
-    function swchartGraphicPanelService($q, $rootScope, $compile) {
+    function swchartGraphicPanelService($rootScope, $compile, restService, crudContextHolderService) {
         //#region Utils
 
         var config = {
             // swchart's template -> sw-chart directive
-            template: "<sw-chart "                          +
-                        "data-chart-type=\"chartType\" "    +
-                        "data-data=\"data\" "               +
-                        "data-options=\"options\" />"        
+            template: "<sw-chart " +
+                        "data-chart-type=\"chartType\" " +
+                        "data-data=\"data\" " +
+                        "data-options=\"options\" />",
+            fields: {
+                base: [
+                    { label: "Owner", value: "owner" },
+                    { label: "Reporter", value: "reportedby" },
+                    { label: "Status", value: "status" }
+                ],
+                workorder: [
+                    { label: "Priority", value: "wopriority" },
+                    { label: "Work Type", value: "worktype" }
+                ],
+                getFields: function (application) {
+                    var specific = this[application];
+                    return specific ? this.base.concat(specific) : this.base;
+                }
+            }
         };
 
-        //TODO: replace with real data
-        function getPlaceHolderData(type) {
-            var data = {};
+
+        function getChartData(configuration) {
+            var params = {
+                entity: configuration.application,
+                property: configuration.field,
+                limit: configuration.field.equalsAny("owner", "reportedby") ? 5 : 0
+            }
+
+            return restService.getPromise("Statistics", "CountByProperty", params)
+                .then(function (response) {
+                    return formatDataForChart(configuration, response.data);
+                });
+        }
+
+        function formatDataForChart(configuration, data) {
+            var processed = [];
+            angular.forEach(data, function (value, key) {
+                processed.push({ field: key, value: value });
+            });
+            // sort by value descending
+            processed = processed.sort(function (d1, d2) {
+                return d2.value - d1.value;
+            });
+
+            // status -> open/close
+            if (configuration.field === "status" && configuration.statusfieldconfig === "openclosed") {
+                // closed status entry
+                var closed = processed.find(function (d) {
+                    return d.field.equalsIc("close");
+                });
+                // sum of all except closed
+                var openCount = processed.filter(function (d) {
+                    return !d.field.equalsIc("close");
+                })
+                .reduce(function (previous, current) {
+                    return previous + current.value;
+                }, 0);
+                // total
+                var totalCount = closed.value + openCount;
+                // new array containing only open/close
+                processed = [
+                    { field: "closed", value: closed.value },
+                    { field: "open", value: openCount },
+                    { field: "total", value: totalCount }
+                ];
+
+            }
+                // worktype -> top 6 + others
+            else if (configuration.field === "worktype" && processed.length > 7) {
+                // 6 highest counts
+                var topresults = processed.slice(0, 6);
+                // sum of the others's counts
+                var othersCount = processed.slice(6)
+                    .reduce(function (previous, current) {
+                        return previous + current.value;
+                    }, 0);
+                // new array composed of top 6 + 'others'
+                processed = topresults.concat({ field: "others", value: othersCount });
+            }
+
+            return handleData(configuration.type, processed);
+        }
+        
+        function handleData(type, data) {
+            var chartData = {};
 
             switch (type) {
                 case "dxChart":
                 case "swRecordCountChart":
+                    chartData = data.map(function (d) {
+                        return { argument: d.field, total: d.value }
+                    });
+                    break;
                 case "dxPie":
                 case "swRecordCountPie":
-                    data = [
-                    {
-                        "argument": "CLOSED",
-                        "total": 5013
-                    }, {
-                        "argument": "INPROG",
-                        "total": 764
-                    }, {
-                        "argument": "NEW",
-                        "total": 2406
-                    }, {
-                        "argument": "PENDING",
-                        "total": 1089
-                    }, {
-                        "argument": "QUEUED",
-                        "total": 1372
-                    }, {
-                        "argument": "RESOLVED",
-                        "total": 3469
-                    }];
+                    chartData = data
+                        .filter(function(d) {
+                            return d.field !== "total";
+                        })
+                        .map(function (d) {
+                            return { argument: d.field, total: d.value }
+                        });
                     break;
                 case "dxLinearGauge":
                 case "swLinearGauge":
                 case "dxCircularGauge":
                 case "swCircularGauge":
                 case "swRecordCountGauge":
-                    data = {
-                        "total": 14113,
-                        "opened": 5631,
-                        "closed": 8482
-                    }
+                    data.forEach(function(d) {
+                        chartData[d.field] = d.value;
+                    });
                     break;
-                case "swRecordTrends":
-                case "dxSparkline":
                 case "swSparkline":
-                    data = [
-                        {
-                            "date": "02/12/16",
-                            "reported": 7,
-                            "completed": 5,
-                            "changed": 2
-                        },
-                        {
-                            "date": "02/13/16",
-                            "reported": 5,
-                            "completed": 0,
-                            "changed": 0
-                        },
-                        {
-                            "date": "02/14/16",
-                            "reported": 0,
-                            "completed": 0,
-                            "changed": 0
-                        },
-                        {
-                            "date": "02/15/16",
-                            "reported": 26,
-                            "completed": 14,
-                            "changed": 9
-                        },
-                        {
-                            "date": "02/16/16",
-                            "reported": 31,
-                            "completed": 17,
-                            "changed": 14
-                        },
-                        {
-                            "date": "02/17/16",
-                            "reported": 24,
-                            "completed": 9,
-                            "changed": 14
-                        },
-                        {
-                            "date": "02/18/16",
-                            "reported": 19,
-                            "completed": 15,
-                            "changed": 9
-                        }
-                    ];
+                    chartData = data.map(function (d) {
+                        return { argument: d.field, value: d.value }
+                    });
                     break;
+                //case "swRecordTrends":
+                //case "dxSparkline":
+                //case "swSparkline":
+                //    chartData = [
+                //        {
+                //            "date": "02/12/16",
+                //            "reported": 7,
+                //            "completed": 5,
+                //            "changed": 2
+                //        },
+                //    ];
+                //    break;
                 case "swLabel":
                     break;
-                case "dxMap":
-                case "swRecordCountMap":
-                    data = [
-                        {
-                            "coordinates": [
-                                -97.1431,
-                                32.844
-                            ],
-                            "percentages": [
-                                66,
-                                34
-                            ],
-                            "text": "BEDFORD",
-                            "total": 895
-                        },
-                        {
-                            "coordinates": [
-                                -71.0589,
-                                42.3601
-                            ],
-                            "percentages": [
-                                38,
-                                62
-                            ],
-                            "text": "BOSTON",
-                            "total": 3308
-                        },
-                        {
-                            "coordinates": [
-                                -104.99,
-                                39.7392
-                            ],
-                            "percentages": [
-                                59,
-                                41
-                            ],
-                            "text": "DENVER",
-                            "total": 1430
-                        },
-                        {
-                            "coordinates": [
-                                -112.074,
-                                33.4484
-                            ],
-                            "percentages": [
-                                30,
-                                70
-                            ],
-                            "text": "PHOENIX",
-                            "total": 6637
-                        },
-                        {
-                            "coordinates": [
-                                -122.332,
-                                47.6062
-                            ],
-                            "percentages": [
-                                53,
-                                47
-                            ],
-                            "text": "SEATTLE",
-                            "total": 1843
-                        }
-                    ];
-                    break;
+                //case "dxMap":
+                //case "swRecordCountMap":
+                //    chartData = [
+                //        {
+                //            "coordinates": [
+                //                -97.1431,
+                //                32.844
+                //            ],
+                //            "percentages": [
+                //                66,
+                //                34
+                //            ],
+                //            "text": "BEDFORD",
+                //            "total": 895
+                //        }
+                //    ];
+                //    break;
             }
-            return data;
+            return chartData;
         }
 
         /**
@@ -181,17 +168,20 @@
          * @returns Promise resolved with the DOMNode representing the graphic: compiled 'sw-chart' directive
          */
         function loadGraphic(element, panel, options) {
-            // create isolated scope for the dynamically compiled 'sw-chart' directive
-            var $parent = angular.element(element).scope();
-            var $scope = $rootScope.$new(true, $parent);
-            $scope.chartType = panel.configurationDictionary.type;
-            $scope.data = getPlaceHolderData(panel.configurationDictionary.type); //TODO: replace with real data
-            $scope.options = panel.configurationDictionary.options;
-            // compile the template with the isolated scope
-            var graphic = $compile(config.template)($scope);
-            $(element).append(graphic);
-            // Promise resolved with the graphic element
-            return $q.when(graphic);
+            return getChartData(panel.configurationDictionary)
+                .then(function (data) {
+                    // create isolated scope for the dynamically compiled 'sw-chart' directive
+                    var $parent = angular.element(element).scope();
+                    var $scope = $rootScope.$new(true, $parent);
+                    $scope.chartType = panel.configurationDictionary.type;
+                    $scope.data = data;
+                    $scope.options = panel.configurationDictionary.options;
+                    // compile the template with the isolated scope
+                    var graphic = $compile(config.template)($scope);
+                    $(element).append(graphic);
+                    // Promise resolved with the graphic element
+                    return graphic;
+                });
         }
 
         function resizeGraphic(graphic, width, height) {
@@ -209,13 +199,20 @@
                 'application': datamap.application,
                 'field': datamap.field,
                 'type': datamap.type,
-                'options': datamap.options
+                'statusfieldconfig': datamap.statusfieldconfig
             };
         }
-        
+
         function onProviderSelected(event) {
             // implementing interface
-            // TODO: enable chart creation -> set the options in the context
+        }
+
+        function onApplicationSelected(event) {
+            var application = event.fields.application;
+            if (!application) return;
+            var fields = config.fields.getFields(application);
+            crudContextHolderService.updateEagerAssociationOptions("fields", fields);
+
         }
         //#endregion
 
@@ -224,7 +221,8 @@
             loadGraphic: loadGraphic,
             resizeGraphic: resizeGraphic,
             onProviderSelected: onProviderSelected,
-            onBeforeAssociatePanel: onBeforeAssociatePanel
+            onBeforeAssociatePanel: onBeforeAssociatePanel,
+            onApplicationSelected: onApplicationSelected
         };
         return service;
         //#endregion
@@ -234,7 +232,7 @@
     angular
         .module("sw_layout")
         .factory("swchartGraphicPanelService",
-            ["$q", "$rootScope", "$compile", swchartGraphicPanelService]);
+            ["$rootScope", "$compile", "restService", "crudContextHolderService", swchartGraphicPanelService]);
     //#endregion
 
 })(angular, jQuery);

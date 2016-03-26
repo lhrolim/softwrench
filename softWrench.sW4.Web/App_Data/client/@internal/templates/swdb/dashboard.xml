@@ -137,31 +137,35 @@
 
             <optionfield label="Application"
                          attribute="application"
-                         requiredexpression="false"
-                         default=""
-                         skipvalidation="true">
+                         requiredexpression="true"
+                         default="">
               <renderer type="combo"/>
+              
               <option label="Service Request" value="sr" />
               <option label="Work Order" value="workorder" />
+              
+              <event type="afterchange" service="swchartGraphicPanelService" method="onApplicationSelected" />
             </optionfield>
 
-            <optionfield label="Field" attribute="field"
-                         default="" requiredexpression="false"
-                         skipvalidation="true">
+            <optionfield label="Field" attribute="field" providerattribute="fields" skipvalidation="true"
+                         default="" requiredexpression="true">
               <renderer type="combo"/>
-              <option label="Owner"     value="owner"/>
-              <option label="Priority"  value="priority"/>
-              <option label="Reporter"  value="reportedby"/>
-              <option label="Status"    value="status"/>
+            </optionfield>
+
+            <optionfield label="" attribute="statusfieldconfig"
+                         default="all" requiredexpression="true"
+                         showexpression="@field==='status'">
+              <renderer type="radio"/>
+              <option label="All" value="all" />
+              <option label="Open/Closed" value="openclosed" />
             </optionfield>
 
             <optionfield label="Type" attribute="type"
-                         requiredexpression="false"
-                         default=""
-                         skipvalidation="true">
+                         requiredexpression="true"
+                         default="">
               <option label="Record Count Bar Chart"  value="swRecordCountChart" />
               <option label="Record Count Gauge"      value="swRecordCountGauge" />
-              <option label="Record Count Map"        value="swRecordCountMap" />
+              <!--<option label="Record Count Map"        value="swRecordCountMap" />-->
               <option label="Record Count Pie Chart"  value="swRecordCountPie" />
               <option label="Record Trends"           value="swRecordTrends" />
               <option label="Sparkline"               value="swSparkline" />

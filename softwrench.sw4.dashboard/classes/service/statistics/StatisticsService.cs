@@ -9,7 +9,7 @@ using softWrench.sW4.Data.Persistence;
 namespace softwrench.sw4.dashboard.classes.service.statistics {
     public class StatisticsService : ISingletonComponent {
 
-        private const string COUNT_BY_PROPERTY_ORDERED_TEMPLATE = @"select COALESCE({1}, 'NULL') as {1},count(*) as countBy 
+        private const string COUNT_BY_PROPERTY_ORDERED_TEMPLATE = @"select COALESCE(CAST({1} as varchar), 'NULL') as {1},count(*) as countBy 
                                                                         from {0} 
                                                                         group by {1} 
                                                                         order by " + COUNT_ORDER;

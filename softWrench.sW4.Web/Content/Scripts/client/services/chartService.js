@@ -137,12 +137,12 @@
                     ranges: [
                         {
                             startValue: 0,
-                            endValue: data.opened,
+                            endValue: data.open,
                             color: "#39b54a"
                         },
                         {
-                            startValue: data.opened,
-                            endValue: data.opened + data.closed,
+                            startValue: data.open,
+                            endValue: data.open + data.closed,
                             color: "#f65752"
                         }
                     ],
@@ -155,7 +155,7 @@
                 },
                 title: {
                     text: "<b>Total: " + data.total.toLocaleString() + "</b>",
-                    subtitle: "Open: " + data.opened.toLocaleString() + "<br />Closed: " + data.closed.toLocaleString()
+                    subtitle: "Open: " + data.open.toLocaleString() + "<br />Closed: " + data.closed.toLocaleString()
                 },
                 valueIndicator: {
                     offset: 30
@@ -375,7 +375,8 @@
         function getSparklineDefaults(data) {
             return {
                 dataSource: data,
-                argumentField: "date",
+                argumentField: "argument",
+                valueField: "value",
                 ignoreEmptyPoints: true,
                 type: "splinearea",
                 showMinMax: true,
