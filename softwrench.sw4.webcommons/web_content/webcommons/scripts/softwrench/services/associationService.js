@@ -2,10 +2,10 @@
     "use strict";
 
 
-    function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService) {
+    function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, restService, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService) {
 
 
-        var doUpdateExtraFields = function(associationFieldMetadata, underlyingValue, datamap) {
+        var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
             var log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
             var key = associationFieldMetadata.associationKey;
             if (datamap.fields != undefined) {
@@ -77,7 +77,7 @@
                 //if the list is lazy (ex: lookups, there´s nothing we can do, except for static option field )
                 if (associationFieldMetadata.options != undefined) {
                     //this means this is an option field with static options
-                    var resultArr = $.grep(associationFieldMetadata.options, function(option) {
+                    var resultArr = $.grep(associationFieldMetadata.options, function (option) {
                         return selectedValue.equalIc(option.value);
                     });
                     return resultArr == null ? null : resultArr[0];
@@ -95,19 +95,90 @@
             return null;
         };
 
+        function lookupSingleAssociationByValue(associationKey, associationValue) {
+            var panelId = crudContextHolderService.isShowingModal() ? "#modal" : null;
 
-        function getLabelText(item, hideDescription, customValue) {
-            if (item == null) {
-                if (customValue == null) {
+            var datamap = crudContextHolderService.rootDataMap(panelId);
+            var schema = crudContextHolderService.currentSchema(panelId);
+
+            var fields = datamap;
+            if (datamap && datamap.fields) {
+                fields = datamap.fields;
+            }
+
+            var fieldsTosubmit = submitService.removeExtraFields(fields, true, schema);
+
+            var key = schemaService.buildApplicationMetadataSchemaKey(schema);
+            var parameters = {
+                key: key,
+                associationKey: associationKey,
+                associationValue: associationValue,
+            };
+
+            return restService.postPromise("Association", "LookupSingleAssociation", parameters, fieldsTosubmit).then(function (httpResponse) {
+                if (httpResponse.data === "null" || httpResponse.data == null) {
                     return null;
                 }
-                return "true" === hideDescription || true === hideDescription ? customValue : "(" + customValue + ")";
+                crudContextHolderService.updateLazyAssociationOption(associationKey, httpResponse.data, true);
+                return httpResponse.data;
+            });
+        }
+
+
+        function parseLabelText(item, options) {
+            if (item == null) {
+                //if item is null no need to perform any further action
+                return null;
             }
 
-            if ("true" === hideDescription || true === hideDescription || item.label==null) {
+            options = options || {};
+            var allowTransientValue = options.allowTransientValue || false;
+            var hideDescription = options.hideDescription || false;
+
+            if ("true" === hideDescription || true === hideDescription || item.label == null) {
                 return item.value;
             }
-            return "(" + item.value + ")" + " - " + item.label;
+            var result = "(" + item.value + ")" + " - " + item.label;
+            return result;
+        }
+
+
+        /**
+         * 
+         * @param {} associationKey 
+         * @param {} itemValue 
+         * @param {} options 
+         *   hideDescription --> whether to show only the label value, false by default
+         *   allowTransientValue --> whether to allow the insertion of new values, which do not necessarily match a server value
+         * 
+         * @returns {} 
+         */
+        function getLabelText(associationKey, itemValue, options) {
+
+            options = options || {};
+            var allowTransientValue = options.allowTransientValue || false;
+
+            if (itemValue == null) {
+                //if item is null no need to perform any further action
+                return $q.when(null);
+            }
+            var item = crudContextHolderService.fetchLazyAssociationOption(associationKey, itemValue);
+
+            if (item == null) {
+                if (!crudContextHolderService.associationsResolved()) {
+                    return $q.when(itemValue);
+                }
+
+                return this.lookupSingleAssociationByValue(associationKey, itemValue).then(function (association) {
+                    if (association == null && allowTransientValue) {
+                        return $q.when(itemValue);
+                    }
+                    return parseLabelText(association, options);
+                });
+            }
+
+            return $q.when(this.parseLabelText(item, options));
+
         };
 
         function getFullObject(associationFieldMetadata, datamap, schema, contextData) {
@@ -195,7 +266,7 @@
             var params = {
                 fields: fields,
                 scope: scope,
-                parentdata: scope.parentdata || /* when trigerring event from modal */ crudContextHolderService.rootDataMap(), 
+                parentdata: scope.parentdata || /* when trigerring event from modal */ crudContextHolderService.rootDataMap(),
                 triggerparams: instantiateIfUndefined(triggerparams)
             };
             $log.getInstance('sw4.associationservice#postAssociationHook').debug('invoking post hook service {0} method {1} from association {2}|{3}'
@@ -250,7 +321,7 @@
                 }
                 var fn = this;
 
-                $.each(associationFieldMetadatas, function(index, value) {
+                $.each(associationFieldMetadatas, function (index, value) {
                     if (zeroEntriesFound && (value.rendererType == "lookup" || value.rendererType == "autocompleteserver")) {
                         //this should never be blocked, but the server might still be returning 0 entries due to a reverse association mapping
                         scope.blockedassociations[dependantFieldName] = false;
@@ -299,7 +370,7 @@
                             var fullObject = associationOption;
 
                             if (isIe9()) {
-                                $timeout(function() {
+                                $timeout(function () {
                                     log.debug('restoring {0} to previous value {1}. '.format(value.target, datamapTargetValue));
                                     //if still present on the new list, setting back the value which was 
                                     //previous selected, but after angular has updadted the list properly
@@ -357,13 +428,13 @@
         };
 
         function updateLazyOptions(lazyOptions) {
-            angular.forEach(lazyOptions, function(value, key) {
+            angular.forEach(lazyOptions, function (value, key) {
                 crudContextHolderService.updateLazyAssociationOption(key, value);
             });
         }
 
         function updateEagerOptions(eagerOptions, contextData) {
-            angular.forEach(eagerOptions, function(value, key) {
+            angular.forEach(eagerOptions, function (value, key) {
                 crudContextHolderService.updateEagerAssociationOptions(key, value, contextData);
             });
         }
@@ -371,7 +442,7 @@
         function updateEagerCompositionOptions(compositionData) {
         }
 
-        function updateFromServerSchemaLoadResult(schemaLoadResult, contextData) {
+        function updateFromServerSchemaLoadResult(schemaLoadResult, contextData, allAssociationsResolved) {
             var log = $log.get("associationService#updateFromServerSchemaLoadResult", ["association"]);
             if (schemaLoadResult == null) {
                 return $q.when();
@@ -382,16 +453,18 @@
             updateLazyOptions(schemaLoadResult.preFetchLazyOptions);
             updateEagerOptions(schemaLoadResult.eagerOptions, contextData);
             updateEagerCompositionOptions(schemaLoadResult.eagerCompositionAssociations);
-            return $timeout(function() {
-                //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, 
-                //and so the listeners
-                crudContextHolderService.markAssociationsResolved();
-                contextService.insertIntoContext("associationsresolved", true, true);
-            }, 100, false);
+            if (allAssociationsResolved) {
+                return $timeout(function () {
+                    //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, 
+                    //and so the listeners
+                    crudContextHolderService.markAssociationsResolved();
+                    contextService.insertIntoContext("associationsresolved", true, true);
+                }, 100, false);
+            }
         }
 
         function loadSchemaAssociations(datamap, schema, options) {
-            var log = $log.get("associationService#loadSchemaAssociations",["association"]);
+            var log = $log.get("associationService#loadSchemaAssociations", ["association"]);
             datamap = datamap || {};
 
             var associations = fieldService.getDisplayablesOfTypes(schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
@@ -401,6 +474,7 @@
             }
 
             options = options || {};
+
             var config = { avoidspin: options.avoidspin };
 
             var key = schemaService.buildApplicationMetadataSchemaKey(schema);
@@ -424,21 +498,21 @@
             }
 
             return $http.post(urlToUse, jsonString, config)
-                .then(function(serverResponse) {
-                    return updateFromServerSchemaLoadResult(serverResponse.data.resultObject, options.contextData);
+                .then(function (serverResponse) {
+                    return updateFromServerSchemaLoadResult(serverResponse.data.resultObject, options.contextData, true);
                 });
 
         }
 
 
-// This method is called whenever an association value changes, in order to update all the dependant associations 
+        // This method is called whenever an association value changes, in order to update all the dependant associations 
         // of this very first association.
         // This would only affect the eager associations, not the lookups, because they would be fetched at the time the user opens it.
         // Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
         function updateAssociations(association, scope, options) {
             options = options || {};
 
-            var log = $log.getInstance('sw4.associationservice#updateAssociations',['association']);
+            var log = $log.getInstance('sw4.associationservice#updateAssociations', ['association']);
 
             var triggerFieldName = association.attribute;
             var schema = scope.schema;
@@ -451,7 +525,7 @@
                 log.debug('No associated dependants for {0}'.format(triggerFieldName));
                 if (association.rendererType !== 'multiselectautocompleteclient') {
                     //if multiple selection, there´s no sense to move focus
-                    $timeout(function() {
+                    $timeout(function () {
                         //this timeout is required because there´s already a digest going on, so this emit would throw an exception
                         //had to put a bigger timeout so that the watches doesn´t get evaluated.
                         //TODO: investigate it
@@ -496,15 +570,15 @@
             if (options.avoidspin) {
                 config.avoidspin = true;
             }
-            return $http.post(urlToUse, jsonString, config).success(function(data) {
+            return $http.post(urlToUse, jsonString, config).success(function (data) {
                 var options = data.resultObject;
                 log.info('associations returned {0}'.format($.keys(options)));
                 updateAssociationOptionsRetrievedFromServer(scope, options, fields, postAssociationHook);
                 if (association.attribute !== "#eagerassociations") {
                     //this means we´re not getting the eager associations, see method above
-//                    postAssociationHook(association, scope, { dispatchedbytheuser: true, phase: 'configured' });
+                    //                    postAssociationHook(association, scope, { dispatchedbytheuser: true, phase: 'configured' });
                 } else {
-                    $timeout(function() {
+                    $timeout(function () {
                         //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, 
                         //and so the listeners
                         contextService.insertIntoContext("associationsresolved", true, true);
@@ -514,7 +588,7 @@
                     //TODO: Is this needed, I couldn't find where it's used, I was not able to test if needed
                     //move input focus to the next field
                     if (triggerFieldName !== "#eagerassociations") {
-                        $timeout(function() {
+                        $timeout(function () {
                             //this timeout is required because there´s already a digest going on, so this emit would throw an exception
                             scope.$emit("sw_movefocus", scope.datamap, scope.schema, triggerFieldName);
                         }, 0, false);
@@ -525,7 +599,7 @@
             });
         };
 
-        function buildLookupSearchDTO(fieldMetadata,lookupObj, searchObj, pageNumber,totalCount,pageSize) {
+        function buildLookupSearchDTO(fieldMetadata, lookupObj, searchObj, pageNumber, totalCount, pageSize) {
             var resultDTO = {};
 
             resultDTO.quickSearchData = lookupObj.quickSearchData;
@@ -533,13 +607,13 @@
             resultDTO.pageNumber = pageNumber;
             resultDTO.totalCount = totalCount;
             resultDTO.pageSize = pageSize;
-            
+
             return resultDTO;
         }
-        
 
 
-    //This takes the lookupObj, pageNumber, and searchObj (dictionary of attribute (key) 
+
+        //This takes the lookupObj, pageNumber, and searchObj (dictionary of attribute (key) 
         //to its value that will filter the lookup), build a searchDTO, and return the post call to the
         //UpdateAssociations function in the ExtendedData controller.
         function getLookupOptions(schema, datamap, lookupObj, pageNumber, searchObj) {
@@ -562,8 +636,8 @@
                 parentKey: schemaService.buildApplicationMetadataSchemaKey(schema),
                 associationFieldName: lookupObj.fieldMetadata.associationKey,
             };
-            parameters.searchDTO = buildLookupSearchDTO(lookupObj.fieldMetadata,lookupObj, searchObj, pageNumber, totalCount, pageSize);
-            
+            parameters.searchDTO = buildLookupSearchDTO(lookupObj.fieldMetadata, lookupObj, searchObj, pageNumber, totalCount, pageSize);
+
 
             var urlToUse = url("/api/generic/Association/GetLookupOptions?" + $.param(parameters));
             var jsonString = angular.toJson(datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(fields));
@@ -590,7 +664,7 @@
                 lookupObj.options = associationResult.associationData;
                 lookupObj.schema = associationResult.associationSchemaDefinition;
                 datamap[lookupObj.fieldMetadata.target] = lookupObj.options[0].value;
-             
+
                 updateAssociationOptionsRetrievedFromServer(scope, result, datamap);
             });
         };
@@ -662,7 +736,9 @@
             getEagerAssociations: getEagerAssociations,
             insertAssocationLabelsIfNeeded: insertAssocationLabelsIfNeeded,
             lookupAssociation: lookupAssociation,
+            lookupSingleAssociationByValue: lookupSingleAssociationByValue,
             markAssociationProcessComplete: markAssociationProcessComplete,
+            parseLabelText: parseLabelText,
             onAssociationChange: onAssociationChange,
             postAssociationHook: postAssociationHook,
             updateAssociationOptionsRetrievedFromServer: updateAssociationOptionsRetrievedFromServer,
@@ -678,7 +754,7 @@
 
     angular
     .module('sw_layout')
-    .factory('associationService', ['dispatcherService', '$http', '$q', '$timeout', '$log', '$rootScope', 'submitService', 'fieldService', 'contextService', 'searchService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService',
+    .factory('associationService', ['dispatcherService', '$http', '$q', '$timeout', '$log', '$rootScope', 'restService', 'submitService', 'fieldService', 'contextService', 'searchService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService',
         associationService]);
 
 })(angular);
