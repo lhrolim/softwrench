@@ -1,9 +1,6 @@
 ﻿<div>
-    <div class="admin-area" ng-if="popupmode != 'browser'">
-        <div class="breadcrumb" breadcrumb data-menu="menu" data-title="title" ng-if="menu.displacement == 'breadcrumb'"></div>
-        <div class="text userinfo" ng-if="menu.displacement != 'breadcrumb'"><span class="glyphicon glyphicon-log-out"></span>&ensp;{{i18N('_headermenu.loggedinas','Logged in as')}} {{userInfo()}}
-        </div>
-
+    <div class="admin-area" ng-if="popupmode != 'browser'" ng-class="{'classic-admin' : showClassicMenu()}">
+        <div breadcrumb class="breadcrumb" data-menu="menu" data-title="title"></div>
         <div class="admin-menu">
             <div ng-if="!showClassicMenu()" ng-style="sidePanelStyle()" class="modern">
                 <a class="main" data-toggle="dropdown" aria-expanded="false">
@@ -73,7 +70,7 @@
                 </ul>
             </div>
 
-            <div ng-if="showClassicMenu()" class="classic">
+            <div ng-if="showClassicMenu()" ng-style="sidePanelStyle()" class="classic">
                 <div ng-click="clickMenuExpander()" class="menu-expand" menu-expander>
                     <i class="fa fa-bars"></i> Admin
                 </div>

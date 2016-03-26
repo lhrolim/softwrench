@@ -66,7 +66,7 @@
             scope.sidePanelStyle = function () {
                 var style = {};
                 if (sidePanelService.getNumberOfVisiblePanels() > 0) {
-                    style["padding-right"] = "30px";
+                    style["padding-right"] = "40px";
                 }
                 return style;
             }
