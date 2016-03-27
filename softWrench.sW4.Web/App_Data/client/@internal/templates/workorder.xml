@@ -152,7 +152,9 @@
             <optionfilter attribute="location" provider="location_.description" allowblank="true" displaycode="true"/>
             <optionfilter attribute="asset_.description" provider="asset_.description" allowblank="true" style="width:300px" whereclause="!@assetnum in (!@#value)" displaycode="true"/>
           </filters>
-
+          <field attribute="wopriority" label="Priority" >
+            <renderer type="priorityicon" params="width=3%" />
+          </field>
           <field attribute="wonum" label="WO#" >
             <renderer type="default" params="width=10%" />
           </field>

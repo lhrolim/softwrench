@@ -120,6 +120,9 @@
       </properties>
       <schemas>
         <list title="Purchase Order Grid">
+          <field attribute="priority" label="Priority" >
+            <renderer type="priorityicon" params="width=3%" />
+          </field>
           <field attribute ="ponum" label="PO#">
             <renderer type="default" params="width=15%" />
           </field>
@@ -130,9 +133,6 @@
             <renderer type="default" params="width=15%" />
           </field>
           <field attribute ="potype" label="Type">
-            <renderer type="default" params="width=15%" />
-          </field>
-          <field attribute ="priority" label="Priority">
             <renderer type="default" params="width=15%" />
           </field>
           <field attribute ="requireddate" label="Required Date">
@@ -278,6 +278,9 @@
       <schemas>
         <!--Creating the Grid: SWWEB-232-->
         <list title="Purchase Request Grid">
+          <field attribute="priority" label="Priority" >
+            <renderer type="priorityicon" params="width=3%" />
+          </field>
           <field attribute="prnum" label="PR#">
             <renderer type="default" params="width=15%"/>
           </field>
