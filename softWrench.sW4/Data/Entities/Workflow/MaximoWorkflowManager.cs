@@ -53,6 +53,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
                                                      <{1}>
                                                        {2}
                                                        <SITEID>{3}</SITEID>
+                                                       <CHANGEBY>{4}</CHANGEBY>
                                                      </{1}>
                                                    </{1}MboKey>
                                                  </Initiate{0}>";
@@ -144,8 +145,9 @@ namespace softWrench.sW4.Data.Entities.Workflow {
             string workflowName = workflow["processname"];
             var baseUri = ApplicationConfiguration.WfUrl;
             var requestUri = baseUri + workflowName;
+            var personId = SecurityFacade.CurrentUser().MaximoPersonId;
             var msg = RequestTemplate.FormatInvariant(workflowName.ToUpper(), entityName.ToUpper(),
-                BuildKeyAttributeString(entityName, appUserId), siteid);
+                BuildKeyAttributeString(entityName, appUserId), siteid, personId);
             await RestUtil.CallRestApi(requestUri, "POST", null, msg);
             var successMessage = "Workflow {0} has been initiated.".FormatInvariant(workflowName);
             return new BlankApplicationResponse {

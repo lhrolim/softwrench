@@ -557,6 +557,7 @@
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
     <Content Include="Content\modules\lookup\lookupModal.js" />
+    <Content Include="Content\Scripts\automationscripts\StartWF.js" />
     <Content Include="Content\Scripts\automationscripts\OSIN.SWWO.js" />
     <Content Include="Content\Scripts\client\adminresources\adminmodule_setup.js" />
     <Content Include="Content\Scripts\client\crud\composition_masterdetails.js" />
