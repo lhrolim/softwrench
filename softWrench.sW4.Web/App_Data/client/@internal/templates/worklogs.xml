@@ -8,6 +8,7 @@
         <property key="mobile.fetchlimit" value="300"/>
         <property key="list.schema.mode" value="input"/>
         <property key ="icon.composition.tab" value="fa fa-gavel ion-ios-chatbubble-outline"/>
+        <property key ="add.button.label" value="Add Work Log"/>
       </properties>
       <schemas>
         <schema id="list"  stereotype="compositionlist">

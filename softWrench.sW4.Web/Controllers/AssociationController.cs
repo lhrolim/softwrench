@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Http;
 using cts.commons.web.Attributes;
 using JetBrains.Annotations;
+using log4net;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
@@ -39,6 +40,8 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly ApplicationAssociationResolver _associationResolver;
         private readonly FilterWhereClauseHandler _filterWhereClauseHandler;
         private readonly IContextLookuper _contextLookuper;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(AssociationController));
 
 
         public AssociationController(DataSetProvider dataSetProvider, ApplicationAssociationResolver associationResolver,
@@ -106,6 +109,25 @@ namespace softWrench.sW4.Web.Controllers {
             return new GenericResponseResult<LookupOptionsFetchResultDTO>(response);
         }
 
+        [HttpPost]
+        public IAssociationOption LookupSingleAssociation([FromUri] ApplicationMetadataSchemaKey key, string associationKey, string associationValue, JObject currentData) {
+            if (associationValue == null) {
+                return null;
+            }
+
+            Log.DebugFormat("retrieving single association value for {0}:{1} app {2} ", associationKey, associationValue, key.ApplicationName);
+            //TODO: make specific method for single association to increase performance/encapsulation
+            var result = DoGetAssociations(key, new SingleAssociationPrefetcherRequest() { AssociationsToFetch = associationKey }, currentData);
+            if (result.PreFetchLazyOptions.ContainsKey(associationKey)) {
+                var preFetchLazyOption = result.PreFetchLazyOptions[associationKey];
+                if (preFetchLazyOption.ContainsKey(associationValue.ToLower())) {
+                    return preFetchLazyOption[associationValue.ToLower()];
+                }
+            }
+            Log.WarnFormat("single association not found for {0}:{1} app {2} ", associationKey, associationValue, key.ApplicationName);
+            return null;
+        }
+
         /// <summary>
         /// 
         /// Brings all the association data of a given schema, including any eager list of options and all the prefetchedlazy options 
@@ -120,6 +142,13 @@ namespace softWrench.sW4.Web.Controllers {
         [NotNull]
         [HttpPost]
         public GenericResponseResult<AssociationMainSchemaLoadResult> GetSchemaOptions([FromUri] ApplicationMetadataSchemaKey key, [FromUri] bool showmore, JObject currentData) {
+            var result = DoGetAssociations(key, new SchemaAssociationPrefetcherRequest() { IsShowMoreMode = showmore }, currentData);
+
+            return new GenericResponseResult<AssociationMainSchemaLoadResult>(result);
+        }
+
+        private AssociationMainSchemaLoadResult DoGetAssociations(ApplicationMetadataSchemaKey key, IAssociationPrefetcherRequest associationPrefetcherRequest,
+            JObject currentData) {
             var user = SecurityFacade.CurrentUser();
 
             if (null == user) {
@@ -134,16 +163,12 @@ namespace softWrench.sW4.Web.Controllers {
 
 
             var entityMetadata = MetadataProvider.Entity(applicationMetadata.Entity);
-            var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, applicationMetadata, currentData);
+            var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata,
+                applicationMetadata, currentData);
 
-            var result = baseDataSet.BuildAssociationOptions(cruddata, applicationMetadata.Schema, new SchemaAssociationPrefetcherRequest() { IsShowMoreMode = showmore });
-
-
-
-
-
-            return new GenericResponseResult<AssociationMainSchemaLoadResult>(result);
-
+            var result = baseDataSet.BuildAssociationOptions(cruddata, applicationMetadata.Schema,
+                associationPrefetcherRequest);
+            return result;
         }
 
         private static ApplicationAssociationDefinition BuildAssociation(ApplicationMetadata application, string associationKey) {

@@ -33,26 +33,22 @@
 
             var log = $log.getInstance('cmplookup#refreshFromAttribute', ["association", "lookup"]);
             var associationKey = fieldMetadata.associationKey;
-            var label = null;
-            if (newValue != null) {
-                var option = crudContextHolderService.fetchLazyAssociationOption(associationKey, newValue);
-                var customValue = fieldMetadata.rendererParameters["allowcustomvalue"] === "true" ? newValue : null;
-                label = associationService.getLabelText(option, fieldMetadata.hideDescription, customValue);
-            }
-            var key = fieldMetadata.applicationPath;
-            if (datamapId) {
-                key += datamapId;
-            }
-            key = replaceAll(key, "\\.", "_");
-            log.debug('setting lookup {0} to {1}'.format(key, label));
-            var el = $("input[data-displayablepath=" + key + "]");
-            if (el.length === 0) {
-                log.warn('lookup {0} not found'.format(key));
-            }
-            el.typeahead('val', label);
-            return;
 
+            var allowTransientValue = fieldMetadata.rendererParameters["allowcustomvalue"] === "true";
 
+            associationService.getLabelText(associationKey, newValue, { hideDescription: fieldMetadata.hideDescription, allowTransientValue: allowTransientValue }).then(function (label) {
+                var key = fieldMetadata.applicationPath;
+                if (datamapId) {
+                    key += datamapId;
+                }
+                key = replaceAll(key, "\\.", "_");
+                log.debug('setting lookup {0} to {1}'.format(key, label));
+                var el = $("input[data-displayablepath=" + key + "]");
+                if (el.length === 0) {
+                    log.warn('lookup {0} not found'.format(key));
+                }
+                el.typeahead('val', label);
+            });
         }
 
         function updateLookupObject(scope, fieldMetadata, searchValue, searchDatamap) {

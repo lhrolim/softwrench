@@ -537,7 +537,13 @@
         }
 
         this.getAddLabel = function () {
-            return $scope.i18N($scope.relationship + '.add', 'Add ' + $scope.title);
+            var labelOverride = $scope.compositiondetailschema.properties['add.button.label'];
+
+            if (labelOverride) {
+                return $scope.i18N($scope.relationship + '.add', labelOverride);
+            } else {
+                return $scope.i18N($scope.relationship + '.add', 'Add ' + $scope.title);
+            }
         }
 
         this.newDetailFn = function () {
