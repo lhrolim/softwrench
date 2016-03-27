@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Connectors;
@@ -15,6 +16,9 @@ namespace softWrench.sW4.Data.Offline {
     public class RowStampUtil {
 
         public const string RowstampColumnName = "rowstamp";
+
+        private static readonly string MSSQLRowstampQuery = "Cast ({0}.{1} as Bigint) > {2}";
+        private static readonly string RowstampQuery = "{0}.{1} > {2}";
 
 
         public static long? Convert(object dbstamp) {
@@ -68,13 +72,15 @@ namespace softWrench.sW4.Data.Offline {
 
         public static string RowstampWhereCondition(EntityMetadata entityMetadata, long rowstamp, SearchRequestDto searchDto) {
             var extraRowstamps = entityMetadata.Schema.Attributes.Where(s => s.Name.StartsWith("rowstamp") && !s.Name.Equals("rowstamp"));
-            var sb = new StringBuilder(entityMetadata.Name + ".rowstamp > " + rowstamp);
+            var patternToUse = ApplicationConfiguration.IsMSSQL(DBType.Maximo) ? MSSQLRowstampQuery : RowstampQuery;
+
+            var sb = new StringBuilder(patternToUse.Fmt(entityMetadata.Name,"rowstamp",rowstamp));
             foreach (var extraRowstamp in extraRowstamps) {
-                sb.Append(" or ").Append(entityMetadata.Name).Append("." + extraRowstamp.Name + " > ").Append(rowstamp);
+                sb.Append(" or ").Append(patternToUse.Fmt(entityMetadata.Name, extraRowstamp.Name,rowstamp));
             }
             foreach (var association in entityMetadata.Associations) {
                 if (searchDto == null || searchDto.ProjectionFields == null || HasProjection(searchDto.ProjectionFields, association)) {
-                    sb.Append(" or ").Append(association.Qualifier).Append(".rowstamp > ").Append(rowstamp);
+                    sb.Append(" or ").Append(patternToUse.Fmt(association.Qualifier, "rowstamp", rowstamp));
                 }
             }
             return sb.ToString();
