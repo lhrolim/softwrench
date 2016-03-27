@@ -96,6 +96,7 @@
         };
 
         function lookupSingleAssociationByValue(associationKey, associationValue) {
+            
             var panelId = crudContextHolderService.isShowingModal() ? "#modal" : null;
 
             var datamap = crudContextHolderService.rootDataMap(panelId);
@@ -132,7 +133,6 @@
             }
 
             options = options || {};
-            var allowTransientValue = options.allowTransientValue || false;
             var hideDescription = options.hideDescription || false;
 
             if ("true" === hideDescription || true === hideDescription || item.label == null) {
@@ -154,7 +154,7 @@
          * @returns {} 
          */
         function getLabelText(associationKey, itemValue, options) {
-
+            var log = $log.get("associationService#getLabelText");
             options = options || {};
             var allowTransientValue = options.allowTransientValue || false;
 
@@ -166,8 +166,11 @@
 
             if (item == null) {
                 if (!crudContextHolderService.associationsResolved()) {
+                    log.debug("schema associations not resolved yet, waiting...")
                     return $q.when(itemValue);
                 }
+
+                log.debug("fetching association option from server");
 
                 return this.lookupSingleAssociationByValue(associationKey, itemValue).then(function (association) {
                     if (association == null && allowTransientValue) {

@@ -115,12 +115,16 @@ namespace softWrench.sW4.Web.Controllers {
                 return null;
             }
 
-            Log.DebugFormat("retrieving single association value for {0}:{1} app {0} ", associationKey, associationValue, key.ApplicationName);
+            Log.DebugFormat("retrieving single association value for {0}:{1} app {2} ", associationKey, associationValue, key.ApplicationName);
             //TODO: make specific method for single association to increase performance/encapsulation
             var result = DoGetAssociations(key, new SingleAssociationPrefetcherRequest() { AssociationsToFetch = associationKey }, currentData);
             if (result.PreFetchLazyOptions.ContainsKey(associationKey)) {
-                return result.PreFetchLazyOptions[associationKey][associationValue.ToLower()];
+                var preFetchLazyOption = result.PreFetchLazyOptions[associationKey];
+                if (preFetchLazyOption.ContainsKey(associationValue.ToLower())) {
+                    return preFetchLazyOption[associationValue.ToLower()];
+                }
             }
+            Log.WarnFormat("single association not found for {0}:{1} app {2} ", associationKey, associationValue, key.ApplicationName);
             return null;
         }
 
