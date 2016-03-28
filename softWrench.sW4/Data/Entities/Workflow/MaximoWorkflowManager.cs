@@ -137,7 +137,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
         }
 
-        public async Task<IGenericResponseResult> DoInitWorkflow(string appId,string appName, string appUserId, string siteid, List<Dictionary<string, string>> workflows) {
+        public IGenericResponseResult DoInitWorkflow(string appId, string appName, string appUserId, string siteid, List<Dictionary<string, string>> workflows) {
             var appMetadata = _cachedWorkorderSchemas[appName];
             var entityName = appMetadata.Schema.EntityName;
 
@@ -145,21 +145,23 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
             var workflow = workflows[0];
             string workflowName = workflow["processname"];
-            var baseUri = ApplicationConfiguration.WfUrl;
-            var personId = SecurityFacade.CurrentUser().MaximoPersonId;
-            var requestUri = baseUri + workflowName;
-            var msg = RequestTemplate.FormatInvariant(workflowName.ToUpper(), entityName.ToUpper(),
-                BuildKeyAttributeString(entityName, appUserId), siteid, personId);
 
-            //forcing blank update to set changeby
+            var personId = SecurityFacade.CurrentUser().MaximoPersonId;
+
+
             IDictionary<string, object> attributes = new Dictionary<string, object>();
             attributes.Add("wonum", appUserId);
             attributes.Add("siteid", siteid);
+            attributes.Add("workflowinfo", personId + ";start;" + workflowName + ";;;");
 
-            _maximoConnectorEngine.Update(new CrudOperationData(appId, attributes, new Dictionary<string, object>(), entityMetadata,appMetadata));
+            _maximoConnectorEngine.Update(new CrudOperationData(appId, attributes, new Dictionary<string, object>(), entityMetadata, appMetadata));
 
-
-            await RestUtil.CallRestApi(requestUri, "POST", null, msg);
+            //            var baseUri = ApplicationConfiguration.WfUrl;
+            //            var requestUri = baseUri + workflowName;
+            //            var msg = RequestTemplate.FormatInvariant(workflowName.ToUpper(), entityName.ToUpper(),
+            //                BuildKeyAttributeString(entityName, appUserId), siteid, personId);
+            //
+            //            await RestUtil.CallRestApi(requestUri, "POST", null, msg);
             var successMessage = "Workflow {0} has been initiated.".FormatInvariant(workflowName);
             return new BlankApplicationResponse {
                 SuccessMessage = successMessage
