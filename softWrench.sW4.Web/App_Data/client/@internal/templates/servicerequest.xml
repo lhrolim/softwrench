@@ -272,8 +272,8 @@
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
 
-            <composition relationship="attachment" label="Attachments" printenabled="false" allowremoval="@status!='CLOSED'">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+            <composition relationship="attachment" label="Attachments" printenabled="false" >
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause" allowremoval="@status!='CLOSED'"/>
 
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
