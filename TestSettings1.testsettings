@@ -8,6 +8,7 @@
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\deltadental" outputDirectory="Client\deltadental\" />
     <DeploymentItem filename="softwrench.sw4.api\metadata\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\kongsberg" outputDirectory="Client\kongsberg\" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\chicago" outputDirectory="Client\chicago" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\bering" outputDirectory="Client\bering\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\@internal" outputDirectory="Client\@internal\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\pae" outputDirectory="Client\pae\" />
