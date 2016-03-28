@@ -7,6 +7,7 @@ using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata.Menu;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 
 namespace softWrench.sW4.Metadata.Menu.Containers {
     public static class MenuContainerExtensions {
@@ -47,6 +48,13 @@ namespace softWrench.sW4.Metadata.Menu.Containers {
                 return true;
             }
             #endregion
+
+            var permissionExpression = leaf.PermissionExpresion;
+
+            if (!string.IsNullOrEmpty(permissionExpression) && !GenericSwMethodInvoker.Invoke<bool>(null, permissionExpression)) {
+                return false;
+            }
+
 
             if (leaf is ApplicationMenuItemDefinition) {
                 var appLeaf = (ApplicationMenuItemDefinition)leaf;
@@ -89,8 +97,14 @@ namespace softWrench.sW4.Metadata.Menu.Containers {
                     }
                 }
             }
+            var permissionExpression = container.PermissionExpresion;
+
+            if (!string.IsNullOrEmpty(permissionExpression) && !GenericSwMethodInvoker.Invoke<bool>(null, permissionExpression)) {
+                return null;
+            }
+
             return !secureLeafs.Any() ? null : new MenuContainerDefinition(container.Id,
-                container.Title, container.Role, container.Tooltip, container.Icon, container.Module, container.Controller, container.Action, container.HasMainAction, container.CustomizationPosition, secureLeafs);
+                container.Title, container.Role, container.Tooltip, container.Icon, container.Module, container.Controller, container.Action, container.HasMainAction, container.CustomizationPosition, container.PermissionExpresion, secureLeafs);
         }
     }
 }

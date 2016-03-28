@@ -935,7 +935,7 @@
     <attribute name="cssclasses" type="string"></attribute>
     <attribute name="primary" type="boolean"></attribute>
     <attribute name="nextSchemaId" type="string"></attribute>
-
+    <attribute name="permissionexpression" type="string" />
 
     <attribute name="position">
       <annotation>
@@ -1166,6 +1166,8 @@
 			name="removeundeclared" type="boolean">
     </attribute>
 
+    <attribute name="permissionexpression" type="string" />
+
     <attribute use="optional" name="platform">
       <simpleType>
         <restriction base="string">
@@ -1223,6 +1225,7 @@
     <attribute name="icon" type="string"></attribute>
     <attribute name="service" type="string"></attribute>
     <attribute name="method" type="string"></attribute>
+    <attribute name="permissionexpression" type="string" />
   </complexType>
 
   <complexType name="headerType">

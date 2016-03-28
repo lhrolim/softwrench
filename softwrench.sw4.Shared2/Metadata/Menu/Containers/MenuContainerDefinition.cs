@@ -7,10 +7,16 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
 
         private List<MenuBaseDefinition> _cachedExplodedLeafs;
 
-        public IEnumerable<MenuBaseDefinition> Leafs { get; set; }
+        public IEnumerable<MenuBaseDefinition> Leafs {
+            get; set;
+        }
 
-        public string Action { get; set; }
-        public string Controller { get; set; }
+        public string Action {
+            get; set;
+        }
+        public string Controller {
+            get; set;
+        }
 
 
 
@@ -18,16 +24,23 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
         /// If true, the menu should render a main button with a drop down to the right, clicking the button should perform an action, 
         /// instead of the default renderer when clicking it would just expand the menu options.
         /// </summary>
-        public bool HasMainAction { get; set; }
+        public bool HasMainAction {
+            get; set;
+        }
 
         /// <summary>
         /// Represents a single application this menu container refers to, if this is the case, or null in case the container points to several distinct applications
         /// </summary>
-        public string ApplicationContainer { get; set; }
+        public string ApplicationContainer {
+            get; set;
+        }
 
-        public MenuContainerDefinition() { }
+     
 
-        public MenuContainerDefinition(string id, string title, string role, string tooltip, string icon, string module, string controller, string action, bool hasMainAction, string customizationPosition, IEnumerable<MenuBaseDefinition> leafs)
+        public MenuContainerDefinition() {
+        }
+
+        public MenuContainerDefinition(string id, string title, string role, string tooltip, string icon, string module, string controller, string action, bool hasMainAction, string customizationPosition, string permissionExpression, IEnumerable<MenuBaseDefinition> leafs)
             : base(id, title, role, tooltip, icon, customizationPosition) {
             Module = module;
             var menuBaseDefinitions = leafs as MenuBaseDefinition[] ?? leafs.ToArray();
@@ -55,6 +68,7 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
             Action = action;
             Controller = controller;
             HasMainAction = hasMainAction;
+            PermissionExpresion = permissionExpression;
         }
 
         public IEnumerable<MenuBaseDefinition> ExplodedLeafs {
