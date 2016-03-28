@@ -8,6 +8,7 @@ using softwrench.sW4.Shared2.Metadata.Menu;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Menu.Containers {
     public static class MenuContainerExtensions {
@@ -51,7 +52,7 @@ namespace softWrench.sW4.Metadata.Menu.Containers {
 
             var permissionExpression = leaf.PermissionExpresion;
 
-            if (!string.IsNullOrEmpty(permissionExpression) && !GenericSwMethodInvoker.Invoke<bool>(null, permissionExpression)) {
+            if (!string.IsNullOrEmpty(permissionExpression) && !ApplicationConfiguration.IsUnitTest && !GenericSwMethodInvoker.Invoke<bool>(null, permissionExpression)) {
                 return false;
             }
 
@@ -99,7 +100,7 @@ namespace softWrench.sW4.Metadata.Menu.Containers {
             }
             var permissionExpression = container.PermissionExpresion;
 
-            if (!string.IsNullOrEmpty(permissionExpression) && !GenericSwMethodInvoker.Invoke<bool>(null, permissionExpression)) {
+            if (!string.IsNullOrEmpty(permissionExpression) && (!ApplicationConfiguration.IsUnitTest && !GenericSwMethodInvoker.Invoke<bool>(null, permissionExpression))) {
                 return null;
             }
 
