@@ -141,6 +141,34 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return (TargetResult)((MaximoConnectorEngine)Engine()).Create(operationData);
         }
 
+        public IEnumerable<IAssociationOption> GetSRPriorityType(OptionFieldProviderParameters parameters)
+        {
+            var query = @"SELECT description AS LABEL,
+	                             CAST(value AS INT) AS VALUE 
+                          FROM numericdomain
+                          WHERE domainid = 'TICKETPRIORITY'";
+
+            var result = MaxDAO.FindByNativeQuery(query, null);
+            var list = new List<AssociationOption>();
+
+            if (result.Any())
+            {
+                foreach (var record in result)
+                {
+                    list.Add(new AssociationOption(record["VALUE"].ToString(), string.Format("{0} - {1}", record["VALUE"], record["LABEL"])));
+                }
+            }
+            else {
+                // If no values are found, then default to numeric selection 1-5
+                list.Add(new AssociationOption("1", "1"));
+                list.Add(new AssociationOption("2", "2"));
+                list.Add(new AssociationOption("3", "3"));
+                list.Add(new AssociationOption("4", "4"));
+                list.Add(new AssociationOption("5", "5"));
+            }
+
+            return list;
+        }
 
         public IEnumerable<IAssociationOption> GetSRClassStructureType(OptionFieldProviderParameters parameters) {
             return GetClassStructureType(parameters, "SR");

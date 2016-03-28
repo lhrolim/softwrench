@@ -48,6 +48,10 @@
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
+              <relationship to="numericdomain" qualifier="synpriority">
+          <relationshipAttribute from="internalpriority" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="TICKETPRIORITY" quoteLiteral="true" />
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
@@ -91,7 +95,10 @@
           </field>
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="width=15%;grid=servicerequest;column=status" />
-          </field>          
+          </field>
+          <field attribute="internalpriority" label="Priority" >
+            <renderer type="priorityicon" params="width=15%;high=1;medium=2;low=3" />
+          </field>
           <field attribute="attachments" tooltip="Attachments">
             <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};"/>
           </field>
@@ -168,6 +175,10 @@
             <field label="Reported Date &amp; Time" attribute="reportdate" readonly="true" default="@currentdatetime">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
+
+            <optionfield attribute="internalpriority" label="Priority" providerattribute="_SRPriorityType">
+              <renderer type="autocompleteclient" params="inputsize=small"/>
+            </optionfield>
           </section>
 
           <section secondarycontent="true" orientation="vertical">
