@@ -13,7 +13,7 @@
             var shouldFetchAssociations = !result.allAssociationsFetched;
 
             //some associations might already been retrieved
-            associationService.updateFromServerSchemaLoadResult(result.associationOptions);
+            associationService.updateFromServerSchemaLoadResult(result.associationOptions, !shouldFetchAssociations);
 
             if (shouldFetchAssociations) {
                 return $timeout(function () {
