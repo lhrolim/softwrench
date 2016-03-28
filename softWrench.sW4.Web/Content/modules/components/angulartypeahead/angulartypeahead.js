@@ -205,8 +205,8 @@
             template: '<div class="input-group lazy-search">' +
                 '<input type="search" class="hidden-phone form-control typeahead" ng-enabled="isModifiableEnabled(fieldMetadata)" placeholder="Find {{placeholder}}" ' +
                 'data-association-key="{{provider}}" data-displayablepath="{{displayablepath}}"/>' +
-                '<span class="input-group-addon last" ng-click="executeMagnetSearch()">' +
-                '<i class="fa fa-search" ng-enabled="isModifiableEnabled(fieldMetadata)"></i>' +
+                '<span class="input-group-addon last" ng-click="!isModifiableEnabled(fieldMetadata) || executeMagnetSearch()">' +
+                '<i class="fa fa-search"></i>' +
                 '</span>'+
             '<div></div><!--stop addon from moving on hover-->'+
             '</div>',
