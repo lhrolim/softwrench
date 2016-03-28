@@ -1,8 +1,9 @@
 ﻿//considerations:
 // strings are java.lang.strings, not javascript strings --> do not use ===, and check for java documentation rather than javascript´s
 
-function afterMboData(ctx) {
+importClass(Packages.psdi.server.MXServer);
 
+function afterMboData(ctx) {
 
     ctx.log("[WorkOrder Workflow]: init script");
     var mbo = ctx.getMbo();
@@ -17,7 +18,7 @@ function afterMboData(ctx) {
     }
 
     var array = workflowInfo.split(";");
-    
+
     var personId = array[0];
     var action = array[1];
     var wfId = array[2];
@@ -27,16 +28,16 @@ function afterMboData(ctx) {
     var memo;
     if (array.length == 5) {
         memo = array[5];
-    } else if (array.length >5) {
+    } else if (array.length > 5) {
         for (var i = 5; i < array.length; i++) {
             memo = memo + array[i];
-            if (i != array.length-1) {
+            if (i != array.length - 1) {
                 memo = memo + ";";
             }
         }
     }
 
-    
+
 
 
     if (action == null || wfId == null) {
@@ -52,19 +53,31 @@ function afterMboData(ctx) {
     //fetch active workflows of the workorder
     var wfInstanceSet = mbo.getMboSet("ACTIVEWORKFLOW");
 
-    if (!wfInstanceSet || wfInstanceSet.isEmpty()) {
-        ctx.log("[WorkOrder Workflow]-- no active workflows found for workorder " + wonum + " skipping execution");
-        return;
-    }
 
     if (!ctx.getUserInfo().getUserLoginDetails().setPersonId) {
         ctx.log("[WorkOrder Workflow]-- custom security class not applied, cannot set personid");
     } else {
         ctx.getUserInfo().getUserLoginDetails().setPersonId(personId);
     }
-        
-    
-    
+
+    if (action == "start") {
+        ctx.log("[WorkOrder Workflow]-- Starting workflow " + wfId);
+        var wfs = MXServer.getMXServer().lookup("WORKFLOW");
+        wfs.initiateWorkflow(wfId, mbo);
+        return;
+    }
+
+
+
+    if (!wfInstanceSet || wfInstanceSet.isEmpty()) {
+
+        ctx.log("[WorkOrder Workflow]-- no active workflows found for workorder " + wonum + " skipping execution");
+        return;
+    }
+
+
+
+
 
     //let´s search for an active workflow with the same id as informed
     for (var i = 0; i < wfInstanceSet.count() ; i++) {
@@ -83,12 +96,12 @@ function afterMboData(ctx) {
                 mbo.setModified(false);
                 ctx.log("[WorkOrder Workflow]-- Routing workflow " + wfId + " to action " + wfActionId);
                 ctx.log("wfinst: " + wfInst);
-                
+
                 wfInst.completeWorkflowAssignment(wfAssignmentId, wfActionId, memo);
 
                 ctx.log("[WorkOrder Workflow]--  Workflow Routed");
                 ctx.skipTxn();
-            }
+            } 
 
             return;
         }
