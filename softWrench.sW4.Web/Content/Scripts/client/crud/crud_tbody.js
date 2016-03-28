@@ -291,20 +291,19 @@
                                 html += "rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
                             }
                             else if (column.rendererType === 'priorityicon') {
-                                //console.log(column);
-                                //var classtoLoad = "fa fa-check";
                                 var foreground = prioritycolorService.getColor(formattedText, column.rendererParameters);
 
                                 html += '<div class="cell-wrapper">';
-                                html += '<i class="fa fa-flag" style="color: {0}"></i>'.format(foreground);
+                                html += '<i class="fa fa-flag" style="color: {0}"'.format(foreground);
 
                                 //create html tooltip with label and count
-                                //var toolTip = "<span style='white-space: nowrap;'>";
-                                //toolTip += column.toolTip ? column.toolTip : column.label;
-                                //toolTip += ': ' + dm.fields[column.attribute];
-                                //toolTip += '</span>';
+                                var toolTip = "<span style='white-space: nowrap;'>";
+                                toolTip += column.label;
+                                toolTip += ': ';
+                                toolTip += formattedText;
+                                toolTip += '</span>';
 
-                               // html += "></i>";
+                                html += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
                             }
 
                             else if (column.type === 'ApplicationFieldDefinition') {
