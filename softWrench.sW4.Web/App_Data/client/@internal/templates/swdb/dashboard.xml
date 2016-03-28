@@ -174,12 +174,13 @@
             <optionfield label="Type" attribute="type"
                          requiredexpression="true"
                          default="">
-              <option label="Vertical Bar Chart"  value="swRecordCountChart" />
-              <option label="Gauge"               value="swRecordCountGauge" />
+              <option label="Vertical Bar Chart"    value="swRecordCountChart" />
+              <option label="Horizontal Bar Chart"  value="swRecordCountRotatedChart" />
+              <option label="Gauge"                 value="swRecordCountGauge" />
               <!--<option label="Record Count Map"        value="swRecordCountMap" />-->
-              <option label="Pie Chart"           value="swRecordCountPie" />
-              <option label="Record Trends"       value="swRecordTrends" />
-              <option label="Sparkline"           value="swSparkline" />
+              <option label="Pie Chart"             value="swRecordCountPie" />
+              <!--<option label="Record Trends"         value="swRecordTrends" />-->
+              <!--<option label="Sparkline"             value="swSparkline" />-->
             </optionfield>
 
             <!--<field label="Options"

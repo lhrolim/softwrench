@@ -98,6 +98,7 @@
             switch (type) {
                 case "dxChart":
                 case "swRecordCountChart":
+                case "swRecordCountRotatedChart":
                     chartData = data.map(function (d) {
                         return { argument: d.field, total: d.value }
                     });

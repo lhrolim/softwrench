@@ -528,6 +528,10 @@
                     case "swRecordCountChart":
                         chartDefaults = getRecordCountChartDefaults(data);
                         break;
+                    case "swRecordCountRotatedChart":
+                        chartDefaults = getRecordCountChartDefaults(data);
+                        chartDefaults.rotated = true;
+                        break;
                     case "swRecordCountGauge":
                         chartDefaults = $.extend(true, {}, getGaugeDefaults(data), getRecordCountGaugeDefaults(data));
                         break;

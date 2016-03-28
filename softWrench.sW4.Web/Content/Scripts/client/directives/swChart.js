@@ -20,6 +20,7 @@
                 switch (scope.chartType) {
                     case "dxChart":
                     case "swRecordCountChart":
+                    case "swRecordCountRotatedChart":
                     case "swRecordTrends":
                         $(element).dxChart(chartOptions);
                         break;
