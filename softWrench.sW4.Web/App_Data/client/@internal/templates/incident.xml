@@ -75,6 +75,9 @@
 
       <schemas>
         <list title="Incident Grid">
+          <field attribute="internalpriority" label="Priority" >
+            <renderer type="priorityicon" params="width=3%" />
+          </field>
           <field attribute="ticketid" label="Incident#">
             <renderer type="default" params="width=12%"/>
           </field>
@@ -86,9 +89,6 @@
           </field>
           <field attribute="targetfinish" label="Target Finish">
             <renderer type="datetime" params="width=12%;format=MM/dd/yyyy HH:mm;showtime=false" />
-          </field>
-          <field attribute="internalpriority" label="Priority">
-            <renderer type="default" params="width=10%" />
           </field>
           <field attribute="reportdate" label="Reported Date">
             <renderer type="datetime" params="width=12%;format=MM/dd/yyyy HH:mm;showtime=false" />

@@ -67,6 +67,9 @@
             <property key="list.click.schema" value="locationdetail"/>
             <property key="list.click.customparams" value="parentlocation_.systemid"/>
           </properties>
+          <field attribute="locoper_.locpriority" label="Priority" >
+            <renderer type="priorityicon" params="width=3%" />
+          </field>
           <field attribute="location" label="Location" readonly="true"/>
           <field attribute="description" label="Description"/>
           <field attribute="classstructure_.description" label="Class Structure"/>
