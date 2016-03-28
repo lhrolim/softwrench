@@ -208,6 +208,33 @@
       </components>
 
       <schemas>
+        <list title="Service Request Grid">
+          <field attribute="ticketid" label="SR#">
+            <renderer type="default" params="width=12%" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="reportedby" label="Reported By">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="owner" label="Owner">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="statuscolor" params="width=15%;grid=servicerequest;column=status" />
+          </field>
+          <field attribute="attachments" tooltip="Attachments">
+            <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.ticketuid desc"/>
+          </properties>
+        </list>
+        
+        
+        
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <properties>
             <property key="detail.showtitle" value="true"/>
@@ -394,6 +421,40 @@
 
 
       <schemas>
+        <list title="Work Order Grid" platform="web">
+          <filters>
+            <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px"/>
+            <optionfilter attribute="location" provider="location_.description" allowblank="true" displaycode="true"/>
+            <optionfilter attribute="asset_.description" provider="asset_.description" allowblank="true" style="width:300px" whereclause="!@assetnum in (!@#value)" displaycode="true"/>
+          </filters>
+          <field attribute="wonum" label="WO#" >
+            <renderer type="default" params="width=10%" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="location" label="Location">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="asset_.description" label="Asset">
+            <renderer type="default" params="width=25%" />
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="statuscolor" params="width=15%;grid=workorder;column=status" />
+          </field>
+          <field attribute="wopriority" label="Priority" >
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="attachments" tooltip="Attachments">
+            <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="workorder.statusdate desc"/>
+            <property key="list.noresultsnewschema" value="newdetail"/>
+          </properties>
+        </list>
+
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
           <properties>
             <property key="detail.showtitle" value="true"/>
