@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using cts.commons.persistence.Util;
-using FluentMigrator;
+using cts.commons.simpleinjector.Events;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Util;
 
-namespace softwrench.sw4.dashboard.classes.model.migration {
+namespace softwrench.sw4.dashboard.classes.startup {
+    public class ChartInitializer : ISWEventListener<ApplicationStartedEvent> {
 
-    [Migration(201603281000)]
-    public class Migration20160328Swweb2200 : Migration {
+        private const string CHART_DASHBOARD_TITLE = "[SWWEB-2200](2016-03-28)";
 
-        public override void Up() {
+        private readonly DisregardingUserSWDBHibernateDaoDecorator _dao = new DisregardingUserSWDBHibernateDaoDecorator(new ApplicationConfigurationAdapter());
+
+        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+            if (!ShouldExecuteInitialization()) return;
+
             var now = DateTime.Now;
 
             var panels = new List<DashboardGraphicPanel>() {
@@ -95,10 +100,8 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
                 },
             };
 
-            var dao = new DisregardingUserSWDBHibernateDaoDecorator(new ApplicationConfigurationAdapter());
-
-            // save panels and replace references by hibernate-managed references
-            panels = dao.BulkSave(panels).ToList();
+            // save panels and replace references by hibernate-managed ones
+            panels = _dao.BulkSave(panels).ToList();
 
             // create relationship entities
             var position = 0;
@@ -111,17 +114,23 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
 
             // create dashboard
             var dashboard = new Dashboard() {
-                Title = "SWWEB2200",
+                Title = CHART_DASHBOARD_TITLE,
                 Filter = new DashboardFilter(),
                 CreationDate = now,
                 UpdateDate = now,
                 Panels = panelRelationships
             };
 
-            dao.Save(dashboard);
+            _dao.Save(dashboard);
         }
 
-        public override void Down() {
+        private bool ShouldExecuteInitialization() {
+            var parameters = new ExpandoObject();
+            var parameterCollection = (ICollection<KeyValuePair<string, object>>)parameters;
+            parameterCollection.Add(new KeyValuePair<string, object>("TITLE", CHART_DASHBOARD_TITLE));
+
+            var count = _dao.CountByNativeQuery("select count(id) from dash_dashboard where title=:TITLE", parameters);
+            return count <= 0;
         }
 
         private class DisregardingUserSWDBHibernateDaoDecorator : SWDBHibernateDAO {
@@ -133,7 +142,7 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
 
             protected override int? GetCreatedByUser() {
                 // force createdby to be 'swadmin' user
-                return (int)_dao.FindSingleByNativeQuery<object>("select id from sw_user2 where username = ?", "swadmin");
+                return (int) _dao.FindSingleByNativeQuery<object>("select id from sw_user2 where username = ?", "swadmin");
             }
         }
     }
