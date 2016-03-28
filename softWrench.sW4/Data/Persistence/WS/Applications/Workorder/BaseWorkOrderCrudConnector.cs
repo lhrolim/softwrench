@@ -57,12 +57,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 // Correct combinations of orgid/siteid are null/null, orgid/null, orgid/siteid. You cannot have a siteid paired with a null orgid.
                 var maxStatusValues = _maxHibernate.FindByNativeQuery(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
                 var maxStatusValue = maxStatusValues.First();
-                if (maxStatusValue.Equals("INPRG")) {
+                if (maxStatusValue.ContainsKey("MAXVALUE") && maxStatusValue["MAXVALUE"].Equals("INPRG")) {
                     // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
                     // Actual date must be in the past - thus we made it a minute behind the current time.   
                     // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
                     WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
-                } else if (maxStatusValue.Equals("COMP")) {
+                } else if (maxStatusValue.ContainsKey("MAXVALUE") && maxStatusValue["MAXVALUE"].Equals("COMP")) {
                     // Actual date must be in the past - thus we made it a minute behind the current time.   
                     WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
                     WsUtil.SetValueIfNull(wo, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
