@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService) {
+    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, $location, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService, historyService) {
 
     $scope.$name = 'HomeController';
 
@@ -23,10 +23,21 @@
         if (sessionRedirectURL != null && ((redirectUrl.indexOf("popupmode=browser") < 0) && (redirectUrl.indexOf("MakeSWAdmin") < 0))) {
             redirectUrl = sessionRedirectURL;
         }
+
+        var locationUrl = historyService.getLocationUrl();
+        if (locationUrl) {
+            redirectUrl = locationUrl;
+        } else {
+            historyService.addToHistory(redirectUrl);
+        }
         //        if (sessionStorage.currentmodule != undefined && sessionStorage.currentmodule != "null") {
         //            //sessionstorage is needed in order to avoid F5 losing currentmodule
         //            $rootScope.currentmodule = sessionStorage.currentmodule;
         //        }
+        redirect(redirectUrl);
+    }
+
+    function redirect(redirectUrl) {
         $http({
             method: "GET",
             url: redirectUrl,
@@ -51,7 +62,17 @@
         });
     }
 
+    $rootScope.$on("$locationChangeSuccess", function (event, newUrl, oldUrl) {
+        if (oldUrl && oldUrl.endsWith(location.pathname)) {
+            return;
+        }
 
+        var redirectUrl = historyService.getLocationUrl();
+        if (!redirectUrl) {
+            return;
+        }
+        redirect(redirectUrl);
+    });
 
     $scope.onTemplateLoad = function (event) {
         $timeout(function () {
@@ -66,7 +87,7 @@
     initController();
 }
 
-    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", HomeController]);
+    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$location", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", "historyService", HomeController]);
 window.HomeController = HomeController;
 
 })(angular);

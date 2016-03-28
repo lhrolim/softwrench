@@ -2,7 +2,7 @@
     'use strict';
 
 
-    function redirectService($http, $rootScope, $log, $q, contextService, fixHeaderService, restService, applicationService, alertService, modalService, schemaCacheService, $timeout, searchService) {
+    function redirectService($http, $rootScope, $log, $q, contextService, fixHeaderService, restService, applicationService, alertService, modalService, schemaCacheService, $timeout, searchService, historyService) {
 
 
         function getActionUrl(controller, action, parameters) {
@@ -40,6 +40,12 @@
 
             return $http.get(redirectUrl).success(
                 function (data) {
+                    if (!parameters || !parameters.popupmode) {
+                        if (controller !== "EntityMetadata" || action !== "Refresh") {
+                            historyService.addToHistory(redirectUrl);
+                        }
+                    }
+
                     if (data.type !== "BlankApplicationResponse") {
                         $rootScope.$broadcast("sw_redirectactionsuccess", data);
                     }
@@ -122,6 +128,7 @@
             var urlToUse = url("/api/Data/{0}?{1}".format(applicationName, queryString));
             log.info("invoking url {0}".format(urlToUse));
             var jsonData = {};
+            historyService.addToHistory(urlToUse);
             $http.get(urlToUse).success(function (data) {
                 jsonData = data;
                 innerGoToApplicationGet(data, null, null, mode, applicationName, null, extraParameters);
@@ -202,6 +209,10 @@
 
 
             if (jsonData == undefined) {
+                if (redirectUrl) {
+                    historyService.addToHistory(redirectUrl);
+                }
+
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
                 return $http.get(redirectUrl).then(function (httpResponse) {
                     var data = httpResponse.data;
@@ -301,7 +312,7 @@
 
     angular
     .module('sw_layout')
-    .factory('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService', 'modalService', 'schemaCacheService', '$timeout', 'searchService', redirectService]);
+    .factory('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService', 'modalService', 'schemaCacheService', '$timeout', 'searchService', 'historyService', redirectService]);
 
 })(angular);
 
