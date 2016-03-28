@@ -179,6 +179,7 @@
               <option label="Gauge"                 value="swRecordCountGauge" />
               <!--<option label="Record Count Map"        value="swRecordCountMap" />-->
               <option label="Pie Chart"             value="swRecordCountPie" />
+              <option label="Line Chart"            value="swRecordCountLineChart" />
               <!--<option label="Record Trends"         value="swRecordTrends" />-->
               <!--<option label="Sparkline"             value="swSparkline" />-->
             </optionfield>

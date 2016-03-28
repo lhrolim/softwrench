@@ -48,6 +48,7 @@
             angular.forEach(data, function (value, key) {
                 processed.push({ field: key, value: value });
             });
+
             // sort by value descending
             processed = processed.sort(function (d1, d2) {
                 return d2.value - d1.value;
@@ -99,6 +100,7 @@
                 case "dxChart":
                 case "swRecordCountChart":
                 case "swRecordCountRotatedChart":
+                case "swRecordCountLineChart":
                     chartData = data.map(function (d) {
                         return { argument: d.field, total: d.value }
                     });

@@ -119,6 +119,11 @@
                     type: "bar",
                     valueField: "total"
                 },
+                argumentAxis: {
+                    label: {
+                        overlappingBehavior: "stagger"
+                    }
+                },
                 tooltip: {
                     enabled: true,
                     customizeTooltip: function (arg) {
@@ -531,6 +536,10 @@
                     case "swRecordCountRotatedChart":
                         chartDefaults = getRecordCountChartDefaults(data);
                         chartDefaults.rotated = true;
+                        break;
+                    case "swRecordCountLineChart":
+                        chartDefaults = getRecordCountChartDefaults(data);
+                        chartDefaults.series.type = "line";
                         break;
                     case "swRecordCountGauge":
                         chartDefaults = $.extend(true, {}, getGaugeDefaults(data), getRecordCountGaugeDefaults(data));

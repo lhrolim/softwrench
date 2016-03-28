@@ -21,6 +21,7 @@
                     case "dxChart":
                     case "swRecordCountChart":
                     case "swRecordCountRotatedChart":
+                    case "swRecordCountLineChart":
                     case "swRecordTrends":
                         $(element).dxChart(chartOptions);
                         break;
