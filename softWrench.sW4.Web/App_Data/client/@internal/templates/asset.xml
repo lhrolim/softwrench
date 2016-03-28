@@ -55,6 +55,9 @@
             <property key="routing.nextapplication" value="asset"/>
             <property key="nextschema.schemaid" value="assetdetail"/>
           </properties>
+          <field attribute="priority" label="Priority" >
+            <renderer type="priorityicon" params="width=3%" />
+          </field>
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description"/>
           <field attribute="location" label="Location"/>

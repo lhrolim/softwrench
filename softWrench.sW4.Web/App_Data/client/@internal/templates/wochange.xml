@@ -61,16 +61,15 @@
     <application entity="wochange" name="change" title="Change">
       <schemas>
         <list title="Change Grid">
-          <field attribute="workorderid" hidden="true">
+          <field attribute="priority" label="Priority" >
+            <renderer type="priorityicon" params="width=3%" />
           </field>
+          <field attribute="workorderid" hidden="true"/>
           <field attribute="wonum" label="Change#">
             <renderer type="default" params="width=12%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
-          </field>
-          <field attribute="priority" label="Priority" >
-            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="risk" label="Risk" >
             <renderer type="default" params="width=15%" />

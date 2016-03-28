@@ -94,7 +94,7 @@
     window.parseBooleanValue = parseBooleanValue;
 
     app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
-    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService, classificationColorService) {
+    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService, classificationColorService, prioritycolorService) {
         "ngInject";
 
         return {
@@ -289,6 +289,21 @@
                                 toolTip += '</span>';
 
                                 html += "rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                            }
+                            else if (column.rendererType === 'priorityicon') {
+                                var foreground = prioritycolorService.getColor(formattedText, column.rendererParameters);
+
+                                html += '<div class="cell-wrapper">';
+                                html += '<i class="fa fa-flag" style="color: {0}"'.format(foreground);
+
+                                //create html tooltip with label and count
+                                var toolTip = "<span style='white-space: nowrap;'>";
+                                toolTip += column.label;
+                                toolTip += ': ';
+                                toolTip += formattedText;
+                                toolTip += '</span>';
+
+                                html += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
                             }
 
                             else if (column.type === 'ApplicationFieldDefinition') {
