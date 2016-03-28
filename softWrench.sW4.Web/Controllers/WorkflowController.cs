@@ -73,7 +73,7 @@ namespace softWrench.sW4.Web.Controllers {
             }
 
 
-            return await _workflowManager.DoInitWorkflow(appName, appUserId, siteid, workflows);
+            return await _workflowManager.DoInitWorkflow(appId,appName, appUserId, siteid, workflows);
         }
 
 

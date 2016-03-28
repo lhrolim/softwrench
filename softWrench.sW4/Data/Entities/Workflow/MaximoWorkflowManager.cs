@@ -53,7 +53,6 @@ namespace softWrench.sW4.Data.Entities.Workflow {
                                                      <{1}>
                                                        {2}
                                                        <SITEID>{3}</SITEID>
-                                                       <CHANGEBY>{4}</CHANGEBY>
                                                      </{1}>
                                                    </{1}MboKey>
                                                  </Initiate{0}>";
@@ -138,16 +137,28 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
         }
 
-        public async Task<IGenericResponseResult> DoInitWorkflow(string appName, string appUserId, string siteid, List<Dictionary<string, string>> workflows) {
-            var entityName = _cachedWorkorderSchemas[appName].Schema.EntityName;
+        public async Task<IGenericResponseResult> DoInitWorkflow(string appId,string appName, string appUserId, string siteid, List<Dictionary<string, string>> workflows) {
+            var appMetadata = _cachedWorkorderSchemas[appName];
+            var entityName = appMetadata.Schema.EntityName;
+
+            var entityMetadata = MetadataProvider.EntityByApplication(entityName);
 
             var workflow = workflows[0];
             string workflowName = workflow["processname"];
             var baseUri = ApplicationConfiguration.WfUrl;
-            var requestUri = baseUri + workflowName;
             var personId = SecurityFacade.CurrentUser().MaximoPersonId;
+            var requestUri = baseUri + workflowName;
             var msg = RequestTemplate.FormatInvariant(workflowName.ToUpper(), entityName.ToUpper(),
                 BuildKeyAttributeString(entityName, appUserId), siteid, personId);
+
+            //forcing blank update to set changeby
+            IDictionary<string, object> attributes = new Dictionary<string, object>();
+            attributes.Add("wonum", appUserId);
+            attributes.Add("siteid", siteid);
+
+            _maximoConnectorEngine.Update(new CrudOperationData(appId, attributes, new Dictionary<string, object>(), entityMetadata,appMetadata));
+
+
             await RestUtil.CallRestApi(requestUri, "POST", null, msg);
             var successMessage = "Workflow {0} has been initiated.".FormatInvariant(workflowName);
             return new BlankApplicationResponse {
