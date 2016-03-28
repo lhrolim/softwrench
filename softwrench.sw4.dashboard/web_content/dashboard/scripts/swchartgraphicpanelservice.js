@@ -68,12 +68,12 @@
                     return previous + current.value;
                 }, 0);
                 // total
-                var totalCount = closed.value + openCount;
+                // var totalCount = closed.value + openCount;
                 // new array containing only open/close
                 processed = [
                     { field: "closed", value: closed.value },
-                    { field: "open", value: openCount },
-                    { field: "total", value: totalCount }
+                    { field: "open", value: openCount }
+                    //{ field: "total", value: totalCount }
                 ];
 
             }
@@ -101,28 +101,23 @@
                 case "swRecordCountChart":
                 case "swRecordCountRotatedChart":
                 case "swRecordCountLineChart":
+                case "dxPie":
+                case "swRecordCountPie":
                     chartData = data.map(function (d) {
                         return { argument: d.field, total: d.value }
                     });
-                    break;
-                case "dxPie":
-                case "swRecordCountPie":
-                    chartData = data
-                        .filter(function(d) { // pie charts shouldn't display 'total' as a member
-                            return d.field !== "total";
-                        })
-                        .map(function (d) {
-                            return { argument: d.field, total: d.value }
-                        });
                     break;
                 case "dxLinearGauge":
                 case "swLinearGauge":
                 case "dxCircularGauge":
                 case "swCircularGauge":
                 case "swRecordCountGauge":
-                    data.forEach(function(d) {
+                    var total = 0;
+                    data.forEach(function (d) {
+                        total += d.value;
                         chartData[d.field] = d.value;
                     });
+                    chartData.total = total;
                     break;
                 case "swSparkline":
                     chartData = data.map(function (d) {
