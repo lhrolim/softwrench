@@ -101,7 +101,7 @@ function afterMboData(ctx) {
 
                 ctx.log("[WorkOrder Workflow]--  Workflow Routed");
                 ctx.skipTxn();
-            } 
+            }
 
             return;
         }
