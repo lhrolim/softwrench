@@ -633,11 +633,14 @@
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
         <list stereotype="compositionlist">
+          <event type="onedit.validation" service="labtranService" method="validateEdit"/>
+          <event type="onremoval.validation" service="labtranService" method="validateRemoval"/>
           <field attribute="labtransid" hidden="true"/>
           <field attribute="laborcode" label="Labor" qualifier="title"/>
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
           <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
           <field attribute="transdate" label="Created Date"/>
+          <field attribute="genapprservreceipt" hidden="true"/>
         </list>
 
         <detail platform="web">
@@ -649,6 +652,7 @@
           <field attribute="refwo" hidden="true" />
           <field attribute="enterby" hidden="true" />
           <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate"/>
+          <field attribute="genapprservreceipt" hidden="true"/>
           <field attribute="transtype" default="WORK" hidden="true"/>
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
