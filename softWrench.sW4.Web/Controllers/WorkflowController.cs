@@ -46,7 +46,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
-        public async Task<IGenericResponseResult> InitiateWorkflow(string appName, string appId, string appUserId, string siteid, string workflowName) {
+        public IGenericResponseResult InitiateWorkflow(string appName, string appId, string appUserId, string siteid, string workflowName) {
 
             var workflows = _workflowManager.GetAvailableWorkflows(appName, workflowName, appId);
 
@@ -73,7 +73,7 @@ namespace softWrench.sW4.Web.Controllers {
             }
 
 
-            return await _workflowManager.DoInitWorkflow(appId,appName, appUserId, siteid, workflows);
+            return _workflowManager.DoInitWorkflow(appId,appName, appUserId, siteid, workflows);
         }
 
 
