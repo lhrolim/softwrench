@@ -12,7 +12,6 @@
   <property key="defaultSiteId" value="SF"/>
   <property key="defaultStoreloc" value="CENTRAL"/>
   <property key="sourcemapping" value="maximo7.5"/>
-   <property key="iiscontextpath " value="http://dd.softwrench.net/softwrench"/>
   <!--
       maximoutc property set to the full name of the timezone the maximo 
       server is set to, refer to the maximoutc.txt in the doc folder for 
@@ -32,6 +31,7 @@
     <property key="maximo_DB_provider" value="System.Data.SQL"/>
     <property key="swdb_url" value="Data Source=10.50.100.50;Initial Catalog=swdb_dd75dev;User Id=sw;password=softwrench;" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.50;Initial Catalog=DD75DEV;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="iiscontextpath " value="http://dev.softwrench.net/deltadental"/>
   </environment>
   
   <environment key="qa">
@@ -40,6 +40,7 @@
     <property key="maximo_DB_provider" value="System.Data.SQL"/>
     <property key="swdb_url" value="Data Source=10.50.100.50;Initial Catalog=swdb_dd75dev_qa;User Id=sw;password=softwrench;" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.50;Initial Catalog=DD75DEV;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="iiscontextpath " value="http://qa.softwrench.net/deltadental"/>
   </environment>
 
   <environment key="uat">
@@ -56,6 +57,7 @@
     <property key="maximo_DB_provider" value="System.Data.SQL"/>
     <property key="swdb_provider" value="System.Data.SQL"/>
     <property key="swdb_url" value="Data Source=10.50.100.40;Initial Catalog=SWDB_DD75MAX;User Id=sw;password=$0ftWr3nch;" />
+    <property key="iiscontextpath " value="http://dd.softwrench.net/softwrench"/>
   </environment>
 
 </Properties>

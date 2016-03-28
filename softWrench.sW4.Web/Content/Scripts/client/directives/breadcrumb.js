@@ -15,6 +15,8 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
             title: '='
         },
         controller: function ($scope) {
+            //TODO: improve for dual menus
+
             $scope.convertAdminHTMLtoLeafs = function (kids) {
                 var leafs = [];
 
@@ -280,8 +282,6 @@ app.directive('breadcrumb', function (contextService, $log, $timeout, recursionH
 
                 log.debug('$scope', $scope);
                 log.debug('schema', crudContextHolderService.currentSchema());
-                //log.debug('datamap', crudContextHolderService.rootDataMap());
-                //log.debug('currentMenu', currentMenu);
                 log.debug('breadcrumbItems', breadcrumbItems);
 
                 $scope.breadcrumbItems = breadcrumbItems;

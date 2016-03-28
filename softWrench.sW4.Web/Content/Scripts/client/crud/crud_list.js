@@ -181,7 +181,7 @@
                         contextService.deleteFromContext("grid_refreshdata");
                         fixHeaderService.FixHeader();
                         //usually this next call won´t do anything, but for lists with optionfields, this is needed
-                        associationService.updateFromServerSchemaLoadResult(data.associationOptions);
+                        associationService.updateFromServerSchemaLoadResult(data.associationOptions,null,true);
                         $scope.gridDataChanged($scope.datamap);
 
                         var elements = [];

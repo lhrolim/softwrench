@@ -91,12 +91,11 @@
                 //no initial value present
                 return;
             }
-            var associationOption = crudContextHolderService.fetchLazyAssociationOption(scope.provider, scope.datamap[scope.attribute]);
-
-            var customValue = scope.allowCustomValue === "true" ? attributeValue : null;
-            var label = associationService.getLabelText(associationOption, scope.hideDescription, customValue);
-            scope.log.debug("setting initial text of typeahead component {0} to {1}".format(scope.displayablepath, label));
-            element.typeahead('val', label);
+            associationService.getLabelText(scope.provider,scope.datamap[scope.attribute], { hideDescription: scope.hideDescription, allowTransientValue: scope.allowCustomValue === "true"}).then(function(label) {
+                scope.log.debug("setting initial text of typeahead component {0} to {1}".format(scope.displayablepath, label));
+                element.typeahead('val', label);
+            });
+            
         }
 
         var configureJqueryHooks = function (scope, element, engine) {
@@ -106,7 +105,7 @@
             //initing typeahead itself
             element.typeahead({ minLength: minLength, highlight: true }, {
                 displayKey: function (item) {
-                    return associationService.getLabelText(item, scope.hideDescription);
+                    return associationService.parseLabelText(item, { hideDescription: scope.hideDescription, allowTransientValue: scope.allowCustomValue === "true" });
                 },
                 source: engine.ttAdapter()
             });
