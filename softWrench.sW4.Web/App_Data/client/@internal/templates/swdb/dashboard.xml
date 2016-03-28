@@ -152,7 +152,7 @@
               <renderer type="combo"/>
             </optionfield>
 
-            <optionfield label="" attribute="statusfieldconfig"
+            <optionfield label="Display Status As" attribute="statusfieldconfig"
                          default="all" requiredexpression="true"
                          showexpression="@field==='status'">
               <renderer type="radio"/>
@@ -160,15 +160,26 @@
               <option label="Open/Closed" value="openclosed" />
             </optionfield>
 
+            <section orientation="horizontal" showexpression="@statusfieldconfig!=='openclosed'">
+              <field attribute="limit" default="0"
+                     label="Top Values" tooltip="Number of the highest entries to show (zero means all entries)">
+                <renderer type="numericinput" params="min=0" />
+              </field>
+              <field label="Show Others" attribute="showothers" showexpression="@limit > 0"
+                     tooltip="Whether or not to show the remaining lowest entries accumulated as an 'others' category">
+                <renderer type="checkbox"/>
+              </field>
+            </section>
+            
             <optionfield label="Type" attribute="type"
                          requiredexpression="true"
                          default="">
-              <option label="Record Count Bar Chart"  value="swRecordCountChart" />
-              <option label="Record Count Gauge"      value="swRecordCountGauge" />
+              <option label="Vertical Bar Chart"  value="swRecordCountChart" />
+              <option label="Gauge"               value="swRecordCountGauge" />
               <!--<option label="Record Count Map"        value="swRecordCountMap" />-->
-              <option label="Record Count Pie Chart"  value="swRecordCountPie" />
-              <option label="Record Trends"           value="swRecordTrends" />
-              <option label="Sparkline"               value="swSparkline" />
+              <option label="Pie Chart"           value="swRecordCountPie" />
+              <option label="Record Trends"       value="swRecordTrends" />
+              <option label="Sparkline"           value="swSparkline" />
             </optionfield>
 
             <!--<field label="Options"

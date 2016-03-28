@@ -27,12 +27,14 @@
             }
         };
 
-
         function getChartData(configuration) {
+            configuration.limit = parseInt(configuration.limit);
+            configuration.showothers = (configuration.showothers === "True" || configuration.showothers === "true");
+
             var params = {
                 entity: configuration.application,
                 property: configuration.field,
-                limit: configuration.field.equalsAny("owner", "reportedby") ? 5 : 0
+                limit: (configuration.limit > 0 && !configuration.showothers && configuration.statusconfig !== "openclosed") ? configuration.limit : 0
             }
 
             return restService.getPromise("Statistics", "CountByProperty", params)
@@ -74,12 +76,12 @@
                 ];
 
             }
-                // worktype -> top 6 + others
-            else if (configuration.field === "worktype" && processed.length > 7) {
+                // should overflow to 'others' -> top within limit + others
+            else if (configuration.limit > 0 && processed.length > configuration.limit && configuration.showothers) {
                 // 6 highest counts
-                var topresults = processed.slice(0, 6);
+                var topresults = processed.slice(0, configuration.limit);
                 // sum of the others's counts
-                var othersCount = processed.slice(6)
+                var othersCount = processed.slice(configuration.limit)
                     .reduce(function (previous, current) {
                         return previous + current.value;
                     }, 0);
@@ -103,7 +105,7 @@
                 case "dxPie":
                 case "swRecordCountPie":
                     chartData = data
-                        .filter(function(d) {
+                        .filter(function(d) { // pie charts shouldn't display 'total' as a member
                             return d.field !== "total";
                         })
                         .map(function (d) {
@@ -199,7 +201,9 @@
                 'application': datamap.application,
                 'field': datamap.field,
                 'type': datamap.type,
-                'statusfieldconfig': datamap.statusfieldconfig
+                'statusfieldconfig': datamap.statusfieldconfig,
+                'limit': datamap.limit,
+                'showothers': datamap.showothers
             };
         }
 
