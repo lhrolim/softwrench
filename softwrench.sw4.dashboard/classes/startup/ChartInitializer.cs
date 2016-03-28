@@ -28,7 +28,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     UpdateDate = now,
                     Visible = true,
                     Filter = new DashboardFilter(),
-                    Size = 4,
+                    Size = 3,
                     Provider = "swChart",
                     Configuration = "application=workorder;field=status;type=swRecordCountGauge;statusfieldconfig=openclosed;limit=0;showothers=False"
                 },
@@ -39,7 +39,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     UpdateDate = now,
                     Visible = true,
                     Filter = new DashboardFilter(),
-                    Size = 8,
+                    Size = 9,
                     Provider = "swChart",
                     Configuration = "application=workorder;field=status;type=swRecordCountChart;statusfieldconfig=all;limit=5;showothers=False"
                 },
@@ -50,7 +50,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     UpdateDate = now,
                     Visible = true,
                     Filter = new DashboardFilter(),
-                    Size = 8,
+                    Size = 9,
                     Provider = "swChart",
                     Configuration = "application=workorder;field=wopriority;type=swRecordCountLineChart;statusfieldconfig=all;limit=0;showothers=False"
                 },
@@ -61,7 +61,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     UpdateDate = now,
                     Visible = true,
                     Filter = new DashboardFilter(),
-                    Size = 4,
+                    Size = 3,
                     Provider = "swChart",
                     Configuration = "application=workorder;field=status;type=swRecordCountPie;statusfieldconfig=openclosed;limit=0;showothers=False"
                 },
@@ -94,7 +94,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     UpdateDate = now,
                     Visible = true,
                     Filter = new DashboardFilter(),
-                    Size = 4,
+                    Size = 3,
                     Provider = "swChart",
                     Configuration = "application=workorder;field=worktype;type=swRecordCountPie;statusfieldconfig=all;limit=6;showothers=True"
                 },

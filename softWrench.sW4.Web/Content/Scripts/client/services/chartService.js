@@ -25,7 +25,7 @@
         //#region default options methods (return DexExtreme object format)
         function getGaugeDefaults(data) {
             var total = data.total;
-            return {
+            return { 
                 geometry: {
                     orientation: "vertical"
                 },
@@ -57,6 +57,9 @@
                 },
                 loadingIndicator: {
                     show: true
+                },
+                size: {
+                    height: 200
                 },
                 title: {
                     font: {
@@ -190,12 +193,13 @@
 
             return {
                 layers: [{}, {
-                    name: "bubbles",
+                    color: '#4488f2',
                     data: markers,
-                    elementType: "bubble",
-                    dataField: "value",
+                    dataField: 'value',
+                    elementType: 'bubble',
                     minSize: 20,
                     maxSize: 60,
+                    name: 'bubbles',
                     sizeGroups: [0, 1000, 3000, 5000, 10000]
                 }],
                 tooltip: {

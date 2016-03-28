@@ -23,31 +23,31 @@
                     case "swRecordCountRotatedChart":
                     case "swRecordCountLineChart":
                     case "swRecordTrends":
-                        $(element).dxChart(chartOptions);
+                        $('.sw.chart', element).dxChart(chartOptions);
                         break;
                     case "dxCircularGauge":
                     case "swCircularGauge":
                     case "swRecordCountGauge":
-                        $(element).dxCircularGauge(chartOptions);
+                        $('.sw.chart', element).dxCircularGauge(chartOptions);
                         break;
                     case "swLabel":
                         scope.labeloptions = chartOptions;
                         break;
                     case "dxLinearGauge":
                     case "swLinearGauge":
-                        $(element).dxLinearGauge(chartOptions);
+                        $('.sw.chart', element).dxLinearGauge(chartOptions);
                         break;
                     case "dxMap":
                     case "swRecordCountMap":
-                        $(element).dxVectorMap(chartOptions);
+                        $('.sw.chart', element).dxVectorMap(chartOptions);
                         break;
                     case "dxPie":
                     case "swRecordCountPie":
-                        $(element).dxPieChart(chartOptions);
+                        $('.sw.chart', element).dxPieChart(chartOptions);
                         break;
                     case "dxSparkline":
                     case "swSparkline":
-                        $(element).dxSparkline(chartOptions);
+                        $('.sw.chart', element).dxSparkline(chartOptions);
                         break;
                 }
             }
