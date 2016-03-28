@@ -98,7 +98,7 @@ angular.module('sw_layout')
             var clonedFields = [
                 "affectedemail", "affectedperson", "affectedphone", "assetnum", "assetditeid",
                 "cinum", "classstructureid", "commodity", "commoditygroup",
-                "description", "longdescription_.ldtext",
+                "description", "longdescription_.ldtext", "ld_.ldtext",
                 "glaccount",
                 "location",
                 "orgig",
