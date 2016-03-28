@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
@@ -12,15 +11,9 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
     [Class(Table = "DASH_DASHBOARD", Lazy = false)]
     public class Dashboard : IBaseAuditEntity {
 
-
-
-        public static string ByUser(IEnumerable<int?> profiles)
-        {
-            
+        public static string ByUser(IEnumerable<int?> profiles) {
             return "from Dashboard where (userid is null or userid = ?) and (userprofiles is null or {0})".Fmt(DashboardFilter.GetUserProfileString(profiles));
         }
-
-      
 
         public static string ByUserNoProfile = "from Dashboard where (userid is null or userid = ?) and (userprofiles is null)";
 

@@ -86,6 +86,7 @@
     <Compile Include="classes\model\migration\Migration20151021Swweb1840.cs" />
     <Compile Include="classes\model\migration\Migration20160301swweb1652.cs" />
     <Compile Include="classes\model\migration\Migration20160323Swweb2200.cs" />
+    <Compile Include="classes\model\migration\Migration20160328Swweb2200.cs" />
     <Compile Include="classes\service\graphic\exception\GraphicStorageSystemException.cs" />
     <Compile Include="classes\service\graphic\GraphicStorageSystemFacadeProvider.cs" />
     <Compile Include="classes\service\graphic\IGraphicStorageSystemAuthDto.cs" />

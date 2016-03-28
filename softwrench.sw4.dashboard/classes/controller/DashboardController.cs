@@ -42,18 +42,6 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public IGenericResponseResult SaveDashboard(Dashboard dashboard) {
             //TODO: update menu, clear caching
             var user = SecurityFacade.CurrentUser();
-            var currentdtm = DateTime.Now;
-
-//            if ("personal".Equals(policy)) {
-//                dashboard.Filter = new DashboardFilter {
-//                    UserId = user.UserId
-//                };
-//            }
-
-            // Populate default values
-            //if (dashboard.Layout == null) {
-            //    dashboard.Layout = "0";
-            //}
 
             var savedDashboard = _dao.Save(dashboard);
             user.Genericproperties.Remove(DashboardConstants.DashBoardsProperty);

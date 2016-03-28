@@ -48,8 +48,9 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
             }
         }
 
-        public void PutConfiguration(string key, string value) {
+        public DashboardGraphicPanel PutConfiguration(string key, string value) {
             ConfigurationDictionary[key] = value;
+            return this;
         }
 
         public string ConfigurationValue(string key) {
