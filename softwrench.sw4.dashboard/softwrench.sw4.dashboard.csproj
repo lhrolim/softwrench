@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="classes\controller\DashboardController.cs" />
     <Compile Include="classes\controller\DashboardMenuManager.cs" />
+    <Compile Include="classes\controller\StatisticsController.cs" />
     <Compile Include="classes\controller\UserDashboardManager.cs" />
     <Compile Include="classes\model\DashboardConstants.cs" />
     <Compile Include="classes\controller\bootstrap\DashBoardRolesManager.cs" />
@@ -83,6 +84,8 @@
     <Compile Include="classes\model\ManageDashBoardsDTO.cs" />
     <Compile Include="classes\model\migration\Migration20150224Swweb792.cs" />
     <Compile Include="classes\model\migration\Migration20151021Swweb1840.cs" />
+    <Compile Include="classes\model\migration\Migration20160301swweb1652.cs" />
+    <Compile Include="classes\model\migration\Migration20160323Swweb2200.cs" />
     <Compile Include="classes\service\graphic\exception\GraphicStorageSystemException.cs" />
     <Compile Include="classes\service\graphic\GraphicStorageSystemFacadeProvider.cs" />
     <Compile Include="classes\service\graphic\IGraphicStorageSystemAuthDto.cs" />
@@ -91,6 +94,8 @@
     <Compile Include="classes\service\graphic\tableau\TableauAuthDto.cs" />
     <Compile Include="classes\service\graphic\tableau\TableauConstants.cs" />
     <Compile Include="classes\service\graphic\tableau\TableauFacade.cs" />
+    <Compile Include="classes\service\statistics\StatisticsService.cs" />
+    <Compile Include="classes\startup\ChartInitializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +148,7 @@
     <Content Include="web_content\dashboard\scripts\dashboardcontroller.js" />
     <None Include="web_content\dashboard\styles\dashboards.scss" />
     <Content Include="web_content\dashboard\scripts\graphicpanelserviceprovider.js" />
+    <Content Include="web_content\dashboard\scripts\swchartgraphicpanelservice.js" />
     <Content Include="web_content\dashboard\scripts\tableaugraphicpanelservice.js" />
     <Content Include="web_content\dashboard\templates\createnewpanelbutton.html" />
     <Content Include="web_content\dashboard\templates\dashboardgraphicpanel.html" />

@@ -11,7 +11,7 @@ namespace softWrench.sW4.Data.Persistence {
             PageSize = pageSize;
             PageNumber = pageNumber;
             QualifiedOrderByColumn = qualifiedSortColumn;
-            OrderByColumn = qualifiedSortColumn.Split('.')[1];
+            OrderByColumn = qualifiedSortColumn.Contains(".") ? qualifiedSortColumn.Split('.')[1] : qualifiedSortColumn;
         }
 
         public static PaginationData GetInstance(SearchRequestDto searchDTO, EntityMetadata entityMetadata) {

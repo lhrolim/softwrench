@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+
+    <application entity="AuditEntry" name="audit" title="Audit Trail">
+      <schemas>
+        <schema id="auditList" stereotype="list" title="Audit Trail">
+          <field attribute="id" label="Audit Id"/>
+          <field attribute="action" label="Action"/>
+          <field attribute="refapplication" label="Application"/>
+          <field attribute="refuserid" label="Record Id"/>
+          <field attribute="createdby" label="Created By"/>
+          <field attribute="createddate" label="Audit Date">
+            <renderer type="datetime"/>
+          </field>
+        </schema>
+
+        <schema id="auditDetail" stereotype="detail" title="Audit Trail Details">
+          <field attribute="action" label="Action" readonly="true"/>
+          <field attribute="refapplication" label="Application" readonly="true"/>
+          <field attribute="refuserid" label="Record Id" readonly="true"/>
+          <field attribute="createdby" label="Created By" readonly="true"/>
+          <field attribute="createddate" label="Audit Date" readonly="true">
+            <renderer type="datetime"/>
+          </field>
+          <!--<section showexpression="@canCreateBoth">
+            <optionfield attribute="policy" label="Policy">
+              <option label="Personal" value="personal"/>
+              <option label="Shared" value="shared"/>
+            </optionfield>
+            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'">
+              <renderer type="checkbox"/>
+            </optionfield>
+          </section>-->
+        </schema>
+      </schemas>
+    </application>
+
+  </applications>
+
+</metadata> 
