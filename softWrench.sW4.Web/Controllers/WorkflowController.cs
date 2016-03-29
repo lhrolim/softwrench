@@ -50,7 +50,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var workflows = _workflowManager.GetAvailableWorkflows(appName, workflowName, appId);
 
-            var validationResult = _workflowManager.ValidateCloseStatus(appName, appId);
+            var validationResult = _workflowManager.ValidateCloseStatus(appName, appId,true);
             if (validationResult != null) {
                 return validationResult;
             }
@@ -73,7 +73,7 @@ namespace softWrench.sW4.Web.Controllers {
             }
 
 
-            return _workflowManager.DoInitWorkflow(appId,appName, appUserId, siteid, workflows);
+            return _workflowManager.DoInitWorkflow(appId, appName, appUserId, siteid, workflows);
         }
 
 
@@ -111,6 +111,12 @@ namespace softWrench.sW4.Web.Controllers {
         public IGenericResponseResult InitRouteWorkflow(string entityName, string id, string appuserId, string siteid) {
             var user = SecurityFacade.CurrentUser();
             var assignments = _workflowManager.LocateAssignmentsToRoute(entityName, id, user);
+
+            var validationResult = _workflowManager.ValidateCloseStatus(entityName, id, false);
+            if (validationResult != null) {
+                return validationResult;
+            }
+
             if (!assignments.Any()) {
                 return new BlankApplicationResponse() { ErrorMessage = "There are no active assignments on this workflow for your user" };
             }

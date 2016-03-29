@@ -170,14 +170,14 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
 
 
-        public BlankApplicationResponse ValidateCloseStatus(string appName, string appid) {
+        public BlankApplicationResponse ValidateCloseStatus(string appName, string appid, bool initingWorkflow) {
             var appMetadata = _cachedWorkorderSchemas[appName];
             var entityName = appMetadata.Schema.EntityName;
 
             var results = _maxDAO.FindByNativeQuery(ClosedStatusQuery.Fmt(entityName, appMetadata.Schema.IdFieldName, appid));
             if (results.Any()) {
                 return new BlankApplicationResponse() {
-                    ErrorMessage = "Cannot initialize a workflow for a {0} of status {1}".Fmt(appMetadata.Title, results[0]["description"])
+                    ErrorMessage = "Cannot {2} a workflow for a {0} of status {1}".Fmt(appMetadata.Title, results[0]["description"], initingWorkflow? "Initialize" : "Route")
                 };
             }
             return null;

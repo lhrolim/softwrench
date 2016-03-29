@@ -2,8 +2,10 @@
 // strings are java.lang.strings, not javascript strings --> do not use ===, and check for java documentation rather than javascript´s
 
 importClass(Packages.psdi.server.MXServer);
+importPackage(Packages.psdi.workflow);
 
-function afterMboData(ctx) {
+
+function beforeMboData(ctx) {
 
     ctx.log("[WorkOrder Workflow]: init script");
     var mbo = ctx.getMbo();
@@ -88,6 +90,8 @@ function afterMboData(ctx) {
             if (action == "stop") {
                 ctx.log("stopping workflow");
                 wfInst.stopWorkflow("Auto Stop");
+                mbo.getMXTransaction().commit();
+                ctx.skipTxn();
             } else if (action == "route") {
                 if (wfActionId == null) {
                     ctx.log("[WorkOrder Workflow]-- wojp3 should inform the action to route to");
@@ -101,6 +105,10 @@ function afterMboData(ctx) {
 
                 ctx.log("[WorkOrder Workflow]--  Workflow Routed");
                 ctx.skipTxn();
+            } else if (action == "start") {
+                ctx.log("[WorkOrder Workflow]-- Starting workflow " + wfId);
+                var wfs = MXServer.getMXServer().lookup("WORKFLOW");
+                wfs.initiateWorkflow(wfId, mbo);
             }
 
             return;
