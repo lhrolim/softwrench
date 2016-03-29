@@ -5,7 +5,9 @@ using System.Linq;
 using cts.commons.persistence.Util;
 using cts.commons.simpleinjector.Events;
 using softwrench.sw4.dashboard.classes.model.entities;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 using WebGrease.Css.Extensions;
 
@@ -15,7 +17,19 @@ namespace softwrench.sw4.dashboard.classes.startup {
         private const string WO_CHART_DASHBOARD_TITLE = "[SWWEB-2200](2016-03-28)";
         private const string SR_CHART_DASHBOARD_TITLE = "[SWWEB-2200](2016-03-29)";
 
+        /// <summary>
+        /// (WO.status is 'open') != (WO.status isn't 'close') --> special query
+        /// </summary>
+        private const string WO_STATUS_OPENCLOSED_WHERECLAUSE = @"where status = 'CLOSE' or 
+                                                                    ((status = 'APPR' or status = 'WPCOND' or status = 'INPRG' or status = 'WORKING' or status = 'WAPPR' or status = 'WMATL') and 
+                                                                    (woclass = 'WORKORDER' or woclass = 'ACTIVITY') and historyflag = 0 and istask = 0)";
+
         private readonly DisregardingUserSWDBHibernateDaoDecorator _dao = new DisregardingUserSWDBHibernateDaoDecorator(new ApplicationConfigurationAdapter());
+        private readonly IWhereClauseFacade _whereClauseFacade;
+
+        public ChartInitializer(IWhereClauseFacade whereClauseFacade) {
+            _whereClauseFacade = whereClauseFacade;
+        }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (ShouldExecuteWOChartInitialization()) {
@@ -23,6 +37,15 @@ namespace softwrench.sw4.dashboard.classes.startup {
             }
             if (ShouldExecuteSRChartInitialization()) {
                 ExecuteSRChartInitialization();
+            }
+
+            var openClosedGauge = "dashboard:wo.status.openclosed.gauge";
+            if (!WhereClauseExists("workorder", openClosedGauge)) {
+                RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, openClosedGauge);
+            }
+            var openClosedPie = "dashboard:wo.status.openclosed";
+            if (!WhereClauseExists("workorder", openClosedPie)) {
+                RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, openClosedPie);
             }
         }
 
@@ -183,6 +206,21 @@ namespace softwrench.sw4.dashboard.classes.startup {
             };
 
             return _dao.Save(dashboard);
+        }
+
+        private bool WhereClauseExists(string application, string metadataId) {
+            var result = _whereClauseFacade.Lookup(application, new ApplicationLookupContext() {
+                MetadataId = metadataId
+            });
+            return result != null && !string.IsNullOrEmpty(result.Query);
+        }
+
+        private void RegisterWhereClause(string application, string query, string metadataId) {
+            _whereClauseFacade.Register(application, query, new WhereClauseRegisterCondition() {
+                AppContext = new ApplicationLookupContext() {
+                    MetadataId = metadataId
+                }
+            });
         }
 
         private class DisregardingUserSWDBHibernateDaoDecorator : SWDBHibernateDAO {
