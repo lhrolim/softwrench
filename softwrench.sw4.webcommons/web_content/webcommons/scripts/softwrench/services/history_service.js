@@ -8,6 +8,23 @@
         // workaround - a way to know if the location was changed by adding a url to the history (causes change in hash)
         // or by browser back and forward
         var locationUpdatedByService = false;
+
+        function getHashBase64() {
+            // firefox workaround - there  is some cases that firefox turns the hash into a path
+            if (BrowserDetect.browser.toLocaleLowerCase() === "firefox") {
+                var path = $location.path();
+                if (path && path.startsWith("/state=")) {
+                    return path.substring(7);
+                }
+            }
+
+            var hash = $location.hash();
+            if (hash && hash.startsWith("state=")) {
+                return hash.substring(6);
+            }
+
+            return null;
+        }
         //#endregion
 
         //#region Public methods
@@ -25,11 +42,13 @@
 
         function getLocationUrl() {
             var log = $log.getInstance("historyService#getLocationUrl");
-            if (!$location.hash() || !$location.hash().startsWith("state=")) {
+
+            var base64 = getHashBase64();
+            if (!base64) {
                 log.debug("No history url on current location.");
                 return null;
             }
-            var base64 = $location.hash().substring(6);
+
             var locationUrl = Base64.decode(base64);
             log.debug("The history url ({0}) was recovered from current location.".format(locationUrl));
             return locationUrl;

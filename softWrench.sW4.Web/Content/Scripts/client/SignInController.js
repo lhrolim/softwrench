@@ -21,13 +21,8 @@
             });
         }
 
-        $scope.redirectURL = function () {
-            var redirectUrl = getUrlParameter("ReturnUrl");
-            var hash = window.location.hash;
-            if (hash && hash.startsWith("##state=")) {
-                redirectUrl += hash;
-            }
-            return redirectUrl;
+        $scope.redirectUrl = function () {
+            return window.location.href.substring(window.location.origin.length);
         }
     }
 })(angular);
