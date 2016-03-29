@@ -22,6 +22,25 @@ app.controller('DashboardController', [
     '$scope', '$log', '$timeout', 'modalService', 'fieldService', 'dashboardAuxService', 'contextService', 'alertService', 'crudContextHolderService',
     function ($scope, $log, $timeout, modalService, fieldService, dashboardAuxService, contextService, alertService, crudContextHolderService) {
 
+        var selectedDashboardIds = [];
+        function dashboardSelectedAtLeastOnce(dashboardId) {
+            return !!selectedDashboardIds.find(function(id) {
+                return dashboardId === id;
+            });
+        }
+        function markDashboardSelected(dashboardId) {
+            if (!dashboardSelectedAtLeastOnce(dashboardId)) {
+                selectedDashboardIds.push(dashboardId);
+            }
+        }
+
+        $scope.dashboardSelectedAtLeastOnce = dashboardSelectedAtLeastOnce;
+
+        $scope.$watch("currentdashboardid", function(newValue, oldValue) {
+            if (newValue === oldValue) return;
+            markDashboardSelected(newValue);
+        });
+
         $scope.doInit = function () {
 
             $scope.canCreateOwn = $scope.resultData.canCreateOwn;
@@ -37,6 +56,7 @@ app.controller('DashboardController', [
             $scope.panelschemas = $scope.resultData.panelSchemas;
             $scope.applications = $scope.resultData.applications;
             $scope.currentdashboardid = $scope.resultData.preferredId;
+            markDashboardSelected($scope.currentdashboardid);
             $scope.dashboard = $scope.getCurrentDashboardById($scope.currentdashboardid);
             var userData = contextService.getUserData();
             $scope.userid = userData.id;
