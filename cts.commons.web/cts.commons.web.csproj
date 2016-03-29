@@ -60,6 +60,7 @@
     <Compile Include="IBundleConfigProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Attributes\SWControllerConfiguration.cs" />
+    <Compile Include="Util\RestUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

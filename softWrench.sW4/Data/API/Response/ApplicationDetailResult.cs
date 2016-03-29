@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
@@ -16,7 +17,7 @@ namespace softWrench.sW4.Data.API.Response {
 
 
         public ApplicationDetailResult(DataMap dataMap, AssociationMainSchemaLoadResult associationOptions,
-            ApplicationSchemaDefinition main, IDictionary<string, ApplicationCompositionSchema> compositions, string id)
+            ApplicationSchemaDefinition main, [CanBeNull]IDictionary<string, ApplicationCompositionSchema> compositions, string id)
             : base(dataMap, null) {
             
             _associationOptions = associationOptions;

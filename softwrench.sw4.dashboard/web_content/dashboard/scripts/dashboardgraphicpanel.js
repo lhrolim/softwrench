@@ -8,9 +8,10 @@
                 restrict: "E",
                 templateUrl: contextService.getResourceUrl("/Content/Shared/dashboard/templates/dashboardgraphicpanel.html"),
                 scope: {
-                    panel: "="
+                    panel: "=",
+                    dashboardid: "="
                 },
-                controller: ["$scope", "graphicPanelServiceProvider", "spinService", function ($scope, graphicPanelServiceProvider, spinService) {
+                controller: ["$scope", "graphicPanelServiceProvider", "spinService", "$timeout", function ($scope, graphicPanelServiceProvider, spinService, $timeout) {
                     var service = graphicPanelServiceProvider.getService($scope.panel.provider);
 
                     $scope.data = {
@@ -51,7 +52,14 @@
                         if (!$scope.data.graphic) return;
                         var element = container || $scope.data.container;
                         service.resizeGraphic($scope.data.graphic, element.offsetWidth, element.offsetHeight);
-                    }; 
+                    };
+
+                    $scope.$on("sw:dashboard:selected", function(event, id) {
+                        if ($scope.dashboardid !== id) return;
+                        $timeout(function() {
+                            service.onDashboardSelected($scope.data.graphic);
+                        }, 0, false);
+                    });
 
                 }],
 

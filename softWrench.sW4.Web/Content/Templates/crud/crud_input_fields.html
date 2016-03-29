@@ -280,19 +280,19 @@
 
 
                 <fieldset ng-switch-when="radio">
-                    <label ng-if="fieldMetadata.rendererParameters['vertical']==null" ng-repeat="option in fieldMetadata.options" class="checkbox-inline">
+                    <label ng-if="fieldMetadata.rendererParameters['vertical']==null" ng-repeat="option in GetAssociationOptions(fieldMetadata)" class="checkbox-inline">
                         <input type="radio"
                                name="{{fieldMetadata.attribute}}"
                                value="{{option.value}}"
-                               ng-model="datamap[fieldMetadata.associationKey]">
+                               ng-model="datamap[fieldMetadata.attribute]">
                         {{i18NOptionField(option,fieldMetadata,schema)}}
                     </label>
-                    <div  ng-if="fieldMetadata.rendererParameters['vertical']!=null" class="radio" ng-repeat="option in fieldMetadata.options">
+                    <div  ng-if="fieldMetadata.rendererParameters['vertical']!=null" class="radio" ng-repeat="option in GetAssociationOptions(fieldMetadata)">
                         <label>
                             <input type="radio"
                                    name="{{fieldMetadata.attribute}}"
                                    value="{{option.value}}"
-                                   ng-model="datamap[fieldMetadata.associationKey]">
+                                   ng-model="datamap[fieldMetadata.attribute]">
                             {{i18NOptionField(option,fieldMetadata,schema)}}
                         </label>
                     </div>

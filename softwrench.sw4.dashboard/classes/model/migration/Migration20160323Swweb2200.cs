@@ -9,13 +9,13 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
         public override void Up() {
             Delete.Column("layout").FromTable("DASH_DASHBOARD");
 
-            Create.Column("size").OnTable("DASH_BASEPANEL").AsInt32().NotNullable();
+            Create.Column("size").OnTable("DASH_BASEPANEL").AsInt32().NotNullable().WithDefaultValue(12);
         }
 
         public override void Down() {
             Delete.Column("size").FromTable("DASH_BASEPANEL");
 
-            Create.Column("layout").OnTable("DASH_DASHBOARD").AsString(MigrationUtil.StringMedium).NotNullable();
+            Create.Column("layout").OnTable("DASH_DASHBOARD").AsString(MigrationUtil.StringMedium).NotNullable().WithDefaultValue("0");
         }
     }
 }

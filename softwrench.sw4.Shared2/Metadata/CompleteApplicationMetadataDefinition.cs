@@ -8,6 +8,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Applications.Notification;
+using softWrench.sW4.Metadata.Applications;
 
 namespace softwrench.sW4.Shared2.Metadata {
 
@@ -75,7 +76,7 @@ namespace softwrench.sW4.Shared2.Metadata {
              string idFieldName, string userIdFieldName,
             IDictionary<string, string> paramters,
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> schemas,
-            IEnumerable<DisplayableComponent> components,SchemaFilters appFilters,
+            IEnumerable<DisplayableComponent> components, SchemaFilters appFilters,
             string service,
             string role,
             bool? auditFlag = false
@@ -205,14 +206,25 @@ namespace softwrench.sW4.Shared2.Metadata {
             return listSchema;
         }
 
-
-        public IDictionary<string, string> Properties
-        {
-            get { return Parameters; }
-            set { Parameters = value; }
+        public ApplicationMetadata StaticFromSchema(string schemaId) {
+            return ApplicationMetadata.FromSchema(Schema(new ApplicationMetadataSchemaKey(schemaId)), Title);
         }
 
-        public IEnumerable<ApplicationSchemaDefinition> CachedNonInternalSchemas { get; set; }
-        public bool HasCreationSchema { get; set; }
+
+        public IDictionary<string, string> Properties {
+            get {
+                return Parameters;
+            }
+            set {
+                Parameters = value;
+            }
+        }
+
+        public IEnumerable<ApplicationSchemaDefinition> CachedNonInternalSchemas {
+            get; set;
+        }
+        public bool HasCreationSchema {
+            get; set;
+        }
     }
 }
