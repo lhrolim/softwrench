@@ -1,58 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Windows.Input;
-using DocumentFormat.OpenXml.Spreadsheet;
-using NHibernate.Linq;
-using NHibernate.Util;
-using Quartz.Util;
-using cts.commons.web.Attributes;
+using cts.commons.portable.Util;
+using log4net;
 using softwrench.sw4.Shared2.Data.Association;
-using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Entities.Workflow;
+using softWrench.sW4.Data.Entities.Workflow.DTO;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
-using softWrench.sW4.Util;
-using softWrench.sW4.Web.Util;
 
 namespace softWrench.sW4.Web.Controllers {
+
+
+
+
+
     public class WorkflowController : ApiController {
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WorkflowController));
+
+
+
+        private readonly MaximoWorkflowManager _workflowManager;
+
         private readonly MaximoHibernateDAO _maximoDao;
-        // {0} - workflowName, {1} - entity, {2} - key attribute, {3} - siteid
-        private const string RequestTemplate = @"<Initiate{0} xmlns='http://www.ibm.com/maximo'>
-                                                   <{1}MboKey>
-                                                     <{1}>
-                                                       {2}
-                                                       <SITEID>{3}</SITEID>
-                                                     </{1}>
-                                                   </{1}MboKey>
-                                                 </Initiate{0}>";
-        private const string WFQueryString = "select wfprocessid, processname from wfprocess where active = 1 and enabled = 1 and {0} = '{1}'";
+
+
+
+        private const string ActiveInstanceQuery = "select wfid,processname from wfinstance where ownertable = ? and ownerid = ? and active = 1";
+
+        private const string WorkFlowById = "select wfid,processname from wfinstance where wfid = ? ";
+
         readonly ApplicationSchemaDefinition _workflowSchema;
 
-        public WorkflowController(MaximoHibernateDAO dao) {
+        public WorkflowController(MaximoHibernateDAO dao, MaximoWorkflowManager workflowManager) {
             _maximoDao = dao;
+            _workflowManager = workflowManager;
             _workflowSchema = MetadataProvider.Application("workflow").Schema(new ApplicationMetadataSchemaKey("workflowselection"));
         }
 
         [HttpPost]
-        public async Task<IGenericResponseResult> InitiateWorkflow(string entityName, string applicationItemId, string siteid, string workflowName) {
-            List<Dictionary<string, string>> workflows;
-            var queryString = workflowName != null
-                ? WFQueryString.FormatInvariant("processname", workflowName)
-                : WFQueryString.FormatInvariant("objectname", entityName);
-            workflows = _maximoDao.FindByNativeQuery(queryString);
+        public IGenericResponseResult InitiateWorkflow(string appName, string appId, string appUserId, string siteid, string workflowName) {
+
+            var workflows = _workflowManager.GetAvailableWorkflows(appName, workflowName, appId);
+
+            var validationResult = _workflowManager.ValidateCloseStatus(appName, appId,true);
+            if (validationResult != null) {
+                return validationResult;
+            }
+
             // If there are no work flows
             if (!workflows.Any()) {
                 // Returning null will pop a warning message on the client side
-                return null;
+                return new BlankApplicationResponse() {
+                    ErrorMessage = "There are no active and enabled Workflows for this record type."
+                };
             }
             // If there are multiple work flows
             if (workflows.Count > 1) {
@@ -63,22 +71,79 @@ namespace softWrench.sW4.Web.Controllers {
                 };
                 return new GenericResponseResult<WorkflowDTO>(dto);
             }
-            var workflow = workflows[0];
-            workflowName = workflow["processname"];
-            var baseUri = ApplicationConfiguration.WfUrl;
-            var requestUri = baseUri + workflowName;
-            var msg = RequestTemplate.FormatInvariant(workflowName.ToUpper(), entityName.ToUpper(), BuildKeyAttributeString(entityName, applicationItemId), siteid);
-            var response = await RestUtil.CallRestApi(requestUri, "POST", null, msg);
-            var successMessage = "Workflow {0} has been initiated.".FormatInvariant(workflowName);
-            return new GenericResponseResult<WebResponse>(response, successMessage);
+
+
+            return _workflowManager.DoInitWorkflow(appId, appName, appUserId, siteid, workflows);
         }
 
-        private string BuildKeyAttributeString(string entityName, string applicationItemId) {
-            string keyTemplate = "<{0}>{1}</{0}>";
-            EntityMetadata Entity = MetadataProvider.Entity(entityName);
-            var formattedKey = keyTemplate.FormatInvariant(Entity.UserIdFieldName.ToUpper(), applicationItemId);
-            return formattedKey;
+
+        public IGenericResponseResult StopWorkflow(string entityName, string id, string userId, string siteid, Int32? wfInstanceId) {
+            if (wfInstanceId != null) {
+                var wfsToStop = _maximoDao.FindByNativeQuery(WorkFlowById, wfInstanceId);
+                Log.InfoFormat("Stopping workflow {0} for app {1}", wfInstanceId, entityName);
+                if (wfsToStop.Any()) {
+                    return _workflowManager.DoStopWorkFlow(entityName, id, userId, siteid, wfsToStop[0]);
+                }
+            }
+
+
+            var workflows = _maximoDao.FindByNativeQuery(ActiveInstanceQuery, entityName, id);
+            // If there are no work flows
+            if (!workflows.Any()) {
+                // Returning null will pop a warning message on the client side
+                return new BlankApplicationResponse() { ErrorMessage = "No Active workflow for workorder {0}".Fmt(userId) };
+            }
+            // If there are multiple work flows
+            if (workflows.Count > 1) {
+                IList<IAssociationOption> workflowOptions = workflows.Select(w => new GenericAssociationOption(w["wfid"], w["processname"])).Cast<IAssociationOption>().ToList();
+                var dto = new WorkflowDTO() {
+                    Workflows = workflowOptions,
+                    Schema = _workflowSchema
+                };
+                return new GenericResponseResult<WorkflowDTO>(dto);
+            }
+            //otherwise, let´s stop the only one found
+            var workflow = workflows[0];
+
+            return _workflowManager.DoStopWorkFlow(entityName, id, userId, siteid, workflow);
         }
+
+        public IGenericResponseResult InitRouteWorkflow(string entityName, string id, string appuserId, string siteid) {
+            var user = SecurityFacade.CurrentUser();
+            var assignments = _workflowManager.LocateAssignmentsToRoute(entityName, id, user);
+
+            var validationResult = _workflowManager.ValidateCloseStatus(entityName, id, false);
+            if (validationResult != null) {
+                return validationResult;
+            }
+
+            if (!assignments.Any()) {
+                return new BlankApplicationResponse() { ErrorMessage = "There are no active assignments on this workflow for your user" };
+            }
+            if (assignments.Count() == 1) {
+                return _workflowManager.LocateWfActionsToRoute(assignments[0].Value, user);
+            }
+            var dto = new WorkflowDTO() {
+                Workflows = assignments,
+                Schema = _workflowSchema
+            };
+            return new GenericResponseResult<WorkflowDTO>(dto);
+        }
+
+        public IGenericResponseResult InitRouteWorkflowSelected(string wfAssignmentId) {
+            var user = SecurityFacade.CurrentUser();
+            return _workflowManager.LocateWfActionsToRoute(wfAssignmentId, user);
+        }
+
+        [HttpPost]
+        public IGenericResponseResult DoRouteWorkflow([FromBody]RouteWorkflowDTO routeWorkflowDTO) {
+            return _workflowManager.DoRouteWorkFlow(routeWorkflowDTO);
+        }
+
+
+
+
+
     }
 
     public class WorkflowDTO {

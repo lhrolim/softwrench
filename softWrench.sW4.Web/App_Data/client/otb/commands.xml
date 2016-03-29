@@ -31,6 +31,11 @@
     <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
   </commandgroup>
 
+  <commandgroup position="modal.detail.confirm" platform="web">
+    <command id="save" icon="fa-check" service="applicationService" method="save" label="Confirm" primary="true"/>
+    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
+  </commandgroup>
+
 
   <commandgroup position="modal.detail.secondary" platform="web">
 

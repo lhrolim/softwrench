@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using Newtonsoft.Json;
 using softwrench.sw4.api.classes.email;
@@ -42,10 +43,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             var wo = maximoTemplateData.IntegrationObject;
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
             if (crudData.ContainsAttribute("#hasstatuschange")) {
-                //first let´s 'simply change the status
+                //first let´s 'simply change the status --> this is needed to create a WOSTATUS TX entry
                 WsUtil.SetValue(wo, "STATUSIFACE", true);
                 WsUtil.SetValue(wo, "CHANGEBY", user.Login.ToUpper());
-                if (!WsUtil.GetRealValue(wo, "STATUS").Equals("CLOSE") || !WsUtil.GetRealValue(wo, "STATUS").Equals("CAN")) {
+                var status = WsUtil.GetRealValue(wo, "STATUS") as string;
+                if (!status.EqualsAny("CAN","CLOSE","COMP")) {
+                    //TODO: review these status later, whether it would make sense to abort TX here
                     maximoTemplateData.InvokeProxy();
                 }
                 WsUtil.SetValue(wo, "STATUSIFACE", false);

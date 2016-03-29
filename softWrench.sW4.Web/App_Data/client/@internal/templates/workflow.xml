@@ -33,10 +33,10 @@
   <applications>
     <application name="workflow" title="Workflow" entity="wfprocess" id="00000000-0000-0000-0000-000000020503">
       <schemas>
-        <schema id="workflowselection">
+        <schema id="workflowselection" stereotype="detail.modal.confirm">
           <field attribute="wfprocessid" hidden="true" />
           <optionfield attribute="processname" label="Process Name" providerattribute="workflows" requiredexpression="true" skipvalidation="true">
-            
+
           </optionfield>
           <commandbars>
             <commandgroup position="detail.primary">
@@ -47,6 +47,24 @@
             <property key="associationstoprefetch" value="#none"/>
           </properties>
         </schema>
+
+        <schema id="workflowRouting" stereotype="detail.modal.confirm" title="Complete Workflow Assignment">
+          <field label="Task" attribute="#tasklabel" readonly="true"/>
+          <field attribute="#wfid" hidden="true"/>
+          <field attribute="#wfassignmentid" hidden="true"/>
+          <field attribute="#processname" hidden="true"/>
+
+          <optionfield label="Action" attribute="#taskoption" providerattribute="taskoptions" skipvalidation="true">
+            <renderer type="radio" params="vertical=true"/>
+          </optionfield>
+
+          <field attribute="#memo" label="Memo"/>
+          
+          <properties>
+            <property key="associationstoprefetch" value="#none"/>
+          </properties>
+        </schema>
+
       </schemas>
     </application>
   </applications>
