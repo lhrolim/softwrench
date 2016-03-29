@@ -20,6 +20,15 @@
                 $scope.errorMessage = err.errorMessage;
             });
         }
+
+        $scope.redirectURL = function () {
+            var redirectUrl = getUrlParameter("ReturnUrl");
+            var hash = window.location.hash;
+            if (hash && hash.startsWith("##state=")) {
+                redirectUrl += hash;
+            }
+            return redirectUrl;
+        }
     }
 })(angular);
 

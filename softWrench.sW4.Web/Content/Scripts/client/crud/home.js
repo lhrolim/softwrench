@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, $location, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService, historyService) {
+    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, $location, $log, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService, historyService) {
 
     $scope.$name = 'HomeController';
 
@@ -62,8 +62,15 @@
         });
     }
 
+    // listen to a location change to redirect on browser back and forward navigation
     $rootScope.$on("$locationChangeSuccess", function (event, newUrl, oldUrl) {
-        if (oldUrl && oldUrl.endsWith(location.pathname)) {
+        if (newUrl === oldUrl || oldUrl && oldUrl.endsWith(location.pathname)) {
+            return;
+        }
+
+        // workaround - if the location change was originated by adding a url on history (causes a hash change on url) ignores this redirect
+        if (historyService.wasLocationUpdatedByService()) {
+            historyService.resetLocationUpdatedByService();
             return;
         }
 
@@ -71,6 +78,8 @@
         if (!redirectUrl) {
             return;
         }
+        var log = $log.getInstance("HomeController#locationChangeSuccess");
+        log.debug("Redirecting to ({0}) as a browser navigation".format(redirectUrl));
         redirect(redirectUrl);
     });
 
@@ -87,7 +96,7 @@
     initController();
 }
 
-    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$location", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", "historyService", HomeController]);
+    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$location", "$log", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", "historyService", HomeController]);
 window.HomeController = HomeController;
 
 })(angular);

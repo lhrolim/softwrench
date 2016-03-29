@@ -217,7 +217,7 @@ String.prototype.isEqual = String.prototype.f = function (other, ignoreCase) {
     return s.toLowerCase() === other.toLowerCase();
 };
 
-String.prototype.contains = function(str) {
+String.prototype.contains = function (str) {
     return this.indexOf(str) >= 0;
 };
 
@@ -857,5 +857,22 @@ if (typeof (window.throttle !== "function") && (!window._ || typeof (window._.th
             }
             return result;
         };
+    }
+
+    // returns the value of the given parameter name from the current url
+    function getUrlParameter(sParam) {
+        var sPageUrl = decodeURIComponent(window.location.search.substring(1));
+        var sUrlVariables = sPageUrl.split("&");
+        var sParameterName;
+
+        for (var i = 0; i < sUrlVariables.length; i++) {
+            sParameterName = sUrlVariables[i].split("=");
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+
+        return null;
     }
 }
