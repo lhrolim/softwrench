@@ -5,7 +5,7 @@
 
 
 
-    function angularTypeahead(restService, $timeout, $log,
+    function angularTypeahead(restService, $timeout, $log,$rootScope,
         contextService, associationService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, expressionService) {
         /// <summary>
         /// This directive integrates with bootsrap-typeahead 0.10.X
@@ -137,10 +137,16 @@
                     if (datamap) {
                         $log.getInstance("angulartypeahead#keyup").debug("cleaning datamap");
                         datamap[scope.attribute] = null;
+                        //rootScope needed if datamap is change to reeval any related expressions that were bound to that particular item
+                        $rootScope.$digest();
                     }
+                } else {
+                    //if filter is applied, let´s not show recently used filters
+                    //scope digest is enough if we´re not clearing nor selecting an entry (i.e, not changing the datamap)
+                    scope.$digest();
                 }
-                scope.$digest();
-                //if filter is applied, let´s not show recently used filters
+                
+                
 
             });
         }
@@ -259,7 +265,7 @@
         return directive;
     }
 
-    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', 'expressionService', angularTypeahead]);
+    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log','$rootScope', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', 'expressionService', angularTypeahead]);
 
 })(angular, Bloodhound);
 
