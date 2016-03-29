@@ -508,16 +508,15 @@
                 //convert the option string into an object
                 var specificOptions = {};
                 if (options) {
-                    specificOptions = JSON.parse(options);
+                    specificOptions = options.replace(/'/g, '"');
+                    specificOptions = JSON.parse(specificOptions);
                 }
 
                 //build the option objects
                 var chartDefaults = this.getDefaultOptions(chartType, data);
                 var defaultAddons = this.getAddonOptions(chartDefaults, data);
                 var specificAddons = this.getAddonOptions(specificOptions, data);
-
                 var combined = $.extend(true, {}, chartDefaults, specificOptions, defaultAddons, specificAddons);
-                //log.debug(combined);
                 
                 return combined;
             },
