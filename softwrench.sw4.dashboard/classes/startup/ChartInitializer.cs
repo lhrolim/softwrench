@@ -14,8 +14,8 @@ using WebGrease.Css.Extensions;
 namespace softwrench.sw4.dashboard.classes.startup {
     public class ChartInitializer : ISWEventListener<ApplicationStartedEvent> {
 
-        private const string WO_CHART_DASHBOARD_TITLE = "[SWWEB-2200](2016-03-28)";
-        private const string SR_CHART_DASHBOARD_TITLE = "[SWWEB-2200](2016-03-29)";
+        private const string WO_CHART_DASHBOARD_TITLE = "Work Orders";
+        private const string SR_CHART_DASHBOARD_TITLE = "Service Requests";
 
         /// <summary>
         /// (WO.status is 'open') != (WO.status isn't 'close') --> special query
@@ -58,47 +58,35 @@ namespace softwrench.sw4.dashboard.classes.startup {
         private Dashboard ExecuteSRChartInitialization() {
             var panels = new List<DashboardGraphicPanel>() {
                 new DashboardGraphicPanel() {
-                    Alias = "sr.status.openclosed.gauge",
-                    Title = "Total Service Requests",
-                    Size = 3,
-                    Configuration = "application=sr;field=status;type=swRecordCountGauge;statusfieldconfig=openclosed;limit=0;showothers=False"
-                },
-                new DashboardGraphicPanel() {
                     Alias = "sr.status.top5",
                     Title = "Service Requests by Status",
                     Size = 9,
-                    Configuration = "application=sr;field=status;type=swRecordCountChart;statusfieldconfig=all;limit=5;showothers=False"
+                    Configuration = "application=sr;field=status;type=swRecordCountChart;statusfieldconfig=all;limit=5;showothers=False;options={'series': {'color': '#f65752'}}"
                 },
                 new DashboardGraphicPanel() {
-                    Alias = "sr.status.line",
-                    Title = "Service Requests by Status",
-                    Size = 9,
-                    Configuration = "application=sr;field=status;type=swRecordCountLineChart;statusfieldconfig=all;limit=0;showothers=False"
-                },
-                new DashboardGraphicPanel() {
-                    Alias = "sr.status.openclosed",
-                    Title = "Open/Closed Service Requests",
+                    Alias = "sr.status.openclosed.gauge",
+                    Title = "Total Service Requests",
                     Size = 3,
-                    Configuration = "application=sr;field=status;type=swRecordCountPie;statusfieldconfig=openclosed;limit=0;showothers=False"
+                    Configuration = "application=sr;field=status;type=swCircularGauge;statusfieldconfig=openclosed;limit=0;showothers=False;options={'valueIndicator': {'color': '#e59323', 'type': 'rangeBar'}}"
                 },
                 new DashboardGraphicPanel() {
                     Alias = "sr.owner.top5",
                     Title = "Top 5 Owners",
                     Size = 6,
-                    Configuration = "application=sr;field=owner;type=swRecordCountRotatedChart;statusfieldconfig=all;limit=5;showothers=False"
+                    Configuration = "application=sr;field=owner;type=swRecordCountRotatedChart;statusfieldconfig=all;limit=5;showothers=False;options={'series': {'color': '#808080', 'type': 'line'}}"
                 },
                 new DashboardGraphicPanel() {
                     Alias = "sr.reportedby.top5",
                     Title = "Top 5 Reporters",
                     Size = 6,
-                    Configuration = "application=sr;field=reportedby;type=swRecordCountRotatedChart;statusfieldconfig=all;limit=5;showothers=False"
+                    Configuration = "application=sr;field=reportedby;type=swRecordCountRotatedChart;statusfieldconfig=all;limit=5;showothers=False;options={'series': {'color': '#4488f2', 'type': 'line'}}"
                 },
                 new DashboardGraphicPanel() {
-                    Alias = "sr.status.pie",
-                    Title = "Service Request Status",
+                    Alias = "sr.status.openclosed",
+                    Title = "Open/Closed Service Requests",
                     Size = 3,
-                    Configuration = "application=sr;field=status;type=swRecordCountPie;statusfieldconfig=all;limit=6;showothers=True"
-                },
+                    Configuration = "application=sr;field=status;type=swRecordCountPie;statusfieldconfig=openclosed;limit=0;showothers=False;options={'series': {'type': 'doughnut'}, 'swChartsAddons': {'addPiePercentageTooltips': true}}"
+                }
             };
 
             return CreateDashboard(SR_CHART_DASHBOARD_TITLE, panels);
@@ -118,7 +106,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     Alias = "wo.status.openclosed.gauge",
                     Title = "Total Work Orders",
                     Size = 3,
-                    Configuration = "application=workorder;field=status;type=swRecordCountGauge;statusfieldconfig=openclosed;limit=0;showothers=False"
+                    Configuration = "application=workorder;field=status;type=swCircularGauge;statusfieldconfig=openclosed;limit=0;showothers=False"
                 },
                 new DashboardGraphicPanel() {
                     Alias = "wo.status.top5",
@@ -130,37 +118,37 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     Alias = "wo.priority",
                     Title = "Work Order by Priority",
                     Size = 9,
-                    Configuration = "application=workorder;field=wopriority;type=swRecordCountLineChart;statusfieldconfig=all;limit=0;showothers=False"
+                    Configuration = "application=workorder;field=wopriority;type=swRecordCountLineChart;statusfieldconfig=all;limit=0;showothers=False;options={'series': {'color': '#808080', 'label': {'visible': false}, 'type': 'line'}}"
                 },
                 new DashboardGraphicPanel() {
                     Alias = "wo.status.openclosed",
                     Title = "Open/Closed Work Orders",
                     Size = 3,
-                    Configuration = "application=workorder;field=status;type=swRecordCountPie;statusfieldconfig=openclosed;limit=0;showothers=False"
+                     Configuration = "application=workorder;field=status;type=swRecordCountPie;statusfieldconfig=openclosed;limit=0;showothers=False;options={'legend': {'visible': false}, 'swChartsAddons': {'addPieLabelAndPercentageLabels': true}}"
                 },
                 new DashboardGraphicPanel() {
                     Alias = "wo.owners.top5",
                     Title = "Top 5 Owners",
                     Size = 6,
-                    Configuration = "application=workorder;field=owner;type=swRecordCountRotatedChart;statusfieldconfig=all;limit=5;showothers=False"
+                    Configuration = "application=workorder;field=owner;type=swRecordCountRotatedChart;statusfieldconfig=all;limit=5;showothers=False;options={'series': {'color': '#e59323'}}"
                 },
                 new DashboardGraphicPanel() {
                     Alias = "wo.reportedby.top5",
                     Title = "Top 5 Reporters",
                     Size = 6,
-                    Configuration = "application=workorder;field=reportedby;type=swRecordCountRotatedChart;statusfieldconfig=all;limit=5;showothers=False"
+                    Configuration = "application=workorder;field=reportedby;type=swRecordCountRotatedChart;statusfieldconfig=all;limit=5;showothers=False;options={'series': {'color': '#39b54a'}}"
                 },
                  new DashboardGraphicPanel() {
                     Alias = "wo.types",
                     Title = "Work Order Types",
                     Size = 3,
-                    Configuration = "application=workorder;field=worktype;type=swRecordCountPie;statusfieldconfig=all;limit=6;showothers=True"
+                    Configuration = "application=workorder;field=worktype;type=swRecordCountPie;statusfieldconfig=all;limit=6;showothers=True;options={'series': {'type': 'doughnut'}, 'swChartsAddons': {'addPiePercentageTooltips': true}, 'tooltip': {'enabled': false}}"
                 },
             };
 
             return CreateDashboard(WO_CHART_DASHBOARD_TITLE, panels);
         }
-
+ 
         #endregion
 
         #region Utils
