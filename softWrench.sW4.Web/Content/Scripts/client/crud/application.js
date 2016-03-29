@@ -56,7 +56,7 @@ app.directive('filterrowrendered', function ($timeout) {
 
 app.controller("ApplicationController", applicationController);
 function applicationController($scope, $http, $log, $timeout,
-    fixHeaderService, $rootScope, associationService, validationService,
+    fixHeaderService, $rootScope, associationService, validationService, historyService,
     contextService, searchService, alertService, schemaService, userPreferencesService, 
     checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService) {
     "ngInject";
@@ -232,6 +232,7 @@ function applicationController($scope, $http, $log, $timeout,
         if (printMode == undefined) {
             //avoid the print url to be saved on the sessionStorage, breaking page refresh
             contextService.insertIntoContext("swGlobalRedirectURL", urlToCall, false);
+            historyService.addToHistory(urlToCall);
         }
         log.info("calling url".format(urlToCall));
 

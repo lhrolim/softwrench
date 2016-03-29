@@ -20,6 +20,10 @@
                 $scope.errorMessage = err.errorMessage;
             });
         }
+
+        $scope.redirectUrl = function () {
+            return window.location.href.substring(window.location.origin.length);
+        }
     }
 })(angular);
 

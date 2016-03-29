@@ -67,7 +67,7 @@
             @if (Model.IsLoginEnabled)
             {
                 <div class="row form">
-                    <form class="col-sm-offset-1 col-sm-10" role="form" action="@Request.RawUrl" method="post" name="value" ng-show="!showforgotPasswordForm">
+                    <form class="col-sm-offset-1 col-sm-10" role="form" action="{{redirectUrl()}}" method="post" name="value" ng-show="!showforgotPasswordForm">
 
                         <div class="row">
                             <div id="diverrormessagelist" class="alert alert-success" ng-show="successMessage!=null">
