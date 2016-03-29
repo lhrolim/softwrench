@@ -15,7 +15,7 @@
     <application id="NWO" icon="fa fa-plus" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
     <!--    <application id="WOB" title="Manage Batch" ref="_wobatch" schema="list" role="allowwobatches" tooltip="Manage Work Order batch"/>-->
   </container>
-  <container title="Solutions" tooltip="Click to access your solutions" icon="fa fa-book" role="solution" id="solution">
+  <container title="Solutions" tooltip="Click to access your solutions" icon="fa fa-book" role="solution" id="solution" permissionexpression="@maximoVersionEvaluator.IsSCCD">
     <application id="SOL" icon="fa fa-table" title="Solution Grid" ref="solution" schema="list" tooltip="Click to view solution"/>
     <application id="SOLNEW" icon="fa fa-plus" title="New Solution" ref="solution" schema="newdetail" tooltip="Click to Create a New Solution"/>
   </container>

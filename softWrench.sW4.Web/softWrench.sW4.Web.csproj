@@ -771,7 +771,6 @@
     <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
-    <Content Include="Content\Templates\directives\swChartLabel.html" />
     <Content Include="Content\Templates\directives\swChart.html" />
     <Content Include="Content\Scripts\client\crud\search\crud_search.js" />
     <Content Include="Content\Templates\crud\search\crud_search.html" />

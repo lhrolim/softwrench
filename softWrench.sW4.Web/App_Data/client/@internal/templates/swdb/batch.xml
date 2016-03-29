@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <!--This is a batch only for workorders-->
+    <entity name="WOBatch"  whereclause="Application = 'WORKORDER' " idAttribute="Id" parententity="Batch">
+      <attributes>
+        <attribute name="wocount" type="int" query="@woBatchWhereClauseProvider.WoCountQuery"/>
+      </attributes>
+    </entity>
+  
+  </entities>
+
+  <applications>
+    
+    <application entity="WOBatch" name="wobatch" title="Workorder Batch">
+      <schemas>
+        <list title="Workorder Batches">
+          <commandbars>
+            <commandgroup position="gridtop" removeundeclared="true">
+              <command id="refresh" icon="fa-refresh" tooltip="refresh" service="searchService" method="refreshGrid"/>
+              <command id="newbatch" icon="fa fa-plus" label="New Batch" service="wobatchService" method="newBatch"/>
+            </commandgroup>
+          </commandbars>
+          <event type="onload" service="wobatchService" method="configurePolling"/>
+          <field attribute="id" label="Batch ID">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="alias" label="Alias">
+            <renderer type="default" params="width=30%"/>
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="updatedate" label="Updated">
+            <renderer type="datetime" params="width=25%"/>
+          </field>
+          <field attribute="wocount" label="Work Order Count">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="itemids" label="Workorders" hidden="true"/>
+          <properties>
+            <property key="list.click.service" value="wobatchService.edit"/>
+          </properties>
+        </list>
+      </schemas>
+    </application>
+
+    <application name="batchreport" entity="BatchReport" title="Batch Report">
+      <schemas>
+        <detail mode="output">
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <removecommand id="print"/>
+              <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" tooltip="Cancel" parameters="default='_batch.list'"/>
+            </commandgroup>
+          </commandbars>
+          <section id="sentbatch" resourcepath="/Content/Templates/batches/dynamiccomposition.html" parameters="schemaref=failedbatchschema;
+                   datamapref=failedbatchdatamap;title=Problematic Items">
+            <!--            <header label="Problematic Items" displacement="ontop"/>-->
+          </section>
+          <section id="sentbatch" resourcepath="/Content/Templates/batches/dynamiccomposition.html" parameters="schemaref=sentbatchschema;
+                   datamapref=sentbatchdatamap;title=Sent Items">
+            <!--            <header label="Sent Items" displacement="ontop"/>-->
+          </section>
+          <properties>
+            <property key="detail.cancel.click" value="_wobatch.list"/>
+          </properties>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="ProblemItems" entity="BatchItemProblem" title="Batch Problems">
+      <schemas>
+        <schema id="list" stereotype="compositionlist">
+          <field attribute="itemid" label="Item Id"/>
+          <field attribute="errormessage" label="Error Message"/>
+        </schema>
+      </schemas>
+    </application>
+    
+  </applications>
+  
+</metadata>

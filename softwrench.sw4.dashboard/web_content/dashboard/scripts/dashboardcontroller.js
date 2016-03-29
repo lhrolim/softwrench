@@ -176,11 +176,9 @@ app.controller('DashboardController', [
             }, 0, false);
         });
 
-        $scope.$on('dash_panelassociated', function (event, panel, row, column) {
-            var dashboard = $scope.dashboard;
+        $scope.$on('dash_panelassociated', function (event, panel) {
             modalService.hide();
-            dashboardAuxService.readjustLayout(dashboard, row, column);
-            dashboardAuxService.readjustPositions(dashboard, panel, row, column);
+            dashboardAuxService.addPanelToDashboard($scope.dashboard, panel);
         });
 
         $scope.getEditButtonClass = function () {

@@ -1,20 +1,15 @@
 ﻿<div class="container">
-    <div ng-repeat="row in getRows()" class="row">
-        <div ng-repeat="column in getColumnsOfRow(row)" class="column" ng-class="getClassByNumberOfColumns(row)">
+    <div class="row">
+        <div ng-repeat="panelDataSource in visiblePanels()" class="column col-sm-{{ panelDataSource.panel.size }}" >
             <div class="wrap"
-                 ng-init="localPanelDataSource = getPanelDataFromMatrix(row,column);localVisible = isPanelVisible(localPanelDataSource)"
-                 ng-switch on="localPanelDataSource.panel.type">
+                 ng-switch on="panelDataSource.panel.type">
 
                 <dashboardgridpanel ng-switch-when="DashboardGridPanel"
-                                    panelcol="{{column}}"
-                                    panelrow="row"
-                                    paneldatasource="localPanelDataSource"
-                                    dashboardid="dashboardid"
-                                    ng-show="localVisible" />
+                                    paneldatasource="panelDataSource"
+                                    dashboardid="dashboardid" />
                 
                 <dashboard-graphic-panel ng-switch-when="DashboardGraphicPanel"
-                                         panel="localPanelDataSource.panel"
-                                         ng-show="localVisible" />
+                                         panel="panelDataSource.panel" />
             </div>
         </div>
     </div>

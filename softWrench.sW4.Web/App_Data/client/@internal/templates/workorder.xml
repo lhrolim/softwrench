@@ -146,15 +146,11 @@
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
-
           <filters>
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px"/>
             <optionfilter attribute="location" provider="location_.description" allowblank="true" displaycode="true"/>
             <optionfilter attribute="asset_.description" provider="asset_.description" allowblank="true" style="width:300px" whereclause="!@assetnum in (!@#value)" displaycode="true"/>
           </filters>
-          <field attribute="wopriority" label="Priority" >
-            <renderer type="priorityicon" params="width=3%" />
-          </field>
           <field attribute="wonum" label="WO#" >
             <renderer type="default" params="width=10%" />
           </field>
@@ -169,6 +165,9 @@
           </field>
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="width=15%;grid=workorder;column=status" />
+          </field>
+          <field attribute="wopriority" label="Priority" >
+            <renderer type="priorityicon" params="width=15%" />
           </field>
           <field attribute="attachments" tooltip="Attachments">
             <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};"/>
@@ -524,8 +523,8 @@
               </container>
             </commandgroup>
           </commandbars>
-          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
         </schema>
 
         <list platform="mobile" title="Work Order Grid">

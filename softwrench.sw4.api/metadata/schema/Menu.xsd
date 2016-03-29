@@ -345,6 +345,7 @@
         <attribute name="modulealias" type="string" />
         <attribute name="action" type="string" />
         <attribute name="controller" type="string" />
+        <attribute name="permissionexpression" type="string" />
         <attribute name="hasmainaction" type="boolean">
           <annotation>
             <documentation>

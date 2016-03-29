@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.simpleinjector.Events;
 using cts.commons.web.Attributes;
-using Newtonsoft.Json.Linq;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.dashboard.classes.service.graphic;
@@ -43,18 +42,6 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public IGenericResponseResult SaveDashboard(Dashboard dashboard) {
             //TODO: update menu, clear caching
             var user = SecurityFacade.CurrentUser();
-            var currentdtm = DateTime.Now;
-
-//            if ("personal".Equals(policy)) {
-//                dashboard.Filter = new DashboardFilter {
-//                    UserId = user.UserId
-//                };
-//            }
-
-            // Populate default values
-            if (dashboard.Layout == null) {
-                dashboard.Layout = "0";
-            }
 
             var savedDashboard = _dao.Save(dashboard);
             user.Genericproperties.Remove(DashboardConstants.DashBoardsProperty);
@@ -114,7 +101,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         [HttpGet]
-        public IGenericResponseResult LoadFields([FromUri]String applicationName) {
+        public IGenericResponseResult LoadFields([FromUri]string applicationName) {
             var app = MetadataProvider.Application(applicationName);
             ApplicationSchemaDefinition schema = app.GetListSchema();
             var options = schema.Fields.Select(f => new GenericAssociationOption(f.Attribute, f.Label)).Where(f => !string.IsNullOrEmpty(f.Label))
@@ -126,12 +113,12 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
 
         [HttpGet]
-        public IGenericResponseResult LoadPanel([FromUri]String panel) {
+        public IGenericResponseResult LoadPanel([FromUri]string panel) {
             return new GenericResponseResult<DashboardBasePanel>(_dao.FindByPK<DashboardBasePanel>(typeof(DashboardBasePanel), Int32.Parse(panel)));
         }
 
         [HttpGet]
-        public IGenericResponseResult LoadPanels([FromUri]String paneltype) {
+        public IGenericResponseResult LoadPanels([FromUri]string paneltype) {
             var availablePanels = _userDashboardManager.LoadUserPanels(SecurityFacade.CurrentUser(), paneltype);
             var options = availablePanels.Select(f => new GenericAssociationOption(f.Id.ToString(), f.Alias))
                 .Cast<IAssociationOption>()

@@ -47,10 +47,11 @@ namespace softWrench.sW4.Metadata.Menu {
             var moduleName = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleName).ValueOrDefault((string)null);
             var moduleAlias = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleAlias).ValueOrDefault((string)null);
             var customizationPosition = xElement.Attribute(XmlMenuMetadataSchema.CustomizationPositionAttribute).ValueOrDefault((string)null);
+            var permissionExpression = xElement.AttributeValue("permissionexpression");
             if (moduleName != null) {
                 modules.Add(new ModuleDefinition(moduleName, moduleAlias));
             }
-            return new ResourceMenuItem(id, role, path, @params, tooltip, moduleName, customizationPosition);
+            return new ResourceMenuItem(id, role, path, @params, tooltip, moduleName, permissionExpression, customizationPosition);
         }
 
         [NotNull]
@@ -66,6 +67,7 @@ namespace softWrench.sW4.Metadata.Menu {
             var moduleName = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleName).ValueOrDefault((string)null);
             var customizationPosition = xElement.Attribute(XmlMenuMetadataSchema.CustomizationPositionAttribute).ValueOrDefault((string)null);
             var moduleAlias = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleAlias).ValueOrDefault((string)null);
+            var permissionExpression = xElement.AttributeValue("permissionexpression");
             if (moduleName != null) {
                 modules.Add(new ModuleDefinition(moduleName, moduleAlias));
             }
@@ -73,7 +75,7 @@ namespace softWrench.sW4.Metadata.Menu {
                 xElement.Attribute(XmlMenuMetadataSchema.ApplicationMenuParametersAttribute).ValueOrDefault((string)null);
             SchemaMode mode;
             Enum.TryParse(modeAttr, true, out mode);
-            return new ApplicationMenuItemDefinition(id, title, role, tooltip, icon, application, schema, mode, PropertyUtil.ConvertToDictionary(parameters), moduleName, customizationPosition);
+            return new ApplicationMenuItemDefinition(id, title, role, tooltip, icon, application, schema, mode, PropertyUtil.ConvertToDictionary(parameters), moduleName, permissionExpression, customizationPosition);
         }
 
         [NotNull]
@@ -91,10 +93,11 @@ namespace softWrench.sW4.Metadata.Menu {
             if (moduleName != null) {
                 modules.Add(new ModuleDefinition(moduleName, moduleAlias));
             }
+            var permissionExpression = xElement.AttributeValue("permissionexpression");
             var parameters =
                 xElement.Attribute(XmlMenuMetadataSchema.ActionMenuParametersAttribute).ValueOrDefault((string)null);
             var controller = xElement.Attribute(XmlMenuMetadataSchema.ActionMenuControllerAttribute).Value;
-            return new ActionMenuItemDefinition(id, title, role, tooltip, icon, action, controller, target, PropertyUtil.ConvertToDictionary(parameters), moduleName, customizationPosition);
+            return new ActionMenuItemDefinition(id, title, role, tooltip, icon, action, controller, target, PropertyUtil.ConvertToDictionary(parameters), moduleName, permissionExpression, customizationPosition);
         }
 
         private static ExternalLinkMenuItemDefinition ParseLink(XElement xElement, List<ModuleDefinition> modules) {
@@ -105,6 +108,7 @@ namespace softWrench.sW4.Metadata.Menu {
             var role = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseRoleAttribute).ValueOrDefault((string)null);
             var customizationPosition = xElement.Attribute(XmlMenuMetadataSchema.CustomizationPositionAttribute).ValueOrDefault((string)null);
             var link = xElement.Attribute(XmlMenuMetadataSchema.LinkElement).Value;
+            var permissionExpression = xElement.AttributeValue("permissionexpression");
 
             var moduleName = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleName).ValueOrDefault((string)null);
             var moduleAlias = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleAlias).ValueOrDefault((string)null);
@@ -113,7 +117,7 @@ namespace softWrench.sW4.Metadata.Menu {
             }
             var parameters =
                 xElement.Attribute(XmlMenuMetadataSchema.ActionMenuParametersAttribute).ValueOrDefault((string)null);
-            return new ExternalLinkMenuItemDefinition(id, title, role, tooltip, icon, link, PropertyUtil.ConvertToDictionary(parameters), moduleName, customizationPosition);
+            return new ExternalLinkMenuItemDefinition(id, title, role, tooltip, icon, link, PropertyUtil.ConvertToDictionary(parameters), moduleName, permissionExpression, customizationPosition);
         }
 
         [NotNull]
@@ -138,6 +142,7 @@ namespace softWrench.sW4.Metadata.Menu {
             var moduleName = containerElement.Attribute(XmlMenuMetadataSchema.ContainerModuleName).ValueOrDefault((string)null);
             var moduleAlias = containerElement.Attribute(XmlMenuMetadataSchema.ContainerModuleAlias).ValueOrDefault((string)null);
             var controller = containerElement.Attribute(XmlMenuMetadataSchema.ActionMenuControllerAttribute).ValueOrDefault((string)null);
+            var permissionExpression = containerElement.AttributeValue("permissionexpression");
             var action = containerElement.Attribute(XmlMenuMetadataSchema.ActionMenuActionAttribute).ValueOrDefault((string)null);
             var customizationPosition = containerElement.Attribute(XmlMenuMetadataSchema.CustomizationPositionAttribute).ValueOrDefault((string)null);
             var hasMainAction = containerElement.Attribute(XmlMenuMetadataSchema.ContainerHasMainAction).ValueOrDefault(false);
@@ -160,13 +165,13 @@ namespace softWrench.sW4.Metadata.Menu {
                 leafs.Add(leaf);
             }
             if (isContainer) {
-                return new MenuContainerDefinition(id, title, role, tooltip, icon, moduleName, controller, action, hasMainAction, customizationPosition, leafs);
+                return new MenuContainerDefinition(id, title, role, tooltip, icon, moduleName, controller, action, hasMainAction, customizationPosition, permissionExpression,leafs);
             }
             if (id == null) {
                 throw MenuMetadataException.MissingIdException();
             }
 
-            return new ReferenceMenuItemDefinition(id, title, role, tooltip, icon, moduleName, controller, action, hasMainAction, leafs);
+            return new ReferenceMenuItemDefinition(id, title, role, tooltip, icon, moduleName, controller, action, hasMainAction, permissionExpression,leafs);
         }
 
         [CanBeNull]

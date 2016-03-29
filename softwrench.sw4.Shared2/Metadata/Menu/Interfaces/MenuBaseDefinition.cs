@@ -15,6 +15,10 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Interfaces {
 
         public string CustomizationPosition { get; set; }
 
+        public string PermissionExpresion {
+            get; set;
+        }
+
         public MenuBaseDefinition() {
 
         }

@@ -83,6 +83,75 @@
       </connectorParameters>
     </entity>
 
+    <entity name="invbalances" idAttribute="invbalancesid">
+      <attributes>
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="binnum" type="varchar" required="false" query="COALESCE(!@binnum, '')"/>
+        <attribute name="lotnum" type="varchar" required="false" />
+        <attribute name="curbal" type="double" required="true" />
+        <attribute name="physcnt" type="double" required="true" />
+        <attribute name="physcntdate" type="datetime" required="false" />
+        <attribute name="reconciled" type="smallint" required="true" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="conditioncode" type="varchar" required="false" />
+        <attribute name="invbalancesid" type="bigint" required="true" />
+        <attribute name="stagingbin" type="smallint" required="true" />
+        <attribute name="stagedcurbal" type="decimal" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="ib1" type="varchar" required="false" />
+      </attributes>
+      <relationships>
+        <relationship to="item" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="inventory" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="invlot">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="lotnum" to="lotnum"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWINVBAL" />
+        <connectorParameter key="dbtable" value="invbalances" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="invlot" idAttribute="invlotid">
+      <attributes>
+        <attribute name="lotnum" type="varchar" required="true" />
+        <attribute name="shelflife" type="float" required="false" />
+        <attribute name="useby" type="datetime" required="false" />
+        <attribute name="mfglotnum" type="varchar" required="false" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="manufacturer" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="invlotid" type="bigint" required="true" />
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="invlot" />
+      </connectorParameters>
+    </entity>
+
     <entity name="maxuser" idAttribute="maxuserid">
       <attributes>
         <attribute name="databaseuserid" type="varchar" required="false" />
@@ -1375,6 +1444,75 @@
         <connectorParameter key="dbtable" value="workorder" />
       </connectorParameters>
 
+    </entity>
+
+    <entity name="labtrans" idAttribute="labtransid">
+      <attributes>
+        <attribute name="transdate" type="datetime" required="true" />
+        <attribute name="laborcode" type="varchar" required="true" />
+        <attribute name="craft" type="varchar" required="true" />
+        <attribute name="payrate" type="double" required="true" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="regularhrs" type="float" required="true" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="enterdate" type="datetime" required="true" />
+        <attribute name="startdate" type="datetime" required="true" />
+        <attribute name="starttime" type="datetime" required="false" />
+        <attribute name="finishdate" type="datetime" required="false" />
+        <attribute name="finishtime" type="datetime" required="false" />
+        <attribute name="transtype" type="varchar" required="true" />
+        <attribute name="outside" type="smallint" required="true" />
+        <attribute name="memo" type="varchar" required="false" />
+        <attribute name="rollup" type="smallint" required="true" />
+        <attribute name="gldebitacct" type="varchar" required="false" />
+        <attribute name="linecost" type="double" required="true" />
+        <attribute name="glcreditacct" type="varchar" required="false" />
+        <attribute name="financialperiod" type="varchar" required="false" />
+        <attribute name="ponum" type="varchar" required="false" />
+        <attribute name="polinenum" type="int" required="false" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="genapprservreceipt" type="smallint" required="true" />
+        <attribute name="paymenttransdate" type="datetime" required="false" />
+        <attribute name="exchangerate2" type="decimal" required="false" />
+        <attribute name="linecost2" type="decimal" required="false" />
+        <attribute name="labtransid" type="bigint" required="true" />
+        <attribute name="servrectransid" type="bigint" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="fincntrlid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="refwo" type="varchar" required="false" />
+        <attribute name="enteredastask" type="smallint" required="true" />
+        <attribute name="ticketid" type="varchar" required="false" />
+        <attribute name="ticketclass" type="varchar" required="false" />
+        <attribute name="contractnum" type="varchar" required="false" />
+        <attribute name="skilllevel" type="varchar" required="false" />
+        <attribute name="timerstatus" type="varchar" required="false" />
+        <attribute name="invoicenum" type="varchar" required="false" />
+        <attribute name="invoicelinenum" type="int" required="false" />
+        <attribute name="revisionnum" type="int" required="false" />
+        <attribute name="premiumpaycode" type="varchar" required="false" />
+        <attribute name="premiumpayhours" type="float" required="false" />
+        <attribute name="premiumpayrate" type="decimal" required="false" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="premiumpayratetype" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="porevisionnum" type="int" required="false" />
+        <attribute name="crewworkgroup" type="varchar" required="false" />
+        <attribute name="amcrew" type="varchar" required="false" />
+        <attribute name="amcrewtype" type="varchar" required="false" />
+        <attribute name="position" type="varchar" required="false" />
+        <attribute name="plusdworkgroup" type="varchar" required="false" />
+        <attribute name="plusdcrewtype" type="varchar" required="false" />
+        <attribute name="plusdcrewid" type="varchar" required="false" />
+        <attribute name="plusdposition" type="varchar" required="false" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="labtrans" />
+      </connectorParameters>
     </entity>
 
     <entity name="failurecode" idAttribute="failurecodeid">

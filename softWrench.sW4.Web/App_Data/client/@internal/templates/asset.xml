@@ -55,15 +55,15 @@
             <property key="routing.nextapplication" value="asset"/>
             <property key="nextschema.schemaid" value="assetdetail"/>
           </properties>
-          <field attribute="priority" label="Priority" >
-            <renderer type="priorityicon" params="width=3%" />
-          </field>
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description"/>
           <field attribute="location" label="Location"/>
           <field attribute="parent" label="Parent"/>
           <field attribute="status" label="Status"/>
           <field attribute="siteid" label="Site ID"/>
+          <field attribute="priority" label="Priority" >
+            <renderer type="priorityicon" params="width=15%" />
+          </field>
           <field attribute="workorders" label="Workorders">
             <renderer type="icon" params="width=3%;expression={'#default':'fa-wrench','0':''};"/>
           </field>

@@ -38,7 +38,8 @@
     "moment": "~2.11.0",
     "textAngular": "~1.4.6",
     "bootstrap-combobox": "1.1.5",
-    "lz-string": "~1.4.4"
+    "lz-string": "~1.4.4",
+	"devextreme-web": "~15.2.5"
   },
   "devDependencies": {},
   "resolutions": {

@@ -26,8 +26,6 @@ angular.module('sw_layout')
         replace: true,
         templateUrl: contextService.getResourceUrl('/Content/Shared/dashboard/templates/dashboardgridpanel.html'),
         scope: {
-            panelrow: '=',
-            panelcol: '@',
             paneldatasource: '=',
             dashboardid:'='
         },
