@@ -1358,11 +1358,11 @@
           <section orientation="horizontal">
             <renderer type="default"/>
             <section id="srsection" />
-            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="true">
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="false">
               <renderer type="lookup" />
               <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
             </association>
-            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" hideDescription="true">
+            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" hideDescription="false">
               <dataprovider prefilterfunction="FilterByPersonGroup"/>
               <renderer type="lookup" />
               <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
@@ -1749,11 +1749,11 @@
           <field attribute="orgid" hidden="true" />
           <field attribute="class" hidden="true" />
           <section id="ticketsection" />
-          <association label="Owner:" target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="true">
+          <association label="Owner:" target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="false">
             <renderer type="lookup" params="inputsize=medium" />
             <event type="afterchange" service="generalsrService" method="afterchangeowner" />
           </association>
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" hideDescription="true">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" hideDescription="false">
             <dataprovider prefilterfunction="FilterByPersonGroup" />
             <renderer type="lookup" params="inputsize=medium" />
           </association>
