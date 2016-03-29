@@ -58,11 +58,11 @@
             if (configuration.field === "status" && configuration.statusfieldconfig === "openclosed") {
                 // closed status entry
                 var closed = processed.find(function (d) {
-                    return d.field.equalsIc("close");
+                    return d.field.equalsIc("close") || d.field.equalsIc("closed");
                 });
                 // sum of all except closed
                 var openCount = processed.filter(function (d) {
-                    return !d.field.equalsIc("close");
+                    return !d.field.equalsIc("close") && !d.field.equalsIc("closed");
                 })
                 .reduce(function (previous, current) {
                     return previous + current.value;
