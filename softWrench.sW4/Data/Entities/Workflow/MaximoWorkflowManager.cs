@@ -93,7 +93,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
         and pv.personid = ?
         ))";
 
-        private const string ClosedStatusQuery = "select s.description from synonymdomain s inner join {0} w on w.status = s.value where {1} = '{2}' and domainid = 'WOSTATUS' and maxvalue in ('CLOSE', 'CAN', 'COMP')";
+        private const string ClosedStatusQuery = "select s.description from synonymdomain s inner join {0} w on w.status = s.value where {1} = '{2}' and domainid = 'WOSTATUS' and maxvalue in ('CLOSE', 'CAN')";
 
 
         [NotNull]
