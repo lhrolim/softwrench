@@ -10,8 +10,9 @@
                 data: "=",
                 options: "="
             },
-            link: function(scope, element, attrs) {
-                scope.labeloptions = {};
+            link: function (scope, element, attrs) {
+                scope.vm = { };
+                scope.vm.labeloptions = {};
 
                 //get the default options
                 var chartOptions = chartService.getChartOptions(scope.chartType, scope.options, scope.data);
@@ -23,31 +24,31 @@
                     case "swRecordCountRotatedChart":
                     case "swRecordCountLineChart":
                     case "swRecordTrends":
-                        $('.sw.chart', element).dxChart(chartOptions);
+                        scope.chart = $(".sw.chart", element).dxChart(chartOptions).dxChart("instance");
                         break;
                     case "dxCircularGauge":
                     case "swCircularGauge":
                     case "swRecordCountGauge":
-                        $('.sw.chart', element).dxCircularGauge(chartOptions);
+                        scope.chart = $(".sw.chart", element).dxCircularGauge(chartOptions).dxCircularGauge("instance");
                         break;
                     case "swLabel":
                         scope.labeloptions = chartOptions;
                         break;
                     case "dxLinearGauge":
                     case "swLinearGauge":
-                        $('.sw.chart', element).dxLinearGauge(chartOptions);
+                        scope.chart = $(".sw.chart", element).dxLinearGauge(chartOptions).dxLinearGauge("instance");
                         break;
                     case "dxMap":
                     case "swRecordCountMap":
-                        $('.sw.chart', element).dxVectorMap(chartOptions);
+                        scope.chart = $(".sw.chart", element).dxVectorMap(chartOptions).dxVectorMap("instance");
                         break;
                     case "dxPie":
                     case "swRecordCountPie":
-                        $('.sw.chart', element).dxPieChart(chartOptions);
+                        scope.chart = $(".sw.chart", element).dxPieChart(chartOptions).dxPieChart("instance");
                         break;
                     case "dxSparkline":
                     case "swSparkline":
-                        $('.sw.chart', element).dxSparkline(chartOptions);
+                        scope.chart = $(".sw.chart", element).dxSparkline(chartOptions).dxSparkline("instance");
                         break;
                 }
             }

@@ -7,9 +7,10 @@
                 <dashboardgridpanel ng-switch-when="DashboardGridPanel"
                                     paneldatasource="panelDataSource"
                                     dashboardid="dashboardid" />
-                
+
                 <dashboard-graphic-panel ng-switch-when="DashboardGraphicPanel"
-                                         panel="panelDataSource.panel" />
+                                         panel="panelDataSource.panel"
+                                         dashboardid="dashboardid" />
             </div>
         </div>
     </div>

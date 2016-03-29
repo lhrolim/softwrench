@@ -233,6 +233,11 @@
             };
         }
 
+
+        function onDashboardSelected(graphic) {
+            // implementing interface        
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -242,7 +247,8 @@
             resizeGraphic: resizeGraphic,
             onProviderSelected: onProviderSelected,
             onWorkbookSelected: onWorkbookSelected,
-            onBeforeAssociatePanel: onBeforeAssociatePanel
+            onBeforeAssociatePanel: onBeforeAssociatePanel,
+            onDashboardSelected: onDashboardSelected
         };
         return service;
         //#endregion

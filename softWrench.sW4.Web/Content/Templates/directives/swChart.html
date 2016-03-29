@@ -1,11 +1,11 @@
 <div class="sw chart">
 
     <div ng-if="chartType==='swLabel'">
-        <div class="kpi" ng-style="{background: labeloptions.background, color: labeloptions.color}">
+        <div class="kpi" ng-style="{background: vm.labeloptions.background, color: vm.labeloptions.color}">
             <div class="wrap">
-                <h4>{{labeloptions.title.text}}</h4>
-                <h1>{{labeloptions.value}}</h1>
-                <h5>{{labeloptions.units.text}}</h5>
+                <h4>{{vm.labeloptions.title.text}}</h4>
+                <h1>{{vm.labeloptions.value}}</h1>
+                <h5>{{vm.labeloptions.units.text}}</h5>
             </div>
         </div>
     </div>
