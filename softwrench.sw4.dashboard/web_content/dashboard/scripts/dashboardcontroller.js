@@ -202,6 +202,7 @@ app.controller('DashboardController', [
             $scope.currentdashboardid = id;
             $scope.dashboard = $scope.getCurrentDashboardById(id);
 
+            $scope.$broadcast("sw:dashboard:selected", id);
             var log = $log.getInstance('dashboardrendered');
             log.trace('lazy loading dashboard {0}'.format(id));
         };

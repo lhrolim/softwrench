@@ -216,6 +216,19 @@
             crudContextHolderService.updateEagerAssociationOptions("fields", fields);
 
         }
+
+        /**
+         * Renders the devexpress element of the graphic container.
+         * 
+         * @param DOMNode graphic sw-chart compiled directive
+         */
+        function onDashboardSelected(graphic) {
+            var scope = angular.element(graphic.children()).scope();
+            var chart = scope.chart;
+            if (!chart) return;
+            chart.render();
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -224,7 +237,8 @@
             resizeGraphic: resizeGraphic,
             onProviderSelected: onProviderSelected,
             onBeforeAssociatePanel: onBeforeAssociatePanel,
-            onApplicationSelected: onApplicationSelected
+            onApplicationSelected: onApplicationSelected,
+            onDashboardSelected: onDashboardSelected
         };
         return service;
         //#endregion
