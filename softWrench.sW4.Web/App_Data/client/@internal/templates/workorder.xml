@@ -335,7 +335,7 @@
               <association label="Reported By" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
                 <renderer type="lookup" params="columnlabel=Name;"/>
               </association>
-              <field label="Reported Date &amp; Time" attribute="reportdate" readonly="true" default="@currentdatetime">
+              <field label="Reported Date" attribute="reportdate" readonly="true" default="@currentdatetime">
                 <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;" />
               </field>
             </section>

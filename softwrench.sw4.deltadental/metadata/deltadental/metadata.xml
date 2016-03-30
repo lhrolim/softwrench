@@ -439,7 +439,7 @@
                   <renderer type="lookup"/>
                   <event type="afterchange" service="srService" method="afterchangeownergroup"/>
                 </association>
-                <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+                <field label="Reported Date" attribute="reportdate" readonly="true" default="@currentdatetime">
                   <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
                 </field>
               </section>

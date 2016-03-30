@@ -257,7 +257,7 @@
           <section orientation="horizontal">
 
             <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+            <field label="Reported Date" attribute="reportdate" readonly="true" default="@currentdatetime">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
 
@@ -569,7 +569,7 @@
 
           <!--Reported Date  OwnerGroup  -->
           <section orientation="horizontal">
-            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+            <field label="Reported Date" attribute="reportdate" readonly="true" default="@currentdatetime">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
 
