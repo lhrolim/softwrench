@@ -536,6 +536,8 @@
                     }, 300, false);
                 }
 
+                //if inside a scroll pane - to update pane size
+                $(window).trigger('resize');
 
                 return false;
             }
