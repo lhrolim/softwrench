@@ -606,8 +606,8 @@
               <removecommand id="cancel"/>
               <removecommand id="print"/>
               <removecommand id="save"/>
-              <command id="additemtobatch" label="Add" service="inventoryService" method="addItemToBatch" showexpression="@issuetype == null" parameters="datamap,previousdata"/>
-              <command id="updateiteminbatch" label="Update" service="inventoryService" method="updateItemInBatch" showexpression="@issuetype != null" parameters="datamap,previousdata"/>
+              <command id="additemtobatch" label="Add" service="inventoryService" method="addItemToBatch" showexpression="@issuetype == null" parameters="datamap,parentdata"/>
+              <command id="updateiteminbatch" label="Update" service="inventoryService" method="updateItemInBatch" showexpression="@issuetype != null" parameters="datamap,parentdata"/>
               <command id="cancel" label="Cancel" service="inventoryService" method="hideNewIssueModal"/>
             </commandgroup>
           </commandbars>
