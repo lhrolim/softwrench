@@ -27,13 +27,15 @@
             }
         };
 
-        function getChartData(configuration) {
+        function getChartData(panel) {
+            var configuration = panel.configurationDictionary;
             configuration.limit = parseInt(configuration.limit);
             configuration.showothers = (configuration.showothers === "True" || configuration.showothers === "true");
 
             var params = {
                 entity: configuration.application,
                 property: configuration.field,
+                whereClauseMetadataId: "dashboard:" + panel.alias,
                 limit: (configuration.limit > 0 && !configuration.showothers && configuration.statusconfig !== "openclosed") ? configuration.limit : 0
             }
 
@@ -168,7 +170,7 @@
          * @returns Promise resolved with the DOMNode representing the graphic: compiled 'sw-chart' directive
          */
         function loadGraphic(element, panel, options) {
-            return getChartData(panel.configurationDictionary)
+            return getChartData(panel)
                 .then(function (data) {
                     // create isolated scope for the dynamically compiled 'sw-chart' directive
                     var $parent = angular.element(element).scope();

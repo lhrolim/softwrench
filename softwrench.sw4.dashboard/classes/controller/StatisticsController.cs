@@ -17,10 +17,9 @@ namespace softwrench.sw4.dashboard.classes.controller {
             _service = service;
         }
 
-
         [HttpGet]
-        public async Task<IDictionary<string, int>> CountByProperty([FromUri]string entity, [FromUri]string property, [FromUri]int limit = 0) {
-            return await _service.CountByProperty(entity, property, limit);
+        public async Task<IDictionary<string, int>> CountByProperty([FromUri]string entity, [FromUri]string property, [FromUri]string whereClauseMetadataId = null, [FromUri]int limit = 0) {
+            return await _service.CountByProperty(entity, property, whereClauseMetadataId, limit);
         }
 
     }

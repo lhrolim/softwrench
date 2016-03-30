@@ -228,12 +228,7 @@
                 <field attribute="targetfinish" label="Target Finish Date">
                   <renderer type="datetime" params="format=MM/dd/yyyy"/>
                 </field>
-                <field attribute="schedstart" label="Scheduled Start Date">
-                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
-                </field>
-                <field attribute="schedfinish" label="Scheduled Finish Date">
-                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
-                </field>
+           
                 <field attribute="actualstart" label="Actual Start Date">
                   <renderer type="datetime" params="format=MM/dd/yyyy"/>
                 </field>
