@@ -232,7 +232,7 @@
           <field attribute="orgid" hidden="true" />
           <field attribute="itemsetid" hidden="true"/>
           <field attribute="linetype" hidden="true"/>
-          <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
+          <field label="Entered Date" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
           <section resourcepath="/Content/Templates/otb/receiving.html">
@@ -371,7 +371,7 @@
           <field attribute="description" label="Description"/>
           <field attribute="orderqty" label="Quantity"/>
           <field attribute="unitcost" label="Unit Cost"/>
-          <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
+          <field label="Entered Date" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
         </schema>

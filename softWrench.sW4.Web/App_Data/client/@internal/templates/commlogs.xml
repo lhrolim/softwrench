@@ -86,7 +86,7 @@
           <field attribute="inbound">
             <renderer type="icon" params="expression={'1':'fa-long-arrow-right green','0':'fa-long-arrow-left orange'}"/>
           </field>
-          <field attribute="createdate" label="Created Date/Time" qualifier="tag">
+          <field attribute="createdate" label="Created Date" qualifier="tag">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
           <field attribute="sendto" label="To" qualifier="expression={'!@inbound':'title'}">
@@ -111,7 +111,7 @@
             <renderer type="lookup"/>
             <event type="afterchange" service="commlogService" method="formatCommTemplate"/>
           </association>
-          <!--<field attribute="createdate" label="Created Date/Time" readonly="true">
+          <!--<field attribute="createdate" label="Created Date" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
           </field>-->
           <field attribute="orgobject" label="Origination" hidden="true"/>

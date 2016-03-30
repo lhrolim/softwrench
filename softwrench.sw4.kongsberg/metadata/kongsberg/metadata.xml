@@ -2024,7 +2024,7 @@
           <field attribute="schedfinish" label="Scheduled Finish Date:"/>
           <field attribute="targstartdate" label="Target Start Date:"/>
           <field attribute="targcompdate" label="Target Finish Date:"/>
-          <!--field attribute="itdcreatedate" label="CR Activation Date/Time"/-->
+          <!--field attribute="itdcreatedate" label="CR Activation Date"/-->
           <field attribute="wopriority" label="Priority:"/>
           <field attribute="status" label="Status:" requiredexpression="true"/>
           <field attribute="longdescription_.ldtext" label="Remarks:"/>
@@ -2097,7 +2097,7 @@
           <field attribute="schedfinish" label="Scheduled Finish Date:"/>
           <field attribute="targstartdate" label="Target Start Date:"/>
           <field attribute="targcompdate" label="Target Finish Date:"/>
-          <!--field attribute="itdcreatedate" label="CR Activation Date/Time"/-->
+          <!--field attribute="itdcreatedate" label="CR Activation Date"/-->
           <field attribute="wopriority" label="Priority:"/>
           <field attribute="status" label="Status:" readonly="true" default="WAPPR" requiredexpression="true"/>
           <field attribute="statusdate" hidden="true" default="@currentdatetime"/>
@@ -2700,7 +2700,7 @@
           <field attribute="description" label="Description"/>
           <field attribute="orderqty" label="Quantity"/>
           <field attribute="unitcost" label="Unit Cost"/>
-          <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
+          <field label="Entered Date" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
         </schema>
