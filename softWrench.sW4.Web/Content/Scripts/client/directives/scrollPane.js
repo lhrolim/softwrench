@@ -29,7 +29,7 @@
                         contents = scrollElement.height();
                     }
 
-                    log.debug(contents, available);
+                    //log.debug(contents, available);
 
                     //if the height was not set (no content), exit
                     if (contents == 0) {
