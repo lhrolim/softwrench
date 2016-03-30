@@ -284,7 +284,7 @@
             </composition>
 
             <composition relationship="attachment" label="Attachments" printenabled="false" >
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause" allowremoval="@status!='CLOSED'"/>
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
 
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
