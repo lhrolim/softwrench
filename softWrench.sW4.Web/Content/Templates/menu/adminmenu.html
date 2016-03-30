@@ -4,10 +4,9 @@
         <div class="admin-menu">
             <div ng-if="!showClassicMenu()" ng-style="sidePanelStyle()" class="modern">
                 <a class="main" data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-cog"></i><span ng-show="showLabel()">&ensp;Settings</span>
+                    <i class="fa fa-cog"></i>&ensp;{{userInfo()}}
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <li class="user"><a>{{userInfo()}}</a></li>
                     <li ng-show="myprofileenabled">
                         <a href="#" ng-click="myProfile()">
                             <i class="fa fa-user fa-fw"></i>&ensp;{{i18N('_headermenu.myprofile','Edit My Profile')}}
