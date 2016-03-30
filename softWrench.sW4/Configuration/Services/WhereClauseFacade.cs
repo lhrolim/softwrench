@@ -167,6 +167,11 @@ namespace softWrench.sW4.Configuration.Services {
 
 
             Condition storedCondition = null;
+
+            if (condition.Alias == null && condition.AppContext != null && condition.AppContext.MetadataId != null) {
+                condition.Alias = condition.AppContext.MetadataId;
+            }
+
             if (condition.Alias != null) {
                 //this means that we actually have a condition rather then just a simple utility class WhereClauseRegisterCondition, that could be used for profiles and modules
                 storedCondition = _dao.FindSingleByQuery<WhereClauseCondition>(Condition.ByAlias, condition.Alias);

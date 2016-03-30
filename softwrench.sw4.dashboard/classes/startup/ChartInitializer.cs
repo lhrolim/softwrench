@@ -20,7 +20,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         /// <summary>
         /// (WO.status is 'open') != (WO.status isn't 'close') --> special query
         /// </summary>
-        private const string WO_STATUS_OPENCLOSED_WHERECLAUSE = @"where status = 'CLOSE' or 
+        private const string WO_STATUS_OPENCLOSED_WHERECLAUSE = @"status = 'CLOSE' or 
                                                                     ((status = 'APPR' or status = 'WPCOND' or status = 'INPRG' or status = 'WORKING' or status = 'WAPPR' or status = 'WMATL') and 
                                                                     (woclass = 'WORKORDER' or woclass = 'ACTIVITY') and historyflag = 0 and istask = 0)";
 
@@ -40,13 +40,13 @@ namespace softwrench.sw4.dashboard.classes.startup {
             }
 
             var openClosedGauge = "dashboard:wo.status.openclosed.gauge";
-            if (!WhereClauseExists("workorder", openClosedGauge)) {
-                RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, openClosedGauge);
-            }
+
+            RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, "OpenCloseDashBoardPie",openClosedGauge);
+
             var openClosedPie = "dashboard:wo.status.openclosed";
-            if (!WhereClauseExists("workorder", openClosedPie)) {
-                RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, openClosedPie);
-            }
+
+            RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, "OpenCloseDashBoardPie", openClosedPie);
+
         }
 
         #region SR Charts
@@ -148,7 +148,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
             return CreateDashboard(WO_CHART_DASHBOARD_TITLE, panels);
         }
- 
+
         #endregion
 
         #region Utils
@@ -196,17 +196,13 @@ namespace softwrench.sw4.dashboard.classes.startup {
             return _dao.Save(dashboard);
         }
 
-        private bool WhereClauseExists(string application, string metadataId) {
-            var result = _whereClauseFacade.Lookup(application, new ApplicationLookupContext() {
-                MetadataId = metadataId
-            });
-            return result != null && !string.IsNullOrEmpty(result.Query);
-        }
 
-        private void RegisterWhereClause(string application, string query, string metadataId) {
+        private void RegisterWhereClause(string application, string query,string alias, string metadataId) {
             _whereClauseFacade.Register(application, query, new WhereClauseRegisterCondition() {
+                Alias = alias,
                 AppContext = new ApplicationLookupContext() {
-                    MetadataId = metadataId
+                    MetadataId = metadataId,
+                    
                 }
             });
         }
