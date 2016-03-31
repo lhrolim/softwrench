@@ -41,6 +41,11 @@ function ScanFilterController($http, $scope, $rootScope, restService, searchServ
         modal.appendTo('#scanFilterController');
         modal.modal('hide');
     };
+
+    $scope.showLabel = function () {
+        //use global property to hide/show labels
+        return contextService.getFromContext("UIShowToolbarLabels", false, true);
+    };
     
     $scope.showScanFilterModal = function () {
         var modal = $('#scanfilterModal');
