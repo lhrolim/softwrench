@@ -165,27 +165,9 @@ app.directive('configAssociationListInputDatamap', function () {
             //dictionary containing which details are or not expanded
             $scope.expandeddetails = {};
 
-            $scope.handlerTitleInputFile = function (cssclassaux) {
-                var title = $scope.i18N('attachment.' + cssclassaux, 'No file selected');
-                var fileInput = $('.' + cssclassaux);
-                $().ready(function () {
-                    fileInput.change(function () {
-                        var titleaux = title;
-                        if (fileInput != undefined && fileInput.val() != '') {
-                            title = fileInput.val();
-                        }
-                        fileInput.attr('title', title);
-                        title = titleaux;
-                    });
-                });
-                return title;
-            };
-
             $scope.setForm = function (form) {
                 $scope.crudform = form;
             };
-
-
 
             $scope.$on('sw_block_association', function (event, association) {
                 $scope.blockedassociations[association] = true;
@@ -250,23 +232,7 @@ app.directive('configAssociationListInputDatamap', function () {
                 if (datepickers) {
                     datepickers.disable();
                 }
-
-                (function () {
-                    // Configure input files
-                    $("#uploadBtn").on("change", function (e) {
-                        var fileName = this.value.match(/[^\/\\]+$/);
-                        var isValid = attachmentService.isValid(this.value);
-                        if (!isValid) {
-                            $("#uploadFile").attr("value", "");
-                            $("#uploadFile").val("");
-                            return;
-                        }
-                        $("#uploadFile").attr("value", fileName);
-                    });
-                })();
-
             });
-
 
             $scope.browseFile = function($event) {
                 $event.preventDefault();
