@@ -179,7 +179,7 @@ namespace softwrench.sW4.test.Metadata {
             Assert.IsTrue(commandSchema.HasDeclaration);
             Assert.AreEqual(2, commandSchema.ApplicationCommands.Count);
             Assert.IsTrue(commandSchema.ApplicationCommands.ContainsKey("#actions"));
-            Assert.AreEqual(1, commandSchema.ApplicationCommands["#actions"].Commands.Count);
+            Assert.AreEqual(3, commandSchema.ApplicationCommands["#actions"].Commands.Count);
 
             Assert.IsTrue(commandSchema.ApplicationCommands.ContainsKey("#detail.primary"));
             Assert.IsTrue(commandSchema.ApplicationCommands["#detail.primary"].Commands.Any(c => c.Id.Equals("customizationtest")));
