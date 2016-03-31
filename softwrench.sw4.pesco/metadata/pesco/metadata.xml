@@ -9,13 +9,35 @@
   </templates>
 
   <entities>
-   
+    <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
+      <relationships>
+        <relationship to="synonymdomain" qualifier="pescosynstatus" cacheable="true">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="SRSTATUS" quoteLiteral="true" />
+          <relationshipAttribute query="(description IN ('New', 'Pending', 'In Progress', 'Closed', 'Resolved'))"/>
+        </relationship>
+      </relationships>
+    </entity>
+  <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
+      <relationships>
+        <relationship to="synonymdomain" qualifier="pescosynstatus" cacheable="true">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
+          <relationshipAttribute query="(value IN ('APPR', 'INPRG', 'WMATL', 'WSCH', 'COMP', 'CAN'))"/>
+        </relationship>
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
       <schemas>
         <schema id="editdetail" abstract="true" stereotype="detail" platform="web" redeclaring="false">
+          <customization position="status">
+            <association label="Status" target="status" labelfield="pescosynstatus.description" requiredexpression="true">
+              <renderer type="lookup" />
+            </association>
+          </customization>
           <commandbars>
             <commandgroup position="actions">
               <command id="Pending" icon="fa-hourglass-2" label="Pending" position="left"
@@ -32,6 +54,11 @@
     <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
       <schemas>
         <schema id="quickeditdetail" abstract="true" stereotype="detail" platform="web" redeclaring="false">
+          <customization position="status">
+            <association label="Status" target="status" labelfield="pescosynstatus.description" requiredexpression="true" enableexpression="false">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
           <commandbars>
             <commandgroup position="actions">
               <command id="Pending" icon="fa-hourglass-2" label="Pending" position="left"
@@ -52,6 +79,21 @@
           <commandbars>
             
           </commandbars>
+        </schema>
+      </schemas>
+    </application>
+    
+    <application name="workorder" title="Work Order" entity="workorder" role="workorders">
+      <schemas>
+        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
+        </schema>
+        <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
+          <customization position="status">
+            <association label="Status" target="status" hideDescription="true" labelfield="pescosynstatus.description">
+              <dataprovider prefilterfunction="FilterStatusCodes"/>
+              <renderer type="lookup" params="avoidautofocus=true"/>
+            </association>
+          </customization>
         </schema>
       </schemas>
     </application>
