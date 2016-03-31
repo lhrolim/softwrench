@@ -9,56 +9,55 @@
   </templates>
 
   <entities>
-    <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
-      <relationships>
-        <relationship to="alndomain" qualifier="crew">
-          <relationshipAttribute from="crewid" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="CREWID" quoteLiteral="true"/>
-        </relationship>
-      </relationships>
-    </entity>
+   
   </entities>
 
   <applications>
-    <application name="workorder" title="Work Order" entity="workorder" role="workorders">
+    <application entity="SR" name="servicerequest" title="Service Request" role="sr">
       <schemas>
-        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
-        </schema>
-        <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
-          <customization position="+hiddenfield">
-            <section orientation="horizontal">
-              <association label="Failure Class" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc" requiredexpression="true">
-                <renderer type="autocompleteclient" />
-              </association>
-              <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode" hideDescription="true" requiredexpression="true">
-                <renderer type="lookup"  />
-                <dataprovider prefilterfunction="FilterProblemCodes" />
-              </association>
-              <association label="Trade" target="crewid" labelfield="crew_.description" requiredexpression="true">
-                <renderer type="lookup"/>
-              </association>
-            </section>
-          </customization>
-          <customization position="worktype">
-            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
-              <renderer type="lookup" params="inputsize=small"/>
-            </association>
-          </customization>
+        <schema id="editdetail" abstract="true" stereotype="detail" platform="web" redeclaring="false">
+          <commandbars>
+            <commandgroup position="actions">
+              <command id="Pending" icon="fa-hourglass-2" label="Pending" position="left"
+                        tooltip="Change Status to Pending"
+                        service="genericTicketService" method="changeStatus" parameters="datamap,editdetail,PENDING"
+                        showexpression="@status == 'NEW'"
+                       />
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>
 
-    <application name="labtrans" entity="labtrans" title="Labor">
+    <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
       <schemas>
-        <schema id="detail" redeclaring="false">
-          <customization position="transtype">
-            <field hidden="true" attribute="transtype" defaultexpression="71"/>
-          </customization>
+        <schema id="quickeditdetail" abstract="true" stereotype="detail" platform="web" redeclaring="false">
+          <commandbars>
+            <commandgroup position="actions">
+              <command id="Pending" icon="fa-hourglass-2" label="Pending" position="left"
+                        tooltip="Change Status to Pending"
+                        service="genericTicketService" method="changeStatus" parameters="datamap,editdetail,PENDING"
+                        showexpression="@status == 'NEW'"
+                       />
+            </commandgroup>
+          </commandbars>
         </schema>
-        
       </schemas>
     </application>
-    
+
+
+    <application name="location" title="Location" entity="location" >
+      <schemas>
+        <schema id="list" redeclaring="false">
+          <commandbars>
+            
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+
+
   </applications>
+  
 
 </metadata>

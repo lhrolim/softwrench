@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('genericTicketService', ["alertService", "searchService","userService", function (alertService, searchService,userService) {
+    .factory('genericTicketService', ["alertService", "crudContextHolderService", "searchService", "userService", "applicationService", function (alertService, crudContextHolderService, searchService, userService, applicationService) {
 
     var updateTicketStatus = function (datamap) {
         // If the status is new and the user has set the owner/owner group, update the status to queued
@@ -13,6 +13,27 @@ angular.module('sw_layout')
     };
 
     return {
+
+        /**
+         * 
+         * @param {} datamap needed because it can come from either a grid or a detail call
+         * @param {} newStatus if not set a modal should open so that the users can pick it
+         * @returns {} 
+         */
+        changeStatus: function (datamap,schemaId, newStatus) {
+
+            var schema = crudContextHolderService.currentSchema();
+            var fields = datamap.fields ? datamap.fields : datamap;
+            var dm = {};
+            if (newStatus) {
+                dm["newStatus"] = newStatus;
+                dm["crud"] = fields;
+                applicationService.invokeOperation(schema.applicationName, schemaId, "ChangeStatus", dm).then(function(httpResponse) {
+                    fields["status"] = newStatus;
+                });
+            }
+        },
+
 
         handleStatusChange: function (schema, datamap, parameters) {
             updateTicketStatus(datamap);

@@ -78,6 +78,8 @@ namespace softWrench.sW4.Data.Persistence.Operation {
                 crudOperationData.SiteId = SiteId;
                 return crudOperationData;
             }
+
+
             var data = (OperationData)JSON.ToObject(type);
             data.EntityMetadata = EntityMetadata;
             if (!typeof(CrudOperationDataContainer).IsAssignableFrom(type)) {
@@ -88,6 +90,12 @@ namespace softWrench.sW4.Data.Persistence.Operation {
                 throw new InvalidOperationException(String.Format(CrudFieldNotFound, OperationName, _entityMetadata.Name));
             }
             ((CrudOperationDataContainer)data).CrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, (JObject)crudFields, Id);
+            if (SiteId == null) {
+                //fallback logic to picksiteid from json
+                SiteId = ((CrudOperationDataContainer)data).CrudData.GetStringAttribute("siteid");
+            }
+
+            ((CrudOperationDataContainer)data).CrudData.SiteId = SiteId;
             data.ApplicationMetadata = ApplicationMetadata;
             _operationData = data;
             return data;

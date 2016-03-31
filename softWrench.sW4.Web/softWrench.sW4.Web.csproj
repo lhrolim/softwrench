@@ -934,6 +934,7 @@
     <Folder Include="App_Data\Client\shared\" />
     <Folder Include="Content\Scripts\softwrench\" />
     <Folder Include="Content\vendor\css\fonts\" />
+    <Folder Include="Controllers\MaximoApps\" />
     <Folder Include="Controllers\Mobile\" />
     <Folder Include="Views\HapagHome\" />
     <Folder Include="Views\SchedulerSetup\" />
