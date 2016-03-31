@@ -15,7 +15,7 @@
   <property key="defaultOrgId" value="EAGLENA"/>
   <property key="defaultSiteId" value="BEDFORD"/>
   <property key="defaultStoreloc" value="CENTRAL"/>
-  <property key="sourcemapping" value="maximo7.5"/>
+  <property key="sourcemapping" value="maximo7.6"/>
   
   <!--
       maximoutc property set to the full name of the timezone the maximo 

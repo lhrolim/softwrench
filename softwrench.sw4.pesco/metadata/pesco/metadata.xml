@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <template path="@person.xml"/>
+    <template path="@workorder.xml"/>
+    <template path="@location.xml"/>
+    <template path="@servicerequest.xml"/>
+  </templates>
+
+  <entities>
+    <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
+      <relationships>
+        <relationship to="alndomain" qualifier="crew">
+          <relationshipAttribute from="crewid" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="CREWID" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
+
+  <applications>
+    <application name="workorder" title="Work Order" entity="workorder" role="workorders">
+      <schemas>
+        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
+        </schema>
+        <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
+          <customization position="+hiddenfield">
+            <section orientation="horizontal">
+              <association label="Failure Class" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc" requiredexpression="true">
+                <renderer type="autocompleteclient" />
+              </association>
+              <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode" hideDescription="true" requiredexpression="true">
+                <renderer type="lookup"  />
+                <dataprovider prefilterfunction="FilterProblemCodes" />
+              </association>
+              <association label="Trade" target="crewid" labelfield="crew_.description" requiredexpression="true">
+                <renderer type="lookup"/>
+              </association>
+            </section>
+          </customization>
+          <customization position="worktype">
+            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+              <renderer type="lookup" params="inputsize=small"/>
+            </association>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="labtrans" entity="labtrans" title="Labor">
+      <schemas>
+        <schema id="detail" redeclaring="false">
+          <customization position="transtype">
+            <field hidden="true" attribute="transtype" defaultexpression="71"/>
+          </customization>
+        </schema>
+        
+      </schemas>
+    </application>
+    
+  </applications>
+
+</metadata>

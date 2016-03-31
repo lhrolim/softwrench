@@ -15,5 +15,9 @@ namespace softWrench.sW4.Security.Services
             var result = ApplicationConfiguration.IsSCCD();
             return result;
         }
+
+        public bool Is76() {
+            return ApplicationConfiguration.Is76();
+        }
     }
 }

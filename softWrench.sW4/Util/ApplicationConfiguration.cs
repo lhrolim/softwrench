@@ -469,6 +469,11 @@ namespace softWrench.sW4.Util {
             return source.ToLower() == "smartcloud7.5";
         }
 
+        public static bool Is76() {
+            var source = MetadataProvider.GlobalProperty(MetadataProperties.Source) ?? "";
+            return source.ToLower() == "maximo7.6";
+        }
+
         public static string DBConnectionString(DBType dbType) {
             var connectionStringSettings = DBConnection(dbType);
             return connectionStringSettings == null ? null : connectionStringSettings.ConnectionString;
@@ -628,6 +633,8 @@ namespace softWrench.sW4.Util {
         public static bool IsClient(string clientName) {
             return ClientName.Equals(clientName);
         }
+
+      
     }
 
 }

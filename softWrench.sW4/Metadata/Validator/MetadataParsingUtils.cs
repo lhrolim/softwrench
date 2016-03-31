@@ -61,7 +61,7 @@ namespace softWrench.sW4.Metadata.Validator {
             if (resource.StartsWith("@")) {
                 resource = resource.Substring(1);
                 if (ApplicationConfiguration.IsUnitTest) {
-                    return @"" + baseDirectory + (isSWDB ? TestSWDBTemplatesInternalPath.Fmt(resource): TestTemplatesInternalPath.Fmt(resource));
+                    return @"" + baseDirectory + (isSWDB ? TestSWDBTemplatesInternalPath.Fmt(resource) : TestTemplatesInternalPath.Fmt(resource));
                 }
                 return @"" + baseDirectory + (isSWDB ? TemplatesSWDBInternalPath.Fmt(resource) : TemplatesInternalPath.Fmt(resource));
             }
@@ -91,6 +91,11 @@ namespace softWrench.sW4.Metadata.Validator {
                 //as a fallback, we will look for the same file as the source
                 mapping = MetadataProvider.GlobalProperty("sourcemapping");
             }
+            if (mapping == "maximo7.6") {
+                //we don´t have a different mapping for 7.6, but need that for certain expressions
+                mapping = "maximo7.5";
+            }
+
             return (baseDirectory + String.Format(pattern, type, mapping));
         }
 
