@@ -110,7 +110,6 @@
                         }
                         restService.postPromise("Workflow", "InitRouteWorkflowSelected", httpParameters).then(function (response) {
                             deferred.resolve();
-                            modalService.hide();
                             CompleteSelectedWFAssignment(response.data);
                         });
 
