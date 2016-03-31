@@ -40,16 +40,16 @@ namespace softWrench.sW4.Metadata.Applications.Command {
                 return new List<ActionPermission>();
             }
             var applicationFinalDelimiter = 1;
-            if (barKey.StartsWith("_")){
+            if (barKey.StartsWith("_")) {
                 //swdb applications start with _
                 applicationFinalDelimiter = 2;
             }
 
             //format: application_schema_mode#barid
             var applicationIdx = barKey.GetNthIndex('_', applicationFinalDelimiter);
-            var modeIdx = barKey.GetNthIndex('_', applicationFinalDelimiter+1);
+            var modeIdx = barKey.GetNthIndex('_', applicationFinalDelimiter + 1);
             var applicationName = barKey.Substring(0, applicationIdx);
-            var schemaName = barKey.Substring(applicationIdx + 1, modeIdx - (applicationIdx +1));
+            var schemaName = barKey.Substring(applicationIdx + 1, modeIdx - (applicationIdx + 1));
             var applicationPermission = profile.GetPermissionByApplication(applicationName);
             if (applicationPermission == null) {
                 return new List<ActionPermission>();
@@ -81,10 +81,12 @@ namespace softWrench.sW4.Metadata.Applications.Command {
                             commands.Add(secured);
                         }
                     } else {
-                        if (user.IsSwAdmin()) {
+                        if (!command.IsMetadataPermitted()) {
+                            Log.DebugFormat("ignoring command {0} due to metadata restriction", command.Id);
+                        } else if (user.IsSwAdmin()) {
                             //sw admin sees it all
                             commands.Add(command);
-                        } else if (!command.Permitted(user,permissions)) {
+                        } else if (!command.Permitted(user, permissions)) {
                             Log.DebugFormat("ignoring command {0} due to abscence of role {1}", command.Id, command.Role);
                         } else {
                             commands.Add(command);

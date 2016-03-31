@@ -76,7 +76,31 @@ namespace softWrench.sW4.Metadata.Parsing {
         }
 
         private static IEnumerable<ICommandDisplayable> ParseCommandDisplayables(IEnumerable<XElement> elements) {
-            return elements.Select(GetCommandDisplayable).ToList();
+
+            var commandThreshold = MetadataProvider.GlobalProperties.GlobalProperty("commands.actionsthreshold");
+            var commandDisplayables = elements.Select(GetCommandDisplayable).ToList();
+            if (commandThreshold == null) {
+                return commandDisplayables;
+            }
+            int threshold = Int32.Parse(commandThreshold);
+            var resultingCommands = new List<ICommandDisplayable>();
+            foreach (var command in commandDisplayables) {
+                var cont = command as ContainerCommand;
+                if (cont != null) {
+                    if (cont.Displayables.Count() > threshold) {
+                        resultingCommands.Add(command);
+                    } else {
+
+                        resultingCommands.AddRange(cont.Displayables);
+                    }
+
+
+                } else {
+                    resultingCommands.Add(command);
+                }
+            }
+            return resultingCommands;
+
         }
 
         public static ICommandDisplayable GetCommandDisplayable(XElement xElement) {
@@ -99,7 +123,9 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var icon = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandIconAttribute);
                 var service = xElement.AttributeValue(XmlBaseSchemaConstants.ServiceAttribute);
                 var method = xElement.AttributeValue(XmlBaseSchemaConstants.MethodAttribute);
-                return new ContainerCommand(id, label, tooltip, role, position, icon, service, method, ParseCommandDisplayables(xElement.Elements()), permissionExpression);
+                var inferiorThreshold = MetadataProvider.GlobalProperties.GlobalProperty("commands.actionsthreshold");
+                var commandDisplayables = ParseCommandDisplayables(xElement.Elements());
+                return new ContainerCommand(id, label, tooltip, role, position, icon, service, method, commandDisplayables, permissionExpression);
             }
             if (xElement.IsNamed(cnst.RemoveCommand)) {
                 return new RemoveCommand(id);

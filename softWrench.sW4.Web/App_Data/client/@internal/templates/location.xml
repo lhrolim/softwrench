@@ -157,10 +157,10 @@
           </composition>
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
                 <command id="dispatchwo" icon="fa-tachometer" label="Create Work Order"
                           parameters="schema,datamap" service="locationService" method="dispatchWO"/>
-              </container>
+<!--              </container>-->
             </commandgroup>
             <commandgroup position="detail.primary">
               <removecommand id="save"/>

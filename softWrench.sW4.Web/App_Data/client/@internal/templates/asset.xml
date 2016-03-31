@@ -71,9 +71,9 @@
         <schema id="detail" title="Asset Detail" stereotype="detail" platform="web">
           <commandbars>
             <commandgroup position="actions">
-              <container id="actioncontainer" icon="fa-bolt" label="Actions">
+<!--              <container id="actioncontainer" icon="fa-bolt" label="Actions">-->
                 <command id="createWO" service="workorderService" method="openNewDetailModal"  label="Create Work Order" icon="fa-tachometer"/>
-              </container>
+<!--              </container>-->
             </commandgroup>
           </commandbars>
           

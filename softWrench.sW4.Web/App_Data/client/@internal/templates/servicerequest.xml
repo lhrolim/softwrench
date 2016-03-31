@@ -289,7 +289,7 @@
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
                 <command id="dispatchwo" icon="fa-tachometer" label="Create Work Order"
                           parameters="schema,datamap" service="dispatchService" method="dispatchWO"/>
                 <!-- Incident is for smart cloud only, allowing them to dispatch incidents on all images is a violation for maximo images -->
@@ -303,7 +303,7 @@
                 <command id="createrelated" 
                          service="srService" method="startRelatedSRCreation" parameters="schema,datamap" 
                          label="Create Related Request" icon="fa-ticket" />
-              </container>
+<!--              </container>-->
             </commandgroup>
           </commandbars>
         </schema>

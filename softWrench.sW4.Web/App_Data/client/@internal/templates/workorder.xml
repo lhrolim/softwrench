@@ -518,11 +518,11 @@
           <!--          </commandbars>-->
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+<!--              <container label="Workflow" id="actioncontainer" icon="fa-bolt">-->
                 <command id="initiateWorkflow" icon="fa-play" label="Initiate Workflow" parameters="schema,datamap" service="workflowService" method="initiateWorkflow" permissionexpression="@maximoVersionEvaluator.Is76"/>
                 <command id="routeWorkflow" icon="fa-step-forward" label="Route Workflow" service="workflowService" method="routeWorkflow" permissionexpression="@maximoVersionEvaluator.Is76"/>
                 <command id="stopWorkflow" icon="fa-stop" label="Stop WorkFlow" service="workflowService" method="stopWorkflow" permissionexpression="@maximoVersionEvaluator.Is76"/>
-              </container>
+<!--              </container>-->
             </commandgroup>
           </commandbars>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>

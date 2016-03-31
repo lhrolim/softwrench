@@ -14,6 +14,7 @@
   <property key="defaultOrgId" value="PESCO"/>
   <property key="defaultSiteId" value="PVDISTRIBUTED"/>
   <property key="defaultStoreloc" value="CENTRAL"/>
+  
   <property key="sourcemapping" value="maximo7.5"/>
   <!--
       maximoutc property set to the full name of the timezone the maximo 
@@ -25,6 +26,8 @@
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>
+
+
   <property key="dashboard.enabled" value="false"/>
   <property key="ui.adminmenu.showclassic" value="true"/>
   <property key="iiscontextpath" value=""/>

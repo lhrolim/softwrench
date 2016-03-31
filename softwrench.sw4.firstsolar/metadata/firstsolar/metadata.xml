@@ -399,11 +399,11 @@
         <schema id="list"  redeclaring="false" stereotype="list.selection">
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
                 <command id="Create" icon="fa-tachometer" label="Create Workorders"
                          service="locationService" method="initBatchWorkorder"
                          parameters="schema,datamap" />
-              </container>
+<!--              </container>-->
             </commandgroup>
           </commandbars>
 
@@ -503,11 +503,11 @@
         <schema id="list"  redeclaring="false" stereotype="list.selection" platform="web">
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
                 <command id="Create" icon="fa-tachometer" label="Create Workorders"
                          service="assetService" method="initBatchWorkorder"
                          parameters="schema,datamap" />
-              </container>
+<!--              </container>-->
             </commandgroup>
           </commandbars>
 
