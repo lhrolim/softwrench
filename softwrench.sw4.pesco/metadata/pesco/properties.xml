@@ -4,8 +4,6 @@
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
   <property key="wsprovider" value="mif" />
-  <property key="basewsURL" value="http://52.36.55.169:9080/meaweb/wsdl/" />
-  <property key="maximo_DB_url" value="Data Source=172.31.18.171;Initial Catalog=PSCCD;User Id=MAXIMO;password=MAXIMO;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
   <property key="maxAttachmentSize" value="10"/> <!--in MB-->
@@ -27,30 +25,37 @@
   <property key="email.stmp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>
 
-
   <property key="dashboard.enabled" value="false"/>
   <property key="ui.adminmenu.showclassic" value="true"/>
-  <property key="iiscontextpath" value=""/>
 
   <environment key="prod">
     <property key="swdb_url" value="Data Source=xx.xx.xx.xx;Initial Catalog=sw;User Id=sw;password=swadmin;" />
   </environment>
   
   <environment key="dev">
-<!--    <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=sw;User Id=sw;password=swadmin;" />-->
-<!--    <property key="maximo_DB_url" value="Data Source=172.31.18.171;Initial Catalog=PSCCD;User Id=MAXIMO;password=MAXIMO;" />-->
-<!--    <property key="basewsURL" value="http://52.36.55.169:9080/meaweb/wsdl/" />-->
-
     <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Cmt;User Id=sw;password=softwrench;" />
     <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
-
   </environment>
   
   <environment key="qa">
-    <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=sw;User Id=sw;password=swadmin;" />
+    <property key="basewsURL" value="http://52.36.55.169:9080/meaweb/wsdl/" />
+    <property key="basewfURL" value="http://52.36.55.169:9080/meaweb/wf/" />
+    <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=SWDB_PSSCD;User Id=sw;password=swadmin;" />
+    <property key="maximo_DB_url" value="Data Source=172.31.18.171;Initial Catalog=PSCCD;User Id=MAXIMO;password=MAXIMO;" />
     <property key="mifcredentials.user" value='mxintadm' />
     <property key="mifcredentials.password" value='mxintadm' />
+	  <property key="iiscontextpath " value="https://softwrench.dev.pslcl.com/"/>
+  </environment>
+  
+  <environment key="uat">
+    <property key="basewsURL" value="http://52.34.132.47:9080/meaweb/wsdl/" />
+    <property key="basewfURL" value="http://52.34.132.47:9080/meaweb/wf/" />
+    <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=SWDB_PSCQA;User Id=sw;password=swadmin;" />
+    <property key="maximo_DB_url" value="Data Source=172.31.18.171;Initial Catalog=PSCQA;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="mifcredentials.user" value='mxintadm' />
+    <property key="mifcredentials.password" value='mxintadm' />
+	  <property key="iiscontextpath " value="https://softwrench.qa.pslcl.com/"/>
   </environment>
 
   <environment key="demo">
