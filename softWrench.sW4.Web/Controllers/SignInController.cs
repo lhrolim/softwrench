@@ -29,7 +29,7 @@ namespace softWrench.sW4.Web.Controllers {
             _dao = dao;
         }
 
-        public ActionResult Index(bool timeout=false,bool forbidden=false) {
+        public ActionResult Index(bool timeout = false, bool forbidden = false) {
             if (User.Identity.IsAuthenticated) {
                 Response.Redirect(FormsAuthentication.GetRedirectUrl(User.Identity.Name, false));
             }
@@ -82,19 +82,26 @@ namespace softWrench.sW4.Web.Controllers {
             }
             userName = userName.ToLower();
             var user = GetUser(userName, password, userTimezoneOffset);
-            if (user != null) {
+            if (user != null /*&& user.Active == true*/) {
                 return AuthSucceeded(userName, userTimezoneOffset, user);
             }
-            return AuthFailed();
+            return AuthFailed(user);
         }
 
-        private ActionResult AuthFailed() {
-            string validationMessage;
-            LoginHandlerModel model;
-            validationMessage = ApplicationConfiguration.LoginErrorMessage != null
-                ? ApplicationConfiguration.LoginErrorMessage.Replace("\\n", "\n")
-                : null;
-            model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName());
+        private ActionResult AuthFailed(InMemoryUser user) {
+            string validationMessage = null;
+            bool active = true;
+            if (user != null && user.Active.HasValue && user.Active.Value == false) {
+                active = false;
+            } else {
+                validationMessage = ApplicationConfiguration.LoginErrorMessage != null
+                    ? ApplicationConfiguration.LoginErrorMessage.Replace("\\n", "\n")
+                    : null;
+            }
+
+            var model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName()) {
+                UserNotActive = !active
+            };
             return View(model);
         }
 
@@ -113,8 +120,7 @@ namespace softWrench.sW4.Web.Controllers {
             return ApplicationConfiguration.ClientName == "hapag";
         }
 
-        private string ClientName()
-        {
+        private string ClientName() {
             return ApplicationConfiguration.ClientName;
         }
 
@@ -157,15 +163,24 @@ namespace softWrench.sW4.Web.Controllers {
                 return null;
             }
 
+            if (!userAux.IsActive) {
+                return InMemoryUser.NewAnonymousInstance(false);
+            }
+
             //this will trigger default ldap auth ==> The user already exists in our database
             if (userAux.Password == null) {
+                if (!_ldapManager.IsLdapSetup()) {
+                    return null;
+                }
+
                 var ldapResult = _ldapManager.LdapAuth(userName, password);
                 if (ldapResult.Success) {
-
                     return SecurityFacade.GetInstance().DoLogin(userAux, userTimezoneOffset);
                 }
                 return null;
             }
+
+
 
             var user = SecurityFacade.GetInstance().Login(userAux, password, userTimezoneOffset);
             return user;
@@ -176,7 +191,7 @@ namespace softWrench.sW4.Web.Controllers {
         public ActionResult SignInReturningUserData(string userName, string password, string userTimezoneOffset) {
             userName = userName.ToLower();
             var user = GetUser(userName, password, userTimezoneOffset);
-          
+
 
             if (user == null) {
                 // We must end the response right now
@@ -196,15 +211,25 @@ namespace softWrench.sW4.Web.Controllers {
             return Json(new UserReturningData(user));
         }
 
-     
+
 
         internal class UserReturningData {
-            public bool Found { get; set; }
-            public string UserName { get; set; }
-            public string OrgId { get; set; }
-            public string SiteId { get; set; }
+            public bool Found {
+                get; set;
+            }
+            public string UserName {
+                get; set;
+            }
+            public string OrgId {
+                get; set;
+            }
+            public string SiteId {
+                get; set;
+            }
 
-            public long? UserTimezoneOffset { get; set; }
+            public long? UserTimezoneOffset {
+                get; set;
+            }
 
             public UserReturningData(InMemoryUser user) {
                 if (user == null) {

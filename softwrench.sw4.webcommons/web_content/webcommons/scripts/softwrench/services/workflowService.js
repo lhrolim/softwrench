@@ -43,7 +43,6 @@
             });
         };
 
-
         var routeWorkflow = function () {
             var rootDatamap = crudContextHolderService.rootDataMap().fields;
             var schema = crudContextHolderService.currentSchema();
@@ -65,9 +64,7 @@
 
                 var deferred = $q.defer();
 
-                if (appResponse.type === "ApplicationDetailResult") {
-
-
+                var CompleteSelectedWFAssignment = function (appResponse) {
                     modalService.show(appResponse.schema, appResponse.resultObject.fields, {
                         title: "Complete Workflow Assignment",
                         cssclass: "dashboardmodal",
@@ -94,6 +91,10 @@
 
 
                     });
+                }
+
+                if (appResponse.type === "ApplicationDetailResult") {
+                    CompleteSelectedWFAssignment(appResponse);
                 } else {
 
                     modalService.show(appResponse.resultObject.schema, appResponse.datamap, {
@@ -107,9 +108,10 @@
                         var httpParameters = {
                             wfAssignmentId: datamap["processname"],
                         }
-                        restService.postPromise("Workflow", "InitRouteWorkflowSelected", httpParameters).then(function () {
+                        restService.postPromise("Workflow", "InitRouteWorkflowSelected", httpParameters).then(function (response) {
                             deferred.resolve();
                             modalService.hide();
+                            CompleteSelectedWFAssignment(response.data);
                         });
 
                     });

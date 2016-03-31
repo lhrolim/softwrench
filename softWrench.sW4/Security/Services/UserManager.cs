@@ -114,7 +114,7 @@ namespace softWrench.sW4.Security.Services {
                     user.UserName = personid.Substring(0, personid.Length - HlagPrefix.Length);
                 }
             }
-
+            user.IsActive = true;
             user.CustomRoles = new HashedSet<UserCustomRole>();
             return save ? DAO.Save(user) : user;
         }

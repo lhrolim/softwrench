@@ -35,6 +35,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _maximoPersonId;
         private readonly string _storeloc;
         private readonly string _signature;
+        private Boolean? _active;
         private int? _timezoneOffset;
         private readonly GridPreferences _gridPreferences;
         private readonly UserPreferences _userPreferences;
@@ -115,6 +116,7 @@ namespace softWrench.sW4.Metadata.Security {
             _userPreferences = userPreferences;
             _signature = userPreferences != null ? userPreferences.Signature : "";
             _mergedUserProfile = mergedProfile;
+            _active = dbUser.IsActive;
         }
 
         private InMemoryUser(string mock) : this() {
@@ -127,8 +129,8 @@ namespace softWrench.sW4.Metadata.Security {
             _timezoneOffset = Convert.ToInt32(TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).TotalMinutes);
         }
 
-        public static InMemoryUser NewAnonymousInstance() {
-            return new InMemoryUser("anonymous");
+        public static InMemoryUser NewAnonymousInstance(bool active = true) {
+            return new InMemoryUser("anonymous") { _active = active };
         }
 
         public Boolean IsAnonymous() {
@@ -223,6 +225,12 @@ namespace softWrench.sW4.Metadata.Security {
         public UserPreferences UserPreferences {
             get {
                 return _userPreferences;
+            }
+        }
+
+        public bool? Active {
+            get {
+                return _active;
             }
         }
 
