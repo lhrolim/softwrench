@@ -7,7 +7,9 @@ angular.module('sw_layout')
 
     return {
         doAction: function (title, controller, action, parameters, target) {
-            menuService.setActiveLeaf(target);
+            if (target) {
+                menuService.setActiveLeaf(target);
+            }
             crudContextHolderService.clearCrudContext();
             return redirectService.redirectToAction(title, controller, action, parameters);
         },

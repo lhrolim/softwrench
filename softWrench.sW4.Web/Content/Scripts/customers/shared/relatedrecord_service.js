@@ -34,6 +34,7 @@ angular.module('sw_layout')
             var swApp = appName(app);
             var schemaId = app.equalsAny("SR", "WORKORDER", "INCIDENT") ? "editdetail" : "detail";
             var params = swApp.equalsIc("incident") ? { id: key, siteid: siteid } : { userid: key, siteid: siteid };
+            params.saveHistoryReturn = true;
 
             return redirectService.goToApplicationView(swApp, schemaId, "input", null, params);
         },

@@ -210,7 +210,7 @@
 
             if (jsonData == undefined) {
                 if (redirectUrl) {
-                    historyService.addToHistory(redirectUrl);
+                    historyService.addToHistory(redirectUrl, parameters.saveHistoryReturn);
                 }
 
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));

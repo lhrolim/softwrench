@@ -10,7 +10,8 @@
 
         function goToDetail(parameters) {
             var params = {
-                id: parameters["workorderid"]
+                id: parameters["workorderid"],
+                saveHistoryReturn: true
             };
             redirectService.goToApplication("workorder", "editdetail", params, null);
         }

@@ -17,7 +17,7 @@
 
     <application entity="UserProfile" name="UserProfile" title="Security Groups">
       <schemas>
-        <list>
+        <list title="Security Groups">
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">

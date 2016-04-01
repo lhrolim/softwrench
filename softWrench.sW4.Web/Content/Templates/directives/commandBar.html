@@ -33,7 +33,7 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <!--TODO: Make recursive...-->
                                     <li ng-repeat="innercommand in command.displayables">
-                                        <a ng-click="executeService(innercommand)" href="#" ng-if="shouldShowCommand(innercommand)"
+                                        <a ng-click="executeService(innercommand)" href="" ng-if="shouldShowCommand(innercommand)"
                                            data-original-title="{{commandtooltip(innercommand)}}" rel="tooltip" data-container="body">
                                             <i class="fa" ng-class="innercommand.icon"></i>&ensp;{{innercommand.label}}
                                         </a>

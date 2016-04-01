@@ -573,6 +573,7 @@
     <Content Include="Content\Scripts\client\directives\searchbox.js" />
     <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\directives\stringtonumber.js" />
+    <Content Include="Content\Scripts\client\services\breadcrumbService.js" />
     <Content Include="Content\Scripts\client\services\chartService.js" />
     <Content Include="Content\Scripts\client\services\controllerinheritanceservice.js" />
     <Content Include="Content\Scripts\client\services\notificationService.js" />

@@ -124,6 +124,14 @@
                         //if main tab is absent (schema with just compositions) redirect to first tab
                         redirectService.redirectToTab(firstTabId);
                     }
+
+                    // covers breadcrumb redirect when the target page does not have the active tab of the src page
+                    var tab = crudContextHolderService.getActiveTab();
+                    if (tab != null && $scope.datamap[tab] == null && hasMainTab) {
+                        // active tab not found
+                        redirectService.redirectToTab($scope.getMainTabId());
+                    }
+
                     $timeout(function () {
                         //time for the components to be rendered
                         focusService.setFocusToFirstField($scope.schema, $scope.datamap);

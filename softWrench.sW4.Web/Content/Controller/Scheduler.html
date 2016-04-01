@@ -21,13 +21,13 @@
                             <td><a ng-click="edit(scheduler)" style="cursor: pointer">{{scheduler.cron}}</a></td>
                             <td style="display: none;"><a>{{scheduler.active}}</a></td>
                             <td>
-                                <a ng-click="pause(scheduler)" href="#" ng-show="scheduler.isScheduled">
+                                <a ng-click="pause(scheduler)" href="" ng-show="scheduler.isScheduled">
                                     <i class="fa fa-pause" rel="tooltip" data-original-title="{{i18N('scheduler.pause_tooltip','Pause job')}}"></i>
                                 </a>
-                                <a ng-click="schedule(scheduler)" href="#" ng-show="!scheduler.isScheduled">
+                                <a ng-click="schedule(scheduler)" href="" ng-show="!scheduler.isScheduled">
                                     <i class="fa fa-play" rel="tooltip" data-original-title="{{i18N('scheduler.schedule_tooltip','Schedule job')}}"></i>
                                 </a>
-                                <a ng-click="execute(scheduler)" href="#" ng-show="scheduler.active">
+                                <a ng-click="execute(scheduler)" href="" ng-show="scheduler.active">
                                     <i class="fa fa-bolt" rel="tooltip" data-original-title="{{i18N('scheduler.execute_tooltip','Execute job now')}}"></i>
                                 </a>
                             </td>

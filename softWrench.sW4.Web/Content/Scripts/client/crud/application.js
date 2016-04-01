@@ -203,9 +203,6 @@ function applicationController($scope, $http, $log, $timeout,
         if (parameters === undefined || parameters == null) {
             parameters = {};
         }
-        if (title == null) {
-            title = $scope.title;
-        }
         $scope.requestpopup = parameters.popupmode ? parameters.popupmode : 'none';
         //change made to prevent popup for incident detail report
         var log = $log.getInstance("applicationController#renderView");
@@ -224,7 +221,9 @@ function applicationController($scope, $http, $log, $timeout,
         parameters.key.mode = mode;
         parameters.key.platform = platform();
         parameters.customParameters = parameters.customParameters || {};
-        parameters.title = title;
+        if (title) {
+            parameters.title = title;
+        }
 
         $scope.applicationname = applicationName;
         $scope.requestmode = mode;
@@ -364,20 +363,24 @@ function applicationController($scope, $http, $log, $timeout,
 
     $scope.doConfirmCancel = function (data, schema, msg) {
         $('.no-touch [rel=tooltip]').tooltip('hide');
-        if (crudContextHolderService.getDirty()) {
-            alertService.confirmCancel(null, null, function () {
-                $scope.toListSchema(data, schema);
-                crudContextHolderService.clearDirty();
-                crudContextHolderService.clearDetailDataResolved();
-                $scope.$digest();
-            }, msg, function () { return; });
-        }
-        else {
-            $scope.toSchema(data, schema);
+
+        // is on breadcrumb navigarion and its not the first on navigation (index 0)
+        if (historyService.indexOnBreadcrumbHistory() > 0) {
+            historyService.redirectOneBack(true, msg);
+            return;
         }
 
-        //update the crud context to update the breadcrumbs 
-//        crudContextHolderService.updateCrudContext(schema, data);
+        if (!crudContextHolderService.getDirty()) {
+            $scope.toSchema(data, schema);
+            return;
+        }
+
+        alertService.confirmCancel(null, null, function () {
+            $scope.toListSchema(data, schema);
+            crudContextHolderService.clearDirty();
+            crudContextHolderService.clearDetailDataResolved();
+            $scope.$digest();
+        }, msg, function () { return; });
     }
 
     $scope.toConfirmCancel = function (data, schema) {

@@ -1,12 +1,12 @@
 <li ng-switch on="leaf.type">
     <a id="{{leaf.type + '_' + leaf.id}}" ng-switch-when="ActionMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
-       ng-click="doAction(leaf, $event)" href="#"
+       ng-click="doAction(leaf, $event)" href=""
        class="level{{level}}">
         <i class="{{isMenuItemIcon(leaf)}}"> </i>
         {{i18NMenuLabel(leaf,false)}}
     </a>
     <a id="{{leaf.type + '_' + leaf.id}}" ng-switch-when="ApplicationMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
-       ng-click="goToApplication(leaf, $event)" href="#"
+       ng-click="goToApplication(leaf, $event)" href=""
        class="level{{level}}">
         <i class="{{isMenuItemIcon(leaf)}}"> </i>
         {{i18NMenuLabel(leaf,false)}}
@@ -36,7 +36,7 @@
             <span class="caret"></span>
             <span class="sr-only">Toggle Dropdown</span>
         </button>
-        <a ng-if="!isButtonStyleContainer(level,leaf)" href="#"
+        <a ng-if="!isButtonStyleContainer(level,leaf)" href=""
            data-toggle="dropdown" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
            ng-click="handleContainerClick(leaf,$event)" class="level{{level}}">
             <i class="{{isMenuItemIcon(leaf)}}"></i>&ensp;{{i18NMenuLabel(leaf,false)}}

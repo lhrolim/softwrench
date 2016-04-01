@@ -15,6 +15,7 @@
         function goToDetail(parameters) {
             var params = {
                 id: parameters["assetid"],
+                saveHistoryReturn: true
             };
             redirectService.goToApplication("asset", "detail", params, null);
         }

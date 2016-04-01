@@ -3,7 +3,7 @@
         <button type="button"
                 ng-class="buttonClasses(getCommand(command))"
                 ng-init="initIfToggleCommand(command)"
-                ng-click="executeService(getCommand(command), toggleCommandOrNull(command))" href="#" 
+                ng-click="executeService(getCommand(command), toggleCommandOrNull(command))" href="" 
                 ng-if="(command.type == 'ApplicationCommand' || command.type == 'ToggleCommand') && shouldShowCommand(getCommand(command))"
                 ng-enabled="isCommandEnabled(getCommand(command))"
                 data-original-title="{{commandtooltip(getCommand(command))}}"
@@ -42,7 +42,7 @@
                 <ul class="dropdown-menu" role="menu">
                     <!--TODO: Make recursive...-->
                     <li ng-repeat="innercommand in command.displayables">
-                        <a ng-click="executeService(innercommand)" href="#" ng-if="shouldShowCommand(innercommand)"
+                        <a ng-click="executeService(innercommand)" href="" ng-if="shouldShowCommand(innercommand)"
                             data-original-title="{{commandtooltip(innercommand)}}" rel="tooltip" data-container="body">
                             <i class="fa" ng-class="innercommand.icon"></i>&ensp;{{innercommand.label}}
                         </a>
