@@ -324,8 +324,6 @@
                                         var priorityColumn = displayableObject[priorityColumn];
                                         var foreground = prioritycolorService.getColor(priority, priorityColumn.rendererParameters);
 
-                                        //console.log(priorityColumn);
-
                                         iconHTML += '<i class="fa fa-flag" style="color: {0}"'.format(foreground);
 
                                         //create html tooltip with label and count
@@ -339,12 +337,11 @@
                                     }
                                 }
 
+                                //create the icons
                                 if (column.rendererParameters.iconcolumns) {
                                     var iconColumns = column.rendererParameters.iconcolumns.split(',');
 
-                                    //console.log(iconColumns);
                                     iconColumns.forEach(function(field) {
-                                        // displayableObject[field.attribute] = field;
                                         var iconColumn = displayableObject[field];
                                         var count = datamap[i].fields[field];
 
