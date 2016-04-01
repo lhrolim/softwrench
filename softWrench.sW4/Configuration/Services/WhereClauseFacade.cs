@@ -12,6 +12,7 @@ using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Iesi.Collections.Generic;
 using NHibernate.Util;
@@ -73,10 +74,14 @@ namespace softWrench.sW4.Configuration.Services {
 
         }
 
-        public void Register(string applicationName, String query, WhereClauseRegisterCondition condition = null, bool validate = true) {
-            if (validate) {
-                Validate(applicationName);
+        public void Register(string applicationName, String query, WhereClauseRegisterCondition condition = null, bool validate = false) {
+
+            var result = Validate(applicationName, validate);
+            if (!result) {
+                Log.WarnFormat("application {0} not found skipping registration", applicationName);
+                return;
             }
+
             var configKey = String.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName);
             if (!_appStarted) {
                 _toRegister.Add(Tuple.Create(configKey, query, condition));
@@ -88,7 +93,7 @@ namespace softWrench.sW4.Configuration.Services {
         public Iesi.Collections.Generic.ISet<UserProfile> ProfilesByApplication(string applicationName, InMemoryUser loggedUser) {
 
             var profiles = loggedUser.Profiles;
-            if (!profiles.Any()) {
+            if (!EnumerableExtensions.Any(profiles)) {
                 //no profiles at all, nothing to consider
                 return new HashedSet<UserProfile>();
             }
@@ -114,7 +119,7 @@ namespace softWrench.sW4.Configuration.Services {
                     defaultId = profile.Id;
                 }
             }
-            if (result.Any() && defaultId != null) {
+            if (EnumerableExtensions.Any(result) && defaultId != null) {
                 result.Insert(0, new UserProfile {
                     Id = defaultId,
                     Name = sb.ToString(0, sb.Length - 3)
@@ -129,19 +134,21 @@ namespace softWrench.sW4.Configuration.Services {
             return string.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName);
         }
 
-        private static void Validate(string applicationName) {
-            try {
-                MetadataProvider.Application(applicationName);
-            } catch (Exception) {
-                try {
-                    MetadataProvider.Entity(applicationName);
-                } catch (Exception) {
+        private static bool Validate(string applicationName, bool throwException = true) {
+            var items = MetadataProvider.FetchAvailableAppsAndEntities();
+            if (!items.Contains(applicationName)) {
+                if (throwException) {
                     throw new InvalidOperationException(String.Format(AppNotFoundEx, applicationName));
                 }
+                return false;
             }
+            return true;
         }
 
         private void DoRegister(string configKey, string query, WhereClauseRegisterCondition condition) {
+
+
+
             if (condition != null && condition.Environment != null && condition.Environment != ApplicationConfiguration.Profile) {
                 //we don´t need to register this property here.
                 return;

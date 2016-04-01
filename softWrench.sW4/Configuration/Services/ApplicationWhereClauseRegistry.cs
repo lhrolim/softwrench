@@ -25,10 +25,7 @@ namespace softWrench.sW4.Configuration.Services {
             var before = new Stopwatch();
             var applications = MetadataProvider.Applications(true);
             var completeApplicationMetadataDefinitions = applications as CompleteApplicationMetadataDefinition[] ?? applications.ToArray();
-            ISet<String> namesToRegister = new HashedSet<string>();
-
-            AddAllApplicationsAndUsedEntities(namesToRegister, completeApplicationMetadataDefinitions);
-
+            System.Collections.Generic.ISet<string> namesToRegister = MetadataProvider.FetchAvailableAppsAndEntities();
             foreach (var name in namesToRegister) {
                 _facade.Register(name, "", null, false);
             }

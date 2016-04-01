@@ -26,6 +26,8 @@ using softwrench.sw4.Shared2.Metadata.Modules;
 using softWrench.sW4.Util;
 using cts.commons.Util;
 using System.Net;
+using Iesi.Collections;
+using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Metadata.Stereotypes;
@@ -50,6 +52,7 @@ namespace softWrench.sW4.Metadata {
         private static ICollection<EntityMetadata> _entityMetadata;
         private static IReadOnlyCollection<CompleteApplicationMetadataDefinition> _applicationMetadata;
         private static IDictionary<string, CommandBarDefinition> _commandBars;
+        private static System.Collections.Generic.ISet<string> _appsAndEntitiesUsedCache = null;
 
         /// <summary>
         /// Holds, for each application a corresponding role name that have been used on the menu to filter it (ex: application=servicerequest, but role was sr)
@@ -92,7 +95,9 @@ namespace softWrench.sW4.Metadata {
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void InitializeMetadata() {
-            try {
+            try
+            {
+                _appsAndEntitiesUsedCache = null;
                 FinishedParsing = false;
                 //this is needed because we may access the API method inside the validation process
                 //                _metadataValidator = new MetadataValidator();
@@ -346,7 +351,7 @@ namespace softWrench.sW4.Metadata {
                 return application.CachedNonInternalSchemas;
             }
 
-            ISet<string> schemaSet = new HashSet<string>();
+            System.Collections.Generic.ISet<string> schemaSet = new HashSet<string>();
 
             var menu = Menu(platform);
             var leafs = menu.ExplodedLeafs;
@@ -552,6 +557,31 @@ namespace softWrench.sW4.Metadata {
             var association = entity.Associations.FirstWithException(f => f.Qualifier == relationship, "could not locate relationship with qualifier {0}", relationship);
             var realName = association.To;
             return Application(realName);
+        }
+
+        public static System.Collections.Generic.ISet<string> FetchAvailableAppsAndEntities() {
+            if (_appsAndEntitiesUsedCache != null) {
+                return _appsAndEntitiesUsedCache;
+            }
+
+            var result = new HashSet<string>();
+
+            var applications = MetadataProvider.Applications(true);
+
+            var completeApplicationMetadataDefinitions = applications as IList<CompleteApplicationMetadataDefinition> ?? applications.ToList();
+            foreach (var application in completeApplicationMetadataDefinitions) {
+                result.Add(application.ApplicationName);
+                foreach (var schema in application.Schemas()) {
+                    foreach (var association in schema.Value.Associations()) {
+                        var entityName = association.EntityAssociation.To;
+                        var associationApplication =
+                            completeApplicationMetadataDefinitions.FirstOrDefault(a => a.Entity == entityName);
+                        var toAdd = associationApplication == null ? association.EntityAssociation.To : associationApplication.ApplicationName;
+                        result.Add(toAdd);
+                    }
+                }
+            }
+            return result;
         }
 
 
