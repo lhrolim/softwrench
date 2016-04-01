@@ -26,6 +26,10 @@
             if (iconvalue != null) {
                 return iconvalue;
             }
+            iconvalue = metadata.rendererParameters['icon'];
+            if (iconvalue != null) {
+                return iconvalue;
+            }
             //forgot to declare it, just return
             return '';
         }

@@ -10,6 +10,10 @@
 
   <entities>
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
+      <attributes>
+        <attribute name="pending" query="status" type="varchar"/>
+      </attributes>
+      
       <relationships>
         <relationship to="synonymdomain" qualifier="pescosynstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
@@ -32,6 +36,24 @@
   <applications>
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
       <schemas>
+        <list redeclaring="false" >
+
+          
+
+          <customization position="#statusicons">
+            <field attribute="#statusicons" label="Status Icons">
+              <renderer type="statusicons" params="width=12%;iconcolumns=internalpriority,communicationcounter,attachmentcounter,relatedcounter"/>
+            </field>
+            <field attribute="pending"  tooltip="Change Status to Pending">
+              <renderer type="iconbutton" params="width=3%;expression={'#default':'','NEW':'fa-hourglass-half'};hideValueOnTooltip=true"/>
+            </field>
+          </customization>
+          
+          
+          <properties>
+            <property key="list.click.service" value="pescoStatusService.changeStatusToPending"/>
+          </properties>
+        </list>
         <schema id="editdetail" abstract="true" stereotype="detail" platform="web" redeclaring="false">
           <customization position="status">
             <association label="Status" target="status" labelfield="pescosynstatus.description" requiredexpression="true">

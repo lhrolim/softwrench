@@ -15,8 +15,6 @@ $asset_path: "../images";
         }
 
         .branding {
-            background: url(#{$asset_path}/branding.png) no-repeat top left;
-
             .logo img {
                 height: 40px;
                 width: auto;

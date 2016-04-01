@@ -87,17 +87,15 @@
             return getIconForOperator($scope.getOperator, columnName);
         };
 
-   
-
         $scope.shouldShowHeaderLabel = function (column) {
-            return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon" && column.rendererType != "priorityicon" && column.rendererType != "statusicons";
+            return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon" && column.rendererType != "priorityicon" && column.rendererType != "statusicons" && column.rendererType != "iconbutton";
         };
 
         $scope.shouldShowHeaderFilter = function (column) {
             return $scope.shouldShowHeaderLabel(column) && !column.rendererParameters["hidefilter"];
         };
 
-        $scope.showDetail = function (rowdm, column, forceEdition) {
+        $scope.showDetail = function (rowdm, attribute, forceEdition) {
 
             var mode = $scope.schema.properties['list.click.mode'];
             var popupmode = $scope.schema.properties['list.click.popupmode'];
@@ -106,13 +104,15 @@
             var editDisabled = $scope.schema.properties['list.disabledetails'];
             var commandResult = null;
 
+            var column = fieldService.getDisplayableByKey($scope.schema, attribute);
+
             var selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
 
             //force edition means that the user has clicked the edition icon, so regardless of the mode we need to open the details
             if (selectionModel.selectionMode && !forceEdition) {
                 commandResult = null;
                 if (fullServiceName != null) {
-                    commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
+                    commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema, $scope.panelid);
                 };
                 if (commandResult == undefined || commandResult !== false) {
                     gridSelectionService.toggleSelection(rowdm, $scope.schema, $scope.panelid);
@@ -134,12 +134,21 @@
             }
 
             if (fullServiceName != null) {
-                commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
+                commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema, $scope.panelid);
                 if (commandResult === false) {
                     return;
+                }else if (commandResult.then) {
+                    return commandResult.then(function() {
+                        $scope.doShowDetail(rowdm, schemaid, mode, popupmode);
+                    });
                 }
             };
 
+            $scope.doShowDetail(rowdm, schemaid, mode, popupmode);
+
+        };
+
+        $scope.doShowDetail = function (rowdm, schemaid, mode, popupmode) {
             var id = rowdm.fields[$scope.schema.idFieldName];
             if (id == null || id == "-666") {
                 window.alert('error id is null');
@@ -163,7 +172,8 @@
             $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, {
                 id: id, popupmode: popupmode, customParameters: $scope.getCustomParameters($scope.schema, rowdm)
             });
-        };
+        }
+
 
         $scope.getCustomParameters = function (schema, rowdm) {
             var customParams = {};

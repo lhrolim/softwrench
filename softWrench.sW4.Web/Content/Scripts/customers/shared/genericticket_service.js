@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('genericTicketService', ["alertService", "crudContextHolderService", "searchService", "userService", "applicationService", function (alertService, crudContextHolderService, searchService, userService, applicationService) {
+    .factory('genericTicketService', ["$q","alertService", "crudContextHolderService", "searchService", "userService", "applicationService", function ($q,alertService, crudContextHolderService, searchService, userService, applicationService) {
 
     var updateTicketStatus = function (datamap) {
         // If the status is new and the user has set the owner/owner group, update the status to queued
@@ -28,10 +28,11 @@ angular.module('sw_layout')
             if (newStatus) {
                 dm["newStatus"] = newStatus;
                 dm["crud"] = fields;
-                applicationService.invokeOperation(schema.applicationName, schemaId, "ChangeStatus", dm).then(function(httpResponse) {
+                return applicationService.invokeOperation(schema.applicationName, schemaId, "ChangeStatus", dm).then(function(httpResponse) {
                     fields["status"] = newStatus;
                 });
             }
+            return $q.when();
         },
 
 

@@ -102,7 +102,7 @@
           <field attribute="attachmentcounter" tooltip="Attachments" hidden="true">
             <renderer type="icon" params="icon=fa-paperclip"/>
           </field>
-          <field attribute="" label="Status Icons">
+          <field attribute="#statusicons" label="Status Icons">
             <renderer type="statusicons" params="width=6%;prioritycolumn=internalpriority;iconcolumns=attachmentcounter"/>
           </field>
           <properties>

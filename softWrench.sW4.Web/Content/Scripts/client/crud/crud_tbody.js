@@ -3,17 +3,21 @@
 
     var app = angular.module('sw_layout');
 
-    function griditemclick(rowNumber, columnNumber, element, forceEdition) {
+    function griditemclick(event,rowNumber, columnAttribute, element, forceEdition) {
         //this is a trick to call a angular scope function from an ordinary onclick listener (same used by batarang...)
         //with this, we can generate the table without compiling it to angular, making it faster
         //first tests pointed a 100ms gain, but need to gather more data.
         var scope = angular.element(element).scope();
+
+
         if (scope.showDetail) {
-            scope.showDetail(scope.datamap[rowNumber], scope.schema.displayables[columnNumber], forceEdition);
+            scope.showDetail(scope.datamap[rowNumber], columnAttribute, forceEdition);
         }
         // to process the checkbox values and select-all state from parent (crud_list) too
-        scope.$root.$digest(); 
+        scope.$root.$digest();
+        event.stopImmediatePropagation();
     }
+
 
     window.griditemclick = griditemclick;
 
@@ -123,9 +127,9 @@
                     return statuscolorService.getColor(status, scope.schema.applicationName);
                 };
 
-                scope.handleIcon = function (iconClass, column, text, foreground) {
+                scope.handleIcon = function (iconClass, column, text, foreground,rowIdx) {
                     var iconHTML = "";
-                    iconHTML += '<i class="fa {0}" '.format(iconClass);
+                    iconHTML += "<i class=\"fa {0}\" onclick='griditemclick(event,{1},\"{2}\",this)'".format(iconClass,rowIdx,column.attribute);
                     if (foreground) {
                         iconHTML += 'style = "color: {0}"'.format(foreground);
                     }
@@ -133,8 +137,10 @@
                     //create html tooltip with label and count
                     var toolTip = "<span style='white-space: nowrap;'>";
                     toolTip += column.toolTip ? column.toolTip : column.label;
+					if (column.rendererParameters && column.rendererParameters["hideValueOnTooltip"] !== "true") {
                     toolTip += ': ';
                     toolTip += text;
+					}
                     toolTip += '</span>';
 
                     iconHTML += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
@@ -271,7 +277,7 @@
 
                             var isHidden = hiddencolumnArray[j];
 
-                            html += "<td {2} onclick='griditemclick({0},{1},this)' class='{3} {4} {5}'".format(i, j, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute), hasDataClass(column, formattedText), column.rendererType);
+                            html += "<td {2} onclick='griditemclick(event,{0},\"{1}\",this)' class='{3} {4} {5}'".format(i, attribute, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute), hasDataClass(column, formattedText), column.rendererType);
                             html += "data-title='{0}'".format(column.label);
                             html += ">";
                             if (column.rendererType === 'color') {
@@ -302,15 +308,24 @@
                                 }
                             }
                             else if (column.rendererType === "icon") {
-                                html+="<div>" + scope.handleIcon(scope.innerLoadIcon(i, j), column, formattedText);
+                                html += scope.handleIcon(scope.innerLoadIcon(i, j), column, formattedText, i);
+                            }
+                            else if (column.rendererType === "iconbutton") {
+                                var innerIcon = scope.innerLoadIcon(i, j);
+
+                                html += '<div>';
+
+                                if (innerIcon) {
+                                    html += '<button class="btn btn-default btn-sm">';
+                                    html += scope.handleIcon(innerIcon, column, formattedText, i);
+                                    html += '</button>';
+                                }
                             }
                             else if (column.rendererType === 'priorityicon') {
                                 var foreground = prioritycolorService.getColor(formattedText, column.rendererParameters);
-                                html += "<div>" + scope.handleIcon("fa-flag", column, formattedText, foreground);
+                                html += "<div>" + scope.handleIcon("fa-flag", column, formattedText, foreground,i);
                             }
-                            else if (column.rendererType === 'statusicons') {                     
-                                
-
+                            else if (column.rendererType === 'statusicons') {
                                 html += '<div class="cell-wrapper">';
                                 var iconHTML = '';
 
@@ -323,7 +338,6 @@
                                         var value = datamap[i].fields[field];
 
                                         if (value) {
-                                            var icon = iconColumn.rendererParameters.icon;
                                             //if not the first icon add a spacer
                                             if (iconHTML != '') {
                                                 iconHTML += '&emsp;';
@@ -332,7 +346,8 @@
                                             if (iconColumn.rendererParameters.qualifier == "priority") {
                                                 foreground = prioritycolorService.getColor(value, iconColumn.rendererParameters);
                                             }
-                                            iconHTML += scope.handleIcon(icon, iconColumn, value, foreground);
+                                            var icon = scope.loadIcon(value, iconColumn);
+                                            iconHTML += scope.handleIcon(icon, iconColumn, value, foreground,i);
                                         }
                                     });
                                 }

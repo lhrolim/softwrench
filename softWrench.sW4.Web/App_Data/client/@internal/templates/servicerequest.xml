@@ -109,7 +109,7 @@
           <field attribute="relatedcounter" tooltip="Related Records" hidden="true">
             <renderer type="icon" params="icon=fa-tags"/>
           </field>
-          <field attribute="" label="Status Icons">
+          <field attribute="#statusicons" label="Status Icons">
             <renderer type="statusicons" params="width=12%;iconcolumns=internalpriority,communicationcounter,attachmentcounter,relatedcounter"/>
           </field>
           <properties>
