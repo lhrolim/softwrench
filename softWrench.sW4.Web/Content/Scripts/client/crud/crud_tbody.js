@@ -76,7 +76,7 @@
     function hasDataClass(column, formattedText) {
         var classString = '';
 
-        if ((formattedText != null && formattedText != "") || column.rendererType == 'color') {
+        if ((formattedText != null && formattedText != "") || column.rendererType == 'color' || column.rendererType == 'statusicons') {
             classString = 'has-data';
         } else {
             classString = 'no-data';
@@ -122,6 +122,24 @@
                 scope.statusColor = function (status, gridname) {
                     return statuscolorService.getColor(status, scope.schema.applicationName);
                 };
+
+                scope.handleIcon = function (iconClass, column, text, foreground) {
+                    var iconHTML = "";
+                    iconHTML += '<i class="fa {0}" '.format(iconClass);
+                    if (foreground) {
+                        iconHTML += 'style = "color: {0}"'.format(foreground);
+                    }
+
+                    //create html tooltip with label and count
+                    var toolTip = "<span style='white-space: nowrap;'>";
+                    toolTip += column.toolTip ? column.toolTip : column.label;
+                    toolTip += ': ';
+                    toolTip += text;
+                    toolTip += '</span>';
+
+                    iconHTML += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                    return iconHTML;
+                }
 
                 scope.getGridColumnStyle = function (column, propertyName, highResolution) {
                     if (column.rendererParameters != null) {
@@ -206,6 +224,12 @@
                     var cursortype = scope.cursortype();
                     var openCalendarTooltip = i18NService.get18nValue('calendar.date_tooltip', 'Open the calendar popup');
 
+                    //map grid columns to an object
+                    var displayableObject = {};
+                    schema.displayables.forEach(function (field) {
+                        displayableObject[field.attribute] = field;
+                    });
+
                     for (var i = 0; i < datamap.length; i++) {
                         var rowst = "datamap[{0}]".format(i);
 
@@ -278,32 +302,42 @@
                                 }
                             }
                             else if (column.rendererType === "icon") {
-                                var classtoLoad = "fa " + scope.innerLoadIcon(i, j);
-                                html += "<div>";
-                                html += " <i class=\"{0}\"".format(classtoLoad);
-
-                                //create html tooltip with label and count
-                                var toolTip = "<span style='white-space: nowrap;'>";
-                                toolTip += column.toolTip ? column.toolTip : column.label;
-                                toolTip += ': ' + dm.fields[column.attribute];
-                                toolTip += '</span>';
-
-                                html += "rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                                html+="<div>" + scope.handleIcon(scope.innerLoadIcon(i, j), column, formattedText);
                             }
                             else if (column.rendererType === 'priorityicon') {
                                 var foreground = prioritycolorService.getColor(formattedText, column.rendererParameters);
+                                html += "<div>" + scope.handleIcon("fa-flag", column, formattedText, foreground);
+                            }
+                            else if (column.rendererType === 'statusicons') {                     
+                                
 
                                 html += '<div class="cell-wrapper">';
-                                html += '<i class="fa fa-flag" style="color: {0}"'.format(foreground);
+                                var iconHTML = '';
 
-                                //create html tooltip with label and count
-                                var toolTip = "<span style='white-space: nowrap;'>";
-                                toolTip += column.label;
-                                toolTip += ': ';
-                                toolTip += formattedText;
-                                toolTip += '</span>';
+                                //create the icons
+                                if (column.rendererParameters.iconcolumns) {
+                                    var iconColumns = column.rendererParameters.iconcolumns.split(',');
 
-                                html += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                                    iconColumns.forEach(function(field) {
+                                        var iconColumn = displayableObject[field];
+                                        var value = datamap[i].fields[field];
+
+                                        if (value) {
+                                            var icon = iconColumn.rendererParameters.icon;
+                                            //if not the first icon add a spacer
+                                            if (iconHTML != '') {
+                                                iconHTML += '&emsp;';
+                                            }
+                                            var foreground = null;
+                                            if (iconColumn.rendererParameters.qualifier == "priority") {
+                                                foreground = prioritycolorService.getColor(value, iconColumn.rendererParameters);
+                                            }
+                                            iconHTML += scope.handleIcon(icon, iconColumn, value, foreground);
+                                        }
+                                    });
+                                }
+
+                                html += iconHTML;
                             }
 
                             else if (column.type === 'ApplicationFieldDefinition') {

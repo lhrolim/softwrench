@@ -31,21 +31,21 @@
             //create the default priority ranges
             var priorityRanges = {
                 high: '1',
-                medium: '2,3',
-                low: '4,5'
+                medium: '2',
+                low: '3'
             }
 
             //override default ranges from metadata
-            if (parameters.high) {
-                priorityRanges.high = parameters.high;
+            if (parameters.highpriority) {
+                priorityRanges.high = parameters.highpriority;
             }
 
-            if (parameters.medium) {
-                priorityRanges.medium = parameters.medium;
+            if (parameters.mediumpriority) {
+                priorityRanges.medium = parameters.mediumpriority;
             }
 
-            if (parameters.low) {
-                priorityRanges.low = parameters.low;
+            if (parameters.lowpriority) {
+                priorityRanges.low = parameters.lowpriority;
             }
 
             //find the priority range

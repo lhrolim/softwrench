@@ -136,13 +136,13 @@
             <renderer type="datetime" params="width=15%;format=MM/dd/yyyy HH:mm;showtime=false"/>
           </field>
           <field attribute ="totalcost" label="Total Cost">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="width=15%;grid=po;column=status" />
           </field>
           <field attribute="priority" label="Priority" >
-            <renderer type="priorityicon" params="width=15%" />
+            <renderer type="priorityicon" params="width=3%" />
           </field>
           <field attribute="receipts" hidden="true"/>
           <properties>
@@ -297,10 +297,10 @@
             <renderer type="default" params="width=15%" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="statuscolor" params="width=15%;grid=pr;column=status" />
+            <renderer type="statuscolor" params="width=12%;grid=pr;column=status" />
           </field>
           <field attribute="priority" label="Priority" >
-            <renderer type="priorityicon" params="width=15%" />
+            <renderer type="priorityicon" params="width=3%" />
           </field>
           <properties>
             <property key="list.click.schema" value="detail"/>
