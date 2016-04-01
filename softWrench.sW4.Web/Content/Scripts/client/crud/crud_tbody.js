@@ -314,35 +314,25 @@
                                 html += '<div class="cell-wrapper">';
                                 var iconHTML = '';
 
-                                //create the priority flag
-                                var priorityColumn = column.rendererParameters.prioritycolumn;
-                                if (priorityColumn) {
-                                    var priority = datamap[i].fields[priorityColumn];
-
-                                    if (priority != null) {
-                                        var priorityColumn = displayableObject[priorityColumn];
-                                        var foreground = prioritycolorService.getColor(priority, priorityColumn.rendererParameters);
-
-                                        iconHTML += scope.handleIcon("fa-flag", priorityColumn, priority, foreground);
-
-                                    }
-                                }
-
                                 //create the icons
                                 if (column.rendererParameters.iconcolumns) {
                                     var iconColumns = column.rendererParameters.iconcolumns.split(',');
 
                                     iconColumns.forEach(function(field) {
                                         var iconColumn = displayableObject[field];
-                                        var count = datamap[i].fields[field];
+                                        var value = datamap[i].fields[field];
 
-                                        if (count > 0) {
+                                        if (value) {
                                             var icon = iconColumn.rendererParameters.icon;
                                             //if not the first icon add a spacer
                                             if (iconHTML != '') {
                                                 iconHTML += '&emsp;';
                                             }
-                                            iconHTML += scope.handleIcon(icon, iconColumn, count);
+                                            var foreground = null;
+                                            if (iconColumn.rendererParameters.qualifier == "priority") {
+                                                foreground = prioritycolorService.getColor(value, iconColumn.rendererParameters);
+                                            }
+                                            iconHTML += scope.handleIcon(icon, iconColumn, value, foreground);
                                         }
                                     });
                                 }
