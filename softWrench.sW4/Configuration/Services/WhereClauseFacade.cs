@@ -12,6 +12,7 @@ using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Iesi.Collections.Generic;
 using NHibernate.Util;
@@ -73,7 +74,7 @@ namespace softWrench.sW4.Configuration.Services {
 
         }
 
-        public void Register(string applicationName, String query, WhereClauseRegisterCondition condition = null, bool validate = true) {
+        public void Register(string applicationName, String query, WhereClauseRegisterCondition condition = null, bool validate = false) {
 
             var result = Validate(applicationName, validate);
             if (!result) {
@@ -92,7 +93,7 @@ namespace softWrench.sW4.Configuration.Services {
         public Iesi.Collections.Generic.ISet<UserProfile> ProfilesByApplication(string applicationName, InMemoryUser loggedUser) {
 
             var profiles = loggedUser.Profiles;
-            if (!profiles.Any()) {
+            if (!EnumerableExtensions.Any(profiles)) {
                 //no profiles at all, nothing to consider
                 return new HashedSet<UserProfile>();
             }
@@ -118,7 +119,7 @@ namespace softWrench.sW4.Configuration.Services {
                     defaultId = profile.Id;
                 }
             }
-            if (result.Any() && defaultId != null) {
+            if (EnumerableExtensions.Any(result) && defaultId != null) {
                 result.Insert(0, new UserProfile {
                     Id = defaultId,
                     Name = sb.ToString(0, sb.Length - 3)
@@ -134,17 +135,12 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         private static bool Validate(string applicationName, bool throwException = true) {
-            try {
-                MetadataProvider.Application(applicationName);
-            } catch (Exception) {
-                try {
-                    MetadataProvider.Entity(applicationName);
-                } catch (Exception) {
-                    if (throwException) {
-                        throw new InvalidOperationException(String.Format(AppNotFoundEx, applicationName));
-                    }
-                    return false;
+            var items = MetadataProvider.FetchAvailableAppsAndEntities();
+            if (!items.Contains(applicationName)) {
+                if (throwException) {
+                    throw new InvalidOperationException(String.Format(AppNotFoundEx, applicationName));
                 }
+                return false;
             }
             return true;
         }
