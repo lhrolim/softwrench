@@ -123,6 +123,24 @@
                     return statuscolorService.getColor(status, scope.schema.applicationName);
                 };
 
+                scope.handleIcon = function (iconClass, column, text, foreground) {
+                    var iconHTML = "";
+                    iconHTML += '<i class="fa {0}" '.format(iconClass);
+                    if (foreground) {
+                        iconHTML += 'style = "color: {0}"'.format(foreground);
+                    }
+
+                    //create html tooltip with label and count
+                    var toolTip = "<span style='white-space: nowrap;'>";
+                    toolTip += column.toolTip ? column.toolTip : column.label;
+                    toolTip += ': ';
+                    toolTip += text;
+                    toolTip += '</span>';
+
+                    iconHTML += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                    return iconHTML;
+                }
+
                 scope.getGridColumnStyle = function (column, propertyName, highResolution) {
                     if (column.rendererParameters != null) {
                         //sections for instance dont have it
@@ -206,6 +224,12 @@
                     var cursortype = scope.cursortype();
                     var openCalendarTooltip = i18NService.get18nValue('calendar.date_tooltip', 'Open the calendar popup');
 
+                    //map grid columns to an object
+                    var displayableObject = {};
+                    schema.displayables.forEach(function (field) {
+                        displayableObject[field.attribute] = field;
+                    });
+
                     for (var i = 0; i < datamap.length; i++) {
                         var rowst = "datamap[{0}]".format(i);
 
@@ -278,39 +302,14 @@
                                 }
                             }
                             else if (column.rendererType === "icon") {
-                                var classtoLoad = "fa " + scope.innerLoadIcon(i, j);
-                                html += "<div>";
-                                html += " <i class=\"{0}\"".format(classtoLoad);
-
-                                //create html tooltip with label and count
-                                var toolTip = "<span style='white-space: nowrap;'>";
-                                toolTip += column.toolTip ? column.toolTip : column.label;
-                                toolTip += ': ' + dm.fields[column.attribute];
-                                toolTip += '</span>';
-
-                                html += "rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                                html+="<div>" + scope.handleIcon(scope.innerLoadIcon(i, j), column, formattedText);
                             }
                             else if (column.rendererType === 'priorityicon') {
                                 var foreground = prioritycolorService.getColor(formattedText, column.rendererParameters);
-
-                                html += '<div>';
-                                html += '<i class="fa fa-flag" style="color: {0}"'.format(foreground);
-
-                                //create html tooltip with label and count
-                                var toolTip = "<span style='white-space: nowrap;'>";
-                                toolTip += column.toolTip ? column.toolTip : column.label;
-                                toolTip += ': ';
-                                toolTip += formattedText;
-                                toolTip += '</span>';
-
-                                html += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                                html += "<div>" + scope.handleIcon("fa-flag", column, formattedText, foreground);
                             }
                             else if (column.rendererType === 'statusicons') {                     
-                                //map grid columns to an object
-                                var displayableObject = {};
-                                schema.displayables.forEach(function (field) {
-                                    displayableObject[field.attribute] = field;
-                                });
+                                
 
                                 html += '<div class="cell-wrapper">';
                                 var iconHTML = '';
@@ -324,16 +323,8 @@
                                         var priorityColumn = displayableObject[priorityColumn];
                                         var foreground = prioritycolorService.getColor(priority, priorityColumn.rendererParameters);
 
-                                        iconHTML += '<i class="fa fa-flag" style="color: {0}"'.format(foreground);
+                                        iconHTML += scope.handleIcon("fa-flag", priorityColumn, priority, foreground);
 
-                                        //create html tooltip with label and count
-                                        var toolTip = "<span style='white-space: nowrap;'>";
-                                        toolTip += priorityColumn.toolTip ? priorityColumn.toolTip : priorityColumn.label;
-                                        toolTip += ': ';
-                                        toolTip += priority;
-                                        toolTip += '</span>';
-
-                                        iconHTML += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
                                     }
                                 }
 
@@ -351,17 +342,7 @@
                                             if (iconHTML != '') {
                                                 iconHTML += '&emsp;';
                                             }
-
-                                            iconHTML += '<i class="fa {0}"'.format(icon);
-
-                                            //create html tooltip with label and count
-                                            var toolTip = "<span style='white-space: nowrap;'>";
-                                            toolTip += iconColumn.toolTip ? iconColumn.toolTip : iconColumn.label;
-                                            toolTip += ': ';
-                                            toolTip += count;
-                                            toolTip += '</span>';
-
-                                            iconHTML += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                                            iconHTML += scope.handleIcon(icon, iconColumn, count);
                                         }
                                     });
                                 }
