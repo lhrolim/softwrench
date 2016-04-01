@@ -115,10 +115,10 @@
                 var datamap = scope.datamap;
                 if (datamap) {
                     datamap[scope.attribute] = datum.value;
-                    scope.$digest();
                 }
-                crudContextHolderService.updateLazyAssociationOption(scope.provider, datum, true);
+                associationService.updateUnderlyingAssociationObject(scope.fieldMetadata, datum, scope);
                 scope.itemSelected({ item: datum });
+                $rootScope.$digest();
             });
 
             element.on("focus", function (e) {

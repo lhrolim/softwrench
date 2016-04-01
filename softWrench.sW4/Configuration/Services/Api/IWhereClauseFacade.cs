@@ -13,7 +13,7 @@ namespace softWrench.sW4.Configuration.Services.Api {
         [NotNull]
         WhereClauseResult Lookup([NotNull]string applicationName, ApplicationLookupContext lookupContext = null, ContextHolder contextHolder = null);
 
-        void Register([NotNull]string applicationName, [NotNull]string query, WhereClauseRegisterCondition condition = null,bool validate=true);
+        void Register([NotNull]string applicationName, [NotNull]string query, WhereClauseRegisterCondition condition = null,bool validate=false);
 
         /// <summary>
         /// Given an application returns a list of associated profiles that have different whereclauses on it, constrained to the ones that the current user have
