@@ -177,6 +177,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseProblemDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\BaseTicketDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ChangeStatusTicketHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\BaseCommlogDataset.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\CommlogHelper.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\DispatchOperationHandler.cs" />

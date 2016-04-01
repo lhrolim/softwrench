@@ -5,6 +5,7 @@
   <property name="dev_pr2" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr2;User Id=sw;password=softwrench;" />
   <property name="dev_pr3" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr3;User Id=sw;password=softwrench;" />
   <property name="dev_pr4" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr4;User Id=sw;password=softwrench;" />
+  <property name="dev_pr5" value="Provider=SQLOLEDB;Data Source=10.50.100.125;Initial Catalog=SWDB_pr5;User Id=sw;password=softwrench;" />
   <property name="droptables" value="../Build/rmtables.sql" />
 
   <if test="${environment::variable-exists('image')}">

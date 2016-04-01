@@ -310,16 +310,16 @@
                          ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isModifiableEnabled(fieldMetadata)"></div>
                 </div>
                 <div ng-switch-when="upload">
-                    <div class="input-group" id="{{fieldMetadata.attribute}}">
+                    <div file-upload class="input-group" id="{{fieldMetadata.attribute}}">
                         <input id="uploadFile" class="form-control" placeholder="No file chosen" disabled="disabled" />
                         <div class="input-group-addon fileUpload" data-upload="files">
                             <span>Choose File</span>
-                            <input class="form-control uploadfile_tooltip upload" name="{{fieldMetadata.attribute}}"
+                            <input class="form-control uploadfile_tooltip upload"
+                                   name="{{fieldMetadata.attribute}}"
                                    id="uploadBtn"
                                    type="file" accept=".jpg,.bmp,.png,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html"
                                    fileread="datamap[fieldMetadata.attribute]"
-                                   path="datamap.newattachment_path"
-                                   title="{{handlerTitleInputFile('uploadfile_tooltip')}}" />
+                                   path="datamap.newattachment_path"/>
                         </div>
                     </div>
                 </div>
@@ -346,20 +346,22 @@
                         <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
                     </div>
                 </div>
-               
-                <div ng-switch-when="multipleupload">
-                    <div class="input-group" id="{{fieldMetadata.attribute}}">
-                        <div class="input-group-addon fileUpload" data-upload="files">
-                            <input name="{{fieldMetadata.attribute}}"
-                                   id="uploadBtn"
-                                   type="file" accept=".jpg,.bmp,.png,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html"
-                                   fileread="datamap[fieldMetadata.attribute]"
-                                   path="datamap.newattachment_path"
-                                   title="{{handlerTitleInputFile('uploadfile_tooltip')}}"
-                                   multiple="multiple" />
-                        </div>
+
+            <div ng-switch-when="multipleupload">
+                <div file-upload class="input-group" id="{{fieldMetadata.attribute}}">
+                    <input id="uploadFile" class="form-control" placeholder="No file chosen" disabled="disabled" />
+                    <div class="input-group-addon fileUpload" data-upload="files">
+                        <span>Choose File</span>
+                        <input class="form-control uploadfile_tooltip upload"
+                               name="{{fieldMetadata.attribute}}"
+                               id="uploadBtn"
+                               type="file" accept=".jpg,.bmp,.png,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html"
+                               fileread="datamap[fieldMetadata.attribute]"
+                               path="datamap.newattachment_path"
+                               multiple="multiple"/>
                     </div>
                 </div>
+            </div>
                 <div ng-switch-when="screenshot">
                     <div ng-show="!isIE()" id="imgHolder_{{fieldMetadata.attribute}}" name="{{fieldMetadata.attribute}}" contenteditable='true' class="form-control image-holder"></div>
                     <iframe id="richTextBox_{{fieldMetadata.attribute}}" ng-show="isIE()" ng-src="{{contextPath('/UserControls/RichTextBox.aspx')}}"
