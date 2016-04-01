@@ -76,7 +76,7 @@
     function hasDataClass(column, formattedText) {
         var classString = '';
 
-        if ((formattedText != null && formattedText != "") || column.rendererType == 'color') {
+        if ((formattedText != null && formattedText != "") || column.rendererType == 'color' || column.rendererType == 'statusicons') {
             classString = 'has-data';
         } else {
             classString = 'no-data';
@@ -293,17 +293,83 @@
                             else if (column.rendererType === 'priorityicon') {
                                 var foreground = prioritycolorService.getColor(formattedText, column.rendererParameters);
 
-                                html += '<div class="cell-wrapper">';
+                                html += '<div>';
                                 html += '<i class="fa fa-flag" style="color: {0}"'.format(foreground);
 
                                 //create html tooltip with label and count
                                 var toolTip = "<span style='white-space: nowrap;'>";
-                                toolTip += column.label;
+                                toolTip += column.toolTip ? column.toolTip : column.label;
                                 toolTip += ': ';
                                 toolTip += formattedText;
                                 toolTip += '</span>';
 
                                 html += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                            }
+                            else if (column.rendererType === 'statusicons') {                     
+                                //map grid columns to an object
+                                var displayableObject = {};
+                                schema.displayables.forEach(function (field) {
+                                    displayableObject[field.attribute] = field;
+                                });
+
+                                html += '<div class="cell-wrapper">';
+                                var iconHTML = '';
+
+                                //create the priority flag
+                                var priorityColumn = column.rendererParameters.prioritycolumn;
+                                if (priorityColumn) {
+                                    var priority = datamap[i].fields[priorityColumn];
+
+                                    if (priority != null) {
+                                        var priorityColumn = displayableObject[priorityColumn];
+                                        var foreground = prioritycolorService.getColor(priority, priorityColumn.rendererParameters);
+
+                                        //console.log(priorityColumn);
+
+                                        iconHTML += '<i class="fa fa-flag" style="color: {0}"'.format(foreground);
+
+                                        //create html tooltip with label and count
+                                        var toolTip = "<span style='white-space: nowrap;'>";
+                                        toolTip += priorityColumn.toolTip ? priorityColumn.toolTip : priorityColumn.label;
+                                        toolTip += ': ';
+                                        toolTip += priority;
+                                        toolTip += '</span>';
+
+                                        iconHTML += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                                    }
+                                }
+
+                                if (column.rendererParameters.iconcolumns) {
+                                    var iconColumns = column.rendererParameters.iconcolumns.split(',');
+
+                                    //console.log(iconColumns);
+                                    iconColumns.forEach(function(field) {
+                                        // displayableObject[field.attribute] = field;
+                                        var iconColumn = displayableObject[field];
+                                        var count = datamap[i].fields[field];
+
+                                        if (count > 0) {
+                                            var icon = iconColumn.rendererParameters.icon;
+                                            //if not the first icon add a spacer
+                                            if (iconHTML != '') {
+                                                iconHTML += '&emsp;';
+                                            }
+
+                                            iconHTML += '<i class="fa {0}"'.format(icon);
+
+                                            //create html tooltip with label and count
+                                            var toolTip = "<span style='white-space: nowrap;'>";
+                                            toolTip += iconColumn.toolTip ? iconColumn.toolTip : iconColumn.label;
+                                            toolTip += ': ';
+                                            toolTip += count;
+                                            toolTip += '</span>';
+
+                                            iconHTML += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                                        }
+                                    });
+                                }
+
+                                html += iconHTML;
                             }
 
                             else if (column.type === 'ApplicationFieldDefinition') {

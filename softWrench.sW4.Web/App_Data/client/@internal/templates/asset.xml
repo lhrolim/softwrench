@@ -61,11 +61,14 @@
           <field attribute="parent" label="Parent"/>
           <field attribute="status" label="Status"/>
           <field attribute="siteid" label="Site ID"/>
-          <field attribute="priority" label="Priority" >
-            <renderer type="priorityicon" params="width=15%" />
+          <field attribute="priority" tooltip="Priority" hidden="true">
+            <renderer type="priorityicon"/>
           </field>
-          <field attribute="workorders" label="Workorders">
-            <renderer type="icon" params="width=3%;expression={'#default':'fa-wrench','0':''};"/>
+          <field attribute="workordercounter" tooltip="Workorders" hidden="true">
+            <renderer type="icon" params="icon=fa-wrench"/>
+          </field>
+          <field attribute="" label="Status Icons">
+            <renderer type="statusicons" params="width=6%;prioritycolumn=priority;iconcolumns=workordercounter"/>
           </field>
         </schema>
         <schema id="detail" title="Asset Detail" stereotype="detail" platform="web">

@@ -90,7 +90,7 @@
    
 
         $scope.shouldShowHeaderLabel = function (column) {
-            return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon";
+            return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon" && column.rendererType != "priorityicon" && column.rendererType != "statusicons";
         };
 
         $scope.shouldShowHeaderFilter = function (column) {
