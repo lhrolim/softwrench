@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using cts.commons.simpleinjector.Core.Order;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Scheduler;
@@ -9,9 +10,13 @@ using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Init {
-    class DbUserInitializer : ISWEventListener<ApplicationStartedEvent> {
+    class DbUserInitializer : ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
         private static readonly SecurityFacade SecurityFacade = SecurityFacade.GetInstance();
         private static SWDBHibernateDAO _dao;
+
+        public int Order {
+            get { return 4; }
+        }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             CreateUser();

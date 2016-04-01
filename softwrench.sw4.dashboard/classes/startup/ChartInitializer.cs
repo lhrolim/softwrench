@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using cts.commons.persistence.Util;
+using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Configuration.Services.Api;
@@ -12,7 +13,7 @@ using softWrench.sW4.Util;
 using WebGrease.Css.Extensions;
 
 namespace softwrench.sw4.dashboard.classes.startup {
-    public class ChartInitializer : ISWEventListener<ApplicationStartedEvent> {
+    public class ChartInitializer : ISWEventListener<ApplicationStartedEvent>, IOrdered {
 
         private const string WO_CHART_DASHBOARD_TITLE = "Work Orders";
         private const string SR_CHART_DASHBOARD_TITLE = "Service Requests";
@@ -26,6 +27,8 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
         private readonly DisregardingUserSWDBHibernateDaoDecorator _dao = new DisregardingUserSWDBHibernateDaoDecorator(new ApplicationConfigurationAdapter());
         private readonly IWhereClauseFacade _whereClauseFacade;
+
+        public int Order { get { return int.MaxValue - 51; } }
 
         public ChartInitializer(IWhereClauseFacade whereClauseFacade) {
             _whereClauseFacade = whereClauseFacade;
