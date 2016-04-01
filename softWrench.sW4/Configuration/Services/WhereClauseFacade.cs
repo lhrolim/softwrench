@@ -74,9 +74,13 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         public void Register(string applicationName, String query, WhereClauseRegisterCondition condition = null, bool validate = true) {
-            if (validate) {
-                Validate(applicationName);
+
+            var result = Validate(applicationName, validate);
+            if (!result) {
+                Log.WarnFormat("application {0} not found skipping registration", applicationName);
+                return;
             }
+
             var configKey = String.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName);
             if (!_appStarted) {
                 _toRegister.Add(Tuple.Create(configKey, query, condition));
@@ -129,19 +133,26 @@ namespace softWrench.sW4.Configuration.Services {
             return string.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName);
         }
 
-        private static void Validate(string applicationName) {
+        private static bool Validate(string applicationName, bool throwException = true) {
             try {
                 MetadataProvider.Application(applicationName);
             } catch (Exception) {
                 try {
                     MetadataProvider.Entity(applicationName);
                 } catch (Exception) {
-                    throw new InvalidOperationException(String.Format(AppNotFoundEx, applicationName));
+                    if (throwException) {
+                        throw new InvalidOperationException(String.Format(AppNotFoundEx, applicationName));
+                    }
+                    return false;
                 }
             }
+            return true;
         }
 
         private void DoRegister(string configKey, string query, WhereClauseRegisterCondition condition) {
+
+
+
             if (condition != null && condition.Environment != null && condition.Environment != ApplicationConfiguration.Profile) {
                 //we don´t need to register this property here.
                 return;
