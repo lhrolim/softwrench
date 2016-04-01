@@ -204,39 +204,45 @@
                     </button>
                 </td>
             </tr>
-        <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
-            <td colspan="100%" style="background-color: white" class="detaildata">
-                <div class="expanded-item-composition" ng-if="isExpandReadOnly()">
-                    <expanded-item-output displayables="compositiondetailschema.displayables"
-                                          schema="compositiondetailschema"
-                                          datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
-                                          cancelfn="cancelComposition()"
-                                          class="clearfix">
-                    </expanded-item-output>
-                </div>
-                <div class="expanded-item-composition" ng-if="!isExpandReadOnly()">
-                    <expanded-item-input displayables="compositiondetailschema.displayables"
-                                         schema="compositiondetailschema"
-                                         datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
-                                         cancelfn="cancelComposition()"
-                                         savefn="save()"
-                                         class="clearfix">
-                    </expanded-item-input>
-                </div>
-            </td>
-        </tr>
-        <tr class="batchadd" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'">
-            <td colspan="100%">
-                <button class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;Add Item</button>
-            </td>
-        </tr>
+            <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
+                <td colspan="100%" style="background-color: white" class="detaildata">
+                    <div class="expanded-item-composition" ng-if="isExpandReadOnly()">
+                        <expanded-item-output displayables="compositiondetailschema.displayables"
+                                              schema="compositiondetailschema"
+                                              datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
+                                              cancelfn="cancelComposition()"
+                                              class="clearfix">
+                        </expanded-item-output>
+                    </div>
+                    <div class="expanded-item-composition" ng-if="!isExpandReadOnly()">
+                        <expanded-item-input displayables="compositiondetailschema.displayables"
+                                             schema="compositiondetailschema"
+                                             datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
+                                             cancelfn="cancelComposition()"
+                                             savefn="save()"
+                                             class="clearfix">
+                        </expanded-item-input>
+                    </div>
+                </td>
+            </tr>
+            <tr class="batchadd" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'">
+                <td colspan="100%">
+                    <button class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;Add Item</button>
+                </td>
+            </tr>
         </tbody>
         <tbody ng-show="isNoRecords()">
+
             <tr>
                 <td colspan="100%">
                     <p class="no-results">
                         <i class="fa fa-info-circle"></i>&ensp;{{i18N('general.norecords','No records to display.')}}
                     </p>
+                </td>
+            </tr>
+            <tr class="batchadd" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'">
+                <td colspan="100%">
+                    <button class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;Add Item</button>
                 </td>
             </tr>
         </tbody>
@@ -245,19 +251,20 @@
         <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber, pageSize, printMode)" />
     </div>
 
-<!--    <div ng-if="showListCommands()" class="form-actions form-group" data-class="commandbar" ng-if="shouldShowAdd()">-->
-<!--        <div class="col-lg-12 hapag-align-button" style="padding-top: 5px">-->
-<!--            This button will only be show at this position in case of an inline composition.
-<!--            Otherwise, it shoul join the default command bar-->
-<!--            <button type="button" id="additem" class="btn commandButton" ng-click="newDetailFn()" ng-show="allowButton(collectionproperties.allowInsertion)">-->
-<!--                <i class="fa fa-plus {{list.schema.icon}}"></i>&ensp;{{i18N(relationship + '.add','Add ' + title)}}-->
-<!--            </button>-->
-<!--
-<!--        </div>-->
-<!-- </div>-->
+    <!--    <div ng-if="showListCommands()" class="form-actions form-group" data-class="commandbar" ng-if="shouldShowAdd()">-->
+    <!--        <div class="col-lg-12 hapag-align-button" style="padding-top: 5px">-->
+    <!--            This button will only be show at this position in case of an inline composition.
+    <!--            Otherwise, it shoul join the default command bar-->
+    <!--            <button type="button" id="additem" class="btn commandButton" ng-click="newDetailFn()" ng-show="allowButton(collectionproperties.allowInsertion)">-->
+    <!--                <i class="fa fa-plus {{list.schema.icon}}"></i>&ensp;{{i18N(relationship + '.add','Add ' + title)}}-->
+    <!--            </button>-->
+    <!--
+    <!--        </div>-->
+    <!-- </div>-->
 
     <div ng-if="newDetail" style="margin-top: 10px">
         <form name="compositionform">
+            <div ng-init="setForm(compositionform)"
             <div ng-init="setForm(compositionform)"></div>
             <new-item-input displayables="compositiondetailschema.displayables"
                             elementid="inputComposition"
