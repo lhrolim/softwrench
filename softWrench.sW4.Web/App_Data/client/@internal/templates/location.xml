@@ -126,14 +126,8 @@
             <field attribute="type" label="Type:" readonly="true"/>
             <field attribute="locoper_.locpriority" label="Priority:" readonly="true"/>
             <field attribute="locoper_.failurecode" label="Failure Code:" readonly="true"/>
-          <!--</section>-->
-          
-          <!--<section orientation="horizontal">-->
             <field attribute="locoper_.itemnum" label="Rotating Item:" readonly="true"/>
             <field attribute="locoper_.groupname" label="Meter Group:" readonly="true"/>
-          <!--</section>-->
-          
-          <!--<section orientation="horizontal">-->
             <field attribute="locoper_.calnum" label="Calendar:" readonly="true"/>
             <field attribute="locoper_.shiftnum" label="Shift:" readonly="true"/>
             <field attribute="glaccount" label="GL Account:" readonly="true"/>
