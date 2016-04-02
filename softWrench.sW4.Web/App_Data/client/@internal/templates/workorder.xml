@@ -143,6 +143,7 @@
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
         <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
+        <property key="icon.composition.tab" value="fa fa-wrench"/>
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">

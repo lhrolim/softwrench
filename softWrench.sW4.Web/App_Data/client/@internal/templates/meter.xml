@@ -21,6 +21,7 @@
     <application name="assetmeter" title="Asset Meter" entity="assetmeter">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
+        <property key="icon.composition.tab" value="fa fa-tachometer"/>
       </properties>
       <schemas>
         <schema id="composition" stereotype="compositionlist" title="Asset Meter Readings">
@@ -117,6 +118,7 @@
     <application name="locationmeter" title="Location Meter" entity="locationmeter">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
+        <property key="icon.composition.tab" value="fa fa-tachometer"/>
       </properties>
       <schemas>
         <schema id="locationcomposition" stereotype="compositionlist" title="Meters">
