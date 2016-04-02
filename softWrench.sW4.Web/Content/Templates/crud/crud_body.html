@@ -62,9 +62,7 @@
                         </a>
                         <a ng-switch-when="ApplicationTabDefinition"
                            ng-href="#{{tab.tabId}}" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)" data-tabid="{{tab.tabId}}">
-                            <i class="fa {{tab.icon}} ">
-                            </i>
-                            {{i18NTabLabel(tab)}} <span ng-show="showTabRecordCount(tab)" class="tabRecordCount">{{getTabRecordCount(tab)}}</span>
+                            <i class="fa {{tab.icon}} "></i>&ensp;{{i18NTabLabel(tab)}}&ensp;<span ng-show="showTabRecordCount(tab)" class="tabRecordCount">{{getTabRecordCount(tab)}}</span>
                         </a>
                     </li>
                 </ul>

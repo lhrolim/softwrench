@@ -30,6 +30,7 @@
       <properties>
         <property key="mobile.fetchlimit" value="30"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
+        <property key="icon.composition.tab" value="fa fa-tags"/>
       </properties>
       <schemas>
         <schema id="list" platform="mobile">
@@ -146,13 +147,12 @@
               <field attribute="changedate" label="Change Date" readonly="true"/>
             </section>
           </section>
-          <tab id="spareparts" label="Spare Parts">
+          <tab id="spareparts" label="Spare Parts" icon="fa-download">
             <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=small" />
               <field attribute="assetnum" label="Asset" readonly="true"/>
               <field attribute="desription" label="Description" readonly="true"/>
               <field attribute="siteid" label="Site" readonly="true"/>
-            </section>
-            <section orientation="horizontal">
               <field attribute="parentasset_.assetnum" label="Parent" readonly="true"/>
               <field attribute="parentasset_.description" label="Description" readonly="true"/>
             </section>
@@ -169,7 +169,7 @@
             <field attribute="location" label="Location" readonly="true"/>
             <field attribute="location_.description" label="Description" readonly="true"/>
           </tab>-->
-          <tab id="meters" label="Meters">
+          <tab id="meters" label="Meters" icon="fa-tachometer">
             <section orientation="horizontal">
               <field attribute="assetnum" label="Asset" readonly="true"/>
               <field attribute="description" label="Description" readonly="true"/>
@@ -180,15 +180,19 @@
               <collectionproperties listschema="assetmeterlist" allowcreation="false" allowremoval="false" allowupdate="false"/>
             </composition>
           </tab>
+          
           <composition relationship="assetspec" label="Specifications" detailschema="compositiondetail" printschema="">
             <collectionproperties listschema="compositionlist" allowcreation="false" allowremoval="false" allowupdate="false"/>
           </composition>
+          
           <composition relationship="assetlocrelation" label="Relationships" detailschema="assetlocrelationdetail">
             <collectionproperties listschema="assetlocrelationlist" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="BuildAssetlocrelationWhereClause"/>
           </composition>
+          
           <composition relationship="workorder" label="Work Order History" detailschema="">
             <collectionproperties listschema="assetwolist" allowcreation="false" allowupdate="false" allowremoval="false" printenabled="false"/>
           </composition>
+          
         </schema>
         <schema id="subassemblies" stereotype="compositionlist" platform="web">
           <field attribute="assetnum" label="Asset" readonly="true"/>

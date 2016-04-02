@@ -3,6 +3,9 @@
 
   <applications>
     <application name="assetspec" title="Asset Specification" entity="assetspec" id="00000000-0000-0000-0000-040079045007" >
+      <properties>
+        <property key="icon.composition.tab" value="fa fa-list-ul"/>
+      </properties>
       <schemas>
         <schema id="compositionlist" title="Asset Specification List" stereotype="compositionlist">
           <field attribute="classstructure_.hierarchypath" label="Classification"/>

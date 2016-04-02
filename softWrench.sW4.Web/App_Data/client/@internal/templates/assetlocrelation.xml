@@ -3,6 +3,9 @@
 
   <applications>
     <application name="assetlocrelation" title="Asset Location Relation" entity="assetlocrelation" id="00000000-0000-0000-0000-000003957204" >
+      <properties>
+        <property key="icon.composition.tab" value="fa fa-share-alt"/>
+      </properties>
       <schemas>
         <schema id="assetlocrelationlist" stereotype="compositionlist">
           <field attribute="relsequencenum" label="Sequence Number" readonly="true"/>

@@ -50,6 +50,9 @@
   
   <applications>
     <application name="locationspec" title="Location Specification" entity="locationspec" id="00000000-0000-0000-0000-000108056902">
+      <properties>
+        <property key="icon.composition.tab" value="fa fa-list-ul"/>
+      </properties>
       <schemas>
         <schema id="compositionlist" title="Location Specification List" stereotype="compositionlist">
           <field attribute="classstructure_.hierarchypath" label="Classification"/>
