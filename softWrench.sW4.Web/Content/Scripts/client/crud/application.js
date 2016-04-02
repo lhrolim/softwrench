@@ -231,7 +231,7 @@ function applicationController($scope, $http, $log, $timeout,
         if (printMode == undefined) {
             //avoid the print url to be saved on the sessionStorage, breaking page refresh
             contextService.insertIntoContext("swGlobalRedirectURL", urlToCall, false);
-            historyService.addToHistory(urlToCall);
+            historyService.addToHistory(urlToCall, false, true);
         }
         log.info("calling url".format(urlToCall));
 
@@ -364,9 +364,8 @@ function applicationController($scope, $http, $log, $timeout,
     $scope.doConfirmCancel = function (data, schema, msg) {
         $('.no-touch [rel=tooltip]').tooltip('hide');
 
-        // is on breadcrumb navigarion and its not the first on navigation (index 0)
-        if (historyService.indexOnBreadcrumbHistory() > 0) {
-            historyService.redirectOneBack(true, msg);
+        // try to redirect from history or breadcrumb history
+        if (historyService.redirectOneBack(msg)) {
             return;
         }
 

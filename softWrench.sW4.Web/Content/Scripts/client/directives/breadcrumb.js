@@ -125,7 +125,7 @@ app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
 
             $scope.redirectIfNeeded = function(leaf) {
                 if (leaf.redirectURL) {
-                    historyService.redirect(leaf.redirectURL, leaf.historyIndex);
+                    historyService.breadcrumbRedirect(leaf.redirectURL, leaf.historyIndex);
                 }
             }
 
