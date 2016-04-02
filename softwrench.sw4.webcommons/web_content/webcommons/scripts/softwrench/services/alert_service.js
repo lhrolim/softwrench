@@ -55,7 +55,15 @@
                     });
                     return deferred.promise;
                 },
+
+                confirmCancel2: function (applicationName, applicationId, msg) {
+                    return this.confirmCancel(applicationName, applicationId, null, msg);
+                },
+
                 confirmCancel: function (applicationName, applicationId, callbackFunction, msg, cancelcallback) {
+
+                    var deferred = $q.defer();
+
                     var defaultConfirmMsg = "Are you sure you want to cancel {0} {1}?".format(applicationName, applicationId);
                     bootbox.setDefaults({ locale: i18NService.getCurrentLanguage() });
                     var defaultDeleteMsg = i18NService.get18nValue('general.defaultcommands.delete.confirmmsg', defaultConfirmMsg, [applicationName, applicationId]);
@@ -77,10 +85,13 @@
                                     cancelcallback();
                                     return;
                                 }
+                                deferred.reject();
                                 return;
                             }
-                            callbackFunction();
-
+                            if (callbackFunction != undefined) {
+                                callbackFunction();
+                            }
+                            deferred.resolve();
                         }
 
                     });

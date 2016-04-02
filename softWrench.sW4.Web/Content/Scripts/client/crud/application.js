@@ -365,9 +365,9 @@ function applicationController($scope, $http, $log, $timeout,
         $('.no-touch [rel=tooltip]').tooltip('hide');
 
         // try to redirect from history or breadcrumb history
-        if (historyService.redirectOneBack(msg)) {
-            return;
-        }
+//        if (historyService.redirectOneBack(msg)) {
+//            return;
+//        }
 
         if (!crudContextHolderService.getDirty()) {
             $scope.toSchema(data, schema);
@@ -393,8 +393,6 @@ function applicationController($scope, $http, $log, $timeout,
                 return $scope.toListSchema(data, schema);
             }
         }
-
-
         if (schema.stereotype.equalsIc("list")) {
             $scope.toListSchema(data, schema);
         } else {
@@ -454,10 +452,17 @@ function applicationController($scope, $http, $log, $timeout,
             }
 
         }
+        var listName = $scope.schema.applicationName + ".list";
+        var checkPointData = checkpointService.fetchCheckpoint(listName);
+        if (checkPointData) {
+            parameters["SearchDTO"] = checkPointData.listContext;
+        }
+
+
 
         // at this point, usually schema should be a list schema, on cancel call for instance, where we pass the previous schema. same goes for the datamap
         // this first if is more of an unexpected case
-        if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail' || $scope.schema.stereotype == 'DetailNew') {
+        if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype === 'Detail' || $scope.schema.stereotype === 'DetailNew') {
             log.debug('rendering list view from server');
             $scope.renderListView(parameters);
         } else {
@@ -466,7 +471,7 @@ function applicationController($scope, $http, $log, $timeout,
                 $scope.$emit('sw_titlechanged', schema.title);
             }
             log.debug('rendering list view with previous data');
-            var checkPointData = checkpointService.fetchCheckpoint();
+            
             data = {
                 //here we have to reproduce that the request is coming from the server, so use resultObject as the name.
                 //check crud_list#gridRefreshed

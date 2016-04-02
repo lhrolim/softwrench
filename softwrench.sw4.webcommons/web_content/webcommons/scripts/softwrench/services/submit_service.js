@@ -139,7 +139,7 @@
             parameters.routeParametersDTO = {};
             parameters.routeParametersDTO.dispatcherComposition = dispatcherComposition;
             parameters = addSchemaDataToParameters(parameters, schema, nextSchemaObj);
-            var checkPointArray = checkpointService.fetchCheckpoint();
+            var checkPointArray = checkpointService.fetchAllCheckpointInfo();
             if (checkPointArray && checkPointArray.length > 0) {
                 parameters.routeParametersDTO.checkPointData = checkPointArray;
             }

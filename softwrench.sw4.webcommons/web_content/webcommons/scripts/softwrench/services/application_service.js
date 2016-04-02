@@ -4,7 +4,7 @@
 
 
 
-    angular.module('webcommons_services').factory('applicationService', ["$q", '$http', '$rootScope', 'contextService', "crudContextHolderService", "userPreferencesService", applicationService]);
+    angular.module('webcommons_services').factory('applicationService', ["$q", '$http', '$rootScope', 'contextService', "crudContextHolderService", "userPreferencesService", "alertService", "checkpointService", applicationService]);
 
     function fillApplicationParameters(parameters, applicationName,schemaId, mode) {
         /// <returns type=""></returns>
@@ -21,7 +21,7 @@
         return parameters;
     };
 
-    function applicationService($q, $http, $rootScope, contextService, crudContextHolderService, userPreferencesService) {
+    function applicationService($q, $http, $rootScope, contextService, crudContextHolderService, userPreferencesService, alertService, checkpointService) {
 
         var buildApplicationURLForBrowser = function (applicationName, parameters) {
             var crudUrl = $(routes_homeurl)[0].value;
@@ -44,6 +44,25 @@
             return removeEncoding(crudUrl);
         };
 
+
+        function toListSchema() {
+            
+        }
+
+
+        function cancelDetail() {
+            $('.no-touch [rel=tooltip]').tooltip('hide');
+
+            if (!crudContextHolderService.getDirty()) {
+                return toListSchema();
+            }
+
+            return alertService.confirmCancel2().then(function() {
+                toListSchema();
+                crudContextHolderService.clearDirty();
+                crudContextHolderService.clearDetailDataResolved();
+            });
+        }
 
         function save() {
             var deferred = $q.defer();
@@ -184,6 +203,7 @@
         };
 
         var service = {
+            cancelDetail: cancelDetail,
             getApplicationUrl: getApplicationUrl,
             getPostPromise: getPostPromise,
             invokeOperation: invokeOperation,

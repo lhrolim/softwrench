@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function crudContextHolderService($rootScope, $log,$injector, $timeout, contextService,schemaCacheService) {
+    function crudContextHolderService($rootScope, $log, $injector, $timeout, contextService, schemaCacheService) {
 
         //#region private variables
 
@@ -13,9 +13,12 @@
         var _originalContext = {
             currentSchema: null,
             rootDataMap: null,
+            isList: null,
+            isDetail: null,
+
             currentApplicationName: null,
             //a datamap that could be used in a transient fashion but that would have the same lifecycle as the main one, i.e, would get cleaned automatically upon app redirect
-            auxDataMap:null,
+            auxDataMap: null,
             /*{
             #global:{
              eagerassociation1_ :[],
@@ -86,7 +89,7 @@
                 pageSize: 0, // number of rows of page (no same of pagination on show only selected)
                 selectAllValue: false, // whether or not select all checkbox is selected
                 showOnlySelected: false,
-                selectionMode:false
+                selectionMode: false
             },
             commandsModel: {
                 toggleCommands: {}
@@ -97,7 +100,7 @@
                 //this is used to set a transient whereclause to the grid that should be appended on all subsequent server calls
                 fixedWhereClause: null
             },
-            customSaveFn:null
+            customSaveFn: null
 
         };
 
@@ -147,7 +150,7 @@
             return getContext(panelid).currentApplicationName;
         }
 
-        function currentSchema(panelid,schema) {
+        function currentSchema(panelid, schema) {
             var context = getContext(panelid);
             if (schema) {
                 context.currentSchema = schema;
@@ -155,7 +158,7 @@
             return context.currentSchema;
         }
 
-        function rootDataMap(panelid,datamap) {
+        function rootDataMap(panelid, datamap) {
             var context = getContext(panelid);
             if (datamap) {
                 context.rootDataMap = datamap;
@@ -205,13 +208,13 @@
             return context.tabRecordCount && context.tabRecordCount[tab.tabId];
         }
 
-        function setTabRecordCount(tabId, panelId,count) {
+        function setTabRecordCount(tabId, panelId, count) {
             var context = getContext(panelId);
             if (context.tabRecordCount) {
                 context.tabRecordCount[tabId] = count;
             }
         }
-        
+
         function setDetailDataResolved(panelid) {
             getContext(panelid).detailDataResolved = true;
             getContext(panelid).associationsResolved = true;
@@ -262,12 +265,12 @@
 
         function detailLoaded(panelid) {
             this.clearDirty(panelid);
-            this.disposeDetail(panelid,false);
+            this.disposeDetail(panelid, false);
             getContext(panelid).needsServerRefresh = false;
         }
 
         function gridLoaded(applicationListResult, panelid) {
-            this.disposeDetail(panelid,true);
+            this.disposeDetail(panelid, true);
             this.setActiveTab(null, panelid);
             var context = getContext(panelid);
             context.affectedProfiles = applicationListResult.affectedProfiles;
@@ -436,7 +439,7 @@
             clearCrudContext("#modal");
         };
 
-        function modalLoaded(datamap,schema) {
+        function modalLoaded(datamap, schema) {
             _crudContext.showingModal = true;
             rootDataMap("#modal", datamap);
             currentSchema("#modal", schema);
@@ -453,7 +456,7 @@
         function getSaveFn() {
             return getContext("#modal").customSaveFn;
         };
-        
+
 
 
 
@@ -504,7 +507,7 @@
 
         //#region gridServices
 
-        function setFixedWhereClause(panelId,fixedWhereClause) {
+        function setFixedWhereClause(panelId, fixedWhereClause) {
             var context = getContext(panelId);
             context.gridModel.fixedWhereClause = fixedWhereClause;
         }
@@ -532,9 +535,32 @@
 
         //#endregion
 
+
+        //#region navigationServices
+
+        function isList(panelid) {
+            return getContext(panelid).isList;
+        }
+
+        function isDetail(commandId, panelid) {
+            return getContext(panelid).isDetail;
+        }
+
+        function setList(list) {
+            getContext(panelid).isList = true;
+            getContext(panelid).isDetail= false;
+        }
+
+        function setDetail(list) {
+            getContext(panelid).isList = false;
+            getContext(panelid).isDetail = true;
+        }
+
+        //#endregion
+
         //#region Service Instance
 
-        var service = {
+        var generalServices = {
             getAffectedProfiles: getAffectedProfiles,
             getActiveTab: getActiveTab,
             setActiveTab: setActiveTab,
@@ -547,9 +573,6 @@
             currentApplicationName: currentApplicationName,
             updateCrudContext: updateCrudContext,
             applicationChanged: applicationChanged,
-            setDirty: setDirty,
-            getDirty: getDirty,
-            clearDirty: clearDirty,
             clearCrudContext: clearCrudContext,
             needsServerRefresh: needsServerRefresh,
             rootDataMap: rootDataMap,
@@ -600,13 +623,26 @@
             toggleShowOnlySelected: toggleShowOnlySelected,
         }
 
-        var commandsService = {
+        var commandsServices = {
             getCommandsModel: getCommandsModels,
             getToggleCommand: getToggleCommand,
             addToggleCommand: addToggleCommand
         }
 
-        return angular.extend({}, service, hookServices, associationServices, modalService, selectionService, gridServices, commandsService);
+        var detailServices = {
+            setDirty: setDirty,
+            getDirty: getDirty,
+            clearDirty: clearDirty,
+        }
+
+        var navigationServices = {
+            isList: isList,
+            isDetail: isDetail,
+            setList: setList,
+            setDetail: setDetail,
+        }
+
+        return angular.extend({}, generalServices, hookServices, associationServices, modalService, selectionService, gridServices, commandsServices, detailServices, navigationServices);
 
 
         //#endregion
