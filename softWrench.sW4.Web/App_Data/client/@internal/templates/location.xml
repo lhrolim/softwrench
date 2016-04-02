@@ -111,22 +111,23 @@
             <property key="detail.crawl.customparams" value="parentlocation_.systemid"/>
           </properties>
           <field attribute="orgid" showexpression="false"/>
+          
           <section orientation="horizontal">
-            <field attribute="location" label="Location:" readonly="true"/>
+            <renderer type="default" params="childinputsize=small" />
+            <field attribute="location" label="Location:" readonly="true" hidden="true"/>
             <field attribute="description" label="Description:" readonly="true"/>
             <field attribute="status" label="Status" readonly="true"/>
             <field attribute="siteid" label="Site:" readonly="true"/>
           </section>
+          
           <section orientation="horizontal">
+            <header displacement="ontop" label="Location Information" params="fieldset=true" />
+            <renderer type="default" params="childinputsize=small" />
             <field attribute="type" label="Type:" readonly="true"/>
             <field attribute="locoper_.locpriority" label="Priority:" readonly="true"/>
             <field attribute="locoper_.failurecode" label="Failure Code:" readonly="true"/>
-          </section>
-          <section orientation="horizontal">
             <field attribute="locoper_.itemnum" label="Rotating Item:" readonly="true"/>
             <field attribute="locoper_.groupname" label="Meter Group:" readonly="true"/>
-          </section>
-          <section orientation="horizontal">
             <field attribute="locoper_.calnum" label="Calendar:" readonly="true"/>
             <field attribute="locoper_.shiftnum" label="Shift:" readonly="true"/>
             <field attribute="glaccount" label="GL Account:" readonly="true"/>
