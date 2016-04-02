@@ -323,7 +323,7 @@
                     if (value == undefined) {
                         return true;
                     }
-                    return direction == 1 ? value.detail_previous : value.detail_next;
+                    return direction == 0 ? value.detail_previous : value.detail_next;
                 }
 
                 $scope.isEditing = function (schema) {
