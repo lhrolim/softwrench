@@ -5,6 +5,7 @@
     function historyService($rootScope, $location, $log, $timeout, crudContextHolderService, i18NService, contextService, alertService) {
         //#region Utils
         var breadcrumbHistoryKey = "breadcrumbHistory";
+        var cancelReturnKey = "cancelReturn";
 
         function buildTitleFromSchema() {
             return i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(), crudContextHolderService.rootDataMap());
@@ -115,8 +116,6 @@
         }
 
         function innerRedirect(url, historyIndex, currentIndex) {
-            
-
             // sets history index in case of the same url appears more than once on history
             var state = {
                 url: url,
@@ -139,16 +138,44 @@
                 $rootScope.$broadcast("sw.breadcrumb.history.redirect.sametitle");
             }
         }
+
+        function redirect(url, historyIndex, currentIndex, msg) {
+            if (!crudContextHolderService.getDirty()) {
+                innerRedirect(url, historyIndex, currentIndex);
+                return;
+            }
+
+            var confirmMsg = msg || "Are you sure you want to leave the page?";
+            alertService.confirmCancel(null, null, function () {
+                // alternative $scope.digest
+                $timeout(function () {
+                    crudContextHolderService.clearDirty();
+                    crudContextHolderService.clearDetailDataResolved();
+                    innerRedirect(url, historyIndex, currentIndex);
+                }, 0);
+            }, confirmMsg, function () { return; });
+        }
+
+        function doSaveCancelReturn() {
+            var state = getLocationState();
+            contextService.set(cancelReturnKey, state);
+        }
         //#endregion
 
         //#region Public methods for history
 
-        function addToHistory(url, saveHistoryReturn) {
+        function addToHistory(url, saveHistoryReturn, saveCancelReturn) {
             var state = { url: url };
             if (saveHistoryReturn) {
                 state.BcHistoryIndex = addToBreadcrumbHistory(url);
             } else {
                 state.BcHistoryIndex = 0;
+            }
+
+            // save the return for cancel button
+            // for breadcrumb navigation breadcrumb history is used
+            if (saveCancelReturn) {
+                doSaveCancelReturn();
             }
 
             var log = $log.getInstance("historyService#addToHistory");
@@ -183,6 +210,31 @@
             locationUpdatedByService = false;
         }
 
+        function redirectOneBack(msg) {
+            var currentIndex = indexOnBreadcrumbHistory();
+
+            // not on breadcrumb navigation or the first one in history
+            // tries to redirect from cancel button return on session
+            if (currentIndex <= 0) {
+                var returnState = contextService.get(cancelReturnKey, true);
+                if (!returnState) {
+                    return false;
+                }
+                redirect(returnState.url, -1, -1, msg);
+                return true;
+            }
+
+            var redirectIndex = currentIndex - 1;
+            var breadcrumbHistory = getBreadcrumbHistory();
+            var historyLength = breadcrumbHistory.length;
+            if (redirectIndex >= historyLength) {
+                return false;
+            }
+
+            var redirectEntry = breadcrumbHistory[redirectIndex];
+            breadcrumbRedirect(redirectEntry.url, redirectIndex, msg);
+            return true;
+        }
         //#endregion
 
         //#region Public methods for breadcrumb history
@@ -243,50 +295,13 @@
             contextService.set(breadcrumbHistoryKey, history);
         }
 
-        function redirect(url, historyIndex, msg) {
+        function breadcrumbRedirect(url, historyIndex, msg) {
             var currentIndex = indexOnBreadcrumbHistory();
             if (historyIndex === currentIndex) {
                 return;
             }
-
-            if (!crudContextHolderService.getDirty()) {
-                innerRedirect(url, historyIndex, currentIndex);
-                return;
-            }
-
-            var confirmMsg = msg || "Are you sure you want to leave the page?";
-            alertService.confirmCancel(null, null, function () {
-                // alternative $scope.digest
-                $timeout(function () {
-                    crudContextHolderService.clearDirty();
-                    crudContextHolderService.clearDetailDataResolved();
-                    innerRedirect(url, historyIndex, currentIndex);
-                }, 0);
-            }, confirmMsg, function () { return; });
+            redirect(url, historyIndex, currentIndex, msg);
         }
-
-        function redirectOneBack(popFromHistory, msg) {
-            var currentIndex = indexOnBreadcrumbHistory();
-            if (currentIndex <= 0) {
-                return;
-            }
-            var redirectIndex = currentIndex - 1;
-            var breadcrumbHistory = getBreadcrumbHistory();
-            var historyLength = breadcrumbHistory.length;
-            if (redirectIndex >= historyLength) {
-                return;
-            }
-
-            if (popFromHistory) {
-                var howMany = historyLength - currentIndex;
-                breadcrumbHistory.splice(currentIndex, howMany);
-                contextService.set(breadcrumbHistoryKey, breadcrumbHistory);
-            }
-
-            var redirectEntry = breadcrumbHistory[redirectIndex];
-            redirect(redirectEntry.url, redirectIndex, msg);
-        }
-
         //#endregion
 
         //#region Service Instance
@@ -296,13 +311,13 @@
             getLocationUrl: getLocationUrl,
             wasLocationUpdatedByService: wasLocationUpdatedByService,
             resetLocationUpdatedByService: resetLocationUpdatedByService,
+            redirectOneBack: redirectOneBack,
             // breadcrumb history methods
             indexOnBreadcrumbHistory: indexOnBreadcrumbHistory,
             eraseBreadcrumbHistory: eraseBreadcrumbHistory,
             getBreadcrumbHistory: getBreadcrumbHistory,
             updateBreadcrumbHistoryTitle: updateBreadcrumbHistoryTitle,
-            redirect: redirect,
-            redirectOneBack: redirectOneBack
+            breadcrumbRedirect: breadcrumbRedirect
         };
         return service;
         //#endregion

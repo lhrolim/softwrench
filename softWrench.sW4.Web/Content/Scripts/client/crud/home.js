@@ -37,13 +37,16 @@
         redirect(redirectUrl);
     }
 
-    function redirect(redirectUrl) {
-        $http({
+    function redirect(redirectUrl, avoidTemplateCache) {
+        var parameters = {
             method: "GET",
-            url: redirectUrl,
-            cache: $templateCache
-        })
-        .then(function (response) {
+            url: redirectUrl
+        }
+        if (!avoidTemplateCache) {
+            parameters.cache = $templateCache;
+        }
+
+        $http(parameters).then(function (response) {
             var result = response.data;
 
             $scope.$parent.includeURL = contextService.getResourceUrl(result.redirectURL);
@@ -80,7 +83,7 @@
         }
         var log = $log.getInstance("HomeController#locationChangeSuccess");
         log.debug("Redirecting to ({0}) as a browser navigation".format(redirectUrl));
-        redirect(redirectUrl);
+        redirect(redirectUrl, true);
     });
 
     $scope.onTemplateLoad = function (event) {

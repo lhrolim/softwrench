@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('searchService', function (i18NService, $log, $rootScope, contextService, fieldService, $http) {
+    .factory('searchService', function (i18NService, $log, $rootScope, contextService, fieldService, $http, historyService) {
     "ngInject";
 
     var objCache = {};
@@ -435,6 +435,9 @@ angular.module('sw_layout')
                 contextService.insertIntoContext("swGlobalRedirectURL", urlToUse, false);
             }
 
+            if (extraParameters.addToHistory) {
+                historyService.addToHistory(urlToUse);
+            }
             if (extraParameters.metadataid != null) {
                 return $http.get(urlToUse, {
                     headers: {

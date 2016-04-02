@@ -161,18 +161,22 @@
 
                             $scope.searchData = {};
                             $scope.searchOperator = {};
-                            $scope.searchSort = $scope.searchSort || {};
+                            $scope.searchSort = {};
 
                             if (data.pageResultDto) {
                                 if (data.pageResultDto.quickSearchData) {
                                     $scope.vm.quickSearchData = data.pageResultDto.quickSearchData;
-                                    $scope.searchSort = {};
-
-                                } else if (data.pageResultDto.searchParams) {
-                                    //TODO: make sure searchSort follows the same logic of building from the server response, then clear the sw_gridchanged event
+                                }
+                                    
+                                if (data.pageResultDto.searchParams) {
                                     var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
                                     $scope.searchData = result.searchData;
                                     $scope.searchOperator = result.searchOperator;
+                                }
+                                    
+                                if (data.pageResultDto["searchSort"]) {
+                                    $scope.searchSort.field = data.pageResultDto["searchSort"];
+                                    $scope.searchSort.order = data.pageResultDto["searchAscending"] === false ? "desc" : "asc";
                                 }
                             }
 
@@ -404,7 +408,8 @@
                             printMode: printMode,
                             schemaFieldsToDisplay: $scope.fieldstodisplay,
                             metadataid: $scope.metadataid,
-                            saveSwGlobalRedirectURL: typeof $scope.panelid === "undefined" && $scope.ismodal !== "true"
+                            saveSwGlobalRedirectURL: typeof $scope.panelid === "undefined" && $scope.ismodal !== "true",
+                            addToHistory: typeof $scope.panelid === "undefined"
                         });
 
                         searchPromise.success(function (data) {
@@ -566,11 +571,6 @@
 
                     $scope.$on("sw_gridrefreshed", function (event, data, panelId) {
                         $scope.gridRefreshed(data, panelId);
-                    });
-
-                    // When changing grids the search sort should be cleared
-                    $scope.$on("sw_gridchanged", function (event) {
-                        $scope.searchSort = {};
                     });
 
                     $scope.$on('sw.crud.list.toggleselected', function (event, args) {
