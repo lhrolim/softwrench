@@ -76,3 +76,12 @@
         }
     }
 }
+
+.pagination {
+    [disabled="disabled"] {
+        i {
+        color: #ccc;
+        cursor: default;
+        }
+    }
+}
