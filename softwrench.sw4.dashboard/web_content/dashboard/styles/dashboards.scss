@@ -83,3 +83,23 @@ sw-chart {
         margin-right: auto;
     }
 }
+
+.panel {
+    .header {
+        .panel-commands {
+            float: right;
+            .panel-command {
+                padding-left: 5px;
+                padding-right: 5px;
+                cursor: pointer;
+                
+                &:last-child {
+                    padding-right: 0;
+                }
+                &:first-child {
+                    padding-left: 0;
+                }
+            }
+        }
+    }
+}

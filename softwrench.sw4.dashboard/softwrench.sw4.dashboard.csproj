@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\controller\DashboardController.cs" />
+    <Compile Include="classes\controller\DashboardDataSet.cs" />
     <Compile Include="classes\controller\DashboardMenuManager.cs" />
     <Compile Include="classes\controller\StatisticsController.cs" />
     <Compile Include="classes\controller\UserDashboardManager.cs" />
@@ -86,6 +87,8 @@
     <Compile Include="classes\model\migration\Migration20151021Swweb1840.cs" />
     <Compile Include="classes\model\migration\Migration20160301swweb1652.cs" />
     <Compile Include="classes\model\migration\Migration20160323Swweb2200.cs" />
+    <Compile Include="classes\model\migration\Migration20160402Swweb2315.cs" />
+    <Compile Include="classes\model\migration\Migration20160331Swweb2334.cs" />
     <Compile Include="classes\service\graphic\exception\GraphicStorageSystemException.cs" />
     <Compile Include="classes\service\graphic\GraphicStorageSystemFacadeProvider.cs" />
     <Compile Include="classes\service\graphic\IGraphicStorageSystemAuthDto.cs" />

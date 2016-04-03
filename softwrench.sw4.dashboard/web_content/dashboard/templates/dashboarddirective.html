@@ -1,17 +1,39 @@
 ﻿<div class="container">
     <div class="row">
-        <div ng-repeat="panelDataSource in visiblePanels()" class="column col-sm-{{ panelDataSource.panel.size }}" >
+        <div ng-repeat="panelDataSource in visiblePanels()" class="column col-sm-{{ panelDataSource.panel.size }}">
             <div class="wrap"
                  ng-switch on="panelDataSource.panel.type">
 
-                <dashboardgridpanel ng-switch-when="DashboardGridPanel"
-                                    paneldatasource="panelDataSource"
-                                    dashboardid="dashboardid" />
+                <div class="panel">
+                    <div class="header">
+                        <span>{{panelDataSource.panel.title}}&nbsp;</span>
 
-                <dashboard-graphic-panel ng-switch-when="DashboardGraphicPanel"
-                                         panel="panelDataSource.panel"
-                                         dashboardid="dashboardid" />
+                        <div class="panel-commands" ng-show="canEdit">
+                            <span class="panel-command" rel="tooltip" data-original-title="Edit Widget"
+                                  ng-click="editPanel(panelDataSource.panel)">
+                                <i class="fa fa-pencil"></i>
+                            </span>
+                            <span class="panel-command" rel="tooltip" data-original-title="Remove Widget"
+                                  ng-click="removePanel(panelDataSource)">
+                                <i class="fa fa-times"></i>
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="body">
+                        <dashboardgridpanel ng-switch-when="DashboardGridPanel"
+                                            paneldatasource="panelDataSource"
+                                            dashboardid="dashboardid" />
+
+                        <dashboard-graphic-panel ng-switch-when="DashboardGraphicPanel"
+                                                 panel="panelDataSource.panel"
+                                                 dashboardid="dashboardid" />
+                    </div>
+
+                </div>
             </div>
+
         </div>
     </div>
 </div>

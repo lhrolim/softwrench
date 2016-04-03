@@ -15,8 +15,10 @@ using WebGrease.Css.Extensions;
 namespace softwrench.sw4.dashboard.classes.startup {
     public class ChartInitializer : ISWEventListener<ApplicationStartedEvent>, IOrdered {
 
-        private const string WO_CHART_DASHBOARD_TITLE = "Work Orders";
-        private const string SR_CHART_DASHBOARD_TITLE = "Service Requests";
+        private const string WoChartDashboardAlias = "workorder";
+        private const string SrChartDashboardAlias = "servicerequest";
+        private const string SrChartDashboardTitle = "Service Requests";
+        private const string WoChartDashboardTitle = "Work Orders";
 
         /// <summary>
         /// (WO.status is 'open') != (WO.status isn't 'close') --> special query
@@ -43,19 +45,16 @@ namespace softwrench.sw4.dashboard.classes.startup {
             }
 
             var openClosedGauge = "dashboard:wo.status.openclosed.gauge";
-
-            RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, "OpenCloseDashBoardPie",openClosedGauge);
+            RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, "OpenCloseDashBoardPie", openClosedGauge);
 
             var openClosedPie = "dashboard:wo.status.openclosed";
-
             RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, "OpenCloseDashBoardPie", openClosedPie);
-
         }
 
         #region SR Charts
 
         private bool ShouldExecuteSRChartInitialization() {
-            return !DashBoardExists(SR_CHART_DASHBOARD_TITLE);
+            return !DashBoardExists(SrChartDashboardAlias);
         }
 
         private Dashboard ExecuteSRChartInitialization() {
@@ -92,7 +91,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 }
             };
 
-            return CreateDashboard(SR_CHART_DASHBOARD_TITLE, panels);
+            return CreateDashboard(SrChartDashboardTitle,SrChartDashboardAlias, panels);
         }
 
         #endregion
@@ -100,7 +99,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         #region WO Charts
 
         private bool ShouldExecuteWOChartInitialization() {
-            return !DashBoardExists(WO_CHART_DASHBOARD_TITLE);
+            return !DashBoardExists(WoChartDashboardAlias);
         }
 
         private Dashboard ExecuteWOChartInitialization() {
@@ -149,23 +148,23 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 },
             };
 
-            return CreateDashboard(WO_CHART_DASHBOARD_TITLE, panels);
+            return CreateDashboard(WoChartDashboardTitle,WoChartDashboardAlias, panels);
         }
 
         #endregion
 
         #region Utils
 
-        private bool DashBoardExists(string title) {
+        private bool DashBoardExists(string alias) {
             var parameters = new ExpandoObject();
             var parameterCollection = (ICollection<KeyValuePair<string, object>>)parameters;
-            parameterCollection.Add(new KeyValuePair<string, object>("TITLE", title));
+            parameterCollection.Add(new KeyValuePair<string, object>("alias", alias));
 
-            var count = _dao.CountByNativeQuery("select count(id) from dash_dashboard where title=:TITLE", parameters);
+            var count = _dao.CountByNativeQuery("select count(id) from dash_dashboard where alias=:alias", parameters);
             return count > 0;
         }
 
-        private Dashboard CreateDashboard(string title, ICollection<DashboardGraphicPanel> panels) {
+        private Dashboard CreateDashboard(string title,string alias, ICollection<DashboardGraphicPanel> panels) {
             var now = DateTime.Now;
 
             // save panels and replace references by hibernate-managed ones
@@ -189,11 +188,15 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
             // create dashboard
             var dashboard = new Dashboard() {
-                Title = title,
                 Filter = new DashboardFilter(),
                 CreationDate = now,
                 UpdateDate = now,
-                Panels = panelRelationships
+                Alias = alias,
+                System = true,
+                Application = alias,
+                Title = title,
+                Panels = panelRelationships,
+                Active = true
             };
 
             return _dao.Save(dashboard);
@@ -205,7 +208,6 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 Alias = alias,
                 AppContext = new ApplicationLookupContext() {
                     MetadataId = metadataId,
-                    
                 }
             });
         }

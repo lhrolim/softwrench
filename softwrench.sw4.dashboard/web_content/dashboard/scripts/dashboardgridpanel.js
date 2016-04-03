@@ -3,8 +3,9 @@
 
 
 angular.module('sw_layout')
-   .directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contextService, searchService) {
-    "ngInject";
+   .directive('dashboardgridpanel',
+    ["$timeout", "$log", "$rootScope", "contextService", "searchService", 
+        function ($timeout, $log, $rootScope, contextService, searchService) {
 
     function doInit(scope) {
         scope.schema = {
@@ -23,29 +24,39 @@ angular.module('sw_layout')
 
     return {
         restrict: 'E',
-        replace: true,
         templateUrl: contextService.getResourceUrl('/Content/Shared/dashboard/templates/dashboardgridpanel.html'),
         scope: {
             paneldatasource: '=',
             dashboardid:'='
         },
 
-        controller: function ($scope, $http) {
-            doInit($scope);
-            searchService.refreshGrid({}, {
-                panelid: $scope.paneldatasource.id,
-                metadataid: $scope.metadataid,
-                pageSize: $scope.paneldatasource.panel['limit'],
-                searchSort: $scope.paneldatasource.panel['defaultSortField'],
-                fieldstodisplay: $scope.paneldatasource.panel['appFields'],
-            });
-        },
+        controller: ["$scope", "$compile", "$element", function ($scope, $compile, $element) {
+            function init() {
+                doInit($scope);
+                searchService.refreshGrid({}, {
+                    panelid: $scope.paneldatasource.id,
+                    metadataid: $scope.metadataid,
+                    pageSize: $scope.paneldatasource.panel['limit'],
+                    searchSort: $scope.paneldatasource.panel['defaultSortField'],
+                    fieldstodisplay: $scope.paneldatasource.panel['appFields'],
+                });
+            }
+
+            init();
+
+            $scope.$watch("paneldatasource.panel", function(newValue, oldValue) {
+                if (newValue === oldValue || !newValue) return;
+                init();
+               
+            }, true);
+
+        }],
 
         link: function (scope, element, attrs) {
             //building a schema object representation to propagate to crud_list.html
             doInit(scope);
         }
     };
-});
+}]);
 
 })(angular);

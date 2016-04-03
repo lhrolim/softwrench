@@ -597,7 +597,7 @@
                     });
 
                     $scope.$on("sw_refreshgrid", function (event, searchData, extraparameters) {
-                        if ($scope.panelid !== extraparameters.panelid) {
+                        if ($scope.panelid != extraparameters.panelid) {
                             return;
                         }
                         $scope.refreshGridRequested(searchData, extraparameters);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NHibernate.Mapping.Attributes;
 
@@ -9,6 +10,10 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
 
 
         public static string GetUserProfileString(IEnumerable<int?> profiles) {
+            if (!profiles.Any()) {
+                return "1=2";
+            }
+
             var sb = new StringBuilder("");
             foreach (var profile in profiles) {
                 sb.Append("userprofiles like %");
@@ -22,10 +27,14 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         }
 
         [Property]
-        public virtual int? UserId { get; set; }
+        public virtual int? UserId {
+            get; set;
+        }
 
         [Property]
-        public virtual string UserProfiles { get; set; }
+        public virtual string UserProfiles {
+            get; set;
+        }
 
 
     }

@@ -51,6 +51,12 @@
                         scope.chart = $(".sw.chart", element).dxSparkline(chartOptions).dxSparkline("instance");
                         break;
                 }
+                //if (scope.chart) {
+                //    scope.chart.on("pointClick", function(e) {
+                //        console.log("!!! DEVEXPRESS POINTCLICK !!!");
+                //        console.log(e);
+                //    });
+                //}
             }
         }
     }]);

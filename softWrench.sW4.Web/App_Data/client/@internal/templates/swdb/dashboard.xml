@@ -5,17 +5,29 @@
 
     <application entity="Dashboard" name="dashboard" title="Dashboard">
       <schemas>
-        <schema id="saveDashboardConfirmation" stereotype="detail">
-          <field attribute="title" label="Title"/>
-          <section showexpression="@canCreateBoth">
-            <optionfield attribute="policy" label="Policy">
-              <option label="Personal" value="personal"/>
-              <option label="Shared" value="shared"/>
-            </optionfield>
-            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'" skipvalidation="true">
-              <renderer type="checkbox"/>
-            </optionfield>
-          </section>
+        <schema id="saveDashboardConfirmation" stereotype="detailnew">
+          <field attribute="title" label="Title" requiredexpression="@mode!='restore'" enableexpression="@mode!='restore'"/>
+          <optionfield attribute="mode">
+            <renderer type="radio" params="vertical=true"/>
+            <filter clientfunction="dashboardAuxService.filterSelectableModeOptions"/>
+            <option label="Brand New" value="brandnew"/>
+            <option label="Copy from existing" value="clone"/>
+            <option label="Restore" value="restore"/>
+          </optionfield>
+
+          <optionfield attribute="dashboardid" label="Select Dashboard" providerattribute="existingDashboards" showexpression="@mode!='brandnew'">
+            <filter clientfunction="dashboardAuxService.filterSelectableDashboards"/>
+          </optionfield>
+          
+<!--          <section showexpression="@canCreateBoth">-->
+<!--            <optionfield attribute="policy" label="Policy">-->
+<!--              <option label="Personal" value="personal"/>-->
+<!--              <option label="Shared" value="shared"/>-->
+<!--            </optionfield>-->
+<!--            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'" skipvalidation="true">-->
+<!--              <renderer type="checkbox"/>-->
+<!--            </optionfield>-->
+<!--          </section>-->
 
           <commandbars>
             <commandgroup position="modal.detail.primary">
@@ -24,7 +36,7 @@
             </commandgroup>
           </commandbars>
           <properties>
-            <property key="associationstoprefetch" value="#none"/>
+<!--            <property key="associationstoprefetch" value="existingDashboards"/>-->
           </properties>
         </schema>
       </schemas>
@@ -65,7 +77,7 @@
           <commandbars>
             <commandgroup position="modal.detail.primary">
               <removecommand id="save"/>
-              <command id="save" icon="fa-check" enableexpression="@panel!=null" service="dashboardAuxService" parameters="datamap" method="selectPanel" label="Select Panel" tooltip="Add Panel" position="&lt;cancel" />
+              <command id="save" icon="fa-check" enableexpression="@panel!=null" service="dashboardAuxService" parameters="datamap" method="selectPanel" label="Select Panel" tooltip="Add Widget" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
           <properties>
@@ -78,7 +90,7 @@
     <application entity="DashboardGridPanel" name="dashboardgrid" title="DashBoardGrid">
       <schemas>
         <detail>
-          <field label="Alias" attribute="alias" requiredexpression="true" tooltip="How this panel can be located"/>
+          <field label="Alias" attribute="alias" requiredexpression="true" tooltip="How this panel can be located" enableexpression="!@id"/>
           <field label="Title" attribute="title" requiredexpression="true" tooltip="The Panel title"/>
           <optionfield label="Application" attribute="application" providerattribute="applications" requiredexpression="true" skipvalidation="true">
             <renderer type="autocompleteclient"/>
@@ -98,9 +110,15 @@
               <renderer type="numericinput"/>
             </field>
 
-            <field label="Size" attribute="size" requiredexpression="true" tooltip="Panel's width">
-              <renderer type="numericinput" params="min=1;max=12" />
-            </field>
+            <optionfield label="Width" attribute="size" requiredexpression="true" tooltip="Panel's width">
+              <renderer type="combo" params="min=1;max=12" />
+              <option label="3"   value="3" />
+              <option label="4"   value="4" />
+              <option label="6"   value="6" />
+              <option label="8"   value="8" />
+              <option label="9"   value="9" />
+              <option label="12"  value="12" />
+            </optionfield>
 
           </section>
           <commandbars>
@@ -108,7 +126,7 @@
               <removecommand id="save"/>
               <command id="save" icon="fa-check" service="dashboardAuxService" method="createAndAssociateGridPanel"
                        parameters="datamap"
-                       label="Add Panel" tooltip="Add Widget" position="&lt;cancel" />
+                       label="Add Grid Widget" tooltip="Add Grid Widget" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
           <properties>
@@ -123,13 +141,13 @@
     <application entity="DashboardGraphicPanel" name="dashboardgraphic" title="DashBoardGraphic">
       <schemas>
         <detail>
-          <field label="Alias" attribute="alias" requiredexpression="true" tooltip="How this panel can be located"/>
-          <field label="Title" attribute="title" requiredexpression="true" tooltip="The Panel title"/>
+          <field label="Alias" attribute="alias" requiredexpression="true" tooltip="How this panel can be located" enableexpression="!@id"/>
+          <field label="Title" attribute="title" requiredexpression="true" tooltip="The Panel title" />
           <optionfield label="Provider" attribute="provider"
                        tooltip="Name of the graphic storage service in which the graphic is located"
                        requiredexpression="true" default="">
             <option label="Chart" value="swChart" />
-            <option label="Tableau" value="Tableau" />
+            <!--<option label="Tableau" value="Tableau" />-->
             <event type="afterchange" method="setGraphicProvider" service="dashboardAuxService"/>
           </optionfield>
 
@@ -177,20 +195,24 @@
               <option label="Vertical Bar Chart"    value="swRecordCountChart" />
               <option label="Horizontal Bar Chart"  value="swRecordCountRotatedChart" />
               <option label="Gauge"                 value="swRecordCountGauge" />
-              <!--<option label="Record Count Map"        value="swRecordCountMap" />-->
               <option label="Pie Chart"             value="swRecordCountPie" />
               <option label="Line Chart"            value="swRecordCountLineChart" />
-              <!--<option label="Record Trends"         value="swRecordTrends" />-->
-              <!--<option label="Sparkline"             value="swSparkline" />-->
+              <!--
+              <option label="Record Count Map"        value="swRecordCountMap" />
+              <option label="Record Trends"         value="swRecordTrends" />
+              <option label="Sparkline"             value="swSparkline" />
+              -->
             </optionfield>
 
-            <!--<field label="Options"
+            <!--
+            <field label="Options"
                          attribute="options"
                          requiredexpression="false"
                          default=""
                          skipvalidation="true">
               <renderer type="textarea"/>
-            </field>-->
+            </field>
+            -->
 
           </section>
 
@@ -208,14 +230,20 @@
                          default="" skipvalidation="true"/>
           </section>
 
-          <field label="Size" attribute="size" requiredexpression="true" tooltip="Panel's width">
-            <renderer type="numericinput" params="min=1;max=12" />
-          </field>
+          <optionfield label="Width" attribute="size" requiredexpression="true" tooltip="Panel's width">
+            <renderer type="combo" params="min=1;max=12" />
+            <option label="3"   value="3" />
+            <option label="4"   value="4" />
+            <option label="6"   value="6" />
+            <option label="8"   value="8" />
+            <option label="9"   value="9" />
+            <option label="12"  value="12" />
+          </optionfield>
 
           <commandbars>
             <commandgroup position="modal.detail.primary">
               <removecommand id="save"/>
-              <command id="save" icon="fa-check" label="Add Panel" tooltip="Add Widget" position="&lt;cancel"
+              <command id="save" icon="fa-check" label="Save" tooltip="Save Graphic Widget" position="&lt;cancel"
                        service="dashboardAuxService" method="createAndAssociateGraphicPanel"
                        parameters="datamap" />
             </commandgroup>

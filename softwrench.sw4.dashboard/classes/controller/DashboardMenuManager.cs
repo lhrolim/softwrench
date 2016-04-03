@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using log4net;
 using softwrench.sw4.api.classes;
@@ -7,13 +6,9 @@ using softwrench.sw4.api.classes.user;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Menu;
-using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Menu;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
-using softWrench.sW4.Metadata.Properties;
-using softWrench.sW4.Util;
 
 namespace softwrench.sw4.dashboard.classes.controller {
     public class DashboardMenuManager : IMenuManager {

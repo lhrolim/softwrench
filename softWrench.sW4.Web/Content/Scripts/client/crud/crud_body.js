@@ -108,7 +108,7 @@
                     focusService.resetFocusToCurrent($scope.schema, key);
                 });
 
-                $scope.$on("sw.modal.show", function(event, modalData) {
+                $scope.$on("sw.modal.show", function (event, modalData) {
                     if ($scope.ismodal === "true") {
                         $rootScope.$broadcast("sw_alltabsloaded");
                     }
@@ -169,7 +169,12 @@
                 *  
                 */
                 $rootScope.$on("sw.crud.associations.updateeageroptions", function (event, associationKey, options, contextData) {
-                    var displayables = fieldService.getDisplayablesByAssociationKey(crudContextHolderService.currentSchema(), associationKey);
+                    if (contextData && contextData.schemaId === "#modal" && "true" !== $scope.ismodal) {
+                        //ignoring 
+                        return $q.reject();
+                    }
+                    var panelId = (contextData && contextData.schemaId === "#modal") ? "#modal" : null;
+                    var displayables = fieldService.getDisplayablesByAssociationKey(crudContextHolderService.currentSchema(panelId), associationKey);
                     var promiseArray = [];
 
                     for (var i = 0; i < displayables.length; i++) {
@@ -229,7 +234,7 @@
 
                 });
 
-                $scope.getMainTabId = function() {
+                $scope.getMainTabId = function () {
                     if ($scope.ismodal === "true") {
                         return "modalmain";
                     }
@@ -416,7 +421,7 @@
                         });
                 };
 
-                this.cancel = function(data, schema) {
+                this.cancel = function (data, schema) {
                     return $scope.cancel(data, schema);
                 }
 
@@ -436,7 +441,7 @@
                 }
 
                 // flag to block multiple save calls while one is still executing
-                var _executingSave = false; 
+                var _executingSave = false;
                 $scope.save = function (parameters) {
                     if (_executingSave) return;
                     _executingSave = true;
@@ -461,9 +466,9 @@
                         }
                         var result = modalSavefn($scope.datamap.fields, schemaToSave);
                         if (result && result.then) {
-                            result.then(function() {
+                            result.then(function () {
                                 modalService.hide();
-                            }).finally(function() {
+                            }).finally(function () {
                                 _executingSave = false;
                             });
                         } else {
@@ -646,7 +651,7 @@
                         if (failureCbk != null) {
                             failureCbk(data);
                         }
-                    }).finally(function() {
+                    }).finally(function () {
                         _executingSave = false;
                     });
                 };

@@ -5,10 +5,12 @@ angular.module("sw_layout").directive("dashboard", ["contextService", function (
 
     return {
         restrict: "E",
-        replace: true,
         templateUrl: contextService.getResourceUrl("/Content/Shared/dashboard/templates/dashboarddirective.html"),
         scope: {
-            dashboard: "="
+            dashboard: "=",
+            canEdit: "=",
+            onPanelEdit: "&",
+            onPanelRemove: "&"
         },
 
         controller: ["$scope", function ($scope) {
@@ -25,8 +27,16 @@ angular.module("sw_layout").directive("dashboard", ["contextService", function (
                 return $scope.dashboard.panels
                     .filter(isPanelVisible)
                     .sort(positionComparator);
-            }
-            
+            };
+
+            $scope.editPanel = function(panel) {
+                return $scope.onPanelEdit({ panel: panel, dashboard: $scope.dashboard });
+            };
+
+            $scope.removePanel = function(panelDataSource) {
+                return $scope.onPanelRemove({ panelDataSource: panelDataSource, dashboard: $scope.dashboard });
+            };
+
         }],
 
         link: function (scope, element, attrs) {

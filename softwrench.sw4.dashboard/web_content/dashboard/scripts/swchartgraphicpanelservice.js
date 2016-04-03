@@ -81,14 +81,14 @@
             }
                 // should overflow to 'others' -> top within limit + others
             else if (configuration.limit > 0 && processed.length > configuration.limit && configuration.showothers) {
-                // 6 highest counts
+                // <limit> highest counts
                 var topresults = processed.slice(0, configuration.limit);
                 // sum of the others's counts
                 var othersCount = processed.slice(configuration.limit)
                     .reduce(function (previous, current) {
                         return previous + current.value;
                     }, 0);
-                // new array composed of top 6 + 'others'
+                // new array composed of top <limit> + 'others'
                 processed = topresults.concat({ field: "others", value: othersCount });
             }
 

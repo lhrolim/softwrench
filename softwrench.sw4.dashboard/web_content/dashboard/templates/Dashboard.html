@@ -1,44 +1,20 @@
 ﻿<div class="dash-header" ng-controller="DashboardController">
-    <!--    <span>-->
-    <!--        $1$        <h2 style="display: inline">Manage Dashboards</h2>#1#-->
-    <!--        <button class="btn btn-primary" ng-show="canCreateDashboards && !creatingDashboard" ng-click="create()">-->
-    <!--            <i class="fa fa-plus"></i>&ensp;Create Dashboard-->
-    <!--        </button>-->
-    <!---->
-    <!--        <button class="btn btn-primary" ng-show="canCreateDashboards && !creatingDashboard" ng-click="createPanel()">-->
-    <!--            <i class="fa fa-plus"></i>&ensp;Create Panel-->
-    <!--        </button>-->
-    <!---->
-    <!--        <span ng-show="creatingDashboard">-->
-    <!--            <label editable-text="dashboard.title" class="control-label">{{ dashboard.title || 'empty' }}</label> *-->
-    <!---->
-    <!--            <button class="btn btn-primary" ng-click="addpanel()">-->
-    <!--                <i class="fa fa-plus"></i>&ensp;Add Panel-->
-    <!--            </button>-->
-    <!---->
-    <!--            <button class="btn btn-primary" ng-click="saveDashboard()" ng-enabled="dashboard.panels.length>0">-->
-    <!--                <i class="fa fa-plus"></i>&ensp;Save-->
-    <!--            </button>-->
-    <!---->
-    <!--            <button class="btn btn-primary" ng-click="cancelDashboard()">-->
-    <!--                <i class="fa fa-plus"></i>&ensp;Cancel-->
-    <!--            </button>-->
-    <!---->
-    <!--        </span>-->
-    <!--    </span>-->
-
     <div>
         <div class="detail-header clearfix">
             <ul class="nav nav-tabs dashboarddetailtab hapag-composition">
                 <li ng-repeat="dashboard in dashboards" dashboardrendered class="{{getActiveClass(dashboard.id)}}">
                     <a ng-href="#{{dashboard.id}}" data-tabid="{{dashboard.id}}" ng-click="viewDashboard($event, dashboard.id)">
-                        <!-- <i class=" {{dashboard.icon}} ">-->
-                        <!-- </i>-->
-                        <!-- <i class="fa fa-pencil" ng-click="editDashboard(dashboard)" ng-show="canEditDashboard(dashboard) && !isEditingAnyDashboard" style="cursor: pointer"></i>-->
-                        <!-- <i class="fa fa-save" ng-show="isEditing(dashboard.id)" ng-click="finishEditingDashboard(dashboard.id)" style="cursor: pointer"></i>-->
-                        {{dashboard.title}}
-                    </a>
+                        
+                        {{dashboard.title}} &nbsp;
 
+                        <span rel="tooltip" data-original-title="Remove Dashboard" 
+                              ng-if="canDeleteDashboard(dashboard)" 
+                              ng-click="deleteDashboard(dashboard)">
+                            
+                            <i class="fa fa-times"></i>
+                        </span>
+                    
+                    </a>
                 </li>
                 <li ng-show="canCreateDashboards">
                     <a ng-href="#add" data-tabid="-1" ng-click="createNewDashboard()">
@@ -47,11 +23,16 @@
                 </li>
             </ul>
         </div>
+        
         <div ng-show="!isNewDashboard()">
             <div class="tab-content">
                 <div class="tab-pane {{getActiveClass(dashboard.id)}}" ng-repeat="dashboard in dashboards" id="{{dashboard.id}}">
                     <div class="tab-header clearfix">
-                        <div class="title pull-left">{{dashboard.title}}</div>
+                        <div class="title pull-left" ng-show="!isEditing(dashboard.id)">{{dashboard.title}}</div>
+                        <input type="text" class="title pull-left" ng-show="isEditing(dashboard.id)" ng-model="dashboard.title" />
+
+                     
+
                         <div class="buttons pull-right">
                             <button class="btn btn-default" ng-show="canEditDashboard(dashboard) && !isEditingAnyDashboard" ng-click="editDashboard(dashboard)">
                                 <i class="fa fa-cog"></i>&ensp;Edit
@@ -63,11 +44,16 @@
                                 <i class="fa fa-times"></i>&ensp;Cancel
                             </button>
                             <button class="btn btn-default" ng-show="isEditing(dashboard.id)" ng-click="addpanel()">
-                                <i class="fa fa-plus"></i>&ensp;Add Panel
+                                <i class="fa fa-plus"></i>&ensp;Add Widget
                             </button>
                         </div>
                     </div>
-                    <dashboard dashboard="dashboard" ng-if="dashboardSelectedAtLeastOnce(dashboard.id)"/>
+
+                    <dashboard ng-if="dashboardSelectedAtLeastOnce(dashboard.id)"
+                               dashboard="dashboard"
+                               can-edit="isEditing(dashboard.id)"
+                               on-panel-edit="editPanel(panel, dashboard)" on-panel-remove="removePanel(panelDataSource, dashboard)" />
+
                 </div>
             </div>
         </div>

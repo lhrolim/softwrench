@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.simpleinjector.Events;
 using cts.commons.web.Attributes;
+using Iesi.Collections.Generic;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.dashboard.classes.service.graphic;
@@ -18,6 +19,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SPF;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.dashboard.classes.controller {
 
@@ -43,10 +45,63 @@ namespace softwrench.sw4.dashboard.classes.controller {
             //TODO: update menu, clear caching
             var user = SecurityFacade.CurrentUser();
 
-            var savedDashboard = _dao.Save(dashboard);
+            Dashboard savedDashboard;
+            dashboard.Active = true;
+
+            if (dashboard.Id != null && dashboard.Cloning) {
+                //copying from existing dashboard
+                var dbDashBoard = _dao.FindByPK<Dashboard>(typeof(Dashboard), dashboard.Id);
+                if (!dbDashBoard.Active) {
+                    //reactivating already existing one
+                    dbDashBoard.Active = true;
+                    savedDashboard = _dao.Save(dbDashBoard);
+                } else {
+                    //cloning dashboard
+                    dashboard.Id = null;
+                    foreach (var panel in dbDashBoard.PanelsSet) {
+                        //removing link id to force creation of a new one
+                        panel.Id = null;
+                        if (dashboard.PanelsSet == null) {
+                            dashboard.PanelsSet = new HashedSet<DashboardPanelRelationship>();
+                        }
+                        dashboard.PanelsSet.Add(panel);
+                    }
+                    savedDashboard = _dao.Save(dashboard);
+                }
+            } else {
+                savedDashboard = _dao.Save(dashboard);
+            }
+            //enforcing that the cloing operation is done
+            savedDashboard.Cloning = false;
             user.Genericproperties.Remove(DashboardConstants.DashBoardsProperty);
             _dispatcher.Dispatch(new ClearMenuEvent());
             return new GenericResponseResult<Dashboard>(savedDashboard);
+        }
+
+        [HttpPost]
+        public IGenericResponseResult DeactivateDashboard([FromBody]Dashboard dashboard) {
+            var user = SecurityFacade.CurrentUser();
+            // check permission
+            if (dashboard.CreatedBy != user.UserId && !user.IsInRole(DashboardConstants.RoleAdmin)) {
+                throw new Exception("You do not have permission to deactivate this dashboard");
+            }
+            // deactivate and save
+            dashboard.Active = false;
+            _dao.Save(dashboard);
+            // update cache
+            user.Genericproperties.Remove(DashboardConstants.DashBoardsProperty);
+            _dispatcher.Dispatch(new ClearMenuEvent());
+            // black success response
+            return new BlankApplicationResponse();
+        }
+
+        [HttpPost]
+        public DashboardBasePanel SavePanel([FromBody]DashboardBasePanel panel) {
+            var user = SecurityFacade.CurrentUser();
+            var savedPanel = _dao.Save(panel);
+            user.Genericproperties.Remove(DashboardConstants.DashBoardsProperty);
+
+            return savedPanel;
         }
 
 
@@ -73,7 +128,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 .Cast<IAssociationOption>()
                 .ToList();
 
-            var topLevel = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web,user);
+            var topLevel = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, user);
             var securedMetadatas = topLevel.Select(metadata => metadata.CloneSecuring(user)).ToList();
             var names = securedMetadatas.Select(a => a.ApplicationName);
             IList<IAssociationOption> applications = names.Select(name => new GenericAssociationOption(name, name)).Cast<IAssociationOption>().ToList();
@@ -86,13 +141,19 @@ namespace softwrench.sw4.dashboard.classes.controller {
             }
             dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
             var dto = new ManageDashBoardsDTO() {
-                CanCreateOwn = canCreateOwn,
-                CanCreateShared = canCreateShared,
+                Permissions = new ManageDashBoardsDTO.ManageDashboardsPermissionDTO() {
+                    CanCreateOwn = canCreateOwn,
+                    CanCreateShared = canCreateShared,
+                    CanDeleteOwn = canCreateOwn,
+                    CanDeleteShared = canCreateShared
+                },
+                Schemas = new ManageDashBoardsDTO.ManageDashboardsSchemasDTO() {
+                    NewPanelSchema = panelSelectionSchema,
+                    PanelSchemas = panelSchemas,
+                    SaveDashboardSchema = saveDashboardSchema,
+                },
                 Dashboards = dashboards,
                 PreferredId = preferredDashboardId,
-                NewPanelSchema = panelSelectionSchema,
-                PanelSchemas = panelSchemas,
-                SaveDashboardSchema = saveDashboardSchema,
                 Applications = applications,
                 Profiles = profiles
             };
@@ -114,7 +175,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
         [HttpGet]
         public IGenericResponseResult LoadPanel([FromUri]string panel) {
-            return new GenericResponseResult<DashboardBasePanel>(_dao.FindByPK<DashboardBasePanel>(typeof(DashboardBasePanel), Int32.Parse(panel)));
+            return new GenericResponseResult<DashboardBasePanel>(_dao.FindByPK<DashboardBasePanel>(typeof(DashboardBasePanel), int.Parse(panel)));
         }
 
         [HttpGet]
@@ -128,7 +189,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
 
         [HttpPost]
-        public IGenericResponseResult CreateGridPanel(DashboardGridPanel panel) {
+        public IGenericResponseResult SaveGridPanel(DashboardGridPanel panel) {
             var app = MetadataProvider.Application(panel.Application);
             ApplicationSchemaDefinition schema = app.GetListSchema();
             panel.SchemaRef = schema.SchemaId;
@@ -137,11 +198,11 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         [HttpPost]
-        public IGenericResponseResult CreateGraphicPanel(DashboardGraphicPanel panel) {
+        public IGenericResponseResult SaveGraphicPanel(DashboardGraphicPanel panel) {
             panel.Filter = new DashboardFilter();
             return new GenericResponseResult<DashboardBasePanel>(_dao.Save(panel));
         }
-        
+
 
         [HttpGet]
         public IGenericResponseResult LoadPreferred() {

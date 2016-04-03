@@ -1,12 +1,14 @@
 ﻿(function (angular) {
     "use strict";
 
-    function dashboardAuxService($rootScope, $log, contextService, restService, graphicPanelServiceProvider,crudContextHolderService) {
+    function dashboardAuxService($rootScope, $log, contextService, restService, graphicPanelServiceProvider, crudContextHolderService) {
         //#region Utils
-        function panelCreated(datamap) {
-            return function(response) {
+        function panelCreated(panel) {
+            return function (response) {
                 var data = response.data;
-                $rootScope.$broadcast("dash_panelassociated", data.resultObject);
+                var resultPanel = data.resultObject;
+                resultPanel["#edit"] = panel["#edit"];
+                $rootScope.$broadcast("dash_panelassociated", resultPanel);
             };
         }
         //#endregion
@@ -14,9 +16,8 @@
         //#region Public methods
         function lookupFields(event) {
             var application = event.fields.application;
-            if (application == null) {
-                return;
-            }
+            if (!application) return;
+
             restService.getPromise("Dashboard", "LoadFields", { applicationName: application }).then(function (response) {
                 var data = response.data;
                 crudContextHolderService.updateEagerAssociationOptions("appfields", data.resultObject);
@@ -36,7 +37,9 @@
 
         function createAndAssociateGridPanel(datamap) {
             var local = datamap.fields || datamap;
-            restService.postPromise("Dashboard", "CreateGridPanel", null, local).then(panelCreated(local));
+            local.size = parseInt(local.size);
+
+            restService.postPromise("Dashboard", "SaveGridPanel", null, local).then(panelCreated(local));
         }
 
         function saveDashboard(datamap, policy) {
@@ -47,10 +50,52 @@
                 delete datamap.panels;
             }
 
-            restService.postPromise("Dashboard", "SaveDashboard", null, localDatamap).then(function (response) {
+            if (localDatamap.mode === "brandnew") {
+                //to avoid inconsistencies if the user selects a value but then switches back to brand new
+                localDatamap.id = null;
+            } else if (localDatamap.mode) {
+                localDatamap.id = localDatamap.dashboardid;
+                localDatamap.cloning = true;
+            }
+
+            return restService.postPromise("Dashboard", "SaveDashboard", null, localDatamap).then(function (response) {
                 var data = response.data;
                 $rootScope.$broadcast("dash_dashsaved", data.resultObject);
             });
+        }
+        function filterSelectableModeOptions(item) {
+            var options = crudContextHolderService.fetchEagerAssociationOptions("existingDashboards", { schemaId: "#modal" });
+            if (!options || options.length === 0) {
+                return false;
+            }
+
+            if (item.value === "brandnew") {
+                return true;
+            }
+
+            return options.some(function (dashboard) {
+                if (item.value === "restore") {
+                    //at least one inactive needs to be restored
+                    return !dashboard.extrafields.active;
+                }
+                else if (item.value === "clone") {
+                    //at least one active needs to be cloned
+                    return dashboard.extrafields.active;
+                }
+            });
+
+        }
+
+        function filterSelectableDashboards(item) {
+            var dm = crudContextHolderService.rootDataMap("#modal");
+            if (!dm) {
+                return true;
+            }
+            if (dm.mode === "restore") {
+                return item.extrafields.active === false;
+            } else if (dm.mode === "clone") {
+                return item.extrafields.active === true;
+            }
         }
 
         function selectPanel(datamap) {
@@ -77,9 +122,20 @@
 
             var panelAssociation = { position: position, panel: panel }
 
-            hasPanels
-                ? dashboard.panels.push(panelAssociation)
-                : dashboard.panels = [panelAssociation];
+            if (!hasPanels) {
+                dashboard.panels = [panelAssociation];
+                return dashboard;
+            }
+
+            if (!panel["#edit"]) { // create: add panel relation
+                dashboard.panels.push(panelAssociation);
+            } else { // edit: update panels
+                dashboard.panels.forEach(function (p) {
+                    if (p.panel.id !== panel.id) return;
+                    p.panel = panel;
+                });
+                delete panel["#edit"];
+            }
 
             return dashboard;
         }
@@ -92,9 +148,15 @@
 
         function createAndAssociateGraphicPanel(paramDatamap) {
             var datamap = paramDatamap.fields || paramDatamap;
+            datamap.size = parseInt(datamap.size);
+
             var instance = graphicPanelServiceProvider.getService(datamap.provider);
             instance.onBeforeAssociatePanel(datamap);
-            restService.postPromise("Dashboard", "CreateGraphicPanel", null, datamap).then(panelCreated(datamap));
+            restService.postPromise("Dashboard", "SaveGraphicPanel", null, datamap).then(panelCreated(datamap));
+        }
+
+        function deactivateDashboard(dashboard) {
+            return restService.postPromise("Dashboard", "DeactivateDashboard", null, dashboard);
         }
         //#endregion
 
@@ -103,11 +165,14 @@
             lookupFields: lookupFields,
             createAndAssociateGridPanel: createAndAssociateGridPanel,
             saveDashboard: saveDashboard,
+            filterSelectableModeOptions: filterSelectableModeOptions,
+            filterSelectableDashboards: filterSelectableDashboards,
             selectPanel: selectPanel,
             loadPanels: loadPanels,
             setGraphicProvider: setGraphicProvider,
             createAndAssociateGraphicPanel: createAndAssociateGraphicPanel,
-            addPanelToDashboard: addPanelToDashboard
+            addPanelToDashboard: addPanelToDashboard,
+            deactivateDashboard: deactivateDashboard
         };
         return service;
         //#endregion
