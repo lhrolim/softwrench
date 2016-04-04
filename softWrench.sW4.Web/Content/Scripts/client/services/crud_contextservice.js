@@ -140,10 +140,6 @@
 
         function setActiveTab(tabId) {
             contextService.setActiveTab(tabId);
-
-            $timeout(function () {
-                $(window).trigger('resize');
-            }, false);
         }
 
         function currentApplicationName(panelid) {

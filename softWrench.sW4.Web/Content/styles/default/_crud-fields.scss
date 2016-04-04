@@ -417,11 +417,6 @@ input[type="date"], input[type="time"] {
     }
 }
 
-/*TODO: remove whem moved to toolbar*/
-[data-class="commandbar"] {
-    padding: 20px 0;
-}
-
 [ng-if="noupdateallowed"] {
     .form-control {
         background: #e5e5e5;

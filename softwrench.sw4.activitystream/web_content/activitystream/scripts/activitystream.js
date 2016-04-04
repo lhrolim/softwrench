@@ -59,7 +59,6 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 log.debug('clearFilter');
 
                 $scope.filterText = '';
-                $(window).trigger('resize');
             }
 
             $scope.displayHidden = function (activity) {
@@ -241,9 +240,6 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 log.debug('toggleHidden');
 
                 $scope.hiddenToggle = !$scope.hiddenToggle;
-
-                //resize/position elements
-                $(window).trigger('resize');
             };
 
             $scope.toggleActivityStream = function () {
@@ -254,10 +250,6 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             $scope.getUnreadStyle = function() {
                 return { top: sidePanelService.getContext($scope.panelid).top - 70 + "px" };
             }
-
-            $scope.$watch('filterText', function () {
-                $(window).trigger('resize');
-            });
 
             //get the current notifications, then automatically refresh
             var refreshLoop = function () {
@@ -282,36 +274,6 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             if (sidePanelService.getExpandedPanelFromPreference() === $scope.panelid && !sidePanelService.isOpened($scope.panelid)) {
                 $scope.toggleActivityStream();
             }
-
-            //open notification pane by default, TODO: remove for production
-            //$timeout(function() {
-            //    $('#activitystream .handle').trigger('click');
-            //}, false);
-
-            //var demoNotifications = [];
-
-            //var newNotification = {};
-            //newNotification.application = "commlog";
-            //newNotification.createBy = "JBREIDENTHAL";
-            //newNotification.flag = "created";
-            //newNotification.icon = "fa-envelope-o";
-            //newNotification.id = "22967305";
-            //newNotification.isRead = false;
-            //newNotification.label = "communication";
-            //newNotification.notificationDate = "2015-09-11T09:51:24";
-            //newNotification.parentApplication = "servicerequest";
-            //newNotification.parentId = "79788";
-            //newNotification.parentLabel = "service request";
-            //newNotification.parentUId = 62671;
-            //newNotification.rowstamp = 185626997;
-            //newNotification.summary = "UPDATE: SR##79788## -DWL -DWLRR7 User on Rowan Rentless rig";
-            //newNotification.targetSchema = null;
-            //newNotification.uId = 23162490;
-            //demoNotifications.push(newNotification);
-            //for (var i = 0; i < 21; i++) {
-            //    var newObject = $.extend({}, newNotification);
-            //    demoNotifications.push(newObject);
-            //}
         }]
     }
 });

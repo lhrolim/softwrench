@@ -202,18 +202,11 @@ app.directive('paginationPages', ['contextService', '$log', '$timeout', function
             $scope.changePage = function (page) {
                 log.debug($scope.paginationData);
                 $scope.$parent.selectPage(page);
-
-                //update header/footer layout
-                $timeout(function () {
-                    $(window).trigger('resize');
-                }, false);
             };
 
             $scope.getLastPage = function () {
                 return $scope.paginationData.pageCount;
             }
-
-          
 
             $scope.getPageArray = function () {
                 //fix undefined error in modal

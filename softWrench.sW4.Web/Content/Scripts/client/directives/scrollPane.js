@@ -17,6 +17,27 @@
                 var scrollPaneData = null;
                 var scrollElement = $('.scroll', element);
 
+                scope.$watch(
+                    function () {
+                        var scrollParent = $(element[0].offsetParent).is(':visible');
+
+                        //if scroll pane exists and parent is visible
+                        if (!scrollPaneData && !scrollParent) {
+                            return;
+                        }
+
+                        return element[0].innerHTML.length;
+                    },
+                    function (newValue, oldValue) {
+                        if (newValue !== oldValue) {
+                            log.debug('content changed, resize scroll pane');
+
+                            //allow the parent to update before resize
+                            lazyLayout();
+                        }
+                    }
+                );
+
                 function getContentHeight(scrollElement, available) {
                     //if set use the avaialbe height as the pane size
                     if (scope.useAvailableHeight) {
@@ -28,8 +49,6 @@
                     if (contents == null) {
                         contents = scrollElement.height();
                     }
-
-                    //log.debug(contents, available);
 
                     //if the height was not set (no content), exit
                     if (contents == 0) {

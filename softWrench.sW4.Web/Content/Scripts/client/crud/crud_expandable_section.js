@@ -83,11 +83,6 @@
                             $(document.body).animate({ scrollTop: $element.offset().top }, 500);
                         }, 0, false);
                     }
-
-                    //update header/footer layout
-                    $timeout(function () {
-                        $(window).trigger('resize');
-                    }, false);
                 };
 
                 var showTemplateLoading = function() {

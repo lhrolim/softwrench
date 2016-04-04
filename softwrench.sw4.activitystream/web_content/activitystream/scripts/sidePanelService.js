@@ -149,7 +149,7 @@
 
             //resize/position elements
             fixHeaderService.callWindowResize();
-            $(window).trigger('resize')
+            $(window).trigger('resize');
 
             var newState = isOpened(panelid);
             if (!mantainPreference) {

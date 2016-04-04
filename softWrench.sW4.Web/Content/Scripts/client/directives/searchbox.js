@@ -13,9 +13,6 @@ app.directive('searchBox', function (contextService, $log) {
             $scope.clearSearch = function () {
                 //reset the seach text
                 $scope.ngModel = '';
-
-                //trigger resize to resize scroll panes
-                $(window).trigger('resize');
             };
         }
     }
