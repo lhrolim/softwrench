@@ -6,7 +6,7 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
     public class Migration20160402Swweb2315 : Migration {
         public override void Up() {
             Alter.Table("DASH_DASHBOARD")
-                .AddColumn("system").AsBoolean()
+                .AddColumn("system").AsBoolean().WithDefaultValue(false)
                 .AddColumn("alias").AsString(MigrationUtil.StringSmall).Nullable()
                 .AddColumn("application").AsString(MigrationUtil.StringSmall).Nullable()
                 .AddColumn("preferredorder").AsInt32().Nullable();
