@@ -33,9 +33,9 @@
   </environment>
   
   <environment key="dev">
-    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Cmt;User Id=sw;password=softwrench;" />
-    <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />  
+    <property key="swdb_url" value="Data Source=10.50.100.54;Initial Catalog=SWDB_PSC76DEV_Cmt;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.50.100.181:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.54;Initial Catalog=PSC76DEV;User Id=MAXIMO;password=MAXIMO;" />  
 <!--	
     <property key="basewsURL" value="http://10.50.100.181:9080/meaweb/wsdl/" />
     <property key="basewfURL" value="http://10.50.100.181:9080/meaweb/wf/" />
