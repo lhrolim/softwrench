@@ -82,7 +82,7 @@ namespace softWrench.sW4.Web.Controllers {
             }
             userName = userName.ToLower();
             var user = GetUser(userName, password, userTimezoneOffset);
-            if (user != null /*&& user.Active == true*/) {
+            if (user != null && user.Active == true) {
                 return AuthSucceeded(userName, userTimezoneOffset, user);
             }
             return AuthFailed(user);
