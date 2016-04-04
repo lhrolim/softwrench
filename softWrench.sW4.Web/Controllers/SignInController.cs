@@ -163,7 +163,8 @@ namespace softWrench.sW4.Web.Controllers {
                 return null;
             }
 
-            if (!userAux.IsActive) {
+            if (!userAux.UserName.Equals("swadmin") && userAux.IsActive.HasValue && userAux.IsActive == false) {
+                //swadmin cannot be inactive
                 return InMemoryUser.NewAnonymousInstance(false);
             }
 

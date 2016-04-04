@@ -41,7 +41,7 @@ namespace softwrench.sw4.user.classes.entities {
         }
 
         [Property(TypeType = typeof(BooleanToIntUserType))]
-        public Boolean IsActive {
+        public bool? IsActive {
             get; set;
         }
 

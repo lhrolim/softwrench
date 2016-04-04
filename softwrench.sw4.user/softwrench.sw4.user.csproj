@@ -105,6 +105,7 @@
     <Compile Include="classes\services\setup\UserLinkManager.cs" />
     <Compile Include="classes\services\UserStatisticsService.cs" />
     <Compile Include="Migration\MigrationSwweb1216.cs" />
+    <Compile Include="Migration\MigrationSWWEB2355.cs" />
     <Compile Include="Migration\MigrationSwweb1340.cs" />
     <Compile Include="Migration\MigrationSwweb1331.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
