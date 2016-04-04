@@ -106,7 +106,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                     statistics = _userStatisticsService.LocateStatistics(swUser);
                     activationLink = _userLinkManager.GetLinkByUser(swUser);
                 }
-                var isActive = swUser.IsActive ? "true" : "false";
+                var isActive = (swUser.IsActive.HasValue && swUser.IsActive == false )? "false" : "true";
                 dataMap.SetAttribute("#isactive", isActive);
                 var preferences = swUser.UserPreferences;
                 var signature = preferences != null ? preferences.Signature : "";
