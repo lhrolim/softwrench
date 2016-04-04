@@ -9,9 +9,9 @@
         function onStatusChanged($event) {
             var status = $event.fields["status"];
             if (status === "INPROG") {
-                $event.fields["actualstart"] = Date.now();
+//                $event.fields["actualstart"] = Date.now();
             } else if (status === "CLOSED" || status === "RESOLVED") {
-                $event.fields["actualfinish"] = Date.now();
+//                $event.fields["actualfinish"] = Date.now();
             }
         }
         //#endregion

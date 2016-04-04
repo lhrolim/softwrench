@@ -67,8 +67,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                     WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
                 } else if (maxStatusValue.ContainsKey("MAXVALUE") && maxStatusValue["MAXVALUE"].Equals("COMP")) {
                     // Actual date must be in the past - thus we made it a minute behind the current time.   
-                    WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
-                    WsUtil.SetValueIfNull(wo, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    WsUtil.SetValue(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    WsUtil.SetValue(wo, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
                 }
             }
 

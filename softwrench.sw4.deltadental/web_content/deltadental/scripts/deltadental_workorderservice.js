@@ -8,11 +8,11 @@
         //#region Public methods
         function onStatusChanged($event) {
             var status = $event.fields["status"];
-            if (status === "INPRG") {
-                $event.fields["actstart"] = Date.now();
-            } else if (status === "COMP" || status === "CLOSE") {
-                $event.fields["actfinish"] = Date.now();
-            }
+//            if (status === "INPRG") {
+//                $event.fields["actstart"] = Date.now();
+//            } else if (status === "COMP" || status === "CLOSE") {
+//                $event.fields["actfinish"] = Date.now();
+//            }
         }
         //#endregion
 
