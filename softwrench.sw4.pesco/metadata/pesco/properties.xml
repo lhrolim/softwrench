@@ -46,8 +46,23 @@
     <property key="iiscontextpath " value="https://dev.softwrench.net/pesco/"/> -->
 	
   </environment>
-  
+
   <environment key="qa">
+    <property key="swdb_url" value="Data Source=10.50.100.54;Initial Catalog=SWDB_PSC76DEV_QA;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.50.100.181:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.54;Initial Catalog=PSC76DEV;User Id=MAXIMO;password=MAXIMO;" />  
+<!--	
+    <property key="basewsURL" value="http://10.50.100.181:9080/meaweb/wsdl/" />
+    <property key="basewfURL" value="http://10.50.100.181:9080/meaweb/wf/" />
+    <property key="swdb_url" value="Data Source=10.50.100.54;Initial Catalog=SWDB_PSC76DEV;User Id=sw;password=softwrench;" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.54;Initial Catalog=PSC76DEV;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="mifcredentials.user" value='mxintadm' />
+    <property key="mifcredentials.password" value='mxintadm' />
+    <property key="iiscontextpath " value="https://qa.softwrench.net/pesco/"/> -->
+	
+  </environment>
+  
+  <environment key="qa-uat">
     <property key="basewsURL" value="http://52.36.55.169:9080/meaweb/wsdl/" />
     <property key="basewfURL" value="http://52.36.55.169:9080/meaweb/wf/" />
     <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=SWDB_PSSCD;User Id=sw;password=swadmin;" />
