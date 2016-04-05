@@ -6,6 +6,7 @@
     <template path="@workorder.xml"/>
     <template path="@location.xml"/>
     <template path="@servicerequest.xml"/>
+    <template path="@asset.xml"/>
   </templates>
 
   <entities>
@@ -30,6 +31,16 @@
           <relationshipAttribute query="(value IN ('APPR', 'INPRG', 'WMATL', 'WSCH', 'COMP', 'CAN'))"/>
         </relationship>
       </relationships>
+    </entity>
+    <entity name="location" idAttribute="locationsid">
+      <attributes>
+        <attribute name="pluspcustomer" type="varchar"/>
+      </attributes>
+    </entity>
+    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
+      <attributes>
+        <attribute name="pluspcustomer" type="varchar"/>
+      </attributes>
     </entity>
   </entities>
 
@@ -98,9 +109,34 @@
     <application name="location" title="Location" entity="location" >
       <schemas>
         <schema id="list" redeclaring="false">
+          <customization position="status"/>
+          <customization position="type"/>
+          <customization position="+orgid">
+            <field attribute="pluspcustomer" label="Customer"/>
+          </customization>
           <commandbars>
             
           </commandbars>
+        </schema>
+        <schema id="locationdetail" title="Location Detail" stereotype="detail" redeclaring="false">
+          <customization position="+intlabrec">
+            <field attribute="pluspcustomer" label="Customer" readonly="true"/>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+    
+    <application name="asset" title="Asset" entity="asset">
+      <schemas>
+         <schema id="list" platform="web" redeclaring="false">
+          <customization position="+siteid">
+            <field attribute="pluspcustomer" label="Customer"/>
+          </customization>
+        </schema>
+        <schema id="detail" title="Asset Detail" stereotype="detail" platform="web" redeclaring="false">
+          <customization position="+item_.description">
+            <field attribute="pluspcustomer" label="Customer" readonly="true"/>
+          </customization>
         </schema>
       </schemas>
     </application>
