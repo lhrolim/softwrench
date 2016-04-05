@@ -322,8 +322,8 @@ namespace softWrench.sW4.Metadata {
             var leafs = menu.ExplodedLeafs;
             foreach (var menuBaseDefinition in leafs) {
                 if (menuBaseDefinition is ApplicationMenuItemDefinition) {
-                    var application = Application((menuBaseDefinition as ApplicationMenuItemDefinition).Application);
-                    if (user == null || user.IsInRole(application.Role) || (user.IsInRole(menuBaseDefinition.Role))) {
+                    var application = Application((menuBaseDefinition as ApplicationMenuItemDefinition).Application,false);
+                    if (application != null && (user == null || user.IsInRole(application.Role) || (user.IsInRole(menuBaseDefinition.Role)))) {
                         result.Add(application);
                     }
                 }
