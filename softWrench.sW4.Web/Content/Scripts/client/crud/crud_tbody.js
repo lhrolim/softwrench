@@ -342,12 +342,15 @@
                                             if (iconHTML != '') {
                                                 iconHTML += '&emsp;';
                                             }
+
                                             var foreground = null;
+                                            var icon = scope.loadIcon(value, iconColumn);
+
                                             if (iconColumn.rendererParameters.qualifier == "priority") {
                                                 foreground = prioritycolorService.getColor(value, iconColumn.rendererParameters);
                                             }
-                                            var icon = scope.loadIcon(value, iconColumn);
-                                            iconHTML += scope.handleIcon(icon, iconColumn, value, foreground,i);
+
+                                            iconHTML += scope.handleIcon(icon, iconColumn, value, foreground, i);
                                         }
                                     });
                                 }

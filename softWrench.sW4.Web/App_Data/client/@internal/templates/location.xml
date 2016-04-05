@@ -79,13 +79,13 @@
           <field attribute="siteid" label="Site"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="locoper_.locpriority" tooltip="Priority" hidden="true">
-            <renderer type="priorityicon"/>
+            <renderer type="priorityicon" params="icon=fa-flag;qualifier=priority"/>
           </field>
           <field attribute="workordercounter" tooltip="Workorders" hidden="true">
             <renderer type="icon" params="icon=fa-wrench"/>
           </field>
           <field attribute="#statusicons" label="Status Icons">
-            <renderer type="statusicons" params="width=6%;prioritycolumn=locoper_.locpriority;iconcolumns=workordercounter"/>
+            <renderer type="statusicons" params="width=6%;iconcolumns=locoper_.locpriority,workordercounter"/>
           </field>
           <!--Child Locations-->
           <!--Open Work Orders-->

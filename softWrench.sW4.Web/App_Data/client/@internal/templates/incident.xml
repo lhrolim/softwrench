@@ -97,13 +97,13 @@
             <renderer type="statuscolor" params="width=12%;grid=incident;column=status" />
           </field>
           <field attribute="internalpriority" tooltip="Priority" hidden="true">
-            <renderer type="priorityicon"/>
+            <renderer type="priorityicon" params="icon=fa-flag;qualifier=priority"/>
           </field>
           <field attribute="attachmentcounter" tooltip="Attachments" hidden="true">
             <renderer type="icon" params="icon=fa-paperclip"/>
           </field>
           <field attribute="#statusicons" label="Status Icons">
-            <renderer type="statusicons" params="width=6%;prioritycolumn=internalpriority;iconcolumns=attachmentcounter"/>
+            <renderer type="statusicons" params="width=6%;iconcolumns=internalpriority,attachmentcounter"/>
           </field>
           <properties>
             <property key="list.click.schema" value="detail"/>

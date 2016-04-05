@@ -48,7 +48,7 @@
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
-              <relationship to="numericdomain" qualifier="synpriority">
+        <relationship to="numericdomain" qualifier="synpriority">
           <relationshipAttribute from="internalpriority" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="TICKETPRIORITY" quoteLiteral="true" />
         </relationship>
