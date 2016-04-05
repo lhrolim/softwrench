@@ -121,8 +121,6 @@
     <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />
     <command icon="fa-plus" label="Expand All" id="expandall" service="$scope" method="expandAll" showexpression="$scope:showExpansionCommands"/>
     <command icon="fa-minus" label="Collapse All" id="collapseall" service="$scope" method="collapseAll" showexpression="$scope:showExpansionCommands"/>
-    <command icon="fa-refresh" label="Refresh" id="refresh" service="$scope" method="refresh" />
-
   </commandgroup>
 
 
