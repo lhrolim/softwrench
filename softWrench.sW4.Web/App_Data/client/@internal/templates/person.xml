@@ -74,10 +74,10 @@
           </field>
           <field attribute="firstname" label="First Name" requiredexpression="true"/>
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
-          <association target="locationorg" labelfield="organization_.description" label="Org ID">
+          <association target="locationorg" labelfield="organization_.description" label="Org ID" requiredexpression="true" defaultexpression="@orgid">
             <renderer type="lookup"/>
           </association>
-          <association target="locationsite" labelfield="site_.description" label="Site ID">
+          <association target="locationsite" labelfield="site_.description" label="Site ID" requiredexpression="true" defaultexpression="@siteid">
             <renderer type="lookup"/>
           </association>
           <association target="location" labelfield="location_.description" label="Location">
@@ -163,10 +163,10 @@
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
 
           <field attribute="#primaryphone" label="Primary Phone" />
-          <association target="locationorg" labelfield="organization_.description" label="Org ID" default="@user.orgid">
+          <association target="locationorg" labelfield="organization_.description" label="Org ID" default="@orgid" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
-          <association target="locationsite" labelfield="site_.description" label="Site ID" default="@user.siteid">
+          <association target="locationsite" labelfield="site_.description" label="Site ID" default="@siteid" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
           <association target="location" labelfield="location_.description" label="Location">

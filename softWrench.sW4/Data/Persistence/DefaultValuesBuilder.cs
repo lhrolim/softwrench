@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence {
     class DefaultValuesBuilder {
@@ -133,6 +134,23 @@ namespace softWrench.sW4.Data.Persistence {
             }
 
             key = key.ToLower();
+
+            if (key.Equals("@orgid")) {
+                if (ApplicationConfiguration.DefaultOrgId != null) {
+                    return ApplicationConfiguration.DefaultOrgId;
+                }
+                //falling back to current logged user
+                key = "@user.orgid";
+            }
+
+            if (key.Equals("@siteid")) {
+                if (ApplicationConfiguration.DefaultSiteId != null) {
+                    return ApplicationConfiguration.DefaultSiteId;
+                }
+                //falling back to current logged user
+                key = "@user.siteid";
+            }
+
             if (key.Equals("@username")) {
                 value = user.Login;
             } else if (key.Equals("@userid")) {
@@ -211,7 +229,7 @@ namespace softWrench.sW4.Data.Persistence {
             return date.ToString(format);
         }
 
-        private static string GetDateAsString(DateTime date, String format = null) {
+        private static string GetDateAsString(DateTime date, string format = null) {
             if (String.IsNullOrEmpty(format)) {
                 format = "MM/dd/yyyy";
             }
