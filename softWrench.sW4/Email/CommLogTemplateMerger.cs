@@ -12,7 +12,7 @@ namespace softWrench.sW4.Email {
     public class CommLogTemplateMerger : ISingletonComponent {
 
         private readonly ISet<string> _phase1FixedVariables = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase)
-        {"ticketid","classificationid","description","changedate","ownerperson.displayname","DESCRIPTION_LONGDESCRIPTION","LONGDESCRIPTION.ldtext","reportedemail", "affectedperson", "affectedemail" };
+        {"ticketid","classificationid","description","changedate","ownerperson.displayname","DESCRIPTION_LONGDESCRIPTION","LONGDESCRIPTION.ldtext","reportedemail", "affectedperson", "affectedemail","reportdate" };
 
         private readonly EntityRepository _entityRepository;
 

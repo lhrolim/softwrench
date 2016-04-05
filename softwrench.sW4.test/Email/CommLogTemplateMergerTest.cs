@@ -74,11 +74,12 @@ Support24 Email: support@kogtsupport24.com
                 {"description", "b"},
                 {"changedate", "c"},
                 {"description_longdescription", "d"},
+                {"reportdate ", "e"},
 
             };
 
             var result = merger.MergeTemplateDefinition(testData1, dict);
-            Assert.AreEqual(resultData1.Fmt("a", "b", "c", "d"), result);
+            Assert.AreEqual(resultData1.Fmt("a", "b", "c", "d","e"), result);
 
         }
     }
