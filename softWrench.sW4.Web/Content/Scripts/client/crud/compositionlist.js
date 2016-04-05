@@ -401,8 +401,11 @@
 
         $scope.showPagination = function () {
             return !$scope.isNoRecords() && // has items to show
-                !!$scope.paginationData && // has paginationdata
-                $scope.paginationData.pageCount > 1;
+                !!$scope.paginationData &&
+                $scope.paginationData.paginationOptions.some(function (option) {
+                    // totalCount is bigger than at least one option
+                    return option !== 0 &&  $scope.paginationData.totalCount > option;
+                });
         }
 
 
