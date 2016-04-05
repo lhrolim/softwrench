@@ -635,7 +635,7 @@
           <customization position="assetnum"/>
           <customization position="problemcode"/>
           <customization position="siteid">
-            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" hideDescription="true">
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <renderer type="lookup" />
             </association>
             <field label="Site:" attribute="siteid" readonly="true" hidden="true">
@@ -643,7 +643,7 @@
             </field>
           </customization>
           <customization position="status">
-            <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description">
+            <association label="Status:" target="status" labelfield="synstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup" params="avoidautofocus=true"/>
               <event type="afterchange" method="onStatusChanged" service="workorderService"/>
@@ -768,7 +768,7 @@
           </customization>
           <customization position="+langcode">
             <field attribute="altdisplayname" hidden="true"/>
-            <association target="altdisplayname" labelfield="altperson_.displayname" hideDescription="true" label="Alt Contact Dispaly Name" extraprojectionvalues="displayname,firstname,lastname,phone_.phonenum,email_.emailaddress">
+            <association target="altdisplayname" labelfield="altperson_.displayname" label="Alt Contact Dispaly Name" extraprojectionvalues="displayname,firstname,lastname,phone_.phonenum,email_.emailaddress">
               <renderer type="lookup" params="application=person;schemaId=personlookup;"/>
               <event service="deltadental_.personService" method="afterChangeAltDisplayname" type="afterchange"/>
             </association>
@@ -796,7 +796,7 @@
           </customization>
           <customization position="+langcode">
             <field attribute="altdisplayname" hidden="true"/>
-            <association target="altdisplayname" labelfield="altperson_.displayname" hideDescription="true" label="Alt Contact Dispaly Name" extraprojectionvalues="displayname,firstname,lastname,phone_.phonenum,email_.emailaddress">
+            <association target="altdisplayname" labelfield="altperson_.displayname" label="Alt Contact Dispaly Name" extraprojectionvalues="displayname,firstname,lastname,phone_.phonenum,email_.emailaddress">
               <renderer type="lookup" params="application=person;schemaId=personlookup;"/>
               <event service="deltadental_.personService" method="afterChangeAltDisplayname" type="afterchange"/>
             </association>

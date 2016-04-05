@@ -657,7 +657,7 @@
           </section>
           
           <section id="statussection">
-            <association label="Status" target="status" hideDescription="true" labelfield="synstatus.description">
+            <association label="Status" target="status" labelfield="synstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup"/>
             </association>

@@ -132,7 +132,7 @@
 
         <componentdisplayable id="siteid">
           <association label="Site" target="siteid" labelfield="site_.description"
-                   requiredexpression="true" hideDescription="true" defaultexpression="@user.site">
+                   requiredexpression="true" defaultexpression="@user.site">
             <renderer type="lookup" />
           </association>
         </componentdisplayable>
@@ -319,7 +319,7 @@
                 <field hidden="true" attribute="failurelist_.failurelist"/>
 
 
-                <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true">
+                <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc">
                   <renderer type="lookup" params="inputsize=small"/>
                 </association>
 
@@ -402,7 +402,7 @@
               <association label="Failure Class" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
                 <renderer type="autocompleteclient" />
               </association>
-              <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode" hideDescription="true">
+              <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
                 <renderer type="lookup"  />
                 <dataprovider prefilterfunction="FilterProblemCodes" />
               </association>
@@ -431,7 +431,7 @@
 
         <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web" stereotype="detailnew">
           <section id="siteidsection">
-            <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true" hideDescription="true">
+            <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true">
               <renderer type="lookup" />
             </association>
           </section>
@@ -470,7 +470,7 @@
             <field attribute="wonum" label="WO#" readonly="true" hidden="true">
               <renderer type="default" />
             </field>
-            <association label="Status" target="status" hideDescription="true" labelfield="synstatus.description">
+            <association label="Status" target="status" labelfield="synstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup" params="avoidautofocus=true"/>
             </association>
@@ -596,7 +596,7 @@
           <field attribute="changeby" label="Changed By" hidden="true"/>
           <field attribute="owner" label="Owner"  readonly="true"/>
 
-          <association label="Status" target="status" hideDescription="true" labelfield="synstatus.description">
+          <association label="Status" target="status" labelfield="synstatus.description">
             <dataprovider prefilterfunction="FilterStatusCodes"/>
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>

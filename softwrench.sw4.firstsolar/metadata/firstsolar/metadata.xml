@@ -73,7 +73,7 @@
           
           
           <customization position="worktype">
-            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" requiredexpression="true">
               <renderer type="lookup" params="inputsize=small"/>
             </association>
           </customization>
@@ -128,7 +128,7 @@
             <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true">
               <renderer type="autocompleteclient" />
             </optionfield>
-            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" requiredexpression="true">
               <renderer type="lookup"/>
             </association>
           </customization>
@@ -142,7 +142,7 @@
           <optionfield attribute="classificationid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
-          <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+          <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
 
@@ -249,7 +249,7 @@
           <optionfield attribute="classificationid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
-          <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+          <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
 
@@ -280,7 +280,7 @@
           <optionfield attribute="classificationid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
-          <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+          <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
 

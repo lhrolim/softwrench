@@ -68,7 +68,7 @@
         </componentdisplayable>
 
         <componentdisplayable id="site">
-          <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true" default="@siteid" hideDescription="true">
+          <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true" default="@siteid">
             <renderer type="lookup"/>
           </association>
         </componentdisplayable>

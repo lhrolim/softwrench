@@ -27,10 +27,10 @@
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
           <customization position="+hiddenfield">
             <section orientation="horizontal">
-              <association label="Failure Class" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc" requiredexpression="true">
+              <association label="Failure Class" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc" requiredexpression="true">
                 <renderer type="autocompleteclient" />
               </association>
-              <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode" hideDescription="true" requiredexpression="true">
+              <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description" requiredexpression="true">
                 <renderer type="lookup"  />
                 <dataprovider prefilterfunction="FilterProblemCodes" />
               </association>
@@ -40,7 +40,7 @@
             </section>
           </customization>
           <customization position="worktype">
-            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" hideDescription="true" requiredexpression="true">
+            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" requiredexpression="true">
               <renderer type="lookup" params="inputsize=small"/>
             </association>
           </customization>

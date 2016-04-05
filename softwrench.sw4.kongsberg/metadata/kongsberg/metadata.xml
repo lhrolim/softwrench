@@ -1372,10 +1372,10 @@
           <section>
             <header displacement="ontop" label="User Information" params="fieldset=true"/>
             <renderer type="default" params="childinputsize=medium" />
-            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" hideDescription="false">
+            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc">
               <renderer type="lookup" params="columnlabel=Name" />
             </association>
-            <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" hideDescription="false">
+            <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc">
               <renderer type="lookup" params="columnlabel=Name" />
             </association>
           </section>
@@ -1403,27 +1403,27 @@
                 <renderer type="combo" />
               </association>
               <field label="TFS#:" attribute="tfsnumber" />
-              <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc" hideDescription="true">
+              <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc">
                 <renderer type="lookup" />
               </association>
-              <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description" hideDescription="true">
+              <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description">
                 <renderer type="lookup" />
               </association>
-              <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1" hideDescription="true">
+              <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1">
                 <renderer type="lookup" />
               </association>
-              <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" orderbyfield="value asc" hideDescription="true">
+              <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" orderbyfield="value asc">
                 <renderer type="lookup" />
               </association>
-              <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description" hideDescription="true">
+              <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description">
                 <renderer type="lookup" />
               </association>
-              <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description" hideDescription="true">
+              <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
                 <renderer type="lookup" />
               </association>
               <field label="Region:" attribute="region" />
               <field label="Service Group:" attribute="commoditygroup" />
-              <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description" hideDescription="true">
+              <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
                 <renderer type="lookup" />
               </association>
               <field label="Rig Name:" attribute="rigname" />
@@ -1795,22 +1795,22 @@
               <field label="TFS#:" attribute="tfsnumber">
                 <renderer type="default" />
               </field>
-              <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" hideDescription="true">
+              <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true">
                 <renderer type="lookup" />
               </association>
-              <association label="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description" hideDescription="true">
+              <association label="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description">
                 <renderer type="lookup" />
               </association>
-              <association label="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1" hideDescription="true">
+              <association label="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1">
                 <renderer type="lookup" />
               </association>
-              <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" hideDescription="true">
+              <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true">
                 <renderer type="lookup" />
               </association>
-              <association label="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description" hideDescription="true">
+              <association label="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description">
                 <renderer type="lookup" />
               </association>
-              <association label="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description" hideDescription="true">
+              <association label="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
                 <renderer type="lookup" />
               </association>
               <field label="Region:" attribute="region">
@@ -1819,7 +1819,7 @@
               <field label="Service Group:" attribute="commoditygroup">
                 <renderer type="default" />
               </field>
-              <association label="Target Version:" target="targetversion" labelfield="targetversion_.description" hideDescription="true">
+              <association label="Target Version:" target="targetversion" labelfield="targetversion_.description">
                 <renderer type="lookup" />
               </association>
               <field label="Rig Name:" attribute="rigname">
@@ -2839,10 +2839,10 @@
           <section>
             <header displacement="ontop" label="Solution Details" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <!--<association label="Site" target="siteid" labelfield="site_.description" hideDescription="true">
+            <!--<association label="Site" target="siteid" labelfield="site_.description">
               <renderer type="lookup" />
             </association>-->
-            <association label="Asset" target="assetnum" labelfield="asset_.description" hideDescription="true">
+            <association label="Asset" target="assetnum" labelfield="asset_.description">
               <renderer type="lookup" />
             </association>
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">

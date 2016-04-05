@@ -147,7 +147,7 @@
         </schema>
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
           <customization position="status">
-            <association label="Status" target="status" hideDescription="true" labelfield="pescosynstatus.description">
+            <association label="Status" target="status" labelfield="pescosynstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup" params="avoidautofocus=true"/>
             </association>

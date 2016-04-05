@@ -368,7 +368,7 @@
           <customization position="assetnum"/>
           <customization position="problemcode"/>
           <customization position="siteid">
-            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" hideDescription="true">
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <renderer type="lookup" />
             </association>
             <field label="Site:" attribute="siteid" readonly="true" hidden="true">

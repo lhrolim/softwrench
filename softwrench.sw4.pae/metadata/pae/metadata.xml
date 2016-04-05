@@ -119,7 +119,7 @@
 
           <field attribute="assetnum" label="Barcode Number"  readonly="true" />
           
-          <association label="Status:" target="status" hideDescription="true" labelfield="assetstatus.description">
+          <association label="Status:" target="status" labelfield="assetstatus.description">
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>
           

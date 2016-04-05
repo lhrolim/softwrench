@@ -36,7 +36,7 @@
           <field attribute="wonum" hidden="true" label="Task"/>
           <field attribute="status" readonly="true" label="Current Status"/>
           <!--          <optionfield providerattribute="availablestatus" attribute="newstatus" label="New Status" requiredexpression="true"/>-->
-          <association label="New Status" target="newstatus" hideDescription="true" labelfield="synstatus.description" requiredexpression="true">
+          <association label="New Status" target="newstatus" labelfield="synstatus.description" requiredexpression="true">
             <dataprovider postfilterfunction="FilterAvailableStatus"/>
             <renderer type="combo"/>
           </association>
