@@ -5,6 +5,7 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Security.Services;
 using System;
 using Microsoft.Ajax.Utilities;
+using softwrench.sw4.user.classes.entities;
 using WcfSamples.DynamicProxy;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
@@ -102,7 +103,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             }
             if (id == null) {
                 Log.WarnFormat("Identifier {0} not received after creating object in Maximo.", idProperty);
-                maximoTemplateData.ResultObject = new TargetResult(null, null, resultData, null, siteId);
+                maximoTemplateData.ResultObject = new TargetResult(null, userId.ToString(), resultData, null, siteId);
                 return;
             }
             maximoTemplateData.ResultObject = new TargetResult(id.ToString(), userId.ToString(), resultData, null, siteId);
