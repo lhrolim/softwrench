@@ -26,6 +26,9 @@
 
   <entities>
     <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
+      <attributes>
+        <attribute name="class" type="varchar" required="true" query="woclass"/>
+      </attributes>
       <relationships>
         <relationship to="failurelistonly" qualifier="failurelist">
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
@@ -271,6 +274,7 @@
           <field attribute="workorderid" hidden="true"/>
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
+          <field attribute="class" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
           <field attribute="pmnum"  hidden="true"/>
           <field attribute="cinum"  hidden="true"/>
