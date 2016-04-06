@@ -30,7 +30,7 @@
                             <th>
                                 <span>{{lookupObj.fieldMetadata.label}}</span>
                             </th>
-                            <th>
+                            <th ng-if="showDescription()">
                                 <span>{{getLookUpDescriptionLabel(lookupObj.fieldMetadata)}}</span>
                             </th>
                         </tr>
@@ -41,7 +41,7 @@
                             <td>
                                 <span>{{option.value}}</span>
                             </td>
-                            <td>
+                            <td ng-if="showDescription()">
                                 <span>{{option.label}}</span>
                             </td>
                         </tr>

@@ -106,7 +106,11 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Condition" params="fieldset=true" />
             <renderer type="default" params="childinputsize=small" />
-            <field attribute="priority" label="Priority" readonly="true"/>
+
+            <optionfield attribute="priority" label="Priority" providerattribute="_SWPriorityType" readonly="true">
+              <renderer type="autocompleteclient"/>
+            </optionfield>
+            
             <field attribute="conditioncode" label="Condition Code" readonly="true"/>
             <field attribute="condition_.description" label="Condition Description" readonly="true"/>
             <field attribute="failurecode" label="Failure Class" readonly="true"/>

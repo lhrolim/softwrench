@@ -102,7 +102,11 @@
             <field attribute="backoutplan" label="Back Out Plan"/>
             <field attribute="backoutplan_.ldtext" label="Back Out Plan Detail"/>
             <field attribute="pretestdetail_.ldtext" label="Pretest Details"/>
-            <field attribute="wopriority" label="Priority"/>
+
+            <optionfield attribute="wopriority" label="Priority" providerattribute="_SWPriorityType">
+              <renderer type="autocompleteclient" params="inputsize=small"/>
+            </optionfield>
+            
             <field attribute="longdescription_.ldtext" label="Remarks"/>
           </section>
 

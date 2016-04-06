@@ -10,10 +10,7 @@
     <entity name="incident" idAttribute="ticketid">
 
       <relationships>
-        <relationship to="numericdomain" >
-          <relationshipAttribute from="internalpriority" to="value" primary="true"/>
-          <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
-        </relationship>
+        
         <relationship to="person" qualifier="reporter">
           <relationshipAttribute from="reportedby" to="personid" primary="true"/>
         </relationship>
@@ -142,9 +139,12 @@
 
             <section orientation="horizontal">
               <renderer type="default" params="childinputsize=medium" />
+              
               <association label="Location" target="location" labelfield="location_.description" >
+                <renderer type="lookup" />
                 <event type="beforechange" service="srService" method="beforeChangeLocation"/>
               </association>
+              
               <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
                 <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
                 <dataprovider prefilterfunction="FilterAssets"/>
@@ -153,18 +153,14 @@
               <optionfield attribute="classstructureid" label="Classification" providerattribute="_IncidentClassStructureType" default="@classstructureid">
                 <renderer type="autocompleteclient" />
               </optionfield>
+              
+              <optionfield attribute="internalpriority" label="Priority" providerattribute="_SWPriorityType" default="1">
+                <renderer type="autocompleteclient" />
+              </optionfield>
+          
             </section>
-
-            <optionfield label="Priority" attribute="internalpriority" default="1">
-              <renderer type="radio"/>
-              <option label="Critical" value="1"/>
-              <option label="High" value="2"/>
-              <option label="Medium" value="3"/>
-              <option label="Low" value="4"/>
-              <option label="Planning" value="5"/>
-            </optionfield>
           </section>
-
+           
           <section orientation="horizontal">
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
@@ -226,8 +222,9 @@
         <schema parentschema="adetail" id="editdetail" title="Incident Details">
           <section id="statussection">
             <field attribute="ticketid" label="Incident#" readonly="true" requiredexpression="false" hidden="true"/>
+            
             <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="false">
-              <renderer type="combo" />
+              <renderer type="lookup" />
             </association>
           </section>
           

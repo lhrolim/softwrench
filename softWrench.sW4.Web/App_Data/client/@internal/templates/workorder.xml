@@ -73,10 +73,6 @@
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="EXCEPTIONREASON" quoteLiteral="true" />
         </relationship>
-        <relationship to="numericdomain" qualifier="synpriority">
-          <relationshipAttribute from="wopriority" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
-        </relationship>
         <!-- this collection = true here forces realtionship to be ignored on detail loading, which is what we need. that primary attribute is a fake one-->
         <relationship to ="glcomponents" collection="true">
           <relationshipAttribute from="glaccount" to="comptext" primary="true"/>
@@ -327,9 +323,10 @@
                   <renderer type="lookup" params="inputsize=small"/>
                 </association>
 
-                <optionfield attribute="wopriority" label="Priority" providerattribute="_WOPriorityType">
+                <optionfield attribute="wopriority" label="Priority" providerattribute="_SWPriorityType">
                   <renderer type="autocompleteclient" params="inputsize=small"/>
                 </optionfield>
+                
               </section>
               <!-- field used to base custmozations for UMC from -->
               <field attribute="hiddenfield" hidden="true"/>
@@ -403,8 +400,8 @@
               <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
               <renderer type="default" params="childinputsize=medium" />
 
-              <association label="Failure Class" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
-                <renderer type="autocompleteclient" />
+              <association label="Failure Class" target="failurecode" labelfield="failurelist_.failurecode" hideDescription="true" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+                <renderer type="lookup" />
               </association>
               <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
                 <renderer type="lookup"  />

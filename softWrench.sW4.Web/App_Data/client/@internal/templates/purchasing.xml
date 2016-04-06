@@ -162,9 +162,11 @@
               <association label="Type" target="type" labelfield="potype_.description">
                 <renderer type="lookup"/>
               </association>
-              <field attribute="priority" label="Priority">
-                <renderer type="default" params="placeholder=Please enter a value from 0-9"/>
-              </field>
+              
+              <optionfield attribute="priority" label="Priority" providerattribute="_SWPriorityType">
+                <renderer type="autocompleteclient"/>
+              </optionfield>
+              
               <field attribute="companies_.phone" label="Phone"/>
             </section>
           </section>
@@ -314,9 +316,11 @@
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="description" label="Summary" hidden="true" />
             <field attribute="prnum" label="PR#" hidden="true" />
-            <field attribute="priority" label="Priority" requiredexpression="true" default="0">
-              <renderer type="numericinput" params="min=0;max=9;decimals=0" />
-            </field>
+
+            <optionfield attribute="priority" label="Priority" providerattribute="_SWPriorityType" requiredexpression="true" default="0">
+              <renderer type="autocompleteclient"/>
+            </optionfield>
+            
             <field attribute="totaltax1" label="Total Tax" />
             <field attribute="totalcost" label="Total Cost" default="0" requiredexpression="true" />
             <field attribute="currencycode" label="Currency" requiredexpression="true" />
