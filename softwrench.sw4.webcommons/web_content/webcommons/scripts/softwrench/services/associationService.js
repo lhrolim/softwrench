@@ -44,25 +44,6 @@
             };
         }
 
-        var updateExtraFields = function (associations, datamap, schema, contextData) {
-            if (!associations || associations.length === 0) {
-                return;
-            }
-            
-            var log = $log.get("associationService#updateExtraFields");
-
-            associations.forEach(function (association) {
-                if (!association || association.extraProjectionFields == null) {
-                    return;
-                }
-
-                var optionValue = getFullObject(association, datamap, schema, contextData);
-                doUpdateExtraFields(association, optionValue, datamap);
-            });
-
-            log.info("Extra fields of associations updated during schema load.");
-        }
-
         var doGetFullObject = function (associationFieldMetadata, selectedValue, datamap, schema, contextData) {
             if (selectedValue == null) {
                 return null;
@@ -207,13 +188,7 @@
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
             var target = associationFieldMetadata.target;
-
-            var fields = datamap;
-            if (datamap && datamap.fields) {
-                fields = datamap.fields;
-            }
-
-            var selectedValue = fields[target];
+            var selectedValue = datamap[target];
 
             if (selectedValue == null) {
                 return null;
@@ -527,9 +502,7 @@
 
             return $http.post(urlToUse, jsonString, config)
                 .then(function (serverResponse) {
-                    var result = updateFromServerSchemaLoadResult(serverResponse.data.resultObject, options.contextData, true);
-                    updateExtraFields(associations, datamap, schema, options.contextData);
-                    return result;
+                    return updateFromServerSchemaLoadResult(serverResponse.data.resultObject, options.contextData, true);
                 });
 
         }
