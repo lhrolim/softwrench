@@ -95,8 +95,7 @@ namespace softWrench.sW4.Metadata {
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void InitializeMetadata() {
-            try
-            {
+            try {
                 _appsAndEntitiesUsedCache = null;
                 FinishedParsing = false;
                 //this is needed because we may access the API method inside the validation process
@@ -559,7 +558,7 @@ namespace softWrench.sW4.Metadata {
             return Application(realName);
         }
 
-        public static System.Collections.Generic.ISet<string> FetchAvailableAppsAndEntities() {
+        public static System.Collections.Generic.ISet<string> FetchAvailableAppsAndEntities(bool includeSWDB = true) {
             if (_appsAndEntitiesUsedCache != null) {
                 return _appsAndEntitiesUsedCache;
             }
@@ -570,6 +569,10 @@ namespace softWrench.sW4.Metadata {
 
             var completeApplicationMetadataDefinitions = applications as IList<CompleteApplicationMetadataDefinition> ?? applications.ToList();
             foreach (var application in completeApplicationMetadataDefinitions) {
+                if (application.ApplicationName.StartsWith("_") && !includeSWDB) {
+                    continue;
+                }
+
                 result.Add(application.ApplicationName);
                 foreach (var schema in application.Schemas()) {
                     foreach (var association in schema.Value.Associations()) {
@@ -579,6 +582,13 @@ namespace softWrench.sW4.Metadata {
                         var toAdd = associationApplication == null ? association.EntityAssociation.To : associationApplication.ApplicationName;
                         result.Add(toAdd);
                     }
+                    if (schema.Value.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.SchemaRelatedEntities)) {
+                        var props = schema.Value.Properties[ApplicationSchemaPropertiesCatalog.SchemaRelatedEntities];
+                        var relatedEntities = props.Split(',').Select(s => s.ToLower());
+                        result.AddAll(relatedEntities);
+                    }
+
+
                 }
             }
             return result;

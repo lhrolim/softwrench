@@ -11,14 +11,18 @@ using JetBrains.Annotations;
 using log4net.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Data.Search;
 using softWrench.sW4.Email;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 
@@ -27,12 +31,17 @@ namespace softWrench.sW4.Web.Controllers {
 
         private readonly MaximoHibernateDAO _maximoDao;
         private readonly CommLogTemplateMerger _templateMerger;
+        private readonly IWhereClauseFacade _whereClauseFacade;
+        private readonly EntityRepository _entityRepository;
+        private EntityMetadata _commtemplateEntity;
 
 
-
-        public CommTemplateController(MaximoHibernateDAO dao, CommLogTemplateMerger templateMerger) {
+        public CommTemplateController(MaximoHibernateDAO dao, CommLogTemplateMerger templateMerger, IWhereClauseFacade whereClauseFacade, EntityRepository entityRepository) {
             _maximoDao = dao;
             _templateMerger = templateMerger;
+            _whereClauseFacade = whereClauseFacade;
+            _entityRepository = entityRepository;
+            _commtemplateEntity = MetadataProvider.Entity("commtemplate");
         }
 
         [HttpPost]
@@ -43,16 +52,16 @@ namespace softWrench.sW4.Web.Controllers {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(app);
             var crudData = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata, app, dto.Json,
                 dto.ApplicationItemId);
-
-
-            var rows = _maximoDao.FindByNativeQuery(string.Format("SELECT * FROM COMMTEMPLATE WHERE templateid = '{0}'", dto.TemplateId));
-
-            if (!rows.Any()) {
+            var searchRequestDto = new SearchRequestDto();
+            searchRequestDto.AppendSearchEntry("templateid", dto.TemplateId);
+            var templates = _entityRepository.Get(_commtemplateEntity, searchRequestDto);
+            if (!templates.Any()) {
                 throw new CommLogTemplateMerger.CommTemplateException("template with id {0} cannot be found".Fmt(dto.TemplateId));
             }
-            var template = rows.First();
-            var rawMessage = template["message"];
-            var rawSubject = template["subject"];
+            var template = templates.First();
+
+            var rawMessage = template.GetStringAttribute("message");
+            var rawSubject = template.GetStringAttribute("subject");
 
             var templateVariables = _templateMerger.LocateVariables(rawMessage);
             templateVariables.AddAll(_templateMerger.LocateVariables(rawSubject));
@@ -65,7 +74,7 @@ namespace softWrench.sW4.Web.Controllers {
                 });
             }
 
-            var mergedVariables = _templateMerger.ApplyVariableResolution(dto.TemplateId,templateVariables, crudData);
+            var mergedVariables = _templateMerger.ApplyVariableResolution(dto.TemplateId, templateVariables, crudData);
 
             var message = _templateMerger.MergeTemplateDefinition(rawMessage, mergedVariables);
             var subject = _templateMerger.MergeTemplateDefinition(rawSubject, mergedVariables);
@@ -111,5 +120,5 @@ namespace softWrench.sW4.Web.Controllers {
         }
     }
 
-   
+
 }

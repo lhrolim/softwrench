@@ -81,8 +81,7 @@ namespace softWrench.sW4.Configuration.Services {
                 Log.WarnFormat("application {0} not found skipping registration", applicationName);
                 return;
             }
-
-            var configKey = String.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName);
+            var configKey = GetFullKey(applicationName);
             if (!_appStarted) {
                 _toRegister.Add(Tuple.Create(configKey, query, condition));
             } else {
@@ -131,7 +130,7 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         private static string GetFullKey(string applicationName) {
-            return string.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName);
+            return string.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName.ToLower());
         }
 
         private static bool Validate(string applicationName, bool throwException = true) {

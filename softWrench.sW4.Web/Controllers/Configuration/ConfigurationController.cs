@@ -62,7 +62,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         [HttpGet]
         public IGenericResponseResult WhereClauses() {
             var rootEntities = _cache.GetCache(ConfigTypes.WhereClauses);
-            var names = MetadataProvider.Applications().Select(a => a.ApplicationName);
+            var names = MetadataProvider.FetchAvailableAppsAndEntities(false);
             var applications = names.Select(name => new GenericAssociationOption(name, name)).Cast<IAssociationOption>().ToList().OrderBy(a=> a.Label);
 //            applications.s
 

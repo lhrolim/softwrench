@@ -236,5 +236,15 @@
         /// Used to specify a service.function() on a schema that is currently called when changing pages in pagination to add custom parameters to the call.
         /// </summary>
         public static string SchemaCustomParamProvider = "schema.customparamprovider";
+
+        /// <summary>
+        /// Comma separated list of entities which should be considered as related to a given application on whereclauses.
+        /// By default any associations, plus the main entity would already bee included
+        /// 
+        /// <see cref="MetadataProvider.FetchAvailableAppsAndEntities"/>
+        /// </summary>
+        public static string SchemaRelatedEntities = "schema.whereclause.related";
+
+
     }
 }
