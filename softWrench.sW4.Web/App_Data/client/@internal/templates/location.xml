@@ -124,7 +124,11 @@
             <header displacement="ontop" label="Location Information" params="fieldset=true" />
             <renderer type="default" params="childinputsize=small" />
             <field attribute="type" label="Type:" readonly="true"/>
-            <field attribute="locoper_.locpriority" label="Priority:" readonly="true"/>
+
+            <optionfield attribute="locoper_.locpriority" label="Priority" providerattribute="_SWPriorityType" readonly="true">
+              <renderer type="autocompleteclient"/>
+            </optionfield>
+            
             <field attribute="locoper_.failurecode" label="Failure Code:" readonly="true"/>
             <field attribute="locoper_.itemnum" label="Rotating Item:" readonly="true"/>
             <field attribute="locoper_.groupname" label="Meter Group:" readonly="true"/>

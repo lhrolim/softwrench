@@ -48,10 +48,6 @@
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
-        <relationship to="numericdomain" qualifier="synpriority">
-          <relationshipAttribute from="internalpriority" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="TICKETPRIORITY" quoteLiteral="true" />
-        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
@@ -186,7 +182,7 @@
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
             </field>
 
-            <optionfield attribute="internalpriority" label="Priority" providerattribute="_SRPriorityType">
+            <optionfield attribute="internalpriority" label="Priority" providerattribute="_SWPriorityType">
               <renderer type="autocompleteclient" params="inputsize=small"/>
             </optionfield>
           </section>

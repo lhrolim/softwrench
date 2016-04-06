@@ -73,6 +73,19 @@ angular.module('sw_lookup')
                 modalPaginationData.paginationOptions = [10, 30, 100];
             };
 
+            $scope.showDescription = function () {
+
+                if ($scope.lookupObj.fieldMetadata == undefined) {
+                    return true;
+                }
+
+                if ($scope.lookupObj.fieldMetadata.hideDescription == undefined) {
+                    return true;
+                }
+
+                return !$scope.lookupObj.fieldMetadata.hideDescription;
+            };
+
             $scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };
