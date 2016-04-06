@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
+using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 
@@ -43,7 +44,7 @@ namespace softWrench.sW4.Email {
         public IDictionary<string, string> ApplyVariableResolution(string templateId, IEnumerable<string> templateVariables, Entity data) {
             var result = new Dictionary<string, string>();
             foreach (var variable in templateVariables) {
-                var normalizedvariable = NormalizeVariables(variable);
+                var normalizedvariable = NormalizeVariables(variable, data);
                 if (!data.ContainsAttribute(normalizedvariable)) {
                     throw new CommTemplateException(
                         "Template {0} is not yet supported. Variable {1} cannot be resolved. Please contact your administrator".Fmt(templateId, variable));
@@ -62,11 +63,15 @@ namespace softWrench.sW4.Email {
             return result;
         }
 
-        private static string NormalizeVariables(string variable) {
+        private static string NormalizeVariables(string variable, AttributeHolder entity) {
             //mapping between variable names in Maximo and in softwrench for phase1
             var normalizedvariable = variable;
             if (normalizedvariable.Equals("description_longdescription")) {
                 normalizedvariable = "longdescription_.ldtext";
+                // some entities declare it as ld instead of longdescription
+                if (!entity.ContainsAttribute(normalizedvariable)) {
+                    normalizedvariable = "ld_.ldtext";
+                }
             }
             if (normalizedvariable.Equals("ownerperson.displayname")) {
                 normalizedvariable = "ownerperson_.displayname";
