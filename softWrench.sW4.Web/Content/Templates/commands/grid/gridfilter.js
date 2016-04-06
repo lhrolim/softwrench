@@ -147,7 +147,7 @@ angular.module('sw_layout')
                 contextService.insertIntoContext("selectedfilter", filter, true);
                 contextService.insertIntoContext("filter_basicmode", $scope.basicMode, true);
                 $scope.basicMode = true;
-                searchService.refreshGrid(searchData, { searchTemplate: template });
+                searchService.refreshGrid(searchData, null, { searchTemplate: template });
             }
 
             $scope.clearFilter = function() {

@@ -254,7 +254,7 @@
                                 if (modalSchema.stereotype.toLocaleLowerCase().startsWith("list")) {
                                     gridSelectionService.clearSelection(null, null, modalService.panelid);
                                     dispatcherService.dispatchevent("sw.crud.list.clearQuickSearch", modalService.panelid);
-                                    searchService.refreshGrid({}, { panelid: modalService.panelid });
+                                    searchService.refreshGrid({}, null, { panelid: modalService.panelid });
                                 }
 
                                 $scope.clearFilter($scope.filter.attribute);

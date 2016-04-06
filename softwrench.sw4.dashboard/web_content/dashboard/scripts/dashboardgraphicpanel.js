@@ -61,6 +61,16 @@
                         }, 0, false);
                     });
 
+                    $scope.reloadGraphic = $window.debounce(function() {
+                        $($scope.data.container).empty();
+                        $scope.loadGraphic();
+                    }, 500, true);
+
+                    $scope.$watch("panel", function(newValue, oldValue) {
+                        if (newValue === oldValue) return;
+                        $scope.reloadGraphic();
+                    }, true);
+
                 }],
 
                 link: function (scope, element, attrs) {

@@ -228,7 +228,7 @@
                         $scope.$broadcast("sw_griddatachanged", datamap, $scope.schema, $scope.panelid);
                     }
 
-                    $scope.refreshGridRequested = function (searchData, extraparameters) {
+                    $scope.refreshGridRequested = function (searchData, searchOperator, extraparameters) {
                         /// <summary>
                         ///  implementation of searchService#refreshgrid see there for details
                         /// </summary>
@@ -259,6 +259,10 @@
                             //} else {
                             $scope.searchData = searchData;
                             //}
+                            pagetogo = 1;
+                        }
+                        if (searchOperator) {
+                            $scope.searchOperator = searchOperator;
                             pagetogo = 1;
                         }
                         if (extraparameters.avoidspin) {
@@ -596,11 +600,11 @@
                         }
                     });
 
-                    $scope.$on("sw_refreshgrid", function (event, searchData, extraparameters) {
+                    $scope.$on("sw_refreshgrid", function (event, searchData, searchOperator, extraparameters) {
                         if ($scope.panelid != extraparameters.panelid) {
                             return;
                         }
-                        $scope.refreshGridRequested(searchData, extraparameters);
+                        $scope.refreshGridRequested(searchData, searchOperator, extraparameters);
                     });
                     //#endregion
 
@@ -652,7 +656,7 @@
                         var dataToRefresh = contextService.fetchFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""), true, true, true);
                         if (dataToRefresh) {
                             log.debug("there was already a scheduled call to refresh data from the server");
-                            $scope.refreshGridRequested(dataToRefresh.searchData, dataToRefresh.extraparameters);
+                            $scope.refreshGridRequested(dataToRefresh.searchData, dataToRefresh.searchOperator, dataToRefresh.extraparameters);
                         }
 
                         if (!dataRefreshed && !dataToRefresh) {

@@ -33,7 +33,7 @@ angular.module('sw_layout')
         controller: ["$scope", "$compile", "$element", function ($scope, $compile, $element) {
             function init() {
                 doInit($scope);
-                searchService.refreshGrid({}, {
+                searchService.refreshGrid({}, null, {
                     panelid: $scope.paneldatasource.id,
                     metadataid: $scope.metadataid,
                     pageSize: $scope.paneldatasource.panel['limit'],

@@ -26,8 +26,32 @@ namespace softwrench.sw4.dashboard.classes.startup {
         private const string WO_STATUS_OPENCLOSED_WHERECLAUSE = @"status = 'CLOSE' or 
                                                                     ((status = 'APPR' or status = 'WPCOND' or status = 'INPRG' or status = 'WORKING' or status = 'WAPPR' or status = 'WMATL') and 
                                                                     (woclass = 'WORKORDER' or woclass = 'ACTIVITY') and historyflag = 0 and istask = 0)";
+        /// <summary>
+        /// Complete SELECT statistics query for wo.status: includes the statuses's descriptions as labels.
+        /// </summary>
+        private const string WO_STATUS_WHERECLAUSE_COMPLETE_QUERY =
+            @"select COALESCE(CAST(status as varchar), 'NULL') as status, count(*) as countBy, s.description as label 
+                from workorder 
+                left join synonymdomain s
+       	            on status = s.value
+  	            where s.domainid = 'WOSTATUS' and s.description is not null
+                group by status,s.description
+                order by countBy desc";
 
-        private readonly DisregardingUserSWDBHibernateDaoDecorator _dao = new DisregardingUserSWDBHibernateDaoDecorator(new ApplicationConfigurationAdapter());
+        /// <summary>
+        /// Complete SELECT statistics query for sr.status: includes the statuses's descriptions as labels.
+        /// </summary>
+        private const string SR_STATUS_WHERECLAUSE_COMPLETE_QUERY = 
+            @"select COALESCE(CAST(status as varchar), 'NULL') as status, count(*) as countBy, s.description as label 
+                from sr 
+                left join synonymdomain s
+       	            on status = s.value
+  	            where s.domainid = 'SRSTATUS' and s.description is not null
+                group by status,s.description
+                order by countBy desc";
+
+
+        private readonly FixedUserSWDBHibernateDao _dao = new FixedUserSWDBHibernateDao(new ApplicationConfigurationAdapter());
         private readonly IWhereClauseFacade _whereClauseFacade;
 
         public int Order { get { return int.MaxValue - 51; } }
@@ -44,11 +68,13 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 ExecuteSRChartInitialization();
             }
 
-            var openClosedGauge = "dashboard:wo.status.openclosed.gauge";
-            RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, "OpenCloseDashBoardPie", openClosedGauge);
+            RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE,      "WOOpenCloseDashBoardGauge",  "dashboard:wo.status.openclosed.gauge");
+            RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE,      "WOOpenCloseDashBoardPie",    "dashboard:wo.status.openclosed");
+            RegisterWhereClause("workorder", WO_STATUS_WHERECLAUSE_COMPLETE_QUERY,  "WOStatusDashboardQuery",     "dashboard:wo.status.top5");
 
-            var openClosedPie = "dashboard:wo.status.openclosed";
-            RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, "OpenCloseDashBoardPie", openClosedPie);
+            RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQuery",     "dashboard:sr.status.top5");
+            RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryLine", "dashboard:sr.status.line");
+            RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryPie", "dashboard:sr.status.pie");
         }
 
         #region SR Charts
@@ -212,10 +238,13 @@ namespace softwrench.sw4.dashboard.classes.startup {
             });
         }
 
-        private class DisregardingUserSWDBHibernateDaoDecorator : SWDBHibernateDAO {
+        /// <summary>
+        /// Restricts <see cref="GetCreatedByUser"/> to swadmin.Id.
+        /// </summary>
+        private class FixedUserSWDBHibernateDao : SWDBHibernateDAO {
             private readonly SWDBHibernateDAO _dao;
 
-            public DisregardingUserSWDBHibernateDaoDecorator(ApplicationConfigurationAdapter applicationConfiguration) : base(applicationConfiguration, new HibernateUtil(applicationConfiguration)) {
+            public FixedUserSWDBHibernateDao(ApplicationConfigurationAdapter applicationConfiguration) : base(applicationConfiguration, new HibernateUtil(applicationConfiguration)) {
                 _dao = new SWDBHibernateDAO(applicationConfiguration, HibernateUtil);
             }
 

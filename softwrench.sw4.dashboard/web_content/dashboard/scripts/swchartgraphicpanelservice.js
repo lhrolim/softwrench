@@ -6,11 +6,18 @@
 
         var config = {
             // swchart's template -> sw-chart directive
-            template: "<sw-chart " +
-                        "data-chart-type=\"chartType\" " +
-                        "data-data=\"data\" " +
-                        "data-options=\"options\" />",
+            template: "<sw-chart "                          +
+                        "data-chart-type=\"chartType\" "    +
+                        "data-data=\"data\" "               +
+                        "data-options=\"options\" "         +
+                        "data-panel=\"panel\" "             +
+                        "/>",
             fields: {
+                nullLabelLookupTable: {
+                    'owner': "UNASSINGED",
+                    'reportedby': "UNASSINGED",
+                    'wopriority': "NO PRIORITY"
+                },
                 base: [
                     { label: "Owner", value: "owner" },
                     { label: "Reporter", value: "reportedby" },
@@ -23,6 +30,10 @@
                 getFields: function (application) {
                     var specific = this[application];
                     return specific ? this.base.concat(specific) : this.base;
+                },
+                getNullValueLabel: function(field) {
+                    var nullValueLabel = this.nullLabelLookupTable[field];
+                    return !!nullValueLabel ? nullValueLabel : null;
                 }
             }
         };
@@ -34,9 +45,11 @@
 
             var params = {
                 entity: configuration.application,
+                application: configuration.application.equalsIc("sr") ? "servicerequest" : configuration.application,
                 property: configuration.field,
                 whereClauseMetadataId: "dashboard:" + panel.alias,
-                limit: (configuration.limit > 0 && !configuration.showothers && configuration.statusconfig !== "openclosed") ? configuration.limit : 0
+                limit: (configuration.limit > 0 && !configuration.showothers && configuration.statusconfig !== "openclosed") ? configuration.limit : 0,
+                nullValueLabel: config.fields.getNullValueLabel(configuration.field)
             }
 
             return restService.getPromise("Statistics", "CountByProperty", params)
@@ -45,54 +58,47 @@
                 });
         }
 
-        function formatDataForChart(configuration, data) {
-            var processed = [];
-            angular.forEach(data, function (value, key) {
-                processed.push({ field: key, value: value });
-            });
+        function formatDataForChart(configuration , data) {
 
             // sort by value descending
-            processed = processed.sort(function (d1, d2) {
-                return d2.value - d1.value;
+            data = data.sort(function (d1, d2) {
+                return d2.fieldCount - d1.fieldCount;
             });
 
             // status -> open/close
             if (configuration.field === "status" && configuration.statusfieldconfig === "openclosed") {
                 // closed status entry
-                var closed = processed.find(function (d) {
-                    return d.field.equalsIc("close") || d.field.equalsIc("closed");
+                var closed = data.find(function (d) {
+                    return d.fieldValue.equalsIc("close") || d.fieldValue.equalsIc("closed");
                 });
                 // sum of all except closed
-                var openCount = processed.filter(function (d) {
-                    return !d.field.equalsIc("close") && !d.field.equalsIc("closed");
+                var openCount = data.filter(function (d) {
+                    return !d.fieldValue.equalsIc("close") && !d.fieldValue.equalsIc("closed");
                 })
                 .reduce(function (previous, current) {
-                    return previous + current.value;
+                    return previous + current.fieldCount;
                 }, 0);
-                // total
-                // var totalCount = closed.value + openCount;
                 // new array containing only open/close
-                processed = [
-                    { field: "closed", value: closed.value },
-                    { field: "open", value: openCount }
-                    //{ field: "total", value: totalCount }
+                data = [
+                    closed,
+                    { fieldValue: "OPEN", fieldLabel: "OPEN", fieldCount: openCount }
                 ];
 
             }
                 // should overflow to 'others' -> top within limit + others
-            else if (configuration.limit > 0 && processed.length > configuration.limit && configuration.showothers) {
+            else if (configuration.limit > 0 && data.length > configuration.limit && configuration.showothers) {
                 // <limit> highest counts
-                var topresults = processed.slice(0, configuration.limit);
+                var topresults = data.slice(0, configuration.limit);
                 // sum of the others's counts
-                var othersCount = processed.slice(configuration.limit)
+                var othersCount = data.slice(configuration.limit)
                     .reduce(function (previous, current) {
-                        return previous + current.value;
+                        return previous + current.fieldCount;
                     }, 0);
                 // new array composed of top <limit> + 'others'
-                processed = topresults.concat({ field: "others", value: othersCount });
+                data = topresults.concat({ fieldValue: "OTHERS", fieldLabel: "OTHERS", fieldCount: othersCount });
             }
 
-            return handleData(configuration.type, processed);
+            return handleData(configuration.type, data);
         }
         
         function handleData(type, data) {
@@ -106,7 +112,11 @@
                 case "dxPie":
                 case "swRecordCountPie":
                     chartData = data.map(function (d) {
-                        return { argument: d.field, total: d.value }
+                        return {
+                            argument: d.fieldLabel,
+                            total: d.fieldCount,
+                            entry: d
+                        }
                     });
                     break;
                 case "dxLinearGauge":
@@ -116,14 +126,18 @@
                 case "swRecordCountGauge":
                     var total = 0;
                     data.forEach(function (d) {
-                        total += d.value;
-                        chartData[d.field] = d.value;
+                        total += d.fieldCount;
+                        chartData[d.fieldLabel] = d.fieldCount;
                     });
                     chartData.total = total;
                     break;
                 case "swSparkline":
                     chartData = data.map(function (d) {
-                        return { argument: d.field, value: d.value }
+                        return {
+                            argument: d.fieldLabel,
+                            value: d.fieldCount,
+                            entry: d
+                        }
                     });
                     break;
                 //case "swRecordTrends":
@@ -175,8 +189,9 @@
                     // create isolated scope for the dynamically compiled 'sw-chart' directive
                     var $parent = angular.element(element).scope();
                     var $scope = $rootScope.$new(true, $parent);
-                    $scope.chartType = panel.configurationDictionary.type;
+                    $scope.panel = panel;
                     $scope.data = data;
+                    $scope.chartType = panel.configurationDictionary.type;
                     $scope.options = panel.configurationDictionary.options;
                     // compile the template with the isolated scope
                     var graphic = $compile(config.template)($scope);

@@ -180,6 +180,7 @@
             var postProcessFn = parameters.postProcessFn;
             delete parameters.savefn;
             delete parameters.postProcessFn;
+            // building url without the function parameters
             var redirectUrl = applicationService.getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData, type);
             //including back savefn param
             parameters.savefn = savefn;

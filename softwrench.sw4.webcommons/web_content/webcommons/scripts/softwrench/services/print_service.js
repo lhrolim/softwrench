@@ -91,7 +91,7 @@ angular.module('sw_layout')
             }
 
             //otherwise, hit the server asking for the full grid to be print
-            searchService.refreshGrid(null, {
+            searchService.refreshGrid(null, null, {
                 pageNumber: 1,
                 pageSize: totalCount,
                 printMode: true,

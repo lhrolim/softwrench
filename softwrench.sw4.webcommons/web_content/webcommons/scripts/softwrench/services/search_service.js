@@ -361,7 +361,7 @@ angular.module('sw_layout')
          *              fieldstodisplay: if present, the schema will be sliced for showing only these fields
          *              quickSearchData: 
          */
-        refreshGrid: function (searchData, extraparameters) {
+        refreshGrid: function (searchData, searchOperator, extraparameters) {
             extraparameters = extraparameters || {};
 
             var key = "poll_refreshgridaction" + (extraparameters.panelid ? extraparameters.panelid : "");
@@ -370,11 +370,12 @@ angular.module('sw_layout')
             //we need to make sure that as soon as it gets available it consumes the message
             contextService.insertIntoContext(key, {
                 searchData: searchData,
+                searchOperator: searchOperator,
                 extraparameters: extraparameters,
                 panelid: extraparameters.panelid,
                 metadataid: extraparameters.metadataid
             }, true);
-            $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
+            $rootScope.$broadcast("sw_refreshgrid", searchData, searchOperator, extraparameters);
         },
 
         quickSearch: function (quickSearchData, panelId) {

@@ -41,12 +41,12 @@ angular.module('sw_layout')
                         if (!searchData.hasOwnProperty(currentAttribute)) {
                             var localSearchData = {};
                             localSearchData[currentAttribute] = data;
-                            searchService.refreshGrid(localSearchData, extraparameters);
+                            searchService.refreshGrid(localSearchData, null, extraparameters);
                             return;
                             // Else if the property exists but is blank, set it to its new value
                         } else if (searchData[currentAttribute] === '') {
                             searchData[currentAttribute] = data;
-                            searchService.refreshGrid(searchData, extraparameters);
+                            searchService.refreshGrid(searchData, null, extraparameters);
                             return;
                         }
                     }
@@ -232,12 +232,12 @@ angular.module('sw_layout')
                         if (!searchData.hasOwnProperty(currentAttribute)) {
                             var localSearchData = {};
                             localSearchData[currentAttribute] = data;
-                            searchService.refreshGrid(localSearchData, extraparameters);
+                            searchService.refreshGrid(localSearchData, null, extraparameters);
                             return;
                             // Else if the property exists but is blank, set it to its new value
                         } else if (searchData[currentAttribute] === '') {
                             searchData[currentAttribute] = data;
-                            searchService.refreshGrid(searchData, extraparameters);
+                            searchService.refreshGrid(searchData, null, extraparameters);
                             return;
                         }
                     }

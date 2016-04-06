@@ -145,12 +145,12 @@
                     ranges: [
                         {
                             startValue: 0,
-                            endValue: data.open,
+                            endValue: data["OPEN"],
                             color: "#39b54a"
                         },
                         {
-                            startValue: data.open,
-                            endValue: data.open + data.closed,
+                            startValue: data["OPEN"],
+                            endValue: data["OPEN"] + (data.hasOwnProperty("CLOSED") ? data["CLOSED"] : data["CLOSE"]),
                             color: "#f65752"
                         }
                     ],
@@ -163,7 +163,7 @@
                 },
                 title: {
                     text: "<b>Total: " + data.total.toLocaleString() + "</b>",
-                    subtitle: "Open: " + data.open.toLocaleString() + "<br />Closed: " + data.closed.toLocaleString()
+                    subtitle: "Open: " + data["OPEN"].toLocaleString() + "<br />Closed: " + (data.hasOwnProperty("CLOSED") ? data["CLOSED"] : data["CLOSE"]).toLocaleString()
                 },
                 valueIndicator: {
                     offset: 30
@@ -287,11 +287,11 @@
                             visible: true
                         }
                     },
-                    smallValuesGrouping: {
-                        groupName: "OTHERS",
-                        mode: "topN",
-                        topCount: 6
-                    },
+                    //smallValuesGrouping: {
+                    //    groupName: "OTHERS",
+                    //    mode: "topN",
+                    //    topCount: 6
+                    //},
                     valueField: "total"
                 },
                 tooltip: {

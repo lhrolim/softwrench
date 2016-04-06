@@ -321,7 +321,7 @@ angular.module('sw_layout')
                 return;
             }
             $timeout(function () {
-                searchService.refreshGrid(null,{avoidspin:true});
+                searchService.refreshGrid(null, null, {avoidspin:true});
             }, 1000);
         }
 
