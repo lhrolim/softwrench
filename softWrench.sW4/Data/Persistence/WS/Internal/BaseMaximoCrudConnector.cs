@@ -4,6 +4,7 @@ using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Security.Services;
 using System;
+using Microsoft.Ajax.Utilities;
 using WcfSamples.DynamicProxy;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
@@ -28,6 +29,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             w.SetValueIfNull(integrationObject, "class", operationData.Class);
             TargetConstantHandler.SetConstantValues(integrationObject, entityMetadata);
             TargetAttributesHandler.SetValuesFromJSON(integrationObject, entityMetadata, operationData);
+
+         
+            long id;
+            if (long.TryParse(operationData.Id, out id) && id < 0) {
+            // The negative ID is used by the front end to identify new records. 
+            //The back end does not support this. therefore, it should be nullified when submitted to Maximo
+                operationData.Id = null;
+                operationData.Attributes[entityMetadata.IdFieldName] = null;
+            }
+            
 
             foreach (var attribute in operationData.Attributes) {
                 if (attribute.Value == null) {
@@ -72,7 +83,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             var userIdProperty = maximoTemplateData.Metadata.Schema.UserIdAttribute.Name;
             var resultOb = (Array)resultData;
             var firstOb = resultOb.GetValue(0);
-            var id = WsUtil.GetRealValue(firstOb, idProperty) as string;
+            var id = WsUtil.GetRealValue(firstOb, idProperty);
             var userId = WsUtil.GetRealValue(firstOb, userIdProperty);
             string siteId = null;
             if (siteIdAttribute != null) {
@@ -89,7 +100,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 maximoTemplateData.ResultObject = new TargetResult(null, null, resultData, null, siteId);
                 return;
             }
-            maximoTemplateData.ResultObject = new TargetResult(id, userId.ToString(), resultData, null, siteId);
+            if (id == null) {
+                Log.WarnFormat("Identifier {0} not received after creating object in Maximo.", idProperty);
+                maximoTemplateData.ResultObject = new TargetResult(null, null, resultData, null, siteId);
+                return;
+            }
+            maximoTemplateData.ResultObject = new TargetResult(id.ToString(), userId.ToString(), resultData, null, siteId);
 
         }
         public void AfterCreation(MaximoOperationExecutionContext maximoExecutionContext) {

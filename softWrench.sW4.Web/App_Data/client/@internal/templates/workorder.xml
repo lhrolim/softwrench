@@ -165,7 +165,7 @@
             <renderer type="default" params="width=25%" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="statuscolor" params="width=12%;grid=workorder;column=status" />
+            <renderer type="statuscolor" params="width=15%;grid=workorder;column=status" />
           </field>
           <field attribute="wopriority" tooltip="Priority" hidden="true">
             <renderer type="priorityicon" params="icon=fa-flag;qualifier=priority"/>
@@ -345,7 +345,7 @@
               <association label="Reported By" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" >
                 <renderer type="lookup" params="columnlabel=Name;"/>
               </association>
-              <field label="Reported Date" attribute="reportdate" readonly="true" default="@currentdatetime">
+              <field label="Reported Date &amp; Time" attribute="reportdate" readonly="true" default="@currentdatetime">
                 <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;" />
               </field>
             </section>
@@ -488,8 +488,7 @@
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'"  />
             </composition>
             <composition relationship="labtrans" label="Labor">
-              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" />
-
+              <collectionproperties listschema="compositionlist" allowupdate="true" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" />
             </composition>
             <composition relationship="tooltrans" label="Tools">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />

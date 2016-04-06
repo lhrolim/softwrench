@@ -142,7 +142,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             }
         }
 
-        private void DeleteLabtrans(string labtransid) {
+        public void DeleteLabtrans(string labtransid) {
             _maxDAO.ExecuteSql("delete from labtrans where labtransid = ? ", labtransid);
         }
 

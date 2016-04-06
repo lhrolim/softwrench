@@ -14,6 +14,10 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
 
         public bool AllowsNull { get; set; }
 
+        public bool HasFromAndTo() {
+            return From != null && To != null;
+        }
+
         public EntityAssociationAttribute() { }
         
 

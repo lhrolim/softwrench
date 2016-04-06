@@ -3,5 +3,6 @@
 
   <reference id="servicereq"/>
   <reference id="workorder"/>
- 
+  <reference id="labtrans"/>
+  
 </Menu>

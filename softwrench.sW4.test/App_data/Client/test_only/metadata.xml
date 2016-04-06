@@ -451,7 +451,9 @@
           <field attribute="longdescription.ldtext" label="Long Description"  />
           <customization position="worklog"></customization>
           <composition relationship="matusetrans" label="Materials" />
-          <composition relationship="labtrans" label="Labors" />
+          <composition relationship="labtrans" label="Labors">
+            <collectionproperties listschema="compositionlist"/>
+          </composition>
         </detail>
         <detail platform="mobile">
           <field attribute="workorderid" hidden="true"/>
@@ -504,7 +506,9 @@
           <association label="Status" target="status" labelfield="synstatus_.description" />
           <composition relationship="worklog" label="Work Logs" />
           <composition relationship="matusetrans" label="Materials" />
-          <composition relationship="labtrans" label="Labors" />
+          <composition relationship="labtrans" label="Labors">
+            <collectionproperties listschema="compositionlist"/>
+          </composition>
           <composition relationship="attachment" label="Attachments" />
           <!--<field attribute="longdescription_.ldtext" label="Long Description" name="description_longdescription"/>-->
           <!--          <composition attribute="longdescription" >-->

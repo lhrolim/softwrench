@@ -105,6 +105,13 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var toAttribute = primaryAttribute.To;
             var prefilledValue = dataMap.GetAttribute(attributeToConsider).ToString();
             search.AppendSearchEntry(toAttribute, prefilledValue);
+
+            foreach (var nonPrimary in applicationAssociation.EntityAssociation.NonPrimaryAttributes()) {
+                if (nonPrimary.HasFromAndTo()) {
+                    var value = dataMap.GetStringAttribute(nonPrimary.From);
+                    search.AppendSearchEntry(nonPrimary.To, value);
+                }
+            }
             return search;
             
         }

@@ -119,6 +119,9 @@
                 else if (field.rendererParameters['formatter'] == 'descriptionDataHandler') {
                     return descriptionDataHandler(value, field);
                 }
+                else if (field.rendererParameters['formatter'] == 'money') {
+                    return $filter('currency')(value, '$', 2);
+                }
             } else if (field.rendererParameters != undefined && field.rendererParameters['limit'] != null) {
                 //format the word to only display the first n characters based on the limit 
                 //once its formatted, also need to register a custom html but may not be here 

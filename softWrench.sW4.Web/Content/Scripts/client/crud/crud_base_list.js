@@ -132,7 +132,7 @@
             if ("true" === editDisabled && nullOrUndef(fullServiceName)) {
                 return;
             }
-
+            // TODO: Result from custom list click MUST be false to stop execution of default list click?
             if (fullServiceName != null) {
                 commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema, $scope.panelid);
                 if (commandResult === false) {

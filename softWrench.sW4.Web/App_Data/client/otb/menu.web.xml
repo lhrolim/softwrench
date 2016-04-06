@@ -11,6 +11,6 @@
   <reference id="Inventory"/>
   <reference id="asset"/>
   <reference id="location"/>
-
+  <reference id="labtrans"/>
 </Menu>
 
