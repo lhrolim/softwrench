@@ -210,7 +210,7 @@
 
 
             if (jsonData == undefined) {
-                if (redirectUrl) {
+                if (redirectUrl && !popupMode) {
                     historyService.addToHistory(redirectUrl, parameters.saveHistoryReturn);
                 }
 
