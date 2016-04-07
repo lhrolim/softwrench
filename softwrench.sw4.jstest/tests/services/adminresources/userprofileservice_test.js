@@ -35,7 +35,8 @@
                 fieldPermissions: [
                 {
                     fieldKey: "location",
-                    permission: "none"
+                    permission: "none",
+                    originalpermission: "none"
                 }]
             },
               {
@@ -44,7 +45,8 @@
                   fieldPermissions: [
                   {
                       fieldKey: "f2",
-                      permission: "none"
+                      permission: "none",
+                      originalpermission: "none"
                   }]
               }
 
@@ -72,15 +74,18 @@
                 fieldPermissions: [
                 {
                     fieldKey: "f1",
-                    permission: "none"
+                    permission: "none",
+                    originalpermission: "none"
                 },
                 {
                     fieldKey: "f2",
-                    permission: "none"
+                    permission: "none",
+                    originalpermission: "none"
                 },
                 {
                     fieldKey: "f3",
-                    permission: "none"
+                    permission: "none",
+                    originalpermission: "none"
                 },
 
 
@@ -118,17 +123,20 @@
                 //this has been changed on screen
                 {
                     fieldKey: "location",
-                    permission: "readonly"
+                    permission: "readonly",
+                    originalpermission: "none"
                 },
                 {
                     //non existing permission, but full control --> do not store
                     fieldKey: "f2",
-                    permission: "fullcontrol"
+                    permission: "fullcontrol",
+                    originalpermission: "fullcontrol"
                 },
                 {
                     //non existing permission --> store
                     fieldKey: "f3",
-                    permission: "none"
+                    permission: "fullcontrol",
+                    originalpermission: "readonly"
                 }
             ],
             "#actionPermissions_": [
@@ -155,7 +163,6 @@
 
         crudContextHolderService.rootDataMap(null, screenDatamap);
 
-
         var dispatcher = {
             application: "asset",
         }
@@ -180,7 +187,7 @@
         //location changed to readonly
         expect(containerPermission.fieldPermissions[0].permission).toBe("readonly");
         expect(containerPermission.fieldPermissions[1].fieldKey).toBe("f3");
-        expect(containerPermission.fieldPermissions[1].permission).toBe("none");
+        expect(containerPermission.fieldPermissions[1].permission).toBe("fullcontrol");
 
 
         expect(mergedData.actionPermissions.length).toBe(1);
@@ -272,27 +279,33 @@
             //this has been changed on screen
             {
                 fieldKey: "f1",
-                permission: "fullcontrol"
+                permission: "fullcontrol",
+                originalpermission: "none"
             },
             {
                 fieldKey: "f2",
-                permission: "fullcontrol"
+                permission: "fullcontrol",
+                originalpermission: "fullcontrol"
             },
             {
                 fieldKey: "f3",
-                permission: "fullcontrol"
+                permission: "fullcontrol",
+                originalpermission: "fullcontrol"
             },
             {
                 fieldKey: "f4",
-                permission: "fullcontrol"
+                permission: "fullcontrol",
+                originalpermission: "fullcontrol"
             },
             {
                 fieldKey: "f5",
-                permission: "fullcontrol"
+                permission: "fullcontrol",
+                originalpermission: "fullcontrol"
             },
             {
                 fieldKey: "f6",
-                permission: "fullcontrol"
+                permission: "fullcontrol",
+                originalpermission: "fullcontrol"
             },
             ],
         }

@@ -486,7 +486,7 @@
                         return storedItem.fieldKey === screnItem.fieldKey;
                     });
                     if (idx === -1) {
-                        if (screnItem.permission !== "fullcontrol") {
+                        if (screnItem.permission !== screnItem.originalpermission) {
                             //no element, let´s add unless we have the fullcontrol mode which is default...
                             simpleLog.debug("adding non default field permission into container for field {0} ".format(screnItem.fieldKey));
                             actualContainerPermission.fieldPermissions.push({

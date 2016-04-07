@@ -174,7 +174,7 @@ namespace softWrench.sW4.Security.Services {
                         dict["permission"] = "readonly";
                     }
                 }
-
+                dict["originalpermission"] = dict["permission"];
                 compositionData.ResultList.Add(dict);
             }
             return CompositionFetchResult.SingleCompositionInstance("#fieldPermissions_", compositionData);
