@@ -29,6 +29,7 @@ using System.Net;
 using Iesi.Collections;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Metadata.Stereotypes;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
@@ -321,8 +322,16 @@ namespace softWrench.sW4.Metadata {
             var leafs = menu.ExplodedLeafs;
             foreach (var menuBaseDefinition in leafs) {
                 if (menuBaseDefinition is ApplicationMenuItemDefinition) {
-                    var application = Application((menuBaseDefinition as ApplicationMenuItemDefinition).Application,false);
+                    var applicationMenu = (menuBaseDefinition as ApplicationMenuItemDefinition);
+                    var application = Application(applicationMenu.Application, false);
+
                     if (application != null && (user == null || user.IsInRole(application.Role) || (user.IsInRole(menuBaseDefinition.Role)))) {
+                        if (applicationMenu.PermissionExpresion != null) {
+                            if (!GenericSwMethodInvoker.Invoke<bool>(null, applicationMenu.PermissionExpresion)) {
+                                //filtering applications based on permission expressions
+                                continue;
+                            }
+                        }
                         result.Add(application);
                     }
                 }

@@ -35,7 +35,7 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
             get; set;
         }
 
-     
+
 
         public MenuContainerDefinition() {
         }
@@ -47,9 +47,17 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
             Leafs = menuBaseDefinitions;
 
             var allApplicationsTheSame = true;
+            Action = action;
+            Controller = controller;
+            HasMainAction = hasMainAction;
+            PermissionExpresion = permissionExpression;
+
             foreach (var leaf in menuBaseDefinitions) {
                 if (leaf.Module == null) {
                     leaf.Module = module;
+                }
+                if (leaf.PermissionExpresion == null) {
+                    leaf.PermissionExpresion = permissionExpression;
                 }
                 if (leaf.Role == null) {
                     //if the item is defining no role, let´s use the parent role
@@ -65,10 +73,7 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
                     ApplicationContainer = ((ApplicationMenuItemDefinition)leaf).Application;
                 }
             }
-            Action = action;
-            Controller = controller;
-            HasMainAction = hasMainAction;
-            PermissionExpresion = permissionExpression;
+            
         }
 
         public IEnumerable<MenuBaseDefinition> ExplodedLeafs {
