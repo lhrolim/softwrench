@@ -8,7 +8,7 @@ using softWrench.sW4.Util;
 
 
 namespace softWrench.sW4.AUTH {
-    public class LdapManager : IComponent {
+    public class LdapManager : ISingletonComponent {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(LdapManager));
 

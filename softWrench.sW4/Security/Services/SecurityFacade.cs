@@ -222,7 +222,7 @@ namespace softWrench.sW4.Security.Services {
             var fullUser = new User();
             LogicalThreadContext.SetData("executinglogin", "true");
             if (swUser.MaximoPersonId != null) {
-                fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id);
+                fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id,true);
                 if (fullUser == null) {
                     Log.WarnFormat("user {0} not found on database", swUser.MaximoPersonId);
                     fullUser = new User();

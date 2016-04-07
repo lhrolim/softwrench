@@ -15,6 +15,7 @@ namespace softwrench.sw4.user.classes.entities {
         private string _userName;
 
         public const string UserByUserName = "from User where lower(UserName) = lower(?)";
+        public const string UserByUserNameOrPerson = "from User where lower(UserName) = lower(?) or lower(MaximoPersonId) = lower(?)";
         public const string UserByMaximoPersonIds = "from User where MaximoPersonId in (:p0)";
         public const string UserByMaximoPersonId = "from User where lower(MaximoPersonId) = lower(?)";
 

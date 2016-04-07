@@ -11,9 +11,11 @@ using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.services.setup;
+using softWrench.sW4.AUTH;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Util;
+using Person = softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities.Person;
 
 namespace softWrench.sW4.Security.Services {
     public class UserManager : ISingletonComponent {
@@ -24,12 +26,15 @@ namespace softWrench.sW4.Security.Services {
 
         private readonly MaximoHibernateDAO _maxDAO;
 
-        private UserSetupEmailService _userSetupEmailService;
+        private readonly UserSetupEmailService _userSetupEmailService;
 
-        public UserManager(UserLinkManager userLinkManager, MaximoHibernateDAO maxDAO, UserSetupEmailService userSetupEmailService) {
+        private static LdapManager _ldapManager;
+
+        public UserManager(UserLinkManager userLinkManager, MaximoHibernateDAO maxDAO, UserSetupEmailService userSetupEmailService, LdapManager ldapManager) {
             _userLinkManager = userLinkManager;
             _maxDAO = maxDAO;
             _userSetupEmailService = userSetupEmailService;
+            _ldapManager = ldapManager;
         }
 
 
@@ -101,7 +106,7 @@ namespace softWrench.sW4.Security.Services {
                     personid += HlagPrefix;
                 }
             }
-            var user = UserSyncManager.GetUserFromMaximoByUserName(personid, null);
+            var user = UserSyncManager.GetUserFromMaximoByUserName(personid, null,true);
             if (user == null) {
                 //if the user does not exist on maximo, then we should not create it on softwrench either
                 return null;
@@ -116,7 +121,24 @@ namespace softWrench.sW4.Security.Services {
             }
             user.IsActive = true;
             user.CustomRoles = new HashedSet<UserCustomRole>();
-            return save ? DAO.Save(user) : user;
+            if (save) {
+                try {
+                    return DAO.Save(user);
+                } catch (Exception e) {
+                    if (_ldapManager.IsLdapSetup()) {
+                        //recovering from scenarios where there might have been an already created user on softwrench with a personid equal to an existing user in maximo
+                        var legacyUser = DAO.FindSingleByQuery<User>(User.UserByUserNameOrPerson, user.UserName,user.MaximoPersonId);
+                        if (legacyUser != null) {
+                            legacyUser.UserName = user.UserName;
+                            legacyUser.MaximoPersonId = user.MaximoPersonId;
+                            return DAO.Save(legacyUser);
+                        }
+                    }
+                    throw;
+                }
+            }
+
+            return user;
         }
 
         public static User SyncLdapUser(User existingUser, bool isLdapSetup) {

@@ -92,7 +92,7 @@
   <commandgroup position="detailfilter" platform="web">
     <command id="apply" icon="fa-check" service="applicationService" method="save" label="Apply" primary="true"/>
     <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
+    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
   </commandgroup>
   
   <commandgroup position="gridbottom" platform="web">
