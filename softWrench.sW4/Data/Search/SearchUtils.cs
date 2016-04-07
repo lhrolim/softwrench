@@ -11,15 +11,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Search {
     public class SearchUtils : IWhereBuilder {
 
         private readonly SearchRequestDto _searchDTO;
-        private readonly String _entityName;
-        private readonly String _tableName;
+        private readonly string _entityName;
+        private readonly string _tableName;
 
         private static List<SearchParameterUtils> _searchParameterUtilsList;
 
@@ -39,21 +39,21 @@ namespace softWrench.sW4.Data.Search {
 
         public const string SearchBetweenSeparator = "___";
 
-        public SearchUtils(SearchRequestDto searchDto, String entityName, string tableName) {
+        public SearchUtils(SearchRequestDto searchDto, string entityName, string tableName) {
             _searchDTO = searchDto;
             _entityName = entityName;
             _tableName = tableName;
 
         }
 
-        public SearchUtils(SearchRequestDto searchDto, String entityName, string tableName, List<SearchParameterUtils> searchParameterUtilsList) {
+        public SearchUtils(SearchRequestDto searchDto, string entityName, string tableName, List<SearchParameterUtils> searchParameterUtilsList) {
             _searchDTO = searchDto;
             _entityName = entityName;
             _searchParameterUtilsList = searchParameterUtilsList;
             _tableName = tableName;
         }
 
-        public static void ValidateString(String jsString) {
+        public static void ValidateString(string jsString) {
             if (jsString.Contains("--") || jsString.Contains(";")) {
                 throw new ArgumentException("this query could lead to sql injection. Aborting operation");
             }
@@ -80,22 +80,22 @@ namespace softWrench.sW4.Data.Search {
             return @where;
         }
 
-        public static string GetWhere(SearchRequestDto listDto, String tableName, String entityName = null) {
+        public static string GetWhere(SearchRequestDto listDto, string tableName, string entityName = null) {
             if (entityName == null) {
                 entityName = tableName;
             }
 
-            if (String.IsNullOrEmpty(listDto.WhereClause) && String.IsNullOrEmpty(listDto.SearchParams)) {
+            if (string.IsNullOrEmpty(listDto.WhereClause) && string.IsNullOrEmpty(listDto.SearchParams)) {
                 return null;
             }
 
             var sb = new StringBuilder();
 
-            if (!String.IsNullOrEmpty(listDto.SearchParams)) {
+            if (!string.IsNullOrEmpty(listDto.SearchParams)) {
                 sb.Append(HandleSearchParams(listDto, entityName));
             }
 
-            if (!String.IsNullOrEmpty(listDto.WhereClause)) {
+            if (!string.IsNullOrEmpty(listDto.WhereClause)) {
                 if (sb.Length > 0) {
                     sb.Append(" AND ");
                 }
@@ -109,16 +109,25 @@ namespace softWrench.sW4.Data.Search {
         private static string HandleSearchParams(SearchRequestDto listDto, string entityName) {
 
 
-            var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !string.IsNullOrWhiteSpace(f));
+            //            var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !string.IsNullOrWhiteSpace(f));
             var searchParameters = listDto.GetParameters();
+
+            if (searchParameters == null) {
+                return "";
+            }
+
 
             var sbReplacingIdx = 0;
             var sb = new StringBuilder(BuildSearchTemplate(listDto, searchParameters));
 
-            foreach (var param in parameters) {
+            foreach (var searchParameterEntry in searchParameters) {
+
+                var searchParameter = searchParameterEntry.Value;
+                var param = searchParameterEntry.Key;
+
                 var statement = new StringBuilder();
 
-                var searchParameter = searchParameters[param];
+                //                var searchParameter = searchParameters[param];
                 if (searchParameter.IgnoreParameter) {
                     //this search parameter needs to be ignored
                     continue;
@@ -133,22 +142,19 @@ namespace softWrench.sW4.Data.Search {
 
                 } else if (searchParameter.SearchOperator == SearchOperator.ORCONTAINS) {
 
-                    var values = (searchParameter.Value as IEnumerable).Cast<string>().ToList();
-                    if (values != null) {
-                        statement.Append("( ");
+                    var values = ((IEnumerable)searchParameter.Value).Cast<string>().ToList();
+                    statement.Append("( ");
 
-                        foreach (string value in values) {
-                            statement.Append(parameterData.Item1);
-                            // this next line would be the ideal, but it will be complicade passing this parameters to BaseHibernateDAO. 
-                            //statement.Append(GetDefaultParam(operatorPrefix, param + i)); 
-                            // TODO: refactor later
-                            statement.Append(operatorPrefix + "'%" + value + "%'");
-                            statement.Append(" OR ");
-                        }
-                        statement.Remove(statement.Length - 4, 4); // remove the last " OR "
-                        statement.Append(" )");
+                    foreach (string value in values) {
+                        statement.Append(parameterData.Item1);
+                        // this next line would be the ideal, but it will be complicade passing this parameters to BaseHibernateDAO. 
+                        //statement.Append(GetDefaultParam(operatorPrefix, param + i)); 
+                        // TODO: refactor later
+                        statement.Append(operatorPrefix + "'%" + value + "%'");
+                        statement.Append(" OR ");
                     }
-
+                    statement.Remove(statement.Length - 4, 4); // remove the last " OR "
+                    statement.Append(" )");
                 } else if (searchParameter.IsBlankNumber || searchParameter.IsBlankDate) {
                     //https://controltechnologysolutions.atlassian.net/browse/YGSI-15
                     statement.Append("( " + parameterData.Item1 + " IS NULL )");
@@ -156,7 +162,7 @@ namespace softWrench.sW4.Data.Search {
                     statement.Append("( " + parameterData.Item1);
 
                     if (searchParameter.IsList) {
-                        statement.Append(operatorPrefix).Append(String.Format(HibernateUtil.ListParameterPrefixPattern, param));
+                        statement.Append(operatorPrefix).Append(string.Format(HibernateUtil.ListParameterPrefixPattern, param));
                     } else if (searchParameter.IsDate || parameterData.Item2 == ParameterType.Date) {
                         statement.Append(HandleDateAttribute(param, searchParameter, operatorPrefix));
                     } else {
@@ -216,24 +222,9 @@ namespace softWrench.sW4.Data.Search {
                     continue;
                 }
 
-                if (parameter.IsDate && !parameter.HasHour) {
+                if (parameter.IsDate) {
                     var dt = parameter.GetAsDate;
-                    if (parameter.IsEqualOrNotEqual()) {
-                        resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
-                        resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
-                    } else if (parameter.IsGtOrGte()) {
-                        //Adding one day in case of Greater Than
-                        if (parameter.SearchOperator == SearchOperator.GT) {
-                            dt = dt.AddDays(1);
-                        }
-                        resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
-                    } else if (parameter.IsLtOrLte()) {
-                        //Removing one day in case of Less than
-                        if (parameter.SearchOperator == SearchOperator.LT) {
-                            dt = dt.AddDays(-1);
-                        }
-                        resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
-                    }
+                    HandleDateParameter(parameter, resultDictionary, searchParameter, dt);
                 } else if (parameter.IsNumber && (parameter.Value is string)) {
                     try {
                         var int32 = Convert.ToInt32(parameter.Value);
@@ -252,18 +243,68 @@ namespace softWrench.sW4.Data.Search {
             return resultDictionary;
         }
 
+        private static void HandleDateParameter(SearchParameter parameter, IDictionary<string, object> resultDictionary,
+          KeyValuePair<string, SearchParameter> searchParameter, DateTime dt) {
+            var paramName = searchParameter.Key;
+            //if it was a between operation, the parameters might have already been set named correctly at GetParameters.GetParameters
+            var beginParam = paramName.EndsWith("_begin") ? paramName : paramName + DateSearchParamBegin;
+            var endParam = paramName.EndsWith("_end") ? paramName : paramName + DateSearchParamEnd;
+
+            if (parameter.IsEqualOrNotEqual()) {
+                if (!parameter.HasHour) {
+                    //this shall create a between interval
+                    resultDictionary.Add(beginParam, DateUtil.BeginOfDay(dt));
+                    resultDictionary.Add(endParam, DateUtil.EndOfDay(dt));
+                } else {
+                    //EQ 16:46 should become BETWEEN 16:46:00 and 16:46:59.999
+                    resultDictionary.Add(beginParam, dt);
+                    resultDictionary.Add(endParam, dt.AddSeconds(59).AddMilliseconds(999));
+
+                    //resultDictionary.Add(searchParameter.Key, dt);
+                }
+            } else if (parameter.IsGtOrGte()) {
+                if (!parameter.HasHour) {
+                    if (parameter.SearchOperator == SearchOperator.GT) {
+                        //if GT, then we need to exclude the current day from the search
+                        dt = dt.AddDays(1);
+                    }
+                    resultDictionary.Add(beginParam, DateUtil.BeginOfDay(dt));
+                } else {
+                    if (parameter.SearchOperator == SearchOperator.GT) {
+                        //if GT let's add one minute since screen doesn't show seconds --> so GT > 16:36 becomes actually GT > 16:36:59.999
+                        dt = dt.AddSeconds(59).AddMilliseconds(999);
+                    }
+                    //if GTE: GTE>= 16:36 keep it as it is
+                    resultDictionary.Add(beginParam, dt.FromUserToMaximo(SecurityFacade.CurrentUser()));
+                }
+            } else if (parameter.IsLtOrLte()) {
+                if (!parameter.HasHour) {
+                    if (parameter.SearchOperator == SearchOperator.LT) {
+                        //if GT, then we need to exclude the current day from the search, making the beggining of yesterday instead
+                        dt = dt.AddDays(-1);
+                    }
+                    resultDictionary.Add(endParam, DateUtil.EndOfDay(dt));
+                } else {
+                    dt = dt.AddSeconds(59).AddMilliseconds(999);
+                    if (parameter.SearchOperator == SearchOperator.LT) {
+                        //if LT let's subtract one minute since screen doesn't show seconds --> LT < 16:36 becomes LT <16:35.59.999
+                        dt = dt.AddMinutes(-1);
+                    }
+                    resultDictionary.Add(endParam, dt.FromUserToMaximo(SecurityFacade.CurrentUser()));
+                }
+            }
+        }
+
+
         private static Tuple<string, ParameterType, string> GetParameterData(string entityName, SearchParameter searchParameter, string paramName) {
 
             // UNION statements cases
             if (paramName.StartsWith("null")) {
                 return new Tuple<string, ParameterType, string>("null", ParameterType.Default, paramName);
             }
-            if (paramName.EndsWith("_union")) {
-                paramName = paramName.Substring(0, paramName.Length - "_union".Length);
-            }
 
             var entity = MetadataProvider.Entity(entityName);
-            paramName = paramName.Contains("___") ? paramName.Split(new string[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[0] : paramName;
+            paramName = NormalizeParameterName(paramName);
             var baseResult = paramName.Contains(".") ? paramName : entityName + "." + paramName;
             var attributeDefinition = entity.Attributes(EntityMetadata.AttributesMode.NoCollections).FirstOrDefault(f => f.Name == paramName);
             var resultType = ParameterType.Default;
@@ -287,29 +328,53 @@ namespace softWrench.sW4.Data.Search {
             return new Tuple<string, ParameterType, string>(baseResult, resultType, baseResult);
         }
 
+        private static string NormalizeParameterName(string paramName) {
+            if (paramName.EndsWith("_union")) {
+                paramName = paramName.Substring(0, paramName.Length - "_union".Length);
+            }
+
+            if (paramName.EndsWith("_begin")) {
+                paramName = paramName.Substring(0, paramName.Length - "_begin".Length);
+            }
+
+            if (paramName.EndsWith("_end")) {
+                paramName = paramName.Substring(0, paramName.Length - "_end".Length);
+            }
+            //TODO: remove, this is legacy
+            paramName = paramName.Contains("___")
+                ? paramName.Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[0]
+                : paramName;
+            return paramName;
+        }
+
         enum ParameterType {
             Default, Date, Number
         }
 
         private static string GetDefaultParam(string operatorPrefix, string param) {
-            return operatorPrefix + (String.Format(HibernateUtil.ParameterPrefixPattern, param));
+            return operatorPrefix + (string.Format(HibernateUtil.ParameterPrefixPattern, param));
         }
 
 
         private static string HandleDateAttribute(string param, SearchParameter searchParameter, string operatorPrefix) {
 
-            var formatedParam = String.Format(HibernateUtil.ParameterPrefixPattern, param);
+            var formatedParam = string.Format(HibernateUtil.ParameterPrefixPattern, param);
             if (searchParameter.SearchOperator == SearchOperator.BLANK) {
                 return " IS NULL";
-            } else if (searchParameter.HasHour || !searchParameter.IsEqualOrNotEqual()) {
+            }
+            if (!searchParameter.IsEqualOrNotEqual()) {
                 var parameterName = param;
                 if (searchParameter.SearchOperator == SearchOperator.GTE || searchParameter.SearchOperator == SearchOperator.GT) {
-                    parameterName += DateSearchParamBegin;
+                    if (!parameterName.EndsWith(DateSearchParamBegin)) {
+                        parameterName += DateSearchParamBegin;
+                    }
                 }
                 if (searchParameter.SearchOperator == SearchOperator.LTE || searchParameter.SearchOperator == SearchOperator.LT) {
-                    parameterName += DateSearchParamEnd;
+                    if (!parameterName.EndsWith(DateSearchParamEnd)) {
+                        parameterName += DateSearchParamEnd;
+                    }
                 }
-                return operatorPrefix + String.Format(HibernateUtil.ParameterPrefixPattern, parameterName);
+                return operatorPrefix + string.Format(HibernateUtil.ParameterPrefixPattern, parameterName);
             }
             var prefix = searchParameter.SearchOperator == SearchOperator.EQ ? " BETWEEN " : " NOT BETWEEN ";
             var sb = new StringBuilder();

@@ -100,7 +100,17 @@ namespace softwrench.sW4.test.Data.Search {
             Assert.IsTrue(parametersMap["reportdate_begin"].Equals(DateUtil.BeginOfDay(DateTime.Parse("2013-01-01"))));
         }
 
-
+        [TestMethod]
+        public void DateTimeSearchDtoeqTest() {
+            var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
+            searchRequestDto.SetFromSearchString(_schema, "reportdate".Split(','), "=2013-01-01 15:45");
+            var @where = SearchUtils.GetWhere(searchRequestDto, "SR");
+            Assert.AreEqual("( SR.reportdate BETWEEN :reportdate_begin AND :reportdate_end )", @where);
+            var parametersMap = SearchUtils.GetParameters(searchRequestDto);
+            Assert.IsTrue(parametersMap.Count == 2);
+            Assert.IsTrue(parametersMap["reportdate_begin"].Equals(DateTime.Parse("2013-01-01 15:45:00")));
+            Assert.IsTrue(parametersMap["reportdate_end"].Equals(DateTime.Parse("2013-01-01 15:45:59.999")));
+        }
 
 
         [TestMethod]

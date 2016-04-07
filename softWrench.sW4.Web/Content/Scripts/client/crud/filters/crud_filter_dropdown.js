@@ -31,15 +31,25 @@
 
                         $scope.markDefaultOperator = function (filter) {
                             if (!$scope.searchOperator[filter.attribute]) {
-                                $scope.searchOperator[filter.attribute] = searchService.defaultSearchOperation();
+                                if (filter.type === "MetadataDateTimeFilter") {
+                                    $scope.searchOperator[filter.attribute] = searchService.getSearchOperationById("GTE");
+                                } else {
+                                    $scope.searchOperator[filter.attribute] = searchService.defaultSearchOperation();
+                                }
+
+
                             }
                         }
 
                         $scope.hasFilter = function (filter) {
                             var operator = $scope.searchOperator[filter.attribute];
-                            if (!operator) return false;
+                            if (!operator) {
+                                return false;
+                            }
                             var search = $scope.searchData[filter.attribute];
-                            if (operator.id === "BLANK") return true;
+                            if (operator.id === "BLANK") {
+                                return true;
+                            }
                             return !!search && !operator.id.equalsAny("", "NF");
 
                         }
@@ -61,10 +71,13 @@
 
                             if (operator.id.equalsAny("", "NF")) {
                                 searchData[columnName] = "";
-                            } else if (searchData[columnName] != null && searchData[columnName] !== "") {
+                            } else if (operator.id === "BTW") {
+                                //changing to btw requires second item to be added
+                                return;
+                            }
+                            else if (searchData[columnName] != null && searchData[columnName] !== "") {
                                 //if there is a search value, apply on click
                                 this.filterBarApplied();
-                                return;
                             } else if (operator.id === "BLANK") {
                                 searchData[columnName] = "";
                                 this.filterBarApplied();
@@ -91,6 +104,16 @@
                             if (true !== keepitOpen) {
                                 $(".dropdown.open").removeClass("open");
                             }
+                            Object.keys($scope.searchOperator).forEach(function (item) {
+                                if ($scope.searchOperator[item] && $scope.searchOperator[item].id === "BTW") {
+                                    delete $scope.searchOperator[item + "_end"];
+                                    if (!$scope.searchData[item + "_end"]) {
+                                        //to prevent exceptions if the user hits the apply without having both values set
+                                        $scope.searchData[item + "_end"] = $scope.searchData[item];
+                                    }
+                                }
+                            });
+
                             $scope.filterApplied();
                         }
 
@@ -200,7 +223,7 @@
                             $scope.layout.standalone = value;
                         };
 
-                        $scope.isModal = function(filter) {
+                        $scope.isModal = function (filter) {
                             return !filter || "MetadataModalFilter" === filter.type;
                         }
 
@@ -209,14 +232,14 @@
                             modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
                         }
 
-                        $scope.showModal = function(filter) {
+                        $scope.showModal = function (filter) {
                             if (!$scope.isModal(filter)) {
                                 return;
                             }
                             $scope.innerShowModal(filter);
                         }
 
-                        $scope.innerShowModal = function(filter) {
+                        $scope.innerShowModal = function (filter) {
                             var datamap = $scope.hasFilter(filter) && $scope.modalDatamap ? $scope.modalDatamap[filter.attribute] : {};
                             datamap = datamap ? datamap : {};
                             var filterI18N = $scope.i18N("_grid.filter.filter", "Filter");
@@ -235,7 +258,7 @@
                             $scope.modalDatamap[att] = datamap;
                             $scope.filterIsActive = true;
                             modalService.hide();
-                           
+
                             var serviceParams = [datamap, modalSchema, $scope.filter];
                             var searchData = dispatcherService.invokeServiceByString($scope.filter.service, serviceParams);
                             $scope.searchData[att] = searchData;
@@ -258,7 +281,7 @@
                                 }
 
                                 $scope.clearFilter($scope.filter.attribute);
-                                
+
                                 // only hides the modal if the filter is a modalFilter
                                 if ($scope.isModal($scope.filter)) {
                                     modalService.hide();

@@ -46,6 +46,28 @@
                                    data-allow-future="{{filter.allowFuture}}"
                                    placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[filter.label])}}"
                                    ng-enter="filterSearch(filter.attribute)"
+                                   ng-disabled="advancedfiltermode"/>
+                            <span class="input-group-addon "
+                                  data-calendericon="true"
+                                  rel="tooltip"
+                                  data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+                        <div data-datepicker="true" class="input-group input-group-sm" ng-if="searchOperator[filter.attribute].id == 'BTW'">
+                            <span class="input-group-addon"
+                                  rel="tooltip"
+                                  data-original-title="{{ getOperatorTooltip(filter.attribute) }}">
+                                <=
+                            </span>
+                            <input type="text" ng-model="searchData[filter.attribute+'_end']" class="form-control"
+                                   data-date-time
+                                   data-attach-datepicker-to-parent="true"
+                                   data-show-time="{{ !filter.dateOnly }}"
+                                   data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
+                                   data-allow-future="{{filter.allowFuture}}"
+                                   placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[filter.label])}}"
+                                   ng-enter="filterSearch(filter.attribute)"
                                    ng-disabled="advancedfiltermode" />
                             <span class="input-group-addon "
                                   data-calendericon="true"
@@ -54,6 +76,7 @@
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
+
                     </div>
                     <div ng-switch-when="MetadataOptionFilter">
                         <filter-multiple-option filter="filter" schema="schema" search-data="searchData" search-operator="searchOperator" apply-filter="filterBarApplied(keepitOpen)" />
