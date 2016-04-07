@@ -142,7 +142,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public static User SyncLdapUser(User existingUser, bool isLdapSetup) {
-            if (existingUser.MaximoPersonId == null) {
+            if (existingUser.MaximoPersonId == null || existingUser.Systemuser) {
                 return existingUser;
             }
 

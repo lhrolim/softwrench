@@ -55,11 +55,15 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public InMemoryUser DoLogin(User dbUser, string userTimezoneOffset) {
-            if (dbUser.MaximoPersonId == null) {
+            if (dbUser.Systemuser || dbUser.MaximoPersonId == null) {
                 //no need to sync to maximo, since there´s no such maximoPersonId
                 return UserFound(dbUser, userTimezoneOffset);
             }
             var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.MaximoPersonId, dbUser.Id);
+            if (maximoUser == null) {
+                Log.WarnFormat("maximo user {0} not found",dbUser.MaximoPersonId);
+                return UserFound(dbUser, userTimezoneOffset);
+            }
             maximoUser.MergeFromDBUser(dbUser);
 
 
@@ -76,7 +80,7 @@ namespace softWrench.sW4.Security.Services {
                     return UserFound(dbUser, userTimezoneOffset);
                 }
 
-                Log.WarnFormat("user {0} not found on maximo with maximopersonid {1}, login unauthorized",dbUser.UserName,dbUser.MaximoPersonId);
+                Log.WarnFormat("user {0} not found on maximo with maximopersonid {1}, login unauthorized", dbUser.UserName, dbUser.MaximoPersonId);
                 return null;
             }
             maximoUser.MergeFromDBUser(dbUser);
@@ -221,8 +225,8 @@ namespace softWrench.sW4.Security.Services {
             }
             var fullUser = new User();
             LogicalThreadContext.SetData("executinglogin", "true");
-            if (swUser.MaximoPersonId != null) {
-                fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id,true);
+            if (!swUser.Systemuser && swUser.MaximoPersonId != null) {
+                fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id, true);
                 if (fullUser == null) {
                     Log.WarnFormat("user {0} not found on database", swUser.MaximoPersonId);
                     fullUser = new User();

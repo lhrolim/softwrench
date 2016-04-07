@@ -50,6 +50,13 @@ namespace softwrench.sw4.user.classes.entities {
         public string CriptoProperties {
             get; set;
         }
+        /// <summary>
+        /// Users that exist only on softwrench but not in Maximo (at least not necessarily)
+        /// </summary>
+        [Property]
+        public bool Systemuser {
+            get; set;
+        }
 
         [Property]
         public string MaximoPersonId {

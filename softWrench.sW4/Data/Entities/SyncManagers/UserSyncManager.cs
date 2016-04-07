@@ -68,10 +68,10 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                 return null;
             }
             var userFromMaximo = GetUserFromMaximoUsers(attributeHolders, forceUser);
-            if (userFromMaximo == null) {
+            if (userFromMaximo == null || !userFromMaximo.Any()) {
                 return null;
             }
-            user = userFromMaximo.FirstOrDefault();
+            user = userFromMaximo.First();
             user.Id = swId;
             return user;
         }
@@ -95,11 +95,11 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                 return null;
             }
             var userFromMaximo = GetUserFromMaximoUsers(attributeHolders);
-            if (userFromMaximo == null) {
+            if (userFromMaximo == null || !userFromMaximo.Any()) {
                 return null;
             }
 
-            fullUser = userFromMaximo.FirstOrDefault();
+            fullUser = userFromMaximo.First();
             fullUser.Id = swUser.Id;
             fullUser.IsActive = swUser.IsActive;
             fullUser.Profiles = swUser.Profiles;
@@ -155,7 +155,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         [CanBeNull]
-        private static IEnumerable<User> GetUserFromMaximoUsers(IEnumerable<AttributeHolder> maximoPersons, bool forceUser=false) {
+        private static IList<User> GetUserFromMaximoUsers(IEnumerable<AttributeHolder> maximoPersons, bool forceUser=false) {
             IList<User> result = new List<User>();
             foreach (var maximoUser in maximoPersons) {
                 var userName = (string)maximoUser.GetAttribute("maxuser_.loginid");
@@ -224,7 +224,8 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                 (
                     !string.IsNullOrEmpty(userToIntegrate.Person.FirstName) &&
                     !string.IsNullOrEmpty(userToIntegrate.Person.LastName) &&
-                    !string.IsNullOrEmpty(userToIntegrate.MaximoPersonId)
+                    !string.IsNullOrEmpty(userToIntegrate.MaximoPersonId)&&
+                    !userToIntegrate.Systemuser
                 );
             if (!isValid) {
                 //var jsonUser = JsonConvert.SerializeObject(userToIntegrate);
