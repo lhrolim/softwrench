@@ -10,6 +10,7 @@ namespace softwrench.sW4.test.Data.Search {
     public class SearchTest2 {
 
         private ApplicationSchemaDefinition _schema;
+        private ApplicationSchemaDefinition _incidentSchema;
 
         [TestInitialize]
         public void Init() {
@@ -18,7 +19,9 @@ namespace softwrench.sW4.test.Data.Search {
                 MetadataProvider.StubReset();
             }
             var schemas = MetadataProvider.Application("invbalances").Schemas();
+            var incidentSchemas = MetadataProvider.Application("incident").Schemas();
             _schema = schemas[new ApplicationMetadataSchemaKey("invbalancesList", "input", "web")];
+            _incidentSchema = incidentSchemas[new ApplicationMetadataSchemaKey("list", "input", "web")];
         }
 
         [TestMethod]
@@ -48,6 +51,18 @@ namespace softwrench.sW4.test.Data.Search {
             var parametersMap = SearchUtils.GetParameters(searchRequestDto);
             Assert.IsTrue(parametersMap.Count == 1);
             Assert.IsTrue(parametersMap["curbal"].Equals(20));
+        }
+
+        [TestMethod]
+        public void TestBetweenInterval() {
+            var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
+            searchRequestDto.AppendSearchEntry("reportdate", "03/04/2016__20/04/2016");
+            var actualWhere = SearchUtils.GetWhere(searchRequestDto, "incident");
+            Assert.AreEqual("( incident.reportdate >= :reportdate_begin ) AND ( incident.reportdate <= :reportdate_end )", actualWhere);
+            var parametersMap = SearchUtils.GetParameters(searchRequestDto);
+            Assert.IsTrue(parametersMap.Count == 2);
+            Assert.IsTrue(parametersMap.ContainsKey("reportdate_begin"));
+            Assert.IsTrue(parametersMap.ContainsKey("reportdate_end"));
         }
     }
 }

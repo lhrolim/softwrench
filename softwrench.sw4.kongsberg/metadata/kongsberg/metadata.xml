@@ -1581,39 +1581,7 @@
     </application>
 
     <!--    ToString="asset + @description"-->
-    <application name="asset" title="Asset" entity="asset" id="00000000-0000-0000-0000-000000000001" >
-      <properties>
-        <property key="mobile.fetchlimit" value="30"/>
-        <property key="mobile.userInteractionEnabled" value="false"/>
-      </properties>
-      <schemas>
-        <list>
-          <field attribute="assetnum" label="Asset" qualifier="title"/>
-          <field attribute="location" label="Location" qualifier="subtitle"/>
-          <field attribute="vendor" label="Vendor"  qualifier="featured"/>
-        </list>
-        <detail>
-          <field attribute="assetid" label="ID:"  requiredexpression="true" />
-          <field attribute="assetnum" label="Asset:"  requiredexpression="true" />
-          <field attribute="location" label="Location:"  requiredexpression="true" />
-          <field attribute="vendor" label="Vendor:"  />
-          <field attribute="description" label="Description:"  />
-          <field attribute="failurecode" label="Failure Class:"  />
-          <field attribute="priority" label="Priority:"  />
-          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
-        </detail>
-        <schema id="assetLookupList" stereotype="list">
-          <field attribute="assetnum" label="Asset"/>
-          <field attribute="description" label="Description">
-            <renderer type="default" params="minwidth=300px" />
-          </field>
-          <field attribute="location" label="Location"/>
-          <field attribute="siteid"  label="Site"/>
-          <field attribute="status" label="Status"/>
-        </schema>
-      </schemas>
-
-    </application>
+   
 
     <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
       <properties>

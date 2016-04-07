@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
+using NHibernate.Util;
 
 namespace softWrench.sW4.Data.Search {
     public class SearchRequestDto : IDataRequest {
@@ -73,7 +74,9 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
-        public string QuickSearchData { get; set; }
+        public string QuickSearchData {
+            get; set;
+        }
 
         private IDictionary<string, SearchParameter> _valuesDictionary;
 
@@ -281,7 +284,7 @@ namespace softWrench.sW4.Data.Search {
             if (string.IsNullOrEmpty(SearchParams)) {
                 return null;
             }
-            _valuesDictionary = new Dictionary<string, SearchParameter>();
+            _valuesDictionary = new LinkedHashMap<string, SearchParameter>();
 
             var parameters = Regex.Split(SearchParams, SearchUtils.SearchParamSpliter).Where(f => !string.IsNullOrWhiteSpace(f)).ToList();
             SearchUtils.ValidateString(SearchValues);
@@ -299,7 +302,17 @@ namespace softWrench.sW4.Data.Search {
                 if (string.IsNullOrEmpty(paramName)) {
                     continue;
                 }
-                _valuesDictionary[paramName] = new SearchParameter(values[i]);
+                String rawValue = values[i];
+                if (rawValue.Contains("__")) {
+                    //between case
+                    var splittedInterval = Regex.Split(rawValue, "__");
+                    _valuesDictionary[paramName + "_begin"] = new SearchParameter(">=" + splittedInterval[0]);
+                    _valuesDictionary[paramName + "_end"] = new SearchParameter("<=" + splittedInterval[1]);
+                } else {
+                    _valuesDictionary[paramName] = new SearchParameter(rawValue);
+                }
+
+
             }
             return _valuesDictionary;
         }
@@ -376,7 +389,9 @@ namespace softWrench.sW4.Data.Search {
         /// True: query should not be made returning a ampty result list instead and count = 0
         /// False: default. Normal behavior
         /// </summary>
-        public bool ForceEmptyResult { get; set; }
+        public bool ForceEmptyResult {
+            get; set;
+        }
 
     }
 }

@@ -45,7 +45,7 @@
             } else if (filter.type === "MetadataNumberFilter") {
                 return operation.id.equalsAny("GT", "LT", "GTE", "LTE", "EQ", "NOTEQ", "BLANK");
             } else if (filter.type === "MetadataDateTimeFilter") {
-                return operation.id.equalsAny("GT", "LT", "GTE", "LTE", "EQ", "NOTEQ", "BLANK");
+                return operation.id.equalsAny("GT", "LT", "GTE", "LTE", "BTW");
             }
 
             return false;
@@ -69,6 +69,9 @@
             var searchOperator = $scope.searchOperator;
             if (searchOperator != null && searchOperator[columnName] != null) {
                 return searchOperator[columnName];
+            }
+            if ($scope.filter.type === "MetadataDateTimeFilter") {
+                return searchService.getSearchOperationById("GTE");
             }
             return searchService.getSearchOperation(0);
         };
