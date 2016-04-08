@@ -101,7 +101,8 @@ function beforeMboData(ctx) {
                 ctx.log("[WorkOrder Workflow]-- Routing workflow " + wfId + " to action " + wfActionId);
                 ctx.log("wfinst: " + wfInst);
 
-                wfInst.completeWorkflowAssignment(wfAssignmentId, wfActionId, memo);
+                wfInst.completeWorkflowAssignment(parseInt(wfAssignmentId), wfActionId, memo);
+                
 
                 ctx.log("[WorkOrder Workflow]--  Workflow Routed");
                 ctx.skipTxn();
