@@ -22,6 +22,7 @@
         "$scope", "$log", "$timeout", "modalService", "fieldService", "dashboardAuxService", "contextService", "alertService", "crudContextHolderService", "redirectService",
     function ($scope, $log, $timeout, modalService, fieldService, dashboardAuxService, contextService, alertService, crudContextHolderService, redirectService) {
 
+        // #region Utils (state control)
         var selectedDashboardIds = [];
         function dashboardSelectedAtLeastOnce(dashboardId) {
             return !!selectedDashboardIds.find(function (id) {
@@ -33,6 +34,42 @@
                 selectedDashboardIds.push(dashboardId);
             }
         }
+        function markDashboardNotSelected(dashboardId) {
+            selectedDashboardIds = selectedDashboardIds.filter(function (id) {
+                return id !== dashboardId;
+            });
+        }
+
+        var dashboardCheckpoint = {};
+        function createDashboardCheckPoint(dashboard) {
+            var checkpoint = angular.copy(dashboard);
+            dashboardCheckpoint[dashboard.id] = checkpoint;
+        }
+        function restoreDashboardCheckpoint(dashboardId) {
+            $scope.currentdashboardid = dashboardId;
+            var checkpoint = angular.copy(dashboardCheckpoint[dashboardId]);
+
+            // for some reason, simple assgnment doesn't work -> has to be done property by property
+            // $scope.dashboard = checkpoint;
+            angular.forEach(checkpoint, function(val, key) {
+                $scope.dashboard[key] = val;
+            });
+        }
+        function isDashboardChanged(dashboard) {
+            var checkpoint = dashboardCheckpoint[dashboard.id];
+            return !angular.equals(dashboard, checkpoint);
+        }
+        function deleteDashboardCheckpoint(dashboardId) {
+            delete dashboardCheckpoint[dashboardId];
+        }
+        function positionComparator(panelA, panelB) {
+            return panelA.position - panelB.position;
+        }
+        function sortPanels(dashboard) {
+            dashboard.panels = dashboard.panels.sort(positionComparator);
+        }
+
+        //#endregion
 
         $scope.dashboardSelectedAtLeastOnce = dashboardSelectedAtLeastOnce;
 
@@ -64,6 +101,8 @@
 
             markDashboardSelected($scope.currentdashboardid);
             $scope.dashboard = $scope.getCurrentDashboardById($scope.currentdashboardid);
+            $scope.dashboards.forEach(sortPanels);
+            $scope.dashboards.forEach(createDashboardCheckPoint);
             var userData = contextService.getUserData();
             $scope.userid = userData.id;
         };
@@ -161,6 +200,7 @@
 
             $scope.dashboard = dashboard;
             $scope.currentdashboardid = dashboard.id;
+            createDashboardCheckPoint($scope.dashboard);
 
             $scope.newDashboard = false;
             $scope.isEditingAnyDashboard = false;
@@ -226,7 +266,7 @@
             $scope.dashboard = $scope.getCurrentDashboardById(id);
 
             $scope.$broadcast("sw:dashboard:selected", id);
-            var log = $log.getInstance("dashboardrendered");
+            var log = $log.getInstance("dashboardrendered", ["dashboard"]);
             log.trace("lazy loading dashboard {0}".format(id));
         };
 
@@ -286,18 +326,28 @@
             return $scope.currentdashboardid === dashboardid && $scope.isEditingAnyDashboard;
         };
 
-        $scope.cancelEditing = function () {
-            $scope.isEditingAnyDashboard = false;
+        $scope.cancelEditing = function (dashboard) {
+            if (!isDashboardChanged(dashboard)) {
+                $scope.isEditingAnyDashboard = false;
+                return;
+            }
+            alertService.confirm2(
+                    "There are unsaved changes to the current dashboard. " +
+                    "Any unsaved changes will be discarded. " +
+                    "Are you sure sure you want to cancel editting.")
+                .then(function() {
+                    restoreDashboardCheckpoint(dashboard.id);
+                    $scope.isEditingAnyDashboard = false;
+                });
         };
 
-        $scope.editDashboard = function (dashboardId) {
+        $scope.editDashboard = function (dashboard) {
             $scope.isEditingAnyDashboard = true;
         };
 
         $scope.finishEditingDashboard = function (dashboardId) {
             $scope.dashboard.policy = "personal";
             dashboardAuxService.saveDashboard($scope.dashboard);
-
         };
 
         $scope.canEditDashboard = function (dashboard) {
@@ -361,6 +411,8 @@
                     $scope.dashboards = $scope.dashboards.filter(function (d) {
                         return d.id !== dashboard.id;
                     });
+                    markDashboardNotSelected(dashboard.id);
+                    deleteDashboardCheckpoint(dashboard.id);
                     if ($scope.currentdashboardid === dashboard.id) {
                         $scope.viewDashboard(null, $scope.dashboards.length > 0 ? $scope.dashboards[0].id : null);
                     }

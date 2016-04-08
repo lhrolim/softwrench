@@ -13,20 +13,13 @@ angular.module("sw_layout").directive("dashboard", ["contextService", function (
             onPanelRemove: "&"
         },
 
-        controller: ["$scope", function ($scope) {
+        controller: ["$scope", "$log", function ($scope, $log) {
 
-            function isPanelVisible(panelDataSource) {
-                return !!panelDataSource && !!panelDataSource.panel && !!panelDataSource.panel.visible;
-            };
+            $scope.$name = "dashboardgridsystem";
+            $scope.dashboardid = $scope.dashboard.id;
             
-            function positionComparator(panelA, panelB) {
-                return panelA.position - panelB.position;
-            }
-
-            $scope.visiblePanels = function() {
-                return $scope.dashboard.panels
-                    .filter(isPanelVisible)
-                    .sort(positionComparator);
+            $scope.isPanelVisible = function (panelDataSource) {
+                return !!panelDataSource && !!panelDataSource.panel && !!panelDataSource.panel.visible;
             };
 
             $scope.editPanel = function(panel) {
@@ -37,12 +30,18 @@ angular.module("sw_layout").directive("dashboard", ["contextService", function (
                 return $scope.onPanelRemove({ panelDataSource: panelDataSource, dashboard: $scope.dashboard });
             };
 
-        }],
+            $scope.panelMoved = function(panelDataSource) {
+                $log.get("dashboarddirective#panelMoved", ["dashboard"])
+                    .debug("positions changed to",
+                            $scope.dashboard.panels.map(function (p) { return p.position; }),
+                            "by dragging ", panelDataSource);
 
-        link: function (scope, element, attrs) {
-            scope.$name = "dashboardgridsystem";
-            scope.dashboardid = scope.dashboard.id;
-        }
+                for (var i = 0; i < $scope.dashboard.panels.length; i++) {
+                    $scope.dashboard.panels[i].position = i;
+                }
+            };
+
+        }]
     };
 
 }]);

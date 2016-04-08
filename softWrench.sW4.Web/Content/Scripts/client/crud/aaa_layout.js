@@ -17,7 +17,9 @@
          'maximo_applications',
          'selectize',
          'ngAnimate',
-         'omr.angularFileDnD']);
+         'omr.angularFileDnD',
+         'dndLists'
+        ]);
 
     angular.module('sw_prelogin', []);
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
@@ -18,10 +19,10 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         [Property]
         public string Provider { get; set; }
 
-        public IDictionary<string, string> ConfigurationDictionary { get; set; }
+        public IDictionary<string, object> ConfigurationDictionary { get; set; }
 
         public DashboardGraphicPanel() : base() {
-            ConfigurationDictionary = new Dictionary<string, string>();
+            ConfigurationDictionary = new Dictionary<string, object>();
         }
 
         /// <summary>
@@ -42,19 +43,34 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
                 value.Split(';')
                     .Select(config => {
                         var entry = config.Split('=');
-                        return new KeyValuePair<string, string>(entry[0], entry[1]);
+                        var entryKey = entry[0];
+                        var entryValue = entry[1];
+                        return new KeyValuePair<string, object>(entryKey, ConfigValueAsObject(entryValue));
                     })
                     .ForEach(entry => ConfigurationDictionary[entry.Key] = entry.Value);
             }
         }
 
-        public DashboardGraphicPanel PutConfiguration(string key, string value) {
+        private object ConfigValueAsObject(string value) {
+            // supports only bool, numbers and strings for now
+            bool configValueBool;
+            if (bool.TryParse(value, out configValueBool)) {
+                return configValueBool;
+            }
+            int configIntValue;
+            if (int.TryParse(value, out configIntValue)) {
+                return configIntValue;
+            }
+            return value;
+        }
+
+        public DashboardGraphicPanel PutConfiguration(string key, object value) {
             ConfigurationDictionary[key] = value;
             return this;
         }
 
-        public string ConfigurationValue(string key) {
-            string value;
+        public object ConfigurationValue(string key) {
+            object value;
             return ConfigurationDictionary.TryGetValue(key, out value) ? value : null;
         }
 

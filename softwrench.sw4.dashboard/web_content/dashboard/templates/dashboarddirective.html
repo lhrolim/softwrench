@@ -1,9 +1,19 @@
 ﻿<div class="container">
-    <div class="row">
-        <div ng-repeat="panelDataSource in visiblePanels()" class="column col-sm-{{ panelDataSource.panel.size }}">
-            <div class="wrap"
-                 ng-switch on="panelDataSource.panel.type">
+    <div class="row" dnd-list="dashboard.panels">
+        <div class="dndPlaceholder col col-sm-3">
+            <div class="dndPlaceholder-content">
+                Drop Widget Here
+            </div>
+        </div>
+        <div ng-repeat="panelDataSource in dashboard.panels"
+             dnd-draggable="panelDataSource"
+             dnd-effect-allowed="move"
+             dnd-moved="dashboard.panels.splice($index, 1);panelMoved(panelDataSource)"
+             dnd-disable-if="!canEdit"
+             ng-if="isPanelVisible(panelDataSource)"
+             class="column col-sm-{{ panelDataSource.panel.size }}">
 
+            <div class="wrap">
                 <div class="panel">
                     <div class="header">
                         <span>{{panelDataSource.panel.title}}&nbsp;</span>
@@ -21,14 +31,16 @@
 
                     </div>
 
-                    <div class="body">
+                    <div class="body"
+                         ng-switch on="panelDataSource.panel.type">
+
                         <dashboardgridpanel ng-switch-when="DashboardGridPanel"
                                             paneldatasource="panelDataSource"
-                                            dashboardid="dashboardid" />
+                                            dashboardid="dashboardid"/>
 
                         <dashboard-graphic-panel ng-switch-when="DashboardGraphicPanel"
                                                  panel="panelDataSource.panel"
-                                                 dashboardid="dashboardid" />
+                                                 dashboardid="dashboardid"/>
                     </div>
 
                 </div>

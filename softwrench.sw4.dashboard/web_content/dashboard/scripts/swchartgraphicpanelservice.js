@@ -40,8 +40,8 @@
 
         function getChartData(panel) {
             var configuration = panel.configurationDictionary;
-            configuration.limit = parseInt(configuration.limit);
-            configuration.showothers = (configuration.showothers === "True" || configuration.showothers === "true");
+            //configuration.limit = parseInt(configuration.limit);
+            //configuration.showothers = (configuration.showothers === "True" || configuration.showothers === "true");
 
             var params = {
                 entity: configuration.application,

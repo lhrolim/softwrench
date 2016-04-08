@@ -89,7 +89,7 @@ module.exports = function (grunt) {
                     "font-awesome.css": "font-awesome/css/font-awesome.min.css",
                     // angular
                     "textAngular.css": "textAngular/dist/textAngular.css",
-                    "angular-ui-select.css": "ui-select/dist/select.min.css",
+                    "angular-ui-select.css": "ui-select/dist/select.min.css"
                 }
             },
             fonts: {
@@ -119,6 +119,7 @@ module.exports = function (grunt) {
                     "angular-animate.js": "angular-animate/angular-animate.min.js",
                     "angular-xeditable.js": "angular-xeditable/dist/js/xeditable.min.js",
                     "angular-file-upload.js": "angular-file-upload/angular-file-upload.min.js",
+                    "angular-drag-and-drop-lists.js": "angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js",
                     // bootstrap
                     "bootstrap.js": "bootstrap/dist/js/bootstrap.min.js",
                     // utils
@@ -218,6 +219,7 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-animate.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-xeditable.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-file-upload.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular-drag-and-drop-lists.js",
                     // minified raw vendors
                     "<%= app.tmp %>/scripts/rawVendor.min.js"
                 ],

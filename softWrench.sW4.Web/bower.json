@@ -39,7 +39,8 @@
     "textAngular": "~1.4.6",
     "bootstrap-combobox": "1.1.5",
     "lz-string": "~1.4.4",
-	"devextreme-web": "~15.2.5"
+    "devextreme-web": "~15.2.5",
+    "angular-drag-and-drop-lists": "^1.4.0"
   },
   "devDependencies": {},
   "resolutions": {

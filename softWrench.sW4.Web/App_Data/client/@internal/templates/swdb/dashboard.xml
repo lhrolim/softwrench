@@ -18,16 +18,16 @@
           <optionfield attribute="dashboardid" label="Select Dashboard" providerattribute="existingDashboards" showexpression="@mode!='brandnew'">
             <filter clientfunction="dashboardAuxService.filterSelectableDashboards"/>
           </optionfield>
-          
-<!--          <section showexpression="@canCreateBoth">-->
-<!--            <optionfield attribute="policy" label="Policy">-->
-<!--              <option label="Personal" value="personal"/>-->
-<!--              <option label="Shared" value="shared"/>-->
-<!--            </optionfield>-->
-<!--            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'" skipvalidation="true">-->
-<!--              <renderer type="checkbox"/>-->
-<!--            </optionfield>-->
-<!--          </section>-->
+
+          <!--<section showexpression="@canCreateBoth">
+            <optionfield attribute="policy" label="Policy">
+              <option label="Personal" value="personal"/>
+              <option label="Shared" value="shared"/>
+            </optionfield>
+            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'" skipvalidation="true">
+              <renderer type="checkbox"/>
+            </optionfield>
+          </section>-->
 
           <commandbars>
             <commandgroup position="modal.detail.primary">
@@ -35,9 +35,9 @@
               <command id="save" icon="fa-check" parameters="datamap" service="dashboardAuxService" method="saveDashboard" label="Confirm" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
-          <properties>
-<!--            <property key="associationstoprefetch" value="existingDashboards"/>-->
-          </properties>
+          <!--<properties>
+            <property key="associationstoprefetch" value="existingDashboards"/>
+          </properties>-->
         </schema>
       </schemas>
     </application>
