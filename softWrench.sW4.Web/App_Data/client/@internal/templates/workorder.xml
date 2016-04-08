@@ -117,6 +117,11 @@
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Applications.Workorder.BaseWorkOrderCrudConnector" />
       </connectorParameters>
     </entity>
+    <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
+      <attributes>
+        <attribute name="description" query="(select description from failurecode where failurecode = !@failurecode and orgid = !@orgid)" type="varchar"/>
+      </attributes>
+    </entity>
   </entities>
 
   <applications>
@@ -270,8 +275,14 @@
           <field attribute="workorderid" hidden="true"/>
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
+
+          <!--TODO: investigate hidden fields on customizations not being added-->
+          <field attribute="crewid" hidden="true"/>
+
           <field attribute="class" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
+          <field hidden="true" attribute="failurelist_.failurelist"/>
+          
           <field attribute="pmnum"  hidden="true"/>
           <field attribute="cinum"  hidden="true"/>
           <!--          <field attribute="failurecode"  hidden="true"/>-->
@@ -316,7 +327,7 @@
                   <renderer type="autocompleteclient" params="inputsize=large" />
                 </optionfield>
 
-                <field hidden="true" attribute="failurelist_.failurelist"/>
+                
 
 
                 <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc">
@@ -400,10 +411,10 @@
               <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
               <renderer type="default" params="childinputsize=medium" />
 
-              <association label="Failure Class" target="failurecode" labelfield="failurelist_.failurecode" hideDescription="true" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+              <association label="Failure Class" target="failurecode" labelfield="failurelist_.description" hideDescription="false" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
                 <renderer type="lookup" />
               </association>
-              <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
+              <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">
                 <renderer type="lookup"  />
                 <dataprovider prefilterfunction="FilterProblemCodes" />
               </association>

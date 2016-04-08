@@ -26,9 +26,9 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             var entityAttributes = entityMetadata.Schema.Attributes;
             var usedRelationships = new HashSet<EntityAssociation>();
             var watch = Stopwatch.StartNew();
-           
+
             ISet<EntityAttribute> usedAttributes = new HashSet<EntityAttribute>();
-            var nonRelationshipFields =appSchema.NonRelationshipFields;
+            var nonRelationshipFields = appSchema.NonRelationshipFields;
             foreach (var field in nonRelationshipFields) {
                 if (field.Attribute.StartsWith("#null")) {
                     usedAttributes.Add(new EntityAttribute(field.Attribute, "varchar", false, true,
@@ -52,8 +52,9 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
 
             var result = SlicedRelationshipBuilderHelper.HandleRelationshipFields(appSchema.RelationshipFields.Select(r => r.Attribute), entityMetadata);
+            MergeRelationships(usedRelationships, result.DirectRelationships);
 
-            usedRelationships.UnionWith(result.DirectRelationships);
+
             // When should the rowstamp be excluded
             var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, entityMetadata.Schema.UserIdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType, (!isUnionSchema && !entityMetadata.SWEntity()));
             SlicedEntityMetadata unionSchema = null;
@@ -66,6 +67,23 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             watch.Stop();
             return new SlicedEntityMetadata(entityMetadata.Name, schema,
                 usedRelationships, entityMetadata.ConnectorParameters, appSchema, result.InnerEntityMetadatas, fetchLimit, unionSchema);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="usedRelationships">the relationships created by associations and compositions</param>
+        /// <param name="directRelationships">the relationships created by hidden fields</param>
+        private static void MergeRelationships(ISet<EntityAssociation> usedRelationships, ISet<SlicedEntityAssociation> hiddenAssociations) {
+            foreach (var relationship in usedRelationships) {
+                if (relationship is SlicedEntityAssociation && hiddenAssociations.Contains(relationship)) {
+                    var sla = (SlicedEntityAssociation)relationship;
+                    var newEntityAttributes = sla.SlicedAttributes;
+                    var hiddenAssociation = hiddenAssociations.First(f => Equals(f, relationship));
+                    var hsla = hiddenAssociation;
+                    newEntityAttributes.AddAll(hsla.SlicedAttributes);
+                }
+            }
+            usedRelationships.UnionWith(hiddenAssociations);
         }
 
 
@@ -105,7 +123,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
         private static IEnumerable<EntityAssociation> HandleCompositions(IEnumerable<ApplicationCompositionDefinition> compositions, EntityMetadata entityMetadata, ApplicationSchemaDefinition appSchema) {
             return
-                compositions.Where(c=> !c.Relationship.StartsWith("#")).Select(
+                compositions.Where(c => !c.Relationship.StartsWith("#")).Select(
                 composition => {
                     var entityAssociation = entityMetadata.Associations.FirstOrDefault(a => a.Qualifier == composition.Relationship);
                     if (entityAssociation == null) {

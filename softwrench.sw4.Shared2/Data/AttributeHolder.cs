@@ -44,7 +44,11 @@ namespace softwrench.sW4.Shared2.Data {
         }
 
         public virtual string GetStringAttribute(string attributeName, bool remove = false, bool throwException = false) {
-            return GetAttribute(attributeName, remove, throwException) as string;
+            var attribute = GetAttribute(attributeName, remove, throwException);
+            if (attribute != null) {
+                return attribute.ToString();
+            }
+            return null;
         }
 
         public void SetAttribute(string attributeName, object value) {

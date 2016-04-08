@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
 using log4net;
-using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Entities.Sliced {
@@ -25,7 +25,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             }
 
             var innerFields = new Dictionary<string, HashSet<string>>();
-            var usedRelationships = new List<EntityAssociation>();
+            var usedRelationships = new HashSet<SlicedEntityAssociation>();
             foreach (var attribute in attributes) {
                 var indexOf = attribute.IndexOf(".", System.StringComparison.InvariantCulture);
                 var qualifier = attribute.Substring(0, indexOf);
@@ -53,7 +53,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         }
 
         private static void PopulateInnerFieldsEntry(EntityMetadata entityMetadata, string attribute,
-            ICollection<EntityAssociation> usedRelationships, Dictionary<string, HashSet<string>> innerFields) {
+            ICollection<SlicedEntityAssociation> usedRelationships, Dictionary<string, HashSet<string>> innerFields) {
             var firstIdx = attribute.IndexOf("_", StringComparison.Ordinal);
             if (firstIdx == -1) {
                 //if the user forgets to declare the _
@@ -68,20 +68,29 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             try {
                 var relatedEntityAssociation = entityMetadata.Associations.FirstOrDefault(a => a.Qualifier == firstAttribute);
                 if (relatedEntityAssociation == null) {
-                    ExceptionUtil.InvalidOperation("missing relationship {0} of entity {1}", firstAttribute, entityMetadata.Name);
+                    throw new InvalidOperationException("missing relationship {0} of entity {1}".Fmt(firstAttribute, entityMetadata.Name));
                 }
 
 
-                usedRelationships.Add(relatedEntityAssociation);
                 if (!innerFields.ContainsKey(firstAttribute)) {
                     innerFields.Add(firstAttribute, new HashSet<string>());
                 }
+
+                var parsedSecondAttribute = seccondAttribute;
                 if (seccondAttribute.StartsWith(".")) {
                     //remove leading .
-                    innerFields[firstAttribute].Add(seccondAttribute.Substring(1));
-                } else {
-                    innerFields[firstAttribute].Add(seccondAttribute);
+                    parsedSecondAttribute = seccondAttribute.Substring(1);
+
                 }
+                innerFields[firstAttribute].Add(parsedSecondAttribute);
+                var slicedEntityAssociation = new SlicedEntityAssociation(relatedEntityAssociation, new HashSet<string>() { parsedSecondAttribute }, relatedEntityAssociation.Qualifier);
+                if (usedRelationships.Contains(slicedEntityAssociation)) {
+                    var existingEntry = usedRelationships.First(f => Equals(f, slicedEntityAssociation));
+                    existingEntry.SlicedAttributes.AddAll(slicedEntityAssociation.SlicedAttributes);
+                } else {
+                    usedRelationships.Add(slicedEntityAssociation);
+                }
+
 
             } catch (Exception e) {
                 Log.Error(firstAttribute + " not found on associations of " + entityMetadata, e);
@@ -99,7 +108,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         }
 
         internal class RelationshipResult {
-            internal IEnumerable<EntityAssociation> DirectRelationships = new List<EntityAssociation>();
+            internal ISet<SlicedEntityAssociation> DirectRelationships = new HashSet<SlicedEntityAssociation>();
             internal IList<SlicedEntityMetadata> InnerEntityMetadatas = new List<SlicedEntityMetadata>();
         }
 

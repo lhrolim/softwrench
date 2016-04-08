@@ -70,7 +70,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                         record["CLASS_4"] == null ? "" : record["CLASS_4"] + "/",
                         record["CLASS_3"] == null ? "" : record["CLASS_3"] + "/",
                         record["CLASS_2"] == null ? "" : record["CLASS_2"] + "/",
-                        record["CLASS_1"] ?? "");
+                        record["CLASS_1"] == null ? "" : record["CLASS_1"] + " (" + record["DESCRIPTION_1"] + ")");
                     return new AssociationOption(record["ID"], label);
                 });
         }
@@ -82,7 +82,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                                                                p2.classificationid AS CLASS_4,  
                                                                p1.classificationid AS CLASS_3, 
                                                                p.classificationid  AS CLASS_2, 
-                                                               c.classificationid  AS CLASS_1
+                                                               c.classificationid  AS CLASS_1,
+                                                               c.description AS DESCRIPTION_1
                                                        FROM classstructure {3} c
                                                        left join classstructure {3} p on p.classstructureid = c.parent
                                                        left join classstructure {3} p1 on p1.classstructureid = p.parent

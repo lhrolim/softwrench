@@ -46,7 +46,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             var filter = parameters.BASEDto;
             var failurecodeid = FailureCodeId(parameters.OriginalEntity);
             if (string.IsNullOrEmpty(failurecodeid)) {
-                filter.ForceEmptyResult = true;
+                // the code comes as a hidden field when the entity first opens, and later as extrafields, if the failurelit is changed on screen
+                var originalDataCode = parameters.OriginalEntity.GetStringAttribute("failurelist_.failurelist");
+                if (string.IsNullOrEmpty(originalDataCode)) {
+                    filter.ForceEmptyResult = true;
+                } else {
+                    filter.AppendSearchEntry("parent", originalDataCode);
+                }
             } else {
                 filter.AppendSearchEntry("parent", failurecodeid);
             }
@@ -54,6 +60,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         }
 
         private string FailureCodeId(AttributeHolder entity) {
+
+
             var extrafields = ((Entity)entity).GetUnMappedAttribute("extrafields");
             if (extrafields == null) return null;
             dynamic fields = JObject.Parse(extrafields);

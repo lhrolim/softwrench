@@ -6,6 +6,7 @@
     <template path="@workorder.xml"/>
     <template path="@location.xml"/>
     <template path="@servicerequest.xml"/>
+    <template path="@failurecode.xml"/>
   </templates>
 
   <entities>
@@ -17,6 +18,11 @@
         </relationship>
       </relationships>
     </entity>
+    <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
+      <attributes>
+        <attribute name="description" query="(select description from failurecode where failurecode = !@failurecode and orgid = !@orgid)" type="varchar"/>
+      </attributes>
+    </entity>
   </entities>
 
   <applications>
@@ -25,12 +31,17 @@
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
         </schema>
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
+          
+          <customization position="failurecode"/>
+          <customization position="problemcode"/>
+          
+              
           <customization position="+hiddenfield">
             <section orientation="horizontal">
               <association label="Failure Class" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc" requiredexpression="true">
-                <renderer type="autocompleteclient" />
+                <renderer type="lookup" />
               </association>
-              <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description" requiredexpression="true">
+              <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description" extraprojectionvalues="failurelist" requiredexpression="true" >
                 <renderer type="lookup"  />
                 <dataprovider prefilterfunction="FilterProblemCodes" />
               </association>
