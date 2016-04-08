@@ -27,6 +27,10 @@
           <relationshipAttribute from="type" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="LOCTYPE" quoteLiteral="true" />
         </relationship>
+        <relationship to="serviceaddress">
+          <relationshipAttribute from="saddresscode" to="addresscode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
       </relationships>
     </entity>
 

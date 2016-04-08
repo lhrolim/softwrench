@@ -568,6 +568,7 @@
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_viewmodel.js" />
     <Content Include="Content\Scripts\client\crud\crud_expandable_section.js" />
     <Content Include="Content\Scripts\client\directives\fileUpload.js" />
+    <Content Include="Content\Scripts\client\directives\gmaps.js" />
     <Content Include="Content\Scripts\client\directives\swChart.js" />
     <Content Include="Content\Scripts\client\crud\search\crudSearchService.js" />
     <Content Include="Content\Scripts\client\directives\scrollPane.js" />
@@ -577,6 +578,7 @@
     <Content Include="Content\Scripts\client\services\breadcrumbService.js" />
     <Content Include="Content\Scripts\client\services\chartService.js" />
     <Content Include="Content\Scripts\client\services\controllerinheritanceservice.js" />
+    <Content Include="Content\Scripts\client\services\load_gmaps_service.js" />
     <Content Include="Content\Scripts\client\services\notificationService.js" />
     <Content Include="Content\Scripts\client\services\logoutService.js" />
     <Content Include="Content\Scripts\client\services\recursionHelper_service.js" />
@@ -699,6 +701,7 @@
     <Content Include="bower.json" />
     <Content Include="Content\styles\default\_bootbox.scss" />
     <Content Include="App_Data\Client\otb\classificationcolors.json" />
+    <Content Include="Content\styles\default\_gmaps.scss" />
     <None Include="Content\styles\default\_button.scss" />
     <None Include="Content\styles\default\vendor\_xeditable.scss" />
     <Content Include="Content\Scripts\client\crud\crud_base_list.js" />
@@ -810,6 +813,7 @@
     <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
     <Content Include="Content\Templates\inputModal.html" />
     <Content Include="Content\Templates\menu\adminmenu.html" />
+    <Content Include="Content\Templates\otb\saddress.html" />
     <Content Include="Content\Templates\otb\WotaskchangeStatus.html" />
     <Content Include="Content\Templates\otb\compositionlistdeleteaction.html" />
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />

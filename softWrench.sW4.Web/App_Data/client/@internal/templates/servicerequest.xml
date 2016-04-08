@@ -194,7 +194,7 @@
                   <header displacement="ontop" label="Work Details" params="fieldset=true" />
                   <renderer type="default" params="childinputsize=large" />
                   <!--<section id ="siteidsection"/>-->
-                  <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" >
+                  <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
                     <renderer type="lookup"/>
                     <event type="beforechange" service="srService" method="beforeChangeLocation"/>
                   </association>
@@ -291,6 +291,11 @@
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
             </composition>
+
+            <tab label="Location Address" id="saddress" icon="fa-map-o" showexpression="(@location_.serviceaddress_.latitudey &amp;&amp; @location_.serviceaddress_.longitudex) || @location_.serviceaddress_.streetaddress">
+              <section id="saddresssection" resourcepath="/Content/Templates/otb/saddress.html" parameters="zoom=19;tabid=saddress">
+              </section>
+            </tab>
           </section>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>

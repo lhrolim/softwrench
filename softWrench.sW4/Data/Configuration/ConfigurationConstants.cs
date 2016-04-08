@@ -33,6 +33,9 @@
         //            }
         //        }
 
-
+        // keys for default values of gmaps addresses
+        public const string MapsDefaultCityKey = "/Global/Maps/DefaultCity";
+        public const string MapsDefaultStateKey = "/Global/Maps/DefaultState";
+        public const string MapsDefaultCountryKey = "/Global/Maps/DefaultCountry";
     }
 }

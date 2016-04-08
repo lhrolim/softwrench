@@ -158,6 +158,16 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
             return config;
         }
 
+        [HttpGet]
+        public List<string> GetConfigurations([FromUri]List<string> fullKeys) {
+            var configs = new List<string>();
+            if (fullKeys == null || fullKeys.Count == 0) {
+                return configs;
+            }
+            fullKeys.ForEach(k => configs.Add(_facade.Lookup<string>(k)));
+            return configs;
+        }
+
         class ConfigurationScreenResult {
 
             public IEnumerable<ModuleDefinition> Modules { get; set; }

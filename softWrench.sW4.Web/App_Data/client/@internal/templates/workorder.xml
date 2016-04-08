@@ -300,7 +300,7 @@
 
               <section orientation="horizontal">
                 <renderer type="default" params="childinputsize=large" />
-                <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" >
+                <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
                   <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
                   <renderer type="lookup" />
                 </association>
@@ -511,6 +511,10 @@
               <collectionproperties allowcreation="false" />
             </composition>
 
+            <tab label="Location Address" id="saddress" icon="fa-map-o" showexpression="(@location_.serviceaddress_.latitudey &amp;&amp; @location_.serviceaddress_.longitudex) || @location_.serviceaddress_.streetaddress">
+              <section id="saddresssection" resourcepath="/Content/Templates/otb/saddress.html" parameters="zoom=19;tabid=saddress">
+              </section>
+            </tab>
           </section>
           <!--          <commandbars>-->
           <!--commented since no customization is possible currently-->

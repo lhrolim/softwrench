@@ -33,6 +33,11 @@
                     return $rootScope.$broadcast("sw_alltabsloaded");
                 }
 
+                // covers a redirect for same application and schema but to another entry
+                $rootScope.$on("sw_applicationrendered", function () {
+                    $rootScope.$broadcast("sw_alltabsloaded");
+                });
+
                 $timeout(function () {
                     var firstTabId = null;
                     $('.compositiondetailtab li>a').each(function () {
@@ -243,6 +248,7 @@
 
                 $scope.setActiveTab = function (tabId) {
                     crudContextHolderService.setActiveTab(tabId);
+                    $rootScope.$broadcast("sw4_activetabchanged", tabId);
                 };
                 $scope.hasTabs = function (schema) {
                     return tabsService.hasTabs(schema);
@@ -263,6 +269,11 @@
                         return false;
                     }
                     return expressionService.evaluate(composition.showExpression, $scope.datamap, $scope);
+                }
+
+                // method for defined <tab> on metadata
+                $scope.shouldShowTab = function (tab) {
+                    return $scope.shouldShowComposition(tab);
                 }
 
                 $scope.toConfirmBack = function (data, schema) {

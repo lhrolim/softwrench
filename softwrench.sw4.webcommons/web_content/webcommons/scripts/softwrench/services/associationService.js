@@ -269,6 +269,19 @@
         function postAssociationHook(associationMetadata, scope, triggerparams) {
             triggerparams = triggerparams || {};
 
+            var fields = triggerparams.fields;
+            if (!fields) {
+                fields = scope.datamap;
+                if (fields && fields.fields != undefined) {
+                    fields = scope.datamap.fields;
+                }
+            }
+
+            // clear the extra fields if new value is null
+            if (fields && fields[associationMetadata.attribute] === null && associationMetadata.extraProjectionFields && associationMetadata.extraProjectionFields.length > 0) {
+                doUpdateExtraFields(associationMetadata, null, fields);
+            }
+
             if (associationMetadata.events == undefined) {
                 return $q.when();
             }
@@ -280,15 +293,6 @@
             if (fn == undefined) {
                 //this should not happen, it indicates a metadata misconfiguration
                 return $q.when();
-            }
-
-            var fields = triggerparams.fields;
-
-            if (!fields) {
-                fields = scope.datamap;
-                if (fields && fields.fields != undefined) {
-                    fields = scope.datamap.fields;
-                }
             }
 
             var params = {

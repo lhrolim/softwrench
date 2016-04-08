@@ -70,6 +70,9 @@ namespace softWrench.sW4.Util {
         }
 
         public static string FirstStackTraceLine([NotNull] Exception e) {
+            if (e.StackTrace == null) {
+                return "";
+            }
             var lines = StackTraceLines(e);
             return lines[0];
         }
