@@ -46,6 +46,11 @@ namespace softwrench.sw4.user.classes.entities {
             get; set;
         }
 
+
+        public bool? MaximoActive {
+            get; set;
+        }
+
         [Property]
         public string CriptoProperties {
             get; set;
@@ -185,7 +190,7 @@ namespace softwrench.sw4.user.classes.entities {
             LastName = LastName ?? dbUSer.LastName;
             SiteId = SiteId ?? dbUSer.SiteId;
             OrgId = OrgId ?? dbUSer.OrgId;
-
+            IsActive = IsActive ?? dbUSer.IsActive;
             PersonGroups = dbUSer.PersonGroups;
             CustomRoles = dbUSer.CustomRoles;
             Profiles = !Profiles.IsEmpty ? Profiles : dbUSer.Profiles;
