@@ -3,9 +3,29 @@
 
     var staticvalidFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png", "lic"];
 
-    angular.module("sw_layout").factory("attachmentService", ["$rootScope", "$q", "$timeout", "contextService", "fieldService", "schemaService", "alertService", "i18NService", "searchService", "tabsService", "redirectService", "$http", "userService", attachmentService]);
+    angular.module("sw_layout").factory("attachmentService", ["$rootScope", "$q", "$timeout", "contextService", "fieldService", "schemaService", "alertService", "i18NService", "searchService", "tabsService", "redirectService", "$http", "userService", "crudContextHolderService", attachmentService]);
 
-    function attachmentService($rootScope, $q, $timeout, contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService, $http, userService) {
+    function attachmentService($rootScope, $q, $timeout, contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService, $http, userService, crudContextHolderService) {
+
+        $rootScope.$on("sw.attachment.file.changed", function (event, fileNames) {
+
+            var panelId = crudContextHolderService.isShowingModal ? "#modal" : null;
+            var dm = crudContextHolderService.rootDataMap(panelId);
+
+            if (fileNames && nullOrEmpty(dm.document)) {
+                if (angular.isArray(fileNames)) {
+                    dm.document = fileNames.join(",");
+                } else {
+                    dm.document = fileNames;
+                }
+                try {
+                    $rootScope.$digest();
+                } catch (e) {
+                    //
+                }
+                
+            }
+        });
 
         var service = {
             isValid: isValid,

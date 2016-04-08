@@ -187,6 +187,9 @@ app.directive('configAssociationListInputDatamap', function () {
             $scope.isPositionLeft = function (fieldMetadata) {
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
             }
+
+           
+
             $scope.$on('sw_associationsupdated', function (event, associationoptions) {
                 $scope.associationsloaded = true;
                 if (!$scope.associationOptions) {

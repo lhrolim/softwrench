@@ -581,7 +581,9 @@
             // remove preview element if a new file is added
             getFileUploadFields().forEach(function (field) {
                 field.rendererParameters["showImagePreview"] = false;
+                $scope.$emit("sw.attachment.file.changed", file.name);
             });
+
         }
 
 
@@ -648,6 +650,7 @@
                 } else {
                     $scope.edit(datamap, "New Attachment", true);
                 }
+                $scope.$emit("sw.attachment.file.changed", file.name);
             });
         }
 

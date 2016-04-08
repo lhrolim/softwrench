@@ -1,7 +1,7 @@
 (function (angular) {
     "use strict";
 
-    angular.module("omr.angularFileDnD", []).directive("fileDropzone", ["attachmentService", function (attachmentService) {
+    angular.module("omr.angularFileDnD", []).directive("fileDropzone", ["attachmentService", "$rootScope", function (attachmentService, $rootScope) {
         return {
             require: "^?form",
             restrict: "A",
@@ -77,7 +77,7 @@
                         if (form) {
                             form.$setDirty();
                         }
-                        scope.$emit("file-dropzone-drop-event", {
+                        $rootScope.$broadcast("file-dropzone-drop-event", {
                             file: scope.file,
                             type: type,
                             name: name,

@@ -77,7 +77,8 @@ app.directive("fileread", function ($log, alertService, attachmentService) {
                 }
 
                 scope.path = fileName;
-                $("[data-upload=files]")[0].value = fileName;
+//                $("[data-upload=files]")[0].value = fileName;
+                scope.$emit("sw.attachment.file.changed", fileName);
             });;
         }
     };
