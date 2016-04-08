@@ -412,7 +412,7 @@
 
             quickSearch: function (quickSearchData, panelId) {
                 if (!quickSearchData) return;
-                this.refreshGrid({}, { quickSearchData: quickSearchData, keepfilterparameters: false, panelid: panelId });
+                this.refreshGrid({}, null,{ quickSearchData: quickSearchData, keepfilterparameters: false, panelid: panelId });
             },
 
             /// <summary>
