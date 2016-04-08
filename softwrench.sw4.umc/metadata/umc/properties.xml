@@ -26,9 +26,9 @@
   <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>
-  <property key="notifications.activityStream.enabled" value="true"/>
-  <property key="dashboard.enabled" value="false"/>
-  <property key="ui.adminmenu.showclassic" value="false"/>
+  <property key="notifications.activityStream.enabled" value="false"/>
+  <property key="dashboard.enabled" value="true"/>
+  <property key="ui.adminmenu.showclassic" value="true"/>
 
   <!-- tableau -->
   <!--
