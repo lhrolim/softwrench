@@ -95,14 +95,14 @@
                                     </div>
                                 </div>
                                 <div ng-switch-when="imagepreview" class="imagepreview">
-                                    <img ng-src="{{ datamap[fieldMetadata.attribute] }}"/>
+                                    <img ng-src="{{ datamap[fieldMetadata.attribute] }}" ng-if="isString(datamap[fieldMetadata.attribute])"/>
                                 </div>
                                 
                                 <div ng-switch-when="link">
-                                    <ul>
+                                    <ul ng-if="isArray(datamap[fieldMetadata.attribute])">
                                         <li ng-repeat="link in datamap[fieldMetadata.attribute]">
-                                            <a href="{{ link[fieldMetadata.rendererParameters['linkUrlField']] }}" target="_blank">
-                                                {{ link[fieldMetadata.rendererParameters['linkNameField']] }}
+                                            <a href="{{ link[fieldMetadata.rendererParameters['linkUrlField'] || 'url' ] }}" target="_blank">
+                                                {{ link[fieldMetadata.rendererParameters['linkNameField'] || 'name' ] }}
                                             </a>
                                         </li>
                                     </ul>

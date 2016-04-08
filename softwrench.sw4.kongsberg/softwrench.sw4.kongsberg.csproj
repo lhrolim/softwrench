@@ -96,6 +96,10 @@
       <Project>{841B4DEA-A209-4AA8-A73C-29C33E01EEE0}</Project>
       <Name>cts.commons.simpleinjector</Name>
     </ProjectReference>
+    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
+      <Project>{5FA34361-87B3-4094-BFBE-7DB7B4D16036}</Project>
+      <Name>cts.commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>

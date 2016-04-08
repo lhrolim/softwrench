@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
+using cts.commons.portable.Util;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
@@ -20,23 +21,22 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
             var result = base.GetApplicationDetail(application, user, request);
             var datamap = result.ResultObject.Fields;
 
-            var docinfourl = WorklogAttachmentUrl(datamap[application.IdFieldName]);
+            var attachment = _attachmentDAO.SingleByOwner("WORKLOG", datamap[application.IdFieldName]);
+            if (attachment == null || string.IsNullOrEmpty(attachment.urlname)) return result;
 
-            if (docinfourl == null) return result;
+            var docinfourl = attachment.urlname;
 
-            var fileUrl = AttachmentHandler.GetFileUrl(docinfourl);
-            datamap.Add("attachment_url", fileUrl);
+            var fileUrl = (string) AttachmentHandler.GetFileUrl(docinfourl);
+            var isImage = fileUrl.ContainsAnyIgnoreCase(new[] {"png", "bmp", "jpg", "jpeg", "gif"}); // TODO: use actual mime type detection
+
+            datamap.Add("attachment_is_image", isImage);
+            // isimage ? image's url : list of file links
+            var attachmentToDisplay = isImage ? fileUrl : (object) new[] {
+                new { name = attachment.document, url = fileUrl }
+            };
+            datamap.Add("attachment_url", attachmentToDisplay);
 
             return result;
-        }
-
-        private string WorklogAttachmentUrl(object worklogid) {
-            var parameters = new ExpandoObject();
-            var parameterCollection = (ICollection<KeyValuePair<string, object>>)parameters;
-            parameterCollection.Add(new KeyValuePair<string, object>("OWNERID", worklogid));
-
-            var attachment = _attachmentDAO.SingleByOwner("WORKLOG", worklogid);
-            return attachment != null ? attachment.urlname : null;
         }
 
         public override string ApplicationName() {

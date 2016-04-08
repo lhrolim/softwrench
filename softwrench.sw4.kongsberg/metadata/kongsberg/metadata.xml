@@ -2859,12 +2859,18 @@
             <section orientation="horizontal">
               <!-- upload image -->
               <field attribute="newattachment" label="Image" showexpression="!@worklogid">
-                <renderer type="dndupload" params="acceptedFileExtensions=jpg,jpeg,png,bmp" />
+                <renderer type="dndupload" params="acceptedFileExtensions=pdf,zip,txt,doc,docx,dwg,gif,jpg,csv,xls,xlsx,pptx,ppt,xml,xsl,bmp,html,las,avi,jpeg,mp3,mp4,z7,rar,AVI,eml,emz,evt,evtx,mp4,log,LAS,MDB,PNG,JPEG,config,dat,lic,ora,eml,png,js,exe" />
               </field>
+              
               <!-- display image preview -->
-              <field attribute="attachment_url" label="Image" readonly="true" showexpression="!!@worklogid &amp;&amp; !!@attachment_url">
+              <field attribute="attachment_url" label="Image" readonly="true" showexpression="!!@worklogid &amp;&amp; !!@attachment_url &amp;&amp; (@attachment_is_image === true || @attachment_is_image === 'true')">
                 <renderer type="imagepreview"/>
               </field>
+              <!-- or display file link -->
+              <field attribute="attachment_url" label="Attachment" showexpression="!!@worklogid &amp;&amp; !!@attachment_url &amp;&amp; (!@attachment_is_image || @attachment_is_image === 'false')">
+                <renderer type="link" params="linkUrlField=url;linkNameField=name"/>
+              </field>
+              
             </section>
           </customization>
         </detail>

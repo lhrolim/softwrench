@@ -62,5 +62,13 @@ namespace cts.commons.portable.Util {
             return source.Contains(find, StringComparison.OrdinalIgnoreCase);
         }
 
+        public static bool ContainsAny(this string source, string[] find, StringComparison comparison) {
+            return find.Any(f => source.Contains(f, comparison));
+        }
+
+        public static bool ContainsAnyIgnoreCase(this string source, string[] find) {
+            return source.ContainsAny(find, StringComparison.OrdinalIgnoreCase);
+        }
+
     }
 }
