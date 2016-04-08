@@ -693,7 +693,7 @@
 
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
-        <list stereotype="compositionlist">
+        <schema id="comositionlist" stereotype="compositionlist">
           <event type="onedit.validation" service="labtranService" method="validateEdit"/>
           <event type="onremoval.validation" service="labtranService" method="validateRemoval"/>
           <field attribute="labtransid" hidden="true"/>
@@ -702,9 +702,9 @@
           <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
           <field attribute="transdate" label="Created Date"/>
           <field attribute="genapprservreceipt" hidden="true"/>
-        </list>
+        </schema>
 
-        <detail platform="web">
+        <schema id="detail" platform="web">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
@@ -736,7 +736,7 @@
           <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.parentdata.fields.glaccount">
             <renderer type="lookup"/>
           </association>
-        </detail>
+        </schema>
 
         <schema id="labors" stereotype="list">
           <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="@#datamapidx == 0 ? ctx:getUserData().login.toUpperCase() : null" extraprojectionvalues="worksite, orgid">
