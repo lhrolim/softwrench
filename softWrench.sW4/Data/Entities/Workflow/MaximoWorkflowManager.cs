@@ -60,21 +60,46 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
         private const string WfQueryString = "select wfprocessid, processname from wfprocess p where active = 1 and enabled = 1 and {0} = '{1}' and not exists(select 1 from wfinstance i where i.processname = p.processname and i.active = 1 and i.ownertable = '{2}' and i.ownerid = '{3}')";
 
+//        private const string WfAssignmentsQuery =
+//
+//        @"select wf.assignid, wf.processname from wfassignment wf
+//        where ownertable = ? and ownerid = ?
+//        and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
+//        and (wf.origperson = ?  or exists (
+//        select 1 from maxrole m where wf.roleid = m.maxrole and type = 'PERSON' and value = ?
+//        union all
+//        select 1 from maxrole m2 
+//        inner join persongroupview pv
+//        on m2.value = pv.persongroup
+//        where wf.roleid = m2.maxrole and m2.type = 'PERSONGROUP' 
+//        and pv.personid = ?
+//        ))";
+
         private const string WfAssignmentsQuery =
 
-        @"select wf.assignid, wf.processname from wfassignment wf
+       @"select wf.assignid, wf.processname from wfassignment wf
         where ownertable = ? and ownerid = ?
         and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
-        and (wf.origperson = ?  or exists (
-        select 1 from maxrole m where wf.roleid = m.maxrole and type = 'PERSON' and value = ?
-        union all
-        select 1 from maxrole m2 
-        inner join persongroupview pv
-        on m2.value = pv.persongroup
-        where wf.roleid = m2.maxrole and m2.type = 'PERSONGROUP' 
-        and pv.personid = ?
-        ))";
+        and (wf.assigncode = ?) ";
 
+
+
+//        private const string WfActionsQuery =
+//        @"select wf.description, wfa.actionid, wfa.instruction, wf.wfid, wf.processname, wf.assignid from wfassignment wf
+//        inner join wfaction wfa
+//        on (wf.nodeid = wfa.ownernodeid and wfa.processname = wf.processname and wf.processrev = wfa.processrev)
+//        inner join wfcallstack c on (wf.nodeid = c.nodeid and wf.wfid = c.wfid)
+//        where wf.assignid = ?
+//        and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
+//        and (wf.origperson = ? or exists (
+//        select 1 from maxrole m where wf.roleid = m.maxrole and type = 'PERSON' and value = ?
+//        union all
+//        select 1 from maxrole m2 
+//        inner join persongroupview pv
+//        on m2.value = pv.persongroup
+//        where wf.roleid = m2.maxrole and m2.type = 'PERSONGROUP' 
+//        and pv.personid = ?
+//        ))";
 
         private const string WfActionsQuery =
         @"select wf.description, wfa.actionid, wfa.instruction, wf.wfid, wf.processname, wf.assignid from wfassignment wf
@@ -83,22 +108,14 @@ namespace softWrench.sW4.Data.Entities.Workflow {
         inner join wfcallstack c on (wf.nodeid = c.nodeid and wf.wfid = c.wfid)
         where wf.assignid = ?
         and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
-        and (wf.origperson = ? or exists (
-        select 1 from maxrole m where wf.roleid = m.maxrole and type = 'PERSON' and value = ?
-        union all
-        select 1 from maxrole m2 
-        inner join persongroupview pv
-        on m2.value = pv.persongroup
-        where wf.roleid = m2.maxrole and m2.type = 'PERSONGROUP' 
-        and pv.personid = ?
-        ))";
+        and (wf.assigncode = ? )";
 
         private const string ClosedStatusQuery = "select s.description from synonymdomain s inner join {0} w on w.status = s.value where {1} = '{2}' and domainid = 'WOSTATUS' and maxvalue in ('CLOSE', 'CAN')";
 
 
         [NotNull]
         public IList<AssociationOption> LocateAssignmentsToRoute(string entityName, string entityId, InMemoryUser user) {
-            var results = _maxDAO.FindByNativeQuery(WfAssignmentsQuery, entityName, entityId, user.MaximoPersonId, user.MaximoPersonId, user.MaximoPersonId);
+            var results = _maxDAO.FindByNativeQuery(WfAssignmentsQuery, entityName, entityId, user.MaximoPersonId);
             return results.Select(r => new AssociationOption(r["assignid"], r["processname"])).ToList();
         }
 
@@ -115,7 +132,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
         [NotNull]
         public ApplicationDetailResult LocateWfActionsToRoute(string wfAssignmentId, InMemoryUser user) {
-            var results = _maxDAO.FindByNativeQuery(WfActionsQuery, wfAssignmentId, user.MaximoPersonId, user.MaximoPersonId, user.MaximoPersonId);
+            var results = _maxDAO.FindByNativeQuery(WfActionsQuery, wfAssignmentId, user.MaximoPersonId);
             var taskOptions = results.Select(r => new AssociationOption(r["actionid"], r["instruction"])).ToList();
             var tasklabel = results[0]["description"];
             var wfid = results[0]["wfid"];
