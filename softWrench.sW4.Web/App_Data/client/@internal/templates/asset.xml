@@ -65,7 +65,7 @@
           <field attribute="priority" tooltip="Priority" hidden="true">
             <renderer type="priorityicon" params="icon=fa-flag;qualifier=priority"/>
           </field>
-          <field attribute="workordercounter" tooltip="Workorders" hidden="true">
+          <field attribute="workordercounter" tooltip="Active Workorders" hidden="true">
             <renderer type="icon" params="icon=fa-wrench"/>
           </field>
           <field attribute="#statusicons" label="Status Icons">
