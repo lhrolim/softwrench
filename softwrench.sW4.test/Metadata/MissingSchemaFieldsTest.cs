@@ -40,6 +40,16 @@ namespace softwrench.sW4.test.Metadata {
             Assert.IsNotNull(ownerTableField);
             Assert.IsTrue(ownerTableField.IsHidden);
 
+
+            appl = MetadataProvider.Application("workorder");
+            schema = appl.Schema(new ApplicationMetadataSchemaKey("editdetail", SchemaMode.input, ClientPlatform.Web));
+            Assert.IsNotNull(schema);
+            var crewIdField = schema.Fields.FirstOrDefault(f => f.Attribute == "crewid");
+            Assert.IsNotNull(crewIdField);
+            Assert.IsTrue(crewIdField.IsHidden);
+
+            
+
         }
     }
 }

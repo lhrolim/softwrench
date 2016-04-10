@@ -121,6 +121,10 @@
           <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
         </relationship>
+        <relationship to="alndomain" qualifier="crew">
+          <relationshipAttribute from="crewid" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="CREWID" quoteLiteral="true"/>
+        </relationship>
 
       </relationships>
 
@@ -374,6 +378,9 @@
             <field label="Site:" attribute="siteid" readonly="true" hidden="true">
               <renderer type="default" />
             </field>
+            <association label="Trade" target="crewid" labelfield="crew_.description" requiredexpression="true">
+              <renderer type="lookup"/>
+            </association>
           </customization>
         </schema>
 
@@ -879,12 +886,12 @@
         <schema id="newdetail" platform="web" redeclaring="false">
           <customization position="classstructureid"></customization>
         </schema>
-        <schema id="editdetail" platform="web" redeclaring="false">
-          <properties>
-            <property key="detail.showtitle" value="true"/>
-          </properties>
-          <customization position="classstructureid"></customization>
-        </schema>
+<!--        <schema id="editdetail" platform="web" redeclaring="false">-->
+<!--          <properties>-->
+<!--            <property key="detail.showtitle" value="true"/>-->
+<!--          </properties>-->
+<!--          <customization position="classstructureid"></customization>-->
+<!--        </schema>-->
       </schemas>
     </application>
 

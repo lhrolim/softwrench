@@ -277,7 +277,7 @@
           <field attribute="woclass" hidden="true"/>
 
           <!--TODO: investigate hidden fields on customizations not being added-->
-          <field attribute="crewid" hidden="true"/>
+<!--          <field attribute="crewid" hidden="true"/>-->
 
           <field attribute="class" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>

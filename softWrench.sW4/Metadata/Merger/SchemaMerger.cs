@@ -49,6 +49,8 @@ namespace softWrench.sW4.Metadata.Validator {
             DoApplyCustomizations(original, overridenSchema, components, customizations, customizationsActuallyApplied, fieldsThatShouldBeCustomized);
             SchemaFilterBuilder.ApplyFilterCustomizations(original.SchemaFilters, overridenSchema.DeclaredFilters);
             original.MergeProperties(overridenSchema);
+
+            ApplicationSchemaFactory.AddHiddenRequiredFields(original);
         }
 
 

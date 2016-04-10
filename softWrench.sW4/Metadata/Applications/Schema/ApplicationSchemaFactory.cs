@@ -65,7 +65,11 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 MergeWithParentFilters(schema);
             }
             schema.Title = title ?? BuildDefaultTitle(schema);
-            AddHiddenRequiredFields(schema);
+            if (schema.RedeclaringSchema) {
+                //otherwise this call needs to be performed after the customization process is finished
+                AddHiddenRequiredFields(schema);
+            }
+
 
             MergeWithStereotypeSchema(schema);
 
@@ -123,7 +127,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 return;
             }
             var childDefinition = schema.CommandSchema.ApplicationCommands;
-            schema.CommandSchema.ApplicationCommands = ApplicationCommandMerger.MergeCommands(childDefinition, parentDefinitions,true);
+            schema.CommandSchema.ApplicationCommands = ApplicationCommandMerger.MergeCommands(childDefinition, parentDefinitions, true);
         }
 
         private static List<IApplicationDisplayable> MergeParentSchemaDisplayables(ApplicationSchemaDefinition childSchema, IApplicationDisplayableContainer parentContainer) {
@@ -209,7 +213,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         /// Add PK and FK fields, as hidden ones, if they weren´t already provided in the metadata.xml configuration. 
         /// This avoid common mistakes.
         /// </summary>
-        private static void AddHiddenRequiredFields(ApplicationSchemaDefinition schema) {
+        public static void AddHiddenRequiredFields(ApplicationSchemaDefinition schema) {
             var idFieldDefinition = schema.Fields.FirstOrDefault(f => f.Attribute == schema.IdFieldName);
             if (idFieldDefinition == null && !schema.Abstract) {
                 //if its abstract, it may be declared on the child schemas, so we wont take any action
