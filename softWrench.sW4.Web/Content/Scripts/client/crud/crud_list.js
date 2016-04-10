@@ -653,9 +653,15 @@
                             $scope.gridRefreshed(dataRefreshed.data, dataRefreshed.panelid);
                         }
 
+                        var pageSize = userPreferencesService.getSchemaPreference("pageSize", $scope.schema.applicationName, $scope.schema.schemaId, $scope.panelid);
+
                         var dataToRefresh = contextService.fetchFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""), true, true, true);
                         if (dataToRefresh) {
                             log.debug("there was already a scheduled call to refresh data from the server");
+                            if (pageSize) {
+                                dataToRefresh.extraparameters = dataToRefresh.extraparameters || {};
+                                dataToRefresh.extraparameters.pageSize = pageSize;
+                            }
                             $scope.refreshGridRequested(dataToRefresh.searchData, dataToRefresh.searchOperator, dataToRefresh.extraparameters);
                         }
 
@@ -667,8 +673,7 @@
                             if (fixedWhereClause) {
                                 searchDTO.filterFixedWhereClause = fixedWhereClause;
                             }
-
-                            var pageSize = userPreferencesService.getSchemaPreference("pageSize", $scope.schema.applicationName, $scope.schema.schemaId, $scope.panelid);
+                            
                             if (pageSize) {
                                 searchDTO.pageSize = pageSize;
                             }
