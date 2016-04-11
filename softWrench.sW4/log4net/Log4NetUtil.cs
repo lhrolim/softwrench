@@ -45,8 +45,11 @@ namespace softWrench.sW4.log4net {
 
             var swFolder = EnvironmentUtil.GetLocalSWFolder();
 
-            var needsFolderReplacement = !swFolder.Equals("c:\\softwrench\\");
-            if (!needsFolderReplacement && (!ApplicationConfiguration.IsDev() || ApplicationConfiguration.IsLocal())) {
+            //this would mean the folder was already specified via a custom environment property
+            var needsFolderReplacement = !swFolder.EqualsIc("c:\\softwrench\\");
+            var isDevOrQa = ApplicationConfiguration.IsDev() || ApplicationConfiguration.IsQA();
+            if (ApplicationConfiguration.IsLocal()) {
+                //on local running instances, let´s not handle the logs at all
                 return;
             }
 
@@ -60,10 +63,11 @@ namespace softWrench.sW4.log4net {
                     continue;
                 }
                 rollingFileAppender.MaxSizeRollBackups = ApplicationConfiguration.IsLocal() ? 1 : 3;
-                if (ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsLocal()) {
+                if (isDevOrQa && !ApplicationConfiguration.IsLocal()) {
                     rollingFileAppender.File = rollingFileAppender.File.Replace("\\logs\\",
                         "\\logs\\{0}\\".Fmt(ApplicationConfiguration.ClientName));
-                } else if (!ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsQA()) {
+                } else if (!isDevOrQa) {
+                    //disabling queries in production
                     ChangeLevel("MAXIMO.SQL", "WARN", null);
                     ChangeLevel("SWDB.SQL", "WARN", null);
                 }
