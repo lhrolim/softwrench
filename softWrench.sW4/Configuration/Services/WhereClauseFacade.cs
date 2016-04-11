@@ -12,15 +12,18 @@ using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using cts.commons.simpleinjector;
 using Iesi.Collections.Generic;
 using NHibernate.Util;
 using softwrench.sw4.user.classes.entities;
+using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Configuration.Services {
     class WhereClauseFacade : IWhereClauseFacade, ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
+
+        private const string DefaultWhereClause = " 1=1 ";
 
         private readonly ConfigurationService _configurationService;
         private readonly IContextLookuper _contextLookuper;
@@ -61,17 +64,38 @@ namespace softWrench.sW4.Configuration.Services {
                 return null;
             }
             resultString = resultString.Trim();
+            WhereClauseResult result;
             if (resultString.StartsWith("@")) {
                 //@service.method
                 var split = resultString.Split('.');
-                return new WhereClauseResult {
+                result = new WhereClauseResult {
                     //remove @
                     ServiceName = split[0].Substring(1),
                     MethodName = split[1]
                 };
+            } else {
+                result = new WhereClauseResult { Query = resultString };
             }
-            return new WhereClauseResult { Query = resultString };
 
+            result.Query = GetConvertedWhereClause(result, SecurityFacade.CurrentUser());
+            return result;
+        }
+
+        private static string GetConvertedWhereClause(WhereClauseResult whereClauseResult, InMemoryUser user, string defaultValue = DefaultWhereClause) {
+            if (!string.IsNullOrEmpty(whereClauseResult.Query)) {
+                return DefaultValuesBuilder.ConvertAllValues(whereClauseResult.Query, user);
+            }
+            if (!string.IsNullOrEmpty(whereClauseResult.ServiceName)) {
+                var ob = SimpleInjectorGenericFactory.Instance.GetObject<object>(whereClauseResult.ServiceName);
+                if (ob != null) {
+                    var result = ReflectionUtil.Invoke(ob, whereClauseResult.MethodName, new object[] { });
+                    if (!(result is string)) {
+                        return DefaultWhereClause;
+                    }
+                    return DefaultValuesBuilder.ConvertAllValues((string)result, user);
+                }
+            }
+            return defaultValue;
         }
 
         public void Register(string applicationName, String query, WhereClauseRegisterCondition condition = null, bool validate = false) {
