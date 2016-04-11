@@ -119,3 +119,33 @@ sw-chart {
         }
     }
 }
+
+.dashboard-page {
+
+    .dashboard-toolbar {
+        padding: 10px;
+
+        .interval-trigger {
+            > div {
+                display: inline-block;
+            }
+            
+            .configure-box {
+                padding: 5px;
+                border: 1px solid black;
+                border-radius: 5px;
+                
+                > div {
+                    display: inline-block;
+                }
+
+                .configure-interval-input {
+                    > input[type=number] {
+                        width: 50px;
+                    }
+                }
+            }
+        }
+    }
+
+}

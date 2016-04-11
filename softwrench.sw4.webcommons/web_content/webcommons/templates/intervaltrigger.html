@@ -1,0 +1,47 @@
+﻿<div class="interval-trigger">
+    <div class="activateBox">
+        <input type="checkbox"
+               ng-model="vm.activated"
+               ng-disabled="config.configuring"
+               ng-change="onActivateChanged(vm.activated)" />
+        &nbsp;{{ activateLabel }}
+    </div>
+    <div ng-show="vm.activated"
+         class="configure-box">
+
+        <div class="configure-interval-input">
+            <span>Interval</span>
+            <input type="number"
+                   rel="tooltip" data-original-title="Interval in {{ config.intervalConfig.unit + 's' }} (zero means it won't run)"
+                   ng-enabled="config.configuring"
+                   ng-model="vm.userInterval"
+                   min="{{ config.intervalConfig.min }}"
+                   max="{{ config.intervalConfig.max }}" />
+        </div>
+        <div ng-hide="config.configuring"
+             class="configure-toggle">
+            <span rel="tooltip" data-original-title="Configure Interval Value">
+                Configure
+            </span>
+            <input type="checkbox"
+                   ng-disabled="config.configuring"
+                   ng-model="config.configuring"
+                   ng-change="onConfigurationFlagChanged(config.configuring)" />
+        </div>
+        
+        <div ng-show="config.configuring"
+             class="configure-box-buttons">
+            <span ng-click="intervalChanged(vm.userInterval)"
+                  rel="tooltip" data-original-title="Save Interval"
+                  style="cursor: pointer; padding: 5px">
+                <i class="fa fa-check"></i>
+            </span>
+            <span ng-click="intervalConfigCancel()"
+                  rel="tooltip" data-original-title="Cancel Interval Changes"
+                  style="cursor: pointer; padding: 5px">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+
+    </div>
+</div>

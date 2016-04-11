@@ -168,6 +168,29 @@
             return tabid == $scope.currentdashboardid ? "active" : null;
         };
 
+        //#region refresh
+        $scope.refreshInterval = {
+            // hardcoded with 'expected' values > TODO: change (fetch from somewhere) when requirements are clearer
+            config: {
+                'min'    : 5,
+                'max'    : 60,
+                'default': 5,
+                'unit'   : "minute"
+            }
+        };
+
+        $scope.refreshDashboards = function (delay) {
+            dashboardAuxService.loadDashboards($scope.currentdashboardid).then(function(data) {
+                $scope.dashboards.forEach(function(dashboard) {
+                    markDashboardNotSelected(dashboard.id);
+                });
+                $scope.resultData = data.resultObject;
+                $scope.doInit();
+            });
+        };
+
+        //#endregion
+
         $scope.doInit();
 
         $scope.$on("dash_createpanel", function (event, paneltype) {

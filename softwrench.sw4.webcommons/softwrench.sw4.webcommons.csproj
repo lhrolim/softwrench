@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web_content\webcommons\scripts\softwrench\components\combo.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\directive\intervaltrigger.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\richtext.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
@@ -143,6 +144,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\util\menu.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\jquery_utils.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\ui_utils.js" />
+    <Content Include="web_content\webcommons\templates\intervaltrigger.html" />
     <Content Include="web_content\webcommons\templates\swlabel.html" />
   </ItemGroup>
   <ItemGroup>

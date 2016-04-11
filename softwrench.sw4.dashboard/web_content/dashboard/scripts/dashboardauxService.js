@@ -158,6 +158,14 @@
         function deactivateDashboard(dashboard) {
             return restService.postPromise("Dashboard", "DeactivateDashboard", null, dashboard);
         }
+
+        function loadDashboards(currentDashboardId) {
+            var params = !!currentDashboardId ? { dashBoardId: currentDashboardId } : null;
+            return restService.getPromise("Dashboard", "LoadDashboard", params)
+                .then(function(response) {
+                    return response.data;
+                });
+        }
         //#endregion
 
         //#region Service Instance
@@ -172,7 +180,8 @@
             setGraphicProvider: setGraphicProvider,
             createAndAssociateGraphicPanel: createAndAssociateGraphicPanel,
             addPanelToDashboard: addPanelToDashboard,
-            deactivateDashboard: deactivateDashboard
+            deactivateDashboard: deactivateDashboard,
+            loadDashboards: loadDashboards
         };
         return service;
         //#endregion
