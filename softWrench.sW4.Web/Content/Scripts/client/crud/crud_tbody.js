@@ -131,12 +131,17 @@
                     var iconHTML = "";
                     iconHTML += "<i class=\"fa {0}\" onclick='griditemclick(event,{1},\"{2}\",this)'".format(iconClass, rowIdx, column.attribute);
 
+                    //if no color or value, hide the icon
+                    if (foreground == null && (text == 0 || text == null)) {
+                        foreground = 'transparent';
+                    }
+
                     if (foreground) {
                         iconHTML += 'style = "color: {0}"'.format(foreground);
                     }
 
                     //create html tooltip with label and count
-                    if (text != null) {
+                    if (text != null && text != 0) {
                         var toolTip = "<span style='white-space: nowrap;'>";
                         toolTip += column.toolTip ? column.toolTip : column.label;
                         if (column.rendererParameters && column.rendererParameters["hideValueOnTooltip"] !== "true") {
@@ -313,7 +318,7 @@
                                 }
                             }
                             else if (column.rendererType === "icon") {
-                                html += scope.handleIcon(scope.innerLoadIcon(i, j), column, formattedText, i);
+                                html += scope.handleIcon(scope.innerLoadIcon(i, j), column, formattedText, null, i);
                             }
                             else if (column.rendererType === "iconbutton") {
                                 var innerIcon = scope.innerLoadIcon(i, j);
@@ -322,7 +327,7 @@
 
                                 if (innerIcon) {
                                     html += '<button class="btn btn-default btn-sm">';
-                                    html += scope.handleIcon(innerIcon, column, formattedText, i);
+                                    html += scope.handleIcon(innerIcon, column, formattedText, null, i);
                                     html += '</button>';
                                 }
                             }
@@ -343,22 +348,20 @@
                                     iconColumns.forEach(function(field) {
                                         var iconColumn = displayableObject[field];
                                         var value = datamap[i].fields[field];
+                                        var foreground = null;
+                                        var icon = scope.loadIcon(value, iconColumn);
 
-                                        if (value) {
-                                            //if not the first icon add a spacer
-                                            if (iconHTML != '') {
-                                                iconHTML += '&emsp;';
-                                            }
-
-                                            var foreground = null;
-                                            var icon = scope.loadIcon(value, iconColumn);
-
-                                            if (iconColumn.rendererParameters.qualifier == "priority") {
-                                                foreground = prioritycolorService.getColor(value, iconColumn.rendererParameters);
-                                            }
-
-                                            iconHTML += scope.handleIcon(icon, iconColumn, value, foreground, i);
+                                        //if not the first icon add a spacer
+                                        if (iconHTML != '') {
+                                            iconHTML += '&emsp;';
                                         }
+
+                                        if (iconColumn.rendererParameters.qualifier == "priority") {
+                                            foreground = prioritycolorService.getColor(value, iconColumn.rendererParameters);
+                                        }
+
+                                        iconHTML += scope.handleIcon(icon, iconColumn, value, foreground, i);
+
                                     });
                                 }
 
