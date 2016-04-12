@@ -96,6 +96,10 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
+        public bool AddPreSelectedFilters {
+            get; set;
+        }
+
         [CanBeNull]
         public List<string> UnionWhereClauses {
             get; set;

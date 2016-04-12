@@ -327,7 +327,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             // add pre selected filter if originally it had not a searchDTO
             // so is a menu/breadcrumb navigation
-            if (searchDto.IsDefaultInstance) {
+            if (searchDto.IsDefaultInstance || searchDto.AddPreSelectedFilters) {
                 SchemaFilterBuilder.AddPreSelectedFilters(application.Schema.DeclaredFilters, searchDto);
             }
 

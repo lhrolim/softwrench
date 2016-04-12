@@ -6,7 +6,7 @@
 
     angular.module('webcommons_services').factory('applicationService', ["$q", '$http', '$rootScope', 'contextService', "crudContextHolderService", "userPreferencesService", "alertService", "checkpointService", applicationService]);
 
-    function fillApplicationParameters(parameters, applicationName,schemaId, mode) {
+    function fillApplicationParameters(parameters, applicationName, schemaId, mode) {
         /// <returns type=""></returns>
         if (parameters === undefined || parameters == null) {
             parameters = {};
@@ -46,7 +46,7 @@
 
 
         function toListSchema() {
-            
+
         }
 
 
@@ -57,7 +57,7 @@
                 return toListSchema();
             }
 
-            return alertService.confirmCancel2().then(function() {
+            return alertService.confirmCancel2().then(function () {
                 toListSchema();
                 crudContextHolderService.clearDirty();
                 crudContextHolderService.clearDetailDataResolved();
@@ -67,7 +67,7 @@
         function save() {
             var deferred = $q.defer();
 
-            var successCallBack = function(data) {
+            var successCallBack = function (data) {
                 deferred.resolve(data);
             }
 
@@ -130,7 +130,10 @@
 
             var pageSize = userPreferencesService.getSchemaPreference("pageSize", applicationName, schemaId);
             if (pageSize) {
-                parameters["SearchDTO"] = parameters["SearchDTO"] || {};
+                // searchdto added only because user pref - should mark to add preselected filters
+                if (!parameters["SearchDTO"]) {
+                    parameters["SearchDTO"] = { AddPreSelectedFilters: true }
+                }
                 parameters["SearchDTO"].pageSize = pageSize;
             }
 
@@ -150,9 +153,8 @@
         };
 
         function getPostPromise(applicationName, schemaId, parameters, datamap) {
-            
-            parameters = fillApplicationParameters(parameters,applicationName, schemaId, mode);
-            var postUrl =url("/api/data/" + applicationName);
+            parameters = fillApplicationParameters(parameters, applicationName, schemaId, mode);
+            var postUrl = url("/api/data/" + applicationName);
 
             var jsonWrapper = {
                 json: datamap,
@@ -172,7 +174,7 @@
             var parameters = extraParameters ? extraParameters : {};
             parameters.Operation = operation;
 
-            parameters = fillApplicationParameters(parameters,applicationName, schemaId, null);
+            parameters = fillApplicationParameters(parameters, applicationName, schemaId, null);
             var putUrl = url("/api/data/" + applicationName);
 
             var jsonWrapper = {
