@@ -61,6 +61,8 @@
                 .menu-expand {
                     color: #fff;
                     cursor: pointer;
+                    margin-top: 7px;
+                    float: right;
                 }
 
                 div.menu-open {
@@ -69,6 +71,7 @@
 
                 div.menu-open + .menu-items {
                     display: block;
+                    clear: both;
                 }
 
                 .buttons {
@@ -258,6 +261,14 @@
             .menu-grid {
                 li {
                     width: 49%;
+
+                    .dropdown-container {
+                        width: 100%;
+
+                        button {
+                            width: 100%;
+                        }
+                    }
                 }
             }
         }
