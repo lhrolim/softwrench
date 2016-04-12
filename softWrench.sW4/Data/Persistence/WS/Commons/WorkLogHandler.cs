@@ -26,29 +26,30 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Workorder id used for data association
             var recordKey = entity.UserId;
 
-            var worklogs = ((IEnumerable<CrudOperationData>)entity.GetRelationship("worklog")).ToArray();
+            // SWWEB-2365: send only edited or new worklogs
+            var worklogs = ((IEnumerable<CrudOperationData>)entity.GetRelationship("worklog"))
+                            .Where(w => w.UnmappedAttributes.ContainsKey("#isDirty"))
+                            .ToArray();
             
             WsUtil.CloneArray(worklogs, rootObject, "WORKLOG", delegate (object integrationObject, CrudOperationData crudData) {
-                // Filter work order materials for any modified entries.  This is done by using the modifydate.  
-                // Modifydate is null when detail schema is passed, which designate the record as updated or changed.  
-                if (crudData.UnmappedAttributes.ContainsKey("#isDirty")) {
-                    WsUtil.SetValueIfNull(integrationObject, "worklogid", -1);
-                    WsUtil.SetValue(integrationObject, "recordkey", recordKey);
-                    WsUtil.SetValueIfNull(integrationObject, "class", entity.TableName);
-                    WsUtil.SetValueIfNull(integrationObject, "createby", user.Login);
-                    WsUtil.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
+                WsUtil.SetValueIfNull(integrationObject, "worklogid", -1);
+                WsUtil.SetValue(integrationObject, "recordkey", recordKey);
+                WsUtil.SetValueIfNull(integrationObject, "class", entity.TableName);
+                WsUtil.SetValueIfNull(integrationObject, "createby", user.Login);
+                WsUtil.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
 
-                    WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
-                    WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
-                    WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
+                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
+                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
+                    
+                WsUtil.SetValue(integrationObject, "modifydate", DateTime.Now.FromServerToRightKind(), true);
+                ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
+                LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
 
-                    WsUtil.SetValue(integrationObject, "modifydate", DateTime.Now.FromServerToRightKind(), true);
-                    ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
-                    LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                }
-
-                // handle Attachments: only for new worklogs
+                // create
                 if (crudData.Id == null) {
+                    WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
+                    
+                    // handle Attachments: only for new worklogs
                     var worklogContent = crudData.GetUnMappedAttribute("newattachment");
                     var worklogPath = crudData.GetUnMappedAttribute("newattachment_path");
                     if (string.IsNullOrWhiteSpace(worklogContent) || string.IsNullOrWhiteSpace(worklogPath)) return;

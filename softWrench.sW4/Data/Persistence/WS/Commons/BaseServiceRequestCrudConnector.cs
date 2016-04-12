@@ -93,7 +93,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
 
-            var mailObject = maximoTemplateData.Properties;
+            //var mailObject = maximoTemplateData.Properties;
 
             WorkLogHandler.HandleWorkLogs(crudData, sr);
             _commlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);

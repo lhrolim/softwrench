@@ -28,6 +28,8 @@
         </schema>
 
         <detail stereotype="compositiondetail" title="Work Log">
+          <field attribute="createdate" hidden="true" />
+          
           <field attribute="description" label="Summary" requiredexpression="true">
             <renderer type="default" params="maxlength=100"/>
           </field>
