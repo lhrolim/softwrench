@@ -115,6 +115,13 @@
 
   <applications>
     <application entity="po" name="po" title="Puchase Orders">
+      <filters>
+        <optionfilter attribute="priority" displaycode="true">
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="High" value="1" />
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Medium" value="2" />
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Low" value="3" />
+        </optionfilter>
+      </filters>
       <properties>
         <property key ="mobile.disabled" value="true"/>
       </properties>
@@ -141,8 +148,8 @@
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="width=15%;grid=po;column=status" />
           </field>
-          <field attribute="priority" label="Priority" >
-            <renderer type="priorityicon" params="width=3%" />
+          <field attribute="priority" tooltip="Priority">
+            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true"/>
           </field>
           <field attribute="receipts" hidden="true"/>
           <properties>
@@ -277,6 +284,13 @@
     </application>
 
     <application entity="pr" name ="pr" title="Purchase Requests">
+      <filters>
+        <optionfilter attribute="priority" displaycode="true">
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="High" value="1" />
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Medium" value="2" />
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Low" value="3" />
+        </optionfilter>
+      </filters>
       <schemas>
         <!--Creating the Grid: SWWEB-232-->
         <list title="Purchase Request Grid">
@@ -301,8 +315,8 @@
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="width=12%;grid=pr;column=status" />
           </field>
-          <field attribute="priority" label="Priority" >
-            <renderer type="priorityicon" params="width=3%" />
+          <field attribute="priority" tooltip="Priority">
+            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true"/>
           </field>
           <properties>
             <property key="list.click.schema" value="detail"/>

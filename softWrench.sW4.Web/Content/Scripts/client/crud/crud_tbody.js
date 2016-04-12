@@ -127,23 +127,28 @@
                     return statuscolorService.getColor(status, scope.schema.applicationName);
                 };
 
-                scope.handleIcon = function (iconClass, column, text, foreground,rowIdx) {
+                scope.handleIcon = function (iconClass, column, text, foreground, rowIdx) {
                     var iconHTML = "";
-                    iconHTML += "<i class=\"fa {0}\" onclick='griditemclick(event,{1},\"{2}\",this)'".format(iconClass,rowIdx,column.attribute);
+                    iconHTML += "<i class=\"fa {0}\" onclick='griditemclick(event,{1},\"{2}\",this)'".format(iconClass, rowIdx, column.attribute);
+
                     if (foreground) {
                         iconHTML += 'style = "color: {0}"'.format(foreground);
                     }
 
                     //create html tooltip with label and count
-                    var toolTip = "<span style='white-space: nowrap;'>";
-                    toolTip += column.toolTip ? column.toolTip : column.label;
-					if (column.rendererParameters && column.rendererParameters["hideValueOnTooltip"] !== "true") {
-                    toolTip += ': ';
-                    toolTip += text;
-					}
-                    toolTip += '</span>';
+                    if (text != null) {
+                        var toolTip = "<span style='white-space: nowrap;'>";
+                        toolTip += column.toolTip ? column.toolTip : column.label;
+                        if (column.rendererParameters && column.rendererParameters["hideValueOnTooltip"] !== "true") {
+                            toolTip += ': ';
+                            toolTip += text;
+                        }
+                        toolTip += '</span>';
 
-                    iconHTML += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"></i>".format(toolTip);
+                        iconHTML += " rel=\"tooltip\" data-html=\"true\" data-original-title=\"{0}\"".format(toolTip);
+                    }
+
+                    iconHTML += "></i>";
                     return iconHTML;
                 }
 
@@ -323,7 +328,9 @@
                             }
                             else if (column.rendererType === 'priorityicon') {
                                 var foreground = prioritycolorService.getColor(formattedText, column.rendererParameters);
-                                html += "<div>" + scope.handleIcon("fa-flag", column, formattedText, foreground,i);
+                                var icon = scope.loadIcon(null, column);
+
+                                html += '<div class="cell-wrapper">' + scope.handleIcon(icon, column, formattedText, foreground, i);
                             }
                             else if (column.rendererType === 'statusicons') {
                                 html += '<div class="cell-wrapper">';

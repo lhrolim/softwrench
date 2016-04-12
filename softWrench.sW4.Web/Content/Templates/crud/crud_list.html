@@ -115,7 +115,7 @@
                         ng-show="!isFieldHidden(schema,column)">
                         <div ng-if="shouldShowHeaderLabel(column)" class="cell-wrapper">
                             <span ng-click="sort(column)" class="add-on" rel="tooltip" data-container="body" data-original-title="{{sortLabel()}}">
-                                {{i18NLabel(column)}}
+                                {{i18NLabel(column)}} <i class="fa {{headerIcon(column)}}" ng-show="hasIcon(column)"></i>
                             </span>
                             <span class="glyphicon glyphicon-sort-by-attributes"
                                   ng-show="shouldShowSort(column,'asc')"

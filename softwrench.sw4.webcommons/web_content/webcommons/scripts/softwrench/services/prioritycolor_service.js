@@ -25,7 +25,7 @@
     return {
         getColor: function (value, parameters) {
             if (!value) {
-                return 'transparent';
+                return '#ddd';
             }
 
             //create the default priority ranges

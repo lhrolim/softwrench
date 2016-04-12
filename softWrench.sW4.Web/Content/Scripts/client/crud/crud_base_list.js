@@ -91,7 +91,31 @@
         };
 
         $scope.shouldShowHeaderLabel = function (column) {
-            return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon" && column.rendererType != "priorityicon" && column.rendererType != "statusicons" && column.rendererType != "iconbutton";
+            //console.log(column.rendererParameters.headericon);
+
+            if (column.rendererParameters.headericon != undefined) {
+                return column.rendererParameters.headericon;
+            }
+
+            return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon" && column.rendererType != "statusicons" && column.rendererType != "iconbutton";
+        };
+
+        $scope.headerIcon = function (column) {
+            if (column.rendererParameters.headericon == undefined) {
+                return '';
+            }
+
+            if (column.rendererParameters.headericon) {
+                return column.rendererParameters.icon;
+            }
+        };
+
+        $scope.hasIcon = function (column) {
+            if (column.rendererParameters.icon == undefined) {
+                return false;
+            }
+
+            return column.rendererParameters.icon != undefined;
         };
 
         $scope.shouldShowHeaderFilter = function (column) {

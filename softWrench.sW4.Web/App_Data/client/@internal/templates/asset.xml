@@ -26,6 +26,11 @@
         <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
         <optionfilter attribute="parent" provider="parentasset_.description" displaycode="true"/>
         <optionfilter attribute="siteid" provider="site_.siteid"/>
+        <optionfilter attribute="priority" displaycode="true">
+            <option xmlns="http://www.controltechnologysolutions.com/filters" label="High" value="1" />
+            <option xmlns="http://www.controltechnologysolutions.com/filters" label="Medium" value="2" />
+            <option xmlns="http://www.controltechnologysolutions.com/filters" label="Low" value="3" />
+          </optionfilter>
       </filters>
       <properties>
         <property key="mobile.fetchlimit" value="30"/>
@@ -62,14 +67,11 @@
           <field attribute="parent" label="Parent"/>
           <field attribute="status" label="Status"/>
           <field attribute="siteid" label="Site ID"/>
-          <field attribute="priority" tooltip="Priority" hidden="true">
-            <renderer type="priorityicon" params="icon=fa-flag;qualifier=priority"/>
+          <field attribute="priority" tooltip="Priority">
+            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true"/>
           </field>
-          <field attribute="workordercounter" tooltip="Active Workorders" hidden="true">
-            <renderer type="icon" params="icon=fa-wrench"/>
-          </field>
-          <field attribute="#statusicons" label="Status Icons">
-            <renderer type="statusicons" params="width=6%;iconcolumns=priority,workordercounter"/>
+          <field attribute="workordercounter" tooltip="Active Workorders">
+            <renderer type="icon" params="width=3%;icon=fa-wrench"/>
           </field>
         </schema>
         <schema id="detail" title="Asset Detail" stereotype="detail" platform="web">

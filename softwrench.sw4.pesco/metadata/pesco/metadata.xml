@@ -50,7 +50,7 @@
         <list redeclaring="false" >
           <customization position="#statusicons">
             <field attribute="#statusicons" label="Status Icons">
-              <renderer type="statusicons" params="width=12%;iconcolumns=internalpriority,communicationcounter,attachmentcounter,relatedcounter"/>
+              <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter"/>
             </field>
             <field attribute="pending"  tooltip="Change Status to Pending">
               <renderer type="iconbutton" params="width=3%;expression={'#default':'','NEW':'fa-hourglass-half'};hideValueOnTooltip=true"/>

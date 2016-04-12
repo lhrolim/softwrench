@@ -155,6 +155,11 @@
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px"/>
             <optionfilter attribute="location" provider="location_.description" allowblank="true" displaycode="true"/>
             <optionfilter attribute="asset_.description" provider="asset_.description" allowblank="true" style="width:300px" whereclause="!@assetnum in (!@#value)" displaycode="true"/>
+            <optionfilter attribute="wopriority" displaycode="true">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="High" value="1" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Medium" value="2" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Low" value="3" />
+            </optionfilter>
           </filters>
           <field attribute="wonum" label="WO#" >
             <renderer type="default" params="width=10%" />
@@ -171,8 +176,8 @@
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="width=15%;grid=workorder;column=status" />
           </field>
-          <field attribute="wopriority" tooltip="Priority" hidden="true">
-            <renderer type="priorityicon" params="icon=fa-flag;qualifier=priority"/>
+          <field attribute="wopriority" tooltip="Priority">
+            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true"/>
           </field>
           <field attribute="communicationcounter" tooltip="Communications" hidden="true">
             <renderer type="icon" params="icon=fa-envelope-o"/>
@@ -184,7 +189,7 @@
             <renderer type="icon" params="icon=fa-tags"/>
           </field>
           <field attribute="#statusicons" label="Status Icons">
-            <renderer type="statusicons" params="width=12%;iconcolumns=wopriority,communicationcounter,attachmentcounter,relatedcounter"/>
+            <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>

@@ -686,7 +686,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             //create default priority list
             var list = new List<AssociationOption>();
 
-            list.Add(new AssociationOption("0", "0 - None"));
+            //list.Add(new AssociationOption("0", "0 - None"));
             list.Add(new AssociationOption("1", "1 - High"));
             list.Add(new AssociationOption("2", "2 - Medium"));
             list.Add(new AssociationOption("3", "3 - Low"));
