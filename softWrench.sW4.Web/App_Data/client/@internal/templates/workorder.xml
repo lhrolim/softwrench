@@ -425,13 +425,15 @@
                 <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;cssclass=crud-lookup-modal;title=Select GL Account;allowcustomvalue=true" />
               </association>
 
-              <association label ="On Behalf of" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
+              <association label="On Behalf of" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
                 <renderer type="lookup" />
               </association>
 
               <section id="attachmentsection"/>
             </section>
 
+            <!-- field used for PECSO customization -->
+            <field attribute="bottomhiddenfield" hidden="true"/>
 
 
           </section>

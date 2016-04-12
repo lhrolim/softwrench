@@ -48,9 +48,6 @@
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
       <schemas>
         <list redeclaring="false" >
-
-          
-
           <customization position="#statusicons">
             <field attribute="#statusicons" label="Status Icons">
               <renderer type="statusicons" params="width=12%;iconcolumns=internalpriority,communicationcounter,attachmentcounter,relatedcounter"/>
@@ -66,6 +63,21 @@
           </properties>
         </list>
         <schema id="editdetail" abstract="true" stereotype="detail" platform="web" redeclaring="false">
+          <customization position="location"></customization>
+          <customization position="assetnum"></customization>
+
+          <customization position="+siteid">
+            <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
+              <renderer type="lookup"/>
+              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            </association>
+            <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+              <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+              <dataprovider prefilterfunction="FilterAssets"/>
+              <event type="afterchange" service="srService" method="afterChangeAsset"/>
+            </association>
+          </customization>
+          
           <customization position="status">
             <association label="Status" target="status" labelfield="pescosynstatus.description" requiredexpression="true">
               <renderer type="lookup" />
@@ -146,12 +158,37 @@
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
         </schema>
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
+          <customization position="location"></customization>
+          <customization position="assetnum"></customization>
+
+          <customization position="+siteid">
+            <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
+              <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
+              <renderer type="lookup" />
+            </association>
+            <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+              <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+              <dataprovider prefilterfunction="FilterAssets"/>
+              <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
+            </association>
+          </customization>
+          
           <customization position="status">
             <association label="Status" target="status" labelfield="pescosynstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup" params="avoidautofocus=true"/>
             </association>
           </customization>
+
+          <customization position="multiassetlocci_"></customization>
+
+          <customization position="+bottomhiddenfield">
+            <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
+              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true"/>
+              <renderer type="TABLE" params="mode=batch;inputsize=xlarge"/>
+            </composition>
+          </customization>
+          
         </schema>
       </schemas>
     </application>
