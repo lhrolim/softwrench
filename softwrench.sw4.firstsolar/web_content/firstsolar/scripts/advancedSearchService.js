@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function advancedSearchService(restService, crudContextHolderService, searchService, $log) {
+    function advancedSearchService($rootScope, $log, restService, crudContextHolderService, searchService, redirectService, alertService) {
         var log = $log.getInstance("sw4.advancedSearchService");
 
         //#region Utils
@@ -19,9 +19,12 @@
             promise.then(function (response) {
                 var options = response.data.map(function (dbData) {
                     return {
-                        "type": "AssociationOption",
+                        "type": "MultiValueAssociationOption",
                         "value": dbData["location"],
-                        "label": dbData["description"] ? dbData["description"] : dbData["location"]
+                        "label": dbData["description"] ? dbData["description"] : dbData["location"],
+                        "extrafields": {
+                            "siteid": dbData["siteid"]
+                        }
                     }
                 });
                 crudContextHolderService.updateEagerAssociationOptions(associationKey, options, null, searchPanelId);
@@ -60,6 +63,18 @@
             }
 
             return true;
+        }
+
+        // searchs for the siteid from location option value
+        var findSiteId = function (associationKey, location) {
+            var options = crudContextHolderService.fetchEagerAssociationOptions(associationKey, null, searchPanelId);
+            if (!options) {
+                return null;
+            }
+            var locationOption = options.find(function (option) {
+                return option["value"] === location;
+            });
+            return locationOption && locationOption.extrafields ? locationOption.extrafields["siteid"] : null;
         }
         //#endregion
 
@@ -116,6 +131,7 @@
 
         function woNoResultsPreAction() {
             var location = null;
+            var associationKey = null;
             var searchDatamap = crudContextHolderService.rootDataMap(searchPanelId);
 
             // tries to get a single location from selected  locations of interest,
@@ -127,6 +143,7 @@
                     return null;
                 }
                 location = locsOfInterest[0];
+                associationKey = "_FsLocationsOfInterest";
             }
 
             var switchgearLocations = searchDatamap[switchgearLocationsId];
@@ -135,6 +152,7 @@
                     return null;
                 }
                 location = switchgearLocations[0];
+                associationKey = "_FsSwitchgearLocations";
             }
 
             var pcsLocations = searchDatamap[pcsLocationsId];
@@ -143,6 +161,7 @@
                     return null;
                 }
                 location = pcsLocations[0];
+                associationKey = "_FsPcsLocations";
             }
 
             // also if no location is found returs null
@@ -151,7 +170,23 @@
             }
 
             // if finally just a single location is found, creates a datamap with it
-            return { location: location };
+            var siteid = findSiteId(associationKey, location);
+            return { location: location, siteid: siteid };
+        }
+
+        function newWorkOrder() {
+            var datamap = woNoResultsPreAction();
+            var msg = "Are you sure you want to leave the page?";
+            if (crudContextHolderService.getDirty()) {
+                alertService.confirmCancel(null, null, function () {
+                    redirectService.goToApplication("workorder", "newdetail", null, datamap);
+                    crudContextHolderService.clearDirty();
+                    crudContextHolderService.clearDetailDataResolved();
+                }, msg, function () { return; });
+            }
+            else {
+                redirectService.goToApplication("workorder", "newdetail", null, datamap);
+            }
         }
         //#endregion
 
@@ -159,7 +194,8 @@
         var service = {
             facilitySelected: facilitySelected,
             customizeComboDropdown: customizeComboDropdown,
-            woNoResultsPreAction: woNoResultsPreAction
+            woNoResultsPreAction: woNoResultsPreAction,
+            newWorkOrder: newWorkOrder
         };
         return service;
         //#endregion
@@ -167,7 +203,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("advancedSearchService", ["restService", "crudContextHolderService", "searchService", "$log", advancedSearchService]);
+    angular.module("sw_layout").factory("advancedSearchService", ["$rootScope", "$log", "restService", "crudContextHolderService", "searchService", "redirectService", "alertService", advancedSearchService]);
 
     //#endregion
 

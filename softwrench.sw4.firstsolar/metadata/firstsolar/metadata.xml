@@ -297,7 +297,7 @@
 
         <schema id="search" title="Location Search" stereotype="search">
           <field attribute="status" hidden="true" default="INPRG,APPR,WOEN,ENRV,HOLD,WAPPR" searchoperation="eq"/>
-          <field attribute="fslocationsearch" hidden="true" default="true"/>
+          <field attribute="fslocationsearch" hidden="true" default="true" searchoperation="eq"/>
           <field attribute="fsincludesubloc" label="Include Sublocations" default="true" searchoperation="eq">
             <renderer type="checkbox"/>
           </field>
@@ -366,15 +366,15 @@
               <removecommand id="save"/>
               <removecommand id="print"/>
               <removecommand id="cancel"/>
-              <command id="search" primary="true" cssclasses="searchbutton" icon="fa-search" service="advancedSearchService" method="search" label="Search" parameters="schema,datamap"/>
-              <command id="clear" cssclasses="searchbutton" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
+              <command id="search" primary="true" icon="fa-search" service="dispatcherService" method="dispatchevent" label="Search" parameters="sw.crud.search,schema,datamap"/>
+              <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
+              <command id="new" cssclasses="searchbutton" icon="fa-plus" service="advancedSearchService" method="newWorkOrder" label="New WO" parameters="schema,datamap"/>
             </commandgroup>
           </commandbars>
           
           <properties>
             <property key="search.panelwidth" value="180"/>
             <property key="crud.disableautofocus" value="true"/>
-            <property key="commandbar.bottom" value="search"/>
             <property key="search.startexpanded" value="true"/>
           </properties>
         </schema>
@@ -419,7 +419,7 @@
         </schema>
 
         <schema id="search" title="Location Search" stereotype="search">
-          <field attribute="fslocationsearch" hidden="true" default="true"/>
+          <field attribute="fslocationsearch" hidden="true" default="true" searchoperation="eq"/>
           <field attribute="fsincludesubloc" label="Include Sublocations" default="true" searchoperation="eq">
             <renderer type="checkbox"/>
           </field>
@@ -483,10 +483,20 @@
             <renderer type="combodropdown" params="multiple=true;showvaluesbelow=true;buttontext=Select PCS(s);maxheight=300;labelmaxlength=30;customdropdownfunction=advancedSearchService.customizeComboDropdown"/>
           </optionfield>
 
+          <commandbars>
+            <commandgroup position="detailform" platform="web">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <removecommand id="cancel"/>
+              <command id="search" primary="true" icon="fa-search" service="dispatcherService" method="dispatchevent" label="Search" parameters="sw.crud.search,schema,datamap"/>
+              <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
+              <command id="new" cssclasses="searchbutton" icon="fa-plus" service="advancedSearchService" method="newWorkOrder" label="New WO" parameters="schema,datamap"/>
+            </commandgroup>
+          </commandbars>
+
           <properties>
             <property key="search.panelwidth" value="180"/>
             <property key="crud.disableautofocus" value="true"/>
-            <property key="commandbar.bottom" value="search"/>
           </properties>
         </schema>
       </schemas>
@@ -525,7 +535,7 @@
         </schema>
 
         <schema id="search" title="Location Search" stereotype="search">
-          <field attribute="fslocationsearch" hidden="true" default="true"/>
+          <field attribute="fslocationsearch" hidden="true" default="true" searchoperation="eq"/>
           <field attribute="fsincludesubloc" label="Include Sublocations" default="true" searchoperation="eq">
             <renderer type="checkbox"/>
           </field>
@@ -589,10 +599,20 @@
             <renderer type="combodropdown" params="multiple=true;showvaluesbelow=true;buttontext=Select PCS(s);maxheight=300;labelmaxlength=30;customdropdownfunction=advancedSearchService.customizeComboDropdown"/>
           </optionfield>
 
+          <commandbars>
+            <commandgroup position="detailform" platform="web">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <removecommand id="cancel"/>
+              <command id="search" primary="true" icon="fa-search" service="dispatcherService" method="dispatchevent" label="Search" parameters="sw.crud.search,schema,datamap"/>
+              <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
+              <command id="new" cssclasses="searchbutton" icon="fa-plus" service="advancedSearchService" method="newWorkOrder" label="New WO" parameters="schema,datamap"/>
+            </commandgroup>
+          </commandbars>
+
           <properties>
             <property key="search.panelwidth" value="180"/>
             <property key="crud.disableautofocus" value="true"/>
-            <property key="commandbar.bottom" value="search"/>
           </properties>
         </schema>
       </schemas>

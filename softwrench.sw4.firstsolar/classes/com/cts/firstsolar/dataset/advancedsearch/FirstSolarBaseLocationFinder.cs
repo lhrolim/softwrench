@@ -8,7 +8,7 @@ using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearc
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch {
     public class FirstSolarBaseLocationFinder : ISingletonComponent {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarBaseLocationFinder));
-        private const string BaseLocationQuery = "SELECT location, description FROM locations WHERE {0} ORDER BY description ASC";
+        private const string BaseLocationQuery = "SELECT location, description, siteid FROM locations WHERE {0} ORDER BY description ASC";
         private const string BaseLocationClause = "(location LIKE ? AND LEN(location) - LEN(REPLACE(location, '-', '')) = ?)";
 
         private readonly IMaximoHibernateDAO _maximoHibernateDao;
