@@ -55,15 +55,15 @@
   
   <commandgroup position="gridtop.selection" platform="web">
     <togglecommand id="toggleselectionmode" position="+profiles" initialstateexpression="$scope:toggleSelectionModeInitialValue">
-      <oncommand id="ontoggleselectionmode" icon="fa-mouse-pointer" service="dispatcherService" method="dispatchevent" tooltip="To Details on Line Click" parameters="sw.crud.list.toggleselectionmode,panelid"/>
-      <offcommand id="ontoggleselectionmode" icon="fa-edit" service="dispatcherService" method="dispatchevent" tooltip="To Selection on Line Click" parameters="sw.crud.list.toggleselectionmode,panelid"/>
+      <oncommand id="ontoggleselectionmode" icon="fa-mouse-pointer" service="dispatcherService" method="dispatchevent" label="View Mode" tooltip="Click Line to View Details" parameters="sw.crud.list.toggleselectionmode,panelid"/>
+      <offcommand id="ontoggleselectionmode" icon="fa-edit" service="dispatcherService" method="dispatchevent" label="Select Mode" tooltip="Click Line to Select" parameters="sw.crud.list.toggleselectionmode,panelid"/>
     </togglecommand>
     
     <togglecommand id="toggleselected" position="+profiles">
       <oncommand id="ontoggleselected" icon="fa-toggle-on" service="dispatcherService" method="dispatchevent"
-                 tooltip="Show All" parameters="sw.crud.list.toggleselected,panelid"/>
+                 label="Show All" parameters="sw.crud.list.toggleselected,panelid"/>
       <offcommand id="offtoggleselected" icon="fa-toggle-off" service="dispatcherService" method="dispatchevent"
-                 tooltip="Show Only Selected" parameters="sw.crud.list.toggleselected,panelid"/>
+                 label="Show Selected" parameters="sw.crud.list.toggleselected,panelid"/>
     </togglecommand>
   </commandgroup>
 
@@ -76,9 +76,9 @@
     <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
     <togglecommand id="toggleselected" position="+profiles">
       <oncommand id="ontoggleselected" icon="fa-toggle-on" service="dispatcherService" method="dispatchevent"
-                 tooltip="Show All" parameters="sw.crud.list.toggleselected,panelid"/>
+                 label="Show All" parameters="sw.crud.list.toggleselected,panelid"/>
       <offcommand id="offtoggleselected" icon="fa-toggle-off" service="dispatcherService" method="dispatchevent"
-                 tooltip="Show Only Selected" parameters="sw.crud.list.toggleselected,panelid"/>
+                 label="Show Selected" parameters="sw.crud.list.toggleselected,panelid"/>
     </togglecommand>
     <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
   </commandgroup>
