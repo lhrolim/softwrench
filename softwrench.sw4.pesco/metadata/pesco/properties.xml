@@ -69,7 +69,7 @@
     <property key="maximo_DB_url" value="Data Source=172.31.18.171;Initial Catalog=PSCCD;User Id=MAXIMO;password=MAXIMO;" />
     <property key="mifcredentials.user" value='mxintadm' />
     <property key="mifcredentials.password" value='mxintadm' />
-	  <property key="iiscontextpath " value="https://softwrench.dev.pslcl.com/"/>
+    <property key="iiscontextpath " value="https://softwrench.dev.pslcl.com/"/>
   </environment>
   
   <environment key="uat">
@@ -79,7 +79,7 @@
     <property key="maximo_DB_url" value="Data Source=172.31.18.171;Initial Catalog=PSCQA;User Id=MAXIMO;password=MAXIMO;" />
     <property key="mifcredentials.user" value='mxintadm' />
     <property key="mifcredentials.password" value='mxintadm' />
-	  <property key="iiscontextpath " value="https://softwrench.qa.pslcl.com/"/>
+    <property key="iiscontextpath " value="https://softwrench.uat.pslcl.com/"/>
   </environment>
 
   <environment key="demo">
