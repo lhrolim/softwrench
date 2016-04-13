@@ -38,7 +38,7 @@
     <property key="ldapPortNumber" value="389"/>
     <property key="ldapBaseDn" value="OU=maximo,DC=CTS,DC=com"/>
     <property key="mifcredentials.user" value="mxintadm"/>
-    <property key="mifcredentials.password" value="mxintadm"/> 
+    <property key="mifcredentials.password" value="$@$Pass"/> 
     
 <!--    <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="$@$Pass"/>  -->
