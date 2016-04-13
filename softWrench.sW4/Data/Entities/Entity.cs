@@ -74,7 +74,8 @@ namespace softWrench.sW4.Data.Entities {
         }
 
         public string GetStringAttribute(string attributeName, bool remove = false, bool throwException = false) {
-            return GetAttribute(attributeName, remove, throwException) as string;
+            var value = GetAttribute(attributeName, remove, throwException);
+            return value != null ? value.ToString() : null;
         }
 
         public override object GetAttribute(string attributeName, bool remove = false, bool throwException = false) {

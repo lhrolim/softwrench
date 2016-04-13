@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
@@ -76,7 +77,19 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
 
         public object DispatchIncident(DispatchOperationData srData) {
             var srCrudData = srData.CrudData;
-            var incidentCrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _incidentEntity, _incidentApplication, new JObject(), null);
+
+            var descriptionAttribute = "longdescription_";
+            var longdescription = srCrudData.GetAttribute(descriptionAttribute + ".ldtext");
+            if (longdescription == null) {
+                descriptionAttribute = "ld_";
+                longdescription = srCrudData.GetAttribute(descriptionAttribute + ".ldtext");
+            }
+            var incident = new Dictionary<string, object>() {
+                { descriptionAttribute + ".ldtext", longdescription }
+            };
+            var incidentJson = JObject.FromObject(incident);
+
+            var incidentCrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _incidentEntity, _incidentApplication, incidentJson, null);
             incidentCrudData.SetAttribute("affectedemail", srCrudData.GetStringAttribute("affectedemail"));
             incidentCrudData.SetAttribute("affectedperson", srCrudData.GetStringAttribute("affectedperson"));
             incidentCrudData.SetAttribute("affectedphone", srCrudData.GetStringAttribute("affectedphone"));
@@ -87,7 +100,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             incidentCrudData.SetAttribute("commodity", srCrudData.GetStringAttribute("commodity"));
             incidentCrudData.SetAttribute("commoditygroup", srCrudData.GetStringAttribute("commoditygroup"));
             incidentCrudData.SetAttribute("description", srCrudData.GetStringAttribute("description"));
-            incidentCrudData.SetAttribute("description_longdescription", srCrudData.GetStringAttribute("description_longdescription"));
             incidentCrudData.SetAttribute("glaccount", srCrudData.GetStringAttribute("glaccount"));
             incidentCrudData.SetAttribute("location", srCrudData.GetStringAttribute("location"));
             incidentCrudData.SetAttribute("orgid", srCrudData.GetStringAttribute("orgid"));
@@ -95,7 +107,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             incidentCrudData.SetAttribute("reportedby", srCrudData.GetStringAttribute("reportedby"));
             incidentCrudData.SetAttribute("reportedemail", srCrudData.GetStringAttribute("reportedemail"));
             incidentCrudData.SetAttribute("reportedphone", srCrudData.GetStringAttribute("reportedphone"));
-            incidentCrudData.SetAttribute("reportedpriority", srCrudData.GetStringAttribute("reportedpriority"));
+            incidentCrudData.SetAttribute("reportedpriority", srCrudData.GetAttribute("reportedpriority"));
             incidentCrudData.SetAttribute("source", srCrudData.GetStringAttribute("source"));
             incidentCrudData.SetAttribute("virtualenv", srCrudData.GetStringAttribute("virtualenv"));
             incidentCrudData.SetAttribute("origrecordid", srCrudData.UserId);
