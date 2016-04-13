@@ -75,8 +75,8 @@
   <environment key="uat">
     <property key="basewsURL" value="http://52.34.132.47:9080/meaweb/wsdl/" />
     <property key="basewfURL" value="http://52.34.132.47:9080/meaweb/wf/" />
-    <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=SWDB_PSCQA;User Id=sw;password=swadmin;" />
-    <property key="maximo_DB_url" value="Data Source=172.31.18.171;Initial Catalog=PSCQA;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=172.31.18.171;Initial Catalog=SWDB_PSCUAT;User Id=sw;password=swadmin;" />
+    <property key="maximo_DB_url" value="Data Source=172.31.18.171;Initial Catalog=PSCUAT;User Id=MAXIMO;password=MAXIMO;" />
     <property key="mifcredentials.user" value='mxintadm' />
     <property key="mifcredentials.password" value='mxintadm' />
     <property key="iiscontextpath " value="https://softwrench.uat.pslcl.com/"/>
