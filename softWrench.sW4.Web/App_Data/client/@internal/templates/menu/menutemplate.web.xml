@@ -55,6 +55,6 @@
   </container>
   <container title="Labor Reporting" tooltip="Click here to access your labor records" icon="fa fa-clock-o" id="labtrans" role="labtrans">
     <application id="LAB" icon="fa fa-table" title="Labor Reporting Grid" ref="labtrans" schema="list" tooltip="Click to view your Labor Reporting Grid"/>
-    <application id="LRT" icon="fa fa-clock-o" title="New Labor Transaction" ref="labtrans" schema="newdetail" tooltip="Click to add a New Labor Report"/>
+    <application id="LRT" icon="fa fa-plus" title="New Labor Transaction" ref="labtrans" schema="newdetail" tooltip="Click to add a New Labor Report"/>
   </container>
 </TemplateCatalog>
