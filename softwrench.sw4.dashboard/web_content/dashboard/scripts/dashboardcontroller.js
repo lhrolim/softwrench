@@ -13,6 +13,8 @@
                 }
                 var log = $log.getInstance('dashboardrendered');
                 log.debug("finished rendering dashboards");
+
+                $rootScope.$broadcast('sw_titlechanged', 'Dashboard');
                 $rootScope.$broadcast('dash_finishloading');
             }
         };
