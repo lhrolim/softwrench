@@ -144,16 +144,12 @@
           <field attribute="issuetype" label="Issue Type">
             <renderer type="default" />
           </field>
-          <optionfield attribute="item_.rotating" label="Rotating">
-            <renderer type="combo" params="width=6%;filteronly=true;formatter=numberToBoolean"/>
-            <option value="1" label="Yes"/>
-            <option value="0" label="No"/>
-          </optionfield>
-          <optionfield attribute="item_.iskit" label="Kit">
-            <renderer type="combo" params="width=6%;filteronly=true;formatter=numberToBoolean"/>
-            <option value="1" label="Yes"/>
-            <option value="0" label="No"/>
-          </optionfield>
+          <field attribute="item_.rotating" label="Rotating?">
+            <renderer type="checkbox" params="width=6%"/>
+          </field>
+          <field attribute="item_.iskit" label="Kit?">
+            <renderer type="checkbox" params="width=6%"/>
+          </field>
           <field attribute="quantity" label="Qty">
             <renderer type="default" params="width=6%;hidefilter=true;formatter=@inventoryService.formatQtyList;"/>
           </field>

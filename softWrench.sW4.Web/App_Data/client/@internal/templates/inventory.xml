@@ -247,16 +247,12 @@
           <field label="Type" attribute="item_.itemtype">
             <renderer type="default" params="width=15%"/>
           </field>
-          <optionfield label="Rotating" attribute="item_.rotating">
-            <renderer type="combo" params="width=16%;filteronly=true;formatter=numberToBoolean"/>
-            <option label="Yes" value="1"/>
-            <option label="No" value="0"/>
-          </optionfield>
-          <optionfield label="Kit" attribute="item_.iskit">
-            <renderer type="combo" params="width=16%;filteronly=true;formatter=numberToBoolean"/>
-            <option value="1" label="Yes"/>
-            <option value="0" label="No"/>
-          </optionfield>
+          <field attribute="item_.rotating" label="Rotating?">
+            <renderer type="checkbox"/>
+          </field>
+          <field attribute="item_.iskit" label="Kit?">
+            <renderer type="checkbox"/>
+          </field>
           <field label="Quantity" attribute="quantity"/>
         </schema>
       </schemas>
@@ -544,16 +540,12 @@
           <field attribute="lotnum" label="Lot">
             <renderer type="default" params="width=8%" />
           </field>
-          <optionfield attribute="item_.rotating" label="Rotating">
-            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean;width=6%"/>
-            <option value="1" label="Yes"/>
-            <option value="0" label="No"/>
-          </optionfield>
-          <optionfield attribute="item_.iskit" label="Kit">
-            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean;width=6%"/>
-            <option value="1" label="Yes"/>
-            <option value="0" label="No"/>
-          </optionfield>
+          <field attribute="item_.rotating" label="Rotating?">
+            <renderer type="checkbox" params="width=6%"/>
+          </field>
+          <field attribute="item_.iskit" label="Kit?">
+            <renderer type="checkbox" params="width=6%"/>
+          </field>
           <field attribute="curbal" label="Balance">
             <renderer type="default" params="width=10%" />
           </field>
