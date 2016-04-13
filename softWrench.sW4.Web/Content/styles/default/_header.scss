@@ -211,6 +211,22 @@
                 li {
                     width: 100%;
 
+                    .dropdown-container {
+                        width: 100%;
+
+                        button {
+                            width: 100%;
+
+                            &.btn-split {
+                                width: calc(100% - 21px);
+
+                                & + .btn-split.dropdown-toggle {
+                                    width: initial;
+                                }
+                            }
+                        }
+                    }
+
                     &:last-child .dropdown, &:last-child a {
                         margin-bottom: 5px;
                     }
@@ -253,20 +269,6 @@
                                     width: 100%;
                                 }
                             }
-                        }
-                    }
-                }
-            }
-
-            .menu-grid {
-                li {
-                    width: 49%;
-
-                    .dropdown-container {
-                        width: 100%;
-
-                        button {
-                            width: 100%;
                         }
                     }
                 }
