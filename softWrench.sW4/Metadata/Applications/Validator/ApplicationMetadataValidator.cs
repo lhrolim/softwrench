@@ -61,11 +61,13 @@ namespace softWrench.sW4.Metadata.Applications.Validator {
         }
 
         public static void AddOptionProviderToValidate(string applicationName, string schemaId, string methodName) {
+            if (!string.IsNullOrEmpty(methodName) && methodName.StartsWith("#")) return;
             AddMethodInvocationToValidate(OptionProviders, OptionProviderAlias, applicationName, schemaId, methodName);
         }
 
         private static void RemoveOptionProviderToValidate(string applicationName, string schemaId, string methodName) {
-            RemoveMethodInvocationToValidate(OptionProviders, OptionProviderAlias, applicationName, schemaId, methodName);
+            if (!string.IsNullOrEmpty(methodName) && methodName.StartsWith("#")) return;
+;            RemoveMethodInvocationToValidate(OptionProviders, OptionProviderAlias, applicationName, schemaId, methodName);
         }
 
         public static void AddCompositionPreFilterToValidate(string applicationName, string schemaId, string methodName) {
@@ -112,7 +114,7 @@ namespace softWrench.sW4.Metadata.Applications.Validator {
 
             // option
             var optionField = displayable as OptionField;
-            if (optionField != null && optionField.ProviderAttribute != null) {
+            if (optionField != null && optionField.ProviderAttribute != null && !optionField.ProviderAttribute.StartsWith("#")) {
                 if (add) {
                     AddOptionProviderToValidate(schema.ApplicationName, schema.SchemaId, optionField.ProviderAttribute);
                 } else {

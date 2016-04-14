@@ -246,6 +246,21 @@
             chart.render();
         }
 
+        /**
+         * Filters the application option according to the list of authorized 
+         * applications of the current user.
+         * 
+         * @param AssociationOption option 
+         * @returns boolean whether or not the options should be displayed (user has authorization) 
+         */
+        function filterSelectableApplications(option) {
+            var applications = crudContextHolderService.fetchEagerAssociationOptions("applications", { schemaId: "#modal" });
+            var appNames = applications.map(function (a) { return a.value; });
+            var filterableName = option.value === "sr" ? "servicerequest" : option.value;
+            // option is part of authorized apps
+            return !!appNames.find(function (a) { return a === filterableName });
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -255,7 +270,8 @@
             onProviderSelected: onProviderSelected,
             onBeforeAssociatePanel: onBeforeAssociatePanel,
             onApplicationSelected: onApplicationSelected,
-            onDashboardSelected: onDashboardSelected
+            onDashboardSelected: onDashboardSelected,
+            filterSelectableApplications: filterSelectableApplications
         };
         return service;
         //#endregion

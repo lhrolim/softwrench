@@ -19,7 +19,6 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SPF;
-using softWrench.sW4.Util;
 
 namespace softwrench.sw4.dashboard.classes.controller {
 
@@ -58,6 +57,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 } else {
                     //cloning dashboard
                     dashboard.Id = null;
+                    dashboard.Application = dbDashBoard.Application;
                     foreach (var panel in dbDashBoard.PanelsSet) {
                         //removing link id to force creation of a new one
                         panel.Id = null;
@@ -128,10 +128,14 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 .Cast<IAssociationOption>()
                 .ToList();
 
-            var topLevel = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, user);
-            var securedMetadatas = topLevel.Select(metadata => metadata.CloneSecuring(user)).ToList();
-            var names = securedMetadatas.Select(a => a.ApplicationName);
-            IList<IAssociationOption> applications = names.Select(name => new GenericAssociationOption(name, name)).Cast<IAssociationOption>().ToList();
+            var applicationNames = user.IsSwAdmin()
+                // swadmin.MergedUserProfile has empty Permissions
+                ? MetadataProvider.FetchSecuredTopLevelApps(ClientPlatform.Web, user).Select(a => a.ApplicationName)
+                : user.MergedUserProfile.Permissions.Where(p => !p.HasNoPermissions).Select(p => p.ApplicationName);
+                                            
+            var applications = applicationNames.Select(name => new GenericAssociationOption(name, name))
+                                            .Cast<IAssociationOption>()
+                                            .ToList();
 
             if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsPreferredProperty)) {
                 preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;

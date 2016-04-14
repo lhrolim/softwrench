@@ -20,6 +20,10 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var attribute = optionField.ProviderAttribute;
             var extraParameter = optionField.ExtraParameter;
 
+            // transient field -> associations will be provided client-side
+            if (attribute.StartsWith("#")) {
+                return null;
+            }
 
             var methodName = GetMethodName(attribute);
             var dataSet = FindDataSet(schema.ApplicationName, schema.SchemaId, methodName);

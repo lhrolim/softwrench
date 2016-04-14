@@ -171,7 +171,7 @@
                     }, 0, false);
                 });
 
-                $scope.$watch('blockedassociations.' + association.associationKey, function (newValue, oldValue) {
+                $scope.$watch('blockedassociations[\"' + association.associationKey + '\"]', function (newValue, oldValue) {
                     cmpfacade.blockOrUnblockAssociations($scope, newValue, oldValue, association);
                 });
 

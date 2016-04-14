@@ -81,7 +81,9 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
-
+        /// <summary>
+        /// Whether or not the application has READ ONLY permission.
+        /// </summary>
         [Property]
         public bool AllowView {
             get; set;

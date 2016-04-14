@@ -308,7 +308,9 @@
 
             return redirectService.openAsModal(schema.applicationName, schema.schemaId, {
                 title: "New Dashboard",
-                cssclass: "dashboardmodal",
+                cssclass: "dashboardmodal"
+            }).then(function() {
+                crudContextHolderService.updateEagerAssociationOptions("#applications", $scope.applications, { schemaId: "#modal" });
             });
 
 

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
@@ -16,7 +13,9 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public IEnumerable<IAssociationOption> GetExistingDashboards(OptionFieldProviderParameters parameters) {
             var user = SecurityFacade.CurrentUser();
             var profiles = user.Profiles;
-            var list = SWDAO.FindByQuery<Dashboard>(Dashboard.ByUser(profiles.Select(s => s.Id), true), user.DBId);
+            var applications = user.MergedUserProfile.Permissions.Where(p => !p.HasNoPermissions).Select(p => p.ApplicationName).ToArray();
+
+            var list = SWDAO.FindByQuery<Dashboard>(Dashboard.ByUserAndApplications(profiles.Select(s => s.Id), true), user.UserId, applications);
             var options = new List<MultiValueAssociationOption>();
             foreach (var dashboard in list) {
                 var label = dashboard.Active ? dashboard.Title : dashboard.Title + " (INACTIVE)";

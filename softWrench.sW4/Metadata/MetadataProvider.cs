@@ -31,6 +31,7 @@ using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications.Association;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Metadata.Stereotypes;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 
@@ -340,6 +341,10 @@ namespace softWrench.sW4.Metadata {
             Log.DebugFormat("fetching top level apps took: {0} ", LoggingUtil.MsDelta(watch));
             //TODO: add hidden menu items
             return result;
+        }
+
+        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchSecuredTopLevelApps(ClientPlatform platform, InMemoryUser user) {
+            return FetchTopLevelApps(platform, user).Select(metadata => metadata.CloneSecuring(user));
         }
 
         /// <summary>

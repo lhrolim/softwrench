@@ -9,6 +9,7 @@ using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Metadata.Menu;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
+using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sw4.dashboard.classes.controller {
     public class DashboardMenuManager : IMenuManager {
@@ -46,7 +47,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
             if (!user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
                 //caching
-                user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars(user);
+                user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars((InMemoryUser) user);
             }
 
             var dashboards = user.Genericproperties[DashboardConstants.DashBoardsProperty] as IEnumerable<Dashboard>;

@@ -8,8 +8,10 @@ using log4net.Core;
 using softwrench.sw4.api.classes.user;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sw4.dashboard.classes.controller {
     public class UserDashboardManager : ISingletonComponent {
@@ -24,21 +26,23 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
 
-
-
-        public IEnumerable<Dashboard> LoadUserDashboars(ISWUser currentUser) {
-
+        public IEnumerable<Dashboard> LoadUserDashboars(InMemoryUser currentUser) {
             var profiles = currentUser.ProfileIds;
-            var enumerable = profiles as int?[] ?? profiles.ToArray();
+            var profilesArray = profiles as int?[] ?? profiles.ToArray();
+            var applications = currentUser.MergedUserProfile.Permissions.Where(p => !p.HasNoPermissions).Select(p => p.ApplicationName).ToArray();
+
             IEnumerable<Dashboard> loadedUserDashboars;
             if (currentUser.IsSwAdmin()) {
                 loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.SwAdminQuery);
-            } else if (enumerable.Any() && !currentUser.IsSwAdmin()) {
+
+            } else if (profilesArray.Any() && !currentUser.IsSwAdmin()) {
                 //sw admin can always see everything
-                loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.ByUser(currentUser.ProfileIds), currentUser.UserId);
+                var statement = Dashboard.ByUserAndApplications(currentUser.ProfileIds);
+                loadedUserDashboars = _dao.FindByQuery<Dashboard>(statement, currentUser.UserId, applications);
             } else {
-                loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.ByUserNoProfile, currentUser.UserId);
+                loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.ByUserAndApplicationsNoProfile, currentUser.UserId, applications);
             }
+
             return FilterViewableWidgetsByUser(loadedUserDashboars, currentUser);
         }
 

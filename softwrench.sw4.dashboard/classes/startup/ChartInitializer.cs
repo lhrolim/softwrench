@@ -8,6 +8,7 @@ using cts.commons.simpleinjector.Events;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 using WebGrease.Css.Extensions;
@@ -16,9 +17,10 @@ namespace softwrench.sw4.dashboard.classes.startup {
     public class ChartInitializer : ISWEventListener<ApplicationStartedEvent>, IOrdered {
 
         private const string WoChartDashboardAlias = "workorder";
+        private const string WoChartDashboardTitle = "Work Orders";
+
         private const string SrChartDashboardAlias = "servicerequest";
         private const string SrChartDashboardTitle = "Service Requests";
-        private const string WoChartDashboardTitle = "Work Orders";
 
         /// <summary>
         /// (WO.status is 'open') != (WO.status isn't 'close') --> special query
@@ -74,13 +76,13 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
             RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQuery",     "dashboard:sr.status.top5");
             RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryLine", "dashboard:sr.status.line");
-            RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryPie", "dashboard:sr.status.pie");
+            RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryPie",  "dashboard:sr.status.pie");
         }
 
         #region SR Charts
 
         private bool ShouldExecuteSRChartInitialization() {
-            return !DashBoardExists(SrChartDashboardAlias);
+            return ApplicationExists(SrChartDashboardAlias) && !DashBoardExists(SrChartDashboardAlias);
         }
 
         private Dashboard ExecuteSRChartInitialization() {
@@ -125,7 +127,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         #region WO Charts
 
         private bool ShouldExecuteWOChartInitialization() {
-            return !DashBoardExists(WoChartDashboardAlias);
+            return ApplicationExists(WoChartDashboardAlias) && !DashBoardExists(WoChartDashboardAlias);
         }
 
         private Dashboard ExecuteWOChartInitialization() {
@@ -174,7 +176,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 },
             };
 
-            return CreateDashboard(WoChartDashboardTitle,WoChartDashboardAlias, panels);
+            return CreateDashboard(WoChartDashboardTitle, WoChartDashboardAlias, panels);
         }
 
         #endregion
@@ -190,7 +192,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
             return count > 0;
         }
 
-        private Dashboard CreateDashboard(string title,string alias, ICollection<DashboardGraphicPanel> panels) {
+        private Dashboard CreateDashboard(string title, string alias, ICollection<DashboardGraphicPanel> panels) {
             var now = DateTime.Now;
 
             // save panels and replace references by hibernate-managed ones
@@ -236,6 +238,10 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     MetadataId = metadataId,
                 }
             });
+        }
+
+        private bool ApplicationExists(string application) {
+            return MetadataProvider.Application(application, false) != null;
         }
 
         /// <summary>

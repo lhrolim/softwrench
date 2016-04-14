@@ -15,6 +15,12 @@
             <option label="Restore" value="restore"/>
           </optionfield>
 
+          <optionfield attribute="application" providerattribute="#applications" 
+                       skipvalidation="true"
+                       label="Application" tooltip="Restrict the dashboard to an application. Useful for filtering dashboards by application permission."
+                       requiredexpression="false"
+                       showexpression="@mode === 'brandnew'" default="" />
+
           <optionfield attribute="dashboardid" label="Select Dashboard" providerattribute="existingDashboards" showexpression="@mode!='brandnew'">
             <filter clientfunction="dashboardAuxService.filterSelectableDashboards"/>
           </optionfield>
@@ -35,9 +41,7 @@
               <command id="save" icon="fa-check" parameters="datamap" service="dashboardAuxService" method="saveDashboard" label="Confirm" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
-          <!--<properties>
-            <property key="associationstoprefetch" value="existingDashboards"/>
-          </properties>-->
+          
         </schema>
       </schemas>
     </application>
@@ -158,6 +162,7 @@
                          requiredexpression="true"
                          default="">
               <renderer type="combo"/>
+              <filter clientfunction="swchartGraphicPanelService.filterSelectableApplications"/>
               
               <option label="Service Request" value="sr" />
               <option label="Work Order" value="workorder" />

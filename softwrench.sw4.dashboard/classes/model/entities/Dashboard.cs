@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using cts.commons.persistence;
-using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
@@ -11,68 +10,50 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
     [Class(Table = "DASH_DASHBOARD", Lazy = false)]
     public class Dashboard : IBaseAuditEntity {
 
-        public static string ByUser(IEnumerable<int?> profiles, bool includeInactive = false) {
-            if (includeInactive) {
-                return "from Dashboard where (userid is null or userid = ?) and (userprofiles is null or {0}) ".Fmt(DashboardFilter.GetUserProfileString(profiles));
-            }
-            return "from Dashboard where (userid is null or userid = ?) and (userprofiles is null or {0}) and active is true".Fmt(DashboardFilter.GetUserProfileString(profiles));
+        private const string BY_USER_PROFILES_APPLICATIONS_TEMPLATE = "from Dashboard where (userid is null or userid = :p0) and (userprofiles is null or {0}) and (application is null or application in (:p1))";
+        private const string BY_USER_PROFILES_APPLICATIONS_ACTIVE_TEMPLATE = BY_USER_PROFILES_APPLICATIONS_TEMPLATE + " and active is true";
+
+        public static string ByUserAndApplications(IEnumerable<int?> profiles, bool includeInactive = false) {
+            return includeInactive 
+                ? string.Format(BY_USER_PROFILES_APPLICATIONS_TEMPLATE, DashboardFilter.GetUserProfileString(profiles))
+                : string.Format(BY_USER_PROFILES_APPLICATIONS_ACTIVE_TEMPLATE, DashboardFilter.GetUserProfileString(profiles));
         }
 
-        public static string ByUserNoProfile = "from Dashboard where (userid is null or userid = ?) and (userprofiles is null) and active is true";
+        public const string ByUserAndApplicationsNoProfile = "from Dashboard where (userid is null or userid = :p0) and (userprofiles is null) and (application is null or application in (:p1)) and active is true";
 
-        public static string SwAdminQuery = "from Dashboard where active is true";
+        public const string SwAdminQuery = "from Dashboard where active is true";
 
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
-        public int? Id {
-            get; set;
-        }
+        public int? Id { get; set; }
 
         [Property]
-        public string Title {
-            get; set;
-        }
+        public string Title { get; set; }
 
         [Property]
-        public DateTime CreationDate {
-            get; set;
-        }
+        public DateTime CreationDate { get; set; }
 
         [Property]
-        public DateTime? UpdateDate {
-            get; set;
-        }
+        public DateTime? UpdateDate { get; set; }
 
         [Property]
-        public int? CreatedBy {
-            get; set;
-        }
+        public int? CreatedBy { get; set; }
 
         [Property]
-        public bool Active {
-            get; set;
-        }
+        public bool Active { get; set; }
 
         [Property]
-        public bool System {
-            get; set;
-        }
+        public bool System { get; set; }
 
         [Property]
-        public string Alias {
-            get; set;
-        }
+        public string Alias { get; set; }
 
         [Property]
-        public string Application {
-            get; set;
-        }
+        public string Application { get; set; }
 
         [Property]
-        public Int32 PreferredOrder {
-            get; set;
-        }
+        public int PreferredOrder { get; set; }
 
         public bool Cloning { get; set; }
 
@@ -87,31 +68,19 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         [Key(1, Column = "dashboard_id")]
         [OneToMany(2, ClassType = typeof(DashboardPanelRelationship))]
         [JsonIgnore]
-        public Iesi.Collections.Generic.ISet<DashboardPanelRelationship> PanelsSet {
-            get; set;
-        }
-
+        public Iesi.Collections.Generic.ISet<DashboardPanelRelationship> PanelsSet { get; set; }
 
         //Adapter cause asp.net won´t serialize interfaces
         public List<DashboardPanelRelationship> Panels {
             get {
-                if (PanelsSet != null) {
-                    return new List<DashboardPanelRelationship>(PanelsSet);
-                }
-                return null;
+                return PanelsSet != null ? new List<DashboardPanelRelationship>(PanelsSet) : null;
             }
             set {
                 PanelsSet = new HashedSet<DashboardPanelRelationship>(value);
             }
         }
 
-
-
         [ComponentProperty]
-        public DashboardFilter Filter {
-            get; set;
-        }
-
-
+        public DashboardFilter Filter { get; set; }
     }
 }
