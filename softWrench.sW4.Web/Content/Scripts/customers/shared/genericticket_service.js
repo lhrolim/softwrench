@@ -48,12 +48,10 @@ angular.module('sw_layout')
                 //if no asset is selected we can proceed.
                 return true;
             }
-            if (event.oldValue == null && event.fields['asset_.location'] == event.newValue) {
-                //if the location was null, and now it´s changing to the asset location, proceed. It might be 
-                //due to the AfterChangeAsset callback.
+            if (event.fields['asset_.location'] == event.newValue) {
+                //if it´s changing to the asset location, proceed. It might be due to the AfterChangeAsset callback.
                 return true;
             }
-
 
             alertService.confirm(null, null, function () {
                 event.fields['assetnum'] = null;
@@ -82,9 +80,14 @@ angular.module('sw_layout')
         },
 
         afterChangeAsset: function (event) {
-            if (event.fields['location'] == null && event.fields.assetnum != null) {
-                var location = event.fields['asset_.location'];
-                event.fields['location'] = location;
+            if (event.fields.assetnum == null) {
+                return;
+            }
+
+            var assetLocation = event.fields["asset_.location"];
+            var location = event.fields["location"];
+            if (assetLocation !== location) {
+                event.fields["location"] = assetLocation;
             }
         },
 

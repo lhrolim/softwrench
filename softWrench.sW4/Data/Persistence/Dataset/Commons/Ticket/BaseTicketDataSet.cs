@@ -47,7 +47,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         }
 
 
-        public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
+        public virtual SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             var location = (string)parameters.OriginalEntity.GetAttribute("location");
             if (location == null) {

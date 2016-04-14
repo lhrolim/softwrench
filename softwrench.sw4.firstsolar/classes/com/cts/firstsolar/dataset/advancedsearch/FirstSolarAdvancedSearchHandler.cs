@@ -98,23 +98,18 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
                 Log.Debug("Done: No locations => empty clause.");
                 return null;
             }
-            var first = true;
-            var locationsClause = new StringBuilder("(");
-            locations.ForEach(l => AddBaseLocationToClause(ref first, locationsClause, l, tableName, includeSublocs));
-            locationsClause.Append(")");
-            Log.Debug(string.Format("Done: {0}", locationsClause));
-            return locationsClause.ToString();
-        }
-
-        private static void AddBaseLocationToClause(ref bool first, StringBuilder clause, string baseLocation, string tableName, bool includeSublocs) {
-            if (!first) {
-                clause.Append(" OR ");
-            }
-            first = false;
-            clause.Append(tableName).Append(".location = '").Append(baseLocation).Append("' ");
+            var clause = new StringBuilder("(");
+            var joinedLocations = "'" + string.Join("', '", locations) + "'";
+            clause.Append(tableName).Append(".location in (").Append(joinedLocations).Append(")");
             if (includeSublocs) {
-                clause.Append(" OR ").Append(tableName).Append(".location LIKE '").Append(baseLocation).Append("%' ");
+                clause.Append(" OR ").Append(tableName).Append(".location in ( ");
+                clause.Append("select l.location from locations l inner join locancestor a on l.location = a.location and l.siteid = a.siteid where a.ancestor in ");
+                clause.Append("(").Append(joinedLocations).Append(")");
+                clause.Append(")");
             }
+            clause.Append(")");
+            Log.Debug(string.Format("Done: {0}", clause));
+            return clause.ToString();
         }
 
         private static void AppendWhereClause(StringBuilder advancedSearchClause, string whereClause) {

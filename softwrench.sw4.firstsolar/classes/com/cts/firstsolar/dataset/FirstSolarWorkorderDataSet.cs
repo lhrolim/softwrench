@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using cts.commons.persistence;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
+using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
     public class FirstSolarWorkorderDataSet : BaseWorkorderDataSet {
@@ -25,6 +28,26 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 _advancedSearchHandler.AppendAdvancedSearchWhereClause(application, searchDto, "workorder");
             }
             return base.GetList(application, searchDto);
+        }
+
+        public override SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+            var location = (string)parameters.OriginalEntity.GetAttribute("location");
+            if (location == null) {
+                Log.Debug("Done: No locations => no filter for location on asset filter.");
+                return filter;
+            }
+
+            var clause = new StringBuilder("(");
+            clause.Append("asset.location = '").Append(location).Append("'");
+            clause.Append(" OR asset.location in ( ");
+            clause.Append("select l.location from locations l inner join locancestor a on l.location = a.location and l.siteid = a.siteid ");
+            clause.Append("where a.ancestor = '").Append(location).Append("')");
+            clause.Append(")");
+            Log.Debug(string.Format("Done where clause to filter assets from location: {0}", clause));
+            filter.AppendWhereClause(clause.ToString());
+
+            return filter;
         }
 
         /// <summary>
