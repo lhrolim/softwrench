@@ -174,6 +174,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return GetClassStructureType(parameters, "SR");
         }
 
+        public IEnumerable<IAssociationOption> GetSRClassStructureTypeDescription(OptionFieldProviderParameters parameters)
+        {
+            return GetClassStructureTypeDescription(parameters, "SR");
+        }
+
         public override string ApplicationName() {
             return "servicerequest,quickservicerequest";
         }

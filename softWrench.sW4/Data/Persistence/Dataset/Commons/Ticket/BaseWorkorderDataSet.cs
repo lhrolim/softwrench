@@ -99,9 +99,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
             return list;
         }
-
+        
         public IEnumerable<IAssociationOption> GetWOClassStructureType(OptionFieldProviderParameters parameters) {
             return GetClassStructureType(parameters, "WORKORDER");
+        }
+
+        public IEnumerable<IAssociationOption> GetWOClassStructureTypeDescription(OptionFieldProviderParameters parameters)
+        {
+            return GetClassStructureTypeDescription(parameters, "WORKORDER");
         }
 
         public SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {

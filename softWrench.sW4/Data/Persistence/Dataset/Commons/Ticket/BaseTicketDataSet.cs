@@ -57,22 +57,47 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return filter;
         }
 
-        protected virtual IEnumerable<IAssociationOption> GetClassStructureType(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
+        protected virtual IEnumerable<IAssociationOption> GetClassStructureType(
+            OptionFieldProviderParameters parameters, string ticketclass, string searchString = null)
+        {
 
             // TODO: Change the design to use a tree view component
             var query = BuildQuery(parameters, ticketclass, searchString);
 
             var result = MaxDAO.FindByNativeQuery(query, null);
 
-            return result.Select(record => {
-                    var label = string.Format("{0}{1}{2}{3}{4}",
+            return result.Select(record =>
+            {
+                var label = string.Format("{0}{1}{2}{3}{4}",
                         record["CLASS_5"] == null ? "" : record["CLASS_5"] + "/",
                         record["CLASS_4"] == null ? "" : record["CLASS_4"] + "/",
                         record["CLASS_3"] == null ? "" : record["CLASS_3"] + "/",
                         record["CLASS_2"] == null ? "" : record["CLASS_2"] + "/",
-                        record["CLASS_1"] == null ? "" : record["CLASS_1"] + " (" + record["DESCRIPTION_1"] + ")");
-                    return new AssociationOption(record["ID"], label);
-                });
+                        record["CLASS_1"] == null ? "" : record["CLASS_1"] + " (" + record["DESCRIPTION"] + ")");
+
+                return new AssociationOption(record["ID"], label);
+            });
+        }
+
+        protected virtual IEnumerable<IAssociationOption> GetClassStructureTypeDescription(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null)
+        {
+
+            // TODO: Change the design to use a tree view component
+            var query = BuildQuery(parameters, ticketclass, searchString);
+
+            var result = MaxDAO.FindByNativeQuery(query, null);
+
+            return result.Select(record =>
+            {
+                var label = record["DESCRIPTION"] ?? string.Format("{0}{1}{2}{3}{4}",
+                    record["CLASS_5"] == null ? "" : record["CLASS_5"] + "/",
+                    record["CLASS_4"] == null ? "" : record["CLASS_4"] + "/",
+                    record["CLASS_3"] == null ? "" : record["CLASS_3"] + "/",
+                    record["CLASS_2"] == null ? "" : record["CLASS_2"] + "/",
+                    record["CLASS_1"] ?? "");
+
+                return new AssociationOption(record["ID"], label);
+            });
         }
 
         protected virtual string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
@@ -83,7 +108,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                                                                p1.classificationid AS CLASS_3, 
                                                                p.classificationid  AS CLASS_2, 
                                                                c.classificationid  AS CLASS_1,
-                                                               c.description AS DESCRIPTION_1
+                                                               c.description AS DESCRIPTION
                                                        FROM classstructure {3} c
                                                        left join classstructure {3} p on p.classstructureid = c.parent
                                                        left join classstructure {3} p1 on p1.classstructureid = p.parent

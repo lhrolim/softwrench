@@ -209,9 +209,11 @@
                     <event type="afterchange" service="srService" method="afterChangeAsset"/>
                   </association>
                   <!--<section id="statussection"/>-->
-                  <optionfield attribute="classstructureid" label="Classification" providerattribute="_SRClassStructureType">
+
+                  <optionfield attribute="classstructureid" label="Classification" providerattribute="_SRClassStructureTypeDescription">
                     <renderer type="autocompleteclient" />
                   </optionfield>
+
                   <association label="Affected Person" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
                     <renderer type="lookup" params="columnlabel=Name"/>
                   </association>

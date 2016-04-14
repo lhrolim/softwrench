@@ -108,7 +108,6 @@
         <relationship to="classstructure">
           <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
         </relationship>
-
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
@@ -327,13 +326,12 @@
                 </association>
               </section>
 
-              <section orientation="horizontal" id="classsection">
-                <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureType">
-                  <renderer type="autocompleteclient" params="inputsize=large" />
-                </optionfield>
+             <section orientation="horizontal" id="classsection">              
+               <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureTypeDescription">
+                 <renderer type="autocompleteclient" params="inputsize=large" />
+               </optionfield>
 
                 
-
 
                 <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc">
                   <renderer type="lookup" params="inputsize=small"/>
@@ -653,7 +651,7 @@
           <field attribute="ld_.ldtext" label="Details:" requiredexpression="false">
             <renderer type="textarea"/>
           </field>
-          <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureType">
+          <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureTypeDescription">
             <renderer type="autocompleteclient" />
           </optionfield>
           <field attribute="assetnum" label="Asset" readonly="true" hidden="true"/>
