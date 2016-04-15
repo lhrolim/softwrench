@@ -67,10 +67,22 @@
             paginationData: {},
             previousData: [{ fields: { id: "100" } }, { fields: { id: "200" } }]
         });
-
-
-
     });
 
+    it("Sorting should be cleared when grid is refreshed", function () {
+        //Set mock data
+        mockScope.paginationData = {};
+        mockScope.searchSort = { field: "ticketid", order: "asc" };
 
+        //mock the function call
+        spyOn(mockScope, "selectPage").and.callFake(function () {
+            return null;
+        });
+
+        //real call
+        mockScope.refreshGridRequested({}, null, {});
+
+        expect(mockScope.searchSort).toBeDefined();
+        expect(mockScope.searchSort).toEqual({});
+    });
 });

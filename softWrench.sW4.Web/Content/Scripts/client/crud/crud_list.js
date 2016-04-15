@@ -241,6 +241,7 @@
 
                         $scope.paginationData = $scope.paginationData || {};
                         $scope.searchData = $scope.searchData || {};
+                        $scope.searchSort = {};
                         $scope.metadataid = extraparameters.metadataid;
                         $scope.vm.quickSearchData = extraparameters.quickSearchData;
 
