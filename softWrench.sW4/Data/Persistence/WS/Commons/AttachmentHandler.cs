@@ -257,6 +257,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             using (var client = new WebClient()) {
                 try {
                     ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+
+                    ServicePointManager.Expect100Continue = true;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+        | SecurityProtocolType.Tls11
+        | SecurityProtocolType.Tls12
+        | SecurityProtocolType.Ssl3;
+
                     var fileBytes = client.DownloadData(finalURL);
                     if (docinfoURL.Contains(".")) {
                         var extension = docinfoURL.Substring(docinfoURL.LastIndexOf(".") + 1);
