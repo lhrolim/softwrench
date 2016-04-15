@@ -20,7 +20,10 @@
             //remove leading and trailing wildcards, but not all of them
             if (value[0] === "%") {
                 value = value.substring(1);
+            } else if (value[0] === "!" && value[1] === "%") {
+                value = value.substring(2);
             }
+
             if (value[value.length - 1] === "%") {
                 value = value.substring(0, value.length - 1);
             }

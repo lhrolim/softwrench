@@ -46,5 +46,36 @@
 
     });
 
+ 
+
+      it('Test filter parameters response, for not contains operation', function () {
+       //testing SWWEB-2183
+        var expectedData = {
+            ticketid: "1234"
+        }
+
+        var result = searchService.buildSearchDataAndOperations("ticketid", "!%1234%");
+        expect(result.searchData).toEqual(expectedData);
+        expect(Object.keys(result.searchOperator).length).toBe(1);
+        expect(result.searchOperator["ticketid"].id).toBe("NCONTAINS");
+    });
+
+    it('Test filter parameters response: % in the middle of the search string should be preserved', function() {
+        var expectedData = {
+            description: "Contains % in between"
+        }
+
+        var result = searchService.buildSearchDataAndOperations("description", "!%Contains % in between%");
+        expect(result.searchData).toEqual(expectedData);
+        expect(result.searchOperator["description"].id).toBe("NCONTAINS");
+
+        result = searchService.buildSearchDataAndOperations("description", ">Contains % in between%");
+        expect(result.searchData).toEqual(expectedData);
+        expect(result.searchOperator["description"].id).toBe("GT");
+
+        result = searchService.buildSearchDataAndOperations("description", "%Contains % in between%");
+        expect(result.searchData).toEqual(expectedData);
+        expect(result.searchOperator["description"].id).toBe("CONTAINS");
+    });
 
 });
