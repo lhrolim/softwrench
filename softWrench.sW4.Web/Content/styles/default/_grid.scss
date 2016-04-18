@@ -69,7 +69,10 @@
                     .dropdown-close {
                         text-align: right;
                         padding: 0 10px 10px 0;
-                        cursor: pointer;
+
+                        icon {
+                            cursor: pointer;
+                        }
                     }
 
                     .input-group {

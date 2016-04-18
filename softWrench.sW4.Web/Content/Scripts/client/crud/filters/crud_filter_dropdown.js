@@ -356,6 +356,28 @@
                             }
                         });
 
+                        //prevent clicking outside of datepicker from closing the filter dropdown
+                        dropdown.on('hide.bs.dropdown', function () {
+                            var dd = $('.dropdown-menu.keep-open', dropdown);
+
+                            if (dd.length > 0) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        });
+
+                        //toogle keep-open class when the datepicker is shown/hidden
+                        $('[data-datepicker="true"]', dropdown).on('dp.show', function () {
+                            $('.dropdown-menu', dropdown).addClass('keep-open');
+                        });
+
+                        $('[data-datepicker="true"]', dropdown).on('dp.hide', function (e) {
+                            $timeout(function() {
+                                $('.dropdown-menu', dropdown).removeClass('keep-open');
+                            }, 100, false);
+                        });
+
                         //autofocus the search input when the dropdown opens
                         $(".js_filter .dropdown").on("show.bs.dropdown", function (event) {
                             $timeout(function () {
