@@ -56,7 +56,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             var pcsLocationsClause = BuildAdvancedSearchWhereClause(pcsLocations, tableName, includeSubloc);
             AppendWhereClause(advancedSearchClause, pcsLocationsClause);
 
-            FinishAdvancedSearch(advancedSearchClause.ToString(), searchDto, facilityList, tableName);
+            FinishAdvancedSearch(advancedSearchClause.ToString(), searchDto, facilityList, tableName, includeSubloc);
         }
 
         /// <summary> 
@@ -93,7 +93,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
         /// <param name="tableName"></param>
         /// <param name="includeSublocs"></param>
         /// <returns></returns>
-        private static string BuildAdvancedSearchWhereClause(List<string> locations, string tableName, bool includeSublocs) {
+        public string BuildAdvancedSearchWhereClause(ICollection<string> locations, string tableName, bool includeSublocs) {
             if (locations == null || !locations.Any()) {
                 Log.Debug("Done: No locations => empty clause.");
                 return null;
@@ -122,7 +122,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             advancedSearchClause.Append(whereClause);
         }
 
-        private static void FinishAdvancedSearch(string advancedWhereClause, SearchRequestDto searchDto, List<string> facilityList, string tableName) {
+        private void FinishAdvancedSearch(string advancedWhereClause, SearchRequestDto searchDto, List<string> facilityList, string tableName, bool includeSubloc) {
             if (!string.IsNullOrEmpty(advancedWhereClause)) {
                 Log.Debug("Full advanced search clause:");
                 Log.Debug(advancedWhereClause);
@@ -132,7 +132,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             // if until now the query is empty is because only the facility was given
             // so the facility clause is used
             Log.Debug("Building facility where clause");
-            var facilitiesClause = BuildAdvancedSearchWhereClause(facilityList, tableName, true);
+            var facilitiesClause = BuildAdvancedSearchWhereClause(facilityList.Select(s=> s + "-00").ToList(), tableName, includeSubloc);
             searchDto.AppendWhereClause(facilitiesClause);
         }
     }

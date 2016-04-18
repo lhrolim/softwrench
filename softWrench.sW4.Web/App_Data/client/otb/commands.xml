@@ -114,7 +114,7 @@
 
   <commandgroup position="bottom.confirmation" platform="web">
     <command id="save" icon="fa-check" service="applicationService" method="save" label="Confirm" primary="true"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
+    <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
   </commandgroup>
 
   <commandgroup position="compositiontop" platform="web">

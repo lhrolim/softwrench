@@ -214,7 +214,7 @@
           <field attribute="location" label="Location" readonly="true"/>
           <field attribute="location_.description" label="Description" readonly="true"/>
         </schema>
-        <schema id="assetLookupList" stereotype="list" platform="web">
+        <schema id="assetLookupList" stereotype="list.singleselection.modal" platform="web">
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description">
             <renderer type="default" params="minwidth=300px" />

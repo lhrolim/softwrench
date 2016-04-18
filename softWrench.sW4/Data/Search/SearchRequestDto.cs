@@ -88,6 +88,9 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
+        /// <summary>
+        /// Similar to an ordinary whereclause, but this acts statefully on the client-side so that the future screen iteractions (while within the same schema) would still pass that very same whereclause.
+        /// </summary>
         public string FilterFixedWhereClause {
             get; set;
         }

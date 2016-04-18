@@ -19,6 +19,11 @@
     <property key="commandbar.top" value="gridtop.selection"/>
   </stereotype>
 
+  <stereotype id="list.singleselection">
+    <property key="list.selectionstyle" value="single"/>
+    <property key="commandbar.top" value="none"/>
+  </stereotype>
+
   <stereotype id="list.modal.readonly">
     <property key="list.disablefilter" value="true"/>
     <property key="list.disabledetails" value="true"/>
@@ -51,6 +56,14 @@
     <property key="list.paginationsize" value="10"/>
     <property key="commandbar.bottom" value="detailfilter"/>
     <property key="commandbar.top" value="gridfiltertop"/>
+  </stereotype>
+
+  <stereotype id="list.singleselection.modal">
+    <property key="list.disabledetails" value="true"/>
+    <property key="list.paginationsize" value="10"/>
+    <property key="list.selectionmodebydefault" value="true" />
+    <property key="commandbar.bottom" value="bottom.confirmation"/>
+    <property key="commandbar.top" value="none"/>
   </stereotype>
 
   <stereotype id="list.selection.modal.filter">

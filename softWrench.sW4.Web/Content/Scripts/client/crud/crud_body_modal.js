@@ -89,7 +89,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             gridSelectionService.clearSelection(null, null, modalService.panelid);
         });
 
-        $scope.showModal = function(modaldata) {
+        $scope.showModal = function(modaldata, fromLink) {
             var schema = modaldata.schema;
             var datamap = modaldata.datamap;
             $scope.schema = schema;
@@ -126,6 +126,19 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
             $timeout(function () {
                 $(window).trigger("resize");
             }, 310, false);
+
+            if (schema.stereotype.equalsIc("list")) {
+                //forcing underlying grid to refresh
+                if (modaldata.appResponseData) {
+                    $rootScope.$broadcast("sw_gridrefreshed", modaldata.appResponseData, "#modal");
+                } else if (datamap.length > 0) {
+                    $rootScope.$broadcast("sw_gridrefreshed", { resultObject: datamap, schema: schema }, "#modal");
+                } else if (!modaldata.fromLink) {
+                    searchService.refreshGrid({}, {}, { panelid: "#modal", forcecleanup: true });
+                }
+
+                
+            }
         };
 
         $scope.save = function(selecteditem) {
@@ -173,6 +186,7 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
         },
         link: function (scope, element, attrs) {
             var modalData = $rootScope.modalTempData;
+            modalData.fromLink = true;
             modalService.show(modalData);
             $rootScope.modalTempData = null;
 
@@ -190,6 +204,6 @@ function crudBodyModal($rootScope, modalService, crudContextHolderService, schem
     return directive;
 }
 
-angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', '$timeout', 'gridSelectionService', crudBodyModal]);
+angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', '$timeout', 'gridSelectionService',  crudBodyModal]);
 
 })(angular);

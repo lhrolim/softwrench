@@ -161,6 +161,7 @@
          * @param {type} jsonData a initial data that could be passed to open a schema filled with some values
          */
         function goToApplication(applicationName, schemaId, parameters, jsonData) {
+            parameters = parameters || {};
             return this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData);
         };
 

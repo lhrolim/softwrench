@@ -127,8 +127,9 @@
                     }
 
                     $scope.gridRefreshed = function (data, panelId) {
-                        if (!!$scope.panelid && $scope.panelid !== panelId) {
-                            //none of my business --> another dashboard event
+                        if ($scope.panelid != panelId) {
+                            //none of my business --> another dashboard event 
+                            //IMPORTANT: do not make it !==, since null is coming and comparing to undefined
                             return;
                         }
 
@@ -237,6 +238,8 @@
                             //this is none of my business --> another dashboard will handle it
                             return;
                         }
+                        
+
                         contextService.deleteFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""));
 
                         $scope.paginationData = $scope.paginationData || {};
@@ -269,6 +272,10 @@
                         if (extraparameters.avoidspin) {
                             contextService.set("avoidspin", true, true);
                         }
+                        if (extraparameters.forcecleanup) {
+                            $scope.paginationData.filterFixedWhereClause = null;
+                        }
+
                         $scope.selectPage(pagetogo, pageSize, printmode);
                     };
 
@@ -491,6 +498,11 @@
                             var preAction = dispatcherService.loadServiceByString(noResultsPreAction);
                             if (preAction) {
                                 datamap = preAction();
+                                if (datamap.then) {
+                                    return datamap.then(function(datamap) {
+                                        return redirectService.goToApplication($scope.schema.applicationName, $scope.schema.noResultsNewSchema, null, datamap);
+                                    });
+                                }
                             }
                         }
                         redirectService.goToApplication($scope.schema.applicationName, $scope.schema.noResultsNewSchema, null, datamap);
@@ -603,8 +615,10 @@
 
                     $scope.$on("sw_refreshgrid", function (event, searchData, searchOperator, extraparameters) {
                         if ($scope.panelid != extraparameters.panelid) {
+                            //DO NOT use !== here to avoid undefined and null comparisons to fail
                             return;
                         }
+                        $scope.schema = crudContextHolderService.currentSchema($scope.panelid);
                         $scope.refreshGridRequested(searchData, searchOperator, extraparameters);
                     });
                     //#endregion
