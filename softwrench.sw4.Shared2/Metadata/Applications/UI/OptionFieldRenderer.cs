@@ -30,7 +30,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI
         }
 
         public enum OptionRendererType {
-            COMBO, CHECKBOX, RADIO, COMBODROPDOWN,AUTOCOMPLETECLIENT, MULTIPLE
+            COMBO, CHECKBOX, RADIO, COMBODROPDOWN, AUTOCOMPLETECLIENT, MULTIPLE, LOOKUP
         }
     }
 }

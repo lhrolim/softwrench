@@ -129,7 +129,7 @@
       <components>
         <componentdisplayable id="classification">
           <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureType">
-            <renderer type="autocompleteclient" params="inputsize=large" />
+            <renderer type="lookup" params="inputsize=large" />
           </optionfield>
         </componentdisplayable>
 
@@ -328,7 +328,7 @@
 
              <section orientation="horizontal" id="classsection">              
                <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureTypeDescription">
-                 <renderer type="autocompleteclient" params="inputsize=large" />
+                 <renderer type="lookup" params="inputsize=large" />
                </optionfield>
 
                 
@@ -338,7 +338,7 @@
                 </association>
 
                 <optionfield attribute="wopriority" label="Priority" providerattribute="_SWPriorityType">
-                  <renderer type="autocompleteclient" params="inputsize=small"/>
+                  <renderer type="lookup" params="inputsize=small"/>
                 </optionfield>
                 
               </section>
@@ -652,12 +652,13 @@
             <renderer type="textarea"/>
           </field>
           <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureTypeDescription">
-            <renderer type="autocompleteclient" />
+            <renderer type="lookup" />
           </optionfield>
           <field attribute="assetnum" label="Asset" readonly="true" hidden="true"/>
           <field attribute="location" label="Location" readonly="true" hidden="true"/>
           <field attribute="reportedby" label="Reported by" default="@username" readonly="true" hidden="true"/>
           <field attribute="reportdate" label="Reported date" default="@now" readonly="true" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
         </schema>
 
 

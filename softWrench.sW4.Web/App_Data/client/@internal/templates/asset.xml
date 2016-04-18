@@ -110,7 +110,7 @@
             <renderer type="default" params="childinputsize=small" />
 
             <optionfield attribute="priority" label="Priority" providerattribute="_SWPriorityType" readonly="true">
-              <renderer type="autocompleteclient"/>
+              <renderer type="lookup"/>
             </optionfield>
             
             <field attribute="conditioncode" label="Condition Code" readonly="true"/>

@@ -31,7 +31,8 @@
             var jsondata = {
                 assetnum: assetData["assetnum"],
                 location: assetData["location"],
-                classstructureid: assetData["classstructureid"]
+                classstructureid: assetData["classstructureid"],
+                siteid: assetData["siteid"]
             };
             return redirectService.goToApplication("workorder", schema, params, jsondata);
         }

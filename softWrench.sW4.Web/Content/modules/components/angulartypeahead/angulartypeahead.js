@@ -91,10 +91,11 @@
                 //no initial value present
                 return;
             }
-            associationService.getLabelText(scope.provider,scope.datamap[scope.attribute], { hideDescription: scope.hideDescription, allowTransientValue: scope.allowCustomValue === "true"}).then(function(label) {
-                scope.log.debug("setting initial text of typeahead component {0} to {1}".format(scope.displayablepath, label));
-                element.typeahead('val', label);
-            });
+            associationService.getLabelText(scope.provider, scope.datamap[scope.attribute], { hideDescription: scope.hideDescription, allowTransientValue: scope.allowCustomValue === "true", isEager: !!scope.fieldMetadata.providerAttribute })
+                .then(function (label) {
+                    scope.log.debug("setting initial text of typeahead component {0} to {1}".format(scope.displayablepath, label));
+                    element.typeahead('val', label);
+                });
             
         }
 

@@ -560,8 +560,8 @@ app.directive('configAssociationListInputDatamap', function () {
                 return fieldService.nonTabFields(displayables);
             };
 
-            $scope.getApplicationPah = function (fieldMetadata) {
-                return replaceAll(fieldMetadata.applicationPath,"\\.","_");
+            $scope.getApplicationPath = function (fieldMetadata) {
+                return replaceAll(fieldMetadata.applicationPath, "\\.", "_");
             }
 
             $scope.getDispatchFn = function (serviceCall) {

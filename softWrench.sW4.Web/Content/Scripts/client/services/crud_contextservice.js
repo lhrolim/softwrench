@@ -376,6 +376,17 @@
             return context._eagerassociationOptions[schemaId][entryId][associationKey];
         }
 
+        function fetchEagerAssociationOption(associationKey, itemValue) {
+            var options = fetchEagerAssociationOptions(associationKey);
+            // normalize value to string
+            var value = angular.isUndefined(itemValue) || itemValue === null ? itemValue : String(itemValue);
+            return !options
+                    ? null
+                    : options.find(function (a) {
+                        return a.value === value;
+                    });
+        }
+
 
         function updateEagerAssociationOptions(associationKey, options, contextData, panelid) {
             if (options == null) {
@@ -582,6 +593,7 @@
             fetchLazyAssociationOption: fetchLazyAssociationOption,
             updateEagerAssociationOptions: updateEagerAssociationOptions,
             fetchEagerAssociationOptions: fetchEagerAssociationOptions,
+            fetchEagerAssociationOption: fetchEagerAssociationOption,
             associationsResolved: associationsResolved,
             markAssociationsResolved: markAssociationsResolved,
 

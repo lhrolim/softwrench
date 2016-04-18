@@ -188,7 +188,7 @@
             </field>
 
             <optionfield attribute="internalpriority" label="Priority" providerattribute="_SWPriorityType">
-              <renderer type="autocompleteclient" params="inputsize=small"/>
+              <renderer type="lookup" params="inputsize=small"/>
             </optionfield>
           </section>
 
@@ -211,7 +211,7 @@
                   <!--<section id="statussection"/>-->
 
                   <optionfield attribute="classstructureid" label="Classification" providerattribute="_SRClassStructureTypeDescription">
-                    <renderer type="autocompleteclient" />
+                    <renderer type="lookup" />
                   </optionfield>
 
                   <association label="Affected Person" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >

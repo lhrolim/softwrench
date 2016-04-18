@@ -95,6 +95,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get { return _sort; }
         }
 
+        public string ApplicationPath {
+            get { return AssociationKey; }
+        }
+
         public object Clone() {
             return new OptionField(ApplicationName, Label, Attribute, Qualifier, RequiredExpression, IsReadOnly, IsHidden, _renderer, _filter,
                 _options,

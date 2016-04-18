@@ -171,7 +171,7 @@
               </association>
               
               <optionfield attribute="priority" label="Priority" providerattribute="_SWPriorityType">
-                <renderer type="autocompleteclient"/>
+                <renderer type="lookup"/>
               </optionfield>
               
               <field attribute="companies_.phone" label="Phone"/>
@@ -332,7 +332,7 @@
             <field attribute="prnum" label="PR#" hidden="true" />
 
             <optionfield attribute="priority" label="Priority" providerattribute="_SWPriorityType" requiredexpression="true" default="0">
-              <renderer type="autocompleteclient"/>
+              <renderer type="lookup"/>
             </optionfield>
             
             <field attribute="totaltax1" label="Total Tax" />

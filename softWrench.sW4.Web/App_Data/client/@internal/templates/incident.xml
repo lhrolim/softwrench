@@ -154,11 +154,11 @@
                 <event type="afterchange" service="srService" method="afterChangeAsset"/>
               </association>
               <optionfield attribute="classstructureid" label="Classification" providerattribute="_IncidentClassStructureType" default="@classstructureid">
-                <renderer type="autocompleteclient" />
+                <renderer type="lookup" />
               </optionfield>
               
               <optionfield attribute="internalpriority" label="Priority" providerattribute="_SWPriorityType" default="1">
-                <renderer type="autocompleteclient" />
+                <renderer type="lookup" />
               </optionfield>
           
             </section>

@@ -54,7 +54,7 @@ angular.module('sw_lookup')
                 focusService.resetFocusToCurrent($scope.schema, $scope.lookupObj.fieldMetadata.attribute);
 
                 $scope.lookupObj.quickSearchData = $scope.lookupsearchdata;
-                associationService.getLookupOptions($scope.schema, $scope.datamap, $scope.lookupObj, pageNumber, $scope.searchObj).success(function (data) {
+                associationService.getLookupOptions($scope.schema, $scope.datamap, $scope.lookupObj, pageNumber, $scope.searchObj).then(function (data) {
                     var result = data.resultObject;
                     $scope.populateModal(result);
                 });
@@ -70,7 +70,7 @@ angular.module('sw_lookup')
                 modalPaginationData.totalCount = associationResult.totalCount;
                 modalPaginationData.selectedPage = associationResult.pageNumber;
                 //TODO: this should come from the server side
-                modalPaginationData.paginationOptions = [10, 30, 100];
+                modalPaginationData.paginationOptions = associationResult.paginationOptions || [10, 30, 100];
             };
 
             $scope.showDescription = function () {

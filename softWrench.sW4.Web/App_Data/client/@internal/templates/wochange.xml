@@ -111,7 +111,7 @@
             <field attribute="pretestdetail_.ldtext" label="Pretest Details"/>
 
             <optionfield attribute="wopriority" label="Priority" providerattribute="_SWPriorityType">
-              <renderer type="autocompleteclient" params="inputsize=small"/>
+              <renderer type="lookup" params="inputsize=small"/>
             </optionfield>
             
             <field attribute="longdescription_.ldtext" label="Remarks"/>

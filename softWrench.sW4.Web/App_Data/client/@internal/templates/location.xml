@@ -132,7 +132,7 @@
             <field attribute="type" label="Type:" readonly="true"/>
 
             <optionfield attribute="locoper_.locpriority" label="Priority" providerattribute="_SWPriorityType" readonly="true">
-              <renderer type="autocompleteclient"/>
+              <renderer type="lookup"/>
             </optionfield>
             
             <field attribute="locoper_.failurecode" label="Failure Code:" readonly="true"/>

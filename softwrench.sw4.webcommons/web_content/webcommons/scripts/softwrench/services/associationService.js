@@ -169,12 +169,19 @@
          * @param {} options 
          *   hideDescription --> whether to show only the label value, false by default
          *   allowTransientValue --> whether to allow the insertion of new values, which do not necessarily match a server value
+         *   isEager --> whether or not this is an eagerly loaded association
          * 
          * @returns {} 
          */
         function getLabelText(associationKey, itemValue, options) {
-            var log = $log.get("associationService#getLabelText");
+            var log = $log.get("associationService#getLabelText", ["association"]);
             options = options || {};
+
+            if (options.isEager) {
+                var eager = crudContextHolderService.fetchEagerAssociationOption(associationKey, itemValue);
+                return $q.when(!!eager ? eager.label : null);
+            }
+
             var allowTransientValue = options.allowTransientValue || false;
 
             if (itemValue == null) {
@@ -185,7 +192,7 @@
 
             if (item == null) {
                 if (!crudContextHolderService.associationsResolved()) {
-                    log.debug("schema associations not resolved yet, waiting...")
+                    log.debug("schema associations not resolved yet, waiting...");
                     return $q.when(itemValue);
                 }
 
@@ -229,14 +236,14 @@
         ///it only makes sense for associations which have extraprojections
         function updateUnderlyingAssociationObject(associationFieldMetadata, underlyingValue, scope) {
 
+            if (!!associationFieldMetadata.providerAttribute) return;
+
             //if association options have no fields, we need to define it as an empty array. 
             scope.associationOptions = scope.associationOptions || [];
-
 
             var key = associationFieldMetadata.associationKey;
             var contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
             var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.schema, contextData);
-
 
             crudContextHolderService.updateLazyAssociationOption(key, underlyingValue, true);
 
@@ -259,7 +266,7 @@
                 return;
             }
 
-            if (associationFieldMetadata.extraProjectionFields.length > 0) {
+            if (!!associationFieldMetadata.extraProjectionFields && associationFieldMetadata.extraProjectionFields.length > 0) {
                 doUpdateExtraFields(associationFieldMetadata, underlyingValue, scope.datamap);
             }
         };
@@ -645,6 +652,30 @@
         }
 
 
+        function getEagerLookupOptions(lookupObj) {
+            var eagerOptions = crudContextHolderService.fetchEagerAssociationOptions(lookupObj.fieldMetadata.associationKey);
+            if (!eagerOptions) {
+                return null;
+            }
+            var quickSearchData = lookupObj.quickSearchData;
+            if (quickSearchData) {
+                eagerOptions = eagerOptions.filter(function (a) {
+                    return a.value.containsIgnoreCase(quickSearchData) || a.label.containsIgnoreCase(quickSearchData);
+                });
+            }
+
+            return {
+                resultObject: {
+                    associationData: eagerOptions,
+                    totalCount: eagerOptions.length,
+                    pageSize: eagerOptions.length,
+                    pageCount: 1,
+                    pageNumber: 1,
+                    paginationOptions: [eagerOptions.length]
+                }
+            }
+        }
+
 
         //This takes the lookupObj, pageNumber, and searchObj (dictionary of attribute (key) 
         //to its value that will filter the lookup), build a searchDTO, and return the post call to the
@@ -653,6 +684,11 @@
             var fields = datamap;
             if (lookupObj.searchDatamap) {
                 fields = lookupObj.searchDatamap;
+            }
+
+            var eagerOptions = getEagerLookupOptions(lookupObj);
+            if (!!eagerOptions) {
+                return $q.when(eagerOptions);
             }
 
             var totalCount = 0;
@@ -674,7 +710,9 @@
 
             var urlToUse = url("/api/generic/Association/GetLookupOptions?" + $.param(parameters));
             var jsonString = angular.toJson(datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(fields));
-            return $http.post(urlToUse, jsonString);
+            return $http.post(urlToUse, jsonString).then(function(response) {
+                return response.data;
+            });
         };
 
         //Updates dependent association values for all association rendererTypes.
@@ -683,7 +721,7 @@
             var getLookupOptions = this.getLookupOptions;
             var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
             lookupObj.searchDatamap = datamap;
-            getLookupOptions(scope.schema, scope.datamap, lookupObj, null, searchObj).success(function (data) {
+            getLookupOptions(scope.schema, scope.datamap, lookupObj, null, searchObj).then(function (data) {
                 var result = data.resultObject;
 
                 if (postFetchHook != null) {

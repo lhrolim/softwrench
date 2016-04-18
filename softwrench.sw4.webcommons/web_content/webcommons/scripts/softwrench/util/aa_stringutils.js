@@ -97,3 +97,7 @@ if (String.prototype.byteSize !== "function") {
         return encodeURI(this).split(/%(?:u[0-9A-F]{2})?[0-9A-F]{2}|./).length - 1;
     };
 }
+
+String.prototype.containsIgnoreCase = function(search) {
+    return new RegExp(search, "i").test(this);
+};

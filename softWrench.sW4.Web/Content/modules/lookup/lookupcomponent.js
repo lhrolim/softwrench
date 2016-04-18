@@ -4,9 +4,11 @@
     function service($rootScope, $timeout, $log, associationService, crudContextHolderService, schemaService) {
 
         function showModal(target, element) {
-            var modals = $('[data-attribute="{0}"]'.format(target), element);
-            modals.draggable();
-            modals.modal('show');
+            $timeout(function() {
+                var modals = $('[data-attribute="{0}"]'.format(target), element);
+                modals.draggable();
+                modals.modal('show');
+            }, 0, false);
         };
 
         function init(bodyElement, scope) {
@@ -30,39 +32,46 @@
          * @returns {} 
          */
         function refreshFromAttribute(fieldMetadata, datamap, datamapId, newValue) {
+            var log = $log.getInstance("cmplookup#refreshFromAttribute", ["association", "lookup"]);
 
-            var log = $log.getInstance('cmplookup#refreshFromAttribute', ["association", "lookup"]);
             var associationKey = fieldMetadata.associationKey;
 
-            var allowTransientValue = fieldMetadata.rendererParameters["allowcustomvalue"] === "true";
-
-            associationService.getLabelText(associationKey, newValue, { hideDescription: fieldMetadata.hideDescription, allowTransientValue: allowTransientValue }).then(function (label) {
+            associationService.getLabelText(associationKey, newValue, {
+                hideDescription: fieldMetadata.hideDescription,
+                allowTransientValue: fieldMetadata.rendererParameters["allowcustomvalue"] === "true",
+                isEager: !!fieldMetadata.providerAttribute
+            })
+            .then(function (label) {
                 var key = fieldMetadata.applicationPath;
                 if (datamapId) {
                     key += datamapId;
                 }
                 key = replaceAll(key, "\\.", "_");
-                log.debug('setting lookup {0} to {1}'.format(key, label));
+
+                log.debug("setting lookup {0} to {1}".format(key, label));
                 var el = $("input[data-displayablepath=" + key + "]");
                 if (el.length === 0) {
-                    log.warn('lookup {0} not found'.format(key));
+                    log.warn("lookup {0} not found".format(key));
                 }
-                el.typeahead('val', label);
+                el.typeahead("val", label);
+                log.debug("setting", associationKey, "to", label);
             });
         }
 
         function updateLookupObject(scope, fieldMetadata, searchValue, searchDatamap) {
-
             scope.lookupObj = scope.lookupObj || {};
-
 
             scope.lookupObj.code = searchValue;
             scope.lookupObj.fieldMetadata = fieldMetadata;
-            scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
-            scope.lookupObj.schemaId = fieldMetadata.schema.rendererParameters["schemaId"];
+
+            // fieldMetadata.schema will be `null` for eageroptions.lookup
+            if (fieldMetadata.schema) {
+                scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
+                scope.lookupObj.schemaId = fieldMetadata.schema.rendererParameters["schemaId"];
+            }
 
             var searchObj = {};
-            var lookupAttribute = fieldMetadata.schema.rendererParameters["attribute"];
+            var lookupAttribute = fieldMetadata.schema ? fieldMetadata.schema.rendererParameters["attribute"] : null;
             if (lookupAttribute != null) {
                 searchObj[lookupAttribute] = searchValue;
             } else if (fieldMetadata.target != null) {
@@ -106,7 +115,7 @@
             lookupObj.modalPaginationData.totalCount = associationResult.totalCount;
             lookupObj.modalPaginationData.selectedPage = associationResult.pageNumber;
             //TODO: this should come from the server side
-            lookupObj.modalPaginationData.paginationOptions = [10, 30, 100];
+            lookupObj.modalPaginationData.paginationOptions = associationResult.paginationOptions || [10, 30, 100];
             showModal(lookupObj.fieldMetadata.target, lookupObj.element);
             return false;
         };
