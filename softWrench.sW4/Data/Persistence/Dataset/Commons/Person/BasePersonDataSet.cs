@@ -21,6 +21,7 @@ using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Persistence.WS.API;
+using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
@@ -81,6 +82,15 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
         public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var detail = base.GetApplicationDetail(application, user, request);
+            // profile detail can be null for users created automatically by the system (such as swadmin). 
+            // Shouldn't happen for actual maximo users.
+            if (detail == null) {
+                var defaultDataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, MetadataProvider.SlicedEntityMetadata(application).Schema.MappingType);
+                defaultDataMap.SetAttribute("personid", request.Id);
+                var associationResults = BuildAssociationOptions(defaultDataMap, application.Schema, request);
+                detail = new ApplicationDetailResult(defaultDataMap, associationResults, application.Schema, CompositionBuilder.InitializeCompositionSchemas(application.Schema, user), request.Id);
+            }
+            
             var personId = detail.ResultObject.GetAttribute("personid") as string;
             var maxActive = Convert.ToBoolean(detail.ResultObject.GetAttribute("maxuser_.active"));
             var swUser = new User();
