@@ -394,6 +394,7 @@
              *              searchTemplate: the search template string to apply on the seach
              *              panelid: the panel id to refresh, used to allow multiple data on screen
              *              fieldstodisplay: if present, the schema will be sliced for showing only these fields
+             *              forcecleanup: used to mark that the any stateful scope data needs to be clean, including filterwhereclauses
              *              quickSearchData: 
              */
             refreshGrid: function (searchData, searchOperator, extraparameters) {
@@ -408,7 +409,8 @@
                     searchOperator: searchOperator,
                     extraparameters: extraparameters,
                     panelid: extraparameters.panelid,
-                    metadataid: extraparameters.metadataid
+                    metadataid: extraparameters.metadataid,
+                    forcecleanup: extraparameters.forcecleanup
                 }, true);
                 $rootScope.$broadcast("sw_refreshgrid", searchData, searchOperator, extraparameters);
             },

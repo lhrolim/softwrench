@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function advancedSearchService($rootScope, $log, restService, crudContextHolderService, searchService, redirectService, alertService) {
+    function advancedSearchService($rootScope, $log, $q, restService, crudContextHolderService, searchService, redirectService, alertService, modalService, schemaCacheService) {
         var log = $log.getInstance("sw4.advancedSearchService");
 
         //#region Utils
@@ -130,63 +130,119 @@
         }
 
         function woNoResultsPreAction() {
+            var searchDatamap = crudContextHolderService.rootDataMap(searchPanelId);
+            var facility = searchDatamap[facilityId];
+            var includeSubLocations = searchDatamap["fsincludesubloc"];
+            var map = buildLocationAndSiteIdMap();
+            if (map.length === 0 && facility) {
+                //if none selected, let´s stick with the facility itself
+                //TODO: fetch correctsiteid
+                map.push({location:facility + "-00", siteid :null});
+            }
+            if (map.length === 0) {
+                //this would only happen if no search at all has been performed, and, hence, there´s no way to fill the initial wo data.
+                return $q.when();
+            }
+
+
+            var parameters = {
+                includeSubLocations: includeSubLocations,
+                locations: map,
+            }
+
+
+            return restService.getPromise("FirstSolarAdvancedSearch", "FindAssetsBySelectedLocations", parameters).then(function (response) {
+                var appData = response.data;
+                var schema = schemaCacheService.getSchemaFromResult(appData);
+
+
+                if (appData.resultObject.length === 0) {
+                    alertService.alert("No asset could be found at the selected locations. Cannot create a workorder");
+                    return $q.reject();
+                }
+
+                var deferred = $q.defer();
+
+                modalService.show(schema, appData, {
+                    title: "Select an Asset",
+                    onloadfn: function () {
+                        crudContextHolderService.setFixedWhereClause("#modal", appData.filterFixedWhereClause);
+                    },
+                    savefn: function () {
+
+                        var selectedAsset = {};
+
+                        var buffer = crudContextHolderService.getSelectionModel("#modal").selectionBuffer;
+                        var keys = Object.keys(buffer);
+                        if (keys.length === 1) {
+                            selectedAsset = buffer[keys[0]].fields;
+                        }
+
+                        var workorderInitialDataMap = {
+                            siteid: selectedAsset.siteid,
+                            assetnum: selectedAsset.assetnum,
+                            location: selectedAsset.location
+                        }
+
+                        deferred.resolve(workorderInitialDataMap);
+                    }
+                });
+
+                return deferred.promise;
+            });
+
+  
+        }
+
+        function buildLocationAndSiteIdMap() {
             var location = null;
             var associationKey = null;
             var searchDatamap = crudContextHolderService.rootDataMap(searchPanelId);
 
+
             // tries to get a single location from selected  locations of interest,
             // switchgear locations or pcs locations, if more than one location is
             // found just returns null
-            var locsOfInterest = searchDatamap[locOfInterestId];
-            if (locsOfInterest && locsOfInterest.length > 0) {
-                if (locsOfInterest.length > 1) {
-                    return null;
-                }
-                location = locsOfInterest[0];
-                associationKey = "_FsLocationsOfInterest";
-            }
+            var locsOfInterest = searchDatamap[locOfInterestId] || [];
+            var switchgearLocations = searchDatamap[switchgearLocationsId] || [];
+            var pcsLocations = searchDatamap[pcsLocationsId] || [];
 
-            var switchgearLocations = searchDatamap[switchgearLocationsId];
-            if (switchgearLocations && switchgearLocations.length > 0) {
-                if (switchgearLocations.length > 1 || location) {
-                    return null;
-                }
-                location = switchgearLocations[0];
-                associationKey = "_FsSwitchgearLocations";
-            }
+            var toSearch = {
+                "_FsLocationsOfInterest": locsOfInterest,
+                "_FsSwitchgearLocations": switchgearLocations,
+                "_FsPcsLocations": pcsLocations
+            };
 
-            var pcsLocations = searchDatamap[pcsLocationsId];
-            if (pcsLocations && pcsLocations.length > 0) {
-                if (pcsLocations.length > 1 || location) {
-                    return null;
-                }
-                location = pcsLocations[0];
-                associationKey = "_FsPcsLocations";
-            }
+            var results = [];
 
-            // also if no location is found returs null
-            if (!location) {
-                return null;
-            }
+            //concatenating everything into a single array
+            Object.keys(toSearch).forEach(function (associationKey) {
+                var items = toSearch[associationKey].map(function (location) {
+                    var siteId = findSiteId(associationKey, location);
+                    return { location: location, siteid: siteId };
+                });
+                results = results.concat(items);
+            });
 
-            // if finally just a single location is found, creates a datamap with it
-            var siteid = findSiteId(associationKey, location);
-            return { location: location, siteid: siteid };
+            return results;
+
         }
 
         function newWorkOrder() {
-            var datamap = woNoResultsPreAction();
-            var msg = "Are you sure you want to leave the page?";
-            if (crudContextHolderService.getDirty()) {
-                alertService.confirmCancel(null, null, function () {
+            return woNoResultsPreAction().then(function (datamap) {
+                modalService.hide();
+                var msg = "Are you sure you want to leave the page?";
+                if (crudContextHolderService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        redirectService.goToApplication("workorder", "newdetail", null, datamap);
+                        crudContextHolderService.clearDirty();
+                        crudContextHolderService.clearDetailDataResolved();
+                    }, msg, function () { return; });
+                }
+                else {
                     redirectService.goToApplication("workorder", "newdetail", null, datamap);
-                    crudContextHolderService.clearDirty();
-                    crudContextHolderService.clearDetailDataResolved();
-                }, msg, function () { return; });
-            }
-            else {
-                redirectService.goToApplication("workorder", "newdetail", null, datamap);
-            }
+                }
+            });
         }
         //#endregion
 
@@ -194,6 +250,7 @@
         var service = {
             facilitySelected: facilitySelected,
             customizeComboDropdown: customizeComboDropdown,
+            buildLocationAndSiteIdMap: buildLocationAndSiteIdMap,
             woNoResultsPreAction: woNoResultsPreAction,
             newWorkOrder: newWorkOrder
         };
@@ -203,7 +260,10 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("advancedSearchService", ["$rootScope", "$log", "restService", "crudContextHolderService", "searchService", "redirectService", "alertService", advancedSearchService]);
+
+    angular
+      .module('firstsolar')
+      .clientfactory('advancedSearchService', ["$rootScope", "$log", "$q", "restService", "crudContextHolderService", "searchService", "redirectService", "alertService", "modalService", "schemaCacheService", advancedSearchService]);
 
     //#endregion
 

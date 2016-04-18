@@ -19,15 +19,17 @@
                 /// could receive as first parameter either the already filled modaldata, or a schema.
                 /// </summary>
                 /// <param name="schemaorModalData">the already filled modaldata, or a schema</param>
+                /// <param name="datamap">the datamap of the current item being displayed on the modal, or an IApplicationResponse, where datamap would be the ResultObject; it could be null for a "creation" workflow.</param>
                 /// <param name="properties">an object with the following:
                 /// 
                 ///     title: the title to display on the modal
                 ///     cssclass: an extra class to add to the modal, making it possible to customize it via css later
                 ///     onloadfn: a function to be called when the modal loads, which would receive the modal scope as a parameter (function onload(modalscope))
                 ///     savefn: a save fn to be called
+                ///     listResult: 
                 /// 
                 /// </param>
-                /// <param name="datamap">the datamap of the current item being displayed on the modal; it could be null for a "creation" workflow.</param>
+                
                 /// <param name="savefn">the savefn to execute upon modal submit click. It should have the following signature:
                 ///     save(modaldatamap) where:
                 ///         modaldatamap is the datamap of the modal
@@ -46,6 +48,7 @@
 
                     properties = properties || {};
                     datamap = datamap || {};
+                    var appResponseData = null;
                     savefn = savefn || properties.savefn;
 
                     if (!properties.cssclass) {
@@ -57,14 +60,19 @@
                     }
 
 
-
                     if (schemaorModalData.mode.equalIc("none")) {
                         schemaorModalData.mode = "input";
+                    }
+
+                    if (datamap.resultObject) {
+                        appResponseData = datamap;
+                        datamap = datamap.resultObject;
                     }
 
                     var modaldata = {
                         schema: schemaorModalData,
                         datamap: datamap,
+                        appResponseData: appResponseData,
                         savefn: savefn,
                         cancelfn: cancelfn,
                         previousdata: parentdata,

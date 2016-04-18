@@ -71,6 +71,7 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\Sar03Til08Customization.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\Sar01Sar02Customization.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarAssetDataSet.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarAssetLookupDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarLocationDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPCSLocationHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderDataSet.cs" />
