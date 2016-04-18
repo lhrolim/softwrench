@@ -143,7 +143,6 @@
           <section>
             <field attribute="actlabcost" hidden="true" />
             <field attribute="actlabhrs" hidden="true"/>
-            <field attribute="siteid" hidden="true" />
             <field attribute="orgid" hidden="true"/>
             <field attribute="createby" hidden="true"/>
             <!-- hiddens for communication template -->
