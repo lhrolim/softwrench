@@ -37,7 +37,7 @@ angular.module('sw_layout')
     function setHeaderPosition() {
         var siteHeaderElements = $('.site-header');
         var affixPaginationElements = $('.affix-pagination');
-        var listTheadElement = $('.listgrid-thead');
+        var listTheadElement = $('.listgrid-thead:visible');
 
         if (siteHeaderElements.css('position') === 'fixed') {
             //if the header is fixed to the top of the page, set the location of the content, context menu, grid header and filter bar
