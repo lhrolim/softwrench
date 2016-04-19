@@ -192,7 +192,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public static void CloneArray(IEnumerable<CrudOperationData> collectionAssociation, object integrationObject, string propertyName, Action<object, CrudOperationData> itemHandlerDelegate = null) {
-            var crudOperationDatas = collectionAssociation as IList<CrudOperationData> ?? collectionAssociation.ToList();
+            // apply cloning only to dirty items --> ignoring unchanged data
+            var crudOperationDatas = collectionAssociation.Where(data => data.UnmappedAttributes.ContainsKey("#isDirty")).ToList();
+
             if (!crudOperationDatas.Any()) {
                 return;
             }

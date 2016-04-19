@@ -132,14 +132,15 @@
 
                     // covers breadcrumb redirect when the target page does not have the active tab of the src page
                     var tab = crudContextHolderService.getActiveTab();
-                    if (tab != null && $scope.datamap.fields[tab] == null && hasMainTab) {
+                    var datamap = $scope.datamap.fields || $scope.datamap;
+                    if (tab != null && datamap[tab] == null && hasMainTab) {
                         // active tab not found
                         redirectService.redirectToTab($scope.getMainTabId());
                     }
 
                     $timeout(function () {
                         //time for the components to be rendered
-                        focusService.setFocusToFirstField($scope.schema, $scope.datamap);
+                        focusService.setFocusToFirstField($scope.schema, datamap);
                     }, 1000, false);
                     eventService.dispatchEvent($scope.schema, "onschemafullyloaded");
                 });
@@ -635,7 +636,13 @@
                                 var updatedValue = responseDataMap.fields[composition];
                                 // has previous data but has no updated data: not safe to update -> hydrate with previous value
                                 if (!!currentValue && (!responseDataMap.fields.hasOwnProperty(composition) || !angular.isArray(updatedValue))) {
-                                    responseDataMap.fields[composition] = currentValue;
+                                    responseDataMap.fields[composition] = currentValue
+                                                                            .filter(function (c) { // filter out just created items
+                                                                                return !c["_iscreation"];
+                                                                            }).map(function (c) { // remove `#isDirty` flag from the items
+                                                                                delete c["#isDirty"];
+                                                                                return c;
+                                                                            });
                                 }
                             });
 

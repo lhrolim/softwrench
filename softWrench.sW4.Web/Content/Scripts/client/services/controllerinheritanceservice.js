@@ -35,7 +35,7 @@
                 var original = obj[methodName];
                 var ctx = context || obj;
                 obj[methodName] = function() {
-                    proxyMethod.apply(ctx, [original, [].slice.call(arguments), ctx]);
+                    return proxyMethod.apply(ctx, [original, [].slice.call(arguments), ctx]);
                 }
                 return this;
             };
