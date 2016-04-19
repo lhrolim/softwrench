@@ -74,14 +74,18 @@
             top: -4px;
             margin: 7px 0 1px 20px;
         }
+
+        &.total {
+            margin-top: 10px;
+        }
     }
 }
 
 .pagination {
     [disabled="disabled"] {
         i {
-        color: #ccc;
-        cursor: default;
+            color: #ccc;
+            cursor: default;
         }
     }
 }

@@ -265,7 +265,9 @@
                         html += "</td>";
 
                         html += "<td class='select' {0}>".format(!hasSingleSelector ? 'style="display:none"' : '');
+                        html += "<div class=\"cell-wrapper\">";
                         html += "<input type='radio' name=\"selectradio\" ng-value=\"true\" ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
+                        html += "</div>";
                         html += "</td>";
 
 
