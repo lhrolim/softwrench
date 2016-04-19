@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using JetBrains.Annotations;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
 
@@ -167,6 +168,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+
+
         private SchemaFilters _schemaFilters;
 
         [DefaultValue(true)]
@@ -283,6 +286,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             set {
                 _schemaFilters = value;
             }
+        }
+
+        /// <summary>
+        /// Holds a list of the Related compositions to be choosen from on the QuickSearch operation.
+        /// 
+        /// Only Make sense for List schemas, null otherwise
+        /// 
+        /// </summary>
+        [CanBeNull]
+        public IEnumerable<IAssociationOption> RelatedCompositions {
+            get; set;
         }
 
 

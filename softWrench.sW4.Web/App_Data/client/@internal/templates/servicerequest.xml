@@ -116,6 +116,7 @@
           <properties>
             <property key="list.click.schema" value="editdetail"/>
             <property key="list.defaultorderby" value="sr.ticketuid desc"/>
+            <property key="list.search.compositionstoexclude" value="attachment,relatedrecord"/>
           </properties>
         </list>
 

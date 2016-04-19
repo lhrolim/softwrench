@@ -14,7 +14,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
 
 
     [TestClass]
-    public class QueryFromBuilderTest {
+    public class QueryFromBuilderTest : BaseMetadataTest {
 
         [TestInitialize]
         public void Init() {

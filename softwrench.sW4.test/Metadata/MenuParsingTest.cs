@@ -12,7 +12,7 @@ using softWrench.sW4.Metadata.Menu;
 namespace softwrench.sW4.test.Metadata {
 
     [TestClass]
-    public class MenuParsingTest {
+    public class MenuParsingTest : BaseMetadataTest {
 
 
         [TestMethod]

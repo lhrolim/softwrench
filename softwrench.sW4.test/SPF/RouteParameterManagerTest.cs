@@ -12,7 +12,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.SPF {
     [TestClass]
-    public class RouteParameterManagerTest {
+    public class RouteParameterManagerTest : BaseMetadataTest {
 
         [TestInitialize]
         public void Init() {

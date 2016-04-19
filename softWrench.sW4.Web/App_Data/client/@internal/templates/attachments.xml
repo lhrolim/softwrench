@@ -27,6 +27,7 @@
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
             <property key="list.click.service" value="attachmentService.selectAttachment"/>
+            <property key="list.search.quicksearchfields" value="document"/>
           </properties>
           <field hidden="true" attribute="ownerid"/>
           <field label="Id" hidden="true" attribute="docinfoid"/>

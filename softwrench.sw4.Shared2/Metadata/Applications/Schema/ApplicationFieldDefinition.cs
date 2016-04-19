@@ -5,6 +5,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using cts.commons.portable.Util;
 using Newtonsoft.Json;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
@@ -94,7 +95,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
-        public string PrimaryAttribute { get; set; }
+        public string PrimaryAttribute {
+            get; set;
+        }
 
         public FieldRenderer Renderer {
             get {
@@ -146,6 +149,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public IDictionary<string, object> FilterParameters {
             get {
                 return _filter == null ? new Dictionary<string, object>() : _filter.ParametersAsDictionary();
+            }
+        }
+
+        [JsonIgnore]
+        public bool IsTextField {
+            get {
+                return DataType != null && DataType.EqualsAny("varchar", "string","text");
             }
         }
 

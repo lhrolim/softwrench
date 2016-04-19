@@ -17,6 +17,7 @@ using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.Association;
@@ -46,7 +47,7 @@ namespace softWrench.sW4.Web.Controllers {
 
 
         /// <summary>
-        /// 
+        /// Returns a list of options to be displayed on the screen for a filter, either eager or lazy loaded
         /// </summary>
         /// <param name="key"></param>
         /// <param name="filterProvider">as described on MetadataOptionFilter</param>
@@ -76,7 +77,7 @@ namespace softWrench.sW4.Web.Controllers {
             var filter = new PaginatedSearchRequestDto();
 
             filter.AppendWhereClause(_filterWhereClauseHandler.GenerateFilterLookupWhereClause(association.OriginalLabelField, labelSearchString, app.Schema));
-            filter.QuickSearchData = labelSearchString;
+            filter.QuickSearchDTO = QuickSearchDTO.Basic(labelSearchString);
             //let´s limit the filter adding an extra value so that we know there´re more to be brought
             //TODO: add a count call
             if (!association.EntityAssociation.Cacheable) {

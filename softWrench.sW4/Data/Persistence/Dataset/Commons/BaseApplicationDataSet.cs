@@ -41,6 +41,7 @@ using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.Commons;
+using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -83,6 +84,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         private IWhereClauseFacade _whereClauseFacade;
         private FilterWhereClauseHandler _filterWhereClauseHandler;
         private QuickSearchWhereClauseHandler _quickSearchWhereClauseHandler;
+        private BaseDataSetSearchHelper _baseDataSetSearchHelper;
+
         private AttachmentHandler _attachmentHandler;
 
         internal BaseApplicationDataSet() {
@@ -145,6 +148,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         protected AttachmentHandler AttachmentHandler {
             get {
                 return _attachmentHandler ?? (_attachmentHandler = new AttachmentHandler());
+            }
+        }
+
+        protected BaseDataSetSearchHelper BaseDataSetSearchHelper{
+            get {
+                if (_baseDataSetSearchHelper != null) {
+                    return _baseDataSetSearchHelper;
+                }
+                _baseDataSetSearchHelper =
+                    SimpleInjectorGenericFactory.Instance.GetObject<BaseDataSetSearchHelper>(typeof(BaseDataSetSearchHelper));
+                return _baseDataSetSearchHelper;
             }
         }
 
@@ -318,7 +332,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 searchDto.SearchSort = propertyValue;
             }
 
-            searchDto = string.IsNullOrEmpty(searchDto.QuickSearchData)
+            searchDto = searchDto.QuickSearchDTO==null
                 ? FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto)
                 : QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
 

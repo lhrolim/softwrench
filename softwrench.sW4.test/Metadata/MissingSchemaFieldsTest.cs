@@ -9,7 +9,7 @@ using softWrench.sW4.Util;
 namespace softwrench.sW4.test.Metadata {
     
     [TestClass]
-    public class MissingSchemaFieldsTest {
+    public class MissingSchemaFieldsTest : BaseMetadataTest {
 
         [ClassInitialize]
         public static void Init(TestContext testContext) {

@@ -10,7 +10,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata.Entities {
     [TestClass]
-    public class TargetAttributeHandlerTest {
+    public class TargetAttributeHandlerTest : BaseMetadataTest {
 
         [ClassInitialize]
         public static void Init(TestContext testContext) {

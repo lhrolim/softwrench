@@ -49,9 +49,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependencies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
     <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
@@ -77,6 +75,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ActivityStream\NotificationSecurityGroupHelperTest.cs" />
+    <Compile Include="BaseMetadataTest.cs" />
+    <Compile Include="BaseOtbMetadataClass.cs" />
     <Compile Include="Category\CategoryUtilTest.cs" />
     <Compile Include="Category\CategoryTreeCacheTest.cs" />
     <Compile Include="Configuration\Service\ConfigurationServiceTest.cs" />
@@ -93,6 +93,7 @@
     <Compile Include="Data\Persistence\WS\Ism\ImacDescriptionHandlerTest.cs" />
     <Compile Include="Data\Relationship\CompositionExpanderHelperTest.cs" />
     <Compile Include="Data\Search\ApplicationSearchTest.cs" />
+    <Compile Include="Data\Search\QuickSearch\QuickSearchWhereClauseHandlerTest.cs" />
     <Compile Include="Data\Search\SearchTest2.cs" />
     <Compile Include="Email\CommLogTemplateMergerTest.cs" />
     <Compile Include="ExtensionsForICustomAttributeProvider.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Metadata\Entities\TargetConstantHandlerTest.cs" />
     <Compile Include="Metadata\Entities\ManchesterSlicedEntityMetadataBuilderTest.cs" />
     <Compile Include="Metadata\ApplicationMetadataValidatorTest.cs" />
+    <Compile Include="Metadata\MetadataProviderTest.cs" />
     <Compile Include="Metadata\MissingSchemaFieldsTest.cs" />
     <Compile Include="Metadata\MetadataPropertiesTest.cs" />
     <Compile Include="Metadata\MenuParsingTest.cs" />
@@ -143,7 +145,9 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_data\Client\test3\metadata.xml" />
+    <Content Include="App_data\Client\test3\metadata.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_data\Client\test3\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -152,8 +156,17 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_data\Client\test2\metadata.xml" />
+    <Content Include="App_data\Client\test2\metadata.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_data\Client\test2\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_data\Client\test4\metadata.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_data\Client\test4\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -175,6 +188,7 @@
     </Content>
     <Content Include="App_data\Client\test_only\metadata.xml">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_data\Client\test_only\properties.xml">
       <SubType>Designer</SubType>

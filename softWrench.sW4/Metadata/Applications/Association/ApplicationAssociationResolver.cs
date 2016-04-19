@@ -16,6 +16,7 @@ using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
+using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
@@ -31,6 +32,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         //        private readonly EntityRepository _entityRepository = new EntityRepository();
 
         private EntityRepository _repository;
+        private QuickSearchHelper _quickSearchHelper;
+
 
         private EntityRepository EntityRepository {
             get {
@@ -39,6 +42,17 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                         SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
                 }
                 return _repository;
+            }
+        }
+
+
+        private QuickSearchHelper QuickSearchHelper {
+            get {
+                if (_quickSearchHelper == null) {
+                    _quickSearchHelper =
+                        SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchHelper>(typeof(QuickSearchHelper));
+                }
+                return _quickSearchHelper;
             }
         }
 
@@ -80,7 +94,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }
 
             // handles quick search request
-            if (!string.IsNullOrEmpty(associationFilter.QuickSearchData)) {
+            if (associationFilter.QuickSearchDTO!=null) {
                 AppendQuickSearch(association, associationFilter);
             }
 
@@ -134,7 +148,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             Task.WaitAll(tasks.ToArray());
         }
 
-        private static void AppendQuickSearch(ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
+        private void AppendQuickSearch(ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             var appMetadata = GetAssociationApplicationMetadata(association);
             var primaryAttribute = association.EntityAssociation.PrimaryAttribute();
 

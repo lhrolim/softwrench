@@ -10,7 +10,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata {
     [TestClass]
-    public class CustomizationTest {
+    public class CustomizationTest : BaseMetadataTest {
 
         private IList<ApplicationFieldDefinition> _baseWorklogDisplayables;
 

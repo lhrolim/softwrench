@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7F0343DC-37A4-41A3-A5E6-773600FA2F1A}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,11 +13,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E4B56D9-F11F-40A4-BAF5-51790789122C}"
 	ProjectSection(SolutionItems) = preProject
 		softWrench.sW4.vsmdi = softWrench.sW4.vsmdi
+		test.runsettings = test.runsettings
 		TestSettings1.testsettings = TestSettings1.testsettings
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F3FBB2C5-70CE-41A1-81B0-A58FCFFA8B96}"
 	ProjectSection(SolutionItems) = preProject
+		Build\.babelrc = Build\.babelrc
 		Build\build.xml = Build\build.xml
 		Build\Builds.build.proj = Build\Builds.build.proj
 		Build\Gruntfile.js = Build\Gruntfile.js

@@ -9,7 +9,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Data.Entities {
     [TestClass]
-    public class EntityBuilderTestGric {
+    public class EntityBuilderTestGric : BaseMetadataTest {
 
         [TestMethod]
         public void TestAddWorkLogToIncident() {

@@ -63,6 +63,17 @@
         public const string ListSchemaOrderBy = "list.defaultorderby";
 
         /// <summary>
+        /// Comma separated list of fields to be included on quicksearch fot the given compositionlist schema. If not specified any visible text fields would be included
+        /// </summary>
+        public const string ListQuickSearchFields = "list.search.quicksearchfields";
+
+        /// <summary>
+        /// Comma separated list of compositions that should not be included in the list of available search options
+        /// </summary>
+        public const string ListQuickSearchCompositionsToExclude = "list.search.compositionstoexclude";
+
+
+        /// <summary>
         /// Use this property to specify a custom controller/action to redirect after the save has been performed.Value should be on the format serviceName.methodName
         /// </summary>
         public const string AfterSubmitAction = "aftersubmit.redirectaction";

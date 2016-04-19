@@ -38,7 +38,7 @@
     <entity name="commlog" idAttribute="commloguid">
       <attributes>
         <attribute name="commlogid" type="int" required="true"/>
-        <attribute name="sendto" type="varchar" required="false" />
+        <attribute name="sendto" type="text" required="false" />
         <attribute name="sendfrom" type="varchar" required="true" />
         <attribute name="subject" type="varchar" required="false" />
         <attribute name="createby" type="varchar" required="true" />

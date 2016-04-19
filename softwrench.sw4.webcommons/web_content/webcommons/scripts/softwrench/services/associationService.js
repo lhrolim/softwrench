@@ -642,7 +642,7 @@
         function buildLookupSearchDTO(fieldMetadata, lookupObj, searchObj, pageNumber, totalCount, pageSize) {
             var resultDTO = {};
 
-            resultDTO.quickSearchData = lookupObj.quickSearchData;
+            resultDTO.quickSearchDTO = lookupObj.quickSearchDTO;
 
             resultDTO.pageNumber = pageNumber;
             resultDTO.totalCount = totalCount;

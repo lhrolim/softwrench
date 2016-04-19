@@ -32,14 +32,14 @@
 
             controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log",
                 "formatService", "fixHeaderService", "alertService",
-                "searchService", "tabsService", "userPreferencesService", 
+                "searchService", "tabsService", "userPreferencesService",
                 "fieldService", "commandService", "i18NService", "modalService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
                 "checkpointService", "schemaCacheService", "dispatcherService",
                 function ($scope, $http, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService,
-                    searchService, tabsService, userPreferencesService, 
+                    searchService, tabsService, userPreferencesService,
                     fieldService, commandService, i18NService, modalService,
                     validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
                     associationService, statuscolorService, contextService, eventService, iconService, expressionService,
@@ -48,7 +48,9 @@
                     $scope.$name = "crudlist";
 
                     $scope.vm = {
-                        quickSearchData: null
+                        quickSearchDTO: {
+                            compositionsToInclude: []
+                        }
                     }
 
                     var scrollPosition = 0;
@@ -72,6 +74,26 @@
                     $scope.tabsDisplayables = function (schema) {
                         return tabsService.tabsDisplayables(schema);
                     };
+
+                    $scope.isCompositionSelectedForSearching = function (composition) {
+                        $scope.vm.quickSearchDTO.compositionsToInclude = $scope.vm.quickSearchDTO.compositionsToInclude || [];
+                        return $scope.vm.quickSearchDTO.compositionsToInclude.indexOf(composition) !== -1;
+                    }
+
+                    $scope.toggleCompositionForSearching = function (composition) {
+                        var compositionsToInclude = $scope.vm.quickSearchDTO.compositionsToInclude;
+                        if (compositionsToInclude == null) {
+                            $scope.vm.quickSearchDTO.compositionsToInclude = [];
+                            compositionsToInclude = [];
+                        }
+                        var idx= compositionsToInclude.indexOf(composition);
+                        if (idx === -1) {
+                            compositionsToInclude.push(composition);
+                        } else {
+                            compositionsToInclude.splice(idx, 1);
+                        }
+
+                    }
 
                     $scope.getGridColumnStyle = function (column, propertyName) {
                         var property = column.rendererParameters[propertyName];
@@ -122,7 +144,7 @@
 
                     // Initial state of selection mode toggle button
                     // depends on "list.selectionmodebydefault" schema property
-                    this.selectionModeToggleInitState = function() {
+                    this.selectionModeToggleInitState = function () {
                         return crudContextHolderService.getSelectionModel($scope.panelid).selectionMode;
                     }
 
@@ -165,16 +187,16 @@
                             $scope.searchSort = {};
 
                             if (data.pageResultDto) {
-                                if (data.pageResultDto.quickSearchData) {
-                                    $scope.vm.quickSearchData = data.pageResultDto.quickSearchData;
+                                if (data.pageResultDto.quickSearchDTO) {
+                                    $scope.vm.quickSearchDTO = data.pageResultDto.quickSearchDTO;
                                 }
-                                    
+
                                 if (data.pageResultDto.searchParams) {
                                     var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
                                     $scope.searchData = result.searchData;
                                     $scope.searchOperator = result.searchOperator;
                                 }
-                                    
+
                                 if (data.pageResultDto["searchSort"]) {
                                     $scope.searchSort.field = data.pageResultDto["searchSort"];
                                     $scope.searchSort.order = data.pageResultDto["searchAscending"] === false ? "desc" : "asc";
@@ -186,7 +208,7 @@
                         contextService.deleteFromContext("grid_refreshdata");
                         fixHeaderService.FixHeader();
                         //usually this next call won´t do anything, but for lists with optionfields, this is needed
-                        associationService.updateFromServerSchemaLoadResult(data.associationOptions,null,true);
+                        associationService.updateFromServerSchemaLoadResult(data.associationOptions, null, true);
                         $scope.gridDataChanged($scope.datamap);
 
                         var elements = [];
@@ -246,7 +268,7 @@
                         $scope.searchData = $scope.searchData || {};
                         $scope.searchSort = {};
                         $scope.metadataid = extraparameters.metadataid;
-                        $scope.vm.quickSearchData = extraparameters.quickSearchData;
+                        $scope.vm.quickSearchDTO = extraparameters.quickSearchDTO || {compositionsToInclude:[]};
 
                         var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
                         var pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
@@ -376,7 +398,7 @@
                         searchDTO.totalCount = totalCount;
                         searchDTO.pageSize = pageSize;
                         searchDTO.paginationOptions = $scope.paginationData.paginationOptions;
-                        searchDTO.quickSearchData = $scope.vm.quickSearchData;
+                        searchDTO.quickSearchDTO = $scope.vm.quickSearchDTO;
 
                         // Check for custom param provider
                         if ($scope.schema.properties && $scope.schema.properties['schema.customparamprovider']) {
@@ -466,7 +488,7 @@
                     };
 
                     $scope.filterApplied = function () {
-                        $scope.vm.quickSearchData = null;
+                        $scope.vm.quickSearchDTO = {};
                         $scope.selectPage(1);
                     };
 
@@ -511,7 +533,7 @@
 
                     //#region eventlisteners
 
-                 
+
 
                     $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
                         if ($scope.datamap && $scope.datamap.length <= 0) {
@@ -570,7 +592,7 @@
 
 
                     $scope.$on("sw_togglefiltermode", function (event, setToBasicMode) {
-                        $scope.vm.quickSearchData = "";
+                        $scope.vm.quickSearchDTO.quickSearchData = null;
                         $scope.searchData = {};
                         $scope.$broadcast("sw_clearAdvancedFilter");
                         $scope.advancedfiltermode = !setToBasicMode;
@@ -609,7 +631,7 @@
 
                     $scope.$on("sw.crud.list.clearQuickSearch", function (event, args) {
                         if ($scope.panelid === args[0]) {
-                            $scope.vm.quickSearchData = "";
+                            $scope.vm.quickSearchDTO.quickSearchData = null;
                         }
                     });
 
@@ -623,14 +645,14 @@
                     });
                     //#endregion
 
-                    $scope.$watch("selectionModel.selectionMode", function(newValue) {
+                    $scope.$watch("selectionModel.selectionMode", function (newValue) {
                         var toggleCommand = crudContextHolderService.getToggleCommand("toggleselectionmode", $scope.panelid);
                         if (toggleCommand) {
                             toggleCommand.state = newValue;
                         }
                     });
 
-                    this.toggleSelectionModeInitialValue = function() {
+                    this.toggleSelectionModeInitialValue = function () {
                         return crudContextHolderService.getSelectionModel($scope.panelid).selectionMode;
                     }
 
@@ -688,7 +710,7 @@
                             if (fixedWhereClause) {
                                 searchDTO.filterFixedWhereClause = fixedWhereClause;
                             }
-                            
+
                             if (pageSize) {
                                 searchDTO.pageSize = pageSize;
                             }

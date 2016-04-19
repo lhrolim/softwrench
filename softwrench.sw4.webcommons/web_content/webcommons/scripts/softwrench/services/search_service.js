@@ -395,7 +395,7 @@
              *              panelid: the panel id to refresh, used to allow multiple data on screen
              *              fieldstodisplay: if present, the schema will be sliced for showing only these fields
              *              forcecleanup: used to mark that the any stateful scope data needs to be clean, including filterwhereclauses
-             *              quickSearchData: 
+             *              quickSearchDTO: 
              */
             refreshGrid: function (searchData, searchOperator, extraparameters) {
                 extraparameters = extraparameters || {};
@@ -415,9 +415,12 @@
                 $rootScope.$broadcast("sw_refreshgrid", searchData, searchOperator, extraparameters);
             },
 
-            quickSearch: function (quickSearchData, panelId) {
-                if (!quickSearchData) return;
-                this.refreshGrid({}, null,{ quickSearchData: quickSearchData, keepfilterparameters: false, panelid: panelId });
+            quickSearch: function (quickSearchDTO, panelId) {
+                if (!quickSearchDTO) {
+                     return;
+                }
+
+                this.refreshGrid({}, null, { quickSearchDTO: quickSearchDTO, keepfilterparameters: false, panelid: panelId });
             },
 
             /// <summary>

@@ -6,7 +6,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Util {
     [TestClass]
-    public class I18NResolverTest {
+    public class I18NResolverTest : BaseMetadataTest {
 
         private readonly I18NResolver _resolver = new I18NResolver();
 

@@ -2,16 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Search;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
+using softWrench.sW4.Data.Search.QuickSearch;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
-    class BaseDataSetSearchHelper {
+    public class BaseDataSetSearchHelper : ISingletonComponent {
 
-        internal static PaginatedSearchRequestDto BuildSearchDTOForAssociationSearch(AssociationUpdateRequest request,
+        private readonly QuickSearchHelper _quickSearchHelper;
+
+        public BaseDataSetSearchHelper(QuickSearchHelper quickSearchHelper) {
+            _quickSearchHelper = quickSearchHelper;
+        }
+
+        /// <summary>
+        /// Main method for creating the searchDTO to search a given association 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="association"></param>
+        /// <param name="cruddata"></param>
+        /// <returns></returns>
+        //TODO: rethink this method
+        public PaginatedSearchRequestDto BuildSearchDTOForAssociationSearch(AssociationUpdateRequest request,
             ApplicationAssociationDefinition association, AttributeHolder cruddata) {
 
             var searchRequest = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
@@ -41,8 +57,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 // If association has a schema key defined, the searchDTO will be filled on client, so just copy it from request
                 searchRequest.SearchParams = request.SearchDTO.SearchParams;
                 searchRequest.SearchValues = request.SearchDTO.SearchValues;
-            } else if (!string.IsNullOrEmpty(request.SearchDTO.QuickSearchData)) {
-                searchRequest.AppendWhereClause(QuickSearchHelper.BuildOrWhereClause(new List<string>{
+            } else if (request.SearchDTO.QuickSearchDTO != null) {
+                searchRequest.AppendWhereClause(_quickSearchHelper.BuildOrWhereClause(new List<string>{
                     association.EntityAssociation.PrimaryAttribute().To,
                     association.LabelFields.FirstOrDefault(),
                 }));
@@ -52,7 +68,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return searchRequest;
         }
 
-      
+
 
     }
 }

@@ -13,9 +13,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using NHibernate.Util;
+using softWrench.sW4.Data.Search.QuickSearch;
 
 namespace softWrench.sW4.Data.Search {
     public class SearchRequestDto : IDataRequest {
+
+        private QuickSearchDTO _quickSearchDTO;
+
 
         public IDictionary<string, string> CustomParameters {
             get; set;
@@ -74,9 +78,22 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
-        public string QuickSearchData {
-            get; set;
+        [CanBeNull]
+        public QuickSearchDTO QuickSearchDTO {
+            get {
+                return _quickSearchDTO;
+            }
+            set {
+                if (value == null || value.QuickSearchData == null) {
+                    //assuring that if no string was passed, we do not consider the DTO
+                    this._quickSearchDTO = null;
+                } else {
+                    this._quickSearchDTO = value;
+                }
+
+            }
         }
+
 
         private IDictionary<string, SearchParameter> _valuesDictionary;
 

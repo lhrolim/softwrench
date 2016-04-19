@@ -154,6 +154,7 @@
           <field attribute="receipts" hidden="true"/>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.search.compositionstoexclude" value="poline"/>
           </properties>
         </list>
 

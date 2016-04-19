@@ -88,6 +88,9 @@ namespace softwrench.sW4.test.Metadata {
 
         private void RegisterClassItSelf(Container container, Type registration, Registration reg) {
             if (registration.IsPublic) {
+                if (_singletonMockTypes.Contains(registration)){
+                    return;
+                }
                 container.AddRegistration(registration, reg);
                 SimpleInjectorGenericFactory.RegisterNameAndType(registration);
             }

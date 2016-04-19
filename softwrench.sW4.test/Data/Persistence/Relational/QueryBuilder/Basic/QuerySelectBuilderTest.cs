@@ -7,7 +7,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
     [TestClass]
-    public class QuerySelectBuilderTest {
+    public class QuerySelectBuilderTest : BaseMetadataTest {
         [TestInitialize]
         public void Before() {
             if (!"hapag".Equals(ApplicationConfiguration.TestclientName)) {

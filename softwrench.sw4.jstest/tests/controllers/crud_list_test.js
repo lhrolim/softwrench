@@ -84,5 +84,7 @@
 
         expect(mockScope.searchSort).toBeDefined();
         expect(mockScope.searchSort).toEqual({});
+        expect(mockScope.vm.quickSearchDTO).toBeDefined();
+        expect(mockScope.vm.quickSearchDTO.compositionsToInclude).toEqual([]);
     });
 });

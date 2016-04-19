@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace softwrench.sW4.test.Data.Search {
     [TestClass]
-    public class ApplicationSearchTest {
+    public class ApplicationSearchTest : BaseMetadataTest {
 
         private ApplicationSchemaDefinition _schema;
         private ApplicationSchemaDefinition _assetSchema;

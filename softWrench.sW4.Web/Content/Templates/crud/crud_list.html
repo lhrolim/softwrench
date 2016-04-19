@@ -4,7 +4,7 @@
         <div ng-hide="hidebars" ng-if="!panelid || panelid == '#modal'">
             <div class="context clearfix header-menu">
                 <!-- commands -->
-                <gridtoolbar advancedsearchdata="vm.quickSearchData"
+                <gridtoolbar advancedsearchdata="vm.quickSearchDTO"
                              position="{{getGridCommandPosition('commandbar.top','gridtop')}}"
                              datamap="datamap"
                              schema="schema"
@@ -17,58 +17,74 @@
                              class="gridtop" />
 
                 <!-- quick search input -->
-                <div ng-show="shouldShowGridNavigation()" class="quick-search col-xs-4">
-                    <div class="input-group">
-                        <input type="text"
-                               placeholder="Search"
-                               class="form-control ng-pristine ng-valid ng-touched"
-                               ng-model="vm.quickSearchData"
-                               ng-enter="quickSearch(vm.quickSearchData)">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default"
-                                    type="button" ng-enabled="!!vm.quickSearchData"
-                                    ng-click="quickSearch(vm.quickSearchData)"
-                                    disabled="disabled">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
+                <div ng-show="shouldShowGridNavigation()">
+                    <div class="quick-search col-xs-4">
+                        <div class="input-group">
+                            <input type="text"
+                                   placeholder="Search"
+                                   class="form-control ng-pristine ng-valid ng-touched"
+                                   ng-model="vm.quickSearchDTO.quickSearchData"
+                                   ng-enter="quickSearch(vm.quickSearchDTO)">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default"
+                                        type="button" ng-enabled="!!vm.quickSearchDTO.quickSearchData"
+                                        ng-click="quickSearch(vm.quickSearchDTO)"
+                                        disabled="disabled">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="btn-group search-options" ng-if="schema.relatedCompositions.length > 0">
+                        <button type="button" class="btn btn-context dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
+                            <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i>
+                            <span>Search Options</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <!--TODO: Make recursive...-->
+                            <li ng-repeat="composition in schema.relatedCompositions">
+                                <input type="checkbox"
+                                       name="composition.value"
+                                       ng-checked="isCompositionSelectedForSearching(composition.value)"
+                                       ng-click="toggleCompositionForSearching(composition.value)"/>&ensp;{{composition.label}}
+
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
+            <!-- simple pagination -->
+            <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
+                        schema="schema" application-name="{{schema.applicationName}}"
+                        search-data="searchData"
+                        search-operator="searchOperator"
+                        panelid="panelid"
+                        pagination-simple-layout />
 
-            
-
-                <!-- simple pagination -->
-                <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
-                            schema="schema" application-name="{{schema.applicationName}}"
-                            search-data="searchData"
-                            search-operator="searchOperator"
-                            panelid="panelid"
-                            pagination-simple-layout/>
-
-                <gridtoolbar advancedsearchdata="vm.quickSearchData"
-                             position="{{getGridCommandPosition('commandbar.top.right','actions')}}"
-                             datamap="datamap"
-                             schema="schema"
-                             pagination-data="paginationData"
-                             search-data="searchData"
-                             search-sort="searchSort"
-                             search-operator="searchOperator"
-                             search-template="searchTemplate"
-                             panelid="panelid"
-                             class="gridtop right"
-                             style="float:right" />
-            </div>
-
+            <gridtoolbar advancedsearchdata="vm.quickSearchData"
+                         position="{{getGridCommandPosition('commandbar.top.right','actions')}}"
+                         datamap="datamap"
+                         schema="schema"
+                         pagination-data="paginationData"
+                         search-data="searchData"
+                         search-sort="searchSort"
+                         search-operator="searchOperator"
+                         search-template="searchTemplate"
+                         panelid="panelid"
+                         class="gridtop right"
+                         style="float:right" />
         </div>
 
-        <!--<div class="filter-container">
-            <div class="context clearfix header-menu">
-                <crud-filter-bar schema="schema" datamap="datamap"
-                                 advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
-                                 search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()" />
-            </div>
-        </div>-->
+    </div>
+
+    <!--<div class="filter-container">
+        <div class="context clearfix header-menu">
+            <crud-filter-bar schema="schema" datamap="datamap"
+                             advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
+                             search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()" />
+        </div>
+    </div>-->
     </div>
 
     <div class="affix-pagination-panel hiddenonprint" ng-hide="'false' !== hidebars" ng-if="panelid">
@@ -159,12 +175,12 @@
     <!--this is exclusive for IBM Demo to indicate the bottom of the page.-->
     <div ng-if="isNotHapagTest()" ng-hide="hidebars">
         <div id="affixpagination1" class="hiddenonprint context clearfix hiddenonprint">
-<!--            <gridtoolbar position="{{getGridCommandPosition('commandbar.bottom','gridbottom')}}"-->
-<!--                         schema="schema"-->
-<!--                         pagination-data="paginationData"-->
-<!--                         search-sort="searchSort"-->
-<!--                         search-data="searchData"-->
-<!--                         search-operator="searchOperator"></gridtoolbar>-->
+            <!--            <gridtoolbar position="{{getGridCommandPosition('commandbar.bottom','gridbottom')}}"-->
+            <!--                         schema="schema"-->
+            <!--                         pagination-data="paginationData"-->
+            <!--                         search-sort="searchSort"-->
+            <!--                         search-data="searchData"-->
+            <!--                         search-operator="searchOperator"></gridtoolbar>-->
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema="schema" application-name="{{schema.applicationName}}"
                         panelid="panelid"

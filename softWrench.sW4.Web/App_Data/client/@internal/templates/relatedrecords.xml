@@ -10,6 +10,7 @@
         <list stereotype="compositionlist">
           <properties>
             <property key="list.click.service" value="relatedrecordService.open"/>
+            <property key="list.search.quicksearchfields" value=""/>
           </properties>
 <!--          <commandbars>-->
 <!--            <commandgroup position="compositiontop" >-->

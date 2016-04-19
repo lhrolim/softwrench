@@ -7,7 +7,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata.Entities {
     [TestClass]
-    public class TargetConstantHandlerTest {
+    public class TargetConstantHandlerTest : BaseMetadataTest {
 
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestInitialize]
         public void Init() {

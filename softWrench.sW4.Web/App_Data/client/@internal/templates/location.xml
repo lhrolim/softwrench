@@ -75,6 +75,7 @@
           <properties>
             <property key="list.click.schema" value="locationdetail"/>
             <property key="list.click.customparams" value="parentlocation_.systemid"/>
+            <property key="list.search.compositionstoexclude" value="assettrans"/>
           </properties>
           <field attribute="location" label="Location" readonly="true"/>
           <field attribute="description" label="Description"/>

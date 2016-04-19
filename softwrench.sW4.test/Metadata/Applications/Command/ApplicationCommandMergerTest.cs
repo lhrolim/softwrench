@@ -9,7 +9,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata.Applications.Command {
     [TestClass]
-    public class ApplicationCommandMergerTest {
+    public class ApplicationCommandMergerTest : BaseMetadataTest {
         private readonly CommandBarDefinition _commandBarDefinition = new CommandBarDefinition(null, "detail", false, new List<ApplicationCommand>
             {
                 ApplicationCommand.TestInstance("c1","","label","icon"),

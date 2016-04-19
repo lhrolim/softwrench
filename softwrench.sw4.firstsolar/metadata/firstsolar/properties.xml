@@ -36,7 +36,7 @@
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_FS76DEV;User Id=sw;password=softwrench;" />
     <property key="ldapServer" value="10.50.100.10"/>
     <property key="ldapPortNumber" value="389"/>
-    <property key="ldapBaseDn" value="OU=maximo,DC=CTS,DC=com"/>
+    <property key="ldapBaseDn" value="CN=mxintadm,OU=USERS,OU=MAXIMO,DC=CTS,DC=com"/>
     <property key="mifcredentials.user" value="mxintadm"/>
     <property key="mifcredentials.password" value="$@$Pass"/> 
     

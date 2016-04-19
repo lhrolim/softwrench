@@ -10,7 +10,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata {
     [TestClass]
-    public class SyncSchemaTest {
+    public class SyncSchemaTest : BaseMetadataTest {
 
 
         [TestInitialize]

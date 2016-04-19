@@ -36,6 +36,7 @@
         <property key="mobile.fetchlimit" value="30"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
         <property key="icon.composition.tab" value="fa fa-tags"/>
+        
       </properties>
       <schemas>
         <schema id="list" platform="mobile">
@@ -60,6 +61,7 @@
           <properties>
             <property key="routing.nextapplication" value="asset"/>
             <property key="nextschema.schemaid" value="assetdetail"/>
+            <property key="list.search.compositionstoexclude" value="assetlocrelation"/>
           </properties>
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description"/>

@@ -53,7 +53,7 @@ angular.module('sw_lookup')
             $scope.lookupModalSearch = function (pageNumber) {
                 focusService.resetFocusToCurrent($scope.schema, $scope.lookupObj.fieldMetadata.attribute);
 
-                $scope.lookupObj.quickSearchData = $scope.lookupsearchdata;
+                $scope.lookupObj.quickSearchDTO = $scope.lookupsearchdata;
                 associationService.getLookupOptions($scope.schema, $scope.datamap, $scope.lookupObj, pageNumber, $scope.searchObj).then(function (data) {
                     var result = data.resultObject;
                     $scope.populateModal(result);
@@ -106,7 +106,7 @@ angular.module('sw_lookup')
             };
 
             $element.on('hide.bs.modal', function (e) {
-                $scope.lookupObj.quickSearchData = null;
+                $scope.lookupObj.quickSearchDTO = null;
                 $('body').removeClass('modal-open');
                 $('.modal-backdrop').remove();
                 if ($scope.lookupObj) {

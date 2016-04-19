@@ -10,13 +10,22 @@ using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
+using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Filter {
 
-    public class FilterWhereClauseHandler : ISingletonComponent {
+    public class FilterWhereClauseHandler : ISingletonComponent
+    {
+
+        private QuickSearchHelper _quickSearchHelper;
+
+        public FilterWhereClauseHandler(QuickSearchHelper quickSearchHelper)
+        {
+            _quickSearchHelper = quickSearchHelper;
+        }
 
 
         public PaginatedSearchRequestDto HandleDTO(ApplicationSchemaDefinition schema, PaginatedSearchRequestDto searchDto) {
@@ -30,7 +39,7 @@ namespace softWrench.sW4.Data.Filter {
             }
 
             // has QuickSearch string: use parameter in filter regardless of WhereClause
-            if (!string.IsNullOrEmpty(searchDto.QuickSearchData)) {
+            if (searchDto.QuickSearchDTO != null) {
                 return searchDto;
             }
 
@@ -121,7 +130,7 @@ namespace softWrench.sW4.Data.Filter {
             var primaryAttribute = entityAssociation.Item1.PrimaryAttribute();
 
             if (!string.IsNullOrEmpty(labelSearchString)) {
-                return QuickSearchHelper.BuildOrWhereClause(new List<string>
+                return _quickSearchHelper.BuildOrWhereClause(new List<string>
                 {
                     primaryAttribute.To,
                     entityAssociation.Item2.Name

@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -209,8 +210,8 @@ namespace softWrench.sW4.Data.Search {
         public static IDictionary<string, object> GetParameters(SearchRequestDto listDto) {
             IDictionary<string, object> resultDictionary = new Dictionary<string, object>();
             // quicksearch statement parameter 
-            if (QuickSearchHelper.HasQuickSearchData(listDto)) {
-                resultDictionary[QuickSearchHelper.QuickSearchParamName] = QuickSearchHelper.QuickSearchDataValue(listDto.QuickSearchData);
+            if (listDto.QuickSearchDTO!=null) {
+                resultDictionary[QuickSearchHelper.QuickSearchParamName] = QuickSearchHelper.QuickSearchDataValue(listDto.QuickSearchDTO.QuickSearchData);
             }
             // filter parameters
             var searchParameters = listDto.GetParameters();

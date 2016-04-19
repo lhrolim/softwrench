@@ -10,7 +10,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Data.Entities {
     [TestClass]
-    public class EntityBuilderTest2 {
+    public class EntityBuilderTest2 : BaseMetadataTest {
 
 
         [TestInitialize]

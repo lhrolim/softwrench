@@ -6,7 +6,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Util {
     [TestClass]
-    public class DateExtensionUtilTest {
+    public class DateExtensionUtilTest : BaseMetadataTest {
 
         private DateTime _zeroHour = DateUtil.BeginOfToday();
 

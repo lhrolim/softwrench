@@ -6,7 +6,7 @@ using softWrench.sW4.Util;
 namespace softwrench.sW4.test.Metadata.Entities {
 
     [TestClass]
-    public class ParentEntityTest {
+    public class ParentEntityTest : BaseMetadataTest {
 
         [ClassInitialize]
         public static void Init(TestContext testContext) {

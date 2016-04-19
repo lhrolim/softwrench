@@ -17,7 +17,7 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
 
 
     [TestClass]
-    public class ImacDescriptionHandlerTest {
+    public class ImacDescriptionHandlerTest : BaseMetadataTest {
 
 
         [TestInitialize]

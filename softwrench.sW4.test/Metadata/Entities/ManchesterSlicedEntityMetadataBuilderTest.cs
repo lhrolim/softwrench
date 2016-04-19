@@ -10,8 +10,7 @@ using System.Diagnostics;
 namespace softwrench.sW4.test.Metadata.Entities
 {
     [TestClass]
-    public class ManchesterSlicedEntityMetadataBuilderTest
-    {
+    public class ManchesterSlicedEntityMetadataBuilderTest : BaseMetadataTest {
         private static ApplicationSchemaDefinition _schema;
 
         [TestInitialize]

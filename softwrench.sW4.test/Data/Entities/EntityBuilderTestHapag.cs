@@ -14,7 +14,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Data.Entities {
     [TestClass]
-    public class EntityBuilderTestHapag {
+    public class EntityBuilderTestHapag : BaseMetadataTest {
 
         [TestMethod]
         public void TestAddWorkLogToIncident() {

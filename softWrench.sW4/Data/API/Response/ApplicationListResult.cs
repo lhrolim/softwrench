@@ -22,7 +22,7 @@ namespace softWrench.sW4.Data.API.Response {
             PageResultDto = new PaginatedSearchRequestDto(totalCount, searchDTO.PageNumber, searchDTO.PageSize, searchDTO.SearchValues, searchDTO.PaginationOptions) {
                 SearchParams = searchDTO.SearchParams,
                 FilterFixedWhereClause = searchDTO.FilterFixedWhereClause,
-                QuickSearchData = searchDTO.QuickSearchData,
+                QuickSearchDTO = searchDTO.QuickSearchDTO,
                 SearchTemplate = searchDTO.SearchTemplate,
                 SearchAscending = searchDTO.SearchAscending,
                 SearchSort = searchDTO.SearchSort

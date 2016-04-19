@@ -28,12 +28,15 @@ using cts.commons.Util;
 using System.Net;
 using Iesi.Collections;
 using Iesi.Collections.Generic;
+using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Metadata.Stereotypes;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
+using EntityUtil = softWrench.sW4.Util.EntityUtil;
 
 namespace softWrench.sW4.Metadata {
     public class MetadataProvider {
@@ -148,6 +151,28 @@ namespace softWrench.sW4.Metadata {
         }
 
 
+        private static void ApplyListSpecificLogic(CompleteApplicationMetadataDefinition app, ApplicationSchemaDefinition schema) {
+            schema.DeclaredFilters.Merge(app.AppFilters);
+            schema.RelatedCompositions = BuildRelatedCompositionsList(schema);
+        }
+
+        public static IEnumerable<AssociationOption> BuildRelatedCompositionsList(ApplicationSchemaDefinition schema) {
+            var relatedDetail = LocateRelatedDetailSchema(schema);
+            if (relatedDetail == null) {
+                return null;
+            }
+
+            var toExcludeSet = new HashSet<string>();
+            var toExclude = schema.GetProperty(ApplicationSchemaPropertiesCatalog.ListQuickSearchCompositionsToExclude);
+            if (toExclude != null) {
+                toExcludeSet.AddAll(toExclude.Split(',').Select(EntityUtil.GetRelationshipName));
+            }
+
+            return relatedDetail.Compositions()
+                .Where(c => !c.Inline && !toExcludeSet.Contains(c.Relationship) && c.HasAtLeastOneVisibleFieldForSearch())
+                .Select(c => new AssociationOption(c.Relationship, c.Label));
+        }
+
         private static void BuildSlicedMetadataCache() {
             var watch = Stopwatch.StartNew();
             SlicedEntityMetadataCache.Clear();
@@ -168,9 +193,8 @@ namespace softWrench.sW4.Metadata {
                     schema.DepandantFields(DependencyBuilder.BuildDependantFields(schema.Fields, schema.DependableFields));
                     schema._fieldWhichHaveDeps = schema.DependantFields().Keys;
                     if (schema.Stereotype.Equals(SchemaStereotype.List)) {
-                        schema.DeclaredFilters.Merge(app.AppFilters);
+                        ApplyListSpecificLogic(app, schema);
                     }
-
 
                     var instance = SlicedEntityMetadataBuilder.GetInstance(entityMetadata, schema, app.FetchLimit);
                     SlicedEntityMetadataCache[new SlicedEntityMetadataKey(webSchema.Key, entityName)] = instance;
@@ -635,6 +659,18 @@ namespace softWrench.sW4.Metadata {
                 return null;
             }
             return app.Schema(new ApplicationMetadataSchemaKey(schema, SchemaMode.None, platform));
+        }
+
+        [CanBeNull]
+        public static ApplicationSchemaDefinition LocateRelatedDetailSchema([NotNull]ApplicationSchemaDefinition listSchema) {
+            var clickSchemaProperty = listSchema.GetProperty(ApplicationSchemaPropertiesCatalog.ListClickSchema);
+            var application = Application(listSchema.ApplicationName);
+            if (clickSchemaProperty != null) {
+                return application.SchemasList.FirstOrDefault(s => s.SchemaId.EqualsIc(clickSchemaProperty));
+            }
+
+            //if there´s only one schema marked with detail stereotype it will be used automatically upon grid routing, so let´s add it
+            return application.SchemaByStereotype("detail");
         }
     }
 }

@@ -8,6 +8,7 @@ using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic
@@ -17,6 +18,8 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic
     {
         IEnumerable<string> attributes = new List<string> { "itemnum", "description" };
         IEnumerable<string> attributesWithRelationships = new List<string> { "itemnum", "location_.location", "location_.description", "description" };
+
+        private QuickSearchHelper QuickSearchHelper = new QuickSearchHelper();
 
         [TestInitialize]
         public void Init() { }

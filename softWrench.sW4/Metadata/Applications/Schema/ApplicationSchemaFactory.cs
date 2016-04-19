@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.user.classes.entities;
@@ -81,6 +82,8 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
             return schema;
         }
+
+    
 
         private static void MergeWithParentFilters(ApplicationSchemaDefinition schema) {
             var reverseParentFields = schema.ParentSchema.DeclaredFilters.Filters.Reverse();
@@ -247,6 +250,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             newSchema.DepandantFields(schema.DependantFields());
             newSchema.FieldWhichHaveDeps = schema.FieldWhichHaveDeps;
             newSchema.NoResultsNewSchema = schema.NoResultsNewSchema;
+            newSchema.RelatedCompositions = schema.RelatedCompositions;
             return newSchema;
         }
 
@@ -257,6 +261,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UserIdFieldName, schema.UnionSchema,
                 schema.EventSet);
             newSchema.NoResultsNewSchema = schema.NoResultsNewSchema;
+            newSchema.RelatedCompositions = schema.RelatedCompositions;
             return newSchema;
         }
 

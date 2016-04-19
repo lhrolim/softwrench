@@ -16,7 +16,7 @@ using softWrench.sW4.Security.Context;
 namespace softwrench.sW4.test.Metadata {
 
     [TestClass]
-    public class ApplicationMetadataValidatorTest {
+    public class ApplicationMetadataValidatorTest : BaseMetadataTest {
 
 
         [TestMethod]

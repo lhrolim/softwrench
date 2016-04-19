@@ -151,7 +151,7 @@
       <schemas>
         <list title="Work Order Grid" platform="web">
           <filters>
-            <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px"/>
+            <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px" />
             <optionfilter attribute="location" provider="location_.description" allowblank="true" displaycode="true"/>
             <optionfilter attribute="asset_.description" provider="asset_.description" allowblank="true" style="width:300px" whereclause="!@assetnum in (!@#value)" displaycode="true"/>
             <optionfilter attribute="wopriority" displaycode="true">

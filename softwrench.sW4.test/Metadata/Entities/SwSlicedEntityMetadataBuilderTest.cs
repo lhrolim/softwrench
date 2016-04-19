@@ -9,7 +9,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 namespace softwrench.sW4.test.Metadata.Entities {
     
     [TestClass]
-    public class SwSlicedEntityMetadataBuilderTest {
+    public class SwSlicedEntityMetadataBuilderTest : BaseMetadataTest {
         
         private static ApplicationSchemaDefinition _schema;
 

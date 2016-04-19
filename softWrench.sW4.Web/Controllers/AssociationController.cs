@@ -22,6 +22,7 @@ using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.Association;
@@ -72,7 +73,7 @@ namespace softWrench.sW4.Web.Controllers {
             var app = MetadataProvider.Application(application).ApplyPoliciesWeb(key);
             var association = BuildAssociation(app, associationKey);
 
-            var filter = new PaginatedSearchRequestDto { QuickSearchData = labelSearchString };
+            var filter = new PaginatedSearchRequestDto { QuickSearchDTO = QuickSearchDTO.Basic(labelSearchString) };
 
             // filter.AppendWhereClause(_filterWhereClauseHandler.GenerateFilterLookupWhereClause(association.OriginalLabelField, labelSearchString, app.Schema));
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), MetadataProvider.EntityByApplication(application), app, currentData);

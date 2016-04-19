@@ -28,16 +28,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
 
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
-            var quickSearchData = searchDto.QuickSearchData;
+            var quickSearchDTO = searchDto.QuickSearchDTO;
 
-            if (string.IsNullOrEmpty(quickSearchData)) {
+            if (quickSearchDTO == null) {
                 if (_advancedSearchHandler.IsAdvancedSearch(searchDto)) {
                     _advancedSearchHandler.AppendAdvancedSearchWhereClause(application, searchDto, "asset");
                 }
                 return base.GetList(application, searchDto);
             }
 
-            var query = _pcsLocationHandler.DoGetPCSQuery(quickSearchData, "asset");
+            var query = _pcsLocationHandler.DoGetPCSQuery(quickSearchDTO.QuickSearchData, "asset");
             if (query != null) {
                 searchDto.AppendWhereClause(query);
             }

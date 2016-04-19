@@ -7,7 +7,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Data.Persistence.Relational {
     [TestClass]
-    public class EntityQueryBuilderTest {
+    public class EntityQueryBuilderTest : BaseMetadataTest{
 
         private readonly EntityQueryBuilder _builder = new EntityQueryBuilder();
 

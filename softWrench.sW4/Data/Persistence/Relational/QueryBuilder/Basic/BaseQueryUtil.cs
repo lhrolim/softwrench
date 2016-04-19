@@ -68,6 +68,19 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             return sb.ToString(0, sb.Length - 1);
         }
 
+
+        public static string ParseAttributeForQuery(EntityMetadata entityMetadata, string alias, EntityAttribute attribute, string context = null) {
+            var contextToUse = context ?? entityMetadata.Name;
+            var query = attribute.Query;
+            if (attribute.Query == null) {
+                return alias + "." + attribute.Name;
+            }
+            if (query.StartsWith("@")) {
+                return BaseQueryBuilder.GetServiceQuery(query, contextToUse);
+            }
+            return attribute.GetQueryReplacingMarkers(contextToUse);
+        }
+
         public static String EvaluateServiceQuery(string query) {
             if (ApplicationConfiguration.IsUnitTest) {
                 //TODO:fix this

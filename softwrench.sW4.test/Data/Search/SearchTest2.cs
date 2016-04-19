@@ -7,7 +7,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Data.Search {
     [TestClass]
-    public class SearchTest2 {
+    public class SearchTest2 : BaseMetadataTest {
 
         private ApplicationSchemaDefinition _schema;
         private ApplicationSchemaDefinition _incidentSchema;

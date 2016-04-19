@@ -5,7 +5,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata {
     [TestClass]
-    public class MetadataPropertiesTest {
+    public class MetadataPropertiesTest : BaseMetadataTest {
 
         [TestInitialize]
         public void Init() {

@@ -11,7 +11,7 @@ using System.Diagnostics;
 namespace softwrench.sW4.test.Metadata.Entities {
     
     [TestClass]
-    public class OtbSlicedEntityMetadataBuilderTest {
+    public class OtbSlicedEntityMetadataBuilderTest : BaseMetadataTest {
         
         private static ApplicationSchemaDefinition _incidentschema;
         private static ApplicationSchemaDefinition _srschema;
