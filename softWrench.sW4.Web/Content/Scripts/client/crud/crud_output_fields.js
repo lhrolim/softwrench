@@ -146,14 +146,6 @@ app.directive('crudOutputFields', function (contextService) {
                 $scope.datamap[fieldMetadata.attribute] = richTextService.getDecodedValue(content);
             }
 
-            $scope.isArray = function(value) {
-                return angular.isArray(value);
-            };
-
-            $scope.isString = function(value) {
-                return angular.isString(value);
-            };
-
             function init() {
                 $scope.countVisibleDisplayables = fieldService.countVisibleDisplayables($scope.datamap, $scope.schema, $scope.displayables);
                 $injector.invoke(BaseController, this, {

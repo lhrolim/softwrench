@@ -147,22 +147,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private IEnumerable<AttachmentDTO> GetAttachments(CrudOperationData commlog) {
             var attachmentData = commlog.GetUnMappedAttribute("attachment");
             var attachmentPath = commlog.GetUnMappedAttribute("newattachment_path");
-
-            if (string.IsNullOrWhiteSpace(attachmentData) || string.IsNullOrWhiteSpace(attachmentPath)) {
-                return Enumerable.Empty<AttachmentDTO>();
-            }
-
-            var attachmentsData = attachmentData.Split(',');
-            var attachmentsPath = attachmentPath.Split(',');
-            var dtos = new List<AttachmentDTO>(attachmentsPath.Length);
-            for (int i = 0, j = 0; i < attachmentsPath.Length; i++, j += 2) {
-                var dto = new AttachmentDTO() {
-                    Data = attachmentsData[j] + ',' + attachmentsData[j + 1],
-                    Path = attachmentsPath[i]
-                };
-                dtos.Add(dto);
-            }
-            return dtos;
+            return _attachmentHandler.BuildAttachments(attachmentPath, attachmentData);
         }
 
         private async void UpdateEmailHistoryAsync(string userId, string[] emailAddresses) {

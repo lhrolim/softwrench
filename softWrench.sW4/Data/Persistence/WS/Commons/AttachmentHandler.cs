@@ -340,6 +340,29 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         /// <summary>
+        /// Builds a list of attachmentdtos from path and string data that are for multiple files.
+        /// </summary>
+        /// <param name="paths">file paths concatenated by a ','</param>
+        /// <param name="data">base64 encoded file data concatenated by a ','</param>
+        /// <returns></returns>
+        public IEnumerable<AttachmentDTO> BuildAttachments(string paths, string data) {
+            if (string.IsNullOrWhiteSpace(paths) || string.IsNullOrWhiteSpace(data)) {
+                return Enumerable.Empty<AttachmentDTO>();
+            }
+            var attachmentsData = data.Split(',');
+            var attachmentsPath = paths.Split(',');
+            var dtos = new List<AttachmentDTO>(attachmentsPath.Length);
+            for (int i = 0, j = 0; i < attachmentsPath.Length; i++, j += 2) {
+                var dto = new AttachmentDTO() {
+                    Data = attachmentsData[j] + ',' + attachmentsData[j + 1],
+                    Path = attachmentsPath[i]
+                };
+                dtos.Add(dto);
+            }
+            return dtos;
+        } 
+
+        /// <summary>
         /// On Mea environment there´s no maxpropvalue table, and the path is stored in a doclink.properties file, 
         /// under C:\Maximo\applications\maximo\properties\doclink.properties. - Please provide 'maximodoclinkspath' and 'maximourldoclinkspath'
         /// 

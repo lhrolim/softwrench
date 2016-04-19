@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Dynamic;
+﻿using System.Linq;
 using cts.commons.portable.Util;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
@@ -21,20 +20,33 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
             var result = base.GetApplicationDetail(application, user, request);
             var datamap = result.ResultObject.Fields;
 
-            var attachment = _attachmentDAO.SingleByOwner("WORKLOG", datamap[application.IdFieldName]);
-            if (attachment == null || string.IsNullOrEmpty(attachment.urlname)) return result;
+            var attachments = _attachmentDAO.ByOwner("WORKLOG", datamap[application.IdFieldName]);
 
-            var docinfourl = attachment.urlname;
+            if (!attachments.Any()) return result;
 
-            var fileUrl = (string) AttachmentHandler.GetFileUrl(docinfourl);
-            var isImage = fileUrl.ContainsAnyIgnoreCase(new[] {"png", "bmp", "jpg", "jpeg", "gif"}); // TODO: use actual mime type detection
+            if (attachments.Count == 1) {
+                var attachment = attachments.First();
+                var docinfourl = (string)attachment.urlname;
 
-            datamap.Add("attachment_is_image", isImage);
-            // isimage ? image's url : list of file links
-            var attachmentToDisplay = isImage ? fileUrl : (object) new[] {
-                new { name = attachment.document, url = fileUrl }
-            };
-            datamap.Add("attachment_url", attachmentToDisplay);
+                var fileUrl = AttachmentHandler.GetFileUrl(docinfourl);
+                var isImage = fileUrl.ContainsAnyIgnoreCase(new[] { "png", "bmp", "jpg", "jpeg", "gif" }); // TODO: use actual mime type detection
+
+                datamap.Add("attachment_is_image", isImage);
+                // isimage ? image's url : list of file links
+                var attachmentToDisplay = isImage ? fileUrl : (object)new[] {
+                    new { name = attachment.document, url = fileUrl }
+                };
+                datamap.Add("attachment_url", attachmentToDisplay);
+
+                return result;
+            }
+
+            var attachmentLinks = attachments.Select(a => new {
+                name = a.document,
+                url = AttachmentHandler.GetFileUrl((string)a.urlname)
+            });
+
+            datamap.Add("attachment_url", attachmentLinks);
 
             return result;
         }

@@ -200,6 +200,14 @@ function BaseController($scope, $log, i18NService, fieldService, commandService,
     $scope.isDesktop = function () {
         return isDesktop();
     };
+
+    $scope.isString = function (value) {
+        return angular.isString(value);
+    };
+
+    $scope.isArray = function (value) {
+        return angular.isArray(value);
+    };
 }
 
 window.BaseController = BaseController;

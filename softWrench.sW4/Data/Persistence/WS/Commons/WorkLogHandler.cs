@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NHibernate.Linq;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
@@ -52,13 +53,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     // handle Attachments: only for new worklogs
                     var worklogContent = crudData.GetUnMappedAttribute("newattachment");
                     var worklogPath = crudData.GetUnMappedAttribute("newattachment_path");
-                    if (string.IsNullOrWhiteSpace(worklogContent) || string.IsNullOrWhiteSpace(worklogPath)) return;
-                    var attachmentParam = new AttachmentDTO() {
-                        Data = worklogContent,
-                        Path = worklogPath
-                    };
+                    var attachments = AttachmentHandlerInstance().BuildAttachments(worklogPath, worklogContent);
                     try {
-                        AttachmentHandlerInstance().AddAttachment(integrationObject, attachmentParam);
+                        attachments.ForEach(attachment => AttachmentHandlerInstance().AddAttachment(integrationObject, attachment));
                     } catch (MaximoException e) {
                         throw new MaximoException("Could not attach image file. Please contact support about 'Installation Task [SWWEB-2156]'", e, ExceptionUtil.DigRootException(e));
                     }

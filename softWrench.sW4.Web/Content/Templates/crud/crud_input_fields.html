@@ -325,14 +325,26 @@
                 </div>
                 <div ng-switch-when="dndupload">
                     <input id="uploadFile" ng-model="datamap.newattachment_path" class="form-control" placeholder="No file chosen" disabled="disabled" />
+                    
                     <div file-dropzone="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] || 'pdf,zip,txt,doc,docx,dwg,gif,jpg,csv,xls,xlsx,ppt,xml,xsl,bmp,html,png,lic' }} "
                          class="dropzone form-control" data-file-name="datamap.newattachment_path" data-file="datamap[fieldMetadata.attribute]"
                          data-dropzone-hover-class="file-over"
                          data-field="fieldMetadata">
+                        
                         <i class="fa fa-dot-circle-o"></i>&ensp;Drag and drop a file here to upload, or
-                        <input id="uploadInput" type="file" 
-                               fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path" 
-                               data-accepted-extensions="{{fieldMetadata.rendererParameters['acceptedFileExtensions'] || 'pdf,zip,txt,doc,docx,dwg,gif,jpg,csv,xls,xlsx,ppt,xml,xsl,bmp,html,png,lic'}}"/>
+                        
+                        <input ng-if="!fieldMetadata.rendererParameters['multiple'] || fieldMetadata.rendererParameters['multiple'] === false || fieldMetadata.rendererParameters['multiple'] === 'false'"
+                               id="uploadInput" type="file"
+                               fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"
+                               data-accepted-extensions="{{fieldMetadata.rendererParameters['acceptedFileExtensions'] || 'pdf,zip,txt,doc,docx,dwg,gif,jpg,csv,xls,xlsx,ppt,xml,xsl,bmp,html,png,lic'}}"
+                               />
+                        
+                        <input ng-if="!!fieldMetadata.rendererParameters['multiple'] && (fieldMetadata.rendererParameters['multiple'] === true || fieldMetadata.rendererParameters['multiple'] === 'true')"
+                               id="uploadInput" type="file" 
+                               fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"
+                               data-accepted-extensions="{{fieldMetadata.rendererParameters['acceptedFileExtensions'] || 'pdf,zip,txt,doc,docx,dwg,gif,jpg,csv,xls,xlsx,ppt,xml,xsl,bmp,html,png,lic'}}"
+                               multiple="multiple" />
+                        
                         <a href="" id="uploadInputLink" ng-click="browseFile($event)">browse</a>
                         <br/>
                         <i class="fa fa-question-circle" style="color: inherit"
@@ -341,7 +353,10 @@
                         </i>
                         &ensp;You can also use 'Print Screen' and 'Ctrl+V' to attach a screenshot
                     </div>
-                    <div ng-if="!!datamap[fieldMetadata.attribute] && (fieldMetadata.rendererParameters['showImagePreview'] === true || fieldMetadata.rendererParameters['showImagePreview'] === 'true')" 
+
+                    <div ng-if="!!datamap[fieldMetadata.attribute] && 
+                         isString(datamap[fieldMetadata.attribute]) &&
+                         (fieldMetadata.rendererParameters['showImagePreview'] === true || fieldMetadata.rendererParameters['showImagePreview'] === 'true')" 
                          class="imagepreview">
                         <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
                     </div>
