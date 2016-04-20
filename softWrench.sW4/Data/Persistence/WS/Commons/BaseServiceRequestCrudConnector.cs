@@ -42,35 +42,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
+            
 
             base.BeforeCreation(maximoTemplateData);
         }
 
-        public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
-            base.AfterUpdate(maximoTemplateData);
-            maximoTemplateData.OperationData.UserId = maximoTemplateData.ResultObject.UserId;
-            maximoTemplateData.OperationData.OperationType = Internal.OperationType.AddChange;
-
-            // Resubmitting MIF for ServiceAddress Update
-            ConnectorEngine.Update((CrudOperationData)maximoTemplateData.OperationData);
-        }
-
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;
-            var user = SecurityFacade.CurrentUser();
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
-            //if (crudData.ContainsAttribute("#hasstatuschange")){
-            //    //first let´s 'simply change the status
-            //    WsUtil.SetValue(sr, "STATUSIFACE", true);
-            //    if (!WsUtil.GetRealValue(sr, "STATUS").Equals("CLOSED")){
-            //        maximoTemplateData.InvokeProxy();
-
-            //     //Duplication of code in CommonTransaction()
-            //        WsUtil.SetValue(sr, "CHANGEBY", user.Login);
-
-            //    } WsUtil.SetValue(sr, "STATUSIFACE", false);
-            //}
-
+            
             // COMSW-52 Auto-populate the actual start and end time for a workorder depending on status change
             // TODO: Caching the status field to prevent multiple SQL update.  
             if (crudData.ContainsAttribute("#hasstatuschange")) {
@@ -93,14 +73,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
 
-            //var mailObject = maximoTemplateData.Properties;
-
             WorkLogHandler.HandleWorkLogs(crudData, sr);
+
             _commlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
-
-            HandleServiceAddress(maximoTemplateData);
-
-            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
 
             base.BeforeUpdate(maximoTemplateData);
         }
@@ -132,6 +107,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             // Update or create new long description 
             LongDescriptionHandler.HandleLongDescription(sr, ((CrudOperationData)maximoTemplateData.OperationData));
+
+            HandleServiceAddress(maximoTemplateData);
+
+            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
         }
 
         private bool HandleServiceAddress(MaximoOperationExecutionContext maximoTemplateData) {
@@ -149,7 +128,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             var tkserviceaddress = ReflectionUtil.InstantiateSingleElementFromArray(maximoTemplateData.IntegrationObject, "TKSERVICEADDRESS");
             w.SetValueIfNull(tkserviceaddress, "TKSERVICEADDRESSID", -1);
-            w.SetValue(tkserviceaddress, "ORGID", user.OrgId);
+            w.CopyFromRootEntity(maximoTemplateData.IntegrationObject, tkserviceaddress, "ORGID", user.OrgId);
             w.SetValue(tkserviceaddress, "SADDRESSCODE", saddresscode);
             w.SetValue(tkserviceaddress, "DESCRIPTION", description);
             w.SetValue(tkserviceaddress, "FORMATTEDADDRESS", formattedaddr);
