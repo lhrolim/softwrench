@@ -585,7 +585,8 @@
             rootDataMap: rootDataMap,
             setDetailDataResolved: setDetailDataResolved,
             getDetailDataResolved: getDetailDataResolved,
-            clearDetailDataResolved: clearDetailDataResolved
+            clearDetailDataResolved: clearDetailDataResolved,
+            getContext: getContext
         };
 
         var associationServices = {

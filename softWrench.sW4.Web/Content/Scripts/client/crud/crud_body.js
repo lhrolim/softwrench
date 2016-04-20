@@ -624,9 +624,9 @@
                     command(urlToUse, jsonString).then(function (result) {
                         crudContextHolderService.afterSave();
                         var data = result.data;
+                        var responseDataMap = data.resultObject;
 
                         if (data.type !== "BlankApplicationResponse") {
-                            var responseDataMap = data.resultObject;
 
                             // handle the case where the datamap had lazy compositions already fetched
                             // and the response does not have them (for performance reasons)
@@ -646,8 +646,12 @@
                                 }
                             });
 
-                            $scope.datamap = responseDataMap;
+                            // not necessary to update the complete datamap after a composition save
+                            if (!parameters.dispatcherComposition) {
+                                $scope.datamap = responseDataMap;
+                            }
                         }
+
                         if (data.id && $scope.datamap.fields &&
                             /* making sure not to update when it's not creation */
                             (!$scope.datamap.fields.hasOwnProperty($scope.schema.idFieldName) || !$scope.datamap.fields[$scope.schema.idFieldName])) {

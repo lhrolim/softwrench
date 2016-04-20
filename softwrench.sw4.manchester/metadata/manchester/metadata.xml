@@ -332,8 +332,10 @@
             </field>
           </section>
           <section id="sraddresssection" orientation="horizontal">
-            <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress"
-                       requiredexpression="@location == null">
+            <association label="Service Address" 
+                         target="saddresscode" labelfield="sraddress_.description" 
+                         extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" 
+                         requiredexpression="@location == null">
               <renderer type="lookup" params="inputsize=large" />
             </association>
             <field label="Site:" attribute="siteid" default="DPW" readonly="true">
