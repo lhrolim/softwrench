@@ -22,7 +22,7 @@
   <property key="maximoutc" value="US Mountain Standard Time"/>
   <property key="email.smtp.host" value="172.31.22.213"/>
   <!--property key="email.smtp.port" value="587"/-->
-  <property key="email.stmp.enableSSL" value="false"/>
+  <property key="email.smtp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>
 
   <property key="dashboard.enabled" value="false"/>
