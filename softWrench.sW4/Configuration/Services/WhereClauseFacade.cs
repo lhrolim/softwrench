@@ -21,7 +21,7 @@ using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Configuration.Services {
-    class WhereClauseFacade : IWhereClauseFacade, ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
+    public class WhereClauseFacade : IWhereClauseFacade, ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
 
         private const string DefaultWhereClause = " 1=1 ";
 
@@ -59,7 +59,12 @@ namespace softWrench.sW4.Configuration.Services {
             return BuildWhereClauseResult(resultString);
         }
 
-        private static WhereClauseResult BuildWhereClauseResult(string resultString) {
+        /// <summary>
+        /// Builds a where clause result 
+        /// </summary>
+        /// <param name="resultString">The result string</param>
+        /// <returns>The <see cref="WhereClauseResult"/> object.</returns>
+        public static WhereClauseResult BuildWhereClauseResult(string resultString) {
             if (resultString == null) {
                 return null;
             }

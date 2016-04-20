@@ -18,8 +18,15 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net.Http;
+using System.Web;
 using System.Web.Http;
+using NHibernate.Linq;
 using softwrench.sw4.user.classes.entities;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Exceptions;
+using softWrench.sW4.Metadata.Applications;
 
 namespace softWrench.sW4.Web.Controllers.Configuration {
     public class ConfigurationController : ApiController {
@@ -31,11 +38,11 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         private readonly ConditionService _conditionService;
         private readonly IConfigurationFacade _facade;
         private readonly SimpleInjectorDomainEventDispatcher _dispatcher;
-
+        private readonly EntityRepository _entityRepository;
 
 
         public ConfigurationController(CategoryTreeCache cache, ConfigurationService configService, I18NResolver resolver, SWDBHibernateDAO dao, ConditionService conditionService, IConfigurationFacade facade,
-            SimpleInjectorDomainEventDispatcher dispatcher) {
+            SimpleInjectorDomainEventDispatcher dispatcher, EntityRepository entityRepository) {
             _cache = cache;
             _configService = configService;
             _resolver = resolver;
@@ -43,6 +50,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
             _conditionService = conditionService;
             _facade = facade;
             _dispatcher = dispatcher;
+            _entityRepository = entityRepository;
         }
 
         [SPFRedirect("Configuration", "_headermenu.configuration")]
@@ -63,8 +71,8 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         public IGenericResponseResult WhereClauses() {
             var rootEntities = _cache.GetCache(ConfigTypes.WhereClauses);
             var names = MetadataProvider.FetchAvailableAppsAndEntities(false);
-            var applications = names.Select(name => new GenericAssociationOption(name, name)).Cast<IAssociationOption>().ToList().OrderBy(a=> a.Label);
-//            applications.s
+            var applications = names.Select(name => new GenericAssociationOption(name, name)).Cast<IAssociationOption>().ToList().OrderBy(a => a.Label);
+            //            applications.s
 
             var result = new ConfigurationScreenResult() {
                 Categories = rootEntities,
@@ -77,8 +85,20 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
             return new GenericResponseResult<ConfigurationScreenResult>(result);
         }
 
-
+        /// <summary>
+        /// Validates and adds a new where clause for a application entity 
+        /// </summary>
+        /// <param name="category">The <see cref="CategoryDTO"/> object</param>
+        /// <returns>the <see cref="IGenericResponseResult"/> result</returns>
+        /// <exception cref="InvalidWhereClauseException">Thrown when an invalid where clause is supplied</exception>
         public IGenericResponseResult Put(CategoryDTO category) {
+            foreach (var definition in category.Definitions) {
+                if (category.FullKey.StartsWith("/_whereclauses/")) {
+                    //not all categories are related to whereclauses only these need to be validated
+                    ValidateWhereClause(category, definition);
+                }
+            }
+
             var result = _configService.UpdateDefinitions(category);
             category.Definitions = result;
             var updatedCategories = _cache.Update(category);
@@ -87,6 +107,39 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
                 SuccessMessage = "Configuration successfully saved"
             };
             return response;
+        }
+
+        private void ValidateWhereClause(CategoryDTO category, PropertyDefinition definition) {
+            try {
+                string value;
+
+
+                if (category.ValuesToSave.TryGetValue(definition.FullKey, out value)) {
+                    var searchRequestDto = new SearchRequestDto();
+                    searchRequestDto.WhereClause = WhereClauseFacade.BuildWhereClauseResult(value).Query;
+                    var application = MetadataProvider.Application(category.Key, false, true);
+                    if (application == null) {
+                        //under some circumstances there will be no applicaiton itself, but rather just a plain entity (e.g commtemplate)
+                        var entity = MetadataProvider.Entity(category.Key);
+                        _entityRepository.Get(entity, searchRequestDto);
+                    } else {
+                        if (category.Condition != null) {
+                            //TODO: improve schema filtering, to validate only against the proper schema, considering offline conditions, etc
+                        } else {
+                            //let´s start by validating all list schemas
+                            var schemas = application.AllSchemasByStereotype("list");
+                            schemas.ForEach(s => {
+                                var entityMetadata = MetadataProvider.SlicedEntityMetadata(s);
+                                _entityRepository.Get(entityMetadata, searchRequestDto);
+                            });
+                        }
+                    }
+                }
+            } catch (NHibernate.Exceptions.GenericADOException ex) {
+                throw new InvalidWhereClauseException("Error validating where clause", ex.InnerException);
+            } catch (Exception ex) {
+                throw new InvalidWhereClauseException(ex.Message);
+            }
         }
 
         [HttpPut]
@@ -170,16 +223,28 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
 
         class ConfigurationScreenResult {
 
-            public IEnumerable<ModuleDefinition> Modules { get; set; }
-            public ICollection<UserProfile> Profiles { get; set; }
+            public IEnumerable<ModuleDefinition> Modules {
+                get; set;
+            }
+            public ICollection<UserProfile> Profiles {
+                get; set;
+            }
 
-            public IOrderedEnumerable<IAssociationOption> Applications { get; set; }
+            public IOrderedEnumerable<IAssociationOption> Applications {
+                get; set;
+            }
 
-            public SortedSet<CategoryDTO> Categories { get; set; }
+            public SortedSet<CategoryDTO> Categories {
+                get; set;
+            }
 
-            public ConfigTypes Type { get; set; }
+            public ConfigTypes Type {
+                get; set;
+            }
 
-            public ICollection<Condition> Conditions { get; set; }
+            public ICollection<Condition> Conditions {
+                get; set;
+            }
         }
 
     }

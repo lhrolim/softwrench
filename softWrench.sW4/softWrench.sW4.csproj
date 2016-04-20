@@ -209,6 +209,7 @@
     <Compile Include="Data\Search\QuickSearch\QuickSearchWhereClauseHandler.cs" />
     <Compile Include="Email\CommLogTemplateMerger.cs" />
     <Compile Include="Email\EmailHistory.cs" />
+    <Compile Include="Exceptions\InvalidWhereClauseException.cs" />
     <Compile Include="Exceptions\MenuMetadataException.cs" />
     <Compile Include="Exceptions\UnauthorizedException.cs" />
     <Compile Include="Extension\MigrationExtensions.cs" />

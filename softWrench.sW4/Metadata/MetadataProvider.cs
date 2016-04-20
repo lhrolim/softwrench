@@ -274,19 +274,25 @@ namespace softWrench.sW4.Metadata {
         ///     application, specified by its name.
         /// </summary>
         /// <param name="name">The name of the application.</param>
-        /// <param name="throwException"></param>
-        public static CompleteApplicationMetadataDefinition Application([NotNull] string name, bool throwException = true) {
+        /// <param name="throwException">If no mathcing application is found, the method throws <see cref="InvalidOperationException"/> if true; Default is false.</param>
+        /// <param name="tryToLocateByEntity">The method tries to locate the application based on the name of its associated entities.</param>
+        public static CompleteApplicationMetadataDefinition Application([NotNull] string name, bool throwException = true, bool tryToLocateByEntity = false) {
             if (name == null) throw new ArgumentNullException("name");
             Validate.NotNull(name, "name");
             var apps = name.StartsWith("_") ? _swdbapplicationMetadata : _applicationMetadata;
 
-            if (!throwException) {
-                return
-                    apps.FirstOrDefault(
+            var application = apps.FirstOrDefault(
                         a => String.Equals(a.ApplicationName, name, StringComparison.CurrentCultureIgnoreCase));
+
+            if (tryToLocateByEntity && application == null) {
+                application = apps.FirstOrDefault(a => a.Entity.EqualsIc(name));
             }
-            return apps
-                .FirstWithException(a => String.Equals(a.ApplicationName, name, StringComparison.CurrentCultureIgnoreCase), "application {0} not found", name);
+
+            if (throwException && application == null) {
+                throw ExceptionUtil.InvalidOperation("application {0} not found", name);
+            }
+
+            return application;
         }
 
         /// <summary>
@@ -449,6 +455,11 @@ namespace softWrench.sW4.Metadata {
         [NotNull]
         public static SlicedEntityMetadata SlicedEntityMetadata(ApplicationMetadata applicationMetadata) {
             return SlicedEntityMetadataCache[new SlicedEntityMetadataKey(applicationMetadata.Schema.GetSchemaKey(), applicationMetadata.Entity)];
+        }
+
+        [NotNull]
+        public static SlicedEntityMetadata SlicedEntityMetadata(ApplicationSchemaDefinition applicationSchemaDefinition) {
+            return SlicedEntityMetadataCache[new SlicedEntityMetadataKey(applicationSchemaDefinition.GetSchemaKey(), applicationSchemaDefinition.EntityName)];
         }
 
         [NotNull]
@@ -647,9 +658,37 @@ namespace softWrench.sW4.Metadata {
 
         }
 
+        /// <summary>
+        /// Gets the entity metadata for an application.
+        /// </summary>
+        /// <param name="applicationName">The application name</param>
+        /// <returns>The <see cref="EntityMetadata"/> object</returns>
         public static EntityMetadata EntityByApplication(string applicationName) {
             var application = Application(applicationName);
             return Entity(application.Entity);
+        }
+
+        /// <summary>
+        /// Gets the sliced entity metadata for an application.
+        /// </summary>
+        /// <param name="applicationName">The application name</param>
+        /// <param name="stereotypeToFilter">A stereotype to lookup, filtering list of results</param>
+        /// <returns>A collection of <see cref="EntityMetadata"/> objects.</returns>
+        public static List<EntityMetadata> SlicedEntityByApplication(string applicationName, string stereotypeToFilter = null) {
+            var entityMetaDatas = new List<EntityMetadata>();
+
+            var application = Application(applicationName, false, true);
+            if (stereotypeToFilter == null) {
+                //all of them
+                foreach (var schema in application.SchemasList) {
+                    entityMetaDatas.Add(SlicedEntityMetadata(schema));
+                }
+            } else {
+                //just the ones which have the same stereotype
+                entityMetaDatas.AddRange(application.AllSchemasByStereotype(stereotypeToFilter).Select(SlicedEntityMetadata));
+            }
+
+            return entityMetaDatas;
         }
 
         [CanBeNull]

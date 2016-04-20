@@ -95,6 +95,16 @@ namespace softWrench.sW4.Metadata.Applications {
             return schemas.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && !schema.Abstract));
         }
 
+        [NotNull]
+        public static IEnumerable<ApplicationSchemaDefinition> AllSchemasByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName, ClientPlatform platform = ClientPlatform.Web) {
+            var schemas = application.SchemasList;
+            if (stereotypeName == "detail") {
+                return schemas.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && schema.StereotypeAttr.ToLower() != "detailnew" && !schema.Abstract));
+            }
+
+            return schemas.Where(schema => (schema.StereotypeAttr.ToLower().StartsWith(stereotypeName) && !schema.Abstract));
+        }
+
 
         public static ApplicationSchemaDefinition PreferredSchemaByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName) {
 
