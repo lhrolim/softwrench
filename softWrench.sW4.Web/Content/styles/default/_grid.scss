@@ -62,8 +62,8 @@
                 padding-bottom: 0;
                 width: 250px;
                 position: fixed;
-                top: initial;
-                left: initial;
+                top: initial !important;
+                left: initial !important;
 
                 .dropdown-content {
                     padding-bottom: 0;
