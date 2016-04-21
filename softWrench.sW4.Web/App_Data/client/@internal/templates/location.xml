@@ -74,14 +74,14 @@
         <list platform="web">
           <properties>
             <property key="list.click.schema" value="locationdetail"/>
-            <property key="list.click.customparams" value="#parentlocationsystemid"/>
+            <property key="list.click.customparams" value="parentlocation_.systemid"/>
             <property key="list.search.compositionstoexclude" value="assettrans"/>
           </properties>
           <field attribute="location" label="Location" readonly="true"/>
           <field attribute="description" label="Description"/>
           <field attribute="classstructure_.description" label="Class Structure"/>
           <field attribute="parentlocation_.parent" label="Parent Location"/>
-          <field attribute="parentlocation_.systemid" label="System" attributeToServer="#parentlocationsystemid"/>
+          <field attribute="parentlocation_.systemid" label="System"/>
           <field attribute="children" label="Child Locations"/>
           <field attribute="assets" label="Assets"/>
           <field attribute="type" label="Type"/>
