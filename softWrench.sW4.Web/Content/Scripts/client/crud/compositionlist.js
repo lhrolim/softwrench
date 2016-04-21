@@ -390,7 +390,7 @@
 
         }
 
-        $scope.getApplicationPah = function (datamap, fieldMetadata) {
+        $scope.getApplicationPath = function (datamap, fieldMetadata) {
             var path = fieldMetadata.applicationPath + schemaService.getId(datamap, $scope.compositionlistschema);
             return replaceAll(path, "\\.", "_");
         }
