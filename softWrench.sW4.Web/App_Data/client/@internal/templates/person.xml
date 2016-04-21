@@ -53,7 +53,7 @@
 
           <commandbars>
             <commandgroup position="gridtop">
-              <command id="new" icon="fa-plus" service="redirectService" method="goToApplicationView" parameters="person,newPersonDetail" label="New User" tooltip="New User" position="left"/>
+              <command id="new" icon="fa-plus" service="redirectService" method="goToApplicationView" parameters="person,newPersonDetail" label="User" tooltip="New User" position="left" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
         </schema>

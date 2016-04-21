@@ -81,10 +81,31 @@
     }
 }
 
+pagination.large-button {
+    margin-top: 1px !important;
+    .pagination {
+        margin: 0;
+
+        .direction {
+            font-size: 24px;
+            margin: 0 !important;
+        }
+    }
+
+    .total {
+        margin: 0;
+        float: none !important;
+
+        .text {
+            text-transform: uppercase;
+        }
+    }
+}
+
 .pagination {
     [disabled="disabled"] {
         i {
-            color: #ccc;
+            color: #ccc !important;
             cursor: default;
         }
     }

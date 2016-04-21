@@ -66,14 +66,14 @@
           </properties>
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
                 <!--<command id="addlabor" icon="fa fa-clock-o" label="Create Labor"
                          service="labtranService" method="openNewDetailModal"/>-->
-                <command id="approvelabors" icon="fa fa-check" label="Approve Labor"
+                <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
                          service="labtranService" method="approveMultipleLabtrans"/>
                 <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
                          service="labtranService" method="deleteMultipleLabtrans"/>
-              </container>
+              <!--</container>-->
             </commandgroup>
           </commandbars>
           <field attribute="labtransid" hidden="true"/>
@@ -164,10 +164,8 @@
             <renderer type="autocompleteclient" />
             <event type="afterchange" service="labtranService" method="aftercraftchange"/>
           </association>
-          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="premiumpay_.defaultrate">
-            <event type="afterchange" service="labtranService" method="updateLineCost"/>
-            <renderer type="lookup"/>
-          </association>
+
+          
           <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate">
             <event type="afterchange" service="labtranService" method="updateLineCost"/>
           </field>
@@ -240,12 +238,12 @@
         <schema id="editdetail" title="Labor Report" stereotype="detail">
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command id="approvelabors" icon="fa fa-check" label="Approve Labor"
+              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+                <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
                          service="labtranService" method="approveSingleLabtrans"/>
                 <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
                          service="labtranService" method="deleteSingleLabtrans"/>
-              </container>
+              <!--</container>-->
             </commandgroup>
           </commandbars>
           <field attribute="labtransid" hidden="true"/>
@@ -259,9 +257,6 @@
           <!--<field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate">
             <event type="afterchange" service="labtranService" method="updateLineCost"/>
           </field>-->
-          <field attribute="ppcraftrate_.premiumpay_.defaultrate" label="Premium Pay Rate" hidden="true">
-            <event type="afterchange" service="labtranService" method="updateLineCost"/>
-          </field>
           <field label="Trans Date" requiredexpression="true" attribute="transdate" enableexpression="false" hidden="true">
             <renderer type="datetime"/>
           </field>
@@ -298,9 +293,6 @@
             <renderer type="lookup"/>
           </association>
           <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
-            <renderer type="lookup"/>
-          </association>
-          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.craft" extraprojectionvalues="premiumpay_.defaultrate">
             <renderer type="lookup"/>
           </association>
           <field attribute="premiumpayhours" label="Premium Pay Hours">

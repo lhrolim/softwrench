@@ -309,10 +309,10 @@
           <commandbars>
             <commandgroup position="actions">
 <!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command id="dispatchwo" icon="fa-tachometer" label="Create Work Order"
+                <command id="dispatchwo" icon="fa-wrench" label="Create Work Order"
                           parameters="schema,datamap" service="dispatchService" method="dispatchWO"/>
                 <!-- Incident is for smart cloud only, allowing them to dispatch incidents on all images is a violation for maximo images -->
-                <command id="dispatchincident" icon="fa-tachometer" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD" 
+                <command id="dispatchincident" icon="fa-warning" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD" 
                           parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
                 
                 <!--<command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap" 

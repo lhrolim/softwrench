@@ -3,7 +3,7 @@
 
     var app = angular.module('sw_layout');
 
-    app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService, schemaService, redirectService, spinService) {
+    app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService, schemaService, redirectService, spinService, commandService) {
         "ngInject";
 
         /// <summary>
@@ -341,6 +341,16 @@
                         return true;
                     }
                     return direction == 0 ? value.detail_previous : value.detail_next;
+                }
+
+                $scope.showActionSeparator = function (position) {
+                    var commands = commandService.getBarCommands($scope.schema, position);
+
+                    if (commands == null) {
+                        return false;
+                    }
+
+                    return commands.length > 0;
                 }
 
                 $scope.isEditing = function (schema) {

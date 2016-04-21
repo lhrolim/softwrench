@@ -308,6 +308,16 @@
                         return $scope.schema.properties[propertyName];
                     }
 
+                    $scope.showActionSeparator = function () {
+                        var commands = commandService.getBarCommands($scope.schema, 'actions');
+
+                        if (commands == null) {
+                            return false;
+                        }
+
+                        return commands.length > 0;
+                    }
+
                     $scope.quickSearch = function (filterdata) {
                         $scope.searchData = {};
                         $scope.searchSort = {};

@@ -1,11 +1,11 @@
 <span ng-controller="GridFilterController">
-    <div class="btn-group">
+    <!--<div class="btn-group">-->
         <button type="button"
                 ng-click="refreshGrid()"
                 ng-show="shouldShowRefreshButton()"
-                class="btn btn-context"
+                class="btn btn-context large-button"
                 data-original-title="{{ !selectedfilter.alias ? 'Refresh grid' : selectedfilter.alias }}" rel="tooltip" data-container="body">
-            <i class="fa fa-refresh"></i><span ng-show="showLabel()">&ensp;Refresh</span>
+            <i class="icon fa fa-refresh"></i><span class="text" ng-show="showLabel()"><span class="space">&ensp;</span>Refresh</span>
 
             <!--<span ng-show="!selectedfilter.alias" ng-if="command.parameters['allowsave']!='false'">&ensp;Filters</span>
             <span ng-show="selectedfilter.alias">{{selectedfilter.alias}}</span>-->

@@ -504,7 +504,7 @@
             <commandgroup position="detail.primary">
               <removecommand id="save"/>
               <removecommand id="print"/>
-              <command id="saveIssue" icon="fa fa-check" label="Save" service="inventoryService" method="submitReservedInventoryIssue" position="left" parameters="schema,datamap"/>
+              <command id="saveIssue" icon="fa fa-check" label="Save" service="inventoryService" method="submitReservedInventoryIssue" position="left" parameters="schema,datamap" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
           <properties>

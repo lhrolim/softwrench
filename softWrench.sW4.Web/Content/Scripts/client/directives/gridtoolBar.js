@@ -366,7 +366,7 @@ app.directive("crudbodydetailtoolbar", ["contextService", function (contextServi
         controller: ["$scope", "controllerInheritanceService", function($scope, controllerInheritanceService) {
 
             controllerInheritanceService.begin(this)
-                .inherit(sharedController, { $scope: $scope })
+                .inherit(sharedController, { $scope: $scope });
 //                .overrides()
 //                .scope($scope, "executeScopeCommand", function (original, params, context) {
 //                    var command = params[0];

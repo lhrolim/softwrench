@@ -10,8 +10,8 @@
                 rel="tooltip"
                 data-container="body"
                 class="applicationcommand btn-context">
-            <i class="fa" ng-class="commandIcon(getCommand(command))"></i>
-            <span ng-show="commandLabel(getCommand(command))">&ensp;{{commandLabel(getCommand(command))}}</span>
+            <i class="icon fa" ng-class="commandIcon(getCommand(command))"></i>
+            <span class="text" ng-show="commandLabel(getCommand(command))"><span class="space">&ensp;</span>{{commandLabel(getCommand(command))}}</span>
         </button>
 
         <div ng-if="command.type == 'ResourceCommand'" ng-click="validateRole(command)">
