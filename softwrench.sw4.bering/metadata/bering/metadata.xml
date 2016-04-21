@@ -219,8 +219,8 @@
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
-              <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
-                       successmessage="Issue created" position="&lt;filter"/>
+              <command id="create_issue" label="Issue" icon="fa-plus" service="inventoryService" method="createIssue" parameters="schema,datamap"
+                       successmessage="Issue created" position="&lt;filter" cssclasses="large-button"/>
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
@@ -492,8 +492,8 @@
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
-              <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
-                       successmessage="Issue created" position="&lt;filter"/>
+              <command id="create_issue" label="Issue" icon="fa-plus" service="inventoryService" method="createIssue" parameters="schema,datamap"
+                       successmessage="Issue created" position="&lt;filter" cssclasses="large-button"/>
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
