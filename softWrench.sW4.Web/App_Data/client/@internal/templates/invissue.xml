@@ -156,7 +156,7 @@
           <field attribute="qtyreturned" label="Qty Rtn">
             <renderer type="default" params="width=6%;hidefilter=true;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
-          <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
+          <section attribute="returnaction" resourcepath="/Content/Templates/otb/invissuereturnaction.html">
             <renderer type="default" params="width=3%" />
           </section>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>

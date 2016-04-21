@@ -80,51 +80,6 @@ angular.module('sw_layout').directive('columnWidths', function ($log, $timeout) 
 
                     //build css rules
                     var css = '';
-                    //css += '@media only screen and (max-width: 767px) {';
-                    //css += '#listgrid {';
-                    //css += 'display: block; }';
-                    //css += '#listgrid thead, #listgrid tbody, #listgrid th, #listgrid td, #listgrid tr {';
-                    //css += 'display: block; }';
-                    //css += '#listgrid thead tr {';
-                    //css += 'position: absolute;';
-                    //css += 'top: -9999px;';
-                    //css += 'left: -9999px; }';
-                    //css += '#listgrid tbody tr {';
-                    //css += 'padding: 10px 0;';
-                    //css += '}';
-                    //css += '#listgrid tbody tr td {';
-                    //css += 'position: relative;';
-                    //css += 'padding: 4px 4px 4px 50%;';
-                    //css += 'white-space: normal;';
-                    //css += 'text-align: left;';
-                    //css += '}';
-                    //css += '#listgrid tbody tr td.no-data {';
-                    //css += 'display: none; }';
-                    //css += '#listgrid tbody tr td:before {';
-                    //css += 'position: absolute;';
-                    //css += 'left: 15px;';
-                    //css += 'width: 45%;';
-                    //css += 'padding-right: 10px;';
-                    //css += 'white-space: nowrap;';
-                    //css += 'text-align: left;';
-                    //css += 'font-weight: bold;';
-                    //css += 'content: attr(data-title); }';
-                    //css += '#listgrid tbody tr td._color {';
-                    //css += 'position: relative;';
-                    //css += 'padding-left: 50%;';
-                    //css += 'white-space: normal;';
-                    //css += 'text-align: left; }';
-                    //css += '#listgrid tbody tr td._color:before {';
-                    //css += 'position: absolute;';
-                    //css += 'top: 6px;';
-                    //css += 'left: 6px;';
-                    //css += 'width: 45%;';
-                    //css += 'padding-right: 10px;';
-                    //css += 'white-space: nowrap;';
-                    //css += 'text-align: left;';
-                    //css += 'font-weight: bold;';
-                    //css += 'content: attr(data-title); } }';
-
                     css += getViewRules(widths, 'width', '768px', 'screen', scope.schema);
                     css += getViewRules(widths, 'width', '1px', 'print', scope.schema);
 

@@ -233,6 +233,15 @@
         position: initial;
     }
 
+    .btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+        pointer-events: initial;
+        opacity: 1.0;
+        filter: alpha(opacity=100);
+        color: #ddd;
+        background: #fff;
+        border-color: #ddd;
+    }
+
     .ticketid {
         margin-top: 0;
     }
@@ -252,6 +261,29 @@
 
                 th {
                     cursor: pointer;
+                    /*padding: 8px 15px;*/
+                    word-break: break-word;
+
+                    &.select-all-header {
+                        text-align: center;
+                        padding-left: 15px;
+                        padding-right: 3px;
+                    }
+
+                    .cell-wrapper {
+                        .part {
+                            display: inline-block;
+                        }
+
+                        .add-on {
+                            max-width: 62%;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            position: relative;
+                            top: 6px;
+                        }
+                    }
                 }
             }
 
@@ -262,6 +294,44 @@
                 &:after {
                     content: " ";
                 }
+            }
+        }
+    }
+
+    td {
+        .input-group, .input-group .glyphicon {
+            position: initial;
+        }
+
+        &.select-multiple {
+            text-align: center;
+            padding-left: 15px;
+            padding-right: 3px;
+        }
+
+        &.edit-detail {
+            padding-right: 15px;
+        }
+
+        &.statuscolor {
+            padding: 5px 0;
+
+            .cell-wrapper {
+                border-radius: 3px;
+                display: inline-block;
+                padding: 5px 8px 3px;
+                margin-left: 15px;
+                white-space: nowrap;
+            }
+        }
+
+        &.iconbutton {
+            padding: 5px 0;
+
+            .btn-sm {
+                margin-right: 15px;
+                padding-top: 2px;
+                padding-bottom: 2px;
             }
         }
     }
@@ -282,59 +352,21 @@
     border-top: none;
 }
 
-#listgrid, #compositionlistgrid {
-    tbody tr {
-        &.odd {
-            background: #ebebeb;
-        }
-    }
-}
-
 .table-hover > tbody > tr:hover {
     & > td, & > th {
         background-color: #d6d6d6;
     }
 }
 
-#listgrid {
-    th {
-        word-break: break-word;
-    }
-
-    th.select-all-header {
-        padding-right: 3px;
-    }
-}
-
-#listgrid {
-    th {
-        &.select-all-header {
-            text-align: center;
-            padding-left: 15px;
-            padding-right: 3px;
-        }
-    }
-
-    td {
-        .input-group, .input-group .glyphicon {
-            position: initial;
-        }
-
-        &.select-multiple {
-            text-align: center;
-            padding-left: 15px;
-            padding-right: 3px;
-        }
-
-        &.edit-detail {
-            padding-right: 15px;
-        }
-    }
-}
-
 #listgrid, #compositionlistgrid {
+    tbody tr {
+        &.odd {
+            background: #ebebeb;
+        }
+    }
+
     th {
-        padding: 13px 0 9px;
+        padding: 9px 0;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
     }
@@ -387,14 +419,45 @@
         margin-top: 0;
         margin-bottom: 0;
     }
+
+    &.table-hover {
+        tbody tr {
+            cursor: pointer;
+
+            &:hover {
+                background: #f5f5f5;
+            }
+        }
+    }
+
+    [ng-show="isNoRecords"] {
+        tr {
+            cursor: default;
+
+            &:hover {
+                background: transparent;
+            }
+        }
+    }
 }
 
 #compositionlistgrid {
-    th {
-        padding: 13px 15px 9px;
+    tbody tr {
+        th {
+            padding: 13px 15px 9px;
+        }
+
+        a {
+            color: #000;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
     }
 
     td {
+        vertical-align: middle;
         padding: 10px 15px 6px;
     }
 }
@@ -403,18 +466,6 @@
     color: black;
     padding-left: 8px;
     word-wrap: break-word;
-}
-
-@media only screen and (min-width: 1200px) {
-    .gridcolumnvalue {
-        max-width: 135px;
-    }
-}
-
-@media only screen and (max-width: 1199px) {
-    .gridcolumnvalue {
-        max-width: 100px;
-    }
 }
 
 #scanConfigTable thead tr td {
@@ -431,47 +482,8 @@
     }
 }
 
-#listgrid {
-    .btn.disabled, .btn[disabled], fieldset[disabled] .btn {
-        pointer-events: initial;
-        opacity: 1.0;
-        filter: alpha(opacity=100);
-        color: #ddd;
-        background: #fff;
-        border-color: #ddd;
-    }
-}
-
 table .detaildata {
     display: table-cell !important;
-}
-
-#compositionlistgrid {
-    tbody tr {
-        a {
-            color: #000;
-
-            &:hover {
-                text-decoration: none;
-            }
-        }
-    }
-
-    td {
-        vertical-align: middle;
-    }
-}
-
-#listgrid, #compositionlistgrid {
-    &.table-hover {
-        tbody tr {
-            cursor: pointer;
-
-            &:hover {
-                background: #f5f5f5;
-            }
-        }
-    }
 }
 
 .quick-search {
@@ -488,29 +500,31 @@ table .detaildata {
     }
 }
 
-#listgrid {
-    td {
-        &.statuscolor {
-            padding: 5px 0;
+[data-application="multiassetlocci"]#compositionlistgrid {
+    th, td {
+        padding: 10px 15px;
 
-            .cell-wrapper {
-                border-radius: 3px;
-                display: inline-block;
-                padding: 5px 8px 3px;
-                margin-left: 15px;
-                white-space: nowrap;
-            }
+        input {
+            background-color: white !important;
         }
+    }
+}
 
-        &.iconbutton {
-            padding: 5px 0;
+.table-hover > [ng-show="isNoRecords"] > tr:hover {
+    & > td, & > th {
+        background-color: transparent;
+    }
+}
 
-            .btn-sm {
-                margin-right: 15px;
-                padding-top: 2px;
-                padding-bottom: 2px;
-            }
-        }
+@media only screen and (min-width: 1200px) {
+    .gridcolumnvalue {
+        max-width: 135px;
+    }
+}
+
+@media only screen and (max-width: 1199px) {
+    .gridcolumnvalue {
+        max-width: 100px;
     }
 }
 
@@ -578,34 +592,5 @@ table .detaildata {
                 }
             }
         }
-    }
-}
-
-[data-application="multiassetlocci"]#compositionlistgrid {
-    th, td {
-        padding: 10px 15px;
-
-        input {
-            background-color: white !important;
-        }
-    }
-}
-
-#listgrid, #compositionlistgrid {
-    [ng-show="isNoRecords"] {
-        /*background: #f00;*/
-        tr {
-            cursor: default;
-
-            &:hover {
-                background: transparent;
-            }
-        }
-    }
-}
-
-.table-hover > [ng-show="isNoRecords"] > tr:hover {
-    & > td, & > th {
-        background-color: transparent;
     }
 }
