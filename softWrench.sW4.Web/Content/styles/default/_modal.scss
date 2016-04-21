@@ -5,6 +5,18 @@
     max-height: 90%;
     display: none;
     min-height: initial;
+
+    .filter-label {
+        .filter-label-wrapper {
+            .dropdown {
+                .dropdown-menu {
+                    position: fixed;
+                    top: initial !important;
+                    left: initial !important;
+                }
+            }
+        }
+    }
 }
 
 .smallmodal {

@@ -375,7 +375,7 @@
                         $('[data-datepicker="true"]', dropdown).on('dp.hide', function (e) {
                             $timeout(function() {
                                 $('.dropdown-menu', dropdown).removeClass('keep-open');
-                            }, 100, false);
+                            }, 200, false);
                         });
 
                         //autofocus the search input when the dropdown opens
