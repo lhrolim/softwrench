@@ -16,10 +16,11 @@
                 <div class="separator large-button" ng-if="ismodal !== 'true'" ng-show="showActionSeparator(getPosition(schema,'toolbar.detail.actions','actions'))">&nbsp;</div>
                 <crudbodydetailtoolbar datamap="datamap" mode="'input'" position="{{getPosition(schema,'toolbar.detail.actions','actions')}}" schema="schema" />
             </div>
-            <div class="right large-button" ng-if="ismodal !== 'true'">
+            <div class="right large-button" ng-if="ismodal !== 'true'" ng-show="showdirectionButtons()">
                 <div class="group pagination">
                     <a ng-click="crawl(1)" ng-disabled="!disableNavigationButton(0)" href="" rel="tooltip" data-original-title="Previous"><i class="icon fa fa-chevron-left"></i></a>&ensp;
                     <a ng-click="crawl(0)" ng-disabled="!disableNavigationButton(1)" href="" rel="tooltip" data-original-title="Next"><i class="icon fa fa-chevron-right"></i></a>
+                    <!--<label class="text" data-paged="paginationData">{{i18N('_grid.pagination.display',"Items: {0}",[paginationData.totalCount])}}</label>-->
                 </div>
             </div>
         </div>

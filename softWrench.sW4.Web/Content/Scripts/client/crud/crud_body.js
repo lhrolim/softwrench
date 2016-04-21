@@ -109,6 +109,10 @@
             validationService, schemaService, $timeout, $interval, eventService, $log, expressionService, focusService, modalService,
             compositionService, attachmentService, sidePanelService) {
 
+                this.shouldshowprint = function () {
+                    return $scope.schema.schemaId != 'newdetail';
+                }
+
                 $(document).on("sw_autocompleteselected", function (event, key) {
                     focusService.resetFocusToCurrent($scope.schema, key);
                 });
@@ -334,6 +338,10 @@
                     var property = schema.properties['detail.navigationbuttons.disabled'];
                     return "true" != property && $scope.ismodal == "false";
                 };
+
+                $scope.showdirectionButtons = function () {
+                    return $scope.schema.schemaId == 'editdetail';
+                }
 
                 $scope.disableNavigationButton = function (direction) {
                     var value = contextService.fetchFromContext("crud_context", true);

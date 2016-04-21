@@ -12,7 +12,7 @@
         width: 100%;
         background: #eee;
         border-bottom: #000 1px solid;
-        padding: 5px 40px 3px 0;
+        padding: 5px 40px 5px 0;
 
         .large-button {
             padding: 10px 0 !important;
@@ -30,6 +30,7 @@
                 display: block;
                 font-size: 10px;
                 /*color: #474949;*/
+                text-transform: uppercase;
 
                 .space {
                     display: none;
@@ -144,13 +145,11 @@
                 }
             }
         }
-        
         /*[position="actions"] {
             .buttons {
             display: block;
             }
         }*/
-
         &.mobile .context .group.pagination a {
             padding: 8px 6px;
         }
@@ -168,15 +167,36 @@
 }
 
 .compositiontoolbar, .compositiontop {
-    .buttons {
-        display: inline-block;
-        margin: 0 5px 5px 0;
+    /*padding: 10px;*/
+    margin-top: -30px;
+    margin-bottom: 30px;
 
-        .btn {
-            font-size: 12px;
+    .wrap {
+        background: #008fc7;
+
+        .buttons {
+            display: inline-block;
+            margin-right: 5px;
+            margin: 10px 0 10px 10px;
+
+            .btn {
+                font-size: 12px;
+                margin-bottom: 0;
+                background: transparent;
+                color: #fff;
+
+                &:hover {
+                    background: rgba(#fff, 0.3);
+                }
+            }
         }
     }
+
+    .no-toolbar {
+        height: 1px;
+    }
 }
+
 
 @media all and (min-width: 480px) {
     .container {

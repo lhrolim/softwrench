@@ -143,7 +143,7 @@
             <renderer type="lookup"/>
           </association>
         </schema>
-        
+
         <schema id="wolabors" stereotype="compositionlist">
           <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
@@ -164,8 +164,10 @@
             <renderer type="autocompleteclient" />
             <event type="afterchange" service="labtranService" method="aftercraftchange"/>
           </association>
-
-          
+          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="premiumpay_.defaultrate">
+            <event type="afterchange" service="labtranService" method="updateLineCost"/>
+            <renderer type="lookup"/>
+          </association>
           <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate">
             <event type="afterchange" service="labtranService" method="updateLineCost"/>
           </field>
@@ -185,7 +187,7 @@
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
           <field attribute="enterby" hidden="true" />
-          
+
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
           <field label="Trans Date" requiredexpression="true" attribute="transdate" default="@now" enableexpression="false" hidden="true">
@@ -229,7 +231,7 @@
           <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
             <renderer type="lookup"/>
           </association>
-          
+
           <field attribute="premiumpayhours" label="Premium Pay Hours">
             <event type="afterchange" service="labtranService" method="updateLineCost"/>
           </field>
@@ -237,14 +239,14 @@
 
         <schema id="editdetail" title="Labor Report" stereotype="detail">
           <commandbars>
-            <commandgroup position="actions">
-              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+            <!--<commandgroup position="actions">-->
+              <container label="Actions" id="actioncontainer" icon="fa-bolt">
                 <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
                          service="labtranService" method="approveSingleLabtrans"/>
                 <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
                          service="labtranService" method="deleteSingleLabtrans"/>
-              <!--</container>-->
-            </commandgroup>
+              </container>
+            <!--</commandgroup>-->
           </commandbars>
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
@@ -257,6 +259,9 @@
           <!--<field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate">
             <event type="afterchange" service="labtranService" method="updateLineCost"/>
           </field>-->
+          <field attribute="ppcraftrate_.premiumpay_.defaultrate" label="Premium Pay Rate" hidden="true">
+            <event type="afterchange" service="labtranService" method="updateLineCost"/>
+          </field>
           <field label="Trans Date" requiredexpression="true" attribute="transdate" enableexpression="false" hidden="true">
             <renderer type="datetime"/>
           </field>
@@ -293,6 +298,9 @@
             <renderer type="lookup"/>
           </association>
           <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
+            <renderer type="lookup"/>
+          </association>
+          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.craft" extraprojectionvalues="premiumpay_.defaultrate">
             <renderer type="lookup"/>
           </association>
           <field attribute="premiumpayhours" label="Premium Pay Hours">
