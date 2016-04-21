@@ -20,9 +20,9 @@
         <list title="Security Groups">
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command label="Refresh Cache" tooltip="Refresh any database changes into application" id="refresh cache" service="userProfileService" method="refreshCache"/>
-              </container>
+              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+                <command label="Refresh Cache" icon="fa-refresh" tooltip="Refresh any database changes into application" id="refresh cache" service="userProfileService" method="refreshCache"/>
+              <!--</container>-->
             </commandgroup>
             <commandgroup position="gridtop">
               <command id="new" icon="fa-plus"
@@ -36,16 +36,16 @@
 
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
                 <command icon="fa-clone" label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate"/>
                 <command icon="fa-users" label="Apply to Users" tooltip="Apply the current profile to multiple user accounts at once" id="applymultiple" service="userProfileService" method="applyMultiple"/>
                 <command icon="fa-users" label="Remove from Users" tooltip="Remove the current profile from multiple user accounts at once" id="removemultiple" service="userProfileService" method="removeMultiple"/>
-              </container>
+              <!--</container>-->
             </commandgroup>
             <commandgroup position="detail.primary">
               <removecommand id="print"/>
-              <command id="save" service="userProfileService" method="save"/>
-              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-remove" position="+save"/>
+              <command id="save" service="userProfileService" method="save" cssclasses="large-button"/>
+              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-trash" position="+save" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
 

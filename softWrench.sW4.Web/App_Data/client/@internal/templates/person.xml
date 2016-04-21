@@ -117,8 +117,8 @@
           <commandbars>
             <commandgroup position="detail.primary">
               <removecommand id="save"/>
-              <command id="save" icon="fa fa-check" label="Save" service="personService" method="submitPerson" position="left" parameters="schema,datamap"/>
-              <command id="cancel" icon="fa-times" service="personService" method="cancelEdition" label="Cancel" tooltip="Cancel"/>
+              <command id="save" icon="fa fa-check" label="Save" service="personService" method="submitPerson" position="left" parameters="schema,datamap" cssclasses="large-button"/>
+              <command id="cancel" icon="fa-times" service="personService" method="cancelEdition" label="Cancel" tooltip="Cancel" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
         </schema>
