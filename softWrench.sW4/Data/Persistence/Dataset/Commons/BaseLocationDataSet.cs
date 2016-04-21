@@ -51,7 +51,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var result = base.GetApplicationDetail(application, user, request);
 
             if (request.CustomParameters != null) {
-                result.ResultObject.SetAttribute("parentlocation_.systemid", request.CustomParameters["parentlocation_.systemid"]);
+                result.ResultObject.SetAttribute("#parentlocationsystemid", request.CustomParameters["#parentlocationsystemid"]);
             }
 
             return result;
@@ -113,7 +113,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         /// <param name="parameter"></param>
         /// <returns></returns>
         public SearchRequestDto FilterLocationHierarchy(CompositionPreFilterFunctionParameters parameter) {
-            var systemid = parameter.OriginalEntity.GetAttribute("parentlocation_.systemid");
+            var systemid = parameter.OriginalEntity.GetAttribute("#parentlocationsystemid");
             var where = "systemid = '{0}'".FormatInvariant(systemid);
             parameter.BASEDto.AppendWhereClause(where);
             return parameter.BASEDto;
