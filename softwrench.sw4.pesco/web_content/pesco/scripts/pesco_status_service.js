@@ -14,7 +14,7 @@
 				return true;
 			}
 			return genericTicketService.changeStatus(datamap, schema.schemaId, "PENDING").then(function() {
-			    searchService.refreshGrid(null, { panelid: panelid});
+			    searchService.refreshGrid(null, null, { panelid: panelid, keepfilterparams :true});
 			    return $q.reject();
 			});
 		}
