@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using softWrench.sW4.Metadata;
 
 namespace softWrench.sW4.Data.Entities {
 
@@ -24,8 +25,8 @@ namespace softWrench.sW4.Data.Entities {
 
 
         [NotNull]
-        public static T BuildFromJson<T>(Type entityType, EntityMetadata metadata, ApplicationMetadata applicationMetadata, JObject json, string id=null) where T : Entity {
-            if (id == null && applicationMetadata!=null) {
+        public static T BuildFromJson<T>(Type entityType, EntityMetadata metadata, ApplicationMetadata applicationMetadata, JObject json, string id = null) where T : Entity {
+            if (id == null && applicationMetadata != null) {
                 //the id can be located inside the json payload, as long as the application metadata is provider
                 //this is not the case for new item compositions though
                 JToken token;
@@ -126,9 +127,10 @@ namespace softWrench.sW4.Data.Entities {
             IDictionary<string, object> associationAttributes, JProperty property) where T : Entity {
             string attributeName;
             var relationshipName = EntityUtil.GetRelationshipName(property.Name, out attributeName);
-            var relationship = metadata.RelatedEntityMetadata(relationshipName);
-            if (relationship == null) {
-                //                throw new InvalidOperationException(String.Format(RelationshipNotFound, relationshipName, metadata.Name));
+
+            var association = metadata.Associations.FirstOrDefault(r => r.Qualifier == relationshipName);
+            var relationship =  association != null ? MetadataProvider.Entity(association.To) : null;
+            if (relationship == null || association.Collection) {
                 return;
             }
             object relatedEntity;
@@ -137,6 +139,12 @@ namespace softWrench.sW4.Data.Entities {
                 relatedEntity = GetInstance(entityType, relationship, null, null);
                 associationAttributes.Add(relationshipName, relatedEntity);
             }
+            if (!(relatedEntity is Entity)) {
+                Log.WarnFormat("could not populate relationship {0} for app {1}".Fmt(relationshipName,metadata.Name));
+                //there´s no way to populate the internal entity
+                return;
+            }
+
             //TODO: last parameter might have been setted based on a flag sent from the json, indicating the correct relationship mode
             PopulateEntity<T>(relationship, null, new JProperty(attributeName, property.Value), (Entity)relatedEntity, entityType, OperationType.Change);
         }

@@ -210,9 +210,22 @@
                     if (!customParamFields.hasOwnProperty(param)) {
                         continue;
                     }
+
+                    var fieldName = customParamFields[param];
+                    var fieldValue = rowdm.fields[fieldName];
+                    // fieldValue not found: maybe a transientField --> find by matching attributeToServer 
+                    if (!fieldValue) {
+                        var actualField = schema.displayables.find(function(field) {
+                            return field.attributeToServer === fieldName;
+                        });
+                        if (!!actualField) {
+                            fieldValue = rowdm.fields[actualField.attribute];
+                        }
+                    }
+
                     customParams[param] = {};
-                    customParams[param]["key"] = customParamFields[param];
-                    customParams[param]["value"] = rowdm.fields[customParamFields[param]];
+                    customParams[param]["key"] = fieldName;
+                    customParams[param]["value"] = fieldValue;
                 }
             }
             return customParams;

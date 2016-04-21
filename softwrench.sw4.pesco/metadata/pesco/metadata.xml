@@ -14,7 +14,7 @@
       <attributes>
         <attribute name="pending" query="status" type="varchar"/>
       </attributes>
-      
+
       <relationships>
         <relationship to="synonymdomain" qualifier="pescosynstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
@@ -23,7 +23,7 @@
         </relationship>
       </relationships>
     </entity>
-  <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
+    <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
       <relationships>
         <relationship to="synonymdomain" qualifier="pescosynstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
@@ -48,7 +48,13 @@
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
       <schemas>
         <list redeclaring="false" >
+
+          <customization position="siteid">
+            <field attribute="siteid" label="Site Id"/>
+          </customization>
+          
           <customization position="#statusicons">
+            
             <field attribute="#statusicons" label="Status Icons">
               <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter"/>
             </field>
@@ -56,8 +62,8 @@
               <renderer type="iconbutton" params="width=3%;expression={'#default':'','NEW':'fa-hourglass-half'};hideValueOnTooltip=true"/>
             </field>
           </customization>
-          
-          
+
+
           <properties>
             <property key="list.click.service" value="pescoStatusService.changeStatusToPending"/>
           </properties>
@@ -77,7 +83,7 @@
               <event type="afterchange" service="srService" method="afterChangeAsset"/>
             </association>
           </customization>
-          
+
           <customization position="status">
             <association label="Status" target="status" labelfield="pescosynstatus.description" requiredexpression="true">
               <renderer type="lookup" />
@@ -98,6 +104,15 @@
 
     <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
       <schemas>
+
+        <schema id="quicksrgrid" redeclaring="false">
+          <customization position="-status">
+            <field attribute="siteid" label="Site Id"/>
+          </customization>
+
+        </schema>
+
+
         <schema id="quickeditdetail" abstract="true" stereotype="detail" platform="web" redeclaring="false">
           <customization position="status">
             <association label="Status" target="status" labelfield="pescosynstatus.description" requiredexpression="true" enableexpression="false">
@@ -127,7 +142,7 @@
             <field attribute="pluspcustomer" label="Customer"/>
           </customization>
           <commandbars>
-            
+
           </commandbars>
         </schema>
         <schema id="locationdetail" title="Location Detail" stereotype="detail" redeclaring="false">
@@ -137,10 +152,10 @@
         </schema>
       </schemas>
     </application>
-    
+
     <application name="asset" title="Asset" entity="asset">
       <schemas>
-         <schema id="list" platform="web" redeclaring="false">
+        <schema id="list" platform="web" redeclaring="false">
           <customization position="+siteid">
             <field attribute="pluspcustomer" label="Customer"/>
           </customization>
@@ -152,9 +167,17 @@
         </schema>
       </schemas>
     </application>
-    
+
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
       <schemas>
+
+        <schema id="list" redeclaring="false" platform="web">
+          <customization position="siteid">
+            <field attribute="siteid" label="Site Id"/>
+          </customization>
+
+        </schema>
+
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
         </schema>
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
@@ -172,7 +195,7 @@
               <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
             </association>
           </customization>
-          
+
           <customization position="status">
             <association label="Status" target="status" labelfield="pescosynstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
@@ -188,13 +211,13 @@
               <renderer type="TABLE" params="mode=batch;inputsize=xlarge"/>
             </composition>
           </customization>
-          
+
         </schema>
       </schemas>
     </application>
 
 
   </applications>
-  
+
 
 </metadata>
