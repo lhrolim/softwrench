@@ -304,12 +304,7 @@ app.directive('configAssociationListInputDatamap', function () {
             };
             $scope.initCheckbox = function (fieldMetadata) {
                 var content = $scope.datamap[fieldMetadata.attribute];
-                if (content === "1" || content === "true" || content === true) {
-                    content = true;
-                } else {
-                    content = false;
-                }
-                $scope.datamap[fieldMetadata.attribute] = content;
+                $scope.datamap[fieldMetadata.attribute] = formatService.isChecked(content);
             }
 
             /* LOOKUP functions */
