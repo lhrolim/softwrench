@@ -36,7 +36,8 @@ angular.module('sw_layout')
 
     function setHeaderPosition() {
         var siteHeaderElement = $('.site-header');
-        var toolbarElement = $('.toolbar-primary:not(.affix-pagination)');
+        //var toolbarElement = $('.toolbar-primary:not(.affix-pagination)');
+        var toolbarElement = $('.toolbar-primary');
         var listTheadElement = $('.listgrid-thead:visible');
 
         if (siteHeaderElement.css('position') === 'fixed') {
@@ -52,7 +53,9 @@ angular.module('sw_layout')
             if (toolbarElement.css('position') === 'fixed') {
                 toolbarElement.css('top', headerHeight);
                 $('#crudbodyform:not([data-modal="true"])').css('margin-top', offsetMargin);
-                $('.dash-header').css('margin-top', offsetMargin);
+
+                var dashToolbar = $('.toolbar-primary:not(.affix-pagination)');
+                $('.dash-header').css('margin-top', dashToolbar.height() + theaderHeight - 1);
             }
 
             //only adjust if table header is fixed
