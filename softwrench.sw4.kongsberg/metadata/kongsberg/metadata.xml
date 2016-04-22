@@ -1004,8 +1004,8 @@
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command id="dispatchincident" icon="fa-tachometer" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD"
+              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+                <command id="dispatchincident" icon="fa-warning" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD"
                           parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
                 
                 <!--<command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
@@ -1016,7 +1016,7 @@
                          service="srService" method="startRelatedSRCreation" parameters="schema,datamap"
                          label="Create Related Request" icon="fa-ticket" />
 
-              </container>
+              <!--</container>-->
             </commandgroup>
           </commandbars>
         </schema>

@@ -572,10 +572,10 @@
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
                 <command id ="dispatchwo" icon="fa-tachometer" label="Dispatch Work Order"
                           parameters="schema,datamap" service="dispatchService" method="dispatchWO"/>
-              </container>
+              <!--</container>-->
             </commandgroup>
 <!--            <commandgroup position="detailform">-->
 <!--              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"-->
