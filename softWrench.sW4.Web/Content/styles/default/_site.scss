@@ -185,7 +185,7 @@ body > .container {
         flex: 1 0 0;
     }
 
-    .affix-pagination {
+    .toolbar-primary {
         position: relative;
         z-index: 1000;
         box-sizing: border-box;
@@ -210,7 +210,7 @@ body > .container {
 
 @media all and (min-width: 768px) {
     .container.desktop {
-        .affix-pagination {
+        .toolbar-primary {
             position: fixed;
         }
 
