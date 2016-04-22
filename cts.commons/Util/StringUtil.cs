@@ -12,8 +12,7 @@ namespace cts.commons.portable.Util {
         /// <param name="start">Start string delimiter</param>
         /// <param name="end">End string delimiter</param>
         /// <returns>Enumerator with all string occurrences</returns>
-        public static IEnumerable<string> GetSubStrings(string input, string start, string end)
-        {
+        public static IEnumerable<string> GetSubStrings(string input, string start, string end) {
 
             var r = new System.Text.RegularExpressions.Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
             MatchCollection matches = r.Matches(input);
@@ -69,12 +68,21 @@ namespace cts.commons.portable.Util {
             return -1;
         }
 
+        public static int CountNumberOfOccurrences(this string source, char charToSearch) {
+            int count = 0;
+            for (int i = 0; i < source.Length; i++) {
+                if (source[i] == charToSearch) {
+                    count++;
+                }
+            }
+            return count;
+        }
+
         public static bool NullOrEmpty(this string source) {
             return String.IsNullOrEmpty(source);
         }
 
-        public static byte[] GetBytes(string str)
-        {
+        public static byte[] GetBytes(string str) {
             var bytes = new byte[str.Length * sizeof(char)];
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;

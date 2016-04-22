@@ -145,6 +145,7 @@
         </schema>
         
         <schema id="wolabors" stereotype="compositionlist">
+          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
           <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>
@@ -231,7 +232,9 @@
           <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
             <renderer type="lookup"/>
           </association>
-          
+          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.craft" extraprojectionvalues="premiumpay_.defaultrate">
+            <renderer type="lookup"/>
+          </association>
           <field attribute="premiumpayhours" label="Premium Pay Hours">
             <event type="afterchange" service="labtranService" method="updateLineCost"/>
           </field>
@@ -249,8 +252,8 @@
             </commandgroup>
           </commandbars>
           <field attribute="labtransid" hidden="true"/>
-          <field attribute="orgid" hidden="true"/>
-          <field attribute="siteid" hidden="true"/>
+          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.fields.orgid"/>
+          <field attribute="siteid" hidden="true" defaultexpression="$.parentdata.fields.siteid"/>
           <field attribute="enterby" hidden="true" />
           <field attribute="genapprservreceipt" hidden="true"/>
           <field attribute="payrate" label="Rate" hidden="true"/>

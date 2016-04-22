@@ -19,7 +19,8 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         public SlicedEntityAssociation(EntityAssociation innerAssociation, IEnumerable<EntityAttribute> slicedAttributes, string context = null)
             : base(innerAssociation.Qualifier, innerAssociation.To, innerAssociation.Attributes, innerAssociation.Collection, innerAssociation.Cacheable, innerAssociation.Lazy, innerAssociation.ReverseLookupAttribute, innerAssociation.IgnorePrimaryAttribute) {
             if (context != null) {
-                SlicedAttributes = new HashSet<EntityAttribute>(slicedAttributes.Select(slicedAttribute => slicedAttribute.ClonePrependingContext(context)));
+                var entityAttributes = slicedAttributes.Select(slicedAttribute => slicedAttribute.ClonePrependingContext(context));
+                SlicedAttributes = new HashSet<EntityAttribute>(entityAttributes);
             } else {
                 SlicedAttributes = new HashSet<EntityAttribute>(slicedAttributes);
             }
@@ -27,7 +28,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         }
 
         public ISet<EntityAttribute> SlicedAttributes {
-            get; set;
+            get; private set;
         }
     }
 }

@@ -51,7 +51,8 @@ namespace softWrench.sW4.Data.Entities {
             var associationAttributes = entity.AssociationAttributes;
             var name = property.Name;
             var listAssociations = metadata.ListAssociations();
-            var collectionAssociation = listAssociations.FirstOrDefault(l => l.Qualifier == EntityUtil.GetRelationshipName(name));
+            var relationshipName = EntityUtil.GetRelationshipName(name);
+            var collectionAssociation = listAssociations.FirstOrDefault(l => l.Qualifier == relationshipName);
             if (name.Contains(".")) {
                 HandleRelationship<T>(entityType, metadata, associationAttributes, property);
                 var attribute = metadata.Schema.Attributes.FirstOrDefault(a => a.Name == name);
@@ -59,7 +60,10 @@ namespace softWrench.sW4.Data.Entities {
                     attributes.Add(property.Name, GetValueFromJson(GetType(metadata, attribute), property.Value));
                 }
             } else if (collectionAssociation != null) {
-                HandleCollections<T>(entityType, metadata, applicationMetadata, collectionAssociation, associationAttributes, property);
+                var collectionType = metadata.RelatedEntityMetadata(collectionAssociation.Qualifier);
+                HandleCollections<T>(entityType, metadata, applicationMetadata, collectionType, associationAttributes, property);
+            } else if (IsInlineTransientComposition(applicationMetadata, relationshipName)) {
+                HandleCollections<T>(entityType, metadata, applicationMetadata, metadata, associationAttributes, property);
             } else {
                 var attribute = metadata.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(name));
                 // if we´re on add mode, make sure the id isn´t setted 
@@ -89,6 +93,15 @@ namespace softWrench.sW4.Data.Entities {
             }
         }
 
+        private static bool IsInlineTransientComposition(ApplicationMetadata applicationMetadata, string name) {
+            if (applicationMetadata == null) {
+                return false;
+            }
+
+            return name.StartsWith("#") &&
+                   applicationMetadata.Schema.Compositions().Any(c => c.Relationship.EqualsIc(name));
+        }
+
         private static string GetType(EntityMetadata metadata, EntityAttribute attribute) {
             if (metadata.Targetschema == null) {
                 return attribute.Type;
@@ -98,16 +111,17 @@ namespace softWrench.sW4.Data.Entities {
         }
 
 
-        private static void HandleCollections<T>(Type entityType, EntityMetadata metadata, ApplicationMetadata applicationMetadata, EntityAssociation collectionAssociation,
+        private static void HandleCollections<T>(Type entityType, EntityMetadata metadata, ApplicationMetadata applicationMetadata, EntityMetadata collectionType,
             IDictionary<string, object> associationAttributes, JProperty property) where T : Entity {
-            var collectionType = metadata.RelatedEntityMetadata(collectionAssociation.Qualifier);
+
             var array = (JArray)property.Value;
             IList<T> collection = new List<T>();
 
-            foreach (JObject jToken in array) {
+            foreach (var jToken1 in array) {
+                var jToken = (JObject)jToken1;
                 JToken idTkn;
-                String idValue = null;
-                String userIdValue = null;
+                string idValue = null;
+                string userIdValue = null;
                 if (jToken.TryGetValue(collectionType.Schema.IdAttribute.Name, out idTkn)) {
                     var valueFromJson = GetValueFromJson(collectionType.Schema.IdAttribute.Type, idTkn);
                     idValue = valueFromJson == null ? null : valueFromJson.ToString();
@@ -129,7 +143,7 @@ namespace softWrench.sW4.Data.Entities {
             var relationshipName = EntityUtil.GetRelationshipName(property.Name, out attributeName);
 
             var association = metadata.Associations.FirstOrDefault(r => r.Qualifier == relationshipName);
-            var relationship =  association != null ? MetadataProvider.Entity(association.To) : null;
+            var relationship = association != null ? MetadataProvider.Entity(association.To) : null;
             if (relationship == null || association.Collection) {
                 return;
             }
@@ -140,7 +154,7 @@ namespace softWrench.sW4.Data.Entities {
                 associationAttributes.Add(relationshipName, relatedEntity);
             }
             if (!(relatedEntity is Entity)) {
-                Log.WarnFormat("could not populate relationship {0} for app {1}".Fmt(relationshipName,metadata.Name));
+                Log.WarnFormat("could not populate relationship {0} for app {1}".Fmt(relationshipName, metadata.Name));
                 //there´s no way to populate the internal entity
                 return;
             }

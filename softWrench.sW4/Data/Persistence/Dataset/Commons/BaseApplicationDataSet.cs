@@ -151,7 +151,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
         }
 
-        protected BaseDataSetSearchHelper BaseDataSetSearchHelper{
+        protected BaseDataSetSearchHelper BaseDataSetSearchHelper {
             get {
                 if (_baseDataSetSearchHelper != null) {
                     return _baseDataSetSearchHelper;
@@ -279,7 +279,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
         }
 
-      
+
 
         private CompositionFetchResult DoGetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
@@ -332,7 +332,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 searchDto.SearchSort = propertyValue;
             }
 
-            searchDto = searchDto.QuickSearchDTO==null
+            searchDto = searchDto.QuickSearchDTO == null
                 ? FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto)
                 : QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
 
@@ -495,17 +495,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             //let's handle eventual inline compositions afterwards to avoid an eventual thread explosion
             #region inlineCompositions
 
-
-
-
-
-
-
-
-
-            #endregion
-
-
             if (Log.IsDebugEnabled) {
                 var keys = string.Join(",", eagerFetchedOptions.Keys.Where(k => eagerFetchedOptions[k] != null)) + string.Join(",", lazyOptions.Keys.Where(k => lazyOptions[k] != null));
                 Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finished execution of options fetching. Resolved collections: {0}", keys));
@@ -519,6 +508,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 result.MergeWithOtherSchemas(innerCompositions);
             }
 
+            #endregion
 
             return result;
         }
@@ -547,7 +537,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                         var compositionRequest = new InlineCompositionAssociationPrefetcherRequest(request, composition.AssociationKey);
                         var task = Task<AssociationMainSchemaLoadResult>.Factory.StartNew(() => BuildAssociationOptions(compositeDataMap, listCompositionSchema, compositionRequest));
                         inlineCompositionTasks.Add(task);
-                    }
+                    } 
                 }
             }
 
@@ -694,9 +684,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
             return resultObject;
         }
-   
-        public IEnumerable<IAssociationOption> GetSWPriorityType(OptionFieldProviderParameters parameters)
-        {
+
+        public IEnumerable<IAssociationOption> GetSWPriorityType(OptionFieldProviderParameters parameters) {
             //create default priority list
             var list = new List<AssociationOption>();
 

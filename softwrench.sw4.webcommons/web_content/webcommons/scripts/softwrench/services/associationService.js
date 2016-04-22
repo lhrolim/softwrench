@@ -5,6 +5,11 @@
     function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, restService, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService) {
 
 
+        /**
+           * Array to avoid multiple calls to the server upon 
+           */
+        var lazyAssociationsBeingResolved = [];
+
         var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
             var log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
             var key = associationFieldMetadata.associationKey;
@@ -19,7 +24,7 @@
             }
             for (var i = 0; i < associationFieldMetadata.extraProjectionFields.length; i++) {
                 var extrafield = associationFieldMetadata.extraProjectionFields[i];
-                var valueToSet = underlyingValue == null ? null : underlyingValue.extrafields[extrafield];
+                var valueToSet = (underlyingValue == null || !underlyingValue.extrafields) ? null : underlyingValue.extrafields[extrafield];
                 log.debug('updating extra field {0}.{1} | value={2}'.format(key, extrafield, valueToSet));
                 if (extrafield.startsWith(key)) {
                     //if the extrafield has the association we dont need to append anything (i.e: solution_x_y and relationship = solution_)
@@ -48,7 +53,7 @@
             if (!associations || associations.length === 0) {
                 return;
             }
-            
+
             var log = $log.get("associationService#updateExtraFields");
 
             associations.forEach(function (association) {
@@ -115,7 +120,9 @@
         };
 
         function lookupSingleAssociationByValue(associationKey, associationValue) {
-            
+
+            lazyAssociationsBeingResolved.push(associationKey);
+
             var panelId = crudContextHolderService.isShowingModal() ? "#modal" : null;
 
             var datamap = crudContextHolderService.rootDataMap(panelId);
@@ -135,9 +142,19 @@
                 associationValue: associationValue,
             };
 
+
             return restService.postPromise("Association", "LookupSingleAssociation", parameters, fieldsTosubmit).then(function (httpResponse) {
                 if (httpResponse.data === "null" || httpResponse.data == null) {
+//                    var fakeItem = {
+//                        value: associationValue,
+//                    };
+//
+//                    crudContextHolderService.updateLazyAssociationOption(associationKey, fakeItem, true);
                     return null;
+                }
+                var idx = lazyAssociationsBeingResolved.indexOf(associationKey);
+                if (idx !== -1) {
+                    lazyAssociationsBeingResolved.splice(idx, 1);
                 }
                 crudContextHolderService.updateLazyAssociationOption(associationKey, httpResponse.data, true);
                 return httpResponse.data;
@@ -193,6 +210,11 @@
             if (item == null) {
                 if (!crudContextHolderService.associationsResolved()) {
                     log.debug("schema associations not resolved yet, waiting...");
+                    return $q.when(itemValue);
+                }
+
+                if (lazyAssociationsBeingResolved.indexOf(associationKey) !== -1) {
+                    log.debug("association was already requested, waiting");
                     return $q.when(itemValue);
                 }
 
@@ -710,7 +732,7 @@
 
             var urlToUse = url("/api/generic/Association/GetLookupOptions?" + $.param(parameters));
             var jsonString = angular.toJson(datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(fields));
-            return $http.post(urlToUse, jsonString).then(function(response) {
+            return $http.post(urlToUse, jsonString).then(function (response) {
                 return response.data;
             });
         };
