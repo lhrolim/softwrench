@@ -196,6 +196,7 @@
             <property key="list.click.schema" value="editdetail"/>
             <property key="list.defaultorderby" value="workorder.statusdate desc"/>
             <property key="list.noresultsnewschema" value="newdetail"/>
+            <property key="list.search.compositionstoexclude" value="assetmeter,locationmeter"/>
             <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
           </properties>
         </schema>
