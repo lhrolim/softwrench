@@ -35,23 +35,27 @@ angular.module('sw_layout')
     };
 
     function setHeaderPosition() {
-        var siteHeaderElements = $('.site-header');
-        var affixPaginationElements = $('.affix-pagination');
+        var siteHeaderElement = $('.site-header');
+        //var toolbarElement = $('.toolbar-primary:not(.affix-pagination)');
+        var toolbarElement = $('.toolbar-primary');
         var listTheadElement = $('.listgrid-thead:visible');
 
-        if (siteHeaderElements.css('position') === 'fixed') {
+        if (siteHeaderElement.css('position') === 'fixed') {
             //if the header is fixed to the top of the page, set the location of the content, context menu, grid header and filter bar
-            var headerHeight = siteHeaderElements.height();
-            var paginationHeight = affixPaginationElements.height();
+            var headerHeight = siteHeaderElement.height();
+            var toolbarHeight = toolbarElement.height();
             var theaderHeight = listTheadElement.height();
-            var offsetMargin = paginationHeight + theaderHeight - 1;
+            var offsetMargin = toolbarHeight + theaderHeight - 1;
 
             $('.content').css('margin-top', headerHeight);
 
             //only adjust if toolbar is fixed 
-            if (affixPaginationElements.css('position') === 'fixed') {
-                affixPaginationElements.css('top', headerHeight);
+            if (toolbarElement.css('position') === 'fixed') {
+                toolbarElement.css('top', headerHeight);
                 $('#crudbodyform:not([data-modal="true"])').css('margin-top', offsetMargin);
+
+                var dashToolbar = $('.toolbar-primary:not(.affix-pagination)');
+                $('.dash-header').css('margin-top', dashToolbar.height() + theaderHeight - 1);
             }
 
             //only adjust if table header is fixed
@@ -62,7 +66,7 @@ angular.module('sw_layout')
                     adjustment = 135;
                 }
 
-                var offsetTop = headerHeight + paginationHeight - adjustment - 1;
+                var offsetTop = headerHeight + toolbarHeight - adjustment - 1;
 
                 listTheadElement.css('top', offsetTop);
                 $('.listgrid-table').css('margin-top', offsetMargin);
@@ -70,7 +74,7 @@ angular.module('sw_layout')
         } else {
             //reset the lcoation of the content, context menu, grid header and filter bar
             $('.content').css('margin-top', 'auto');
-            affixPaginationElements.css('top', 'auto');
+            toolbarElement.css('top', 'auto');
             listTheadElement.css('top', 'auto');
             $('.listgrid-table').css('margin-top', 'auto');
         }

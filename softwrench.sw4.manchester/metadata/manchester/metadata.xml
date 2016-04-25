@@ -718,7 +718,7 @@
 
         <schema id="detail" platform="web">
           <field attribute="labtransid" hidden="true"/>
-          <field attribute="orgid" hidden="true"/>
+          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.fields.orgid"/>
           <field attribute="siteid" hidden="true"/>
           <field attribute="laborcode" hidden="true" />
           <field attribute="transtype" hidden="true" />
@@ -750,7 +750,8 @@
           </association>
         </schema>
 
-        <schema id="labors" stereotype="list">
+        <schema id="labors" stereotype="compositionlist">
+          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
           <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="@#datamapidx == 0 ? ctx:getUserData().login.toUpperCase() : null" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>

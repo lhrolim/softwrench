@@ -36,9 +36,9 @@
             $(".site-header").width($(".site-header").css("width", "calc(100% - " + activityWidth + "px)"));
 
             if ($(".site-header").css("position") === "fixed") {
-                $(".affix-pagination").width($(".affix-pagination").css("width", "calc(100% - " + activityWidth + "px)"));
+                $(".toolbar-primary").width($(".toolbar-primary").css("width", "calc(100% - " + activityWidth + "px)"));
             } else {
-                $(".affix-pagination").width($(".affix-pagination").css("width", "100%"));
+                $(".toolbar-primary").width($(".toolbar-primary").css("width", "100%"));
             }
 
             $(".listgrid-thead").width($(".listgrid-thead").css("width", "calc(100% - " + activityWidth + "px)"));

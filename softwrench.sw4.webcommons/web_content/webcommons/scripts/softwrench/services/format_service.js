@@ -191,6 +191,25 @@
             return datamap;
         }
 
+        function validateChecked(content) {
+            var isChecked = false;
+            switch (typeof content) {
+                case "boolean":
+                    isChecked = content;
+                    break;
+
+                case "number":
+                    isChecked = content === 1? true : false;
+                    break;
+
+                case "string":
+                    isChecked = content.equalsIc("y") || content.equalsIc("yes") || content.equalsIc("true") || content.equalsIc("1");
+                    break;
+            }
+
+            return isChecked;
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -200,7 +219,8 @@
             formatDate: formatDate,
             adjustDateFormatForAngular: adjustDateFormatForAngular,
             adjustDateFormatForPicker: adjustDateFormatForPicker,
-            doContentStringConversion: doContentStringConversion
+            doContentStringConversion: doContentStringConversion,
+            isChecked: validateChecked
         };
 
         return service;
