@@ -97,6 +97,12 @@
                     <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
                 </div>
 
+                <div ng-switch-when="richtext">
+                    <div class="richtext image-holder"
+                         text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]"
+                         ng-init="initRichtextField(fieldMetadata)" ta-disabled="true">
+                    </div>
+                </div>
 
                 <input type="text"
                        class="form-control"
