@@ -19,17 +19,15 @@
             height: 65px;
             width: 65px;
             text-align: center;
-            /*background: #f00 !important;*/
+
             .icon {
                 font-size: 24px;
                 margin-bottom: 8px;
-                /*color: #666;*/
             }
 
             .text {
                 display: block;
                 font-size: 10px;
-                /*color: #474949;*/
                 text-transform: uppercase;
 
                 .space {
@@ -96,13 +94,7 @@
 
         .group {
             margin: 5px 10px 0;
-            /*&.pagesize {
-                padding-top: 8px;
-            }
 
-            &.pagination {
-                padding-top: 5px;
-            }*/
             &.total {
                 margin-top: 15px;
             }
@@ -145,19 +137,11 @@
                 }
             }
         }
-        /*[position="actions"] {
-            .buttons {
-            display: block;
-            }
-        }*/
+
         &.mobile .context .group.pagination a {
             padding: 8px 6px;
         }
-        /*.pagination {
-            a {
-                font-size: 16px;
-            }
-        }*/
+
         #affixpagination1 {
             padding-top: 0px;
             padding-bottom: 8px;
@@ -165,38 +149,6 @@
         }
     }
 }
-
-.compositiontoolbar, .compositiontop {
-    /*padding: 10px;*/
-    margin-top: -30px;
-    margin-bottom: 30px;
-
-    .wrap {
-        background: #008fc7;
-
-        .buttons {
-            display: inline-block;
-            margin-right: 5px;
-            margin: 10px 0 10px 10px;
-
-            .btn {
-                font-size: 12px;
-                margin-bottom: 0;
-                background: transparent;
-                color: #fff;
-
-                &:hover {
-                    background: rgba(#fff, 0.3);
-                }
-            }
-        }
-    }
-
-    .no-toolbar {
-        height: 1px;
-    }
-}
-
 
 @media all and (min-width: 480px) {
     .container {

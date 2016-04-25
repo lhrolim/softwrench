@@ -15,19 +15,6 @@
         return null;
     }
 
-
-    $scope.toolbarHasButtons = function () {
-        var commands = commandService.getBarCommands($scope.schema, $scope.position);
-
-        if (commands == null) {
-            return false;
-        }
-
-        return commands.some(function(command) {
-            return $scope.shouldShowCommand($scope.getCommand(command));
-        });
-    }    
-
     $scope.getGridToolbar = function () {
         return commandService.getBarCommands($scope.schema, $scope.position);
     }
