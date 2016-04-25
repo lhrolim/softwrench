@@ -179,7 +179,7 @@
           <field attribute="linecost" label="Line Cost" hidden="true"/>
         </schema>
 
-        <schema id="newdetail" title="Labor Report" stereotype="detailnew">
+        <schema id="newdetail" title="Labor Report Details" stereotype="detailnew">
           <properties>
             <property key="schema.noninternal" value="true"/>
             <property key="nextschema.schemaid" value="list"/>
@@ -240,7 +240,7 @@
           </field>
         </schema>
 
-        <schema id="editdetail" title="Labor Report" stereotype="detail">
+        <schema id="editdetail" title="Labor Report Details" stereotype="detail">
           <commandbars>
             <commandgroup position="actions">
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
