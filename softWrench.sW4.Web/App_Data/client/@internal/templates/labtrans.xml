@@ -179,7 +179,7 @@
           <field attribute="linecost" label="Line Cost" hidden="true"/>
         </schema>
 
-        <schema id="newdetail" title="Labor Report Details" stereotype="detailnew">
+        <schema id="newdetail" title="New Labor Transaction" stereotype="detailnew">
           <properties>
             <property key="schema.noninternal" value="true"/>
             <property key="nextschema.schemaid" value="list"/>
