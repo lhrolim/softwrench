@@ -210,34 +210,37 @@
             <renderer type="autocompleteclient" />
             <event type="afterchange" service="labtranService" method="aftercraftchange"/>
           </association>-->
-          <field label="Start Date" requiredexpression="true" attribute="startdate" default="@now">
-            <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
-            <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
-          </field>
-          <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8">
-            <event type="afterchange" service="labtranService" method="updateLineCost"/>
-          </field>
-          <association target="transtype" label="Work Type" labelfield="lttype_.description" requiredexpression="true">
-            <renderer type="lookup"/>
-          </association>
-          <association target="refwo" label="Work Order" labelfield="workorder_.description" requiredexpression="@transtype == 'WORK' &amp;&amp; (@location == null &amp;&amp; @assetnum == null &amp;&amp; @gldebitacct == null)">
-            <renderer type="lookup"/>
-          </association>
-          <association target="location" label="Location" labelfield="location_.description" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @assetnum == null &amp;&amp; @gldebitacct == null)">
-            <renderer type="lookup"/>
-          </association>
-          <association target="assetnum" label="Asset" labelfield="asset_.description" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @gldebitacct == null)">
-            <renderer type="lookup"/>
-          </association>
-          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
-            <renderer type="lookup"/>
-          </association>
-          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.craft" extraprojectionvalues="premiumpay_.defaultrate">
-            <renderer type="lookup"/>
-          </association>
-          <field attribute="premiumpayhours" label="Premium Pay Hours">
-            <event type="afterchange" service="labtranService" method="updateLineCost"/>
-          </field>
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <field label="Start Date" requiredexpression="true" attribute="startdate" default="@now">
+              <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
+              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+            </field>
+            <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8">
+              <event type="afterchange" service="labtranService" method="updateLineCost"/>
+            </field>
+            <association target="transtype" label="Work Type" labelfield="lttype_.description" requiredexpression="true">
+              <renderer type="lookup"/>
+            </association>
+            <association target="refwo" label="Work Order" labelfield="workorder_.description" requiredexpression="@transtype == 'WORK' &amp;&amp; (@location == null &amp;&amp; @assetnum == null &amp;&amp; @gldebitacct == null)">
+              <renderer type="lookup"/>
+            </association>
+            <association target="location" label="Location" labelfield="location_.description" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @assetnum == null &amp;&amp; @gldebitacct == null)">
+              <renderer type="lookup"/>
+            </association>
+            <association target="assetnum" label="Asset" labelfield="asset_.description" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @gldebitacct == null)">
+              <renderer type="lookup"/>
+            </association>
+            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
+              <renderer type="lookup"/>
+            </association>
+            <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.craft" extraprojectionvalues="premiumpay_.defaultrate">
+              <renderer type="lookup"/>
+            </association>
+            <field attribute="premiumpayhours" label="Premium Pay Hours">
+              <event type="afterchange" service="labtranService" method="updateLineCost"/>
+            </field>
+          </section>
         </schema>
 
         <schema id="editdetail" title="Labor Report Details" stereotype="detail">
@@ -272,43 +275,46 @@
             <renderer type="datetime"/>
           </field>
 
-          <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
-          </association>
-          <association label="Craft" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
-            <renderer type="lookup" />
-            <event type="afterchange" service="labtranService" method="aftercraftchange"/>
-          </association>
-          <field label="Start Date" requiredexpression="true" attribute="startdate">
-            <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
-            <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
-          </field>
-          <field attribute="regularhrs" label="Regular Hours" requiredexpression="true">
-            <event type="afterchange" service="labtranService" method="updateLineCost"/>
-          </field>
-          <association target="transtype" label="Work Type" labelfield="lttype_.description"  requiredexpression="true">
-            <renderer type="lookup"/>
-          </association>
-          <association target="refwo" label="Work Order" labelfield="workorder_.description" dependantfields="siteid,orgid" requiredexpression="@transtype == 'WORK' &amp;&amp; (@location == null &amp;&amp; @assetnum == null &amp;&amp; @gldebitacct == null)">
-            <dataprovider prefilterfunction = "FilterOpenWorkorders" />
-            <renderer type="lookup"/>
-          </association>
-          <association target="location" label="Location" labelfield="location_.description" dependantfields="siteid,orgid" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @assetnum == null &amp;&amp; @gldebitacct == null)">
-            <renderer type="lookup"/>
-          </association>
-          <association target="assetnum" label="Asset" labelfield="asset_.description" dependantfields="siteid,orgid" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @gldebitacct == null)">
-            <renderer type="lookup"/>
-          </association>
-          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
-            <renderer type="lookup"/>
-          </association>
-          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.craft" extraprojectionvalues="premiumpay_.defaultrate">
-            <renderer type="lookup"/>
-          </association>
-          <field attribute="premiumpayhours" label="Premium Pay Hours">
-            <event type="afterchange" service="labtranService" method="updateLineCost"/>
-          </field>
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="labtranService" method="afterlaborchange"/>
+            </association>
+            <association label="Craft" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
+              <renderer type="lookup" />
+              <event type="afterchange" service="labtranService" method="aftercraftchange"/>
+            </association>
+            <field label="Start Date" requiredexpression="true" attribute="startdate">
+              <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
+              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+            </field>
+            <field attribute="regularhrs" label="Regular Hours" requiredexpression="true">
+              <event type="afterchange" service="labtranService" method="updateLineCost"/>
+            </field>
+            <association target="transtype" label="Work Type" labelfield="lttype_.description"  requiredexpression="true">
+              <renderer type="lookup"/>
+            </association>
+            <association target="refwo" label="Work Order" labelfield="workorder_.description" dependantfields="siteid,orgid" requiredexpression="@transtype == 'WORK' &amp;&amp; (@location == null &amp;&amp; @assetnum == null &amp;&amp; @gldebitacct == null)">
+              <dataprovider prefilterfunction = "FilterOpenWorkorders" />
+              <renderer type="lookup"/>
+            </association>
+            <association target="location" label="Location" labelfield="location_.description" dependantfields="siteid,orgid" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @assetnum == null &amp;&amp; @gldebitacct == null)">
+              <renderer type="lookup"/>
+            </association>
+            <association target="assetnum" label="Asset" labelfield="asset_.description" dependantfields="siteid,orgid" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @gldebitacct == null)">
+              <renderer type="lookup"/>
+            </association>
+            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
+              <renderer type="lookup"/>
+            </association>
+            <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.craft" extraprojectionvalues="premiumpay_.defaultrate">
+              <renderer type="lookup"/>
+            </association>
+            <field attribute="premiumpayhours" label="Premium Pay Hours">
+              <event type="afterchange" service="labtranService" method="updateLineCost"/>
+            </field>
+          </section>
         </schema>
       </schemas>
     </application>
