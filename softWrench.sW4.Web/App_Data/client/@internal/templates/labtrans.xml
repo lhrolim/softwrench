@@ -66,14 +66,14 @@
           </properties>
           <commandbars>
             <commandgroup position="actions">
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
+              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
                 <!--<command id="addlabor" icon="fa fa-clock-o" label="Create Labor"
                          service="labtranService" method="openNewDetailModal"/>-->
-                <command id="approvelabors" icon="fa fa-check" label="Approve Labor"
+                <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
                          service="labtranService" method="approveMultipleLabtrans"/>
                 <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
                          service="labtranService" method="deleteMultipleLabtrans"/>
-              </container>
+              <!--</container>-->
             </commandgroup>
           </commandbars>
           <field attribute="labtransid" hidden="true"/>
@@ -143,7 +143,7 @@
             <renderer type="lookup"/>
           </association>
         </schema>
-        
+
         <schema id="wolabors" stereotype="compositionlist">
           <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
           <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
@@ -188,7 +188,7 @@
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
           <field attribute="enterby" hidden="true" />
-          
+
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
           <field label="Trans Date" requiredexpression="true" attribute="transdate" default="@now" enableexpression="false" hidden="true">
@@ -242,14 +242,14 @@
 
         <schema id="editdetail" title="Labor Report Details" stereotype="detail">
           <commandbars>
-            <commandgroup position="actions">
+            <!--<commandgroup position="actions">-->
               <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command id="approvelabors" icon="fa fa-check" label="Approve Labor"
+                <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
                          service="labtranService" method="approveSingleLabtrans"/>
                 <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
                          service="labtranService" method="deleteSingleLabtrans"/>
               </container>
-            </commandgroup>
+            <!--</commandgroup>-->
           </commandbars>
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.fields.orgid"/>

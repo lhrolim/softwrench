@@ -10,7 +10,7 @@
     </div>
     <div class="part right total" ng-if="layout.simple" ng-style="sidePanelStyle()">
         <label ng-if="isHapag()">{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
-        <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Items: {0}",[paginationData.totalCount])}}</label>
+        <label ng-if="!isHapag()" class="text">{{i18N('_grid.pagination.display',"Items: {0}",[paginationData.totalCount])}}</label>
     </div>
     <div class="part pagesize" ng-show="shouldShowPagination()" ng-if="!layout.simple">
         <div class="form-inline">

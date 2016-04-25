@@ -12,22 +12,58 @@
         width: 100%;
         background: #eee;
         border-bottom: #000 1px solid;
-        padding: 5px 40px 3px 0;
+        padding: 5px 40px 5px 0;
+
+        .large-button {
+            padding: 10px 0 !important;
+            height: 65px;
+            width: 65px;
+            text-align: center;
+
+            .icon {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+
+            .text {
+                display: block;
+                font-size: 10px;
+                text-transform: uppercase;
+
+                .space {
+                    display: none;
+                }
+            }
+
+            &.separator {
+                margin: 5px 10px;
+            }
+        }
 
         .search-options {
-            margin-left: 10px;
-            margin-top: 4px;
+            margin-top: 5px;
             float: left;
+
+            &.btn-group.open button {
+                box-shadow: none;
+            }
 
             button {
                 background: transparent;
+                padding-left: 0;
+                padding-right: 0;
+                font-size: 12px;
+
+                &:active {
+                    box-shadow: none;
+                }
             }
 
             .dropdown-menu {
                 padding: 10px 15px;
 
                 li {
-                    margin-top: 5px;
+                    margin-top: 10px;
 
                     &:first-child {
                         margin-top: 0;
@@ -36,6 +72,7 @@
                     input[type="checkbox"] {
                         position: relative;
                         top: 2px;
+                        height: auto;
                     }
                 }
             }
@@ -58,14 +95,6 @@
         .group {
             margin: 5px 10px 0;
 
-            &.pagesize {
-                padding-top: 8px;
-            }
-
-            &.pagination {
-                padding-top: 5px;
-            }
-
             &.total {
                 margin-top: 15px;
             }
@@ -85,7 +114,7 @@
 
         .buttons {
             display: inline-block;
-            margin: 0 5px 5px 0;
+            margin-right: 5px;
 
             .btn {
                 font-size: 12px;
@@ -93,10 +122,18 @@
 
             .btn-context {
                 background: transparent;
-                padding: 7px 12px 5px;
+                padding: 7px 12px 4px;
 
                 &:hover {
                     background: #ddd;
+                }
+
+                .icon {
+                    color: #666;
+                }
+
+                .text {
+                    color: #474949;
                 }
             }
         }
@@ -105,27 +142,10 @@
             padding: 8px 6px;
         }
 
-        .pagination {
-            a {
-                font-size: 16px;
-            }
-        }
-
         #affixpagination1 {
             padding-top: 0px;
             padding-bottom: 8px;
             border-bottom: none;
-        }
-    }
-}
-
-.compositiontoolbar, .compositiontop {
-    .buttons {
-        display: inline-block;
-        margin: 0 5px 5px 0;
-
-        .btn {
-            font-size: 12px;
         }
     }
 }

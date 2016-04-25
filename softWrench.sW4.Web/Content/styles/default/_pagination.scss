@@ -40,9 +40,9 @@
 
                 .page {
                     display: inline-block;
-                    border: 1px solid #ccc;
+                    border: 1px solid transparent;
                     border-radius: 5px;
-                    padding-top: 3px;
+                    padding: 3px 5px;
                     min-width: 24px;
                     height: 24px;
                     text-align: center;
@@ -50,7 +50,7 @@
                     margin-left: 5px;
 
                     &:hover {
-                        background: #ccc;
+                        background: #ddd;
                     }
 
                     &.current {
@@ -81,10 +81,31 @@
     }
 }
 
+pagination.large-button {
+    margin-top: 1px !important;
+    .pagination {
+        margin: 0;
+
+        .direction {
+            font-size: 24px;
+            margin: 0 !important;
+        }
+    }
+
+    .total {
+        margin: 0;
+        float: none !important;
+
+        .text {
+            text-transform: uppercase;
+        }
+    }
+}
+
 .pagination {
     [disabled="disabled"] {
         i {
-            color: #ccc;
+            color: #ccc !important;
             cursor: default;
         }
     }

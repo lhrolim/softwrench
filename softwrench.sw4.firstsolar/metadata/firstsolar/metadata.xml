@@ -400,7 +400,7 @@
           <commandbars>
             <commandgroup position="actions">
 <!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command id="Create" icon="fa-tachometer" label="Create Workorders"
+                <command id="Create" icon="fa-wrench" label="Create Work Orders"
                          service="locationService" method="initBatchWorkorder"
                          parameters="schema,datamap" />
 <!--              </container>-->
@@ -516,7 +516,7 @@
           <commandbars>
             <commandgroup position="actions">
 <!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command id="Create" icon="fa-tachometer" label="Create Workorders"
+                <command id="Create" icon="fa-wrench" label="Create Work Orders"
                          service="assetService" method="initBatchWorkorder"
                          parameters="schema,datamap" />
 <!--              </container>-->

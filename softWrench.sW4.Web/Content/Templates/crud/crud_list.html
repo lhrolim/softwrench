@@ -15,7 +15,7 @@
                              search-template="searchTemplate"
                              panelid="panelid"
                              class="gridtop" />
-
+                <div class="separator large-button" ng-if="ismodal !== 'true'">&nbsp;</div>
                 <!-- quick search input -->
                 <div ng-show="shouldShowGridNavigation()">
                     <div class="quick-search col-xs-4">
@@ -34,46 +34,48 @@
                                 </button>
                             </span>
                         </div>
-                    </div>
-                    <div class="btn-group search-options" ng-if="schema.relatedCompositions.length > 0">
-                        <button type="button" class="btn btn-context dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
-                            <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i>
-                            <span>Search Options</span>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <!--TODO: Make recursive...-->
-                            <li ng-repeat="composition in schema.relatedCompositions">
-                                <input type="checkbox"
-                                       name="composition.value"
-                                       ng-checked="isCompositionSelectedForSearching(composition.value)"
-                                       ng-click="toggleCompositionForSearching(composition.value)"/>&ensp;{{composition.label}}
 
-                            </li>
-                        </ul>
+                        <div class="btn-group search-options" ng-if="schema.relatedCompositions.length > 0">
+                            <button type="button" class="btn btn-context dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
+                                <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i>
+                                <span>Search Options</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <!--TODO: Make recursive...-->
+                                <li ng-repeat="composition in schema.relatedCompositions">
+                                    <input type="checkbox"
+                                           name="composition.value"
+                                           ng-checked="isCompositionSelectedForSearching(composition.value)"
+                                           ng-click="toggleCompositionForSearching(composition.value)" />&ensp;{{composition.label}}
+
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-            <!-- simple pagination -->
+                <div class="separator large-button" ng-if="ismodal !== 'true'" ng-show="showActionSeparator()">&nbsp;</div>
+                <gridtoolbar advancedsearchdata="vm.quickSearchData"
+                             position="{{getGridCommandPosition('commandbar.top.right','actions')}}"
+                             datamap="datamap"
+                             schema="schema"
+                             pagination-data="paginationData"
+                             search-data="searchData"
+                             search-sort="searchSort"
+                             search-operator="searchOperator"
+                             search-template="searchTemplate"
+                             panelid="panelid"
+                             class="gridtop"/>
+
+                <!-- simple pagination -->
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema="schema" application-name="{{schema.applicationName}}"
                         search-data="searchData"
                         search-operator="searchOperator"
                         panelid="panelid"
-                        pagination-simple-layout />
-
-            <gridtoolbar advancedsearchdata="vm.quickSearchData"
-                         position="{{getGridCommandPosition('commandbar.top.right','actions')}}"
-                         datamap="datamap"
-                         schema="schema"
-                         pagination-data="paginationData"
-                         search-data="searchData"
-                         search-sort="searchSort"
-                         search-operator="searchOperator"
-                         search-template="searchTemplate"
-                         panelid="panelid"
-                         class="gridtop right"
-                         style="float:right" />
+                        pagination-simple-layout
+                        class="large-button"/>
         </div>
 
     </div>

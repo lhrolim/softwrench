@@ -3,7 +3,7 @@
 
     var app = angular.module('sw_layout');
 
-    app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService, schemaService, redirectService, spinService) {
+    app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService, schemaService, redirectService, spinService, commandService) {
         "ngInject";
 
         /// <summary>
@@ -108,6 +108,10 @@
             associationService, crudContextHolderService, alertService,
             validationService, schemaService, $timeout, $interval, eventService, $log, expressionService, focusService, modalService,
             compositionService, attachmentService, sidePanelService) {
+
+                this.shouldshowprint = function () {
+                    return $scope.schema.schemaId != 'newdetail';
+                }
 
                 $(document).on("sw_autocompleteselected", function (event, key) {
                     focusService.resetFocusToCurrent($scope.schema, key);
@@ -335,12 +339,26 @@
                     return "true" != property && $scope.ismodal == "false";
                 };
 
+                $scope.showdirectionButtons = function () {
+                    return $scope.schema.schemaId == 'editdetail';
+                }
+
                 $scope.disableNavigationButton = function (direction) {
                     var value = contextService.fetchFromContext("crud_context", true);
                     if (value == undefined) {
                         return true;
                     }
                     return direction == 0 ? value.detail_previous : value.detail_next;
+                }
+
+                $scope.showActionSeparator = function (position) {
+                    var commands = commandService.getBarCommands($scope.schema, position);
+
+                    if (commands == null) {
+                        return false;
+                    }
+
+                    return commands.length > 0;
                 }
 
                 $scope.isEditing = function (schema) {

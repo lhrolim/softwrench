@@ -53,7 +53,7 @@
 
           <commandbars>
             <commandgroup position="gridtop">
-              <command id="new" icon="fa-plus" service="redirectService" method="goToApplicationView" parameters="person,newPersonDetail" label="New User" tooltip="New User" position="left"/>
+              <command id="new" icon="fa-plus" service="redirectService" method="goToApplicationView" parameters="person,newPersonDetail" label="User" tooltip="New User" position="left" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
         </schema>
@@ -117,8 +117,8 @@
           <commandbars>
             <commandgroup position="detail.primary">
               <removecommand id="save"/>
-              <command id="save" icon="fa fa-check" label="Save" service="personService" method="submitPerson" position="left" parameters="schema,datamap"/>
-              <command id="cancel" icon="fa-times" service="personService" method="cancelEdition" label="Cancel" tooltip="Cancel"/>
+              <command id="save" icon="fa fa-check" label="Save" service="personService" method="submitPerson" position="left" parameters="schema,datamap" cssclasses="large-button"/>
+              <command id="cancel" icon="fa-times" service="personService" method="cancelEdition" label="Cancel" tooltip="Cancel" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
         </schema>
