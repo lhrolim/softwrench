@@ -106,7 +106,7 @@
             <commandgroup position="detail.primary" removeundeclared="false">
               <removecommand id="print"/>
               <removecommand id="cancel"/>
-              <command id="cancelTransfer" icon="fa fa-times" label="Cancel" service="invtransferService" method="cancel"/>
+              <command id="cancelTransfer" icon="fa fa-times" label="Cancel" service="invtransferService" method="cancel" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
           <event type="onload" service="scannerdetectionService" method="initInvuseTransferDetailListener"/>
