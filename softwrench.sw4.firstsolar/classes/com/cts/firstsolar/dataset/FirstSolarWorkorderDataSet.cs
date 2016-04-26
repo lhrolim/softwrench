@@ -41,7 +41,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var clause = new StringBuilder("(");
             clause.Append("asset.location = '").Append(location).Append("'");
             clause.Append(" OR asset.location in ( ");
-            clause.Append("select l.location from locations l inner join locancestor a on l.location = a.location and l.siteid = a.siteid ");
+            clause.Append("select a.location from locancestor a ");
             clause.Append("where a.ancestor = '").Append(location).Append("')");
             clause.Append(")");
             Log.Debug(string.Format("Done where clause to filter assets from location: {0}", clause));

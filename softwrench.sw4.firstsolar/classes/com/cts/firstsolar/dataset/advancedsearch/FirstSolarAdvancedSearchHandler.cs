@@ -103,7 +103,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             clause.Append(tableName).Append(".location in (").Append(joinedLocations).Append(")");
             if (includeSublocs) {
                 clause.Append(" OR ").Append(tableName).Append(".location in ( ");
-                clause.Append("select l.location from locations l inner join locancestor a on l.location = a.location and l.siteid = a.siteid where a.ancestor in ");
+                clause.Append("select a.location from locancestor a where a.ancestor in ");
                 clause.Append("(").Append(joinedLocations).Append(")");
                 clause.Append(")");
             }
