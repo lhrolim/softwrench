@@ -22,7 +22,7 @@ namespace softwrench.sW4.test.Metadata {
         [TestMethod]
         public void TestMetadataValidation() {
             foreach (var clientName in TestUtil.ClientNames()) {
-                if (clientName == "pae" || clientName == "hapag") {
+                if (clientName == "hapag") {
                     // pae -> maximo 7.1
                     // hapag -> too alien
                     continue;

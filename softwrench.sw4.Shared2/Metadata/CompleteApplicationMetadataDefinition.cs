@@ -64,7 +64,7 @@ namespace softwrench.sW4.Shared2.Metadata {
         //        public MobileApplicationSchema _mobileSchema;
         private readonly IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> _schemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
 
-        private readonly IEnumerable<ApplicationSchemaDefinition> _schemasList = new List<ApplicationSchemaDefinition>();
+        private readonly ISet<ApplicationSchemaDefinition> _schemasList = new HashSet<ApplicationSchemaDefinition>();
 
         public IEnumerable<DisplayableComponent> DisplayableComponents = new List<DisplayableComponent>();
 
@@ -103,7 +103,7 @@ namespace softwrench.sW4.Shared2.Metadata {
             if (paramters.ContainsKey(ApplicationMetadataConstants.FetchLimitProperty)) {
                 FetchLimit = int.Parse(paramters[ApplicationMetadataConstants.FetchLimitProperty].ToString());
             }
-            _schemasList = _schemas.Values;
+            _schemasList = new HashSet<ApplicationSchemaDefinition>(_schemas.Values);
             DisplayableComponents = components;
             Role = role ?? applicationName;
             AuditFlag = auditFlag;

@@ -830,6 +830,25 @@
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
+        <relationship to="asset" qualifier="subassembly" collection="true">
+          <relationshipAttribute from="assetnum" to="ancestor" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="sparepart" collection="true">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="assetmeter" collection="true">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+        <relationship to="assetlocrelation" collection="true" ignoreprimary="true">
+          <!--Required to have a relationshipAttribute on relationship declaration, real query build in prefilterfunction-->
+          <relationshipAttribute query=""/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="asset" />
@@ -1090,6 +1109,13 @@
           <!--Required to have a relationshipAttribute on relationship declaration, real query build in prefilterfunction-->
           <relationshipAttribute query=""/>
         </relationship>
+       <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+        <relationship to="locoper">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="locations" />
@@ -1291,8 +1317,15 @@
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
       <relationships>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
         <relationship to="assetattribute">
           <relationshipAttribute from="assetattrid" to="assetattrid" primary="true"/>
+        </relationship>
+        <relationship to="classspec">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+          <relationshipAttribute from="assetattrid" to="assetattrid"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -1353,6 +1386,11 @@
         <attribute name="positeid" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
+      <relationships>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="assettrans" />
       </connectorParameters>
@@ -1751,7 +1789,7 @@
         <relationship to="person" qualifier="affectedperson">
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
         </relationship>
-      
+
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="incident" />
@@ -3850,8 +3888,25 @@
         <attribute name="premiumpayratetype" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
+      <relationships>
+        <relationship to="workorder">
+          <relationshipAttribute from="refwo" to="wonum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="labtrans" />
+        <connectorParameter key="integration_interface" value="SWEMPACT" />
       </connectorParameters>
     </entity>
 
@@ -4201,7 +4256,9 @@
         <relationship to="person" qualifier="inspector">
           <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
-
+        <relationship to="synonymdomain" ignoreprimary="true">
+          <relationshipAttribute literal="avecalcmethod" to="domainid"/>
+        </relationship>
       </relationships>
 
 
@@ -4249,6 +4306,9 @@
         <relationship to="person" qualifier="inspector">
           <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
+        <relationship to="synonymdomain" qualifier="averagemethod" ignoreprimary="true">
+          <relationshipAttribute literal="averagemethod" to="domainid"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="locationmeter" />
@@ -4282,6 +4342,217 @@
         <connectorParameter key="dbtable" value="COMMTEMPLATE" />
       </connectorParameters>
     </entity>
+
+    <entity name="assetlocrelation" idAttribute="assetlocrelationid">
+      <attributes>
+        <attribute name="sourceassetnum" type="varchar" required="false" />
+        <attribute name="sourcelocation" type="varchar" required="false" />
+        <attribute name="targetassetnum" type="varchar" required="false" />
+        <attribute name="targetlocation" type="varchar" required="false" />
+        <attribute name="sourcestartmeasure" type="decimal" required="false" />
+        <attribute name="targetstartmeasure" type="decimal" required="false" />
+        <attribute name="sourceendmeasure" type="decimal" required="false" />
+        <attribute name="targetendmeasure" type="decimal" required="false" />
+        <attribute name="sourcestartoffset" type="decimal" required="false" />
+        <attribute name="sourcestartyoffset" type="decimal" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="sourcestartzoffset" type="decimal" required="false" />
+        <attribute name="targetstartoffset" type="decimal" required="false" />
+        <attribute name="targetstartyoffset" type="decimal" required="false" />
+        <attribute name="targetstartzoffset" type="decimal" required="false" />
+        <attribute name="sourceendoffset" type="decimal" required="false" />
+        <attribute name="sourceendyoffset" type="decimal" required="false" />
+        <attribute name="sourceendzoffset" type="decimal" required="false" />
+        <attribute name="targetendoffset" type="decimal" required="false" />
+        <attribute name="targetendyoffset" type="decimal" required="false" />
+        <attribute name="targetendzoffset" type="decimal" required="false" />
+        <attribute name="sourcestartassetfeatureid" type="bigint" required="false" />
+        <attribute name="targetstartassetfeatureid" type="bigint" required="false" />
+        <attribute name="sourceendassetfeatureid" type="bigint" required="false" />
+        <attribute name="targetendassetfeatureid" type="bigint" required="false" />
+        <attribute name="assetlocrelationid" type="bigint" required="true" />
+        <attribute name="assetrelationnum" type="varchar" required="true" />
+        <attribute name="createddate" type="datetime" required="false" />
+        <attribute name="sourcestartyoffsetref" type="varchar" required="false" />
+        <attribute name="sourceendyoffsetref" type="varchar" required="false" />
+        <attribute name="sourcestartzoffsetref" type="varchar" required="false" />
+        <attribute name="sourceendzoffsetref" type="varchar" required="false" />
+        <attribute name="targetstartyoffsetref" type="varchar" required="false" />
+        <attribute name="targetendyoffsetref" type="varchar" required="false" />
+        <attribute name="targetstartzoffsetref" type="varchar" required="false" />
+        <attribute name="targetendzoffsetref" type="varchar" required="false" />
+        <attribute name="islinearref" type="smallint" required="true" />
+        <attribute name="sourcebasemeasureunitid" type="varchar" required="false" />
+        <attribute name="sourceendbasemeasure" type="decimal" required="false" />
+        <attribute name="sourceendmeasureunitid" type="varchar" required="false" />
+        <attribute name="sourceendoffsetunitid" type="varchar" required="false" />
+        <attribute name="sourcestartbasemeasure" type="decimal" required="false" />
+        <attribute name="sourcestartmeasureunitid" type="varchar" required="false" />
+        <attribute name="sourcestartoffsetunitid" type="varchar" required="false" />
+        <attribute name="targetbasemeasureunitid" type="varchar" required="false" />
+        <attribute name="targetstartmeasureunitid" type="varchar" required="false" />
+        <attribute name="targetstartoffsetunitid" type="varchar" required="false" />
+        <attribute name="targetendmeasureunitid" type="varchar" required="false" />
+        <attribute name="targetendoffsetunitid" type="varchar" required="false" />
+        <attribute name="targetstartbasemeasure" type="decimal" required="false" />
+        <attribute name="targetendbasemeasure" type="decimal" required="false" />
+        <attribute name="assetlocrelhistid" type="int" required="false" />
+        <attribute name="linearassetlocrelationid" type="int" required="true" />
+        <attribute name="relsequencenum" type="int" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="asset" qualifier="sourceasset">
+          <relationshipAttribute from="sourceassetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="location" qualifier="sourcelocation">
+          <relationshipAttribute from="sourcelocation" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="asset" qualifier="targetasset">
+          <relationshipAttribute from="targetassetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="location" qualifier="targetlocation">
+          <relationshipAttribute from="targetlocation" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="assetlocrelation" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="ppcraftrate" idAttribute="ppcraftrateid">
+      <attributes>
+        <attribute name="craft" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="ratetype" type="varchar" required="false" />
+        <attribute name="rate" type="decimal" required="false" />
+        <attribute name="inherit" type="smallint" required="true" />
+        <attribute name="ppcraftrateid" type="bigint" required="true" />
+        <attribute name="premiumpaycode" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="premiumpay">
+          <relationshipAttribute from="premiumpaycode" to="premiumpaycode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="ppcraftrate" />
+      </connectorParameters>
+    </entity>
+    <entity name="premiumpay" idAttribute="premiumpayid">
+      <attributes>
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="defaultratetype" type="varchar" required="true" />
+        <attribute name="defaultrate" type="decimal" required="false" />
+        <attribute name="globalppcode" type="smallint" required="true" />
+        <attribute name="premiumpayid" type="bigint" required="true" />
+        <attribute name="premiumpaycode" type="varchar" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="premiumpay" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="classspec" idAttribute="classspecid">
+      <attributes>
+        <attribute name="classstructureid" type="varchar" required="true" />
+        <attribute name="assetattrid" type="varchar" required="true" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="domainid" type="varchar" required="false" />
+        <attribute name="attrdescprefix" type="varchar" required="false" />
+        <attribute name="cs01" type="varchar" required="false" />
+        <attribute name="cs02" type="varchar" required="false" />
+        <attribute name="cs03" type="varchar" required="false" />
+        <attribute name="cs04" type="datetime" required="false" />
+        <attribute name="cs05" type="decimal" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="section" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="classspecid" type="bigint" required="true" />
+        <attribute name="applydownhier" type="smallint" required="true" />
+        <attribute name="inheritedfrom" type="varchar" required="false" />
+        <attribute name="inheritedfromid" type="bigint" required="false" />
+        <attribute name="tableattribute" type="varchar" required="false" />
+        <attribute name="lookupname" type="varchar" required="false" />
+        <attribute name="linkedtoattribute" type="varchar" required="false" />
+        <attribute name="linkedtosection" type="varchar" required="false" />
+        <attribute name="assetattributeid" type="bigint" required="false" />
+        <attribute name="continuous" type="smallint" required="true" />
+        <attribute name="lineartype" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="classspec" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="locoper" idAttribute="locoperid">
+      <attributes>
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="calnum" type="varchar" required="false" />
+        <attribute name="locpriority" type="int" required="false" />
+        <attribute name="itemnum" type="varchar" required="false" />
+        <attribute name="failurecode" type="varchar" required="false" />
+        <attribute name="classification" type="varchar" required="false" />
+        <attribute name="flo1" type="varchar" required="false" />
+        <attribute name="flo2" type="varchar" required="false" />
+        <attribute name="flo3" type="varchar" required="false" />
+        <attribute name="flo4" type="varchar" required="false" />
+        <attribute name="flo5" type="varchar" required="false" />
+        <attribute name="flo6" type="decimal" required="false" />
+        <attribute name="flo7" type="datetime" required="false" />
+        <attribute name="flo8" type="decimal" required="false" />
+        <attribute name="flo9" type="varchar" required="false" />
+        <attribute name="flo10" type="int" required="false" />
+        <attribute name="warrantyexpdate" type="datetime" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="false" />
+        <attribute name="shiftnum" type="varchar" required="false" />
+        <attribute name="groupname" type="varchar" required="false" />
+        <attribute name="locoperid" type="bigint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="metergroup">
+          <relationshipAttribute from="groupname" to="groupname" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="locoper" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="metergroup" idAttribute="metergroupid">
+      <attributes>
+        <attribute name="groupname" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="metergroupid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="metergroup" />
+      </connectorParameters>
+    </entity>
+
   </entities>
 
 </metadata>

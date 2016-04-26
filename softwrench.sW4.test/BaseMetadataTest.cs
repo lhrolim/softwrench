@@ -17,6 +17,8 @@ namespace softwrench.sW4.test {
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\chicago", "Client\\chicago")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\entegra", "Client\\entegra")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\gric", "Client\\gric")]
+    [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\pae", "Client\\pae")]
+    [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\umc", "Client\\umc")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\firstsolar", "Client\\firstsolar")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\manchester", "Client\\manchester")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\kongsberg", "Client\\kongsberg")]
