@@ -11,7 +11,6 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
-using WebGrease.Css.Extensions;
 
 namespace softwrench.sw4.dashboard.classes.startup {
     public class ChartInitializer : ISWEventListener<ApplicationStartedEvent>, IOrdered {
@@ -119,7 +118,18 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 }
             };
 
-            return CreateDashboard(SrChartDashboardTitle,SrChartDashboardAlias, panels);
+            var grid = new DashboardGridPanel() {
+                Alias = "sr.grid",
+                Title = "Service Requests",
+                Application = "servicerequest",
+                AppFields = "ticketid,description,reportedby,owner,changedate,status",
+                DefaultSortField = "changedate",
+                SchemaRef = "list",
+                Limit = 15,
+                Size = 12
+            };
+
+            return CreateDashboard(SrChartDashboardTitle,SrChartDashboardAlias, panels, grid);
         }
 
         #endregion
@@ -176,7 +186,18 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 },
             };
 
-            return CreateDashboard(WoChartDashboardTitle, WoChartDashboardAlias, panels);
+            var grid = new DashboardGridPanel() {
+                Alias = "wo.grid",
+                Title = "Work Orders",
+                Application = "workorder",
+                AppFields = "wonum,description,location,asset_.description,status",
+                DefaultSortField = "wonum",
+                SchemaRef = "list",
+                Limit = 15,
+                Size = 12
+            };
+
+            return CreateDashboard(WoChartDashboardTitle, WoChartDashboardAlias, panels, grid);
         }
 
         #endregion
@@ -192,22 +213,29 @@ namespace softwrench.sw4.dashboard.classes.startup {
             return count > 0;
         }
 
-        private Dashboard CreateDashboard(string title, string alias, ICollection<DashboardGraphicPanel> panels) {
+        private Dashboard CreateDashboard(string title, string alias, ICollection<DashboardGraphicPanel> panels, DashboardGridPanel grid) {
             var now = DateTime.Now;
 
+            var allPanels = new List<DashboardBasePanel>();
+            allPanels.AddRange(panels);
+            allPanels.Add(grid);
+
             // save panels and replace references by hibernate-managed ones
-            panels.ForEach(p => {
+            allPanels.ForEach(p => {
                 p.CreationDate = now;
                 p.UpdateDate = now;
-                p.Provider = "swChart";
                 p.Visible = true;
                 p.Filter = new DashboardFilter();
+                var panel = p as DashboardGraphicPanel;
+                if (panel != null) {
+                    panel.Provider = "swChart";
+                }
             });
-            panels = _dao.BulkSave(panels).ToList();
+            allPanels = _dao.BulkSave(allPanels).ToList();
 
             // create relationship entities
             var position = 0;
-            var panelRelationships = panels
+            var panelRelationships = allPanels
                 .Select(p => new DashboardPanelRelationship() {
                     Position = position++,
                     Panel = p
