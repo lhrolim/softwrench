@@ -41,7 +41,6 @@
 
                 $scope.$watch("title", function (newValue, oldValue) {
                     $scope.processBreadcrumb();
-
                 });
 
                 $rootScope.$on("sw.breadcrumb.history.redirect.sametitle", function () {
