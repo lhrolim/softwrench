@@ -226,7 +226,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             JToken password;
             json.TryGetValue("#password", out password);
             string passwordString = null;
-            if (password != null && !password.ToString().NullOrEmpty()) {
+            if (password != null && !password.ToString().NullOrEmpty() &&
+                !ApplicationConfiguration.Profile.EqualsIc("demo")) {
                 passwordString = password.ToString();
                 user.Password = AuthUtils.GetSha1HashData(passwordString);
             }
