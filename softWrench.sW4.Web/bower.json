@@ -40,6 +40,7 @@
     "bootstrap-combobox": "1.1.5",
     "lz-string": "~1.4.4",
     "devextreme-web": "~15.2.5",
+    "bootstrap-multiselect": "~0.9.13",
     "angular-drag-and-drop-lists": "^1.4.0"
   },
   "devDependencies": {},
