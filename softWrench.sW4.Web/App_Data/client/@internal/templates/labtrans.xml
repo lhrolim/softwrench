@@ -55,7 +55,7 @@
           <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
           <field attribute="transdate" label="Created Date"/>
           <field attribute="genapprservreceipt" hidden="true"/>
-          <event type="onremoval.validation" service="labtranService" method="validateEdit"/>
+          <event type="onremoval.validation" service="labtranService" method="validateRemoval"/>
           <event type="onedit.validation" service="labtranService" method="validateEdit"/>
         </schema>
 
@@ -109,7 +109,7 @@
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
 
-          <composition inline="true" relationship="#laborlist"  detailschema="" printschema="" showexpression="@_iscreation" requiredrelationshipexpression="true">
+          <composition inline="true" relationship="#laborlist" label="Labors"  detailschema="" printschema="" showexpression="@_iscreation" requiredrelationshipexpression="true">
             <collectionproperties listschema="wolabors" autocommit="false"/>
             <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>
@@ -198,7 +198,7 @@
             <renderer type="datetime"/>
           </field>
           <field attribute="mode" label="Mode" qualifier="batchselector" hidden="true" default="batch"></field>
-          <composition inline="true" relationship="#laborlist"  detailschema="" printschema="" showexpression="true" requiredrelationshipexpression="true">
+          <composition inline="true" label="" relationship="#laborlist"  detailschema="" printschema="" showexpression="true" requiredrelationshipexpression="true">
             <collectionproperties listschema="labors" autocommit="false"/>
             <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>

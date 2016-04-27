@@ -705,7 +705,7 @@
 
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
-        <schema id="comositionlist" stereotype="compositionlist">
+        <!--<schema id="compositionlist" stereotype="compositionlist">
           <event type="onedit.validation" service="labtranService" method="validateEdit"/>
           <event type="onremoval.validation" service="labtranService" method="validateRemoval"/>
           <field attribute="labtransid" hidden="true"/>
@@ -714,7 +714,7 @@
           <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
           <field attribute="transdate" label="Created Date"/>
           <field attribute="genapprservreceipt" hidden="true"/>
-        </schema>
+        </schema>-->
 
         <schema id="detail" platform="web">
           <field attribute="labtransid" hidden="true"/>
@@ -733,7 +733,7 @@
           <field attribute="defaultrate" hidden="true" defaultexpression="@user.defaultcraftrate"/>
 
           <composition inline="true" relationship="#laborlist" label="Labors"  detailschema="" printschema="" showexpression="@_iscreation" requiredrelationshipexpression="true">
-            <collectionproperties listschema="labors" autocommit="false"/>
+            <collectionproperties listschema="laborscomp" autocommit="false"/>
             <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
           </composition>
 
@@ -750,7 +750,7 @@
           </association>
         </schema>
 
-        <schema id="labors" stereotype="compositionlist">
+        <schema id="laborscomp" stereotype="compositionlist">
           <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
           <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="@#datamapidx == 0 ? ctx:getUserData().login.toUpperCase() : null" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
