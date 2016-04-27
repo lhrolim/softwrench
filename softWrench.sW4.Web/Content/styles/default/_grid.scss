@@ -352,12 +352,6 @@
     border-top: none;
 }
 
-.table-hover > tbody > tr:hover {
-    & > td, & > th {
-        background-color: #d6d6d6;
-    }
-}
-
 #listgrid, #compositionlistgrid {
     tbody tr {
         &.odd {
@@ -423,10 +417,6 @@
     &.table-hover {
         tbody tr {
             cursor: pointer;
-
-            &:hover {
-                background: #f5f5f5;
-            }
         }
     }
 
@@ -459,6 +449,20 @@
     td {
         vertical-align: middle;
         padding: 10px 15px 6px;
+    }
+}
+
+.table-hover > tbody > tr:hover {
+    background-color: #d6d6d6 !important;
+
+    & > td, & > th {
+        background-color: #d6d6d6 !important;
+    }
+
+    .priorityicon {
+        i {
+            color: #f5f5f5 !important;
+        }
     }
 }
 
@@ -548,10 +552,6 @@ table .detaildata {
         tbody {
             tr {
                 padding: 10px 0;
-
-                &:hover {
-                    background-color: #d6d6d6;
-                }
 
                 td, td.radio, td.checkbox {
                     position: relative;
