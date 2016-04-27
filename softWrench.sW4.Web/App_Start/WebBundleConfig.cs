@@ -77,7 +77,6 @@ namespace softWrench.sW4.Web {
                 // bootstrap
                 .Include(
                     "~/Content/vendor/scripts/bootstrap/bootstrap.js",
-                    "~/Content/vendor/scripts/bootstrap/bootstrap-multiselect.js",
                     "~/Content/vendor/scripts/bootstrap/bootbox.js"
                 )
                 // angular
