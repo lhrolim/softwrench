@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('relatedrecordService', ["redirectService", "searchService", function (redirectService, searchService) {
+    .factory('relatedrecordService', ["redirectService", "searchService", "crudContextHolderService", function (redirectService, searchService, crudContextHolderService) {
     var getWorkOrderId = function (app, wonum, siteid) {
         var searchData = {
             wonum: wonum,
@@ -42,6 +42,31 @@ angular.module('sw_layout')
         saveBatch: function (event) {
             redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
         },
+
+        clearSelectedRelatedEntityId: function(event) {
+            event.fields["#transient_relatedreckey"] = null;
+            event.fields["relatedreckey"] = null;
+            event.fields["relatedservicerequest_"] = null;
+            event.fields["relatedworkorder_"] = null;
+        },
+
+        onAfterRelatedEntitySelected: function(event) {
+            var datamap = event.fields;
+            var selectedEntityName = datamap["relatedrecclass"];
+            var selectedEntity = (function() {
+                switch (selectedEntityName) {
+                    case "SR":
+                        return datamap["relatedservicerequest_"];
+                    case "WORKORDER":
+                        return datamap["relatedworkorder_"];
+                    default:
+                        return { siteid: null, orgid: null }
+                }
+            })();
+
+            datamap["relatedrecsiteid"] = selectedEntity["siteid"];
+            datamap["relatedrecorgid"] = selectedEntity["orgid"];
+        }
 
     };
 

@@ -49,6 +49,10 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             get { return EntityMetadata.GetTableName().ToUpper(); }
         }
 
+        public bool IsDirty {
+            get { return UnmappedAttributes.ContainsKey("#isDirty"); }
+        }
+
         public CrudOperationData Clone() {
             var atributes = new Dictionary<string, object>(Attributes);
             var assocAtributes = new Dictionary<string, object>(AssociationAttributes);

@@ -4,6 +4,7 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
@@ -36,13 +37,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             _commlogHandler = new CommLogHandler();
             MaxHibernate = MaximoHibernateDAO.GetInstance();
             _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
-
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
-            // Update common fields or transactions prior to maximo operation exection
+            // Update common fields or transactions prior to maximo operation execution
             CommonTransaction(maximoTemplateData);
-            
 
             base.BeforeCreation(maximoTemplateData);
         }
@@ -50,22 +49,22 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
-            
+
             // COMSW-52 Auto-populate the actual start and end time for a workorder depending on status change
             // TODO: Caching the status field to prevent multiple SQL update.  
             if (crudData.ContainsAttribute("#hasstatuschange")) {
                 // Correct combinations of orgid/siteid are null/null, orgid/null, orgid/siteid. You cannot have a siteid paired with a null orgid.
-                var maxStatusValues = MaxHibernate.FindByNativeQuery(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'SRSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
+                var maxStatusValues = MaxHibernate.FindByNativeQuery(string.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'SRSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
                 var maxStatusValue = maxStatusValues.First();
                 if (maxStatusValue["MAXVALUE"].Equals("INPROG")) {
                     // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
                     // Actual date must be in the past - thus we made it a minute behind the current time.   
                     // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
-                    WsUtil.SetValue(sr, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    w.SetValue(sr, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
                 } else if (maxStatusValue["MAXVALUE"].EqualsAny("COMP", "CLOSED", "RESOLVED")) {
                     // Actual date must be in the past - thus we made it a minute behind the current time.   
-                    WsUtil.SetValue(sr, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
-                    WsUtil.SetValue(sr, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    w.SetValue(sr, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    w.SetValue(sr, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
                 }
             }
 
@@ -76,6 +75,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             WorkLogHandler.HandleWorkLogs(crudData, sr);
 
             _commlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
+
+            HandleRelatedRecords(maximoTemplateData);
 
             base.BeforeUpdate(maximoTemplateData);
         }
@@ -102,23 +103,23 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
 
             // SWWEB-980 Additional logic to change status to queued if owner is selected
-            if (WsUtil.GetRealValue(sr, "STATUS").Equals("NEW") && (WsUtil.GetRealValue(sr, "OWNER") != null || WsUtil.GetRealValue(sr, "OWNERGROUP") != null))
-                WsUtil.SetValue(sr, "STATUS", "QUEUED"); 
+            if (w.GetRealValue(sr, "STATUS").Equals("NEW") && (w.GetRealValue(sr, "OWNER") != null || w.GetRealValue(sr, "OWNERGROUP") != null))
+                w.SetValue(sr, "STATUS", "QUEUED");
 
             // Update or create new long description 
-            LongDescriptionHandler.HandleLongDescription(sr, ((CrudOperationData)maximoTemplateData.OperationData));
+            LongDescriptionHandler.HandleLongDescription(sr, (CrudOperationData)maximoTemplateData.OperationData);
 
             HandleServiceAddress(maximoTemplateData);
 
             _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
         }
 
-        private bool HandleServiceAddress(MaximoOperationExecutionContext maximoTemplateData) {
+        private static void HandleServiceAddress(MaximoOperationExecutionContext maximoTemplateData) {
             var data = (CrudOperationData)maximoTemplateData.OperationData;
             var user = SecurityFacade.CurrentUser();
             var saddresscode = data.GetUnMappedAttribute("saddresscode");
 
-            if (saddresscode == null) return false;
+            if (saddresscode == null) return;
 
             var description = data.GetUnMappedAttribute("#tkdesc");
             var formattedaddr = data.GetUnMappedAttribute("#tkformattedaddress");
@@ -135,8 +136,36 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValue(tkserviceaddress, "STADDRNUMBER", streetnumber);
             w.SetValue(tkserviceaddress, "STADDRSTREET", streetaddr);
             w.SetValue(tkserviceaddress, "STADDRSTTYPE", streettype);
+        }
 
-            return true;
+        private static void HandleRelatedRecords(MaximoOperationExecutionContext maximoOperation) {
+            var srData = (CrudOperationData)maximoOperation.OperationData;
+            var relatedRecords = ((IEnumerable<CrudOperationData>)srData.GetRelationship("relatedrecord_"))
+                                    .Where(r => r.IsDirty)
+                                    .ToList();
+
+            if (!relatedRecords.Any()) return;
+
+            var sr = maximoOperation.IntegrationObject;
+            var user = SecurityFacade.CurrentUser();
+
+            w.CloneArray(relatedRecords, sr, "RELATEDRECORD", (relatedRecord, relatedRecordData) => {
+                w.SetValue(relatedRecord, "RELATEDRECORDID", -1);
+                w.SetValue(relatedRecord, "RELATETYPE", "RELATED");
+                // current SR data
+                w.SetValue(relatedRecord, "RECORDKEY", srData.UserId);
+                w.CopyFromRootEntity(sr, relatedRecord, "SITEID", user.SiteId);
+                w.CopyFromRootEntity(sr, relatedRecord, "ORGID", user.OrgId);
+                // related target data
+                var relatedClass = relatedRecordData.GetStringAttribute("relatedrecclass").ToUpper();
+                if (relatedClass.Equals("WORKORDER")) {
+                    w.SetValueIfNull(relatedRecord, "RELATEDRECWOCLASS", relatedClass);
+                    w.SetValueIfNull(relatedRecord, "RELATEDRECWONUM", relatedRecordData.GetAttribute("relatedreckey"));
+                    //in case of workorder we cannot pass these values, but rather the WO specific ones
+                    w.NullifyValue(relatedRecord, "RELATEDRECCLASS");
+                    w.NullifyValue(relatedRecord, "RELATEDRECKEY");
+                } 
+            });
         }
     }
 }
