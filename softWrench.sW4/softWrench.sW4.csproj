@@ -199,6 +199,8 @@
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Transfer\InvTransferBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Labtrans\LabtransBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\KongsbergProjectRequestCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\TicketspecHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\ServiceAddressHandler.cs" />

@@ -3204,5 +3204,34 @@
         <connectorParameter key="dbtable" value="COMMTEMPLATE" />
       </connectorParameters>
     </entity>
+    <entity name="ticketspec" idAttribute="ticketspecid">
+      <attributes>
+        <attribute name="ticketspecid" type="bigint" required="true" />
+        <attribute name="alnvalue" type="varchar" required="false" />
+        <attribute name="assetattrid" type="varchar" required="true" />
+        <attribute name="ticketid" type="varchar" required="true" />
+        <attribute name="class" type="varchar" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="classstructureid" type="varchar" required="true" />
+        <attribute name="displaysequence" type="smallint" required="true" />
+        <attribute name="linkedtoattribute" type="varchar" required="false" />
+        <attribute name="linkedtosection" type="varchar" required="false" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="numvalue" type="decimal" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="section" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="refobjectid" type="int" required="true" />
+        <attribute name="refobjectname" type="varchar" required="false" />
+        <attribute name="classspecid" type="bigint" required="false" />
+        <attribute name="mandatory" type="smallint" required="true" />
+        <attribute name="tablevalue" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="ticketspec" />
+      </connectorParameters>
+    </entity>
   </entities>
 </metadata>
