@@ -185,6 +185,7 @@
                         }
 
                         deferred.resolve(workorderInitialDataMap);
+                        modalService.hide();
                     }
                 });
 
