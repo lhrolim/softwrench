@@ -6,6 +6,7 @@ using Newtonsoft.Json.Converters;
 using NHibernate.Mapping.Attributes;
 using softwrench.sw4.api.classes.user;
 using softwrench.sw4.problem.classes;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.Persistence.WS.API;
 
 namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
@@ -83,6 +84,9 @@ namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
                 return Items.Count;
             }
         }
+
+        [JsonIgnore]
+        public ClientPlatform? Platform { get; set; }
 
         public static Batch TransientInstance(string application, ISWUser user) {
             return new Batch() {

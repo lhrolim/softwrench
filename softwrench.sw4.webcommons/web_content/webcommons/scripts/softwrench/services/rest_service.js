@@ -71,6 +71,10 @@ modules.webcommons.factory('restService', ["$http", "$log", "contextService", fu
             return $http.post(url, json, config);
         },
 
+        post: function () {
+            return this.postPromise.apply(this, arguments);
+        },
+
         /**
          * Sends a GET request to an ASP.NET Controller. 
          * 
@@ -85,6 +89,10 @@ modules.webcommons.factory('restService', ["$http", "$log", "contextService", fu
             var log = $log.getInstance("restService#invokeGet");
             log.info("invoking get on url {0}".format(url));
             return $http.get(url, config);
+        },
+
+        get: function() {
+            return this.getPromise.apply(this, arguments);
         }
 
     };

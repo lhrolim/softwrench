@@ -62,15 +62,33 @@ Array.prototype.firstOrDefault = function (fn) {
     }
 
 
-    Array.prototype.findIndex = Array.prototype.findIndex || function (predicate, thisArg) {
-        "use strict";
-        //TODO: Check predicate is a function.
-        var lastIndex = -1;
-        if (!Array.prototype.some.call(this, function (val, index, arr) {
-            return predicate.call(thisArg, val, lastIndex = index, arr);
-        })) {
-            return -1;
-        }
-
-        return lastIndex;
+Array.prototype.findIndex = Array.prototype.findIndex || function (predicate, thisArg) {
+    "use strict";
+    //TODO: Check predicate is a function.
+    var lastIndex = -1;
+    if (!Array.prototype.some.call(this, function (val, index, arr) {
+        return predicate.call(thisArg, val, lastIndex = index, arr);
+    })) {
+        return -1;
     }
+
+    return lastIndex;
+}
+
+if (typeof (Array.prototype.distinct) !== "function") {
+    // from http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array#answer-9229821
+    Array.prototype.distinct = function () {
+        var seen = {};
+        var out = [];
+        var len = this.length;
+        var j = 0;
+        for (var i = 0; i < len; i++) {
+            var item = this[i];
+            if (seen[item] !== 1) {
+                seen[item] = 1;
+                out[j++] = item;
+            }
+        }
+        return out;
+    }
+}

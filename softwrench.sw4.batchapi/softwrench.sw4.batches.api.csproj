@@ -87,6 +87,10 @@
       <Project>{8062DCE9-1422-4CA7-8004-FFA7794A6516}</Project>
       <Name>softwrench.sw4.problem</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
+      <Project>{E3764769-6D4D-4986-BAF4-02D1B479D961}</Project>
+      <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
