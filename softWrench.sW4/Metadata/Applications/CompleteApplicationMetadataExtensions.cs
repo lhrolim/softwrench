@@ -16,15 +16,16 @@ namespace softWrench.sW4.Metadata.Applications {
         /// <returns></returns>
         public static CompleteApplicationMetadataDefinition CloneSecuring(this CompleteApplicationMetadataDefinition originalMetadata,
            InMemoryUser user) {
-            var schemas = originalMetadata.Schemas();
+            var schemas = originalMetadata.SchemasList;
             var securedSchemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
 
             foreach (var applicationSchema in schemas) {
-                if (applicationSchema.Value.IsWebPlatform() || applicationSchema.Value.SchemaId.Equals(ApplicationMetadataConstants.SyncSchema)) {
+                if (applicationSchema.IsWebPlatform() || applicationSchema.SchemaId.Equals(ApplicationMetadataConstants.SyncSchema)) {
                     continue;
                 }
-                var securedMetadata = originalMetadata.ApplyPolicies(applicationSchema.Key, user, ClientPlatform.Mobile, null);
-                securedSchemas.Add(securedMetadata.Schema.GetSchemaKey(), securedMetadata.Schema);
+                var securedMetadata = originalMetadata.ApplyPolicies(applicationSchema.GetSchemaKey(), user, ClientPlatform.Mobile, null);
+                var applicationMetadataSchemaKey = securedMetadata.Schema.GetSchemaKey();
+                securedSchemas.Add(applicationMetadataSchemaKey, securedMetadata.Schema);
             }
 
             return new CompleteApplicationMetadataDefinition(

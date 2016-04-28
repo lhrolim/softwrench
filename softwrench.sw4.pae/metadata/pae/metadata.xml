@@ -143,7 +143,7 @@
           <event type="onload" service="paeAssetService" method="initAssetDetailListener"/>
         </detail>
 
-        <schema id="assetLookupList" stereotype="list" >
+        <schema id="assetLookupList" stereotype="list" platform="web">
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description">
             <renderer type="default" params="minwidth=300px" />
@@ -152,6 +152,7 @@
           <field attribute="siteid"  label="Site"/>
           <field attribute="status" label="Status"/>
         </schema>
+        
       </schemas>
     </application>
 
