@@ -155,7 +155,7 @@ angular.module('sw_layout')
                 $scope.selectedfilter = null;
                 $scope.advancedsearchdata = null;
                 $scope.searchOperator = {};
-                searchService.refreshGrid({},null, { panelid: $scope.panelid});
+                searchService.refreshGrid({}, null, { panelid: $scope.panelid, forcecleanup :true});
             }
 
             $scope.$on("sw_redirectapplicationsuccess", function(event) {

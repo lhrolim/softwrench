@@ -80,7 +80,7 @@
         });
 
         //real call
-        mockScope.refreshGridRequested({}, null, {});
+        mockScope.refreshGridRequested({}, null, { forcecleanup :true});
 
         expect(mockScope.searchSort).toBeDefined();
         expect(mockScope.searchSort).toEqual({});
