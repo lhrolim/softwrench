@@ -33,7 +33,17 @@
                 orgid: user.orgId,
                 assetnum: data
             };
-            searchService.searchWithData("asset", searchData).success(function (resultData) {
+
+            var equalityoperator = searchService.getSearchOperationBySymbol("=");
+            var extraparameters = {
+                searchOperators: {
+                    siteid: equalityoperator,
+                    orgid: equalityoperator,
+                    assetnum: equalityoperator
+                }
+            }
+
+            searchService.searchWithData("asset", searchData, null, extraparameters).success(function (resultData) {
 
                 var resultObject = resultData.resultObject;
 
