@@ -47,6 +47,20 @@
     <property key="mifcredentials.password" value="maxadmin"/>
   </environment>
 
+  <environment key="demo">
+    <property key="basewsURL" value="http://173.193.44.2:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.37.19.66;Initial Catalog=ISM;User Id=maximo;password=MAXIMO;" />
+    <property key="maximo_DB_provider" value="System.Data.SQL" />
+    <!--<property key="swdb_provider" value="IBM.Data.DB2" />
+    <property key="swdb_url" value="Server=10.50.100.195:50000;Database=SWDB_CCP;UID=sw;PWD=sw@dm1n;CurrentSchema=SW" />  -->
+    <property key="swdb_provider" value="System.Data.SQL"/>
+    <property key="swdb_url" value="Data Source=10.37.19.66;Initial Catalog=SWDB_ISM;User Id=sw;password=softwrench;" />
+    ​
+    <property key="mifcredentials.user" value="maxadmin"/>
+    <property key="mifcredentials.password" value="maxadmin"/>
+  </environment>
+  ​
+
 
 
 </Properties>
