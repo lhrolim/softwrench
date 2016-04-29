@@ -1,5 +1,5 @@
 ﻿
-(function () {
+(function (angular) {
     'use strict';
 
     angular.module('maximo_applications').factory('personService', ['$rootScope', 'alertService', 'redirectService', 'applicationService', 'contextService', 'crudContextHolderService', 'dispatcherService', personService]);
@@ -10,10 +10,33 @@
             afterChangeUsername: afterChangeUsername,
             validatePerson: validatePerson,
             cancelEdition: cancelEdition,
-            submitPerson: submitPerson
+            submitPerson: submitPerson,
+            loadPhone: loadPhone,
+            loadEmail:loadEmail
         };
 
         return service;
+
+        function loadPhone() {
+            var dm = crudContextHolderService.rootDataMap("#modal");
+            if (dm.phoneid) {
+                //edition
+                dm["#originalphonenum"] = dm.phonenum;
+                dm["#originaltype"] = dm.type;
+                dm["originalprimary"] = dm.isprimary;
+            }
+        };
+
+        function loadEmail() {
+            var dm = crudContextHolderService.rootDataMap("#modal");
+            if (dm.emailid) {
+                //edition
+                dm["#originalemailaddress"] = dm.emailaddress;
+                dm["#originaltype"] = dm.type;
+                dm["originalprimary"] = dm.isprimary;
+            }
+        }
+
 
         function cancelEdition() {
             var schema = crudContextHolderService.currentSchema();
@@ -52,4 +75,4 @@
         }
 
     }
-})();
+})(angular);

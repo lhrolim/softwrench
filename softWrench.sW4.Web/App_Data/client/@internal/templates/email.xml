@@ -5,6 +5,11 @@
       <attributes>
         <attribute name="loweremail" query="LOWER(emailaddress)" type="string"/>
       </attributes>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWEMAIL"/>
+        <connectorParameter key="integration_interface_operations" value="CRUD_DELETE"/>
+      </connectorParameters>
+      
       
     </entity>
     
@@ -22,19 +27,22 @@
           <field attribute="loweremail" hidden="true"/>
           <field attribute="emailaddress" label="Email Address"/>
           <field attribute="type" label="Type"/>
-          <field attribute="isprimary" label="Primary"/>
+          <field attribute="isprimary" label="Primary">
+            <renderer type="checkbox"/>
+          </field>
         </schema>
         <schema id="detail" stereotype="compositiondetail" title="Email Detail">
           <field attribute="personid" hidden="true"/>
           <field attribute="emailid" hidden="true"/>
           <field attribute="loweremail" hidden="true"/>
-          <field attribute="emailaddress" label="Email Address"/>
-          <optionfield attribute="type" label="Type" providerattribute="_EmailTypeOptions">
+          <field attribute="emailaddress" label="Email Address" requiredexpression="true"/>
+          <optionfield attribute="type" label="Type" providerattribute="_EmailTypeOptions" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
-          <field attribute="isprimary" label="Primary" enableexpression="service:emailService.hasPrimary" defaultexpression="service:emailService.isPrimary">
+          <field attribute="isprimary" label="Primary" enableexpression="@originalprimary == false" defaultexpression="service:emailService.isPrimary">
             <renderer type="checkbox"/>
           </field>
+          <event type="onschemafullyloaded" service="personService" method="loadEmail"/>
         </schema>
       </schemas>
     </application>

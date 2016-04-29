@@ -155,6 +155,7 @@
     <Compile Include="Data\API\Association\SchemaLoading\IAssociationSchemaLoadResult.cs" />
     <Compile Include="Data\API\Association\SingleAssociationPrefetcherRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionRequestWrapperDTO.cs" />
+    <Compile Include="Data\API\Composition\CompositionOperationDTO.cs" />
     <Compile Include="Data\API\Composition\PreFetchedCompositionFetchRequest.cs" />
     <Compile Include="Data\API\JsonRequestWrapper.cs" />
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />

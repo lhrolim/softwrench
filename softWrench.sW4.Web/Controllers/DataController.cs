@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
+using cts.commons.portable.Util;
 using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Web.Util;
@@ -192,8 +193,9 @@ namespace softWrench.sW4.Web.Controllers {
             var operation = operationDataRequest.Operation;
 
             if (!mockMaximo) {
+
                 maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
-                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation, operationDataRequest.Batch, new Tuple<string, string>(operationDataRequest.UserId, operationDataRequest.SiteId));
+                    .Execute(applicationMetadata, json, operationDataRequest);
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
                 //mobile requests doesn´t have to handle success messages or redirections

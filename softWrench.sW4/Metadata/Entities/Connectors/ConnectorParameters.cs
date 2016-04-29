@@ -27,7 +27,7 @@ namespace softWrench.sW4.Metadata.Entities.Connectors {
             return new ConnectorParameters(new Dictionary<string, string>(), false);
         }
 
-        public string GetWSEntityKey(string keyToUse) {
+        public string GetWSEntityKey(string keyToUse = ConnectorParameters.UpdateInterfaceParam) {
             string entityKey;
             if (!_parameters.TryGetValue(ApplicationConfiguration.WsProvider + "_" + keyToUse, out entityKey)) {
                 _parameters.TryGetValue(keyToUse, out entityKey);

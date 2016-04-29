@@ -323,6 +323,11 @@
                         $scope.datamap[fieldMetadata.attribute] = formatService.isChecked(content);
                     }
 
+                    $scope.isChecked = function (fieldMetadata) {
+                        var content = $scope.datamap[fieldMetadata.attribute];
+                        return formatService.isChecked(content);
+                    }
+
                     /* LOOKUP functions */
 
                     $scope.getLookUpDescriptionLabel = function (fieldMetadata) {

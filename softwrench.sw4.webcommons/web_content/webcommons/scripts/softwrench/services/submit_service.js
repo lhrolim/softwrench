@@ -129,35 +129,47 @@
             return data;
         }
 
+        function isBatch(datamap, schema) {
+            //whether it shall run on batch mode
+            var batchDisplayable = schemaService.locateDisplayableByQualifier(schema, "batchselector");
+            var batchAttribute = batchDisplayable ? batchDisplayable.attribute : null;
+            if (schemaService.isPropertyTrue(schema, "batch")) {
+                return true;
+            }
+            else if (batchAttribute && datamap[batchAttribute]) {
+                return datamap[batchAttribute].equalsAny("batch", "true");
+            }
+        }
 
-        function createSubmissionParameters(datamap, schema, nextSchemaObj, id, dispatcherComposition) {
-            var parameters = {};
+
+        function createSubmissionParameters(datamap, schema, nextSchemaObj, id, compositionData) {
+
+            var parameters = {
+                id: id,
+                applicationName: schema.applicationName,
+                batch: isBatch(datamap, schema),
+                platform : platform(),
+                
+                compositionData: compositionData
+            };
+
+            if (compositionData != null) {
+                parameters.routeParametersDTO = {
+                    dispatcherComposition: compositionData.dispatcherComposition
+                };
+            }
+
             if (sessionStorage.mockmaximo === "true") {
                 //this will cause the maximo layer to be mocked, allowing testing of workflows without actually calling the backend
                 parameters.mockmaximo = true;
             }
-            parameters.routeParametersDTO = {};
-            parameters.routeParametersDTO.dispatcherComposition = dispatcherComposition;
+            
             parameters = addSchemaDataToParameters(parameters, schema, nextSchemaObj);
             var checkPointArray = checkpointService.fetchAllCheckpointInfo();
             if (checkPointArray && checkPointArray.length > 0) {
                 parameters.routeParametersDTO.checkPointData = checkPointArray;
             }
-            parameters.applicationName = schema.applicationName;
-            parameters.id = id;
-
-            //whether it shall run on batch mode
-            var batchDisplayable = schemaService.locateDisplayableByQualifier(schema, "batchselector");
-            var batchAttribute = batchDisplayable ? batchDisplayable.attribute : null;
-            if (schemaService.isPropertyTrue(schema, "batch")) {
-                parameters.batch = true;
-            }
-            else if (batchAttribute && datamap[batchAttribute]) {
-                parameters.batch = datamap[batchAttribute].equalsAny("batch", "true");
-            }
-
-
-            parameters.platform = platform();
+            
             return parameters;
         }
 

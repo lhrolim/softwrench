@@ -96,10 +96,10 @@
           </field>
 
           <composition relationship="phone" label="Phone Numbers" inline="false" >
-            <collectionproperties allowcreation="true" allowupdate="false"/>
+            <collectionproperties allowcreation="true" allowupdate="true" allowremoval="!@primary" />
           </composition>
           <composition relationship="email" label="Email Addresses" inline="false">
-            <collectionproperties allowcreation="true" allowupdate="false"/>
+            <collectionproperties allowcreation="true" allowupdate="true" allowremoval="!@primary"/>
           </composition>
 
           <tab label="Security Groups" icon="fa-gear" id="permission" role="sysadmin">
