@@ -112,7 +112,6 @@
     <None Include="app.config" />
     <None Include="customer.placeholder" />
     <None Include="packages.config" />
-    <None Include="web_content\firstsolar\styles\advancedSearch.scss" />
     <None Include="web_content\firstsolar\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>

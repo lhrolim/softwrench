@@ -99,8 +99,8 @@
                 filter: '<li class="multiselect-item filter">' +
                 '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>' +
                 '<input id="fsblock" class="form-control multiselect-search" placeholder="Block" type="text">' +
-                '<input id="fspcs" class="form-control multiselect-search" placeholder="PCS" type="text"></div></li>',
-                filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" type="button"><i class="fa fa-eraser"></i></button></span>'
+                '<input id="fspcs" class="form-control multiselect-search" placeholder="PCS" type="text" style="margin-top: -1px"></div></li>',
+                filterClearBtn: '<span class="input-group-addon"><i class="fa fa-eraser"></i></span>'
             }
 
             dropdownOptions["filterFunction"] = function (optionValue, optionText, filterInput) {
