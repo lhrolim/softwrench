@@ -51,7 +51,7 @@
                     style["-o-transform"] = trasform;
                     style["transform"] = trasform;
 
-                    log.debug("side panel style: top ({0}), handle width ({1}), transform ({2})", style["top"], style["min-width"], style["transform"]);
+                    log.debug("side panel style: top ({0}), handle width ({1}), transform ({2})".format(style["top"], style["min-width"], style["transform"]));
                     return style;
                 }
 

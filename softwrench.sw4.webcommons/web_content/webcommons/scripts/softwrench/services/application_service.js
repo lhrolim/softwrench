@@ -64,7 +64,22 @@
             });
         }
 
-        function save() {
+        /**
+         * 
+         * @param {} parameters 
+         * 
+         * compositionData --> an object holding the composition related data:
+         * {
+         * 
+         *       dispatcherComposition --> the name of the composition (relationship) that initiated this save
+         *       operation --> indicates the operation performed on the composition, such as crud_delete, crud_update, crud_create
+         *       id --> the id of the composition item
+         * }
+         * 
+         * 
+         * @returns {} 
+         */
+        function save(parameters) {
             var deferred = $q.defer();
 
             var successCallBack = function (data) {
@@ -75,18 +90,29 @@
                 deferred.reject(data);
             }
 
-            var isComposition = crudContextHolderService.getActiveTab() !== null;
+            parameters = parameters || {
+                refresh:false
+            };
 
-            var dispatchedByModal = crudContextHolderService.isShowingModal();
+            var isComposition = crudContextHolderService.getActiveTab() !== null;
+            var dispatchedByModal = parameters.dispatchedByModal;
+
+            if (dispatchedByModal == undefined) {
+                dispatchedByModal = crudContextHolderService.isShowingModal();
+            }
+
+
 
             //TODO: refactor it entirely to use promises instead
             $rootScope.$broadcast("sw_submitdata", {
                 successCbk: successCallBack,
                 failureCbk: failureCallback,
                 isComposition: isComposition,
-                nextSchemaObj: {},
+                compositionData: parameters.compositionData,
+                dispatcherComposition: parameters.dispatcherComposition,
+                nextSchemaObj: parameters.nextSchemaObj,
                 dispatchedByModal: dispatchedByModal,
-                refresh: false
+                refresh: parameters.refresh
             });
 
             return deferred.promise;

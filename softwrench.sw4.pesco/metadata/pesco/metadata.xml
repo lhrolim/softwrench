@@ -59,7 +59,7 @@
       </filters>
       <schemas>
         
-        <list redeclaring="false" >
+        <list redeclaring="false" stereotype="list.selection">
           <customization position="siteid">
             <field attribute="siteid" label="Site Id"/>
           </customization>
@@ -79,7 +79,23 @@
           <properties>
             <property key="list.click.service" value="pescoStatusService.changeStatusToPending"/>
           </properties>
+
+          <commandbars>
+            <commandgroup position="actions">
+              <command id="Create" icon="fa-pencil" label="Change Status" 
+                       showexpression="service:pescoStatusService.hasSelectedItemsForBatchStatus"
+                       service="pescoStatusService" method="initBatchStatusChange"
+                       parameters="schema,datamap" />
+            </commandgroup>
+          </commandbars>
+
         </list>
+
+        <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status">
+          <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true">
+            <renderer type="lookup"/>
+          </association>
+        </schema>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail" redeclaring="false">
           <customization position="location"></customization>
@@ -201,7 +217,7 @@
 
       <schemas>
        
-         <list title="Work Order Grid" platform="web" redeclaring="false" >
+         <list title="Work Order Grid" platform="web" redeclaring="false" stereotype="list.selection">
           <customization position="siteid">
              <field attribute="siteid" label="Site Id"/>
            </customization>
@@ -211,7 +227,25 @@
               <renderer type="checkbox" />
             </field>
           </customization>
-        </list>
+
+           <commandbars>
+             <commandgroup position="actions">
+               <command id="Create" icon="fa-pencil" label="Change Status"
+                        showexpression="service:pescoStatusService.hasSelectedItemsForBatchStatus"
+                        service="pescoStatusService" method="initBatchStatusChange"
+                        parameters="schema,datamap" />
+             </commandgroup>
+           </commandbars>
+
+         </list>
+
+        <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status">
+          <association label="Status" target="status" labelfield="synstatus.description">
+            <dataprovider prefilterfunction="FilterStatusCodes"/>
+            <renderer type="lookup" params="avoidautofocus=true"/>
+          </association>
+        </schema>
+          
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
           <customization position="location"></customization>
           <customization position="assetnum"></customization>

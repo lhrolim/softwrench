@@ -21,7 +21,7 @@
     }
 
     &.hidden {
-        display : none;
+        display: none;
     }
 
     .handle {
@@ -53,9 +53,28 @@
     .pane {
         padding: 20px 20px 0 20px;
         visibility: hidden;
-    }    
+    }
 
     &.open .pane {
         visibility: visible;
+    }
+
+    .commandbar {
+        .toolbar-cell {
+            text-align: left !important;
+
+            .buttons {
+                display: inline-block;
+                margin-right: 5px;
+
+                .btn-context {
+                    background: #ddd;
+
+                    .space {
+                        display: none;
+                    }
+                }
+            }
+        }
     }
 }

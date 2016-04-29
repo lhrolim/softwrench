@@ -155,6 +155,7 @@
     <Compile Include="Data\API\Association\SchemaLoading\IAssociationSchemaLoadResult.cs" />
     <Compile Include="Data\API\Association\SingleAssociationPrefetcherRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionRequestWrapperDTO.cs" />
+    <Compile Include="Data\API\Composition\CompositionOperationDTO.cs" />
     <Compile Include="Data\API\Composition\PreFetchedCompositionFetchRequest.cs" />
     <Compile Include="Data\API\JsonRequestWrapper.cs" />
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
@@ -199,6 +200,8 @@
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Transfer\InvTransferBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Labtrans\LabtransBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\KongsbergProjectRequestCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\TicketspecHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\ServiceAddressHandler.cs" />

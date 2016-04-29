@@ -1,4 +1,5 @@
 ﻿using softwrench.sW4.Shared2.Metadata.Applications;
+using softWrench.sW4.Data.API.Composition;
 
 namespace softWrench.sW4.Data.API {
     public class OperationDataRequest {
@@ -6,7 +7,9 @@ namespace softWrench.sW4.Data.API {
 
         //For some reason MVC api is not working unless it´s a pure getter/setter
         public RouterParametersDTO RouteParametersDTOHandled {
-            get { return RouteParametersDTO ?? new RouterParametersDTO(); }
+            get {
+                return RouteParametersDTO ?? new RouterParametersDTO();
+            }
         }
 
         //this comes from client side, not supposed to be used on the server side
@@ -22,9 +25,13 @@ namespace softWrench.sW4.Data.API {
             get; set;
         }
 
-        public string UserId {get; set;}
+        public string UserId {
+            get; set;
+        }
 
-        public string SiteId {get; set;}
+        public string SiteId {
+            get; set;
+        }
 
         public ClientPlatform Platform {
             get; set;
@@ -41,6 +48,8 @@ namespace softWrench.sW4.Data.API {
         public string Operation {
             get; set;
         }
+
+        public CompositionOperationDTO CompositionData { get; set; }
 
         public bool Batch {
             get; set;

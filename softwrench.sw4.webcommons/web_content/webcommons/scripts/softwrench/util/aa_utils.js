@@ -876,3 +876,11 @@ if (typeof (window.throttle !== "function") && (!window._ || typeof (window._.th
         return null;
     }
 }
+
+if (typeof (Object.values !== "function")) {
+    Object.values = function(obj) {
+        return Object.keys(obj).map(function(key) {
+            return obj[key];
+        });
+    };
+}

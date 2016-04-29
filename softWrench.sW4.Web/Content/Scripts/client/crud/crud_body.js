@@ -119,11 +119,15 @@
 
                 $scope.$on("sw.modal.show", function (event, modalData) {
                     if ($scope.ismodal === "true") {
-                        $rootScope.$broadcast("sw_alltabsloaded");
+                        $scope.allTabsLoaded();
                     }
                 });
 
                 $scope.$on("sw_alltabsloaded", function (event, firstTabId) {
+                    $scope.allTabsLoaded(event, firstTabId);
+                });
+
+                $scope.allTabsLoaded = function(event, firstTabId) {
                     if (!$scope.schema) {
                         return;
                     }
@@ -147,7 +151,7 @@
                         focusService.setFocusToFirstField($scope.schema, datamap);
                     }, 1000, false);
                     eventService.dispatchEvent($scope.schema, "onschemafullyloaded");
-                });
+                }
 
                 $scope.getTabRecordCount = function (tab) {
                     return crudContextHolderService.getTabRecordCount(tab);
@@ -569,7 +573,7 @@
                     }
 
                     var eventResult = eventService.beforesubmit_postvalidation(schemaToSave, transformedFields, eventParameters);
-                    if (eventResult == false) {
+                    if (eventResult === false) {
                         //this means that the custom postvalidator should call the continue method
                         log.debug('waiting on custom postvalidator to invoke the continue function');
                         _executingSave = false;
@@ -608,7 +612,7 @@
 
 
 
-                    var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id, parameters.dispatcherComposition);
+                    var submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id, parameters.compositionData);
 
                     var jsonWrapper = {
                         json: transformedFields,
@@ -644,7 +648,7 @@
                         var data = result.data;
                         var responseDataMap = data.resultObject;
 
-                        if (data.type !== "BlankApplicationResponse") {
+                        if (!data.type.equalsAny("BlankApplicationResponse", "GenericApplicationResponse")) {
 
                             // handle the case where the datamap had lazy compositions already fetched
                             // and the response does not have them (for performance reasons)

@@ -106,7 +106,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             foreach (var item in batch.Items) {
                 //jArray.Add(item.DataMapJSonObject);
 
-                var applicationMetadata = user.CachedSchema(item.Application, new ApplicationMetadataSchemaKey(item.Schema, SchemaMode.None, ClientPlatform.Mobile));
+                var applicationMetadata = user.CachedSchema(item.Application, new ApplicationMetadataSchemaKey(item.Schema, SchemaMode.None, batch.Platform ?? ClientPlatform.Mobile));
                 var entityMetadata = MetadataProvider.Entity(applicationMetadata.Entity);
 
                 CrudOperationData crudOperationData;

@@ -222,7 +222,7 @@
     function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,alertService,
         formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient, userPreferencesService, associationService, 
         expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
-        schemaService, contextService, fixHeaderService) {
+        schemaService, contextService, fixHeaderService, applicationService) {
 
         $scope.lookupObj = {};
 
@@ -676,6 +676,7 @@
                 }
                 
                 modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, function saveCallBack(datamap) {
+                    
                     $scope.save(datamap);
                 }, null, $scope.parentdata, $scope.parentschema);
                 
@@ -876,7 +877,7 @@
                 redirectService.redirectToTab('main');
                 return;
             }
-            modalService.show($scope.compositiondetailschema, item, {}, $scope.save, null, $scope.parentdata, $scope.parentschema);
+            modalService.show($scope.compositiondetailschema, angular.copy(item), {}, $scope.save, null, $scope.parentdata, $scope.parentschema);
         }
 
         $scope.delete = function (item, column, $event, rowIndex) {
@@ -891,11 +892,11 @@
                         var fn = dispatcherService.loadService(event.service, event.method);
                         fn(compositionItem, $scope.compositionlistschema).then(function() {
                             compositionItem["#deleted"] = 1;
-                            $scope.save(compositionItem);
+                            $scope.save(compositionItem,null,"crud_delete");
                         });
                     } else {
                         compositionItem["#deleted"] = 1;
-                        $scope.save(compositionItem);
+                        $scope.save(compositionItem, null,"crud_delete");
                     }
                 });
             });
@@ -1060,7 +1061,7 @@
             return false;
         };
 
-        $scope.save = function (selecteditem) {
+        $scope.save = function (selecteditem,schema,action) {
             if (!selecteditem) {
                 //if the function is called inside a modal, then we would receive the item as a parameter, otherwise it would be on the scope of the page itself
                 selecteditem = $scope.selecteditem;
@@ -1080,7 +1081,7 @@
             // Validation should happen before adding items to the composition list to allow invalid data to pass into the system.
             var detailSchema = $scope.compositionschemadefinition.schemas.detail;
             var validationErrors;
-            if (selecteditem != undefined && selecteditem["#deleted"] != 1) {
+            if (selecteditem != undefined && selecteditem["#deleted"] !== 1) {
                 var crudFormCtrl = getModalCrudFormController();
                 validationErrors = validationService.validate(detailSchema, detailSchema.displayables, selecteditem, crudFormCtrl.$error);
                 if (validationErrors.length > 0) {
@@ -1127,15 +1128,35 @@
                 //this will disable success message, since we know we´ll need to refresh the screen
                 contextService.insertIntoContext("refreshscreen", true, true);
             }
-            //TODO: refactor this, using promises
-            $scope.$emit("sw_submitdata", {
-                successCbk: afterSaveListener("onAfterSave", alwaysrefresh),
-                failureCbk: afterSaveListener("onSaveError", selecteditem),
+            if (!action) {
+                action = selecteditem["_iscreation"] ? "crud_create" : "crud_update";
+            }
+
+            applicationService.save({
                 dispatcherComposition: $scope.relationship,
-                isComposition: true,
                 nextSchemaObj: { schemaId: crudContextHolderService.currentSchema().schemaId },
-                refresh: alwaysrefresh
+                refresh: alwaysrefresh,
+                dispatchedByModal:false,
+                compositionData: {
+                    operation: action,
+                    dispatcherComposition: $scope.relationship,
+                    id: schemaService.getId(selecteditem, $scope.compositionlistschema)
+                }
+            }).then(function(data) {
+                $scope.onAfterSave(data, alwaysrefresh);
+            }).catch(function(data) {
+                $scope.onSaveError(data, selecteditem);
             });
+
+//            //TODO: refactor this, using promises
+//            $scope.$emit("sw_submitdata", {
+//                successCbk: afterSaveListener("onAfterSave", alwaysrefresh),
+//                failureCbk: afterSaveListener("onSaveError", selecteditem),
+//                dispatcherComposition: $scope.relationship,
+//                isComposition: true,
+//                nextSchemaObj: { schemaId: crudContextHolderService.currentSchema().schemaId },
+//                refresh: alwaysrefresh
+//            });
         };
 
         function afterSaveListener(name, extra) {
@@ -1364,7 +1385,7 @@
     CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService","alertService",
             "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient", "userPreferencesService", "associationService", 
             "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
-            "schemaService", "contextService", "fixHeaderService"];
+            "schemaService", "contextService", "fixHeaderService", "applicationService"];
 
     window.CompositionListController = CompositionListController;
 

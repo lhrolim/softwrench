@@ -61,7 +61,7 @@
     <property key="swdb_url" value="Data Source=172.24.16.111;Initial Catalog=SWDB_KOGTPROD;User Id=sw;password=$0ftWr3nch;" />
     <!--<property key="basewsURL" value="https://www.kogtsupport24.com/meaweb/wsdl/" />-->
     <property key="basewsURL" value="http://172.24.32.39:9080/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=172.24.16.111;Initial Catalog=KOGTPROD;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="maximo_DB_url" value="Data Source=172.24.16.111;Initial Catalog=KOGTPROD;User Id=MAXIMO;password=M@x1m0;" />
     <property key="email.smtp.host" value="172.24.16.101"/>
   </environment>
 

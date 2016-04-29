@@ -1,7 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
   <entities>
-
+    <entity name="phone" idAttribute="phoneid">
+      <attributes>
+        <attribute name="isprimary" type="integer" required="true" />
+        <attribute name="personid" type="varchar" required="true" />
+        <attribute name="phoneid" type="integer" required="true" />
+        <attribute name="phonenum" type="varchar" required="true" />
+        <attribute name="rowstamp" type="integer" required="true" />
+        <attribute name="type" type="varchar" required="false" />
+      </attributes>
+      <relationships>
+        <relationship to="alndomain">
+          <relationshipAttribute query="!@domainid = 'PHONETYPE'" primary="true"/>
+          <relationshipAttribute from="type" to="value"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="phone" />
+        <connectorParameter key="integration_interface" value="SWPHONE" />
+        <connectorParameter key="integration_interface_operations" value="CRUD_DELETE"/>
+      </connectorParameters>
+    </entity>
   </entities>
 
   <applications>
@@ -15,19 +35,22 @@
           <field attribute="phoneid" hidden="true"/>
           <field attribute="phonenum" label="Phone #"/>
           <field attribute="type" label="Type"/>
-          <field attribute="isprimary" label="Primary"/>
+          <field attribute="isprimary" label="Primary">
+            <renderer type="checkbox"/>
+          </field>
         </schema>
 
         <schema id="detail" stereotype="compositiondetail" title="Phone Detail">
           <field attribute="personid" hidden="true"/>
           <field attribute="phoneid" hidden="true"/>
-          <field attribute="phonenum" label="Phone #"/>
-          <optionfield attribute="type" label="Type" providerattribute="_PhoneTypeOptions">
+          <field attribute="phonenum" label="Phone #" requiredexpression="true"/>
+          <optionfield attribute="type" label="Type" providerattribute="_PhoneTypeOptions" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
-          <field attribute="isprimary" label="Primary">
+          <field attribute="isprimary" label="Primary" enableexpression="@originalprimary == false">
             <renderer type="checkbox"/>
           </field>
+          <event type="onschemafullyloaded" service="personService" method="loadPhone"/>
         </schema>
       </schemas>
     </application>

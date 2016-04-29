@@ -537,7 +537,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                         var compositionRequest = new InlineCompositionAssociationPrefetcherRequest(request, composition.AssociationKey);
                         var task = Task<AssociationMainSchemaLoadResult>.Factory.StartNew(() => BuildAssociationOptions(compositeDataMap, listCompositionSchema, compositionRequest));
                         inlineCompositionTasks.Add(task);
-                    } 
+                    }
                 }
             }
 
@@ -556,6 +556,67 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         //        public virtual SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
         //            return Engine().Sync(applicationMetadata, applicationSyncData);
         //        }
+        public TargetResult Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
+            var compositionData = operationData.CompositionData;
+            if (compositionData == null || !compositionData.Operation.EqualsAny(OperationConstants.CRUD_DELETE, OperationConstants.CRUD_UPDATE)) {
+                return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
+                    new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+            }
+
+            var clientComposition = operationData.RouteParametersDTOHandled.DispatcherComposition;
+            var composition = application.Schema.Compositions().FirstOrDefault(f => f.Relationship.Equals(EntityUtil.GetRelationshipName(clientComposition)));
+            if (composition == null) {
+                return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
+                  new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+            }
+            var compositionListSchema = composition.Schema.Schemas.List;
+            var compositionEntityName = compositionListSchema.EntityName;
+            var compositionEntity = MetadataProvider.Entity(compositionEntityName);
+            var maximoWebServiceName = compositionEntity.ConnectorParameters.GetWSEntityKey();
+            if (maximoWebServiceName == null) {
+                //let parent web-service handle it
+                return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
+                    new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+            }
+
+            if (compositionEntity.ConnectorParameters.Parameters.ContainsKey("integration_interface_operations")) {
+                var validOperations = compositionEntity.ConnectorParameters.Parameters["integration_interface_operations"].Split(',');
+                if (!validOperations.Any(a => a.EqualsIc(compositionData.Operation))) {
+                    //not to be handled by composed web-service either
+                    return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
+                        new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+                }
+
+            }
+
+            //if there´s an specific web-service for the child entity, let´s use it
+            var compositionSchemaToUse = compositionData.Operation.EqualsIc(OperationConstants.CRUD_DELETE)
+                ? composition.Schema.Schemas.List
+                : composition.Schema.Schemas.Detail;
+
+            var compositionApplication = ApplicationMetadata.FromSchema(compositionSchemaToUse);
+
+            var ds = DataSetProvider.GetInstance().LookupDataSet(compositionApplication.Name, compositionSchemaToUse.SchemaId);
+            if (ds.GetType() != typeof(BaseApplicationDataSet)) {
+                //if there´s an overriden DataSet for the composition, let´s use it
+                return ds.Execute(compositionApplication, GetCompositionJson(json, compositionData.DispatcherComposition), compositionData.Id, compositionData.Operation,
+                operationData.Batch,
+                new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+            }
+            //otherwise let´s stick with the main app dataset
+            return Execute(compositionApplication, GetCompositionJson(json, compositionData.DispatcherComposition), compositionData.Id, compositionData.Operation,
+                operationData.Batch,
+                new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+
+        }
+
+        private JObject GetCompositionJson(JObject json, string relationship) {
+            var val = json.GetValue(relationship) as JContainer;
+            if (val == null) {
+                return json;
+            }
+            return val[0] as JObject;
+        }
 
         public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch, Tuple<string, string> userIdSite) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
@@ -569,6 +630,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 return BatchSubmissionService.CreateAndSubmit(operationWrapper.ApplicationMetadata.Name, operationWrapper.ApplicationMetadata.Schema.SchemaId, operationWrapper.JSON);
             }
 
+            return DoExecute(operationWrapper);
+        }
+
+        public virtual TargetResult DoExecute(OperationWrapper operationWrapper) {
             return Engine().Execute(operationWrapper);
         }
 

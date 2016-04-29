@@ -19,7 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F3FBB2C5-70CE-41A1-81B0-A58FCFFA8B96}"
 	ProjectSection(SolutionItems) = preProject
-		Build\.babelrc = Build\.babelrc
 		Build\build.xml = Build\build.xml
 		Build\Builds.build.proj = Build\Builds.build.proj
 		Build\Gruntfile.js = Build\Gruntfile.js

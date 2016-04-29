@@ -182,6 +182,7 @@
                                id="checkbox"
                                ng-model="datamap[fieldMetadata.attribute]"
                                ng-init="initCheckbox(fieldMetadata)"
+                               ng-checked="isChecked(fieldMetadata)"
                                ng-enabled="isModifiableEnabled(fieldMetadata)"
                                ng-true-value="true" ng-false-value="false" />
                         <label class="control-label"
