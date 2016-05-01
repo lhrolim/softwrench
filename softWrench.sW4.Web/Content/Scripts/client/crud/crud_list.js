@@ -674,6 +674,20 @@
                         }
                     });
 
+
+                    this.hasNewSchema = function() {
+                        return $scope.schema.newSchemaRepresentation != null;
+                    }
+
+                    this.newShemaLabel = function () {
+                        return $scope.schema.newSchemaRepresentation && $scope.schema.newSchemaRepresentation.label;
+                    }
+
+                    this.newEntry = function () {
+                        return redirectService.goToApplication($scope.schema.applicationName, $scope.schema.newSchemaRepresentation.schemaId);
+                    }
+
+
                     this.toggleSelectionModeInitialValue = function () {
                         return crudContextHolderService.getSelectionModel($scope.panelid).selectionMode;
                     }

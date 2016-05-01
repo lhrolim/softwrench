@@ -29,6 +29,7 @@ using System.Net;
 using Iesi.Collections;
 using Iesi.Collections.Generic;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
@@ -154,6 +155,7 @@ namespace softWrench.sW4.Metadata {
         private static void ApplyListSpecificLogic(CompleteApplicationMetadataDefinition app, ApplicationSchemaDefinition schema) {
             schema.DeclaredFilters.Merge(app.AppFilters);
             schema.RelatedCompositions = BuildRelatedCompositionsList(schema);
+            schema.NewSchemaRepresentation = LocateNewSchema(schema.ApplicationName);
         }
 
         public static IEnumerable<AssociationOption> BuildRelatedCompositionsList(ApplicationSchemaDefinition schema) {
@@ -710,6 +712,40 @@ namespace softWrench.sW4.Metadata {
 
             //if there큦 only one schema marked with detail stereotype it will be used automatically upon grid routing, so let큦 add it
             return application.SchemaByStereotype("detail");
+        }
+
+        [CanBeNull]
+        public static SchemaRepresentation LocateNewSchema([NotNull]string applicationName) {
+
+            var application = Application(applicationName);
+            //if there큦 only one schema marked with detail stereotype it will be used automatically upon grid routing, so let큦 add it
+            var newSchema = application.SchemaByStereotype("detailnew");
+            if (newSchema == null) {
+                return null;
+            }
+            if (newSchema.MenuTitle != null) {
+                return new SchemaRepresentation() {
+                    Label = newSchema.MenuTitle,
+                    SchemaId = newSchema.SchemaId
+                };
+            }
+
+            var menu = Menu(ClientPlatform.Web);
+            foreach (var leaf in menu.ExplodedLeafs) {
+                if (leaf is ApplicationMenuItemDefinition) {
+                    ApplicationMenuItemDefinition menuItem = (ApplicationMenuItemDefinition)leaf;
+                    if (menuItem.Schema.EqualsIc(newSchema.SchemaId) &&
+                        menuItem.Application.EqualsIc(newSchema.ApplicationName)) {
+                        newSchema.MenuTitle = leaf.Title;
+                        return new SchemaRepresentation() {
+                            Label = newSchema.MenuTitle,
+                            SchemaId = newSchema.SchemaId
+                        };
+                    }
+                }
+            }
+            return null;
+
         }
     }
 }

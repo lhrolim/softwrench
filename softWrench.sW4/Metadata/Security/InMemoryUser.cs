@@ -376,6 +376,10 @@ namespace softWrench.sW4.Metadata.Security {
             Genericproperties.Remove("menumanagerscached");
         }
 
+        public void ClearBars() {
+            _cachedBars = new ConcurrentDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>>();
+        }
+
         [CanBeNull]
         public object GetProperty(string key) {
             if (Genericproperties.ContainsKey(key)) {

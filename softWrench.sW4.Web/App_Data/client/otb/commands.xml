@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <commands xmlns="http://www.controltechnologysolutions.com/commandmetadata">
 
+  
   <commandgroup position="gridtop" platform="web">
-    <!--    <command id="new" icon="fa-plus" service="applicationService" method="newitem" label="$scope." tooltip="New Item"/>-->
+    <command id="new" icon="fa-plus" service="$scope" method="newEntry" label="New" tooltip="$scope:newShemaLabel" showexpression="$scope:hasNewSchema" cssclasses="large-button"/>
     <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
     <command id="print" icon="fa-print" label="Print" service="printService" method="printList" parameters="paginationData,schema" tooltip="Print" showexpression="" cssclasses="large-button"/>
     <command id="export" icon="fa-file-text-o" label="Export" service="excelService" method="exporttoexcel" parameters="schema,searchData,searchSort,searchOperator,paginationData"
@@ -25,7 +26,7 @@
 
 
   <!-- Modal commands-->
-  
+
   <commandgroup position="modal.detail.primary" platform="web">
     <command id="save" icon="fa-check" service="applicationService" method="save" label="Save" primary="true"/>
     <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
@@ -50,15 +51,15 @@
 
 
   <commandgroup position="detailform" platform="web">
-    
+
   </commandgroup>
-  
+
   <commandgroup position="gridtop.selection" platform="web">
-<!--    <togglecommand id="toggleselectionmode" position="+profiles" initialstateexpression="$scope:toggleSelectionModeInitialValue">-->
-<!--      <oncommand id="ontoggleselectionmode" icon="fa-mouse-pointer" service="dispatcherService" method="dispatchevent" label="View" tooltip="Click Line to Select" parameters="sw.crud.list.toggleselectionmode,panelid" cssclasses="large-button"/>-->
-<!--      <offcommand id="ontoggleselectionmode" icon="fa-edit" service="dispatcherService" method="dispatchevent" label="Select" tooltip="Click Line to View Details" parameters="sw.crud.list.toggleselectionmode,panelid" cssclasses="large-button"/>-->
-<!--    </togglecommand>-->
-    
+    <!--    <togglecommand id="toggleselectionmode" position="+profiles" initialstateexpression="$scope:toggleSelectionModeInitialValue">-->
+    <!--      <oncommand id="ontoggleselectionmode" icon="fa-mouse-pointer" service="dispatcherService" method="dispatchevent" label="View" tooltip="Click Line to Select" parameters="sw.crud.list.toggleselectionmode,panelid" cssclasses="large-button"/>-->
+    <!--      <offcommand id="ontoggleselectionmode" icon="fa-edit" service="dispatcherService" method="dispatchevent" label="Select" tooltip="Click Line to View Details" parameters="sw.crud.list.toggleselectionmode,panelid" cssclasses="large-button"/>-->
+    <!--    </togglecommand>-->
+
     <togglecommand id="toggleselected" position="+profiles">
       <oncommand id="ontoggleselected" icon="fa-toggle-on" service="dispatcherService" method="dispatchevent"
                  label="Show" tooltip="Show Selected" parameters="sw.crud.list.toggleselected,panelid" cssclasses="large-button"/>
@@ -94,7 +95,7 @@
     <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.list.filter.modal.clear,schema"/>
     <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
   </commandgroup>
-  
+
   <commandgroup position="gridbottom" platform="web">
 
   </commandgroup>

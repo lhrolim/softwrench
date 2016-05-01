@@ -561,6 +561,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 (ClientPlatform.Mobile == Platform || null == Platform) || (ParentSchema != null && ParentSchema.IsMobilePlatform());
         }
 
+        public bool IsPlatformSupported(ClientPlatform platform) {
+            if (platform.Equals(ClientPlatform.Web)) {
+                return IsWebPlatform();
+            }
+            return IsMobilePlatform();
+        }
+
 
         public void DepandantFields(IDictionary<string, ISet<string>> fields) {
             _depandantFields = fields;
@@ -584,5 +591,19 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public bool IsCreation() {
             return Stereotype.Equals(SchemaStereotype.DetailNew);
         }
+
+        /// <summary>
+        /// The corrsponding menu title of the given schema. Will be used for cached purposes internally by the framework
+        /// </summary>
+        public string MenuTitle {
+            get;
+            set;
+        }
+
+        public SchemaRepresentation NewSchemaRepresentation {
+            get; set;
+        }
+
+
     }
 }

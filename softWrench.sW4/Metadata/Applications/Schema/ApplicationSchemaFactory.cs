@@ -251,6 +251,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             newSchema.FieldWhichHaveDeps = schema.FieldWhichHaveDeps;
             newSchema.NoResultsNewSchema = schema.NoResultsNewSchema;
             newSchema.RelatedCompositions = schema.RelatedCompositions;
+            newSchema.NewSchemaRepresentation = schema.NewSchemaRepresentation;
             return newSchema;
         }
 
@@ -262,6 +263,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 schema.EventSet);
             newSchema.NoResultsNewSchema = schema.NoResultsNewSchema;
             newSchema.RelatedCompositions = schema.RelatedCompositions;
+            newSchema.NewSchemaRepresentation = schema.NewSchemaRepresentation;
             return newSchema;
         }
 

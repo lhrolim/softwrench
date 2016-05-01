@@ -11,9 +11,14 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Metadata.Menu {
-    public class MenuSecurityManager : ISWEventListener<ClearMenuEvent> {
+    public class MenuSecurityManager : ISWEventListener<ClearMenuEvent>, ISWEventListener<ClearCacheEvent> {
         public void HandleEvent(ClearMenuEvent eventToDispatch) {
             SecurityFacade.CurrentUser().ClearMenu();
+        }
+
+        public void HandleEvent(ClearCacheEvent eventToDispatch) {
+            SecurityFacade.CurrentUser().ClearMenu();
+            SecurityFacade.CurrentUser().ClearBars();
         }
 
         private readonly ILog _log = LogManager.GetLogger(typeof(MenuSecurityManager));

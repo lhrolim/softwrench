@@ -126,6 +126,11 @@
         public const string NoResultsNewSchema = "list.noresultsnewschema";
 
         /// <summary>
+        /// Destination schema of the new button of empty list.
+        /// </summary>
+        public const string NewSchema = "list.newschema";
+
+        /// <summary>
         /// Function to be executed before the create new page to be opened from no results button.
         /// Can return a datamap to be pre filled on the create new page.
         /// </summary>
@@ -228,6 +233,8 @@
         /// </summary>
         public static string SearchSchemaId = "search.schemaid";
 
+     
+
         /// <summary>
         /// The the target schema id of current  search schema. If not preent "list" will be used
         /// </summary>
@@ -255,6 +262,7 @@
         /// <see cref="MetadataProvider.FetchAvailableAppsAndEntities"/>
         /// </summary>
         public static string SchemaRelatedEntities = "schema.whereclause.related";
+
 
 
     }

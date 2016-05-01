@@ -130,6 +130,12 @@ namespace softWrench.sW4.Web.Controllers {
         /// </summary>
         public IApplicationResponse Post([FromBody]JsonRequestWrapper wrapper) {
             wrapper.RequestData.Operation = OperationConstants.CRUD_CREATE;
+            if (wrapper.RequestData.CurrentSchemaKey == null) {
+                var schemaRepresentation = MetadataProvider.LocateNewSchema(wrapper.RequestData.ApplicationName);
+                if (schemaRepresentation != null) {
+                    wrapper.RequestData.CurrentSchemaKey = schemaRepresentation.SchemaId;
+                }
+            }
             return DoExecute(wrapper.RequestData, wrapper.Json);
         }
         //
