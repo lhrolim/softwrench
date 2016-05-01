@@ -266,9 +266,17 @@
 
                         $scope.paginationData = $scope.paginationData || {};
                         $scope.searchData = $scope.searchData || {};
-                        $scope.searchSort = {};
+                        $scope.searchSort = $scope.searchSort || {};
+                        $scope.vm.quickSearchDTO = extraparameters.quickSearchDTO || $scope.vm.quickSearchDTO;
+                        if (extraparameters.quickSearchDTO) {
+                            $scope.vm.quickSearchDTO = extraparameters.quickSearchDTO;
+                        } else {
+                            $scope.vm.quickSearchDTO = $scope.vm.quickSearchDTO || { compositionsToInclude: [] };
+                        }
+
+
                         $scope.metadataid = extraparameters.metadataid;
-                        $scope.vm.quickSearchDTO = extraparameters.quickSearchDTO || {compositionsToInclude:[]};
+                        
 
                         var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
                         var pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
@@ -296,6 +304,10 @@
                         }
                         if (extraparameters.forcecleanup) {
                             $scope.paginationData.filterFixedWhereClause = null;
+                            $scope.searchData = {};
+                            $scope.searchSort = {};
+                            $scope.searchOperator = {};
+                            $scope.vm.quickSearchDTO = { compositionsToInclude: [] };
                         }
 
                         $scope.selectPage(pagetogo, pageSize, printmode);

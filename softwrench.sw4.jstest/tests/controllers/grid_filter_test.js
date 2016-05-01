@@ -37,7 +37,7 @@
 
         //services should have been called
         expect(_contextService.insertIntoContext).toHaveBeenCalledWith('selectedfilter', null, true);
-        expect(_searchService.refreshGrid).toHaveBeenCalledWith({}, null,{ panelid: undefined });
+        expect(_searchService.refreshGrid).toHaveBeenCalledWith({}, null,{ panelid: undefined, forcecleanup:true });
 
 
     });
