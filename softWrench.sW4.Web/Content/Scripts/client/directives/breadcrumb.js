@@ -27,12 +27,9 @@
 
                 $scope.processBreadcrumb = function () {
                     var breadcrumbItems = breadcrumbService.getBreadcrumbItems($scope.title);
-
-                    //                log.debug('$scope', $scope);
-                    //                log.debug('schema', crudContextHolderService.currentSchema());
-                    log.debug('breadcrumbItems', $scope.title);
-
                     $scope.breadcrumbItems = breadcrumbItems;
+
+                    log.debug('breadcrumbItems', $scope.title, breadcrumbItems);
                 };
 
                 $scope.toggleOpen = function (event) {

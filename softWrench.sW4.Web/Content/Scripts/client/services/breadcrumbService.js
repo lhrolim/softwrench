@@ -327,7 +327,7 @@
             if (currentMenu.displacement === "admin") {
                 var settingsPage = {};
                 settingsPage.icon = "fa fa-cog";
-                settingsPage.title = userInfo();
+                settingsPage.title = 'Settings';
                 settingsPage.leafs = currentMenu.leafs;
                 settingsPage.type = "MenuContainerDefinition";
                 foundPages.unshift(settingsPage);
