@@ -360,7 +360,7 @@
     }
 
     th {
-        padding: 9px 15px;
+        padding: 9px 0;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
     }
@@ -432,7 +432,7 @@
 }
 
 #compositionlistgrid {
-    tbody tr {
+    tr {
         th {
             padding: 13px 15px 9px;
         }
