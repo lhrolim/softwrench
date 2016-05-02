@@ -4524,6 +4524,8 @@
       <connectorParameters>
         <connectorParameter key="dbtable" value="labtrans" />
         <connectorParameter key="integration_interface" value="SWEMPACT" />
+        <!--TODO: use these for delete/updates -->
+        <connectorParameter key="integration_interface_operations" value="" />
       </connectorParameters>
     </entity>
     <entity name="laborcraftrate" idAttribute="laborcraftrateid">
