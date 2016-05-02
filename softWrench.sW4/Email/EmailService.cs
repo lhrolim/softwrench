@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using System.Net.Mail;
+using System.Threading;
 using System.Threading.Tasks;
 using cts.commons.Util;
 using softWrench.sW4.Metadata;
@@ -52,18 +53,20 @@ namespace softWrench.sW4.Email {
             return objsmtpClient;
         }
 
-        public async void SendEmailAsync(EmailData emailData) {
-            var smtpClient = ConfiguredSmtpClient();
-            var email = BuildMailMessage(emailData);
+        /// <summary>
+        /// Sends email in a fire-and-forget way.
+        /// </summary>
+        /// <param name="emailData"></param>
+        public void SendEmailAsync(EmailData emailData) {
             // Send the email message asynchronously
-            await Task.Factory.NewThread(() => smtpClient.Send(email));
+            Task.Run(() => SendEmail(emailData));
         }
 
         public void SendEmail(EmailData emailData) {
-            var smtpClient = ConfiguredSmtpClient();
-            var email = BuildMailMessage(emailData);
-            // Send the email message synchronously
             try {
+                var smtpClient = ConfiguredSmtpClient();
+                var email = BuildMailMessage(emailData);
+                // Send the email message synchronously
                 smtpClient.Send(email);
             } catch (Exception ex) {
                 Log.Error(ex);
