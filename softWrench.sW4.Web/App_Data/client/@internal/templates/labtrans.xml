@@ -33,6 +33,9 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="labtrans" />
+        <connectorParameter key="integration_interface" value="SWEMPACT" />
+        <!--TODO: use these for delete/updates -->
+        <connectorParameter key="integration_interface_operations" value="" />
       </connectorParameters>
     </entity>
     <entity name="labortranstype" idAttribute="synonymdomainid" parententity="synonymdomain" whereclause="DOMAINID = 'LTTYPE'">
@@ -67,12 +70,12 @@
           <commandbars>
             <commandgroup position="actions">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <!--<command id="addlabor" icon="fa fa-clock-o" label="Create Labor"
+              <!--<command id="addlabor" icon="fa fa-clock-o" label="Create Labor"
                          service="labtranService" method="openNewDetailModal"/>-->
-                <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
-                         service="labtranService" method="approveMultipleLabtrans"/>
-                <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
-                         service="labtranService" method="deleteMultipleLabtrans"/>
+              <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
+                       service="labtranService" method="approveMultipleLabtrans"/>
+              <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
+                       service="labtranService" method="deleteMultipleLabtrans"/>
               <!--</container>-->
             </commandgroup>
           </commandbars>
@@ -246,12 +249,12 @@
         <schema id="editdetail" title="Labor Report Details" stereotype="detail">
           <commandbars>
             <!--<commandgroup position="actions">-->
-              <container label="Actions" id="actioncontainer" icon="fa-bolt">
-                <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
-                         service="labtranService" method="approveSingleLabtrans"/>
-                <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
-                         service="labtranService" method="deleteSingleLabtrans"/>
-              </container>
+            <container label="Actions" id="actioncontainer" icon="fa-bolt">
+              <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
+                       service="labtranService" method="approveSingleLabtrans"/>
+              <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
+                       service="labtranService" method="deleteSingleLabtrans"/>
+            </container>
             <!--</commandgroup>-->
           </commandbars>
           <field attribute="labtransid" hidden="true"/>
