@@ -50,7 +50,8 @@ namespace softWrench.sW4.Web {
         }
 
         public void PopulateScriptBundles(BundleCollection bundles) {
-            if (ApplicationConfiguration.IsLocal()) {
+            var isLocal = ApplicationConfiguration.IsLocal();
+            if (isLocal) {
                 PopulateLocalScriptBundles(bundles);
             } else {
                 PopulateDistributionScriptBundles(bundles);
@@ -125,6 +126,7 @@ namespace softWrench.sW4.Web {
         private void PopulateDistributionScriptBundles(BundleCollection bundles) {
             var scriptBundle = new ScriptBundle(Bundles.Distribution.AllScripts)
                 .Include("~/Content/dist/scripts/vendor.js")
+                .Include("~/Content/dist/scripts/customvendor.js")
                 .Include("~/Content/dist/scripts/app.js");
             scriptBundle.Orderer = new PassthroughBundleOrderer();
             bundles.Add(scriptBundle);

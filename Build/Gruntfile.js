@@ -6,7 +6,14 @@ module.exports = function (grunt) {
     var customer = grunt.option("customer");
     var skipTest = grunt.option("skiptest");
 
+    //Resolving presets on the run, so that we do not need to install node-modules on web-project
+    var babelCore = require('babel-core');
+    var optManager = new babelCore.OptionManager();
+    var resolvedPresets = optManager.resolvePresets(['es2015']);
+
+
     grunt.initConfig({
+
         //#region global app config
         app: {
             content: fullPath + "Content",
@@ -17,6 +24,20 @@ module.exports = function (grunt) {
             webcommons: fullPath + "Content/Shared/webcommons",
             tmp: fullPath + "Content/temp",
             dist: fullPath + "Content/dist"
+        },
+        //#endregion
+
+
+        //#region babeljs
+        babel: {
+            options: {
+                "presets": resolvedPresets
+            },
+            dist: {
+                files: {
+                    "<%= app.dist %>/scripts/app.js": "<%= concat.appScripts.dest %>"
+                }
+            }
         },
         //#endregion
 
@@ -203,6 +224,10 @@ module.exports = function (grunt) {
                     // jquery
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery-ui.js",
+
+                    "<%= bowercopy.scripts.options.destPrefix %>/jquery.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/jquery-ui.js",
+
                     // bootstrap
                     "<%= bowercopy.scripts.options.destPrefix %>/bootstrap.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/bootstrap-datetimepicker.js",
@@ -224,13 +249,24 @@ module.exports = function (grunt) {
                 ],
                 dest: "<%= app.dist %>/scripts/vendor.js"
             },
-            appScripts: {
+
+            customVendorScripts: {
                 options: {
                     separator: ";\n"
                 },
                 src: [
                     // customVendors (except angular)
                     "<%= app.customVendor %>/scripts/{**/*.js, !(angular)/**/*.js}",
+                ],
+
+                dest: "<%= app.tmp %>/scripts/customvendor.concat.js"
+            },
+
+            appScripts: {
+                options: {
+                    separator: ";\n"
+                },
+                src: [
                     // actual app: ng-annotated source
                     "<%= app.tmp %>/scripts/app.annotated.js"
                 ],
@@ -274,6 +310,14 @@ module.exports = function (grunt) {
                     dest: "<%= app.tmp %>/scripts/rawVendor.min.js"
                 }]
             },
+
+            customVendors: {
+                files: [{
+                    src: ["<%= concat.customVendorScripts.dest %>"],
+                    dest: "<%= app.dist %>/scripts/customvendor.js"
+                }]
+            },
+
             app: {
                 files: [{
                     src: ["<%= concat.appScripts.dest %>"],
@@ -315,6 +359,7 @@ module.exports = function (grunt) {
                 },
                 files: [
                     "<%= app.dist %>/scripts/vendor.js",
+                    "<%= app.dist %>/scripts/customvendor.js",
                     "<%= app.dist %>/scripts/app.js",
                     "../softWrench.sW4.Web/Content/Templates/**/*.html",
                     "<%= app.tests %>/angular_mock.js",
@@ -336,6 +381,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
     grunt.loadNpmTasks("grunt-karma");
+    require("load-grunt-tasks")(grunt);
+
     //#endregion
 
     //#region customTasks
@@ -348,11 +395,15 @@ module.exports = function (grunt) {
         "copyAll", // copying bower files
         "cssmin:customVendor", // minify and concat 'customized from vendor' css
         "concat:vendorStyles", // concat vendors's css + minified 'customized from vendor' and distribute as 'css/vendor.css'
+        "concat:customVendorScripts", // concat custom vendors's scripts and distribute as 'scripts/vendor.js'
         "uglify:rawVendors", // minifies unminified vendors
         "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
         "ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
+        "uglify:customVendors",
+        "babel",// uses babeljs to convert brandnew ES6 javascript into ES5 allowing for old browsers
         "uglify:app" // minify app script and distribute as 'scripts/app.js'
+//        "clean:vendor", "clean:tmp" // clean temporary folders 
     ];
     if (!skipTest) {
         defaultTasks.push("karma:target");  // run tests on minified scripts
@@ -366,11 +417,27 @@ module.exports = function (grunt) {
         "bowercopy:scripts", // copying bower js files
         "uglify:rawVendors", // minifies unminified vendors
         "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
+        "concat:customVendorScripts", // concat custom vendors's scripts and distribute as 'scripts/vendor.js'
         "ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
+        "uglify:customVendors",
+        "babel",// uses babeljs to convert brandnew ES6 javascript into ES5 allowing for old browsers
         "uglify:app", // minify app script and distribute as 'scripts/app.js'
         "karma:target", // run tests on minified scripts
         "clean:vendor", "clean:tmp" // clean temporary folders 
+    ]);
+
+
+    grunt.registerTask("unminified", [
+       "cleanAll", // clean folders: preparing for copy
+       "bowercopy:scripts", // copying bower js files
+       "uglify:rawVendors", // minifies unminified vendors
+       "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
+       "ngAnnotate:app", // ng-annotates app's scripts
+       "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
+       "babel",// uses babeljs to convert brandnew ES6 javascript into ES5 allowing for old browsers
+       "karma:target", // run tests on minified scripts
+       "clean:vendor", "clean:tmp" // clean temporary folders
     ]);
     //#endregion
 
