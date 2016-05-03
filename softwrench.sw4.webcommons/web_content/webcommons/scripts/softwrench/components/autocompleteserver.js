@@ -74,6 +74,14 @@
                             rateLimitWait: 500,
                             filter: function (parsedResponse) {
                                 if (filterMode) {
+                                    //if the displayname is blank we show the value instead.
+                                    for (var i = 0; i < parsedResponse.length; i++) {
+                                        var item = parsedResponse[i];
+                                        if (item.label === undefined || item.label === '') {
+                                            item.label = item.value;
+                                        }
+                                    }
+
                                     //if we are on filterMode, we´ll use only the Bloodhound engine, but rather have an external control for the list instead of the typeahead default
                                     scope.$broadcast("sw.autocompleteserver.response", parsedResponse);
                                     return [];
