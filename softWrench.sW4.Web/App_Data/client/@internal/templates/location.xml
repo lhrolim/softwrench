@@ -27,6 +27,10 @@
           <relationshipAttribute from="type" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="LOCTYPE" quoteLiteral="true" />
         </relationship>
+        <relationship to="asset" collection="true">
+          <relationshipAttribute from="location" primary="true" query="asset.location = @from or asset.location in (select location from locancestor locan where locan.ancestor = @from)"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
         <relationship to="serviceaddress">
           <relationshipAttribute from="saddresscode" to="addresscode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
@@ -35,7 +39,7 @@
     </entity>
 
   </entities>
-  
+
   <applications>
     <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
       <properties>
@@ -58,7 +62,7 @@
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="Low" value="3" />
         </optionfilter>
       </filters>
-      
+
       <schemas>
         <schema id="locationlookup" title="Location List">
           <field attribute="location" label="Location" qualifier="title"/>
@@ -97,7 +101,7 @@
           <!--Child Locations-->
           <!--Open Work Orders-->
         </list>
-        
+
         <list platform="mobile">
           <field attribute="location" label="Location" readonly="true"/>
           <field attribute="description" label="Description"/>
@@ -112,13 +116,13 @@
           <!--<field attribute="parentlocation_.systemid" label="System"/>-->
           <!--<field attribute="children" label="Child Locations"/>-->
         </list>
-        
+
         <schema id="locationdetail" title="Location Detail" stereotype="detail">
           <properties>
             <property key="detail.crawl.customparams" value="parentlocation_.systemid"/>
           </properties>
           <field attribute="orgid" showexpression="false"/>
-          
+
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=small" />
             <field attribute="location" label="Location:" readonly="true" hidden="true"/>
@@ -126,7 +130,7 @@
             <field attribute="status" label="Status" readonly="true"/>
             <field attribute="siteid" label="Site:" readonly="true"/>
           </section>
-          
+
           <section orientation="horizontal">
             <header displacement="ontop" label="Location Information" params="fieldset=true" />
             <renderer type="default" params="childinputsize=small" />
@@ -135,7 +139,7 @@
             <optionfield attribute="locoper_.locpriority" label="Priority" providerattribute="_SWPriorityType" readonly="true">
               <renderer type="lookup"/>
             </optionfield>
-            
+
             <field attribute="locoper_.failurecode" label="Failure Code:" readonly="true"/>
             <field attribute="locoper_.itemnum" label="Rotating Item:" readonly="true"/>
             <field attribute="locoper_.groupname" label="Meter Group:" readonly="true"/>
@@ -144,11 +148,11 @@
             <field attribute="glaccount" label="GL Account:" readonly="true"/>
             <field attribute="intlabrec" label="Internal Labor Account" readonly="true"/>
           </section>
-          
+
           <section id="systems" orientation="horizontal">
             <!-- need to add some type of selectable association for systems -->
           </section>
-          
+
           <composition relationship="parentlocation" label="Parent" detailschema="" inline="true">
             <collectionproperties listschema="locationparentlist" allowcreation="false" prefilterfunction="FilterLocationHierarchy"/>
           </composition>
@@ -172,10 +176,10 @@
           </composition>
           <commandbars>
             <commandgroup position="actions">
-<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command id="dispatchwo" icon="fa-wrench" label="Create Work Order"
-                          parameters="schema,datamap" service="locationService" method="dispatchWO"/>
-<!--              </container>-->
+              <!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+              <command id="dispatchwo" icon="fa-wrench" label="Create Work Order"
+                        parameters="schema,datamap" service="locationService" method="dispatchWO"/>
+              <!--              </container>-->
             </commandgroup>
             <commandgroup position="detail.primary">
               <removecommand id="save"/>

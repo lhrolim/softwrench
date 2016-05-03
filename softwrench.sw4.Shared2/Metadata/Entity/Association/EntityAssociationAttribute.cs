@@ -4,24 +4,39 @@ using softwrench.sw4.Shared2.Metadata.Entity;
 namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
     public class EntityAssociationAttribute : IQueryHolder {
 
-        public bool Primary { get; set; }
-        public string To { get; set; }
-        public string From { get; set; }
-        public string Literal { get; set; }
-        public bool QuoteLiteral { get; set; }
+        public bool Primary {
+            get; set;
+        }
+        public string To {
+            get; set;
+        }
+        public string From {
+            get; set;
+        }
+        public string Literal {
+            get; set;
+        }
+        public bool QuoteLiteral {
+            get; set;
+        }
 
-        public string Query { get; set; }
+        public string Query {
+            get; set;
+        }
 
-        public bool AllowsNull { get; set; }
+        public bool AllowsNull {
+            get; set;
+        }
 
         public bool HasFromAndTo() {
             return From != null && To != null;
         }
 
-        public EntityAssociationAttribute() { }
-        
+        public EntityAssociationAttribute() {
+        }
 
-        public EntityAssociationAttribute(string to, string @from, string query, bool primary = false,bool allowsNull=false) {
+
+        public EntityAssociationAttribute(string to, string @from, string query, bool primary = false, bool allowsNull = false) {
 
             From = @from;
             To = to;
@@ -30,7 +45,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
             AllowsNull = allowsNull;
         }
 
-        
+
 
         public EntityAssociationAttribute(bool quoteLiteral, string to, string from, string literal) {
             if (literal == null) throw new ArgumentNullException("literal");
@@ -43,8 +58,12 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
             QuoteLiteral = quoteLiteral;
         }
 
-        public string GetQueryReplacingMarkers(string entityName) {
-            return Query.Replace("!@", entityName + ".");
+        public string GetQueryReplacingMarkers(string entityName, string fromValue = null) {
+            var queryReplacingMarkers = Query.Replace("!@", entityName + ".");
+            if (fromValue != null) {
+                queryReplacingMarkers = queryReplacingMarkers.Replace("@from", "'" + fromValue + "'");
+            }
+            return queryReplacingMarkers;
         }
 
 

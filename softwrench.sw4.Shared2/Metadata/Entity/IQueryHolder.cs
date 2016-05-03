@@ -3,6 +3,6 @@
 
         string Query { get; }
 
-        string GetQueryReplacingMarkers(string entityName);
+        string GetQueryReplacingMarkers(string entityName, string fromValue=null);
     }
 }

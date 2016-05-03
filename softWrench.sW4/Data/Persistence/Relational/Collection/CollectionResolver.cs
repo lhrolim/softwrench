@@ -260,13 +260,20 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             foreach (var entity in enumerable) {
                 var key = matchingResultWrapper.FetchKey(entity);
                 var searchValue = SearchUtils.GetSearchValue(lookupAttribute, entity);
-                if (!String.IsNullOrWhiteSpace(searchValue) && lookupAttribute.To != null) {
+                if (!String.IsNullOrWhiteSpace(searchValue)) {
                     searchValues.Add(searchValue);
-                    key.AppendEntry(lookupAttribute.To, searchValue);
+                    if (lookupAttribute.To != null) {
+                        key.AppendEntry(lookupAttribute.To, searchValue);
+                    }
                 }
             }
             if (searchValues.Any()) {
-                searchRequestDto.AppendSearchEntry(lookupAttribute.To, searchValues);
+                if (lookupAttribute.To != null) {
+                    searchRequestDto.AppendSearchEntry(lookupAttribute.To, searchValues);
+                } else if (lookupAttribute.Query != null) {
+                    //TODO: support for multiple entities on print
+                    searchRequestDto.AppendWhereClause(lookupAttribute.GetQueryReplacingMarkers(parameter.EntityMetadata.Name, searchValues.FirstOrDefault()));
+                }
             } else if (hasMainEntity && lookupAttribute.Primary) {
                 //if nothing was provided, it should return nothing, instead of all the values --> 
                 //if the main entity had a null on a primary element of the composition, nothing should be seen

@@ -19,7 +19,7 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
             Context = context;
         }
 
-        public override string GetQueryReplacingMarkers(String entityName) {
+        public override string GetQueryReplacingMarkers(string entityName, string fromValue=null) {
 
 
             if (Query.StartsWith("ref:")) {

@@ -232,6 +232,7 @@
           <field attribute="assetid" hidden="true"/>
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description"/>
+          <field attribute="location" label="Location"/>
           <field attribute="parentasset_.assetnum" label="Parent"/>
           <field attribute="parentasset_.description" label="Parent Description"/>
           <field attribute="itemnum" label="Rotating Item"/>
