@@ -301,18 +301,25 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 return;
             }
             var optionFilter = (MetadataOptionFilter)filter;
-            var options = optionFilter.Options;
-            if (options == null) {
-                return;
+
+            // Giving precedence to the top level preselected filter condition if it exists.
+            if (!string.IsNullOrWhiteSpace(optionFilter.Preselected)){
+                dto.AppendSearchParam(filter.Attribute);
+                dto.AppendSearchValue(string.Format("={0}", optionFilter.Preselected));
+            } else {
+                var options = optionFilter.Options;
+                if (options == null) {
+                    return;
+                }
+
+                var metadataFilterOptions = options as IList<MetadataFilterOption> ?? options.ToList();
+                var optionValues = metadataFilterOptions.Where(o => o.PreSelected).Select(o => o.Value);
+                var values = string.Join(",", optionValues);
+
+                if (string.IsNullOrEmpty(values)) { return; }
+                dto.AppendSearchParam(filter.Attribute);
+                dto.AppendSearchValue("=" + values);
             }
-
-            var metadataFilterOptions = options as IList<MetadataFilterOption> ?? options.ToList();
-            var optionValues = metadataFilterOptions.Where(o => o.PreSelected).Select(o => o.Value);
-            var values = string.Join(",", optionValues);
-
-            if (string.IsNullOrEmpty(values)) { return; }
-            dto.AppendSearchParam(filter.Attribute);
-            dto.AppendSearchValue("=" + values);
         }
     }
 }

@@ -17,7 +17,6 @@
                         applyFilter: "&"
                     },
 
-
                     link: function (scope, element, attrs) {
                         scope.vm = {};
 
@@ -66,6 +65,9 @@
                             scope.preSelectOptionIfNeeded(item, linkLog);
                         });
 
+                        //select filter options for the top level preselect condition
+                        scope.preSelectOption(scope.filter.options, linkLog);
+
                         if (!filter.lazy && filter.provider) {
                             //let´s get the whole list from the server 
                             //FilterData#GetFilterOptions(string application, ApplicationMetadataSchemaKey key, string filterProvider, string filterAttribute, string labelSearchString)
@@ -80,6 +82,9 @@
                             restService.getPromise("FilterData", "GetFilterOptions", parameters).then(function (result) {
                                 scope.filteroptions = scope.filteroptions.concat(result.data);
                                 scope.filteroptions = removeDuplicatesOnArray(scope.filteroptions, "value");
+
+                                //select filter options for the top level preselect condition
+                                scope.preSelectOption(scope.filteroptions, linkLog);
                             });
                         } else {
                             scope.vm.notSearching = true;
@@ -146,8 +151,6 @@
                     },
 
                     controller: ["$scope", "$rootScope", function ($scope, $rootScope) {
-
-
                         var filter = $scope.filter;
 
                         $scope.labelValue = function (option) {
@@ -292,6 +295,21 @@
                             }
                         }
 
+                        $scope.preSelectOption = function (options, log) {
+                            if ($scope.filter.preselected !== undefined && $scope.filter.preselected !== '') {
+                                $scope.filter.preselected.split(",").forEach(function (value) {
+                                    options.forEach(function (item) {
+                                        //these won´t go to currently used
+                                        item.nonstoreable = true;
+                                        if (item.value === value.trim()) {
+                                            log.debug("Option pre selected: (" + item.value + ") " + item.label);
+                                            $scope.selectedOptions[item.value] = 1;
+                                        }
+                                    });
+                                });
+                            }
+                        }
+
                         $scope.preSelectOptionIfNeeded = function (option, log) {
                             var searchValue = $scope.searchData[filter.attribute];
                             if (option.preSelected && searchValue && searchValue.indexOf(option.value) >= 0) {
@@ -407,16 +425,14 @@
                             filter.options.forEach(function (item) {
                                 $scope.preSelectOptionIfNeeded(item, log);
                             });
+
+                            //select filter options for the top level preselect condition
+                            $scope.preSelectOption($scope.filteroptions, log);
                         });
                     }]
-
-
 
                 };
 
                 return directive;
-
             }]);
-
 })(angular);
-
