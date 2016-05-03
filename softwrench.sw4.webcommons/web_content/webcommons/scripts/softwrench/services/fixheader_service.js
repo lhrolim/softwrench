@@ -37,7 +37,7 @@ angular.module('sw_layout')
     function setHeaderPosition() {
         var siteHeaderElement = $('.site-header');
         //var toolbarElement = $('.toolbar-primary:not(.affix-pagination)');
-        var toolbarElement = $('.toolbar-primary');
+        var toolbarElement = $('.toolbar-primary:visible');
         var listTheadElement = $('.listgrid-thead:visible');
 
         if (siteHeaderElement.css('position') === 'fixed') {

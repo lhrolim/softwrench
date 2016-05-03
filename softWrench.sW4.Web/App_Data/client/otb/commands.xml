@@ -77,9 +77,9 @@
     <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
     <togglecommand id="toggleselected" position="+profiles">
       <oncommand id="ontoggleselected" icon="fa-toggle-on" service="dispatcherService" method="dispatchevent"
-                 label="Show All" parameters="sw.crud.list.toggleselected,panelid"/>
+                 label="Show" tooltip="Show Selected" parameters="sw.crud.list.toggleselected,panelid" cssclasses="large-button"/>
       <offcommand id="offtoggleselected" icon="fa-toggle-off" service="dispatcherService" method="dispatchevent"
-                 label="Show Selected" parameters="sw.crud.list.toggleselected,panelid"/>
+                 label="Show" tooltip="Show All" parameters="sw.crud.list.toggleselected,panelid" cssclasses="large-button"/>
     </togglecommand>
     <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
   </commandgroup>
