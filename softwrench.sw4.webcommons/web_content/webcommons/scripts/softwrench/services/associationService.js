@@ -69,6 +69,8 @@
         }
 
         var doGetFullObject = function (associationFieldMetadata, selectedValue, datamap, schema, contextData) {
+
+
             if (selectedValue == null) {
                 return null;
             } else if (Array.isArray(selectedValue)) {
@@ -95,6 +97,10 @@
             if (compositionService.isCompositionListItem(datamap)) {
                 contextData = compositionService.buildCompositionListItemContext(contextData, datamap, schema);
             }
+            if (!contextData && crudContextHolderService.isShowingModal()) {
+                contextData = { schemaId: "#modal" };
+            }
+
             var listToSearch = crudContextHolderService.fetchEagerAssociationOptions(key, contextData);
 
             if (listToSearch == null) {

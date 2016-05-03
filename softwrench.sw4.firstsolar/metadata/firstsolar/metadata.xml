@@ -165,7 +165,7 @@
           <field attribute="details" label="Details:" requiredexpression="true">
             <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
-          <field attribute="classificationid" label="Origination">
+          <field attribute="classification" label="Origination">
             <renderer type="default" params="updatable=true"/>
           </field>
           <field attribute="worktype" label="Work Type">
@@ -207,7 +207,7 @@
           <field attribute="details" label="Details:" requiredexpression="true">
             <renderer type="textarea" params="updatable=true;limit=20"/>
           </field>
-          <field attribute="classificationid" label="Origination">
+          <field attribute="classification" label="Origination">
             <renderer type="default" params="updatable=true"/>
           </field>
           <field attribute="worktype" label="Work Type">
