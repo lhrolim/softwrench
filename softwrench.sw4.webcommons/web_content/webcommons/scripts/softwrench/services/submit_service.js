@@ -167,6 +167,7 @@
             parameters = addSchemaDataToParameters(parameters, schema, nextSchemaObj);
             var checkPointArray = checkpointService.fetchAllCheckpointInfo();
             if (checkPointArray && checkPointArray.length > 0) {
+                parameters.routeParametersDTO = {};
                 parameters.routeParametersDTO.checkPointData = checkPointArray;
             }
             

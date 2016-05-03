@@ -475,10 +475,7 @@
                 }
 
                 // flag to block multiple save calls while one is still executing
-                var _executingSave = false;
                 $scope.save = function (parameters) {
-                    if (_executingSave) return;
-                    _executingSave = true;
                     var log = $log.getInstance('crudbody#save');
                     parameters = parameters || {};
 
@@ -495,19 +492,14 @@
                         var validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, $scope.datamap.fields, errorForm);
                         if (validationErrors.length > 0) {
                             //interrupting here, can´t be done inside service
-                            _executingSave = false;
                             return;
                         }
                         var result = modalSavefn($scope.datamap.fields, schemaToSave);
                         if (result && result.then) {
                             result.then(function () {
                                 modalService.hide();
-                            }).finally(function () {
-                                _executingSave = false;
-                            });
-                        } else {
-                            _executingSave = false;
-                        }
+                            })
+                        } 
                         return;
                     }
 
@@ -539,7 +531,6 @@
                     if (eventResult === false) {
                         //this means that the custom service should call the continue method
                         log.debug('waiting on custom prevalidation to invoke the continue function');
-                        _executingSave = false;
                         return;
                     }
 
@@ -555,7 +546,6 @@
                         var validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, transformedFields, $scope.crudform.$error);
                         if (validationErrors.length > 0) {
                             //interrupting here, can´t be done inside service
-                            _executingSave = false;
                             return;
                         }
                     }
@@ -576,7 +566,6 @@
                     if (eventResult === false) {
                         //this means that the custom postvalidator should call the continue method
                         log.debug('waiting on custom postvalidator to invoke the continue function');
-                        _executingSave = false;
                         return;
                     }
 
@@ -628,7 +617,6 @@
                         if (formToSubmitId != null) {
                             var form = $(formToSubmitId);
                             submitService.submitForm(form, submissionParameters, jsonString, applicationName);
-                            _executingSave = false;
                             return;
                         }
                     }
@@ -695,9 +683,7 @@
                         if (failureCbk != null) {
                             failureCbk(data);
                         }
-                    }).finally(function () {
-                        _executingSave = false;
-                    });
+                    })
                 };
 
                 // adds a padding right to not be behind side panels handles
