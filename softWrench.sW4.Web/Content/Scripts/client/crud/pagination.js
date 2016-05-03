@@ -89,8 +89,8 @@
                 }
 
                 $scope.shouldShowPagination = function () {
-                    if ($scope.paginationData.paginationOptions == undefined) {
-                        return;
+                    if (!$scope.paginationData || !$scope.paginationData.paginationOptions) {
+                        return false;
                     }
 
                     return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected && !!$scope.paginationData && $scope.paginationData.paginationOptions.some(function (option) {
