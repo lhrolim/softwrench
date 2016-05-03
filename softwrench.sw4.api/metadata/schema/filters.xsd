@@ -52,7 +52,7 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
             <documentation>schema of the lookup modal</documentation>
           </annotation>
         </attribute>
-        
+        <attribute name="preselected" type="string"></attribute>
       </extension>
     </complexContent>
   </complexType>

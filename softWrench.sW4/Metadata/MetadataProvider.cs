@@ -744,7 +744,10 @@ namespace softWrench.sW4.Metadata {
                     }
                 }
             }
-            return null;
+            return new SchemaRepresentation() {
+                Label = newSchema.Title,
+                SchemaId = newSchema.SchemaId
+            };
 
         }
     }

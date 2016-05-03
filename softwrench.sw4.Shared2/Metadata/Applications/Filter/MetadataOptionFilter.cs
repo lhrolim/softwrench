@@ -35,13 +35,20 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
             get; set;
         }
 
-        public MetadataOptionFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, string provider, bool displayCode, bool allowBlank, string style, bool lazy, string advancedFilterSchemaId, IEnumerable<MetadataFilterOption> options)
+        public string Preselected {
+            get; set;
+        }
+        /// <summary>
+        /// Initialize a new instance of the <see cref="MetadataOptionFilter"/> class.
+        /// </summary>
+        public MetadataOptionFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, string provider, bool displayCode, bool allowBlank, string style, bool lazy, string advancedFilterSchemaId, string preselected, IEnumerable<MetadataFilterOption> options)
             : base(attribute, label, icon, position, tooltip, whereClause, false, style) {
             Provider = provider;
             Options = options;
             AllowBlank = allowBlank;
             DisplayCode = displayCode;
             Lazy = lazy;
+            Preselected = preselected;
             AdvancedFilterSchemaId = advancedFilterSchemaId;
         }
 

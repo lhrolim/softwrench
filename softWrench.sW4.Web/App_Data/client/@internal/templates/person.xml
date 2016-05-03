@@ -50,12 +50,6 @@
           </field>
 
           <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>
-
-          <commandbars>
-            <commandgroup position="gridtop">
-              <command id="new" icon="fa-plus" service="redirectService" method="goToApplicationView" parameters="person,newPersonDetail" label="User" tooltip="New User" position="new" cssclasses="large-button" showexpression="true"/>
-            </commandgroup>
-          </commandbars>
         </schema>
 
         <schema id="detail" stereotype="detail" title="User Profile">

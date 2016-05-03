@@ -56,6 +56,10 @@
           <f:option label="Yes" value="1" />
           <f:option label="No" value="0" />
         </optionfilter>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Open" value="INPROG,QUEUED,PENDING,NEW,HISTEDIT" preselected="true" displaycode="false"
+                  tooltip="The status of open service requests. Matches any service request of &quot;INPROG&quot;, &quot;PENDING&quot;, &quot;QUEUED&quot;, &quot;NEW&quot; or &quot;HISTEDIT&quot; status."/>
+        </optionfilter>
       </filters>
       <schemas>
         
@@ -212,6 +216,10 @@
         <optionfilter attribute="lostenergy" allowblank="false" style="width:300px" eager="true">
           <f:option label="Yes" value="1" />
           <f:option label="No" value="0" />
+        </optionfilter>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Open" value="APPR,HISTEDIT,INPRG,WAPPR,WMATL,WPCOND,WSCH" preselected="true" displaycode="false"
+                  tooltip="The status of open work orders. Matches any work orders of &quot;APPR&quot;, &quot;HISTEDIT&quot;, &quot;INPRG&quot;, &quot;WAPPR&quot; , &quot;WMATL&quot;, &quot;WPCOND&quot; or &quot;WSCH&quot; status."/>
         </optionfilter>
       </filters>
 
