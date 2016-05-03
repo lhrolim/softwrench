@@ -1,4 +1,5 @@
 ﻿using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;

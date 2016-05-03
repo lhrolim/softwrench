@@ -2,10 +2,10 @@
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
-using WsUtil = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.wsWorkorder;
+using WsUtil = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons
+namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions
 {
 
     class LocationHandler

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
     class ISMAttachmentHandler {

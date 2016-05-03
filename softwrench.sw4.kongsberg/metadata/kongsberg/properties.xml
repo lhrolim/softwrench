@@ -10,10 +10,11 @@
 
   <property key="defaultOrgId" value="KOGT"/>
   <property key="defaultSiteId" value="SUPPORT24"/>
-  <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
+  
   <!--  <property key="email.smtp.timeout" value="10000"/>-->
   <!--property key="email.smtp.port" value="587"/-->
-  <property key="email.stmp.enableSSL" value="true"/>
+  <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
+  <property key="email.stmp.enableSSL" value="false"/>
 
   <!--Sample UNC Doclink Path-->
   <!--<property key="maximourldoclinkspath" value="https://10.10.10.10"/>-->
@@ -63,6 +64,7 @@
     <property key="basewsURL" value="http://172.24.32.39:9080/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=172.24.16.111;Initial Catalog=KOGTPROD;User Id=MAXIMO;password=M@x1m0;" />
     <property key="email.smtp.host" value="172.24.16.101"/>
+    <property key="email.stmp.enableSSL" value="true"/>
   </environment>
 
 </Properties>

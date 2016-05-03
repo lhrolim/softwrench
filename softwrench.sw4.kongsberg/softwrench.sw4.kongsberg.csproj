@@ -39,6 +39,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\kongsberg\connector\KongsbergIncidentCrudConnector.cs" />
+    <Compile Include="classes\com\cts\kongsberg\connector\KongsbergProjectRequestCrudConnector.cs" />
+    <Compile Include="classes\com\cts\kongsberg\connector\KongsbergServiceRequestCrudConnector.cs" />
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergIncidentDataSet.cs" />
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergProjectRequestDataSet.cs" />
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergServiceRequestDataSet.cs" />
@@ -48,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\kongsberg\configuration\" />
-    <Folder Include="classes\com\cts\kongsberg\connector\" />
     <Folder Include="classes\com\cts\kongsberg\migration\" />
     <Folder Include="web_content\kongsberg\htmls\" />
   </ItemGroup>

@@ -10,17 +10,18 @@ using JetBrains.Annotations;
 using NHibernate.Linq;
 using softwrench.sw4.api.classes.email;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
-using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.wsWorkorder;
-using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
+using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons {
-    class CommLogHandler {
+namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
+    public class CommLogHandler {
 
         private const string Ticketuid = "ticketuid";
         private const string Commloguid = "commloguid";

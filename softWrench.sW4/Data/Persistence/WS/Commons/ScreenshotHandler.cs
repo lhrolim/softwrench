@@ -4,6 +4,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Util;
 using System;
 using System.Text;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class ScreenshotHandler {

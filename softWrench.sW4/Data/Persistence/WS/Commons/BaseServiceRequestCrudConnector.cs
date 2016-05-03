@@ -10,24 +10,28 @@ using cts.commons.portable.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using cts.commons.simpleinjector;
 using softwrench.sw4.api.classes.email;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Email;
 
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
-    class BaseServiceRequestCrudConnector : CrudConnectorDecorator {
+    public class BaseServiceRequestCrudConnector : CrudConnectorDecorator {
 
         protected AttachmentHandler _attachmentHandler;
         protected CommLogHandler _commlogHandler;
         private MaximoHibernateDAO maxHibernate;
         private readonly EmailService _emailService;
 
-        protected MaximoHibernateDAO MaxHibernate {
-            get {
+        protected MaximoHibernateDAO MaxHibernate
+        {
+            get
+            {
                 return maxHibernate;
             }
 
-            set {
+            set
+            {
                 maxHibernate = value;
             }
         }
@@ -76,7 +80,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             _commlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 
-            HandleRelatedRecords(maximoTemplateData);
+            RelatedRecordHandler.HandleRelatedRecords(maximoTemplateData);
 
             base.BeforeUpdate(maximoTemplateData);
         }
@@ -103,8 +107,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
 
             // SWWEB-980 Additional logic to change status to queued if owner is selected
-            if (w.GetRealValue(sr, "STATUS").Equals("NEW") && (w.GetRealValue(sr, "OWNER") != null || w.GetRealValue(sr, "OWNERGROUP") != null))
+            if (w.GetRealValue(sr, "STATUS").Equals("NEW") &&
+                (w.GetRealValue(sr, "OWNER") != null || w.GetRealValue(sr, "OWNERGROUP") != null)) {
                 w.SetValue(sr, "STATUS", "QUEUED");
+            }
+
 
             // Update or create new long description 
             LongDescriptionHandler.HandleLongDescription(sr, (CrudOperationData)maximoTemplateData.OperationData);
@@ -138,34 +145,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValue(tkserviceaddress, "STADDRSTTYPE", streettype);
         }
 
-        private static void HandleRelatedRecords(MaximoOperationExecutionContext maximoOperation) {
-            var srData = (CrudOperationData)maximoOperation.OperationData;
-            var relatedRecords = ((IEnumerable<CrudOperationData>)srData.GetRelationship("relatedrecord_"))
-                                    .Where(r => r.IsDirty)
-                                    .ToList();
 
-            if (!relatedRecords.Any()) return;
-
-            var sr = maximoOperation.IntegrationObject;
-            var user = SecurityFacade.CurrentUser();
-
-            w.CloneArray(relatedRecords, sr, "RELATEDRECORD", (relatedRecord, relatedRecordData) => {
-                w.SetValue(relatedRecord, "RELATEDRECORDID", -1);
-                w.SetValue(relatedRecord, "RELATETYPE", "RELATED");
-                // current SR data
-                w.SetValue(relatedRecord, "RECORDKEY", srData.UserId);
-                w.CopyFromRootEntity(sr, relatedRecord, "SITEID", user.SiteId);
-                w.CopyFromRootEntity(sr, relatedRecord, "ORGID", user.OrgId);
-                // related target data
-                var relatedClass = relatedRecordData.GetStringAttribute("relatedrecclass").ToUpper();
-                if (relatedClass.Equals("WORKORDER")) {
-                    w.SetValueIfNull(relatedRecord, "RELATEDRECWOCLASS", relatedClass);
-                    w.SetValueIfNull(relatedRecord, "RELATEDRECWONUM", relatedRecordData.GetAttribute("relatedreckey"));
-                    //in case of workorder we cannot pass these values, but rather the WO specific ones
-                    w.NullifyValue(relatedRecord, "RELATEDRECCLASS");
-                    w.NullifyValue(relatedRecord, "RELATEDRECKEY");
-                } 
-            });
-        }
     }
 }

@@ -5,6 +5,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Email;
 using softWrench.sW4.Metadata.Applications;

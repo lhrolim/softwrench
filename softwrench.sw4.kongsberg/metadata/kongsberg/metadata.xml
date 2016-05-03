@@ -277,7 +277,7 @@
       <connectorParameters>
         <connectorParameter key="dbtable" value="sr" />
         <connectorParameter key="integration_interface" value="SWSR" />
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.KongsbergServiceRequestCrudConnector" />
+        <connectorParameter key="customconnector" value="softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector.KongsbergServiceRequestCrudConnector" />
         <connectorParameter key="dispatchincident_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
       </connectorParameters>
     </entity>
@@ -334,7 +334,7 @@
         </relationship>
       </relationships>
       <connectorParameters>
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.KongsbergProjectRequestCrudConnector" />
+        <connectorParameter key="customconnector" value="softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector.KongsbergProjectRequestCrudConnector" />
       </connectorParameters>
     </entity>
 
@@ -598,7 +598,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="incident" idAttribute="ticketid">
+    <entity name="incident" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
         <attribute name="accumulatedholdtime" type="float" required="false" />
         <attribute name="accumulateslaholdtime" type="smallint" required="false" query="(select COALESCE(slahold, 0) from slarecords sla inner join pluspservagree on sanum = sla.slanum where ownertable = 'TICKET' and ownerid = !@ticketuid)" />
@@ -754,6 +754,8 @@
         <attribute name="vendor" type="varchar" required="false" />
         <attribute name="virtualenv" type="smallint" required="false" />
         <attribute name="wellname" type="varchar" required="false" />
+        <attribute name="accumulateslaholdtime" type="smallint" required="false" query="(select COALESCE(slahold, 0) from slarecords sla inner join pluspservagree on sanum = sla.slanum where ownertable = 'TICKET' and ownerid = !@ticketuid)" />
+        <attribute name="slaapplied" type="smallint" required="flase" query="(select Case COUNT(OWNERID) when 0 then 0 else 1 end from slarecords where slarecords.ownertable = 'TICKET' and slarecords.ownerid = !@ticketuid )" />
         <attribute name="attachmentcounter" type="int" query="(select count(*) from doclinks where ownertable = 'INCIDENT' and ownerid = !@ticketuid)" required="false"/>
       </attributes>
       <relationships>
@@ -786,10 +788,7 @@
           <relationshipAttribute from="targetversion" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TARGETVERSION" quoteLiteral="true"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
-          <relationshipAttribute from="status" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="INCIDENTSTATUS" quoteLiteral="true" />
-        </relationship>
+     
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
@@ -803,17 +802,11 @@
           <relationshipAttribute from="siteid" to="siteid" />
           <relationshipAttribute to="class" literal="INCIDENT" quoteLiteral="true" />
         </relationship>
-        <relationship to ="commlog" collection="true">
-          <relationshipAttribute from="ticketuid" to="ownerid" primary="true" />
-          <relationshipAttribute to="ownertable" literal="INCIDENT" quoteLiteral="true"/>
-        </relationship>
-        <relationship to="DOCLINKS" qualifier="attachment" collection="true">
+       <relationship to="DOCLINKS" qualifier="attachment" collection="true">
           <relationshipAttribute from="ticketuid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="INCIDENT" quoteLiteral="true"/>
         </relationship>
-        <relationship to="person" qualifier="reportedbyperson">
-          <relationshipAttribute from="reportedby" to="personid" primary="true"/>
-        </relationship>
+     
         <relationship to="person" qualifier="affectedperson">
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
         </relationship>
@@ -828,24 +821,11 @@
         <relationship to="person" qualifier="reporter">
           <relationshipAttribute from="reportedby" to="personid" primary="true"/>
         </relationship>
-        <relationship to="person">
-          <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
-          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true" />
-        </relationship>
-        <relationship to="person" qualifier="ownerperson">
-          <relationshipAttribute from="owner" to="personid" primary="true"/>
-        </relationship>
-        <relationship to ="persongroup">
-          <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
-        </relationship>
-        <relationship to="classification" qualifier="classification">
-          <relationshipAttribute from="classificationid" to ="classificationid" primary="true"/>
-        </relationship>
+     
         <relationship to ="classusewith" qualifier="incidentclassstructures">
           <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
           <relationshipAttribute to="objectvalue" literal="INCIDENT" quoteLiteral="true"/>
         </relationship>
-
         <relationship to="incidentclassifications" qualifier="incidentclassifications">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
         </relationship>
@@ -856,27 +836,13 @@
           <relationshipAttribute from="solution" to ="solution" primary="true"/>
           <relationshipAttribute to="status" literal="active" quoteLiteral="true"/>
         </relationship>
-        <relationship to="longdescription" qualifier="symptom">
-          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
-          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
-          <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
-        </relationship>
-        <relationship to="longdescription" qualifier="cause">
-          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
-          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
-          <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
-        </relationship>
-        <relationship to="longdescription" qualifier="resolution">
-          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
-          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
-          <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
-        </relationship>
+     
 
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="incident" />
         <connectorParameter key="integration_interface" value="SWINCIDENT" />
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.KongsbergIncidentCrudConnector" />
+        <connectorParameter key="customconnector" value="softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector.KongsbergIncidentCrudConnector" />
       </connectorParameters>
     </entity>
 

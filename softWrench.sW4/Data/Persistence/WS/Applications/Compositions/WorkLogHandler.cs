@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using NHibernate.Linq;
-using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
-using WsUtil = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.wsWorkorder;
+using WsUtil = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons {
+namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
-    class WorkLogHandler {
+    public class WorkLogHandler {
 
         private static AttachmentHandler _handler;
 

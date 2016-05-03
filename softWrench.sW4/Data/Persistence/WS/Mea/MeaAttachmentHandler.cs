@@ -4,6 +4,7 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 using System.IO;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 
 namespace softWrench.sW4.Data.Persistence.WS.Mea {
     class MeaAttachmentHandler : AttachmentHandler {

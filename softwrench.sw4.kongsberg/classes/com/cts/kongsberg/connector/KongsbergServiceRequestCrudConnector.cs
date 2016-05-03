@@ -1,14 +1,14 @@
-﻿using softWrench.sW4.Data.Persistence.WS.Internal;
+﻿using System;
+using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.Commons;
+using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
-using System;
-using cts.commons.portable.Util;
-using softWrench.sW4.Data.Persistence.Operation;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons
+namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector
 {
-    class KongsbergServiceRequestCrudConnector: BaseServiceRequestCrudConnector {
+    public class KongsbergServiceRequestCrudConnector: BaseServiceRequestCrudConnector {
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;

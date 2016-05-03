@@ -1681,7 +1681,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="incident" idAttribute="ticketid">
+    <entity name="incident" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
         <attribute name="actlabcost" type="decimal" required="true" />
         <attribute name="actlabhrs" type="float" required="true" />

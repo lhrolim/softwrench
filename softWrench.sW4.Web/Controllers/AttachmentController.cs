@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 
 namespace softWrench.sW4.Web.Controllers {
 

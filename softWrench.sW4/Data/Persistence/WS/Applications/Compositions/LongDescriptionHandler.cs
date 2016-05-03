@@ -1,7 +1,7 @@
 ﻿using softWrench.sW4.Data.Persistence.Operation;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons {
+namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
     class LongDescriptionHandler {
 
         public static T HandleLongDescription<T>(T integrationObject, CrudOperationData entity, string property = "DESCRIPTION_LONGDESCRIPTION", string relatedobject = "longdescription") {

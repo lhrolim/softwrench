@@ -7,7 +7,7 @@
   </templates>
 
   <entities>
-    <entity name="incident" idAttribute="ticketid">
+    <entity name="incident" idAttribute="ticketuid" useridAttribute="ticketid">
 
       <relationships>
         
@@ -19,12 +19,18 @@
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
           <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true" />
         </relationship>
+
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="person" qualifier="reportedbyperson">
+          <relationshipAttribute from="reportedby" to="personid" primary="true"/>
         </relationship>
         <relationship to ="persongroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
+      
+        
         <relationship to="classification" qualifier="classification">
           <relationshipAttribute from="classificationid" to ="classificationid" primary="true"/>
         </relationship>
@@ -50,9 +56,14 @@
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
         </relationship>
-        <relationship to="synonymdomain" qualifier="synstatus">
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="INCIDENTSTATUS" quoteLiteral="true" />
+        </relationship>
+
+        <relationship to ="commlog" collection="true">
+          <relationshipAttribute from="ticketuid" to="ownerid" primary="true" />
+          <relationshipAttribute to="ownertable" literal="INCIDENT" quoteLiteral="true"/>
         </relationship>
 
 

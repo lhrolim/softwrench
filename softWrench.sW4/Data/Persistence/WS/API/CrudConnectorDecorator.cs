@@ -9,7 +9,7 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
     public abstract class CrudConnectorDecorator : IMaximoCrudConnector {
         protected BaseMaximoCrudConnector _realCrudConnector;
 
-        internal MaximoConnectorEngine ConnectorEngine {
+        protected internal MaximoConnectorEngine ConnectorEngine {
             get {
                 return
                     SimpleInjectorGenericFactory.Instance.GetObject<MaximoConnectorEngine>(

@@ -1,33 +1,33 @@
-﻿using log4net;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using cts.commons.simpleinjector;
+using JetBrains.Annotations;
+using log4net;
 using Newtonsoft.Json.Linq;
-using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
-using System;
-using System.Collections;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
 using r = softWrench.sW4.Util.ReflectionUtil;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
-using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
-using System.Text;
-using System.Collections.Generic;
-using cts.commons.simpleinjector;
-using JetBrains.Annotations;
-using softWrench.sW4.Data.Persistence.WS.Internal;
 
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons {
+namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
     public class AttachmentHandler {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(AttachmentHandler));

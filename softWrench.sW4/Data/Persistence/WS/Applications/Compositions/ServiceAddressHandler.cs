@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons {
+namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
     public class ServiceAddressHandler {
 
         public static void HandleServiceAddressForWo(CrudOperationData entity, object wo) {

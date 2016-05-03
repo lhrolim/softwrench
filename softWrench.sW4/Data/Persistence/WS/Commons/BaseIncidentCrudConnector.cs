@@ -6,16 +6,22 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using cts.commons.portable.Util;
+using cts.commons.simpleinjector;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
+using softWrench.sW4.Email;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
-    class BaseIncidentCrudConnector : CrudConnectorDecorator {
+    public class BaseIncidentCrudConnector : CrudConnectorDecorator {
 
         protected AttachmentHandler _attachmentHandler;
+        protected CommLogHandler _commlogHandler;
 
         public BaseIncidentCrudConnector() {
             _attachmentHandler = new AttachmentHandler();
+            _commlogHandler = new CommLogHandler();
+            
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -46,11 +52,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
 
-            //Handle Commlogs
-            // CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
+         
 
             // Update or create attachments
             _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
+            RelatedRecordHandler.HandleRelatedRecords(maximoTemplateData);
 
             // Update solution 
             HandleSolutions(crudData, sr);

@@ -1,14 +1,10 @@
-﻿using softWrench.sW4.Data.Persistence.WS.Internal;
-using softWrench.sW4.Security.Services;
-using softWrench.sW4.Util;
-using System;
-using cts.commons.portable.Util;
-using softWrench.sW4.Data.Persistence.Operation;
-using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
+﻿using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.Commons;
+using softWrench.sW4.Data.Persistence.WS.Internal;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons
+namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector
 {
-    class KongsbergProjectRequestCrudConnector: KongsbergServiceRequestCrudConnector {
+    public class KongsbergProjectRequestCrudConnector: KongsbergServiceRequestCrudConnector {
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             TicketspecHandler.HandleTicketspec(maximoTemplateData);
@@ -18,7 +14,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
         public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
             base.AfterUpdate(maximoTemplateData);
             maximoTemplateData.OperationData.UserId = maximoTemplateData.ResultObject.UserId;
-            maximoTemplateData.OperationData.OperationType = Internal.OperationType.AddChange;
+            maximoTemplateData.OperationData.OperationType = softWrench.sW4.Data.Persistence.WS.Internal.OperationType.AddChange;
 
             // Resubmitting MIF for ServiceAddress Update
             ConnectorEngine.Update((CrudOperationData)maximoTemplateData.OperationData);

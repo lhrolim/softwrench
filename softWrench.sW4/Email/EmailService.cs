@@ -5,16 +5,13 @@ using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 using cts.commons.portable.Util;
-using cts.commons.simpleinjector;
 using System.Net.Mail;
-using System.Threading;
 using System.Threading.Tasks;
-using cts.commons.Util;
+using log4net;
 using softWrench.sW4.Metadata;
-using Common.Logging;
-using softwrench.sw4.api.classes;
 using softwrench.sw4.api.classes.email;
 using softWrench.sW4.Util;
+using LogManager = log4net.LogManager;
 
 
 namespace softWrench.sW4.Email {
@@ -23,6 +20,10 @@ namespace softWrench.sW4.Email {
         private static readonly Regex HtmlImgRegex = new Regex("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(EmailService));
+
+        public EmailService(){
+            Log.DebugFormat("init log...");
+        }
 
         private SmtpClient ConfiguredSmtpClient() {
             var objsmtpClient = new SmtpClient();
@@ -50,6 +51,9 @@ namespace softWrench.sW4.Email {
                 objsmtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             }
 
+
+            Log.DebugFormat("smtp client object: host= {0}, port={1}, enableSSL ={2} , useDefaultCredentials= {3}, username ={4} ".Fmt(objsmtpClient.Host, objsmtpClient.Port, objsmtpClient.EnableSsl, objsmtpClient.UseDefaultCredentials, username));
+
             return objsmtpClient;
         }
 
@@ -58,12 +62,14 @@ namespace softWrench.sW4.Email {
         /// </summary>
         /// <param name="emailData"></param>
         public void SendEmailAsync(EmailData emailData) {
+            Log.DebugFormat("sending email asynchronoysly");
             // Send the email message asynchronously
             Task.Run(() => SendEmail(emailData));
         }
 
         public void SendEmail(EmailData emailData) {
             try {
+                Log.DebugFormat("start sending email");
                 var smtpClient = ConfiguredSmtpClient();
                 var email = BuildMailMessage(emailData);
                 // Send the email message synchronously

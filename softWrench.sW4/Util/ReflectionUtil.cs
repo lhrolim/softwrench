@@ -29,8 +29,20 @@ namespace softWrench.sW4.Util {
             return arr;
         }
 
-        public static object InstanceFromName(String typeName) {
-            return Activator.CreateInstance(null, typeName).Unwrap();
+        public static object InstanceFromName(string typeName) {
+
+            var type = Type.GetType(typeName);
+            if (type != null) {
+                return Activator.CreateInstance(type);
+            }
+            foreach (var asm in AssemblyLocator.GetSWAssemblies()) {
+                type = asm.GetType(typeName);
+                if (type != null) {
+                    return Activator.CreateInstance(type);
+                }
+            }
+            return null;
+
         }
 
         public static object InstanceFromType(Type type) {
@@ -274,7 +286,7 @@ namespace softWrench.sW4.Util {
             return prop == null ? null : prop.GetValue(baseObject);
         }
 
-       
+
 
         public static bool IsNull(object baseObject, string propertyName) {
             return ReflectionUtil.GetProperty(baseObject, propertyName) == null;

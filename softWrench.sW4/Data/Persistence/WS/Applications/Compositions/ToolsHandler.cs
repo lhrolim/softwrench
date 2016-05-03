@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using NHibernate.Linq;
-using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons.Compositions {
+namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
     class ToolsHandler {
 
         private const string ItemNumAttribute = "itemnum";

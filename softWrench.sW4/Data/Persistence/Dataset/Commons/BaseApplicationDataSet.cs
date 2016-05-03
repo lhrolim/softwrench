@@ -40,6 +40,7 @@ using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Metadata.Applications.Schema;

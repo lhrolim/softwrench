@@ -8,6 +8,7 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
     abstract class BaseISMTicketDecorator : BaseISMDecorator {

@@ -1547,7 +1547,7 @@
       </attributes>
     </entity>
 
-    <entity name="incident" idAttribute="ticketid">
+    <entity name="incident" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
         <attribute name="actlabcost" type="double" required="true" />
         <attribute name="actlabhrs" type="double" required="true" />
