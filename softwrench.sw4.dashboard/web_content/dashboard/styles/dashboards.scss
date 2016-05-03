@@ -82,13 +82,8 @@
 
 @media all and (min-width: 768px) {
     .container.desktop .dash-header {
-        .listgrid-table {
-            margin-top: 83px !important;
-        }
-
         .toolbar-primary, .listgrid-thead {
-            position: absolute;
-            top: -83px !important;
+            position: initial;
         }
     }
 }

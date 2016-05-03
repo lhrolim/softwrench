@@ -89,6 +89,10 @@
                 }
 
                 $scope.shouldShowPagination = function () {
+                    if ($scope.paginationData.paginationOptions == undefined) {
+                        return;
+                    }
+
                     return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected && !!$scope.paginationData && $scope.paginationData.paginationOptions.some(function (option) {
                         // totalCount is bigger than at least one option
                         return option!=0 && $scope.paginationData.totalCount > option;
