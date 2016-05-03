@@ -12,7 +12,6 @@ using softwrench.sw4.dashboard.classes.service.graphic;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Data.Association;

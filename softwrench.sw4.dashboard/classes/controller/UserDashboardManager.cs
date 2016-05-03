@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using cts.commons.simpleinjector;
 using log4net;
-using log4net.Core;
 using softwrench.sw4.api.classes.user;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
-using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
@@ -30,15 +27,21 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var profiles = currentUser.ProfileIds;
             var profilesArray = profiles as int?[] ?? profiles.ToArray();
             var applications = currentUser.MergedUserProfile.Permissions.Where(p => !p.HasNoPermissions).Select(p => p.ApplicationName).ToArray();
+            if (!applications.Any()) {
+                // HQL requires a non-empty list for IN parameters
+                applications = new string[] { null };
+            }
 
             IEnumerable<Dashboard> loadedUserDashboars;
             if (currentUser.IsSwAdmin()) {
+                // sw admin can always see everything
                 loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.SwAdminQuery);
 
             } else if (profilesArray.Any() && !currentUser.IsSwAdmin()) {
-                //sw admin can always see everything
+
                 var statement = Dashboard.ByUserAndApplications(currentUser.ProfileIds);
                 loadedUserDashboars = _dao.FindByQuery<Dashboard>(statement, currentUser.UserId, applications);
+
             } else {
                 loadedUserDashboars = _dao.FindByQuery<Dashboard>(Dashboard.ByUserAndApplicationsNoProfile, currentUser.UserId, applications);
             }
