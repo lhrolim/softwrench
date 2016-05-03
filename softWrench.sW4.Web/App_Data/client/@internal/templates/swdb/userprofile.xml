@@ -26,7 +26,7 @@
             </commandgroup>
             <commandgroup position="gridtop">
               <command id="new" icon="fa-plus"
-                       service="redirectService" method="goToApplicationView" parameters="_UserProfile,detail" label="Group" tooltip="New Security Group" position="left" cssclasses="large-button"/>
+                       service="redirectService" method="goToApplicationView" parameters="_UserProfile,detail" label="Group" tooltip="New Security Group" position="left" cssclasses="large-button" showexpression="true"/>
             </commandgroup>
           </commandbars>
           <field label="Name" attribute="name" />
