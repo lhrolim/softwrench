@@ -4,7 +4,7 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Metadata.Entities;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
-    internal interface IMaximoCrudConnector : IMaximoConnector, ISingletonComponent {
+    internal interface IMaximoCrudConnector : IMaximoConnector {
         DynamicObject CreateProxy(EntityMetadata metadata);
         MaximoOperationExecutionContext CreateExecutionContext(DynamicObject proxy, IOperationData operationData);
         void PopulateIntegrationObject(MaximoOperationExecutionContext maximoTemplateData);

@@ -14,11 +14,6 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
     public class KongsbergIncidentCrudConnector : BaseIncidentCrudConnector {
 
         
-
-        public KongsbergIncidentCrudConnector() {
-         
-        }
-
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var incident = maximoTemplateData.IntegrationObject;
             var sr = maximoTemplateData.IntegrationObject;
