@@ -20,6 +20,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         protected AttachmentHandler _attachmentHandler;
         protected CommLogHandler _commlogHandler;
+        protected WorkLogHandler _WorkLogHandler;
         private MaximoHibernateDAO maxHibernate;
         private readonly EmailService _emailService;
 
@@ -37,8 +38,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         public BaseServiceRequestCrudConnector() {
-            _attachmentHandler = new AttachmentHandler();
-            _commlogHandler = new CommLogHandler();
+            _attachmentHandler = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
+            _commlogHandler = SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
+            _WorkLogHandler = SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
             MaxHibernate = MaximoHibernateDAO.GetInstance();
             _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
         }
@@ -76,7 +78,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
 
-            WorkLogHandler.HandleWorkLogs(crudData, sr);
+            _WorkLogHandler.HandleWorkLogs(crudData, sr);
 
             _commlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 

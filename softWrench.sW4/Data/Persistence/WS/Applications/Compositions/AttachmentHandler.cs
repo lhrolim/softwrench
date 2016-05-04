@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using log4net;
@@ -28,7 +29,7 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
-    public class AttachmentHandler {
+    public class AttachmentHandler : ISingletonComponent {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(AttachmentHandler));
 
@@ -36,8 +37,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
 
         private AttachmentDao _attachmentDao;
-        public AttachmentDao AttachmentDao {
-            get {
+        public AttachmentDao AttachmentDao
+        {
+            get
+            {
                 return _attachmentDao ?? (_attachmentDao = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentDao>(typeof(AttachmentDao)));
             }
         }
@@ -53,8 +56,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
         private MaximoHibernateDAO _maxDAO;
 
-        public AttachmentHandler() {
-            _maxDAO = SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
+        public AttachmentHandler(MaximoHibernateDAO maxDAO) {
+            _maxDAO = maxDAO;
         }
 
 
@@ -151,7 +154,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             w.SetValue(docLink, "CHANGEBY", user.MaximoPersonId);
 
             //TODO: remove these lines
-            w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.MaximoPersonId, "reportedby",true);
+            w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.MaximoPersonId, "reportedby", true);
             w.CopyFromRootEntity(maximoObj, docLink, "CHANGEBY", user.MaximoPersonId, "reportedby", true);
 
             w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());
@@ -360,7 +363,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 dtos.Add(dto);
             }
             return dtos;
-        } 
+        }
 
         /// <summary>
         /// On Mea environment there´s no maxpropvalue table, and the path is stored in a doclink.properties file, 

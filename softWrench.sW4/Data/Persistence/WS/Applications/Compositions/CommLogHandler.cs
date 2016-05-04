@@ -21,7 +21,7 @@ using softWrench.sW4.wsWorkorder;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
-    public class CommLogHandler {
+    public class CommLogHandler : ISingletonComponent {
 
         private const string Ticketuid = "ticketuid";
         private const string Commloguid = "commloguid";
@@ -47,9 +47,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         private readonly AttachmentHandler _attachmentHandler;
 
 
-        public CommLogHandler() {
-            _dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>(typeof(ISWDBHibernateDAO));
-            _attachmentHandler = new AttachmentHandler();
+        public CommLogHandler(ISWDBHibernateDAO dao, AttachmentHandler attachmentHandler) {
+            _dao = dao;
+            _attachmentHandler = attachmentHandler;
         }
 
         public void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
@@ -67,7 +67,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
             w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate (object integrationObject, CrudOperationData crudData) {
                 var sendTo = w.GetRealValue(integrationObject, Sendto);
-                if(sendTo == null) throw new ArgumentNullException("To:");
+                if (sendTo == null) throw new ArgumentNullException("To:");
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
                 var id = MaximoHibernateDAO.GetInstance().FindSingleByNativeQuery<object>("Select MAX(commlog.commlogid) from commlog", null);
                 var rnd = new Random();
@@ -97,8 +97,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             var bccEmail = w.GetRealValue(integrationObject, Bcc);
             ccEmail = ccEmail != null ? ccEmail.ToString() : "";
             bccEmail = bccEmail != null ? bccEmail.ToString() : "";
-            var allAddresses = (string) ccEmail != "" ? recipientEmail + "," + ccEmail : recipientEmail;
-            allAddresses = (string) bccEmail != "" ? allAddresses + "," + bccEmail : allAddresses;
+            var allAddresses = (string)ccEmail != "" ? recipientEmail + "," + ccEmail : recipientEmail;
+            allAddresses = (string)bccEmail != "" ? allAddresses + "," + bccEmail : allAddresses;
             return allAddresses;
         }
 
@@ -140,9 +140,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 w.GetRealValue<string>(integrationObject, Sendto),
                 w.GetRealValue<string>(integrationObject, Subject),
                 w.GetRealValue<string>(integrationObject, Message), attachments) {
-                    Cc = w.GetRealValue<string>(integrationObject, Cc),
-                    BCc = w.GetRealValue<string>(integrationObject, Bcc)
-                };
+                Cc = w.GetRealValue<string>(integrationObject, Cc),
+                BCc = w.GetRealValue<string>(integrationObject, Bcc)
+            };
         }
 
         private IEnumerable<AttachmentDTO> GetAttachments(CrudOperationData commlog) {
@@ -160,7 +160,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     .Where(address => !emailRecords.Any(email => email.EmailAddress.EqualsIc(address)))
                     .Select(address => new EmailHistory(null, userId, address))
                     .ToList();
-                
+
                 _dao.BulkSave(newRecords);
             });
         }

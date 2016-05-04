@@ -8,10 +8,14 @@ namespace softWrench.sW4.Web.Controllers {
 
     public class AttachmentController : FileDownloadController {
 
-        private readonly AttachmentHandler _attachmentHandler = new AttachmentHandler();
+        private readonly AttachmentHandler _attachmentHandler;
+
+        public AttachmentController(AttachmentHandler attachmentHandler) {
+            _attachmentHandler = attachmentHandler;
+        }
 
         public FileContentResult Download(string id, string mode, AttachmentRequest request) {
-            
+
             Tuple<Byte[], string> fileTuple;
 
             if (mode == "http") {

@@ -7,8 +7,9 @@ using System.IO;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 
 namespace softWrench.sW4.Data.Persistence.WS.Mea {
-    class MeaAttachmentHandler : AttachmentHandler {
-
+    public class MeaAttachmentHandler : AttachmentHandler {
+        public MeaAttachmentHandler(MaximoHibernateDAO maxDAO) : base(maxDAO) {
+        }
 
         /// <summary>
         /// On Mea there´s no way to save the attachment directly from a ws. Hence, we need to save it to the filesystem.
@@ -24,7 +25,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mea {
         //TODO: code to delete wrongly created files, if ws fails
         protected override void HandleAttachmentDataAndPath(string attachmentData,
             object docLink, string attachmentPath) {
-            
+
             var pathVariable = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksPath);
             var pathToSave = pathVariable + attachmentPath;
             //TODO: Handle exceptions

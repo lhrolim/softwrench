@@ -25,16 +25,18 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
         protected AttachmentHandler _attachmentHandler;
         protected LabTransHandler LabTransHandler;
         protected CommLogHandler _commlogHandler;
+        protected WorkLogHandler WorkLogHandler;
         protected MaximoHibernateDAO _maxHibernate;
 
         private readonly EmailService _emailService;
 
         public BaseWorkOrderCrudConnector() {
-            _attachmentHandler = new AttachmentHandler();
-            _commlogHandler = new CommLogHandler();
+            _attachmentHandler = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
+            _commlogHandler = SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
             _maxHibernate = MaximoHibernateDAO.GetInstance();
             _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
             LabTransHandler = SimpleInjectorGenericFactory.Instance.GetObject<LabTransHandler>(typeof(LabTransHandler));
+            WorkLogHandler = SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {

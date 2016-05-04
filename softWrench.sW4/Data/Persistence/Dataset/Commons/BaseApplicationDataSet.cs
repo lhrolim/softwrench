@@ -148,7 +148,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         protected AttachmentHandler AttachmentHandler {
             get {
-                return _attachmentHandler ?? (_attachmentHandler = new AttachmentHandler());
+                if (_attachmentHandler != null) {
+                    return _attachmentHandler;
+                }
+                _attachmentHandler =
+                    SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
+                return _attachmentHandler;
             }
         }
 

@@ -6,6 +6,7 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
@@ -14,7 +15,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         protected AttachmentHandler _attachmentHandler;
 
         public BasePurchaseRequestCrudConnector() {
-            _attachmentHandler = new AttachmentHandler();
+            _attachmentHandler = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {

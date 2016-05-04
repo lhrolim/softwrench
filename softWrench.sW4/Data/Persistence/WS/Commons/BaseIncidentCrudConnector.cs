@@ -15,13 +15,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
     public class BaseIncidentCrudConnector : CrudConnectorDecorator {
 
-        protected AttachmentHandler _attachmentHandler;
-        protected CommLogHandler _commlogHandler;
+        protected AttachmentHandler AttachmentHandler;
+        protected CommLogHandler CommlogHandler;
+        protected WorkLogHandler WorkLogHandler;
 
         public BaseIncidentCrudConnector() {
-            _attachmentHandler = new AttachmentHandler();
-            _commlogHandler = new CommLogHandler();
-            
+            AttachmentHandler = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
+            CommlogHandler = SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
+            WorkLogHandler = SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -55,7 +56,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
          
 
             // Update or create attachments
-            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
+            AttachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
             RelatedRecordHandler.HandleRelatedRecords(maximoTemplateData);
 
             // Update solution 
@@ -74,7 +75,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
 
             // Update or create attachments
-            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
+            AttachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
 
             base.BeforeCreation(maximoTemplateData);
         }

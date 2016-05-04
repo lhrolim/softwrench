@@ -36,7 +36,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
             //Handle Commlogs
             //Handle Commlogs
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
-            _commlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
+            CommlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 
 
             base.BeforeUpdate(maximoTemplateData);

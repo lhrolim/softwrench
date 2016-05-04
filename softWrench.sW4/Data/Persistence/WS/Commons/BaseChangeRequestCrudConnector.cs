@@ -4,6 +4,7 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
@@ -11,10 +12,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
 {
     class BaseChangeRequestCrudConnector : CrudConnectorDecorator
     {
-        protected AttachmentHandler _attachmentHandler;
+        protected AttachmentHandler AttachmentHandler;
+        protected WorkLogHandler _WorkLogHandler;
 
         public BaseChangeRequestCrudConnector() {
-            _attachmentHandler = new AttachmentHandler();
+            AttachmentHandler = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
+            _WorkLogHandler = SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -24,7 +27,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
             w.SetValueIfNull(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
             w.SetValueIfNull(sr, "CHANGEBY", user.Login);
 
-            WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, sr);
+            _WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, sr);
 
             CommonTransaction(maximoTemplateData);
 
@@ -47,7 +50,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
             var crudData = (CrudOperationData)maximoTemplateData.OperationData;
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
 
-            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
+            AttachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
         }
     }
 }

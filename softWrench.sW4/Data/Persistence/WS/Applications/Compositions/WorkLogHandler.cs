@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.simpleinjector;
 using NHibernate.Linq;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
@@ -11,15 +12,17 @@ using WsUtil = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
-    public class WorkLogHandler {
+    public class WorkLogHandler :ISingletonComponent{
 
-        private static AttachmentHandler _handler;
+        private readonly AttachmentHandler _attachmentHandler;
 
-        private static AttachmentHandler AttachmentHandlerInstance() {
-            return _handler ?? (_handler = new AttachmentHandler());
+        public WorkLogHandler(AttachmentHandler handler)
+        {
+            _attachmentHandler = handler;
         }
 
-        public static void HandleWorkLogs(CrudOperationData entity, object rootObject) {
+
+        public  void HandleWorkLogs(CrudOperationData entity, object rootObject) {
             // Use to obtain security information from current user
             var user = SecurityFacade.CurrentUser();
 
@@ -52,9 +55,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     // handle Attachments: only for new worklogs
                     var worklogContent = crudData.GetUnMappedAttribute("newattachment");
                     var worklogPath = crudData.GetUnMappedAttribute("newattachment_path");
-                    var attachments = AttachmentHandlerInstance().BuildAttachments(worklogPath, worklogContent);
+                    var attachments = _attachmentHandler.BuildAttachments(worklogPath, worklogContent);
                     try {
-                        attachments.ForEach(attachment => AttachmentHandlerInstance().AddAttachment(integrationObject, attachment));
+                        attachments.ForEach(attachment => _attachmentHandler.AddAttachment(integrationObject, attachment));
                     } catch (MaximoException e) {
                         throw new MaximoException("Could not attach image file. Please contact support about 'Installation Task [SWWEB-2156]'", e, ExceptionUtil.DigRootException(e));
                     }
