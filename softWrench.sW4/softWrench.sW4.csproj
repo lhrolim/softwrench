@@ -102,6 +102,10 @@
     <Reference Include="NHibernate.Mapping.Attributes">
       <HintPath>..\packages\NHibernate.Mapping.Attributes.3.2.0.0\lib\NHibernate.Mapping.Attributes.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.PdfGenerator, Version=1.1.12.0, Culture=neutral, PublicKeyToken=231663d50a41b451, processorArchitecture=MSIL">
+      <HintPath>..\packages\NReco.PdfGenerator.1.1.12.0\lib\net20\NReco.PdfGenerator.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Oracle.DataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=x86" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -171,6 +175,7 @@
     <Compile Include="Data\Entities\Workflow\MaximoWorkflowException.cs" />
     <Compile Include="Data\Entities\Workflow\MaximoWorkflowManager.cs" />
     <Compile Include="Data\Filter\FilterWhereClauseHandler.cs" />
+    <Compile Include="Data\PDF\PDFService.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseLabtransDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseAssetDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseLocationDataSet.cs" />

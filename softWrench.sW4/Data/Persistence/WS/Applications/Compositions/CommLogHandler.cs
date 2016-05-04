@@ -9,16 +9,18 @@ using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using NHibernate.Linq;
 using softwrench.sw4.api.classes.email;
+using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
+using softWrench.sW4.Data.PDF;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using softWrench.sW4.wsWorkorder;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
+using softWrench.sW4.Metadata.Applications;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
     public class CommLogHandler : ISingletonComponent {
@@ -45,11 +47,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
         private readonly ISWDBHibernateDAO _dao;
         private readonly AttachmentHandler _attachmentHandler;
+        private readonly PdfService _pdfService;
+        private readonly IMemoryContextLookuper _lookuper;
 
 
-        public CommLogHandler(ISWDBHibernateDAO dao, AttachmentHandler attachmentHandler) {
+        public CommLogHandler(ISWDBHibernateDAO dao, AttachmentHandler attachmentHandler, PdfService pdfService, IMemoryContextLookuper lookuper) {
             _dao = dao;
             _attachmentHandler = attachmentHandler;
+            _pdfService = pdfService;
+            _lookuper = lookuper;
         }
 
         public void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
@@ -83,8 +89,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 w.CopyFromRootEntity(rootObject, integrationObject, Modifydate, DateTime.Now.FromServerToRightKind());
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
-                HandleAttachments(crudData, integrationObject, maximoTemplateData.ApplicationMetadata);
+
+                var attachments = GetAttachments(crudData, maximoTemplateData.ApplicationMetadata, entity);
+
+                maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, attachments));
+                HandleAttachments(attachments, integrationObject, maximoTemplateData.ApplicationMetadata);
                 var username = user.Login;
                 var allAddresses = GetListOfAllAddressesUsed(integrationObject);
                 UpdateEmailHistoryAsync(username, allAddresses.ToLower().Split(','));
@@ -125,30 +134,83 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             commLog.SetAttribute(propertyName, sendToArray.Length > 1 ? string.Join(",", sendToArray) : sendToArray[0]);
         }
 
-        private void HandleAttachments(CrudOperationData data, [NotNull] object maximoObj, [NotNull] Metadata.Applications.ApplicationMetadata applicationMetadata) {
+        private void HandleAttachments(IEnumerable<AttachmentDTO> attachments, [NotNull] object maximoObj, [NotNull] ApplicationMetadata applicationMetadata) {
             if (maximoObj == null) throw new ArgumentNullException("maximoObj");
             if (applicationMetadata == null) throw new ArgumentNullException("applicationMetadata");
 
-            GetAttachments(data).ForEach(attachment => _attachmentHandler.AddAttachment(maximoObj, attachment));
+            attachments.ForEach(attachment => _attachmentHandler.AddAttachment(maximoObj, attachment));
         }
 
-        private EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData) {
-            var attachments = GetAttachments(crudData).Select(dto => new EmailAttachment(dto.Data, dto.Path)).ToList();
+        private EmailData GenerateEmailObject(object integrationObject, IEnumerable<AttachmentDTO> attachments) {
+            var emailAttachments = attachments.Select(dto => new EmailAttachment() {
+                AttachmentName = dto.Path,
+                AttachmentData = dto.Data,
+                AttachmentBinary = dto.BinaryData
+            }).ToList();
 
             return new EmailData(
                 w.GetRealValue<string>(integrationObject, Sendfrom),
                 w.GetRealValue<string>(integrationObject, Sendto),
                 w.GetRealValue<string>(integrationObject, Subject),
-                w.GetRealValue<string>(integrationObject, Message), attachments) {
+                w.GetRealValue<string>(integrationObject, Message), emailAttachments) {
                 Cc = w.GetRealValue<string>(integrationObject, Cc),
                 BCc = w.GetRealValue<string>(integrationObject, Bcc)
             };
         }
 
-        private IEnumerable<AttachmentDTO> GetAttachments(CrudOperationData commlog) {
+        private List<AttachmentDTO> GetAttachments(CrudOperationData commlog, ApplicationMetadata appMetadata, CrudOperationData entity) {
             var attachmentData = commlog.GetUnMappedAttribute("attachment");
             var attachmentPath = commlog.GetUnMappedAttribute("newattachment_path");
-            return _attachmentHandler.BuildAttachments(attachmentPath, attachmentData);
+            var attachments = _attachmentHandler.BuildAttachments(attachmentPath, attachmentData);
+
+            var detailsHtml = commlog.GetUnMappedAttribute("detailsHtml");
+            if (string.IsNullOrEmpty(detailsHtml)) {
+                return attachments;
+            }
+
+            attachments.Add(CreateDetailsAttachment(detailsHtml, appMetadata, entity));
+            return attachments;
+        }
+
+        private AttachmentDTO CreateDetailsAttachment(string detailsHtml, ApplicationMetadata appMetadata, CrudOperationData entity) {
+            var fullContext = _lookuper.GetFromMemoryContext<SwHttpContext>("httpcontext");
+            var appContext = fullContext.Context;
+            var seccondBarIndex = appContext.IndexOf("/", 1, StringComparison.Ordinal);
+            if (seccondBarIndex > 0) {
+                appContext = appContext.Substring(0, appContext.IndexOf("/", 1, StringComparison.Ordinal));
+            }
+            var serverPath = ApplicationConfiguration.GetServerPath(appContext);
+
+            // make css paths absolute
+            var processedHtml = detailsHtml.Replace("<link href=\"" + appContext, "<link href=\"" + serverPath);
+            // make images paths absolute
+            processedHtml = processedHtml.Replace(" src=\"" + appContext, " src=\"" + serverPath);
+
+            // limits title to 20 chars
+            var fullTitle = appMetadata.Title + " Details";
+            var title = fullTitle;
+            if (title.Length > 20) {
+                title = "";
+                appMetadata.Title.Split(' ').ForEach(token => title += token.Substring(0, 1).ToUpper());
+                title += " Details";
+            }
+            var hasUserId = !string.IsNullOrEmpty(entity.UserId);
+            var description = fullTitle + (hasUserId ? " #" + entity.UserId : "");
+            var path = appMetadata.Title + (hasUserId ? "(" + entity.UserId + ")" : "") + ".pdf";
+            path = path.Replace(' ', '_');
+
+            var dto = new AttachmentDTO() {
+                Path = path,
+                BinaryData = _pdfService.HtmlToPdf(processedHtml, fullTitle),
+                Title = title,
+                Description = description
+            };
+
+            //Comment to generate files for testing
+            //File.WriteAllBytes(@"C:\temp\test.pdf", dto.BinaryData);
+            //File.WriteAllText(@"C:\temp\test.html", processedHtml);
+
+            return dto;
         }
 
         private async void UpdateEmailHistoryAsync(string userId, string[] emailAddresses) {

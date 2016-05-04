@@ -69,7 +69,7 @@
           </customization>
           <customization position="+owner">
             <field attribute="lostenergy3" label="Lost Energy" readonly="true" enableexpression="false">
-              <renderer type="checkbox" />
+              <renderer type="checkbox" params="formatter=numberToBoolean"/>
             </field>
           </customization>
           <customization position="#statusicons">
@@ -102,11 +102,18 @@
         </schema>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail" redeclaring="false">
+          <customization position="description"></customization>
+
+          <customization position="+tophiddenfield">
+            <field attribute="description" label="Summary" requiredexpression="true">
+              <renderer type="default" params="maxlength=100" />
+            </field>
+          </customization>
+          
           <customization position="location"></customization>
           <customization position="assetnum"></customization>
 
-          <customization position="-ld_.ldtext">
-            <section orientation="horizontal">
+          <customization position="+locationhiddenfield">
             <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
               <renderer type="lookup"/>
               <event type="beforechange" service="srService" method="beforeChangeLocation"/>
@@ -117,9 +124,8 @@
               <event type="afterchange" service="srService" method="afterChangeAsset"/>
             </association>
               <field attribute="lostenergy3" label="Lost Energy">
-                <renderer type="checkbox"/>
+                <renderer type="checkbox" params="formatter=numberToBoolean"/>
               </field>
-            </section>
           </customization>
         </schema>
             
@@ -255,11 +261,20 @@
         </schema>
           
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
+
+          <customization position="description"></customization>
+          
+          <customization position="+tophiddenfield">
+            <field attribute="description" label="Summary" requiredexpression="true">
+              <renderer type="default" params="maxlength=100" />
+            </field>
+          </customization>
+          
           <customization position="location"></customization>
           <customization position="assetnum"></customization>
 
-          <customization position="-ld_.ldtext">
-            <section orientation="horizontal">
+          <customization position="+locationhiddenfield">
+            <!--<section orientation="horizontal">-->
             <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
               <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
               <renderer type="lookup" />
@@ -271,9 +286,9 @@
               <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
             </association>
             <field attribute="lostenergy" label="Lost Energy">
-              <renderer type="checkbox"/>
+              <renderer type="checkbox" params="formatter=numberToBoolean"/>
             </field>
-               </section>
+               <!--</section>-->
           </customization>
         </schema>
       

@@ -11,6 +11,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
+using System.Web;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Data.Entities;
@@ -24,6 +25,8 @@ namespace softWrench.sW4.Util {
 
         private static string _clientName;
         private static string _environment;
+        private static string _serverPath;
+        private static string _appPath;
 
         private static MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
 
@@ -604,15 +607,15 @@ namespace softWrench.sW4.Util {
             var type = connectionStringSettings.ProviderName;
             switch (type) {
                 case "System.Data.SQL":
-                return DBMS.MSSQL;
+                    return DBMS.MSSQL;
                 case "System.Data.SqlClient":
-                return DBMS.MSSQL;
+                    return DBMS.MSSQL;
                 case "System.Data.OracleClient":
-                return DBMS.ORACLE;
+                    return DBMS.ORACLE;
                 case "Oracle.DataAccess.Client":
-                return DBMS.ORACLE;
+                    return DBMS.ORACLE;
                 case "IBM.Data.DB2":
-                return DBMS.DB2;
+                    return DBMS.DB2;
             }
             return DBMS.MYSQL;
         }
@@ -634,7 +637,13 @@ namespace softWrench.sW4.Util {
             return ClientName.Equals(clientName);
         }
 
-      
+        public static string GetServerPath(string appContext) {
+            if (!string.IsNullOrEmpty(_serverPath)) {
+                return _serverPath;
+            }
+            _serverPath = HttpContext.Current.Request.MapPath(appContext);
+            return _serverPath;
+        }
     }
 
 }

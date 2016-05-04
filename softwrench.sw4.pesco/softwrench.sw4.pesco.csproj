@@ -58,6 +58,7 @@
   <ItemGroup>
     <Content Include="metadata\pesco\deploy.xml" />
     <Content Include="metadata\pesco\menu.web.xml" />
+    <Content Include="web_content\pesco\images\logo-pdf.png" />
     <Content Include="web_content\pesco\scripts\aaa_pescomodule.js" />
     <Content Include="web_content\pesco\scripts\pesco_status_service.js" />
     <EmbeddedResource Include="metadata\pesco\metadata.xml">

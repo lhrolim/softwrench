@@ -150,8 +150,14 @@ namespace softWrench.sW4.Email {
 
         private void HandleAttachments(List<EmailAttachment> attachments, MailMessage email) {
             foreach (var attachment in attachments) {
-                string encodedAttachment = attachment.AttachmentData.Substring(attachment.AttachmentData.IndexOf(",") + 1);
-                byte[] bytes = Convert.FromBase64String(encodedAttachment);
+                byte[] bytes;
+                if (attachment.AttachmentBinary != null) {
+                    bytes = attachment.AttachmentBinary;
+                } else {
+                    var htmlData = attachment.AttachmentData;
+                    var encodedAttachment = htmlData.Substring(htmlData.IndexOf(",", StringComparison.Ordinal) + 1);
+                    bytes = Convert.FromBase64String(encodedAttachment);
+                }
                 email.Attachments.Add(new Attachment(new MemoryStream(bytes), attachment.AttachmentName));
             }
         }

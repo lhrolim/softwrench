@@ -1,12 +1,15 @@
-﻿<form id="printsectionform" class="form-horizontal hiddenonscreen" style="padding-left: 10px">
-    <div class="form-group container" style="padding-left: 25px">
+﻿<form id="printsectionform" class="form-horizontal hiddenonscreen">
+    <div class="form-group container">
         <div ng-if="showPrintSection">
 
             <div id="rootprintdiv" ng-repeat="item in printDatamap" printsectionrendered>
+                <div ng-if="showPrintLogo" class="print-logo">
+                    <img ng-src="{{ printLogo }}" />
+                </div>
                 <div ng-show="shouldPrintMain">
-                    <h4 class="text-center"><strong>{{printSchema.title}}</strong></h4>
-                    <crud-output-fields schema="printSchema" datamap="item.fields" displayables="printSchema.displayables" orientation="vertical">
-                    </crud-output-fields>
+                    <h4>{{printSchema.title}} - {{displayableID}}</h4>
+                    <fieldset><legend class="legend-label">General</legend></fieldset>
+                    <crud-output-fields schema="printSchema" datamap="item.fields" displayables="printSchema.displayables" orientation="vertical"></crud-output-fields>
                 </div>
                 <div ng-show="showPrintSectionCompostions">
                     <div ng-repeat="composition in compositionstoprint" ng-class="{'pagebreak-before': shouldPageBreak}">

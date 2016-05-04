@@ -132,21 +132,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         public void AddAttachment(object maximoObj, AttachmentDTO attachment) {
             var user = SecurityFacade.CurrentUser();
             // Exit function - do not add attachment
-            if (string.IsNullOrEmpty(attachment.Data)) {
+            if (string.IsNullOrEmpty(attachment.Data) && attachment.BinaryData == null) {
                 return;
             }
             // Check if file was rich text file - needed to convert it to word document.
             if (attachment.Path.ToLower().EndsWith("rtf")) {
-                var bytes = Convert.FromBase64String(attachment.Data);
+                var bytes = attachment.BinaryData ?? Convert.FromBase64String(attachment.Data);
                 var decodedString = Encoding.UTF8.GetString(bytes);
                 var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
-                bytes = Encoding.UTF8.GetBytes(compressedScreenshot);
-                attachment.Data = Convert.ToBase64String(bytes);
+                attachment.BinaryData = Encoding.UTF8.GetBytes(compressedScreenshot);
                 attachment.Path = attachment.Path.Substring(0, attachment.Path.Length - 3) + "doc";
             }
 
             // Exit function - if attachment size exceed specification
-            if (!Validate(attachment.Path, attachment.Data)) {
+            if (!Validate(attachment.Path, attachment.Data, attachment.BinaryData)) {
                 return;
             }
             var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
@@ -169,7 +168,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
             w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? string.Empty);
 
-            HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path);
+            HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path, attachment.BinaryData);
         }
 
         private void CommonCode(object maximoObj, object docLink, InMemoryUser user, AttachmentDTO attachment) {
@@ -191,7 +190,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? String.Empty);
         }
 
-        public static bool Validate(string attachmentPath, string attachmentData) {
+        public static bool Validate(string attachmentPath, string attachmentData, byte[] binaryData = null) {
             var allowedFiles = ApplicationConfiguration.AllowedFilesExtensions;
 
             if (attachmentPath != null && attachmentPath.IndexOf('.') != -1) {
@@ -202,11 +201,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             }
 
             var maxAttSizeInBytes = ApplicationConfiguration.MaxAttachmentSize * 1024 * 1024;
-            Log.InfoFormat("Attachment size: {0}", attachmentData.Length);
-            if (attachmentData != null && attachmentData.Length > maxAttSizeInBytes) {
-                var attachmentLength = attachmentData.Length / 1024 / 1024;
-                throw new Exception(String.Format(
-                    "Attachment is too large ({0} MB). Max attachment size is {1} MB.", attachmentLength, ApplicationConfiguration.MaxAttachmentSize));
+            var size = attachmentData == null ? (binaryData == null ? 0 : binaryData.Length) : attachmentData.Length;
+            Log.InfoFormat("Attachment size: {0}", size);
+            if (size > maxAttSizeInBytes) {
+                var mbSize = size / 1024 / 1024;
+                throw new Exception(string.Format(
+                    "Attachment is too large ({0} MB). Max attachment size is {1} MB.", mbSize, ApplicationConfiguration.MaxAttachmentSize));
             }
 
             return true;
@@ -218,8 +218,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             }
         }
 
-        protected virtual void HandleAttachmentDataAndPath(string attachmentData, object docLink, string attachmentPath) {
-            w.SetValue(docLink, "DOCUMENTDATA", FileUtils.ToByteArrayFromHtmlString(attachmentData));
+        protected virtual void HandleAttachmentDataAndPath(string attachmentData, object docLink, string attachmentPath, byte[] binaryData) {
+            var bytes = binaryData ?? FileUtils.ToByteArrayFromHtmlString(attachmentData);
+            w.SetValue(docLink, "DOCUMENTDATA", bytes);
         }
 
         protected virtual int GetMaximoLength() {
@@ -349,9 +350,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         /// <param name="paths">file paths concatenated by a ','</param>
         /// <param name="data">base64 encoded file data concatenated by a ','</param>
         /// <returns></returns>
-        public IEnumerable<AttachmentDTO> BuildAttachments(string paths, string data) {
+        public List<AttachmentDTO> BuildAttachments(string paths, string data) {
             if (string.IsNullOrWhiteSpace(paths) || string.IsNullOrWhiteSpace(data)) {
-                return Enumerable.Empty<AttachmentDTO>();
+                return new List<AttachmentDTO>();
             }
             var attachmentsData = data.Split(',');
             var attachmentsPath = paths.Split(',');

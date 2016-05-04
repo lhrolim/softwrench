@@ -173,9 +173,13 @@
             <renderer type="link" params="linkUrlField=url;linkNameField=name"/>
           </field>
 
+          <optionfield attribute="extraattachments" label="Featured Attachments" default="" showexpression="!@commlogid" >
+            <option label="Details" value="details"/>
+          </optionfield>
+
           <commandbars>
-            <commandgroup position="detail.primary" removeundeclared="false">
-              <command id="save" icon="fa-check" service="$scope" method="save" label="Send" />
+            <commandgroup position="modal.detail.primary" removeundeclared="false">
+              <command id="save" icon="fa-check" service="commlogService" method="send" parameters="datamap,schema" label="Send" primary="true"/>
             </commandgroup>
           </commandbars>
 

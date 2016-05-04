@@ -1,7 +1,7 @@
-﻿(function(angular) {
+﻿(function (angular) {
     'use strict';
 
-    function commlogService($http, contextService, restService, richTextService, crudContextHolderService) {
+    function commlogService($http, contextService, restService, richTextService, crudContextHolderService, applicationService, printService) {
         function updatereadflag(parameters) {
             if (parameters.compositionItemData["read"]) {
                 return;
@@ -19,7 +19,7 @@
 
             parameters.compositionItemData["read"] = true;
 
-            restService.invokePost("Commlog", "UpdateReadFlag", httpParameters, null, null, function() {
+            restService.invokePost("Commlog", "UpdateReadFlag", httpParameters, null, null, function () {
                 parameters.compositionItemData["read"] = false;
             });
         };
@@ -39,7 +39,7 @@
             };
 
 
-            restService.invokePost("CommTemplate", "MergeTemplateDefinition", null, angular.toJson(httpParameters), function(data) {
+            restService.invokePost("CommTemplate", "MergeTemplateDefinition", null, angular.toJson(httpParameters), function (data) {
                 parameters.fields['subject'] = data.resultObject.subject;
                 parameters.fields['message'] = richTextService.getDecodedValue(data.resultObject.message);
                 parameters.fields['sendto'] = [parameters.parentdata['fields']['reportedemail']];
@@ -54,16 +54,58 @@
             }
         }
 
+        var buildDetailsHtml = function (commlogDatamap) {
+            var root = $("<html></html>");
+            var head = $("<head></head>");
+            var styles = $("style, link[rel='stylesheet']").clone();
+            styles.each(function (index, el) {
+                head.append(el);
+            });
+            root.append(head);
+
+            var body = $("<body></body>");
+            body.addClass("pdf-root");
+            body.append($("#printsectionform")[0].outerHTML);
+            root.append(body);
+
+            commlogDatamap["detailsHtml"] = root[0].outerHTML;
+            applicationService.save();
+        }
+
+        var send = function (commLogDatamap, commLogSchema) {
+            var safeCommLogDatamap = commLogDatamap.fields ? commLogDatamap.fields : commLogDatamap;
+            var extraAtach = safeCommLogDatamap["extraattachments"];
+            if (!extraAtach || extraAtach !== "details") {
+                applicationService.save();
+                return;
+            }
+
+            var schema = crudContextHolderService.currentSchema();
+            var datamap = crudContextHolderService.rootDataMap();
+
+            var printCallback = function () {
+                buildDetailsHtml(safeCommLogDatamap);
+            }
+
+            var printOptions = {
+                shouldPageBreak: false,
+                shouldPrintMain: true,
+                printCallback: printCallback
+            };
+            printService.printDetail(schema, datamap, printOptions);
+        }
+
         var service = {
             formatCommTemplate: formatCommTemplate,
             updatereadflag: updatereadflag,
-            addSignature: addSignature
+            addSignature: addSignature,
+            send: send
         };
 
         return service;
     }
 
-    angular.module("sw_layout").factory("commlogService", ["$http", "contextService", "restService", "richTextService", "crudContextHolderService", commlogService]);
+    angular.module("sw_layout").factory("commlogService", ["$http", "contextService", "restService", "richTextService", "crudContextHolderService", "applicationService", "printService", commlogService]);
 
 
 })(angular);

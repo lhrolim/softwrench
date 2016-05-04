@@ -6,7 +6,7 @@ body {
 }
 
 body, .small {
-  font-size: 13px;
+    font-size: 13px;
 }
 
 .btn {
@@ -236,15 +236,24 @@ body > .container {
     }
 }
 
+fieldset {
+    &.hasheader {
+        margin-top: 30px;
+    }
+}
+
 .legend-label {
-    display: inline;
-    padding-top: 20px;
-    margin: 0 15px 10px;
+    margin: 0 15px 15px;
     width: calc(100% - 30px);
     white-space: nowrap;
     vertical-align: baseline;
     font-size: 12px;
     line-height: 24px;
+    background: #aaa;
+    border: none;
+    padding: 8px 10px 5px;
+    font-weight: bold;
+    color: #fff;
 }
 
 .topMessageAux {

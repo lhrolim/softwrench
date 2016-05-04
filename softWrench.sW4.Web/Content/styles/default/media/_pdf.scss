@@ -1,0 +1,52 @@
+﻿.pdf-root {
+    margin: 20px 0;
+
+    .hiddenonscreen {
+        display: block !important;
+    }
+
+    #printsectionform {
+        padding: 0;
+
+        .form-group.container {
+            padding: 0;
+
+            #rootprintdiv {
+                display: inherit !important;
+
+                .print-logo {
+                    margin: 0 15px 40px;
+                }
+
+                h4 {
+                    font-weight: bold;
+                    margin: 0 15px 10px;
+                }
+
+                .no-results {
+                    display: none !important;
+                }
+
+                .crud_output {
+                    fieldset {
+                        .form-control {
+                            font-weight: normal;
+                            min-height: 30px;
+                            padding: 6px 0 3px;
+                            border-radius: 0;
+                            border-top: none;
+                            border-left: none;
+                            border-right: none;
+                            box-shadow: none;
+                        }
+
+                        .ta-scroll-window > .ta-bind {
+                            min-height: 0;
+                            padding: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

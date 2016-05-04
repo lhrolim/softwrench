@@ -7,14 +7,14 @@
         <label class="control-label"
                ng-style="getLabelStyle(fieldMetadata)"
                ng-class="getLabelClass(fieldMetadata)"
-               ng-if="hasLabelOrHeader(fieldMetadata)">
-            {{i18NLabel(fieldMetadata)}}<span ng-show="i18NLabel(fieldMetadata)!='' && hasSameLineLabel(fieldMetadata)">:</span>
+               ng-if="hasLabelOrHeader(fieldMetadata) && !isLabelVisible(fieldMetadata,true)">
+            {{i18NInputLabel(fieldMetadata)}}
         </label>
         <legend ng-if="isLabelVisible(fieldMetadata,true)"
                 rel="tooltip"
                 data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
                 class="legend-label">
-            {{i18NLabel(fieldMetadata)}}
+            {{i18NInputLabel(fieldMetadata)}}
         </legend>
 
         <div class="field" ng-class="getInputClass(fieldMetadata)">

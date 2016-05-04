@@ -1,5 +1,4 @@
 ﻿using softwrench.sW4.Shared2.Metadata;
-using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
@@ -20,18 +19,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Mea {
         /// 
         /// </summary>
         /// <param name="attachmentData"></param>
-        /// <param name="base64Delegate"></param>
         /// <param name="docLink"></param>
         /// <param name="attachmentPath"></param>
+        /// <param name="binaryData"></param>
         ///
         //TODO: code to delete wrongly created files, if ws fails
         protected override void HandleAttachmentDataAndPath(string attachmentData,
-            object docLink, string attachmentPath) {
-
+            object docLink, string attachmentPath, byte[] binaryData) {
+            
             var pathVariable = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksPath);
             var pathToSave = pathVariable + attachmentPath;
             //TODO: Handle exceptions
-            File.WriteAllBytes(pathToSave, FileUtils.ToByteArrayFromHtmlString(attachmentData));
+
+            var bytes = binaryData ?? FileUtils.ToByteArrayFromHtmlString(attachmentData);
+            File.WriteAllBytes(pathToSave, bytes);
             WsUtil.SetValue(docLink, "URLNAME", pathToSave);
             WsUtil.SetValue(docLink, "NEWURLNAME", pathToSave);
         }

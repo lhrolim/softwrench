@@ -138,10 +138,10 @@
     </form>
 
     <!-- had to divide the 'print-modal' and 'print-seciton' in two diferent divs, otherwise the 'print-section' was totally ignored (really dont know why) -->
-    <div ng-if="schema != null">
+    <div ng-if="schema != null && (!ismodal || ismodal !== 'true')">
         <print-modal schema="schema" datamap="datamap" />
     </div>
-    <div ng-if="schema != null">
+    <div ng-if="schema != null && (!ismodal || ismodal !== 'true')">
         <print-section schema="schema" datamap="datamap"/>
     </div>
 

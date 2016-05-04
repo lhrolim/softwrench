@@ -123,10 +123,11 @@ angular.module('sw_layout')
             params.options.printMode = true;
             var shouldPageBreak = printOptions == undefined ? true : printOptions.shouldPageBreak;
             var shouldPrintMain = printOptions == undefined ? true : printOptions.shouldPrintMain;
+            var printCallback = printOptions == undefined ? null : printOptions.printCallback;
 
             var emptyCompositions = {};
             //TODO: check whether printOptions might or not be null
-            if (printOptions != null) {
+            if (printOptions != null && printOptions.compositionsToExpand) {
                 $.each(printOptions.compositionsToExpand, function (key, obj) {
                     if (obj.value == true) {
                         var compositionData = datamap.fields[key];
@@ -140,7 +141,7 @@ angular.module('sw_layout')
             if (params.options.compositionsToExpand == undefined || params.options.compositionsToExpand == "") {
                 //no need to hit the server, just print the main detail
                 log.debug('sw_readytoprintevent dispatched');
-                $rootScope.$broadcast("sw_readytoprintevent", mergeCompositionData(datamap, notExpansibleCompositions, emptyCompositions), shouldPageBreak, shouldPrintMain);
+                $rootScope.$broadcast("sw_readytoprintevent", mergeCompositionData(datamap, notExpansibleCompositions, emptyCompositions), shouldPageBreak, shouldPrintMain, printCallback);
                 return;
             }
 
@@ -155,7 +156,7 @@ angular.module('sw_layout')
 
                 log.debug('sw_readytoprintevent dispatched after server return');
                 var compositionsToPrint = mergeCompositionData(datamap, notExpansibleCompositions, compositions);
-                $rootScope.$broadcast("sw_readytoprintevent", compositionsToPrint, shouldPageBreak, shouldPrintMain);
+                $rootScope.$broadcast("sw_readytoprintevent", compositionsToPrint, shouldPageBreak, shouldPrintMain, printCallback);
             });
         },
 
