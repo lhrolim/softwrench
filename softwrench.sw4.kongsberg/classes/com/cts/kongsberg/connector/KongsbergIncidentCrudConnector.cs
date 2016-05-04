@@ -13,10 +13,10 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
     public class KongsbergIncidentCrudConnector : BaseIncidentCrudConnector {
 
-        private readonly EmailService _emailService;
+        
 
         public KongsbergIncidentCrudConnector() {
-            _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
+         
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {

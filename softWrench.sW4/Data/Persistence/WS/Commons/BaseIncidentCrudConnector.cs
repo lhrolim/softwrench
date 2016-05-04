@@ -18,11 +18,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         protected AttachmentHandler AttachmentHandler;
         protected CommLogHandler CommlogHandler;
         protected WorkLogHandler WorkLogHandler;
+        protected readonly EmailService _emailService;
 
         public BaseIncidentCrudConnector() {
             AttachmentHandler = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
             CommlogHandler = SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
             WorkLogHandler = SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
+            _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
