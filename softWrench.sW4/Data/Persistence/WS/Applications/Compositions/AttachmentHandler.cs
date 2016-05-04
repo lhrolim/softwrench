@@ -34,7 +34,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AttachmentHandler));
 
         private readonly MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
-        private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
+        private readonly DataSetProvider _dataSetProvider;
 
         private AttachmentDao _attachmentDao;
         public AttachmentDao AttachmentDao
@@ -56,8 +56,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
         private MaximoHibernateDAO _maxDAO;
 
-        public AttachmentHandler(MaximoHibernateDAO maxDAO) {
+        public AttachmentHandler(MaximoHibernateDAO maxDAO, DataSetProvider dataSetProvider) {
             _maxDAO = maxDAO;
+            _dataSetProvider = dataSetProvider;
         }
 
 
