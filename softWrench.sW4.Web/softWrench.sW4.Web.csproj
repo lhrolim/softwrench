@@ -531,6 +531,7 @@
     <Content Include="Content\Controller\RoleGroup.html" />
     <Content Include="Content\customVendor\scripts\bootstrap\bootstrap-combobox.js" />
     <Content Include="Content\customVendor\scripts\bootstrap\bootstrap-datetimepicker.js" />
+    <Content Include="Content\customVendor\scripts\bootstrap\bootstrap-multiselect.js" />
     <Content Include="Content\customVendor\scripts\misc\bootbox.js" />
     <Content Include="Content\customVendor\scripts\misc\modernizr.js" />
     <Content Include="Content\fonts\font.css" />

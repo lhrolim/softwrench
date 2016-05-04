@@ -25,7 +25,7 @@
   <property key="email.smtp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>
 
-  <property key="dashboard.enabled" value="false"/>
+  <property key="dashboard.enabled" value="true"/>
   <property key="ui.adminmenu.showclassic" value="true"/>
 
   <environment key="prod">

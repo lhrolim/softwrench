@@ -40,68 +40,73 @@
 
         function getChartData(panel) {
             var configuration = panel.configurationDictionary;
-            //configuration.limit = parseInt(configuration.limit);
-            //configuration.showothers = (configuration.showothers === "True" || configuration.showothers === "true");
 
             var params = {
                 entity: configuration.application,
-                application: configuration.application.equalsIc("sr") ? "servicerequest" : configuration.application,
+                application: "sr".equalsIc(configuration.application) ? "servicerequest" : configuration.application,
                 property: configuration.field,
                 whereClauseMetadataId: "dashboard:" + panel.alias,
                 limit: (configuration.limit > 0 && !configuration.showothers && configuration.statusconfig !== "openclosed") ? configuration.limit : 0,
                 nullValueLabel: config.fields.getNullValueLabel(configuration.field)
             }
+            var method = "CountByProperty";
 
-            return restService.getPromise("Statistics", "CountByProperty", params)
+            // custom system only charts: require custom server-side action logic
+            if (!!configuration.action) {
+                params["action"] = configuration.action;
+                method = "GetStatisticalData";
+            }
+
+            return restService.getPromise("Statistics", method, params)
                 .then(function (response) {
-                    return formatDataForChart(configuration, response.data);
+                    var processed = processData(configuration, response.data);
+                    return formatDataForChart(configuration.type, processed);
                 });
         }
 
-        function formatDataForChart(configuration , data) {
-
+        function processData(configuration , data) {
             // sort by value descending
-            data = data.sort(function (d1, d2) {
+            var processed = data.sort(function (d1, d2) {
                 return d2.fieldCount - d1.fieldCount;
             });
 
             // status -> open/close
             if (configuration.field === "status" && configuration.statusfieldconfig === "openclosed") {
                 // closed status entry
-                var closed = data.find(function (d) {
+                var closed = processed.find(function (d) {
                     return d.fieldValue.equalsIc("close") || d.fieldValue.equalsIc("closed");
                 });
                 // sum of all except closed
-                var openCount = data.filter(function (d) {
+                var openCount = processed.filter(function (d) {
                     return !d.fieldValue.equalsIc("close") && !d.fieldValue.equalsIc("closed");
                 })
                 .reduce(function (previous, current) {
                     return previous + current.fieldCount;
                 }, 0);
                 // new array containing only open/close
-                data = [
+                processed = [
                     closed,
                     { fieldValue: "OPEN", fieldLabel: "OPEN", fieldCount: openCount }
                 ];
 
             }
-                // should overflow to 'others' -> top within limit + others
-            else if (configuration.limit > 0 && data.length > configuration.limit && configuration.showothers) {
+            // should overflow to 'others' -> top within limit + others
+            else if (configuration.limit > 0 && processed.length > configuration.limit && configuration.showothers) {
                 // <limit> highest counts
-                var topresults = data.slice(0, configuration.limit);
+                var topresults = processed.slice(0, configuration.limit);
                 // sum of the others's counts
-                var othersCount = data.slice(configuration.limit)
+                var othersCount = processed.slice(configuration.limit)
                     .reduce(function (previous, current) {
                         return previous + current.fieldCount;
                     }, 0);
                 // new array composed of top <limit> + 'others'
-                data = topresults.concat({ fieldValue: "OTHERS", fieldLabel: "OTHERS", fieldCount: othersCount });
+                processed = topresults.concat({ fieldValue: "OTHERS", fieldLabel: "OTHERS", fieldCount: othersCount });
             }
 
-            return handleData(configuration.type, data);
+            return processed;
         }
         
-        function handleData(type, data) {
+        function formatDataForChart(type, data) {
             var chartData = {};
 
             switch (type) {

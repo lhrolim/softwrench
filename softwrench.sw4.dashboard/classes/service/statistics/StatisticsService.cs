@@ -1,29 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Context;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.dashboard.classes.service.statistics {
     public class StatisticsService : ISingletonComponent {
 
-        private const string COUNT_BY_PROPERTY_ORDERED_TEMPLATE = @"select COALESCE(CAST({1} as varchar), 'NULL') as {1},count(*) as countBy 
+        private const string COUNT_BY_PROPERTY_ORDERED_TEMPLATE = @"select COALESCE(CAST({1} as varchar), 'NULL') as {1}, count(*) as countBy 
                                                                         from {0} 
                                                                         {2}
                                                                         group by {1}
                                                                         order by " + COUNT_ORDER;
         private const string COUNT_ORDER = "countBy desc";
 
-        private readonly IMaximoHibernateDAO _dao;
+        private readonly IMaximoHibernateDAO _maxdao;
+        private readonly ISWDBHibernateDAO _swdao;
         private readonly IWhereClauseFacade _whereClauseFacade;
 
-        public StatisticsService(IMaximoHibernateDAO dao, IWhereClauseFacade whereClauseFacade) {
-            _dao = dao;
+        public StatisticsService(IMaximoHibernateDAO maxdao, ISWDBHibernateDAO swdao, IWhereClauseFacade whereClauseFacade) {
+            _maxdao = maxdao;
+            _swdao = swdao;
             _whereClauseFacade = whereClauseFacade;
         }
 
@@ -37,23 +43,97 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
         /// <param name="request"></param>
         /// <returns></returns>
         public async Task<IEnumerable<StatisticsResponseEntry>> CountByProperty(StatisticsRequest request) {
-            return await Task.Factory.StartNew(() => {
-                var pagination = request.Limit > 0 ? new PaginationData(request.Limit, 1, COUNT_ORDER) : null;
-                var query = BuildStatisticsQuery(request);
+            var pagination = request.Limit > 0 ? new PaginationData(request.Limit, 1, COUNT_ORDER) : null;
+            var query = BuildStatisticsQuery(request);
+            var dao = IsMaximoApplication(request.Application) ?  (IBaseHibernateDAO) _maxdao : _swdao;
 
-                return _dao.FindByNativeQuery(query, new ExpandoObject(), pagination)
-                            .Cast<IDictionary<string, object>>() // cast so ExpandoObject's properties can be indexed by string key
-                            .Select(d => {
-                                var fieldValue = (string)d[request.Property];
-                                var fieldCount = (int)d["countBy"];
-                                // value is `null`: label configured by request. Otherwise try and grab the label from the query
-                                var label = string.IsNullOrEmpty(fieldValue) || string.Equals(fieldValue, "NULL") 
-                                            ? request.NullValueLabel 
-                                            : d.ContainsKey("label") ? (string) d["label"] : null;
-
-                                return new StatisticsResponseEntry(fieldValue: fieldValue, fieldCount: fieldCount, fieldLabel: label);
-                            });
+            return await Task.Run(() => {
+                var result = dao.FindByNativeQuery(query, new ExpandoObject(), pagination);
+                return FormatQueryResult(result, request.Property, request.NullValueLabel);
             });
+        }
+
+        private static IEnumerable<StatisticsResponseEntry> FormatQueryResult(IEnumerable<dynamic> resultSet, string propertyName, string nullValueLabel) {
+            return resultSet.Cast<IDictionary<string, object>>()
+                // cast so ExpandoObject's properties can be indexed by string key
+                .Select(d => {
+                    var fieldValue = (string)d[propertyName];
+                    var fieldCountLong = d["countBy"] as long?;
+                    var fieldCount = fieldCountLong ?? Convert.ToInt64((int) d["countBy"]);
+                    // value is `null`: label configured by request. Otherwise try and grab the label from the query
+                    var label = string.IsNullOrEmpty(fieldValue) || string.Equals(fieldValue, "NULL")
+                        ? nullValueLabel
+                        : d.ContainsKey("label") ? (string)d["label"] : null;
+
+                    return new StatisticsResponseEntry(fieldValue: fieldValue, fieldCount: fieldCount, fieldLabel: label);
+                });
+        }
+
+        public async Task<IEnumerable<StatisticsResponseEntry>> GetDataByAction(string action, StatisticsRequest request) {
+            switch (action) {
+                case "device_value":
+                    return await DeviceValuesMonthly(request);
+                default:
+                    throw new InvalidOperationException(string.Format("No action that can provide statistical data for '{0}'", action));
+            }
+        }
+
+        #region Specific API-unfriendly stuff
+
+        private async Task<IEnumerable<StatisticsResponseEntry>> DeviceValuesMonthly(StatisticsRequest request) {
+                var now = DateTime.Now.ToUniversalTime();
+                var normalizedNow = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+                var months = new List<DateTime>(12);
+                for (var i = 11; i > 0; i--) {
+                    months.Add(normalizedNow.AddMonths(-i));    
+                }
+                months.Add(normalizedNow);
+
+                var queryBuilder = new StringBuilder(@"
+                    select d.rng as monthyear, max(d.value) as maxmonthvalue, min(d.value) as minmonthvalue
+                        from 
+	                        (
+		                    select valuelong as value,
+		                        case ");
+
+                months.ForEach(m => {
+                    var firstDayOfMonthTimestamp = m.ToUnixTimeStamp();
+                    var lastDayOfMonth = new DateTime(m.Year, m.Month, DateTime.DaysInMonth(m.Year, m.Month), 23, 59, 59, DateTimeKind.Utc);
+                    var lastDayOfMonthTimeStamp = lastDayOfMonth.ToUnixTimeStamp();
+                    var monthName = m.ToString("MMMM", CultureInfo.InvariantCulture);
+                    queryBuilder.AppendLine(string.Format("when timestamp between {0} and {1} then '{2}/{3}'", firstDayOfMonthTimestamp, lastDayOfMonthTimeStamp, monthName, m.Year));
+                });
+
+                queryBuilder.Append(@"
+                        end as rng
+		                from pesco_device_value
+	                    ) d
+                    where d.rng is not null
+                    group by d.rng");
+
+            return await Task.Run(() => {
+
+                var results = _swdao.FindByNativeQuery(queryBuilder.ToString())
+                                .Select(r => {
+                                    var max = long.Parse(r["maxmonthvalue"]);
+                                    var min = long.Parse(r["minmonthvalue"]);
+                                    return new Dictionary<string, object> {
+                                        { "countBy", max - min },
+                                        { "monthyear", r["monthyear"] },
+                                        { "label", r["monthyear"] }
+                                    };
+                                }).Where(r => ((long) r["countBy"]) > 0 );
+
+                return FormatQueryResult(results, "monthyear", "NULL");
+            });
+        }
+
+        #endregion
+
+        #region Utils
+
+        private bool IsMaximoApplication(string app) {
+            return MetadataProvider.FetchAvailableAppsAndEntities().Contains(app);
         }
 
         private string BuildStatisticsQuery(StatisticsRequest request) {
@@ -81,6 +161,8 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
             var formattedQuery = string.Format(COUNT_BY_PROPERTY_ORDERED_TEMPLATE, request.Entity, request.Property, whereClause);
             return formattedQuery;
         }
+
+        #endregion
 
     }
 }

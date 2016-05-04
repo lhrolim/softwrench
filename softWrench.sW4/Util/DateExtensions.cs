@@ -16,6 +16,31 @@ namespace softWrench.sW4.Util {
         }
 
         /// <summary>
+        /// Gets the Unix Time Stamp for the DateTime 
+        /// (number of seconds passed since Unix Epoch = midnight 1/1/1970).
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        public static long ToUnixTimeStamp(this DateTime dateTime) {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var unixDateTime = (dateTime.ToUniversalTime() - epoch).TotalSeconds;
+            return (long) Math.Truncate(unixDateTime);
+        }
+
+        /// <summary>
+        /// Converts a Unix Time Stamp to a local DateTime.
+        /// Has to be called statically from this class 
+        /// (not possible to add extension static methods to classes, otherwise would have added it to DateTime).
+        /// </summary>
+        /// <param name="unixTimeStamp"></param>
+        /// <returns></returns>
+        public static DateTime FromUnixTimeStamp(long unixTimeStamp) {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var dateTime = epoch.AddSeconds(unixTimeStamp);
+            return dateTime.ToLocalTime();
+        }
+
+        /// <summary>
         /// Converts a server DateTime to a client DateTime
         /// </summary>
         /// <param name="date">Server DateTime</param>

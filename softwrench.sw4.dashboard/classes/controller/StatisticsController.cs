@@ -22,5 +22,10 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return await _service.CountByProperty(request);
         }
 
+        [HttpGet]
+        public async Task<IEnumerable<StatisticsResponseEntry>> GetStatisticalData([FromUri]string action, [FromUri]StatisticsRequest request) {
+            return await _service.GetDataByAction(action, request);
+        }
+
     }
 }

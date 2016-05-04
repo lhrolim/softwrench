@@ -52,13 +52,12 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 order by countBy desc";
 
 
-        private readonly FixedUserSWDBHibernateDao _dao = new FixedUserSWDBHibernateDao(new ApplicationConfigurationAdapter());
-        private readonly IWhereClauseFacade _whereClauseFacade;
+        private readonly DashboardInitializationService _service;
 
         public int Order { get { return int.MaxValue - 51; } }
 
-        public ChartInitializer(IWhereClauseFacade whereClauseFacade) {
-            _whereClauseFacade = whereClauseFacade;
+        public ChartInitializer(DashboardInitializationService service) {
+            _service = service;
         }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
@@ -69,19 +68,19 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 ExecuteSRChartInitialization();
             }
 
-            RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE,      "WOOpenCloseDashBoardGauge",  "dashboard:wo.status.openclosed.gauge");
-            RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE,      "WOOpenCloseDashBoardPie",    "dashboard:wo.status.openclosed");
-            RegisterWhereClause("workorder", WO_STATUS_WHERECLAUSE_COMPLETE_QUERY,  "WOStatusDashboardQuery",     "dashboard:wo.status.top5");
+            _service.RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE,      "WOOpenCloseDashBoardGauge",  "dashboard:wo.status.openclosed.gauge");
+            _service.RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE,      "WOOpenCloseDashBoardPie",    "dashboard:wo.status.openclosed");
+            _service.RegisterWhereClause("workorder", WO_STATUS_WHERECLAUSE_COMPLETE_QUERY,  "WOStatusDashboardQuery",     "dashboard:wo.status.top5");
 
-            RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQuery",     "dashboard:sr.status.top5");
-            RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryLine", "dashboard:sr.status.line");
-            RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryPie",  "dashboard:sr.status.pie");
+            _service.RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQuery",     "dashboard:sr.status.top5");
+            _service.RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryLine", "dashboard:sr.status.line");
+            _service.RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryPie",  "dashboard:sr.status.pie");
         }
 
         #region SR Charts
 
         private bool ShouldExecuteSRChartInitialization() {
-            return ApplicationExists(SrChartDashboardAlias) && !DashBoardExists(SrChartDashboardAlias);
+            return ApplicationExists(SrChartDashboardAlias) && !_service.DashBoardExists(SrChartDashboardAlias);
         }
 
         private Dashboard ExecuteSRChartInitialization() {
@@ -129,7 +128,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 Size = 12
             };
 
-            return CreateDashboard(SrChartDashboardTitle,SrChartDashboardAlias, panels, grid);
+            return _service.CreateDashboard(SrChartDashboardTitle,SrChartDashboardAlias, panels, grid);
         }
 
         #endregion
@@ -137,7 +136,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         #region WO Charts
 
         private bool ShouldExecuteWOChartInitialization() {
-            return ApplicationExists(WoChartDashboardAlias) && !DashBoardExists(WoChartDashboardAlias);
+            return ApplicationExists(WoChartDashboardAlias) && !_service.DashBoardExists(WoChartDashboardAlias);
         }
 
         private Dashboard ExecuteWOChartInitialization() {
@@ -197,95 +196,15 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 Size = 12
             };
 
-            return CreateDashboard(WoChartDashboardTitle, WoChartDashboardAlias, panels, grid);
+            return _service.CreateDashboard(WoChartDashboardTitle, WoChartDashboardAlias, panels, grid);
         }
 
         #endregion
 
         #region Utils
 
-        private bool DashBoardExists(string alias) {
-            var parameters = new ExpandoObject();
-            var parameterCollection = (ICollection<KeyValuePair<string, object>>)parameters;
-            parameterCollection.Add(new KeyValuePair<string, object>("alias", alias));
-
-            var count = _dao.CountByNativeQuery("select count(id) from dash_dashboard where alias=:alias", parameters);
-            return count > 0;
-        }
-
-        private Dashboard CreateDashboard(string title, string alias, ICollection<DashboardGraphicPanel> panels, DashboardGridPanel grid) {
-            var now = DateTime.Now;
-
-            var allPanels = new List<DashboardBasePanel>();
-            allPanels.AddRange(panels);
-            allPanels.Add(grid);
-
-            // save panels and replace references by hibernate-managed ones
-            allPanels.ForEach(p => {
-                p.CreationDate = now;
-                p.UpdateDate = now;
-                p.Visible = true;
-                p.Filter = new DashboardFilter();
-                var panel = p as DashboardGraphicPanel;
-                if (panel != null) {
-                    panel.Provider = "swChart";
-                }
-            });
-            allPanels = _dao.BulkSave(allPanels).ToList();
-
-            // create relationship entities
-            var position = 0;
-            var panelRelationships = allPanels
-                .Select(p => new DashboardPanelRelationship() {
-                    Position = position++,
-                    Panel = p
-                })
-                .ToList();
-
-            // create dashboard
-            var dashboard = new Dashboard() {
-                Filter = new DashboardFilter(),
-                CreationDate = now,
-                UpdateDate = now,
-                Alias = alias,
-                System = true,
-                Application = alias,
-                Title = title,
-                Panels = panelRelationships,
-                Active = true
-            };
-
-            return _dao.Save(dashboard);
-        }
-
-
-        private void RegisterWhereClause(string application, string query,string alias, string metadataId) {
-            _whereClauseFacade.Register(application, query, new WhereClauseRegisterCondition() {
-                Alias = alias,
-                AppContext = new ApplicationLookupContext() {
-                    MetadataId = metadataId,
-                }
-            });
-        }
-
-        private bool ApplicationExists(string application) {
+        protected bool ApplicationExists(string application) {
             return MetadataProvider.Application(application, false) != null;
-        }
-
-        /// <summary>
-        /// Restricts <see cref="GetCreatedByUser"/> to swadmin.Id.
-        /// </summary>
-        private class FixedUserSWDBHibernateDao : SWDBHibernateDAO {
-            private readonly SWDBHibernateDAO _dao;
-
-            public FixedUserSWDBHibernateDao(ApplicationConfigurationAdapter applicationConfiguration) : base(applicationConfiguration, new HibernateUtil(applicationConfiguration)) {
-                _dao = new SWDBHibernateDAO(applicationConfiguration, HibernateUtil);
-            }
-
-            protected override int? GetCreatedByUser() {
-                // force createdby to be 'swadmin' user
-                return (int)_dao.FindSingleByNativeQuery<object>("select id from sw_user2 where username = ?", "swadmin");
-            }
         }
 
         #endregion
