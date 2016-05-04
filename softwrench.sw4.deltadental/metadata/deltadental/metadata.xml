@@ -695,10 +695,10 @@
           <field attribute="labor_.orgid" hidden="true" />
           <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="ctx:getUserData().login.toUpperCase()" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
-            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
+            <event type="afterchange" service="labtransService" method="afterlaborchange"/>
           </association>
           <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
-            <event type="afterchange" service="labtranService" method="aftercraftchange"/>
+            <event type="afterchange" service="labtransService" method="aftercraftchange"/>
           </association>
           <field label="Start Date:" requiredexpression="true" attribute="startdate" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />

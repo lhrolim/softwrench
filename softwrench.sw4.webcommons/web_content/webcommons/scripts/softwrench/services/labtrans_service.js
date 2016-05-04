@@ -1,8 +1,8 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module('sw_layout').factory('labtranService', ["$q", "alertService", "redirectService", "crudContextHolderService", "restService", "searchService",
-        function ($q, alertService, redirectService, crudContextHolderService, restService, searchService) {
+    angular.module('sw_layout').factory('labtransService', ["$q", "alertService", "redirectService", "crudContextHolderService", "restService", "searchService", "contextService",
+        function ($q, alertService, redirectService, crudContextHolderService, restService, searchService, contextService) {
             var calcLineCost = function (regularHours, regularRate, premiumHours, premiumRate) {
                 var regularPay = regularHours * regularRate;
                 var premiumPay = 0;
@@ -42,7 +42,7 @@
                     var regularHours = event.fields['regularhrs'];
                     var regularRate = event.fields['payrate'];
                     var premiumHours = event.fields['premiumpayhours'];
-                    var premiumRate = event.fields['ppcraftrate_premiumpay_.defaultrate'];
+                    var premiumRate = event.fields['ppcraftrate_.premiumpay_.defaultrate'];
                     event.fields['premiumpayrate'] = premiumRate;
                     event.fields['linecost'] = calcLineCost(regularHours, regularRate, premiumHours, premiumRate);
                 }
@@ -191,6 +191,15 @@
                         redirectService.goToApplicationView("labtrans", "editdetail", "input", null, parameters);
                     }
                     return false;
+                },
+                defaultLaborExpression: function (datamap, schema, displayable) {
+                    var username = '';
+                    var rootdatamap = crudContextHolderService.rootDataMap();
+                    if (rootdatamap.fields['#laborlist_'].length < 2) {
+                        var user = contextService.getUserData();
+                        username = user.login.toUpperCase();
+                    }
+                    return username;
                 }
     };
 }]);

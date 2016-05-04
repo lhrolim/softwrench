@@ -58,24 +58,24 @@
           <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
           <field attribute="transdate" label="Created Date"/>
           <field attribute="genapprservreceipt" hidden="true"/>
-          <event type="onremoval.validation" service="labtranService" method="validateRemoval"/>
-          <event type="onedit.validation" service="labtranService" method="validateEdit"/>
+          <event type="onremoval.validation" service="labtransService" method="validateRemoval"/>
+          <event type="onedit.validation" service="labtransService" method="validateEdit"/>
         </schema>
 
         <schema id="list" stereotype="list.selection" title="Labor Reporting Grid">
           <properties>
             <property key="list.selectionstyle" value="multiple"/>
-            <property key="list.click.service" value="labtranService.listClick"/>
+            <property key="list.click.service" value="labtransService.listClick"/>
           </properties>
           <commandbars>
             <commandgroup position="actions">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
               <!--<command id="addlabor" icon="fa fa-clock-o" label="Create Labor"
-                         service="labtranService" method="openNewDetailModal"/>-->
+                         service="labtransService" method="openNewDetailModal"/>-->
               <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
-                       service="labtranService" method="approveMultipleLabtrans"/>
+                       service="labtransService" method="approveMultipleLabtrans"/>
               <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
-                       service="labtranService" method="deleteMultipleLabtrans"/>
+                       service="labtransService" method="deleteMultipleLabtrans"/>
               <!--</container>-->
             </commandgroup>
           </commandbars>
@@ -124,21 +124,21 @@
           <section orientation="horizontal">
             <field label="Start Date" requiredexpression="true" attribute="startdate">
               <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
-              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+              <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
             </field>
             <field label="Start Time" attribute="starttime" >
               <renderer type="time" params="format=HH:mm;showdate=false" />
-              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+              <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
             </field>
           </section>
           <section orientation="horizontal">
             <field label="End Date" attribute="finishdate">
               <renderer type="date" params="format=MM/dd/yyyy;showtime=false" />
-              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+              <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
             </field>
             <field label="End Time" attribute="finishtime" >
               <renderer type="time" params="format=HH:mm;showdate=false" />
-              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+              <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
             </field>
           </section>
           <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8"/>
@@ -151,32 +151,32 @@
           <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
           <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
-            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
+            <event type="afterchange" service="labtransService" method="afterlaborchange"/>
           </association>
           <association label="Craft" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
             <renderer type="autocompleteclient" />
-            <event type="afterchange" service="labtranService" method="aftercraftchange"/>
+            <event type="afterchange" service="labtransService" method="aftercraftchange"/>
           </association>
         </schema>
 
         <schema id="labors" stereotype="compositionlist">
-          <association label="Labor" target="laborcode" labelfield="labor_.person_.displayname" requiredexpression="true" extraprojectionvalues="worksite, orgid">
+          <association label="Labor" target="laborcode" labelfield="labor_.person_.displayname" requiredexpression="true" extraprojectionvalues="worksite, orgid" defaultexpression="service:labtransService.defaultLaborExpression">
             <renderer type="lookup"/>
-            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
+            <event type="afterchange" service="labtransService" method="afterlaborchange"/>
           </association>
           <association label="Craft" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
             <renderer type="autocompleteclient" />
-            <event type="afterchange" service="labtranService" method="aftercraftchange"/>
+            <event type="afterchange" service="labtransService" method="aftercraftchange"/>
           </association>
           <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="premiumpay_.defaultrate">
-            <event type="afterchange" service="labtranService" method="updateLineCost"/>
+            <event type="afterchange" service="labtransService" method="updateLineCost"/>
             <renderer type="lookup"/>
           </association>
           <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate">
-            <event type="afterchange" service="labtranService" method="updateLineCost"/>
+            <event type="afterchange" service="labtransService" method="updateLineCost"/>
           </field>
           <field attribute="ppcraftrate_.premiumpay_.defaultrate" label="Premium Pay Rate" hidden="true">
-            <event type="afterchange" service="labtranService" method="updateLineCost"/>
+            <event type="afterchange" service="labtransService" method="updateLineCost"/>
           </field>
           <field attribute="premiumpayrate" hidden="true"/>
           <field attribute="linecost" label="Line Cost" hidden="true"/>
@@ -207,20 +207,20 @@
           </composition>
           <!--<association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
-            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
+            <event type="afterchange" service="labtransService" method="afterlaborchange"/>
           </association>
           <association label="Craft" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
             <renderer type="autocompleteclient" />
-            <event type="afterchange" service="labtranService" method="aftercraftchange"/>
+            <event type="afterchange" service="labtransService" method="aftercraftchange"/>
           </association>-->
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <field label="Start Date" requiredexpression="true" attribute="startdate" default="@now">
               <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
-              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+              <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
             </field>
             <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8">
-              <event type="afterchange" service="labtranService" method="updateLineCost"/>
+              <event type="afterchange" service="labtransService" method="updateLineCost"/>
             </field>
             <association target="transtype" label="Work Type" labelfield="lttype_.description" requiredexpression="true">
               <renderer type="lookup"/>
@@ -237,11 +237,8 @@
             <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
               <renderer type="lookup"/>
             </association>
-            <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.craft" extraprojectionvalues="premiumpay_.defaultrate">
-              <renderer type="lookup"/>
-            </association>
             <field attribute="premiumpayhours" label="Premium Pay Hours">
-              <event type="afterchange" service="labtranService" method="updateLineCost"/>
+              <event type="afterchange" service="labtransService" method="updateLineCost"/>
             </field>
           </section>
         </schema>
@@ -251,9 +248,9 @@
             <!--<commandgroup position="actions">-->
             <container label="Actions" id="actioncontainer" icon="fa-bolt">
               <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
-                       service="labtranService" method="approveSingleLabtrans"/>
+                       service="labtransService" method="approveSingleLabtrans"/>
               <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
-                       service="labtranService" method="deleteSingleLabtrans"/>
+                       service="labtransService" method="deleteSingleLabtrans"/>
             </container>
             <!--</commandgroup>-->
           </commandbars>
@@ -266,10 +263,10 @@
           <field attribute="premiumpayrate" hidden="true"/>
           <field attribute="linecost" label="Line Cost" hidden="true"/>
           <!--<field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate">
-            <event type="afterchange" service="labtranService" method="updateLineCost"/>
+            <event type="afterchange" service="labtransService" method="updateLineCost"/>
           </field>-->
           <field attribute="ppcraftrate_.premiumpay_.defaultrate" label="Premium Pay Rate" hidden="true">
-            <event type="afterchange" service="labtranService" method="updateLineCost"/>
+            <event type="afterchange" service="labtransService" method="updateLineCost"/>
           </field>
           <field label="Trans Date" requiredexpression="true" attribute="transdate" enableexpression="false" hidden="true">
             <renderer type="datetime"/>
@@ -282,18 +279,18 @@
             <renderer type="default" params="childinputsize=medium" />
             <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
               <renderer type="lookup"/>
-              <event type="afterchange" service="labtranService" method="afterlaborchange"/>
+              <event type="afterchange" service="labtransService" method="afterlaborchange"/>
             </association>
             <association label="Craft" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
               <renderer type="lookup" />
-              <event type="afterchange" service="labtranService" method="aftercraftchange"/>
+              <event type="afterchange" service="labtransService" method="aftercraftchange"/>
             </association>
             <field label="Start Date" requiredexpression="true" attribute="startdate">
               <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
-              <event type="afterchange" service="labtranService" method="afterDateTimeChange"/>
+              <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
             </field>
             <field attribute="regularhrs" label="Regular Hours" requiredexpression="true">
-              <event type="afterchange" service="labtranService" method="updateLineCost"/>
+              <event type="afterchange" service="labtransService" method="updateLineCost"/>
             </field>
             <association target="transtype" label="Work Type" labelfield="lttype_.description"  requiredexpression="true">
               <renderer type="lookup"/>
@@ -311,11 +308,11 @@
             <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
               <renderer type="lookup"/>
             </association>
-            <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.craft" extraprojectionvalues="premiumpay_.defaultrate">
+            <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="premiumpay_.defaultrate">
               <renderer type="lookup"/>
             </association>
             <field attribute="premiumpayhours" label="Premium Pay Hours">
-              <event type="afterchange" service="labtranService" method="updateLineCost"/>
+              <event type="afterchange" service="labtransService" method="updateLineCost"/>
             </field>
           </section>
         </schema>

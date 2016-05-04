@@ -706,8 +706,8 @@
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
         <!--<schema id="compositionlist" stereotype="compositionlist">
-          <event type="onedit.validation" service="labtranService" method="validateEdit"/>
-          <event type="onremoval.validation" service="labtranService" method="validateRemoval"/>
+          <event type="onedit.validation" service="labtransService" method="validateEdit"/>
+          <event type="onremoval.validation" service="labtransService" method="validateRemoval"/>
           <field attribute="labtransid" hidden="true"/>
           <field attribute="laborcode" label="Labor" qualifier="title"/>
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
@@ -754,11 +754,11 @@
           <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
           <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="@#datamapidx == 0 ? ctx:getUserData().login.toUpperCase() : null" extraprojectionvalues="worksite, orgid">
             <renderer type="lookup"/>
-            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
+            <event type="afterchange" service="labtransService" method="afterlaborchange"/>
           </association>
           <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate" default="@user.defaultcraft">
             <renderer type="autocompleteclient" />
-            <event type="afterchange" service="labtranService" method="aftercraftchange"/>
+            <event type="afterchange" service="labtransService" method="aftercraftchange"/>
           </association>
         </schema>
       </schemas>

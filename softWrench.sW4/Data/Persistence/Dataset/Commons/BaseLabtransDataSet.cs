@@ -1,20 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
-using Quartz.Util;
 using softWrench.sW4.Data.API;
-using softWrench.sW4.Data.API.Composition;
-using softWrench.sW4.Data.API.Response;
-using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
-using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
@@ -24,6 +16,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
 
             TargetResult result;
+
+            // Make sure that premium hours is not sumitted as an empty string
+            var payhours = json.GetValue("premiumpayhours");
+            json["premiumpayhours"] = payhours.ToString() == "" ? null : payhours;
+
             if (application.Schema.SchemaId.EqualsIc("editdetail")) {
                 // Remove the current id
                 var labtransId = json.GetValue("labtransid");
