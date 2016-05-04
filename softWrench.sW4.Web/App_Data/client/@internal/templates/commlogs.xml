@@ -108,6 +108,7 @@
           <properties>
             <property key="expansible" value="false"/>
             <property key="masterdetail" value="true"/>
+            <property key="list.search.quicksearchfields" value="sendto,sendfrom,subject"/>
           </properties>
           <field attribute="read">
             <renderer type="icon" params="expression={'#default':'fa-circle','true':''}"/>

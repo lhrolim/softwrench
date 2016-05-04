@@ -58,7 +58,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
 
             var validFilterAttributes = schemaFilters.Filters
                     // filter out datetime and boolean filters
-                    .Where(f => !(f is MetadataBooleanFilter) && !(f is MetadataDateTimeFilter))
+                    .Where(f => !(f is MetadataBooleanFilter) && !(f is MetadataDateTimeFilter) && !(f is MetadataNumberFilter))
                     .Select(f => AttribteAppendingApplicationPrefix(f.Attribute, entity, attributes));
 
             var sb = new StringBuilder();
@@ -128,9 +128,17 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
 
                 var fieldsToInclude = quickSearchFields.Split(',');
                 foreach (var fieldToInclude in fieldsToInclude) {
+                    var fieldDefinition =
+                        listCompositionSchema.Fields.FirstOrDefault(f => f.Attribute.EqualsIc(fieldToInclude));
+                    if (fieldDefinition == null) {
+                        Log.WarnFormat("field {0} could not be located at {1}, review your quicksearch config", fieldToInclude, listCompositionSchema.ApplicationName);
+                        continue;
+                    }
+
                     sb.Append(first ? " and (" : " or ");
                     first = false;
-                    sb.Append(QuickSearchHelper.QuickSearchStatement(entityAssociation.Qualifier + "." + fieldToInclude));
+                    var ignoreCoalesce = IgnoreCoalesce(fieldDefinition);
+                    sb.Append(QuickSearchHelper.QuickSearchStatement(entityAssociation.Qualifier + "." + fieldToInclude, ignoreCoalesce));
                 }
 
                 if (!first) {
@@ -152,7 +160,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
                     var queryAttribute = BaseQueryUtil.ParseAttributeForQuery(compositionEntity,
                         entityAssociation.Qualifier, entityAttribute, entityAssociation.Qualifier);
 
-                    var ignoreCoalesce = nonHidden.DataType.Equals("text") && !nonHidden.DeclaredAsQueryOnEntity;
+                    var ignoreCoalesce = IgnoreCoalesce(nonHidden);
                     sb.Append(QuickSearchHelper.QuickSearchStatement(queryAttribute, ignoreCoalesce));
                 }
                 if (!first) {
@@ -162,6 +170,10 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
 
             }
             return sb.ToString();
+        }
+
+        private static bool IgnoreCoalesce(ApplicationFieldDefinition fieldDefinition) {
+            return fieldDefinition.DataType!=null && fieldDefinition.DataType.Equals("text") && !fieldDefinition.DeclaredAsQueryOnEntity;
         }
 
         private static string AttribteAppendingApplicationPrefix(string attribute, EntityMetadata entity, IEnumerable<EntityAttribute> attributes) {

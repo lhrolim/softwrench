@@ -103,9 +103,32 @@ namespace softwrench.sW4.test.Data.Search.QuickSearch {
             var expected =
 @"1=1 
 or exists (select 1 from worklog as worklog_ where SR.ticketid = worklog_.recordkey and SR.siteid = worklog_.siteid and worklog_.class = 'SR' and ((UPPER(COALESCE(worklog_.description,'')) like :quicksearchstring))) 
-or exists (select 1 from commlog as commlog_ where SR.ticketuid = commlog_.ownerid and commlog_.ownertable = 'SR' and ((commlog_.sendto like :quicksearchstring) or (UPPER(COALESCE(commlog_.sendfrom,'')) like :quicksearchstring) or (UPPER(COALESCE(commlog_.subject,'')) like :quicksearchstring) or (UPPER(COALESCE(SUBSTRING(commlog_.message, 1, 50),'')) like :quicksearchstring)))";
+or exists (select 1 from commlog as commlog_ where SR.ticketuid = commlog_.ownerid and commlog_.ownertable = 'SR' and ((commlog_.sendto like :quicksearchstring) or (UPPER(COALESCE(commlog_.sendfrom,'')) like :quicksearchstring) or (UPPER(COALESCE(commlog_.subject,'')) like :quicksearchstring)))";
             Assert.AreEqual(expected.Replace("\n", "").Replace("\t", "").Replace("\r", ""), whereClause.Replace("\n", "").Replace("\t", "").Replace("\r", ""));
         }
+
+
+//        /// <summary>
+//        /// Assures that if the schema has the property list.search.quicksearchfields defined, only its fields would be searched
+//        /// </summary>
+//        [TestMethod]
+//        public void TestWithCompositionDataAndSchemaProperty3() {
+//
+//            var dto = new PaginatedSearchRequestDto();
+//            dto.QuickSearchDTO = new QuickSearchDTO() {
+//                QuickSearchData = "test",
+//                CompositionsToInclude = new List<string>(){
+//                    "attachment"
+//                }
+//            };
+//
+//            var whereClause = _handler.HandleDTO(_schema, dto).WhereClause;
+//
+//            var expected =
+//@"1=1 
+//or exists (select 1 from worklog as worklog_ where SR.ticketid = worklog_.recordkey and SR.siteid = worklog_.siteid and worklog_.class = 'SR' and ((UPPER(COALESCE(worklog_.description,'')) like :quicksearchstring)))";
+//            Assert.AreEqual(expected.Replace("\n", "").Replace("\t", "").Replace("\r", ""), whereClause.Replace("\n", "").Replace("\t", "").Replace("\r", ""));
+//        }
 
 
         /// <summary>
@@ -136,7 +159,7 @@ or exists (select 1 from commlog as commlog_ where SR.ticketuid = commlog_.owner
             _helperMock.Verify(a => a.BuildOrWhereClause(It.IsAny<IEnumerable<string>>(), null), Times.Once());
 
             //if list of fields is blank, do not add any clausues
-            Assert.AreEqual("1=1",result.WhereClause);
+            Assert.AreEqual("1=1", result.WhereClause);
 
 
 
