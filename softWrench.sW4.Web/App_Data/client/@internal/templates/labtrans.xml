@@ -58,7 +58,7 @@
           <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
           <field attribute="transdate" label="Created Date"/>
           <field attribute="genapprservreceipt" hidden="true"/>
-          <event type="onremoval.validation" service="labtransService" method="validateRemoval"/>
+          <event type="onremoval.validation" service="labtransService" method="validateEdit"/>
           <event type="onedit.validation" service="labtransService" method="validateEdit"/>
         </schema>
 
