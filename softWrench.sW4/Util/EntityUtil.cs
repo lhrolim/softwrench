@@ -10,6 +10,10 @@ namespace softWrench.sW4.Util {
         }
 
         public static string GetRelationshipName(string attribute) {
+            if (attribute == null) {
+                return null;
+            }
+
             var idx = attribute.IndexOf(".", System.StringComparison.Ordinal);
             if (idx == -1) {
                 return attribute.EndsWith("_") ? attribute.Trim('\'') : attribute.Trim('\'') + "_"; ;
