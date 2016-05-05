@@ -39,6 +39,7 @@
     </entity>
     <entity name="location" idAttribute="locationsid">
       <attributes>
+        <attribute name="isproject" type="smallint" required="true" />
         <attribute name="pluspcustomer" type="varchar"/>
       </attributes>
     </entity>
@@ -115,9 +116,10 @@
 
           <customization position="+locationhiddenfield">
             <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
-              <renderer type="lookup"/>
+              <renderer type="lookup" params="application=location;schemaId=locationLookupList;"/>
               <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             </association>
+              
             <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
               <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
               <dataprovider prefilterfunction="FilterAssets"/>
@@ -183,20 +185,43 @@
 
 
     <application name="location" title="Location" entity="location" >
+      <filters>
+        <optionfilter attribute="isproject" allowblank="false" style="width:300px" eager="true">
+          <f:option label="Yes" value="1" />
+          <f:option label="No" value="0" />
+        </optionfilter>
+      </filters>
       <schemas>
         <schema id="list" redeclaring="false">
           <customization position="status"/>
           <customization position="type"/>
           <customization position="+orgid">
+            <field attribute="isproject" label="Is Project" readonly="true" enableexpression="false">
+              <renderer type="checkbox" />
+            </field>
             <field attribute="pluspcustomer" label="Customer"/>
           </customization>
           <commandbars>
             
           </commandbars>
         </schema>
+        
+        <schema id="locationLookupList" stereotype="list.singleselection.modal" platform="web" title="Location List">
+          <field attribute="location" label="Location" qualifier="title"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+          <optionfield attribute="isproject" label="Is Project">
+            <renderer type="checkbox"  params="filteronly=true;formatter=numberToBoolean"/>
+            <option label="No" value="FALSE"/>
+            <option label="Yes" value="TRUE"/>  
+          </optionfield>
+        </schema>
+        
         <schema id="locationdetail" title="Location Detail" stereotype="detail" redeclaring="false">
           <customization position="+intlabrec">
             <field attribute="pluspcustomer" label="Customer" readonly="true"/>
+            <field attribute="isproject" label="Is Project" readonly="true" enableexpression="false">
+              <renderer type="checkbox"/>
+            </field>
           </customization>
         </schema>
       </schemas>
@@ -277,10 +302,10 @@
             <!--<section orientation="horizontal">-->
             <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
               <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
-              <renderer type="lookup" />
+              <renderer type="lookup" params="application=location;schemaId=locationLookupList;"/>
             </association>
-           
-            <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+         
+           <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
               <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
               <dataprovider prefilterfunction="FilterAssets"/>
               <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>

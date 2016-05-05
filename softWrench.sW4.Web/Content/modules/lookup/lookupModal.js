@@ -48,7 +48,11 @@
             },
 
             controller: function ($injector, $scope, $http, $element, searchService, i18NService, associationService,
-                                  formatService, expressionService, focusService) {
+                                  formatService, expressionService, focusService, contextService) {
+
+                $scope.searchData = { };
+                $scope.searchOperator = { };
+                $scope.searchSort = { };
 
                 $scope.lookupModalSearch = function (pageNumber) {
                     focusService.resetFocusToCurrent($scope.schema, $scope.lookupObj.fieldMetadata.attribute);
@@ -56,6 +60,14 @@
                     $scope.lookupObj.quickSearchDTO = {
                         quickSearchData: $scope.lookupsearchdata
                     }
+                   
+                    var reportDto = contextService.retrieveReportSearchDTO($scope.schema.schemaId);
+                    var searchDTO = !!reportDto
+                        ? searchService.buildReportSearchDTO(reportDto, $scope.searchData, $scope.searchSort, $scope.searchOperator, null)
+                        : searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, null, $scope.searchTemplate);
+
+                    $scope.searchObj = searchDTO;
+
                     associationService.getLookupOptions($scope.schema, $scope.datamap, $scope.lookupObj, pageNumber, $scope.searchObj).then(function (data) {
                         var result = data.resultObject;
                         $scope.populateModal(result);
@@ -73,6 +85,47 @@
                     modalPaginationData.selectedPage = associationResult.pageNumber;
                     //TODO: this should come from the server side
                     modalPaginationData.paginationOptions = associationResult.paginationOptions || [10, 30, 100];
+                };
+
+                $scope.filterForColumn = function(column) {
+                    return $scope.lookupObj.schema.schemaFilters.filters.find(function (filter) {
+                        return filter.attribute === column.attribute;
+                    });
+                };
+
+                $scope.selectAllChecked = false;
+
+                $scope.filterApplied = function () {
+                    $scope.lookupModalSearch(1);
+                };
+
+                $scope.checkboxIconClass = function(value) {
+                    return (value === 1 || value === true || "yes".equalsIc(value)) ? "fa-check-square-o" : "fa-square-o";
+                }
+
+                $scope.sort = function (column) {
+                    if (!$scope.shouldShowHeaderLabel(column) || "none" === $scope.schema.properties["list.sortmode"]) {
+                        return;
+                    }
+                    var columnName = column.attribute;
+
+                    var sorting = $scope.searchSort;
+                    if (sorting.field != null && sorting.field === columnName) {
+                        sorting.order = sorting.order === "desc" ? "asc" : "desc";
+                    } else {
+                        sorting.field = columnName;
+                        sorting.order = "asc";
+                    }
+                    $scope.lookupModalSearch(1);
+                };
+
+                $scope.sortLabel = function () {
+                    return $scope.i18N("_grid.filter.clicksort", "Click here to sort");
+                }
+
+                $scope.shouldShowSort = function (column, orientation) {
+                    var defaultCondition = !!column.attribute && ($scope.searchSort.field === column.attribute || $scope.searchSort.field === column.rendererParameters["sortattribute"]) && $scope.searchSort.order === orientation;
+                    return defaultCondition;
                 };
 
                 $scope.showDescription = function () {
@@ -106,7 +159,7 @@
                     associationService.updateUnderlyingAssociationObject(fieldMetadata, option, $scope);
                     $element.modal('hide');
                 };
-
+                
                 $element.on('hide.bs.modal', function (e) {
                     $scope.lookupObj.quickSearchDTO = null;
                     $('body').removeClass('modal-open');

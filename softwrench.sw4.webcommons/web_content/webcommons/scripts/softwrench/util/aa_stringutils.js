@@ -43,7 +43,7 @@ String.prototype.equalsAny = String.prototype.f = function () {
 };
 
 String.prototype.equalsIc = String.prototype.f = function () {
-    return arguments[0].isEqual(this, true);
+    return this.isEqual(arguments[0], true);
 };
 
 

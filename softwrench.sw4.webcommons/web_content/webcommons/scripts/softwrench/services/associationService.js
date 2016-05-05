@@ -671,6 +671,10 @@
             var resultDTO = {};
 
             resultDTO.quickSearchDTO = lookupObj.quickSearchDTO;
+            resultDTO.searchParams = searchObj.searchParams;
+            resultDTO.searchValues = searchObj.searchValues;
+            resultDTO.searchSort = searchObj.searchSort;
+            resultDTO.SearchAscending = searchObj.SearchAscending;
 
             resultDTO.pageNumber = pageNumber;
             resultDTO.totalCount = totalCount;
@@ -678,8 +682,7 @@
 
             return resultDTO;
         }
-
-
+        
         function getEagerLookupOptions(lookupObj) {
             var eagerOptions = crudContextHolderService.fetchEagerAssociationOptions(lookupObj.fieldMetadata.associationKey);
             if (!eagerOptions) {

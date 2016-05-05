@@ -1,4 +1,4 @@
-﻿<div class="modal fade lookupModal modalLock" 
+﻿<div class="modal fade lookupModal modalLock"
      data-attribute="{{lookupObj.fieldMetadata.target}}" tabindex="-1" role="dialog" data-backdrop="static"
      data-keyboard="false" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -11,7 +11,7 @@
                 <div class="context clearfix">
                     <div class="input-group lazy-search">
                         <input type="search" class="hidden-phone form-control" ng-model="lookupsearchdata" ng-model-options='{ debounce: 700 }'
-                               placeholder="Find {{placeholder}}" data-association-key="{{provider}}" ng-enter="lookupModalSearch(pageNumber)" ng-change="lookupModalSearch(pageNumber)"/>
+                               placeholder="Find {{placeholder}}" data-association-key="{{provider}}" ng-enter="lookupModalSearch(pageNumber)" ng-change="lookupModalSearch(pageNumber)" />
                         <span class="input-group-addon last" ng-click="lookupModalSearch(pageNumber)">
                             <i class="fa fa-search"></i>
                         </span>
@@ -20,7 +20,7 @@
                     <pagination pagination-data="lookupObj.modalPaginationData"
                                 disable-export="true"
                                 disable-print="true"
-                                renderfn="lookupModalSearch(pageNumber)" ng-cloak/>
+                                renderfn="lookupModalSearch(pageNumber)" ng-cloak />
                 </div>
             </div>
             <div class="modal-body">
@@ -49,18 +49,45 @@
                 </table>
                 <!--build responsive css rules based on metadata-->
                 <style ng-if="lookupObj.schema != null" column-widths columns="{{lookupObj.schema.displayables}}" gridtype="lookupgrid"></style>
-                <table id="lookupgrid" class="table table-hover hidden-phone" ng-show="lookupObj.schema != null">
-                    <thead>
+                <table id="listgrid" class="table table-hover hidden-phone" ng-show="lookupObj.schema != null">
+                    <thead id="listgridthread" class="listgrid-thead">
                         <tr class="header-row">
                             <th ng-repeat="column in lookupObj.schema.displayables" ng-hide="column.isHidden">
-                                <span>{{i18NLabel(column)}}</span>
+
+                                <div ng-if="shouldShowHeaderLabel(column)" class="cell-wrapper">
+                                    <div ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel()}}">
+                                        {{i18NLabel(column)}} <i class="fa {{headerIcon(column)}}" ng-show="hasIcon(column)"></i>
+                                    </div>
+                                    <div class="glyphicon glyphicon-sort-by-attributes part" ng-show="shouldShowSort(column,'asc')"
+                                         rel="tooltip" data-original-title="Sorted ascending">
+                                    </div>
+                                    <div class="glyphicon glyphicon-sort-by-attributes-alt part" ng-show="shouldShowSort(column,'desc')"
+                                         rel="tooltip" data-original-title="Sorted descending">
+                                    </div>
+                                    <div class="filter-label part" filterrowrendered>
+                                        <crud-filter-dropdown filter="filterForColumn(column)"
+                                                              schema="lookupObj.schema" datamap="datamap"
+                                                              select-all="selectAllChecked"
+                                                              search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()"
+                                                              filter-standalone />
+                                    </div>
+                                </div>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="option in lookupObj.options" ng-click="lookupModalSelect(option)">
                             <td ng-repeat="column in lookupObj.schema.displayables" ng-hide="column.isHidden">
-                                <span>{{getFormattedValue(option.extrafields[column.attribute], column, option)}}</span>
+                                <ng-switch on="column.rendererType">
+                                    <span ng-switch-when="checkbox">
+                                        <div class='cell-wrapper'>
+                                            <i class="fa {{checkboxIconClass(option.extrafields[column.attribute])}}" />
+                                        </div>
+                                    </span>
+                                    <span ng-switch-default>{{getFormattedValue(option.extrafields[column.attribute], column, option)}}</span>
+                                </ng-switch>
+
+
                             </td>
                         </tr>
                     </tbody>

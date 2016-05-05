@@ -211,9 +211,10 @@ String.prototype.isEqual = String.prototype.f = function (other, ignoreCase) {
     if (!ignoreCase) {
         return s === other;
     }
-    if (other == null) {
+    if (other == null || !isString(other)) {
         return false;
     }
+
     return s.toLowerCase() === other.toLowerCase();
 };
 

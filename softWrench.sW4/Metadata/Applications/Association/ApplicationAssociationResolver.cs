@@ -196,7 +196,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             if (orderByField != null) {
                 associationFilter.SearchSort = orderByField;
                 associationFilter.SearchAscending = !orderByField.EndsWith("desc");
-            } else {
+            } else if (string.IsNullOrWhiteSpace(associationFilter.SearchSort)) {
                 if (associationFilter.ProjectionFields.Any(f => f.Alias == "value")) {
                     associationFilter.SearchSort = "value";
                 } else {
@@ -206,7 +206,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                         : "1";
                 }
                 associationFilter.SearchAscending = true;
-            }
+            } 
         }
 
 
