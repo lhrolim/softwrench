@@ -23,79 +23,95 @@ namespace softwrench.sw4.user.classes.entities {
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
-        public int? Id {
+        public int? Id
+        {
             get; set;
         }
 
         [Property]
-        public string UserName {
-            get {
+        public string UserName
+        {
+            get
+            {
                 return _userName == null ? null : _userName.ToLower();
             }
-            set {
+            set
+            {
                 _userName = value;
             }
         }
 
-        public Person Person {
+        public Person Person
+        {
             get; set;
         }
 
         [Property(TypeType = typeof(BooleanToIntUserType))]
-        public bool? IsActive {
+        public bool? IsActive
+        {
             get; set;
         }
 
 
-        public bool? MaximoActive {
+        public bool? MaximoActive
+        {
             get; set;
         }
 
         [Property]
-        public string CriptoProperties {
+        public string CriptoProperties
+        {
             get; set;
         }
         /// <summary>
         /// Users that exist only on softwrench but not in Maximo (at least not necessarily)
         /// </summary>
         [Property]
-        public bool Systemuser {
+        public bool Systemuser
+        {
             get; set;
         }
 
         [Property]
-        public string MaximoPersonId {
+        public string MaximoPersonId
+        {
             get; set;
         }
 
         [Property]
-        public string Password {
+        public string Password
+        {
             get; set;
         }
 
         [Property]
-        public string FirstName {
+        public string FirstName
+        {
             get; set;
         }
 
         [Property]
-        public string LastName {
+        public string LastName
+        {
             get; set;
         }
 
         [Property]
-        public string Email {
+        public string Email
+        {
             get; set;
         }
 
 
         [Property]
-        public string SiteId {
+        public string SiteId
+        {
             get; set;
         }
 
         [Property]
-        public string OrgId {
+        public string OrgId
+        {
             get; set;
         }
 
@@ -105,7 +121,8 @@ namespace softwrench.sw4.user.classes.entities {
         Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "user_id")]
         [OneToMany(2, ClassType = typeof(PersonGroupAssociation))]
-        public ISet<PersonGroupAssociation> PersonGroups {
+        public ISet<PersonGroupAssociation> PersonGroups
+        {
             get; set;
         }
 
@@ -114,7 +131,8 @@ namespace softwrench.sw4.user.classes.entities {
         Lazy = CollectionLazy.False)]
         [Key(1, Column = "user_id")]
         [ManyToMany(2, Column = "profile_id", ClassType = typeof(UserProfile))]
-        public ISet<UserProfile> Profiles {
+        public ISet<UserProfile> Profiles
+        {
             get; set;
         }
 
@@ -122,7 +140,8 @@ namespace softwrench.sw4.user.classes.entities {
         Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "user_id")]
         [OneToMany(2, ClassType = typeof(UserCustomRole))]
-        public ISet<UserCustomRole> CustomRoles {
+        public ISet<UserCustomRole> CustomRoles
+        {
             get; set;
         }
 
@@ -131,12 +150,14 @@ namespace softwrench.sw4.user.classes.entities {
           Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "user_id")]
         [OneToMany(2, ClassType = typeof(UserCustomConstraint))]
-        public ISet<UserCustomConstraint> CustomConstraints {
+        public ISet<UserCustomConstraint> CustomConstraints
+        {
             get; set;
         }
-        
+
         [OneToOne(ClassType = typeof(UserPreferences), Lazy = Laziness.False, PropertyRef = "UserId", Cascade = "all")]
-        public UserPreferences UserPreferences {
+        public UserPreferences UserPreferences
+        {
             get; set;
         }
 
@@ -188,8 +209,13 @@ namespace softwrench.sw4.user.classes.entities {
             Password = Password ?? dbUSer.Password;
             FirstName = FirstName ?? dbUSer.FirstName;
             LastName = LastName ?? dbUSer.LastName;
-            SiteId = SiteId ?? dbUSer.SiteId;
-            OrgId = OrgId ?? dbUSer.OrgId;
+            if (Person != null) {
+                SiteId = Person.SiteId ?? dbUSer.SiteId;
+                OrgId = Person.OrgId ?? dbUSer.OrgId;
+            } else {
+                SiteId = SiteId ?? dbUSer.SiteId;
+                OrgId = OrgId ?? dbUSer.OrgId;
+            }
             IsActive = IsActive ?? dbUSer.IsActive;
             PersonGroups = dbUSer.PersonGroups;
             CustomRoles = dbUSer.CustomRoles;
@@ -262,8 +288,10 @@ namespace softwrench.sw4.user.classes.entities {
             return user;
         }
 
-        public string FullName {
-            get {
+        public string FullName
+        {
+            get
+            {
                 if (Person == null || (Person.FirstName == null && Person.LastName == null)) {
                     return FirstName + " " + LastName;
                 }

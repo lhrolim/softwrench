@@ -457,8 +457,9 @@
 
         <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web" stereotype="detailnew">
           <section id="siteidsection">
-            <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true">
+            <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true" extraprojectionvalues="orgid">
               <renderer type="lookup" />
+              <event type="afterchange" method="adjustOrgId" service="genericTicketService"/>
             </association>
           </section>
 

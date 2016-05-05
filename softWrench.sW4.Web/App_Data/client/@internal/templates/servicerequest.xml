@@ -267,8 +267,9 @@
         <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" >
           <section id="ticketidsection">
             <field label="Status" attribute="status" readonly="true" default="NEW" hidden="true"/>
-            <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true">
+            <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true" extraprojectionvalues="orgid">
               <renderer type="lookup"/>
+              <event type="afterchange" method="adjustOrgId" service="genericTicketService"/>
             </association>
           </section>
 
