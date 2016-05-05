@@ -34,6 +34,8 @@
         contextService.insertIntoContext("commandbars", {});
         var el = angular.element("<crud-list datamap='datamap' schema='schema' is-list='true' ismodal='false' timestamp='100' />");
         $compile(el)(mockScope);
+        //mocking directive loading
+        $httpBackend.when('GET', '/Content/Templates/directives/multiselectDropdown.html').respond({});
         mockScope.$digest();
         mockScope = el.isolateScope() || el.scope();
 

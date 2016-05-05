@@ -23,7 +23,10 @@
   <commandgroup position="detail.secondary" platform="web">
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint" cssclasses="large-button"/>
   </commandgroup>
+  
+  <commandgroup position="multiselect.dropdown" platform="web">
 
+  </commandgroup>
 
   <!-- Modal commands-->
 
@@ -60,12 +63,12 @@
     <!--      <offcommand id="ontoggleselectionmode" icon="fa-edit" service="dispatcherService" method="dispatchevent" label="Select" tooltip="Click Line to View Details" parameters="sw.crud.list.toggleselectionmode,panelid" cssclasses="large-button"/>-->
     <!--    </togglecommand>-->
 
-    <togglecommand id="toggleselected" position="+profiles">
+    <!--<togglecommand id="toggleselected" position="+profiles">
       <oncommand id="ontoggleselected" icon="fa-toggle-on" service="dispatcherService" method="dispatchevent"
                  label="Show" tooltip="Show Selected" parameters="sw.crud.list.toggleselected,panelid" cssclasses="large-button"/>
       <offcommand id="offtoggleselected" icon="fa-toggle-off" service="dispatcherService" method="dispatchevent"
                  label="Show" tooltip="Show All" parameters="sw.crud.list.toggleselected,panelid" cssclasses="large-button"/>
-    </togglecommand>
+    </togglecommand>-->
   </commandgroup>
 
   <commandgroup position="spreadsheet" platform="web">

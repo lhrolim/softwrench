@@ -574,6 +574,7 @@
     <Content Include="Content\Scripts\client\crud\crud_expandable_section.js" />
     <Content Include="Content\Scripts\client\directives\fileUpload.js" />
     <Content Include="Content\Scripts\client\directives\gmaps.js" />
+    <Content Include="Content\Scripts\client\directives\multiselectDropdown.js" />
     <Content Include="Content\Scripts\client\directives\swChart.js" />
     <Content Include="Content\Scripts\client\crud\search\crudSearchService.js" />
     <Content Include="Content\Scripts\client\directives\scrollPane.js" />
@@ -832,6 +833,7 @@
     <Content Include="Content\Templates\configConditionModal.html" />
     <Content Include="Content\Templates\printModal.html" />
     <Content Include="Content\modules\lookup\templates\lookupModal.html" />
+    <Content Include="Content\Templates\directives\multiselectDropdown.html" />
     <Content Include="Content\Templates\searchbox.html" />
     <Content Include="Content\Templates\usefulFaqLinks.html" />
     <Content Include="Content\styles\default\_pagination.scss" />
@@ -841,7 +843,6 @@
     <Content Include="Content\Templates\usersetup\forgotpassword.html" />
     <Content Include="Content\Templates\usersetup\welcomeemail_manualpassword.html" />
     <Content Include="Content\Templates\usersetup\welcomeemail_automaticpassword.html" />
-    <Content Include="Content\vendor\scripts\bootstrap-multiselect.js" />
     <Content Include="Dependencies\DocumentFormat.OpenXml.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -947,6 +948,7 @@
     <Folder Include="App_Data\Client\shared\" />
     <Folder Include="Content\Scripts\softwrench\" />
     <Folder Include="Content\vendor\css\fonts\" />
+    <Folder Include="Content\vendor\scripts\" />
     <Folder Include="Controllers\MaximoApps\" />
     <Folder Include="Controllers\Mobile\" />
     <Folder Include="Views\HapagHome\" />

@@ -1,0 +1,16 @@
+﻿<div class="multiselect-dropdown">
+    <input type="checkbox" ng-model="ngModel" ng-change="checkToggle()"/><i class="toggle fa fa-caret-down" data-toggle="dropdown" aria-expanded="false" ng-click="dropdownClick()"></i>
+    <ul class="dropdown-menu" role="menu">
+        <li>
+            <a ng-click="toggleSelected()" ng-enabled="toggleSelectedEnabled()" href="">
+                <i class="fa" ng-class="toggleSelectedClass()"></i>&ensp;Show Selected
+            </a>
+        </li>
+        <hr />
+        <li ng-repeat="command in getDropdownCommands()">
+            <a ng-click="executeService(getCommand(command))" href="">
+                <i class="fa" ng-class="commandIcon(getCommand(command))"></i>&ensp;{{commandLabel(getCommand(command))}}
+            </a>
+        </li>
+    </ul>
+</div>

@@ -260,8 +260,10 @@
                         html += "<tr class='{0}' style='cursor: {1};color: {2}' listtablerendered rel='hideRow'>".format(rowClass, cursortype, rowTextColor);
                         needsWatchers = hasMultipleSelector || hasSingleSelector;
 
-                        html += "<td class='select-multiple' {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
+                        html += "<td class='select-multiple' data-title=\"Select\" {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
+                        html += "<div class=\"cell-wrapper\">";
                         html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
+                        html += "</div>";
                         html += "</td>";
 
                         html += "<td class='select' {0}>".format(!hasSingleSelector ? 'style="display:none"' : '');

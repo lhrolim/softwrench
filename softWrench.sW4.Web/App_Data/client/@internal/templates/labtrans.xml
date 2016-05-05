@@ -69,14 +69,16 @@
           </properties>
           <commandbars>
             <commandgroup position="actions">
-              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-              <!--<command id="addlabor" icon="fa fa-clock-o" label="Create Labor"
-                         service="labtransService" method="openNewDetailModal"/>-->
               <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
                        service="labtransService" method="approveMultipleLabtrans"/>
               <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
                        service="labtransService" method="deleteMultipleLabtrans"/>
-              <!--</container>-->
+            </commandgroup>
+            <commandgroup position="multiselect.dropdown">
+              <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
+                       service="labtransService" method="approveMultipleLabtrans"/>
+              <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
+                       service="labtransService" method="deleteMultipleLabtrans"/>
             </commandgroup>
           </commandbars>
           <field attribute="labtransid" hidden="true"/>
@@ -245,14 +247,14 @@
 
         <schema id="editdetail" title="Labor Report Details" stereotype="detail">
           <commandbars>
-            <!--<commandgroup position="actions">-->
-            <container label="Actions" id="actioncontainer" icon="fa-bolt">
-              <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
-                       service="labtransService" method="approveSingleLabtrans"/>
-              <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
-                       service="labtransService" method="deleteSingleLabtrans"/>
-            </container>
-            <!--</commandgroup>-->
+            <commandgroup position="multiselect.dropdown">
+              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+                <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
+                         service="labtranService" method="approveSingleLabtrans"/>
+                <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
+                         service="labtranService" method="deleteSingleLabtrans"/>
+              <!--</container>-->
+            </commandgroup>
           </commandbars>
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.fields.orgid"/>

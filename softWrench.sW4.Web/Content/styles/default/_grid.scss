@@ -40,7 +40,7 @@
             font-weight: bold;
         }
 
-        .dropdown { // dropdown icon
+        .dropdown {
             .wrap {
                 padding: 5px 15px;
                 cursor: pointer;
@@ -58,7 +58,7 @@
                 }
             }
 
-            .dropdown-menu { // dropdown-menu
+            .dropdown-menu {
                 padding-bottom: 0;
                 width: 250px;
 
@@ -246,6 +246,54 @@
         margin-top: 0;
     }
 
+    th.select-multiple {
+        text-align: center;
+        padding: 0;
+
+        .multiselect-dropdown {
+            padding: 14px 0 3px 8px;
+            width: 50px;
+
+            input, i {
+                display: inline-block;
+            }
+
+            input {
+                margin-right: 2px;
+            }
+
+            hr {
+                margin: 5px 0;
+            }
+
+            a[disabled="disabled"] {
+                color: rgba(#333, 0.5);
+
+                &:hover {
+                    background: none;
+                }
+            }
+
+            .toggle {
+                color: #999;
+                padding: 5px 5px 5px 0;
+            }
+
+            .dropdown-menu {
+                left: 10px;
+                top: initial;
+            }
+
+            &:hover {
+                background: #999;
+
+                .toggle {
+                    color: #fff;
+                }
+            }
+        }
+    }
+
     thead {
         background-color: #fff;
 
@@ -261,14 +309,7 @@
 
                 th {
                     cursor: pointer;
-                    /*padding: 8px 15px;*/
                     word-break: break-word;
-
-                    &.select-all-header {
-                        text-align: center;
-                        padding-left: 15px;
-                        padding-right: 3px;
-                    }
 
                     .cell-wrapper {
                         .part {
@@ -301,12 +342,6 @@
     td {
         .input-group, .input-group .glyphicon {
             position: initial;
-        }
-
-        &.select-multiple {
-            text-align: center;
-            padding-left: 15px;
-            padding-right: 3px;
         }
 
         &.edit-detail {
