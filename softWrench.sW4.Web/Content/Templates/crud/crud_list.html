@@ -52,6 +52,13 @@
                                 </li>
                             </ul>
                         </div>
+                        <grid-filter schema="schema"
+                                        search-data="searchData"
+                                        search-operator="searchOperator"
+                                        search-template="searchTemplate"
+                                        panelid="panelid"
+                                        quick-search-dto="vm.quickSearchDTO">
+                        </grid-filter>
                     </div>
                 </div>
 
@@ -144,7 +151,7 @@
                             </div>
                             <div class="filter-label part" ng-show="shouldShowGridNavigation()" filterrowrendered>
                                 <crud-filter-dropdown filter="filterForColumn(column)"
-                                                      schema="schema" datamap="datamap"
+                                                      schema="schema" datamap="datamap" panelid="panelid"
                                                       advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
                                                       search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()"
                                                       filter-standalone />

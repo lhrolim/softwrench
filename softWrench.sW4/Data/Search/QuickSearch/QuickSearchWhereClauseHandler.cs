@@ -62,6 +62,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
                     .Select(f => AttribteAppendingApplicationPrefix(f.Attribute, entity, attributes));
 
             var sb = new StringBuilder();
+            sb.Append("(");
             sb.Append(_quickSearchHelper.BuildOrWhereClause(validFilterAttributes));
 
 
@@ -69,6 +70,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
             if (dto.QuickSearchDTO.CompositionsToInclude != null) {
                 sb.Append(HandleCompositions(schema, dto.QuickSearchDTO.CompositionsToInclude));
             }
+            sb.Append(")");
 
             // appending just where clause statement: value of the statement parameter is set at SearchUtils#GetParameters
             dto.AppendWhereClause(sb.ToString());

@@ -139,13 +139,23 @@
 
         };
 
+        var parseOptions = function(searchData) {
+            var options = [];
+            if (searchData.startsWith("nullor:")) {
+                options.push("nullor:");
+                searchData = searchData.substring(7);
+            }
+            return options.concat(searchData.split(","));
+        }
+
         var service = {
             lookupRecentlyUsed: lookupRecentlyUsed,
             updateRecentlyUsed: updateRecentlyUsed,
             deleteFromRecentlyUsed: deleteFromRecentlyUsed,
             buildSearchValueFromOptions: buildSearchValueFromOptions,
             getFilterText: getFilterText,
-            buildSelectedItemsArray: buildSelectedItemsArray
+            buildSelectedItemsArray: buildSelectedItemsArray,
+            parseOptions: parseOptions
         };
 
         return service;

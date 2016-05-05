@@ -2,44 +2,62 @@
 
     var mockScope;
     var controller;
-    var _contextService;
+    var _crudContextHolderService;
     var _searchService;
 
     //init app --> first action usually
     beforeEach(angular.mock.module('sw_layout'));
 
-    beforeEach(angular.mock.inject(function ($rootScope, $controller, contextService, searchService) {
+    beforeEach(angular.mock.inject(function ($rootScope, $controller, searchService, crudContextHolderService) {
         mockScope = $rootScope.$new();
-        _contextService = contextService;
+        _crudContextHolderService = crudContextHolderService;
         _searchService = searchService;
-        controller = $controller('GridFilterController', {
+        controller = $controller("GridFilterController", {
             $scope: mockScope,
-            contextService: _contextService,
+            crudContextHolderService: _crudContextHolderService,
             searchService : _searchService
         });
     }));
 
-    it("Clear filters", function() {
-        //simulating the user has added anything to screen
-        mockScope.selectedfilter = {};
-        mockScope.searchOperator = { a: 'a' };
+    it("Clear Filter", function () {
+        mockScope.panelid = "myPanelId";
 
         //creating mocks
-        spyOn(_contextService, 'insertIntoContext');
-        spyOn(_searchService, 'refreshGrid');
+        spyOn(_crudContextHolderService, "setSelectedFilter");
+        spyOn(_searchService, "refreshGrid");
+        spyOn(mockScope, "applyFilter");
 
-        //real call
-        mockScope.clearFilter();
-
-        //values should have been cleaned
-        expect(mockScope.selectedfilter).toBeNull();
-        expect(mockScope.searchOperator['a']).toBeUndefined();
+        //simulating the user removed the filter from selection
+        mockScope.selectedfilter = null;
+        mockScope.filterChanged();
 
         //services should have been called
-        expect(_contextService.insertIntoContext).toHaveBeenCalledWith('selectedfilter', null, true);
-        expect(_searchService.refreshGrid).toHaveBeenCalledWith({}, null,{ panelid: undefined, forcecleanup:true });
+        expect(_crudContextHolderService.setSelectedFilter).toHaveBeenCalledWith(null, mockScope.panelid);
+        expect(_crudContextHolderService.setSelectedFilter.calls.count()).toBe(1);
+        expect(_searchService.refreshGrid).toHaveBeenCalled();
+        expect(_searchService.refreshGrid.calls.count()).toBe(1);
+        expect(mockScope.applyFilter.calls.count()).toBe(0);
+    });
 
+    it("Select Filter", function () {
+        var filter = { alias: "myfilter" };
+        mockScope.panelid = "myPanelId";
 
+        //creating mocks
+        spyOn(_crudContextHolderService, "setSelectedFilter");
+        spyOn(_searchService, "refreshGrid");
+        spyOn(mockScope, "applyFilter");
+
+        //simulating the user selecting a filter
+        mockScope.selectedfilter = filter;
+        mockScope.filterChanged();
+
+        //services should have been called
+        expect(_crudContextHolderService.setSelectedFilter).toHaveBeenCalledWith(filter, mockScope.panelid);
+        expect(_crudContextHolderService.setSelectedFilter.calls.count()).toBe(1);
+        expect(_searchService.refreshGrid.calls.count()).toBe(0);
+        expect(mockScope.applyFilter).toHaveBeenCalled();
+        expect(mockScope.applyFilter.calls.count()).toBe(1);
     });
 
 

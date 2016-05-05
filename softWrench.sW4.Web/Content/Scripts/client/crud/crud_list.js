@@ -31,14 +31,14 @@
             },
 
             controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log",
-                "formatService", "fixHeaderService", "alertService",
+                "formatService", "fixHeaderService", "alertService", "gridPreferenceService",
                 "searchService", "tabsService", "userPreferencesService",
                 "fieldService", "commandService", "i18NService", "modalService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
                 "checkpointService", "schemaCacheService", "dispatcherService",
                 function ($scope, $http, $rootScope, $filter, $injector, $log,
-                    formatService, fixHeaderService, alertService,
+                    formatService, fixHeaderService, alertService, gridPreferenceService,
                     searchService, tabsService, userPreferencesService,
                     fieldService, commandService, i18NService, modalService,
                     validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
@@ -310,7 +310,7 @@
                             $scope.vm.quickSearchDTO = { compositionsToInclude: [] };
                         }
 
-                        $scope.selectPage(pagetogo, pageSize, printmode);
+                        $scope.selectPage(pagetogo, pageSize, printmode, extraparameters);
                     };
 
                     $scope.getGridCommandPosition = function (propertyName, defaultProperty) {
@@ -331,13 +331,16 @@
                     }
 
                     $scope.quickSearch = function (filterdata) {
-                        $scope.searchData = {};
-                        $scope.searchSort = {};
-                        if (!filterdata) {
-                            searchService.refreshGrid({});
+                        // have a selected saved filter - applies filter considering the quicksearch also
+                        var filter = crudContextHolderService.getSelectedFilter($scope.panelid);
+                        if (filter) {
+                            filterdata = filterdata && filterdata.quickSearchData ? filterdata : { compositionsToInclude: [] };
+                            gridPreferenceService.applyFilter(filter, $scope.searchOperator, filterdata, $scope.panelid);
                             return;
                         }
-                        searchService.quickSearch(filterdata, $scope.panelid);
+
+                        // no saved filter selected just do the quick search considering existing search data (filters)
+                        searchService.refreshGrid($scope.searchData, $scope.searchOperator, { quickSearchDTO: filterdata, panelid: $scope.panelid });
                     };
 
                     $scope.cursortype = function () {
@@ -388,11 +391,14 @@
 
                     };
 
-                    $scope.selectPage = function (pageNumber, pageSize, printMode) {
+                    $scope.selectPage = function (pageNumber, pageSize, printMode, extraparameters) {
                         if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
                             $scope.paginationData.pageNumber = pageNumber;
                             return;
                         }
+
+                        extraparameters = extraparameters || {};
+
                         var totalCount = 0;
                         var filterFixedWhereClause = null;
                         if ($scope.paginationData != null) {
@@ -421,6 +427,7 @@
                         searchDTO.pageSize = pageSize;
                         searchDTO.paginationOptions = $scope.paginationData.paginationOptions;
                         searchDTO.quickSearchDTO = $scope.vm.quickSearchDTO;
+                        searchDTO.AddPreSelectedFilters = extraparameters.addPreSelectedFilters ? true : false;
 
                         // Check for custom param provider
                         if ($scope.schema.properties && $scope.schema.properties['schema.customparamprovider']) {
@@ -510,7 +517,6 @@
                     };
 
                     $scope.filterApplied = function () {
-                        $scope.vm.quickSearchDTO = {};
                         $scope.selectPage(1);
                     };
 
@@ -610,24 +616,6 @@
 
                         $(".no-touch [rel=tooltip]").tooltip({ container: "body", trigger: "hover" });
                         log.debug("finish table rendered listener");
-                    });
-
-
-                    $scope.$on("sw_togglefiltermode", function (event, setToBasicMode) {
-                        $scope.vm.quickSearchDTO.quickSearchData = null;
-                        $scope.searchData = {};
-                        $scope.$broadcast("sw_clearAdvancedFilter");
-                        $scope.advancedfiltermode = !setToBasicMode;
-                        fixHeaderService.callWindowResize();
-
-                        angular.forEach($scope.searchData, function (data, key) {
-                            $scope.searchData[key] = "";
-                        });
-
-                        var operator = searchService.getSearchOperationBySymbol("");
-                        angular.forEach($scope.searchOperator, function (op, key) {
-                            $scope.searchOperator[key] = operator;
-                        });
                     });
 
                     $scope.$on("sw_gridrefreshed", function (event, data, panelId) {

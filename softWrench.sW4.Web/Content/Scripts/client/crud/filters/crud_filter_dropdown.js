@@ -14,7 +14,8 @@
                     searchOperator: "=", // shared dictionary [column : current filter operator object]
                     selectAll: "=", // shared boolean flag indicating if multiple select in filters is selected
                     advancedFilterMode: "=", // shared boolean flag indicating if advanced filter mode is activated
-                    filterApplied: "&" // callback executed when the filters are applied
+                    filterApplied: "&", // callback executed when the filters are applied
+                    panelid: "="
                 },
                 //#region controller
                 controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService", "$q", "modalFilterService", "crudContextHolderService", "gridSelectionService",
@@ -104,6 +105,9 @@
                             if (true !== keepitOpen) {
                                 $(".dropdown.open").removeClass("open");
                             }
+
+                            $scope.markDefaultOperator($scope.filter);
+
                             Object.keys($scope.searchOperator).forEach(function (item) {
                                 if ($scope.searchOperator[item] && $scope.searchOperator[item].id === "BTW") {
                                     delete $scope.searchOperator[item + "_end"];

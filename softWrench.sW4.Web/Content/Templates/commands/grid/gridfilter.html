@@ -1,90 +1,23 @@
-<span ng-controller="GridFilterController">
-    <!--<div class="btn-group">-->
-        <button type="button"
-                ng-click="refreshGrid()"
-                ng-show="shouldShowRefreshButton()"
-                class="btn btn-context large-button"
-                data-original-title="{{ !selectedfilter.alias ? 'Refresh grid' : selectedfilter.alias }}" rel="tooltip" data-container="body">
-            <i class="icon fa fa-refresh"></i><span class="text" ng-show="showLabel()"><span class="space">&ensp;</span>Refresh</span>
-
-            <!--<span ng-show="!selectedfilter.alias" ng-if="command.parameters['allowsave']!='false'">&ensp;Filters</span>
-            <span ng-show="selectedfilter.alias">{{selectedfilter.alias}}</span>-->
-        </button>
-        <!--<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" ng-if="command.parameters['allowsave']!='false'">
-            <span class="caret"></span>
-            <span class="sr-only">Toggle Dropdown</span>
-        </button> -->
-        <!--<ul class="dropdown-menu" role="menu">-->
-            <!--<li>
-                <a href="#" ng-click="toggleFilterMode()">
-                    <span ng-if="basicMode"><i class="fa fa-rocket"></i>&ensp;{{i18N('_grid.filter.advanced','Quick Search')}}</span>
-                    <span ng-if="!basicMode"><i class="fa fa-minus"></i>&ensp;{{i18N('_grid.filter.basic','Hide Search')}}</span>
-                </a>
-            </li>-->
-            <!--<li ng-if="selectedfilter">
-                <a href="#" ng-click="clearFilter()">
-                    {{i18N('_grid.filter.clear','Clear Filter')}}
-                </a>
-            </li>
-            <li>
-                <a href="#" ng-click="saveFilter()">
-                    <i class="fa fa-save"></i>&ensp;{{i18N('_grid.filter.save','Save')}}
-                </a>
-            </li>
-            <li>
-                <a href="#" ng-click="deleteFilter()" ng-if="selectedfilter">
-                    <i class="fa fa-times"></i>&ensp;{{i18N('_grid.filter.delete','Delete')}}
-                </a>
-            </li>
-            <li>
-                <a href="#" ng-if="selectedfilter && false">
-                    <i class="fa fa-share"></i>&ensp;Share
-                </a>
-            </li>
-
-            <li class="divider" ng-if="hasFilter()"></li>
-            <li ng-repeat="filter in nonSharedFilters()">
-                <a href="#" ng-click="applyFilter(filter)"><i class="fa fa-filter"></i>&ensp;{{filter.alias}}</a>
-            </li>
-            <li class="divider" ng-if="hasSharedFilter()"></li>
-            <li ng-repeat="filter in sharedFilters()">
-                <a href="#" ng-click="applyFilter(filter)"><i class="fa fa-filter"></i>&ensp;{{filter.alias}}</a>
-            </li>
-        </ul>
-    </div>
-
-    <button type="button" class="btn" data-original-title="Quick Search" rel="tooltip" ng-show="false">
-        <i class="fa fa-rocket"></i>
-    </button>-->
+<div class="filter-option">
+    <button type="button" class="btn btn-context" data-original-title="{{i18N('_grid.filter.save','Save Filter')}}" rel="tooltip" ng-click="saveFilter()" ng-enabled="shouldEnableSaveButton()">
+        <i class="fa fa-save"></i>
+    </button>
+    <button type="button" class="btn btn-context" data-original-title="{{i18N('_grid.filter.delete','Delete Filter')}}" rel="tooltip" ng-click="deleteFilter()" ng-enabled="selectedfilter">
+        <i class="fa fa-trash-o"></i>
+    </button>
+    <select class="hidden-phone form-control combobox"
+            ng-model="selectedfilter"
+            ng-options="option.alias for option in nonSharedFilters()"
+            ng-change="filterChanged()">
+        <option value=""></option>
+    </select>
 
     <!--to be shown as a modal only-->
-    <div id='savefilterform' class="form-horizontal" style="display: none">
-        <div class="form-group">
-            <label class='control-label col-md-5'>{{i18N('_grid.filter.savefiltername',"Filter Name")}}</label>
-            <div class="col-md-7">
-                <input type='text' name='filtername' id='savefiltername'
-                       value="{{selectedfilter.alias}}"
-                       class="form-control"
-                       maxlength="20" />
-            </div>
-        </div>
+    <div id="savefilterform" style="display: none">
+        <input type="text" name="filtername" id="savefiltername"
+               value="{{selectedfilter.alias}}"
+               class="form-control"
+               maxlength="20"
+               placeholder="Name" />
     </div>
-    
-<!--    <div id="advancedfilterform" class="context clearfix header-menu" ng-show="!basicMode" style="display: none">-->
-<!--        <div class="form-horizontal" role="form">-->
-<!--            <div class="form-group">-->
-<!--                <label for="advancedSearch" class="col-sm-1 control-label">Search</label>-->
-<!--                <div class="col-sm-11">-->
-<!--                    <div class="input-group">-->
-<!--                        <input class="form-control" id="advancedSearch" ng-model="advancedsearchdata">-->
-<!--                        <span class="input-group-btn">-->
-<!--                            <button class="btn btn-default" type="button" ng-click="doAdvancedSearch()"><i class="fa fa-search"></i></button>-->
-<!--                        </span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!---->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
-</span>
+</div>

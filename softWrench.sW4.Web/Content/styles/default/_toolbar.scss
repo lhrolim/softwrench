@@ -41,7 +41,7 @@
         }
 
         .search-options {
-            margin-top: 5px;
+            margin-top: 9px;
             float: left;
 
             &.btn-group.open button {
@@ -75,6 +75,35 @@
                         height: auto;
                     }
                 }
+            }
+        }
+
+        .filter-option {
+            display: inline-block;
+            margin-top: 5px;
+            float: right;
+
+            button, select {
+                display: inline-block;
+            }
+
+            button {
+                background: transparent;
+
+                &:hover {
+                    background: #ddd;
+                }
+            }
+
+            select {
+                height: 30px;
+                width: 160px;
+                top: 3px;
+                position: relative;
+            }
+
+            #savefilterform {
+                margin-top: 5px;
             }
         }
 
@@ -152,7 +181,7 @@
     .part {
         padding: 5px 0;
 
-                &.pagesize {
+        &.pagesize {
             /*position: relative;*/
             top: -2px;
             /*margin: 7px 0 1px 20px;*/
@@ -199,6 +228,18 @@
 
     #crudbodyform .context .group:first-child {
         margin-left: 0;
+    }
+}
+
+@media all and (min-width: 1660px) {
+    .container {
+        .context {
+            .filter-option {
+                select {
+                    width: 300px;
+                }
+            }
+        }
     }
 }
 

@@ -2,14 +2,29 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('gridPreferenceService', function (contextService, restService, $log) {
+    .factory('gridPreferenceService', function (contextService, restService, $log, searchService) {
     "ngInject";
+
+    function compareFilters(a, b) {
+        if (a.alias < b.alias) {
+            return -1;
+        }
+        if (a.alias > b.alias) {
+            return 1;
+        }
+        return 0;
+    }
 
     function doLoadFilter(shared, application, schema) {
         var user = contextService.getUserData();
         var gridpreferences = user.gridPreferences;
-        var filters = gridpreferences.gridFilters;
         var result = [];
+        if (!gridpreferences) {
+            return result;
+        }
+
+        var filters = gridpreferences.gridFilters;
+        
         var log = $log.getInstance("#gridpreferenceservice#doLoadFilter");
         $.each(filters, function (key, association) {
             if (association.filter.application.equalIc(application)
@@ -19,7 +34,7 @@ angular.module('sw_layout')
                 result.push(association.filter);
             }
         });
-        return result;
+        return result.sort(compareFilters);
     }
 
     return {
@@ -42,7 +57,7 @@ angular.module('sw_layout')
             return filters.length > 0;
         },
 
-        saveFilter: function (schema, searchData,template, searchOperators, alias, id, filterowner, successCbk) {
+        saveFilter: function (schema, searchData,template, searchOperators, advancedSearch, alias, id, filterowner, successCbk) {
             var fields = "";
             var operators = "";
             var values = "";
@@ -68,6 +83,7 @@ angular.module('sw_layout')
                 values: values.substr(0, values.length - 3),
                 template: template,
                 alias: alias,
+                advancedSearch: advancedSearch,
                 id: id
             };
 
@@ -112,6 +128,27 @@ angular.module('sw_layout')
                 });
                 cbk();
             });
+        },
+
+        applyFilter: function (filter, searchOperator, quickSearchDTO, panelid) {
+            var searchData = {};
+            if (filter.fields) {
+                var fieldsArray = filter.fields.split(",");
+                var operatorsArray = filter.operators.split(",");
+                var valuesArray = filter.values.split(",,,");
+                for (var i = 0; i < fieldsArray.length; i++) {
+                    var field = fieldsArray[i];
+                    searchData[field] = valuesArray[i];
+                    searchOperator[field] = searchService.getSearchOperationBySymbol(operatorsArray[i]);
+                }
+            } else {
+                searchOperator = {};
+            }
+            
+            var template = filter.template;
+            
+            searchService.refreshGrid(searchData, searchOperator, { searchTemplate: template, quickSearchDTO: quickSearchDTO, panelid: panelid });
+            return searchData;
         }
     };
 

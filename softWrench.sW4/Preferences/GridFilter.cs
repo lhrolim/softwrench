@@ -48,6 +48,9 @@ namespace softWrench.sW4.Preferences {
         [Property]
         public DateTime? UpdateDate { get; set; }
 
+        [Property]
+        public string AdvancedSearch { get; set; }
+
         [JsonIgnore]
         [ManyToOne(Column = "creator", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
         public User Creator { get; set; }

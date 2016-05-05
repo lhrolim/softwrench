@@ -14,7 +14,8 @@
                         searchData: '=',
                         searchOperator: '=',
                         schema: '=',
-                        applyFilter: "&"
+                        applyFilter: "&",
+                        panelid: "="
                     },
 
                     link: function (scope, element, attrs) {
@@ -85,6 +86,7 @@
 
                                 //select filter options for the top level preselect condition
                                 scope.preSelectOption(scope.filteroptions, linkLog);
+                                scope.parseSearchData();
                             });
                         } else {
                             scope.vm.notSearching = true;
@@ -145,6 +147,7 @@
                                     scope.$digest();
                                 });
 
+                                scope.parseSearchData();
                             }, 0, false);
 
                         }
@@ -230,6 +233,26 @@
                                 var datamap = { fields: {} };
                                 datamap.fields[attFieldName] = value;
                                 $scope.lookupModalBuffer[value] = datamap;
+                            });
+                        }
+
+                        $scope.parseSearchData = function (searchData) {
+                            $scope.selectedOptions = [];
+                            var dataToParse = searchData ? searchData : $scope.searchData;
+                            if (!dataToParse) {
+                                return;
+                            }
+
+                            var data = dataToParse[filter.attribute];
+                            if (!data) {
+                                return;
+                            }
+
+                            var dataOptions = filterModelService.parseOptions(data);
+                            $scope.getAllAvailableOptions().forEach(function (option) {
+                                if (dataOptions.indexOf(option.value) >= 0) {
+                                    $scope.selectedOptions[option.value] = 1;
+                                }
                             });
                         }
 
@@ -428,6 +451,29 @@
 
                             //select filter options for the top level preselect condition
                             $scope.preSelectOption($scope.filteroptions, log);
+                        });
+
+                        function deselectAll(panelid) {
+                            if ($scope.panelid == panelid) {
+                                $scope.selectedOptions = [];
+                            }
+                        }
+
+                        // When deselecting a saved filter, selected options have to be cleared
+                        $scope.$on("sw.grid.filter.cleared", function (event, panelid) {
+                            deselectAll(panelid);
+                        });
+
+                        // When selecting a saved filter, selected options have to be updated
+                        $scope.$on("sw.grid.filter.selected", function (event, searchData, panelid) {
+                            if ($scope.panelid == panelid) {
+                                $scope.parseSearchData(searchData);
+                            }
+                        });
+
+                        //on refresh selected options have to be cleared
+                        $scope.$on("sw.grid.refresh", function (event, panelid) {
+                            deselectAll(panelid);
                         });
                     }]
 

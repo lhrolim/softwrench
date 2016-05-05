@@ -415,14 +415,6 @@
                 $rootScope.$broadcast("sw_refreshgrid", searchData, searchOperator, extraparameters);
             },
 
-            quickSearch: function (quickSearchDTO, panelId) {
-                if (!quickSearchDTO) {
-                     return;
-                }
-
-                this.refreshGrid({}, null, { quickSearchDTO: quickSearchDTO, keepfilterparameters: false, panelid: panelId });
-            },
-
             /// <summary>
             /// invokes a search function on the specified application, returning a $http.get promise invocation built
             /// </summary>
@@ -488,12 +480,7 @@
                 } else {
                     return $http.get(urlToUse);
                 }
-            },
-
-            toggleAdvancedFilterMode: function (setToBasicMode) {
-                $rootScope.$broadcast("sw_togglefiltermode", setToBasicMode);
-            },
-
+            }
         };
 
     });

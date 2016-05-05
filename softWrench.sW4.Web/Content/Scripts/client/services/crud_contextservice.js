@@ -100,7 +100,8 @@
             originalPaginationData: null,
             gridModel: {
                 //this is used to set a transient whereclause to the grid that should be appended on all subsequent server calls
-                fixedWhereClause: null
+                fixedWhereClause: null,
+                selectedFilter: null
             },
             customSaveFn: null
 
@@ -526,6 +527,16 @@
             return context.gridModel.fixedWhereClause;
         }
 
+        function setSelectedFilter(filter, panelId) {
+            var context = getContext(panelId);
+            context.gridModel.selectedFilter = filter;
+        }
+
+        function getSelectedFilter(panelId) {
+            var context = getContext(panelId);
+            return context.gridModel.selectedFilter;
+        }
+
         //#endregion
 
         //#region commandsServices
@@ -621,6 +632,8 @@
         var gridServices = {
             setFixedWhereClause: setFixedWhereClause,
             getFixedWhereClause: getFixedWhereClause,
+            setSelectedFilter: setSelectedFilter,
+            getSelectedFilter: getSelectedFilter
         }
 
         var selectionService = {
