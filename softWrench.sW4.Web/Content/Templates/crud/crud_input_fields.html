@@ -1,6 +1,6 @@
 <section id="{{elementid}}" schemaid="{{schema.schemaId}}">
     <div ng-init="setForm(crudbodyform)" />
-    <div>
+    <div class="field-wrap">
         <fieldset ng-repeat="fieldMetadata in nonTabFields(displayables)"
                   class="form-group {{getFieldClass(fieldMetadata)}}"
                   ng-show="!isFieldHidden(schema,fieldMetadata)"

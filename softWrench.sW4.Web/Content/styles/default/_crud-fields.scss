@@ -11,6 +11,7 @@ fieldset.form-group {
     margin-left: 0;
     padding-right: 15px;
     padding-left: 15px;
+    min-height: 60px;
 
     &.haschildren {
         padding-right: 0;
@@ -40,6 +41,11 @@ fieldset.form-group {
 .form-group.sidebyside {
     clear: none;
     padding: 0 15px;
+}
+
+.field-wrap {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 fieldset .form-group.sidebyside {
