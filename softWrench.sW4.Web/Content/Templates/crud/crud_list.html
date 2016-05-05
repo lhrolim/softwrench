@@ -52,7 +52,9 @@
                                 </li>
                             </ul>
                         </div>
-                        <grid-filter schema="schema"
+                        <grid-filter
+                                    ng-if="ismodal!=='true'"
+                                     schema="schema"
                                         search-data="searchData"
                                         search-operator="searchOperator"
                                         search-template="searchTemplate"
