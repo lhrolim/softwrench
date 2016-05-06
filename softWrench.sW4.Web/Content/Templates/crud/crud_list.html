@@ -15,10 +15,10 @@
                              search-template="searchTemplate"
                              panelid="panelid"
                              class="gridtop" />
-                <div class="separator large-button" ng-if="ismodal !== 'true'">&nbsp;</div>
+                <div class="separator large-button hidden-xs col-sm-1" ng-if="ismodal !== 'true'">&nbsp;</div>
                 <!-- quick search input -->
                 <div ng-show="shouldShowGridNavigation()">
-                    <div class="quick-search col-xs-4">
+                    <div class="quick-search col-xs-12 col-sm-6 col-md-4">
                         <div class="input-group">
                             <input type="text"
                                    placeholder="Search"
@@ -35,7 +35,7 @@
                             </span>
                         </div>
 
-                        <div class="btn-group search-options" ng-if="schema.relatedCompositions.length > 0">
+                        <div class="btn-group search-options col-xs-12 col-sm-6 col-md-4" ng-if="schema.relatedCompositions.length > 0">
                             <button type="button" class="btn btn-context dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
                                 <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i>
                                 <span>Search Options</span>
@@ -53,17 +53,17 @@
                             </ul>
                         </div>
                         <grid-filter
-                                    ng-if="ismodal!=='true'"
-                                     schema="schema"
-                                        search-data="searchData"
-                                        search-operator="searchOperator"
-                                        search-template="searchTemplate"
-                                        panelid="panelid"
-                                        quick-search-dto="vm.quickSearchDTO">
+                            ng-if="ismodal!=='true'"
+                            schema="schema"
+                            search-data="searchData"
+                            search-operator="searchOperator"
+                            search-template="searchTemplate"
+                            panelid="panelid"
+                            quick-search-dto="vm.quickSearchDTO"
+                            class="col-xs-12 col-sm-6 col-md-8">
                         </grid-filter>
                     </div>
                 </div>
-
                 <div class="separator large-button" ng-if="ismodal !== 'true'" ng-show="showActionSeparator()">&nbsp;</div>
                 <gridtoolbar advancedsearchdata="vm.quickSearchData"
                              position="{{getGridCommandPosition('commandbar.top.right','actions')}}"
@@ -75,7 +75,7 @@
                              search-operator="searchOperator"
                              search-template="searchTemplate"
                              panelid="panelid"
-                             class="gridtop"/>
+                             class="actions"/>
 
                 <!-- simple pagination -->
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"

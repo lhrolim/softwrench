@@ -11,8 +11,8 @@
     <div id="affixpagination" class="hiddenonprint toolbar-primary" ng-class="{'affix-pagination' : ismodal !== 'true' }" ng-if="ismodal !== 'true'">
         <div class="context clearfix header-menu" ng-if="isDetail">
             <div class="left">
-                <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.primary','detail.primary')}}" schema="schema"/>
-                <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.secondary','detail.secondary')}}" schema="schema"/>
+                <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.primary','detail.primary')}}" schema="schema" class="detail-primary"/>
+                <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.secondary','detail.secondary')}}" schema="schema" class="detail-secondary"/>
                 <div class="separator large-button" ng-if="ismodal !== 'true'" ng-show="showActionSeparator(getPosition(schema,'toolbar.detail.actions','actions'))">&nbsp;</div>
                 <crudbodydetailtoolbar datamap="datamap" mode="'input'" position="{{getPosition(schema,'toolbar.detail.actions','actions')}}" schema="schema" />
             </div>

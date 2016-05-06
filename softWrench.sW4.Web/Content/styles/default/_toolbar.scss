@@ -79,13 +79,7 @@
         }
 
         .filter-option {
-            display: inline-block;
             margin-top: 5px;
-            float: right;
-
-            button, select {
-                display: inline-block;
-            }
 
             button {
                 background: transparent;
@@ -97,9 +91,8 @@
 
             select {
                 height: 30px;
-                width: 160px;
-                top: 3px;
-                position: relative;
+                width: calc(100% - 83px);
+                display: inline-block;
             }
 
             #savefilterform {
@@ -127,6 +120,19 @@
             &.total {
                 margin-top: 15px;
             }
+
+            &.pagination {
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
+
+        .detail-primary {
+            margin-right: 0;
+        }
+
+        .detail-secondary {
+            margin-left: 0;
         }
 
         .separator {
@@ -175,17 +181,10 @@
 
 #affixpagination1 {
     padding: 0;
-    /*padding-bottom: 8px;*/
     border-bottom: none;
 
     .part {
         padding: 5px 0;
-
-        &.pagesize {
-            /*position: relative;*/
-            top: -2px;
-            /*margin: 7px 0 1px 20px;*/
-        }
     }
 }
 
@@ -209,6 +208,10 @@
             .hidden-xs {
                 display: inline-block !important;
             }
+
+            grid-filter {
+                float: right;
+            }
         }
     }
 }
@@ -221,6 +224,12 @@
 
                 &:first-child {
                     margin-left: 5px;
+                }
+            }
+
+            .actions {
+                .buttons {
+                    display: block;
                 }
             }
         }
@@ -243,17 +252,12 @@
     }
 }
 
-/*.gridtop .applicationcommand {
-    display: none;
-}
-
-@media all and (min-width: 480px) {
-    .gridtop .applicationcommand {
-        display: inline-block;
-    }
-}*/
-
 #affixpagination1 {
     border-bottom: none;
     border-top: #000 1px solid;
+}
+
+.compositiontoolbar .buttons {
+    display: inline-block;
+    margin-right: 5px;
 }
