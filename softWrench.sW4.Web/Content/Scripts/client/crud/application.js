@@ -459,9 +459,10 @@ function applicationController($scope, $http, $log, $timeout,
                 parameters.application = result.app;
                 parameters.schema = result.schemaId;
                 parameters.mode = result.mode;
+                // Update list name used to retreive checkpoint data with application.schema of target list
+                listName = parameters.application + "." + parameters.schema;
             }
-            // Update list name used to retreive checkpoint data with application.schema of target list
-            listName = parameters.application + "." + parameters.schema;
+            
         }
         
         var checkPointData = checkpointService.fetchCheckpoint(listName);
