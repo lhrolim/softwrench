@@ -143,7 +143,7 @@
                     var datamap = $scope.datamap.fields || $scope.datamap;
                     if (tab != null && datamap[tab] == null && hasMainTab) {
                         // active tab not found
-                        redirectService.redirectToTab($scope.getMainTabId());
+//                        redirectService.redirectToTab($scope.getMainTabId());
                     }
 
                     $timeout(function () {
