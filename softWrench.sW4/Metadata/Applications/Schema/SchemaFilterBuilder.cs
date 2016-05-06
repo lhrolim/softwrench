@@ -297,14 +297,22 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         }
 
         private static void AddPreSelectedFilter(BaseMetadataFilter filter, SearchRequestDto dto) {
-            if (!(filter is MetadataOptionFilter)) {
+            var optionFilter = filter as MetadataOptionFilter;
+            if (optionFilter != null) {
+                AddPreSelectedFilter(optionFilter, dto);
                 return;
             }
-            var optionFilter = (MetadataOptionFilter)filter;
 
+            var booleanFilter = filter as MetadataBooleanFilter;
+            if (booleanFilter != null) {
+                AddPreSelectedFilter(booleanFilter, dto);
+            }
+        }
+
+        private static void AddPreSelectedFilter(MetadataOptionFilter optionFilter, SearchRequestDto dto) {
             // Giving precedence to the top level preselected filter condition if it exists.
-            if (!string.IsNullOrWhiteSpace(optionFilter.Preselected)){
-                dto.AppendSearchParam(filter.Attribute);
+            if (!string.IsNullOrWhiteSpace(optionFilter.Preselected)) {
+                dto.AppendSearchParam(optionFilter.Attribute);
                 dto.AppendSearchValue(string.Format("={0}", optionFilter.Preselected));
             } else {
                 var options = optionFilter.Options;
@@ -317,9 +325,22 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 var values = string.Join(",", optionValues);
 
                 if (string.IsNullOrEmpty(values)) { return; }
-                dto.AppendSearchParam(filter.Attribute);
+                dto.AppendSearchParam(optionFilter.Attribute);
                 dto.AppendSearchValue("=" + values);
             }
+        }
+
+        private static void AddPreSelectedFilter(MetadataBooleanFilter booleanFilter, SearchRequestDto dto) {
+            if (string.IsNullOrEmpty(booleanFilter.PreSelected)) {
+                return;
+            }
+
+            var trueValue = booleanFilter.TrueValue ?? "1";
+            var falseValue = booleanFilter.FalseValue ?? "0";
+            var value = "true".Equals(booleanFilter.PreSelected) ? trueValue : falseValue;
+
+            dto.AppendSearchParam(booleanFilter.Attribute);
+            dto.AppendSearchValue("=" + value);
         }
     }
 }

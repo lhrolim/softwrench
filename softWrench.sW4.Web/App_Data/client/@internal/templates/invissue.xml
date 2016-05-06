@@ -34,6 +34,10 @@
   <applications>
 
     <application name="invissue" title="Issue Inventory" entity="invissue">
+      <filters>
+        <booleanfilter attribute="item_.rotating"/>
+        <booleanfilter attribute="item_.iskit"/>
+      </filters>
 
       <components>
         <componentdisplayable id="issueitem">

@@ -53,10 +53,7 @@
   <applications>
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
       <filters>
-        <optionfilter attribute="lostenergy3" allowblank="false" style="width:300px" eager="true">
-          <f:option label="Yes" value="1" />
-          <f:option label="No" value="0" />
-        </optionfilter>
+        <booleanfilter attribute="lostenergy3"/>
         <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="Open" value="INPROG,QUEUED,PENDING,NEW,HISTEDIT" preselected="true" displaycode="false"
                   tooltip="The status of open service requests. Matches any service request of &quot;INPROG&quot;, &quot;PENDING&quot;, &quot;QUEUED&quot;, &quot;NEW&quot; or &quot;HISTEDIT&quot; status."/>
@@ -186,10 +183,7 @@
 
     <application name="location" title="Location" entity="location" >
       <filters>
-        <optionfilter attribute="isproject" allowblank="false" style="width:300px" eager="true">
-          <f:option label="Yes" value="1" />
-          <f:option label="No" value="0" />
-        </optionfilter>
+        <booleanfilter attribute="isproject"/>
       </filters>
       <schemas>
         <schema id="list" redeclaring="false">
@@ -244,10 +238,7 @@
     
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
       <filters>
-        <optionfilter attribute="lostenergy" allowblank="false" style="width:300px" eager="true">
-          <f:option label="Yes" value="1" />
-          <f:option label="No" value="0" />
-        </optionfilter>
+        <booleanfilter attribute="lostenergy"/>
         <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="Open" value="APPR,HISTEDIT,INPRG,WAPPR,WMATL,WPCOND,WSCH" preselected="true" displaycode="false"
                   tooltip="The status of open work orders. Matches any work orders of &quot;APPR&quot;, &quot;HISTEDIT&quot;, &quot;INPRG&quot;, &quot;WAPPR&quot; , &quot;WMATL&quot;, &quot;WPCOND&quot; or &quot;WSCH&quot; status."/>

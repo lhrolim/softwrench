@@ -50,6 +50,11 @@
       <properties>
         <property key ="icon.composition.tab" value="fa fa-clock-o"/>
       </properties>
+
+      <filters>
+        <booleanfilter attribute="genapprservreceipt"/>
+      </filters>
+      
       <schemas>
         <schema id="compositionlist" title="Labor List">
           <field attribute="labtransid" hidden="true"/>

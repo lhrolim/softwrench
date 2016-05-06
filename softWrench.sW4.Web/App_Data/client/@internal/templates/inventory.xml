@@ -222,6 +222,11 @@
     </application>
 
     <application name="inventory" title="Inventory" entity="inventory">
+      <filters>
+        <booleanfilter attribute="item_.rotating"/>
+        <booleanfilter attribute="item_.iskit"/>
+      </filters>
+      
       <schemas>
         <list>
           <field attribute="itemnum"/>
@@ -515,6 +520,11 @@
     </application>
 
     <application entity="invbalances" name="invbalances" title="Inventory">
+      <filters>
+        <booleanfilter attribute="item_.rotating"/>
+        <booleanfilter attribute="item_.iskit"/>
+      </filters>
+        
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
       </properties>

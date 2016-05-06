@@ -23,6 +23,10 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string DisplayCodeAttribute = "displaycode";
         public const string EagerAttribute = "eager";
         public const string DefaultSelectionAttribute = "defaultselection";
+        public const string TrueLabelAttribute = "truelabel";
+        public const string TrueValueAttribute = "truevalue";
+        public const string FalseLabelAttribute = "falselabel";
+        public const string FalseValueAttribute = "falsevalue";
         public const string RemoveAttribute = "remove";
         public const string TargetSchemaAttribute = "targetschema";
         public const string ServiceAttribute = "service";

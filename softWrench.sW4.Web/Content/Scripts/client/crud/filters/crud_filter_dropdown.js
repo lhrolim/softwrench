@@ -270,6 +270,11 @@
                             $scope.selectOperator(att, searchOperator);
                         }
 
+                        $scope.booleanFilterTrueLabel = $scope.filter && $scope.filter.trueLabel ? $scope.filter.trueLabel : i18NService.get18nValue("_grid.filter.boolean.true", "Yes");
+                        $scope.booleanFilterTrueValue = $scope.filter && $scope.filter.trueValue ? $scope.filter.trueValue : "1";
+                        $scope.booleanFilterFalseLabel = $scope.filter && $scope.filter.falseLabel ? $scope.filter.falseLabel : i18NService.get18nValue("_grid.filter.boolean.false", "No");
+                        $scope.booleanFilterFalseValue = $scope.filter && $scope.filter.falseValue ? $scope.filter.falseValue : "0";
+
                         $scope.$on("sw.crud.list.filter.modal.clear", function (event, args) {
                             var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
                             promise.then(function (modalSchema) {
@@ -377,7 +382,7 @@
                         });
 
                         $('[data-datepicker="true"]', dropdown).on('dp.hide', function (e) {
-                            $timeout(function() {
+                            $timeout(function () {
                                 $('.dropdown-menu', dropdown).removeClass('keep-open');
                             }, 200, false);
                         });

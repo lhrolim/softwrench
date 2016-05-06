@@ -61,7 +61,31 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
   <complexType name="BoolFilterType">
     <complexContent>
       <extension base="f:BaseFilterType">
-        <attribute name="defaultselection" type="boolean"></attribute>
+        <attribute name="preselected" type="boolean">
+          <annotation>
+            <documentation>If the filter should be preselected with "true" or "false". If not present no preselection occurs.</documentation>
+          </annotation>
+        </attribute>
+        <attribute name="truelabel" type="string">
+          <annotation>
+            <documentation>The label of the true option. Default: Yes</documentation>
+          </annotation>
+        </attribute>
+        <attribute name="truevalue" type="string">
+          <annotation>
+            <documentation>The value of the true option. Default: 1</documentation>
+          </annotation>
+        </attribute>
+        <attribute name="falselabel" type="string">
+          <annotation>
+            <documentation>The label of the false option. Default: No</documentation>
+          </annotation>
+        </attribute>
+        <attribute name="falsevalue" type="string">
+          <annotation>
+            <documentation>The value of the false option. Default: 0</documentation>
+          </annotation>
+        </attribute>
       </extension>
     </complexContent>
   </complexType>

@@ -2,10 +2,10 @@
 
     <div class="dropdown" ng-init="markDefaultOperator(filter)">
         <div class="wrap" ng-class="{'slim': layout.standalone}"
-             rel="tooltip" data-original-title="{{getFilterText(filter)}}" 
+             rel="tooltip" data-original-title="{{getFilterText(filter)}}"
              ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}"
              ng-click="showModal(filter)">
-            <span ng-hide="layout.standalone">{{i18N('_grid.filter.placeholder','{0}',[filter.label])}}:</span> 
+            <span ng-hide="layout.standalone">{{i18N('_grid.filter.placeholder','{0}',[filter.label])}}:</span>
             <span ng-hide="layout.standalone" class="filter-text">{{getFilterText(filter)}}</span>
             <i class="fa grid-filter-button"
                ng-class="{
@@ -45,7 +45,7 @@
                                    data-allow-future="{{filter.allowFuture}}"
                                    placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[filter.label])}}"
                                    ng-enter="filterSearch(filter.attribute)"
-                                   ng-disabled="advancedfiltermode"/>
+                                   ng-disabled="advancedfiltermode" />
                             <span class="input-group-addon "
                                   data-calendericon="true"
                                   rel="tooltip"
@@ -77,6 +77,16 @@
                         </div>
 
                     </div>
+                    <div ng-switch-when="MetadataBooleanFilter">
+                        <div class="input-group">
+                            <div class="radio">
+                                <label><input type="radio" value="{{booleanFilterTrueValue}}" ng-model="searchData[filter.attribute]"> {{booleanFilterTrueLabel}} </label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" value="{{booleanFilterFalseValue}}" ng-model="searchData[filter.attribute]"> {{booleanFilterFalseLabel}} </label>
+                            </div>
+                        </div>
+                    </div>
                     <div ng-switch-when="MetadataOptionFilter">
                         <filter-multiple-option filter="filter" schema="schema" panelid="panelid" search-data="searchData" search-operator="searchOperator" apply-filter="filterBarApplied(keepitOpen)" />
                     </div>
@@ -93,7 +103,7 @@
                             <input ng-if="filter.type === 'MetadataNumberFilter'" string-to-number
                                    type="number" placeholder="{{i18N('_grid.filter.placeholder','{0} Search', [filter.label])}}" class="form-control"
                                    ng-model="searchData[filter.attribute]" ng-enter="filterSearch(filter.attribute)" ng-disabled="advancedfiltermode">
-                            <input ng-if="filter.type !== 'MetadataNumberFilter'" 
+                            <input ng-if="filter.type !== 'MetadataNumberFilter'"
                                    type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search', [filter.label])}}" class="form-control"
                                    ng-model="searchData[filter.attribute]" ng-enter="filterSearch(filter.attribute)" ng-disabled="advancedfiltermode">
                             <span ng-click="filterBarApplied()"

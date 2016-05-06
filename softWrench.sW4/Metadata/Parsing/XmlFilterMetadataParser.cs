@@ -57,8 +57,12 @@ namespace softWrench.sW4.Metadata.Parsing {
                     var options = ParseDefaultOptions(el);
                     filters.AddLast(new MetadataOptionFilter(attribute, label, icon, position, tooltip, whereclause, provider, displayCode, allowBlank, style, !eager, advancedFilterSchema, preSelected, options));
                 } else if (el.IsNamed(XmlFilterSchema.BooleanFilterElement)) {
-                    var defaultValue = el.Attribute(XmlFilterSchema.DefaultSelectionAttribute).ValueOrDefault(true);
-                    filters.AddLast(new MetadataBooleanFilter(attribute, label, icon, position, tooltip, whereclause, defaultValue));
+                    var preSelected = el.Attribute(XmlBaseSchemaConstants.PreSelectedAttribute).ValueOrDefault((string)null);
+                    var trueLabel = el.Attribute(XmlFilterSchema.TrueLabelAttribute).ValueOrDefault((string)null);
+                    var trueValue = el.Attribute(XmlFilterSchema.TrueValueAttribute).ValueOrDefault((string)null);
+                    var falseLabel = el.Attribute(XmlFilterSchema.FalseLabelAttribute).ValueOrDefault((string)null);
+                    var falseValue = el.Attribute(XmlFilterSchema.FalseValueAttribute).ValueOrDefault((string)null);
+                    filters.AddLast(new MetadataBooleanFilter(attribute, label, icon, position, tooltip, whereclause, preSelected, trueLabel, trueValue, falseLabel, falseValue));
                 } else if (el.IsNamed(XmlFilterSchema.NumericFilterElement)) { 
                     var numberFilter = new MetadataNumberFilter(attribute, label, icon, position, tooltip, whereclause);
                     filters.AddLast(numberFilter);
