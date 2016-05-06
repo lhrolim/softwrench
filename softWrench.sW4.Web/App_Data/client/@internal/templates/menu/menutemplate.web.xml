@@ -57,4 +57,7 @@
     <application id="LAB" icon="fa fa-table" title="Labor Reporting Grid" ref="labtrans" schema="list" tooltip="Click to view your Labor Reporting Grid"/>
     <application id="LRT" icon="fa fa-plus" title="New Labor Transaction" ref="labtrans" schema="newdetail" tooltip="Click to add a New Labor Report"/>
   </container>
+  <container title="Global Search" tooltip="Click to access the Global Search" icon="fa fa-cube" id="globalsearch" role="globalsearch" >
+    <application id="GS" icon="fa fa-table" title="Global Search Grid" ref="globalsearch" schema="list" tooltip="Click to view the Global Search Grid" />
+  </container>
 </TemplateCatalog>

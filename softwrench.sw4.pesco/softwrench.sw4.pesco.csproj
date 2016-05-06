@@ -58,7 +58,6 @@
     <Compile Include="classes\com\cts\pesco\configuration\PescoDOFChartInitializer.cs" />
     <Compile Include="classes\com\cts\pesco\dataset\PescoServiceRequestDataSet.cs" />
     <Compile Include="classes\com\cts\pesco\migration\MigrationSwweb2374.cs" />
-    <Compile Include="classes\com\cts\pesco\dataset\PescoGlobalSearchDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\pesco\connector\" />
+    <Folder Include="classes\com\cts\pesco\dataset\" />
     <Folder Include="web_content\pesco\htmls\" />
   </ItemGroup>
   <ItemGroup>

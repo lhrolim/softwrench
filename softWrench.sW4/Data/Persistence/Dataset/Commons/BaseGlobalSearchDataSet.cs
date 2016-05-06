@@ -7,22 +7,22 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
-using softWrench.sW4.Data.Persistence;
-using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using BaseQueryBuilder = softWrench.sW4.Data.Persistence.Relational.BaseQueryBuilder;
 
-namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
-    class PescoGlobalSearchDataSet : MaximoApplicationDataSet {
+namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
+    class BaseGlobalSearchDataSet : MaximoApplicationDataSet {
         private readonly IMaximoHibernateDAO _maximoDao;
         private readonly EntityRepository _entityRepository;
         private readonly IWhereClauseFacade _whereClauseFacade;
@@ -30,6 +30,7 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
         private readonly IDictionary<string, string> _entities = new Dictionary<string, string>
         {
             {"sr", "Service Request"},
+            {"incident", "Incident"},
             {"workorder", "Work Order"},
             {"asset", "Asset"},
             {"location", "Location"}
@@ -38,6 +39,7 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
         private readonly IDictionary<string, string> _applications = new Dictionary<string, string>
         {
             {"servicerequest", "Service Request"},
+            {"incident", "Incident"},
             {"workorder", "Work Order"},
             {"asset", "Asset"},
             {"location", "Location"}
@@ -45,13 +47,14 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
 
         private readonly IDictionary<string, string> _baseQueries = new Dictionary<string, string>
         {
-            {"servicerequest", "select ticketid as userrecordid, CAST(ticketuid AS VARCHAR(15)) as recordid, description, reportdate as createdate, changedate, 'sr' as recordtype, 'Service Request' as recordtypelabel, 'servicerequest' as appname, 'editdetail' as appschema from sr {0}"},
-            {"workorder", "select wonum as userrecordid, CAST(workorderid AS VARCHAR(15)) as recordid, description, reportdate as createdate, changedate, 'workorder' as recordtype ,'Work Order' as recordtypelabel, 'workorder' as appname, 'editdetail' as appschema from workorder {0}"},
-            {"asset", "select assetnum as userrecordid, CAST(assetid AS VARCHAR(15)) as recordid, description, '' as createdate, changedate, 'asset' as recordtype, 'Asset' as recordtypelabel, 'asset' as appname, 'detail' as appschema from asset {0}"},
-            {"location", "select location as userrecordid, CAST(locationsid AS VARCHAR(15)) as recordid, description, '' as createdate, changedate, 'location' as recordtype,'Location' as recordtypelabel, 'location' as appname, 'locationdetail' as appschema from locations {0}"}
+            {"servicerequest", "select ticketid as userrecordid, CAST(ticketuid AS VARCHAR(15)) as recordid, description, reportdate as createdate, changedate, 'sr' as recordtype, 'Service Request' as recordtypelabel, 'servicerequest' as appname, 'editdetail' as appschema from sr WHERE {0}"},
+            {"incident", "select ticketid as userrecordid, CAST(ticketuid AS VARCHAR(15)) as recordid, description, reportdate as createdate, changedate, 'sr' as recordtype, 'Incident' as recordtypelabel, 'incident' as appname, 'editdetail' as appschema from ticket WHERE class = 'INCIDENT' AND {0}"},
+            {"workorder", "select wonum as userrecordid, CAST(workorderid AS VARCHAR(15)) as recordid, description, reportdate as createdate, changedate, 'workorder' as recordtype ,'Work Order' as recordtypelabel, 'workorder' as appname, 'editdetail' as appschema from workorder WHERE {0}"},
+            {"asset", "select assetnum as userrecordid, CAST(assetid AS VARCHAR(15)) as recordid, description, '' as createdate, changedate, 'asset' as recordtype, 'Asset' as recordtypelabel, 'asset' as appname, 'detail' as appschema from asset WHERE {0}"},
+            {"location", "select location as userrecordid, CAST(locationsid AS VARCHAR(15)) as recordid, description, '' as createdate, changedate, 'location' as recordtype,'Location' as recordtypelabel, 'location' as appname, 'locationdetail' as appschema from locations WHERE {0}"}
         };
 
-        public PescoGlobalSearchDataSet(IMaximoHibernateDAO maximoDao, IWhereClauseFacade whereClauseFacade, EntityRepository entityRepository) {
+        public BaseGlobalSearchDataSet(IMaximoHibernateDAO maximoDao, IWhereClauseFacade whereClauseFacade, EntityRepository entityRepository) {
             _maximoDao = maximoDao;
             _whereClauseFacade = whereClauseFacade;
             _entityRepository = entityRepository;
@@ -127,12 +130,13 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
         }
 
         public string BuildUnionQuery(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+            var user = SecurityFacade.CurrentUser();
+            var customerApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, user);
             var sb = new StringBuilder();
-            foreach (var key in _applications.Keys) {
+            foreach (var key in _applications.Keys.Where(k => customerApps.Any(a => a.ApplicationName.EqualsIc(k)))) {
                 var baseQuery = _baseQueries[key];
                 var whereClause = _whereClauseFacade.Lookup(key);
-                var whereClauseString = " WHERE " + whereClause.Query;
-                sb.Append(baseQuery.Fmt(whereClauseString)).Append(" UNION ");
+                sb.Append(baseQuery.Fmt(whereClause.Query)).Append(" UNION ");
             }
             var queryString = sb.ToString();
             if (queryString.EndsWith(" UNION ")) {
@@ -148,22 +152,17 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
             sb.Append("select {0} from (");
             // Append union query
             sb.Append(BuildUnionQuery(application, searchDto));
-            // Close wraper
+            // Close wrapper
             sb.Append(") as globalsearch {1} {2}");
             return sb.ToString();
         }
-
-
-
 
         public override string ApplicationName() {
             return "globalsearch";
         }
 
         public override string ClientFilter() {
-            return "pesco";
+            return null;
         }
-
-
     }
 }
