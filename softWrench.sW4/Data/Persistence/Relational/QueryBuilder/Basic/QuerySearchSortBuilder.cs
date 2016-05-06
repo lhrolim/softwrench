@@ -6,7 +6,7 @@ using softWrench.sW4.Metadata.Entities.Schema;
 using softWrench.sW4.Metadata.Entities.Sliced;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
-    class QuerySearchSortBuilder {
+    public class QuerySearchSortBuilder {
 
         private const string AliasDelimiter = "\"";
         private const string LiteralDelimiter = "'";

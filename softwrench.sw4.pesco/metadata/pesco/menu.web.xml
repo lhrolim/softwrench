@@ -5,6 +5,8 @@
   <reference id="workorder"/>
   <reference id="asset"/>
   <reference id="location"/>
-
+  <container title="Global Search" tooltip="Click to access the Global Search" icon="fa fa-cube" id="GlobalSearch" role="globalsearch" >
+    <application id="GS" icon="fa fa-table" title="Global Search Grid" ref="globalsearch" schema="list" tooltip="Click to view the Global Search Grid" />
+  </container>
 </Menu>
 

@@ -114,6 +114,12 @@ function applicationController($scope, $http, $log, $timeout,
         }
     });
 
+    $scope.$on('sw.redirect', function (event, args) {
+        if (args.type && args.type.indexOf("ApplicationMenuItemDefinition") > -1) {
+            contextService.deleteFromContext('detail.cancel.click');
+        }
+    });
+
     $scope.$on('sw_applicationredirected', function (event, parameters) {
         if (parameters.popupmode === "browser" || parameters.popupmode === "modal") {
             return;
@@ -436,6 +442,7 @@ function applicationController($scope, $http, $log, $timeout,
             parameters["SearchDTO"].pageSize = pageSize;
         }
 
+        var listName = $scope.schema.applicationName + ".list";
         if (schema != null && data != null) {
             $scope.schema = schema;
             $scope.datamap = data;
@@ -443,6 +450,9 @@ function applicationController($scope, $http, $log, $timeout,
             //if they are both null, it means that the previous data does not exist (F5 on browser). 
             //Let´s keep them untouched until the new one comes from server, otherwise after the $http call there will be errors on the $digest evalution
             var cancelSchema = $scope.schema.properties['detail.cancel.click'];
+            // Check the context for an overloaded detail.cancel.click application and schema
+            var overloadedCancelSchema = contextService.retrieveFromContext('detail.cancel.click', null, true);
+            cancelSchema = overloadedCancelSchema != 'undefined' ? overloadedCancelSchema : cancelSchema;
             if (cancelSchema) {
                 //if this schema registers another application/schema/mode entry for the cancel click, let´s use it
                 var result = schemaService.parseAppAndSchema(cancelSchema);
@@ -450,9 +460,10 @@ function applicationController($scope, $http, $log, $timeout,
                 parameters.schema = result.schemaId;
                 parameters.mode = result.mode;
             }
-
+            // Update list name used to retreive checkpoint data with application.schema of target list
+            listName = parameters.application + "." + parameters.schema;
         }
-        var listName = $scope.schema.applicationName + ".list";
+        
         var checkPointData = checkpointService.fetchCheckpoint(listName);
         if (checkPointData) {
             parameters["SearchDTO"] = checkPointData.listContext;

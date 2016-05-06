@@ -11,7 +11,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
     /// <summary>
     /// When creating new items on maximo sometimes it returns just the userId + the site. Therefore this has to be used instead of the ByIdSiteWhereBuilder
     /// </summary>
-    class ByUserIdSiteWhereBuilder : IWhereBuilder {
+    public class ByUserIdSiteWhereBuilder : IWhereBuilder {
 
         private const string ByUserIdQueryParameter = "userid";
         private const string BySiteIdQueryParameter = "siteid";

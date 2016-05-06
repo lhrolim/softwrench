@@ -4,7 +4,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
-    class EntityWhereClauseBuilder : Basic.BaseQueryBuilder, IWhereBuilder {
+    public class EntityWhereClauseBuilder : Basic.BaseQueryBuilder, IWhereBuilder {
 
 
         public string BuildWhereClause(string entityName, SearchRequestDto searchDto = null) {

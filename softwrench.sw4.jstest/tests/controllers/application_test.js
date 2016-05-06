@@ -46,7 +46,8 @@
 
         var data = [{ fields: { id: "100" } }, { fields: { id: "200" } }];
         var schema ={idFieldName:"id",displayables:[],properties: {} }
-        
+        mockScope.schema = schema;
+
         spyOn(mockScope, "$broadcast");
 
         mockScope.toListSchema(data,schema);

@@ -158,9 +158,29 @@
 
                     .bootstrap-datetimepicker-widget {
                         z-index: 9999 !important; // force date picker to display on top of the dropdown
-                        width: 38em; // maintain date and time side-by-side
+                        width: 30em; // maintain date and time side-by-side
                         @media (max-width: 768px) {
                             width: 19em !important; // time below date for 'smaller' screens
+                        }
+
+                        table {
+                            td {
+                                padding: 3px 0 !important;
+
+                                span {
+                                    margin: 0;
+                                }
+                            }
+                        }
+
+                        .picker-switch {
+                            td {
+                                padding: 0 3px !important;
+
+                                span {
+                                    padding: 0 8px;
+                                }
+                            }
                         }
                     }
                 }

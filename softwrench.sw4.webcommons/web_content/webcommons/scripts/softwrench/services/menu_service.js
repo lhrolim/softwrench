@@ -172,6 +172,7 @@
                 parameters.popupmode = leaf.parameters['popupmode'];
             }
             checkpointService.clearCheckpoints();
+            $rootScope.$broadcast('sw.redirect', leaf);
             redirectService.goToApplicationView(leaf.application, leaf.schema, leaf.mode, this.getI18nMenuLabel(leaf, null), parameters);
         };
 

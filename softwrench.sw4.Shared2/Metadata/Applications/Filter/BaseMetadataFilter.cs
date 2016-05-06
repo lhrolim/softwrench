@@ -66,7 +66,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
         /// 
         /// The whereclause can be:
         /// 
-        /// 1. a vanilla string using !@ as a placeholder for the current value (!@value)
+        /// 1. a vanilla string using !@ as a placeholder for the current value (!@#value)
         /// 2. a @xxx.yyy string that will be evaluated to either a SimpleInjector(online) or a service method (mobile)
         /// 2.1 a @xxx string will be evaluated to a standard DataSet method (i.e there needs to exist such method on the DataSet)
         /// 

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
-    class ByIdWhereBuilder : IWhereBuilder {
+    public class ByIdWhereBuilder : IWhereBuilder {
 
         private const string ByIdQueryParameter = "id";
         private readonly EntityMetadata _entityMetadata;

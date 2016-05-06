@@ -6,7 +6,7 @@ using System.Text;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
 
-    class CompositeWhereBuilder : IWhereBuilder {
+    public class CompositeWhereBuilder : IWhereBuilder {
         private const string And = " and ";
 
         private readonly IEnumerable<IWhereBuilder> _whereBuilders;

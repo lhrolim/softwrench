@@ -48,7 +48,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
         }
 
-        private DataMap BuildDataMap(EntityMetadata entityMetadata, IEnumerable<KeyValuePair<string, object>> r) {
+        public DataMap BuildDataMap(EntityMetadata entityMetadata, IEnumerable<KeyValuePair<string, object>> r) {
 
 
             return new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key, entityMetadata), pair => HandleValue(pair.Key, entityMetadata, pair.Value), StringComparer.OrdinalIgnoreCase), entityMetadata.Schema.MappingType);

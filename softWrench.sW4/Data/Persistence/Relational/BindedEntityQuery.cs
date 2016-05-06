@@ -4,7 +4,7 @@ using System.Dynamic;
 using JetBrains.Annotations;
 
 namespace softWrench.sW4.Data.Persistence.Relational {
-    internal class BindedEntityQuery {
+    public class BindedEntityQuery {
         private readonly string _sql;
         private dynamic _parameters;
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="globalsearch" idAttribute="recordid">
+      <attributes>
+        <!-- ID of the record -->
+        <attribute name="recordid" type="varchar"/>
+        <!-- User ID of the record -->
+        <attribute name="userrecordid" type="varchar"/>
+        <!-- Description or summary from the record-->
+        <attribute name="description" type="varchar"/>
+        <!-- Date the record was created -->
+        <attribute name="createdate" type="datetime"/>
+        <!-- Date the record was last changed -->
+        <attribute name="changedate" type="datetime"/>
+        <!-- Type of the record (SR, WO, Asset, Location) to search (hidden)-->
+        <attribute name="recordtype" type="varchar"/>
+        <!-- Type of the record (SR, WO, Asset, Location) to show on screen-->
+        <attribute name="recordtypelabel" type="varchar"/>
+        <!-- Name of the application for the record -->
+        <attribute name="appname" type="varchar"/>
+        <!-- The schema to use for the record type -->
+        <attribute name="appschema" type="varchar"/>
+      </attributes>
+    </entity>
+  </entities>
+  
+  <applications>
+    <application entity="globalsearch" name="globalsearch" title="Global Search">
+      <schemas>
+        <schema id="list" title="Global Search Grid" stereotype="list">
+
+          <filters>
+            <optionfilter attribute="recordtypelabel" displaycode="false" eager="true" provider="@RecordTypes" whereclause="recordtype in (!@#value)"/>
+          </filters>
+          
+          <properties>
+            <property key="list.click.service" value="globalSearchService.listClick"/>
+          </properties>
+          <field attribute="recordid" label="System Record ID" hidden="true"/>
+          <field attribute="userrecordid" label="Record ID"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="createdate" label="Create Date"/>
+          <field attribute="changedate" label="Change Date"/>
+          <field attribute="recordtypelabel" label="Record Type"/>
+          <field attribute="recordtype" hidden="true"/>
+          <field attribute="appname" label="Schema" hidden="true"/>
+          <field attribute="appschema" label="Schema" hidden="true"/>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

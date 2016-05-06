@@ -103,7 +103,10 @@ angular.module('sw_layout')
                         sideBySide: true,
                         showClose: showCloseButton,
                         toolbarPlacement: 'top',
-                        useCurrent: false
+                        useCurrent: false,
+                        widgetPositioning: {
+                            vertical: 'bottom'
+                        }
                         //debug: true
                     });
 

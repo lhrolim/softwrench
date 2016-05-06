@@ -34,12 +34,17 @@
       <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Quartz">
+      <HintPath>..\packages\Quartz.2.2.1\lib\net40\Quartz.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\com\cts\pesco\configuration\PescoDOFChartInitializer.cs" />
     <Compile Include="classes\com\cts\pesco\migration\MigrationSwweb2374.cs" />
+    <Compile Include="classes\com\cts\pesco\dataset\PescoGlobalSearchDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,12 +74,14 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="customer.placeholder" />
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="web_content\pesco\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\pesco\connector\" />
-    <Folder Include="classes\com\cts\pesco\dataset\" />
     <Folder Include="web_content\pesco\htmls\" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +92,10 @@
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
       <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
+      <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
+      <Name>cts.commons</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>

@@ -9,6 +9,7 @@ using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using Moq;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications.Validator;
 using softWrench.sW4.Security.Context;
@@ -42,11 +43,13 @@ namespace softwrench.sW4.test.Metadata {
                 var swdbMock = new Mock<ISWDBHibernateDAO>();
                 var maximodbMock = new Mock<IMaximoHibernateDAO>();
                 var contextLookuperMock = new Mock<IContextLookuper>();
+                var whereClauseFacadeMock = new Mock<IWhereClauseFacade>();
 
                 var scanner = new TestSimpleInjectorScanner();
                 scanner.ResgisterSingletonMock<ISWDBHibernateDAO>(swdbMock);
                 scanner.ResgisterSingletonMock<IMaximoHibernateDAO>(maximodbMock);
                 scanner.ResgisterSingletonMock<IContextLookuper>(contextLookuperMock);
+                scanner.ResgisterSingletonMock<IWhereClauseFacade>(whereClauseFacadeMock);
 
                 scanner.InitDIController();
 

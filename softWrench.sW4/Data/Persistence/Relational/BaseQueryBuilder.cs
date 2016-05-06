@@ -16,11 +16,11 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational {
 
-    abstract class BaseQueryBuilder {
+    public abstract class BaseQueryBuilder {
 
         protected const int InitialStringBuilderCapacity = 1024;
 
-        private static ILog _log = LogManager.GetLogger(typeof(BaseQueryBuilder));
+        private static readonly ILog _log = LogManager.GetLogger(typeof(BaseQueryBuilder));
 
         protected BindedEntityQuery TemplateQueryBuild(EntityMetadata entityMetadata, InternalQueryRequest queryParameter, QueryCacheKey.QueryMode queryMode) {
             string queryString;
@@ -95,7 +95,11 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             return new QueryCacheKey(queryMode);
         }
 
-        protected IWhereBuilder GetCompositeBuilder(EntityMetadata entityMetadata, InternalQueryRequest queryParameter) {
+//        public static IWhereBuilder GetCompositeBuilderExternal(EntityMetadata entityMetadata, InternalQueryRequest queryParameter){
+//            return 
+//        }
+
+        public static IWhereBuilder GetCompositeBuilder(EntityMetadata entityMetadata, InternalQueryRequest queryParameter) {
             IList<IWhereBuilder> whereBuilders = new List<IWhereBuilder>();
             if (queryParameter.Id != null) {
                 //TODO: make some kind of hash to determine if this is needed...
@@ -126,7 +130,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             return new CompositeWhereBuilder(whereBuilders);
         }
 
-        protected List<SearchParameterUtils> GetSearchParameterUtilsList(EntityMetadata entityMetadata, SearchRequestDto searchRequestDto) {
+        protected static List<SearchParameterUtils> GetSearchParameterUtilsList(EntityMetadata entityMetadata, SearchRequestDto searchRequestDto) {
             var searchParameterUtilsList = new List<SearchParameterUtils>();
             if (searchRequestDto.ValuesDictionary != null) {
                 var entityAttributes = entityMetadata.Schema.Attributes;
@@ -141,30 +145,27 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             }
             return searchParameterUtilsList;
         }
+    }
 
-        protected class InternalQueryRequest {
+    public class InternalQueryRequest {
 
-            public SearchRequestDto SearchDTO;
+        public SearchRequestDto SearchDTO;
 
-            public Rowstamps Rowstamps {
-                get; set;
-            }
-
-            public string Id {
-                get; set;
-            }
-
-            public Tuple<string, string> UserIdSiteTuple {
-                get; set;
-            }
-
-            public bool Cacheable() {
-                return SearchDTO == null;
-            }
-
+        public Rowstamps Rowstamps {
+            get; set;
         }
 
+        public string Id {
+            get; set;
+        }
 
+        public Tuple<string, string> UserIdSiteTuple {
+            get; set;
+        }
+
+        public bool Cacheable() {
+            return SearchDTO == null;
+        }
 
     }
 }

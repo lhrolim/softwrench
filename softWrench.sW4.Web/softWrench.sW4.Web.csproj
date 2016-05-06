@@ -365,6 +365,7 @@
     <Content Include="App_Data\Client\%40internal\templates\assetlocrelation.xml" />
     <Content Include="App_Data\Client\%40internal\templates\assetspec.xml" />
     <Content Include="App_Data\Client\%40internal\templates\assettrans.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\globalsearch.xml" />
     <Content Include="App_Data\Client\%40internal\templates\locationspec.xml">
       <SubType>Designer</SubType>
     </Content>
