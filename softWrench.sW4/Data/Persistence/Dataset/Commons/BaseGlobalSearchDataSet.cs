@@ -48,7 +48,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         private readonly IDictionary<string, string> _baseQueries = new Dictionary<string, string>
         {
             {"servicerequest", "select ticketid as userrecordid, CAST(ticketuid AS VARCHAR(15)) as recordid, description, reportdate as createdate, changedate, 'sr' as recordtype, 'Service Request' as recordtypelabel, 'servicerequest' as appname, 'editdetail' as appschema from sr WHERE {0}"},
-            {"incident", "select ticketid as userrecordid, CAST(ticketuid AS VARCHAR(15)) as recordid, description, reportdate as createdate, changedate, 'sr' as recordtype, 'Incident' as recordtypelabel, 'incident' as appname, 'editdetail' as appschema from ticket WHERE class = 'INCIDENT' AND {0}"},
+            {"incident", "select ticketid as userrecordid, CAST(ticketuid AS VARCHAR(15)) as recordid, description, reportdate as createdate, changedate, 'incident' as recordtype, 'Incident' as recordtypelabel, 'incident' as appname, 'editdetail' as appschema from ticket WHERE class = 'INCIDENT' AND {0}"},
             {"workorder", "select wonum as userrecordid, CAST(workorderid AS VARCHAR(15)) as recordid, description, reportdate as createdate, changedate, 'workorder' as recordtype ,'Work Order' as recordtypelabel, 'workorder' as appname, 'editdetail' as appschema from workorder WHERE {0}"},
             {"asset", "select assetnum as userrecordid, CAST(assetid AS VARCHAR(15)) as recordid, description, '' as createdate, changedate, 'asset' as recordtype, 'Asset' as recordtypelabel, 'asset' as appname, 'detail' as appschema from asset WHERE {0}"},
             {"location", "select location as userrecordid, CAST(locationsid AS VARCHAR(15)) as recordid, description, '' as createdate, changedate, 'location' as recordtype,'Location' as recordtypelabel, 'location' as appname, 'locationdetail' as appschema from locations WHERE {0}"}
@@ -119,8 +119,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         /// <returns></returns>
         public IEnumerable<IAssociationOption> RecordTypes(FilterProviderParameters parameters) {
             var result = new List<IAssociationOption>();
-
-            foreach (var key in _entities.Keys) {
+            var user = SecurityFacade.CurrentUser();
+            var customerApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, user);
+            foreach (var key in _entities.Keys.Where(k => customerApps.Any(a => a.Entity.EqualsIc(k)))) {
                 if (MetadataProvider.Entity(key) != null) {
                     result.Add(new AssociationOption(key, _entities[key]));
                 }
