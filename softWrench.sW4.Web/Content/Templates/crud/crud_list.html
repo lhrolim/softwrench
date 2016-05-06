@@ -18,7 +18,7 @@
                 <div class="separator large-button hidden-xs col-sm-1" ng-if="ismodal !== 'true'">&nbsp;</div>
                 <!-- quick search input -->
                 <div ng-show="shouldShowGridNavigation()">
-                    <div class="quick-search col-xs-12 col-sm-6 col-md-4">
+                    <div class="quick-search col-xs-12 col-sm-6 col-md-4" ng-class="{'no-search-options' : schema.relatedCompositions.length == 0}">
                         <div class="input-group">
                             <input type="text"
                                    placeholder="Search"
