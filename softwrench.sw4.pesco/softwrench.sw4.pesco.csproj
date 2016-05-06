@@ -41,12 +41,6 @@
     <Reference Include="Quartz">
       <HintPath>..\packages\Quartz.2.2.1\lib\net40\Quartz.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.batchapi">
-      <HintPath>..\softWrench.sW4.Web\Bin\softwrench.sw4.batchapi.dll</HintPath>
-    </Reference>
-    <Reference Include="softwrench.sW4.batches">
-      <HintPath>..\softWrench.sW4.Web\Bin\softwrench.sW4.batches.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Http">
@@ -95,7 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\pesco\connector\" />
-    <Folder Include="classes\com\cts\pesco\dataset\" />
     <Folder Include="web_content\pesco\htmls\" />
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +111,14 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
+      <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>
+      <Name>softwrench.sw4.batches.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
+      <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
+      <Name>softwrench.sW4.batches</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.dashboard\softwrench.sw4.dashboard.csproj">
       <Project>{BB222B54-5670-4853-ACF9-64BB36094021}</Project>
