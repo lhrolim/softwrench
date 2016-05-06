@@ -236,24 +236,51 @@
                             });
                         }
 
+                        function updateLookupModalGridBufferMultiple(selectedValues) {
+                            // updates lookup modal grid buffer
+                            // when lookup modal is opened the lookup modal grid buffer is passed
+                            // and any selected option will be selected on modal too
+                            $scope.lookupModalBuffer = {};
+                            if (!selectedValues || selectedValues.length === 0) {
+                                return;
+                            }
+
+                            var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                            promise.then(function (modalSchema) {
+                                var attFieldName = $scope.filter.advancedFilterAttribute || modalSchema.idFieldName;
+                                selectedValues.forEach(function(value) {
+                                    var datamap = { fields: {} };
+                                    datamap.fields[attFieldName] = value;
+                                    $scope.lookupModalBuffer[value] = datamap;
+                                });
+                            });
+                        }
+
+
                         $scope.parseSearchData = function (searchData) {
                             $scope.selectedOptions = [];
-                            var dataToParse = searchData ? searchData : $scope.searchData;
-                            if (!dataToParse) {
-                                return;
-                            }
-
-                            var data = dataToParse[filter.attribute];
-                            if (!data) {
-                                return;
-                            }
-
-                            var dataOptions = filterModelService.parseOptions(data);
-                            $scope.getAllAvailableOptions().forEach(function (option) {
-                                if (dataOptions.indexOf(option.value) >= 0) {
-                                    $scope.selectedOptions[option.value] = 1;
+                            var data = null;
+                            if (!searchData) {
+                                if ($scope.searchData) {
+                                    data = $scope.searchData[filter.attribute];
                                 }
-                            });
+                            } else {
+                                data = searchData;
+                            }
+
+                            $scope.cacheAtributeSearchData = data;
+                            var dataOptions = data && typeof data == "string" ? filterModelService.parseOptions(data) : [];
+                            if (dataOptions.length > 0) {
+                                $scope.getAllAvailableOptions().forEach(function(option) {
+                                    if (dataOptions.indexOf(option.value) >= 0) {
+                                        $scope.selectedOptions[option.value] = 1;
+                                    }
+                                });
+                            }
+
+                            if ($scope.filter.advancedFilterSchemaId) {
+                                updateLookupModalGridBufferMultiple(dataOptions);
+                            }
                         }
 
                         // changed option is sent in case of user action on changing the state of option checkbox
@@ -272,6 +299,7 @@
                                 searchData[filter.attribute] = result;
                                 searchOperator[filter.attribute] = searchService.getSearchOperationById("EQ");
                             }
+                            $scope.cacheAtributeSearchData = result;
                             $scope.applyFilter({ keepitOpen: true });
 
                             // if has lookup for options
@@ -453,27 +481,21 @@
                             $scope.preSelectOption($scope.filteroptions, log);
                         });
 
-                        function deselectAll(panelid) {
-                            if ($scope.panelid == panelid) {
-                                $scope.selectedOptions = [];
+                        // This listener is designed to update the selected options after anything indirectely changes the searchdata besides the user selecting a filter option.
+                        // It's called everytime the grid receives data from server and updates the grid data.
+                        // To avoid changes that are directly made to the filter and changes to another filters $scope.cacheAtributeSearchData is used.
+                        $scope.$on("sw_griddatachanged", function (event, datamap, schema, panelid) {
+                            if ($scope.paneild != panelid) {
+                                return;
                             }
-                        }
-
-                        // When deselecting a saved filter, selected options have to be cleared
-                        $scope.$on("sw.grid.filter.cleared", function (event, panelid) {
-                            deselectAll(panelid);
-                        });
-
-                        // When selecting a saved filter, selected options have to be updated
-                        $scope.$on("sw.grid.filter.selected", function (event, searchData, panelid) {
-                            if ($scope.panelid == panelid) {
-                                $scope.parseSearchData(searchData);
-                            }
-                        });
-
-                        //on refresh selected options have to be cleared
-                        $scope.$on("sw.grid.refresh", function (event, panelid) {
-                            deselectAll(panelid);
+                            // timeout is used to enables $scope.searchData from this scope to be updated with $scope.searchData from crud_list
+                            $timeout(function () {
+                                var atributeSearchData = $scope.filter && $scope.searchData && $scope.searchData[$scope.filter.attribute];
+                                if ($scope.cacheAtributeSearchData == atributeSearchData) {
+                                    return;
+                                }
+                                $scope.parseSearchData(atributeSearchData);
+                            }, 0, false);
                         });
                     }]
 

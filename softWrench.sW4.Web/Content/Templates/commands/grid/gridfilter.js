@@ -10,7 +10,6 @@
                     crudContextHolderService.setSelectedFilter($scope.selectedfilter, $scope.panelid);
                     if (!$scope.selectedfilter) {
                         searchService.refreshGrid({}, null, { panelid: $scope.panelid, forcecleanup: true, addPreSelectedFilters: true });
-                        $rootScope.$broadcast("sw.grid.filter.cleared", $scope.panelid);
                         return;
                     }
                     $scope.applyFilter($scope.selectedfilter);
@@ -108,8 +107,7 @@
 
                 $scope.applyFilter = function (filter) {
                     $scope.quickSearchDto = filter.advancedSearch ? JSON.parse(filter.advancedSearch) : { compositionsToInclude: [] };
-                    var searchData = gridPreferenceService.applyFilter(filter, $scope.searchOperator, $scope.quickSearchDto, $scope.panelid);
-                    $rootScope.$broadcast("sw.grid.filter.selected", searchData, $scope.panelid);
+                    gridPreferenceService.applyFilter(filter, $scope.searchOperator, $scope.quickSearchDto, $scope.panelid);
                 }
 
                 function clearFilter(panelid) {

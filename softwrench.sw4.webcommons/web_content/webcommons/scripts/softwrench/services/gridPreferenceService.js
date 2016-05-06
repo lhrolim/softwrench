@@ -148,7 +148,6 @@ angular.module('sw_layout')
             var template = filter.template;
             
             searchService.refreshGrid(searchData, searchOperator, { searchTemplate: template, quickSearchDTO: quickSearchDTO, panelid: panelid });
-            return searchData;
         }
     };
 
