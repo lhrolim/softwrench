@@ -66,11 +66,18 @@
         
         <list redeclaring="false" stereotype="list.selection">
           <customization position="siteid">
-            <field attribute="siteid" label="Site Id"/>
+            <field attribute="siteid" label="Site Id">
+              <renderer type="default" params="width=12%"/>
+            </field>
           </customization>
           <customization position="+owner">
             <field attribute="lostenergy3" label="Lost Energy" readonly="true" enableexpression="false">
               <renderer type="checkbox" params="formatter=numberToBoolean"/>
+            </field>
+          </customization>
+          <customization position="status">
+            <field attribute="status" label="Status">
+              <renderer type="statuscolor" params="width=10%" />
             </field>
           </customization>
           <customization position="#statusicons">
@@ -252,9 +259,15 @@
        
          <list title="Work Order Grid" platform="web" redeclaring="false" stereotype="list.selection">
           <customization position="siteid">
-             <field attribute="siteid" label="Site Id"/>
+            <field attribute="siteid" label="Site Id">
+              <renderer type="default" params="width=12%"/>
+            </field>
            </customization>
-          
+           <customization position="status">
+             <field attribute="status" label="Status">
+               <renderer type="statuscolor" params="width=10%" />
+             </field>
+           </customization>
           <customization position="+asset_.description">
             <field attribute="lostenergy" label="Lost Energy" readonly="true" enableexpression="false">
               <renderer type="checkbox" />
