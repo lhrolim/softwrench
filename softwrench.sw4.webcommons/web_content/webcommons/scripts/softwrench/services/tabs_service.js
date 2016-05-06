@@ -170,6 +170,14 @@
             var schemas = nonInlineCompositionsDict(baseSchema);
             var thisSchema = schemas[compositionKey];
             return thisSchema.label;
+        },
+
+        hasTab: function(baseSchema, tabid) {
+            var displayable = fieldService.getDisplayableByKey(baseSchema, tabid);
+            if (!displayable) {
+                return false;
+            }
+            return fieldService.isTabOrComposition(displayable);
         }
 
     };

@@ -141,9 +141,9 @@
                     // covers breadcrumb redirect when the target page does not have the active tab of the src page
                     var tab = crudContextHolderService.getActiveTab();
                     var datamap = $scope.datamap.fields || $scope.datamap;
-                    if (tab != null && datamap[tab] == null && hasMainTab) {
+                    if (tab != null && !tabsService.hasTab($scope.schema, tab)) {
                         // active tab not found
-//                        redirectService.redirectToTab($scope.getMainTabId());
+                        redirectService.redirectToTab($scope.getMainTabId());
                     }
 
                     $timeout(function () {
