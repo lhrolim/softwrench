@@ -403,7 +403,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
 
 
-        public AssociationMainSchemaLoadResult BuildAssociationOptions(AttributeHolder dataMap,
+        public virtual AssociationMainSchemaLoadResult BuildAssociationOptions(AttributeHolder dataMap,
             ApplicationSchemaDefinition schema, IAssociationPrefetcherRequest request) {
 
             var result = new AssociationMainSchemaLoadResult();

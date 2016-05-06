@@ -6,7 +6,12 @@
 
     function workorderService($log, redirectService, crudContextHolderService) {
 
-
+        function setLocationFromAsset(parameters) {
+            var dm = crudContextHolderService.rootDataMap().fields;
+            if (dm.location == null && dm.extrafields.asset_.location!=null) {
+                dm.location = dm.extrafields.asset_.location;
+            }
+        }
 
         function goToDetail(parameters) {
             var params = {
@@ -39,7 +44,8 @@
 
         var service = {
             goToDetail: goToDetail,
-            openNewDetailModal: openNewDetailModal
+            openNewDetailModal: openNewDetailModal,
+            setLocationFromAsset: setLocationFromAsset
         };
 
         return service;

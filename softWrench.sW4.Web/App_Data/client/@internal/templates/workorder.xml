@@ -567,6 +567,7 @@
           </commandbars>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <event  type="onassociationsloaded" service="workorderService" method="setLocationFromAsset"/>
         </schema>
 
         <list platform="mobile" title="Work Order Grid">

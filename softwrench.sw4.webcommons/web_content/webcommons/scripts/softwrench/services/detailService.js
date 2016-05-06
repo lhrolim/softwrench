@@ -3,7 +3,7 @@
 
     
 
-    function detailService($log, $q, $timeout, $rootScope, associationService, compositionService, fieldService, schemaService, contextService, crudContextHolderService) {
+    function detailService($log, $q, $timeout, $rootScope, associationService,eventService, compositionService, fieldService, schemaService, contextService, crudContextHolderService) {
 
         function isEditDetail(schema, datamap) {
             return fieldService.getId(datamap, schema) != undefined;
@@ -19,7 +19,10 @@
                 return $timeout(function () {
                     //why this timeout?
                     $log.get("#detailService#fetchRelationshipData").info('fetching eager associations of {0}'.format(scope.schema.applicationName));
-                    associationService.loadSchemaAssociations(scope.datamap,scope.schema, { avoidspin: true });
+                    associationService.loadSchemaAssociations(scope.datamap, scope.schema, { avoidspin: true }).then(function (result) {
+                        var eventInvocation = eventService.dispatchEvent(scope.schema, "onassociationsloaded");
+                        return result;
+                    });
 
                 });
             } else {
@@ -80,6 +83,6 @@
 
     angular.module("sw_layout")
         .factory("detailService",
-            ["$log", "$q", "$timeout", "$rootScope", "associationService", "compositionService", "fieldService", "schemaService", "contextService", "crudContextHolderService", detailService]);
+            ["$log", "$q", "$timeout", "$rootScope", "associationService", "eventService", "compositionService", "fieldService", "schemaService", "contextService", "crudContextHolderService", detailService]);
 
 })(angular);

@@ -17,7 +17,7 @@
             <event type="afterchange" service="multiassetlocciService" method="afterChangeAsset"/>
           </association>
           <association target="location" labelfield="location_.location" label="Location">
-            <renderer type="lookup"/>
+            <renderer type="lookup" params="allowcustomvalue=true"/>
             <event type="afterchange" service="multiassetlocciService" method="afterChangeLocation"/>
           </association>
           <field attribute="sequence" label="Sequence" >
@@ -42,8 +42,9 @@
           <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
             <renderer type="lookup"/>
           </association>
-          <association target="location" labelfield="location_.location" label="Location">
-            <renderer type="lookup"/>
+          <association target="location" labelfield="location_.location" label="Location" >
+            <!--TODO: remove that parameter it´s a workaround-->
+            <renderer type="lookup" params="allowcustomvalue=true"/>
           </association>
           <field attribute="sequence" label="Sequence" >
             <renderer type="numericinput" params="min=1;"/>
