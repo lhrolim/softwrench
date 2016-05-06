@@ -1384,7 +1384,8 @@
         }
 
         //#endregion
-        if (expressionService.evaluate($scope.metadatadeclaration.showExpression, $scope.parentdata, $scope)) {
+        if (!$scope.metadatadeclaration || expressionService.evaluate($scope.metadatadeclaration.showExpression, $scope.parentdata, $scope)) {
+            //this is needed for cases where we have an inline composition hidden under a showexpression, and we don´t want it even to be initialized
             init();
         }
         
