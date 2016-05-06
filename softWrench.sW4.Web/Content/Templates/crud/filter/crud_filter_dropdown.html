@@ -80,10 +80,10 @@
                     <div ng-switch-when="MetadataBooleanFilter">
                         <div class="input-group">
                             <div class="radio">
-                                <label><input type="radio" value="{{booleanFilterTrueValue}}" ng-model="searchData[filter.attribute]"> {{booleanFilterTrueLabel}} </label>
+                                <label><input type="radio" value="{{booleanFilterTrueValue}}" ng-model="searchData[filter.attribute]" ng-change="filterBarApplied()"> {{booleanFilterTrueLabel}} </label>
                             </div>
                             <div class="radio">
-                                <label><input type="radio" value="{{booleanFilterFalseValue}}" ng-model="searchData[filter.attribute]"> {{booleanFilterFalseLabel}} </label>
+                                <label><input type="radio" value="{{booleanFilterFalseValue}}" ng-model="searchData[filter.attribute]" ng-change="filterBarApplied()"> {{booleanFilterFalseLabel}} </label>
                             </div>
                         </div>
                     </div>
