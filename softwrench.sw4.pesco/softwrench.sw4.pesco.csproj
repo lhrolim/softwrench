@@ -34,15 +34,29 @@
       <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Quartz">
       <HintPath>..\packages\Quartz.2.2.1\lib\net40\Quartz.dll</HintPath>
     </Reference>
+    <Reference Include="softwrench.sw4.batchapi">
+      <HintPath>..\softWrench.sW4.Web\Bin\softwrench.sw4.batchapi.dll</HintPath>
+    </Reference>
+    <Reference Include="softwrench.sW4.batches">
+      <HintPath>..\softWrench.sW4.Web\Bin\softwrench.sW4.batches.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\pesco\action\PescoBatchController.cs" />
     <Compile Include="classes\com\cts\pesco\configuration\PescoDOFChartInitializer.cs" />
+    <Compile Include="classes\com\cts\pesco\dataset\PescoServiceRequestDataSet.cs" />
     <Compile Include="classes\com\cts\pesco\migration\MigrationSwweb2374.cs" />
     <Compile Include="classes\com\cts\pesco\dataset\PescoGlobalSearchDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,6 +106,10 @@
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
       <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.web\cts.commons.web.csproj">
+      <Project>{4C79CFAD-0861-432D-B89C-1D237FBFC522}</Project>
+      <Name>cts.commons.web</Name>
     </ProjectReference>
     <ProjectReference Include="..\cts.commons\cts.commons.csproj">
       <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>

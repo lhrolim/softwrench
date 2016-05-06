@@ -4,9 +4,7 @@ using softWrench.sW4.Util;
 namespace softwrench.sW4.pesco.classes.com.cts.pesco.migration {
     [Migration(201604211500)]
     public class MigrationSwweb2374 : Migration {
-        /*  
-            INSERT INTO pesco_device_value (deviceid,timestamp,interfaceid,itemid,valuelong) VALUES ('dummy',1430438400000,'[1:{0239}]',0,1000);
-        */
+        
         public override void Up() {
             if (!"pesco".Equals(ApplicationConfiguration.ClientName)) {
                 return;

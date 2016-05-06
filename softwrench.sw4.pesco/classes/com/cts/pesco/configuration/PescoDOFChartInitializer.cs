@@ -3,7 +3,6 @@ using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.dashboard.classes.startup;
-using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.pesco.classes.com.cts.pesco.configuration {
