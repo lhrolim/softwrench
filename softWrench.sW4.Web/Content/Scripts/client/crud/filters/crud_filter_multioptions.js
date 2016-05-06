@@ -193,7 +193,7 @@
                                 $scope.vm.allSelected = 0;
                                 $scope.toggleSelectAll();
                                 $scope.lookupModalBuffer = {};
-                                $timeout(function() {
+                                $timeout(function () {
                                     $scope.jelement.typeahead('val', '');
                                 }, 0, false);
 
@@ -248,7 +248,7 @@
                             var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
                             promise.then(function (modalSchema) {
                                 var attFieldName = $scope.filter.advancedFilterAttribute || modalSchema.idFieldName;
-                                selectedValues.forEach(function(value) {
+                                selectedValues.forEach(function (value) {
                                     var datamap = { fields: {} };
                                     datamap.fields[attFieldName] = value;
                                     $scope.lookupModalBuffer[value] = datamap;
@@ -256,6 +256,58 @@
                             });
                         }
 
+
+                        // compare two selection options, priority is given to the one that have data with more values
+                        // this is use to prioritise options that agregates many search data on the parse
+                        function compareSelectionOptions(a, b) {
+                            if (a.parsedValues.length > b.parsedValues.length) {
+                                return -1;
+                            }
+                            if (a.parsedValues.length < b.parsedValues.length) {
+                                return 1;
+                            }
+                            return 0;
+                        }
+
+                        // matches the search data with the select options, gives priority to options that have
+                        // more search data (ex. "a,b,c,f" > "c,f")
+                        function innerParseSearchData(dataOptions) {
+                            var allOptions = $scope.getAllAvailableOptions();
+                            var optionsWithParsedValues = [];
+
+                            // parse the value of the option ("1,2,3" -> [1, 2, 3])
+                            // and sort the optios by the number of values desc
+                            allOptions.forEach(function (option) {
+                                var parsedOption = {
+                                    option: option,
+                                    parsedValues: filterModelService.parseOptions(option.value)
+                                }
+                                optionsWithParsedValues.push(parsedOption);
+                            });
+                            optionsWithParsedValues.sort(compareSelectionOptions);
+
+                            // verifies if the options have the search data and should be selected
+                            optionsWithParsedValues.forEach(function (parsedOption) {
+                                // dataOptions array loses entries so should be verified empty
+                                if (dataOptions.length === 0) {
+                                    return;
+                                }
+
+                                // verifies if option value is entirely on search data
+                                var containsAllData = parsedOption.parsedValues.every(function(data) {
+                                    return dataOptions.indexOf(data) >= 0;
+                                });
+                                if (!containsAllData) {
+                                    return;
+                                }
+
+                                // marks the option as selected and consumes the search data
+                                $scope.selectedOptions[parsedOption.option.value] = 1;
+                                dataOptions = dataOptions.filter(function(data) {
+                                    return parsedOption.parsedValues.indexOf(data) < 0;
+                                });
+                            });
+                        }
 
                         $scope.parseSearchData = function (searchData) {
                             $scope.selectedOptions = [];
@@ -271,11 +323,8 @@
                             $scope.cacheAtributeSearchData = data;
                             var dataOptions = data && typeof data == "string" ? filterModelService.parseOptions(data) : [];
                             if (dataOptions.length > 0) {
-                                $scope.getAllAvailableOptions().forEach(function(option) {
-                                    if (dataOptions.indexOf(option.value) >= 0) {
-                                        $scope.selectedOptions[option.value] = 1;
-                                    }
-                                });
+                                // clones the array data to enable array customization
+                                innerParseSearchData([].concat(dataOptions));
                             }
 
                             if ($scope.filter.advancedFilterSchemaId) {
@@ -400,7 +449,7 @@
                         * 
                         * @param {} value The option value.
                         */
-                        function addLookupOption(value,label) {
+                        function addLookupOption(value, label) {
                             // searchs for itens with same value on filter options
                             var alreadyExists = $scope.vm.recentlyOptions.some(function (existingItem) {
                                 return value === existingItem.value;
@@ -411,7 +460,7 @@
                                     label: label,
                                     value: value,
                                     nonstoreable: false,
-                                    removable:true
+                                    removable: true
                                 }
                                 $scope.vm.recentlyOptions.push(item);
                             }
@@ -438,7 +487,7 @@
                                     //TODO: receive this from metadata somehow
                                     label = datamap.fields["description"];
                                 }
-                                addLookupOption(value,label);
+                                addLookupOption(value, label);
                             }
 
                             // updates the local buffer
