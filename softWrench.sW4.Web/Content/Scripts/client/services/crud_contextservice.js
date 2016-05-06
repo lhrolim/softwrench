@@ -70,8 +70,8 @@
           
 
             //TODO: below is yet to be implemented/refactored
-            detail_previous: "0",
-            detail_next: "0",
+            detail_previous: { id: "0" },
+            detail_next: { id: "0" },
             list_elements: [],
             previousData: null,
             paginationData: null,

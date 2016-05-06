@@ -23,8 +23,8 @@ angular.module('sw_layout')
 
         myProfile: function () {
             var crudContext = {
-                detail_next: "0",
-                detail_previous: "-1"
+                detail_next: { id: "0" },
+                detail_previous: { id: "-1" }
             };
             contextService.insertIntoContext("crud_context", crudContext);
             var id = contextService.getUserData().maximoPersonId;

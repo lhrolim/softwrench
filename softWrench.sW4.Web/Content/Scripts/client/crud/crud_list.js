@@ -36,14 +36,14 @@
                 "fieldService", "commandService", "i18NService", "modalService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
-                "checkpointService", "schemaCacheService", "dispatcherService",
+                "checkpointService", "schemaCacheService", "dispatcherService", "schemaService",
                 function ($scope, $http, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService, gridPreferenceService,
                     searchService, tabsService, userPreferencesService,
                     fieldService, commandService, i18NService, modalService,
                     validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
                     associationService, statuscolorService, contextService, eventService, iconService, expressionService,
-                    checkpointService, schemaCacheService, dispatcherService) {
+                    checkpointService, schemaCacheService, dispatcherService, schemaService) {
 
                     $scope.$name = "crudlist";
 
@@ -211,14 +211,20 @@
                         associationService.updateFromServerSchemaLoadResult(data.associationOptions, null, true);
                         $scope.gridDataChanged($scope.datamap);
 
-                        var elements = [];
-                        for (var i = 0; i < $scope.datamap.length; i++) {
-                            elements.push($scope.datamap[i].fields[$scope.schema.idFieldName]);
-                        }
+                        var elements = $scope.datamap.map(function (item) {
+                            var applicationField = schemaService.locateDisplayableByQualifier($scope.schema, "application.name");
+                            var detailShemaIdField = schemaService.locateDisplayableByQualifier($scope.schema, "schema.detail.id");
+
+                            var listitem = { id: item.fields[$scope.schema.idFieldName] };
+                            if (!!applicationField) listitem.application = item.fields[applicationField.attribute];
+                            if (!!detailShemaIdField) listitem.detailSchemaId = item.fields[detailShemaIdField.attribute];
+
+                            return listitem;
+                        });
                         var crudContext = {
                             list_elements: elements,
-                            detail_next: "0",
-                            detail_previous: "-1",
+                            detail_next: { id : "0" },
+                            detail_previous: { id: "-1" },
                             paginationData: $scope.paginationData,
                             previousData: $scope.datamap
                         };

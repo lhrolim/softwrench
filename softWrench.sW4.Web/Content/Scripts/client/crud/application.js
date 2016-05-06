@@ -141,9 +141,7 @@ function applicationController($scope, $http, $log, $timeout,
     //#endregion
 
     function switchMode(mode, scope) {
-        if (scope == null) {
-            scope = $scope;
-        }
+        scope = scope || $scope;
         scope.isDetail = mode;
         scope.isList = !mode;
         var crud_context;
@@ -155,9 +153,14 @@ function applicationController($scope, $http, $log, $timeout,
             }
 
             var id = $scope.datamap.fields[$scope.schema.idFieldName];
-            if (crud_context.list_elements && crud_context.list_elements.indexOf(id) != -1) {
-                var previous = crud_context.list_elements.indexOf(id) - 1;
-                var next = crud_context.list_elements.indexOf(id) + 1;
+            var idAsString = String(id);
+            var findById = function(item) {
+                return item.id === id || item.id === idAsString;
+            };
+            if (crud_context.list_elements && crud_context.list_elements.find(findById)) {
+                var current = crud_context.list_elements.findIndex(findById);
+                var previous = current - 1;
+                var next = current + 1;
                 crud_context.detail_previous = crud_context.list_elements[previous];
                 crud_context.detail_next = crud_context.list_elements[next];
 

@@ -344,8 +344,9 @@
                 };
 
                 $scope.showdirectionButtons = function () {
-                    return $scope.schema.schemaId == 'editdetail';
-                }
+                    // is detail and is not creation
+                    return schemaService.isDetail($scope.schema) && !!$scope.datamap.fields[$scope.schema.idFieldName];
+                };
 
                 $scope.disableNavigationButton = function (direction) {
                     var value = contextService.fetchFromContext("crud_context", true);
@@ -395,16 +396,16 @@
                 $scope.crawl = function (direction) {
                     var schema = crudContextHolderService.currentSchema();
                     var value = contextService.fetchFromContext("crud_context", true);
-                    var id = direction == 1 ? value.detail_previous : value.detail_next;
-                    if (id == undefined) {
-                        return;
-                    }
+                    var item = direction == 1  ? value.detail_previous : value.detail_next;
+
+                    if (!item) return;
+                    
                     // If the detail crawl has a custom param, we need to get it from the pagination list
                     var customParams = {};
                     if (schema.properties && schema.properties["detail.crawl.customparams"]) {
                         // Get the next/previous record that the params will be coming from
                         var record = value.previousData.filter(function (obj) {
-                            return obj.fields[schema.idFieldName] == id;
+                            return obj.fields[schema.idFieldName] == item.id;
                         });
 
                         // TODO: If the record is null (item not on page in previous data)????
@@ -422,11 +423,11 @@
 
                     var mode = $scope.$parent.mode;
                     var popupmode = $scope.$parent.popupmode;
-                    var schemaid = schema.schemaId;
-                    var applicationname = schema.applicationName;
+                    var schemaid = item.detailSchemaId || schema.schemaId;
+                    var applicationname = item.application || schema.applicationName;
                     var title = $scope.$parent.title;
 
-                    $scope.$emit("sw_navigaterequest", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode, customParameters: customParams });
+                    $scope.$emit("sw_navigaterequest", applicationname, schemaid, mode, title, { id: item.id, popupmode: popupmode, customParameters: customParams });
 
                 };
 

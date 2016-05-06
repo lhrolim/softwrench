@@ -44,9 +44,9 @@
     it("Grid Refreshed By A Filter", function () {
 
         _contextService.insertIntoContext("crud_context", {
-            list_elements: ["100", "200", "300"],
-            detail_next: "0",
-            detail_previous: "-1",
+            list_elements: [{ id: "100" }, { id: "200" }, { id: "300" }],
+            detail_next: { id: "0" },
+            detail_previous: { id: "-1" },
             paginationData: {},
             previousData: [{}, {}, {}]
         });
@@ -63,9 +63,9 @@
 
         expect(crudContext).toBeDefined();
         expect(crudContext).toEqual({
-            list_elements: ["100", "200"],
-            detail_next: "0",
-            detail_previous: "-1",
+            list_elements: [{ id: "100" }, { id: "200" }],
+            detail_next: { id: "0" },
+            detail_previous: { id: "-1" },
             paginationData: {},
             previousData: [{ fields: { id: "100" } }, { fields: { id: "200" } }]
         });

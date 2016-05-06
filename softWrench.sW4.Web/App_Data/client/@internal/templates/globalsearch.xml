@@ -40,13 +40,13 @@
           </properties>
           <field attribute="recordid" label="System Record ID" hidden="true"/>
           <field attribute="userrecordid" label="Record ID"/>
-          <field attribute="description" label="Description"/>
+          <field attribute="description" label="Summary"/>
           <field attribute="createdate" label="Create Date"/>
           <field attribute="changedate" label="Change Date"/>
           <field attribute="recordtypelabel" label="Record Type"/>
           <field attribute="recordtype" hidden="true"/>
-          <field attribute="appname" label="Schema" hidden="true"/>
-          <field attribute="appschema" label="Schema" hidden="true"/>
+          <field attribute="appname" label="Schema" hidden="true" qualifier="application.name" />
+          <field attribute="appschema" label="Schema" hidden="true" qualifier="schema.detail.id" />
         </schema>
       </schemas>
     </application>
