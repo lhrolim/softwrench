@@ -32,7 +32,7 @@
         <schema id="list" title="Global Search Grid" stereotype="list">
 
           <filters>
-            <optionfilter attribute="recordtypelabel" displaycode="false" eager="true" provider="@RecordTypes" whereclause="recordtype in (!@#value)"/>
+            <optionfilter attribute="recordtypelabel" displaycode="false" eager="true" provider="@RecordTypes" />
           </filters>
           
           <properties>

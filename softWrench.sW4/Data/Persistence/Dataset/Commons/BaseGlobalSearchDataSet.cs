@@ -123,7 +123,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var customerApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, user);
             foreach (var key in _entities.Keys.Where(k => customerApps.Any(a => a.Entity.EqualsIc(k)))) {
                 if (MetadataProvider.Entity(key) != null) {
-                    result.Add(new AssociationOption(key, _entities[key]));
+                    result.Add(new AssociationOption(_entities[key], _entities[key]));
                 }
             }
 
