@@ -144,11 +144,11 @@
                             <div ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel()}}">
                                 {{i18NLabel(column)}} <i class="fa {{headerIcon(column)}}" ng-show="hasIcon(column)"></i>
                             </div>
-                            <div class="glyphicon glyphicon-sort-by-attributes part"
+                            <div class="fa fa-sort-amount-asc part"
                                   ng-show="shouldShowSort(column,'asc')"
                                   rel="tooltip" data-original-title="Sorted ascendant">
                             </div>
-                            <div class="glyphicon glyphicon-sort-by-attributes-alt part" ng-show="shouldShowSort(column,'desc')"
+                            <div class="fa fa-sort-amount-desc part" ng-show="shouldShowSort(column,'desc')"
                                   rel="tooltip" data-original-title="Sorted descendant">
                             </div>
                             <div class="filter-label part" ng-show="shouldShowGridNavigation()" filterrowrendered>

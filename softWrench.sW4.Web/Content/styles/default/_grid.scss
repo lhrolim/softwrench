@@ -332,6 +332,8 @@
                     word-break: break-word;
 
                     .cell-wrapper {
+                        line-height: 1;
+
                         .part {
                             display: inline-block;
                         }
@@ -340,9 +342,6 @@
                             max-width: 62%;
                             text-overflow: ellipsis;
                             white-space: nowrap;
-                            overflow: hidden;
-                            position: relative;
-                            top: 6px;
                         }
                     }
                 }
@@ -415,7 +414,7 @@
     }
 
     th {
-        padding: 9px 0;
+        padding: 13px 0 9px;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
 
