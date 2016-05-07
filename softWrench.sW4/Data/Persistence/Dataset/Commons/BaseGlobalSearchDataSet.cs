@@ -71,9 +71,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 //if the schema has a default sort defined, and we didn´t especifally asked for any sort column, apply the default schema
                 searchDto.SearchSort = propertyValue;
             }
-            searchDto = searchDto.QuickSearchDTO == null
-                ? FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto)
-                : QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
+
+            FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto);
+            QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
 
             var paginationData = PaginationData.GetInstance(searchDto, entityMetadata);
             // Build the applicable where clause

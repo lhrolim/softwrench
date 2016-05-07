@@ -338,9 +338,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 searchDto.SearchSort = propertyValue;
             }
 
-            searchDto = searchDto.QuickSearchDTO == null
-                ? FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto)
-                : QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
+            FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto);
+            QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
 
             var tasks = new Task[1];
             var ctx = ContextLookuper.LookupContext();

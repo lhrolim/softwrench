@@ -38,11 +38,6 @@ namespace softWrench.sW4.Data.Filter {
                 return searchDto;
             }
 
-            // has QuickSearch string: use parameter in filter regardless of WhereClause
-            if (searchDto.QuickSearchDTO != null) {
-                return searchDto;
-            }
-
             var entity = MetadataProvider.EntityByApplication(schema.ApplicationName);
 
             var allFilters = schemaFilters.Filters;
