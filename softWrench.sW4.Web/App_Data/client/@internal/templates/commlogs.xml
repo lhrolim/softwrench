@@ -137,7 +137,7 @@
           <event type="onschemafullyloaded" service="commlogService" method="addSignature"/>
           <field attribute="commlogid" hidden="true" />
           <field attribute="ownertable" defaultexpression="$.parentdata.fields['class']" hidden="true"/>
-          <association target="#templateid" label="Template" labelfield="commtemplate_.description" valuefield="templateid" >
+          <association target="#templateid" label="Template" labelfield="commtemplate_.description" valuefield="templateid" showexpression="!@commlogid">
             <renderer type="lookup"/>
             <event type="afterchange" service="commlogService" method="formatCommTemplate"/>
           </association>
