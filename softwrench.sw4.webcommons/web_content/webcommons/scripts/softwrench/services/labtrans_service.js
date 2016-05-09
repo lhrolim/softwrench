@@ -15,11 +15,12 @@
 
             var updateLineCost = function (event) {
                 if (event.parentdata) {
+                    var parentdatamap = event.parentdata.fields || event.parentdata;
                     // Update from one of the labor lines
-                    var regularHours = event.parentdata['regularhrs'];
-                    var regularRate = event.fields['payrate'];
-                    var premiumHours = event.parentdata['premiumpayhours'];
-                    var premiumRate = event.fields['ppcraftrate_.premiumpay_.defaultrate'];
+                    var regularHours = parentdatamap['regularhrs'];
+                    var regularRate = parentdatamap['payrate'];
+                    var premiumHours = parentdatamap['premiumpayhours'];
+                    var premiumRate = parentdatamap['ppcraftrate_.premiumpay_.defaultrate'];
                     event.fields['premiumpayrate'] = premiumRate;
                     event.fields['linecost'] = calcLineCost(regularHours, regularRate, premiumHours, premiumRate);
                 } else if (event.fields['#laborlist_']) {
