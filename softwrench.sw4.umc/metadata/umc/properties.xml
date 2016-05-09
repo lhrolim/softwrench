@@ -42,18 +42,19 @@
   <environment key="dev">
     <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=UMC76DEV;User Id=MAXIMO;password=MAXIMO;" />
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_UMC76DEV;User Id=sw;password=softwrench;" />
-  </environment>
+    <property key="iiscontextpath " value="http://dev.softwrench.net/umc"/>  </environment>
   
   <environment key="qa">
     <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=UMC76DEV;User Id=MAXIMO;password=MAXIMO;" />
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_UMC76DEV_QA;User Id=sw;password=softwrench;" /> 
-  </environment>
+    <property key="iiscontextpath " value="http://qa.softwrench.net/umc"/>  </environment>
 
   <environment key="prod">
     <property key="basewsURL" value="http://10.50.100.159:9080/meaweb/wsdl/" />
     <property key="basewfURL" value="http://10.50.100.159:9080/meaweb/wf/" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.40;Initial Catalog=UMC76MAX;User Id=MAXIMO;password=Max7506;" />
     <property key="swdb_url" value="Data Source=10.50.100.40;Initial Catalog=SWDB_UMC76MAX;User Id=sw;password=$0ftWr3nch;" />
+    <property key="iiscontextpath " value="http://prod.softwrench.net/umc"/>
   </environment>
 
 </Properties>
