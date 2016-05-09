@@ -35,8 +35,10 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         private QuickSearchHelper _quickSearchHelper;
 
 
-        private EntityRepository EntityRepository {
-            get {
+        private EntityRepository EntityRepository
+        {
+            get
+            {
                 if (_repository == null) {
                     _repository =
                         SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
@@ -46,8 +48,10 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         }
 
 
-        private QuickSearchHelper QuickSearchHelper {
-            get {
+        private QuickSearchHelper QuickSearchHelper
+        {
+            get
+            {
                 if (_quickSearchHelper == null) {
                     _quickSearchHelper =
                         SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchHelper>(typeof(QuickSearchHelper));
@@ -88,13 +92,12 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
             var isLookupMode = associationFilter is PaginatedSearchRequestDto && association.RendererType == "lookup";
 
-            // needs to search by every attribute
-            if (isLookupMode || association.IsEagerLoaded()) {
-                AppendNonPrimaryAttributesSearch(originalEntity, association, associationFilter);
-            }
+
+            AppendNonPrimaryAttributesSearch(originalEntity, association, associationFilter);
+
 
             // handles quick search request
-            if (associationFilter.QuickSearchDTO!=null) {
+            if (associationFilter.QuickSearchDTO != null) {
                 AppendQuickSearch(association, associationFilter);
             }
 
@@ -206,7 +209,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                         : "1";
                 }
                 associationFilter.SearchAscending = true;
-            } 
+            }
         }
 
 
