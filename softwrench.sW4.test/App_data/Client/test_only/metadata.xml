@@ -19,7 +19,25 @@
       </attributes>
     </entity>
 
-    <entity name="workorder" idAttribute="wonum" >
+    <entity name="fakefailurelistonly" idAttribute="failurelist">
+      <attributes>
+        <attribute name="description" query="(select description from failurecode where failurecode = !@failurecode and orgid = !@orgid)" type="varchar"/>
+      </attributes>
+    </entity>
+
+    <entity name="fakeworkorder" idAttribute="fakeid">
+      <attributes>
+        <attribute name="fakeid" required="true" type="bigint" />
+      </attributes>
+      <relationships>
+        <relationship to="fakefailurelistonly" qualifier="failurelist">
+          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>  
+      </relationships>
+    </entity>
+
+    <entity name="workorder" idAttribute="wonum">
       <attributes>
         <attribute name="workorderid" required="true" type="bigint" />
         <attribute name="wonum" required="true" type="varchar"  auto-generated="true"/>
@@ -125,7 +143,6 @@
           <relationshipAttribute from="crewid" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="CREWID" quoteLiteral="true"/>
         </relationship>
-
       </relationships>
 
       <connectorParameters>
@@ -398,6 +415,7 @@
           <field attribute="status" label="Status" qualifier="featured"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
         </list>
+        
         <detail platform="web">
           <field attribute="workorderid"  readonly="true" hidden="true"/>
           <field attribute="wonum" label="Number"  requiredexpression="true" readonly="true" />
@@ -892,6 +910,16 @@
 <!--          </properties>-->
 <!--          <customization position="classstructureid"></customization>-->
 <!--        </schema>-->
+      </schemas>
+    </application>
+
+    <application name="fakeworkorder" entity="fakeworkorder" title="Fake Work Order">
+      <schemas>
+        <schema id="TestWithTargetSelectStatement_detail" stereotype="detail">
+          <association label="Failure Code:" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+            <renderer type="lookup" />
+          </association>
+        </schema>
       </schemas>
     </application>
 

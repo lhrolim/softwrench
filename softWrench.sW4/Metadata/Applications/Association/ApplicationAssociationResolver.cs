@@ -162,11 +162,27 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var listOfFields = appMetadata != null
                 ? appMetadata.Schema.NonHiddenFields.Where(i => !i.DeclaredAsQueryOnEntity).Select(f => f.Attribute)
                 : shouldUsePrimary
-                    ? new[] { primaryAttribute.To, association.LabelFields.FirstOrDefault() }
-                    : new[] { association.LabelFields.FirstOrDefault() };
+                    ? new[] { primaryAttribute.To, GetLabelFieldForQuickSearch(association) }
+                    : new[] { GetLabelFieldForQuickSearch(association) };
 
             var quickSearchWhereClause = QuickSearchHelper.BuildOrWhereClause(listOfFields, association.EntityAssociation.To);
             associationFilter.AppendWhereClause(quickSearchWhereClause);
+        }
+
+        /// <summary>
+        /// Solves the case in which the association's labelfield is a query on the target entity: 
+        /// association.EntityAssociation.To#[labelfield].Query != `empty`.
+        /// </summary>
+        /// <param name="association"></param>
+        /// <returns></returns>
+        private static string GetLabelFieldForQuickSearch(ApplicationAssociationDefinition association) {
+            var field = association.LabelFields.FirstOrDefault();
+            if (string.IsNullOrEmpty(field)) return field;
+            var targetEntity = MetadataProvider.Entity(association.EntityAssociation.To);
+            if (targetEntity == null) return field;
+            var targetField = targetEntity.LocateAttribute(field);
+            if (targetField == null || string.IsNullOrEmpty(targetField.Query)) return field;
+            return AssociationHelper.PrecompiledAssociationAttributeQuery(association.EntityAssociation.To, targetField);
         }
 
         private static void AppendNonPrimaryAttributesSearch(AttributeHolder originalEntity, ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {

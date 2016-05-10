@@ -8,7 +8,6 @@ using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata.Entity;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
-using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 

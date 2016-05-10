@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
-using softwrench.sw4.Shared2.Metadata.Applications.Filter;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.Search.QuickSearch {
     public class QuickSearchHelper : ISingletonComponent {
@@ -18,13 +17,11 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
         }
 
         public static string QuickSearchStatement([NotNull]string attribute, bool ignoreCoalesce = false) {
-            if (ignoreCoalesce) {
-                return "({0} like :{1})".Fmt(attribute,QUICK_SEARCH_PARAM_NAME);
-            }
-            return string.Format(QUICK_SEARCH_PARAM_QUERY_PATTERN, attribute);
+            return ignoreCoalesce 
+                ? "({0} like :{1})".Fmt(attribute,QUICK_SEARCH_PARAM_NAME) 
+                : string.Format(QUICK_SEARCH_PARAM_QUERY_PATTERN, attribute);
         }
 
-     
 
         public static string QuickSearchParamName {
             get {
@@ -47,13 +44,26 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
         /// <returns></returns>
         public virtual string BuildOrWhereClause(IEnumerable<string> attributes, string context = null) {
             var attrs = attributes.ToList();
-            var attributesForStatement = context == null ? attrs : attrs.Where(atr => !atr.Contains("_.")).Select(a => context + "." + a).ToList();
+
+            /* not prefixing complete select statements */
+
+            var attributesForStatement = context == null 
+                ? attrs 
+                : attrs.Where(atr => !atr.Contains("_.") &&  !IsSelectStatement(atr)).Select(a => context + "." + a).ToList();
+
             if (context != null) {
-                attributesForStatement = attributesForStatement.Concat(attrs.Where(atr => atr.Contains("_.")).ToList()).ToList();
+                attributesForStatement = attributesForStatement.Concat(attrs.Where(atr => atr.Contains("_.") || IsSelectStatement(atr)).ToList()).ToList();
             }
 
             // iterate filters and 'OR' the attributes
-            return "(" + string.Join("OR", attributesForStatement.Select((item)=>QuickSearchStatement(item))) + ")";
+            return "(" + string.Join("OR", attributesForStatement.Select((item) => QuickSearchStatement(item))) + ")";
+        }
+
+        private static bool IsSelectStatement(string attribute) {
+            var attr = attribute.TrimStart();
+            return attr.StartsWith("select ", StringComparison.OrdinalIgnoreCase) || 
+                attr.StartsWith("(select ", StringComparison.OrdinalIgnoreCase) || 
+                attr.StartsWith("( select ", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
