@@ -30,7 +30,7 @@
     <input type="hidden" id="hddn_popupmode" value="@Request.Params.Get("popupmode")" />
     <input type="hidden" id="hiddn_user" value="@Model.UserJSON" />
     <div class="spinner" data-class="spinner" id="mainspinner"></div>
-    <div ng-controller="LayoutController" class="container {{clientName}} {{deviceType}}">
+    <div ng-controller="LayoutController" class="container {{clientName}} {{deviceType}} {{browserType}}">
         <notifications></notifications>
         <div class="vertical-menu clearfix" ng-if="menu.displacement == 'vertical'">
             <menu-wrapper menu="menu" popupmode="{{popupmode}}" class="menu-primary"/>

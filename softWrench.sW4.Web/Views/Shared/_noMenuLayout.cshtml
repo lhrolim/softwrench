@@ -28,9 +28,9 @@
     <input type="hidden" id="routes_homeurl" value="@Url.Action("RedirectToAction", "Home")" />
     <input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath" />
     <input type="hidden" id="hddn_popupmode" value="@Request.Params.Get("popupmode")" />
-    <div ng-controller="NoMenuLayoutController" class="{{clientName}} {{deviceType}}">
+    <div ng-controller="NoMenuLayoutController" class="{{clientName}} {{deviceType}} {{browserType}}">
         <div class="spinner" data-class="spinner" id="mainspinner"></div>
-        <div class="container {{clientName}} {{deviceType}}">
+        <div class="container {{clientName}} {{deviceType}} {{browserType}}">
 
             <header class="site-header navbar-fixed-top hiddenonprint">
                 <div class="branding">
