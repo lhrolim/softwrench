@@ -394,6 +394,24 @@
     }
 }
 
+.safari {
+    #listgrid {
+        thead {
+            tr {
+                &.header-row {
+                    th {
+                        .cell-wrapper {
+                            .add-on {
+                                top: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 .filter-container {
     display: none;
 }

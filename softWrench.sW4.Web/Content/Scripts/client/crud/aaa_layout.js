@@ -306,6 +306,8 @@
             $rootScope.environment = config.environment;
             $rootScope.i18NRequired = config.i18NRequired;
             $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
+            $rootScope.browserType = BrowserDetect.browser.toLowerCase();
+
             contextService.insertIntoContext("activityStreamFlag", config.activityStreamFlag, true);
             contextService.insertIntoContext("UIShowClassicAdminMenu", config.uiShowClassicAdminMenu, true);
             contextService.insertIntoContext("UIShowToolbarLabels", config.uiShowToolbarLabels, true);
