@@ -87,7 +87,7 @@
                         .then(function () {
                             log.debug("clearing selection buffer and realoading [application: {0}, schema: {1}]".format(application, schemaId));
                             crudContextHolderService.clearSelectionBuffer();
-                            return redirectService.goToApplication(application, schemaId);
+                            return searchService.refreshGrid(null, null, { panelid: null, keepfilterparams: true });
                         });
                 }
             });
