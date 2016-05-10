@@ -1128,6 +1128,7 @@
         </relationship>
         <relationship to="locoper">
           <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
         <relationship to="asset" collection="true">
