@@ -23,6 +23,7 @@ $asset_path: "../images";
 .container {
     header {
         background: $background_color url(#{$asset_path}/header.jpg) no-repeat center left;
+        border-bottom: 1px solid #000;
 
         .admin-area {
             background-color: $form_background;
