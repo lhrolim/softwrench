@@ -16,7 +16,9 @@ $(function () {
                      d.type.toUpperCase() === 'NUMBER' ||
                      d.type.toUpperCase() === 'DATE')
                  ) ||
-                 d.tagName.toUpperCase() === 'TEXTAREA') {
+                 d.tagName.toUpperCase() === 'TEXTAREA'
+                || event.target.id.startsWith("taText")
+                ) {
                 doPrevent = d.readOnly || d.disabled;
             }
             else {
