@@ -841,7 +841,7 @@
                 return;
             }
 
-            var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
+            var needServerFetching = $scope.fetchfromserver || $scope.detailData[compositionId] == undefined;
             if (!needServerFetching) {
                 //opening it using already existing cached instance
                 $scope.innerToggleDetails(false, compositionId, $scope.detailData[compositionId].data, item);
