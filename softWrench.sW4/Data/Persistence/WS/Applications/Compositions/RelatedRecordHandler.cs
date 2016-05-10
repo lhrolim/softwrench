@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
@@ -13,8 +10,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
 
         public static void HandleRelatedRecords(MaximoOperationExecutionContext maximoOperation) {
-            var srData = (CrudOperationData)maximoOperation.OperationData;
-            var relatedRecords = ((IEnumerable<CrudOperationData>)srData.GetRelationship("relatedrecord_"))
+            var parentData = (CrudOperationData)maximoOperation.OperationData;
+            var relatedRecords = ((IEnumerable<CrudOperationData>)parentData.GetRelationship("relatedrecord_"))
                                     .Where(r => r.IsDirty)
                                     .ToList();
 
@@ -27,7 +24,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 w.SetValue(relatedRecord, "RELATEDRECORDID", -1);
                 w.SetValue(relatedRecord, "RELATETYPE", "RELATED");
                 // current SR data
-                w.SetValue(relatedRecord, "RECORDKEY", srData.UserId);
+                w.SetValue(relatedRecord, "RECORDKEY", parentData.UserId);
                 w.CopyFromRootEntity(ticket, relatedRecord, "SITEID", user.SiteId);
                 w.CopyFromRootEntity(ticket, relatedRecord, "ORGID", user.OrgId);
                 // related target data

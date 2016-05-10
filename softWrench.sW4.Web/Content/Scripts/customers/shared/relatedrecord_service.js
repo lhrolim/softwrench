@@ -43,7 +43,7 @@ angular.module('sw_layout')
             redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
         },
 
-        clearSelectedRelatedEntityId: function(event) {
+        clearSelectedRelatedEntityId: function (event) {
             event.fields["#transient_relatedreckey"] = null;
             event.fields["relatedreckey"] = null;
             event.fields["relatedservicerequest_"] = null;

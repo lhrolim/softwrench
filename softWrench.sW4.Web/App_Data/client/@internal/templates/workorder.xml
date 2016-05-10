@@ -534,7 +534,7 @@
               <collectionproperties allowcreation="false" listschema="composition"/>
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
-              <collectionproperties allowcreation="false" />
+              <collectionproperties allowupdate="false" />
             </composition>
 
             <tab label="Location Address" id="saddress" icon="fa-map-o" showexpression="(@location_.serviceaddress_.latitudey &amp;&amp; @location_.serviceaddress_.longitudex) || @location_.serviceaddress_.streetaddress">
