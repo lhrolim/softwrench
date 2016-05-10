@@ -7,6 +7,7 @@ angular.module("sw_layout")
 
             $scope.refreshGrid = function () {
                 searchService.refreshGrid({}, null, { panelid: $scope.panelid, forcecleanup: true, addPreSelectedFilters: true });
+                crudContextHolderService.clearSelectionBuffer();
                 $rootScope.$broadcast("sw.grid.refresh", $scope.panelid);
             };
 
