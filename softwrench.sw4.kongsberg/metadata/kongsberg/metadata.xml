@@ -10,6 +10,7 @@
     <template path="@attachments.xml"/>
     <template path="@incident.xml"/>
     <template path="@attachments.xml"/>
+    <template path="@relatedrecords.xml"/>
   </templates>
   <entities>
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
@@ -1555,7 +1556,7 @@
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
-              <collectionproperties allowcreation="false" />
+              <collectionproperties allowupdate="false" />
             </composition>
           </section>
 
@@ -2066,7 +2067,7 @@
               <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" prefilterfunction="BuildRelatedAttachmentsWhereClause" />
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
-              <collectionproperties allowcreation="false" />
+              <collectionproperties allowupdate="false" />
             </composition>
             <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus" />
           </section>
@@ -2588,35 +2589,35 @@
       </schemas>
     </application>
 
-    <application name="relatedrecord" title="Related Records" entity="relatedrecord" id="00000000-0000-0000-0000-000000000008" >
-      <properties>
-        <property key ="icon.composition.tab" value="fa fa-tags"/>
-      </properties>
-      <schemas>
-        <list stereotype="compositionlist">
-          <properties>
-            <property key="list.click.service" value="relatedrecordService.open"/>
-          </properties>
-          <!--          <commandbars>-->
-          <!--            <commandgroup position="compositiontop" >-->
-          <!--              <container id="addrelated" label="Add Related Record" position=">refresh" icon="fa-plus" tooltip="Add related record entry">-->
-          <!--                <command id="addrelatedch" label="Change" icon="fa-random" service="relatedrecordService" method="create" parameters="'change',parentdatamap"/>-->
-          <!--                <command id="addrelatedin" label="Incident" icon="fa-warning" service="relatedrecordService" method="create" parameters="'incident',parentdatamap"/>-->
-          <!--                <command id="addrelatedsr" label="Service Request" icon="fa-ticket" service="relatedrecordService" method="create" parameters="'servicerequest',parentdatamap"/>-->
-          <!--              </container>-->
-          <!--            </commandgroup>-->
-          <!--          </commandbars>-->
-          <field attribute="relatedreckey" label="Related Record Key" />
-          <field attribute="relatedrecclass" label="Related Record Class" />
-          <field attribute="siteid" hidden="true" />
-        </list>
-        <detail stereotype="compositiondetail">
-          <field attribute="relatedreckey" label="Related Record Key:" />
-          <field attribute="relatedrecclass" label="Related Record Class:" />
-          <field attribute="siteid" hidden="true" />
-        </detail>
-      </schemas>
-    </application>
+<!--    <application name="relatedrecord" title="Related Records" entity="relatedrecord" id="00000000-0000-0000-0000-000000000008" >-->
+<!--      <properties>-->
+<!--        <property key ="icon.composition.tab" value="fa fa-tags"/>-->
+<!--      </properties>-->
+<!--      <schemas>-->
+<!--        <list stereotype="compositionlist">-->
+<!--          <properties>-->
+<!--            <property key="list.click.service" value="relatedrecordService.open"/>-->
+<!--          </properties>-->
+<!--          ~1~          <commandbars>@1@-->
+<!--          ~1~            <commandgroup position="compositiontop" >@1@-->
+<!--          ~1~              <container id="addrelated" label="Add Related Record" position=">refresh" icon="fa-plus" tooltip="Add related record entry">@1@-->
+<!--          ~1~                <command id="addrelatedch" label="Change" icon="fa-random" service="relatedrecordService" method="create" parameters="'change',parentdatamap"/>@1@-->
+<!--          ~1~                <command id="addrelatedin" label="Incident" icon="fa-warning" service="relatedrecordService" method="create" parameters="'incident',parentdatamap"/>@1@-->
+<!--          ~1~                <command id="addrelatedsr" label="Service Request" icon="fa-ticket" service="relatedrecordService" method="create" parameters="'servicerequest',parentdatamap"/>@1@-->
+<!--          ~1~              </container>@1@-->
+<!--          ~1~            </commandgroup>@1@-->
+<!--          ~1~          </commandbars>@1@-->
+<!--          <field attribute="relatedreckey" label="Related Record Key" />-->
+<!--          <field attribute="relatedrecclass" label="Related Record Class" />-->
+<!--          <field attribute="siteid" hidden="true" />-->
+<!--        </list>-->
+<!--        <detail stereotype="compositiondetail">-->
+<!--          <field attribute="relatedreckey" label="Related Record Key:" />-->
+<!--          <field attribute="relatedrecclass" label="Related Record Class:" />-->
+<!--          <field attribute="siteid" hidden="true" />-->
+<!--        </detail>-->
+<!--      </schemas>-->
+<!--    </application>-->
 
     <application name="commodities" title="Commodities" entity="commodities" >
       <schemas>
