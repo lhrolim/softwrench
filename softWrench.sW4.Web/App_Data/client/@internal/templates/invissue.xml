@@ -479,7 +479,7 @@
             <commandgroup position="detail.primary">
               <removecommand id="cancel"/>
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position=">print"/>
-              <command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>
+              <command id="cancelinvissue" label="Cancel" icon="fa-times" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print" cssclasses="large-button"/>              
             </commandgroup>
           </commandbars>
           <event type="onload" service="scannerdetectionService" method="initInvIssueDetailListener"/>
