@@ -80,8 +80,8 @@
     <property key="ldapServer" value="10.1.20.101"/>
     <property key="ldapPortNumber" value="389"/>
     <property key="ldapBaseDn" value="DC=FS,DC=LOCAL"/>
-    <property key="mifcredentials.user" value="mxintadm"/>
-    <property key="mifcredentials.password" value="mxintadm"/>  
+    <property key="mifcredentials.user" value="c007079"/>
+    <property key="mifcredentials.password" value="35o$@$Pass"/>  
   </environment>
 
   <environment key="uat">
