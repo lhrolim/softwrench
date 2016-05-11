@@ -540,7 +540,7 @@
         <schema id="newitem" stereotype="compositiondetail" mode="input" title="New Issue">
           <section>
             <field attribute="matusetransid" hidden="true"/>
-            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
+            <field attribute="enterby" label="Entered By" readonly="true" default="@personid"/>
             <field attribute="siteid" label="Site" readonly="true"/>
             <field attribute="storeloc" label="Storeroom" readonly="true"/>
           </section>
@@ -654,7 +654,7 @@
           <section>
             <field attribute="matusetransid" label="Issues and Returns: " hidden="true"/>
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
-            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
+            <field attribute="enterby" label="Entered By" readonly="true" default="@personid"/>
             <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
               <renderer type="lookup"/>
             </association>
@@ -891,7 +891,7 @@
             <field attribute="orgid" hidden="true"/>
             <field attribute="rowstamp" label="Row Stamp" hidden="true"/>
             <field attribute="requestedby" label="Requested By" readonly="true"/>
-            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
+            <field attribute="enterby" label="Entered By" readonly="true" default="@personid"/>
             <field attribute="#issuetype" label="Issue Type" readonly="true"/>
             <field attribute="issueto" label="Issue To" readonly="true"/>
           </section>

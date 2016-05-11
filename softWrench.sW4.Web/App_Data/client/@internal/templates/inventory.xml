@@ -448,7 +448,7 @@
             <section orientation="horizontal">
               <renderer type="default" params="childinputsize=medium" />
               <field attribute="requestedby" label="Requested By" readonly="true" />
-              <field attribute="enterby" label="Entered By" readonly="true" default="@username" />
+              <field attribute="enterby" label="Entered By" readonly="true" default="@personid" />
               <field attribute="#issuetype" label="Issue Type" readonly="true" />
               <field attribute="issueto" label="Issue To:\" readonly="true" />
             </section>

@@ -178,8 +178,8 @@
           <section orientation="horizontal">
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <field attribute="reportedby" label="Reported By" default="@username" readonly="true"/>
-            <association label="Affected Person" target="affectedperson" labelfield="person_.displayname" default="@username">
+            <field attribute="reportedby" label="Reported By" default="@personid" readonly="true"/>
+            <association label="Affected Person" target="affectedperson" labelfield="person_.displayname" default="@personid">
               <renderer type="lookup"/>
             </association>
             <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">

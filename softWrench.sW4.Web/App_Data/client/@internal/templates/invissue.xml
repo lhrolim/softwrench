@@ -390,7 +390,7 @@
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="matusetransid" label="Issues and Returns: " hidden="true"/>
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
-            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
+            <field attribute="enterby" label="Entered By" readonly="true" default="@personid"/>
             <reference id="site"/>
             <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
               <renderer type="lookup"/>
@@ -564,7 +564,7 @@
         <schema id="newitem" stereotype="compositiondetail" mode="input" title="New Issue" platform="web">
           <section>
             <field attribute="matusetransid" hidden="true"/>
-            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
+            <field attribute="enterby" label="Entered By" readonly="true" default="@personid"/>
             <field attribute="siteid" label="Site" readonly="true"/>
             <field attribute="storeloc" label="Storeroom" readonly="true"/>
           </section>

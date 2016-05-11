@@ -49,7 +49,7 @@
             <renderer type="checkbox" params="editable=true;width=5%"/>
           </field>
           <field attribute="rollover" hidden="true"/>
-          <field attribute="inspector" default="@username" hidden="true"></field>
+          <field attribute="inspector" default="@personid" hidden="true"></field>
 <!--          <association labelfield="inspector_.displayname" valuefield="personid" target="inspector" label="Inspector" requiredexpression="true" default="@username">-->
 <!--            <renderer type="lookup" params="editable=true;width=10%"/>-->
 <!--          </association>-->
