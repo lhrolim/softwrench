@@ -261,23 +261,17 @@
                         needsWatchers = hasMultipleSelector || hasSingleSelector;
 
                         html += "<td class='select-multiple' data-title=\"Select\" {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
-                        html += "<div class=\"cell-wrapper\">";
+                        html += "<div class=\"cell-wrapper multiselect-dropdown\">";
                         html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
+                        html += "<i class=\"toggle fa fa-caret-down\" ></i>"; //placeholder to ensure column alignment
                         html += "</div>";
                         html += "</td>";
 
-                        html += "<td class='select' {0}>".format(!hasSingleSelector ? 'style="display:none"' : '');
+                        html += "<td class='select-single' {0}>".format(!hasSingleSelector ? 'style="display:none"' : '');
                         html += "<div class=\"cell-wrapper\">";
                         html += "<input type='radio' name=\"selectradio\" ng-value=\"true\" ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
                         html += "</div>";
                         html += "</td>";
-
-
-                        html += '<td class="select-single" style="display:none">';
-                        //TODO: to be implemented
-                        html += '</td>';
-
-                        //console.log(datamap[i]);
 
                         var dm = datamap[i];
                         for (j = 0; j < schema.displayables.length; j++) {
@@ -419,10 +413,6 @@
                             }
                             html += "</div></td>";
 
-
-
-
-
                         }
                         if (hasMultipleSelector && !disableddetails) {
                             html += "<td ng-show=\"selectionModel.selectionMode\" class=\"edit-detail\">";
@@ -454,8 +444,6 @@
                 scope.selectChanged = function (row) {
                     gridSelectionService.selectionChanged(row, scope.schema, true, scope.panelid);
                 }
-
-
 
                 scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
                     if (panelid === scope.panelid) {

@@ -81,7 +81,25 @@ angular.module('sw_layout')
     };
 
     //register layout functions, debounced to stop repeated calls while resizing the browser window
-    $(window).resize(window.debounce(setHeaderPosition, 300));
+    $(window).resize(window.debounce(setHeaderPosition, 250));
+
+    function setHeaderColumnWidths() {
+        var table = $('.listgrid-table');
+        var rows = $('tbody tr', table);
+        var firstRow = $('td', rows[0]);
+
+        firstRow.each(function () {
+            var tdClass = $(this)[0].classList[0];
+            var tdWidth = $(this).width();
+            var th = $('.listgrid-table thead th.{0}'.format(tdClass));
+
+            th.width(tdWidth);
+            $('.cell-wrapper', th).width(tdWidth);
+        });
+    };
+
+    //register layout functions, debounced to stop repeated calls while resizing the browser window
+    $(window).resize(window.debounce(setHeaderColumnWidths, 50));
 
     var topMessageAddClass = function (div) {
         div.addClass("affix-thead");
@@ -190,9 +208,11 @@ angular.module('sw_layout')
             }
         },
 
-        fixThead: function (schema, params) {
+        fixThead: function (schema, params, listTableRenderedEvent) {
+            //console.log('fixThead', schema, params, listTableRenderedEvent);
+
             var log = $log.getInstance('sw4.fixThead');
- 
+
             if ($rootScope.clientName == 'hapag') {
                 log.debug('starting fix Thead');
                 if (!params || !params.resizing) {
@@ -201,15 +221,15 @@ angular.module('sw_layout')
                 var table = $(".listgrid-table");
                 var thead = buildTheadArray(log, table, params.empty);
 
-                $('thead tr:eq(0) th', table).each(function (i, v) {
+                $('thead tr:eq(0) th', table).each(function(i, v) {
                     $(v).width(thead[i]);
                 });
-                $('thead tr:eq(2) th', table).each(function (i, v) {
+                $('thead tr:eq(2) th', table).each(function(i, v) {
                     $(v).width(thead[i]);
                 });
 
                 // set the columns width back
-                $('tbody tr:eq(0) td', table).each(function (i, v) {
+                $('tbody tr:eq(0) td', table).each(function(i, v) {
                     $(v).width(thead[i]);
                 });
 
@@ -220,6 +240,8 @@ angular.module('sw_layout')
 
                 //update the style, to fixed
                 this.fixTableTop(table, params);
+            } else {
+                setHeaderColumnWidths();
             }
 
             this.callWindowResize();
@@ -232,6 +254,7 @@ angular.module('sw_layout')
             $timeout(function () {
                 log.debug('callWindowResize');
                 setHeaderPosition();
+                setHeaderColumnWidths();
             }, 0, false);
         }, 300),
 

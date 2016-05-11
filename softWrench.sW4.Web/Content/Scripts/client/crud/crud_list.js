@@ -506,11 +506,11 @@
                         $scope.selectPage(1);
                     };
 
-                    $scope.sortLabel = function () {
+                    $scope.sortLabel = function (column) {
                         if (!$scope.shouldShowGridNavigation()) {
                             return "";
                         }
-                        return $scope.i18N("_grid.filter.clicksort", "Click here to sort");
+                        return $scope.i18N("_grid.filter.clicksort", "{0}, Click to sort".format(column.label));
                     }
 
                     $scope.collapse = function (selector) {

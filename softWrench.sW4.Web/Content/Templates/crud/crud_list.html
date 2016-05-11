@@ -124,32 +124,28 @@
     <div class="divAuxTable">
         <!--build responsive css rules based on metadata-->
         <style column-widths schema="schema"></style>
-
         <table class="table table-hover hidden-phone fixedtable listgrid-table" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" id="listgrid">
             <thead id="listgridthread" class="listgrid-thead">
-                <!-- Header row -->
                 <tr class="header-row">
                     <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'" class="select-multiple">
-                        <!--Multiselect-->
                         <multiselect-dropdown data-checkbox-fn="selectAllChanged()" data-commands="multiselect.dropdown" data-datamap="datamap" data-schema="schema" ng-model="selectionModel.selectAllValue"/>
                     </th>
                     <th ng-show="schema.properties['list.selectionstyle'] === 'single'">
                         <!--Singleselect-->
                     </th>
-
                     <th class="{{safeCSSselector(column.attribute)}}"
                         ng-repeat="column in schema.displayables"
                         ng-show="!isFieldHidden(schema,column)">
                         <div ng-if="shouldShowHeaderLabel(column)" class="cell-wrapper">
-                            <div ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel()}}">
+                            <div ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel(column)}}">
                                 {{i18NLabel(column)}} <i class="fa {{headerIcon(column)}}" ng-show="hasIcon(column)"></i>
                             </div>
                             <div class="fa fa-sort-amount-asc part"
-                                  ng-show="shouldShowSort(column,'asc')"
-                                  rel="tooltip" data-original-title="Sorted ascendant">
+                                 ng-show="shouldShowSort(column,'asc')"
+                                 rel="tooltip" data-original-title="Sorted ascendant">
                             </div>
                             <div class="fa fa-sort-amount-desc part" ng-show="shouldShowSort(column,'desc')"
-                                  rel="tooltip" data-original-title="Sorted descendant">
+                                 rel="tooltip" data-original-title="Sorted descendant">
                             </div>
                             <div class="filter-label part" ng-show="shouldShowGridNavigation()" filterrowrendered>
                                 <crud-filter-dropdown filter="filterForColumn(column)"
@@ -160,13 +156,12 @@
                             </div>
                         </div>
                     </th>
-                    <th class="clear"><!--SWWEB-841--></th>
-
-                    <th ng-show="selectionModel.selectionMode && 'true' !==schema.properties['list.disableddetails']">
+                    <th ng-if="selectionModel.selectionMode && 'true' !==schema.properties['list.disableddetails']">
                         <!--Selection mode active... should render an extra icon to open up the details-->
                     </th>
-                </tr>
 
+                    <th class="clear"></th>
+                </tr>
             </thead>
             <tbody crudtbody schema="schema" datamap="datamap" panelid="panelid" timestamp="{{timestamp}}" bindonce />
         </table>
@@ -199,7 +194,4 @@
                         search-operator="searchOperator" />
         </div>
     </div>
-    <!--    <div ng-if="isCommand(schema)">-->
-    <!--        <commandbar schema="schema" mode="schema.mode" datamap="datamap" />-->
-    <!--    </div>-->
 </form>

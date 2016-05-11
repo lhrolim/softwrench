@@ -191,7 +191,7 @@ function getCSSrule(columnIndex, columnClass, columnWidth, schema) {
 window.getCSSrule = getCSSrule;
 
 function buildCSSrule(columnIndex, columnClass, properties, schema) {
-    return buildCSSselector(columnIndex, columnClass, 'th', schema) + ',' + buildCSSselector(columnIndex, columnClass, 'td', schema) + '{' + properties + '}'
+    return buildCSSselector(columnIndex, columnClass, 'th', schema) + ',' + buildCSSselector(columnIndex, columnClass, 'td', schema) + '{' + properties + '}';
 }
 
 window.buildCSSrule = buildCSSrule;
