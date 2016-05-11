@@ -12,7 +12,7 @@
         width: 100%;
         background: #eee;
         border-bottom: #000 1px solid;
-        padding: 5px 40px 5px 0;
+        padding: 10px 40px 10px 0;
 
         .large-button {
             padding: 10px 0 !important;
@@ -36,12 +36,16 @@
             }
 
             &.separator {
-                margin: 5px 10px;
+                margin: 0 10px;
             }
         }
 
+        .quick-search {
+            margin-top: 0;
+        }
+
         .search-options {
-            margin-top: 9px;
+            margin-top: 6px;
             float: left;
 
             &.btn-group.open button {
@@ -86,18 +90,26 @@
 
         .filter-option {
             margin-top: 5px;
+            height: 30px;
+            overflow: hidden;
 
-            button {
-                background: transparent;
+            .buttons {
+                margin: 0;
+                top: -3px;
+                position: relative;
 
-                &:hover {
-                    background: #ddd;
+                button {
+                    background: transparent;
+
+                    &:hover {
+                        background: #ddd;
+                    }
                 }
             }
 
             select {
                 height: 30px;
-                width: calc(100% - 83px);
+                width: calc(100% - 78px);
                 display: inline-block;
             }
 
@@ -226,7 +238,7 @@
     .container {
         .context {
             .group {
-                margin: 5px 0 0;
+                margin: 0;
 
                 &:first-child {
                     margin-left: 5px;
