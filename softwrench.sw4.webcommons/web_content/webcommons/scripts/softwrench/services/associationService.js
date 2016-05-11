@@ -151,11 +151,11 @@
 
             return restService.postPromise("Association", "LookupSingleAssociation", parameters, fieldsTosubmit).then(function (httpResponse) {
                 if (httpResponse.data === "null" || httpResponse.data == null) {
-//                    var fakeItem = {
-//                        value: associationValue,
-//                    };
-//
-//                    crudContextHolderService.updateLazyAssociationOption(associationKey, fakeItem, true);
+                    //                    var fakeItem = {
+                    //                        value: associationValue,
+                    //                    };
+                    //
+                    //                    crudContextHolderService.updateLazyAssociationOption(associationKey, fakeItem, true);
                     return null;
                 }
                 var idx = lazyAssociationsBeingResolved.indexOf(associationKey);
@@ -682,9 +682,16 @@
 
             return resultDTO;
         }
-        
+
         function getEagerLookupOptions(lookupObj) {
-            var eagerOptions = crudContextHolderService.fetchEagerAssociationOptions(lookupObj.fieldMetadata.associationKey);
+            var isShowingModal = crudContextHolderService.isShowingModal();
+            var contextData = null;
+            if (isShowingModal) {
+                contextData = {
+                    schemaId: "#modal"
+                };
+            }
+            var eagerOptions = crudContextHolderService.fetchEagerAssociationOptions(lookupObj.fieldMetadata.associationKey, contextData);
             if (!eagerOptions) {
                 return null;
             }
