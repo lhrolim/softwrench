@@ -155,6 +155,7 @@
           <field attribute="location" hidden="true"/>
           <field attribute="workorderid" hidden="true"/>
           <field attribute="classificationid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
           <field attribute="#warning" tooltip="There are already one or more workorders associated with this location, click here to view them">
             <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%;updatable=true" />
           </field>
@@ -194,6 +195,7 @@
         <schema id="batchAssetSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="classificationid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
           <field attribute="#warning" tooltip="There are already one or more workorders associated with this asset, click here to view them">
             <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%;updatable=true"/>
           </field>

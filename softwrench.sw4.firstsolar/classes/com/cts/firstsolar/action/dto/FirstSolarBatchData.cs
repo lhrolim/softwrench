@@ -18,6 +18,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto {
         public string SiteId {
             get; set;
         }
+        public string OrgId {
+            get; set;
+        }
 
         //used for batch submission only
         public string Classificationid {

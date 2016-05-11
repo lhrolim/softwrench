@@ -25,6 +25,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             var fields = new Dictionary<string, object>();
             fields["DESCRIPTION"] = sharedData.Summary;
             fields["siteid"] = sharedData.SiteId;
+            fields["orgid"] = sharedData.OrgId;
             fields["reportedby"] = SecurityFacade.CurrentUser().MaximoPersonId;
 
             fields["classstructureid"] = sharedData.Classificationid;
@@ -42,6 +43,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
                 //if there´s specific data being passed, let´s use it
                 fields["DESCRIPTION"] = specificData.Summary ?? sharedData.Summary;
                 fields["siteid"] = specificData.SiteId ?? sharedData.SiteId;
+                fields["orgid"] = specificData.OrgId ?? sharedData.OrgId;
                 fields["DESCRIPTION_LONGDESCRIPTION"] = specificData.Details ?? sharedData.Details;
                 if (specificData.Classification != null) {
                     fields["classstructureid"] = specificData.Classificationid;
@@ -86,6 +88,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             if (multiValueOption.Extrafields != null) {
                 if (multiValueOption.Extrafields.ContainsKey("siteid")) {
                     fields["siteid"] = multiValueOption.Extrafields["siteid"];
+                }
+                if (multiValueOption.Extrafields.ContainsKey("orgid")) {
+                    fields["orgid"] = multiValueOption.Extrafields["orgid"];
                 }
                 if (multiValueOption.Extrafields.ContainsKey("location")) {
                     fields["location"] = multiValueOption.Extrafields["location"];

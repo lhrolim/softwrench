@@ -86,6 +86,7 @@
           </commandbars>
           
           <field attribute="assetid" label="Asset#" readonly="true" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
           
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=small" />

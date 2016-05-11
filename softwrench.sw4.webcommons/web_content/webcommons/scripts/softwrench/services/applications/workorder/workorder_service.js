@@ -37,7 +37,8 @@
                 assetnum: assetData["assetnum"],
                 location: assetData["location"],
                 classstructureid: assetData["classstructureid"],
-                siteid: assetData["siteid"]
+                siteid: assetData["siteid"],
+                orgid: assetData["orgid"]
             };
             return redirectService.goToApplication("workorder", schema, params, jsondata);
         }

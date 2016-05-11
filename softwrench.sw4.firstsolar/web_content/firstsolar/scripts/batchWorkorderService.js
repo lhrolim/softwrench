@@ -74,7 +74,8 @@
                 };
 
                 associationOption.extraFields = {
-                    "siteid": value.fields["siteid"]
+                    "siteid": value.fields["siteid"],
+                    "orgid": value.fields["orgid"]
                 }
 
                 if (schema.applicationName === "asset") {

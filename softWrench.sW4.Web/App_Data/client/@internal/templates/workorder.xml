@@ -670,6 +670,7 @@
           <field attribute="reportedby" label="Reported by" default="@username" readonly="true" hidden="true"/>
           <field attribute="reportdate" label="Reported date" default="@now" readonly="true" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
         </schema>
 
 
