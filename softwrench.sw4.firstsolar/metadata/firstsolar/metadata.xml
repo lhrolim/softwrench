@@ -86,7 +86,7 @@
             </optionfield>
           </customization>
           <properties>
-            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,newattachment,assetnum"/>
+            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,newattachment,assetnum,siteid"/>
             <property key="search.schemaid" value="search"/>
           </properties>
         </schema>

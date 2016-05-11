@@ -142,7 +142,10 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                         }
                     } else {
                         var result = DoApplyFieldPermission(fieldsToRetain, field, container);
-                        if (FieldPermission.FullControl.Equals(result)) {
+                        if (FieldPermission.Ignore.Equals(result)) {
+                            // just ignores security and adds the field
+                            resultingFields.Add(field);
+                        } else if (FieldPermission.FullControl.Equals(result)) {
                             var ass = field as ApplicationAssociationDefinition;
                             if (field.IsReadOnly) {
                                 Log.InfoFormat("adding cloned non-readonly version of field {0}", field.Role);
@@ -158,13 +161,6 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                             } else {
                                 resultingFields.Add(field);
                             }
-
-
-
-
-
-
-
                         } else if (FieldPermission.ReadOnly.Equals(result) && field is IPCLCloneable) {
                             Log.InfoFormat("adding cloned readonly version of field {0}", field.Role);
                             var clone = (IApplicationDisplayable)((IPCLCloneable)field).Clone();
@@ -179,7 +175,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
         }
 
         private enum FieldPermission {
-            FullControl, ReadOnly, None
+            FullControl, ReadOnly, None, Ignore
         }
 
 
@@ -188,7 +184,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             var appDisplayable = field as IApplicationIndentifiedDisplayable;
             if (appDisplayable == null) {
                 //no way to infer on that field
-                return FieldPermission.FullControl;
+                return FieldPermission.Ignore;
             }
 
             var isRetained = fieldsToRetain.Any() && !fieldsToRetain.Any(f => appDisplayable.Attribute.EqualsIc(f));
@@ -199,13 +195,16 @@ namespace softWrench.sW4.Metadata.Applications.Security {
 
             if (container == null) {
                 //no security applied, adding the field
-                return FieldPermission.FullControl;
+                return FieldPermission.Ignore;
             }
 
             var fieldPermission =
                 container.FieldPermissions.FirstOrDefault(f => f.FieldKey.EqualsIc(appDisplayable.Role));
-            if (fieldPermission == null || fieldPermission.Permission.EqualsIc("fullcontrol")) {
+            if (fieldPermission == null) {
                 //no security applied, adding the field
+                return FieldPermission.Ignore;
+            }
+            if (fieldPermission.Permission.EqualsIc("fullcontrol")) {
                 return FieldPermission.FullControl;
             }
             if (fieldPermission.Permission.EqualsIc("none")) {
