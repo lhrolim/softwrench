@@ -1,6 +1,28 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('changeservice', function ($http, redirectService, formatService, fieldService,alertService) {
+app.factory('changeservice', function ($http, redirectService, formatService, fieldService, alertService) {
+
+    /**
+     * Parses a string into a date. Expects the format 'dd/MM/yyyy HH:mm'.
+     * @param {String} value 
+     * @returns {Date} 
+     */
+    function parseTargetDate(value) {
+        var datetime = value.split(" ");
+        var date = datetime[0] || "01/01/1970";
+        var time = datetime[1] || "00:00";
+
+        var dateparts = date.split("/");
+        var day = parseInt(dateparts[0]     || 1);
+        var month = parseInt(dateparts[1]   || 1);
+        var year = parseInt(dateparts[2]    || 1970);
+
+        var timeparts = time.split(":");
+        var hours = parseInt(timeparts[0]   || 0);
+        var minutes = parseInt(timeparts[1] || 0);
+
+        return new Date(year, month, day, hours, minutes, 0, 0);
+    }
 
     return {
 
@@ -78,13 +100,17 @@ app.factory('changeservice', function ($http, redirectService, formatService, fi
 
         validateNewForm: function (schema, datamap) {
             var arr = [];
-            var targstartdate = datamap['targstartdate'];
-            var targcompdate = datamap['targcompdate'];
-            if (Date.parse(targstartdate) > Date.parse(targcompdate)) {
-                arr.push('Target Start Date cannot be later than Target Finish Date');
+
+            var targstartdate = datamap["targstartdate"];
+            var targstartdateParsed = parseTargetDate(targstartdate);
+
+            var targcompdate = datamap["targcompdate"];
+            var targcompdateParsed = parseTargetDate(targcompdate);
+
+            if (targstartdateParsed.getTime() > targcompdateParsed.getTime()) {
+                arr.push("Target Start Date cannot be later than Target Finish Date");
             }
             return arr;
-
         }
     };
 
