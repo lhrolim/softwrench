@@ -198,15 +198,15 @@
                         }
                     });
 
-                    $scope.$on("sw.modal.hide", function () {
-
-                        if ($scope.ismodal === "true" && $scope.unWatcherArray) {
-                            $scope.unWatcherArray.forEach(function (fn) {
-                                //unregistering previously watches
-                                fn();
-                            });
-                        }
-                    });
+//                    $scope.$on("sw.modal.hide", function () {
+//
+//                        if ($scope.ismodal === "true" && $scope.unWatcherArray) {
+//                            $scope.unWatcherArray.forEach(function (fn) {
+//                                //unregistering previously watches
+//                                fn();
+//                            });
+//                        }
+//                    });
 
                     //this will get called when the input form is done rendering
                     $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {

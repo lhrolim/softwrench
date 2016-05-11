@@ -29,9 +29,16 @@
 
             var parentIdFieldName = parentSchema.idFieldName;
             var parentData = parameters.parentdata["fields"];
+            var templateId = parameters.fields['#templateid'];
+
+            if (templateId == null) {
+                return;
+            }
+
+
 
             var httpParameters = {
-                templateId: parameters.fields['#templateid'],
+                templateId: templateId,
                 json: parentData,
                 schemaId: parentSchema.schemaId,
                 applicationName: parentSchema.applicationName,

@@ -146,7 +146,10 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
                     scope.disableOnChange = true;
                     selectize.clearOptions();
                     updateOptionsWithSelectedModel(scope.ngModel, scope.options);
-                    selectize.addOption(scope.options);
+                    if (scope.options) {
+                        //cts:luiz --> avoid null exception
+                        selectize.addOption(scope.options);
+                    }
                     selectize.setValue(scope.ngModel);
                     scope.disableOnChange = false;
                 }, true);
