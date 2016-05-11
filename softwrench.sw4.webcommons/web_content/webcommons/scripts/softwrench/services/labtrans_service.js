@@ -18,7 +18,7 @@
                     var parentdatamap = event.parentdata.fields || event.parentdata;
                     // Update from one of the labor lines
                     var regularHours = parentdatamap['regularhrs'];
-                    var regularRate = parentdatamap['payrate'];
+                    var regularRate = event.fields['payrate'];
                     var premiumHours = parentdatamap['premiumpayhours'];
                     var premiumRate = parentdatamap['ppcraftrate_.premiumpay_.defaultrate'];
                     event.fields['premiumpayrate'] = premiumRate;
