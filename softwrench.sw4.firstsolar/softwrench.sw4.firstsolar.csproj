@@ -79,6 +79,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web_content\firstsolar\htmls\advancedSearchPcsButtons.html" />
+    <Content Include="web_content\firstsolar\images\branding.png" />
+    <Content Include="web_content\firstsolar\images\logo-pdf.png" />
     <Content Include="web_content\firstsolar\scripts\aaa_firstsolarmodule.js" />
     <Content Include="web_content\firstsolar\scripts\advancedSearchService.js" />
     <Content Include="web_content\firstsolar\scripts\assetService.js" />

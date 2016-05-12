@@ -1,4 +1,4 @@
-﻿$signin_color: #ffb755;
+﻿$signin_color: #fff;
 $form_background: rgba(1, 62, 91, 0.8);
 $asset_path: "../images";
 
@@ -15,7 +15,7 @@ $asset_path: "../images";
         }
 
         .branding {
-            background: none;
+            background: url(#{$asset_path}/branding.png) no-repeat top left;
 
             .logo img {
                 height: 115px;
