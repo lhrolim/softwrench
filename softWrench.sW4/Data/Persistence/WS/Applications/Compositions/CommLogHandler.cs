@@ -7,6 +7,7 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
+using log4net;
 using NHibernate.Linq;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
@@ -50,12 +51,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         private readonly PdfService _pdfService;
         private readonly IMemoryContextLookuper _lookuper;
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CommLogHandler));
+
 
         public CommLogHandler(ISWDBHibernateDAO dao, AttachmentHandler attachmentHandler, PdfService pdfService, IMemoryContextLookuper lookuper) {
             _dao = dao;
             _attachmentHandler = attachmentHandler;
             _pdfService = pdfService;
             _lookuper = lookuper;
+            Log.Debug("init");
         }
 
         public void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
@@ -185,6 +189,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             var processedHtml = detailsHtml.Replace("<link href=\"" + appContext, "<link href=\"" + serverPath);
             // make images paths absolute
             processedHtml = processedHtml.Replace(" src=\"" + appContext, " src=\"" + serverPath);
+
+            if (Log.IsDebugEnabled) {
+                Log.DebugFormat(processedHtml);
+            }
 
             // limits title to 20 chars
             var fullTitle = appMetadata.Title + " Details";
