@@ -21,6 +21,8 @@
       </filters>
 
       <schemas>
+
+
         <schema id="compositionlist" stereotype="compositionlist">
           <field attribute="displayname" label="Display Name" qualifier="title"/>
         </schema>
@@ -28,6 +30,7 @@
           <field attribute="personid" hidden="true" />
           <field attribute="displayname" label="Display Name" requiredexpression="true" />
         </schema>
+
 
         <schema id="list" stereotype="list" title="Users">
           <field attribute="personuid" hidden="true"/>
@@ -44,7 +47,7 @@
           <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>
         </schema>
 
-        <schema id="detail" stereotype="detail" title="User Details">
+        <schema id="detail" stereotype="detail" title="User Profile">
           <event type="beforesubmit.onvalidation" service="personService" method="validatePerson"/>
 
           <section id="statistics" resourcepath="/Content/Templates/usersetup/userstatistics.html"></section>

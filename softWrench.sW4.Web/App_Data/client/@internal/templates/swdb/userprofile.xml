@@ -17,11 +17,7 @@
 
     <application entity="UserProfile" name="UserProfile" title="Security Groups">
       <schemas>
-
-        <schema id="list" stereotype="list" title="Security Groups">
-          <properties>
-            <property key="list.click.schema" value="editdetail"/>
-          </properties>
+        <list title="Security Groups">
           <commandbars>
             <commandgroup position="actions">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
@@ -30,14 +26,29 @@
             </commandgroup>
             <commandgroup position="gridtop">
               <command id="new" icon="fa-plus"
-                       service="redirectService" method="goToApplicationView" parameters="_UserProfile,newdetail" label="Group" tooltip="New Security Group" position="left" cssclasses="large-button" showexpression="true"/>
+                       service="redirectService" method="goToApplicationView" parameters="_UserProfile,detail" label="Group" tooltip="New Security Group" position="left" cssclasses="large-button" showexpression="true"/>
             </commandgroup>
           </commandbars>
           <field label="Name" attribute="name" />
           <field label="Description" attribute="description" />
-        </schema>
-        
-        <schema id="detail" stereotype="detail">
+        </list>
+        <detail>
+
+          <commandbars>
+            <commandgroup position="actions">
+              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+              <command icon="fa-clone" label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate" cssclasses="large-button"/>
+              <command icon="fa-users" label="Apply Users" tooltip="Apply the current profile to multiple user accounts at once" id="applymultiple" service="userProfileService" method="applyMultiple" cssclasses="large-button"/>
+              <command icon="fa-users" label="Remove Users" tooltip="Remove the current profile from multiple user accounts at once" id="removemultiple" service="userProfileService" method="removeMultiple" cssclasses="large-button"/>
+              <!--</container>-->
+            </commandgroup>
+            <commandgroup position="detail.primary">
+              <removecommand id="print"/>
+              <command id="save" service="userProfileService" method="save" cssclasses="large-button"/>
+              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-trash" position="+back" cssclasses="large-button"/>
+            </commandgroup>
+          </commandbars>
+
           <section orientation="horizontal">
             <header displacement="ontop" label="General" params="fieldset=true" />
             <field label="Name" attribute="name" requiredexpression="true"/>
@@ -134,29 +145,8 @@
           </tab>-->
           
           <event type="onschemafullyloaded" method="onSchemaLoad" service="userProfileService"/>
-        </schema>
+        </detail>
 
-        <schema id="newdetail" parentschema="detail" stereotype="detailnew" title="New Security Group" >
-
-        </schema>
-
-        <schema id="editdetail" parentschema="detail" title="Security Group Details">
-          <commandbars>
-            <commandgroup position="actions">
-              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-              <command icon="fa-clone" label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate" cssclasses="large-button"/>
-              <command icon="fa-users" label="Apply Users" tooltip="Apply the current profile to multiple user accounts at once" id="applymultiple" service="userProfileService" method="applyMultiple" cssclasses="large-button"/>
-              <command icon="fa-users" label="Remove Users" tooltip="Remove the current profile from multiple user accounts at once" id="removemultiple" service="userProfileService" method="removeMultiple" cssclasses="large-button"/>
-              <!--</container>-->
-            </commandgroup>
-            <commandgroup position="detail.primary">
-              <removecommand id="print"/>
-              <command id="save" service="userProfileService" method="save" cssclasses="large-button"/>
-              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-trash" position="+back" cssclasses="large-button"/>
-            </commandgroup>
-          </commandbars>
-        </schema>
-        
         <schema id="rolerepresentation" stereotype="list.selection">
           <field hidden="true" attribute="id"/>
           <field label="Name" attribute="name" />
