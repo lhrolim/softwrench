@@ -1598,7 +1598,7 @@
             <property key="list.click.schema" value="editdetail"/>
           </properties>
         </schema>
-        <schema id="adetail" stereotype="detail" abstract="true" title="Job Request">
+        <schema id="adetail" stereotype="detail" abstract="true" title="Real-Time Job Request">
           <section id="hiddenfields">
             <section id="statussection"/>
             <field attribute="classstructureid" label="Class Structure ID" hidden="true"/>
@@ -1701,13 +1701,13 @@
           </section>
         </schema>
         
-        <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Job Request">
+        <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Real-Time Job Request">
           <properties>
             <property key="nextschema.schemaid" value="editdetail"/>
           </properties>
         </schema>
         
-        <schema id="editdetail" parentschema="adetail" stereotype="detail" title="Job Request">
+        <schema id="editdetail" parentschema="adetail" stereotype="detail" title="Real-Time Job Request">
         </schema>
       </schemas>
     </application>
