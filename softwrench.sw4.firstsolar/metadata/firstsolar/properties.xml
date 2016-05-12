@@ -4,8 +4,8 @@
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
   <property key="wsprovider" value="mif" />
-  <property key="basewsURL" value="http://10.50.100.168:9080/meaweb/wsdl/" />
-  <property key="basewfURL" value="http://10.50.100.168:9080/meaweb/wf/" />
+  <property key="basewsURL" value="http://10.50.100.203:9080/meaweb/wsdl/" />
+  <property key="basewfURL" value="http://10.50.100.203:9080/meaweb/wf/" />
   <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=FS76DEV;User Id=MAXIMO;password=MAXIMO;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
@@ -45,13 +45,13 @@
   </environment>
 
   <environment key="qa">
-    <property key="basewsURL" value="http://10.50.100.168:9080/meaweb/wsdl/" />
+    <property key="basewsURL" value="http://10.50.100.203:9080/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=FS76DEV;User Id=MAXIMO;password=MAXIMO;" />
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_FS76DEV_QA;User Id=sw;password=softwrench;" />
   </environment>
 
   <environment key="prod">
-    <property key="basewsURL" value="http://10.50.100.168:9080/meaweb/wsdl/" />
+    <property key="basewsURL" value="http://10.50.100.203:9080/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=FS76MAX;User Id=MAXIMO;password=MAXIMO;" />
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_FS76MAX;User Id=sw;password=softwrench;" />
   </environment>
