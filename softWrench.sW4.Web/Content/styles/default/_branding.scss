@@ -4,6 +4,15 @@ $asset_path: "../../Images";
 
 .page-signin {
     background: $background_color url(#{$asset_path}/signin-lg.jpg) no-repeat center center fixed;
+
+    .form-signin {
+        .logo.main {
+            img {
+                height: 130px;
+                width: auto;
+            }
+        }
+    }
 }
 
 .page-overlay {
@@ -22,7 +31,6 @@ $asset_path: "../../Images";
         }
 
         .branding {
-            /*background: url(#{$asset_path}/branding.png) no-repeat top left;*/
         }
     }
 

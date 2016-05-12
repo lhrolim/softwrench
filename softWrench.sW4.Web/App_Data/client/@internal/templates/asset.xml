@@ -80,7 +80,7 @@
           <commandbars>
             <commandgroup position="actions">
 <!--              <container id="actioncontainer" icon="fa-bolt" label="Actions">-->
-                <command id="createWO" service="workorderService" method="openNewDetailModal"  label="Create Work Order" icon="fa-wrench"/>
+                <command id="createWO" service="workorderService" method="openNewDetailModal"  label="Create W.O." icon="fa-wrench" cssclasses="large-button"/>
 <!--              </container>-->
             </commandgroup>
           </commandbars>
@@ -152,7 +152,9 @@
             <section orientation="horizontal">
               <header displacement="ontop" label="Status" params="fieldset=true" />
               <renderer type="default" params="childinputsize=small" />
-              <field attribute="isrunning" label="Asset Up?" readonly="true"/>
+              <field attribute="isrunning" label="Asset Up?" enableexpression="false">
+                <renderer type="checkbox"/>
+              </field>
               <field attribute="assetstatus_.changedate" label="Status Date" readonly="true"/>
               <field attribute="totdowntime" label="Total Downtime" readonly="true"/>
             </section>

@@ -1565,7 +1565,7 @@
             <commandgroup position="actions">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
                 <command id="dispatchincident" icon="fa-warning" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD"
-                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident"/>
+                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident" cssclasses="large-button"/>
                 
                 <!--<command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>-->
@@ -1573,7 +1573,7 @@
                 <!-- Create new SR as Related Record -->
                 <command id="createrelated"
                          service="srService" method="startRelatedSRCreation" parameters="schema,datamap"
-                         label="Create Related Request" icon="fa-ticket" />
+                         label="Create Request" icon="fa-ticket" cssclasses="large-button"/>
 
               <!--</container>-->
             </commandgroup>
@@ -2903,11 +2903,9 @@
           <field attribute="description" label="Description">
             <renderer type="default"/>
           </field>
-          <optionfield attribute="selfservaccess" label="Self-Service">
-            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
-            <option label="Yes" value="1"/>
-            <option label="No" value="0"/>
-          </optionfield>
+          <field attribute="selfservaccess" label="Self-Service">
+            <renderer type="checkbox" params="filteronly=true;formatter=numberToBoolean"/>
+          </field>
           <field attribute="assetnum" label="Asset">
             <renderer type="default"/>
           </field>

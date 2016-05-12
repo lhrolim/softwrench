@@ -345,11 +345,9 @@
           <section>
             <header displacement="ontop" label="Vendow Info" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
-            <optionfield attribute="novendor" label="No Vendor?"  requiredexpression="true" >
-              <renderer type="radio"/>
-              <option label="No" value="FALSE"/>
-              <option label="Yes" value="TRUE"/>
-            </optionfield>
+            <field attribute="novendor" label="No Vendor?" requiredexpression="true" >
+              <renderer type="checkbox"/>
+            </field>
               <association label="Vendor" target="vendor" labelfield="companies_.company" enableexpression="@novendor=='FALSE'">
                 <renderer type="lookup"/>
               </association>

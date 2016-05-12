@@ -11,24 +11,31 @@
     .context {
         width: 100%;
         background: #eee;
-        border-bottom: #000 1px solid;
-        padding: 10px 40px 10px 0;
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        padding: 10px 40px 10px 5px;
 
         .large-button {
-            padding: 10px 0 !important;
+            padding: 5px 0 !important;
             height: 65px;
             width: 65px;
             text-align: center;
 
             .icon {
                 font-size: 24px;
-                margin-bottom: 8px;
+                margin-bottom: 5px;
             }
 
             .text {
                 display: block;
                 font-size: 10px;
                 text-transform: uppercase;
+                white-space: normal;
+                height: 28px;
+                width: 65px;
+                display: table-cell;
+                vertical-align: middle;
+                text-align: center;
 
                 .space {
                     display: none;
@@ -45,7 +52,7 @@
         }
 
         .search-options {
-            margin-top: 6px;
+            margin-top: 8px;
             float: left;
 
             &.btn-group.open button {
@@ -57,6 +64,7 @@
                 padding-left: 0;
                 padding-right: 0;
                 font-size: 12px;
+                height: 28px;
 
                 &:active {
                     box-shadow: none;
@@ -91,12 +99,9 @@
         .filter-option {
             margin-top: 5px;
             height: 30px;
-            overflow: hidden;
 
             .buttons {
                 margin: 0;
-                top: -3px;
-                position: relative;
 
                 button {
                     background: transparent;
@@ -196,6 +201,12 @@
         &.mobile .context .group.pagination a {
             padding: 8px 6px;
         }
+
+        &.detail {
+            .pagination {
+                margin-top: 18px;
+            }
+        }
     }
 }
 
@@ -246,29 +257,11 @@
                     margin-left: 5px;
                 }
             }
-
-            .actions {
-                .buttons {
-                    display: block;
-                }
-            }
         }
     }
 
     #crudbodyform .context .group:first-child {
         margin-left: 0;
-    }
-}
-
-@media all and (min-width: 1660px) {
-    .container {
-        .context {
-            .filter-option {
-                select {
-                    width: 300px;
-                }
-            }
-        }
     }
 }
 

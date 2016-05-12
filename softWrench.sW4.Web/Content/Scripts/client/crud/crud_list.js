@@ -541,6 +541,14 @@
                         return !$scope.selectionModel.showOnlySelected && "true" !== $scope.schema.properties["list.disablepagination"];
                     }
 
+                    $scope.shouldShowSearchOptions = function () {
+                        if (!$scope.schema.relatedCompositions) {
+                            return true;
+                        }
+
+                        return !$scope.schema.relatedCompositions.length > 0;
+                    }
+
                     $scope.noRecordsNewButtonLabel = function () {
                         var create = i18NService.get18nValue("_grid.filter.noresultWithNewCreate", "Create");
                         return create + " " + $scope.schema.applicationTitle;

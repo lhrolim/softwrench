@@ -42,6 +42,14 @@
     header {
         background: #0061cc url(../Images/header.jpg) no-repeat center left;
         background-size: cover;
+
+        .branding {
+            .logo {
+                img {
+                    height: auto;
+                }
+            }
+        }
     }
 
     footer {

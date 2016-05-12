@@ -51,6 +51,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\bering\images\branding.png" />
     <Content Include="web_content\bering\images\footer.jpg" />
     <Content Include="web_content\bering\images\header-email.jpg" />
     <EmbeddedResource Include="metadata\bering\deploy.xml">
