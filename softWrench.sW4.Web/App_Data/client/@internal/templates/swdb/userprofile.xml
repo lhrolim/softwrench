@@ -21,7 +21,7 @@
           <commandbars>
             <commandgroup position="actions">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command label="Refresh Cache" icon="fa-refresh" tooltip="Refresh any database changes into application" id="refresh cache" service="userProfileService" method="refreshCache"/>
+                <command label="Refresh Cache" icon="fa-refresh" tooltip="Refresh any database changes into application" id="refresh cache" service="userProfileService" method="refreshCache" cssclasses="large-button"/>
               <!--</container>-->
             </commandgroup>
             <commandgroup position="gridtop">
@@ -37,15 +37,15 @@
           <commandbars>
             <commandgroup position="actions">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command icon="fa-clone" label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate"/>
-                <command icon="fa-users" label="Apply to Users" tooltip="Apply the current profile to multiple user accounts at once" id="applymultiple" service="userProfileService" method="applyMultiple"/>
-                <command icon="fa-users" label="Remove from Users" tooltip="Remove the current profile from multiple user accounts at once" id="removemultiple" service="userProfileService" method="removeMultiple"/>
+              <command icon="fa-clone" label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate" cssclasses="large-button"/>
+              <command icon="fa-users" label="Apply Users" tooltip="Apply the current profile to multiple user accounts at once" id="applymultiple" service="userProfileService" method="applyMultiple" cssclasses="large-button"/>
+              <command icon="fa-users" label="Remove Users" tooltip="Remove the current profile from multiple user accounts at once" id="removemultiple" service="userProfileService" method="removeMultiple" cssclasses="large-button"/>
               <!--</container>-->
             </commandgroup>
             <commandgroup position="detail.primary">
               <removecommand id="print"/>
               <command id="save" service="userProfileService" method="save" cssclasses="large-button"/>
-              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-trash" position="+save" cssclasses="large-button"/>
+              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-trash" position="+back" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
 

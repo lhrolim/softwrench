@@ -94,8 +94,8 @@
         }
 
         .branding {
-            min-height: 100px;
-            padding: 20px 20px;
+            min-height: 90px;
+            padding: 15px 20px;
 
             .logo img {
                 max-width: 100%;
@@ -252,7 +252,7 @@
 
 @media all and (min-width: 330px) {
     .container header .branding .logo img {
-        width: 274px;
+       height: 60px;
     }
 }
 

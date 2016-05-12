@@ -74,10 +74,10 @@
           </properties>
           <commandbars>
             <commandgroup position="actions">
-              <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"
-                       service="labtransService" method="approveMultipleLabtrans"/>
-              <command id="deletelabor" icon="fa fa-trash" label="Delete Labor"
-                       service="labtransService" method="deleteMultipleLabtrans"/>
+              <command id="approvelabors" icon="fa fa-check-circle" label="Approve"
+                       service="labtransService" method="approveMultipleLabtrans" cssclasses="large-button"/>
+              <command id="deletelabor" icon="fa fa-trash" label="Delete"
+                       service="labtransService" method="deleteMultipleLabtrans" cssclasses="large-button"/>
             </commandgroup>
             <commandgroup position="multiselect.dropdown">
               <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"

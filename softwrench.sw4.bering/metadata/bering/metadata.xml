@@ -196,16 +196,12 @@
           <field label="Type" attribute="item_.itemtype">
             <renderer type="default" params="width=15%"/>
           </field>
-          <optionfield label="Rotating" attribute="item_.rotating">
-            <renderer type="combo" params="width=19%;filteronly=true;formatter=numberToBoolean"/>
-            <option label="Yes" value="1"/>
-            <option label="No" value="0"/>
-          </optionfield>
-          <optionfield label="Kit" attribute="item_.iskit">
-            <renderer type="combo" params="width=19%;filteronly=true;formatter=numberToBoolean"/>
-            <option value="1" label="Yes"/>
-            <option value="0" label="No"/>
-          </optionfield>
+          <field label="Rotating" attribute="item_.rotating">
+            <renderer type="checkbox" params="width=19%;filteronly=true;formatter=numberToBoolean"/>
+          </field>
+          <field label="Kit" attribute="item_.iskit">
+            <renderer type="checkbox" params="width=19%;filteronly=true;formatter=numberToBoolean"/>
+          </field>
         </schema>
       </schemas>
     </application>
@@ -220,7 +216,7 @@
           <commandbars>
             <commandgroup position="gridtop">
               <command id="create_issue" label="Issue" icon="fa-plus" service="inventoryService" method="createIssue" parameters="schema,datamap"
-                       successmessage="Issue created" position="&lt;filter" cssclasses="large-button"/>
+                       successmessage="Issue created" position="-print" cssclasses="large-button"/>
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
@@ -493,7 +489,7 @@
           <commandbars>
             <commandgroup position="gridtop">
               <command id="create_issue" label="Issue" icon="fa-plus" service="inventoryService" method="createIssue" parameters="schema,datamap"
-                       successmessage="Issue created" position="&lt;filter" cssclasses="large-button"/>
+                       successmessage="Issue created" position="-print" cssclasses="large-button"/>
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
           </commandbars>

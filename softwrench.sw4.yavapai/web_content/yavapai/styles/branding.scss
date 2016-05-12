@@ -7,6 +7,14 @@
     header {
         background: #34a7e0 url(../images/header.jpg) no-repeat top left;
         background-size: cover;
+
+        .branding {
+            .logo {
+                img {
+                    height: 100px;
+                }
+            }
+        }
     }
 
     footer {

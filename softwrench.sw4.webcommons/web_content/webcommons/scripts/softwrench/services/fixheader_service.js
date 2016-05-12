@@ -253,8 +253,8 @@ angular.module('sw_layout')
             //trigger resize to postition fixed header elements
             $timeout(function () {
                 log.debug('callWindowResize');
-                setHeaderPosition();
                 setHeaderColumnWidths();
+                setHeaderPosition();
             }, 0, false);
         }, 300),
 

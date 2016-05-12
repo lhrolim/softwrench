@@ -226,11 +226,11 @@
             <field attribute="itemnum" label="Item" readonly="true"/>
             <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
             <field attribute="rotassetnum" label="Rotating Asset" readonly="true"/>
-            <field attribute="item_.rotating" label="Rotating" readonly="true">
-              <renderer type="default" params="formatter=numberToBoolean"/>
+            <field attribute="item_.rotating" label="Rotating" enableexpression="false">
+              <renderer type="checkbox" params="formatter=numberToBoolean"/>
             </field>
-            <field attribute="item_.iskit" label="Kit" readonly="true">
-              <renderer type="default" params="formatter=numberToBoolean"/>
+            <field attribute="item_.iskit" label="Kit" enableexpression="false">
+              <renderer type="checkbox" params="formatter=numberToBoolean"/>
             </field>
             <field attribute="binnum" label="Bin" readonly="true"/>
             <field attribute="lotnum" label="Lot" readonly="true"/>

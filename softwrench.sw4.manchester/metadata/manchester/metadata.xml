@@ -392,8 +392,8 @@
           <commandbars>
             <commandgroup position="actions">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command id ="dispatchwo" icon="fa-wrench" label="Create Work Order"
-                          parameters="schema,datamap" service="dispatchService" method="dispatchWO"/>
+                <command id ="dispatchwo" icon="fa-wrench" label="Create W.O."
+                          parameters="schema,datamap" service="dispatchService" method="dispatchWO" cssclasses="large-button"/>
               <!--</container>-->
             </commandgroup>
             <commandgroup position="detailform">

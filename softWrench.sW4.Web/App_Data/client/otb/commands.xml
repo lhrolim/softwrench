@@ -14,7 +14,8 @@
   <commandgroup position="detail.primary" platform="web">
     <!--<command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />-->
     <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave" cssclasses="large-button"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" cssclasses="large-button"/>
+    <command id="back" icon="fa-arrow-left" service="$scope" method="cancel" label="Back" showexpression="$scope:shouldshowback" cssclasses="large-button"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" showexpression="$scope:shouldshowcancel" cssclasses="large-button"/>
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint" cssclasses="large-button"/>
   </commandgroup>
 
@@ -123,9 +124,9 @@
   </commandgroup>
 
   <commandgroup position="compositiontop" platform="web">
-    <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />
-    <command icon="fa-plus" label="Expand All" id="expandall" service="$scope" method="expandAll" showexpression="$scope:showExpansionCommands"/>
-    <command icon="fa-minus" label="Collapse All" id="collapseall" service="$scope" method="collapseAll" showexpression="$scope:showExpansionCommands"/>
+    <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" cssclasses="btn-primary"/>
+    <command icon="fa-plus" label="Expand All" id="expandall" service="$scope" method="expandAll" showexpression="$scope:showExpansionCommands" cssclasses="btn-primary"/>
+    <command icon="fa-minus" label="Collapse All" id="collapseall" service="$scope" method="collapseAll" showexpression="$scope:showExpansionCommands" cssclasses="btn-primary"/>
   </commandgroup>
 
 

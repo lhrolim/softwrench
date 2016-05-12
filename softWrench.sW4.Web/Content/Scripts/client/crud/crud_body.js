@@ -110,7 +110,15 @@
             compositionService, attachmentService, sidePanelService) {
 
                 this.shouldshowprint = function () {
-                    return $scope.schema.schemaId != 'newdetail';
+                    return $scope.schema.stereotypeAttr != 'detailnew';
+                }
+
+                this.shouldshowback = function () {
+                    return $scope.schema.stereotypeAttr != 'detailnew';
+                }
+
+                this.shouldshowcancel = function () {
+                    return $scope.schema.stereotypeAttr == 'detailnew';
                 }
 
                 $(document).on("sw_autocompleteselected", function (event, key) {

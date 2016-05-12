@@ -1,5 +1,9 @@
 #crudbodyform {
     margin-bottom: 20px;
+
+    .form-actions {
+        min-height: initial;
+    }
 }
 
 fieldset.form-group {

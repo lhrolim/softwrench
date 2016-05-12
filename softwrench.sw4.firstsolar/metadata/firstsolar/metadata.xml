@@ -402,9 +402,9 @@
           <commandbars>
             <commandgroup position="actions">
 <!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command id="Create" icon="fa-wrench" label="Create Work Orders"
+                <command id="Create" icon="fa-wrench" label="Create W.O."
                          service="locationService" method="initBatchWorkorder"
-                         parameters="schema,datamap" />
+                         parameters="schema,datamap" cssclasses="large-button"/>
 <!--              </container>-->
             </commandgroup>
           </commandbars>
@@ -518,9 +518,9 @@
           <commandbars>
             <commandgroup position="actions">
 <!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command id="Create" icon="fa-wrench" label="Create Work Orders"
+                <command id="Create" icon="fa-wrench" label="Create W.O."
                          service="assetService" method="initBatchWorkorder"
-                         parameters="schema,datamap" />
+                         parameters="schema,datamap" cssclasses="large-button"/>
 <!--              </container>-->
             </commandgroup>
           </commandbars>
