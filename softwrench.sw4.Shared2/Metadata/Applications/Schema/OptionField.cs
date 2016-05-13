@@ -34,7 +34,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             OptionFieldRenderer renderer, FieldFilter filter, List<IAssociationOption> options, string defaultValue, bool sort, string showExpression,
             string toolTip, string attributeToServer, ISet<ApplicationEvent> events, string providerAttribute, string dependantFields, string enableExpression, 
             string evalExpression, string extraParameter, string defaultExpression, string searchOperation)
-            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, defaultExpression, false, searchOperation) {
+            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, null, toolTip, attributeToServer, events, enableExpression, defaultExpression, false, searchOperation) {
             _renderer = renderer;
             _filter = filter;
             _options = options;

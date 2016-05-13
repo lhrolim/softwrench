@@ -125,6 +125,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var isHidden = field.Attribute(XmlMetadataSchema.FieldAttributeHidden).ValueOrDefault(false);
             var showExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
             var toolTip = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
+            var helpIcon = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableHelpIconAttribute).ValueOrDefault((string)null);
             var defaultValue = field.Attribute(XmlMetadataSchema.FieldAttributeDefaultValue).ValueOrDefault((string)null);
             var defaultExpression = field.Attribute(XmlMetadataSchema.FieldAttributeDefaultExpression).ValueOrDefault((string)null);
             var renderer = ParseRendererNew(field.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement),
@@ -146,7 +147,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var datatype = ParseDataType(entityMetadata, attribute);
 
             var fieldObj = new ApplicationFieldDefinition(applicationName, attribute, datatype, label, requiredExpression, isReadOnly, isHidden, renderer,
-                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault,
+                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, helpIcon, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault,
                 defaultExpression, declaredAsQueryOnEntity, searchOperation);
 
             AddPrimaryAttribute(fieldObj, entityMetadata);
@@ -294,8 +295,9 @@ namespace softWrench.sW4.Metadata.Parsing {
                     var parameters = xElement.Attribute(XmlMetadataSchema.ApplicationHeaderParametersAttribute).ValueOrDefault((string)null);
                     var displacement = xElement.Attribute(XmlMetadataSchema.ApplicationHeaderDisplacementAttribute).ValueOrDefault((string)null);
                     var showExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
-
-                    return new ApplicationHeader(label, parameters, displacement, showExpression);
+                    var toolTip = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
+                    var helpIcon = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableHelpIconAttribute).ValueOrDefault((string)null);
+                    return new ApplicationHeader(label, parameters, displacement, showExpression, helpIcon, toolTip);
                 }
             }
             return null;
@@ -366,6 +368,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var labelData = new ApplicationAssociationDefinition.LabelData(label, labelPattern, labelField, applicationName);
             var showExpression = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
             var enableExpression = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute).ValueOrDefault("true");
+            var helpIcon = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableHelpIconAttribute).ValueOrDefault((string)null);
             var tooltip = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
             var extraProjectionFields = association.Attribute(XmlMetadataSchema.ApplicationAssociationExtraProjectionFieldsAttribute).ValueOrDefault((string)null);
             var qualifier = association.Attribute(XmlMetadataSchema.FieldAttributeQualifier).ValueOrDefault((string)null);
@@ -375,7 +378,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var valueField = association.Attribute(XmlMetadataSchema.ApplicationAssociationValueField).ValueOrDefault((string)null);
             ApplicationSection section = ParseAssociationDetails(association, schemaId, applicationName, entityMetadata);
 
-            return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(applicationName, schemaId, association, target), showExpression, tooltip,
+            return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(applicationName, schemaId, association, target), showExpression, helpIcon, tooltip,
                 requiredExpression, ParseEvents(association), defaultValue, hideDescription, orderbyfield, defaultExpression, extraProjectionFields, enableExpression, forceDistinctOptions, valueField, section);
         }
 

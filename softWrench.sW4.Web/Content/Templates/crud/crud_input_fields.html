@@ -6,6 +6,7 @@
                   ng-show="!isFieldHidden(schema,fieldMetadata)"
                   rel="input-form-repeat"
                   bodyrendered>
+            
             <label class="control-label"
                    rel="{{showLabelTooltip(fieldMetadata)}}"
                    data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
@@ -13,14 +14,19 @@
                    ng-style="getLabelStyle(fieldMetadata)"
                    ng-class="getLabelClass(fieldMetadata)">
                 <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
+                <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
                 <!--this will bring either label or header in case of section-->
-                {{i18NInputLabel(fieldMetadata)}}
+                {{i18NInputLabel(fieldMetadata)}} 
+                <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
             </label>
+           
             <legend ng-if="isLabelVisible(fieldMetadata,true)"
                     rel="tooltip"
                     data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
                     class="legend-label">
+                <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
                 {{i18NInputLabel(fieldMetadata)}}
+                <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
             </legend>
 
             <!--Read only section-->
@@ -118,8 +124,8 @@
             <div ng-if="!fieldMetadata.isReadOnly"
                  ng-show="fieldMetadata.attribute!=schema.idFieldName"
                  ng-switch on="fieldMetadata.rendererType"
-                 ng-class="getInputClass(fieldMetadata)">
-            
+                 ng-class="getInputClass(fieldMetadata)">                
+
                 <div ng-switch-when="combo" class="sw-combobox-container">
 
                     <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">

@@ -47,7 +47,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
         public ApplicationCompositionDefinition(string @from, string relationship, string label, ApplicationCompositionSchema schema, string showExpression, string toolTip, bool hidden, bool printEnabled, ApplicationHeader header)
-            : base(from, label, showExpression, toolTip) {
+            : base(from, label, showExpression, toolTip, null) {
             if (relationship == null) throw new ArgumentNullException("relationship");
             _relationship = relationship;
             _schema = schema;
