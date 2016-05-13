@@ -118,7 +118,7 @@
                 //TODO: review this decision here it might not be suitable for all the scenarios
                 crudContextHolderService.modalLoaded(datamapToUse,schema);
 
-                associationService.loadSchemaAssociations(datamapToUse, schema).then(function () {
+                associationService.loadSchemaAssociations(datamapToUse, schema,{contextData: new ContextData("#modal")}).then(function () {
                     if (modaldata.onloadfn) {
                         modaldata.onloadfn($scope);
                     }

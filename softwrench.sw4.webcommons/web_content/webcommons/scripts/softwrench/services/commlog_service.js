@@ -29,13 +29,11 @@
 
             var parentIdFieldName = parentSchema.idFieldName;
             var parentData = parameters.parentdata["fields"];
-            var templateId = parameters.fields['#templateid'];
+            let templateId = parameters.fields['#templateid'];
 
             if (templateId == null) {
                 return;
             }
-
-
 
             var httpParameters = {
                 templateId: templateId,

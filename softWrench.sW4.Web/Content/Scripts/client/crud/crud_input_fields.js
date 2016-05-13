@@ -111,7 +111,6 @@
                 outerassociationdescription: '=',
                 issection: '@',
                 ismodal: '@',
-                panelid: '='
             },
 
             link: function (scope, element, attrs) {
@@ -177,6 +176,11 @@
                         $scope.blockedassociations[association] = null;
                     });
 
+                    $scope.getPanelId = function () {
+                        //TODO: pass whole panelid
+                        return $scope.ismodal === "true" ? "#modal" : null;
+                    }
+
                     $scope.getCheckboxOptions = function (fieldMetadata) {
                         if (fieldMetadata.providerAttribute == null) {
                             return fieldMetadata.options;
@@ -207,6 +211,7 @@
 //                            });
 //                        }
 //                    });
+
 
                     //this will get called when the input form is done rendering
                     $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
@@ -661,19 +666,19 @@
             }
         }
     })
-    .directive('selectCombo', function () {
-        return {
-            restrict: 'A',
-            link: function (scope, element, attr) {
-                $(element).on('click', 'input', function (e) {
-                    //console.log('click');
-                    $(element).find('[data-dropdown="dropdown"]').click();
-                    //return false;
-                    //e.stopPropagation();
-                });
+.directive('selectCombo', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            $(element).on('click', 'input', function (e) {
+                //console.log('click');
+                $(element).find('[data-dropdown="dropdown"]').click();
+                //return false;
+                //e.stopPropagation();
+            });
 
-            }
-        };
-    });
+        }
+    };
+});
 
 })(app, angular);

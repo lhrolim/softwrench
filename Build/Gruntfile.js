@@ -35,7 +35,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    "<%= app.dist %>/scripts/app.js": "<%= concat.appScripts.dest %>"
+                    "<%= app.tmp %>/scripts/app.es6.js": "<%= concat.appScripts.dest %>"
                 }
             }
         },
@@ -320,7 +320,7 @@ module.exports = function (grunt) {
 
             app: {
                 files: [{
-                    src: ["<%= concat.appScripts.dest %>"],
+                    src: ["<%= app.tmp %>/scripts/app.es6.js"],
                     dest: "<%= app.dist %>/scripts/app.js"
                 }]
             }
@@ -403,7 +403,7 @@ module.exports = function (grunt) {
         "uglify:customVendors",
         "babel",// uses babeljs to convert brandnew ES6 javascript into ES5 allowing for old browsers
         "uglify:app" // minify app script and distribute as 'scripts/app.js'
-//        "clean:vendor", "clean:tmp" // clean temporary folders 
+        // "clean:vendor", "clean:tmp" // clean temporary folders 
     ];
     if (!skipTest) {
         defaultTasks.push("karma:target");  // run tests on minified scripts

@@ -53,6 +53,8 @@
     <Content Include="web_content\webcommons\scripts\softwrench\components\richtext.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\dto\ContextData.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\dto\OpttionsLoadSchema.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\globalsearch\globalsearch_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\asset_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_shared.js" />

@@ -7,7 +7,9 @@
             </div>
             <div class="scroll">
                 <div class="modal-body" ng-show="modalshown">
-                    <crud-body cancelfn="cancel()"
+                    <crud-body
+                               panelid="'#modal'"
+                               cancelfn="cancel()"
                                ismodal="true"
                                schema="schema"
                                datamap="datamap"

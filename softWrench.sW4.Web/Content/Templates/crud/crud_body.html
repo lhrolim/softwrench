@@ -72,7 +72,9 @@
                 <div class="tab-pane" ng-class="{'active': hasAnyFieldOnMainTab(schema)}" id="{{getMainTabId()}}">
                     <ng-switch on="schema.mode.equalsAny('input', 'none') ">
                         <div ng-switch-when="true">
-                            <crud-input-wrapper ismodal="{{ismodal}}"
+                            <crud-input-wrapper
+                                                panelid="{{panelid}}"
+                                                ismodal="{{ismodal}}"
                                                 extraparameters="extraparameters"
                                                 elementid="crudInputMainComposition"
                                                 schema="schema" datamap="datamap.fields"

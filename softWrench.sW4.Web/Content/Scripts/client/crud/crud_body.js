@@ -91,6 +91,7 @@
                 searchData: '=',
                 searchOperator: '=',
                 searchSort: '=',
+                panelid: "@",
                 ismodal: '@',
                 checked: '=',
                 timestamp: '=',

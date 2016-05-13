@@ -794,7 +794,7 @@ if (typeof (window.debounce !== "function") && (!window._ || typeof (window._.de
      * @param Boolean immediate 
      * @returns debounced function 
      */
-    function debounce(func, wait, immediate) {
+    window.debounce = function debounce(func, wait, immediate) {
         var timeout;
         return function () {
             var context = this, args = arguments;
@@ -828,7 +828,7 @@ if (typeof (window.throttle !== "function") && (!window._ || typeof (window._.th
      * @param {} options
      * @returns Function throttle function 
      */
-    function throttle(func, wait, options) {
+    window.throttle = function throttle(func, wait, options) {
         var context, args, result;
         var timeout = null;
         var previous = 0;
@@ -859,23 +859,23 @@ if (typeof (window.throttle !== "function") && (!window._ || typeof (window._.th
             return result;
         };
     }
+}
 
-    // returns the value of the given parameter name from the current url
-    function getUrlParameter(sParam) {
-        var sPageUrl = decodeURIComponent(window.location.search.substring(1));
-        var sUrlVariables = sPageUrl.split("&");
-        var sParameterName;
+// returns the value of the given parameter name from the current url
+window.getUrlParameter = function getUrlParameter(sParam) {
+    var sPageUrl = decodeURIComponent(window.location.search.substring(1));
+    var sUrlVariables = sPageUrl.split("&");
+    var sParameterName;
 
-        for (var i = 0; i < sUrlVariables.length; i++) {
-            sParameterName = sUrlVariables[i].split("=");
+    for (var i = 0; i < sUrlVariables.length; i++) {
+        sParameterName = sUrlVariables[i].split("=");
 
-            if (sParameterName[0] === sParam) {
-                return sParameterName[1] === undefined ? true : sParameterName[1];
-            }
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
         }
-
-        return null;
     }
+
+    return null;
 }
 
 if (typeof (Object.values !== "function")) {

@@ -524,7 +524,7 @@
                 return $timeout(function () {
                     //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, 
                     //and so the listeners
-                    crudContextHolderService.markAssociationsResolved();
+                    crudContextHolderService.markAssociationsResolved(contextData !=null ? contextData.panelId : null);
                     contextService.insertIntoContext("associationsresolved", true, true);
                 }, 100, false);
             }

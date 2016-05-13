@@ -192,7 +192,13 @@
                 return scope.jelement.typeahead("val");
             }
 
-            scope.$on("sw_associationsresolved", function (event) {
+            scope.$on("sw_associationsresolved", function (event, panelid) {
+                if (panelid != scope.panelid) {
+                    //keep != to avoid errors
+                    log.debug("ignoring event sw_associationsresolved for panelid {0} since we are on {1}".format(panelid, scope.panelid));
+                    return;
+                }
+
                 setInitialText(element, scope);
             });
 
@@ -220,6 +226,7 @@
                 schema: '=',
                 datamap: '=',
                 fieldMetadata: "=",
+                panelid: '@',
                 //the 
                 attribute: '=',
                 provider: '=',
@@ -231,6 +238,7 @@
 
                 hideDescription: '@',
                 mode: '@',
+                
 
                 //min number of characters to start searching. Depending on the size of the dataset might be wise to put a higher number here.
                 minLength: '@',

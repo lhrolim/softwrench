@@ -273,16 +273,17 @@
                     <input type="text" class="hidden-phone form-control typeahead" data-association-key="{{fieldMetadata.associationKey}}" data-target="{{fieldMetadata.attribute}}" />
                     <input type="hidden" id="{{'autocomplete_' + fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.target]" />
                 </div>
-            
-                <div ng-if="fieldMetadata.rendererType == 'lookup' ||  fieldMetadata.rendererType == 'modal'">
-                    <lookup-input datamap="datamap"
-                                  field-metadata="fieldMetadata"
-                                  schema="schema"
-                                  disabledassociations="disabledassociations"
-                                  blockedassociations="blockedassociations"
-                                  displayablepath="{{ getApplicationPath(fieldMetadata) }}"
-                                  />
-                </div>
+
+            <div ng-if="fieldMetadata.rendererType == 'lookup' ||  fieldMetadata.rendererType == 'modal'">
+                <lookup-input
+                    panelid="{{getPanelId()}}"
+                    datamap="datamap"
+                    field-metadata="fieldMetadata"
+                    schema="schema"
+                    disabledassociations="disabledassociations"
+                    blockedassociations="blockedassociations"
+                    displayablepath="{{ getApplicationPath(fieldMetadata) }}"/>
+            </div>
 
 
 

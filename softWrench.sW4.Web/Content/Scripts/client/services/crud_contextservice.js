@@ -431,7 +431,7 @@
 
         function markAssociationsResolved(panelid) {
             getContext(panelid).associationsResolved = true;
-            $rootScope.$broadcast("sw_associationsresolved");
+            $rootScope.$broadcast("sw_associationsresolved", panelid);
         }
 
         function associationsResolved(panelid) {
