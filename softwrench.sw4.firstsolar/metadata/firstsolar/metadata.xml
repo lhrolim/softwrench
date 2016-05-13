@@ -329,7 +329,7 @@
             <option label="KBSA"  value="KBSA1"/>
             <option label="KBSB"  value="KBSB1"/>
             <option label="KNS1"  value="KNS11"/>
-            <option label="KSS11"  value="KSS11"/>
+            <option label="KSS1"  value="KSS11"/>
             <option label="LHS1"  value="LHS11"/>
             <option label="LMS1"  value="LMS01"/>
             <option label="MAN1"  value="MAN11"/>
@@ -451,7 +451,7 @@
             <option label="KBSA"  value="KBSA1"/>
             <option label="KBSB"  value="KBSB1"/>
             <option label="KNS1"  value="KNS11"/>
-            <option label="KNS1"  value="KSS11"/>
+            <option label="KSS1"  value="KSS11"/>
             <option label="LHS1"  value="LHS11"/>
             <option label="LMS1"  value="LMS01"/>
             <option label="MAN1"  value="MAN11"/>
@@ -570,7 +570,7 @@
             <option label="KBSA"  value="KBSA1"/>
             <option label="KBSB"  value="KBSB1"/>
             <option label="KNS1"  value="KNS11"/>
-            <option label="KNS1"  value="KSS11"/>
+            <option label="KSS1"  value="KSS11"/>
             <option label="LHS1"  value="LHS11"/>
             <option label="LMS1"  value="LMS01"/>
             <option label="MAN1"  value="MAN11"/>
