@@ -32,6 +32,7 @@
           <field label="Name" attribute="name" />
           <field label="Description" attribute="description" />
         </list>
+        
         <detail>
 
           <commandbars>
@@ -45,10 +46,13 @@
             <commandgroup position="detail.primary">
               <removecommand id="print"/>
               <command id="save" service="userProfileService" method="save" cssclasses="large-button"/>
-              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-trash" position="+back" cssclasses="large-button"/>
+              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-trash" position="+back" cssclasses="large-button" 
+                       showexpression="!!@id &amp;&amp; !!@deletable" enableexpression="!!@id &amp;&amp; !!@deletable"/>
             </commandgroup>
           </commandbars>
 
+          <field attribute="deletable" hidden="true" default="1" />
+          
           <section orientation="horizontal">
             <header displacement="ontop" label="General" params="fieldset=true" />
             <field label="Name" attribute="name" requiredexpression="true"/>

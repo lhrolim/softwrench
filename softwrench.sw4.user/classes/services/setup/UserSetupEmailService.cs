@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Net.Cache;
-using System.Security.Policy;
+using System.Linq;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
@@ -17,6 +17,8 @@ namespace softwrench.sw4.user.classes.services.setup {
 
     public class UserSetupEmailService : ISingletonComponent {
 
+        private const string NoReplySendFrom = "noreply@controltechnologysolutions.com";
+
         private readonly IEmailService _emailService;
 
         private Template _template;
@@ -29,6 +31,7 @@ namespace softwrench.sw4.user.classes.services.setup {
         private readonly string _automaticTemplatePath;
         private readonly string _manualTemplatePath;
         private readonly string _forgotPasswordTemplatePath;
+        private readonly string _newUserRegistrationApprovalRequestTemplatePath;
         private string _headerImageUrl;
 
         public UserSetupEmailService(IEmailService emailService, RedirectService redirectService, UserLinkManager linkManager, IApplicationConfiguration appConfig) {
@@ -40,6 +43,7 @@ namespace softwrench.sw4.user.classes.services.setup {
             _automaticTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//welcomeemail_automaticpassword.html";
             _manualTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//welcomeemail_manualpassword.html";
             _forgotPasswordTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//forgotpassword.html";
+            _newUserRegistrationApprovalRequestTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//newuserapproval.html";
 
             HandleHeaderImage();
         }
@@ -58,7 +62,7 @@ namespace softwrench.sw4.user.classes.services.setup {
             }
         }
 
-        public void SendActivationEmail(User user, string email,string openPassword=null) {
+        public void SendActivationEmail(User user, string email, string openPassword = null) {
             Validate.NotNull(email, "email");
             Validate.NotNull(user, "user");
             var automaticMode = openPassword == null;
@@ -86,7 +90,7 @@ namespace softwrench.sw4.user.classes.services.setup {
                         password = openPassword
                     }));
 
-            var emailData = new EmailData("noreply@controltechnologysolutions.com", email, "[softWrench] Welcome to softWrench", msg);
+            var emailData = new EmailData(NoReplySendFrom, email, "[softWrench] Welcome to softWrench", msg);
             _emailService.SendEmail(emailData);
 
         }
@@ -112,9 +116,63 @@ namespace softwrench.sw4.user.classes.services.setup {
                         password = user.Password
                     }));
 
-            var emailData = new EmailData("noreply@controltechnologysolutions.com", email, "[softWrench] Change Password Instructions", msg);
+            var emailData = new EmailData(NoReplySendFrom, email, "[softWrench] Change Password Instructions", msg);
             _emailService.SendEmail(emailData);
-
         }
+
+        /// <summary>
+        /// Will send an email to all `approverEmails` with instructions on how to activate the user.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="firstname"></param>
+        /// <param name="lastname"></param>
+        /// <param name="approverEmails"></param>
+        public void NewUserApprovalRequestEmail(string username, string firstname, string lastname, IEnumerable<string> approverEmails) {
+            Validate.NotEmpty(username, "username");
+            Validate.NotEmpty(firstname, "firstname");
+            Validate.NotEmpty(lastname, "lastname");
+
+            var approverEmailsList = approverEmails.ToList();
+            Validate.NotEmpty(approverEmailsList, "approverEmails");
+
+            var sendTo =  approverEmailsList.Count == 1 
+                ? approverEmailsList.First() 
+                : approverEmailsList.Aggregate("", (concat, current) => concat + "," + current);
+
+            var templateContent = File.ReadAllText(_newUserRegistrationApprovalRequestTemplatePath);
+            var template = Template.Parse(templateContent);
+
+            var message = template.Render(Hash.FromAnonymousObject(new {
+                headerurl = _redirectService.GetRootUrl() + _headerImageUrl,
+                systemurl = _redirectService.GetRootUrl(),
+                firstname,
+                lastname,
+                username
+            }));
+
+            var emailData = new EmailData(NoReplySendFrom, sendTo, "[softWrench] User Creation Awaiting Approval", message);
+            _emailService.SendEmail(emailData);
+        }
+
+        /// <summary>
+        /// Sends an email with a generic message.
+        /// </summary>
+        /// <param name="userEmail"></param>
+        /// <param name="subject"></param>
+        /// <param name="message"></param>
+        /// <param name="fireAndForget">whether or not to send the email in a fire-and-forget way. Defaults to <code>false</code></param>
+        public void GenericMessageEmail(string userEmail, string subject, string message, bool fireAndForget = false) {
+            Validate.NotEmpty(userEmail, "userEmail");
+            Validate.NotEmpty(subject, "subject");
+            Validate.NotEmpty(message, "message");
+
+            var mail = new EmailData(NoReplySendFrom, userEmail, subject, message);
+            if (fireAndForget) {
+                _emailService.SendEmailAsync(mail);
+            } else {
+                _emailService.SendEmail(mail);
+            }
+        }
+
     }
 }

@@ -342,6 +342,7 @@
     <Compile Include="Models\Report\ReportModel.cs" />
     <Compile Include="Models\USerSetup.cs" />
     <Compile Include="Models\UserSetup\DefinePasswordModel.cs" />
+    <Compile Include="Models\UserSetup\UserSetupError.cs" />
     <Compile Include="Security\ContextLookuper.cs" />
     <Compile Include="SPF\Filters\CompressionFilter.cs" />
     <Compile Include="SPF\Filters\MvcContextFilter.cs" />
@@ -840,6 +841,7 @@
     <Content Include="Content\styles\default\_pagination.scss" />
     <None Include="Content\styles\default\_treeview.scss" />
     <Content Include="Content\Templates\downloadattachment.html" />
+    <Content Include="Content\Templates\usersetup\newuserapproval.html" />
     <Content Include="Content\Templates\usersetup\userstatistics.html" />
     <Content Include="Content\Templates\usersetup\forgotpassword.html" />
     <Content Include="Content\Templates\usersetup\welcomeemail_manualpassword.html" />
@@ -944,6 +946,7 @@
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\UserSetup\DefinePassword.cshtml" />
     <Content Include="Views\Shared\_NoMenuLayout.cshtml" />
+    <Content Include="Views\UserSetup\SecurityException.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />

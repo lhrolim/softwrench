@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence.Util;
 using cts.commons.web.Formatting;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NHibernate.Linq.Visitors;
 using NHibernate.Mapping.Attributes;
 using softwrench.sw4.user.classes.entities.security;
 
@@ -27,7 +25,7 @@ namespace softwrench.sw4.user.classes.entities {
         }
 
         [Property(Column = "deletable", TypeType = typeof(BooleanToIntUserType))]
-        public virtual Boolean Deletable {
+        public virtual bool Deletable {
             get; set;
         }
 

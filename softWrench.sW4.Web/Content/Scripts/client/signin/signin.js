@@ -4,6 +4,8 @@
 $(document).ready(function () {
     $("#userTimezoneOffset").val(new Date().getTimezoneOffset());
     sessionStorage['ctx_loggedin'] = false;
+    
+    $(".no-touch [rel=tooltip]").tooltip({ container: "body", trigger: "hover" });
 
     $('#btnLogin').click(function () {
         var username = $('#userName');

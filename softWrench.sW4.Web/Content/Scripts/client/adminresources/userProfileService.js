@@ -673,6 +673,7 @@
                 name: dm["name"],
                 description: dm["description"],
                 applicationPermissions: appPermissions,
+                deletable: dm["deletable"] === true || dm["deletable"] === "1" || dm["deletable"] === "true",
                 roles: selectedRoles
             }
 

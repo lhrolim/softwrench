@@ -1,0 +1,26 @@
+﻿<html>
+<head>
+    <title>User Registration Approval</title>
+</head>
+<body style="width:600px;margin:0 auto;padding:20px;font: normal 14px/24px Arial, Helvetica, sans-serif;">
+    <img width="600" height="150" src="{{headerurl}}" alt=""/>
+    <br/>
+    <p>The User {{firstname}} {{lastname}} has just been registered and requires activation.</p>
+    <p>Please follow these steps in order to complete the user's activation:</p>
+    <br/>
+    <ol>
+        <li>Log in to <a href="{{systemurl}}">softWrench</a></li>
+        <li>Go to Options > Admin > Security > Users</li>
+        <li>Select the user with username {{username}}</li>
+        <li>
+            <ul>
+                <li>Set the user's 'Org ID'</li>
+                <li>Set the user's 'Site ID'</li>
+                <li>Assign the user to a Security Group</li>
+                <li>Check the Active (softWrench) box</li>
+            </ul>
+        </li>
+        <li>Click on 'Send Activation Email'</li> 
+    </ol>
+</body>
+</html>

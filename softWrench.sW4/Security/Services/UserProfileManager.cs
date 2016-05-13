@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using cts.commons.persistence;
@@ -137,6 +138,9 @@ namespace softWrench.sW4.Security.Services {
                     var profile = FindById(profileId);
                     if (profile == null) {
                         return;
+                    }
+                    if (!profile.Deletable) {
+                        throw new InvalidOperationException(string.Format("The userprofile '{0}' is not deletable.", profile.Name));
                     }
                     _dao.DeleteCollection(profile.ApplicationPermissions);
                     _dao.ExecuteSql("delete from sw_user_userprofile where profile_id = {0}".Fmt(profile.Id));

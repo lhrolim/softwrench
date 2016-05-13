@@ -21,6 +21,8 @@ namespace softwrench.sw4.user.classes.entities {
 
         public const string UserHaving = "from User where lower(MaximoPersonId) = lower(?)";
 
+        public const string UserByProfile = "select u from User u inner join u.Profiles p where lower(p.Name) = lower(?)";
+
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public int? Id

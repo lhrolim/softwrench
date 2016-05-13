@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities.SyncManagers;
@@ -15,7 +14,6 @@ using softWrench.sW4.AUTH;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Util;
-using Person = softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities.Person;
 
 namespace softWrench.sW4.Security.Services {
     public class UserManager : ISingletonComponent {
@@ -70,8 +68,9 @@ namespace softWrench.sW4.Security.Services {
             return savedUser;
         }
 
-        public void DefineUserPassword(User user, string password) {
+        public void ActivateAndDefinePassword(User user, string password) {
             user.Password = AuthUtils.GetSha1HashData(password);
+            user.IsActive = true;
             var savedUser = DAO.Save(user);
             //TODO: wipeout link
             _userLinkManager.DeleteLink(savedUser);

@@ -46,16 +46,15 @@
                 email: email
             }
 
-            restService.postPromise("UserSetupWebApi", "SendActivationEmail", params).then(function () {
-                alertService.success("An email has been sent with instructions to reset the password");
-            }).catch(function(data) {
-                alertService.error(data.data.errorMessage);
-            });
+            restService.postPromise("UserSetupWebApi", "SendActivationEmail", params)
+                .then(function() {
+                    alertService.notifymessage("success", "An email has been sent with instructions to reset the password", "Email Sent");
+                });
         }
     }
 
-    angular.module('sw_layout')
-        .controller('UserStatisticsController', ['$scope', "restService", "alertService", "formatService", userStatisticsController]);
+    angular.module("sw_layout")
+        .controller("UserStatisticsController", ["$scope", "restService", "alertService", "formatService", userStatisticsController]);
 
 })(angular);
 

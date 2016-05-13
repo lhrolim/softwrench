@@ -151,16 +151,136 @@
                             @if (@Model.ClientName != "demo") {
                                 <div class="buttons submit-button col-sm-offset-3 col-sm-6">
                                     <button class="btn col-xs-4 col-sm-5" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
-                                    <a class="btn forgot-password col-xs-4 col-sm-5" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
+                                    <div class="col-xs-4 col-sm-5">
+                                        <a class="btn forgot-password" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
+                                        <br/>
+                                        <a class="btn forgot-password"
+                                           data-toggle="modal" data-target="#newUserRegistrationModal">
+                                            New User Registration
+                                        </a>
+                                    </div>
                                 </div>
                             }
                             @if (@Model.ClientName == "demo") {
                                 <div class="row buttons submit-button">
                                     <button class="btn col-xs-4 col-sm-2" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
-                                    <a class="btn forgot-password col-xs-4 col-sm-2" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
+                                    <div class="col-xs-4 col-sm-2">
+                                        <a class="btn forgot-password" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
+                                        <br/>
+                                        <a class="btn forgot-password"
+                                           data-toggle="modal" data-target="#newUserRegistrationModal">
+                                            New User Registration
+                                        </a>
+                                    </div>
                                 </div>
                             }
                             </form>
+
+                        <!-- #region New User Registration Modal -->
+                        <div id="newUserRegistrationModal" 
+                             class="modal fade new-user-registration-modal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">New User Registration</h4>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <form name="registration.form" novalidate>
+                                            <fieldset class="form-group">
+                                                <span class="requiredfieldmark">*</span>&nbsp;
+                                                <label class="control-label">First Name</label>
+                                                <span class="requiredfieldmark" ng-if="registration.form.firstname.$touched && registration.form.firstname.$invalid">
+                                                    First Name is required
+                                                </span>
+                                                <input name="firstname" ng-model="registration.data.firstname" required
+                                                       ng-change="registration.setUserName()"
+                                                       type="text" class="form-control">
+                                            </fieldset>
+                                            <fieldset class="form-group">
+                                                <span class="requiredfieldmark">*</span>&nbsp;
+                                                <label class="control-label">Last Name</label>
+                                                <span class="requiredfieldmark" ng-if="registration.form.lastname.$touched && registration.form.lastname.$invalid">
+                                                    Last Name is required
+                                                </span>
+                                                <input name="lastname" ng-model="registration.data.lastname" required
+                                                       ng-change="registration.setUserName()"
+                                                       type="text" class="form-control">
+                                            </fieldset>
+                                            <fieldset class="form-group">
+                                                <span class="requiredfieldmark">*</span>&nbsp;
+                                                <label class="control-label" rel="tooltip" data-original-title="Automatically created from first and last names">
+                                                    Username
+                                                </label>
+                                                <input name="username" ng-model="registration.data.username" required disabled="disabled"
+                                                       type="text" class="form-control">
+                                            </fieldset>
+                                            <fieldset class="form-group">
+                                                <span class="requiredfieldmark">*</span>&nbsp;
+                                                <label class="control-label">Password</label>
+                                                <span class="requiredfieldmark" ng-if="registration.form.password.$touched && registration.form.password.$invalid">
+                                                    Password is Required
+                                                </span>
+                                                <input name="password" ng-model="registration.data.password" required
+                                                       type="password" class="form-control">
+                                            </fieldset>
+                                            <fieldset class="form-group">
+                                                <span class="requiredfieldmark">*</span>&nbsp;
+                                                <label class="control-label">Confirm Password</label>
+                                                <div style="display: inline-block; vertical-align: top">
+                                                    <div ng-if="registration.form.passwordconfirm.$touched && registration.form.passwordconfirm.$invalid">
+                                                        <span class="requiredfieldmark">Confirm Password is Required</span>
+                                                    </div>
+                                                    <div ng-if="registration.form.passwordconfirm.$touched && registration.data.password !== registration.data.passwordconfirm">
+                                                        <span class="requiredfieldmark">Password and Confirm Password don't match</span>
+                                                    </div>
+                                                </div>
+                                                <input name="passwordconfirm" ng-model="registration.data.passwordconfirm" required
+                                                       type="password" class="form-control">
+                                            </fieldset>
+                                            <fieldset class="form-group">
+                                                <span class="requiredfieldmark">*</span>&nbsp;
+                                                <label class="control-label"
+                                                       rel="tooltip" data-original-title="The user will receive a confirmation link on this email">
+                                                    Email
+                                                </label>
+                                                <span class="requiredfieldmark" ng-if="registration.form.email.$touched && registration.form.email.$invalid">
+                                                    Email needs to be a valid email address
+                                                </span>
+                                                <input name="email" ng-model="registration.data.email" required
+                                                       type="email" class="form-control">
+                                            </fieldset>
+                                            <fieldset class="form-group">
+                                                <span class="requiredfieldmark">*</span>&nbsp;
+                                                <label class="control-label" rel="tooltip" data-original-title="Optional '+' sign followed by numbers (without spaces)">
+                                                    Phone Number
+                                                </label>&nbsp;
+                                                <span class="requiredfieldmark" ng-if="registration.form.phone.$touched && registration.form.phone.$invalid">
+                                                    Phone needs to be valid phone number
+                                                </span>
+                                                <input name="phone" ng-model="registration.data.phone" required ng-pattern="/^\+?(\d)+$/"
+                                                       type="text" class="form-control">
+                                            </fieldset>
+                                        </form>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                                ng-disabled="registration.loading.ongoing"
+                                                ng-click="registration.dismiss()">
+                                            Cancel
+                                        </button>
+                                        <button type="button" class="btn btn-primary"
+                                                ng-disabled="registration.form.$invalid || registration.loading.ongoing"
+                                                ng-click="registration.submit()">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- #endregion -->
+
 
                             <form class="forgotpasswordform col-sm-offset-1 col-sm-10" ng-show="showforgotPasswordForm">
                                 <div class="row">

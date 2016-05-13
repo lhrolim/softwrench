@@ -1,4 +1,29 @@
-﻿.bootbox {
+﻿@mixin bootbox-modal-color($color) {
+    .modal-content {
+        border: 2px solid $color;
+
+        .modal-header {
+            i {
+                color: $color;
+            }
+        }
+
+        .modal-footer {
+            text-align: center;
+
+            .btn {
+                margin-left: 0;
+
+                &.btn-primary {
+                    background: $color;
+                    border-color: $color;
+                }
+            }
+        }
+    }
+}
+
+.bootbox {
     &.modal {
         .modal-dialog {
             .modal-content {
@@ -57,28 +82,10 @@
         }
 
         &.error {
-            .modal-content {
-                border: 2px solid $cts_red;
-
-                .modal-header {
-                    i {
-                        color: $cts_red;
-                    }
-                }
-
-                .modal-footer {
-                    text-align: center;
-
-                    .btn {
-                        margin-left: 0;
-
-                        &.btn-primary {
-                            background: $cts_red;
-                            border-color: $cts_red;
-                        }
-                    }
-                }
-            }
+            @include bootbox-modal-color($cts_red);
+        }
+        &.success {
+            @include bootbox-modal-color($cts_green);
         }
     }
 }
