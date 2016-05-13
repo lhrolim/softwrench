@@ -48,17 +48,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
         private readonly ISWDBHibernateDAO _dao;
         private readonly AttachmentHandler _attachmentHandler;
-        private readonly PdfService _pdfService;
-        private readonly IMemoryContextLookuper _lookuper;
+        private PdfEmailReportHandler _pfEmailReportHandler;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(CommLogHandler));
 
 
-        public CommLogHandler(ISWDBHibernateDAO dao, AttachmentHandler attachmentHandler, PdfService pdfService, IMemoryContextLookuper lookuper) {
+        public CommLogHandler(ISWDBHibernateDAO dao, AttachmentHandler attachmentHandler, PdfEmailReportHandler pfEmailReportHandler) {
             _dao = dao;
             _attachmentHandler = attachmentHandler;
-            _pdfService = pdfService;
-            _lookuper = lookuper;
+            _pfEmailReportHandler = pfEmailReportHandler;
             Log.Debug("init");
         }
 
@@ -172,67 +170,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 return attachments;
             }
 
-            attachments.Add(CreateDetailsAttachment(detailsHtml, appMetadata, entity));
+            attachments.Add(_pfEmailReportHandler.CreateDetailsAttachment(detailsHtml, appMetadata.Title, entity.UserId));
             return attachments;
         }
 
-        private AttachmentDTO CreateDetailsAttachment(string detailsHtml, ApplicationMetadata appMetadata, CrudOperationData entity) {
-            var fullContext = _lookuper.GetFromMemoryContext<SwHttpContext>("httpcontext");
-            var appContext = fullContext.Context;
-            var seccondBarIndex = appContext.IndexOf("/", 1, StringComparison.Ordinal);
-            if (seccondBarIndex > 0) {
-                appContext = appContext.Substring(0, appContext.IndexOf("/", 1, StringComparison.Ordinal));
-            }
-
-            if (Log.IsDebugEnabled) {
-                Log.DebugFormat("Details Commlog original App context: " + appContext);
-            }
-
-            // appcontext not found on html, probably appcontext is "/"
-            // or appcontext found as the content folder also probably appcontext is "/"
-            if (detailsHtml.IndexOf("<link href=\"" + appContext, StringComparison.Ordinal) < 0 || "/Content".Equals(appContext)) {
-                appContext = "/";
-            }
-
-            var serverPath = AppDomain.CurrentDomain.BaseDirectory;
-
-            // make css paths absolute
-            var processedHtml = detailsHtml.Replace("<link href=\"" + appContext, "<link href=\"" + serverPath);
-            // make images paths absolute
-            processedHtml = processedHtml.Replace(" src=\"" + appContext, " src=\"" + serverPath);
-
-            if (Log.IsDebugEnabled) {
-                Log.DebugFormat("Details Commlog App context: " + appContext);
-                Log.DebugFormat("Details Commlog Server path: " + serverPath);
-                Log.DebugFormat(processedHtml);
-            }
-
-            // limits title to 20 chars
-            var fullTitle = appMetadata.Title + " Details";
-            var title = fullTitle;
-            if (title.Length > 20) {
-                title = "";
-                appMetadata.Title.Split(' ').ForEach(token => title += token.Substring(0, 1).ToUpper());
-                title += " Details";
-            }
-            var hasUserId = !string.IsNullOrEmpty(entity.UserId);
-            var description = fullTitle + (hasUserId ? " #" + entity.UserId : "");
-            var path = appMetadata.Title + (hasUserId ? "(" + entity.UserId + ")" : "") + ".pdf";
-            path = path.Replace(' ', '_');
-
-            var dto = new AttachmentDTO() {
-                Path = path,
-                BinaryData = _pdfService.HtmlToPdf(processedHtml, fullTitle),
-                Title = title,
-                Description = description
-            };
-
-            //Comment to generate files for testing
-            //File.WriteAllBytes(@"C:\temp\test.pdf", dto.BinaryData);
-            //File.WriteAllText(@"C:\temp\test.html", processedHtml);
-
-            return dto;
-        }
+     
 
         private async void UpdateEmailHistoryAsync(string userId, string[] emailAddresses) {
             await Task.Factory.NewThread(() => {

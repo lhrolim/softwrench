@@ -171,7 +171,6 @@
     <Compile Include="Data\Entities\Labor\UserLaborCraftFetcher.cs" />
     <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />
     <Compile Include="Data\Entities\Workflow\DTO\RouteWorkflowDTO.cs" />
-    <Compile Include="Data\Entities\Workflow\DTO\InitWorkflowDTO2.cs" />
     <Compile Include="Data\Entities\Workflow\MaximoWorkflowException.cs" />
     <Compile Include="Data\Entities\Workflow\MaximoWorkflowManager.cs" />
     <Compile Include="Data\Filter\FilterWhereClauseHandler.cs" />
@@ -198,6 +197,7 @@
     <Compile Include="Data\Persistence\WS\AMEX\AmexAssetConnectors.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoException.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoWebServiceNotResolvedException.cs" />
+    <Compile Include="Data\Persistence\WS\Applications\Compositions\PdfEmailReportHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\HandlerParseUtil.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\LabTransHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\MultiAssetLocciHandler.cs" />
