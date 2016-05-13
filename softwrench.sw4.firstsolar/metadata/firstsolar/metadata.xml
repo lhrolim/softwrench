@@ -6,6 +6,7 @@
     <template path="@workorder.xml"/>
     <template path="@location.xml"/>
     <template path="@workflow.xml"/>
+    <template path="@relatedrecords.xml"/>
   </templates>
 
   <entities>
@@ -620,6 +621,17 @@
             <property key="crud.disableautofocus" value="true"/>
           </properties>
         </schema>
+      </schemas>
+    </application>
+    <application name="relatedrecord" title="Related Records" entity="relatedrecord">
+      <schemas>
+        <detail stereotype="compositiondetail" title="Related Record" redeclaring="false">
+          <optionfield attribute="relatedrecclass" label="Application" requiredexpression="true" default="">
+            <!--<option label="Service Request" value="SR" />-->
+            <option label="Work Order" value="WORKORDER" />
+            <event type="afterchange" service="relatedrecordService" method="clearSelectedRelatedEntityId"/>
+          </optionfield>
+        </detail>
       </schemas>
     </application>
   </applications>
