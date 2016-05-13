@@ -363,6 +363,7 @@
     <Compile Include="Util\StaticFileLoad\RowStampScriptHelper.cs" />
     <Compile Include="Util\StaticFileLoad\StaticFileTagRenderer.cs" />
     <Content Include="apple-touch-icon.png" />
+    <Content Include="App_Data\Client\%40internal\templates\classspec.xml" />
     <Content Include="App_Data\Client\%40internal\templates\assetlocrelation.xml" />
     <Content Include="App_Data\Client\%40internal\templates\assetspec.xml" />
     <Content Include="App_Data\Client\%40internal\templates\assettrans.xml" />
@@ -409,6 +410,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\asset.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\po.xml" />
     <Content Include="App_Data\Client\%40internal\templates\multiassetlocci.xml" />
     <Content Include="App_Data\Client\%40internal\templates\attachments.xml" />
     <Content Include="App_Data\Client\%40internal\templates\chartofaccounts.xml" />
@@ -431,6 +433,7 @@
     <Content Include="App_Data\Client\%40internal\templates\longdescription.xml" />
     <Content Include="App_Data\Client\%40internal\templates\materials.xml" />
     <Content Include="App_Data\Client\%40internal\templates\meter.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\locationmeter.xml" />
     <Content Include="App_Data\Client\%40internal\templates\purchasing.xml" />
     <Content Include="App_Data\Client\%40internal\templates\receiving.xml" />
     <Content Include="App_Data\Client\%40internal\templates\relatedrecords.xml" />
@@ -438,6 +441,7 @@
     <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Data\Client\%40internal\templates\serviceaddress.xml" />
     <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
     <Content Include="App_Data\Client\%40internal\templates\sparepart.xml" />
     <Content Include="App_Data\Client\%40internal\templates\swdb\audit.xml" />

@@ -10,7 +10,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sw4.amex.classes.com.cts.amex.dataset {
-    public class AmexAssetDataSet : MaximoApplicationDataSet {
+    public class AmexAssetDataSet : BaseAssetDataSet {
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             searchDto.SearchSort = "ASSET.MANUFACTURER, ASSET.ITEMNUM, ASSET.DESCRIPTION";
             searchDto.SearchAscending = true;

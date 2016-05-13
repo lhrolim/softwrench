@@ -9,7 +9,168 @@
   </templates>
 
   <entities>
-
+    <entity name="invuseline" idAttribute="invuselineid">
+      <attributes>
+        <attribute name="invusenum" type="varchar" required="true" />
+        <attribute name="usetype" type="varchar" required="true" />
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="false" />
+        <attribute name="tostoreloc" type="varchar" required="false" />
+        <attribute name="tositeid" type="varchar" required="false" />
+        <attribute name="quantity" type="double" required="true" />
+        <attribute name="fromconditioncode" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="requestnum" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="validated" type="smallint" required="true" />
+        <attribute name="financialperiod" type="varchar" required="false" />
+        <attribute name="enteredastask" type="smallint" required="true" />
+        <attribute name="toconditioncode" type="varchar" required="false" />
+        <attribute name="linetype" type="varchar" required="true" />
+        <attribute name="remark" type="varchar" required="false" />
+        <attribute name="tobin" type="varchar" required="false" />
+        <attribute name="tolot" type="varchar" required="false" />
+        <attribute name="fromstoreloc" type="varchar" required="true" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="invuselinenum" type="int" required="true" />
+        <attribute name="issueid" type="bigint" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="issueto" type="varchar" required="false" />
+        <attribute name="gldebitacct" type="varchar" required="false" />
+        <attribute name="glcreditacct" type="varchar" required="false" />
+        <attribute name="refwo" type="varchar" required="false" />
+        <attribute name="actualdate" type="datetime" required="true" />
+        <attribute name="conversion" type="decimal" required="false" />
+        <attribute name="unitcost" type="double" required="true" />
+        <attribute name="linecost" type="double" required="true" />
+        <attribute name="commoditygroup" type="varchar" required="false" />
+        <attribute name="commodity" type="varchar" required="false" />
+        <attribute name="ponum" type="varchar" required="false" />
+        <attribute name="porevisionnum" type="int" required="false" />
+        <attribute name="polinenum" type="int" required="false" />
+        <attribute name="positeid" type="varchar" required="false" />
+        <attribute name="mrnum" type="varchar" required="false" />
+        <attribute name="mrlinenum" type="int" required="false" />
+        <attribute name="prsiteid" type="varchar" required="false" />
+        <attribute name="rotassetnum" type="varchar" required="false" />
+        <attribute name="fromlot" type="varchar" required="false" />
+        <attribute name="frombin" type="varchar" required="false" />
+        <attribute name="physcnt" type="decimal" required="true" />
+        <attribute name="physcntdate" type="datetime" required="true" />
+        <attribute name="split" type="smallint" required="true" />
+        <attribute name="newassetnum" type="varchar" required="false" />
+        <attribute name="returnagainstissue" type="smallint" required="true" />
+        <attribute name="toorgid" type="varchar" required="false" />
+        <attribute name="receiptscomplete" type="smallint" required="true" />
+        <attribute name="receivedqty" type="decimal" required="false" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="returnedqty" type="decimal" required="false" />
+        <attribute name="inspectionrequired" type="smallint" required="true" />
+        <attribute name="invuselineid" type="bigint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="invuseline" />
+      </connectorParameters>
+    </entity>
+    
+    <entity name="invuse" idAttribute="invuseid">
+      <attributes>
+        <attribute name="invusenum" type="varchar" required="true" />
+        <attribute name="invowner" type="varchar" required="false" />
+        <attribute name="usetype" type="varchar" required="true" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="fromstoreloc" type="varchar" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="statusiface" type="smallint" required="true" />
+        <attribute name="statusdate" type="datetime" required="true" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="autocreated" type="smallint" required="true" />
+        <attribute name="receipts" type="varchar" required="false" />
+        <attribute name="shipmentdate" type="datetime" required="false" />
+        <attribute name="shiptoattn" type="varchar" required="false" />
+        <attribute name="currencycode" type="varchar" required="false" />
+        <attribute name="exchangedate" type="datetime" required="false" />
+        <attribute name="exchangerate" type="decimal" required="false" />
+        <attribute name="exchangerate2" type="decimal" required="false" />
+        <attribute name="invuseid" type="bigint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="workorderid" type="bigint" required="false" />
+      </attributes>
+      <relationships>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+        </relationship>
+        <relationship to="invuseline">
+          <relationshipAttribute from="invusenum" to="invusenum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="fromstoreloc" to="fromstoreloc"/>
+          <relationshipAttribute from="usetype" to="usetype"/>
+        </relationship>
+        <relationship to="invcost">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="fromstoreloc" to="location"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+        </relationship>
+        <relationship to="location" qualifier="fromlocation">
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="frominvbalance">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.frombin" to="binnum" primary="true"/>
+        </relationship>
+        <relationship to="location" qualifier="tolocation">
+          <relationshipAttribute from="invuseline_.tostoreloc" to="location" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="toinvbalance">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.tostoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.tobin" to="binnum" primary="true"/>
+        </relationship>
+        <relationship to="item">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="invuseline_.rotassetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.frombin" to="binnum"/>
+          <relationshipAttribute from="invuseline_.fromlot" to="lotnum"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWINVUSE"/>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInvuseCrudConnector"/>
+        <connectorParameter key="dbtable" value="invuse" />
+      </connectorParameters>
+    </entity>
   </entities>
 
   <applications>

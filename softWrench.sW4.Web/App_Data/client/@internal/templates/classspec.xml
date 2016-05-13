@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="classspec" idAttribute="classspecid">
+      <attributes>
+        <attribute name="classstructureid" type="varchar" required="true" />
+        <attribute name="assetattrid" type="varchar" required="true" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="domainid" type="varchar" required="false" />
+        <attribute name="attrdescprefix" type="varchar" required="false" />
+        <attribute name="cs01" type="varchar" required="false" />
+        <attribute name="cs02" type="varchar" required="false" />
+        <attribute name="cs03" type="varchar" required="false" />
+        <attribute name="cs04" type="datetime" required="false" />
+        <attribute name="cs05" type="decimal" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="section" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="classspecid" type="bigint" required="true" />
+        <attribute name="applydownhier" type="smallint" required="true" />
+        <attribute name="inheritedfrom" type="varchar" required="false" />
+        <attribute name="inheritedfromid" type="bigint" required="false" />
+        <attribute name="tableattribute" type="varchar" required="false" />
+        <attribute name="lookupname" type="varchar" required="false" />
+        <attribute name="linkedtoattribute" type="varchar" required="false" />
+        <attribute name="linkedtosection" type="varchar" required="false" />
+        <attribute name="assetattributeid" type="bigint" required="false" />
+        <attribute name="continuous" type="smallint" required="true" />
+        <attribute name="lineartype" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="classspec" />
+      </connectorParameters>
+    </entity>
+
+  </entities>
+  
+ 
+</metadata>

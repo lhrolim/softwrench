@@ -22,6 +22,7 @@
     <template path="@route.xml"/>
     <template path="@relatedrecords.xml"/>
     <template path="@multiassetlocci.xml"/>
+    <template path="@serviceaddress.xml"/>
   </templates>
 
   <entities>
@@ -30,6 +31,70 @@
         <attribute name="class" type="varchar" required="true" query="woclass"/>
       </attributes>
       <relationships>
+        <relationship to="worklog" collection="true">
+          <relationshipAttribute from="wonum" to="recordkey" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true" />
+        </relationship>
+        <relationship to ="commlog" collection="true">
+          <relationshipAttribute from="workorderid" to="ownerid" primary="true" />
+          <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="matusetrans" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="labtrans" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="location" >
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="asset" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="failurecode" >
+          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="worktype" >
+          <relationshipAttribute from="worktype" to="worktype" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="chartofaccounts" >
+          <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="ld">
+          <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="DOCLINKS" qualifier="attachment" collection="true">
+          <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="tooltrans" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="multiassetlocci" collection="true">
+          <relationshipAttribute from="wonum" to="RECORDKEY" primary="true"/>
+          <relationshipAttribute from="woclass" to="RECORDCLASS" />
+          <relationshipAttribute from="siteid" to="worksiteid" />
+        </relationship>
+        <relationship to="relatedrecord" collection="true">
+          <relationshipAttribute from="wonum" to="recordkey" primary="true"/>
+          <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true"/>
+        </relationship>
+        
         <relationship to="failurelistonly" qualifier="failurelist">
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
@@ -108,6 +173,8 @@
         <relationship to="classstructure">
           <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
         </relationship>
+        
+        
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />

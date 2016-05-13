@@ -1,6 +1,92 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <entities>
+
+    <entity name="assetlocrelation" idAttribute="assetlocrelationid">
+      <attributes>
+        <attribute name="sourceassetnum" type="varchar" required="false" />
+        <attribute name="sourcelocation" type="varchar" required="false" />
+        <attribute name="targetassetnum" type="varchar" required="false" />
+        <attribute name="targetlocation" type="varchar" required="false" />
+        <attribute name="sourcestartmeasure" type="decimal" required="false" />
+        <attribute name="targetstartmeasure" type="decimal" required="false" />
+        <attribute name="sourceendmeasure" type="decimal" required="false" />
+        <attribute name="targetendmeasure" type="decimal" required="false" />
+        <attribute name="sourcestartoffset" type="decimal" required="false" />
+        <attribute name="sourcestartyoffset" type="decimal" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="sourcestartzoffset" type="decimal" required="false" />
+        <attribute name="targetstartoffset" type="decimal" required="false" />
+        <attribute name="targetstartyoffset" type="decimal" required="false" />
+        <attribute name="targetstartzoffset" type="decimal" required="false" />
+        <attribute name="sourceendoffset" type="decimal" required="false" />
+        <attribute name="sourceendyoffset" type="decimal" required="false" />
+        <attribute name="sourceendzoffset" type="decimal" required="false" />
+        <attribute name="targetendoffset" type="decimal" required="false" />
+        <attribute name="targetendyoffset" type="decimal" required="false" />
+        <attribute name="targetendzoffset" type="decimal" required="false" />
+        <attribute name="sourcestartassetfeatureid" type="bigint" required="false" />
+        <attribute name="targetstartassetfeatureid" type="bigint" required="false" />
+        <attribute name="sourceendassetfeatureid" type="bigint" required="false" />
+        <attribute name="targetendassetfeatureid" type="bigint" required="false" />
+        <attribute name="assetlocrelationid" type="bigint" required="true" />
+        <attribute name="assetrelationnum" type="varchar" required="true" />
+        <attribute name="createddate" type="datetime" required="false" />
+        <attribute name="sourcestartyoffsetref" type="varchar" required="false" />
+        <attribute name="sourceendyoffsetref" type="varchar" required="false" />
+        <attribute name="sourcestartzoffsetref" type="varchar" required="false" />
+        <attribute name="sourceendzoffsetref" type="varchar" required="false" />
+        <attribute name="targetstartyoffsetref" type="varchar" required="false" />
+        <attribute name="targetendyoffsetref" type="varchar" required="false" />
+        <attribute name="targetstartzoffsetref" type="varchar" required="false" />
+        <attribute name="targetendzoffsetref" type="varchar" required="false" />
+        <attribute name="islinearref" type="smallint" required="true" />
+        <attribute name="sourcebasemeasureunitid" type="varchar" required="false" />
+        <attribute name="sourceendbasemeasure" type="decimal" required="false" />
+        <attribute name="sourceendmeasureunitid" type="varchar" required="false" />
+        <attribute name="sourceendoffsetunitid" type="varchar" required="false" />
+        <attribute name="sourcestartbasemeasure" type="decimal" required="false" />
+        <attribute name="sourcestartmeasureunitid" type="varchar" required="false" />
+        <attribute name="sourcestartoffsetunitid" type="varchar" required="false" />
+        <attribute name="targetbasemeasureunitid" type="varchar" required="false" />
+        <attribute name="targetstartmeasureunitid" type="varchar" required="false" />
+        <attribute name="targetstartoffsetunitid" type="varchar" required="false" />
+        <attribute name="targetendmeasureunitid" type="varchar" required="false" />
+        <attribute name="targetendoffsetunitid" type="varchar" required="false" />
+        <attribute name="targetstartbasemeasure" type="decimal" required="false" />
+        <attribute name="targetendbasemeasure" type="decimal" required="false" />
+        <attribute name="assetlocrelhistid" type="int" required="false" />
+        <attribute name="linearassetlocrelationid" type="int" required="true" />
+        <attribute name="relsequencenum" type="int" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="asset" qualifier="sourceasset">
+          <relationshipAttribute from="sourceassetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="location" qualifier="sourcelocation">
+          <relationshipAttribute from="sourcelocation" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="asset" qualifier="targetasset">
+          <relationshipAttribute from="targetassetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="location" qualifier="targetlocation">
+          <relationshipAttribute from="targetlocation" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="assetlocrelation" />
+      </connectorParameters>
+    </entity>
+
+  </entities>
+  
   <applications>
     <application name="assetlocrelation" title="Asset Location Relation" entity="assetlocrelation" id="00000000-0000-0000-0000-000003957204" >
       <properties>

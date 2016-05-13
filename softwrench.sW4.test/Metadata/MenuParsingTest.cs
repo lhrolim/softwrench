@@ -18,10 +18,6 @@ namespace softwrench.sW4.test.Metadata {
         [TestMethod]
         public void TestWebMenuParsing() {
             foreach (var clientName in TestUtil.ClientNames()) {
-                if (clientName == "pae") {
-                    //maximo 7.1
-                    continue;
-                }
                 Debug.WriteLine(clientName);
                 ApplicationConfiguration.TestclientName = clientName;
                 try {

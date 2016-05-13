@@ -23,6 +23,66 @@
         <relationship to ="glcomponents">
           <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
+        <relationship to="workorder" >
+          <relationshipAttribute from="refwo" to="wonum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="person" qualifier="issuetoperson">
+          <relationshipAttribute from="issueto" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="asset" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="storeloc" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="inventory" qualifier="storeroominventory">
+          <relationshipAttribute from="storeloc" to="storeloc" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="invbalances">
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="storeloc" to="location"/>
+          <relationshipAttribute from="binnum" to="binnum" primary="true"/>
+          <relationshipAttribute from="lotnum" to="lotnum" />
+        </relationship>
+        <relationship to="invbalances" qualifier="binbalances">
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="storeloc" to="location"/>
+          <relationshipAttribute from="binnum" to="binnum" primary="true"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="lotbalances">
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="storeloc" to="location"/>
+          <relationshipAttribute from="binnum" to="binnum"/>
+          <relationshipAttribute from="lotnum" to="lotnum" primary="true"/>
+        </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+        </relationship>
+        <relationship to="chartofaccounts" >
+          <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="location" qualifier="storeroom">
+          <relationshipAttribute from="storeloc" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+        </relationship>
+        
       </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />

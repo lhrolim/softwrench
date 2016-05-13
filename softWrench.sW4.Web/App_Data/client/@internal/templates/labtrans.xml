@@ -7,6 +7,74 @@
   </templates>
 
   <entities>
+
+    <entity name="ppcraftrate" idAttribute="ppcraftrateid">
+      <attributes>
+        <attribute name="craft" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="ratetype" type="varchar" required="false" />
+        <attribute name="rate" type="decimal" required="false" />
+        <attribute name="inherit" type="smallint" required="true" />
+        <attribute name="ppcraftrateid" type="bigint" required="true" />
+        <attribute name="premiumpaycode" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="premiumpay">
+          <relationshipAttribute from="premiumpaycode" to="premiumpaycode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="ppcraftrate" />
+      </connectorParameters>
+    </entity>
+    <entity name="laborcraftrate" idAttribute="laborcraftrateid">
+      <attributes>
+        <attribute name="craft" type="varchar" required="true" />
+        <attribute name="skilllevel" type="varchar" required="false" />
+        <attribute name="laborcode" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="contractnum" type="varchar" required="false" />
+        <attribute name="inherit" type="smallint" required="true" />
+        <attribute name="defaultcraft" type="smallint" required="true" />
+        <attribute name="rate" type="decimal" required="false" />
+        <attribute name="glaccount" type="varchar" required="false" />
+        <attribute name="controlaccount" type="varchar" required="false" />
+        <attribute name="laborcraftrateid" type="bigint" required="true" />
+        <attribute name="defaultticketglacc" type="varchar" required="false" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="laborcraftrate" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="premiumpay" idAttribute="premiumpayid">
+      <attributes>
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="defaultratetype" type="varchar" required="true" />
+        <attribute name="defaultrate" type="decimal" required="false" />
+        <attribute name="globalppcode" type="smallint" required="true" />
+        <attribute name="premiumpayid" type="bigint" required="true" />
+        <attribute name="premiumpaycode" type="varchar" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="premiumpay" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="labortranstype" idAttribute="synonymdomainid" parententity="synonymdomain" whereclause="DOMAINID = 'LTTYPE'">
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="synonymdomain" />
+      </connectorParameters>
+    </entity>
+
     <entity name="labtrans" idAttribute="labtransid">
       <relationships>
         <relationship to="labor">
@@ -30,6 +98,20 @@
         <relationship to="labortranstype" qualifier="lttype">
           <relationshipAttribute from="transtype" to="value" primary="true"/>
         </relationship>
+        <relationship to="workorder">
+          <relationshipAttribute from="refwo" to="wonum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="labtrans" />
@@ -38,11 +120,7 @@
         <connectorParameter key="integration_interface_operations" value="" />
       </connectorParameters>
     </entity>
-    <entity name="labortranstype" idAttribute="synonymdomainid" parententity="synonymdomain" whereclause="DOMAINID = 'LTTYPE'">
-      <connectorParameters>
-        <connectorParameter key="dbtable" value="synonymdomain" />
-      </connectorParameters>
-    </entity>
+   
   </entities>
 
   <applications>

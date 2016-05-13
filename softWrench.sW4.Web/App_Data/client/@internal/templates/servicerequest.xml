@@ -7,11 +7,54 @@
     <template path="@relatedrecords.xml"/>
     <template path="@commlogs.xml"/>
     <template path="@failurecode.xml"/>
+    <template path="@serviceaddress.xml"/>
   </templates>
 
   <entities>
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
       <relationships>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="assetsiteid" to="siteid" />
+        </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+          <relationshipAttribute to="active" literal="1"/>
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="worklog" collection="true">
+          <relationshipAttribute from="ticketid" to="recordkey" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="class" literal="SR" quoteLiteral="true" />
+        </relationship>
+        <relationship to ="commlog" collection="true">
+          <relationshipAttribute from="ticketuid" to="ownerid" primary="true" />
+          <relationshipAttribute to="ownertable" literal="SR" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="longdescription" qualifier="ld" lazy="true">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="DOCLINKS" qualifier="attachment" collection="true">
+          <relationshipAttribute from="ticketuid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="SR" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="relatedrecord" collection="true">
+          <relationshipAttribute from="ticketid" to="recordkey" primary="true"/>
+          <relationshipAttribute to="class" literal="SR" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="SRSTATUS" quoteLiteral="true" />
+        </relationship>
+
         <relationship to="person">
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
           <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true" />
@@ -48,6 +91,8 @@
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
+        
+        
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />

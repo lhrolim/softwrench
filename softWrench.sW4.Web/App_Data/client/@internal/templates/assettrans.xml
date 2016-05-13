@@ -1,6 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <entities>
+    <entity name="assettrans" idAttribute="assettransid">
+      <attributes>
+        <attribute name="assetid" type="integer" required="false" />
+        <attribute name="assetnum" type="varchar" required="true" />
+        <attribute name="assettransid" type="integer" required="true" />
+        <attribute name="conditioncode" type="varchar" required="false" />
+        <attribute name="datemoved" type="timestamp" required="true" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="fromconditioncode" type="varchar" required="false" />
+        <attribute name="fromdept" type="varchar" required="false" />
+        <attribute name="fromloc" type="varchar" required="false" />
+        <attribute name="fromparent" type="varchar" required="false" />
+        <attribute name="glcreditacct" type="varchar" required="false" />
+        <attribute name="gldebitacct" type="varchar" required="false" />
+        <attribute name="matrectransid" type="integer" required="false" />
+        <attribute name="matusetransid" type="integer" required="false" />
+        <attribute name="memo" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="ponum" type="varchar" required="false" />
+        <attribute name="positeid" type="varchar" required="false" />
+        <attribute name="rowstamp" type="integer" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="taskid" type="integer" required="false" />
+        <attribute name="todept" type="varchar" required="false" />
+        <attribute name="toloc" type="varchar" required="false" />
+        <attribute name="toorgid" type="varchar" required="false" />
+        <attribute name="toparent" type="varchar" required="false" />
+        <attribute name="tositeid" type="varchar" required="true" />
+        <attribute name="transdate" type="timestamp" required="true" />
+        <attribute name="transtype" type="varchar" required="false" />
+        <attribute name="wonum" type="varchar" required="false" />
+      </attributes>
+      <relationships>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="assettrans" />
+      </connectorParameters>
+    </entity>
+    
+  </entities>
+  
   <applications>
     <application name="assettrans" title="Asset Trans" entity="assettrans" id="00000000-0000-0000-0000-040079045007" >
       <properties>

@@ -10,7 +10,39 @@
     <entity name="incident" idAttribute="ticketuid" useridAttribute="ticketid">
 
       <relationships>
-        
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="longdescription" qualifier="ld">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="relatedrecord" collection="true">
+          <relationshipAttribute from="ticketid" to="recordkey" primary="true"/>
+          <relationshipAttribute to="class" literal="INCIDENT" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="worklog" collection="true">
+          <relationshipAttribute from="ticketid" to="recordkey" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="class" literal="INCIDENT" quoteLiteral="true" />
+        </relationship>
+        <relationship to="DOCLINKS" qualifier="attachment" collection="true">
+          <relationshipAttribute from="ticketuid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="INCIDENT" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="person" qualifier="affectedperson">
+          <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="INCIDENTSTATUS" quoteLiteral="true" />
+        </relationship>
         <relationship to="person" qualifier="reporter">
           <relationshipAttribute from="reportedby" to="personid" primary="true"/>
         </relationship>

@@ -1,6 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <entities>
+    <entity name="worklog" idAttribute="worklogid" >
+      <attributes>
+        <attribute name="worklogid" type="bigint" required="true" />
+        <attribute name="logtype" type="varchar" required="true" />
+        <attribute name="createby" type="varchar" required="true" />
+        <attribute name="createdate" type="datetime" required="true" />
+        <attribute name="clientviewable" type="smallint" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="modifyby" type="varchar" required="true" />
+        <attribute name="modifydate" type="datetime" required="true" />
+        <attribute name="recordkey" type="varchar" required="true" />
+        <attribute name="class" type="varchar" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="assignmentid" type="bigint" required="false" />
+      </attributes>
+      <relationships>
+        <relationship to="longdescription" qualifier="wld" >
+          <relationshipAttribute from="worklogid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKLOG" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="synonymdomain" >
+          <relationshipAttribute from="logtype" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="LOGTYPE" quoteLiteral="true"/>
+          <relationshipAttribute to="defaults" literal="1" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="person" qualifier="createdbyperson" >
+          <relationshipAttribute from="createby" to="personid" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="mea_integration_interface" value="ISW_WL" />
+      </connectorParameters>
+
+    </entity>
+
+
+  </entities>
+
   <applications>
     <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008">
       <properties>
@@ -29,12 +73,12 @@
           <properties>
             <property key="list.search.quicksearchfields" value="description"/>
           </properties>
-          
+
         </schema>
 
         <detail stereotype="compositiondetail" title="Work Log">
           <field attribute="createdate" hidden="true" />
-          
+
           <field attribute="description" label="Summary" requiredexpression="true">
             <renderer type="default" params="maxlength=100"/>
           </field>
@@ -54,13 +98,13 @@
               <option label="No" value="0"/>
             </optionfield>
           </section>
-          
+
           <!-- attachment placeholder -->
           <!-- TODO: use section+id instead of field when it's eventually possible -->
           <field attribute="position_attachment" hidden="true"></field>
-          
+
         </detail>
-        
+
       </schemas>
     </application>
 

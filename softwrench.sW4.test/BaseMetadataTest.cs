@@ -17,11 +17,17 @@ namespace softwrench.sW4.test {
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\chicago", "Client\\chicago")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\entegra", "Client\\entegra")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\gric", "Client\\gric")]
+    [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\bering", "Client\\bering")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\pae", "Client\\pae")]
+    [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\apachegold", "Client\\apachegold")]
+    [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\amex", "Client\\amex")]
+    [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\entegra", "Client\\entegra")]
+    [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\pesco", "Client\\pesco")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\umc", "Client\\umc")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\firstsolar", "Client\\firstsolar")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\manchester", "Client\\manchester")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\kongsberg", "Client\\kongsberg")]
+    [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\tva", "Client\\tva")]
     [TestClass]
     public abstract class BaseMetadataTest
     {

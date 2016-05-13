@@ -62,6 +62,9 @@
         <relationship to ="glcomponents">
           <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
+        <relationship to="person" qualifier="issuetoperson">
+          <relationshipAttribute from="issueto" to="personid" primary="true"/>
+        </relationship>  
       </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePhysicalCountCrudConnector"/>

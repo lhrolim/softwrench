@@ -1,6 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <entities>
+    <entity name="lochierarchy" idAttribute="lochierarchyid">
+      <attributes>
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="parent" type="varchar" required="false" />
+        <attribute name="systemid" type="varchar" required="true" />
+        <attribute name="children" type="smallint" required="true" />
+        <attribute name="gisparam1" type="varchar" required="false" />
+        <attribute name="gisparam2" type="varchar" required="false" />
+        <attribute name="gisparam3" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="lochierarchyid" type="bigint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="location" qualifier="childlocation">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="location" qualifier="parentlocation">
+          <relationshipAttribute from="parent" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="locoper" qualifier="childlocoper">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="locoper" qualifier="parentlocoper">
+          <relationshipAttribute from="parent" to="location" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="lochierarchy" />
+      </connectorParameters>
+    </entity>
+    
+    
+  </entities>
+  
   <applications>
     <application name="lochierarchy" title="Location Hierarchy" entity="lochierarchy" id="00000000-0000-0000-0000-000000000002">
       <schemas>

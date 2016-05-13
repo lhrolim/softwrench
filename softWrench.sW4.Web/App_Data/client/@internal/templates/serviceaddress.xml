@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="serviceaddress" idAttribute="serviceaddressid">
+      <attributes>
+        <attribute name="addresscode" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="staddrnumber" type="varchar" required="false" />
+        <attribute name="staddrdirprfx" type="varchar" required="false" />
+        <attribute name="staddrstreet" type="varchar" required="false" />
+        <attribute name="staddrsttype" type="varchar" required="false" />
+        <attribute name="staddrdirsfx" type="varchar" required="false" />
+        <attribute name="staddrunitnum" type="varchar" required="false" />
+        <attribute name="streetaddress" type="varchar" required="false" />
+        <attribute name="formattedaddress" type="varchar" required="false" />
+        <attribute name="addressline2" type="varchar" required="false" />
+        <attribute name="addressline3" type="varchar" required="false" />
+        <attribute name="city" type="varchar" required="false" />
+        <attribute name="regiondistrict" type="varchar" required="false" />
+        <attribute name="county" type="varchar" required="false" />
+        <attribute name="stateprovince" type="varchar" required="false" />
+        <attribute name="postalcode" type="varchar" required="false" />
+        <attribute name="country" type="varchar" required="false" />
+        <attribute name="geocode" type="varchar" required="false" />
+        <attribute name="timezone" type="varchar" required="false" />
+        <attribute name="directions" type="varchar" required="false" />
+        <attribute name="latitudey" type="decimal" required="false" />
+        <attribute name="longitudex" type="decimal" required="false" />
+        <attribute name="referencepoint" type="varchar" required="false" />
+        <attribute name="parent" type="varchar" required="false" />
+        <attribute name="objectname" type="varchar" required="false" />
+        <attribute name="serviceaddressid" type="bigint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="plussfeatureclass" type="varchar" required="false" />
+        <attribute name="plussisgis" type="smallint" required="true" />
+        <attribute name="gischecksum" type="bigint" required="false" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="serviceaddress" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="sraddress" idAttribute="serviceaddressid" parententity="serviceaddress">
+      <relationships>
+        <relationship to="tkserviceaddress">
+          <relationshipAttribute from="addresscode" to="saddresscode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="serviceaddress" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="woaddress" idAttribute="serviceaddressid" parententity="serviceaddress">
+      <relationships>
+        <relationship to="woserviceaddress">
+          <relationshipAttribute from="addresscode" to="saddresscode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="serviceaddress" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="tkserviceaddress" idAttribute="tkserviceaddressid">
+      <attributes>
+        <attribute name="ticketid" type="varchar" required="false" />
+        <attribute name="class" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="staddrnumber" type="varchar" required="false" />
+        <attribute name="staddrdirprfx" type="varchar" required="false" />
+        <attribute name="staddrstreet" type="varchar" required="false" />
+        <attribute name="staddrsttype" type="varchar" required="false" />
+        <attribute name="staddrdirsfx" type="varchar" required="false" />
+        <attribute name="staddrunitnum" type="varchar" required="false" />
+        <attribute name="streetaddress" type="varchar" required="false" />
+        <attribute name="formattedaddress" type="varchar" required="false" />
+        <attribute name="addressline2" type="varchar" required="false" />
+        <attribute name="addressline3" type="varchar" required="false" />
+        <attribute name="city" type="varchar" required="false" />
+        <attribute name="regiondistrict" type="varchar" required="false" />
+        <attribute name="county" type="varchar" required="false" />
+        <attribute name="stateprovince" type="varchar" required="false" />
+        <attribute name="postalcode" type="varchar" required="false" />
+        <attribute name="country" type="varchar" required="false" />
+        <attribute name="geocode" type="varchar" required="false" />
+        <attribute name="timezone" type="varchar" required="false" />
+        <attribute name="directions" type="varchar" required="false" />
+        <attribute name="latitudey" type="decimal" required="false" />
+        <attribute name="longitudex" type="decimal" required="false" />
+        <attribute name="referencepoint" type="varchar" required="false" />
+        <attribute name="addressischanged" type="smallint" required="true" />
+        <attribute name="saddresscode" type="varchar" required="false" />
+        <attribute name="tkserviceaddressid" type="bigint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="serviceaddress">
+          <relationshipAttribute from="saddresscode" to="addresscode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="tkserviceaddress" />
+      </connectorParameters>
+    </entity>
+
+  </entities>
+
+ 
+</metadata>

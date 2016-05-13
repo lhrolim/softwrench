@@ -3,6 +3,9 @@
 
   <templates>
     <template path="@person.xml"/>
+    <template path="@location.xml"/>
+    <template path="@asset.xml"/>
+    <template path="@workorder.xml"/>
   </templates>
 
   <entities>

@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+
+  <entities>
+   <entity name="po" idAttribute="ponum">
+      <attributes>
+        <attribute name="ponum" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="purchaseagent" type="varchar" required="false" />
+        <attribute name="orderdate" type="datetime" required="false" />
+        <attribute name="requireddate" type="datetime" required="false" />
+        <attribute name="followupdate" type="datetime" required="false" />
+        <attribute name="potype" type="varchar" required="false" />
+        <attribute name="originalponum" type="varchar" required="false" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="statusdate" type="datetime" required="true" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="contact" type="varchar" required="false" />
+        <attribute name="freightterms" type="varchar" required="false" />
+        <attribute name="paymentterms" type="varchar" required="false" />
+        <attribute name="shipvia" type="varchar" required="false" />
+        <attribute name="customernum" type="varchar" required="false" />
+        <attribute name="fob" type="varchar" required="false" />
+        <attribute name="shipto" type="varchar" required="false" />
+        <attribute name="shiptoattn" type="varchar" required="false" />
+        <attribute name="billto" type="varchar" required="false" />
+        <attribute name="billtoattn" type="varchar" required="false" />
+        <attribute name="totalcost" type="decimal" required="false" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="priority" type="int" required="true" />
+        <attribute name="historyflag" type="smallint" required="true" />
+        <attribute name="po1" type="varchar" required="false" />
+        <attribute name="po2" type="varchar" required="false" />
+        <attribute name="po3" type="varchar" required="false" />
+        <attribute name="po4" type="varchar" required="false" />
+        <attribute name="po5" type="varchar" required="false" />
+        <attribute name="po6" type="decimal" required="false" />
+        <attribute name="po7" type="datetime" required="false" />
+        <attribute name="po8" type="decimal" required="false" />
+        <attribute name="po9" type="int" required="false" />
+        <attribute name="po10" type="smallint" required="true" />
+        <attribute name="vendeliverydate" type="datetime" required="false" />
+        <attribute name="receipts" type="varchar" required="false" />
+        <attribute name="currencycode" type="varchar" required="true" />
+        <attribute name="exchangerate" type="decimal" required="false" />
+        <attribute name="exchangedate" type="datetime" required="false" />
+        <attribute name="buyahead" type="smallint" required="true" />
+        <attribute name="totaltax1" type="decimal" required="false" />
+        <attribute name="totaltax2" type="decimal" required="false" />
+        <attribute name="totaltax3" type="decimal" required="false" />
+        <attribute name="inclusive1" type="smallint" required="true" />
+        <attribute name="inclusive2" type="smallint" required="true" />
+        <attribute name="inclusive3" type="smallint" required="true" />
+        <attribute name="internal" type="smallint" required="true" />
+        <attribute name="totaltax4" type="decimal" required="false" />
+        <attribute name="totaltax5" type="decimal" required="false" />
+        <attribute name="inclusive4" type="smallint" required="true" />
+        <attribute name="inclusive5" type="smallint" required="true" />
+        <attribute name="startdate" type="datetime" required="false" />
+        <attribute name="enddate" type="datetime" required="false" />
+        <attribute name="payonreceipt" type="smallint" required="true" />
+        <attribute name="buyercompany" type="varchar" required="false" />
+        <attribute name="exchangerate2" type="decimal" required="false" />
+        <attribute name="mnetsent" type="varchar" required="false" />
+        <attribute name="ecomstatusdate" type="datetime" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="contractrefnum" type="varchar" required="false" />
+        <attribute name="poid" type="bigint" required="true" />
+        <attribute name="contractrefid" type="bigint" required="false" />
+        <attribute name="contractrefrev" type="int" required="false" />
+        <attribute name="contreleaseseq" type="int" required="false" />
+        <attribute name="storeloc" type="varchar" required="false" />
+        <attribute name="storelocsiteid" type="varchar" required="false" />
+        <attribute name="inspectionrequired" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="revisionnum" type="int" required="true" />
+        <attribute name="revcomments" type="varchar" required="false" />
+        <attribute name="internalchange" type="smallint" required="true" />
+        <attribute name="ignorecntrev" type="smallint" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="po" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="poline" idAttribute="polinenum">
+      <attributes>
+        <attribute name="ponum" type="varchar" required="true" />
+        <attribute name="itemnum" type="varchar" required="false" />
+        <attribute name="storeloc" type="varchar" required="false" />
+        <attribute name="modelnum" type="varchar" required="false" />
+        <attribute name="catalogcode" type="varchar" required="false" />
+        <attribute name="orderqty" type="decimal" required="false" />
+        <attribute name="orderunit" type="varchar" required="false" />
+        <attribute name="unitcost" type="decimal" required="false" />
+        <attribute name="receivedqty" type="decimal" required="false" />
+        <attribute name="receivedunitcost" type="decimal" required="false" />
+        <attribute name="receivedtotalcost" type="decimal" required="true" />
+        <attribute name="rejectedqty" type="decimal" required="true" />
+        <attribute name="vendeliverydate" type="datetime" required="false" />
+        <attribute name="supervisor" type="varchar" required="false" />
+        <attribute name="enterdate" type="datetime" required="true" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="pl1" type="varchar" required="false" />
+        <attribute name="pl2" type="varchar" required="false" />
+        <attribute name="pl3" type="varchar" required="false" />
+        <attribute name="pl4" type="decimal" required="false" />
+        <attribute name="pl5" type="varchar" required="false" />
+        <attribute name="requestedby" type="varchar" required="false" />
+        <attribute name="reqdeliverydate" type="datetime" required="false" />
+        <attribute name="issue" type="smallint" required="true" />
+        <attribute name="polinenum" type="int" required="true" />
+        <attribute name="taxed" type="smallint" required="true" />
+        <attribute name="plin1" type="varchar" required="false" />
+        <attribute name="plin2" type="varchar" required="false" />
+        <attribute name="plin3" type="varchar" required="false" />
+        <attribute name="plin4" type="datetime" required="false" />
+        <attribute name="plin5" type="decimal" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="chargestore" type="smallint" required="true" />
+        <attribute name="gldebitacct" type="varchar" required="false" />
+        <attribute name="glcreditacct" type="varchar" required="false" />
+        <attribute name="linecost" type="decimal" required="true" />
+        <attribute name="tax1code" type="varchar" required="false" />
+        <attribute name="tax1" type="decimal" required="true" />
+        <attribute name="tax2code" type="varchar" required="false" />
+        <attribute name="tax2" type="decimal" required="true" />
+        <attribute name="tax3code" type="varchar" required="false" />
+        <attribute name="tax3" type="decimal" required="true" />
+        <attribute name="receiptreqd" type="smallint" required="true" />
+        <attribute name="manufacturer" type="varchar" required="false" />
+        <attribute name="tax4code" type="varchar" required="false" />
+        <attribute name="tax4" type="decimal" required="true" />
+        <attribute name="tax5code" type="varchar" required="false" />
+        <attribute name="tax5" type="decimal" required="true" />
+        <attribute name="category" type="varchar" required="false" />
+        <attribute name="remark" type="varchar" required="false" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="loadedcost" type="decimal" required="true" />
+        <attribute name="prorateservice" type="smallint" required="true" />
+        <attribute name="receiptscomplete" type="smallint" required="true" />
+        <attribute name="inspectionrequired" type="smallint" required="true" />
+        <attribute name="proratecost" type="decimal" required="false" />
+        <attribute name="polineid" type="bigint" required="true" />
+        <attribute name="linecost2" type="decimal" required="false" />
+        <attribute name="mrnum" type="varchar" required="false" />
+        <attribute name="mrlinenum" type="int" required="false" />
+        <attribute name="pl6" type="varchar" required="false" />
+        <attribute name="pl7" type="varchar" required="false" />
+        <attribute name="pl8" type="varchar" required="false" />
+        <attribute name="pl9" type="varchar" required="false" />
+        <attribute name="pl10" type="varchar" required="false" />
+        <attribute name="plin6" type="varchar" required="false" />
+        <attribute name="plin7" type="varchar" required="false" />
+        <attribute name="plin8" type="varchar" required="false" />
+        <attribute name="plin9" type="varchar" required="false" />
+        <attribute name="polaln1" type="varchar" required="false" />
+        <attribute name="polaln2" type="varchar" required="false" />
+        <attribute name="polaln3" type="varchar" required="false" />
+        <attribute name="polaln4" type="varchar" required="false" />
+        <attribute name="polaln5" type="varchar" required="false" />
+        <attribute name="pcardnum" type="varchar" required="false" />
+        <attribute name="pcardtype" type="varchar" required="false" />
+        <attribute name="pcardexpdate" type="varchar" required="false" />
+        <attribute name="fincntrlid" type="varchar" required="false" />
+        <attribute name="pcardverification" type="varchar" required="false" />
+        <attribute name="vendorpackcode" type="varchar" required="false" />
+        <attribute name="vendorpackquantity" type="varchar" required="false" />
+        <attribute name="vendorwarehouse" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="isdistributed" type="smallint" required="true" />
+        <attribute name="refwo" type="varchar" required="false" />
+        <attribute name="enteredastask" type="smallint" required="true" />
+        <attribute name="linetype" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="false" />
+        <attribute name="conditioncode" type="varchar" required="false" />
+        <attribute name="contractrefnum" type="varchar" required="false" />
+        <attribute name="commoditygroup" type="varchar" required="false" />
+        <attribute name="commodity" type="varchar" required="false" />
+        <attribute name="contractrefid" type="bigint" required="false" />
+        <attribute name="contractrefrev" type="int" required="false" />
+        <attribute name="scheduleid" type="bigint" required="false" />
+        <attribute name="contreflineid" type="bigint" required="false" />
+        <attribute name="tositeid" type="varchar" required="true" />
+        <attribute name="shipto" type="varchar" required="false" />
+        <attribute name="shiptoattn" type="varchar" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="conversion" type="decimal" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="mktplcitem" type="smallint" required="true" />
+        <attribute name="classstructureid" type="varchar" required="false" />
+        <attribute name="revisionnum" type="int" required="true" />
+        <attribute name="revstatus" type="varchar" required="false" />
+        <attribute name="taxexempt" type="smallint" required="true" />
+        <attribute name="receipttolerance" type="decimal" required="false" />
+        <attribute name="receipttolamt" type="float" required="false" />
+        <attribute name="receipttolqty" type="float" required="false" />
+        <attribute name="restype" type="varchar" required="false" />
+        <attribute name="consignment" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="poline" />
+      </connectorParameters>
+    </entity>
+
+  </entities>
+
+
+</metadata>

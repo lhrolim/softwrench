@@ -4,8 +4,12 @@
   <templates>
     <template path="@assetlocrelation.xml"/>
     <template path="@assetspec.xml"/>
+    <template path="@locationmeter.xml"/>
+    <template path="@meter.xml"/>
+    
   </templates>
   <entities>
+
     <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
       <relationships>
         <relationship to="site">
@@ -16,8 +20,238 @@
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="LOCASSETSTATUS" quoteLiteral="true" />
         </relationship>
+        <relationship to="AssetUserCust" qualifier="primaryuser">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute to="isprimary" literal="1" quoteLiteral="false"/>
+        </relationship>
+        <relationship to="AssetUserCust" qualifier="assetcustodian" collection="true">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="assetspec" collection="true">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="assettrans">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="ticket" collection="true">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="workorder" collection="true">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="asset" qualifier="parentasset">
+          <relationshipAttribute from="parent" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="asset" qualifier="childassets" collection="true">
+          <relationshipAttribute from="assetnum" to="parent" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="asset" qualifier="subassembly" collection="true">
+          <relationshipAttribute from="assetnum" to="ancestor" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="assetloccomm">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="assetloccomm">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+        <relationship to="condition">
+          <relationshipAttribute from="conditioncode" to="conditionnum" primary="true"/>
+        </relationship>
+        <relationship to="metergroup">
+          <relationshipAttribute from="groupname" to="groupname" primary="true"/>
+        </relationship>
+        <relationship to="companies" qualifier="vendor">
+          <relationshipAttribute from="vendor" to="company" primary="true"/>
+          <relationshipAttribute to="type" literal="V" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="companies" qualifier="manufacturer">
+          <relationshipAttribute from="manufacturer" to="company" primary="true"/>
+          <relationshipAttribute to="type" literal="M" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="assetstatus">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="sparepart" collection="true">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="assetmeter" collection="true">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+        <relationship to="assetlocrelation" collection="true" ignoreprimary="true">
+          <!--Required to have a relationshipAttribute on relationship declaration, real query build in prefilterfunction-->
+          <relationshipAttribute query=""/>
+        </relationship>
+        <relationship to="safetylexicon">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
       </relationships>
+
     </entity>
+
+    <entity name="assetstatus" idAttribute="assetnum">
+      <attributes>
+        <attribute name="assetnum" type="varchar" required="true" />
+        <attribute name="wonum" type="varchar" required="false" />
+        <attribute name="isrunning" type="smallint" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="downtime" type="float" required="true" />
+        <attribute name="calnum" type="varchar" required="false" />
+        <attribute name="code" type="varchar" required="false" />
+        <attribute name="operational" type="smallint" required="true" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="assetstatusid" type="bigint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="assetstatus" />
+      </connectorParameters>
+    </entity>
+    
+    <entity name="assetmeter" idAttribute="assetmeterid">
+      <attributes>
+        <attribute name="assetnum" type="varchar" required="true" />
+        <attribute name="metername" type="varchar" required="true" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="rollover" type="decimal" required="false" />
+        <attribute name="avgcalcmethod" type="varchar" required="false" />
+        <attribute name="slidingwindowsize" type="int" required="false" />
+        <attribute name="rolldownsource" type="varchar" required="false" />
+        <attribute name="sincelastrepair" type="decimal" required="true" />
+        <attribute name="sincelastoverhaul" type="decimal" required="true" />
+        <attribute name="sincelastinspect" type="decimal" required="true" />
+        <attribute name="sinceinstall" type="decimal" required="true" />
+        <attribute name="lifetodate" type="decimal" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="remarks" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="lastreadingdate" type="datetime" required="false" />
+        <attribute name="lastreading" type="varchar" required="false" />
+        <attribute name="pointnum" type="varchar" required="false" />
+        <attribute name="average" type="decimal" required="false" />
+        <attribute name="readingtype" type="varchar" required="false" />
+        <attribute name="lastreadinginspctr" type="varchar" required="false" />
+        <attribute name="assetmeterid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="sequence" type="smallint" required="false" />
+        <attribute name="endfeature" type="varchar" required="false" />
+        <attribute name="startfeature" type="varchar" required="false" />
+        <attribute name="endmeasure" type="decimal" required="false" />
+        <attribute name="startmeasure" type="decimal" required="false" />
+        <attribute name="startoffset" type="decimal" required="false" />
+        <attribute name="endoffset" type="decimal" required="false" />
+        <attribute name="startyoffset" type="decimal" required="false" />
+        <attribute name="endyoffset" type="decimal" required="false" />
+        <attribute name="startzoffset" type="decimal" required="false" />
+        <attribute name="endzoffset" type="decimal" required="false" />
+        <attribute name="startyoffsetref" type="varchar" required="false" />
+        <attribute name="endyoffsetref" type="varchar" required="false" />
+        <attribute name="startzoffsetref" type="varchar" required="false" />
+        <attribute name="endzoffsetref" type="varchar" required="false" />
+        <attribute name="startfeatureid" type="bigint" required="false" />
+        <attribute name="endfeatureid" type="bigint" required="false" />
+        <attribute name="startassetfeatureid" type="bigint" required="false" />
+        <attribute name="endassetfeatureid" type="bigint" required="false" />
+        <attribute name="basemeasureunitid" type="varchar" required="false" />
+        <attribute name="endbasemeasure" type="decimal" required="false" />
+        <attribute name="endmeasureunitid" type="varchar" required="false" />
+        <attribute name="endoffsetunitid" type="varchar" required="false" />
+        <attribute name="startbasemeasure" type="decimal" required="false" />
+        <attribute name="startmeasureunitid" type="varchar" required="false" />
+        <attribute name="startoffsetunitid" type="varchar" required="false" />
+        <attribute name="linearassetmeterid" type="int" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="disabledrollover" type="boolean" query="'false'" />
+      </attributes>
+      <relationships>
+        <relationship to="meter">
+          <relationshipAttribute from="metername" to="metername" primary="true"/>
+        </relationship>
+        <relationship to="person" qualifier="inspector">
+          <relationshipAttribute from="inspector" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="synonymdomain" ignoreprimary="true">
+          <relationshipAttribute literal="avecalcmethod" to="domainid"/>
+        </relationship>
+      </relationships>
+
+
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="assetmeter" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="condition" idAttribute="conditionid">
+      <attributes>
+        <attribute name="conditionid" type="bigint" required="true" />
+        <attribute name="conditionnum" type="varchar" required="true" />
+        <attribute name="type" type="varchar" required="true" />
+        <attribute name="expression" type="varchar" required="false" />
+        <attribute name="classname" type="varchar" required="false" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="nocaching" type="smallint" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="condition" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="safetylexicon" idAttribute="safetylexiconid">
+      <attributes>
+        <attribute name="safetylexiconid" type="bigint" required="true" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="hazardid" type="varchar" required="false" />
+        <attribute name="tagoutid" type="varchar" required="false" />
+        <attribute name="applyseq" type="smallint" required="false" />
+        <attribute name="removeseq" type="smallint" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="sl01" type="varchar" required="false" />
+        <attribute name="sl02" type="varchar" required="false" />
+        <attribute name="sl03" type="datetime" required="false" />
+        <attribute name="sl04" type="decimal" required="false" />
+        <attribute name="sl05" type="int" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="safetylexicon" />
+      </connectorParameters>
+    </entity>
+
+
   </entities>
   <applications>
     <application name="asset" title="Asset" entity="asset" id="00000000-0000-0000-0000-000000000001" >

@@ -1,6 +1,252 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <entities>
+    <entity name="woactivity" idAttribute="workorderid" useridAttribute="wonum" whereclause="historyflag = 0">
+      <attributes>
+        <attribute name="actfinish" type="timestamp" required="false" />
+        <attribute name="actlabcost" type="decimal" required="true" />
+        <attribute name="actlabhrs" type="double" required="true" />
+        <attribute name="actmatcost" type="decimal" required="true" />
+        <attribute name="actservcost" type="decimal" required="true" />
+        <attribute name="actstart" type="timestamp" required="false" />
+        <attribute name="acttoolcost" type="decimal" required="true" />
+        <attribute name="assetlocpriority" type="integer" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="backoutplan" type="varchar" required="false" />
+        <attribute name="calccalendar" type="varchar" required="false" />
+        <attribute name="calcorgid" type="varchar" required="false" />
+        <attribute name="calcpriority" type="integer" required="false" />
+        <attribute name="calcshift" type="varchar" required="false" />
+        <attribute name="calendar" type="varchar" required="false" />
+        <attribute name="changeby" type="varchar" required="false" />
+        <attribute name="changedate" type="timestamp" required="false" />
+        <attribute name="chargestore" type="integer" required="true" />
+        <attribute name="cinum" type="varchar" required="false" />
+        <attribute name="classstructureid" type="varchar" required="false" />
+        <attribute name="commodity" type="varchar" required="false" />
+        <attribute name="commoditygroup" type="varchar" required="false" />
+        <attribute name="contract" type="varchar" required="false" />
+        <attribute name="crewid" type="varchar" required="false" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="disabled" type="integer" required="true" />
+        <attribute name="downtime" type="integer" required="true" />
+        <attribute name="environment" type="varchar" required="false" />
+        <attribute name="estatapprlabcost" type="decimal" required="true" />
+        <attribute name="estatapprlabhrs" type="double" required="true" />
+        <attribute name="estatapprmatcost" type="decimal" required="true" />
+        <attribute name="estatapprservcost" type="decimal" required="true" />
+        <attribute name="estatapprtoolcost" type="decimal" required="true" />
+        <attribute name="estdur" type="double" required="true" />
+        <attribute name="estlabcost" type="decimal" required="true" />
+        <attribute name="estlabhrs" type="double" required="true" />
+        <attribute name="estmatcost" type="decimal" required="true" />
+        <attribute name="estservcost" type="decimal" required="true" />
+        <attribute name="esttoolcost" type="decimal" required="true" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="faildate" type="timestamp" required="false" />
+        <attribute name="failurecode" type="varchar" required="false" />
+        <attribute name="fincntrlid" type="varchar" required="false" />
+        <attribute name="firstapprstatus" type="varchar" required="false" />
+        <attribute name="flowaction" type="varchar" required="false" />
+        <attribute name="flowactionassist" type="integer" required="true" />
+        <attribute name="flowcontrolled" type="integer" required="true" />
+        <attribute name="generatedforpo" type="varchar" required="false" />
+        <attribute name="genforpolineid" type="integer" required="false" />
+        <attribute name="glaccount" type="varchar" required="false" />
+        <attribute name="haschildren" type="integer" required="true" />
+        <attribute name="hasfollowupwork" type="integer" required="true" />
+        <attribute name="hasld" type="integer" required="true" />
+        <attribute name="historyflag" type="integer" required="true" />
+        <attribute name="inspector" type="varchar" required="false" />
+        <attribute name="interruptible" type="integer" required="true" />
+        <attribute name="istask" type="integer" required="true" />
+        <attribute name="jobtaskid" type="integer" required="false" />
+        <attribute name="jpnum" type="varchar" required="false" />
+        <attribute name="justifypriority" type="varchar" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="launchentryname" type="varchar" required="false" />
+        <attribute name="lead" type="varchar" required="false" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="measuredate" type="timestamp" required="false" />
+        <attribute name="measurementvalue" type="decimal" required="false" />
+        <attribute name="newchildclass" type="varchar" required="true" />
+        <attribute name="observation" type="varchar" required="false" />
+        <attribute name="onbehalfof" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="origrecordclass" type="varchar" required="false" />
+        <attribute name="origrecordid" type="varchar" required="false" />
+        <attribute name="outlabcost" type="decimal" required="true" />
+        <attribute name="outmatcost" type="decimal" required="true" />
+        <attribute name="outtoolcost" type="decimal" required="true" />
+        <attribute name="owner" type="varchar" required="false" />
+        <attribute name="ownergroup" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="parent" type="varchar" required="false" />
+        <attribute name="parentchgsstatus" type="integer" required="true" />
+        <attribute name="persongroup" type="varchar" required="false" />
+        <attribute name="phone" type="varchar" required="false" />
+        <attribute name="pluspaddressline2" type="varchar" required="false" />
+        <attribute name="pluspaddressline3" type="varchar" required="false" />
+        <attribute name="pluspaddrischanged" type="integer" required="true" />
+        <attribute name="pluspagreement" type="varchar" required="false" />
+        <attribute name="pluspallowquote" type="integer" required="true" />
+        <attribute name="pluspbblinenum" type="integer" required="false" />
+        <attribute name="pluspbillbatch" type="varchar" required="false" />
+        <attribute name="pluspbillbatchid" type="integer" required="false" />
+        <attribute name="pluspbillstatus" type="varchar" required="false" />
+        <attribute name="pluspcalccalnum" type="varchar" required="false" />
+        <attribute name="pluspcalcorgid" type="varchar" required="false" />
+        <attribute name="pluspcalcshift" type="varchar" required="false" />
+        <attribute name="pluspcity" type="varchar" required="false" />
+        <attribute name="pluspcostcenter" type="varchar" required="false" />
+        <attribute name="pluspcountry" type="varchar" required="false" />
+        <attribute name="pluspcounty" type="varchar" required="false" />
+        <attribute name="pluspcustchacct" type="varchar" required="false" />
+        <attribute name="pluspcustomer" type="varchar" required="false" />
+        <attribute name="pluspcustponum" type="varchar" required="false" />
+        <attribute name="pluspdirections" type="varchar" required="false" />
+        <attribute name="pluspgeocode" type="varchar" required="false" />
+        <attribute name="plusplatdirection" type="varchar" required="false" />
+        <attribute name="plusplatitude" type="decimal" required="false" />
+        <attribute name="plusplinestatus" type="varchar" required="false" />
+        <attribute name="plusplongdirection" type="varchar" required="false" />
+        <attribute name="plusplongitude" type="decimal" required="false" />
+        <attribute name="pluspmaxprice" type="decimal" required="false" />
+        <attribute name="plusporigqprice" type="decimal" required="false" />
+        <attribute name="plusporigqtype" type="varchar" required="false" />
+        <attribute name="pluspporeq" type="integer" required="true" />
+        <attribute name="plusppostalcode" type="varchar" required="false" />
+        <attribute name="plusppricesched" type="varchar" required="false" />
+        <attribute name="pluspquotedprice" type="decimal" required="false" />
+        <attribute name="pluspquotetype" type="varchar" required="false" />
+        <attribute name="plusprefpoint" type="varchar" required="false" />
+        <attribute name="pluspregiondistr" type="varchar" required="false" />
+        <attribute name="pluspresponseplan" type="varchar" required="false" />
+        <attribute name="plusprevnum" type="integer" required="false" />
+        <attribute name="pluspstaddrdirprfx" type="varchar" required="false" />
+        <attribute name="pluspstaddrdirsfx" type="varchar" required="false" />
+        <attribute name="pluspstaddrnumber" type="varchar" required="false" />
+        <attribute name="pluspstaddrstreet" type="varchar" required="false" />
+        <attribute name="pluspstaddrsttype" type="varchar" required="false" />
+        <attribute name="pluspstaddrunitnum" type="varchar" required="false" />
+        <attribute name="pluspstateprovince" type="varchar" required="false" />
+        <attribute name="pluspstreetaddress" type="varchar" required="false" />
+        <attribute name="plusptimezone" type="varchar" required="false" />
+        <attribute name="pmcombpelactname" type="varchar" required="false" />
+        <attribute name="pmcombpelenabled" type="integer" required="false" />
+        <attribute name="pmcombpelinprog" type="integer" required="false" />
+        <attribute name="pmcomimpact" type="integer" required="false" />
+        <attribute name="pmcomstate" type="varchar" required="false" />
+        <attribute name="pmcomtype" type="varchar" required="false" />
+        <attribute name="pmcomurgency" type="integer" required="false" />
+        <attribute name="pmduedate" type="date" required="false" />
+        <attribute name="pmextdate" type="date" required="false" />
+        <attribute name="pmnextduedate" type="date" required="false" />
+        <attribute name="pmnum" type="varchar" required="false" />
+        <attribute name="pointnum" type="varchar" required="false" />
+        <attribute name="problemcode" type="varchar" required="false" />
+        <attribute name="reasonforchange" type="varchar" required="false" />
+        <attribute name="remdur" type="double" required="false" />
+        <attribute name="reportdate" type="timestamp" required="false" />
+        <attribute name="reportedby" type="varchar" required="false" />
+        <attribute name="respondby" type="timestamp" required="false" />
+        <attribute name="risk" type="varchar" required="false" />
+        <attribute name="route" type="varchar" required="false" />
+        <attribute name="routestopid" type="integer" required="false" />
+        <attribute name="rowstamp" type="integer" required="true" />
+        <attribute name="schedfinish" type="timestamp" required="false" />
+        <attribute name="schedstart" type="timestamp" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="statusdate" type="timestamp" required="true" />
+        <attribute name="supervisor" type="varchar" required="false" />
+        <attribute name="suspendflow" type="integer" required="true" />
+        <attribute name="targcompdate" type="timestamp" required="false" />
+        <attribute name="targetdesc" type="varchar" required="false" />
+        <attribute name="targstartdate" type="timestamp" required="false" />
+        <attribute name="taskid" type="integer" required="false" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="verification" type="varchar" required="false" />
+        <attribute name="whomischangefor" type="varchar" required="false" />
+        <attribute name="woacceptscharges" type="integer" required="true" />
+        <attribute name="woclass" type="varchar" required="true" />
+        <attribute name="woeq1" type="varchar" required="false" />
+        <attribute name="woeq10" type="varchar" required="false" />
+        <attribute name="woeq11" type="varchar" required="false" />
+        <attribute name="woeq12" type="decimal" required="false" />
+        <attribute name="woeq13" type="timestamp" required="false" />
+        <attribute name="woeq14" type="decimal" required="false" />
+        <attribute name="woeq2" type="varchar" required="false" />
+        <attribute name="woeq3" type="varchar" required="false" />
+        <attribute name="woeq4" type="varchar" required="false" />
+        <attribute name="woeq5" type="decimal" required="false" />
+        <attribute name="woeq6" type="timestamp" required="false" />
+        <attribute name="woeq7" type="decimal" required="false" />
+        <attribute name="woeq8" type="varchar" required="false" />
+        <attribute name="woeq9" type="varchar" required="false" />
+        <attribute name="wogroup" type="varchar" required="false" />
+        <attribute name="woisswap" type="integer" required="true" />
+        <attribute name="wojo1" type="varchar" required="false" />
+        <attribute name="wojo2" type="varchar" required="false" />
+        <attribute name="wojo3" type="varchar" required="false" />
+        <attribute name="wojo4" type="decimal" required="false" />
+        <attribute name="wojo5" type="varchar" required="false" />
+        <attribute name="wojo6" type="varchar" required="false" />
+        <attribute name="wojo7" type="varchar" required="false" />
+        <attribute name="wojo8" type="varchar" required="false" />
+        <attribute name="wojp1" type="varchar" required="false" />
+        <attribute name="wojp2" type="varchar" required="false" />
+        <attribute name="wojp3" type="varchar" required="false" />
+        <attribute name="wojp4" type="decimal" required="false" />
+        <attribute name="wojp5" type="timestamp" required="false" />
+        <attribute name="wol1" type="varchar" required="false" />
+        <attribute name="wol2" type="varchar" required="false" />
+        <attribute name="wol3" type="decimal" required="false" />
+        <attribute name="wol4" type="timestamp" required="false" />
+        <attribute name="wolablnk" type="varchar" required="false" />
+        <attribute name="wolo1" type="varchar" required="false" />
+        <attribute name="wolo10" type="integer" required="false" />
+        <attribute name="wolo2" type="varchar" required="false" />
+        <attribute name="wolo3" type="varchar" required="false" />
+        <attribute name="wolo4" type="varchar" required="false" />
+        <attribute name="wolo5" type="varchar" required="false" />
+        <attribute name="wolo6" type="decimal" required="false" />
+        <attribute name="wolo7" type="timestamp" required="false" />
+        <attribute name="wolo8" type="decimal" required="false" />
+        <attribute name="wolo9" type="varchar" required="false" />
+        <attribute name="wonum" type="varchar" required="true" />
+        <attribute name="wopriority" type="integer" required="false" />
+        <attribute name="worklocation" type="varchar" required="false" />
+        <attribute name="workorderid" type="integer" required="true" />
+        <attribute name="worktype" type="varchar" required="false" />
+        <attribute name="worts1" type="varchar" required="false" />
+        <attribute name="worts2" type="varchar" required="false" />
+        <attribute name="worts3" type="varchar" required="false" />
+        <attribute name="worts4" type="timestamp" required="false" />
+        <attribute name="worts5" type="decimal" required="false" />
+        <attribute name="wosequence" type="integer" required="false" />
+      </attributes>
+      <relationships>
+        <relationship to="longdescription" qualifier="ld">
+          <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="WOACTIVITY" />
+      </connectorParameters>
+    </entity>
+    
+  </entities>
+  
   <applications>
     <application entity="woactivity" name="woactivity" title="WO Activity">
       <properties>

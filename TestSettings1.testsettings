@@ -6,6 +6,7 @@
     <DeploymentItem filename="softwrench.sW4.test\App_data\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\hapag" outputDirectory="Client\hapag\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\deltadental" outputDirectory="Client\deltadental\" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\apachegold" outputDirectory="Client\apachegold\" />
     <DeploymentItem filename="softwrench.sw4.api\metadata\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\client\kongsberg" outputDirectory="Client\kongsberg\" />
     

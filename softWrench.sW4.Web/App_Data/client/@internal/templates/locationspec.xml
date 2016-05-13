@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <templates>
+    <template path="@classspec.xml"/>
+  </templates>
+  
   <entities>
     <entity name="locationspec" idAttribute="locationspecid">
       <attributes>

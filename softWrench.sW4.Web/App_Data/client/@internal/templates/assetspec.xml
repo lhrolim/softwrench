@@ -1,6 +1,80 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <templates>
+    <template path="@classspec.xml"/>
+  </templates>
+  
+  <entities>
+    <entity name="assetspec" idAttribute="assetspecid">
+      <attributes>
+        <attribute name="alnvalue" type="varchar" required="false" />
+        <attribute name="assetattrid" type="varchar" required="true" />
+        <attribute name="assetnum" type="varchar" required="true" />
+        <attribute name="assetspecid" type="integer" required="true" />
+        <attribute name="basemeasureunitid" type="varchar" required="false" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="timestamp" required="true" />
+        <attribute name="classstructureid" type="varchar" required="true" />
+        <attribute name="continuous" type="integer" required="true" />
+        <attribute name="displaysequence" type="integer" required="true" />
+        <attribute name="endassetfeatureid" type="integer" required="false" />
+        <attribute name="endbasemeasure" type="decimal" required="false" />
+        <attribute name="endmeasure" type="decimal" required="false" />
+        <attribute name="endmeasureunitid" type="varchar" required="false" />
+        <attribute name="endoffset" type="decimal" required="false" />
+        <attribute name="endoffsetunitid" type="varchar" required="false" />
+        <attribute name="endyoffset" type="decimal" required="false" />
+        <attribute name="endyoffsetref" type="varchar" required="false" />
+        <attribute name="endzoffset" type="decimal" required="false" />
+        <attribute name="endzoffsetref" type="varchar" required="false" />
+        <attribute name="es01" type="varchar" required="false" />
+        <attribute name="es02" type="varchar" required="false" />
+        <attribute name="es03" type="varchar" required="false" />
+        <attribute name="es04" type="timestamp" required="false" />
+        <attribute name="es05" type="decimal" required="false" />
+        <attribute name="inheritedfromitem" type="integer" required="true" />
+        <attribute name="itemspecvalchanged" type="integer" required="true" />
+        <attribute name="linearassetspecid" type="integer" required="true" />
+        <attribute name="linkedtoattribute" type="varchar" required="false" />
+        <attribute name="linkedtosection" type="varchar" required="false" />
+        <attribute name="mandatory" type="integer" required="true" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="numvalue" type="decimal" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="rowstamp" type="integer" required="true" />
+        <attribute name="section" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="startassetfeatureid" type="integer" required="false" />
+        <attribute name="startbasemeasure" type="decimal" required="false" />
+        <attribute name="startmeasure" type="decimal" required="false" />
+        <attribute name="startmeasureunitid" type="varchar" required="false" />
+        <attribute name="startoffset" type="decimal" required="false" />
+        <attribute name="startoffsetunitid" type="varchar" required="false" />
+        <attribute name="startyoffset" type="decimal" required="false" />
+        <attribute name="startyoffsetref" type="varchar" required="false" />
+        <attribute name="startzoffset" type="decimal" required="false" />
+        <attribute name="startzoffsetref" type="varchar" required="false" />
+        <attribute name="tablevalue" type="varchar" required="false" />
+      </attributes>
+      <relationships>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+        <relationship to="assetattribute">
+          <relationshipAttribute from="assetattrid" to="assetattrid" primary="true"/>
+        </relationship>
+        <relationship to="classspec">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+          <relationshipAttribute from="assetattrid" to="assetattrid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="assetspec" />
+      </connectorParameters>
+    </entity>
+  </entities>
+  
   <applications>
     <application name="assetspec" title="Asset Specification" entity="assetspec" id="00000000-0000-0000-0000-040079045007" >
       <properties>

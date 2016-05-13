@@ -3,6 +3,44 @@
 
 
   <entities>
+
+    <entity name="meter" idAttribute="meterid">
+      <attributes>
+        <attribute name="metername" type="varchar" required="true" />
+        <attribute name="metertype" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="readingtype" type="varchar" required="false" />
+        <attribute name="measureunitid" type="varchar" required="false" />
+        <attribute name="domainid" type="varchar" required="false" />
+        <attribute name="meterid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="alndomain">
+          <relationshipAttribute from="domainid" to="domainid" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="meter" />
+      </connectorParameters>
+    </entity>
+    
+    <entity name="metergroup" idAttribute="metergroupid">
+      <attributes>
+        <attribute name="groupname" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="metergroupid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="metergroup" />
+      </connectorParameters>
+    </entity>
+    
     <entity name="METERREADING" idAttribute="METERREADINGID">
       <!--This entity is declared just to use the wsdl out of it, it´s not indeed used for querying-->
       <attributes>
