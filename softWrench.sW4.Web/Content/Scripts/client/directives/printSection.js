@@ -39,10 +39,12 @@ app.directive('printSection', function (contextService) {
             $scope.showPrintLogo = false;
             $scope.displayableID = null;
 
+            var locationPath = window.location.pathname === "/" ? "" : window.location.pathname;
+
             if ("otb" === $rootScope.clientName) {
-                $scope.printLogo = window.location.pathname + "/Content/Images/logo-pdf.png";
+                $scope.printLogo = locationPath + "/Content/Images/logo-pdf.png";
             } else {
-                $scope.printLogo = window.location.pathname + "/Content/Customers/" + $rootScope.clientName + "/images/logo-pdf.png";
+                $scope.printLogo = locationPath + "/Content/Customers/" + $rootScope.clientName + "/images/logo-pdf.png";
             }
             $.ajax({
                 url: $scope.printLogo, type: "HEAD",

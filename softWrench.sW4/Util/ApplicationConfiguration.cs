@@ -636,14 +636,6 @@ namespace softWrench.sW4.Util {
         public static bool IsClient(string clientName) {
             return ClientName.Equals(clientName);
         }
-
-        public static string GetServerPath(string appContext) {
-            if (!string.IsNullOrEmpty(_serverPath)) {
-                return _serverPath;
-            }
-            _serverPath = HttpContext.Current.Request.MapPath(appContext);
-            return _serverPath;
-        }
     }
 
 }

@@ -183,7 +183,18 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             if (seccondBarIndex > 0) {
                 appContext = appContext.Substring(0, appContext.IndexOf("/", 1, StringComparison.Ordinal));
             }
-            var serverPath = ApplicationConfiguration.GetServerPath(appContext);
+
+            if (Log.IsDebugEnabled) {
+                Log.DebugFormat("Details Commlog original App context: " + appContext);
+            }
+
+            // appcontext not found on html, probably appcontext is "/"
+            // or appcontext found as the content folder also probably appcontext is "/"
+            if (detailsHtml.IndexOf("<link href=\"" + appContext, StringComparison.Ordinal) < 0 || "/Content".Equals(appContext)) {
+                appContext = "/";
+            }
+
+            var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 
             // make css paths absolute
             var processedHtml = detailsHtml.Replace("<link href=\"" + appContext, "<link href=\"" + serverPath);
@@ -191,6 +202,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             processedHtml = processedHtml.Replace(" src=\"" + appContext, " src=\"" + serverPath);
 
             if (Log.IsDebugEnabled) {
+                Log.DebugFormat("Details Commlog App context: " + appContext);
+                Log.DebugFormat("Details Commlog Server path: " + serverPath);
                 Log.DebugFormat(processedHtml);
             }
 
