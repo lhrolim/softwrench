@@ -99,21 +99,7 @@
                                 </script>
                             }
                             <div class="row login">
-
                                 @if (@Model.ClientName != "demo") {
-                                    @*<div class="col-sm-6">
-                                            <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
-                                            <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                                Username is required<br />
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <input id="password" type="password" name="password" class="form-control" placeholder="Password">
-                                            <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                                Password is required<br />
-                                            </div>
-                                            <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
-                                        </div>*@
                                     <div class="col-sm-offset-3 col-sm-6">
                                         <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
                                         <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
@@ -153,7 +139,6 @@
                                     <button class="btn col-xs-4 col-sm-5" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
                                     <div class="col-xs-4 col-sm-5">
                                         <a class="btn forgot-password" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
-                                        <br/>
                                         <a class="btn forgot-password"
                                            data-toggle="modal" data-target="#newUserRegistrationModal">
                                             New User Registration
@@ -166,7 +151,6 @@
                                     <button class="btn col-xs-4 col-sm-2" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
                                     <div class="col-xs-4 col-sm-2">
                                         <a class="btn forgot-password" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
-                                        <br/>
                                         <a class="btn forgot-password"
                                            data-toggle="modal" data-target="#newUserRegistrationModal">
                                             New User Registration
