@@ -42,19 +42,26 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             var facilityList = FirstSolarAdvancedSearchDtoUtils.GetFacilityList(searchDto);
             var includeSubloc = FirstSolarAdvancedSearchDtoUtils.GetIncludeSubLocations(searchDto);
 
-            Log.Debug("Building locations of interest where clause...");
-            var locOfInterest = FirstSolarAdvancedSearchDtoUtils.GetLocationsOfInterest(searchDto);
-            var locOfInterestClause = BuildAdvancedSearchWhereClause(locOfInterest, tableName, includeSubloc);
-            AppendWhereClause(advancedSearchClause, locOfInterestClause);
+            var allLocations = new HashSet<string>();
 
-            Log.Debug("Building sitchgears locations where clause");
+            Log.Debug("Building locations of interest, sitchgears and pcs locations where clause...");
+
+            var locOfInterest = FirstSolarAdvancedSearchDtoUtils.GetLocationsOfInterest(searchDto);
+            if (locOfInterest != null) {
+                locOfInterest.ForEach(l => allLocations.Add(l));
+            }
             var switchgears = FirstSolarAdvancedSearchDtoUtils.GetSwitchgears(searchDto);
-            var switchgearsClause = BuildAdvancedSearchWhereClause(switchgears, tableName, includeSubloc);
-            AppendWhereClause(advancedSearchClause, switchgearsClause);
-            Log.Debug("Building pcs where clause");
+            if (switchgears != null) {
+                switchgears.ForEach(l => allLocations.Add(l));
+            }
+
             var pcsLocations = FirstSolarAdvancedSearchDtoUtils.GetPcsLocations(searchDto);
-            var pcsLocationsClause = BuildAdvancedSearchWhereClause(pcsLocations, tableName, includeSubloc);
-            AppendWhereClause(advancedSearchClause, pcsLocationsClause);
+            if (pcsLocations != null) {
+                pcsLocations.ForEach(l => allLocations.Add(l));
+            }
+
+            var locWhereClause = BuildAdvancedSearchWhereClause(allLocations, tableName, includeSubloc);
+            AppendWhereClause(advancedSearchClause, locWhereClause);
 
             FinishAdvancedSearch(advancedSearchClause.ToString(), searchDto, facilityList, tableName, includeSubloc);
         }
@@ -100,14 +107,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             }
             var clause = new StringBuilder("(");
             var joinedLocations = "'" + string.Join("', '", locations) + "'";
-            clause.Append(tableName).Append(".location in (").Append(joinedLocations).Append(")");
-            if (includeSublocs) {
-                clause.Append(" OR ").Append(tableName).Append(".location in ( ");
-                clause.Append("select a.location from locancestor a where a.ancestor in ");
-                clause.Append("(").Append(joinedLocations).Append(")");
-                clause.Append(")");
+            clause.Append(tableName).Append(".location in (");
+            if (!includeSublocs) {
+                clause.Append(joinedLocations);
+            } else {
+                clause.Append("(select l.location from locations l where l.location in (").Append(joinedLocations).Append("))");
+                clause.Append(" UNION ");
+                clause.Append("(select a.location from locancestor a where a.ancestor in (").Append(joinedLocations).Append("))");
             }
-            clause.Append(")");
+            clause.Append("))");
             Log.Debug(string.Format("Done: {0}", clause));
             return clause.ToString();
         }
@@ -132,7 +140,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advanceds
             // if until now the query is empty is because only the facility was given
             // so the facility clause is used
             Log.Debug("Building facility where clause");
-            var facilitiesClause = BuildAdvancedSearchWhereClause(facilityList.Select(s=> s + "-00").ToList(), tableName, includeSubloc);
+            var facilitiesClause = BuildAdvancedSearchWhereClause(facilityList.Select(s => s + "-00").ToList(), tableName, includeSubloc);
             searchDto.AppendWhereClause(facilitiesClause);
         }
     }
