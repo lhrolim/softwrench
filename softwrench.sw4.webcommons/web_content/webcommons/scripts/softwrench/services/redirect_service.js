@@ -2,7 +2,7 @@
     'use strict';
 
 
-    function redirectService($http, $rootScope, $log, $q, contextService, fixHeaderService, restService, applicationService, alertService, modalService, schemaCacheService, $timeout, searchService, historyService) {
+    function redirectService($http, $rootScope, $log, $q, contextService, fixHeaderService, restService, applicationService, alertService, modalService, schemaCacheService, $timeout, searchService, historyService, $location) {
 
 
         function getActionUrl(controller, action, parameters) {
@@ -11,6 +11,7 @@
 
         function redirectToHome() {
             contextService.deleteFromContext("swGlobalRedirectURL");
+            $location.path("");
             window.location.reload();
         };
 
@@ -314,7 +315,7 @@
 
     angular
     .module('sw_layout')
-    .factory('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService', 'modalService', 'schemaCacheService', '$timeout', 'searchService', 'historyService', redirectService]);
+    .factory('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService', 'modalService', 'schemaCacheService', '$timeout', 'searchService', 'historyService', "$location", redirectService]);
 
 })(angular);
 
