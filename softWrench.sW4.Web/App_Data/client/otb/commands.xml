@@ -13,9 +13,8 @@
 
   <commandgroup position="detail.primary" platform="web">
     <!--<command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />-->
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" showexpression="$scope:shouldshowsave" cssclasses="large-button"/>
-    <command id="back" icon="fa-arrow-left" service="$scope" method="cancel" label="Back" showexpression="$scope:shouldshowback" cssclasses="large-button"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" showexpression="$scope:shouldshowcancel" cssclasses="large-button"/>
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" cssclasses="large-button"/>
+    <command id="cancel" icon="$scope:getCancelIcon" service="$scope" method="cancel" label="$scope:getCancelLabel" cssclasses="large-button"/>
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint" cssclasses="large-button"/>
   </commandgroup>
 

@@ -46,7 +46,7 @@
             <commandgroup position="detail.primary">
               <removecommand id="print"/>
               <command id="save" service="userProfileService" method="save" cssclasses="large-button"/>
-              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-trash" position="+back" cssclasses="large-button" 
+              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-trash" position="+canel" cssclasses="large-button" 
                        showexpression="!!@id &amp;&amp; !!@deletable" enableexpression="!!@id &amp;&amp; !!@deletable"/>
             </commandgroup>
           </commandbars>

@@ -114,13 +114,21 @@
                     return $scope.schema.stereotypeAttr != 'detailnew';
                 }
 
-                this.shouldshowback = function () {
-                    return $scope.schema.stereotypeAttr != 'detailnew';
-                }
+                this.getCancelLabel = function () {
+                    if ($scope.schema.stereotypeAttr == 'detailnew') {
+                        return 'Cancel';
+                    }
 
-                this.shouldshowcancel = function () {
-                    return $scope.schema.stereotypeAttr == 'detailnew';
-                }
+                    return 'Back';
+                };
+
+                this.getCancelIcon = function () {
+                    if ($scope.schema.stereotypeAttr == 'detailnew') {
+                        return 'fa-times';
+                    }
+
+                    return 'fa-arrow-left';
+                };
 
                 $(document).on("sw_autocompleteselected", function (event, key) {
                     focusService.resetFocusToCurrent($scope.schema, key);
