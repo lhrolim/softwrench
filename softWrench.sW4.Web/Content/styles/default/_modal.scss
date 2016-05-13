@@ -30,6 +30,10 @@
 
     .listgrid-table {
         margin-top: 0 !important;
+
+        td {
+            width: initial !important;
+        }
     }
 }
 

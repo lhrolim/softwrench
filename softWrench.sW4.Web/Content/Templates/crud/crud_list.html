@@ -130,7 +130,7 @@
                     <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'" class="select-multiple">
                         <multiselect-dropdown data-checkbox-fn="selectAllChanged()" data-commands="multiselect.dropdown" data-datamap="datamap" data-schema="schema" ng-model="selectionModel.selectAllValue"/>
                     </th>
-                    <th ng-show="schema.properties['list.selectionstyle'] === 'single'">
+                    <th ng-show="schema.properties['list.selectionstyle'] === 'single'" class="select-single">
                         <!--Singleselect-->
                     </th>
                     <th class="{{safeCSSselector(column.attribute)}}"
@@ -156,7 +156,7 @@
                             </div>
                         </div>
                     </th>
-                    <th ng-if="selectionModel.selectionMode && 'true' !==schema.properties['list.disableddetails']">
+                    <th ng-if="selectionModel.selectionMode && schema.properties['list.disableddetails'] !== 'true'" class="edit-detail">
                         <!--Selection mode active... should render an extra icon to open up the details-->
                     </th>
 

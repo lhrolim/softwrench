@@ -47,6 +47,14 @@
             }
         }
 
+        pagination.large-button {
+            height: auto;
+
+            .text {
+                height: auto;
+            }
+        }
+
         .quick-search {
             margin-top: 0;
         }

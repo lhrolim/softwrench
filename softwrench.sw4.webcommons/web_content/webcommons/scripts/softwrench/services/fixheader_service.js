@@ -84,18 +84,22 @@ angular.module('sw_layout')
     $(window).resize(window.debounce(setHeaderPosition, 250));
 
     function setHeaderColumnWidths() {
-        var table = $('.listgrid-table');
-        var rows = $('tbody tr', table);
-        var firstRow = $('td', rows[0]);
+        var modalGrid = $('.modal .listgrid-table:visible');
 
-        firstRow.each(function () {
-            var tdClass = $(this)[0].classList[0];
-            var tdWidth = $(this).width();
-            var th = $('.listgrid-table thead th.{0}'.format(tdClass));
+        if (modalGrid.length == 0) {
+            var table = $('.listgrid-table:visible');
+            var rows = $('tbody tr', table);
+            var firstRow = $('td', rows[0]);
 
-            th.width(tdWidth);
-            $('.cell-wrapper', th).width(tdWidth);
-        });
+            firstRow.each(function() {
+                var tdClass = $(this)[0].classList[0];
+                var tdWidth = $(this).width();
+                var th = $('thead th.{0}'.format(tdClass), table);
+
+                th.width(tdWidth);
+                $('.cell-wrapper', th).width(tdWidth);
+            });
+        }
     };
 
     //register layout functions, debounced to stop repeated calls while resizing the browser window
