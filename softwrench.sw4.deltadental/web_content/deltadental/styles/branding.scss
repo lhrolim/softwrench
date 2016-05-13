@@ -1,11 +1,15 @@
 ﻿$form_background: rgba(#013e5b, 0.75);
 
-.container header .branding .logo {
-    margin-top: 15px;
-}
-
 .page-signin {
     background: #0066c8 url(../images/signin-lg.jpg) no-repeat center center fixed;
+
+    .form-signin {
+        .logo.main {
+            img {
+                height: 56px;
+            }
+        }
+    }
 }
 
 .container {

@@ -4,6 +4,14 @@ $asset_path: "../images";
 
 .page-signin {
     background: $signin_color url(#{$asset_path}/signin-lg.jpg) no-repeat center center fixed;
+
+    .form-signin {
+        .logo.main {
+            img {
+                height: 60px;
+            }
+        }
+    }
 }
 
 .container {
@@ -17,7 +25,6 @@ $asset_path: "../images";
         .branding {
             .logo img {
                 height: 40px;
-                width: auto;
             }
         }
     }

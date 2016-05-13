@@ -15,6 +15,10 @@ $asset_path: "../images";
         .logo.main {
             background: #fff;
             padding: 50px 0;
+
+            img {
+                height: auto;
+            }
         }
     }
 }

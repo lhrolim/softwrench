@@ -1,7 +1,23 @@
 ﻿.page-signin {
     .form-signin {
+        .logo.main {
+            img {
+                height: auto;
+            }
+        }
+
         .divider {
             height: 40px;
+        }
+    }
+}
+
+.container {
+    header {
+        .branding {
+            .logo img {
+                height: 50px;
+            }
         }
     }
 }
