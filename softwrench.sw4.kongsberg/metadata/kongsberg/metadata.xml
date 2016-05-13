@@ -1582,10 +1582,10 @@
       </schemas>
     </application>
 
-    <application name="projectrequest" title="Project Request" entity="projectrequest">
+    <application name="projectrequest" title="Real-Time Job Request" entity="projectrequest">
       <schemas>
-        <schema id="list" stereotype="list" title="Project Request Grid">
-          <field attribute="ticketid" label="Project Request"/>
+        <schema id="list" stereotype="list" title="Real-Time Job Request Grid">
+          <field attribute="ticketid" label="Real-Time Job Request"/>
           <field attribute="reportdate" label="Report Date">
             <renderer type="datetime"/>
           </field>
@@ -1598,7 +1598,7 @@
             <property key="list.click.schema" value="editdetail"/>
           </properties>
         </schema>
-        <schema id="adetail" stereotype="detail" abstract="true" title="Project Request">
+        <schema id="adetail" stereotype="detail" abstract="true" title="Real-Time Job Request">
           <section id="hiddenfields">
             <section id="statussection"/>
             <field attribute="classstructureid" label="Class Structure ID" hidden="true"/>
@@ -1701,13 +1701,13 @@
           </section>
         </schema>
         
-        <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Project Request">
+        <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Real-Time Job Request">
           <properties>
             <property key="nextschema.schemaid" value="editdetail"/>
           </properties>
         </schema>
         
-        <schema id="editdetail" parentschema="adetail" stereotype="detail" title="Project Request">
+        <schema id="editdetail" parentschema="adetail" stereotype="detail" title="Real-Time Job Request">
         </schema>
       </schemas>
     </application>

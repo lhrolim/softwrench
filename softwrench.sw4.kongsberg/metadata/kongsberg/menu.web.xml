@@ -6,9 +6,9 @@
   <reference id="servicereq"/>
   <reference id="Incident"/>
   <reference id="solution"/>
-  <container title="Project Requests" tooltip="Click to access your Project Request tasks" icon="fa fa-ticket" id="projreq" role="jr">
-    <application id="JRG" icon="fa fa-table" title="Project Request Grid" ref="projectrequest" schema="list" tooltip="Click to view your Project Request grid"/>
-    <application id="JR" icon="fa fa-plus" title="New Project Request" ref="projectrequest" schema="newdetail" tooltip="Click to Create a New Project Request"/>
+  <container title="Real-Time Job Requests" tooltip="Click to access your Jon Request tasks" icon="fa fa-ticket" id="projreq" role="jr">
+    <application id="JRG" icon="fa fa-table" title="Real-Time Job Request Grid" ref="projectrequest" schema="list" tooltip="Click to view your Real-Time Job Request grid"/>
+    <application id="JR" icon="fa fa-plus" title="New Real-Time Job Request" ref="projectrequest" schema="newdetail" tooltip="Click to Create a New Job Request"/>
   </container>
   
 </Menu>
