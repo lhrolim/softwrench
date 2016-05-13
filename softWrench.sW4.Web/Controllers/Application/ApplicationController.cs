@@ -27,6 +27,7 @@ using System.Text;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using System.IO.Compression;
 
 namespace softWrench.sW4.Web.Controllers.Application {
     [System.Web.Mvc.Authorize]
@@ -284,6 +285,78 @@ namespace softWrench.sW4.Web.Controllers.Application {
             var stream = new MemoryStream(byteArray);
 
             return File(stream, contentType, fileName);
+        }
+
+        /// <summary>
+        /// Downloads a zip file containing the log files.
+        /// </summary>
+        /// <param name="fileName">The file name</param>
+        /// <param name="contentType">The content type</param>
+        /// <param name="path">the file path</param>
+        /// <param name="setFileNameWithDate">flag to append date with file name.</param>
+        /// <returns>A <see cref="FileContentResult"/> result.</returns>
+        public FileContentResult DownloadLogFilesZipBundle(string fileName, string contentType, string path, bool setFileNameWithDate = false) {
+            var zipFileName = Path.GetTempPath() + "LogFiles_" + DateTime.UtcNow.Ticks + ".zip";
+            using (var zipFile = new FileStream(zipFileName, FileMode.Create)) {
+                using (var zipArchive = new ZipArchive(zipFile, ZipArchiveMode.Update)) {
+                    for (int i = 0; i <= 5; i++) {
+                        var filePath = path;
+
+                        if (i != 0) { filePath = filePath + "." + i.ToString(); }
+
+                        if (System.IO.File.Exists(filePath)) {
+                            string content;
+                            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                            using (var streamReader = new StreamReader(fileStream)) {
+                                content = streamReader.ReadToEnd();
+                            }
+
+                            var fileNameAux = fileName.Split('.');
+                            var customName = setFileNameWithDate ? fileNameAux[0] + string.Format("_{0}_", i) + DateTime.Now.ToString("MMM-dd-yyyy") : fileNameAux[0] + string.Format("_{0}", i);
+                            var tempName = string.Format("{0}{1}", customName, ".txt");
+
+                            var byteArray = Encoding.ASCII.GetBytes(content);
+                            var stream = new MemoryStream(byteArray);
+
+                            this.AddFileToZip(tempName, stream, zipArchive);
+                        }
+                    }
+                }
+            }
+
+            var contentBuffer = GetBytesFromFile(zipFileName);
+            System.IO.File.Delete(zipFileName);
+
+            return File(contentBuffer, contentType, fileName);
+        }
+
+        /// <summary>
+        /// Adds the file to zip.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fileStream">file stream.</param>
+        /// <param name="zipArchive">The zip archive.</param>
+        private void AddFileToZip(string fileName, Stream fileStream, ZipArchive zipArchive) {
+            var entry = zipArchive.CreateEntry(fileName);
+            using (var writer = entry.Open()) {
+                fileStream.CopyTo(writer);
+            }
+        }
+
+        /// <summary>
+        /// Gets the bytes from file.
+        /// </summary>
+        /// <param name="zipFileName">Name of the zip file.</param>
+        /// <returns>An array of bytes.</returns>
+        private static byte[] GetBytesFromFile(string zipFileName) {
+            byte[] contentBuffer;
+            using (var zipStream = new FileStream(zipFileName, FileMode.Open)) {
+                contentBuffer = new byte[zipStream.Length];
+                zipStream.Position = 0;
+                zipStream.Read(contentBuffer, 0, contentBuffer.Length);
+            }
+
+            return contentBuffer;
         }
 
     }

@@ -6,38 +6,57 @@
                 <label class="" for="changeviewlogid">
                     <input type="radio" id="changeviewlogid" ng-model="chooselog" value="changeviewlog">
                     Change Log Level
-                   
+
                 </label>
                 <label class="" for="viewdownloadlogid">
                     <input type="radio" id="viewdownloadlogid" ng-model="chooselog" value="viewdownloadlog" ng-change="setDefaultAppender()">
                     View/Download Log
-                   
+
                 </label>
+                <div style="margin-top:10px;" ng-show="chooselog === 'viewdownloadlog'">
+                    <input type="radio" ng-model="logrotation" id="latestlog" value="0" ng-change="readLogFile(logrotation, filenumber)">
+                    Latest Log
+
+                    <input style="margin-left:10px;" type="radio" id="" ng-model="logrotation" value="1" ng-change="readLogFile(logrotation, filenumber)">
+                    Select Rotation:
+
+                    <select ng-disabled="logrotation === '0'" ng-model="filenumber" ng-change="readLogFile(logrotation, filenumber)">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+
+                </div>
             </div>
         </div>
-        <section ng-if="chooselog == 'viewdownloadlog'">
+        <section ng-show="chooselog == 'viewdownloadlog'">
             <div class="appender form-group">
                 <label class="control-label col-lg-2">Select Log Appender</label>
                 <div class="col-lg-10">
                     <div>
                         <select ng-model="selectedappender"
-                            ng-options="appender.name for appender in appenders"
-                            ng-change="viewAppenderContent(selectedappender)"
-                            class="form-control" />
+                                ng-options="appender.name for appender in appenders"
+                                ng-change="viewAppenderContent(selectedappender)"
+                                class="form-control" />
                     </div>
                 </div>
-                <div class="col-lg-offset-2 col-lg-10" ng-if="selectedappender.value != null">
-                    <button type="submit" class="btn btn-primary" ng-click="downloadFile(selectedappender)">
-                        <i class="fa fa-download"></i>&ensp;Download      
+                <div class="col-lg-offset-2 col-lg-10" ng-show="selectedappender.value != null">
+                    <button type="button" class="btn btn-primary" ng-click="downloadFile(selectedappender, logrotation, filenumber)">
+                        <i class="fa fa-download"></i>&ensp;Download
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="downloadZipFile(selectedappender)">
+                        <i class="fa fa-download"></i>&ensp;Download all as Zip
                     </button>
                 </div>
             </div>
             <div>
                 <textarea ng-model="appendercontent" readonly
-                    class="form-control textarealog" />
+                          class="form-control textarealog" />
             </div>
         </section>
-        <section ng-if="chooselog == 'changeviewlog'">
+        <section ng-show="chooselog == 'changeviewlog'">
             <div class="form-group">
                 <label class="control-label col-lg-2">Category Filter</label>
                 <div class="col-lg-10">
@@ -72,4 +91,4 @@
             </div>
         </section>
     </form>
-</article>
+</article> 
