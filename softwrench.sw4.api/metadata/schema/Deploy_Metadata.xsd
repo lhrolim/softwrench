@@ -317,7 +317,6 @@
       </element>
 
     </choice>
-
     <attribute name="label" type="string" use="required"></attribute>
     <attribute name="target" type="string" use="required"></attribute>
     <attribute name="labelfield" type="string" use="required"></attribute>

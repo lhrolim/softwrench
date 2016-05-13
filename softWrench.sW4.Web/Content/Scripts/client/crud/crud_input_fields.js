@@ -493,7 +493,8 @@
                         return result;
                     }
                     $scope.showLabelTooltip = function (fieldMetadata) {
-                        if (fieldMetadata.label !== fieldMetadata.toolTip) {
+                        var helpIcon = $scope.getHelpIconPos(fieldMetadata);
+                        if (fieldMetadata.label !== fieldMetadata.toolTip && (helpIcon == undefined || helpIcon === '')) {
                             return 'tooltip';
                         } else {
                             return '';
@@ -615,6 +616,19 @@
 
                     $scope.initField = function (fieldMetadata) {
                         crud_inputcommons.initField($scope, fieldMetadata, "datamap");
+                    };
+
+                    $scope.getHelpIconPos = function (fieldMetadata) {
+                        return fieldMetadata.header ? fieldMetadata.header.helpIcon : fieldMetadata.helpIcon;
+                    };
+
+                    $scope.showHelpIcon = function (fieldMetadata, position) {
+                        var helpIconPosition = $scope.getHelpIconPos(fieldMetadata);                        
+                        return (helpIconPosition != null && helpIconPosition != '' && helpIconPosition === position);
+                    };
+
+                    $scope.helpToolTip = function (fieldMetadata) {
+                        return fieldMetadata.header ? fieldMetadata.header.toolTip : fieldMetadata.toolTip;
                     };
 
                     $scope.initRichtextField = function (fieldMetadata) {

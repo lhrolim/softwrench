@@ -27,7 +27,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string ShowExpression { get; set; }
         [DefaultValue("true")]
         public string EnableExpression { get; set; }
-
+        public string HelpIcon { get; set; }
         public string ToolTip { get; set; }
         public bool IsReadOnly { get; set; }
         public string AttributeToServer { get; set; }
@@ -49,7 +49,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         protected BaseApplicationFieldDefinition(string applicationName, string label,
             string attribute, string requiredExpression, bool isReadOnly,
-            string defaultValue, string qualifier, string showExpression, string toolTip,
+            string defaultValue, string qualifier, string showExpression, string helpIcon, string toolTip,
             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression,
             string defaultExpression, bool declaredAsQueryOnEntity, string searchOperation) {
             if (attribute == null) {
@@ -65,6 +65,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             DefaultValue = defaultValue;
             Qualifier = qualifier;
             ShowExpression = showExpression;
+            HelpIcon = helpIcon;
             ToolTip = toolTip;
             AttributeToServer = attributeToServer;
             if (events != null) {

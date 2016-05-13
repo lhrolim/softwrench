@@ -452,6 +452,12 @@
 
   </complexType>
 
+  <simpleType name="HelpIcon">
+    <restriction base="string">
+      <enumeration value="left"></enumeration>
+      <enumeration value="right"></enumeration>
+    </restriction>
+  </simpleType>
 
   <simpleType name="modeType">
     <restriction base="string">
@@ -509,6 +515,7 @@
     <attribute name="default" type="string"></attribute>
     <attribute name="defaultexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
+    <attribute name="helpicon" type="tns:HelpIcon" use="optional" default="right"></attribute>
     <attribute name="preventnoresultscarry" type="boolean">
       <annotation>
         <documentation>
@@ -662,6 +669,7 @@
         </documentation>
       </annotation>
     </attribute>
+    <attribute name="helpicon" type="tns:HelpIcon" use="optional" default="right"></attribute>
   </complexType>
 
   <complexType name="DataProvider">
@@ -859,7 +867,7 @@
       <enumeration value="manual"></enumeration>
     </restriction>
   </simpleType>
-
+  
   <simpleType name="StereotypeType">
     <restriction base="string">
       <enumeration value="list"></enumeration>
@@ -1240,6 +1248,8 @@
         </restriction>
       </simpleType>
     </attribute>
+    <attribute name="tooltip" type="string"></attribute>
+    <attribute name="helpicon" type="tns:HelpIcon" use="optional" default="right"></attribute>
   </complexType>
 
   <complexType name="baseEvent">

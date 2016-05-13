@@ -16,15 +16,15 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         public static ApplicationAssociationDefinition GetFilterInstance(string from, string labelField, string target) {
             var schema = new ApplicationAssociationSchemaDefinition(new AssociationDataProvider(), new AssociationFieldRenderer(), null);
-            return GetInstance(from, new ApplicationAssociationDefinition.LabelData(null, null, labelField, from), target, null, schema, "true", null, null, null, null, false, null, null);
+            return GetInstance(from, new ApplicationAssociationDefinition.LabelData(null, null, labelField, from), target, null, schema, "true", null, null, null, null, null, false, null, null);
         }
 
 
         public static ApplicationAssociationDefinition GetInstance([NotNull] string @from, [NotNull]ApplicationAssociationDefinition.LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-                                                                   string showExpression, string toolTip, string requiredExpression, ISet<ApplicationEvent> events, string defaultValue, bool hideDescription,
+                                                                   string showExpression, string helpIcon, string toolTip, string requiredExpression, ISet<ApplicationEvent> events, string defaultValue, bool hideDescription,
             string orderbyfield, string defaultExpression, string extraProjectionFields = null, string isEnabled = "true", bool forceDistinctOptions = true, string valueField = null, ApplicationSection detailSection = null) {
 
-            var association = new ApplicationAssociationDefinition(from, labelData, target, qualifier, applicationAssociationSchema, showExpression,
+            var association = new ApplicationAssociationDefinition(from, labelData, target, qualifier, applicationAssociationSchema, showExpression, helpIcon,
                                                                    toolTip, requiredExpression, defaultValue, hideDescription, orderbyfield,
                                                                    defaultExpression, isEnabled, events, forceDistinctOptions,
                                                                    valueField, detailSection);

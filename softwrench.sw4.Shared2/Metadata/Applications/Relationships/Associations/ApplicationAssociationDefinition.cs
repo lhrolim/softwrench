@@ -115,9 +115,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield, string defaultExpression,
+            string showExpression, string helpIcon, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield, string defaultExpression,
             string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string valueField = null, ApplicationSection detailSection = null)
-            : base(from, labelData.Label, showExpression, toolTip) {
+            : base(from, labelData.Label, showExpression, helpIcon, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
             // LabelField = labelData.LabelField;
@@ -360,7 +360,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
         public object Clone() {
-            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, RequiredExpression,
+            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, HelpIcon, ToolTip, RequiredExpression,
                 DefaultValue, HideDescription, OrderByField, DefaultExpression, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField, DetailSection) {
                 ExtraProjectionFields = ExtraProjectionFields,
                 LabelFields = LabelFields,

@@ -15,6 +15,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public abstract string Role { get; }
         [DefaultValue("true")] public string ShowExpression { get; set; }
         public string ToolTip { get; set; }
+        public string HelpIcon { get; set; }
         public bool IsReadOnly { get; set; }
 
 
@@ -26,12 +27,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         }
 
-        protected ApplicationRelationshipDefinition(string @from, string label, string showExpression, string toolTip) {
+        protected ApplicationRelationshipDefinition(string @from, string label, string showExpression, string toolTip, string helpIcon) {
             if (@from == null) throw new ArgumentNullException("from");
             From = @from;
             Label = label;
             ShowExpression = showExpression;
             ToolTip = toolTip;
+            HelpIcon = helpIcon;
             LazyEntityAssociation = new Lazy<EntityAssociation>(LookupEntityAssociation);
         }
 

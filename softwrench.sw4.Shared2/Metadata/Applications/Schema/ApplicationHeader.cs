@@ -18,6 +18,8 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
         public IDictionary<string, object> Parameters { get; set; }
         public string Displacement { get { return DisplacementEnum.ToString().ToLower(); } }
         public DisplacementType DisplacementEnum { get; set; }
+        public string HelpIcon { get; set; }
+        public string ToolTip { get; set; }
 
         [DefaultValue("true")]
         public string ShowExpression { get; set; }
@@ -27,12 +29,14 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
 
         }
 
-        public ApplicationHeader(string label, string parameters, string displacement, string showExpression) {
+        public ApplicationHeader(string label, string parameters, string displacement, string showExpression, string helpIcon, string toolTip) {
             Label = label;
             Parameters = PropertyUtil.ConvertToDictionary(parameters);
             ValidateDisplacementType(displacement);
             _parametersString = parameters;
             ShowExpression = showExpression;
+            HelpIcon = helpIcon;
+            ToolTip = toolTip;
         }
 
         protected void ValidateDisplacementType(String displacement) {
@@ -55,7 +59,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
         }
 
         public object Clone() {
-            return new ApplicationHeader(Label, _parametersString, Displacement,ShowExpression);
+            return new ApplicationHeader(Label, _parametersString, Displacement,ShowExpression, HelpIcon, ToolTip);
         }
     }
 }

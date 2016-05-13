@@ -11,6 +11,7 @@
         public const string BaseDisplayableEvalExpressionAttribute = "evalexpression";
         public const string BaseDisplayableEnableDefaultAttribute = "enabledefault";
         public const string BaseDisplayableToolTipAttribute = "tooltip";
+        public const string BaseDisplayableHelpIconAttribute = "helpicon";
         public const string BaseDisplayableHiddenAttribute = "hidden";
         public const string BaseDisplayablePrintEnabledAttribute = "printenabled";
         public const string BaseDisplayableAttributeAttribute = "attribute";
