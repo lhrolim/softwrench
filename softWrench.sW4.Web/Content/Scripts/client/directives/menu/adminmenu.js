@@ -12,6 +12,7 @@
         scope: {
             isClientAdmin: '=',
             isSysAdmin: '=',
+            isDynamicAdmin: '=',
             popupmode: '=',
             myprofileenabled: '=',
             menu: '=',

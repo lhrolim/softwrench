@@ -22,6 +22,7 @@
                             <li><a href="" ng-click="doAction(null,'EntityMetadata','MenuEditor',null,$event)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.menueditor','Menu Editor')}}</a></li>
                             <li><a href="" ng-click="doAction(null,'EntityMetadata','ClassificationColorEditor',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.classificationcoloreditor','Classification Color Editor')}}</a></li>
                             <li><a href="" ng-click="doAction(null,'EntityMetadata','StatusColorEditor',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.statuscoloreditor','Status Color Editor')}}</a></li>
+                            <li ng-show="isDynamicAdmin"><a href="" ng-click="doAction(null,'SqlClient','SqlClient',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;SQL Client</a></li>
                         </ul>
                     </li>
                     <li class="dropdown-submenu" ng-show="isClientAdmin">
@@ -90,6 +91,7 @@
                                 <li><a href="" ng-click="doAction(null,'EntityMetadata','Editor',null,$event)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.metadataeditor','Metadata Editor')}}</a></li>
                                 <li><a href="" ng-click="doAction(null,'EntityMetadata','MenuEditor',null,$event)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.menueditor','Menu Editor')}}</a></li>
                                 <li><a href="" ng-click="doAction(null,'EntityMetadata','StatuscolorEditor',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.statuscoloreditor','Status Color Editor')}}</a></li>
+                                <li ng-show="isDynamicAdmin"><a href="" ng-click="doAction(null,'SqlClient','SqlClient',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;SQL Client</a></li>
                             </ul>
                         </div>
                         <div class="btn-group" ng-show="isClientAdmin">

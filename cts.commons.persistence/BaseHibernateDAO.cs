@@ -191,7 +191,6 @@ namespace cts.commons.persistence {
             return list;
         }
 
-
         public IList<dynamic> FindByNativeQuery(string queryst, ExpandoObject parameters, IPaginationData paginationData = null, string queryAlias = null) {
             var before = Stopwatch.StartNew();
             using (var session = GetSession()) {
@@ -211,6 +210,30 @@ namespace cts.commons.persistence {
                 using (session.BeginTransaction()) {
                     var query = BuildQuery(queryst, parameters, session, true);
                     return (T)query.UniqueResult();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Executes update sql queries 
+        /// Use this method only for exceptional scenarios, as we´re not intended to update Maximo straight to the database
+        /// </summary>
+        /// <param name="sql">The sql query</param>
+        /// <param name="parameters">The parameters</param>
+        /// <returns>The affected row count</returns>
+        public int ExecuteSql(string sql, params object[] parameters) {
+            using (var session = GetSession()) {
+                using (var transaction = session.BeginTransaction()) {
+                    var query = session.CreateSQLQuery(sql);
+                    if (parameters != null) {
+                        for (int i = 0; i < parameters.Length; i++) {
+                            query.SetParameter(i, parameters[i]);
+                        }
+                    }
+                    var result = query.ExecuteUpdate();
+                    transaction.Commit();
+
+                    return result;
                 }
             }
         }

@@ -70,24 +70,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                 }
             }
         }
-
-        public void ExecuteSql(string sql, params object[] parameters) {
-            using (var session = GetSession()) {
-                using (var transaction = session.BeginTransaction()) {
-                    var query = session.CreateSQLQuery(sql);
-                    if (parameters != null) {
-                        for (int i = 0; i < parameters.Length; i++) {
-                            query.SetParameter(i, parameters[i]);
-                        }
-                    }
-                    query.ExecuteUpdate();
-                    transaction.Commit();
-                }
-            }
-        }
-
-
-
+        
         #region configuration
 
         protected override string GetDialect() {

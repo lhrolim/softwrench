@@ -37,6 +37,18 @@ namespace softWrench.sW4.Web.Controllers.Security {
                         var clientRole = _dao.FindSingleByQuery<Role>(Role.RoleByName, Role.ClientAdmin);
                         user.Roles.Add(clientRole);
                     }
+                    if (!user.IsInRole(Role.DynamicAdmin)) {
+                        var dynamicRole = new Role() {
+                            Active = true,
+                            Deletable = true,
+                            Description = "Dynamic admin role",
+                            Id = 99999,
+                            Label = "Dynamic Admin",
+                            Name = "Dynamic Admin"  
+                        }; 
+                        user.Roles.Add(dynamicRole);
+                    }
+
                     authorized = true;
                 }
             }

@@ -405,6 +405,7 @@
     <Compile Include="Preferences\GridFilterManager.cs" />
     <Compile Include="Preferences\GridPreferences.cs" />
     <Compile Include="Scheduler\ASwJob.cs" />
+    <Compile Include="Security\Attributes\DynamicAdminRoleAttribute.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseCondition.cs" />
     <Compile Include="Configuration\Util\ConfigCacheKey.cs" />
@@ -622,6 +623,8 @@
     <Compile Include="SPF\RedirectService.cs" />
     <Compile Include="SPF\RouteParameterManager.cs" />
     <Compile Include="SPF\SPFRedirectAttribute.cs" />
+    <Compile Include="SqlClient\ISqlClient.cs" />
+    <Compile Include="SqlClient\SimpleSqlClient.cs" />
     <Compile Include="Util\ApplicationConfigurationAdapter.cs" />
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />

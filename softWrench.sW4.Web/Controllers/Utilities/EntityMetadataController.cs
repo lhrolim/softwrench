@@ -33,8 +33,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         public RedirectResponseResult Builder() {
             return new RedirectResponseResult();
         }
-
-
+        
         [HttpGet]
         public IGenericResponseResult Refresh() {
             var user = SecurityFacade.CurrentUser();

@@ -337,6 +337,7 @@
                 $rootScope.menu = menuModel.menu;
                 $scope.menu = menuModel.menu;
                 $scope.isSysAdmin = menuModel.isSysAdmin;
+                $scope.isDynamicAdmin = menuModel.isDynamicAdmin;
                 $scope.isClientAdmin = menuModel.isClientAdmin;
                 $('.hapag-body').addClass('hapag-body-loaded');
             });

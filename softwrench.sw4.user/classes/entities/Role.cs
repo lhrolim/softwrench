@@ -14,6 +14,7 @@ namespace softwrench.sw4.user.classes.entities {
         public const string ClientAdmin = "clientadmin";
         public const string SysJob = "sysjob";
         public const string ClientJob = "clientjob";
+        public const string DynamicAdmin = "dynamicadmin";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]

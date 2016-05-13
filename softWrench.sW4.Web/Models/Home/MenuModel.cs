@@ -9,12 +9,14 @@ namespace softWrench.sW4.Web.Models.Home {
         private readonly IDictionary<string, CommandBarDefinition> _commandBars;
         private readonly bool _isSysAdmin;
         private readonly bool _isClientAdmin;
+        private readonly bool _isDynamicAdmin;
 
-        public MenuModel(MenuDefinition menu, IDictionary<string, CommandBarDefinition> commandBars, bool isSysAdmin, bool isClientAdmin) {
+        public MenuModel(MenuDefinition menu, IDictionary<string, CommandBarDefinition> commandBars, bool isSysAdmin, bool isClientAdmin, bool isDynamicAdmin) {
             _menu = menu;
             _isSysAdmin = isSysAdmin;
             _isClientAdmin = isClientAdmin;
             _commandBars = commandBars;
+            _isDynamicAdmin = isDynamicAdmin;
         }
 
         public MenuDefinition Menu {
@@ -27,6 +29,10 @@ namespace softWrench.sW4.Web.Models.Home {
 
         public bool IsClientAdmin {
             get { return _isClientAdmin; }
+        }
+
+        public bool IsDynamicAdmin {
+            get { return _isDynamicAdmin; }
         }
 
         public IDictionary<string, CommandBarDefinition> CommandBars {

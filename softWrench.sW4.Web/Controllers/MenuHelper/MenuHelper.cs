@@ -35,6 +35,7 @@ namespace softWrench.sW4.Web.Controllers.MenuHelper {
                 var user = SecurityFacade.CurrentUser();
                 var isSysAdmin = user.IsInRole("sysadmin") ||  (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
                 var isClientAdmin = user.IsInRole("clientadmin") || (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
+                var isDynamicAdmin = user.IsInRole("dynamicadmin") || (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
                 bool fromCache;
                 var securedMenu = _menuSecurityManager.Menu(user,platform, out fromCache);
                 if (!user.Genericproperties.ContainsKey("menumanagerscached")) {
@@ -45,7 +46,7 @@ namespace softWrench.sW4.Web.Controllers.MenuHelper {
                     user.Genericproperties["menumanagerscached"] = true;
                 }
                 var securedBars = user.SecuredBars(platform, MetadataProvider.CommandBars());
-                return new MenuModel(securedMenu, securedBars, isSysAdmin, isClientAdmin);
+                return new MenuModel(securedMenu, securedBars, isSysAdmin, isClientAdmin, isDynamicAdmin);
             } catch (InvalidOperationException) {
                 FormsAuthentication.SignOut();
                 return null;

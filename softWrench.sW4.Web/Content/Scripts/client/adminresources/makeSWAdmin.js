@@ -18,6 +18,8 @@ function MakeSWAdminController($scope, $http, $timeout, redirectService) {
                 $timeout(function () {
                     location.reload();
                 }, 1500);
+
+                redirectService.redirectToHome();
             } else {
                 $scope.msg = "Unauthorized";
             }

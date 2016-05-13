@@ -146,6 +146,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\util\log_enhacer.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\menu.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\jquery_utils.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\util\sql_client.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\stopbackspacenav.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\ui_utils.js" />
     <Content Include="web_content\webcommons\templates\intervaltrigger.html" />
