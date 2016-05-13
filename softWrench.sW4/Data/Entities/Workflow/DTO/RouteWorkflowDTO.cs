@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace softWrench.sW4.Data.Entities.Workflow.DTO {
-    public class InitWorkflowDTO {
+    public class RouteWorkflowDTO {
 
         public string OwnerId {
             get; set;
@@ -19,6 +19,11 @@ namespace softWrench.sW4.Data.Entities.Workflow.DTO {
         public string SiteId {
             get; set;
         }
+
+        public string OrgId {
+            get; set;
+        }
+
         public string WfId {
             get; set;
         }

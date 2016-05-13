@@ -154,7 +154,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
         }
 
-        public IGenericResponseResult DoInitWorkflow(string appId, string appName, string appUserId, string siteid, List<Dictionary<string, string>> workflows) {
+        public IGenericResponseResult DoInitWorkflow(string appId, string appName, string appUserId, string siteid,string orgId, List<Dictionary<string, string>> workflows) {
             var appMetadata = _cachedWorkorderSchemas[appName];
             var entityName = appMetadata.Schema.EntityName;
 
@@ -169,6 +169,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
             IDictionary<string, object> attributes = new Dictionary<string, object>();
             attributes.Add("wonum", appUserId);
             attributes.Add("siteid", siteid);
+            attributes.Add("orgid", orgId);
             attributes.Add("workflowinfo", personId + ";start;" + workflowName + ";;;");
 
             _maximoConnectorEngine.Update(new CrudOperationData(appId, attributes, new Dictionary<string, object>(), entityMetadata, appMetadata));
@@ -211,6 +212,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
             IDictionary<string, object> attributes = new Dictionary<string, object>();
             attributes.Add("wonum", routeWorkflowDTO.AppUserId);
             attributes.Add("siteid", routeWorkflowDTO.SiteId);
+            attributes.Add("orgid", routeWorkflowDTO.OrgId);
             attributes.Add("workflowinfo", BuildWorkflowInfo(routeWorkflowDTO));
 
             _maximoConnectorEngine.Update(new CrudOperationData(routeWorkflowDTO.OwnerId, attributes, new Dictionary<string, object>(), entityMetadata,
@@ -235,7 +237,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
         }
 
 
-        public IGenericResponseResult DoStopWorkFlow(string entityName, string id, string userId, string siteid, Dictionary<string, string> workflow) {
+        public IGenericResponseResult DoStopWorkFlow(string entityName, string id, string userId, string siteid, string orgid, Dictionary<string, string> workflow) {
             var appMetadata = _cachedWorkorderSchemas[entityName];
 
             var entityMetadata = MetadataProvider.Entity(entityName);
@@ -243,6 +245,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
             IDictionary<string, object> attributes = new Dictionary<string, object>();
             attributes.Add(appMetadata.Schema.UserIdFieldName, userId);
             attributes.Add("siteid", siteid);
+            attributes.Add("orgid", orgid);
 
             attributes.Add("workflowinfo", SecurityFacade.CurrentUser().MaximoPersonId + ";stop;" + workflow["wfid"] + ";;;");
 

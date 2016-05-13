@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.portable.Util;
 using log4net;
@@ -46,7 +45,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
-        public IGenericResponseResult InitiateWorkflow(string appName, string appId, string appUserId, string siteid, string workflowName) {
+        public IGenericResponseResult InitiateWorkflow(string appName, string appId, string appUserId, string siteid, string orgid, string workflowName) {
 
             var workflows = _workflowManager.GetAvailableWorkflows(appName, workflowName, appId);
 
@@ -73,16 +72,16 @@ namespace softWrench.sW4.Web.Controllers {
             }
 
 
-            return _workflowManager.DoInitWorkflow(appId, appName, appUserId, siteid, workflows);
+            return _workflowManager.DoInitWorkflow(appId, appName, appUserId, siteid, orgid, workflows);
         }
 
 
-        public IGenericResponseResult StopWorkflow(string entityName, string id, string userId, string siteid, Int32? wfInstanceId) {
+        public IGenericResponseResult StopWorkflow(string entityName, string id, string userId, string siteid,string orgid, Int32? wfInstanceId) {
             if (wfInstanceId != null) {
                 var wfsToStop = _maximoDao.FindByNativeQuery(WorkFlowById, wfInstanceId);
                 Log.InfoFormat("Stopping workflow {0} for app {1}", wfInstanceId, entityName);
                 if (wfsToStop.Any()) {
-                    return _workflowManager.DoStopWorkFlow(entityName, id, userId, siteid, wfsToStop[0]);
+                    return _workflowManager.DoStopWorkFlow(entityName, id, userId, siteid, orgid, wfsToStop[0]);
                 }
             }
 
@@ -105,7 +104,7 @@ namespace softWrench.sW4.Web.Controllers {
             //otherwise, let´s stop the only one found
             var workflow = workflows[0];
 
-            return _workflowManager.DoStopWorkFlow(entityName, id, userId, siteid, workflow);
+            return _workflowManager.DoStopWorkFlow(entityName, id, userId, siteid, orgid, workflow);
         }
 
         public IGenericResponseResult InitRouteWorkflow(string entityName, string id, string appuserId, string siteid) {

@@ -12,6 +12,7 @@
                 appId: fields[schema.idFieldName],
                 appUserId: fields[schema.userIdFieldName],
                 siteid: fields["siteid"],
+                orgid: fields["orgid"],
                 workflowName: workflowName
             };
 
@@ -78,6 +79,7 @@
                             ownerTable: schema.applicationName,
                             appUserId: rootDatamap[schema.userIdFieldName],
                             siteid: rootDatamap["siteid"],
+                            orgId: rootDatamap["orgid"],
                             wfId: fields["#wfid"],
                             processName: fields["#processName"],
                             memo: fields["#memo"],
@@ -136,6 +138,7 @@
                 id: datamap["fields"][schema.idFieldName],
                 userid: datamap["fields"][schema.userIdFieldName],
                 siteid: datamap["fields"]["siteid"],
+                orgid: datamap["fields"]["orgid"],
                 wfInstanceId: wfInstanceId
             };
 
