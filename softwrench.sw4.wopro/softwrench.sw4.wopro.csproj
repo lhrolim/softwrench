@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{639D7DC5-14F8-4CDA-A10E-4F8395D1320B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>softwrench.sw4.wopro</RootNamespace>
+    <AssemblyName>softwrench.sw4.wopro</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="metadata\wopro\properties.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="metadata\wopro\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Content Include="metadata\wopro\readme.txt" />
+    <Content Include="web_content\wopro\images\branding.png" />
+    <Content Include="web_content\wopro\images\footer.jpg" />
+    <Content Include="web_content\wopro\images\header-email.jpg" />
+    <Content Include="web_content\wopro\images\header.jpg" />
+    <Content Include="web_content\wopro\images\logo-byline.png" />
+    <Content Include="web_content\wopro\images\logo-main.png" />
+    <Content Include="web_content\wopro\images\signin-lg.jpg" />
+    <Content Include="web_content\wopro\images\signin-md.jpg" />
+    <Content Include="web_content\wopro\images\signin-sm.jpg" />
+    <Content Include="web_content\wopro\images\signin-xs.jpg" />
+    <Content Include="web_content\wopro\images\signin-xxs.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="customer.placeholder" />
+    <None Include="packages.config" />
+    <None Include="web_content\wopro\styles\branding.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="classes\com\cts\wopro\configuration\" />
+    <Folder Include="classes\com\cts\wopro\connector\" />
+    <Folder Include="classes\com\cts\wopro\dataset\" />
+    <Folder Include="classes\com\cts\wopro\migration\" />
+    <Folder Include="web_content\wopro\htmls\" />
+    <Folder Include="web_content\wopro\scripts\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

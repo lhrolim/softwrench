@@ -998,9 +998,13 @@
       <Project>{ee5325f6-2bab-4241-b7fb-0e1556a88e23}</Project>
       <Name>softwrench.sw4.sodexo</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.wopro\softwrench.sw4.wopro.csproj">
+      <Project>{639d7dc5-14f8-4cda-a10e-4f8395d1320b}</Project>
+      <Name>softwrench.sw4.wopro</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.xerox\softwrench.sw4.xerox.csproj">
       <Project>{d704fc33-6b04-44a1-b12f-a8c196127a08}</Project>
-      <Name>softwrench.sw4.acs</Name>
+      <Name>softwrench.sw4.xerox</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.activitystream\softwrench.sw4.activitystream.csproj">
       <Project>{34d2e894-c3aa-4f6e-b562-7a91d3078793}</Project>
