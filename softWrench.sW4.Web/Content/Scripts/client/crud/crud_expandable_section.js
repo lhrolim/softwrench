@@ -78,11 +78,20 @@
                 var toggleExpansion = function () {
                     $scope.config.expanded = !$scope.config.expanded;
 
+                    var siteHeaderElement = $('.site-header');
+                    var toolbarElement = $('.toolbar-primary:visible');
+                    var fixedOffset = 0;
+
+                    //adjust the scroll to postion if the header is fixed
+                    if (siteHeaderElement.css('position') === 'fixed') {
+                        fixedOffset = siteHeaderElement.height() + toolbarElement.height();
+                    }
+                    
                     // scroll to expanded section
                     if ($scope.config.expanded) {
                         $timeout(function () {
                             //keep the expand button visible below the header and toolbar
-                            $(document.body).animate({ scrollTop: $element.offset().top - $('.site-header').height() - $('.toolbar-primary:visible').height() }, 500);
+                            $(document.body).animate({ scrollTop: $element.offset().top - fixedOffset }, 500);
                         }, 500, false);
                     }
                 };
