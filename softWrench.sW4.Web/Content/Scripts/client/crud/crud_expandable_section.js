@@ -77,11 +77,13 @@
 
                 var toggleExpansion = function () {
                     $scope.config.expanded = !$scope.config.expanded;
+
                     // scroll to expanded section
                     if ($scope.config.expanded) {
-                        $timeout(function() {
-                            $(document.body).animate({ scrollTop: $element.offset().top }, 500);
-                        }, 0, false);
+                        $timeout(function () {
+                            //keep the expand button visible below the header and toolbar
+                            $(document.body).animate({ scrollTop: $element.offset().top - $('.site-header').height() - $('.toolbar-primary:visible').height() }, 500);
+                        }, 500, false);
                     }
                 };
 
