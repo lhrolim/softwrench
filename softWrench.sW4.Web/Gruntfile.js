@@ -128,7 +128,9 @@ module.exports = function (grunt) {
                 reporters: ["progress", "dots"],
                 logLevel: "INFO",
                 preprocessors: {
-                    'Content/Templates/**/*.html': ["ng-html2js"]
+                    'Content/Templates/**/*.html': ["ng-html2js"],
+                    'Content/Shared/webcommons/scripts/**/*.js': ["babel"],
+                    'Content/Scripts/**/*.js': ["babel"]
                 },
                 ngHtml2JsPreprocessor: {
                     // If your build process changes the path to your TEMPLATES,
@@ -136,6 +138,12 @@ module.exports = function (grunt) {
                     prependPrefix: "/",
                     // the name of the Angular module to create
                     moduleName: "sw.templates"
+                },
+                babelPreprocessor: {
+                    options: {
+                        presets: ["es2015"],
+                        sourceMap: false
+                    }
                 },
                 files: [
                     // vendors

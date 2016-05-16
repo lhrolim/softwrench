@@ -36,8 +36,6 @@
   <property key="tableau_username" value="swadmin" />
   <property key="tableau_password" value="sw@dm1n" />
   <property key="tableau_site" value="default" />
-  
-  
   <!-- end tableau -->
   
   <environment key="dev">
@@ -82,6 +80,5 @@
     <property key="maximo_DB_url" value="Data Source=10.50.100.101;Initial Catalog=CTS75MAX;User Id=MAXIMO;password=maximo1;" />
     <property key="swdb_url" value="Data Source=10.50.100.101;Initial Catalog=SWDB_CTS75MAX;User Id=sw;password=softwrench;" />
   </environment>
-
 
 </Properties>
