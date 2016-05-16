@@ -6,6 +6,7 @@
     <template path="@locationspec.xml"/>
     <template path="@assettrans.xml"/>
     <template path="@locationmeter.xml"/>
+    <template path="@serviceaddress.xml"/>
   </templates>
 
   <entities>

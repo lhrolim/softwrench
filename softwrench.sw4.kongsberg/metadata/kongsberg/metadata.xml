@@ -9,8 +9,10 @@
     <template path="@commlogs.xml"/>
     <template path="@attachments.xml"/>
     <template path="@incident.xml"/>
+    <template path="@asset.xml"/>
     <template path="@attachments.xml"/>
     <template path="@relatedrecords.xml"/>
+    <template path="@workorder.xml"/>
   </templates>
   <entities>
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
