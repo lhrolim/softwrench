@@ -141,6 +141,9 @@
           <relationshipAttribute query=""/>
         </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="locations" />
+      </connectorParameters>
     </entity>
 
   </entities>
