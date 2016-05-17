@@ -259,7 +259,7 @@ angular.module('sw_layout')
                 log.debug('callWindowResize');
                 setHeaderColumnWidths();
                 setHeaderPosition();
-            }, 0, false);
+            }, 100, false);
         }, 300),
 
         activateResizeHandler: function () {
