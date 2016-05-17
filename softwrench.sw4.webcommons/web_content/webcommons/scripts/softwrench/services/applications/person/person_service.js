@@ -2,9 +2,9 @@
 (function (angular) {
     'use strict';
 
-    angular.module('maximo_applications').factory('personService', ['$rootScope', 'alertService', 'redirectService', 'applicationService', 'contextService', 'crudContextHolderService', 'dispatcherService', personService]);
+    angular.module('maximo_applications').factory('personService', ['$rootScope',"$log", 'alertService', 'redirectService', 'applicationService', 'contextService', 'crudContextHolderService', 'dispatcherService', personService]);
 
-    function personService($rootScope, alertService, redirectService, applicationService, contextService, crudContextHolderService, dispatcherService) {
+    function personService($rootScope,$log, alertService, redirectService, applicationService, contextService, crudContextHolderService, dispatcherService) {
 
         var service = {
             afterChangeUsername: afterChangeUsername,
@@ -24,6 +24,8 @@
                 dm["#originalphonenum"] = dm.phonenum;
                 dm["#originaltype"] = dm.type;
                 dm["originalprimary"] = dm.isprimary;
+
+                $log.get("personService#loadPhone", ["phone"]).debug("setting original phone data: {0}{1}{2}".format(dm.phonenum, dm.type, dm.isprimary));
             }
         };
 
@@ -34,6 +36,7 @@
                 dm["#originalemailaddress"] = dm.emailaddress;
                 dm["#originaltype"] = dm.type;
                 dm["originalprimary"] = dm.isprimary;
+                $log.get("personService#loadEmail", ["email"]).debug("setting original email data: {0}{1}{2}".format(dm.emailaddress, dm.type, dm.isprimary));
             }
         }
 
