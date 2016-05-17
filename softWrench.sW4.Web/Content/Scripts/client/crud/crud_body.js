@@ -136,6 +136,9 @@
 
                 $scope.$on("sw.modal.show", function (event, modalData) {
                     if ($scope.ismodal === "true") {
+                        if (modalData && modalData.schema) {
+                            $scope.schema = modalData.schema;
+                        }
                         $scope.allTabsLoaded();
                     }
                 });

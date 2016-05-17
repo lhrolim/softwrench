@@ -1436,11 +1436,13 @@
     <Content Include="node_modules\karma\static\karma.js" />
     <Content Include="templates\fake.html" />
     <Content Include="tests\controllers\application_test.js" />
+    <Content Include="tests\controllers\crud_body_test.js" />
     <Content Include="tests\controllers\crud_list_test.js" />
     <Content Include="tests\controllers\commlogaction_test.js" />
     <Content Include="tests\controllers\grid_filter_test.js" />
     <Content Include="tests\customers\firstsolar\services\batchWoService_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
+    <Content Include="tests\pojos\SchemaPojo.js" />
     <Content Include="tests\services\adminresources\userprofileservice_test.js" />
     <Content Include="tests\services\format_service_test.js" />
     <Content Include="tests\services\search_service_test.js" />
@@ -5658,6 +5660,7 @@
   <ItemGroup>
     <Content Include="package.json" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

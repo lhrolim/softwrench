@@ -348,8 +348,16 @@ module.exports = function (grunt) {
                 // preprocess matching files before serving them to the browser
                 // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
                 preprocessors: {
-                    '../softWrench.sW4.Web/Content/Templates/**/*.html': ["ng-html2js"]
+                    '../softWrench.sW4.Web/Content/Templates/**/*.html': ["ng-html2js"],
+                    "<%= app.tests %>/tests/**/*.js": ['babel'],
                 },
+
+                babelPreprocessor: {
+                       options: {
+                           "presets": resolvedPresets
+                      }
+                },
+
                 ngHtml2JsPreprocessor: {
                     // If your build process changes the path to your TEMPLATES,
                     // use stripPrefix and prependPrefix to adjust it.

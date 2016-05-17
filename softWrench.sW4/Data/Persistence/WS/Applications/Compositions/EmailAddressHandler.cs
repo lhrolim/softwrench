@@ -38,7 +38,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             WsUtil.CloneArray(emailAddress, rootObject, "EMAIL", delegate (object integrationObject, CrudOperationData crudData) {
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
                 ReflectionUtil.InstantiateAndSetIfNull(integrationObject, "type");
-                if (crudData.ContainsAttribute("#originalemailaddress") && isDifferent(crudData)) {
+                if (crudData.ContainsAttribute("#originalemailaddress") && IsDifferent(crudData)) {
 
                     IDictionary<string, object> attributes = new Dictionary<string, object>()
                     {
@@ -53,7 +53,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         }
 
 
-        private static bool isDifferent(CrudOperationData crudData) {
+        private static bool IsDifferent(CrudOperationData crudData) {
             return !crudData.GetAttribute("#originalemailaddress").Equals(crudData.GetAttribute("emailaddress")) ||
                    !crudData.GetAttribute("type").Equals(crudData.GetAttribute("#originaltype"));
         }

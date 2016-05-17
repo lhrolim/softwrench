@@ -25,6 +25,8 @@
             dispatchEvent: function (schema, eventName, parameters) {
                 var fn = loadEvent(schema, eventName);
                 if (fn) {
+                    $log.get("eventService#dispatchEvent", ["event"])
+                        .info("dispatching event {0} for schema {1} ".format(eventName, schema.schemaId));
                     if (parameters) {
                         return fn(parameters);
                     }

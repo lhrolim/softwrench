@@ -49,10 +49,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web_content\webcommons\scripts\softwrench\components\combo.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\constants\JavascriptEventConstants.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\intervaltrigger.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\richtext.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\constants\MetadataEventConstants.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\dto\ModalData.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\ContextData.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\OpttionsLoadSchema.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\globalsearch\globalsearch_service.js" />

@@ -1181,9 +1181,13 @@
         };
 
         $scope.onAfterSave = function (data, alwaysrefresh) {
-            if (alwaysrefresh) window.location.href = window.location.href;
+            if (alwaysrefresh) {
+                window.location.href = window.location.href;
+            }
             // dispose of the edit/creation form
-            if ($rootScope.showingModal) modalService.hide();
+            if ($rootScope.showingModal) {
+                 modalService.hide();
+            }
             $scope.newDetail = false;
             $scope.selecteditem = null;
             $scope.collapseAll();

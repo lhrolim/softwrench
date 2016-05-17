@@ -14,6 +14,7 @@ Thumbs.db
 /.vs
 softwrench.sw4.jstest/jenkinstest-results.xml
 softwrench.sw4.jstest/test-results.testxml
+softwrench.sw4.jstest/node_modules/
 !softWrench.sW4.Web/Content/Customers/
 softWrench.sW4.Web/Content/Customers/*
 

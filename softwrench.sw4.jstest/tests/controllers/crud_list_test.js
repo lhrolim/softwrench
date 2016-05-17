@@ -1,9 +1,10 @@
 ﻿describe('Crud List Test', function () {
 
     var mockScope;
+    var _eventService;
+    var $httpBackend;
     var _contextService;
     var _searchService;
-    var $httpBackend;
 
     beforeEach(module('sw_layout'));
 
