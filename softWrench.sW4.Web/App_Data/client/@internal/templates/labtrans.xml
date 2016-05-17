@@ -140,6 +140,9 @@
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
           <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
           <field attribute="transdate" label="Created Date"/>
+          <field attribute="genapprservreceipt" label="Approved?">
+            <renderer type="checkbox"/>
+          </field>
           <field attribute="genapprservreceipt" hidden="true"/>
           <event type="onremoval.validation" service="labtransService" method="validateEdit"/>
           <event type="onedit.validation" service="labtransService" method="validateEdit"/>
@@ -205,6 +208,7 @@
           <!--Shows only on line expand -->
           <field label="Labor" attribute="laborcode" showexpression="!@_iscreation"/>
           <field label="Craft" attribute="craft" showexpression="!@_iscreation"/>
+          <field attribute="linecost" label="Line Cost" readonly="true" showexpression="!@_iscreation"/>
 
           <section orientation="horizontal">
             <field label="Start Date" requiredexpression="true" attribute="startdate">
@@ -226,7 +230,9 @@
               <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
             </field>
           </section>
-          <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8"/>
+          <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8">
+            <event type="afterchange" service="labtransService" method="updateLineCost"/>
+          </field>
           <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.fields.glaccount">
             <renderer type="lookup"/>
           </association>
@@ -242,10 +248,11 @@
             <renderer type="autocompleteclient" />
             <event type="afterchange" service="labtransService" method="aftercraftchange"/>
           </association>
+          <field attribute="linecost" label="Line Cost"/>
         </schema>
 
         <schema id="labors" stereotype="compositionlist">
-          <association label="Labor" target="laborcode" labelfield="labor_.person_.displayname" requiredexpression="true" extraprojectionvalues="worksite, orgid" defaultexpression="service:labtransService.defaultLaborExpression">
+          <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid" defaultexpression="service:labtransService.defaultLaborExpression">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtransService" method="afterlaborchange"/>
           </association>
@@ -257,6 +264,7 @@
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
             <renderer type="lookup"/>
           </association>
+          <field attribute="linecost" label="Line Cost"/>
           <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate">
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
           </field>
@@ -264,7 +272,6 @@
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
           </field>
           <field attribute="premiumpayrate" hidden="true"/>
-          <field attribute="linecost" label="Line Cost" hidden="true"/>
         </schema>
 
         <schema id="newdetail" title="New Labor Transaction" stereotype="detailnew">
@@ -399,6 +406,7 @@
             <field attribute="premiumpayhours" label="Premium Pay Hours">
               <event type="afterchange" service="labtransService" method="updateLineCost"/>
             </field>
+            <field attribute="linecost" label="Line Cost" readonly="true"/>
           </section>
         </schema>
       </schemas>

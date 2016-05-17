@@ -10,6 +10,9 @@
                     premiumPay = premiumHours * (premiumRate * regularRate);
                 }
                 var lineCost = regularPay + premiumPay;
+                if (lineCost == undefined) {
+                    lineCost = "";
+                }
                 return lineCost;
             };
 
@@ -23,7 +26,7 @@
                     var premiumRate = parentdatamap['ppcraftrate_.premiumpay_.defaultrate'];
                     event.fields['premiumpayrate'] = premiumRate;
                     event.fields['linecost'] = calcLineCost(regularHours, regularRate, premiumHours, premiumRate);
-                } else if (event.fields['#laborlist_']) {
+                } else if (event.fields['#laborlist_'] && (event.fields['_iscreation'] || event.fields['mode'] == 'batch')) {
                     // Update from the body of the batch labor detail
                     var labors = event.fields['#laborlist_'];
                     for (var laborIndex in labors) {
@@ -41,7 +44,7 @@
                 } else {
                     // Update from the single labor detail
                     var regularHours = event.fields['regularhrs'];
-                    var regularRate = event.fields['payrate'];
+                    var regularRate = event.fields['laborcraftrate_.rate'];
                     var premiumHours = event.fields['premiumpayhours'];
                     var premiumRate = event.fields['ppcraftrate_.premiumpay_.defaultrate'];
                     event.fields['premiumpayrate'] = premiumRate;
