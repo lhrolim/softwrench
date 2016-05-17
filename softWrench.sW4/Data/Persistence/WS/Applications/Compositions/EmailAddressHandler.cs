@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using log4net;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Metadata;
@@ -11,10 +12,10 @@ using WsUtil = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
     class EmailAddressHandler {
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(EmailAddressHandler));
+
         public EmailAddressHandler() {
-
-
-
+            Log.Debug("init");
         }
 
         public static CrudOperationData HandleEmailAddress(CrudOperationData entity, object rootObject) {
@@ -38,8 +39,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             WsUtil.CloneArray(emailAddress, rootObject, "EMAIL", delegate (object integrationObject, CrudOperationData crudData) {
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
                 ReflectionUtil.InstantiateAndSetIfNull(integrationObject, "type");
+
+                Log.DebugFormat("new:{0} ,original: {1}", crudData.GetAttribute("emailaddress"), crudData.GetAttribute("#originalemailaddress"));
+
                 if (crudData.ContainsAttribute("#originalemailaddress") && IsDifferent(crudData)) {
 
+                    Log.InfoFormat("a new email {0} was detected, the original one {1} will be deleted", crudData.GetAttribute("emailaddress"), crudData.GetAttribute("#originalemailaddress"));
                     IDictionary<string, object> attributes = new Dictionary<string, object>()
                     {
                         {"emailaddress",crudData.GetAttribute("#originalemailaddress") },

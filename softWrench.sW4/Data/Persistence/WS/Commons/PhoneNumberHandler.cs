@@ -6,13 +6,21 @@ using softWrench.sW4.Util;
 using WsUtil = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.wsWorkorder;
 using cts.commons.simpleinjector;
+using log4net;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Persistence.Engine;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     public class PhoneNumberHandler : ISingletonComponent {
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(PhoneNumberHandler));
+
+        public PhoneNumberHandler() {
+            Log.Debug("init");
+        }
 
 
         /// <summary>
@@ -40,7 +48,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
                 ReflectionUtil.InstantiateAndSetIfNull(integrationObject, "type");
 
+                Log.DebugFormat("new:{0} ,original: {1}", crudData.GetAttribute("phonenum"), crudData.GetAttribute("#originalphonenum"));
+
                 if (crudData.ContainsAttribute("#originalphonenum") && isDifferent(crudData)) {
+
+                    Log.InfoFormat("a new phone {0} was detected, the original one {1} will be deleted", crudData.GetAttribute("phonenum"), crudData.GetAttribute("#originalphonenum"));
+
                     IDictionary<string, object> attributes = new Dictionary<string, object>()
                     {
                         {"phonenum",crudData.GetAttribute("#originalphonenum") },
