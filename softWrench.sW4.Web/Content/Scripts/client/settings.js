@@ -5,8 +5,34 @@ angular.module("sw_layout").controller("AceController", AceController);
 function AceController($scope, $http, $templateCache, $window, i18NService, alertService, restService, contextService) {
     "ngInject";
 
-    $scope.save = function () {
+    $scope.templates = [];
+    $scope.selectedTemplate = '';
 
+    $scope.loadTemplate = function () {
+        $http.get(url("/api/generic/EntityMetadata/GetMetadataContent?templatePath=" + $scope.selectedTemplate.path))
+            .success(function (data) {
+                $scope.resultData = data.resultObject;
+                init();
+            })
+            .error(function (data) {
+                alertService.alert("Failure!");
+            }); 
+    };
+
+    $scope.getTemplates = function () {
+        $http.get(url("/api/generic/EntityMetadata/GetTemplateFiles"))
+            .success(function (data) {
+                $scope.templates = data;
+                if ($scope.templates.length > 0) {
+                    $scope.selectedTemplate = $scope.templates[0];
+                }
+            })
+            .error(function (data) {
+                alertService.alert("Failure!");
+            });
+    };
+
+    $scope.save = function () {
         switch ($scope.type) {
             case 'menu':
                 var urlToUse = "/api/generic/EntityMetadata/SaveMenu";
@@ -20,7 +46,6 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
             default:
                 var urlToUse = $scope.type;
                 break;
-
         }
         alertService.confirmMsg("You will be logged out in order to implement this change.Do you want to continue? ", function () {
             $http({
@@ -28,47 +53,42 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
                 url: url(urlToUse),
                 headers: { "Content-Type": "application/xml" },
                 data: ace.edit("editor").getValue()
-            })
-                .success(function () {
+            }).success(function () {
+                contextService.deleteFromContext("swGlobalRedirectURL");
+                $window.location.href = url("/stub/reset");
+            });
+        });
+    };
+
+    $scope.savechanges = function () {
+        if ($scope.comments != undefined) {
+            alertService.confirmMsg("Are you sure you want to save your changes to the Metadata? You will be logged out in order to implement this change. Do you want to continue?", function () {
+                var httpParameters = {
+                    Comments: $scope.comments,
+                    Metadata: ace.edit("editor").getValue(),
+                    Path: $scope.selectedTemplate.path,
+                    Name: $scope.selectedTemplate.name
+                };
+
+                var urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
+                var json = angular.toJson(httpParameters);
+
+                $http({
+                    method: "POST",
+                    dataType: "json",
+                    url: url(urlToUse),
+                    headers: { "Content-Type": "application/json; charset=utf-8" },
+                    data: json
+                }).success(function () {
+                    alertService.notifymessage("Metadata saved successfully");
                     contextService.deleteFromContext("swGlobalRedirectURL");
                     $window.location.href = url("/stub/reset");
                 });
-
-        });
-    };
-    $scope.savechanges = function () {
-        if ($scope.comments != undefined) {
-            
-            alertService.confirmMsg("Are you sure you want to Save your changes to the Metadata ? ", function () {
-                
-                    var httpParameters = {
-                        Comments: $scope.comments,
-                        Metadata: ace.edit("editor").getValue()
-                    };
-
-                    var urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
-
-                    var json = angular.toJson(httpParameters);
-                    $http({
-                        method: "POST",
-                        dataType: "json",
-                        url: url(urlToUse),
-                        headers: { "Content-Type": "application/json; charset=utf-8" },
-                        data: json
-                    }).
-                        success(function () {
-                            
-                            $scope.save();
-                            alertService.alert("Metadata saved successfully");
-                           
-                            
-                        });
-                
             });
-            }
-        else
+        } else {
             alertService.alert("Please describe your changes in the Comments section");
-        };
+        } 
+    };
        
             
     $scope.restore = function () {
@@ -97,18 +117,15 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
        
     $scope.restorexml = function () {
         alertService.confirmMsg("Select a Restore File from the table to restore your xml to selected file. None of your current changes will be saved. Is this what you want to do? ", function () {
-            var urlToCall = url("/api/generic/EntityMetadata/RestoreSavedMetadata");
+            var urlToCall = url("/api/generic/EntityMetadata/RestoreSavedMetadata?metadataFileName=" + $scope.selectedTemplate.name);
             $http.get(urlToCall).success(function (result) {
                                 $scope.results = result;
-                
-        
             }).error(function (result) {
                 alertService.alert("Failed to Load your xml file.Please try again later");
             });
-          
-
         });
     };
+
     $scope.edit = function (Metadata) {
         alertService.confirmMsg("The selected xml file will overwrite the existing xml file.None of your current changes will be saved. Is this what you want to do? ", function () {
 
@@ -122,6 +139,7 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
             alertService.alert("Your xml file has been successfully restored");
         });
     };
+
     $scope.contextPath = function (path) {
         return url(path);
     };
@@ -140,13 +158,16 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
         editor.gotoLine(0);
     }
 
-    loadScript("/Content/Scripts/vendor/ace/ace.js", init);
+    loadScript("/Content/customVendor/scripts/msic/ace.js", init());
 
     $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
         if (oldValue != newValue && $scope.resultObject.redirectURL.indexOf("EntityMetadataEditor.html") != -1) {
             init();
         }
     });
+
+    //Fetch the templates
+    $scope.getTemplates();
 }
 
 window.AceController = AceController;

@@ -14,6 +14,9 @@ using softWrench.sW4.Util;
 using softWrench.sW4.SPF;
 using Newtonsoft.Json.Linq;
 using System.Data;
+using softWrench.sW4.Metadata.Validator;
+using System.Collections.Generic;
+using System.IO;
 
 namespace softWrench.sW4.Web.Controllers.Utilities {
 
@@ -26,8 +29,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             _swdbDao = dao;
             _eventDispatcher = eventDispatcher;
         }
-
-
+        
         [HttpGet]
         [SPFRedirect("Metadata Builder", "_headermenu.metadatabuilder", "EntityMetadataBuilder")]
         public RedirectResponseResult Builder() {
@@ -53,6 +55,32 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "metadata"));
             }
         }
+
+        [HttpGet]
+        public IGenericResponseResult GetMetadataContent(string templatePath) {
+            using (var reader = new MetadataProvider().GetTemplateStream(templatePath)) {
+                var result = reader.ReadToEnd();
+                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "metadata"));
+            }
+        }
+
+        [HttpGet]
+        public List<dynamic> GetTemplateFiles() {            
+            var templates = new List<dynamic>();
+
+            //add the metadata
+            var metadataPath = MetadataParsingUtils.GetPath("metadata.xml");
+            templates.Add(new { path = metadataPath, name = "metadata.xml" });
+
+            //add the templates
+            var files = MetadataParsingUtils.GetTemplateFileNames();
+            foreach (var file in files) {
+                templates.Add(new { path = file, name = Path.GetFileName(file) });
+            }
+
+            return templates;
+        }
+
         [HttpGet]
         public IGenericResponseResult RestoreDefaultMetadata() {
             var resultData = _swdbDao.FindByQuery<Metadataeditor>(Metadataeditor.ByDefaultId);
@@ -60,15 +88,19 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(metadata, "metadata"));
 
         }
+
         [HttpGet]
-        public DataTable RestoreSavedMetadata() {
-            var resultData = _swdbDao.FindByQuery<Metadataeditor>(Metadataeditor.BySavedId);
+        public DataTable RestoreSavedMetadata(string metadataFileName) {
+            var query = string.Format(Metadataeditor.ByFileName, metadataFileName);
+
+            var resultData = _swdbDao.FindByQuery<Metadataeditor>(query);
 
             var result = new DataTable();
             result.Columns.Add("Id", typeof(Int32));
             result.Columns.Add("CreatedDate", typeof(DateTime));
             result.Columns.Add("Description", typeof(string));
             result.Columns.Add("Metadata", typeof(string));
+
             foreach (Metadataeditor i in resultData) {
                 var id = i.Id;
                 var metadata = i.SystemStringValue;
@@ -77,10 +109,8 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 result.Rows.Add(id, createdDate, comments, metadata);
             }
             return result;
-
-            //return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(Metadata, "metadata"));
-
         }
+
         [HttpGet]
         [SPFRedirect("Classification Color Editor", "_headermenu.classificationcoloreditor", "EntityMetadataEditor")]
         public IGenericResponseResult ClassificationColorEditor()
@@ -91,6 +121,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "classificationcolors"));
             }
         }
+
         [HttpGet]
         [SPFRedirect("Status Color Editor", "_headermenu.statuscoloreditor", "EntityMetadataEditor")]
         public IGenericResponseResult StatusColorEditor() {
@@ -99,6 +130,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "statuscolors"));
             }
         }
+
         [HttpGet]
         [SPFRedirect("Menu Editor", "_headermenu.menueditor", "EntityMetadataEditor")]
         public IGenericResponseResult MenuEditor() {
@@ -106,7 +138,6 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 var result = reader.ReadToEnd();
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "menu"));
             }
-
         }
 
         [HttpPut]
@@ -118,25 +149,30 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             task.Wait();
             new MetadataProvider().Save(task.Result);
         }
-
-
+        
         [HttpPost]
         public void SaveMetadataEditor(HttpRequestMessage request) {
             var content = request.Content;
             var json = JObject.Parse(content.ReadAsStringAsync().Result);
-            var comments = json.First.Last.ToString();
-            var metadata = json.Last.Last.ToString();
+            var comments = json.StringValue("Comments");
+            var metadata = json.StringValue("Metadata");
+            var path = json.StringValue("Path");
+            var name = json.StringValue("Name");
 
-            
             var now = DateTime.Now;
             var newMetadataEntry = new Metadataeditor() {
                 SystemStringValue = metadata,
                 Comments = comments,
                 CreatedDate = now,
                 DefaultId = 0,
-
+                ChangedBy = SecurityFacade.CurrentUser().MaximoPersonId,
+                Name = name,
+                Path = path,
+                BaselineVersion = ""
             };
+
             _swdbDao.Save(newMetadataEntry);
+            new MetadataProvider().Save(metadata, false, path);
         }
 
         [HttpPut]

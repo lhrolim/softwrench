@@ -38,6 +38,7 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Metadata.Stereotypes;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using EntityUtil = softWrench.sW4.Util.EntityUtil;
+using System.Text;
 
 namespace softWrench.sW4.Metadata {
     public class MetadataProvider {
@@ -71,9 +72,7 @@ namespace softWrench.sW4.Metadata {
         public static MetadataProviderInternalCache InternalCache {
             get; set;
         }
-
-
-
+        
         private const string Metadata = "metadata.xml";
         private const string StatusColor = "statuscolors.json";
         private const string ClassificationColor = "classificationcolors.json";
@@ -469,28 +468,45 @@ namespace softWrench.sW4.Metadata {
             return MetadataParsingUtils.GetStreamImpl(resource);
         }
 
-        public void Save([NotNull] Stream data, bool internalFramework = false) {
+        [NotNull]
+        public StreamReader GetTemplateStream(string path) {
+            return MetadataParsingUtils.DoGetStream(path, true);
+        }
+
+        public void Save([NotNull] string data, bool internalFramework = false, string path = null) {
+            try {
+                var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(data));
+                Save(memoryStream, internalFramework, path);
+            } catch (Exception e) {
+                Log.Error("error saving metadata", e);
+                throw;
+            } finally {                
+            }
+        }
+
+        public void Save([NotNull] Stream data, bool internalFramework = false, string path = null) {
             try {
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
-
                 _metadataXmlInitializer.Validate(_commandBars, data);
-
                 _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
                 _swdbmetadataXmlInitializer.Validate(_commandBars);
 
-                using (var stream = File.Create(MetadataParsingUtils.GetPath(Metadata, internalFramework))) {
+                var metadataPath = string.IsNullOrWhiteSpace(path) ? MetadataParsingUtils.GetPath(Metadata, internalFramework) : path; 
+
+                using (var stream = File.Create(metadataPath)) {
                     data.CopyTo(stream);
                     stream.Flush();
                 }
+
                 FillFields();
             } catch (Exception e) {
                 Log.Error("error saving metadata", e);
                 throw;
             } finally {
                 _metadataXmlInitializer = null;
-
             }
         }
+
         public void SaveColor([NotNull] Stream data, bool internalFramework = false) {
 
             try {

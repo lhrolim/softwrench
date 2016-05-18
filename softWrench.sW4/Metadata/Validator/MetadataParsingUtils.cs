@@ -52,9 +52,11 @@ namespace softWrench.sW4.Metadata.Validator {
             return assembly.GetManifestResourceStream(resourceName);
         }
 
-
-
-
+        public static string[] GetTemplateFileNames() {
+            var path = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, string.Format(TemplatesInternalPath, string.Empty));
+            return Directory.GetFiles(path);
+        }
+        
         public static string GetTemplateInternalPath(string resource, bool isSWDB) {
 
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -104,8 +106,12 @@ namespace softWrench.sW4.Metadata.Validator {
             return GetStreamImpl(path, streamValidator, fallbackToDefaultImpl);
         }
 
-        public static StreamReader DoGetStream(string path) {
+        public static StreamReader DoGetStream(string path, bool isAbsolutePath = true) {
             try {
+                if (!isAbsolutePath) {
+                    path = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, path);
+                }
+
                 if (File.Exists(path)) {
                     return new StreamReader(path);
                 }

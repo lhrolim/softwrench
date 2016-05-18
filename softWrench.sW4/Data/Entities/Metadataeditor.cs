@@ -11,7 +11,7 @@ namespace softWrench.sW4.Data.Entities {
 
         public const String ByDefaultId = "from Metadataeditor where DefaultId = 1";
 
-        public const String BySavedId = "from Metadataeditor where DefaultId= 0";
+        public const String ByFileName = "from Metadataeditor where Name= '{0}'";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -28,6 +28,18 @@ namespace softWrench.sW4.Data.Entities {
 
         [Property]
         public virtual int DefaultId { get; set; }
+
+        [Property]
+        public virtual string Name { get; set; }
+
+        [Property]
+        public virtual string Path { get; set; }
+
+        [Property]
+        public virtual string BaselineVersion { get; set; }
+
+        [Property]
+        public virtual string ChangedBy { get; set; }
 
 
         public virtual string SystemStringValue
