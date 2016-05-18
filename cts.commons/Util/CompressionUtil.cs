@@ -4,6 +4,12 @@ using System.IO.Compression;
 namespace cts.commons.Util {
     public class CompressionUtil {
 
+
+        public static string Base64Encode(string plainText) {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
         public static byte[] Compress(byte[] plainData) {
             if (plainData == null) {
                 return null;

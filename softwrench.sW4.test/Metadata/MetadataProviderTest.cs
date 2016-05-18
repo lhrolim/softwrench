@@ -13,7 +13,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata {
     [TestClass]
-    public class MetadataProviderTest : BaseOtbMetadataClass {
+    public class MetadataProviderTest : BaseOtbMetadataTest {
 
 
 

@@ -3,14 +3,16 @@
 
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
-  <property key="wsprovider" value="mif" />
+  <property key="wsprovider" value="rest" />
   <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
   <property key="basewfURL" value="http://10.50.100.125:9080/meaweb/wf/" />
   <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
-  <property key="maxAttachmentSize" value="10"/> <!--in MB-->
-  <property key="maxScreenshotSize" value="5"/> <!-- in MB-->
+  <property key="maxAttachmentSize" value="10"/>
+  <!--in MB-->
+  <property key="maxScreenshotSize" value="5"/>
+  <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
   <property key="defaultOrgId" value="EAGLENA"/>
   <property key="defaultSiteId" value="BEDFORD"/>
@@ -36,14 +38,22 @@
   <property key="tableau_username" value="swadmin" />
   <property key="tableau_password" value="sw@dm1n" />
   <property key="tableau_site" value="default" />
+
+
   <!-- end tableau -->
-  
+
   <environment key="dev">
     <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Cmt;User Id=sw;password=softwrench;" />
+    <!--  <property key="wsprovider" value="rest" />-->
+    <property key="basewsRestURL" value="http://10.50.100.125:9080/maxrest/rest/os/" />
+    <property key="restcredentials.user" value="maxadmin"/>
+    <property key="restcredentials.password" value="maxadmin"/>
   </environment>
-  
-   <environment key="dev_pr">
-     <!--environment for pull requests-->
+
+
+
+  <environment key="dev_pr">
+    <!--environment for pull requests-->
     <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_pr;User Id=sw;password=softwrench;" />
   </environment>
 

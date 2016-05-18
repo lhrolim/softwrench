@@ -52,10 +52,11 @@ namespace softWrench.sW4.Util {
         }
 
         public static byte[] ToByteArrayFromHtmlString(string content) {
-            var indexOf = content.IndexOf(',');
-            var base64String = content.Substring(indexOf + 1);
+            var base64String = GetB64PartOnly(content);
             return System.Convert.FromBase64String(base64String);
         }
+
+      
 
         public static string GetB64PartOnly(string content) {
             var indexOf = content.IndexOf(',');

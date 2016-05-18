@@ -375,6 +375,10 @@
     <Compile Include="Util\StaticFileLoad\StaticFileTagRenderer.cs" />
     <Content Include="apple-touch-icon.png" />
     <Content Include="App_Data\Client\%40internal\templates\classspec.xml" />
+    <Content Include="App_Data\Client\%40internal\target\rest.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\assetlocrelation.xml" />
     <Content Include="App_Data\Client\%40internal\templates\assetspec.xml" />
     <Content Include="App_Data\Client\%40internal\templates\assettrans.xml" />

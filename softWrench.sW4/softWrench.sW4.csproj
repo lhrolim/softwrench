@@ -212,6 +212,11 @@
     <Compile Include="Data\Persistence\WS\Applications\Compositions\EmailAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\ServiceAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
+    <Compile Include="Data\Persistence\WS\Rest\IRestObjectWrapper.cs" />
+    <Compile Include="Data\Persistence\WS\Rest\RestExecutionContext.cs" />
+    <Compile Include="Data\Persistence\WS\Rest\RestComposedData.cs" />
+    <Compile Include="Data\Persistence\WS\Rest\RestCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Rest\RestIntegrationObjectWrapper.cs" />
     <Compile Include="Data\Relationship\Association\AssociationCacheKey.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchHelper.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchDTO.cs" />

@@ -178,7 +178,7 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
-        <connectorParameter key="entermeter_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder.MeterReadingOperationHandler" />
+        <connectorParameter key="entermeter_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder.MeterReadingOperationHandler" />
         <!--        <connectorParameter key="markmultiassetcomplete_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder.ProgressMultiAssetHandler" />-->
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Applications.Workorder.BaseWorkOrderCrudConnector" />
       </connectorParameters>

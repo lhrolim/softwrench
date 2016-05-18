@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Xml.Linq;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
 
 namespace softWrench.sW4.Metadata.Parsing {
@@ -22,6 +24,11 @@ namespace softWrench.sW4.Metadata.Parsing {
             return (converter(attribute.Value, out value))
                 ? value
                 : @default;
+        }
+
+        public static string ElementValue([NotNull] this XElement rootElement, string childElementName) {
+            var element = rootElement.Elements().FirstOrDefault(f => f.Name.LocalName.EqualsIc(childElementName));
+            return element == null ? null : element.Value;
         }
 
         public static bool ValueOrDefault([CanBeNull] this XAttribute attribute, bool @default) {

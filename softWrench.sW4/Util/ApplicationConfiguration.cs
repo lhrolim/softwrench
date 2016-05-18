@@ -94,11 +94,13 @@ namespace softWrench.sW4.Util {
 
         public static readonly string Profile = GetProfile();
 
-        private static string GetProfile() {
+        public static readonly string SecondProfile = GetProfile("secondprofile");
+
+        private static string GetProfile(string profileKey = "profile") {
             if (_environment != null) {
                 return _environment;
             }
-            var declaredProfile = ConfigurationManager.AppSettings["profile"];
+            var declaredProfile = ConfigurationManager.AppSettings[profileKey];
             _environment = declaredProfile ?? UnitTestProfile;
             return _environment;
         }
@@ -186,6 +188,22 @@ namespace softWrench.sW4.Util {
         public static string MifCredentialsPassword {
             get {
                 return MetadataProvider.GlobalProperty("mifcredentials.password");
+            }
+        }
+
+        public static string RestCredentialsUser
+        {
+            get
+            {
+                return MetadataProvider.GlobalProperty("restcredentials.user");
+            }
+        }
+
+        public static string RestCredentialsPassword
+        {
+            get
+            {
+                return MetadataProvider.GlobalProperty("restcredentials.password");
             }
         }
 

@@ -46,6 +46,9 @@ namespace softWrench.sW4.Metadata.Properties {
                 return _globalProperties;
             }
         }
+
+        
+
         /// <summary>
         /// 
         /// </summary>

@@ -18,6 +18,7 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -37,10 +38,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         private readonly DataSetProvider _dataSetProvider;
 
         private AttachmentDao _attachmentDao;
-        public AttachmentDao AttachmentDao
-        {
-            get
-            {
+        public AttachmentDao AttachmentDao {
+            get {
                 return _attachmentDao ?? (_attachmentDao = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentDao>(typeof(AttachmentDao)));
             }
         }
@@ -219,8 +218,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         }
 
         protected virtual void HandleAttachmentDataAndPath(string attachmentData, object docLink, string attachmentPath, byte[] binaryData) {
-            var bytes = binaryData ?? FileUtils.ToByteArrayFromHtmlString(attachmentData);
-            w.SetValue(docLink, "DOCUMENTDATA", bytes);
+            if (docLink is IRestObjectWrapper) {
+                var base64String = attachmentData != null ? FileUtils.GetB64PartOnly(attachmentData) : Convert.ToBase64String(binaryData);
+                w.SetValue(docLink, "DOCUMENTDATA", base64String);
+            } else {
+                var bytes = binaryData ?? FileUtils.ToByteArrayFromHtmlString(attachmentData);
+                w.SetValue(docLink, "DOCUMENTDATA", bytes);
+            }
         }
 
         protected virtual int GetMaximoLength() {

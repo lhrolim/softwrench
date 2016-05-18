@@ -281,7 +281,7 @@
         <connectorParameter key="dbtable" value="sr" />
         <connectorParameter key="integration_interface" value="SWSR" />
         <connectorParameter key="customconnector" value="softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector.KongsbergServiceRequestCrudConnector" />
-        <connectorParameter key="dispatchincident_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
+        <connectorParameter key="dispatchincident_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
       </connectorParameters>
     </entity>
 

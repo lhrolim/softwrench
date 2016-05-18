@@ -136,7 +136,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var streetaddr = data.GetUnMappedAttribute("#tkstaddrstreet");
             var streettype = data.GetUnMappedAttribute("#tkstaddrsttype");
 
-            var tkserviceaddress = ReflectionUtil.InstantiateSingleElementFromArray(maximoTemplateData.IntegrationObject, "TKSERVICEADDRESS");
+            var tkserviceaddress = ReflectionUtil.InstantiateSingleElementFromArray(maximoTemplateData.IntegrationObject, "TKSERVICEADDRESS",true);
             w.SetValueIfNull(tkserviceaddress, "TKSERVICEADDRESSID", -1);
             w.CopyFromRootEntity(maximoTemplateData.IntegrationObject, tkserviceaddress, "ORGID", user.OrgId);
             w.SetValue(tkserviceaddress, "SADDRESSCODE", saddresscode);

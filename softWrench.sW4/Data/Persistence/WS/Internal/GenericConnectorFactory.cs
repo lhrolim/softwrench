@@ -5,6 +5,7 @@ using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softWrench.sW4.Data.Persistence.WS.Mea;
 using softWrench.sW4.Data.Persistence.WS.Mif;
+using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 
@@ -75,6 +76,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             }
             if (WsProvider.ISM.Equals(provider)) {
                 return new IsmCrudConnector();
+            }
+            if (WsProvider.REST.Equals(provider)) {
+                return new RestCrudConnector();
             }
             throw new InvalidOperationException("Please, configure WsProvider key to either mea or mif");
         }

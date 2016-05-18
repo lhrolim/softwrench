@@ -96,8 +96,8 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
-        <connectorParameter key="dispatchwo_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
-        <connectorParameter key="dispatchincident_mif_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
+        <connectorParameter key="dispatchwo_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
+        <connectorParameter key="dispatchincident_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.DispatchOperationHandler" />
         <connectorParameter key="changestatus_customconnector" value="softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ChangeStatusTicketHandler" />
       </connectorParameters>
     </entity>

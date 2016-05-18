@@ -76,7 +76,7 @@
   <ItemGroup>
     <Compile Include="ActivityStream\NotificationSecurityGroupHelperTest.cs" />
     <Compile Include="BaseMetadataTest.cs" />
-    <Compile Include="BaseOtbMetadataClass.cs" />
+    <Compile Include="BaseOtbMetadataTest.cs" />
     <Compile Include="Category\CategoryUtilTest.cs" />
     <Compile Include="Category\CategoryTreeCacheTest.cs" />
     <Compile Include="Configuration\Service\ConfigurationServiceTest.cs" />
@@ -92,6 +92,7 @@
     <Compile Include="Data\Persistence\WS\Applications\Compositions\PdfEmailReportHandlerTest.cs" />
     <Compile Include="Data\Persistence\WS\Applications\InvIssueBatchConverterTest.cs" />
     <Compile Include="Data\Persistence\WS\Ism\ImacDescriptionHandlerTest.cs" />
+    <Compile Include="Data\Persistence\WS\Rest\RestCrudConnectorTest.cs" />
     <Compile Include="Data\Relationship\CompositionExpanderHelperTest.cs" />
     <Compile Include="Data\Search\ApplicationSearchTest.cs" />
     <Compile Include="Data\Search\QuickSearch\LookupQuickSearchTest.cs" />
@@ -408,6 +409,7 @@
       <Name>softWrench.sW4</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

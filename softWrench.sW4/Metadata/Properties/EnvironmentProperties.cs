@@ -4,17 +4,17 @@ using cts.commons.portable.Util;
 namespace softWrench.sW4.Metadata.Properties {
     public class EnvironmentProperties {
 
-        private readonly string key;
+        private readonly string _key;
 
-        private readonly IDictionary<string, string> _properties = new Dictionary<string, string>();
+        private readonly IDictionary<string, string> _properties;
 
         public EnvironmentProperties(string key, IDictionary<string, string> properties) {
-            this.key = key;
+            this._key = key;
             _properties = properties;
         }
 
         public string Key {
-            get { return key; }
+            get { return _key; }
         }
 
         public IDictionary<string, string> Properties {

@@ -8,6 +8,7 @@ using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json;
 using softWrench.sW4.Data.Persistence.WS.API;
+using softWrench.sW4.Data.Persistence.WS.Rest;
 
 namespace softWrench.sW4.Util {
     public static class ReflectionUtil {
@@ -62,14 +63,14 @@ namespace softWrench.sW4.Util {
             if (baseObject == null) {
                 return null;
             }
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[memberName];
+            var prop = TypeDescriptor.GetProperties(baseObject)[memberName];
             if (prop == null) {
                 prop = TypeDescriptor.GetProperties(baseObject)[memberName.ToUpper()];
                 if (prop == null) {
                     return null;
                 }
             }
-            Type propertyType = prop.PropertyType;
+            var propertyType = prop.PropertyType;
             return InstanceFromType(propertyType);
         }
 
@@ -83,7 +84,7 @@ namespace softWrench.sW4.Util {
         /// <returns></returns>
         public static Boolean SetProperty(object baseObject, String propertyName, object value) {
             //search for the property name as is, fallbacking to the upper propertyname==> Some fields have "Value" as property while some have "VALUE"
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[propertyName] ??
+            var prop = TypeDescriptor.GetProperties(baseObject)[propertyName] ??
                                       TypeDescriptor.GetProperties(baseObject)[propertyName.ToUpper()];
             if (prop == null) {
                 return false;
@@ -130,7 +131,7 @@ namespace softWrench.sW4.Util {
         }
 
         public static object InstantiateProperty(object baseObject, string propertyName, dynamic innerPropertyValues) {
-            object newInstance = InstanceFromMember(baseObject, propertyName);
+            var newInstance = InstanceFromMember(baseObject, propertyName);
             foreach (var prop in innerPropertyValues.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)) {
                 SetProperty(newInstance, prop.Name, prop.GetValue(innerPropertyValues, null));
             }
@@ -154,9 +155,9 @@ namespace softWrench.sW4.Util {
 
 
         public static object InstantiateProperty(object baseObject, int index) {
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[index];
-            Type firstPropertyType = prop.PropertyType;
-            object instance = InstanceFromType(firstPropertyType);
+            var prop = TypeDescriptor.GetProperties(baseObject)[index];
+            var firstPropertyType = prop.PropertyType;
+            var instance = InstanceFromType(firstPropertyType);
             prop.SetValue(baseObject, instance);
             return instance;
 
@@ -172,8 +173,8 @@ namespace softWrench.sW4.Util {
             if (baseObject == null) {
                 return null;
             }
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
-            Type type = prop.PropertyType;
+            var prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
+            var type = prop.PropertyType;
             return type.HasElementType ? type.GetElementType() : type;
         }
         /// <summary>
@@ -187,15 +188,15 @@ namespace softWrench.sW4.Util {
             if (baseObject == null) {
                 return null;
             }
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
-            Type type = prop.PropertyType;
+            var prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
+            var type = prop.PropertyType;
             if (!type.IsArray) {
                 throw new ArgumentException(String.Format("property {0} is not an array", propertyName));
             }
-            Type elementType = type.GetElementType();
-            Array arr = InstantiateArray(elementType, arraySize);
-            for (int i = 0; i < arraySize; i++) {
-                object element = InstanceFromType(elementType);
+            var elementType = type.GetElementType();
+            var arr = InstantiateArray(elementType, arraySize);
+            for (var i = 0; i < arraySize; i++) {
+                var element = InstanceFromType(elementType);
                 arr.SetValue(element, i);
             }
             prop.SetValue(baseObject, arr);
@@ -203,9 +204,9 @@ namespace softWrench.sW4.Util {
         }
 
         public static Array InstantiateArrayWithBlankElements(Type elementType, int arraySize) {
-            Array arr = InstantiateArray(elementType, arraySize);
-            for (int i = 0; i < arraySize; i++) {
-                object element = InstanceFromType(elementType);
+            var arr = InstantiateArray(elementType, arraySize);
+            for (var i = 0; i < arraySize; i++) {
+                var element = InstanceFromType(elementType);
                 arr.SetValue(element, i);
             }
             return arr;
@@ -222,14 +223,14 @@ namespace softWrench.sW4.Util {
             if (baseObject == null) {
                 return null;
             }
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
-            Type type = prop.PropertyType;
+            var prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
+            var type = prop.PropertyType;
             if (!type.IsArray) {
                 throw new ArgumentException(String.Format("property {0} is not an array", propertyName));
             }
-            Type elementType = type.GetElementType();
-            object element = InstanceFromType(elementType);
-            Array arr = InstantiateArray(elementType, element);
+            var elementType = type.GetElementType();
+            var element = InstanceFromType(elementType);
+            var arr = InstantiateArray(elementType, element);
             prop.SetValue(baseObject, arr);
             return element;
         }
@@ -239,31 +240,39 @@ namespace softWrench.sW4.Util {
         /// </summary>
         /// <param name="baseObject"></param>
         /// <param name="propertyName"></param>
+        /// <param name="markAsExclusive"></param>
         /// <returns></returns>
-        public static object InstantiateSingleElementFromArray(object baseObject, string propertyName) {
+        public static object InstantiateSingleElementFromArray(object baseObject, string propertyName, bool markAsInline=false) {
             if (baseObject == null) {
                 return null;
             }
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
+            if (baseObject is IRestObjectWrapper) {
+                var wrapper = (IRestObjectWrapper)baseObject;
+                var restComposedData = new RestComposedData(markAsInline);
+                wrapper.AddEntry(propertyName, restComposedData);
+                return restComposedData.AddComposedData(null, 1, propertyName);
+            }
+
+            var prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
 
             if (prop == null) {
                 throw new MaximoException(string.Format("Array {0} is not declared in object {1}. Please contact support.", propertyName, baseObject.GetType()));
             }
 
-            Type type = prop.PropertyType;
+            var type = prop.PropertyType;
             if (!type.IsArray) {
                 throw new ArgumentException(string.Format("property {0} is not an array", propertyName));
             }
-            Type elementType = type.GetElementType();
-            object element = InstanceFromType(elementType);
+            var elementType = type.GetElementType();
+            var element = InstanceFromType(elementType);
 
-            Array array = prop.GetValue(baseObject) as Array;
+            var array = prop.GetValue(baseObject) as Array;
 
             if (array == null) {
                 array = InstantiateArray(elementType, element);
                 prop.SetValue(baseObject, array);
             } else {
-                Array newArray = Array.CreateInstance(elementType, array.Length + 1);
+                var newArray = Array.CreateInstance(elementType, array.Length + 1);
                 Array.Copy(array, newArray, array.Length);
                 newArray.SetValue(element, newArray.Length - 1);
                 prop.SetValue(baseObject, newArray);
@@ -282,7 +291,7 @@ namespace softWrench.sW4.Util {
         }
 
         public static object GetProperty(object baseObject, int index) {
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[index];
+            var prop = TypeDescriptor.GetProperties(baseObject)[index];
             return prop == null ? null : prop.GetValue(baseObject);
         }
 
@@ -298,19 +307,19 @@ namespace softWrench.sW4.Util {
         }
 
         public static object Clone(object target, object source, params string[] propertyQualifier) {
-            PropertyDescriptorCollection targetProperties = TypeDescriptor.GetProperties(target);
-            PropertyDescriptorCollection sourceProperties = TypeDescriptor.GetProperties(source);
+            var targetProperties = TypeDescriptor.GetProperties(target);
+            var sourceProperties = TypeDescriptor.GetProperties(source);
             foreach (PropertyDescriptor prop in targetProperties) {
-                PropertyDescriptor sourceProperty = sourceProperties.Find(prop.Name, true);
+                var sourceProperty = sourceProperties.Find(prop.Name, true);
                 if (sourceProperty == null) continue;
-                object value = sourceProperty.GetValue(source);
+                var value = sourceProperty.GetValue(source);
                 if (value == null) continue;
                 if (sourceProperty.PropertyType == prop.PropertyType) {
                     prop.SetValue(target, value);
                 } else if (!sourceProperty.PropertyType.IsPrimitive && propertyQualifier != null) {
-                    object o = prop.GetValue(target);
+                    var o = prop.GetValue(target);
                     if (o == null) {
-                        object newInstance = InstanceFromType(prop.PropertyType);
+                        var newInstance = InstanceFromType(prop.PropertyType);
                         prop.SetValue(target, newInstance);
                         o = newInstance;
                     }
@@ -341,7 +350,7 @@ namespace softWrench.sW4.Util {
         public static object[] MapParameters(MethodBase method, IDictionary<string, object> namedParameters) {
             var paramNames = method.GetParameters().Select(p => p.Name).ToArray();
             var parameters = new object[paramNames.Length];
-            for (int i = 0; i < parameters.Length; ++i) {
+            for (var i = 0; i < parameters.Length; ++i) {
                 parameters[i] = Type.Missing;
             }
             foreach (var item in namedParameters) {
