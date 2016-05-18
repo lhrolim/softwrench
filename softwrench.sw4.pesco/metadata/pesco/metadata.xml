@@ -91,23 +91,7 @@
           <properties>
             <property key="list.click.service" value="pescoStatusService.changeStatusToPending"/>
           </properties>
-
-          <commandbars>
-            <commandgroup position="actions">
-              <command id="Create" icon="fa-pencil" label="Change Status" 
-                       showexpression="service:pescoStatusService.hasSelectedItemsForBatchStatus"
-                       service="pescoStatusService" method="initBatchStatusChange"
-                       parameters="schema,datamap" />
-            </commandgroup>
-          </commandbars>
-
         </list>
-
-        <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status">
-          <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true">
-            <renderer type="lookup"/>
-          </association>
-        </schema>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail" redeclaring="false">
           <customization position="description"></customization>
@@ -273,24 +257,7 @@
               <renderer type="checkbox" />
             </field>
           </customization>
-
-           <commandbars>
-             <commandgroup position="actions">
-               <command id="Create" icon="fa-pencil" label="Change Status"
-                        showexpression="service:pescoStatusService.hasSelectedItemsForBatchStatus"
-                        service="pescoStatusService" method="initBatchStatusChange"
-                        parameters="schema,datamap" />
-             </commandgroup>
-           </commandbars>
-
          </list>
-
-        <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status">
-          <association label="Status" target="status" labelfield="synstatus.description">
-            <dataprovider prefilterfunction="FilterStatusCodes"/>
-            <renderer type="lookup" params="avoidautofocus=true"/>
-          </association>
-        </schema>
           
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
 

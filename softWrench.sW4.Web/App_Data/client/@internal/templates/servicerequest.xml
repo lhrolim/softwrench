@@ -127,7 +127,7 @@
       </properties>
       <schemas>
 
-        <list title="Service Request Grid">
+        <list title="Service Request Grid" stereotype="list.selection">
           <field attribute="ticketid" label="SR#">
             <renderer type="default" params="width=12%" />
           </field>
@@ -165,7 +165,23 @@
             <property key="list.defaultorderby" value="sr.ticketuid desc"/>
             <property key="list.search.compositionstoexclude" value="attachment,relatedrecord"/>
           </properties>
+
+          <commandbars>
+            <commandgroup position="actions">
+              <command id="Create" icon="fa-pencil" label="Change Status"
+                       showexpression="service:genericTicketService.hasSelectedItemsForBatchStatus"
+                       service="genericTicketService" method="initBatchStatusChange"
+                       parameters="schema,datamap" />
+            </commandgroup>
+          </commandbars>
+          
         </list>
+
+        <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status">
+          <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true">
+            <renderer type="lookup"/>
+          </association>
+        </schema>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
 

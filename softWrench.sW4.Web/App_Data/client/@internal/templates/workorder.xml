@@ -216,7 +216,7 @@
         <property key="icon.composition.tab" value="fa fa-wrench"/>
       </properties>
       <schemas>
-        <schema id="list" stereotype="list" title="Work Order Grid" platform="web">
+        <schema id="list" stereotype="list.selection" title="Work Order Grid" platform="web">
           <filters>
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px" />
             <optionfilter attribute="location" provider="location_.description" allowblank="true" displaycode="true"/>
@@ -266,9 +266,24 @@
             <property key="list.search.compositionstoexclude" value="assetmeter,locationmeter"/>
             <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
           </properties>
+
+          <commandbars>
+            <commandgroup position="actions">
+              <command id="Create" icon="fa-pencil" label="Change Status"
+                       showexpression="service:genericTicketService.hasSelectedItemsForBatchStatus"
+                       service="genericTicketService" method="initBatchStatusChange"
+                       parameters="schema,datamap" />
+            </commandgroup>
+          </commandbars>
+          
         </schema>
 
-
+        <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status">
+          <association label="Status" target="status" labelfield="synstatus.description">
+            <dataprovider prefilterfunction="FilterStatusCodes"/>
+            <renderer type="lookup" params="avoidautofocus=true"/>
+          </association>
+        </schema>
 
         <schema id="wonumlookup" title="item" stereotype="list">
           <field attribute="wonum"/>

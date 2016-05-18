@@ -350,7 +350,7 @@
       
       
       <schemas>
-        <list title="Service Request Grid" redeclaring="false">
+        <list title="Service Request Grid" redeclaring="false" stereotype="list.selection">
           <customization position="reportedby">
             <field attribute="reportedby" hidden="true" label="Reported By"/>
             <field attribute="reportedbyp_.displayname" label="Reported By">
@@ -596,7 +596,7 @@
         </optionfilter>
       </filters>
       <schemas>
-        <list title="Work Order Grid" platform="web" redeclaring="false">
+        <list title="Work Order Grid" platform="web" redeclaring="false" stereotype="list.selection">
 
           <customization position="asset_.description">
             <field attribute="ownerperson_.displayname" label="Owner">

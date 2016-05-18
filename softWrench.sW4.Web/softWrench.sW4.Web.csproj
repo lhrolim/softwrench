@@ -147,6 +147,10 @@
     <Reference Include="SimpleInjector.Integration.Web.Mvc">
       <HintPath>..\packages\SimpleInjector.Integration.Web.Mvc.2.4.0\lib\net40\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="softwrench.sw4.batchapi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\softwrench.sw4.batchapi.dll</HintPath>
+    </Reference>
     <Reference Include="softWrench.sW4.Controls.ActiveX, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d722d4e8b402a55a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dependencies\softWrench.sW4.Controls.ActiveX.dll</HintPath>
@@ -273,6 +277,7 @@
     <Compile Include="Common\TestProxy.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
+    <Compile Include="Controllers\Application\Ticket\StatusBatchController.cs" />
     <Compile Include="Controllers\AssociationController.cs" />
     <Compile Include="Controllers\Audit\AuditController.cs" />
     <Compile Include="Controllers\MetadataController.cs" />
@@ -1160,7 +1165,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>8080</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

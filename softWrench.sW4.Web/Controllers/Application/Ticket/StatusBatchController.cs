@@ -12,16 +12,16 @@ using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 
-namespace softwrench.sw4.pesco.classes.com.cts.pesco.action {
+namespace softWrench.sW4.Web.Controllers.Application.Ticket {
 
     [Authorize]
     [SPFRedirect(URL = "Application")]
     [SWControllerConfiguration]
-    public class PescoBatchController : ApiController {
+    public class StatusBatchController : ApiController {
 
         private readonly BatchItemSubmissionService _batchService;
 
-        public PescoBatchController(BatchItemSubmissionService batchService) : base() {
+        public StatusBatchController(BatchItemSubmissionService batchService) : base() {
             _batchService = batchService;
         }
 

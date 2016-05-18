@@ -48,7 +48,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="classes\com\cts\pesco\action\PescoBatchController.cs" />
     <Compile Include="classes\com\cts\pesco\configuration\PescoDOFChartInitializer.cs" />
     <Compile Include="classes\com\cts\pesco\dataset\PescoServiceRequestDataSet.cs" />
     <Compile Include="classes\com\cts\pesco\migration\MigrationSwweb2374.cs" />
@@ -88,6 +87,7 @@
     <None Include="web_content\pesco\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="classes\com\cts\pesco\action\" />
     <Folder Include="classes\com\cts\pesco\connector\" />
     <Folder Include="web_content\pesco\htmls\" />
   </ItemGroup>
