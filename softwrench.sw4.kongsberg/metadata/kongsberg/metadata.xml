@@ -327,13 +327,13 @@
           <relationshipAttribute from="orgid" to="orgid"/>
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
-        <relationship to="alndomain" qualifier="servicecompany">
-          <relationshipAttribute from="servcomp" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="SERVICECOMPANY" quoteLiteral="true"/>
+        <relationship to="alndomain" qualifier="servicecompany" ignoreprimary="true">
+          <relationshipAttribute from="servcomp" to="value"/>
+          <relationshipAttribute to="domainid" literal="SERVICECOMPANY" quoteLiteral="true" primary="true"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="timezones">
-          <relationshipAttribute from="wellsitetimezone" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="TIMEZONE" quoteLiteral="true"/>
+        <relationship to="synonymdomain" qualifier="timezones" ignoreprimary="true">
+          <relationshipAttribute from="wellsitetimezone" to="value"/>
+          <relationshipAttribute to="domainid" literal="TIMEZONE" quoteLiteral="true" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -1645,7 +1645,7 @@
               <field attribute="prodservline" label="Product Service Line"/>
             </section>
             <section orientation="horizontal">
-              <association target="servcomp" label="Service Company" labelfield="servicecompany_.description">
+              <association target="servcomp" label="Service Company" labelfield="servicecompany_.description" valuefield="value">
                 <renderer type="lookup"/>
               </association>
               <field attribute="servcomprep" label="Service Company Representative"/>
@@ -1671,7 +1671,7 @@
               <field attribute="jobduration" label="Job Duration"/>
             </section>
             <section orientation="horizontal">
-              <association target="wellsitetimezone" label="Time Zone of Well Site" labelfield="timezones_.description">
+              <association target="wellsitetimezone" label="Time Zone of Well Site" labelfield="timezones_.description" valuefield="value">
                 <renderer type="lookup"/>
               </association>
               <field attribute="contactphone" label="24 Hour Contact Phone Number"/>

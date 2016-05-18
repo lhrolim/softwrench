@@ -72,6 +72,9 @@ namespace softwrench.sw4.activitystream.classes.Util {
             var whereClauseResult = _whereClauseFacade.Lookup(applicationName, null, context);
             //to apply eventual method implementations
             var convertedValue = whereClauseResult != null ?  whereClauseResult.Query : "";
+            if (convertedValue.StartsWith("where ")) {
+                convertedValue = convertedValue.Substring("where".Length);
+            }
             var whereClause = whereClauseResult.IsEmpty() ? " UNION " : " AND " + convertedValue + " UNION ";
 
             sb.Append(GetRoleQuery(applicationName)).Append(whereClause);
