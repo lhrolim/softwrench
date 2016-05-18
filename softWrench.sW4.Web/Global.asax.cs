@@ -132,6 +132,7 @@ namespace softWrench.sW4.Web {
                 return;
             }
             try {
+                AuthLog.DebugFormat("starting on authentication");
                 var ticket = FormsAuthentication.Decrypt(cookie.Value);
                 if (ticket == null) {
                     return; // Not authorised
@@ -139,6 +140,8 @@ namespace softWrench.sW4.Web {
                 AuthLog.DebugFormat("authenticated request: ticket expiration {0}", ticket.Expiration);
 
                 if (ticket.Expiration >= DateTime.Now) {
+                    //forcing ticket to renew (not trusting on sliding expiration)
+                    FormsAuthentication.RenewTicketIfOld(ticket);
                     return;
                 }
                 AuthLog.InfoFormat("authenticated request: cookie expired redirecting user to signin");
