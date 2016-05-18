@@ -23,7 +23,7 @@
                     var regularHours = parentdatamap['regularhrs'];
                     var regularRate = event.fields['payrate'];
                     var premiumHours = parentdatamap['premiumpayhours'];
-                    var premiumRate = parentdatamap['ppcraftrate_.premiumpay_.defaultrate'];
+                    var premiumRate = event.fields['ppcraftrate_.premiumpay_.defaultrate'];
                     event.fields['premiumpayrate'] = premiumRate;
                     event.fields['linecost'] = calcLineCost(regularHours, regularRate, premiumHours, premiumRate);
                 } else if (event.fields['#laborlist_'] && (event.fields['_iscreation'] || event.fields['mode'] == 'batch')) {
