@@ -9,7 +9,7 @@ using softwrench.sw4.problem.classes;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.Persistence.WS.API;
 
-namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
+namespace softwrench.sw4.batch.api.entities {
 
     ///
     [Class(Table = "BAT_BATCH", Lazy = false)]

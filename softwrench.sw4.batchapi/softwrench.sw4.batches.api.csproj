@@ -7,8 +7,8 @@
     <ProjectGuid>{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>softwrench.sw4.batchapi</RootNamespace>
-    <AssemblyName>softwrench.sw4.batchapi</AssemblyName>
+    <RootNamespace>softwrench.sw4.batch.api</RootNamespace>
+    <AssemblyName>softwrench.sw4.batch.api</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -48,19 +48,19 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="com\cts\softwrench\sw4\batches\api\BatchOptions.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\entities\Batch.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\entities\BatchAttributes.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\entities\BatchItem.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\entities\BatchItemProblem.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\entities\BatchReport.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\entities\BatchStatus.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\entities\BatchStatusType.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\entities\IBatch.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\entities\MultiItemBatch.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\services\IBatchOptionProvider.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\services\IBatchSubmissionService.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\api\services\IBatchSubmissionConverter.cs" />
+    <Compile Include="BatchOptions.cs" />
+    <Compile Include="entities\Batch.cs" />
+    <Compile Include="entities\BatchAttributes.cs" />
+    <Compile Include="entities\BatchItem.cs" />
+    <Compile Include="entities\BatchItemProblem.cs" />
+    <Compile Include="entities\BatchReport.cs" />
+    <Compile Include="entities\BatchStatus.cs" />
+    <Compile Include="entities\BatchStatusType.cs" />
+    <Compile Include="entities\IBatch.cs" />
+    <Compile Include="entities\MultiItemBatch.cs" />
+    <Compile Include="services\IBatchOptionProvider.cs" />
+    <Compile Include="services\IBatchSubmissionService.cs" />
+    <Compile Include="services\IBatchSubmissionConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

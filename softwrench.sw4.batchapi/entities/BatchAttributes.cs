@@ -1,7 +1,7 @@
 ﻿using System;
 using NHibernate.Mapping.Attributes;
 
-namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
+namespace softwrench.sw4.batch.api.entities {
 
     [Component]
     public class BatchAttributes {

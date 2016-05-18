@@ -8,7 +8,7 @@ using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
+using softwrench.sw4.batch.api.entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;

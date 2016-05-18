@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.Attributes;
 using softwrench.sw4.problem.classes;
 
-namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
+namespace softwrench.sw4.batch.api.entities {
 
     [Class(Table = "BAT_BATCHITEM", Lazy = false)]
     public class BatchItem : IBaseEntity {

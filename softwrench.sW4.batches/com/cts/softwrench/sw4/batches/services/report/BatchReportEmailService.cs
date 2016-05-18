@@ -2,12 +2,12 @@
 using System.IO;
 using DotLiquid;
 using log4net;
-using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
 using softWrench.sW4.Email;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
 using softwrench.sw4.api.classes.email;
+using softwrench.sw4.batch.api.entities;
 using softWrench.sW4.SPF;
 using Hash = DotLiquid.Hash;
 

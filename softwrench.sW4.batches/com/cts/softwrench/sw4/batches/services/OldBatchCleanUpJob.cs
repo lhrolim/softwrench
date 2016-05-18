@@ -1,4 +1,4 @@
-﻿using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
+﻿using softwrench.sw4.batch.api.entities;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Scheduler;
 using softWrench.sW4.Util;

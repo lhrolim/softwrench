@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
+using softwrench.sw4.batch.api.entities;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data;

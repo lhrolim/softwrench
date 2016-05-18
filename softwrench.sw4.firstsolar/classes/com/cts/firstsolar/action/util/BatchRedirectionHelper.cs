@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 using cts.commons.simpleinjector;
-using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
+using softwrench.sw4.batch.api.entities;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;

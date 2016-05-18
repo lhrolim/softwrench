@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
-using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
+using softwrench.sw4.batch.api.entities;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission;
 using softWrench.sW4.Data.API.Response;

@@ -4,7 +4,7 @@ using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using NHibernate.Mapping.Attributes;
 
-namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
+namespace softwrench.sw4.batch.api.entities {
     [Class(Table = "BAT_REPORT", Lazy = false)]
     public class BatchReport : IBaseEntity {
 

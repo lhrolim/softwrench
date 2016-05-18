@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities;
+using softwrench.sw4.batch.api.entities;
 using softWrench.sW4.Data.Persistence.Operation;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services {

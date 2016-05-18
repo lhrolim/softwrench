@@ -5,7 +5,7 @@ using cts.commons.Util;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 
-namespace softwrench.sw4.batchapi.com.cts.softwrench.sw4.batches.api.entities {
+namespace softwrench.sw4.batch.api.entities {
 
     ///
     [Class(Table = "BAT_MULBATCH", Lazy = false)]
