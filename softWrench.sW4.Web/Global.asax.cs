@@ -35,6 +35,7 @@ namespace softWrench.sW4.Web {
     public class WebApiApplication : System.Web.HttpApplication, ISWEventListener<ClientChangeEvent>, ISWEventListener<ClearCacheEvent> {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(WebApiApplication));
+        private static readonly ILog AuthLog = LogManager.GetLogger(SwConstants.AUTH_LOG);
 
         protected void Application_Start(object sender, EventArgs args) {
             //FIX for http://stackoverflow.com/questions/12638810/nhibernate-race-condition-when-loading-entity
@@ -91,7 +92,7 @@ namespace softWrench.sW4.Web {
                 var container = SimpleInjectorScanner.InitDIController();
                 var dispatcher = (IEventDispatcher)container.GetInstance(typeof(IEventDispatcher));
                 dispatcher.Dispatch(new ApplicationStartedEvent());
-//                ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
+                //                ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
             }
 
             SecurityFacade.InitSecurity();
@@ -126,16 +127,19 @@ namespace softWrench.sW4.Web {
                 throw new HttpException("Cookieless Forms Authentication is not " +
                                         "supported for this application.");
             }
-            if (Request.Cookies[FormsAuthentication.FormsCookieName] == null) {
+            var cookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+            if (cookie == null) {
                 return;
             }
             try {
-                var ticket = FormsAuthentication.Decrypt(
-                    Request.Cookies[FormsAuthentication.FormsCookieName].Value);
+                var ticket = FormsAuthentication.Decrypt(cookie.Value);
                 if (ticket == null) {
                     return; // Not authorised
                 }
+                AuthLog.DebugFormat("cookie expiration {0}, ticket expiration {1}",cookie.Expires,  ticket.Expiration);
+
                 if (ticket.Expiration < DateTime.Now) {
+                    AuthLog.DebugFormat("cookie expired redirecting user to signin");
                     FormsAuthentication.SignOut();
                     throw new HttpResponseException(HttpStatusCode.Unauthorized);
                 }
@@ -171,6 +175,22 @@ namespace softWrench.sW4.Web {
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
                 Response.Cache.SetNoStore();
+            }
+
+            if (AuthLog.IsDebugEnabled) {
+                try {
+                    var cookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+                    if (cookie == null) {
+                        return;
+                    }
+                    var ticket = FormsAuthentication.Decrypt(cookie.Value);
+                    if (ticket == null) {
+                        return; // Not authorised
+                    }
+                    AuthLog.DebugFormat("cookie expiration {0}, ticket expiration {1}", cookie.Expires, ticket.Expiration);
+                } catch {
+                    //error handling
+                }
             }
 
 
