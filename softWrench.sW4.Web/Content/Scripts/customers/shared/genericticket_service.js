@@ -1,8 +1,11 @@
 ﻿(function (angular) {
     "use strict";
 
+    // crudContextHolderService, redirectService, restService, alertService
+
 angular.module('sw_layout')
-    .factory('genericTicketService', ["$q","alertService", "crudContextHolderService", "searchService", "userService", "applicationService", function ($q,alertService, crudContextHolderService, searchService, userService, applicationService) {
+    .factory('genericTicketService', ["$q", "alertService", "crudContextHolderService", "searchService", "userService", "applicationService", "redirectService", "restService", "$log",
+        function ($q, alertService, crudContextHolderService, searchService, userService, applicationService, redirectService, restService, $log) {
 
     var updateTicketStatus = function (datamap) {
         // If the status is new and the user has set the owner/owner group, update the status to queued
@@ -127,10 +130,6 @@ angular.module('sw_layout')
                 return;
                 
             }
-             
-            
-
-
         },
 
         beforechangeownergroup: function (event) {
@@ -196,7 +195,77 @@ angular.module('sw_layout')
 
         isDeleteAllowed: function (datamap, schema) {
             return datamap.fields['status'] === 'NEW' && datamap.fields['reportedby'] === userService.getPersonId();
+        },
+
+        //#region batch status change
+        hasSelectedItemsForBatchStatus: function () {
+            return Object.keys(crudContextHolderService.getSelectionModel().selectionBuffer).length > 0;
+        },
+
+        validateBatchStatusChange: function (selectedItems) {
+            // check if user selected at least one entry
+            if (selectedItems.length <= 0) {
+                alertService.alert("Please select at least one entry to proceed.");
+                return false;
+            }
+
+            // check if user selected items with different status
+            const differentStatus = selectedItems.map( item => item["status"]).distinct();
+            const hasDifferentStatus = differentStatus.length > 1;
+
+            if (hasDifferentStatus) {
+                const statusForMessage = differentStatus.map(s =>  `'${s}'`).join(", ");
+                alertService.alert(
+                    "You selected entries with status values of {0}.".format(statusForMessage) +
+                    "<br>" +
+                    "Please select entries with the same status to proceed."
+                    );
+                return false;
+            }
+
+            return true;
+        },
+
+        initBatchStatusChange: function (schema, datamap) {
+            var log = $log.get("genericTicketService#initBatchStatus", ["batch"]);
+
+            var application = schema.applicationName;
+            var schemaId = schema.schemaId;
+
+            // items selected in the buffer
+            const selectedItems = Object.values(crudContextHolderService.getSelectionModel().selectionBuffer).map(s => s.fields);
+
+            // invalid selection
+            if (!this.validateBatchStatusChange(selectedItems)) return;
+
+            log.debug("initializing batch status change for [application: {0}, schema: {1}]".format(application, schemaId));
+
+            redirectService.openAsModal(application, "batchStatusChangeModal", {
+                savefn: function (modalData, modalSchema) {
+                    var newStatus = modalData["status"];
+
+                    // only changed data + ids
+                    const itemsToSubmit = selectedItems.map(selected => {
+                        var dehydrated = { status: newStatus };
+                        dehydrated[schema.idFieldName] = selected[schema.idFieldName];
+                        dehydrated[schema.userIdFieldName] = selected[schema.userIdFieldName];
+                        dehydrated["siteid"] = selected["siteid"];
+                        dehydrated["orgid"] = selected["orgid"];
+                        return dehydrated;
+                    });
+
+                    log.debug("submitting:", itemsToSubmit);
+
+                    return restService.post("StatusBatch", "ChangeStatus", { application: application }, itemsToSubmit)
+                        .then(() => {
+                            log.debug("clearing selection buffer and realoading [application: {0}, schema: {1}]".format(application, schemaId));
+                            crudContextHolderService.clearSelectionBuffer();
+                            return searchService.refreshGrid(null, null, { panelid: null, keepfilterparams: true });
+                        });
+                }
+            });
         }
+        //#endregion
     };
 
 }]);
