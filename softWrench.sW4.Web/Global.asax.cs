@@ -136,13 +136,14 @@ namespace softWrench.sW4.Web {
                 if (ticket == null) {
                     return; // Not authorised
                 }
-                AuthLog.DebugFormat("cookie expiration {0}, ticket expiration {1}",cookie.Expires,  ticket.Expiration);
+                AuthLog.DebugFormat("authenticated request: ticket expiration {0}", ticket.Expiration);
 
-                if (ticket.Expiration < DateTime.Now) {
-                    AuthLog.DebugFormat("cookie expired redirecting user to signin");
-                    FormsAuthentication.SignOut();
-                    throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                if (ticket.Expiration >= DateTime.Now) {
+                    return;
                 }
+                AuthLog.InfoFormat("authenticated request: cookie expired redirecting user to signin");
+                FormsAuthentication.SignOut();
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
             } catch {
                 //error handling
             }
@@ -187,7 +188,7 @@ namespace softWrench.sW4.Web {
                     if (ticket == null) {
                         return; // Not authorised
                     }
-                    AuthLog.DebugFormat("cookie expiration {0}, ticket expiration {1}", cookie.Expires, ticket.Expiration);
+                    AuthLog.DebugFormat("end request: ticket expiration {0}", ticket.Expiration);
                 } catch {
                     //error handling
                 }
