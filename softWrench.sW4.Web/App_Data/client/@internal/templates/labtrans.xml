@@ -264,7 +264,9 @@
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
             <renderer type="lookup"/>
           </association>
-          <field attribute="linecost" label="Line Cost"/>
+          <field attribute="linecost" label="Line Cost">
+            <renderer type="default" params="formatter=money"/>
+          </field>
           <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate">
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
           </field>
