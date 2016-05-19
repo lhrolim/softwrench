@@ -10,6 +10,105 @@
     <template path="@location.xml"/>
   </templates>
 
+  <entities>
+
+    <entity name="person" idAttribute="personuid" useridAttribute="personid">
+      <attributes>
+        <attribute name="personid" type="varchar" required="true" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="displayname" type="varchar" required="false" />
+        <attribute name="firstname" type="varchar" required="false" />
+        <attribute name="lastname" type="varchar" required="false" />
+        <attribute name="department" type="varchar" required="false" />
+        <attribute name="title" type="varchar" required="false" />
+        <attribute name="employeetype" type="varchar" required="false" />
+        <attribute name="jobcode" type="varchar" required="false" />
+        <attribute name="supervisor" type="varchar" required="false" />
+        <attribute name="birthdate" type="datetime" required="false" />
+        <attribute name="lastevaldate" type="datetime" required="false" />
+        <attribute name="nextevaldate" type="datetime" required="false" />
+        <attribute name="hiredate" type="datetime" required="false" />
+        <attribute name="terminationdate" type="datetime" required="false" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="locationsite" type="varchar" required="false" />
+        <attribute name="locationorg" type="varchar" required="false" />
+        <attribute name="shiptoaddress" type="varchar" required="false" />
+        <attribute name="billtoaddress" type="varchar" required="false" />
+        <attribute name="droppoint" type="varchar" required="false" />
+        <attribute name="wfmailelection" type="varchar" required="false" />
+        <attribute name="transemailelection" type="varchar" required="true" />
+        <attribute name="delegate" type="varchar" required="false" />
+        <attribute name="delegatefromdate" type="datetime" required="false" />
+        <attribute name="delegatetodate" type="datetime" required="false" />
+        <attribute name="pcardnum" type="varchar" required="false" />
+        <attribute name="pcardtype" type="varchar" required="false" />
+        <attribute name="pcardexpdate" type="varchar" required="false" />
+        <attribute name="pcardverification" type="varchar" required="false" />
+        <attribute name="addressline1" type="varchar" required="false" />
+        <attribute name="addressline2" type="varchar" required="false" />
+        <attribute name="addressline3" type="varchar" required="false" />
+        <attribute name="city" type="varchar" required="false" />
+        <attribute name="regiondistrict" type="varchar" required="false" />
+        <attribute name="county" type="varchar" required="false" />
+        <attribute name="stateprovince" type="varchar" required="false" />
+        <attribute name="country" type="varchar" required="false" />
+        <attribute name="postalcode" type="varchar" required="false" />
+        <attribute name="vip" type="int" required="false" />
+        <attribute name="statusdate" type="datetime" required="true" />
+        <attribute name="acceptingwfmail" type="smallint" required="true" />
+        <attribute name="wopriority" type="int" required="false" />
+        <attribute name="loctoservreq" type="smallint" required="true" />
+        <attribute name="personuid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="language" type="varchar" required="false" />
+        <attribute name="locale" type="varchar" required="false" />
+        <attribute name="timezone" type="varchar" required="false" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="primarysms" type="varchar" required="false" />
+        <attribute name="ownergroup" type="varchar" required="false" />
+        <attribute name="im_id" type="varchar" required="false" />
+        <attribute name="caltype" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="dfltapp" type="varchar" required="false" />
+        <attribute name="deviceclass" type="smallint" required="false" />
+
+      </attributes>
+      <relationships>
+        <relationship to="maxuser">
+          <relationshipAttribute from="personid" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="email" collection="true">
+          <relationshipAttribute from="personid" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="phone" collection="true">
+          <relationshipAttribute from="personid" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="locationsite" to="siteid" primary="true"/>
+        </relationship>
+        <relationship to="organization">
+          <relationshipAttribute from="locationorg" to="orgid" primary="true"/>
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="locationsite" to="siteid"/>
+          <relationshipAttribute to="type" query="!@type != 'STOREROOM'"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="person" />
+        <connectorParameter key="integration_interface" value="SWPERSON" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePersonCrudConnector" />
+      </connectorParameters>
+
+    </entity>
+
+  </entities>
+  
   <applications>
     <application name="person" title="Person" entity="person">
       <properties>
@@ -53,7 +152,7 @@
 
           <section id="statistics" resourcepath="/Content/Templates/usersetup/userstatistics.html"></section>
 
-          <field attribute="personuid" label="Person ID" showexpression="false"/>
+          <field attribute="personuid" label="Person ID" hidden="true"/>
           <field attribute="personid" label="Username" requiredexpression="true" readonly="true"/>
 
           <field attribute="#password" label="Password" showexpression="!@ldapEnabled">

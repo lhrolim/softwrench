@@ -81,6 +81,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         }
 
         public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            if (request.UserId != null && request.UserIdSitetuple == null) {
+                request.UserIdSitetuple = new Tuple<string, string>(request.UserId, null);
+            }
+
             var detail = base.GetApplicationDetail(application, user, request);
             // profile detail can be null for users created automatically by the system (such as swadmin). 
             // Shouldn't happen for actual maximo users.
@@ -90,7 +94,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 var associationResults = BuildAssociationOptions(defaultDataMap, application.Schema, request);
                 detail = new ApplicationDetailResult(defaultDataMap, associationResults, application.Schema, CompositionBuilder.InitializeCompositionSchemas(application.Schema, user), request.Id);
             }
-            
+
             var personId = detail.ResultObject.GetAttribute("personid") as string;
             var maxActive = Convert.ToBoolean(detail.ResultObject.GetAttribute("maxuser_.active"));
             var swUser = new User();
@@ -116,7 +120,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                     statistics = _userStatisticsService.LocateStatistics(swUser);
                     activationLink = _userLinkManager.GetLinkByUser(swUser);
                 }
-                var isActive = (swUser.IsActive.HasValue && swUser.IsActive == false )? "false" : "true";
+                var isActive = (swUser.IsActive.HasValue && swUser.IsActive == false) ? "false" : "true";
                 dataMap.SetAttribute("#isactive", isActive);
                 var preferences = swUser.UserPreferences;
                 var signature = preferences != null ? preferences.Signature : "";
@@ -155,7 +159,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var username = json.GetValue("personid").ToString();
             var firstName = json.GetValue("firstname").ToString();
             var lastName = json.GetValue("lastname").ToString();
-            var isactive = json.GetValue("#isactive").ToString().EqualsAny("1","true");
+            var isactive = json.GetValue("#isactive").ToString().EqualsAny("1", "true");
             var signature = json.GetValue("#signature").ToString();
             var dbUser = _swdbDAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, username);
 
@@ -179,7 +183,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             }
             user.UserPreferences.Signature = signature;
             var screenSecurityGroups = LoadProfiles(json);
-            
+
 
             var validSecurityGroupOperation = ValidateSecurityGroups(application.Schema.SchemaId, dbUser, screenSecurityGroups);
             if (!validSecurityGroupOperation) {

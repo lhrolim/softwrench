@@ -88,6 +88,8 @@ namespace softWrench.sW4.Data.API {
             }
         }
 
+        public string UserId { get; set; }
+
         public Tuple<string, string> UserIdSitetuple {
             get; set;
         }
@@ -106,6 +108,7 @@ namespace softWrench.sW4.Data.API {
             if (adapter.SiteId != null && adapter.UserId != null){
                 request.UserIdSitetuple = new Tuple<string, string>(adapter.UserId,adapter.SiteId);
             }
+            request.UserId = adapter.UserId;
 
             var entityMetadata = MetadataProvider.Entity(applicationMetadata.Entity);
             if (adapter.InitialData != null) {

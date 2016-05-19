@@ -28,7 +28,12 @@ angular.module('sw_layout')
             };
             contextService.insertIntoContext("crud_context", crudContext);
             var id = contextService.getUserData().maximoPersonId;
-            this.loadApplication('Person', 'myprofiledetail', 'input', id);
+
+            var parameters = {
+                userid: id
+            }
+            redirectService.goToApplicationView('Person', 'myprofiledetail', 'input', null, parameters, null);
+
         },
 
         logout: function () {
