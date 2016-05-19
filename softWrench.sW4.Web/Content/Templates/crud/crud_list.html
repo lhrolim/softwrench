@@ -38,8 +38,8 @@
                         <div class="btn-group search-options col-xs-12 col-sm-5 col-md-4 col-lg-3" ng-if="schema.relatedCompositions.length > 0">
                             <button type="button" class="btn btn-context dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
                                 <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i>
-                                <span>Search Options</span>
-                                <span class="caret"></span>
+                                <div class="text">Search Options</div>
+                                <div class="caret"></div>
                             </button>
                             <ul class="dropdown-menu" role="menu">
                                 <!--TODO: Make recursive...-->

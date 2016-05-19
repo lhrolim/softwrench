@@ -147,6 +147,9 @@
                 openedPanel = panelid;
             }
 
+            //add class to help css adjustments
+            $('html').toggleClass('side-panel-open');
+
             //resize/position elements
             fixHeaderService.callWindowResize();
             $(window).trigger('resize');

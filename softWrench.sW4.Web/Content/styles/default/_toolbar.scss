@@ -49,6 +49,7 @@
 
         pagination.large-button {
             height: auto;
+            display: none;
 
             .text {
                 height: auto;
@@ -73,9 +74,18 @@
                 padding-right: 0;
                 font-size: 12px;
                 height: 28px;
+                text-align: left;
 
                 &:active {
                     box-shadow: none;
+                }
+
+                .text {
+                    display: inline-block;
+                }
+
+                .caret {
+                    display: inline-block;
                 }
             }
 
@@ -108,28 +118,32 @@
             margin-top: 5px;
             height: 30px;
 
-            .buttons {
-                margin: 0;
+            .inputs {
+                text-align: right;
 
-                button {
-                    background: transparent;
+                .buttons {
+                    margin: 0;
 
-                    &:hover {
-                        background: #ddd;
+                    button {
+                        background: transparent;
+
+                        &:hover {
+                            background: #ddd;
+                        }
                     }
                 }
-            }
 
-            select {
-                height: 30px;
-                width: calc(100% - 78px);
-                display: inline-block;
-                top: 3px;
-                position: relative;
-            }
+                select {
+                    height: 30px;
+                    width: calc(100% - 105px);
+                    display: inline-block;
+                    top: 3px;
+                    position: relative;
+                }
 
-            #savefilterform {
-                margin-top: 5px;
+                #savefilterform {
+                    margin-top: 5px;
+                }
             }
         }
 
@@ -253,6 +267,18 @@
             }
         }
     }
+
+    .side-panel-open {
+        .container {
+            .context {
+                .quick-search {
+                    &.col-sm-6 {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
 }
 
 @media all and (min-width: 992px) {
@@ -265,11 +291,43 @@
                     margin-left: 5px;
                 }
             }
+
+            pagination.large-button {
+                display: block;
+            }
+        }
+    }
+
+    .side-panel-open {
+        .container {
+            .context {
+                pagination.large-button {
+                    display: none;
+                }
+
+                .quick-search {
+                    &.col-md-5 {
+                        width: 52%;
+                    }
+                }
+            }
         }
     }
 
     #crudbodyform .context .group:first-child {
         margin-left: 0;
+    }
+}
+
+@media all and (min-width: 1048px) {
+    .side-panel-open {
+        .container {
+            .context {
+                pagination.large-button {
+                    display: block;
+                }
+            }
+        }
     }
 }
 
