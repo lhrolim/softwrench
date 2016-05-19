@@ -3,7 +3,7 @@
 
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
-  <property key="wsprovider" value="rest" />
+  <property key="wsprovider" value="mif" />
   <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
   <property key="basewfURL" value="http://10.50.100.125:9080/meaweb/wf/" />
   <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
