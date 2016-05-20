@@ -29,29 +29,25 @@ namespace softwrench.sw4.dashboard.classes.startup {
             return count > 0;
         }
 
-        public Dashboard CreateDashboard(string title, string alias, ICollection<DashboardGraphicPanel> panels, DashboardGridPanel grid = null) {
+        public Dashboard CreateDashboard(string title, string alias, ICollection<DashboardBasePanel> panels) {
             var now = DateTime.Now;
 
-            var allPanels = new List<DashboardBasePanel>();
-            allPanels.AddRange(panels);
-            if (grid != null) allPanels.Add(grid);
-
             // save panels and replace references by hibernate-managed ones
-            allPanels.ForEach(p => {
-                p.CreationDate = now;
-                p.UpdateDate = now;
-                p.Visible = true;
-                p.Filter = new DashboardFilter();
-                var panel = p as DashboardGraphicPanel;
-                if (panel != null) {
-                    panel.Provider = "swChart";
+            foreach (var panel in panels) {
+                panel.CreationDate = now;
+                panel.UpdateDate = now;
+                panel.Visible = true;
+                panel.Filter = new DashboardFilter();
+                var graphicPanel = panel as DashboardGraphicPanel;
+                if (graphicPanel != null) {
+                    graphicPanel.Provider = "swChart";
                 }
-            });
-            allPanels = _dao.BulkSave(allPanels).ToList();
+            }
+            panels = _dao.BulkSave(panels).ToList();
 
             // create relationship entities
             var position = 0;
-            var panelRelationships = allPanels
+            var panelRelationships = panels
                 .Select(p => new DashboardPanelRelationship() {
                     Position = position++,
                     Panel = p

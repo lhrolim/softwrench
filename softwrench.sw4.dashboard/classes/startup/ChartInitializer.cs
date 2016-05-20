@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using cts.commons.persistence.Util;
+﻿using System.Collections.Generic;
 using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
 using softwrench.sw4.dashboard.classes.model.entities;
-using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
-using softWrench.sW4.Security.Context;
-using softWrench.sW4.Util;
+using ctes = softwrench.sw4.dashboard.classes.service.statistics.StatisticsConstants;
 
 namespace softwrench.sw4.dashboard.classes.startup {
     public class ChartInitializer : ISWEventListener<ApplicationStartedEvent>, IOrdered {
@@ -30,26 +23,28 @@ namespace softwrench.sw4.dashboard.classes.startup {
         /// <summary>
         /// Complete SELECT statistics query for wo.status: includes the statuses's descriptions as labels.
         /// </summary>
-        private const string WO_STATUS_WHERECLAUSE_COMPLETE_QUERY =
-            @"select COALESCE(CAST(status as varchar), 'NULL') as status, count(*) as countBy, s.description as label 
+        private static readonly string WO_STATUS_WHERECLAUSE_COMPLETE_QUERY = string.Format(
+            @"select COALESCE(CAST(status as varchar), 'NULL') as status, count(*) as {0}, s.description as {1} 
                 from workorder 
                 left join synonymdomain s
        	            on status = s.value
-  	            where s.domainid = 'WOSTATUS' and s.description is not null
+  	            where s.domainid = 'WOSTATUS' and s.description is not null {2}
                 group by status,s.description
-                order by countBy desc";
+                order by countBy desc",
+            ctes.FIELD_VALUE_VARIABLE_NAME, ctes.FIELD_LABEL_VARIABLE_NAME, ctes.CONTEXT_FILTER_VARIABLE_NAME);
 
         /// <summary>
         /// Complete SELECT statistics query for sr.status: includes the statuses's descriptions as labels.
         /// </summary>
-        private const string SR_STATUS_WHERECLAUSE_COMPLETE_QUERY = 
-            @"select COALESCE(CAST(status as varchar), 'NULL') as status, count(*) as countBy, s.description as label 
+        private static readonly string SR_STATUS_WHERECLAUSE_COMPLETE_QUERY = string.Format(
+            @"select COALESCE(CAST(status as varchar), 'NULL') as status, count(*) as {0}, s.description as {1} 
                 from sr 
                 left join synonymdomain s
        	            on status = s.value
-  	            where s.domainid = 'SRSTATUS' and s.description is not null
+  	            where s.domainid = 'SRSTATUS' and s.description is not null {2}
                 group by status,s.description
-                order by countBy desc";
+                order by countBy desc",
+            ctes.FIELD_VALUE_VARIABLE_NAME, ctes.FIELD_LABEL_VARIABLE_NAME, ctes.CONTEXT_FILTER_VARIABLE_NAME);
 
 
         private readonly DashboardInitializationService _service;
@@ -84,7 +79,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         }
 
         private Dashboard ExecuteSRChartInitialization() {
-            var panels = new List<DashboardGraphicPanel>() {
+            var panels = new List<DashboardBasePanel>() {
                 new DashboardGraphicPanel() {
                     Alias = "sr.status.top5",
                     Title = "Service Requests by Status",
@@ -114,21 +109,20 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     Title = "Open/Closed Service Requests",
                     Size = 3,
                     Configuration = "application=sr;field=status;type=swRecordCountPie;statusfieldconfig=openclosed;limit=0;showothers=False;options={'series': {'type': 'doughnut'}, 'swChartsAddons': {'addPiePercentageTooltips': true}}"
+                },
+                new DashboardGridPanel() {
+                    Alias = "sr.grid",
+                    Title = "Service Requests",
+                    Application = "servicerequest",
+                    AppFields = "ticketid,description,reportedby,owner,changedate,status",
+                    DefaultSortField = "changedate",
+                    SchemaRef = "list",
+                    Limit = 15,
+                    Size = 12
                 }
             };
 
-            var grid = new DashboardGridPanel() {
-                Alias = "sr.grid",
-                Title = "Service Requests",
-                Application = "servicerequest",
-                AppFields = "ticketid,description,reportedby,owner,changedate,status",
-                DefaultSortField = "changedate",
-                SchemaRef = "list",
-                Limit = 15,
-                Size = 12
-            };
-
-            return _service.CreateDashboard(SrChartDashboardTitle,SrChartDashboardAlias, panels, grid);
+            return _service.CreateDashboard(SrChartDashboardTitle,SrChartDashboardAlias, panels);
         }
 
         #endregion
@@ -140,7 +134,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         }
 
         private Dashboard ExecuteWOChartInitialization() {
-            var panels = new List<DashboardGraphicPanel>() {
+            var panels = new List<DashboardBasePanel>() {
                 new DashboardGraphicPanel() {
                     Alias = "wo.status.openclosed.gauge",
                     Title = "Total Work Orders",
@@ -177,26 +171,25 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     Size = 6,
                     Configuration = "application=workorder;field=reportedby;type=swRecordCountRotatedChart;statusfieldconfig=all;limit=5;showothers=False;options={'series': {'color': '#39b54a'}}"
                 },
-                 new DashboardGraphicPanel() {
+                new DashboardGraphicPanel() {
                     Alias = "wo.types",
                     Title = "Work Order Types",
                     Size = 3,
                     Configuration = "application=workorder;field=worktype;type=swRecordCountPie;statusfieldconfig=all;limit=6;showothers=True;options={'series': {'type': 'doughnut'}, 'swChartsAddons': {'addPiePercentageTooltips': true}, 'tooltip': {'enabled': false}}"
                 },
+                new DashboardGridPanel() {
+                    Alias = "wo.grid",
+                    Title = "Work Orders",
+                    Application = "workorder",
+                    AppFields = "wonum,description,location,asset_.description,status",
+                    DefaultSortField = "wonum",
+                    SchemaRef = "list",
+                    Limit = 15,
+                    Size = 12
+                }
             };
 
-            var grid = new DashboardGridPanel() {
-                Alias = "wo.grid",
-                Title = "Work Orders",
-                Application = "workorder",
-                AppFields = "wonum,description,location,asset_.description,status",
-                DefaultSortField = "wonum",
-                SchemaRef = "list",
-                Limit = 15,
-                Size = 12
-            };
-
-            return _service.CreateDashboard(WoChartDashboardTitle, WoChartDashboardAlias, panels, grid);
+            return _service.CreateDashboard(WoChartDashboardTitle, WoChartDashboardAlias, panels);
         }
 
         #endregion

@@ -28,11 +28,11 @@
                     { label: "Work Type", value: "worktype" }
                 ],
                 getFields: function (application) {
-                    var specific = this[application];
+                    const specific = this[application];
                     return specific ? this.base.concat(specific) : this.base;
                 },
                 getNullValueLabel: function(field) {
-                    var nullValueLabel = this.nullLabelLookupTable[field];
+                    const nullValueLabel = this.nullLabelLookupTable[field];
                     return !!nullValueLabel ? nullValueLabel : null;
                 }
             }
@@ -40,15 +40,15 @@
 
         function getChartData(panel) {
             var configuration = panel.configurationDictionary;
-
-            var params = {
-                entity: configuration.application,
-                application: "sr".equalsIc(configuration.application) ? "servicerequest" : configuration.application,
+            const isServiceRequest = "sr".equalsIc(configuration.application);
+            const params = {
+                entity: isServiceRequest ? "SR" : configuration.application,
+                application: isServiceRequest ? "servicerequest" : configuration.application,
                 property: configuration.field,
-                whereClauseMetadataId: "dashboard:" + panel.alias,
+                whereClauseMetadataId: `dashboard:${panel.alias}`,
                 limit: (configuration.limit > 0 && !configuration.showothers && configuration.statusconfig !== "openclosed") ? configuration.limit : 0,
                 nullValueLabel: config.fields.getNullValueLabel(configuration.field)
-            }
+            };
             var method = "CountByProperty";
 
             // custom system only charts: require custom server-side action logic
@@ -58,34 +58,27 @@
             }
 
             return restService.getPromise("Statistics", method, params)
-                .then(function (response) {
-                    var processed = processData(configuration, response.data);
+                .then(response => {
+                    const processed = processData(configuration, response.data);
                     return formatDataForChart(configuration.type, processed);
                 });
         }
 
         function processData(configuration , data) {
             // sort by value descending
-            var processed = data.sort(function (d1, d2) {
-                return d2.fieldCount - d1.fieldCount;
-            });
+            var processed = data.sort((d1, d2) => d2.fieldCount - d1.fieldCount);
 
             // status -> open/close
             if (configuration.field === "status" && configuration.statusfieldconfig === "openclosed") {
                 // closed status entry
-                var closed = processed.find(function (d) {
-                    return d.fieldValue.equalsIc("close") || d.fieldValue.equalsIc("closed");
-                });
+                const closed = processed.find(d => d.fieldValue.equalsIc("close") || d.fieldValue.equalsIc("closed"));
                 // sum of all except closed
-                var openCount = processed.filter(function (d) {
-                    return !d.fieldValue.equalsIc("close") && !d.fieldValue.equalsIc("closed");
-                })
-                .reduce(function (previous, current) {
-                    return previous + current.fieldCount;
-                }, 0);
+                const openCount = processed
+                    .filter(d => !d.fieldValue.equalsIc("close") && !d.fieldValue.equalsIc("closed"))
+                    .reduce( (previous, current) => previous + current.fieldCount, 0);
                 // new array containing only open/close
                 processed = [
-                    closed,
+                    closed || { fieldValue: "CLOSED", fieldLabel: "CLOSED", fieldCount: 0 },
                     { fieldValue: "OPEN", fieldLabel: "OPEN", fieldCount: openCount }
                 ];
 
@@ -93,12 +86,9 @@
             // should overflow to 'others' -> top within limit + others
             else if (configuration.limit > 0 && processed.length > configuration.limit && configuration.showothers) {
                 // <limit> highest counts
-                var topresults = processed.slice(0, configuration.limit);
+                const topresults = processed.slice(0, configuration.limit);
                 // sum of the others's counts
-                var othersCount = processed.slice(configuration.limit)
-                    .reduce(function (previous, current) {
-                        return previous + current.fieldCount;
-                    }, 0);
+                const othersCount = processed.slice(configuration.limit).reduce((previous, current) => previous + current.fieldCount, 0);
                 // new array composed of top <limit> + 'others'
                 processed = topresults.concat({ fieldValue: "OTHERS", fieldLabel: "OTHERS", fieldCount: othersCount });
             }
@@ -116,13 +106,11 @@
                 case "swRecordCountLineChart":
                 case "dxPie":
                 case "swRecordCountPie":
-                    chartData = data.map(function (d) {
-                        return {
-                            argument: d.fieldLabel,
-                            total: d.fieldCount,
-                            entry: d
-                        }
-                    });
+                    chartData = data.map(d => ({
+                        argument: d.fieldLabel,
+                        total: d.fieldCount,
+                        entry: d
+                    }));
                     break;
                 case "dxLinearGauge":
                 case "swLinearGauge":
@@ -130,20 +118,18 @@
                 case "swCircularGauge":
                 case "swRecordCountGauge":
                     var total = 0;
-                    data.forEach(function (d) {
+                    data.forEach(d => {
                         total += d.fieldCount;
                         chartData[d.fieldLabel] = d.fieldCount;
                     });
                     chartData.total = total;
                     break;
                 case "swSparkline":
-                    chartData = data.map(function (d) {
-                        return {
-                            argument: d.fieldLabel,
-                            value: d.fieldCount,
-                            entry: d
-                        }
-                    });
+                    chartData = data.map(d => ({
+                        argument: d.fieldLabel,
+                        value: d.fieldCount,
+                        entry: d
+                    }));
                     break;
                 //case "swRecordTrends":
                 //case "dxSparkline":
@@ -190,16 +176,16 @@
          */
         function loadGraphic(element, panel, options) {
             return getChartData(panel)
-                .then(function (data) {
+                .then(data => {
                     // create isolated scope for the dynamically compiled 'sw-chart' directive
-                    var $parent = angular.element(element).scope();
-                    var $scope = $rootScope.$new(true, $parent);
+                    const $parent = angular.element(element).scope();
+                    const $scope = $rootScope.$new(true, $parent);
                     $scope.panel = panel;
                     $scope.data = data;
                     $scope.chartType = panel.configurationDictionary.type;
                     $scope.options = panel.configurationDictionary.options;
                     // compile the template with the isolated scope
-                    var graphic = $compile(config.template)($scope);
+                    const graphic = $compile(config.template)($scope);
                     $(element).append(graphic);
                     // Promise resolved with the graphic element
                     return graphic;
@@ -232,9 +218,9 @@
         }
 
         function onApplicationSelected(event) {
-            var application = event.fields.application;
+            const application = event.fields.application;
             if (!application) return;
-            var fields = config.fields.getFields(application);
+            const fields = config.fields.getFields(application);
             crudContextHolderService.updateEagerAssociationOptions("fields", fields);
 
         }
@@ -245,8 +231,8 @@
          * @param DOMNode graphic sw-chart compiled directive
          */
         function onDashboardSelected(graphic) {
-            var scope = angular.element(graphic.children()).scope();
-            var chart = scope.chart;
+            const scope = angular.element(graphic.children()).scope();
+            const chart = scope.chart;
             if (!chart) return;
             chart.render();
         }
@@ -259,17 +245,17 @@
          * @returns boolean whether or not the options should be displayed (user has authorization) 
          */
         function filterSelectableApplications(option) {
-            var applications = crudContextHolderService.fetchEagerAssociationOptions("applications", { schemaId: "#modal" });
-            var appNames = applications.map(function (a) { return a.value; });
-            var filterableName = option.value === "sr" ? "servicerequest" : option.value;
+            const applications = crudContextHolderService.fetchEagerAssociationOptions("applications", { schemaId: "#modal" });
+            const appNames = applications.map(a => a.value);
+            const filterableName = option.value === "sr" ? "servicerequest" : option.value;
             // option is part of authorized apps
-            return !!appNames.find(function (a) { return a === filterableName });
+            return !!appNames.find(a =>  a === filterableName);
         }
 
         //#endregion
 
         //#region Service Instance
-        var service = {
+        const service = {
             loadGraphic: loadGraphic,
             resizeGraphic: resizeGraphic,
             onProviderSelected: onProviderSelected,

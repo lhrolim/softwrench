@@ -22,7 +22,7 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.configuration {
             }
 
             if (_service.DashBoardExists(PESCO_DOF_DASHBOARD_ALIAS)) return;
-            var panels = new List<DashboardGraphicPanel> {
+            var panels = new List<DashboardBasePanel> {
                 new DashboardGraphicPanel() {
                     Alias = "pesco.dof.device_value",
                     Title = "Device Values: Dummy",

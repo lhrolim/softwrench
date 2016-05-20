@@ -101,6 +101,7 @@
     <Compile Include="classes\service\graphic\tableau\TableauAuthDto.cs" />
     <Compile Include="classes\service\graphic\tableau\TableauConstants.cs" />
     <Compile Include="classes\service\graphic\tableau\TableauFacade.cs" />
+    <Compile Include="classes\service\statistics\StatisticsConstants.cs" />
     <Compile Include="classes\service\statistics\StatisticsRequest.cs" />
     <Compile Include="classes\service\statistics\StatisticsResponseEntry.cs" />
     <Compile Include="classes\service\statistics\StatisticsService.cs" />

@@ -9,28 +9,37 @@ using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Context;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
+using ctes = softwrench.sw4.dashboard.classes.service.statistics.StatisticsConstants;
 
 namespace softwrench.sw4.dashboard.classes.service.statistics {
     public class StatisticsService : ISingletonComponent {
 
-        private const string COUNT_BY_PROPERTY_ORDERED_TEMPLATE = @"select COALESCE(CAST({1} as varchar), 'NULL') as {1}, count(*) as countBy 
-                                                                        from {0} 
+        private const string COUNT_BY_PROPERTY_ORDERED_TEMPLATE = "select COALESCE(CAST({1} as varchar), 'NULL') as {1}, count(*) as " + ctes.FIELD_VALUE_VARIABLE_NAME + 
+                                                                    @" from {0} 
                                                                         {2}
                                                                         group by {1}
                                                                         order by " + COUNT_ORDER;
-        private const string COUNT_ORDER = "countBy desc";
+
+        private const string COUNT_ORDER = ctes.FIELD_VALUE_VARIABLE_NAME + " desc";
 
         private readonly IMaximoHibernateDAO _maxdao;
         private readonly ISWDBHibernateDAO _swdao;
         private readonly IWhereClauseFacade _whereClauseFacade;
+        private readonly DataConstraintsWhereBuilder _whereBuilder;
+        private readonly IContextLookuper _contextLookuper;
 
-        public StatisticsService(IMaximoHibernateDAO maxdao, ISWDBHibernateDAO swdao, IWhereClauseFacade whereClauseFacade) {
+        public StatisticsService(IMaximoHibernateDAO maxdao, ISWDBHibernateDAO swdao,
+            IWhereClauseFacade whereClauseFacade, DataConstraintsWhereBuilder whereBuilder, IContextLookuper contextLookuper) {
             _maxdao = maxdao;
             _swdao = swdao;
             _whereClauseFacade = whereClauseFacade;
+            _whereBuilder = whereBuilder;
+            _contextLookuper = contextLookuper;
         }
 
         /// <summary>
@@ -58,12 +67,12 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
                 // cast so ExpandoObject's properties can be indexed by string key
                 .Select(d => {
                     var fieldValue = (string)d[propertyName];
-                    var fieldCountLong = d["countBy"] as long?;
-                    var fieldCount = fieldCountLong ?? Convert.ToInt64((int) d["countBy"]);
+                    var fieldCountLong = d[ctes.FIELD_VALUE_VARIABLE_NAME] as long?;
+                    var fieldCount = fieldCountLong ?? Convert.ToInt64((int) d[ctes.FIELD_VALUE_VARIABLE_NAME]);
                     // value is `null`: label configured by request. Otherwise try and grab the label from the query
                     var label = string.IsNullOrEmpty(fieldValue) || string.Equals(fieldValue, "NULL")
                         ? nullValueLabel
-                        : d.ContainsKey("label") ? (string)d["label"] : null;
+                        : d.ContainsKey(ctes.FIELD_LABEL_VARIABLE_NAME) ? (string)d[ctes.FIELD_LABEL_VARIABLE_NAME] : null;
 
                     return new StatisticsResponseEntry(fieldValue: fieldValue, fieldCount: fieldCount, fieldLabel: label);
                 });
@@ -118,11 +127,11 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
                                     var max = long.Parse(r["maxmonthvalue"]);
                                     var min = long.Parse(r["minmonthvalue"]);
                                     return new Dictionary<string, object> {
-                                        { "countBy", max - min },
+                                        { ctes.FIELD_VALUE_VARIABLE_NAME, max - min },
                                         { "monthyear", r["monthyear"] },
-                                        { "label", r["monthyear"] }
+                                        { ctes.FIELD_LABEL_VARIABLE_NAME, r["monthyear"] }
                                     };
-                                }).Where(r => ((long) r["countBy"]) > 0 );
+                                }).Where(r => ((long) r[ctes.FIELD_VALUE_VARIABLE_NAME]) > 0 );
 
                 return FormatQueryResult(results, "monthyear", "NULL");
             });
@@ -132,12 +141,16 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
 
         #region Utils
 
-        private bool IsMaximoApplication(string app) {
+        private static bool IsMaximoApplication(string app) {
             return MetadataProvider.FetchAvailableAppsAndEntities().Contains(app);
         }
 
         private string BuildStatisticsQuery(StatisticsRequest request) {
-            var whereClause = "";
+            _contextLookuper.FillGridContext(request.Application, SecurityFacade.CurrentUser());
+
+            var contextWhereClause = _whereBuilder.BuildWhereClause(request.Entity, null);
+
+            var requestWhereClause = "";
 
             if (!string.IsNullOrEmpty(request.WhereClauseMetadataId)) {
                 var whereClauseResult = _whereClauseFacade.Lookup(request.Application, new ApplicationLookupContext() {
@@ -145,20 +158,37 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
                 });
                 // this warning here is a lie: (WhereClauseFacade implements IWhereClauseFacade).Lookup can return null
                 if (whereClauseResult != null) {
-                    whereClause = whereClauseResult.Query;
+                    requestWhereClause = whereClauseResult.Query;
                 }
             }
 
+            var hasContextFilter = !string.IsNullOrEmpty(contextWhereClause) && !string.Equals(contextWhereClause, requestWhereClause);
+
             // full query -> use it
-            if (whereClause.TrimStart().StartsWith("select ", StringComparison.OrdinalIgnoreCase)) {
-                return whereClause;
+            if (requestWhereClause.TrimStart().StartsWith("select ", StringComparison.OrdinalIgnoreCase)) {
+                return hasContextFilter 
+                    ? requestWhereClause.Replace(ctes.CONTEXT_FILTER_VARIABLE_NAME, string.Format(" and ({0})", contextWhereClause)) 
+                    : requestWhereClause;
+            }
+
+            // combine both whereclauses
+            string fullWhereClause;
+            var hasRequestFilter = !string.IsNullOrEmpty(requestWhereClause);
+            if (!hasRequestFilter && !hasContextFilter) {
+                fullWhereClause = "";
+            } else if (!hasRequestFilter /*&& hasContextFilter*/) {
+                fullWhereClause = contextWhereClause;
+            } else if (/*hasRequestFilter &&*/ !hasContextFilter) {
+                fullWhereClause = requestWhereClause;
+            } else {
+                fullWhereClause = requestWhereClause + string.Format(" and ({0})", contextWhereClause);
+            }
+            if (!string.IsNullOrEmpty(fullWhereClause) && !fullWhereClause.StartsWith("where", StringComparison.OrdinalIgnoreCase)) {
+                fullWhereClause = "where " + fullWhereClause;
             }
 
             // format default query
-            if (!string.IsNullOrEmpty(whereClause) && !whereClause.StartsWith("where", StringComparison.OrdinalIgnoreCase)) {
-                whereClause = "where " + whereClause;
-            }
-            var formattedQuery = string.Format(COUNT_BY_PROPERTY_ORDERED_TEMPLATE, request.Entity, request.Property, whereClause);
+            var formattedQuery = string.Format(COUNT_BY_PROPERTY_ORDERED_TEMPLATE, request.Entity, request.Property, fullWhereClause);
             return formattedQuery;
         }
 
