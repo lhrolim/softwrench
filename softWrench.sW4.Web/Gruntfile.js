@@ -129,8 +129,11 @@ module.exports = function (grunt) {
                 logLevel: "INFO",
                 preprocessors: {
                     'Content/Templates/**/*.html': ["ng-html2js"],
-                    'Content/Shared/webcommons/scripts/**/*.js': ["babel"],
-                    'Content/Scripts/**/*.js': ["babel"]
+                    'Content/Shared/**/*.js': ["babel"],
+                    'Content/Scripts/**/*.js': ["babel"],
+                    'Content/modules/**/*.js': ["babel"],
+                    'Content/Customers/**/scripts/**/*.js': ["babel"],
+                    '../softwrench.sw4.jstest/tests/**/*.js': ["babel"]
                 },
                 ngHtml2JsPreprocessor: {
                     // If your build process changes the path to your TEMPLATES,
