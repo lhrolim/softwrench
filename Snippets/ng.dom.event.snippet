@@ -22,9 +22,9 @@
       </Declarations>
       <Code Language="JavaScript">
         <![CDATA[
-        function $event$Listener(event) {
+        const $event$Listener = event => {
 
-        }
+        };
         angular.element($element$).on("$event$", $event$Listener);
         $$scope.$$on("$$destroy", function() {
           angular.element($element$).off("$event$", $event$Listener);
