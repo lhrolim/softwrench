@@ -19,11 +19,11 @@ softwrench.sw4.jstest/node_modules/
 softWrench.sW4.Web/Content/Customers/*
 
 softWrench.sW4.Web/App_Data/client/*
-!softWrench.sW4.Web/App_Data/client/@internal/*
-!softWrench.sW4.Web/App_Data/client/hapag/*
-!softWrench.sW4.Web/App_Data/client/otb/*
-!softWrench.sW4.Web/App_Data/client/scottsdale/*
-!softWrench.sW4.Web/App_Data/client/shared/*
+!softWrench.sW4.Web/App_Data/client/@internal/
+!softWrench.sW4.Web/App_Data/client/hapag/
+!softWrench.sW4.Web/App_Data/client/otb/
+!softWrench.sW4.Web/App_Data/client/scottsdale/
+!softWrench.sW4.Web/App_Data/client/shared/
 
 softWrench.sW4.Web/Content/Shared/
 softWrench.sW4.Web/Content/Scripts/softwrench/shared

@@ -186,7 +186,7 @@ namespace softWrench.sW4.Configuration.Services {
                 //if no condition is passed, we just need to update the base definition data
                 var definition = new PropertyDefinition {
                     FullKey = configKey,
-                    Key = CategoryUtil.GetPropertyKey(configKey),
+                    SimpleKey = CategoryUtil.GetPropertyKey(configKey),
                     StringValue = query,
                     DataType = typeof(string).Name,
                     Renderer = "whereclause",

@@ -219,6 +219,11 @@
         public static string DetailFocusAllowMoveBackward = "detail.focus.allowmovingbackward";
 
         /// <summary>
+        /// If "true" reloads de current schema after a save with the new values.
+        /// </summary>
+        public static string CompositionSoftRefresh = "compositions.softrefresh";
+
+        /// <summary>
         /// If true all options fields of this schema will be rendered with no initial selection
         /// </summary>
         public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";

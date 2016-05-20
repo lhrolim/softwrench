@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <applications>
+    <application entity="PropertyDefinition" name="configuration" title="Configuration">
+      <schemas>
+        <detail title="Configuration">
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <removecommand id="save"/>
+              <command id="cancel" service="redirectService" method="redirectToHome"/>
+            </commandgroup>
+          </commandbars>
+          <composition detailschema="trueDetail" fetchtype="eager"  relationship="#properties"  printschema="" inline="true">
+            <collectionproperties allowcreation="false" listschema="globalList" allowupdate="true"/>
+          </composition>
+
+          <properties>
+            <property key="compositions.softrefresh" value="true"/>
+          </properties>
+        </detail>
+
+        <schema id="globalList" stereotype="list">
+          <field attribute="alternatveFullkey" label="Full Key"/>
+          <field attribute="description" label="Description"/>
+          <section attribute="currentvalue" resourcepath="/Content/Templates/crud/configuration/configuration_grid_value.html">
+            <header label="Current Value"/>
+          </section>
+        </schema>
+
+        <schema id="trueDetail"  stereotype="compositiondetail" title="Configuration Entry">
+          <field attribute="alternatveFullkey" label="Full Key" readonly="true"/>
+          <field attribute="description" label="Description" readonly="true"/>
+          <section attribute="value" resourcepath="/Content/Templates/crud/configuration/configuration_detail_value.html"/>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

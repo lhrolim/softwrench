@@ -1,10 +1,10 @@
 ﻿using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
-using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Configuration.Util;
 using System;
 using cts.commons.persistence.Util;
+using Newtonsoft.Json;
 using CompressionUtil = softWrench.sW4.Util.CompressionUtil;
 
 namespace softWrench.sW4.Configuration.Definitions {
@@ -13,10 +13,11 @@ namespace softWrench.sW4.Configuration.Definitions {
     public class PropertyDefinition : IComparable<PropertyDefinition> {
 
         public const string ByKey = "from PropertyDefinition where FullKey=?";
+        public const string ByVisibilityByConfigTypeOrderedByKey = "from PropertyDefinition where Visible = ? and FullKey like ? order by FullKey asc";
 
         public PropertyDefinition(string fullKey) {
             FullKey = fullKey;
-            Key = CategoryUtil.GetPropertyKey(fullKey);
+            SimpleKey = CategoryUtil.GetPropertyKey(fullKey);
             Visible = true;
         }
 
@@ -29,7 +30,8 @@ namespace softWrench.sW4.Configuration.Definitions {
         public virtual string FullKey { get; set; }
 
         [Property(Column = "key_")]
-        public virtual string Key { get; set; }
+        public virtual string SimpleKey { get; set; }
+
         [Property]
         [JsonIgnore]
         public virtual string DefaultValue { get; set; }
@@ -86,7 +88,7 @@ namespace softWrench.sW4.Configuration.Definitions {
 
 
         public int CompareTo(PropertyDefinition other) {
-            return string.Compare(Key, other.Key, System.StringComparison.Ordinal);
+            return string.Compare(SimpleKey, other.SimpleKey, System.StringComparison.Ordinal);
         }
 
         public override string ToString() {

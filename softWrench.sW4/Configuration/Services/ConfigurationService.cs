@@ -9,7 +9,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 using JetBrains.Annotations;
+using softWrench.sW4.Configuration.Services.Api;
 
 namespace softWrench.sW4.Configuration.Services {
 
@@ -20,45 +22,51 @@ namespace softWrench.sW4.Configuration.Services {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigurationService));
 
-        private static readonly ConcurrentDictionary<string, ConcurrentDictionary<ContextHolder, object>> ConfigCache = new ConcurrentDictionary<string, ConcurrentDictionary<ContextHolder, object>>();
+        private static readonly ConcurrentDictionary<string, ConcurrentDictionary<ContextHolder, string>> ConfigCache = new ConcurrentDictionary<string, ConcurrentDictionary<ContextHolder, string>>();
 
-        private readonly SWDBHibernateDAO _dao;
+        private readonly ISWDBHibernateDAO _dao;
 
 
-        public ConfigurationService(SWDBHibernateDAO dao) {
+        public ConfigurationService(ISWDBHibernateDAO dao) {
             _dao = dao;
         }
 
         [NotNull]
-        public T Lookup<T>(string configKey, ContextHolder lookupContext) {
-            ConcurrentDictionary<ContextHolder, object> fromContext;
-            if (ConfigCache.TryGetValue(configKey, out fromContext)) {
-                if (fromContext.ContainsKey(lookupContext)) {
-                    Log.DebugFormat("Retrieving key {0} from cache. Retrieved content: {1}", lookupContext, (T)fromContext[lookupContext]);
-                    return (T)fromContext[lookupContext];
+        public T Lookup<T>(string configKey, ContextHolder lookupContext, ConfigurationCacheContext cacheContext = null) {
+            ConcurrentDictionary<ContextHolder, string> fromContext = null;
+            var ignoreCache = cacheContext != null && cacheContext.IgnoreCache;
+            var preDefinition = cacheContext != null ? cacheContext.PreDefinition : null;
+
+            if (!ignoreCache) {
+                if (ConfigCache.TryGetValue(configKey, out fromContext)) {
+                    if (fromContext.ContainsKey(lookupContext)) {
+                        var convertedValue = (T)Convert.ChangeType(fromContext[lookupContext], typeof(T));
+                        Log.DebugFormat("Retrieving key {0} from cache. Retrieved content: {1}", lookupContext, convertedValue);
+                        return convertedValue;
+                    }
+                } else {
+                    fromContext = new ConcurrentDictionary<ContextHolder, string>();
+                    ConfigCache.TryAdd(configKey, fromContext);
                 }
-            } else {
-                fromContext = new ConcurrentDictionary<ContextHolder, object>();
-                ConfigCache.TryAdd(configKey, fromContext);
             }
-            var definition = _dao.FindSingleByQuery<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
+            var definition = preDefinition ?? _dao.FindSingleByQuery<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
             if (definition == null) {
                 Log.Warn(String.Format("property {0} not found", configKey));
                 return default(T);
             }
             var values = definition.Values;
             if (!values.Any()) {
-                return DefaultValueCase<T>(definition, fromContext, lookupContext);
+                return DefaultValueCase<T>(definition, fromContext, lookupContext, ignoreCache);
             }
             if (values.Count == 1) {
                 var propertyValue = values.First();
                 if (!ConditionMatch.No.Equals(propertyValue.MatchesConditions(lookupContext).MatchType)) {
-                    return ValueMatched<T>(propertyValue, fromContext, lookupContext);
+                    return ValueMatched<T>(propertyValue, fromContext, lookupContext, ignoreCache);
                 }
-                return DefaultValueCase<T>(definition, fromContext, lookupContext);
+                return DefaultValueCase<T>(definition, fromContext, lookupContext, ignoreCache);
             }
             //TODO: finish Conditions
-            return HandleConditions<T>(values, lookupContext, definition, fromContext, lookupContext);
+            return HandleConditions<T>(values, lookupContext, definition, fromContext, lookupContext, ignoreCache);
         }
 
         public void SetValue(string configKey, object value) {
@@ -82,15 +90,14 @@ namespace softWrench.sW4.Configuration.Services {
 
 
         private void UpdateCache(string configKey) {
-            if (ConfigCache.ContainsKey(configKey))
-            {
-                ConcurrentDictionary<ContextHolder, object> value;
-                ConfigCache.TryRemove(configKey,out value);
+            if (ConfigCache.ContainsKey(configKey)) {
+                ConcurrentDictionary<ContextHolder, string> value;
+                ConfigCache.TryRemove(configKey, out value);
             }
         }
 
         private T HandleConditions<T>(IEnumerable<PropertyValue> values, ContextHolder lookupContext,
-            PropertyDefinition definition, ConcurrentDictionary<ContextHolder, object> fromContext, ContextHolder configCacheKey) {
+            PropertyDefinition definition, ConcurrentDictionary<ContextHolder, string> fromContext, ContextHolder configCacheKey, bool ignoreCache = false) {
             var resultingValues = BuildResultValues<T>(values, lookupContext);
             if (!resultingValues.Any()) {
                 if (lookupContext.Module != null) {
@@ -99,10 +106,10 @@ namespace softWrench.sW4.Configuration.Services {
                 }
 
                 Log.Debug(String.Format(NoPropertiesForContext, lookupContext));
-                return DefaultValueCase<T>(definition, fromContext, configCacheKey);
+                return DefaultValueCase<T>(definition, fromContext, configCacheKey, ignoreCache);
             }
 
-            return ValueMatched<T>(resultingValues.First().Value, fromContext, configCacheKey);
+            return ValueMatched<T>(resultingValues.First().Value, fromContext, configCacheKey, ignoreCache);
 
         }
 
@@ -118,27 +125,32 @@ namespace softWrench.sW4.Configuration.Services {
             return resultingValues;
         }
 
-        private static T ValueMatched<T>(PropertyValue propertyValue,IDictionary<ContextHolder, object> fromContext, ContextHolder configCacheKey) {
+        private static T ValueMatched<T>(PropertyValue propertyValue, IDictionary<ContextHolder, string> fromContext, ContextHolder configCacheKey, bool ignoreCache = false) {
             var value = propertyValue.StringValue;
-            if (String.IsNullOrEmpty(propertyValue.StringValue)) {
+            if (string.IsNullOrEmpty(propertyValue.StringValue)) {
                 value = propertyValue.SystemStringValue;
             }
 
-            var convertedValue = (T)Convert.ChangeType(value, typeof(T));
-            try {
-                Log.DebugFormat("adding key {0} to configuration cache", configCacheKey);
-                fromContext.Add(configCacheKey, convertedValue);
-            } catch (Exception e) {
-                Log.Warn("error updating context cache", e);
+            if (!ignoreCache) {
+                try {
+                    Log.DebugFormat("adding key {0} to configuration cache", configCacheKey);
+                    fromContext.Add(configCacheKey, value);
+                } catch (Exception e) {
+                    Log.Warn("error updating context cache", e);
+                }
             }
+
+            var convertedValue = (T)Convert.ChangeType(value, typeof(T));
+
             Log.DebugFormat("Value matched: {0}", value);
             return convertedValue;
         }
 
-        private T DefaultValueCase<T>(PropertyDefinition definition, ConcurrentDictionary<ContextHolder, object> fromContext, ContextHolder configCacheKey) {
-            var convertedValue = (T)Convert.ChangeType(definition.StringValue, typeof(T));
-            fromContext.TryAdd(configCacheKey, convertedValue);
-            return convertedValue;
+        private T DefaultValueCase<T>(PropertyDefinition definition, ConcurrentDictionary<ContextHolder, string> fromContext, ContextHolder configCacheKey, bool ignoreCache = false) {
+            if (!ignoreCache) {
+                fromContext.TryAdd(configCacheKey, definition.StringValue);
+            }
+            return (T)Convert.ChangeType(definition.StringValue, typeof(T));
         }
 
 
@@ -172,7 +184,7 @@ namespace softWrench.sW4.Configuration.Services {
                         definition.Values = new HashedSet<PropertyValue>();
                     }
                     definition.Values.Add(propValue);
-                    ConcurrentDictionary<ContextHolder, object> fromContext;
+                    ConcurrentDictionary<ContextHolder, string> fromContext;
                     if (ConfigCache.TryGetValue(definition.FullKey, out fromContext)) {
                         //clear entire cache of definion
                         fromContext.Clear();
@@ -182,6 +194,52 @@ namespace softWrench.sW4.Configuration.Services {
             }
 
             return updatedDefinitions;
+        }
+
+        // global property, ignores module, profile and conditions
+        public void UpdateGlobalDefinition(string fullKey, string value) {
+            var definition = _dao.FindSingleByQuery<PropertyDefinition>(PropertyDefinition.ByKey, fullKey);
+            if ("boolean".Equals(definition.DataType) && value != null) {
+                value = value.ToLower(); // newtonsoft json workaround it converts bool true to string "True" same for false
+            }
+            var propValue = InnerGetGlobalPropertyValue(definition);
+            if (propValue != null) {
+                UpdateFoundValue(definition, value, propValue);
+                return;
+            }
+
+            if (value == null) {
+                return;
+            }
+
+            propValue = _dao.Save(new PropertyValue {
+                Definition = definition,
+                StringValue = value
+            });
+            if (definition.Values == null) {
+                definition.Values = new HashedSet<PropertyValue>();
+            }
+            definition.Values.Add(propValue);
+            _dao.Save(definition);
+            UpdateCache(fullKey);
+        }
+
+        // global property, ignores module, profile and conditions
+        public T GetGlobalPropertyValue<T>(PropertyDefinition definition) {
+            var value = InnerGetGlobalPropertyValue(definition);
+            var stringValue = value == null ? null : (value.StringValue ?? value.SystemStringValue);
+            return (T)Convert.ChangeType(stringValue, typeof(T));
+        }
+
+        // global property, ignores module, profile and conditions
+        private static PropertyValue InnerGetGlobalPropertyValue(PropertyDefinition definition) {
+            var values = definition.Values;
+            return values == null || !values.Any() ? null : values.First();
+        }
+
+        public IList<PropertyDefinition> GetAllVisibleDefinitions(ConfigTypes type) {
+            return _dao.FindByQuery<PropertyDefinition>(PropertyDefinition.ByVisibilityByConfigTypeOrderedByKey, true,
+                "/" + type.GetRootLevel() + "/%");
         }
 
         private void UpdateFoundValue(PropertyDefinition definition, string value, PropertyValue propValue) {
@@ -201,7 +259,7 @@ namespace softWrench.sW4.Configuration.Services {
                 }
                 definition.Values.Add(propValue);
             }
-            ConcurrentDictionary<ContextHolder, object> fromContext;
+            ConcurrentDictionary<ContextHolder, string> fromContext;
             if (ConfigCache.TryGetValue(definition.FullKey, out fromContext)) {
                 //clear entire cache of definion
                 fromContext.Clear();

@@ -7,6 +7,7 @@
     <template path="@audit.xml"/>
     <template path="@batch.xml"/>
     <template path="@swerror.xml"/>
+    <template path="@configuration.xml"/>
   </templates>
   
 </metadata>

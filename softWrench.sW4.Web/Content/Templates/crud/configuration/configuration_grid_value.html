@@ -1,0 +1,15 @@
+﻿<ng-switch on="compositionitem.renderer">
+    <div ng-switch-when="attachment">
+        ATT
+    </div>
+    <div ng-switch-default>
+        <ng-switch on="compositionitem.datatype">
+            <div ng-switch-when="boolean">
+                <input type="checkbox" ng-if="compositionitem.currentvalue != null" ng-checked="compositionitem.currentvalue == 'true'" onclick="return false"/>
+            </div>
+            <div ng-switch-default>
+                {{compositionitem.currentvalue}}
+            </div>
+        </ng-switch>
+    </div>
+</ng-switch>

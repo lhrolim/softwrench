@@ -561,7 +561,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         //        public virtual SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
         //            return Engine().Sync(applicationMetadata, applicationSyncData);
         //        }
-        public TargetResult Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
+        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
             var compositionData = operationData.CompositionData;
             if (compositionData == null || !compositionData.Operation.EqualsAny(OperationConstants.CRUD_DELETE, OperationConstants.CRUD_UPDATE)) {
                 return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,

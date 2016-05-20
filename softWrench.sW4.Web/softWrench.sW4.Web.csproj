@@ -461,6 +461,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\swdb\swerror.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\swdb\configuration.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\swdb\userprofile.xml" />
     <Content Include="App_Data\Client\%40internal\templates\synstatus.xml" />
     <Content Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
@@ -785,6 +788,8 @@
     <Content Include="Content\Templates\commands\grid\refresh.js" />
     <Content Include="Content\Templates\commands\grid\refresh.html" />
     <Content Include="Content\Templates\crud\composition_masterdetails.html" />
+    <Content Include="Content\Templates\crud\configuration\configuration_detail_value.html" />
+    <Content Include="Content\Templates\crud\configuration\configuration_grid_value.html" />
     <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />

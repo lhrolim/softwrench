@@ -1191,6 +1191,17 @@
             $scope.newDetail = false;
             $scope.selecteditem = null;
             $scope.collapseAll();
+
+            var softrefresh = schemaService.isPropertyTrue($scope.parentschema, "compositions.softrefresh");
+            if (softrefresh) {
+                return redirectService.goToApplicationView($scope.parentschema.applicationName, $scope.parentschema.schemaId);
+            }
+
+            if (!$scope.paginationData) {
+                $scope.clearNewCompositionData();
+                return $q.when(null);
+            }
+
             // select first page
             return $scope.selectPage(1).then(function (result) {
                 $scope.clearNewCompositionData();
@@ -1392,7 +1403,7 @@
             //this is needed for cases where we have an inline composition hidden under a showexpression, and we don´t want it even to be initialized
             init();
         }
-        
+
     };
 
     CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService", "alertService",

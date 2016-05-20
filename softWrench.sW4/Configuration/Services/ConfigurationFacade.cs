@@ -53,7 +53,7 @@ namespace softWrench.sW4.Configuration.Services {
 
         private void DoRegister(string configKey, PropertyDefinition definition) {
             definition.FullKey = configKey;
-            definition.Key = CategoryUtil.GetPropertyKey(configKey);
+            definition.SimpleKey = CategoryUtil.GetPropertyKey(configKey);
             _dao.Save(definition);
         }
 

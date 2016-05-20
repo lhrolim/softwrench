@@ -1,0 +1,45 @@
+﻿<fieldset class="form-group">
+    <label class="control-label">
+        Default Value:
+    </label>
+    <ng-switch on="datamap.renderer">
+        <div ng-switch-when="attachment">
+            ATT
+        </div>
+        <div ng-switch-default>
+            <ng-switch on="datamap.datatype">
+                <div class="input-group" ng-switch-when="boolean">
+                    <input type="checkbox" ng-checked="datamap.stringvalue == 'true'" onclick="return false"/>
+                </div>
+                <div class="input-group" ng-switch-default style="width: 100%">
+                    <label ng-if="!ismodal" class="form-control" ng-bind-html="datamap.stringvalue | linebreak" data-attribute="{{datamap.stringvalue}}"/>
+                    <input ng-if="ismodal" class="form-control" type="text" ng-model="datamap.stringvalue" disabled/>
+                </div>
+            </ng-switch>
+        </div>
+    </ng-switch>
+</fieldset>
+
+<fieldset class="form-group">
+    <label class="control-label">
+        Value:
+    </label>
+    <ng-switch on="datamap.renderer">
+        <div ng-switch-when="attachment">
+            ATT
+        </div>
+        <div ng-switch-default>
+            <ng-switch on="datamap.datatype">
+                <div class="input-group" ng-switch-when="boolean">
+                    <input ng-if="!ismodal" type="checkbox" ng-checked="datamap.value == 'true'" onclick="return false"/>
+
+                    <input ng-if="ismodal" type="checkbox" ng-model="datamap.value" ng-true-value="'true'" ng-false-value="'false'"/>
+                </div>
+                <div class="input-group" ng-switch-default style="width: 100%">
+                    <label ng-if="!ismodal" class="form-control" ng-bind-html="datamap.value | linebreak" data-attribute="{{datamap.value}}" />
+                    <input ng-if="ismodal" class="form-control" type="text" ng-model="datamap.value" />
+                </div>
+            </ng-switch>
+        </div>
+    </ng-switch>
+</fieldset>
