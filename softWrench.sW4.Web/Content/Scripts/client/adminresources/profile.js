@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module("sw_layout").controller("ProfileController", ProfileController);
-    function ProfileController($scope, crudContextHolderService,userService) {
+    function ProfileController($scope, crudContextHolderService,userService, alertService) {
         "ngInject";
 
         var app = angular.module('plunker', ['ui.multiselect']);
@@ -13,21 +13,29 @@
         }
 
         $scope.addSelectedProfiles = function (selectedavailableprofiles) {
-            $scope.parentDatamap['#profiles'] = $scope.parentDatamap['#profiles'].concat(selectedavailableprofiles);
-            $scope.profiles = $scope.parentDatamap['#profiles'];
-            var availableProfilesArr = $scope.availableprofiles;
-            $scope.availableprofiles = availableProfilesArr.filter(function (item) {
-                return selectedavailableprofiles.indexOf(item) === -1;
-            });
+            if (selectedavailableprofiles === undefined || selectedavailableprofiles.length === undefined || selectedavailableprofiles.length === 0) {
+                alertService.alert("Select a security group from \"Available Security Groups\" list before adding");
+            } else {
+                $scope.parentDatamap['#profiles'] = $scope.parentDatamap['#profiles'].concat(selectedavailableprofiles);
+                $scope.profiles = $scope.parentDatamap['#profiles'];
+                var availableProfilesArr = $scope.availableprofiles;
+                $scope.availableprofiles = availableProfilesArr.filter(function (item) {
+                    return selectedavailableprofiles.indexOf(item) === -1;
+                });
+            }
         };
 
         $scope.removeSelectedProfiles = function (selectedprofiles) {
-            $scope.availableprofiles = $scope.availableprofiles.concat(selectedprofiles);
-            var userProfiles = $scope.parentDatamap['#profiles'];
-            $scope.parentDatamap['#profiles'] = userProfiles.filter(function (item) {
-                return selectedprofiles.indexOf(item) === -1;
-            });
-            $scope.profiles = $scope.parentDatamap['#profiles'];
+            if (selectedprofiles === undefined || selectedprofiles.length === undefined || selectedprofiles.length === 0) {
+                alertService.alert("Select a security group from \"Active Security Groups\" list before deleting");
+            } else {
+                $scope.availableprofiles = $scope.availableprofiles.concat(selectedprofiles);
+                var userProfiles = $scope.parentDatamap['#profiles'];
+                $scope.parentDatamap['#profiles'] = userProfiles.filter(function (item) {
+                    return selectedprofiles.indexOf(item) === -1;
+                });
+                $scope.profiles = $scope.parentDatamap['#profiles'];
+            }
         };
 
 
