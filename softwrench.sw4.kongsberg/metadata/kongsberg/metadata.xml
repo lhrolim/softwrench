@@ -2891,6 +2891,10 @@
     </application>
 
     <application name="solution" title="solution" entity="solution">
+       <filters>
+        <booleanfilter attribute="selfservaccess"/>
+      </filters>
+
       <properties>
         <property key ="icon.composition.tab" value="fa fa-book"/>
       </properties>
