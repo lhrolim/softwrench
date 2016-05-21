@@ -27,8 +27,8 @@ namespace softWrench.sW4.Web.Controllers {
                     MetadataProvider.StubReset();
                     _eventDispatcher.Dispatch(new ClearCacheEvent());
                 }
-                
-                DoLogout(Session,Response);
+
+                DoLogout(Session, Response);
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/", "")));
             } catch {
                 FormsAuthentication.SignOut();
@@ -37,11 +37,14 @@ namespace softWrench.sW4.Web.Controllers {
 
         }
 
-        public static void DoLogout(HttpSessionStateBase session,HttpResponseBase response) {
+        public static void DoLogout(HttpSessionStateBase session, HttpResponseBase response) {
             FormsAuthentication.SignOut();
 
-            session.Clear(); // This may not be needed -- but can't hurt
-            session.Abandon();
+            if (session != null) {
+                session.Clear(); // This may not be needed -- but can't hurt
+                session.Abandon();
+            }
+
 
             // Clear authentication cookie
             HttpCookie rFormsCookie = new HttpCookie(FormsAuthentication.FormsCookieName, "");
@@ -56,7 +59,7 @@ namespace softWrench.sW4.Web.Controllers {
             response.Cookies.Add(rSessionCookie);
 
 
-            
+
         }
     }
 }
