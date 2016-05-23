@@ -260,7 +260,7 @@
             <renderer type="autocompleteclient" />
             <event type="afterchange" service="labtransService" method="aftercraftchange"/>
           </association>
-          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="premiumpay_.defaultrate">
+          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="rate">
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
             <renderer type="lookup"/>
           </association>
@@ -270,7 +270,7 @@
           <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate">
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
           </field>
-          <field attribute="ppcraftrate_.premiumpay_.defaultrate" label="Premium Pay Rate" hidden="true">
+          <field attribute="rate" label="Premium Pay Rate" hidden="true">
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
           </field>
           <field attribute="premiumpayrate" hidden="true"/>
