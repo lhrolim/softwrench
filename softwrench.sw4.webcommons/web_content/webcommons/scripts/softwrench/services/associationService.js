@@ -675,6 +675,7 @@
             resultDTO.searchValues = searchObj.searchValues;
             resultDTO.searchSort = searchObj.searchSort;
             resultDTO.SearchAscending = searchObj.SearchAscending;
+            resultDTO.addPreSelectedFilters = searchObj.addPreSelectedFilters;
 
             resultDTO.pageNumber = pageNumber;
             resultDTO.totalCount = totalCount;

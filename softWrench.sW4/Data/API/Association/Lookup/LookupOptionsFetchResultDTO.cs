@@ -4,11 +4,14 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Data.Search;
 
 namespace softWrench.sW4.Data.API.Association.Lookup {
     public class LookupOptionsFetchResultDTO : BaseAssociationUpdateResult {
 
         private readonly PaginatedSearchRequestDto _pageResultDto;
+        private readonly SearchRequestDto _searchDTO;
+
         //TODO: rethink of this schema, shouldn't be needed to pass each time
         private readonly ApplicationSchemaDefinition _associationSchemaDefinition;
 
@@ -18,9 +21,11 @@ namespace softWrench.sW4.Data.API.Association.Lookup {
             };
         }
 
-        public LookupOptionsFetchResultDTO(int totalCount, int pageNumber, int pageSize, IEnumerable<IAssociationOption> associationData, ApplicationMetadata associationApplicationMetadata)
+        public LookupOptionsFetchResultDTO(int totalCount, int pageNumber, int pageSize, IEnumerable<IAssociationOption> associationData, ApplicationMetadata associationApplicationMetadata, SearchRequestDto searchDTO = null)
             : base(associationData) {
             _pageResultDto = new PaginatedSearchRequestDto(totalCount, pageNumber, pageSize, null, PaginatedSearchRequestDto.DefaultPaginationOptions);
+            _searchDTO = searchDTO;
+
             if (associationApplicationMetadata != null)
             {
                 _associationSchemaDefinition = associationApplicationMetadata.Schema;
@@ -41,6 +46,8 @@ namespace softWrench.sW4.Data.API.Association.Lookup {
         public int PageCount { get { return _pageResultDto.PageCount; } }
 
         public IEnumerable<PageToShow> PagesToShow { get { return _pageResultDto.PagesToShow; } }
+
+        public SearchRequestDto SearchDTO { get { return _searchDTO; } }
 
         #endregion
     }

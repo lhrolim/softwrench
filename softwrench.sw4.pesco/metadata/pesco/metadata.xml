@@ -177,7 +177,7 @@
 
     <application name="location" title="Location" entity="location" >
       <filters>
-        <booleanfilter attribute="isproject"/>
+        <booleanfilter attribute="isproject" preselected="true"/>
       </filters>
       <schemas>
         <schema id="list" redeclaring="false">

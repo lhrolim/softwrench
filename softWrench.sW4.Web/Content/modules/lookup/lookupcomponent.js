@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    function service($rootScope, $timeout, $log, associationService, crudContextHolderService, schemaService) {
+    function service($rootScope, $timeout, $log, associationService, crudContextHolderService, schemaService, searchService) {
 
         function showModal(target, element) {
             $timeout(function() {
@@ -71,6 +71,7 @@
             }
 
             var searchObj = {};
+            searchObj.addPreSelectedFilters = true;
             var lookupAttribute = fieldMetadata.schema ? fieldMetadata.schema.rendererParameters["attribute"] : null;
             if (lookupAttribute != null) {
                 searchObj[lookupAttribute] = searchValue;
@@ -114,6 +115,13 @@
             lookupObj.modalPaginationData.pageSize = associationResult.pageSize;
             lookupObj.modalPaginationData.totalCount = associationResult.totalCount;
             lookupObj.modalPaginationData.selectedPage = associationResult.pageNumber;
+            
+            if (associationResult.searchDTO && associationResult.searchDTO.searchParams && associationResult.searchDTO.searchValues) {
+                var result = searchService.buildSearchDataAndOperations(associationResult.searchDTO.searchParams, associationResult.searchDTO.searchValues);
+                lookupObj.searchData = result.searchData;
+                lookupObj.searchOperator = result.searchOperator;
+            }
+          
             //TODO: this should come from the server side
             lookupObj.modalPaginationData.paginationOptions = associationResult.paginationOptions || [10, 30, 100];
             showModal(lookupObj.fieldMetadata.target, lookupObj.element);
@@ -138,7 +146,7 @@
 
     }
 
-    service.$inject = ['$rootScope', '$timeout', '$log', 'associationService', 'crudContextHolderService', 'schemaService'];
+    service.$inject = ['$rootScope', '$timeout', '$log', 'associationService', 'crudContextHolderService', 'schemaService', 'searchService'];
 
     angular.module("sw_lookup").factory('cmplookup', service);
 

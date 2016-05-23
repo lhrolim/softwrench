@@ -50,9 +50,10 @@
             controller: function ($injector, $scope, $http, $element, searchService, i18NService, associationService,
                                   formatService, expressionService, focusService, contextService) {
 
-                $scope.searchData = { };
-                $scope.searchOperator = { };
-                $scope.searchSort = { };
+                $scope.searchData = {};
+                $scope.searchOperator = {};
+                $scope.searchSort = {};
+                $scope.searchObj = {};
 
                 $scope.lookupModalSearch = function (pageNumber) {
                     focusService.resetFocusToCurrent($scope.schema, $scope.lookupObj.fieldMetadata.attribute);
@@ -61,12 +62,8 @@
                         quickSearchData: $scope.lookupsearchdata
                     }
                    
-                    var reportDto = contextService.retrieveReportSearchDTO($scope.schema.schemaId);
-                    var searchDTO = !!reportDto
-                        ? searchService.buildReportSearchDTO(reportDto, $scope.searchData, $scope.searchSort, $scope.searchOperator, null)
-                        : searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, null, $scope.searchTemplate);
-
-                    $scope.searchObj = searchDTO;
+                    $scope.searchObj = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, null, $scope.searchTemplate);
+                    $scope.searchObj.addPreSelectedFilters = false;
 
                     associationService.getLookupOptions($scope.schema, $scope.datamap, $scope.lookupObj, pageNumber, $scope.searchObj).then(function (data) {
                         var result = data.resultObject;
@@ -185,10 +182,11 @@
                     if ($scope.lookupObj.item) {
                         $scope.datamap = $scope.lookupObj.item;
                     }
+
+                    $scope.searchData = $scope.lookupObj.searchData;
+                    $scope.searchOperator = $scope.lookupObj.searchOperator;
                     $scope.modalCanceled = false;
                     $scope.selectedOption = null;
-                    $scope.searchObj = {};
-                    //                $scope.populateModal($scope.lookupObj);
                     $scope.$digest();
                 });
 

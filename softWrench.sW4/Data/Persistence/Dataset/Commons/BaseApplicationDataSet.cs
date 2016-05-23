@@ -660,17 +660,22 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var before = LoggingUtil.StartMeasuring(Log, "fetching lookup options for application {0} schema {1}", application.Name, application.Schema.Name);
 
             var association = application.Schema.Associations().FirstOrDefault(f => (EntityUtil.IsRelationshipNameEquals(f.AssociationKey, lookupRequest.AssociationFieldName)));
+            var associationApplicationMetadata = ApplicationAssociationResolver.GetAssociationApplicationMetadata(association);
 
-            var options = _associationOptionResolver.ResolveOptions(application.Schema, cruddata, association, lookupRequest.SearchDTO); ;
+            if(associationApplicationMetadata != null 
+                && associationApplicationMetadata.Schema != null 
+                && associationApplicationMetadata.Schema.SchemaFilters != null
+                && lookupRequest.SearchDTO.AddPreSelectedFilters) {
+                SchemaFilterBuilder.AddPreSelectedFilters(associationApplicationMetadata.Schema.SchemaFilters, lookupRequest.SearchDTO);
+            }
+           
+            var options = _associationOptionResolver.ResolveOptions(application.Schema, cruddata, association, lookupRequest.SearchDTO);
 
             if (Log.IsDebugEnabled) {
                 Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finished execution of options fetching. Resolved collections: {0}"));
             }
-
-            var associationApplicationMetadata =
-                        ApplicationAssociationResolver.GetAssociationApplicationMetadata(association);
-
-            return new LookupOptionsFetchResultDTO(lookupRequest.SearchDTO.TotalCount, lookupRequest.SearchDTO.PageNumber, lookupRequest.SearchDTO.PageSize, options, associationApplicationMetadata);
+            
+            return new LookupOptionsFetchResultDTO(lookupRequest.SearchDTO.TotalCount, lookupRequest.SearchDTO.PageNumber, lookupRequest.SearchDTO.PageSize, options, associationApplicationMetadata, lookupRequest.SearchDTO);
         }
 
         /// <summary>
