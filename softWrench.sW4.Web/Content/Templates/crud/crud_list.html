@@ -135,9 +135,15 @@
                     </th>
                     <th class="{{safeCSSselector(column.attribute)}}"
                         ng-repeat="column in schema.displayables"
-                        ng-show="!isFieldHidden(schema,column)">
+                        ng-show="!isFieldHidden(schema,column)"
+                        ng-init="columnFilter = filterForColumn(column)">
                         <div ng-if="shouldShowHeaderLabel(column)" class="cell-wrapper">
-                            <div ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel(column)}}">
+                            <div ng-if="!!columnFilter" 
+                                 ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel(column)}}">
+                                {{i18NLabel(column)}} <i class="fa {{headerIcon(column)}}" ng-show="hasIcon(column)"></i>
+                            </div>
+                            <div ng-if="!columnFilter"
+                                 class="add-on part" data-container="body">
                                 {{i18NLabel(column)}} <i class="fa {{headerIcon(column)}}" ng-show="hasIcon(column)"></i>
                             </div>
                             <div class="fa fa-sort-amount-asc part"
@@ -148,7 +154,7 @@
                                  rel="tooltip" data-original-title="Sorted descendant">
                             </div>
                             <div class="filter-label part" ng-show="shouldShowGridNavigation()" filterrowrendered>
-                                <crud-filter-dropdown filter="filterForColumn(column)"
+                                <crud-filter-dropdown filter="columnFilter"
                                                       schema="schema" datamap="datamap" panelid="panelid"
                                                       advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
                                                       search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()"
