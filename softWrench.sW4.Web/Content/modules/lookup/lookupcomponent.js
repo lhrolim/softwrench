@@ -94,7 +94,7 @@
 
             if (hasSingleElement(associationResult.associationData)) {
                 var firstOption = lookupObj.options[0];
-                var firstElementEqualsCode = firstOption.value != null && lookupObj.code != null && firstOption.value.toUpperCase() == lookupObj.code.toUpperCase();
+                var firstElementEqualsCode = firstOption.value != null && lookupObj.code != null && ((window.isString(firstOption.value) && window.isString(lookupObj.code) && firstOption.value.toUpperCase() == lookupObj.code.toUpperCase()) || (firstOption.value == lookupObj.code));
                 var attribute = lookupObj.fieldMetadata.attribute;
                 var datamapIsChanging = datamap[attribute] != firstOption.value;
                 if (firstElementEqualsCode && datamapIsChanging) {

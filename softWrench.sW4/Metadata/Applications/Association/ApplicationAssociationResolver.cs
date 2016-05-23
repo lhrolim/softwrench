@@ -253,7 +253,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                                     : BuildComplexLabel(attributeHolder, association);
 
                 if (association.ExtraProjectionFields.Count > 0) {
-                    options.Add(new MultiValueAssociationOption((string)value, label, attributeHolder, association.ForceDistinctOptions));
+                    options.Add(new MultiValueAssociationOption(Convert.ToString(value), label, attributeHolder, association.ForceDistinctOptions));
                 } else {
 
                     options.Add(new AssociationOption(Convert.ToString(value), label));

@@ -116,6 +116,20 @@
                     var mins = Math.round(Math.round(parseFloat(0 + '.' + tempMins) * 60 * 100) / 100);
                     return (hours < 10 ? "0" + hours : hours) + " : " + (mins < 10 ? "0" + mins : "" + mins);
                 }
+                else if (field.rendererParameters['formatter'] == 'doubleToTimeExt') {
+                    if (value == null) {
+                        return "";
+                    }
+                    // Convert hours to milliseconds
+                    var milliseconds = value * 3600000;
+                    var time = new Date(milliseconds);
+                    var days = Math.floor(value / 24);
+                    var hours = time.getUTCHours();
+                    var mins = time.getUTCMinutes();
+                    var secs = time.getUTCSeconds();
+
+                    return (days < 10 ? "0" + days : days) + " : " + (hours < 10 ? "0" + hours : hours) + " : " + (mins < 10 ? "0" + mins : "" + mins) + " : " + (secs < 10 ? "0" + secs : "" + secs);
+                }
                 else if (field.rendererParameters['formatter'] == 'descriptionDataHandler') {
                     return descriptionDataHandler(value, field);
                 }

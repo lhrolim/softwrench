@@ -5,6 +5,7 @@
     <template path="@assetlocrelation.xml"/>
     <template path="@assetspec.xml"/>
     <template path="@locationmeter.xml"/>
+    <template path="@sparepart.xml"/>
     <template path="@meter.xml"/>
     
   </templates>
