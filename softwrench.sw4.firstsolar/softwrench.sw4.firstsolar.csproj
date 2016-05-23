@@ -78,7 +78,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="metadata\firstsolar\menu.mobile..xml" />
+    <Content Include="metadata\firstsolar\menu.mobile.xml" />
     <Content Include="web_content\firstsolar\htmls\advancedSearchPcsButtons.html" />
     <Content Include="web_content\firstsolar\images\branding.png" />
     <Content Include="web_content\firstsolar\images\logo-pdf.png" />
