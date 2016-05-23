@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, $location, $log, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService, historyService) {
+    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, $location, $log, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService, historyService, configurationService) {
 
     $scope.$name = 'HomeController';
 
@@ -47,6 +47,9 @@
         }
 
         $http(parameters).then(function (response) {
+            // updates the configs on page load
+            configurationService.updateConfigurations();
+
             var result = response.data;
 
             $scope.$parent.includeURL = contextService.getResourceUrl(result.redirectURL);
@@ -99,7 +102,7 @@
     initController();
 }
 
-    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$location", "$log", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", "historyService", HomeController]);
+    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$location", "$log", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", "historyService", "configurationService", HomeController]);
 window.HomeController = HomeController;
 
 })(angular);

@@ -323,6 +323,7 @@
     <Compile Include="DB_Migration\4.4.1\20150723_SWWEB_1275.cs" />
     <Compile Include="DB_Migration\5.3.0\20160127_SWWEB_2020.cs" />
     <Compile Include="DB_Migration\5.8.0\20160504_SWWEB_2437.cs" />
+    <Compile Include="DB_Migration\5.9.0\20160518_SWWEB_2513.cs" />
     <Compile Include="DB_Migration\5.9.0\20160517_SWWEB_2492.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
@@ -588,6 +589,7 @@
     <Content Include="Content\Scripts\client\directives\stringtonumber.js" />
     <Content Include="Content\Scripts\client\services\breadcrumbService.js" />
     <Content Include="Content\Scripts\client\services\chartService.js" />
+    <Content Include="Content\Scripts\client\services\configurationservice.js" />
     <Content Include="Content\Scripts\client\services\controllerinheritanceservice.js" />
     <Content Include="Content\Scripts\client\services\load_gmaps_service.js" />
     <Content Include="Content\Scripts\client\services\notificationService.js" />

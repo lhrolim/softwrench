@@ -2,15 +2,14 @@
 using log4net;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Util;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Context;
 using cts.commons.simpleinjector;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
 using JetBrains.Annotations;
+using NHibernate.Linq;
 using softWrench.sW4.Configuration.Services.Api;
 
 namespace softWrench.sW4.Configuration.Services {
@@ -22,31 +21,25 @@ namespace softWrench.sW4.Configuration.Services {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigurationService));
 
-        private static readonly ConcurrentDictionary<string, ConcurrentDictionary<ContextHolder, string>> ConfigCache = new ConcurrentDictionary<string, ConcurrentDictionary<ContextHolder, string>>();
-
         private readonly ISWDBHibernateDAO _dao;
+        private readonly ConfigurationCache _cache;
 
-
-        public ConfigurationService(ISWDBHibernateDAO dao) {
+        public ConfigurationService(ISWDBHibernateDAO dao, ConfigurationCache cache) {
             _dao = dao;
+            _cache = cache;
         }
 
         [NotNull]
         public T Lookup<T>(string configKey, ContextHolder lookupContext, ConfigurationCacheContext cacheContext = null) {
-            ConcurrentDictionary<ContextHolder, string> fromContext = null;
             var ignoreCache = cacheContext != null && cacheContext.IgnoreCache;
             var preDefinition = cacheContext != null ? cacheContext.PreDefinition : null;
 
             if (!ignoreCache) {
-                if (ConfigCache.TryGetValue(configKey, out fromContext)) {
-                    if (fromContext.ContainsKey(lookupContext)) {
-                        var convertedValue = (T)Convert.ChangeType(fromContext[lookupContext], typeof(T));
-                        Log.DebugFormat("Retrieving key {0} from cache. Retrieved content: {1}", lookupContext, convertedValue);
-                        return convertedValue;
-                    }
-                } else {
-                    fromContext = new ConcurrentDictionary<ContextHolder, string>();
-                    ConfigCache.TryAdd(configKey, fromContext);
+                var fromCache = _cache.GetFromCache(configKey, lookupContext);
+                if (fromCache.Key) {
+                    var convertedValue = (T)Convert.ChangeType(fromCache.Value, typeof(T));
+                    Log.DebugFormat("Retrieving key {0} from cache. Retrieved content: {1}", lookupContext, convertedValue);
+                    return convertedValue;
                 }
             }
             var definition = preDefinition ?? _dao.FindSingleByQuery<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
@@ -56,17 +49,17 @@ namespace softWrench.sW4.Configuration.Services {
             }
             var values = definition.Values;
             if (!values.Any()) {
-                return DefaultValueCase<T>(definition, fromContext, lookupContext, ignoreCache);
+                return DefaultValueCase<T>(definition, lookupContext, ignoreCache);
             }
             if (values.Count == 1) {
                 var propertyValue = values.First();
                 if (!ConditionMatch.No.Equals(propertyValue.MatchesConditions(lookupContext).MatchType)) {
-                    return ValueMatched<T>(propertyValue, fromContext, lookupContext, ignoreCache);
+                    return ValueMatched<T>(propertyValue, definition.FullKey, lookupContext, ignoreCache);
                 }
-                return DefaultValueCase<T>(definition, fromContext, lookupContext, ignoreCache);
+                return DefaultValueCase<T>(definition, lookupContext, ignoreCache);
             }
             //TODO: finish Conditions
-            return HandleConditions<T>(values, lookupContext, definition, fromContext, lookupContext, ignoreCache);
+            return HandleConditions<T>(values, lookupContext, definition, ignoreCache);
         }
 
         public void SetValue(string configKey, object value) {
@@ -84,33 +77,22 @@ namespace softWrench.sW4.Configuration.Services {
             }
             foundValue.StringValue = value.ToString();
             _dao.Save(foundValue);
-            UpdateCache(configKey);
+            _cache.ClearCache(configKey);
         }
 
-
-
-        private void UpdateCache(string configKey) {
-            if (ConfigCache.ContainsKey(configKey)) {
-                ConcurrentDictionary<ContextHolder, string> value;
-                ConfigCache.TryRemove(configKey, out value);
-            }
-        }
-
-        private T HandleConditions<T>(IEnumerable<PropertyValue> values, ContextHolder lookupContext,
-            PropertyDefinition definition, ConcurrentDictionary<ContextHolder, string> fromContext, ContextHolder configCacheKey, bool ignoreCache = false) {
+        private T HandleConditions<T>(IEnumerable<PropertyValue> values, ContextHolder lookupContext, PropertyDefinition definition, bool ignoreCache = false) {
             var resultingValues = BuildResultValues<T>(values, lookupContext);
-            if (!resultingValues.Any()) {
-                if (lookupContext.Module != null) {
-                    //if a module was asked and nothing was found do not 
-                    return default(T);
-                }
-
-                Log.Debug(String.Format(NoPropertiesForContext, lookupContext));
-                return DefaultValueCase<T>(definition, fromContext, configCacheKey, ignoreCache);
+            if (resultingValues.Any()) {
+                return ValueMatched<T>(resultingValues.First().Value, definition.FullKey, lookupContext, ignoreCache);
             }
 
-            return ValueMatched<T>(resultingValues.First().Value, fromContext, configCacheKey, ignoreCache);
+            if (lookupContext.Module != null) {
+                //if a module was asked and nothing was found do not 
+                return default(T);
+            }
 
+            Log.Debug(String.Format(NoPropertiesForContext, lookupContext));
+            return DefaultValueCase<T>(definition, lookupContext, ignoreCache);
         }
 
         public static SortedDictionary<ConditionMatchResult, PropertyValue> BuildResultValues<T>(IEnumerable<PropertyValue> values, ContextHolder lookupContext) {
@@ -125,7 +107,7 @@ namespace softWrench.sW4.Configuration.Services {
             return resultingValues;
         }
 
-        private static T ValueMatched<T>(PropertyValue propertyValue, IDictionary<ContextHolder, string> fromContext, ContextHolder configCacheKey, bool ignoreCache = false) {
+        private T ValueMatched<T>(PropertyValue propertyValue, string fullKey, ContextHolder configCacheKey, bool ignoreCache = false) {
             var value = propertyValue.StringValue;
             if (string.IsNullOrEmpty(propertyValue.StringValue)) {
                 value = propertyValue.SystemStringValue;
@@ -134,7 +116,7 @@ namespace softWrench.sW4.Configuration.Services {
             if (!ignoreCache) {
                 try {
                     Log.DebugFormat("adding key {0} to configuration cache", configCacheKey);
-                    fromContext.Add(configCacheKey, value);
+                    _cache.AddToCache(fullKey, configCacheKey, value);
                 } catch (Exception e) {
                     Log.Warn("error updating context cache", e);
                 }
@@ -146,9 +128,9 @@ namespace softWrench.sW4.Configuration.Services {
             return convertedValue;
         }
 
-        private T DefaultValueCase<T>(PropertyDefinition definition, ConcurrentDictionary<ContextHolder, string> fromContext, ContextHolder configCacheKey, bool ignoreCache = false) {
+        private T DefaultValueCase<T>(PropertyDefinition definition, ContextHolder configCacheKey, bool ignoreCache = false) {
             if (!ignoreCache) {
-                fromContext.TryAdd(configCacheKey, definition.StringValue);
+                _cache.AddToCache(definition.FullKey, configCacheKey, definition.StringValue);
             }
             return (T)Convert.ChangeType(definition.StringValue, typeof(T));
         }
@@ -184,11 +166,7 @@ namespace softWrench.sW4.Configuration.Services {
                         definition.Values = new HashedSet<PropertyValue>();
                     }
                     definition.Values.Add(propValue);
-                    ConcurrentDictionary<ContextHolder, string> fromContext;
-                    if (ConfigCache.TryGetValue(definition.FullKey, out fromContext)) {
-                        //clear entire cache of definion
-                        fromContext.Clear();
-                    }
+                    _cache.ClearCache(definition.FullKey);
                 }
 
             }
@@ -221,7 +199,7 @@ namespace softWrench.sW4.Configuration.Services {
             }
             definition.Values.Add(propValue);
             _dao.Save(definition);
-            UpdateCache(fullKey);
+            _cache.ClearCache(fullKey);
         }
 
         // global property, ignores module, profile and conditions
@@ -259,11 +237,27 @@ namespace softWrench.sW4.Configuration.Services {
                 }
                 definition.Values.Add(propValue);
             }
-            ConcurrentDictionary<ContextHolder, string> fromContext;
-            if (ConfigCache.TryGetValue(definition.FullKey, out fromContext)) {
-                //clear entire cache of definion
-                fromContext.Clear();
+            _cache.ClearCache(definition.FullKey);
+        }
+
+        public ClientSideConfigurations GetClientSideConfigurations(long? cacheTimestamp, ContextHolder lookupContex) {
+            var configs = _cache.GetClientSideConfigurations();
+            if (configs != null) {
+                return cacheTimestamp != null && cacheTimestamp >= configs.CacheTimestamp ? null : configs;
             }
+
+            var keyCache = _cache.GetCacheableOnClientKeyCache();
+            if (!keyCache.Any()) {
+                return _cache.UpdateCachedOnClient(new Dictionary<string, string>(), CurrentTimestamp());
+            }
+
+            var cacheableOnClientValues = new Dictionary<string, string>();
+            keyCache.ForEach(key => cacheableOnClientValues.Add(key, Lookup<string>(key, lookupContex)));
+            return _cache.UpdateCachedOnClient(cacheableOnClientValues, CurrentTimestamp());
+        }
+
+        private static long CurrentTimestamp() {
+            return (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
         }
     }
 }

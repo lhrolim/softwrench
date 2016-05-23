@@ -221,6 +221,11 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
             return configs;
         }
 
+        [HttpGet]
+        public ClientSideConfigurations GetClientSideConfigurations([FromUri] long? cacheTimestamp) {
+            return _facade.GetClientSideConfigurations(cacheTimestamp);
+        }
+
         class ConfigurationScreenResult {
 
             public IEnumerable<ModuleDefinition> Modules {
@@ -246,6 +251,5 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
                 get; set;
             }
         }
-
     }
 }

@@ -123,17 +123,20 @@ namespace softWrench.sW4.Data.Configuration {
             // default values of gmaps addresses
             facade.Register(ConfigurationConstants.MapsDefaultCityKey, new PropertyDefinition() {
                 Description = "The default value to city property to use for locate addresses on google maps",
-                DataType = "string"
+                DataType = "string",
+                CachedOnClient = true
             });
 
             facade.Register(ConfigurationConstants.MapsDefaultStateKey, new PropertyDefinition() {
                 Description = "The default value to state/province property to use for locate addresses on google maps",
-                DataType = "string"
+                DataType = "string",
+                CachedOnClient = true
             });
 
             facade.Register(ConfigurationConstants.MapsDefaultCountryKey, new PropertyDefinition() {
                 Description = "The default value to country property to use for locate addresses on google maps",
-                DataType = "string"
+                DataType = "string",
+                CachedOnClient = true
             });
         }
     }

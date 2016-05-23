@@ -14,6 +14,7 @@ namespace softWrench.sW4.Configuration.Definitions {
 
         public const string ByKey = "from PropertyDefinition where FullKey=?";
         public const string ByVisibilityByConfigTypeOrderedByKey = "from PropertyDefinition where Visible = ? and FullKey like ? order by FullKey asc";
+        public const string ByCachedOnClient = "from PropertyDefinition where CachedOnClient=?";
 
         public PropertyDefinition(string fullKey) {
             FullKey = fullKey;
@@ -51,7 +52,10 @@ namespace softWrench.sW4.Configuration.Definitions {
         [Property(TypeType = typeof(BooleanToIntUserType))]
         public virtual bool Contextualized { get; set; }
 
-//        [Property(Type = "BinaryBlob")]
+        [Property(TypeType = typeof(BooleanToIntUserType))]
+        public virtual bool CachedOnClient { get; set; }
+
+        //        [Property(Type = "BinaryBlob")]
         public virtual byte[] DefaultBlobValue { get; set; }
 
         [Property(Column = "alias_")]

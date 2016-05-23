@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module("sw_layout").directive("googleMap", ["$rootScope", "$timeout", "$q", "$log", "loadGoogleMapApi", "restService", function ($rootScope, $timeout, $q, $log, loadGoogleMapApi, restService) {
+    angular.module("sw_layout").directive("googleMap", ["$rootScope", "$timeout", "$q", "$log", "loadGoogleMapApi", "restService", "configurationService", function ($rootScope, $timeout, $q, $log, loadGoogleMapApi, restService, configurationService) {
         return {
             restrict: "C", // restrict by class name
             scope: {
@@ -190,13 +190,10 @@
 
                 // loads the gmaps api and loads default values from server configs
                 log.debug("Loading gmap on tab ({0}), zoom ({1}), lat ({2}), long ({3}) and street address ({4}).".format($scope.tabid, zoom, $scope.lat, $scope.long, $scope.streetaddress));
-                var configsPromise = restService.getPromise("Configuration", "GetConfigurations", { fullKeys: ["/Global/Maps/DefaultCity", "/Global/Maps/DefaultState", "/Global/Maps/DefaultCountry"] });
-                $q.all([configsPromise, loadGoogleMapApi]).then(function (results) {
-                    // Promised resolved
-                    var configs = results[0].data;
-                    defaultCity = configs[0];
-                    defaultState = configs[1];
-                    defaultCountry = configs[2];
+                loadGoogleMapApi.then(function () {
+                    defaultCity = configurationService.getConfigurationValue("/Global/Maps/DefaultCity");
+                    defaultState = configurationService.getConfigurationValue("/Global/Maps/DefaultState");
+                    defaultCountry = configurationService.getConfigurationValue("/Global/Maps/DefaultCountry");
                     log.debug("Default city ({0}), default state ({1}) and default country ({2}).".format(defaultCity, defaultState, defaultCountry));
 
                     $scope.geocoder = new google.maps.Geocoder();

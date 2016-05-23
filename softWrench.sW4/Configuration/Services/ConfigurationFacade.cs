@@ -64,6 +64,9 @@ namespace softWrench.sW4.Configuration.Services {
             _appStarted = true;
         }
 
+        public ClientSideConfigurations GetClientSideConfigurations(long? cacheTimestamp) {
+            return _configService.GetClientSideConfigurations(cacheTimestamp, _contextLookuper.LookupContext());
+        }
 
         //execute last
         public int Order { get { return 1; } }
