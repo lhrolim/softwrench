@@ -252,8 +252,8 @@
         </schema>
 
         <schema id="labors" stereotype="compositionlist">
-          <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid" defaultexpression="service:labtransService.defaultLaborExpression">
-            <renderer type="lookup"/>
+          <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid" defaultexpression="service:labtransService.defaultLaborExpression" hideDescription="true">
+            <renderer type="lookup" params="hideDescription=true"/>
             <event type="afterchange" service="labtransService" method="afterlaborchange"/>
           </association>
           <association label="Craft" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
@@ -402,13 +402,16 @@
             <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
               <renderer type="lookup"/>
             </association>
-            <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="premiumpay_.defaultrate">
+            <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="rate">
+              <event type="afterchange" service="labtransService" method="updateLineCost"/>
               <renderer type="lookup"/>
             </association>
             <field attribute="premiumpayhours" label="Premium Pay Hours">
               <event type="afterchange" service="labtransService" method="updateLineCost"/>
             </field>
-            <field attribute="linecost" label="Line Cost" readonly="true"/>
+            <field attribute="linecost" label="Line Cost" readonly="true">
+              <renderer type="default" params="formatter=money"/>
+            </field>
           </section>
         </schema>
       </schemas>
