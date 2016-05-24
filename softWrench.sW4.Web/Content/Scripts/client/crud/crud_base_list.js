@@ -17,6 +17,7 @@
             return formattedValue;
         };
 
+     
 
         $scope.isColumnEditable = function (column) {
             return column.rendererParameters['editable'] === "true";

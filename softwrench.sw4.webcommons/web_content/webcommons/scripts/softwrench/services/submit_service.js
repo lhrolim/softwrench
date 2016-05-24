@@ -146,6 +146,7 @@
 
             var parameters = {
                 id: id,
+                userId: datamap[schema.userIdFieldName],
                 applicationName: schema.applicationName,
                 batch: isBatch(datamap, schema),
                 platform : platform(),

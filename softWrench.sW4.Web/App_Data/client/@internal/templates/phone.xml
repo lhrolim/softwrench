@@ -45,9 +45,10 @@
           <field attribute="phoneid" hidden="true"/>
           <field attribute="phonenum" label="Phone #" requiredexpression="true"/>
           <optionfield attribute="type" label="Type" providerattribute="_PhoneTypeOptions" requiredexpression="true">
-            <renderer type="autocompleteclient" />
+            <renderer type="combo" />
           </optionfield>
-          <field attribute="isprimary" label="Primary" enableexpression="@originalprimary == false">
+          <!--this strange looking enableexpression implements the requirement so that the first phone needs to be disabled, or already primary phones-->
+          <field attribute="isprimary" label="Primary" enableexpression="@originalprimary != true">
             <renderer type="checkbox"/>
           </field>
           <event type="onschemafullyloaded" service="personService" method="loadPhone"/>

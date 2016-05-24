@@ -329,8 +329,10 @@
                     }
 
                     $scope.isChecked = function (fieldMetadata) {
-                        var content = $scope.datamap[fieldMetadata.attribute];
-                        return formatService.isChecked(content);
+                        const content = $scope.datamap[fieldMetadata.attribute];
+                        const isChecked = formatService.isChecked(content);
+                        $scope.datamap[fieldMetadata.attribute] = isChecked;
+                        return isChecked;
                     }
 
                     /* LOOKUP functions */

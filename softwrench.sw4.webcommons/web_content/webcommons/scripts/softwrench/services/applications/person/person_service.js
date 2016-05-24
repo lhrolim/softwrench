@@ -17,6 +17,15 @@
 
         return service;
 
+        function handlePrimaryForCreation(compositionDatamap,type) {
+            //phone creation
+            var personData = crudContextHolderService.rootDataMap().fields;
+            if (!personData[type] || personData[type].length === 0) {
+                compositionDatamap["isprimary"] = true;
+                compositionDatamap["originalprimary"] = true;
+            }
+        }
+
         function loadPhone() {
             var dm = crudContextHolderService.rootDataMap("#modal");
             if (dm.phoneid) {
@@ -24,8 +33,9 @@
                 dm["#originalphonenum"] = dm.phonenum;
                 dm["#originaltype"] = dm.type;
                 dm["originalprimary"] = dm.isprimary;
-
                 $log.get("personService#loadPhone", ["phone"]).debug("setting original phone data: {0}{1}{2}".format(dm.phonenum, dm.type, dm.isprimary));
+            } else {
+                handlePrimaryForCreation(dm, "phone_");
             }
         };
 
@@ -37,6 +47,8 @@
                 dm["#originaltype"] = dm.type;
                 dm["originalprimary"] = dm.isprimary;
                 $log.get("personService#loadEmail", ["email"]).debug("setting original email data: {0}{1}{2}".format(dm.emailaddress, dm.type, dm.isprimary));
+            } else {
+                handlePrimaryForCreation(dm, "email_");
             }
         }
 

@@ -1096,28 +1096,6 @@
                 }
             }
 
-            var updatedCompositionData = [];
-            if ($scope.hasDetailSchema() && $scope.collectionproperties.allowUpdate === "true") {
-                for (var key in $scope.detailData) {
-                    if ($scope.detailData.hasOwnProperty(key) && $scope.hasModified(key, detailSchema.displayables)) {
-                        updatedCompositionData.push($scope.detailData[key].data);
-
-                        validationErrors = validationService.validate(detailSchema, detailSchema.displayables, $scope.detailData[key].data);
-                        if (validationErrors.length > 0) {
-                            //interrupting here, can´t be done inside service
-                            return false;
-                        }
-                    }
-                }
-            }
-
-            //parentdata is bound to the datamap --> this is needed so that the sw_submitdata has the updated data
-            if ($scope.hasDetailSchema() && $scope.collectionproperties.allowUpdate) {
-                //if composition items are editable, then we should pass the entire composition list back.  One or more item could have been changed.
-                //$scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
-                $scope.parentdata.fields[$scope.relationship] = updatedCompositionData;
-            }
-
             if (selecteditem != undefined) {
                 //ensure new item is captured as well
                 safePush($scope.parentdata.fields, $scope.relationship, selecteditem);
@@ -1143,11 +1121,7 @@
                 nextSchemaObj: { schemaId: crudContextHolderService.currentSchema().schemaId },
                 refresh: alwaysrefresh,
                 dispatchedByModal: false,
-                compositionData: {
-                    operation: action,
-                    dispatcherComposition: $scope.relationship,
-                    id: schemaService.getId(selecteditem, $scope.compositionlistschema)
-                }
+                compositionData: new CompositionOperation(action, $scope.relationship, selecteditem, schemaService.getId(selecteditem, $scope.compositionlistschema))
             }).then(function (data) {
                 $scope.onAfterSave(data, alwaysrefresh);
             }).catch(function (data) {
@@ -1214,9 +1188,9 @@
             $scope.compositionData().forEach(function (item) {
                 delete item["#isDirty"];
             });
-            //TODO: there´s a bug in potential here, after we´re adding an item to a composition the parentdata is getting inconsistent
-            //but it´s rather on the save fn
-            $scope.parentdata.fields[$scope.relationship] = [];
+//            //TODO: there´s a bug in potential here, after we´re adding an item to a composition the parentdata is getting inconsistent
+//            //but it´s rather on the save fn
+//            $scope.parentdata.fields[$scope.relationship] = [];
         };
 
 

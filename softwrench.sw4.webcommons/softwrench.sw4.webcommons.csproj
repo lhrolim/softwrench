@@ -55,6 +55,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\constants\MetadataEventConstants.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\dto\CompositionOperation.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\ModalData.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\ContextData.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\OpttionsLoadSchema.js" />
