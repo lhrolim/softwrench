@@ -226,7 +226,9 @@
                             detail_next: { id : "0" },
                             detail_previous: { id: "-1" },
                             paginationData: $scope.paginationData,
-                            previousData: $scope.datamap
+                            previousData: $scope.datamap,
+                            panelid: $scope.panelid,
+                            applicationName: $scope.schema.applicationName
                         };
                         contextService.insertIntoContext("crud_context", crudContext);
                     }

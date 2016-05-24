@@ -152,20 +152,40 @@ function applicationController($scope, $http, $log, $timeout,
                 return;
             }
 
+            if (crud_context.panelid != null || crud_context.applicationName !== scope.schema.applicationName) {
+                // the list was from a modal or dashboard panel
+                // or is from another aplication
+                // should not be considered when goint to detail
+                crud_context.detail_previous = null;
+                crud_context.detail_next = null;
+                crud_context.list_elements = null;
+                crud_context.panelid = null;
+                contextService.insertIntoContext("crud_context", crud_context);
+            }
+
             var id = $scope.datamap.fields[$scope.schema.idFieldName];
+            var list = crud_context.list_elements;
+            if (!list || !id) {
+                return;
+            }
+
             var idAsString = String(id);
             var findById = function(item) {
                 return item.id === id || item.id === idAsString;
             };
-            if (crud_context.list_elements && crud_context.list_elements.find(findById)) {
-                var current = crud_context.list_elements.findIndex(findById);
+            if (list.find(findById)) {
+                var current = list.findIndex(findById);
                 var previous = current - 1;
                 var next = current + 1;
-                crud_context.detail_previous = crud_context.list_elements[previous];
-                crud_context.detail_next = crud_context.list_elements[next];
-
-                contextService.insertIntoContext("crud_context", crud_context);
+                crud_context.detail_previous = list[previous];
+                crud_context.detail_next = list[next];
+            } else {
+                // not on list, so new created
+                crud_context.detail_previous = null;
+                crud_context.detail_next = list.length > 0 ? list[0] : null;
+                list.unshift({ id: id });
             }
+            contextService.insertIntoContext("crud_context", crud_context);
         }
 
     }
