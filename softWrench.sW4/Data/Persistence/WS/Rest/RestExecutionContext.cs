@@ -10,8 +10,10 @@ using cts.commons.web.Util;
 using log4net;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Util;
 using CompressionUtil = cts.commons.Util.CompressionUtil;
 
@@ -33,7 +35,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
 
         private string GenerateRestUrl(EntityMetadata entityMetadata, string entityId) {
             var baseRestURL = MetadataProvider.GlobalProperty("basewsRestURL");
-            var entityKey = entityMetadata.ConnectorParameters.GetWSEntityKey();
+            var entityKey = entityMetadata.ConnectorParameters.GetWSEntityKey(ConnectorParameters.UpdateInterfaceParam,WsProvider.REST);
             return !baseRestURL.EndsWith("/") ? baseRestURL + "/" + entityKey : baseRestURL + entityKey + "/" + entityId;
         }
 

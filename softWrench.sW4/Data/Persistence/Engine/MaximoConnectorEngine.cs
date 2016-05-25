@@ -18,7 +18,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
         public override TargetResult Execute(OperationWrapper operationWrapper) {
             var entityMetadata = operationWrapper.EntityMetadata;
-            var connector = GenericConnectorFactory.GetConnector(entityMetadata, operationWrapper.OperationName);
+            var connector = GenericConnectorFactory.GetConnector(entityMetadata, operationWrapper.OperationName, operationWrapper.Wsprovider);
             var operationName = operationWrapper.OperationName;
 
             var result = DoExecuteCrud(operationWrapper, connector);

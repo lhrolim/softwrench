@@ -228,7 +228,7 @@
           <field attribute="#personid" label="Username" requiredexpression="@personuid == -1" showexpression="@personuid == -1">
             <event type="afterchange" service="personService" method="afterChangeUsername"/>
           </field>
-          <field attribute="personid" label="Username" showexpression="@personuid != -1" readonly="true" />
+          <field attribute="personid" label="Username" showexpression="@personuid != -1 &amp;&amp; @personuid != null" readonly="true" />
           <field attribute="#primaryemail" requiredexpression="true" label="Primary Email" tooltip="The user will receive a confirmation link on this email"/>
 
           <optionfield attribute="passwordmode" default="auto" label="Password Generation" showexpression="!@ldapEnabled"

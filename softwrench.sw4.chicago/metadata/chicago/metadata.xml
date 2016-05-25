@@ -88,7 +88,7 @@
         </relationship>
       </relationships>
       <connectorParameters>
-        <connectorParameter key="customconnector" value="softwrench.sw4.chicago.classes.com.cts.chicago.dataset.ChicagoServiceRequestCrudConnector" />
+        <connectorParameter key="customconnector" value="softwrench.sw4.chicago.classes.com.cts.chicago.connector.ChicagoSRCrudConnector" />
       </connectorParameters>
     </entity>
     <entity name="impacturgency" idAttribute="impacturgencyid">

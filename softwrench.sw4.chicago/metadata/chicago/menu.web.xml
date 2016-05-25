@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="horizontal" indexitem="SR">
+
+  <reference id="servicereq"/>
+  <reference id="qservicereq"/>
+</Menu>
+

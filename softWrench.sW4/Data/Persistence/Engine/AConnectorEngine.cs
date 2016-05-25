@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using cts.commons.portable.Util;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.Relational.Collection;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
-using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.Persistence.Engine {
     public abstract class AConnectorEngine : IConnectorEngine {
@@ -22,7 +17,6 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
         public abstract TargetResult Execute(OperationWrapper operationWrapper);
 
-        private readonly CollectionResolver _collectionResolver = new CollectionResolver();
 
         private readonly EntityRepository _entityRepository;
 

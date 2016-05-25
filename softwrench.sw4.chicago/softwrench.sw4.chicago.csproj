@@ -30,14 +30,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="cts.commons.simpleinjector">
+      <HintPath>..\softWrench.sW4.Web\Bin\cts.commons.simpleinjector.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="classes\com\cts\chicago\dataset\ChicagoServiceRequestCrudConnector.cs" />
+    <Compile Include="classes\com\cts\chicago\connector\ChicagoSRCrudConnector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="metadata\chicago\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="web_content\chicago\scripts\chicagosr_service.js" />
     <EmbeddedResource Include="metadata\chicago\properties.xml">
       <SubType>Designer</SubType>
@@ -68,7 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\chicago\configuration\" />
-    <Folder Include="classes\com\cts\chicago\connector\" />
+    <Folder Include="classes\com\cts\chicago\dataset\" />
     <Folder Include="classes\com\cts\chicago\migration\" />
     <Folder Include="web_content\chicago\htmls\" />
   </ItemGroup>

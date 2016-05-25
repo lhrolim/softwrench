@@ -439,7 +439,7 @@
           <properties>
             <property key="nextschema.schemaid" value="quicksrgrid"/>
           </properties>          
-          <section orientation="horizontal">
+          <section orientation="horizontal" id="statussection">
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="ticketuid" label="SR#" hidden="true"/>
             <field label="Status" attribute="status" readonly="true" default="NEW" hidden="true"/>

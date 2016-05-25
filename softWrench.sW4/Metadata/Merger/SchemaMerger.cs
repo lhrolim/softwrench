@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using log4net;
-using softwrench.sw4.Shared2.Metadata.Applications.Command;
-using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softWrench.sW4.Exceptions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
@@ -68,77 +66,28 @@ namespace softWrench.sW4.Metadata.Validator {
                     continue;
                 }
                 if (displayable is IApplicationDisplayableContainer) {
-                    //sections, tabs
-                    DoApplyCustomizations((IApplicationDisplayableContainer)displayable,
-                        overridenSchema, components,
-                         customizations, customizationsActuallyApplied,
-                        fieldsThatShouldBeCustomized);
-                    resultDisplayables.Add(displayable);
+
+                    var container = (IApplicationDisplayableContainer)displayable;
+                    bool containerReplaced = false;
+
+                    if (container.Id != null && container is IApplicationIndentifiedDisplayable) {
+                        var attrDisplayable = (IApplicationIndentifiedDisplayable)container;
+                        //sections, tabs
+                        containerReplaced = DoApplySingleCustomization(overridenSchema, components, customizations, customizationsActuallyApplied, attrDisplayable, resultDisplayables);
+                    }
+
+                    if (!containerReplaced) {
+                        //applying customizations on inner fields of the container, since no maching customization was found
+                        DoApplyCustomizations((IApplicationDisplayableContainer)displayable,
+                                overridenSchema, components,
+                                customizations, customizationsActuallyApplied,
+                                fieldsThatShouldBeCustomized);
+                        resultDisplayables.Add(displayable);
+                    }
                     continue;
                 }
 
-                var attribute = attrDisplayablee.Attribute;
-
-                var customization =
-                    customizations.FirstOrDefault(
-                        f =>
-                            (f.Position.Equals(attribute) || f.Position.Equals("+" + attribute) ||
-                             f.Position.Equals("-" + attribute)));
-                if (customization == null) {
-                    if (displayable is ApplicationAssociationDefinition) {
-                        //if the field is an association let´s give it a change to search for the label field instead before assuming there´s no customization present
-                        //this is needed because sometimes we might have multiple fields pointing to a same target and would be preferable to use that strategy, otherwise
-                        // both fields would be customized. See materials.xml
-                        var association = displayable as ApplicationAssociationDefinition;
-                        var labelField = association.OriginalLabelField;
-                        customization =
-                            customizations.FirstOrDefault(
-                        f =>
-                            (f.Position.Equals(labelField) || f.Position.Equals("+" + labelField) ||
-                             f.Position.Equals("-" + labelField)));
-
-                    }
-                }
-
-                if (customization == null) {
-                    //no customization found, add the original field normally
-                    resultDisplayables.Add(displayable);
-                    continue;
-                }
-
-                Log.DebugFormat("applying customization {0} on schema {1}", customization.Position, overridenSchema);
-                customizationsActuallyApplied.Add(customizations.IndexOf(customization));
-
-                if (customization.Position.StartsWith("-")) {
-                    if (!customization.Displayables.Any()) {
-                        throw new MetadataException(
-                            "left customizations must have a body, check your metadata at {0}  | customization: {1}".Fmt(
-                                overridenSchema, customization.Position));
-                    }
-                    var resolvedDisplayables = DisplayableUtil.PerformReferenceReplacement(customization.Displayables,
-                        overridenSchema, overridenSchema.ComponentDisplayableResolver, components);
-                    resultDisplayables.AddRange(resolvedDisplayables);
-                    resultDisplayables.Add(displayable);
-                } else if (customization.Position.StartsWith("+")) {
-                    if (!customization.Displayables.Any()) {
-                        throw new MetadataException(
-                            "right customizations must have a body, check your metadata at {0} | customization: {1}".Fmt(
-                                overridenSchema, customization.Position));
-                    }
-                    resultDisplayables.Add(displayable);
-                    var resolvedDisplayables = DisplayableUtil.PerformReferenceReplacement(customization.Displayables,
-                        overridenSchema, overridenSchema.ComponentDisplayableResolver, components);
-                    resultDisplayables.AddRange(resolvedDisplayables);
-                } else {
-                    //exact match
-                    //if empty this would replace the existing displayable
-                    var resolvedDisplayables = DisplayableUtil.PerformReferenceReplacement(customization.Displayables,
-                        overridenSchema, overridenSchema.ComponentDisplayableResolver, components);
-                    resultDisplayables.AddRange(resolvedDisplayables);
-
-                    // removes the replaced displayable from validation
-                    ApplicationMetadataValidator.RemoveDisplaybleToValidateIfNeeded(overridenSchema, displayable);
-                }
+                DoApplySingleCustomization(overridenSchema, components, customizations, customizationsActuallyApplied, attrDisplayablee, resultDisplayables);
             }
             if (customizationsActuallyApplied.Count != fieldsThatShouldBeCustomized && (original is ApplicationSchemaDefinition)) {
                 //second condition means that this is not a section iteration, i.e --> check number just at the end
@@ -154,6 +103,77 @@ namespace softWrench.sW4.Metadata.Validator {
             }
             original.Displayables = resultDisplayables;
         }
+
+        private static bool DoApplySingleCustomization(ApplicationSchemaDefinition overridenSchema, IEnumerable<DisplayableComponent> components,
+            IList<ApplicationSchemaCustomization> customizations, HashSet<int> customizationsActuallyApplied, IApplicationIndentifiedDisplayable attrDisplayablee,
+            List<IApplicationDisplayable> resultDisplayables) {
+            var attribute = attrDisplayablee.Attribute;
+            if (attrDisplayablee is IApplicationDisplayableContainer) {
+                attribute = ((IApplicationDisplayableContainer)attrDisplayablee).Id;
+            }
+
+            var customization =
+                customizations.FirstOrDefault(
+                    f =>
+                        (f.Position.Equals(attribute) || f.Position.Equals("+" + attribute) ||
+                         f.Position.Equals("-" + attribute)));
+            if (customization == null) {
+                if (attrDisplayablee is ApplicationAssociationDefinition) {
+                    //if the field is an association let´s give it a change to search for the label field instead before assuming there´s no customization present
+                    //this is needed because sometimes we might have multiple fields pointing to a same target and would be preferable to use that strategy, otherwise
+                    // both fields would be customized. See materials.xml
+                    var association = attrDisplayablee as ApplicationAssociationDefinition;
+                    var labelField = association.OriginalLabelField;
+                    customization =
+                        customizations.FirstOrDefault(
+                            f =>
+                                (f.Position.Equals(labelField) || f.Position.Equals("+" + labelField) ||
+                                 f.Position.Equals("-" + labelField)));
+                }
+            }
+
+            if (customization == null) {
+                //no customization found, add the original field normally
+                resultDisplayables.Add(attrDisplayablee);
+                return false;
+            }
+
+            Log.DebugFormat("applying customization {0} on schema {1}", customization.Position, overridenSchema);
+            customizationsActuallyApplied.Add(customizations.IndexOf(customization));
+
+            if (customization.Position.StartsWith("-")) {
+                if (!customization.Displayables.Any()) {
+                    throw new MetadataException(
+                        "left customizations must have a body, check your metadata at {0}  | customization: {1}".Fmt(
+                            overridenSchema, customization.Position));
+                }
+                var resolvedDisplayables = DisplayableUtil.PerformReferenceReplacement(customization.Displayables,
+                    overridenSchema, overridenSchema.ComponentDisplayableResolver, components);
+                resultDisplayables.AddRange(resolvedDisplayables);
+                resultDisplayables.Add(attrDisplayablee);
+            } else if (customization.Position.StartsWith("+")) {
+                if (!customization.Displayables.Any()) {
+                    throw new MetadataException(
+                        "right customizations must have a body, check your metadata at {0} | customization: {1}".Fmt(
+                            overridenSchema, customization.Position));
+                }
+                resultDisplayables.Add(attrDisplayablee);
+                var resolvedDisplayables = DisplayableUtil.PerformReferenceReplacement(customization.Displayables,
+                    overridenSchema, overridenSchema.ComponentDisplayableResolver, components);
+                resultDisplayables.AddRange(resolvedDisplayables);
+            } else {
+                //exact match
+                //if empty this would replace the existing displayable
+                var resolvedDisplayables = DisplayableUtil.PerformReferenceReplacement(customization.Displayables,
+                    overridenSchema, overridenSchema.ComponentDisplayableResolver, components);
+                resultDisplayables.AddRange(resolvedDisplayables);
+
+                // removes the replaced displayable from validation
+                ApplicationMetadataValidator.RemoveDisplaybleToValidateIfNeeded(overridenSchema, attrDisplayablee);
+            }
+            return true;
+        }
+
 
         private static bool IsAutoGenerated(IApplicationIndentifiedDisplayable attrDisplayablee) {
             var fieldDef = attrDisplayablee as ApplicationFieldDefinition;
