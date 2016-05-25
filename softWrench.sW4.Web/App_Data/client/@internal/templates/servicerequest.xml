@@ -452,7 +452,7 @@
             <renderer type="richtext"/>
           </field>
 
-          <section orientation="horizontal">
+          <section orientation="horizontal" id="reportedbysection">
             <renderer type="default" params="childinputsize=medium" />
             <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@personid" orderbyfield="personid asc" >
               <renderer type="lookup" params="columnlabel=Name;"/>
@@ -494,7 +494,7 @@
 
           <field attribute="ticketid" label="SR#" readonly="true" hidden="true"/>
 
-          <section orientation="horizontal">
+          <section orientation="horizontal" id="statussection">
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="description" label="Summary" requiredexpression="true">
               <renderer type="default" params="maxlength=100" />

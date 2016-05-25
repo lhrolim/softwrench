@@ -510,7 +510,7 @@
           </properties>
           <customization position="statussection">
             <section orientation="horizontal" id="statussection">
-              <renderer type="default" params="childinputsize=medium" />
+              <renderer type="default" params="childinputsize=small" />
               <field attribute="ticketuid" label="SR#" hidden="true"/>
               <field attribute="description" label="Summary" requiredexpression="true">
                 <renderer type="default" params="maxlength=100" />
