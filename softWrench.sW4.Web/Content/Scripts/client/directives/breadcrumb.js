@@ -84,13 +84,15 @@
 
         return {
             controller: function ($scope, alertService, validationService, crudContextHolderService, historyService) {
-                $scope.goToApplication = function (leaf) {
+                $scope.goToApplication = function (leaf, event, fromDropdownOrMenu) {
                     var msg = "Are you sure you want to leave the page?";
 
                     var parameters = {};
-                    var checkPointData = checkpointService.fetchCheckpoint(leaf.application + "." + leaf.schema);
-                    if (checkPointData) {
-                        parameters["SearchDTO"] = checkPointData.listContext;
+                    if (!fromDropdownOrMenu) {
+                        var checkPointData = checkpointService.fetchCheckpoint(leaf.application + "." + leaf.schema);
+                        if (checkPointData) {
+                            parameters["SearchDTO"] = checkPointData.listContext;
+                        }
                     }
 
                     if (crudContextHolderService.getDirty()) {
