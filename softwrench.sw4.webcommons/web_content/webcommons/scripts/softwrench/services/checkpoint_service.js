@@ -21,7 +21,12 @@
                 if (gridData == null) {
                     throw new Error('gridData should not be null');
                 }
-                var searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData);
+
+                var quickserarchDTO = null;
+                if (gridData.vm) {
+                    quickserarchDTO = gridData.vm.quickSearchDTO;
+                }
+                var searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quickserarchDTO);
 
                 this.createGridCheckpoint(schema, searchDTO);
 
