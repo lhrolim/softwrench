@@ -187,7 +187,7 @@
           </field>
         </schema>
 
-        <schema id="detail" stereotype="detail" title="Labor Reporting Detail">
+        <schema id="detail" stereotype="detail" title="Labor Reporting Detail" platform="web">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
@@ -276,7 +276,7 @@
           <field attribute="premiumpayrate" hidden="true"/>
         </schema>
 
-        <schema id="newdetail" title="New Labor Transaction" stereotype="detailnew">
+        <schema id="newdetail" title="New Labor Transaction" stereotype="detailnew" platform="web">
           <properties>
             <property key="schema.noninternal" value="true"/>
             <property key="nextschema.schemaid" value="list"/>
@@ -337,7 +337,7 @@
           </section>
         </schema>
 
-        <schema id="editdetail" title="Labor Report Details" stereotype="detail">
+        <schema id="editdetail" title="Labor Report Details" stereotype="detail" platform="web">
           <commandbars>
             <commandgroup position="multiselect.dropdown">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
@@ -414,7 +414,47 @@
             </field>
           </section>
         </schema>
+
+        <schema id="detail" stereotype="detail" title="Labor Reporting" platform="mobile">
+          <field attribute="labtransid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="laborcode" hidden="true" />
+          <field attribute="transtype" hidden="true" />
+          <field attribute="genapprservreceipt" hidden="true"/>
+          <field attribute="refwo" hidden="true" />
+          <field attribute="enterby" hidden="true" />
+          <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate"/>
+          <field attribute="labor_.worksite" hidden="true" />
+          <field attribute="labor_.orgid" hidden="true" />
+          <field label="Labor" attribute="laborcode" showexpression="!@_iscreation"/>
+          <field label="Craft" attribute="craft" showexpression="!@_iscreation"/>
+          <field attribute="linecost" label="Line Cost" readonly="true" showexpression="!@_iscreation"/>
+          <field label="Start Date" requiredexpression="true" attribute="startdate">
+            <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
+            <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
+          </field>
+          <field label="Start Time" attribute="starttime" >
+            <renderer type="time" params="format=HH:mm;showdate=false" />
+            <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
+          </field>
+          <field label="End Date" attribute="finishdate">
+            <renderer type="date" params="format=MM/dd/yyyy;showtime=false" />
+            <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
+          </field>
+          <field label="End Time" attribute="finishtime" >
+            <renderer type="time" params="format=HH:mm;showdate=false" />
+            <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
+          </field>
+          <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8">
+            <event type="afterchange" service="labtransService" method="updateLineCost"/>
+          </field>
+          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.fields.glaccount">
+            <renderer type="lookup"/>
+          </association>
+        </schema>
       </schemas>
+    
     </application>
 
     <application entity="laborcraftrate" name="laborcraftrate" title="Craft">

@@ -7,16 +7,14 @@
 
         function getDownloadDataCount(dataDownloadResult) {
             var count = 0;
-            angular.forEach(dataDownloadResult, function (result) {
+            angular.forEach(dataDownloadResult, result => {
                 if (!angular.isArray(result)) {
                     count += result;
                     return;
                 }
                 // in some cases, each result is an array of numbers
                 // in that case we need to iterate through each number of result
-                angular.forEach(result, function (element) {
-                    count += element;
-                });
+                angular.forEach(result, element => count += element);
             });
             return count;
         }
@@ -31,27 +29,23 @@
          * @returns Promise resolved with the batches, rejected with database error 
          */
         function handleDeletableDataEntries(batches) {
-            var statements = _.chain(batches)
+            const statements = _.chain(batches)
                 .pluck("loadeditems") // [[BatchItem]]
                 .flatten() // [BatchItem]
-                .filter(function (item) {
-                    return item.crudoperation === crudConstants.operation.create && !item.problem;
-                }) // [BatchItem] crud_create and doesn't have problem  
+                .filter(item => item.crudoperation === crudConstants.operation.create && !item.problem) // [BatchItem] crud_create and doesn't have problem  
                 .pluck("dataentry") // [DataEntry]
                 .groupBy("application") // { DataEntry['application'] : [DataEntry] }
-                .map(function (entries, application) {
+                .map((entries, application) => {
                     // for some reason this query only works if there are no '' around the ids
-                    var ids = _.pluck(entries, "id"); 
-                    return { query: entities.DataEntry.deleteInIdsStatement, args: [ids, application] }
+                    var ids = _.pluck(entries, "id");
+                    return { query: entities.DataEntry.deleteInIdsStatement, args: [ids, application] };
                 }) // [PreparedStatement]
                 .value();
 
             // nothing to delete: resolve with batches immediately
             if (statements.length <= 0) return $q.when(batches);
             // resolve with batches if delete wass successful
-            return swdbDAO.executeQueries(statements).then(function() {
-                return batches;
-            });
+            return swdbDAO.executeQueries(statements).then(() => batches);
         }
 
         /**
@@ -63,38 +57,31 @@
         function onBatchesCompleted(completionResult) {
             var log = $log.get("dataSynchronizationService#onBatchesCompleted");
             var start = completionResult.start;
-            var batchTuples = completionResult.batchTuples;
-            var promises = _.map(batchTuples, function (tuple) {
-                var remoteBatch = tuple.remote;
-                var batch = tuple.local;
+            const batchTuples = completionResult.batchTuples;
+            const promises = _.map(batchTuples, tuple => {
+                const remoteBatch = tuple.remote;
+                const batch = tuple.local;
                 return batchService.updateBatch(batch, remoteBatch);
             });
             $q.all(promises)
-                .then(function(batches) {
-                    return handleDeletableDataEntries(batches);
-                })
-                .then(function (batches) {
-                    // update the related syncoperations as 'COMPLETE'
-                    // TODO: assuming there's only a single batch/application per syncoperation -> develop generic case
-                    return synchronizationOperationService.completeFromAsyncBatch(batches).then(function (operations) {
-                        // resolve with the saved batches to transparently continue the promise 
-                        // chain as it was before (not aware of syncoperations update)
-                        return batches;
-                    });
-                })
-                .then(function (batches) {
-                    return dataSynchronizationService.syncData().then(function (downloadResults) {
+                .then(batches => handleDeletableDataEntries(batches))
+                // update the related syncoperations as 'COMPLETE'
+                // TODO: assuming there's only a single batch/application per syncoperation -> develop generic case
+                .then(batches => synchronizationOperationService.completeFromAsyncBatch(batches)
+                    // resolve with the saved batches to transparently continue the promise 
+                    // chain as it was before (not aware of syncoperations update)
+                    .then(operations => batches))
+                .then(batches => 
+                    dataSynchronizationService.syncData().then(downloadResults => {
                         var dataCount = getDownloadDataCount(downloadResults);
                         return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batches);
-                    });
-                })
-                .then(function (operation) {
+                    })
+                )
+                .then(operation => {
                     log.info("created SyncOperation for async Batch Processing");
                     synchronizationNotificationService.notifySynchronizationReceived(operation);
                 })
-                .catch(function (error) {
-                    log.error(error);
-                });
+                .catch(error => log.error(error));
         }
 
         /**
@@ -103,15 +90,12 @@
          * @returns Promise resolved with the updated payload
          */
         function onBeforeBatchSubmit(batch, params, payload) {
-            var promises = [];
-            angular.forEach(payload.items, function (item) {
-                var promise = offlineAuditService.getEntriesForEntity(item.dataentry, batch.application).then(function (entries) {
+            const promises = payload.items.map(item =>
+                offlineAuditService.getEntriesForEntity(item.dataentry, batch.application).then(entries => {
                     item.additionaldata.auditentries = entries;
                     return item;
-                });
-                promises.push(promise);
-            });
-            return $q.all(promises).then(function (items) {
+            }));
+            return $q.all(promises).then(items => {
                 // substitute payload's items by items with auditentries
                 payload.items = items;
                 return payload;
@@ -123,9 +107,7 @@
         //#region Public methods
 
         function hasDataToSync() {
-            return swdbDAO.countByQuery("DataEntry", "isDirty=1 and pending=0").then(function(count) {
-                return count > 0;
-            });
+            return swdbDAO.countByQuery("DataEntry", "isDirty=1 and pending=0").then(count => count > 0);
         }
 
         /**
@@ -137,22 +119,22 @@
         function fullDownload() {
             var log = $log.get("synchronizationFacade#fullDownload");
             log.info("Executing full download");
-            var start = new Date().getTime();
-            var syncDataPromise = dataSynchronizationService.syncData();
-            var metadataDownloadedPromise = metadataSynchronizationService.syncData("1.0");
-            var associationDataDownloadPromise = associationDataSynchronizationService.syncData();
-            var httpPromises = [];
-            httpPromises.push(metadataDownloadedPromise);
-            httpPromises.push(associationDataDownloadPromise);
-            httpPromises = httpPromises.concat(syncDataPromise);
+            const start = new Date().getTime();
+
+            const httpPromises = [
+                metadataSynchronizationService.syncData("1.0"),
+                associationDataSynchronizationService.syncData()
+            ].concat(dataSynchronizationService.syncData());
+
             return $q.all(httpPromises)
-                .then(function(results) {
-                    var end = new Date().getTime();
+                .then(results => {
+                    const end = new Date().getTime();
                     log.info("finished full download process. Ellapsed {0}".format(end - start));
-                    var metadataDownloadedResult = results[0];
-                    var associationDataDownloaded = results[1];
-                    var dataDownloadedResult = results.subarray(2);
-                    var totalNumber = getDownloadDataCount(dataDownloadedResult);
+
+                    const metadataDownloadedResult = results[0];
+                    const associationDataDownloaded = results[1];
+                    const dataDownloadedResult = results.subarray(2);
+                    const totalNumber = getDownloadDataCount(dataDownloadedResult);
                     
                     return synchronizationOperationService.createNonBatchOperation(start, end, totalNumber, associationDataDownloaded, metadataDownloadedResult);
                 });
@@ -171,16 +153,14 @@
             var log = $log.get("synchronizationFacade#fullSync");
             log.info("init full synchronization process");
 
-            var start = new Date().getTime();
-            var dbapplications = metadataModelService.getMetadatas();
+            const start = new Date().getTime();
+            const dbapplications = metadataModelService.getMetadatas();
 
             // one Batch per application
-            var batchPromises = dbapplications.map(function(dbapplication) {
-                return batchService.createBatch(dbapplication);
-            });
+            const batchPromises = dbapplications.map(dbapplication => batchService.createBatch(dbapplication));
            
             return $q.all(batchPromises)
-                .then(function (batches) {
+                .then(batches => {
                     // no batches created: full download instead of full sync
                     if (!batches || batches.length <= 0 || !batches[0]) {
                         log.info("No batches created: Executing full download instead of full sync.");
@@ -189,29 +169,25 @@
                     // batches created: submit to server
                     log.info("Batches created locally: submitting to server.");
                     return batchService.submitBatches(batches)
-                        .then(function (batchResults) {
+                        .then(batchResults => {
                             // check for synchronous or asynchronous case
-                            var asyncBatches = batchResults.filter(function(batch) {
-                                return batch.status !== "COMPLETE";
-                            });
+                            var asyncBatches = batchResults.filter(batch => batch.status !== "COMPLETE");
                             // async case
                             if (asyncBatches.length > 0) {
                                 // register async Batches for async processing
-                                angular.forEach(asyncBatches, function (asyncBatch) {
-                                    asyncSynchronizationService.registerForAsyncProcessing(asyncBatch);
-                                });
+                                angular.forEach(asyncBatches, asyncBatch => asyncSynchronizationService.registerForAsyncProcessing(asyncBatch));
                                 // create batch/offline SyncOperation
                                 return synchronizationOperationService.createBatchOperation(start, batchResults);
                             }
                             // sync case: 
                             // - delete DataEntries that should be deleted
                             // - download ONLY data and create a SyncOperation indicating both a Batch submission and a download
-                            return handleDeletableDataEntries(batchResults).then(function() {
-                                return dataSynchronizationService.syncData();
-                            }).then(function (downloadResults) {
-                                log.debug("Batch returned synchronously --> performing download");
-                                var dataCount = getDownloadDataCount(downloadResults);
-                                return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
+                            return handleDeletableDataEntries(batchResults)
+                                .then(() => dataSynchronizationService.syncData())
+                                .then(downloadResults => {
+                                    log.debug("Batch returned synchronously --> performing download");
+                                    var dataCount = getDownloadDataCount(downloadResults);
+                                    return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
                             });
                         });
                 });
@@ -232,18 +208,19 @@
                 template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Synchronizing data<span>"
             });
             // try to sync
-            return fullSync().then(function () {
+            return fullSync()
+                .then(() => {
                     $ionicLoading.hide();
                     return true;
-                }).catch(function () {
+                })
+                .catch(() => {
                     $ionicLoading.hide();
                     // sync failed: check if user wishes to logout regardless
                     return $ionicPopup.confirm({
                         title: failPopupConfig.title || "Synchronization failed",
                         template: failPopupConfig.template || "Continue anyway?"
-                    }).then(function (continueAnyway) {
-                        return !!continueAnyway;
-                    });
+                    })
+                    .then(continueAnyway => !!continueAnyway);
                 });
         }
 
@@ -256,14 +233,13 @@
         // registering completion callback on the asyncSynchronizationService
         asyncSynchronizationService.onBatchesCompleted(onBatchesCompleted);
 
-        var api = {
-            hasDataToSync: hasDataToSync,
-            fullDownload: fullDownload,
-            fullSync: fullSync,
-            attempSyncAndContinue: attempSyncAndContinue,
-            handleDeletableDataEntries: handleDeletableDataEntries
-        }
-
+        const api = {
+            hasDataToSync,
+            fullDownload,
+            fullSync,
+            attempSyncAndContinue,
+            handleDeletableDataEntries
+        };
         return api;
         //#endregion
     }
