@@ -128,7 +128,7 @@ module.exports = function (grunt) {
                 reporters: ["progress", "dots"],
                 logLevel: "INFO",
                 preprocessors: {
-                    'Content/Templates/**/*.html': ["ng-html2js"],
+                     'Content/Templates/**/*.html': ["ng-html2js"],
                     'Content/Shared/**/*.js': ["babel"],
                     'Content/Scripts/**/*.js': ["babel"],
                     'Content/modules/**/*.js': ["babel"],

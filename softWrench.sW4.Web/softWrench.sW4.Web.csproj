@@ -589,7 +589,6 @@
     <Content Include="Content\Scripts\client\directives\stringtonumber.js" />
     <Content Include="Content\Scripts\client\services\breadcrumbService.js" />
     <Content Include="Content\Scripts\client\services\chartService.js" />
-    <Content Include="Content\Scripts\client\services\configurationservice.js" />
     <Content Include="Content\Scripts\client\services\controllerinheritanceservice.js" />
     <Content Include="Content\Scripts\client\services\load_gmaps_service.js" />
     <Content Include="Content\Scripts\client\services\notificationService.js" />

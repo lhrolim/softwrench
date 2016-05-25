@@ -202,10 +202,21 @@
                                             <fieldset class="form-group">
                                                 <span class="requiredfieldmark">*</span>&nbsp;
                                                 <label class="control-label">Password</label>
-                                                <span class="requiredfieldmark" ng-if="registration.form.password.$touched && registration.form.password.$invalid">
-                                                    Password is Required
-                                                </span>
-                                                <input name="password" ng-model="registration.data.password" required
+                                                <div style="display: inline-block; vertical-align: top">
+                                                    <div ng-if="registration.form.password.$touched && registration.form.password.$error.required && !registration.form.password.$pending.password">
+                                                        <span class="requiredfieldmark">Password is Required</span>    
+                                                    </div>
+                                                    <div ng-if="registration.form.password.$pending.password">
+                                                        <span>Checking if password is valid...</span>    
+                                                    </div>
+                                                    <div ng-if="registration.form.password.$error.password" 
+                                                         ng-repeat="message in passwordValidation.messages">
+                                                        <span class="requiredfieldmark">{{ message }}</span>    
+                                                    </div>
+                                                </div>
+                                                <input name="password" ng-model="registration.data.password" required 
+                                                       password-validation password-async-validation password-username-value="{{ registration.data.username }}"
+                                                       ng-model-options="{ debounce: 500 }"
                                                        type="password" class="form-control">
                                             </fieldset>
                                             <fieldset class="form-group">
@@ -255,7 +266,7 @@
                                             Cancel
                                         </button>
                                         <button type="button" class="btn btn-primary"
-                                                ng-disabled="registration.form.$invalid || registration.loading.ongoing"
+                                                ng-disabled="registration.form.$invalid || registration.form.password.$pending.password || registration.loading.ongoing"
                                                 ng-click="registration.submit()">
                                             Submit
                                         </button>

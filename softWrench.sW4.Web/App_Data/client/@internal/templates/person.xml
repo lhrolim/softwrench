@@ -156,7 +156,7 @@
           <field attribute="personid" label="Username" requiredexpression="true" readonly="true"/>
 
           <field attribute="#password" label="Password" showexpression="!@ldapEnabled">
-            <renderer type="password" params="placeholder=Blank to keep current stored password;avoidautofocus=true"/>
+            <renderer type="password" params="placeholder=Blank to keep current stored password;avoidautofocus=true;usernameFieldName=personid"/>
           </field>
           <field attribute="#retypepassword" label="Retype Password" showexpression="!@ldapEnabled">
             <renderer type="password" params="placeholder=Blank to keep current stored password;avoidautofocus=true"/>
@@ -241,7 +241,7 @@
 
           <section orientation="vertical" showexpression="@passwordmode == 'manual'">
             <field attribute="#password" label="Password" showexpression="!@ldapEnabled" requiredexpression="true">
-              <renderer type="password"  params="placeholder=Leave it blank to make the system autogenerate it;avoidautofocus=true"/>
+              <renderer type="password"  params="placeholder=Leave it blank to make the system autogenerate it;avoidautofocus=true;usernameFieldName=#personid"/>
             </field>
             <field attribute="#retypepassword" label="Retype Password" showexpression="!@ldapEnabled" requiredexpression="true">
               <renderer type="password" params="placeholder=Leave it blank to make the system autogenerate it;avoidautofocus=true"/>

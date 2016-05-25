@@ -21,7 +21,7 @@
          'dndLists'
         ]);
 
-    angular.module('sw_prelogin', []);
+    angular.module('sw_prelogin', ["webcommons_services"]);
 
     //angular 1.3 migration reference
     //app.config(['$controllerProvider', function ($controllerProvider) {

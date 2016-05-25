@@ -18,8 +18,6 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Net.Http;
-using System.Web;
 using System.Web.Http;
 using NHibernate.Linq;
 using softwrench.sw4.user.classes.entities;
@@ -212,12 +210,12 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         }
 
         [HttpGet]
-        public List<string> GetConfigurations([FromUri]List<string> fullKeys) {
-            var configs = new List<string>();
+        public IDictionary<string, string> GetConfigurations([FromUri]List<string> fullKeys) {
+            var configs = new Dictionary<string, string>();
             if (fullKeys == null || fullKeys.Count == 0) {
                 return configs;
             }
-            fullKeys.ForEach(k => configs.Add(_facade.Lookup<string>(k)));
+            fullKeys.ForEach(k => configs.Add(k, _facade.Lookup<string>(k)));
             return configs;
         }
 

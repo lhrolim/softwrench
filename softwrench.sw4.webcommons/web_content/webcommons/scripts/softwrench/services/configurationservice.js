@@ -6,7 +6,7 @@
         var configsKey = "swconfigs";
         var timestampKey = "swconfigs.timestamp";
 
-        var fallbackRetry = function () {
+        const fallbackRetry = function () {
             contextService.insertIntoContext(timestampKey, null);
             updateConfigurations();
         }
@@ -16,7 +16,7 @@
 
         // returns undefined if confg not found
         function getConfigurationValue(key) {
-            var configs = contextService.get(configsKey, true);
+            const configs = contextService.get(configsKey, true);
             if (!configs) {
                 fallbackRetry();
                 return undefined;
@@ -25,16 +25,16 @@
         }
 
         function updateConfigurations() {
-            var parameters = {
+            const parameters = {
                 cacheTimestamp: contextService.get(timestampKey, true)
-            }
-            var config = { avoidspin: true };
-            return restService.getPromise("Configuration", "GetClientSideConfigurations", parameters, config).then(function (result) {
-                var data = result.data;
+            };
+            const config = { avoidspin: true };
+            return restService.getPromise("Configuration", "GetClientSideConfigurations", parameters, config).then(result => {
+                const data = result.data;
                 if (!data || data === "null") {
                     return null;
                 }
-                var configs = data["configurations"];
+                const configs = data["configurations"];
                 contextService.insertIntoContext(configsKey, configs);
                 contextService.insertIntoContext(timestampKey, data["cacheTimestamp"]);
                 return configs;
@@ -44,9 +44,9 @@
         //#endregion
 
         //#region Service Instance
-        var service = {
-            getConfigurationValue: getConfigurationValue,
-            updateConfigurations: updateConfigurations
+        const service = {
+            getConfigurationValue,
+            updateConfigurations
         };
         return service;
         //#endregion
@@ -54,7 +54,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("configurationService", ["contextService", "restService", configurationService]);
+    angular.module("webcommons_services").factory("configurationService", ["contextService", "restService", configurationService]);
 
     //#endregion
 
