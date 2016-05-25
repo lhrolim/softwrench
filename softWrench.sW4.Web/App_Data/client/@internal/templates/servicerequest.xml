@@ -508,7 +508,7 @@
             <renderer type="richtext"/>
           </field>
 
-          <section orientation="horizontal">
+          <section orientation="horizontal" id="reportedbysection">
             <renderer type="default" params="childinputsize=medium" />
             <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@personid" orderbyfield="personid asc" >
               <renderer type="lookup" params="columnlabel=Name;"/>
@@ -524,9 +524,11 @@
               <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             </association>
           </section>
-          <composition relationship="attachment" label="Attachments" printenabled="false">
-            <collectionproperties allowcreation="false" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-          </composition>
+          <section id="compositions">
+            <composition relationship="attachment" label="Attachments" printenabled="false">
+              <collectionproperties allowcreation="false" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+            </composition>
+          </section>
         </schema>
       </schemas>
     </application>
