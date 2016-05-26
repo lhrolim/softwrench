@@ -10,7 +10,8 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
 
         private readonly Exception _immediate;
         private readonly Exception _root;
-        
+        private string _additionalMessage;
+
         public Exception ImmediateCause { get { return _immediate; } }
         public Exception RootCause { get { return _root; } }
 
@@ -56,9 +57,11 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         /// </summary>
         /// <param name="immediateCause"></param>
         /// <param name="rootCause"></param>
-        public MaximoException([NotNull]Exception immediateCause, [NotNull]Exception rootCause) : base(rootCause.Message) {
+        /// <param name="additionalMessage"></param>
+        public MaximoException([NotNull]Exception immediateCause, [NotNull]Exception rootCause, string additionalMessage=null) : base(rootCause.Message + " " + (additionalMessage ?? "")) {
             _immediate = immediateCause;
             _root = rootCause;
+            _additionalMessage = additionalMessage;
         }
         
     }

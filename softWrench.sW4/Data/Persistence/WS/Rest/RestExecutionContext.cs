@@ -9,6 +9,7 @@ using cts.commons.portable.Util;
 using cts.commons.web.Util;
 using log4net;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using softWrench.sW4.Metadata;
@@ -76,6 +77,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
         }
 
         protected override Exception HandleProxyInvocationError(Exception e) {
+            if (e is WebException) {
+                var webException = (WebException)e;
+                var responseStream = webException.Response.GetResponseStream();
+                using (var responseReader = new StreamReader(responseStream)) {
+                    // parse xml response
+                    var text = responseReader.ReadToEnd();
+                    var rootException = ExceptionUtil.DigRootException(e);
+                    return new MaximoException(e, rootException,text);
+                }
+            }
             return base.HandleProxyInvocationError(e);
         }
 
