@@ -1,4 +1,4 @@
-(function (angular) {
+﻿(function (angular) {
     "use strict";
 
     // crudContextHolderService, redirectService, restService, alertService
@@ -38,25 +38,10 @@ angular.module('sw_layout')
             return $q.when();
         },
 
-adjustOrgId: function (event) {
+        adjustOrgId: function (event) {
             event.fields.orgid = event.fields.extrafields["site_.orgid"];
         },
 
-        changePriority: function (datamap, schemaId, priorityField, newPriority) {
-            var schema = crudContextHolderService.currentSchema();
-            var fields = datamap.fields ? datamap.fields : datamap;
-            var dm = fields;
-            var extraParameters = {
-                id: fields.ticketid
-            }
-            if (newPriority) {
-                dm[priorityField] = newPriority;
-                return applicationService.invokeOperation(schema.applicationName, schemaId, "ChangePriority", dm, extraParameters).then(function (httpResponse) {
-                    fields[priorityField] = newPriority;
-                });
-            }
-            return $q.when();
-        },
 
         handleStatusChange: function (schema, datamap, parameters) {
             updateTicketStatus(datamap);

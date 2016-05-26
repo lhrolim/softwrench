@@ -230,7 +230,7 @@
           <field attribute="status" label="Status"/>
           <field attribute="siteid" label="Site ID"/>
           <field attribute="priority" tooltip="Priority">
-            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
+            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true"/>
           </field>
           <field attribute="workordercounter" tooltip="Active Workorders">
             <renderer type="icon" params="width=3%;icon=fa-wrench"/>

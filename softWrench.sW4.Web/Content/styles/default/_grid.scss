@@ -515,36 +515,6 @@
         margin-bottom: 0;
     }
 
-    .priorityicon {
-        i {
-            padding: 3px;
-        }
-
-        .dropdown-menu {
-            top: initial;
-            left: initial;
-            margin-left: -145px;
-
-            .info-dropdown {
-                display: table-row;
-                font-size: 13px;
-
-                .icon, .text {
-                    display: table-cell;
-                }
-
-                .icon {
-                    padding-left: 10px;
-                    color: #888;
-                }
-
-                .text {
-                    padding-right: 10px;
-                }
-            }
-        }
-    }
-
     &.table-hover {
         tbody tr {
             cursor: pointer;
@@ -591,7 +561,7 @@
     }
 
     .priorityicon {
-        .cell-wrapper > i {
+        i {
             color: #f5f5f5 !important;
         }
     }

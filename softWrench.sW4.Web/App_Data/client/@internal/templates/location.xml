@@ -202,7 +202,7 @@
           <field attribute="siteid" label="Site"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="locoper_.locpriority" tooltip="Priority">
-            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
+            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true"/>
           </field>
           <field attribute="workordercounter" tooltip="Workorders">
             <renderer type="icon" params="width=3%;icon=fa-wrench"/>
