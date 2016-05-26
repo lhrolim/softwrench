@@ -33,18 +33,26 @@ namespace softWrench.sW4.Data.Entities {
 
         [CanBeNull]
         public string Id {
-            get { return _id; }
+            get {
+                return _id;
+            }
         }
 
         [NotNull]
-        public string Name { get; private set; }
+        public string Name {
+            get; private set;
+        }
 
         public IDictionary<string, object> AssociationAttributes {
-            get { return _associationAttributes; }
+            get {
+                return _associationAttributes;
+            }
         }
 
         public EntityMetadata Metadata {
-            get { return _metadata; }
+            get {
+                return _metadata;
+            }
         }
 
 
@@ -70,7 +78,9 @@ namespace softWrench.sW4.Data.Entities {
         }
 
         public IDictionary<string, string> UnmappedAttributes {
-            get { return _unmappedAttributes; }
+            get {
+                return _unmappedAttributes;
+            }
         }
 
         public string GetStringAttribute(string attributeName, bool remove = false, bool throwException = false) {
@@ -99,18 +109,42 @@ namespace softWrench.sW4.Data.Entities {
             return base.GetAttribute(lowerAttribute, remove, throwException);
         }
 
-        public override bool ContainsAttribute(string attributeName)
-        {
+        public override bool ContainsAttribute(string attributeName, bool checksForNonNull = false) {
             var lowerAttribute = attributeName.ToLowerInvariant();
             if (lowerAttribute.Contains(".")) {
                 string resultAttributeName;
                 var relationshipName = EntityUtil.GetRelationshipName(lowerAttribute, out resultAttributeName);
                 var relationship = GetRelationship(relationshipName);
                 if (relationship is Entity) {
-                    return ((Entity)relationship).ContainsAttribute(resultAttributeName);
+                    var containsAttribute = ((Entity)relationship).ContainsAttribute(resultAttributeName);
+                    if (containsAttribute && checksForNonNull) {
+                        var attribute = ((Entity)relationship).GetAttribute(resultAttributeName);
+                        if (attribute is string) {
+                            return !string.IsNullOrEmpty((string)attribute);
+                        }
+                        return attribute != null;
+                    }
+                    return containsAttribute;
                 }
             }
-            return UnmappedAttributes.ContainsKey(lowerAttribute) || Attributes.ContainsKey(lowerAttribute);
+            var containsKey = Attributes.ContainsKey(lowerAttribute);
+            var containsUnmapped = UnmappedAttributes.ContainsKey(lowerAttribute);
+            if (!checksForNonNull) {
+                return containsKey || containsUnmapped;
+            }
+
+            if (containsUnmapped) {
+                var attribute = UnmappedAttributes[lowerAttribute];
+                return !string.IsNullOrEmpty((string)attribute);
+            }
+            if (containsKey) {
+                var attribute = Attributes[lowerAttribute];
+                if (attribute is string) {
+                    return !string.IsNullOrEmpty((string)attribute);
+                }
+                return attribute != null;
+            }
+            return false;
         }
 
         /// <summary>

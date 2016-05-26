@@ -40,8 +40,8 @@
     <property key="maximo_DB_provider" value="IBM.Data.DB2" />  -->
 
     <property key="basewsRestURL" value="http://173.193.44.2:9080/maxrest/rest/os/" />
-    <property key="restcredentials.user" value="maxadmin"/>
-    <property key="restcredentials.password" value="maxadmin"/>
+    <property key="restcredentials.user" value="mxintadm"/>
+    <property key="restcredentials.password" value="mxintadm"/>
     
     
     <property key="basewsURL" value="http://10.50.100.178:9080/meaweb/wsdl/" />
@@ -62,8 +62,8 @@
   <environment key="qa">
 
     <property key="basewsRestURL" value="http://173.193.44.2:9080/maxrest/rest/os/" />
-    <property key="restcredentials.user" value="maxadmin"/>
-    <property key="restcredentials.password" value="maxadmin"/>
+    <property key="restcredentials.user" value="mxintadm"/>
+    <property key="restcredentials.password" value="mxintadm"/>
 
     <property key="basewsURL" value="http://10.50.100.178:9080/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.54;Initial Catalog=ISMDEV;User Id=maximo;password=MAXIMO;" />

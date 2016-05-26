@@ -4,6 +4,7 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using System;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -32,13 +33,13 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             base.AfterUpdate(maximoTemplateData);
 
             var crudOperationData = (CrudOperationData)maximoTemplateData.OperationData;
-
-            if (crudOperationData.ContainsAttribute("#underwaycall")) {
+            
+            if (crudOperationData.ContainsAttribute("#underwaycall",true) || string.IsNullOrEmpty(ApplicationConfiguration.RestCredentialsUser)) {
                 //avoid infinite loop
                 return;
             }
             
-            if (!crudOperationData.ContainsAttribute(ISMTicketUid)) {
+            if (!crudOperationData.ContainsAttribute(ISMTicketUid,true)) {
                 //instance already existed on service layer but not on ISM
                 AfterCreation(maximoTemplateData);
             } else {
@@ -67,7 +68,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             base.AfterCreation(maximoTemplateData);
             var crudOperationData = (CrudOperationData)maximoTemplateData.OperationData;
 
-            if (crudOperationData.ContainsAttribute("#underwaycall")) {
+            if (crudOperationData.ContainsAttribute("#underwaycall",true) || string.IsNullOrEmpty(ApplicationConfiguration.RestCredentialsUser)) {
                 //avoid infinite loop
                 return;
             }
