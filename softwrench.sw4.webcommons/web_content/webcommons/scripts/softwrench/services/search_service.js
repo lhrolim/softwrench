@@ -257,7 +257,7 @@
             /// <param name="paginationData">an object containing pageNumber and pageSize properties</param>
             /// <param name="searchTemplate">a string containing the query, with the parameters delimited by : (ex: :a || :b || :c || :d) </param>
             /// <returns type=""></returns>        
-            buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData, searchTemplate) {
+            buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData, searchTemplate, quicksearchDTO) {
                 var searchDto = {};
                 searchData = searchData || {};
                 searchSort = searchSort || {};
@@ -269,6 +269,7 @@
                 searchDto.SearchAscending = searchSort.order == "asc";
                 searchDto.filterFixedWhereClause = filterFixedWhereClause;
                 searchDto.needsCountUpdate = true;
+                searchDto.quickSearchDTO = quicksearchDTO;
                 //existing template pass too many variable, which some of them did not get translated and caused an SQL error
                 //searchDto.searchTemplate = searchTemplate;
                 searchDto.searchTemplate = searchTemplate;
