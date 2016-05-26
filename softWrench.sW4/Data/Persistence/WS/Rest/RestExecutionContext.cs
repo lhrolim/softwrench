@@ -35,7 +35,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
 
         private string GenerateRestUrl(EntityMetadata entityMetadata, string entityId) {
             var baseRestURL = MetadataProvider.GlobalProperty("basewsRestURL");
-            var entityKey = entityMetadata.ConnectorParameters.GetWSEntityKey(ConnectorParameters.UpdateInterfaceParam,WsProvider.REST);
+            var entityKey = entityMetadata.ConnectorParameters.GetWSEntityKey(ConnectorParameters.UpdateInterfaceParam, WsProvider.REST);
             return !baseRestURL.EndsWith("/") ? baseRestURL + "/" + entityKey : baseRestURL + entityKey + "/" + entityId;
         }
 
@@ -73,6 +73,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
                     return text;
                 }
             }
+        }
+
+        protected override Exception HandleProxyInvocationError(Exception e) {
+            return base.HandleProxyInvocationError(e);
         }
 
         private string GeneratePayLoad() {

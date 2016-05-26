@@ -46,6 +46,8 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
                 crudOperationData.SetAttribute("ticketuid", crudOperationData.GetAttribute(ISMTicketUid));
                 crudOperationData.SetAttribute("ticketid", crudOperationData.GetAttribute(ISMTicketId));
 
+                crudOperationData.SetAttribute("#underwaycall",true);
+
                 var mifOperationWrapper = new OperationWrapper(crudOperationData,
                     OperationConstants.CRUD_UPDATE) {
                     Wsprovider = WsProvider.REST
