@@ -1,8 +1,9 @@
 ﻿describe('Comm Log Actions test', function () {
 
 
-    var mockScope;
-    var controller, _contextService, _fieldService, _applicationService, _rootScope;
+    var commlogService;
+    var dispatcherService;
+    var _contextService, _fieldService, _applicationService, _rootScope;
     var $q;
 
 
@@ -25,30 +26,22 @@
     });
 
 
-    beforeEach(angular.mock.inject(function ($rootScope, $controller, contextService, fieldService, applicationService, _$q_) {
+    beforeEach(angular.mock.inject(function (_$rootScope_, $controller, contextService, fieldService, applicationService, _$q_, _commlogService_, _dispatcherService_) {
 
-        _rootScope = $rootScope;
-        mockScope = $rootScope.$new();
+        _rootScope = _$rootScope_;
+        dispatcherService = _dispatcherService_;
         _contextService = contextService;
         _fieldService = fieldService;
         _applicationService = applicationService;
         _fieldService = fieldService;
         $q = _$q_;
-
-        mockScope.compositiondetailschema = {
-            displayables: []
-        };
-
-        controller = $controller('CommLogActionsController', {
-            $scope: mockScope,
-            contextService: _contextService,
-            applicationService: _applicationService,
-            fieldService: _fieldService,
-        });
+        commlogService = _commlogService_;
+     
     }));
 
     function testSetup(inputData, outputData, actionfn, hasSystemDefault, inputsignature, actionTitle) {
-        spyOn(mockScope, "$emit");
+
+        spyOn(_rootScope, "$broadcast").and.callThrough();
 
         spyOn(_contextService, "getUserData").and.returnValue({ email: useremail, userPreferences: { signature: inputsignature } });
 
@@ -65,12 +58,10 @@
 
         //let´s pretend the date is a string, to make tests easier but it will be the current date!!
         spyOn(_fieldService, "currentDate").and.returnValue("mockeddate!");
-
-
-        mockScope[actionfn]({});
+        commlogService[actionfn]({},{});
         //this is needed to trigger the promises resolutions!
         _rootScope.$digest();
-        expect(mockScope.$emit).toHaveBeenCalledWith('sw.composition.edit', outputData, actionTitle, true);
+        expect(_rootScope.$broadcast).toHaveBeenCalledWith('sw.composition.edit', outputData, actionTitle, true);
     }
 
     it("Reply All, with default email not present, with system default", function () {
