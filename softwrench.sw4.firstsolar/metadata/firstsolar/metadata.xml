@@ -301,7 +301,7 @@
         <schema id="search" title="Location Search" stereotype="search">
           <field attribute="status" hidden="true" default="INPRG,APPR,WOEN,ENRV,HOLD,WAPPR" searchoperation="eq"/>
           <field attribute="fslocationsearch" hidden="true" default="false" searchoperation="eq"/>
-          <field attribute="fsincludesubloc" label="Include Sublocations?" default="true" searchoperation="eq">
+          <field attribute="fsincludesubloc" label="Include Sublocations?" defaultexpression="false" searchoperation="eq">
             <renderer type="checkbox" params="layout=left"/>
           </field>
           <optionfield attribute="fsfacility" label="Facility" requiredexpression="true" searchoperation="eq" default="">
@@ -423,7 +423,7 @@
 
         <schema id="search" title="Location Search" stereotype="search">
           <field attribute="fslocationsearch" hidden="true" default="true" searchoperation="eq"/>
-          <field attribute="fsincludesubloc" label="Include Sublocations?" default="false" searchoperation="eq">
+          <field attribute="fsincludesubloc" label="Include Sublocations?" defaultexpression="false" searchoperation="eq">
             <renderer type="checkbox" params="layout=left"/>
           </field>
           <optionfield attribute="fsfacility" label="Facility" requiredexpression="true" searchoperation="eq" default="">
@@ -542,7 +542,7 @@
 
         <schema id="search" title="Location Search" stereotype="search">
           <field attribute="fslocationsearch" hidden="true" default="true" searchoperation="eq"/>
-          <field attribute="fsincludesubloc" label="Include Sublocations?" default="false" searchoperation="eq">
+          <field attribute="fsincludesubloc" label="Include Sublocations?" defaultexpression="false" searchoperation="eq">
             <renderer type="checkbox" params="layout=left"/>
           </field>
           <optionfield attribute="fsfacility" label="Facility" requiredexpression="true" searchoperation="eq" default="">

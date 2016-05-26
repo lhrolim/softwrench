@@ -79,22 +79,31 @@
         };
     });
 
-    app.directive('bcMenuItem', function ($log, menuService, adminMenuService) {
+    app.directive('bcMenuItem', function ($log, menuService, adminMenuService, checkpointService) {
         "ngInject";
 
         return {
             controller: function ($scope, alertService, validationService, crudContextHolderService, historyService) {
-                $scope.goToApplication = function (leaf) {
+                $scope.goToApplication = function (leaf, event, fromDropdownOrMenu) {
                     var msg = "Are you sure you want to leave the page?";
+
+                    var parameters = {};
+                    if (!fromDropdownOrMenu) {
+                        var checkPointData = checkpointService.fetchCheckpoint(leaf.application + "." + leaf.schema);
+                        if (checkPointData) {
+                            parameters["SearchDTO"] = checkPointData.listContext;
+                        }
+                    }
+
                     if (crudContextHolderService.getDirty()) {
                         alertService.confirmCancel(null, null, function () {
-                            menuService.goToApplication(leaf, null);
+                            menuService.goToApplication(leaf, null, parameters);
                             crudContextHolderService.clearDirty();
                             crudContextHolderService.clearDetailDataResolved();
                             $scope.$digest();
                         }, msg, function () { return; });
                     } else {
-                        menuService.goToApplication(leaf, null);
+                        menuService.goToApplication(leaf, null, parameters);
                     }
 
                     $scope.closeBreadcrumbs();
