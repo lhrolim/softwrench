@@ -705,16 +705,21 @@
 
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
-        <!--<schema id="compositionlist" stereotype="compositionlist">
-          <event type="onedit.validation" service="labtransService" method="validateEdit"/>
-          <event type="onremoval.validation" service="labtransService" method="validateRemoval"/>
-          <field attribute="labtransid" hidden="true"/>
-          <field attribute="laborcode" label="Labor" qualifier="title"/>
-          <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
-          <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
-          <field attribute="transdate" label="Created Date"/>
-          <field attribute="genapprservreceipt" hidden="true"/>
-        </schema>-->
+        <schema id="newdetail" title="New Labor Transaction" stereotype="detailnew" platform="web" redeclaring="false">
+          <customization position="gldebitacct">
+            <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+        </schema>
+
+        <schema id="editdetail" title="Labor Report Details" stereotype="detail" platform="web" redeclaring="false">
+          <customization position="gldebitacct">
+            <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+        </schema>
 
         <schema id="detail" platform="web">
           <field attribute="labtransid" hidden="true"/>
