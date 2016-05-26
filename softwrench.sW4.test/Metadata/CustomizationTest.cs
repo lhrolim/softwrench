@@ -2,6 +2,7 @@
 using System.Linq;
 using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using softwrench.sw4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -210,6 +211,25 @@ namespace softwrench.sW4.test.Metadata {
             Assert.AreEqual("small",section.RendererParameters["childinputsize"]);
 
             
+        }
+
+
+        [TestMethod]
+        public void ValidateTabBehavior() {
+
+            if (ApplicationConfiguration.TestclientName != "test4") {
+                ApplicationConfiguration.TestclientName = "test4";
+                MetadataProvider.StubReset();
+            }
+
+            var app = MetadataProvider.Application("asset");
+            var newDetailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
+            var tabNumber =newDetailSchema.GetDisplayable<ApplicationTabDefinition>(typeof(ApplicationTabDefinition))
+                    .Count(s => s.Id.EqualsIc("spareparts"));
+            Assert.AreEqual(1, tabNumber);
+            
+
+
         }
 
 
