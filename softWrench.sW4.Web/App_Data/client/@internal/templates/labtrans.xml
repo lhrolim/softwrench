@@ -327,7 +327,7 @@
             <association target="assetnum" label="Asset" labelfield="asset_.description" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @gldebitacct == null)">
               <renderer type="lookup"/>
             </association>
-            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
+            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
               <renderer type="lookup"/>
             </association>
             <field attribute="premiumpayhours" label="Premium Pay Hours">
@@ -398,7 +398,7 @@
             <association target="assetnum" label="Asset" labelfield="asset_.description" dependantfields="siteid,orgid" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @gldebitacct == null)">
               <renderer type="lookup"/>
             </association>
-            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @assetnum == null)">
+            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
               <renderer type="lookup"/>
             </association>
             <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="rate">
