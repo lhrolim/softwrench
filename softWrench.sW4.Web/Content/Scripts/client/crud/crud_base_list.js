@@ -123,6 +123,17 @@
             return $scope.shouldShowHeaderLabel(column) && !column.rendererParameters["hidefilter"];
         };
 
+        $scope.changePriority = function (rowdm, attribute, newPriority) {
+            var column = fieldService.getDisplayableByKey($scope.schema, attribute);
+            var clickService = column.rendererParameters.onclick;
+            var newValue = {
+                attribute: attribute,
+                value: newPriority
+            }
+
+            commandService.executeClickCustomCommand(clickService, rowdm.fields, column, $scope.schema, $scope.panelid, newValue);
+        };
+
         $scope.showDetail = function (rowdm, attribute, forceEdition) {
 
             var mode = $scope.schema.properties['list.click.mode'];

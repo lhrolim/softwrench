@@ -1,7 +1,7 @@
 ﻿(function(modules) {
     "use strict";
 
-    modules.webcommons.factory('prioritycolorService', [function () {
+    modules.webcommons.factory('priorityService', ['searchService', 'genericTicketService', '$q', function (searchService, genericTicketService, $q) {
         var fallbackFunction = function (priority) {
             var color;
 
@@ -22,8 +22,23 @@
             return color;
         };
 
+        function defaultPriorities() {
+            return {
+                //0: 'No Priority',
+                1: 'High Priority',
+                2: 'Medium Priority',
+                3: 'Low Priority'
+            }
+        };
+
     return {
-        getColor: function (value, parameters) {
+        getPriorityList: function () {
+            //TODO: provide way to customize priority list via metadata
+
+            return defaultPriorities();
+        },
+
+        getPriorityColor: function (value, parameters) {
             if (!value) {
                 return '#ccc';
             }
@@ -56,6 +71,14 @@
             });
 
             return fallbackFunction(priority[0]);
+        },
+
+        setPriority: function (datamap, column, schema, panelid, newValue) {
+            return genericTicketService.changePriority(datamap, schema.schemaId, newValue.attribute, newValue.value).then(function () {
+                searchService.refreshGrid(null, null, { panelid: panelid, keepfilterparams: true });
+                return $q.reject();
+            });
+
         }
     };
 }]);
