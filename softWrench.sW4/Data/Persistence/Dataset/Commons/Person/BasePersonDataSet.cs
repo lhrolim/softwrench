@@ -90,7 +90,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             // Shouldn't happen for actual maximo users.
             if (detail == null) {
                 var defaultDataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, MetadataProvider.SlicedEntityMetadata(application).Schema.MappingType);
-                defaultDataMap.SetAttribute("personid", request.Id);
+                defaultDataMap.SetAttribute("personid", request.UserIdSitetuple.Item1);
                 var associationResults = BuildAssociationOptions(defaultDataMap, application.Schema, request);
                 detail = new ApplicationDetailResult(defaultDataMap, associationResults, application.Schema, CompositionBuilder.InitializeCompositionSchemas(application.Schema, user), request.Id);
             }

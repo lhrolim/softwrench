@@ -15,9 +15,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         private const string WrongCrudConnectorType = "Custom crud connector {0} should be of type {1}";
         private const string WrongConnectorType = "Custom connector {0} should be of type {1}";
 
-        public static IMaximoConnector GetConnector(EntityMetadata metadata, String operation) {
-            BaseMaximoCrudConnector baseCrudConnector = GetBaseConnector();
-            IMaximoConnector decoratedCrudConnector = LookupCustomConnector(metadata, operation);
+        public static IMaximoConnector GetConnector(EntityMetadata metadata, string operation, WsProvider? provider = null) {
+            var baseCrudConnector = GetBaseConnector(provider);
+            var decoratedCrudConnector = LookupCustomConnector(metadata, operation, provider);
             if (decoratedCrudConnector == null) {
                 return baseCrudConnector;
             }
@@ -28,11 +28,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             return decoratedCrudConnector;
         }
 
-        private static IMaximoConnector LookupCustomConnector(EntityMetadata metadata, String operation) {
-            var provider = WsUtil.WsProvider();
+        private static IMaximoConnector LookupCustomConnector(EntityMetadata metadata, string operation, WsProvider? provider = null) {
+            if (provider == null) {
+                provider = WsUtil.WsProvider();
+            }
             var prefix = provider.ToString().ToLower();
             var connectorParams = metadata.ConnectorParameters.Parameters;
-            String customConnectorTypeName = null;
+            string customConnectorTypeName;
             connectorParams.TryGetValue(operation.ToLower() + "_" + prefix + Customconnector, out customConnectorTypeName);
             if (customConnectorTypeName == null) {
                 connectorParams.TryGetValue(operation.ToLower() + Customconnector, out customConnectorTypeName);
@@ -50,7 +52,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             if (customConnectorTypeName == null) {
                 return null;
             }
-            //TODO: use spring
+            //TODO: use simpleinjector
             try {
                 var connector = (IMaximoConnector)ReflectionUtil.InstanceFromName(customConnectorTypeName);
                 if (OperationConstants.IsCrud(operation) && !(connector is IMaximoCrudConnector)) {
@@ -66,8 +68,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             }
         }
 
-        public static BaseMaximoCrudConnector GetBaseConnector() {
-            var provider = WsUtil.WsProvider();
+        public static BaseMaximoCrudConnector GetBaseConnector(WsProvider? provider = null) {
+            if (provider == null) {
+                provider = WsUtil.WsProvider();
+            }
+            
             if (WsProvider.MEA.Equals(provider)) {
                 return new MeaCrudConnector();
             }

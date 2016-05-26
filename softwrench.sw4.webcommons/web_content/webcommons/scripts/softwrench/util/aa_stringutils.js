@@ -14,7 +14,7 @@ if (typeof String.prototype.startsWith != 'function') {
 }
 
 function isString(o) {
-    return typeof o == "string" || (typeof o == "object" && o.constructor === String);
+    return (o !== null && o !== undefined) && (typeof o === "string" || (typeof o === "object" && o.constructor === String));
 }
 
 String.prototype.format = String.prototype.f = function () {
@@ -101,3 +101,7 @@ if (String.prototype.byteSize !== "function") {
 String.prototype.containsIgnoreCase = function(search) {
     return new RegExp(search, "i").test(this);
 };
+
+String.prototype.repeat = function(times) {
+    return new Array(times + 1).join(this);
+}

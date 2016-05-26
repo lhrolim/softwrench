@@ -477,10 +477,6 @@ function BuildDataObject() {
     return parameters;
 }
 
-function isString(o) {
-    return typeof o == "string" || (typeof o == "object" && o.constructor === String);
-}
-
 function platformQS() {
     return "platform=" + platform();
 }

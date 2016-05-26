@@ -128,12 +128,7 @@ module.exports = function (grunt) {
                 reporters: ["progress", "dots"],
                 logLevel: "INFO",
                 preprocessors: {
-                    'Content/Templates/**/*.html': ["ng-html2js"],
-                    'Content/Shared/**/*.js': ["babel"],
-                    'Content/Scripts/**/*.js': ["babel"],
-                    'Content/modules/**/*.js': ["babel"],
-                    'Content/Customers/**/scripts/**/*.js': ["babel"],
-                    '../softwrench.sw4.jstest/tests/**/*.js': ["babel"]
+                    'Content/Templates/**/*.html': ["ng-html2js"]
                 },
                 ngHtml2JsPreprocessor: {
                     // If your build process changes the path to your TEMPLATES,
@@ -141,12 +136,6 @@ module.exports = function (grunt) {
                     prependPrefix: "/",
                     // the name of the Angular module to create
                     moduleName: "sw.templates"
-                },
-                babelPreprocessor: {
-                    options: {
-                        presets: ["es2015"],
-                        sourceMap: false
-                    }
                 },
                 files: [
                     // vendors
@@ -169,7 +158,7 @@ module.exports = function (grunt) {
                     "<%= app.webcommons %>/scripts/softwrench/sharedservices_module.js", // webcommons
                     "<%= app.content %>/Scripts/client/crud/aaa_layout.js", // sw
                     // webcommons
-                    "<%= app.content %>/Shared/{**/*.js, !(webcommons)/**/*.js}",
+                    "<%= app.content %>/Shared/**/*.js",
                     // sw
                     "<%= app.content %>/Scripts/client/crud/**/*!(aaa_layout).js",
                     "<%= app.content %>/Scripts/client/services/*.js",
@@ -179,9 +168,9 @@ module.exports = function (grunt) {
                     "<%= app.content %>/Scripts/client/directives/menu/*.js",
                     "<%= app.content %>/Templates/commands/**/*.js",
                     "<%= app.content %>/modules/**/*.js",
-                    // Shared
-                    "<%= app.content %>/Shared/{**/*.js, !(webcommons)/**/*.js}",
-                    // base otb
+
+
+               // base otb
                     "<%= app.content %>/Scripts/customers/otb/*.js",
                     // customers shared
                     "<%= app.content %>/Scripts/customers/shared/*.js",

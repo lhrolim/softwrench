@@ -438,8 +438,11 @@
         <schema id="quicknewdetail" stereotype="detailnew" title="New Quick Request">
           <properties>
             <property key="nextschema.schemaid" value="quicksrgrid"/>
-          </properties>          
-          <section orientation="horizontal">
+          </properties>
+
+          <section id="extrahiddenfields"/>
+          
+          <section orientation="horizontal" id="statussection">
             <renderer type="default" params="childinputsize=medium" />
             <field attribute="ticketuid" label="SR#" hidden="true"/>
             <field label="Status" attribute="status" readonly="true" default="NEW" hidden="true"/>
@@ -477,6 +480,9 @@
           <properties>
             <property key="nextschema.schemaid" value="quicksrgrid"/>
           </properties>
+
+          <section id="extrahiddenfields"/>
+
 
           <!-- hiddens for communication template -->
           <field attribute="changedate" hidden="true"/>

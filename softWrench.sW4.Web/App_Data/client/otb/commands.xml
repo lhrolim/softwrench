@@ -77,6 +77,12 @@
     <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel"/>
   </commandgroup>
 
+  <commandgroup position="commlog" platform="web">
+    <command id="reply" icon="fa-mail-reply" label="Reply" tooltip="Reply" service="commlogService" method="reply" parameters="schema,commLogDatamap"/>
+    <command id="replyall" icon="fa-mail-reply-all" label="Reply All" tooltip="Reply All" service="commlogService" method="replyAll" parameters="schema,commLogDatamap"/>
+    <command id="forward" icon="fa-mail-forward" label="Forward" tooltip="Forward" service="commlogService" method="forward" parameters="schema,commLogDatamap"/>
+  </commandgroup>
+  
   <commandgroup position="gridfiltertop" platform="web">
     <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
     <togglecommand id="toggleselected" position="+profiles">

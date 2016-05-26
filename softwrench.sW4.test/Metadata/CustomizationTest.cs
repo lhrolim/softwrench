@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using softwrench.sw4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -183,6 +185,49 @@ namespace softwrench.sW4.test.Metadata {
 
             Assert.IsTrue(commandSchema.ApplicationCommands.ContainsKey("#detail.primary"));
             Assert.IsTrue(commandSchema.ApplicationCommands["#detail.primary"].Commands.Any(c => c.Id.Equals("customizationtest")));
+
+
+        }
+
+
+        [TestMethod]
+        public void TestSectionReplacement() {
+
+            if (ApplicationConfiguration.TestclientName != "test4") {
+                ApplicationConfiguration.TestclientName = "test4";
+                MetadataProvider.StubReset();
+            }
+
+            var app = MetadataProvider.Application("quickservicerequest");
+            var newDetailSchema = app.Schema(new ApplicationMetadataSchemaKey("quicknewdetail"));
+            var section =
+                newDetailSchema.GetDisplayable<ApplicationSection>(typeof(ApplicationSection))
+                    .FirstOrDefault(s => s.Id.EqualsIc("statussection"));
+
+            Assert.IsNotNull(section);
+            //one extra field got added
+            Assert.AreEqual(4,section.Displayables.Count);
+            Assert.IsTrue(section.Displayables.OfType<ApplicationFieldDefinition>().Any(a=> a.Attribute.EqualsIc("extrafield")));
+            Assert.AreEqual("small",section.RendererParameters["childinputsize"]);
+
+            
+        }
+
+
+        [TestMethod]
+        public void ValidateTabBehavior() {
+
+            if (ApplicationConfiguration.TestclientName != "test4") {
+                ApplicationConfiguration.TestclientName = "test4";
+                MetadataProvider.StubReset();
+            }
+
+            var app = MetadataProvider.Application("asset");
+            var newDetailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
+            var tabNumber =newDetailSchema.GetDisplayable<ApplicationTabDefinition>(typeof(ApplicationTabDefinition))
+                    .Count(s => s.Id.EqualsIc("spareparts"));
+            Assert.AreEqual(1, tabNumber);
+            
 
 
         }

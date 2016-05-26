@@ -9,9 +9,12 @@ using cts.commons.portable.Util;
 using cts.commons.web.Util;
 using log4net;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Util;
 using CompressionUtil = cts.commons.Util.CompressionUtil;
 
@@ -33,7 +36,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
 
         private string GenerateRestUrl(EntityMetadata entityMetadata, string entityId) {
             var baseRestURL = MetadataProvider.GlobalProperty("basewsRestURL");
-            var entityKey = entityMetadata.ConnectorParameters.GetWSEntityKey();
+            var entityKey = entityMetadata.ConnectorParameters.GetWSEntityKey(ConnectorParameters.UpdateInterfaceParam, WsProvider.REST);
             return !baseRestURL.EndsWith("/") ? baseRestURL + "/" + entityKey : baseRestURL + entityKey + "/" + entityId;
         }
 
@@ -71,6 +74,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
                     return text;
                 }
             }
+        }
+
+        protected override Exception HandleProxyInvocationError(Exception e) {
+            if (e is WebException) {
+                var webException = (WebException)e;
+                var responseStream = webException.Response.GetResponseStream();
+                using (var responseReader = new StreamReader(responseStream)) {
+                    // parse xml response
+                    var text = responseReader.ReadToEnd();
+                    var rootException = ExceptionUtil.DigRootException(e);
+                    return new MaximoException(e, rootException,text);
+                }
+            }
+            return base.HandleProxyInvocationError(e);
         }
 
         private string GeneratePayLoad() {

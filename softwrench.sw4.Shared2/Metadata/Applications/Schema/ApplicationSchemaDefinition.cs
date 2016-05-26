@@ -600,6 +600,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             set;
         }
 
+        public string Id {
+            get {
+                return SchemaId;
+            }
+        }
+
         public SchemaRepresentation NewSchemaRepresentation {
             get; set;
         }
