@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\com\cts\chicago\connector\ChicagoSRCrudConnector.cs" />
+    <Compile Include="classes\com\cts\chicago\dataset\ChicagoServiceRequestDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -75,7 +76,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\chicago\configuration\" />
-    <Folder Include="classes\com\cts\chicago\dataset\" />
     <Folder Include="classes\com\cts\chicago\migration\" />
     <Folder Include="web_content\chicago\htmls\" />
   </ItemGroup>

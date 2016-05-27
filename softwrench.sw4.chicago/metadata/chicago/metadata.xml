@@ -25,10 +25,15 @@
         <attribute name="itdresolvergroup" type="varchar" required="false"/>
         <attribute name="itdfirstcallresolution" type="boolean" required="false"/>
         <attribute name="createdby" type="varchar" required="false"/>
+        <attribute name="department" type="varchar" required="false"/>
         <attribute name="ismticketid" type="varchar" required="false"/>
         <attribute name="ismticketuid" type="varchar" required="false"/>
       </attributes>
       <relationships>
+        <relationship to="alndomain" qualifier="DEPARTMENT">
+          <relationshipAttribute from="department" to="value" primary="true"/>
+          <relationshipAttribute literal="DEPARTMENTS" to="domainid" quoteLiteral="true"/>
+        </relationship>
         <relationship to="synonymdomain" qualifier="TSDTKTSOURCE">
           <relationshipAttribute from="externalsystem" to="value" primary="true"/>
           <relationshipAttribute literal="TSDTKTSOURCE" to="domainid" quoteLiteral="true"/>
@@ -270,9 +275,9 @@
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
-            <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" extraprojectionvalues="langcode" orderbyfield="personid asc" requiredexpression="true">
+            <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" extraprojectionvalues="langcode,department" orderbyfield="personid asc" requiredexpression="true">
               <renderer type="lookup" params="columnlabel=Name;"/>
-              <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
+              <event type="afterchange" service="chicagosrService" method="afterChangeReportedBy"/>
             </association>
             <association label="Affected Person" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" requiredexpression="true">
               <renderer type="lookup" params="columnlabel=Name"/>
@@ -324,7 +329,9 @@
                 </association>
               </section>
               <section orientation="horizontal">
-                <field attribute="reportedbyp_.department" label="Department" readonly="true"/>
+                <association target="department" labelfield="DEPARTMENT_.description"  label="Department">
+                  <renderer type="lookup"/>
+                </association>
                 <field attribute="itdfirstcallresolution" label="First Call Resolution?">
                   <renderer type="checkbox"/>
                 </field>
