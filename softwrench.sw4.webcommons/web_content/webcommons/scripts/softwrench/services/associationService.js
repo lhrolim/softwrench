@@ -213,7 +213,7 @@
             }
             var item = crudContextHolderService.fetchLazyAssociationOption(associationKey, itemValue);
 
-            if (options.hideDescription) {
+            if (options.hideDescription === "true" || options.hideDescription === true) {
                 return $q.when(itemValue);
             }
 
