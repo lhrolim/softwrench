@@ -539,8 +539,10 @@ module.exports = function (grunt) {
             }).then(function () {
                 // apply overrides
                 // TODO: copy all files in overrides
-                var ori = path.join(projectPath, "overrides", platform.trim(), "cordova", "lib", "build.js");
-                var dest = path.join(projectPath, "platforms", platform.trim(), "cordova", "lib", "build.js");
+                var platformName = platform.trim();
+                var ori = path.join(projectPath, "overrides", platformName, "cordova", "lib", "build.js");
+                var dest = path.join(projectPath, "platforms", platformName, "cordova", "lib", "build.js");
+                console.log("copying", ori, "to", dest);
                 return fs.copySync(ori, dest);
             });
 
