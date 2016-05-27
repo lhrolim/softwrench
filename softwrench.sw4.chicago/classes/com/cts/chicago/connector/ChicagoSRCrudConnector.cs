@@ -61,27 +61,18 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
                 //instance already existed on service layer but not on ISM
                 AfterCreation(maximoTemplateData);
             } else {
-                try {
-                    //updating ISM Entry which already exists
-                    crudOperationData.SetAttribute("ticketuid", crudOperationData.GetAttribute(ISMTicketUid));
-                    crudOperationData.SetAttribute("ticketid", crudOperationData.GetAttribute(ISMTicketId));
+                //updating ISM Entry which already exists
+                crudOperationData.SetAttribute("ticketuid", crudOperationData.GetAttribute(ISMTicketUid));
+                crudOperationData.SetAttribute("ticketid", crudOperationData.GetAttribute(ISMTicketId));
 
-                    crudOperationData.SetAttribute("underwaycall", true);
+                crudOperationData.SetAttribute("underwaycall", true);
 
-                    var mifOperationWrapper = new OperationWrapper(crudOperationData,
-                        OperationConstants.CRUD_UPDATE) {
-                        Wsprovider = WsProvider.REST
-                    };
+                var mifOperationWrapper = new OperationWrapper(crudOperationData,
+                    OperationConstants.CRUD_UPDATE) {
+                    Wsprovider = WsProvider.REST
+                };
 
-                    ConnectorEngine.Execute(mifOperationWrapper);
-                } catch (WebException e) {
-                    var maximoException = MaximoException.ParseWebExceptionResponse((WebException)e);
-                    ProblemManager.Register("servicerequest", maximoTemplateData.OperationData.UserId, null,
-                        SecurityFacade.CurrentUser().DBId, maximoException.StackTrace, maximoException.Message);
-                } catch (Exception e) {
-                    ProblemManager.Register("servicerequest", maximoTemplateData.OperationData.UserId, null,
-                        SecurityFacade.CurrentUser().DBId, e.StackTrace, e.Message);
-                }
+                ConnectorEngine.Execute(mifOperationWrapper);
             }
         }
 
