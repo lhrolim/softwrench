@@ -51,9 +51,15 @@
   </environment>
 
   <environment key="prod">
-    <property key="basewsURL" value="http://10.50.100.203:9080/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=FS76MAX;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_FS76MAX;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.2.8.239:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=EDR1SQL01V304\MAXIMO_120_V304;Initial Catalog=MaxProd;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=10.2.9.151;Initial Catalog=SWDB_MaxProd;User Id=zService_softwrench;password=v2Arh6NEd;" />
+    <property key="ldapServer" value="10.1.20.101"/>
+    <property key="ldapPortNumber" value="389"/>
+    <property key="ldapBaseDn" value="DC=FS,DC=LOCAL"/>
+    <property key="mifcredentials.user" value="zSvc_MaximoSoftwrench"/>
+    <property key="mifcredentials.password" value="cafe-suevBGp"/>
+    <property key="iiscontextpath " value="http://10.2.8.xxx/softwrench"/>
   </environment>
   
   <environment key="dev-uat">
