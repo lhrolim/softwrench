@@ -41,6 +41,10 @@ namespace softWrench.sW4.Metadata.Entities.Connectors {
             if (!_parameters.TryGetValue(providerName + "_" + keyToUse, out entityKey)) {
                 _parameters.TryGetValue(keyToUse, out entityKey);
             }
+            if (providerName == "rest") {
+
+            }
+
             return entityKey;
         }
 

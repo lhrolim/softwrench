@@ -4,6 +4,10 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using System;
+using System.Net;
+using cts.commons.simpleinjector;
+using softwrench.sw4.problem.classes;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -14,6 +18,20 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
         private const string ISMTicketId = "ismticketid";
         private const string ISMTicketUid = "ismticketuid";
+
+        private IProblemManager _problemManager;
+
+        private IProblemManager ProblemManager {
+            get {
+                if (_problemManager != null) {
+                    return _problemManager;
+                }
+                _problemManager = SimpleInjectorGenericFactory.Instance.GetObject<IProblemManager>(typeof(IProblemManager));
+                return _problemManager;
+            }
+
+        }
+
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;
@@ -33,28 +51,37 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             base.AfterUpdate(maximoTemplateData);
 
             var crudOperationData = (CrudOperationData)maximoTemplateData.OperationData;
-            
-            if (crudOperationData.ContainsAttribute("#underwaycall",true) || string.IsNullOrEmpty(ApplicationConfiguration.RestCredentialsUser)) {
+
+            if (crudOperationData.ContainsAttribute("underwaycall", true) || string.IsNullOrEmpty(ApplicationConfiguration.RestCredentialsUser)) {
                 //avoid infinite loop
                 return;
             }
-            
-            if (!crudOperationData.ContainsAttribute(ISMTicketUid,true)) {
+
+            if (!crudOperationData.ContainsAttribute(ISMTicketUid, true)) {
                 //instance already existed on service layer but not on ISM
                 AfterCreation(maximoTemplateData);
             } else {
-                //updating ISM Entry which already exists
-                crudOperationData.SetAttribute("ticketuid", crudOperationData.GetAttribute(ISMTicketUid));
-                crudOperationData.SetAttribute("ticketid", crudOperationData.GetAttribute(ISMTicketId));
+                try {
+                    //updating ISM Entry which already exists
+                    crudOperationData.SetAttribute("ticketuid", crudOperationData.GetAttribute(ISMTicketUid));
+                    crudOperationData.SetAttribute("ticketid", crudOperationData.GetAttribute(ISMTicketId));
 
-                crudOperationData.SetAttribute("#underwaycall",true);
+                    crudOperationData.SetAttribute("underwaycall", true);
 
-                var mifOperationWrapper = new OperationWrapper(crudOperationData,
-                    OperationConstants.CRUD_UPDATE) {
-                    Wsprovider = WsProvider.REST
-                };
+                    var mifOperationWrapper = new OperationWrapper(crudOperationData,
+                        OperationConstants.CRUD_UPDATE) {
+                        Wsprovider = WsProvider.REST
+                    };
 
-                ConnectorEngine.Execute(mifOperationWrapper);
+                    ConnectorEngine.Execute(mifOperationWrapper);
+                } catch (WebException e) {
+                    var maximoException = MaximoException.ParseWebExceptionResponse((WebException)e);
+                    ProblemManager.Register("servicerequest", maximoTemplateData.OperationData.UserId, null,
+                        SecurityFacade.CurrentUser().DBId, maximoException.StackTrace, maximoException.Message);
+                } catch (Exception e) {
+                    ProblemManager.Register("servicerequest", maximoTemplateData.OperationData.UserId, null,
+                        SecurityFacade.CurrentUser().DBId, e.StackTrace, e.Message);
+                }
             }
         }
 
@@ -68,7 +95,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             base.AfterCreation(maximoTemplateData);
             var crudOperationData = (CrudOperationData)maximoTemplateData.OperationData;
 
-            if (crudOperationData.ContainsAttribute("#underwaycall",true) || string.IsNullOrEmpty(ApplicationConfiguration.RestCredentialsUser)) {
+            if (crudOperationData.ContainsAttribute("underwaycall", true) || string.IsNullOrEmpty(ApplicationConfiguration.RestCredentialsUser)) {
                 //avoid infinite loop
                 return;
             }
@@ -82,7 +109,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             crudOperationData.SetAttribute("ticketid", null);
             crudOperationData.SetAttribute("ticketuid", null);
 
-            crudOperationData.SetAttribute("#underwaycall", true);
+            crudOperationData.SetAttribute("underwaycall", true);
 
             var originalId = crudOperationData.Id;
 

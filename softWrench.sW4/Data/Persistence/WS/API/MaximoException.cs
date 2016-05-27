@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Net;
 using JetBrains.Annotations;
 using softWrench.sW4.Util;
 
@@ -63,6 +65,17 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             _root = rootCause;
             _additionalMessage = additionalMessage;
         }
-        
+
+
+        public static Exception ParseWebExceptionResponse(WebException webException) {
+            var responseStream = webException.Response.GetResponseStream();
+            using (var responseReader = new StreamReader(responseStream)) {
+                // parse xml response
+                var text = responseReader.ReadToEnd();
+                var rootException = ExceptionUtil.DigRootException(webException);
+                return new MaximoException(webException, rootException, text);
+            }
+        }
+
     }
 }
