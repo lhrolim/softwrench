@@ -1,8 +1,8 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module('sw_layout').factory('labtransService', ["$q", "alertService", "redirectService", "crudContextHolderService", "restService", "searchService", "contextService",
-        function ($q, alertService, redirectService, crudContextHolderService, restService, searchService, contextService) {
+    angular.module('sw_layout').factory('labtransService', ["$q", "alertService", "redirectService", "crudContextHolderService", "restService", "searchService", "applicationService", "contextService",
+        function ($q, alertService, redirectService, crudContextHolderService, restService, searchService, applicationService, contextService) {
             var calcLineCost = function (regularHours, regularRate, premiumHours, premiumRate) {
                 var regularPay = regularHours * regularRate;
                 var premiumPay = 0;
@@ -204,6 +204,11 @@
                         username = user.login.toUpperCase();
                     }
                     return username;
+                },
+                save: function (datamap) {
+                    applicationService.save().then(function (data) {
+                        datamap.fields['labtransid'] = data.id;
+                    });
                 }
     };
 }]);

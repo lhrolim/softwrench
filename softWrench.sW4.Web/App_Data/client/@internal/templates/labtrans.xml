@@ -346,6 +346,9 @@
                          service="labtranService" method="deleteSingleLabtrans"/>
               <!--</container>-->
             </commandgroup>
+            <commandgroup position="detail.primary">
+              <command id="save" service="labtransService" method="save" parameters="datamap" icon="fa-check" cssclasses="large-button"/>
+            </commandgroup>
           </commandbars>
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.fields.orgid"/>

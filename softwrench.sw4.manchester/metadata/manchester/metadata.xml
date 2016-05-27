@@ -706,8 +706,8 @@
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
         <schema id="newdetail" title="New Labor Transaction" stereotype="detailnew" platform="web" redeclaring="false">
-          <customization position="gldebitacct">
-            <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext">
+         <customization position="gldebitacct">
+            <association label="GL Debit Account:" target="gldebitacct" labelfield="glcomponents_.comptext">
               <renderer type="lookup"/>
             </association>
           </customization>
@@ -715,7 +715,7 @@
 
         <schema id="editdetail" title="Labor Report Details" stereotype="detail" platform="web" redeclaring="false">
           <customization position="gldebitacct">
-            <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext">
+            <association label="GL Debit Account:" target="gldebitacct" labelfield="glcomponents_.comptext">
               <renderer type="lookup"/>
             </association>
           </customization>
