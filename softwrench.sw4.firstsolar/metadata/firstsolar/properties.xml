@@ -51,6 +51,9 @@
   </environment>
 
   <environment key="prod">
+    <property key="defaultOrgId" value="ORG6"/>
+    <property key="defaultSiteId" value="1803"/>
+    <property key="defaultStoreloc" value="0010"/>
     <property key="basewsURL" value="http://10.2.8.239:9080/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=EDR1SQL01V304\MAXIMO_120_V304;Initial Catalog=MaxProd;User Id=MAXIMO;password=MAXIMO;" />
     <property key="swdb_url" value="Data Source=10.2.9.151;Initial Catalog=SWDB_MaxProd;User Id=zService_softwrench;password=v2Arh6NEd;" />
