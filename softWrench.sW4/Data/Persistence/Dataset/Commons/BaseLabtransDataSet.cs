@@ -27,21 +27,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 json.Remove("labtransid");
                 operation = "crud_create";
                 // Submit to create the new lab trans
-                result = base.Execute(application, json, null, operation, isBatch, userIdSite);
-                // TODO: Due to changing from an update to a create in the backend, there is no redirect and thus the detail data is not retreived by default. Would need a new property to force the retreival of the updated detail on a create call.
-                var resultOb = (Array)result.ResultObject;
-                var firstOb = resultOb.GetValue(0);
-                id = WsUtil.GetRealValue(firstOb, application.IdFieldName).ToString();
-                var detailrequest = new DetailRequest(id, application.Schema.GetSchemaKey());
-                var detailResult = base.GetApplicationDetail(application, SecurityFacade.CurrentUser(), detailrequest);
-                result.ResultObject = detailResult.ResultObject;
+                result = base.Execute(application, json, null, operation, isBatch, null);
+                result.ResultObject = null;
+                result.SuccessMessage = "Labor successfully updated";
                 // Delete the original if it was an edit
                 MaximoHibernateDAO.GetInstance()
                     .ExecuteSql("delete from labtrans where labtransid = ? ", labtransId.ToString());
             } else {
                 result = base.Execute(application, json, id, operation, isBatch, userIdSite);
             }
-            
+
             return result;
         }
 
