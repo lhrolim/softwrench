@@ -661,21 +661,23 @@
 
                             // handle the case where the datamap had lazy compositions already fetched
                             // and the response does not have them (for performance reasons)
-                            var compositions = compositionService.getLazyCompositions($scope.schema, $scope.datamap.fields);
-                            compositions.forEach(function (composition) {
-                                var currentValue = $scope.datamap.fields[composition];
-                                var updatedValue = responseDataMap.fields[composition];
-                                // has previous data but has no updated data: not safe to update -> hydrate with previous value
-                                if (!!currentValue && (!responseDataMap.fields.hasOwnProperty(composition) || !angular.isArray(updatedValue))) {
-                                    responseDataMap.fields[composition] = currentValue
-                                                                            .filter(function (c) { // filter out just created items
-                                                                                return !c["_iscreation"];
-                                                                            }).map(function (c) { // remove `#isDirty` flag from the items
-                                                                                delete c["#isDirty"];
-                                                                                return c;
-                                                                            });
-                                }
-                            });
+                            if (!data.type.equalsAny("ApplicationListResult")) {
+                                var compositions = compositionService.getLazyCompositions($scope.schema, $scope.datamap.fields);
+                                compositions.forEach(function(composition) {
+                                    var currentValue = $scope.datamap.fields[composition];
+                                    var updatedValue = responseDataMap.fields[composition];
+                                    // has previous data but has no updated data: not safe to update -> hydrate with previous value
+                                    if (!!currentValue && (!responseDataMap.fields.hasOwnProperty(composition) || !angular.isArray(updatedValue))) {
+                                        responseDataMap.fields[composition] = currentValue
+                                            .filter(function(c) { // filter out just created items
+                                                return !c["_iscreation"];
+                                            }).map(function(c) { // remove `#isDirty` flag from the items
+                                                delete c["#isDirty"];
+                                                return c;
+                                            });
+                                    }
+                                });
+                            }
 
                             // not necessary to update the complete datamap after a composition save
                             if (!parameters.dispatcherComposition) {
