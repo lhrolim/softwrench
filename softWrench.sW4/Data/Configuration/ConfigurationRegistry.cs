@@ -138,16 +138,6 @@ namespace softWrench.sW4.Data.Configuration {
                 DataType = "string",
                 CachedOnClient = true
             });
-
-            facade.Register("/Global/Maps/DefaultTest", new PropertyDefinition() {
-                Description = "The default test.",
-                DataType = "string"
-            });
-
-            facade.Register("/Global/Maps/DefaultTest2", new PropertyDefinition() {
-                Description = "The default test2.",
-                DataType = "string"
-            });
         }
     }
 }

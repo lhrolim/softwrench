@@ -1426,8 +1426,12 @@
 
             var fields = $scope.parentdata.fields || $scope.parentdata;
             crudContextHolderService.clearDetailDataResolved();
+
+            var searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
+            searchDTO.pageNumber = pageNumber;
+            searchDTO.pageSize = pageSize;
             return compositionService
-                .getCompositionList($scope.relationship, $scope.parentschema, fields, pageNumber, $scope.paginationData.pageSize)
+                .searchCompositionList($scope.relationship, $scope.parentschema, fields, searchDTO)
                 .then(function (result) {
                     $scope.refreshList(result[$scope.relationship]);
                 }).finally(function () {
