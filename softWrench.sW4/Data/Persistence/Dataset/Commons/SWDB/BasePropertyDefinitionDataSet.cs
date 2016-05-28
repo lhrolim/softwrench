@@ -60,28 +60,23 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             CompositionFetchRequest request, JObject currentData) {
             var searchDTO = request.PaginatedSearch;
             var compositions = new Dictionary<string, EntityRepository.SearchEntityResult>();
-            int totalCount;
-            var searchResult = new EntityRepository.SearchEntityResult {
-                ResultList = GetConfigurationList(searchDTO, out totalCount),
-                PaginationData = searchDTO
-            };
-            compositions.Add("#properties_", searchResult);
-            searchDTO.TotalCount = totalCount;
-            return new CompositionFetchResult(compositions, null);
-        }
 
-        private IList<Dictionary<string, object>> GetConfigurationList(PaginatedSearchRequestDto searchDTO, out int totalcaount) {
             searchDTO.AppendWhereClause(
                 " (Visible = true AND FullKey like '/Global/%' AND (renderer is null or renderer != 'attachment')) ");
             var listApplication = MetadataProvider.Application("_configuration")
                 .ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("list"));
             var listResult = GetList(listApplication, searchDTO);
-            totalcaount = listResult.TotalCount;
 
             var lookupContext = _contextLookuper.LookupContext();
             var resultList = new List<Dictionary<string, object>>();
             listResult.ResultObject.ForEach(ah => AddToResultList(resultList, ah, lookupContext));
-            return resultList;
+
+            var searchResult = new EntityRepository.SearchEntityResult {
+                ResultList = resultList,
+                PaginationData = new PaginatedSearchRequestDto(listResult.TotalCount, listResult.PageNumber, listResult.PageSize, null, listResult.PaginationOptions)
+            };
+            compositions.Add("#properties_", searchResult);
+            return new CompositionFetchResult(compositions, null);
         }
 
         private void AddToResultList(ICollection<Dictionary<string, object>> resultList, AttributeHolder ah,
