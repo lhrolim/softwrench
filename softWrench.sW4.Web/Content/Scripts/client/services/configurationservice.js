@@ -45,15 +45,13 @@
             var schema = crudContextHolderService.currentSchema();
             var datamap = crudContextHolderService.rootDataMap();
             compositionService.getCompositionList("#properties_", schema, datamap, 1, 10).then(function (result) {
-                $timeout(function () {
-                    $rootScope.$broadcast("sw_compositiondataresolved", result);
-                }, 2000, false);
+                compositionService.resolveCompositions(result);
             });
 
             //restService.getPromise("Composition", "GetCompositionData", parameters).then(function (httpResponse) {
             //    var compositionData = httpResponse.data.resultObject;
             //    $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
-                   
+
             //});
         }
 

@@ -248,6 +248,9 @@
                     $scope.save(parameters);
                 });
 
+               
+
+
                 $scope.$on('sw_compositiondataresolved', function (event, data) {
                     var tab = crudContextHolderService.getActiveTab();
                     if (tab != null && data[tab] != null) {

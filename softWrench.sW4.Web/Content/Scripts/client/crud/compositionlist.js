@@ -179,6 +179,7 @@
                 if (scope.metadata.type == "ApplicationCompositionDefinition" && isInline && !custom) {
                     //inline compositions should load automatically
                     doLoad();
+                 
                 }
 
                 scope.cancel = function (data, schema) {
@@ -448,6 +449,11 @@
                 }
             }
 
+            var eventData = compositionService.pollCompositionEvent($scope.relationship);
+            if (eventData) {
+                $scope.onAfterCompositionResolved(null, eventData);
+            }
+
         }
 
         $scope.getApplicationPath = function (datamap, fieldMetadata) {
@@ -471,10 +477,13 @@
 
 
         $scope.onAfterCompositionResolved = function (event, compositiondata) {
+
             if (!compositiondata || !compositiondata.hasOwnProperty($scope.relationship)) {
                 //this is not the data this tab is interested
                 return;
             }
+
+            compositionService.pollCompositionEvent();
 
             var log = $log.get("compositionlist#resolved", ["composition"]);
 
