@@ -215,11 +215,6 @@ namespace softWrench.sW4.Configuration.Services {
             return values == null || !values.Any() ? null : values.First();
         }
 
-        public IList<PropertyDefinition> GetAllVisibleDefinitions(ConfigTypes type) {
-            return _dao.FindByQuery<PropertyDefinition>(PropertyDefinition.ByVisibilityByConfigTypeOrderedByKey, true,
-                "/" + type.GetRootLevel() + "/%");
-        }
-
         private void UpdateFoundValue(PropertyDefinition definition, string value, PropertyValue propValue) {
             if (string.IsNullOrEmpty(value) && propValue.SystemValue == null) {
                 _dao.Delete(propValue);

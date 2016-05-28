@@ -271,7 +271,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         [CanBeNull]
         public SchemaFilters SchemaFilters {
             get {
-                if (Stereotype != SchemaStereotype.List) {
+                if (Stereotype != SchemaStereotype.List && Stereotype != SchemaStereotype.CompositionList) {
                     //only resolve it for list schemas
                     FiltersResolved = true;
                     return _schemaFilters;

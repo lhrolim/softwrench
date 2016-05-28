@@ -32,9 +32,29 @@
                 </th>
                 <th class="{{safeCSSselector(column.attribute)}}"
                     ng-repeat="column in compositionlistschema.displayables"
-                    ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,null)">
+                    ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,null)"
+                    ng-init="columnFilter = filterForColumn(column)">
                     <span ng-show="isFieldRequired(column,column.requiredExpression)" class="requiredfieldmark">* </span>
-                    <span class="add-on">{{i18NLabel(column)}}</span>
+                    
+                    <span ng-if="!!columnFilter && !hideFilter()" ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel(column)}}">
+                        {{i18NLabel(column)}}
+                    </span>
+                    <span ng-if="!columnFilter || hideFilter()" class="add-on part" data-container="body">
+                        {{i18NLabel(column)}}
+                    </span>
+                    <div class="fa fa-sort-amount-asc part" ng-show="shouldShowSort(column,'asc')"
+                         rel="tooltip" data-original-title="Sorted ascendant">
+                    </div>
+                    <div class="fa fa-sort-amount-desc part" ng-show="shouldShowSort(column,'desc')"
+                         rel="tooltip" data-original-title="Sorted descendant">
+                    </div>
+                    <div ng-if="!hideFilter()" class="filter-label part" filterrowrendered>
+                        <crud-filter-dropdown filter="columnFilter"
+                                              schema="compositionlistschema" datamap="datamap" panelid="panelid"
+                                              advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
+                                              search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()"
+                                              filter-standalone />
+                    </div>
                 </th>
                 <th ng-if="showEditButton()">
                     <!-- edit button -->

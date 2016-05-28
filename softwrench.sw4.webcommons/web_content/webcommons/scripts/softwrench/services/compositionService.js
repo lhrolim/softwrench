@@ -231,6 +231,11 @@
                 var dto = buildFetchRequestDTO(schema, datamap, [composition], pageRequest);
                 return fetchCompositions(dto, datamap, true);
             }
+
+            function searchCompositionList(composition, schema, datamap, searchDTO) {
+                var dto = buildFetchRequestDTO(schema, datamap, [composition], searchDTO);
+                return fetchCompositions(dto, datamap, true);
+            }
              
             /**
              * Fetches the composition item with the specified id
@@ -278,6 +283,7 @@
                 buildMergedDatamap: buildMergedDatamap,
                 populateWithCompositionData: populateWithCompositionData,
                 getCompositionList: getCompositionList,
+                searchCompositionList: searchCompositionList,
                 isCompositionLodaded: isCompositionLodaded,
                 getLazyCompositions: getLazyCompositions,
                 getCompositionDetailItem: getCompositionDetailItem,

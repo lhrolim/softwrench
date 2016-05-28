@@ -158,6 +158,7 @@
           <properties>
             <property key="list.paginationsize" value="10"/>
             <property key="list.paginationoptions" value="10"/>
+            <property key="compositions.disable.filter" value="true"/>
           </properties>
         </schema>
 

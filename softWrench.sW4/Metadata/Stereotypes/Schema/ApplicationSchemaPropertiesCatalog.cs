@@ -224,6 +224,11 @@
         public static string CompositionSoftRefresh = "compositions.softrefresh";
 
         /// <summary>
+        /// If "true" disables the filter of a list schema used on composition.
+        /// </summary>
+        public static string CompositionDisableFilter = "compositions.disable.filter";
+
+        /// <summary>
         /// If true all options fields of this schema will be rendered with no initial selection
         /// </summary>
         public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
