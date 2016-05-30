@@ -25,7 +25,7 @@
     </div>
     <input type="hidden" ng-model="datamap[fieldMetadata.target]" />
 
-    <div>
+    <div ng-if="loadModalWrappers">
         <lookup-modal-wrapper lookup-obj="lookupObj"
                               lookup-associations-code="lookupAssociationsCode"
                               lookup-associations-description="lookupAssociationsDescription"
