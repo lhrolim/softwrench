@@ -119,6 +119,14 @@ module.exports = function (grunt) {
         .concat(solutionScripts)
         .concat(testScripts);
 
+    function getKarmaPreprocessorsConfig(scripts) {
+        var preprocessors = {};
+        scripts.forEach(function(s) {
+            preprocessors[s] = ["babel"];
+        });
+        return preprocessors;
+    }
+
     //#endregion
 
     grunt.initConfig({
@@ -351,6 +359,20 @@ module.exports = function (grunt) {
         },
         //#endregion
 
+        //#region babel
+        babel: {
+            options: {
+                sourceMap: false,
+                presets: ["es2015"]
+            },
+            dist: { // transpiles result of concat
+                files: {
+                    "tmp/es6/app.es6.js": "<%= concat.appScripts.dest %>"
+                }
+            }
+        },
+        //#endregion
+
         //#region minify javascript
         uglify: {
             options: {
@@ -359,9 +381,9 @@ module.exports = function (grunt) {
                 }
             },
             release: {
-                // uglify the result of concat
+                // uglify the result of es6 transpile
                 files: {
-                    "www/Content/public/app.min.js": "<%= concat.appScripts.dest %>"
+                    "www/Content/public/app.min.js": "tmp/es6/app.es6.js"
                 }
             }
         },
@@ -396,7 +418,7 @@ module.exports = function (grunt) {
                 logLevel: "WARN",
                 files: ["overrides/cordova.js"].concat(allScripts),
                 browsers: ["PhantomJS"],
-                singleRun: true
+                singleRun: true,
             },
             tdd: { // dev environment
                 autoWatch: true,
@@ -405,21 +427,38 @@ module.exports = function (grunt) {
                 browsers: ["Chrome"]
             },
             debug: { // CI dev
+                options: {
+                    babelPreprocessor: {
+                        options: {
+                            presets: ["es2015"],
+                            sourceMap: false
+                        }
+                    },
+                    preprocessors: getKarmaPreprocessorsConfig(solutionScripts.concat(testScripts))
+                }
             },
             release: { // CI release
-                files: [{
-                    src: [
+                options: {
+                    babelPreprocessor: {
+                        options: {
+                            presets: ["es2015"],
+                            sourceMap: false
+                        }
+                    },
+                    preprocessors: getKarmaPreprocessorsConfig(testScripts),
+                    files: [
                         "overrides/cordova.js",
                         "www/Content/public/vendor/vendor.min.js",
                         "www/Content/public/app.min.js"
                     ].concat(testScripts)
-                }]
+                }
             }
         }
         //#endregion
     });
 
     //#region grunt plugins
+    grunt.loadNpmTasks("grunt-babel");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-clean");
@@ -446,6 +485,7 @@ module.exports = function (grunt) {
         "cleanall", // cleans destination folders
         "bowercopy:prod", "bowercopy:css", "bowercopy:fontsrelease", // copy bower dependencies to appropriate project folders
         "concatall", // concats the scripts and stylesheets
+        "babel", // transpiles es6 app scripts
         "minify", // uglyfies scripts and minifies stylesheets
         "tagsrelease" // generates import tags for the prepared files in main template file (layout.html)
     ]);
@@ -548,11 +588,11 @@ module.exports = function (grunt) {
                 return taco.packageProject(platformsToBuild);
             })
             .then(function() {
-            		return done();
+            	return done();
             })
             .catch(function(e) {
-            		console.error("Error building project:\n", e);
-            		return done(false);
+            	console.error("Error building project:\n", e);
+            	return done(false);
             });
     });
 

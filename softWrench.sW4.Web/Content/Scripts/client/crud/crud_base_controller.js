@@ -20,6 +20,12 @@ function BaseController($scope, $log, i18NService, fieldService, commandService,
         return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema);
     };
 
+    $scope.getBooleanClass = function (item, attribute) {
+        if (item[attribute] == "true" || item[attribute] === 1 || item[attribute] === "1") {
+            return 'fa-check-square-o';
+        }
+        return 'fa-square-o';
+    }
 
 
     $scope.i18NOptionField = function (option, fieldMetadata, schema) {

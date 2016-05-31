@@ -25,8 +25,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
 
             var resultData = maximoTemplateData.InvokeProxy();
 
-            maximoTemplateData.ResultObject = ParseResult(maximoTemplateData.Metadata, (string) resultData);
+            maximoTemplateData.ResultObject = ParseResult(maximoTemplateData.Metadata, (string)resultData);
 
+        }
+
+        private static XElement GetResultElement(XElement xml, EntityMetadata entityMetadata) {
+            var rootSetElem = xml.Descendants().FirstOrDefault(f => f.Name.LocalName.EqualsIc(entityMetadata.ConnectorParameters.GetWSEntityKey() + "Set"));
+            if (rootSetElem == null) {
+                return xml;
+            }
+            return rootSetElem.Elements().FirstOrDefault();
         }
 
         internal static TargetResult ParseResult(EntityMetadata entityMetadata, string resultData) {
@@ -35,12 +43,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
             var userIdProperty = entityMetadata.Schema.UserIdAttribute.Name;
             var xml = XElement.Parse(resultData);
 
-            var rootSetElem = xml.Descendants().FirstOrDefault(f => f.Name.LocalName.EqualsIc(entityMetadata.ConnectorParameters.GetWSEntityKey() + "Set"));
-            if (rootSetElem == null) {
-                return null;
-            }
-
-            var resultElement = rootSetElem.Elements().FirstOrDefault();
+            var resultElement = GetResultElement(xml,entityMetadata);
             if (resultElement == null) {
                 return null;
             }

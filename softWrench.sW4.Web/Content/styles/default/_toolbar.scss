@@ -1,4 +1,4 @@
-﻿.toolbar-primary {
+.toolbar-primary {
     width: 100%;
 
     pagination {
@@ -336,7 +336,17 @@
     border-top: #000 1px solid;
 }
 
-.compositiontoolbar .buttons {
-    display: inline-block;
-    margin-right: 5px;
+.toolbar-secondary {
+    .separator {
+        float: left;
+        margin-right: 19px;
+        border-left: 1px solid #bbb;
+        width: 1px;
+        height: 32px;
+    }
+
+    .buttons {
+        display: inline-block;
+        margin-right: 5px;
+    }
 }

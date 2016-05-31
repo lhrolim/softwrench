@@ -30,14 +30,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="cts.commons.simpleinjector">
+      <HintPath>..\softWrench.sW4.Web\Bin\cts.commons.simpleinjector.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="classes\com\cts\chicago\dataset\ChicagoServiceRequestCrudConnector.cs" />
+    <Compile Include="classes\com\cts\chicago\connector\ChicagoSRCrudConnector.cs" />
+    <Compile Include="classes\com\cts\chicago\dataset\ChicagoServiceRequestDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="metadata\chicago\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="web_content\chicago\scripts\chicagosr_service.js" />
     <EmbeddedResource Include="metadata\chicago\properties.xml">
       <SubType>Designer</SubType>
@@ -68,7 +76,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\chicago\configuration\" />
-    <Folder Include="classes\com\cts\chicago\connector\" />
     <Folder Include="classes\com\cts\chicago\migration\" />
     <Folder Include="web_content\chicago\htmls\" />
   </ItemGroup>
@@ -88,6 +95,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
+      <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>
+      <Name>softwrench.sw4.problem</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>

@@ -9,5 +9,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces {
     public interface IApplicationDisplayableContainer {
         List<IApplicationDisplayable> Displayables { get; set; }
 
+        string Id { get; }
+
     }
 }

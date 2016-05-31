@@ -1,8 +1,8 @@
 ﻿<section class="crud_output">
-    
+
     <fieldset ng-repeat="fieldMetadata in nonTabFields(displayables)"
-         class="form-group {{getFieldClass(fieldMetadata)}}"
-         ng-show="!isFieldHidden(schema,fieldMetadata)">
+              class="form-group {{getFieldClass(fieldMetadata)}}"
+              ng-show="!isFieldHidden(schema,fieldMetadata)">
 
         <label class="control-label"
                ng-style="getLabelStyle(fieldMetadata)"
@@ -40,7 +40,8 @@
                 <div ng-switch-when="OptionField" class="input-group">
                     <div ng-switch on="fieldMetadata.rendererType">
                         <div ng-switch-when="combo">
-                            <select id="{{formatId(fieldMetadata.target)}}"
+                            <select ng-if="fieldMetadata.options &amp;&amp; fieldMetadata.options.length > 0"
+                                    id="{{formatId(fieldMetadata.target)}}"
                                     class="hidden-phone form-control combobox"
                                     ng-class="{'combobox-dynamic' : isDesktop()}"
                                     ng-model="datamap[fieldMetadata.target]"
@@ -49,6 +50,12 @@
                                     ng-enabled="false">
                                 <option value=""></option>
                             </select>
+                            <label class="form-control" ng-if="!fieldMetadata.options || fieldMetadata.options.length == 0"
+                                   ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap) | linebreak"
+                                   ng-init="bindEvalExpression(fieldMetadata)"
+                                   data-attribute="{{fieldMetadata.attribute}}">
+                            </label>
+
                         </div>
                         <div ng-switch-default>
                             <label class="form-control"
@@ -117,9 +124,13 @@
                                     </div>
                                 </div>
                                 <div ng-switch-when="imagepreview" class="imagepreview">
-                                    <img ng-src="{{ datamap[fieldMetadata.attribute] }}" ng-if="isString(datamap[fieldMetadata.attribute])"/>
+                                    <img ng-src="{{ datamap[fieldMetadata.attribute] }}" ng-if="isString(datamap[fieldMetadata.attribute])" />
                                 </div>
-                                
+
+                                <div ng-switch-when="checkbox">
+                                    <i class="fa {{getBooleanClass(datamap,fieldMetadata.attribute)}}"></i>
+                                </div>
+
                                 <div ng-switch-when="link">
                                     <ul ng-if="isArray(datamap[fieldMetadata.attribute])">
                                         <li ng-repeat="link in datamap[fieldMetadata.attribute]">
@@ -141,7 +152,7 @@
                         </div>
                     </div>
                 </div>
-               
+
             </ng-switch>
         </div>
     </fieldset>

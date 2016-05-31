@@ -5,7 +5,7 @@
 
         //#region Utils
 
-        var config = {
+        const config = {
             eventnamespace:"sw4:security:",
             authkey: "security:auth:user",
             previouskey: "security:auth:previous",
@@ -16,12 +16,12 @@
             }
         };
 
-        var $event = function(name) {
+        const $event = function (name) {
             return config.eventnamespace + name;
         };
 
-        var isLoginState = function () {
-            var current = routeService.$state.current.name;
+        const isLoginState = function () {
+            const current = routeService.$state.current.name;
             return current === "login";
         };
 
@@ -38,7 +38,7 @@
          * 
          * @param {} user 
          */
-        var loginLocal = function (user) {
+        const loginLocal = function (user) {
             var previous = localStorageService.get(config.authkey);
             previous = !!previous ? previous : localStorageService.get(config.previouskey);
             localStorageService.put(config.authkey, user);
@@ -62,9 +62,9 @@
          * @param String password 
          * @returns Promise resolved with the user retuned from the server
          */
-        var login = function(username, password) {
+        const login = function (username, password) {
             //this was setted during bootstrap of the application, or on settingscontroller.js (settings screen)
-            return routeService.loginURL().then(function (url) {
+            return routeService.loginURL().then(url => {
                 return $http({
                     method: "POST",
                     url: url,
@@ -72,11 +72,11 @@
                     timeout: 20 * 1000 // 20 seconds
                 });
             })
-            .then(function (response) {
+            .then(response => {
                 //cleaning history so that back button does not return user to login page
                 $ionicHistory.clearCache();
 
-                var userdata = response.data;
+                const userdata = response.data;
                 if (!!userdata["Found"]) {
                     loginLocal(userdata);
                     return userdata;
@@ -95,7 +95,7 @@
          * 
          * @returns logged user 
          */
-        var currentFullUser = function() {
+        const currentFullUser = function () {
             return localStorageService.get(config.authkey);
         };
 
@@ -103,8 +103,8 @@
          * @returns username of the logged user. 
          * @deprecated use currentFullUser and querry it for wanted property instead
          */
-        var currentUser = function() {
-            var user = currentFullUser();
+        const currentUser = function () {
+            const user = currentFullUser();
             if (!user) {
                 return null;
             }
@@ -114,8 +114,8 @@
         /**
          * @returns true if there's a user logged in, false otherwise 
          */
-        var hasAuthenticatedUser = function() {
-            var user = currentFullUser();
+        const hasAuthenticatedUser = function () {
+            const user = currentFullUser();
             return !!user;
         };
 
@@ -131,7 +131,7 @@
          * 
          * @return Promise resolved with the logged out user 
          */
-        var logout = function () {
+        const logout = function () {
             // invalidate current session
             var current = localStorageService.remove(config.authkey);
             // making sure the previous user is always the last "active" user
@@ -140,7 +140,7 @@
             }
             $rootScope.$broadcast($event("logout"), current);
 
-            return swdbDAO.resetDataBase(["Settings"]).then(function () {
+            return swdbDAO.resetDataBase(["Settings"]).then(() => {
                 $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
                 return current;
             });
@@ -151,13 +151,11 @@
          * response status (indicating the user requires remote authentication).
          * For now just calls logout.
          */
-        var handleUnauthorizedRemoteAccess = ionic.debounce(function () {
-            var logoutPromise = logout();
+        const handleUnauthorizedRemoteAccess = ionic.debounce(() => {
+            const logoutPromise = logout();
             // not at login state, transition to it with proper message
             if (!isLoginState()) {
-                logoutPromise.then(function () {
-                    routeService.go("login", { message: config.message.unauthorizedaccess });
-                });
+                logoutPromise.then(() => routeService.go("login", { message: config.message.unauthorizedaccess }));
             }
         }, 0, true); //debouncing for when multiple parallel requests are unauthorized
 
@@ -165,16 +163,15 @@
 
         //#region Service Instance
 
-        var service = {
-            login: login,
-            loginLocal: loginLocal,
-            currentUser: currentUser,
-            currentFullUser: currentFullUser,
-            hasAuthenticatedUser: hasAuthenticatedUser,
-            logout: logout,
-            handleUnauthorizedRemoteAccess: handleUnauthorizedRemoteAccess
+        const service = {
+            login,
+            loginLocal,
+            currentUser,
+            currentFullUser,
+            hasAuthenticatedUser,
+            logout,
+            handleUnauthorizedRemoteAccess
         };
-
         return service;
 
         //#endregion

@@ -1,13 +1,14 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 
 namespace softWrench.sW4.Data.Persistence.Operation {
     public class OperationWrapper {
         private const string CrudFieldNotFound = "crud field expected on json of operation {0} of entity {1}";
-        private String _operationName;
+        private string _operationName;
 
         private readonly EntityMetadata _entityMetadata;
 
@@ -26,10 +27,12 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             get; set;
         }
 
+        public WsProvider? Wsprovider { get; set; }
+
         private IOperationData _operationData;
 
 
-        public OperationWrapper(ApplicationMetadata applicationMetadata, EntityMetadata entityMetadata, string operationName, JObject json, String id) {
+        public OperationWrapper(ApplicationMetadata applicationMetadata, EntityMetadata entityMetadata, string operationName, JObject json, string id) {
             _operationName = operationName;
             JSON = json;
             _entityMetadata = entityMetadata;
@@ -37,7 +40,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             ApplicationMetadata = applicationMetadata;
         }
 
-        public OperationWrapper(CrudOperationData operationData, String operationName) {
+        public OperationWrapper(CrudOperationData operationData, string operationName) {
             _entityMetadata = operationData.EntityMetadata;
             Id = operationData.Id;
             UserId = operationData.UserId;
@@ -87,7 +90,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             }
             JToken crudFields;
             if (!JSON.TryGetValue("crud", out crudFields)) {
-                throw new InvalidOperationException(String.Format(CrudFieldNotFound, OperationName, _entityMetadata.Name));
+                throw new InvalidOperationException(string.Format(CrudFieldNotFound, OperationName, _entityMetadata.Name));
             }
             ((CrudOperationDataContainer)data).CrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, (JObject)crudFields, Id);
             if (SiteId == null) {

@@ -19,6 +19,10 @@
         return commandService.getBarCommands($scope.schema, $scope.position);
     }
 
+    $scope.getCompositionToolbar = function () {
+        return commandService.getBarCommands($scope.schema, 'commlog');
+    }
+
     $scope.url = function (path) {
         return contextService.getResourceUrl(path);
     }
@@ -275,7 +279,8 @@ app.directive('masterdetailtoolbar', ["contextService", function (contextService
             parentdatamap: '=',
             datamap: '=',
             //holds the selected ids amongst the ones prensent on the datamap 
-            selectedids: '='
+            selectedids: '=',
+            commLogDatamap: '='
         },
 
         link: function (scope, element, attrs, ctrl) {

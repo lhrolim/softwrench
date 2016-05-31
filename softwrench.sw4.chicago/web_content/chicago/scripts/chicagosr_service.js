@@ -3,13 +3,14 @@
 
     angular
       .module('sw_layout')
-      .factory('chicagosrService', ['alertService', chicagosrService]);
+      .factory('chicagosrService', ['$q', 'alertService', 'searchService', chicagosrService]);
 
-    function chicagosrService(alertService) {
+    function chicagosrService($q, alertService, searchService) {
         var service = {
             afterChangeImpact: afterChangeImpact,
             afterChangeUrgency: afterChangeUrgency,
-            beforeChangeStatus: beforeChangeStatus
+            beforeChangeStatus: beforeChangeStatus,
+            afterChangeReportedBy: afterChangeReportedBy
         };
 
         function latestWorklogType(datamap) {
@@ -69,6 +70,24 @@
                 return false;
             }
             return true;
+        };
+
+        function afterChangeReportedBy(event) {
+            var datamap = event.fields;
+            var searchData = {
+                personid: datamap['reportedby'],
+                isprimary: '1'
+            };
+            datamap['department'] = datamap['reportedbyp_.department'];
+            return $q.all([
+                searchService.searchWithData("email", searchData, "list"),
+                searchService.searchWithData("phone", searchData, "list")
+            ]).then(function(result) {
+                var emailResult = result[0].data.resultObject[0];
+                datamap['reportedemail'] = emailResult ? emailResult.fields['emailaddress'] : '';
+                var phoneResult = result[1].data.resultObject[0];
+                datamap['reportedphone'] = phoneResult ? phoneResult.fields['phonenum'] : '';
+            });
         };
 
         return service;

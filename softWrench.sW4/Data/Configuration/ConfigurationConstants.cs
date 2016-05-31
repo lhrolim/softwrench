@@ -37,5 +37,21 @@
         public const string MapsDefaultCityKey = "/Global/Maps/DefaultCity";
         public const string MapsDefaultStateKey = "/Global/Maps/DefaultState";
         public const string MapsDefaultCountryKey = "/Global/Maps/DefaultCountry";
+
+        public class Password {
+            public const string MinLengthKey = "/Global/Password/Min";
+            public const string MaxAdjacentKey = "/Global/Password/Adjacent";
+            public const string CanContainLoginKey = "/Global/Password/ContainLogin";
+            public const string RequiresUppercaseKey = "/Global/Password/Uppercase";
+            public const string RequiresLowercaseKey = "/Global/Password/Lowercase";
+            public const string RequiresNumberKey = "/Global/Password/Number";
+            public const string RequiresSpecialKey = "/Global/Password/Special";
+            public const string PlacementNumberFirstKey = "/Global/Password/PlacementNumberFirst";
+            public const string PlacementNumberLastKey = "/Global/Password/PlacementNumberLast";
+            public const string PlacementSpecialFirstKey = "/Global/Password/PlacementSpecialFirst";
+            public const string PlacementSpecialLastKey = "/Global/Password/PlacementSpecialLast";
+            public const string BlackListKey = "/Global/Password/BlackList";
+            public const string LoginKey = "/Global/Password/Login";
+        }
     }
 }

@@ -63,6 +63,8 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
             return string.Format("Position: {0}", Position);
         }
 
+        public string Id { get; private set; }
+
         public string RendererType { get; private set; }
         public string Type { get; private set; }
         public string Role { get; private set; }

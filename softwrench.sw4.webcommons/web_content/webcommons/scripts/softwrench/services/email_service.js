@@ -18,29 +18,27 @@
             return emailRegexp.test(emailAddress.toLowerCase().trim());
         }
 
-        function isPrimary() {
-            return !hasPrimary();
-        }
-
+       
         function hasPrimary() {
-            var rootDatamap = crudContextHolderService.rootDataMap();
-            var hasPrimary = false;
-            var emailAddresses = rootDatamap.fields["email_"];
-            for (var email in emailAddresses) {
+            const rootDatamap = crudContextHolderService.rootDataMap();
+            var result = false;
+            const emailAddresses = rootDatamap.fields["email_"];
+            for (let email in emailAddresses) {
                 if (!emailAddresses.hasOwnProperty(email)) {
                     continue;
                 }
                 if (emailAddresses[email]["isprimary"] == 1) {
-                    hasPrimary = true;
+                    result = true;
                 }
             }
-            return hasPrimary;
+            return result;
         }
 
-        var service = {
-            validateEmailAddress: validateEmailAddress,
-            isPrimary: isPrimary,
-            hasPrimary: hasPrimary
+     
+
+        const service = {
+            validateEmailAddress,
+            hasPrimary
         };
 
         return service;

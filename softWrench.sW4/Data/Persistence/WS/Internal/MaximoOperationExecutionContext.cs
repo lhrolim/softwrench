@@ -105,6 +105,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         /// </summary>
         /// <param name="e">exception thrown</param>
         /// <returns></returns>
+        /// 
         protected virtual Exception HandleProxyInvocationError(Exception e) {
             var rootException = ExceptionUtil.DigRootException(e);
             return new MaximoException(e, rootException);

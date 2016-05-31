@@ -136,7 +136,7 @@ angular.module('sw_layout')
         },
 
         //TODO: make it generic
-        executeClickCustomCommand: function (fullServiceName, rowdm, column, schema, panelid) {
+        executeClickCustomCommand: function (fullServiceName, rowdm, column, schema, panelid, newValue) {
             var idx = fullServiceName.indexOf(".");
             var serviceName = fullServiceName.substring(0, idx);
             var methodName = fullServiceName.substring(idx + 1);
@@ -154,6 +154,7 @@ angular.module('sw_layout')
             args.push(column);
             args.push(schema);
             args.push(panelid);
+            args.push(newValue);
 
             return method.apply(service, args);
         },

@@ -35,11 +35,13 @@
           <field attribute="personid" hidden="true"/>
           <field attribute="emailid" hidden="true"/>
           <field attribute="loweremail" hidden="true"/>
-          <field attribute="emailaddress" label="Email Address" requiredexpression="true"/>
+          <field attribute="emailaddress" label="Email Address" requiredexpression="true">
+            <renderer type="email"/>
+          </field>
           <optionfield attribute="type" label="Type" providerattribute="_EmailTypeOptions" requiredexpression="true">
-            <renderer type="autocompleteclient" />
+            <renderer type="combo" />
           </optionfield>
-          <field attribute="isprimary" label="Primary" enableexpression="@originalprimary == false" defaultexpression="service:emailService.isPrimary">
+          <field attribute="isprimary" label="Primary" enableexpression="@originalprimary != true">
             <renderer type="checkbox"/>
           </field>
           <event type="onschemafullyloaded" service="personService" method="loadEmail"/>

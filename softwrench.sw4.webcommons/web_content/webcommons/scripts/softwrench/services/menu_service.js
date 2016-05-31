@@ -150,7 +150,7 @@
             redirectService.redirectToAction(leaf.title, leaf.controller, leaf.action, leaf.parameters, leaf.target);
         };
 
-        function goToApplication(leaf, target) {
+        function goToApplication(leaf, target, parameters) {
             if (!securityService.validateRoleWithErrorMessage(leaf.role)) {
                 return;
             }
@@ -166,7 +166,7 @@
             contextService.insertIntoContext('currentgridarray', null);
             contextService.insertIntoContext("currentmodule", leaf.module);
 
-            var parameters = {};
+            parameters = parameters ? parameters : {};
 
             if (leaf.parameters != null) {
                 parameters.popupmode = leaf.parameters['popupmode'];

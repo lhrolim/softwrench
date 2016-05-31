@@ -213,6 +213,11 @@
             }
             var item = crudContextHolderService.fetchLazyAssociationOption(associationKey, itemValue);
 
+            if (options.hideDescription === "true" || options.hideDescription === true) {
+                return $q.when(itemValue);
+            }
+
+
             if (item == null) {
                 if (!crudContextHolderService.associationsResolved()) {
                     log.debug("schema associations not resolved yet, waiting...");

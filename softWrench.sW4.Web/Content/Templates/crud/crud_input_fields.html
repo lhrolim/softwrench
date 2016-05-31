@@ -539,9 +539,23 @@
                                 </div>
                                 <div ng-switch-default ng-if="fieldMetadata.rendererType != 'lookup' &&  fieldMetadata.rendererType != 'modal'">
 
-                                    <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
+                                    <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }"
+                                         ng-init="inputType = getInputType(fieldMetadata)">
                                         <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>
-                                        <input type="{{getInputType(fieldMetadata)}}"
+                                        <input ng-if="inputType === 'password'"
+                                               type="{{inputType}}"
+                                               password-validation password-username-value="{{ datamap[fieldMetadata.rendererParameters['usernameFieldName']] }}"
+                                               ng-model-options="{ debounce: 500 }"
+                                               ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
+                                               data-field="{{fieldMetadata.attribute}}"
+                                               ng-enabled="isModifiableEnabled(fieldMetadata)"
+                                               data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                                               maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                                               placeholder="{{fieldMetadata.rendererParameters['placeholder']}}"
+                                               ng-init="initField(fieldMetadata)"
+                                               dynamic-name="fieldMetadata.attribute" />
+                                        <input ng-if="inputType !== 'password'"
+                                               type="{{inputType}}" 
                                                ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
                                                data-field="{{fieldMetadata.attribute}}"
                                                ng-enabled="isModifiableEnabled(fieldMetadata)"

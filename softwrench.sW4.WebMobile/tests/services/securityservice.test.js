@@ -1,6 +1,6 @@
 ﻿describe("SecurityService test", function() {
 
-    var mocked = {
+    const mocked = {
         storage: {},
         userData: {
             "UserName": "swadmin",
@@ -12,18 +12,14 @@
     var localStorageService, securityService;
 
     beforeEach(module("softwrench"));
-    beforeEach(inject(function(_securityService_, _localStorageService_) {
+    beforeEach(inject((_securityService_, _localStorageService_) => {
         securityService = _securityService_;
         localStorageService = _localStorageService_;
-        spyOn(localStorageService, "put").and.callFake(function(key, value, options) {
-            mocked.storage[key] = value;
-        });
-        spyOn(localStorageService, "get").and.callFake(function (key) {
-            return mocked.storage[key];
-        });
+        spyOn(localStorageService, "put").and.callFake((key, value, options) => mocked.storage[key] = value);
+        spyOn(localStorageService, "get").and.callFake(key => mocked.storage[key]);
     }));
 
-    it("Testing local login functions", function() {
+    it("Testing local login functions", () => {
         // no logged user
         expect(securityService.hasAuthenticatedUser()).toBeFalsy();
         // login locally

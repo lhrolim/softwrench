@@ -168,14 +168,14 @@
                     });
                 }
 
-                var tabidChanged = function(newTabid) {
+                const tabidChanged = function (newTabid) {
                     if (newTabid !== $scope.tabid) {
                         return;
                     }
 
                     // do not update map on every tab change
                     // just if the location is changed
-                    var currentLocationKey = getLocationKey();
+                    const currentLocationKey = getLocationKey();
                     if (lastLocationKey === currentLocationKey) {
                         return;
                     }
@@ -183,9 +183,7 @@
                     lastLocationKey = currentLocationKey;
 
                     // ensures map is visible
-                    $timeout(function () {
-                        locationChanged();
-                    }, 0);
+                    $timeout(() => locationChanged());
                 }
 
                 // loads the gmaps api and loads default values from server configs
@@ -203,7 +201,8 @@
                     $rootScope.$on("sw4_activetabchanged", function (event, tabid) {
                         tabidChanged(tabid);
                     });
-                }, function () {
+
+                }, error => {
                     // Promise rejected
                 });
             }

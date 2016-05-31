@@ -58,7 +58,7 @@ namespace softwrench.sW4.Shared2.Data {
             Attributes.Add(attributeName, value);
         }
 
-        public virtual bool ContainsAttribute(string attributeName) {
+        public virtual bool ContainsAttribute(string attributeName, bool checksForNonNull = false) {
             return Attributes.ContainsKey(attributeName);
         }
 

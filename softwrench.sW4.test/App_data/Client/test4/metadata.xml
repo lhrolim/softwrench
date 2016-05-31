@@ -30,6 +30,7 @@
 
     <!--Workflow-->
     <template path="@workflow.xml"/>
+    <template path="@asset.xml"/>
 
   </templates>
 
@@ -95,6 +96,26 @@
       </schemas>
     </application>
 
+    <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
+      <schemas>
+        <schema id="quicknewdetail" redeclaring="false">
+          <customization position="statussection">
+            <section orientation="horizontal" id="statussection">
+              <renderer type="default" params="childinputsize=small" />
+
+              <field attribute="extrafield" label="ExtraField" hidden="true"/>
+              <field attribute="ticketuid" label="SR#" hidden="true"/>
+              <field label="Status" attribute="status" readonly="true" default="NEW" hidden="true"/>
+              <field attribute="description" label="Summary" requiredexpression="true">
+                <renderer type="default" params="maxlength=100" />
+              </field>
+              
+            </section>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+    
 
     <application name="relatedrecord" title="Related Records" entity="relatedrecord" redeclaring="false" >
       <properties>
@@ -112,6 +133,18 @@
         </list>
       </schemas>
     </application>
+
+    <application name="asset" title="Asset" entity="asset">
+      <schemas>
+        <schema id="detail" title="Asset Detail" stereotype="detail" platform="web" redeclaring="false">
+          <customization position="+item_.description">
+            <field attribute="pluspcustomer" label="Customer" readonly="true"/>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+
+
 
   </applications>
 

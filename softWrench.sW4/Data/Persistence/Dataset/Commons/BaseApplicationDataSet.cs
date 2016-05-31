@@ -604,18 +604,26 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var ds = DataSetProvider.GetInstance().LookupDataSet(compositionApplication.Name, compositionSchemaToUse.SchemaId);
             if (ds.GetType() != typeof(BaseApplicationDataSet)) {
                 //if there´s an overriden DataSet for the composition, let´s use it
-                return ds.Execute(compositionApplication, GetCompositionJson(json, compositionData.DispatcherComposition), compositionData.Id, compositionData.Operation,
-                operationData.Batch,
-                new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+                var targetResult = ds.Execute(compositionApplication, GetCompositionJson(json, compositionData), compositionData.Id, compositionData.Operation,
+                    operationData.Batch, new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+
+                //let's make sure the success message receives the right userId, which is the parent userid
+                targetResult.UserId = operationData.UserId;
+
+                return targetResult;
             }
             //otherwise let´s stick with the main app dataset
-            return Execute(compositionApplication, GetCompositionJson(json, compositionData.DispatcherComposition), compositionData.Id, compositionData.Operation,
+            return Execute(compositionApplication, GetCompositionJson(json, compositionData), compositionData.Id, compositionData.Operation,
                 operationData.Batch,
                 new Tuple<string, string>(operationData.UserId, operationData.SiteId));
 
         }
 
-        private JObject GetCompositionJson(JObject json, string relationship) {
+        private JObject GetCompositionJson(JObject json, CompositionOperationDTO compositionOperationDTO) {
+            if (compositionOperationDTO.CompositionItem != null) {
+                return compositionOperationDTO.CompositionItem;
+            }
+            var relationship = compositionOperationDTO.DispatcherComposition;
             var val = json.GetValue(relationship) as JContainer;
             if (val == null) {
                 return json;
@@ -662,19 +670,19 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var association = application.Schema.Associations().FirstOrDefault(f => (EntityUtil.IsRelationshipNameEquals(f.AssociationKey, lookupRequest.AssociationFieldName)));
             var associationApplicationMetadata = ApplicationAssociationResolver.GetAssociationApplicationMetadata(association);
 
-            if(associationApplicationMetadata != null 
-                && associationApplicationMetadata.Schema != null 
+            if (associationApplicationMetadata != null
+                && associationApplicationMetadata.Schema != null
                 && associationApplicationMetadata.Schema.SchemaFilters != null
                 && lookupRequest.SearchDTO.AddPreSelectedFilters) {
                 SchemaFilterBuilder.AddPreSelectedFilters(associationApplicationMetadata.Schema.SchemaFilters, lookupRequest.SearchDTO);
             }
-           
+
             var options = _associationOptionResolver.ResolveOptions(application.Schema, cruddata, association, lookupRequest.SearchDTO);
 
             if (Log.IsDebugEnabled) {
                 Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finished execution of options fetching. Resolved collections: {0}"));
             }
-            
+
             return new LookupOptionsFetchResultDTO(lookupRequest.SearchDTO.TotalCount, lookupRequest.SearchDTO.PageNumber, lookupRequest.SearchDTO.PageSize, options, associationApplicationMetadata, lookupRequest.SearchDTO);
         }
 

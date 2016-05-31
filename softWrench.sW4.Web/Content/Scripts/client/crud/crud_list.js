@@ -209,6 +209,9 @@
                         fixHeaderService.FixHeader();
                         //usually this next call won´t do anything, but for lists with optionfields, this is needed
                         associationService.updateFromServerSchemaLoadResult(data.associationOptions, null, true);
+
+                        checkpointService.createGridCheckpointFromGridData($scope.schema, $scope);
+
                         $scope.gridDataChanged($scope.datamap);
 
                         var elements = $scope.datamap.map(function (item) {
@@ -226,7 +229,9 @@
                             detail_next: { id : "0" },
                             detail_previous: { id: "-1" },
                             paginationData: $scope.paginationData,
-                            previousData: $scope.datamap
+                            previousData: $scope.datamap,
+                            panelid: $scope.panelid,
+                            applicationName: $scope.schema.applicationName
                         };
                         contextService.insertIntoContext("crud_context", crudContext);
                     }
@@ -458,8 +463,6 @@
 
                         //avoids table flickering
                         fixHeaderService.unfix();
-
-                        checkpointService.createGridCheckpoint($scope.schema, searchDTO);
 
                         $scope.$parent.multipleSchema = false;
                         $scope.$parent.schemas = null;

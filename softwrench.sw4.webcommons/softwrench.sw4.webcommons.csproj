@@ -53,8 +53,10 @@
     <Content Include="web_content\webcommons\scripts\softwrench\directive\intervaltrigger.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\richtext.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\directive\passwordvalidation.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\constants\MetadataEventConstants.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\dto\CompositionOperation.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\ModalData.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\ContextData.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\OpttionsLoadSchema.js" />
@@ -62,12 +64,15 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\asset_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_shared.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\workorder\workorder_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\configurationservice.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\history_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\modalFilter_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\notificationService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\classificationcolor_service.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\prioritycolor_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\priority_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\userPreferencesService.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\validation\passwordvalidationservice.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\validation\validation_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\workflowService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\data\datamapSanitize_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\email_service.js" />
@@ -144,7 +149,6 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\tabs_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\tooltrans_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\gridPreferenceService.js" />
-    <Content Include="web_content\webcommons\scripts\softwrench\services\validation_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\clientawareserviceprovider.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\log_enhacer.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\menu.js" />

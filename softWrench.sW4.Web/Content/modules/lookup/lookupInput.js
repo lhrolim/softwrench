@@ -57,27 +57,27 @@
                     };
 
 
-//                    scope.lookupCodeChange = function (fieldMetadata) {
-//                        var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
-//                        if (allowFreeText === "true") {
-//                            var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
-//                            scope.datamap[fieldMetadata.target] = code;
-//                        }
-//                    };
+                    //                    scope.lookupCodeChange = function (fieldMetadata) {
+                    //                        var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
+                    //                        if (allowFreeText === "true") {
+                    //                            var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
+                    //                            scope.datamap[fieldMetadata.target] = code;
+                    //                        }
+                    //                    };
 
-//                    scope.lookupCodeBlur = function (fieldMetadata) {
-//                        var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
-//                        var targetValue = scope.datamap[fieldMetadata.target];
-//                        var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
-//
-//                        if (code != targetValue) {
-//                            if (code == null || code == '') {
-//                                scope.datamap[fieldMetadata.target] = null;
-//                            } else if (allowFreeText != "true") {
-//                                scope.showLookupModal(fieldMetadata);
-//                            }
-//                        }
-//                    };
+                    //                    scope.lookupCodeBlur = function (fieldMetadata) {
+                    //                        var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
+                    //                        var targetValue = scope.datamap[fieldMetadata.target];
+                    //                        var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
+                    //
+                    //                        if (code != targetValue) {
+                    //                            if (code == null || code == '') {
+                    //                                scope.datamap[fieldMetadata.target] = null;
+                    //                            } else if (allowFreeText != "true") {
+                    //                                scope.showLookupModal(fieldMetadata);
+                    //                            }
+                    //                        }
+                    //                    };
 
 
                     scope.showCustomModal = function (fieldMetadata, schema, datamap) {
@@ -120,7 +120,8 @@
 
 
                     scope.showLookupModal = function (text) {
-                        var fieldMetadata = scope.fieldMetadata;
+                        scope.loadModalWrappers = true;
+                        const fieldMetadata = scope.fieldMetadata;
                         
                         if (fieldMetadata.rendererType === "modal") {
                             this.showCustomModal(fieldMetadata, scope.schema, scope.datamap);

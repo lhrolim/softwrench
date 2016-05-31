@@ -205,36 +205,31 @@
             return datamap;
         }
 
-        function validateChecked(content) {
-            var isChecked = false;
+        function isChecked(content) {
+
             switch (typeof content) {
                 case "boolean":
-                    isChecked = content;
-                    break;
-
+                    return content;
                 case "number":
-                    isChecked = content === 1? true : false;
-                    break;
-
+                    return content === 1;
                 case "string":
-                    isChecked = content.equalsIc("y") || content.equalsIc("yes") || content.equalsIc("true") || content.equalsIc("1");
-                    break;
+                    return content.equalsIc("y") || content.equalsIc("yes") || content.equalsIc("true") || content.equalsIc("1");
             }
 
-            return isChecked;
+            return false;
         }
 
         //#endregion
 
         //#region Service Instance
 
-        var service = {
-            format: format,
-            formatDate: formatDate,
-            adjustDateFormatForAngular: adjustDateFormatForAngular,
-            adjustDateFormatForPicker: adjustDateFormatForPicker,
-            doContentStringConversion: doContentStringConversion,
-            isChecked: validateChecked
+        const service = {
+            format,
+            formatDate,
+            adjustDateFormatForAngular,
+            adjustDateFormatForPicker,
+            doContentStringConversion,
+            isChecked
         };
 
         return service;

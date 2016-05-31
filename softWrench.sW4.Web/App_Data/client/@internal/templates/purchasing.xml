@@ -153,7 +153,7 @@
             <renderer type="statuscolor" params="width=12%;grid=po;column=status" />
           </field>
           <field attribute="priority" tooltip="Priority">
-            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true"/>
+            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
           </field>
           <field attribute="receipts" hidden="true"/>
           <properties>
@@ -321,7 +321,7 @@
             <renderer type="statuscolor" params="width=12%;grid=pr;column=status" />
           </field>
           <field attribute="priority" tooltip="Priority">
-            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true"/>
+            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
           </field>
           <properties>
             <property key="list.click.schema" value="detail"/>

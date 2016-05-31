@@ -271,7 +271,7 @@
         padding: 0;
 
         .multiselect-dropdown {
-            padding: 14px 0 3px 8px;
+            padding: 7px 0 3px 8px;
             width: 50px;
 
             input, i {
@@ -515,6 +515,36 @@
         margin-bottom: 0;
     }
 
+    .priorityicon {
+        i {
+            padding: 3px;
+        }
+
+        .dropdown-menu {
+            top: initial;
+            left: initial;
+            margin-left: -145px;
+
+            .info-dropdown {
+                display: table-row;
+                font-size: 13px;
+
+                .icon, .text {
+                    display: table-cell;
+                }
+
+                .icon {
+                    padding-left: 10px;
+                    color: #888;
+                }
+
+                .text {
+                    padding-right: 10px;
+                }
+            }
+        }
+    }
+
     &.table-hover {
         tbody tr {
             cursor: pointer;
@@ -561,7 +591,7 @@
     }
 
     .priorityicon {
-        i {
+        .cell-wrapper > i {
             color: #f5f5f5 !important;
         }
     }

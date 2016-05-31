@@ -10,18 +10,15 @@
      * @returns {} service instance
      * @constructor 
      */
-    var SynchronizationOperationService = function ($log, $q, swdbDAO, formatter) {
-        var self = this;
+    const SynchronizationOperationService = function ($log, $q, swdbDAO, formatter) {
 
-        var saveBatchOperation = function (operation, relatedBatches) {
+        const saveBatchOperation = function (operation, relatedBatches) {
             return swdbDAO.instantiate("SyncOperation", operation)
-                .then(function (operationEntity) {
+                .then((operationEntity) => {
                     // all batches need to be complete in order for the syncoperation to be complete
-                    var isComplete = relatedBatches.every(function (batch) {
-                        return batch.status === "COMPLETE";
-                    });
+                    const isComplete = relatedBatches.every(batch => batch.status === "COMPLETE");
                     // add relationships
-                    relatedBatches.forEach(function (batch) {
+                    relatedBatches.forEach(batch => {
                         operationEntity.batches.add(batch);
                         if (batch.loadeditems && batch.loadeditems !== null && batch.loadeditems.length > 0) {
                             operationEntity.items += batch.loadeditems.length;
@@ -29,10 +26,8 @@
                         batch.syncoperation = operationEntity;
                     });
                     if (isComplete) {
-                        var hasProblem = relatedBatches.some(function (result) {
-                            //if every batch returned as complete than we have a synchronous case and can close the sync operation
-                            return result.hasProblems;
-                        });
+                        //if every batch returned as complete than we have a synchronous case and can close the sync operation
+                        const hasProblem = relatedBatches.some(result => result.hasProblems);
                         operationEntity.status = "COMPLETE";
                         operationEntity.enddate = new Date().getTime();
                         operationEntity.hasProblems = hasProblem;
@@ -40,12 +35,12 @@
                         operationEntity.status = "PENDING";
                     }
                     var deferred = $q.defer();
-                    persistence.transaction(function (tx) {
+                    persistence.transaction(tx => {
                         try {
                             swdbDAO.bulkSave(relatedBatches, tx);
                             swdbDAO.save(operationEntity, tx);
                             // flushing transaction
-                            persistence.flush(tx, function () {
+                            persistence.flush(tx, () => {
                                 // resolve promise with the syncOperation
                                 deferred.resolve(operationEntity);
                             });
@@ -59,7 +54,7 @@
         }
 
         this.createBatchOperation = function(startdate, relatedBatches) {
-            var operation = {
+            const operation = {
                 startdate: startdate,
                 items: 0
             };
@@ -68,13 +63,10 @@
         };
 
         this.createSynchronousBatchOperation = function (startdate, numberofdownloadeditems, relatedBatches) {
+            //if every batch returned as complete than we have a synchronous case and can close the sync operation
+            const hasProblem = relatedBatches.some(result => result.hasProblems);
 
-            var hasProblem = relatedBatches.some(function (result) {
-                //if every batch returned as complete than we have a synchronous case and can close the sync operation
-                return result.hasProblems;
-            });
-
-            var operation = {
+            const operation = {
                 startdate: startdate,
                 numberofdownloadeditems: numberofdownloadeditems,
                 numberofdownloadedsupportdata: 0,
@@ -85,7 +77,7 @@
         };
         
         this.createNonBatchOperation = function(startdate, enddate, numberofdownloadeditems, numberofdownloadedsupportdata, metadatachange) {
-            var operation = {
+            const operation = {
                 startdate: startdate,
                 enddate: enddate,
                 status: "COMPLETE",
@@ -93,9 +85,7 @@
                 numberofdownloadedsupportdata: numberofdownloadedsupportdata,
                 metadatachange: metadatachange
             };
-            return swdbDAO.instantiate("SyncOperation", operation).then(function(item) {
-                return swdbDAO.save(item);
-            });
+            return swdbDAO.instantiate("SyncOperation", operation).then(item => swdbDAO.save(item));
         }
 
         this.hasProblems = function (operation) {
@@ -103,17 +93,14 @@
         };
 
         this.getSyncList = function (pageNumber) {
-            var page = !pageNumber || pageNumber <= 0 ? 1 : pageNumber;
+            const page = !pageNumber || pageNumber <= 0 ? 1 : pageNumber;
             return swdbDAO.findByQuery("SyncOperation", null, { pagesize: 10, pageNumber: page, orderby: "startdate", orderbyascending: false })
-                .then(function(operations) {
-                    if (!operations || operations.length <= 0) {
-                        return operations;
-                    }
-                    // format the operations found
-                    return operations.map(function(operation) {
-                        return self.formatOperation(operation);
-                    });
-                });
+                .then(operations => 
+                    !operations || operations.length <= 0 
+                        ? operations
+                        // format the operations found
+                        : operations.map(operation => this.formatOperation(operation))
+                );
         };
 
         /**
@@ -123,10 +110,7 @@
          * @returns Promise: resolved with SyncOperation entity, rejected with database Error. 
          */
         this.getOperation = function (id) {
-            return swdbDAO.findById("SyncOperation", id)
-                .then(function(operation) {
-                    return self.formatOperation(operation);
-                });
+            return swdbDAO.findById("SyncOperation", id).then(operation => this.formatOperation(operation));
         };
 
         this.doneNoProblems = function(operation) {
@@ -181,10 +165,8 @@
          */
         this.getBatchItems = function(operation) {
             return swdbDAO.findByQuery("Batch", "syncoperation = '{0}'".format(operation.id))
-                .then(function(batches) {
-                    var batchids = batches.map(function(batch) {
-                        return "'{0}'".format(batch.id);
-                    });
+                .then(batches => {
+                    const batchids = batches.map(batch => `'${batch.id}'`);
                     return swdbDAO.findByQuery("BatchItem", "batch in ({0})".format(batchids), { prefetch: "problem" });
                 });
         };
@@ -196,9 +178,7 @@
          */
         this.getMostRecentOperation = function() {
             return swdbDAO.findSingleByQuery("SyncOperation", null, { orderby: "startdate", orderbyascending: false })
-                .then(function(operation) {
-                    return self.formatOperation(operation);
-                });
+                .then(operation => this.formatOperation(operation));
         };
 
         /**
@@ -212,7 +192,7 @@
          */
         this.completeFromAsyncBatch = function(batches) {
             var enddate = new Date();
-            var operations = batches.map(function(batch) {
+            const operations = batches.map(function(batch) {
                 batch.syncoperation.status = "COMPLETE";
                 batch.syncoperation.enddate = enddate;
                 return batch.syncoperation;
