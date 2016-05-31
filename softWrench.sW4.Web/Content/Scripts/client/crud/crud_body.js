@@ -30,12 +30,12 @@
                 log.debug("finished rendering tabs of detail screen");
                 if (scope.$last === undefined) {
                     //0 tabs scenario
-                    return $rootScope.$broadcast("sw_alltabsloaded");
+                    return $rootScope.$broadcast("sw_alltabsloaded", null, scope.panelid);
                 }
 
                 // covers a redirect for same application and schema but to another entry
                 $rootScope.$on("sw_applicationrendered", function () {
-                    $rootScope.$broadcast("sw_alltabsloaded");
+                    $rootScope.$broadcast("sw_alltabsloaded", null, scope.panelid);
                 });
 
                 $timeout(function () {
@@ -57,7 +57,7 @@
                         });
 
                     });
-                    $rootScope.$broadcast("sw_alltabsloaded", firstTabId);
+                    $rootScope.$broadcast("sw_alltabsloaded", firstTabId, scope.panelid);
 
                 }, 0, false);
 
@@ -143,7 +143,10 @@
                     }
                 });
 
-                $scope.$on("sw_alltabsloaded", function (event, firstTabId) {
+                $scope.$on("sw_alltabsloaded", function (event, firstTabId, panelId) {
+                    if ($scope.panelid !== panelId) {
+                        return;
+                    }
                     $scope.allTabsLoaded(event, firstTabId);
                 });
 
