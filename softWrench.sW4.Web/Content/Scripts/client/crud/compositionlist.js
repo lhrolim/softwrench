@@ -250,11 +250,9 @@
         $scope.filterApplied = function () {
             $scope.paginationData.pageNumber = 1;
             var searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
-            compositionService.searchCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields || $scope.parentdata, searchDTO).then(function (result) {
-                $scope.refreshList(result[$scope.relationship]);
-            }).finally(function () {
-                crudContextHolderService.setDetailDataResolved();
-            });
+            compositionService.searchCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields || $scope.parentdata, searchDTO).then(
+                result => $scope.refreshList(result[$scope.relationship])
+            ).finally(() => crudContextHolderService.setDetailDataResolved());
         };
 
         $scope.shouldShowSort = function (column, orientation) {
@@ -268,7 +266,7 @@
             var columnName = column.attribute;
 
             var sorting = $scope.searchSort;
-            if (sorting.field != null && sorting.field === columnName) {
+            if (sorting.field && sorting.field === columnName) {
                 sorting.order = sorting.order === "desc" ? "asc" : "desc";
             } else {
                 sorting.field = columnName;
@@ -1250,7 +1248,7 @@
             }
 
             // select first page
-            return $scope.selectPage(destinationPage).then(function (result) {
+            return $scope.selectPage(destinationPage).then(() => {
                 $scope.clearNewCompositionData();
                 crudContextHolderService.setTabRecordCount($scope.relationship, null, $scope.paginationData.totalCount);
             });
@@ -1419,11 +1417,8 @@
             searchDTO.pageSize = pageSize;
             return compositionService
                 .searchCompositionList($scope.relationship, $scope.parentschema, fields, searchDTO)
-                .then(function (result) {
-                    $scope.refreshList(result[$scope.relationship]);
-                }).finally(function () {
-                    crudContextHolderService.setDetailDataResolved();
-                });
+                .then(result => $scope.refreshList(result[$scope.relationship]))
+                .finally(() => crudContextHolderService.setDetailDataResolved());
         };
 
         $scope.refreshList = function (compositionData) {

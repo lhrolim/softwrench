@@ -51,41 +51,40 @@
             var log = $log.getInstance('compositionservice#fetchCompositions');
             var urlToUse = url("/api/generic/Composition/GetCompositionData");
             return $http.post(urlToUse, requestDTO, { avoidspin: !showLoading })
-                .then(function (response) {
+                .then(response => {
                     var data = response.data;
                     var parentModifiedFields = data.parentModifiedFields;
                     if (parentModifiedFields) {
                         //server has replied that some fields should change on parent datamap as well
-                        for (var field in parentModifiedFields) {
+                        angular.forEach(parentModifiedFields, (fieldValue, field) => {
                             if (parentModifiedFields.hasOwnProperty(field)) {
-                                datamap[field] = parentModifiedFields[field];
+                                datamap[field] = fieldValue;
                             }
-                        }
+                        });
                     }
                     var compositionArray = data.resultObject;
                     var result = {};
-                    for (var composition in compositionArray) {
-
+                    angular.forEach(compositionArray, (compositionValue, composition) => {
                         if (!compositionArray.hasOwnProperty(composition)) {
-                            continue;
+                            return;
                         }
-                        var resultList = compositionArray[composition].resultList;
+                        var resultList = compositionValue.resultList;
                         log.info('composition {0} returned with {1} entries'.format(composition, resultList.length));
                         //this datamap entry is bound to the whole screen, so we need to set it here as well
                         datamap[composition] = resultList;
 
-                        var paginationData = compositionArray[composition].paginationData;
+                        var paginationData = compositionValue.paginationData;
                         // enforce composition pagination options
                         paginationData.paginationOptions = paginationData.paginationOptions ? paginationData.paginationOptions : config.defaultOptions;
                         //setting this case the tabs have not yet been loaded so that they can fetch from here
                         contextService.insertIntoContext("compositionpagination_{0}".format(composition), paginationData, true);
-                        compositionContext[composition] = compositionArray[composition];
+                        compositionContext[composition] = compositionValue;
                         result[composition] = {
                             relationship: composition,
                             list: resultList,
                             paginationData: paginationData
                         };
-                    }
+                    });
                     return result;
                 });
         };
@@ -93,9 +92,8 @@
         function doPopulateWithCompositionData(requestDTO, datamap) {
 
             return fetchCompositions(requestDTO, datamap)
-                .then(function (result) {
-
-                    $timeout(function () {
+                .then(result => {
+                    $timeout(() => {
                         $rootScope.$broadcast("sw_compositiondataresolved", result);
                         crudContextHolderService.compositionsLoaded(result);
                     });
@@ -151,21 +149,23 @@
             }
             var compositions = [];
             var cachedCompositions = schema.cachedCompositions;
-            for (var composition in cachedCompositions) {
+
+            angular.forEach(cachedCompositions, (compositionValue, composition) => {
                 if (!cachedCompositions.hasOwnProperty(composition)) {
-                    continue;
+                    return;
                 }
-                if ("lazy".equalsIc(cachedCompositions[composition].fetchType)) {
+                if ("lazy".equalsIc(compositionValue.fetchType)) {
                     compositions.push(composition);
-                } else if ("eager".equalsIc(cachedCompositions[composition].fetchType)) {
+                } else if ("eager".equalsIc(compositionValue.fetchType)) {
                     compositionContext[composition] = datamap[composition];
                 }
-            }
+            });
             return compositions;
         };
 
         function isCompositionLodaded(relationship) {
-            return compositionContext[relationship] != null;
+            const value = compositionContext[relationship];
+            return typeof value !== "undefined" && value !== null;
         };
 
         function locatePrintSchema(baseSchema, compositionKey) {
@@ -188,11 +188,11 @@
         };
 
         function getListCommandsToKeep(compositionSchema) {
-            var listSchema = compositionSchema.schemas.list;
-            if (listSchema == null) {
+            const listSchema = compositionSchema.schemas.list;
+            if (typeof listSchema === "undefined" || listSchema === null) {
                 return null;
             }
-            var toKeepProperty = listSchema.properties["composition.mainbuttonstoshow"];
+            const toKeepProperty = listSchema.properties["composition.mainbuttonstoshow"];
             if (!nullOrEmpty(toKeepProperty)) {
                 return toKeepProperty.split(';');
             }
