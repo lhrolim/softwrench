@@ -557,26 +557,26 @@
               </association>
             </section>
           </customization>
-          <customization position="reportedby">
-            <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" extraprojectionvalues="department" default="@personid" orderbyfield="personid asc" >
-              <renderer type="lookup" params="columnlabel=Name;"/>
-              <event type="afterchange" service="chicagosrService" method="afterChangeReportedBy"/>
-            </association>
-          </customization>
-          <customization position="+reportedemail">
-            <field attribute="reportdate" label="Reported Date" default="@now"/>
-          </customization>
-          <customization position="siteid">
-            <field attribute="siteid" hidden="true"/>
+          <customization position="reportedbysection">
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=small" />
+              <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" extraprojectionvalues="department" default="@personid" orderbyfield="personid asc" >
+                <renderer type="lookup" params="columnlabel=Name;"/>
+                <event type="afterchange" service="chicagosrService" method="afterChangeReportedBy"/>
+              </association>
+              <field attribute="reportedphone" label="Reported By Phone" readonly="true"/>
+              <field attribute="reportedemail" label="Reported By Email" readonly="true"/>
+              <field attribute="reportdate" label="Reported Date" default="@now"/>
+            </section>
           </customization>
           <customization position="location"/>
           <customization position="compositions">
             <section id="compositions">
               <composition relationship="worklog" label="Work Logs">
-                <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
+                <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" allowremoval="false" />
               </composition>
               <composition relationship="attachment" label="Attachments" printenabled="false">
-                <collectionproperties allowcreation="false" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+                <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" allowremoval="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
               </composition>
             </section>
           </customization>
