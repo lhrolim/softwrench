@@ -24,6 +24,7 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
             var doLoad = function() {
                 scope.compositionschemadefinition = scope.metadata.schema;
                 scope.compositiondata = scope.parentdata[scope.metadata.relationship];
+                scope.parentdata = { id:scope.parentdata.id, fields: scope.parentdata };
                 element.append(
                     "<inline-composition-list parentdata='parentdata' parentschema='parentschema'" +
                     "metadata='metadata' iscollection='iscollection' compositionschemadefinition='compositionschemadefinition' compositiondata='compositiondata' mode='mode' ismodal='ismodal'/>"

@@ -90,7 +90,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             var compositionData = operationData.CompositionData;
             var id = compositionData.Id;
             var newValue = json
-                .Value<JToken>("fields")
                 .Value<JArray>("#properties_")
                 .First(t => id.Equals(t.Value<string>("fullkey")) && t.Value<string>("#edited") != null)
                 .Value<string>("value");
