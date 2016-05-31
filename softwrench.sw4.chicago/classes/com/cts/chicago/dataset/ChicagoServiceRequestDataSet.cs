@@ -33,12 +33,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
         }
 
         public SearchRequestDto FilterQSRWorklogs(CompositionPreFilterFunctionParameters parameter) {
-
-            var sb = new StringBuilder();
-            sb.Append(" clientviewable = 1 ");
-
-            parameter.BASEDto.AppendWhereClause(sb.ToString());
-
+            parameter.BASEDto.AppendWhereClause(" clientviewable = 1 ");
             return parameter.BASEDto;
         }
 
