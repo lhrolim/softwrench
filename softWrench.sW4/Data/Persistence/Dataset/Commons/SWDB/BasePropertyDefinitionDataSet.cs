@@ -59,7 +59,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             var compositions = new Dictionary<string, EntityRepository.SearchEntityResult>();
 
             searchDTO.AppendWhereClause(
-                " (Visible = true AND FullKey like '/Global/%' AND (renderer is null or renderer != 'attachment')) ");
+                " (Visible = 1 AND FullKey like '/Global/%' AND (renderer is null or renderer != 'attachment')) ");
             var listApplication = MetadataProvider.Application("_configuration")
                 .ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("list"));
             var listResult = GetList(listApplication, searchDTO);
