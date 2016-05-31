@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/deploymetadata">
+<globalproperties>
+
+
+  <environment key="qa">
+    <property key="iispath" value="softwrench/chicago" />
+    <property key="msdeploy_url" value="https://10.50.100.218:8172/msdeploy.axd,username=cts\Jenkins,password=J3nk1ns" />
+  </environment>
+
+</globalproperties>
+</metadata>
