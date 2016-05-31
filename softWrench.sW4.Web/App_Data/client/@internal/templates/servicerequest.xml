@@ -119,6 +119,11 @@
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="Medium" value="2" />
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="Low" value="3" />
         </optionfilter>
+        <optionfilter attribute="statusicons" displaycode="true">
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Communications" value="communicationcounter" />
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Attachments" value="attachmentcounter" />
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Related Records" value="relatedcounter" />
+        </optionfilter>
       </filters>
 
       <properties>
@@ -156,9 +161,8 @@
           <field attribute="relatedcounter" tooltip="Related Records" hidden="true">
             <renderer type="icon" params="icon=fa-tags"/>
           </field>
-          
-          <field attribute="#statusicons" label="Status Icons">
-            <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter"/>
+          <field attribute="statusicons" tooltip="Status Icons">
+            <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter;icon=fa-tachometer;headericon=true;showsort=false"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>

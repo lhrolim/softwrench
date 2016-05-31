@@ -80,9 +80,9 @@
               <renderer type="statuscolor" params="width=10%" />
             </field>
           </customization>
-          <customization position="#statusicons">
-            <field attribute="#statusicons" label="Status Icons">
-              <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter"/>
+          <customization position="statusicons">
+            <field attribute="statusicons" tooltip="Status Icons">
+              <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter;icon=fa-tachometer;headericon=true;showsort=false"/>
             </field>
             <field attribute="pending"  tooltip="Change Status to Pending">
               <renderer type="iconbutton" params="width=3%;expression={'#default':'','NEW':'fa-hourglass-half'};hideValueOnTooltip=true"/>

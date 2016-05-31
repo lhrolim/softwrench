@@ -98,7 +98,7 @@
                 return column.rendererParameters.headericon;
             }
 
-            return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon" && column.rendererType != "statusicons" && column.rendererType != "iconbutton";
+            return (column.type === "ApplicationFieldDefinition" || column.type === "OptionField") && column.rendererType !== "color" && column.rendererType !== "icon" && column.rendererType !== "iconbutton";
         };
 
         $scope.headerIcon = function (column) {
