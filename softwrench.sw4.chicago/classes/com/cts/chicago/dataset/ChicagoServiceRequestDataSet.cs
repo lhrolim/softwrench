@@ -1,9 +1,12 @@
-﻿using cts.commons.persistence;
+﻿using System.Text;
+using cts.commons.persistence;
 using cts.commons.portable.Util;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
+using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
@@ -29,8 +32,18 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
             return result;
         }
 
+        public SearchRequestDto FilterQSRWorklogs(CompositionPreFilterFunctionParameters parameter) {
+
+            var sb = new StringBuilder();
+            sb.Append(" clientviewable = 1 ");
+
+            parameter.BASEDto.AppendWhereClause(sb.ToString());
+
+            return parameter.BASEDto;
+        }
+
         public override string ApplicationName() {
-            return "servicerequest";
+            return "servicerequest,quickservicerequest";
         }
 
         public override string ClientFilter() {

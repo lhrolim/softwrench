@@ -28,6 +28,7 @@
         <attribute name="department" type="varchar" required="false"/>
         <attribute name="ismticketid" type="varchar" required="false"/>
         <attribute name="ismticketuid" type="varchar" required="false"/>
+        <attribute name="tickettype" type="varchar" required="false"/>
       </attributes>
       <relationships>
         <relationship to="alndomain" qualifier="DEPARTMENT">
@@ -577,8 +578,8 @@
           <customization position="location"/>
           <customization position="compositions">
             <section id="compositions">
-              <composition relationship="worklog" label="Work Logs">
-                <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" allowremoval="false" />
+              <composition relationship="worklog" label="Work Logs" detailschema="qsrcompositiondetail">
+                <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" allowremoval="false" prefilterfunction="FilterQSRWorklogs"/>
               </composition>
               <composition relationship="attachment" label="Attachments" printenabled="false">
                 <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" allowremoval="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
@@ -599,6 +600,29 @@
             </association>
           </customization>
         </detail>
+
+        <schema id="qsrcompositiondetail" stereotype="compositiondetail" title="Work Log">
+          <field attribute="createdate" hidden="true" />
+
+          <field attribute="description" label="Summary" requiredexpression="true">
+            <renderer type="default" params="maxlength=100"/>
+          </field>
+          <field attribute="wld_.ldtext" label="Details" >
+            <renderer type="richtext"/>
+          </field>
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="logtype" label="Log Type" default="CLIENTNOTE" readonly="true"/>
+            <field attribute="clientviewable" label="Client Viewable" default="1" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+          </section>
+
+          <!-- attachment placeholder -->
+          <!-- TODO: use section+id instead of field when it's eventually possible -->
+          <field attribute="position_attachment" hidden="true"></field>
+
+        </schema>
       </schemas>
     </application>
   </applications>
