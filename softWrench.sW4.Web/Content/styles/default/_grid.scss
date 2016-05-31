@@ -345,8 +345,6 @@
                 }
 
                 th {
-                    cursor: pointer;
-                    word-break: break-word;
 
                     .cell-wrapper {
                         line-height: 1;
@@ -456,6 +454,8 @@
 
     th {
         padding: 11px 15px 9px;
+        cursor: pointer;
+        word-break: break-word;
 
         &.active {
             background: transparent;

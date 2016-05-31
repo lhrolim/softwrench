@@ -47,12 +47,6 @@
             compositionService.getCompositionList("#properties_", schema, datamap, 1, 10).then(function (result) {
                 compositionService.resolveCompositions(result);
             });
-
-            //restService.getPromise("Composition", "GetCompositionData", parameters).then(function (httpResponse) {
-            //    var compositionData = httpResponse.data.resultObject;
-            //    $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
-
-            //});
         }
 
         //#endregion

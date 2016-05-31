@@ -31,7 +31,8 @@
                         };
 
                         $scope.markDefaultOperator = function (filter) {
-                            if (!$scope.searchOperator[filter.attribute]) {
+                            var operator = $scope.searchOperator[filter.attribute];
+                            if (!operator || operator.id === "NF") {
                                 if (filter.type === "MetadataDateTimeFilter") {
                                     $scope.searchOperator[filter.attribute] = searchService.getSearchOperationById("GTE");
                                 } else {

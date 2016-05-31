@@ -16,7 +16,7 @@
           <event type="onschemafullyloaded" service="configurationService" method="loadConfigsComposition"/>
 
           <properties>
-            <property key="compositions.softrefresh" value="true"/>
+            <property key="compositions.keepfilters" value="true"/>
           </properties>
         </detail>
 

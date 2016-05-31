@@ -248,6 +248,7 @@
         }
 
         $scope.filterApplied = function () {
+            $scope.paginationData.pageNumber = 1;
             var searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
             compositionService.searchCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields || $scope.parentdata, searchDTO).then(function (result) {
                 $scope.refreshList(result[$scope.relationship]);
@@ -1261,18 +1262,21 @@
             $scope.selecteditem = null;
             $scope.collapseAll();
 
-            var softrefresh = schemaService.isPropertyTrue($scope.parentschema, "compositions.softrefresh");
-            if (softrefresh) {
-                return redirectService.goToApplicationView($scope.parentschema.applicationName, $scope.parentschema.schemaId);
-            }
-
             if (!$scope.paginationData) {
                 $scope.clearNewCompositionData();
                 return $q.when(null);
             }
 
+            var keepfilters = schemaService.isPropertyTrue($scope.parentschema, "compositions.keepfilters");
+            var destinationPage = keepfilters ? $scope.paginationData.pageNumber : 1;
+            if (!keepfilters) {
+                $scope.searchData = {};
+                $scope.searchOperator = {};
+                $scope.searchSort = {};
+            }
+
             // select first page
-            return $scope.selectPage(1).then(function (result) {
+            return $scope.selectPage(destinationPage).then(function (result) {
                 $scope.clearNewCompositionData();
                 crudContextHolderService.setTabRecordCount($scope.relationship, null, $scope.paginationData.totalCount);
             });

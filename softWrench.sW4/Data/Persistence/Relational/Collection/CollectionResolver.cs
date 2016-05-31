@@ -241,7 +241,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
 
             var orderByField = parameter.CompositionSchema.CollectionProperties.OrderByField;
-            if (orderByField != null) {
+            if (orderByField != null && string.IsNullOrEmpty(searchRequestDto.SearchSort)) {
                 searchRequestDto.SearchSort = orderByField;
                 searchRequestDto.SearchAscending = !orderByField.EndsWith("desc");
             }

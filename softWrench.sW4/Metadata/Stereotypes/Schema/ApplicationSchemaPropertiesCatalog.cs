@@ -219,9 +219,9 @@
         public static string DetailFocusAllowMoveBackward = "detail.focus.allowmovingbackward";
 
         /// <summary>
-        /// If "true" reloads de current schema after a save with the new values.
+        /// If "true" reloads de current schema kepping filters, page and ordering.
         /// </summary>
-        public static string CompositionSoftRefresh = "compositions.softrefresh";
+        public static string CompositionSoftRefresh = "compositions.keepfilters";
 
         /// <summary>
         /// If "true" disables the filter of a list schema used on composition.

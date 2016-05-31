@@ -49,9 +49,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             }
 
             datamap = new DataMap(application.Name, new Dictionary<string, object>());
-            //var searchRequestDto = new PaginatedSearchRequestDto(10, PaginatedSearchRequestDto.DefaultPaginationOptions);
-            //var configList = GetConfigurationList(searchRequestDto);
-            //datamap.SetAttribute("fields", new Dictionary<string, object> { { "#properties_", configList } });
             return new ApplicationDetailResult(datamap, null, application.Schema,
                 CompositionBuilder.InitializeCompositionSchemas(application.Schema, user), null);
         }
