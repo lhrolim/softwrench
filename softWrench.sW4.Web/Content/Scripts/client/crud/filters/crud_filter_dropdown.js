@@ -38,22 +38,25 @@
                                 } else {
                                     $scope.searchOperator[filter.attribute] = searchService.defaultSearchOperation();
                                 }
-
-
                             }
                         }
 
                         $scope.hasFilter = function (filter) {
+                            if (filter.rendererType === 'statusicons') {
+                                return filter.options.some(option => $scope.searchData[option.value] === '1');
+                            }
+
                             var operator = $scope.searchOperator[filter.attribute];
                             if (!operator) {
                                 return false;
                             }
+
                             var search = $scope.searchData[filter.attribute];
                             if (operator.id === "BLANK") {
                                 return true;
                             }
-                            return !!search && !operator.id.equalsAny("", "NF");
 
+                            return !!search && !operator.id.equalsAny("", "NF");
                         }
 
                         /**
@@ -92,7 +95,13 @@
                          * 
                          * @param String columnName 
                          */
-                        $scope.clearFilter = function (filterAttribute) {
+                        $scope.clearFilter = function (filter) {
+                            filter.options.forEach(function (option) {
+                                delete $scope.searchData[option.value];
+                                delete $scope.searchOperator[option.value];
+                            });
+
+                            var filterAttribute = filter.attribute;
                             $(".dropdown.open").removeClass("open");
                             $scope.selectOperator(filterAttribute, config.noopoperator);
                             $scope.filterApplied();

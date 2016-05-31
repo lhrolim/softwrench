@@ -26,9 +26,6 @@
                         //let´s avoid some null pointers
                         scope.filter.options = scope.filter.options || [];
 
-
-
-
                         //this is also static
                         var schema = scope.schema;
                         var filter = scope.filter;
@@ -166,7 +163,10 @@
                                 return option.label;
                             }
                             var label = "(" + option.value + ")";
-                            if (!!option.label) {
+        
+                            if (filter.rendererType == 'statusicons' && !!option.label) {
+                                label = option.label;
+                            } else if (!!option.label) {
                                 label += " - " + option.label;
                             }
                             return label;
@@ -311,6 +311,16 @@
 
                         $scope.parseSearchData = function (searchData) {
                             $scope.selectedOptions = [];
+
+                            //make sure statusicons options are checked
+                            if (filter.rendererType == 'statusicons') {
+                                filter.options.forEach(function(option) {
+                                    if ($scope.searchData[option.value] === '1') {
+                                        $scope.selectedOptions[option.value] = 1;
+                                    }
+                                });
+                            }
+
                             var data = null;
                             if (!searchData) {
                                 if ($scope.searchData) {
@@ -348,6 +358,35 @@
                                 searchData[filter.attribute] = result;
                                 searchOperator[filter.attribute] = searchService.getSearchOperationById("EQ");
                             }
+
+                            if (filter.rendererType == 'statusicons') {
+                                searchData[filter.attribute] = null;
+                                searchOperator[filter.attribute] = null;
+
+                                //remove all search data (prevent unselected options from remaining)
+                                var availableOptions = $scope.getAllAvailableOptions();
+                                availableOptions.forEach(function (option) {
+                                    delete searchData[option.value];
+                                    delete searchOperator[option.value];
+                                });
+
+                                //add all checked otopions
+                                if (result) {
+                                    var optionList = result.split(',');
+
+                                    //if multiple options selected
+                                    if (optionList.length > 0) {
+                                        optionList.forEach(function(option) {
+                                            searchData[option] = 1;
+                                            searchOperator[option] = searchService.getSearchOperationById("GTE");
+                                        });
+                                    } else {
+                                        searchData[result] = 1;
+                                        searchOperator[result] = searchService.getSearchOperationById("GTE");
+                                    }
+                                }
+                            }
+
                             $scope.cacheAtributeSearchData = result;
                             $scope.applyFilter({ keepitOpen: true });
 
