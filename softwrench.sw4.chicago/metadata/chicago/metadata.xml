@@ -540,7 +540,7 @@
               </association>
               <field attribute="reportedphone" label="Reported By Phone" readonly="true"/>
               <field attribute="reportedemail" label="Reported By Email" readonly="true"/>
-              <field attribute="reportdate" label="Reported Date" default="@now"/>
+              <field attribute="reportdate" label="Reported Date" default="@now" readonly="true"/>
             </section>
           </customization>
         </schema>
@@ -572,7 +572,7 @@
               </association>
               <field attribute="reportedphone" label="Reported By Phone" readonly="true"/>
               <field attribute="reportedemail" label="Reported By Email" readonly="true"/>
-              <field attribute="reportdate" label="Reported Date" default="@now"/>
+              <field attribute="reportdate" label="Reported Date" default="@now" readonly="true"/>
             </section>
           </customization>
           <customization position="location"/>
