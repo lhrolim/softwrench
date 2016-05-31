@@ -1,4 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Web.Services.Protocols;
 using JetBrains.Annotations;
 using softWrench.sW4.Util;
 
@@ -10,16 +14,32 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
 
         private readonly Exception _immediate;
         private readonly Exception _root;
-        
-        public Exception ImmediateCause { get { return _immediate; } }
-        public Exception RootCause { get { return _root; } }
+
+        private readonly string _soapStack;
+
+        public Exception ImmediateCause {
+            get {
+                return _immediate;
+            }
+        }
+        public Exception RootCause {
+            get {
+                return _root;
+            }
+        }
 
         public virtual string FullStackTrace {
             get {
-                return 
-                    (RootCause != null ? (RootCause.StackTrace + "\n") : "") +
-                    (ImmediateCause != null ? (ImmediateCause.StackTrace + "\n") : "") + 
-                    StackTrace;
+                var sb = new StringBuilder();
+                sb.Append(RootCause != null ? (RootCause.StackTrace + "\n") : "");
+                sb.Append(ImmediateCause != null ? (ImmediateCause.StackTrace + "\n") : "");
+                if (_soapStack != null) {
+                    sb.Append(_soapStack);
+                } else {
+                    sb.Append(StackTrace);
+                }
+                return sb.ToString();
+
             }
         }
 
@@ -56,10 +76,32 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         /// </summary>
         /// <param name="immediateCause"></param>
         /// <param name="rootCause"></param>
-        public MaximoException([NotNull]Exception immediateCause, [NotNull]Exception rootCause) : base(rootCause.Message) {
+        /// <param name="additionalMessage"></param>
+        public MaximoException([NotNull]Exception immediateCause, [NotNull]Exception rootCause, string additionalMessage = null) : base(rootCause.Message + " " + (additionalMessage ?? "")) {
+            if (rootCause is SoapException) {
+                var ex = (SoapException)rootCause;
+                _soapStack = ex.Detail.InnerText;
+            }
+
             _immediate = immediateCause;
             _root = rootCause;
         }
-        
+
+
+        public static Exception ParseWebExceptionResponse(WebException webException) {
+            var responseStream = webException.Response.GetResponseStream();
+            if (responseStream == null) {
+                var rootException = ExceptionUtil.DigRootException(webException);
+                return new MaximoException(webException, rootException);
+            }
+
+            using (var responseReader = new StreamReader(responseStream)) {
+                // parse xml response
+                var text = responseReader.ReadToEnd();
+                var rootException = ExceptionUtil.DigRootException(webException);
+                return new MaximoException(webException, rootException, text);
+            }
+        }
+
     }
 }

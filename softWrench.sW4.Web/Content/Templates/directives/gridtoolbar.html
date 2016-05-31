@@ -1,10 +1,10 @@
-<div class="group" data-classplaceholder="commandbar">
+<div class="toolbar-secondary group" data-classplaceholder="commandbar">
     <div class="wrap">
         <div class="buttons" ng-repeat="command in getGridToolbar()">
             <button type="button"
                     ng-class="buttonClasses(getCommand(command))"
                     ng-init="initIfToggleCommand(command)"
-                    ng-click="executeService(getCommand(command), toggleCommandOrNull(command))" href="" 
+                    ng-click="executeService(getCommand(command), toggleCommandOrNull(command))" href=""
                     ng-if="(command.type == 'ApplicationCommand' || command.type == 'ToggleCommand') && shouldShowCommand(getCommand(command))"
                     ng-enabled="isCommandEnabled(getCommand(command))"
                     data-original-title="{{commandtooltip(getCommand(command))}}"
@@ -16,7 +16,7 @@
             </button>
 
             <div ng-if="command.type == 'ResourceCommand'" ng-click="validateRole(command)">
-                <ng-include src="url(command.path)" />
+                <ng-include src="url(command.path)"/>
             </div>
 
             <div ng-if="command.type == 'ContainerCommand'" ng-click="validateRole(command)">
@@ -44,12 +44,30 @@
                         <!--TODO: Make recursive...-->
                         <li ng-repeat="innercommand in command.displayables">
                             <a ng-click="executeService(innercommand)" href="" ng-if="shouldShowCommand(innercommand)"
-                                data-original-title="{{commandtooltip(innercommand)}}" rel="tooltip" data-container="body">
+                               data-original-title="{{commandtooltip(innercommand)}}" rel="tooltip" data-container="body">
                                 <i class="fa" ng-class="innercommand.icon"></i>&ensp;{{innercommand.label}}
                             </a>
                         </li>
                     </ul>
                 </div>
+            </div>
+        </div>
+        <div ng-if="!!commLogDatamap" class="buttons">
+            <div class="separator">&nbsp;</div>
+            <div class="buttons" ng-repeat="command in getCompositionToolbar()">
+                <button type="button"
+                        ng-class="buttonClasses(getCommand(command))"
+                        ng-init="initIfToggleCommand(command)"
+                        ng-click="executeService(getCommand(command), toggleCommandOrNull(command))" href=""
+                        ng-if="(command.type == 'ApplicationCommand' || command.type == 'ToggleCommand') && shouldShowCommand(getCommand(command))"
+                        ng-enabled="isCommandEnabled(getCommand(command))"
+                        data-original-title="{{commandtooltip(getCommand(command))}}"
+                        rel="tooltip"
+                        data-container="body"
+                        class="applicationcommand btn-primary">
+                    <i class="icon fa" ng-class="commandIcon(getCommand(command))"></i>
+                    <span class="text" ng-show="commandLabel(getCommand(command))"><span class="space">&ensp;</span>{{commandLabel(getCommand(command))}}</span>
+                </button>
             </div>
         </div>
     </div>

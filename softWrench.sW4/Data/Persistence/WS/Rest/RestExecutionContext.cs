@@ -9,6 +9,7 @@ using cts.commons.portable.Util;
 using cts.commons.web.Util;
 using log4net;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using softWrench.sW4.Metadata;
@@ -35,7 +36,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
 
         private string GenerateRestUrl(EntityMetadata entityMetadata, string entityId) {
             var baseRestURL = MetadataProvider.GlobalProperty("basewsRestURL");
-            var entityKey = entityMetadata.ConnectorParameters.GetWSEntityKey(ConnectorParameters.UpdateInterfaceParam,WsProvider.REST);
+            var entityKey = entityMetadata.ConnectorParameters.GetWSEntityKey(ConnectorParameters.UpdateInterfaceParam, WsProvider.REST);
+            if (baseRestURL.EndsWith("/mbo/")) {
+                if (entityKey.StartsWith("SW")) {
+                    entityKey = entityKey.Substring(2);
+                }
+            }
+
             return !baseRestURL.EndsWith("/") ? baseRestURL + "/" + entityKey : baseRestURL + entityKey + "/" + entityId;
         }
 
@@ -74,6 +81,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
                 }
             }
         }
+
+        protected override Exception HandleProxyInvocationError(Exception e) {
+            if (e is WebException) {
+                return MaximoException.ParseWebExceptionResponse((WebException)e);
+            }
+            return base.HandleProxyInvocationError(e);
+        }
+
+
 
         private string GeneratePayLoad() {
             var obj = (RestIntegrationObjectWrapper)IntegrationObject;

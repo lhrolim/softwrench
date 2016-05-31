@@ -209,6 +209,9 @@
                         fixHeaderService.FixHeader();
                         //usually this next call won´t do anything, but for lists with optionfields, this is needed
                         associationService.updateFromServerSchemaLoadResult(data.associationOptions, null, true);
+
+                        checkpointService.createGridCheckpointFromGridData($scope.schema, $scope);
+
                         $scope.gridDataChanged($scope.datamap);
 
                         var elements = $scope.datamap.map(function (item) {
@@ -461,8 +464,6 @@
                         //avoids table flickering
                         fixHeaderService.unfix();
 
-                        checkpointService.createGridCheckpoint($scope.schema, searchDTO);
-
                         $scope.$parent.multipleSchema = false;
                         $scope.$parent.schemas = null;
                         var listSchema = "list";
@@ -491,9 +492,8 @@
 
                     };
 
-
                     $scope.sort = function (column) {
-                        if (!$scope.shouldShowHeaderLabel(column) || "none" === $scope.schema.properties["list.sortmode"] || !$scope.shouldShowGridNavigation()) {
+                        if (!$scope.shouldShowHeaderLabel(column) || "none" === $scope.schema.properties["list.sortmode"] || !$scope.shouldShowGridNavigation() || column.rendererParameters.showsort === "false") {
                             return;
                         }
                         var columnName = column.attribute;
@@ -509,10 +509,10 @@
                     };
 
                     $scope.sortLabel = function (column) {
-                        if (!$scope.shouldShowGridNavigation()) {
+                        if (!$scope.shouldShowGridNavigation() || column.rendererParameters.showsort === "false") {
                             return "";
                         }
-                        return $scope.i18N("_grid.filter.clicksort", "{0}, Click to sort".format(column.label));
+                        return $scope.i18N("_grid.filter.clicksort", "{0}, Click to sort".format(column.toolTip ? column.toolTip : column.label));
                     }
 
                     $scope.collapse = function (selector) {
@@ -529,9 +529,15 @@
                     };
 
                     $scope.filterForColumn = function (column) {
-                        return $scope.schema.schemaFilters.filters.find(function (filter) {
-                            return filter.attribute === column.attribute;
-                        });
+                        const filter = $scope.schema.schemaFilters.filters.find(filter => filter.attribute === column.attribute);
+
+                        if (!!column && !!column.rendererType) {
+                            if (!!filter) {
+                                filter.rendererType = column.rendererType;
+                            }
+                        }
+
+                        return filter;
                     }
 
                     // called when the state of select all checkbox changes from user action

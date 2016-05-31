@@ -3,9 +3,9 @@
 
     angular
       .module('sw_layout')
-      .factory('chicagosrService', ['alertService', 'searchService', chicagosrService]);
+      .factory('chicagosrService', ['$q', 'alertService', 'searchService', chicagosrService]);
 
-    function chicagosrService(alertService, searchService) {
+    function chicagosrService($q, alertService, searchService) {
         var service = {
             afterChangeImpact: afterChangeImpact,
             afterChangeUrgency: afterChangeUrgency,
@@ -78,15 +78,16 @@
                 personid: datamap['reportedby'],
                 isprimary: '1'
             };
-            searchService.searchWithData("email", searchData, "list").success(function (data) {
-                var resultObject = data.resultObject[0];
-                datamap['reportedemail'] = resultObject ? resultObject.fields['emailaddress'] : '';
-            });
-            searchService.searchWithData("phone", searchData, "list").success(function (data) {
-                var resultObject = data.resultObject[0];
-                datamap['reportedphone'] = resultObject ? resultObject.fields['phonenum'] : '';
-            });
             datamap['department'] = datamap['reportedbyp_.department'];
+            return $q.all([
+                searchService.searchWithData("email", searchData, "list"),
+                searchService.searchWithData("phone", searchData, "list")
+            ]).then(function(result) {
+                var emailResult = result[0].data.resultObject[0];
+                datamap['reportedemail'] = emailResult ? emailResult.fields['emailaddress'] : '';
+                var phoneResult = result[1].data.resultObject[0];
+                datamap['reportedphone'] = phoneResult ? phoneResult.fields['phonenum'] : '';
+            });
         };
 
         return service;

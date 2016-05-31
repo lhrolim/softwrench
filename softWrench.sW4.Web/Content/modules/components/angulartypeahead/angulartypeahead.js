@@ -193,7 +193,7 @@
             }
 
             scope.$on("sw_associationsresolved", function (event, panelid) {
-                if (panelid != scope.panelid) {
+                if (panelid != scope.panelid && !(panelid == null && scope.panelid ==="")) {
                     //keep != to avoid errors
                     log.debug("ignoring event sw_associationsresolved for panelid {0} since we are on {1}".format(panelid, scope.panelid));
                     return;

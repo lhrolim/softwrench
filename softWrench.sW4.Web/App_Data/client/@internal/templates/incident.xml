@@ -118,6 +118,9 @@
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="Medium" value="2" />
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="Low" value="3" />
         </optionfilter>
+        <optionfilter attribute="statusicons" displaycode="true">
+          <option xmlns="http://www.controltechnologysolutions.com/filters" label="Attachments" value="attachmentcounter" />
+        </optionfilter>
       </filters>
       <schemas>
         <list title="Incident Grid">
@@ -143,10 +146,13 @@
             <renderer type="statuscolor" params="width=12%;grid=incident;column=status" />
           </field>
           <field attribute="internalpriority" tooltip="Priority">
-            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true"/>
+            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
           </field>
-          <field attribute="attachmentcounter" tooltip="Attachments">
-            <renderer type="icon" params="width=3%;icon=fa-paperclip"/>
+          <field attribute="attachmentcounter" tooltip="Attachments" hidden="true">
+            <renderer type="icon" params="icon=fa-paperclip"/>
+          </field>
+          <field attribute="statusicons" tooltip="Status Icons">
+            <renderer type="statusicons" params="width=3%;iconcolumns=attachmentcounter;icon=fa-tachometer;headericon=true;showsort=false"/>
           </field>
           <properties>
             <property key="list.click.schema" value="detail"/>

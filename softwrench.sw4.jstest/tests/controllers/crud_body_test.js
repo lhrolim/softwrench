@@ -25,7 +25,6 @@
 
         contextService.insertIntoContext("commandbars", {});
         contextService.set("grid_refreshdata", { panelid: "aaa" }, true);
-        debugger;
         mockScope.datamap = {};
         var el = angular.element("<crud-body datamap='datamap' schema='schema' is-list='true' ismodal='false' timestamp='100' />");
         $compile(el)(mockScope);

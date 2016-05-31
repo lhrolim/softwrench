@@ -3,7 +3,7 @@
 
     var app = angular.module('sw_layout');
 
-    function griditemclick(event,rowNumber, columnAttribute, element, forceEdition) {
+    function griditemclick(event, rowNumber, columnAttribute, element, forceEdition) {
         //this is a trick to call a angular scope function from an ordinary onclick listener (same used by batarang...)
         //with this, we can generate the table without compiling it to angular, making it faster
         //first tests pointed a 100ms gain, but need to gather more data.
@@ -17,9 +17,13 @@
         scope.$root.$digest();
         event.stopImmediatePropagation();
     }
-
-
     window.griditemclick = griditemclick;
+
+    function changePriority(rowNumber, priority, element, columnAttribute) {
+        var scope = angular.element(element).scope();
+        scope.changePriority(scope.datamap[rowNumber], columnAttribute, priority);
+    }
+    window.changePriority = changePriority;
 
     function defaultAppending(formattedText, updatable, rowst, column, background, foreground) {
         var st = "";
@@ -98,7 +102,7 @@
     window.parseBooleanValue = parseBooleanValue;
 
     app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
-    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService, classificationColorService, prioritycolorService) {
+    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService, classificationColorService, priorityService) {
         "ngInject";
 
         return {
@@ -127,9 +131,44 @@
                     return statuscolorService.getColor(status, scope.schema.applicationName);
                 };
 
+                scope.priorityDropdown = function (rowNumber, column, icon, closed) {
+                    var priorityList = priorityService.getPriorityList();
+                    var html = '<ul class="dropdown-menu" role="menu">';
+
+                    if (closed) {
+                        html += '<li class="info-dropdown">';
+                        html += '<i class="icon fa fa-info-circle"></i>&ensp;<span class="text">You can\'t change<br />closed tickets.</span>';
+                        html += '</li>';
+                    } else {
+                        for (var key in priorityList) {
+                            if (priorityList.hasOwnProperty(key)) {
+
+                                var color = priorityService.getPriorityColor(key, column.rendererParameters);
+                                if (key == 0) {
+                                    color = '#ccc';
+                                }
+
+                                html += "<li><a onclick='changePriority({0}, {1}, this, \"{2}\")'>".format(rowNumber, key, column.attribute);
+                                html += '<i class="fa {0}" style="color: {1}"></i>&ensp;{2}'.format(icon, color, priorityList[key]);
+                                html += '</a></li>';
+                            }
+                        }
+                    }
+
+                    html += '</ul>';
+
+                    return html;
+                }
+
                 scope.handleIcon = function (iconClass, column, text, foreground, rowIdx) {
                     var iconHTML = "";
-                    iconHTML += "<i class=\"fa {0}\" onclick='griditemclick(event,{1},\"{2}\",this)'".format(iconClass, rowIdx, column.attribute);
+                    iconHTML += "<i class=\"fa {0}\"".format(iconClass);
+
+                    if (column.rendererType == 'priorityicon' && column.rendererParameters.changevalue != undefined && column.rendererParameters.changevalue == 'true') {
+                        iconHTML += 'data-toggle="dropdown" aria-expanded="false"';
+                    } else {
+                        iconHTML += "onclick='griditemclick(event,{0},\"{1}\",this)'".format(rowIdx, column.attribute);
+                    }
 
                     //if no color or value, hide the icon
                     if (foreground == null && (text == 0 || text == null)) {
@@ -176,9 +215,7 @@
                     return null;
                 }
 
-
                 scope.appendDateTimeComponent = function (columnSt, rendererParameters, attribute, openCalendarTooltip) {
-
                     var st = "<input type=\"text\" ng-model=\"{0}.fields[{1}]\" data-date-time  class=\"form-control\" ".format(columnSt, attribute);
                     st += " data-show-time=\"{0}\" ".format(parseBooleanValue(rendererParameters['showtime']));
                     st += " data-show-date=\"{0}\"".format(parseBooleanValue(rendererParameters['showdate']));
@@ -290,8 +327,13 @@
 
                             var isHidden = hiddencolumnArray[j];
 
-                            html += "<td {2} onclick='griditemclick(event,{0},\"{1}\",this)' class='{3} {4} {5}'".format(i, attribute, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute), hasDataClass(column, formattedText), column.rendererType);
-                            html += "data-title='{0}'".format(column.label);
+                            html += "<td {0} class='{1} {2} {3}'".format(isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute), hasDataClass(column, formattedText), column.rendererType);
+
+                            if (column.rendererType != 'priorityicon' || (column.rendererParameters.changevalue == undefined || column.rendererParameters.changevalue == 'false')) {
+                                html += " onclick='griditemclick(event,{0},\"{1}\",this)'".format(i, attribute);
+                            }
+
+                            html += " data-title='{0}'".format(column.label ? column.label : column.toolTip);
                             html += ">";
                             if (column.rendererType === 'color') {
                                 var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
@@ -335,10 +377,15 @@
                                 }
                             }
                             else if (column.rendererType === 'priorityicon') {
-                                var foreground = prioritycolorService.getColor(formattedText, column.rendererParameters);
+                                var foreground = priorityService.getPriorityColor(formattedText, column.rendererParameters);
                                 var icon = scope.loadIcon(null, column);
 
                                 html += '<div class="cell-wrapper">' + scope.handleIcon(icon, column, formattedText, foreground, i);
+
+                                if (column.rendererParameters.changevalue != undefined && column.rendererParameters.changevalue == 'true') {
+                                    var closed = dm.fields['status'].equalIc('CLOSED') || dm.fields['status'].equalIc('CLOSE');
+                                    html += scope.priorityDropdown(i, column, icon, closed);
+                                }
                             }
                             else if (column.rendererType === 'statusicons') {
                                 html += '<div class="cell-wrapper">';
@@ -360,7 +407,7 @@
                                         }
 
                                         if (iconColumn.rendererParameters.qualifier == "priority") {
-                                            foreground = prioritycolorService.getColor(value, iconColumn.rendererParameters);
+                                            foreground = priorityService.getPriorityColor(value, iconColumn.rendererParameters);
                                         }
 
                                         iconHTML += scope.handleIcon(icon, iconColumn, value, foreground, i);

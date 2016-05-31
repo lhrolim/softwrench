@@ -748,7 +748,6 @@
     <Content Include="Content\Scripts\customers\shared\invissuereturnaction.js" />
     <Content Include="Content\Scripts\customers\shared\receiving.js" />
     <Content Include="Content\Scripts\customers\shared\solution_service.js" />
-    <Content Include="Content\Scripts\customers\shared\commlogactions.js" />
     <Content Include="Content\Scripts\customers\otb\sr_service.js" />
     <Content Include="Content\Scripts\customers\shared\relatedrecord_service.js" />
     <Content Include="Content\Scripts\customers\shared\genericticket_service.js" />
@@ -833,7 +832,6 @@
     <Content Include="Content\Templates\otb\WotaskchangeStatus.html" />
     <Content Include="Content\Templates\otb\compositionlistdeleteaction.html" />
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />
-    <Content Include="Content\Templates\otb\commlogaction.html" />
     <Content Include="Content\Templates\otb\receiving.html" />
     <Content Include="Content\Templates\pagination-pages.html" />
     <Content Include="Content\Templates\samelinepickers.html" />

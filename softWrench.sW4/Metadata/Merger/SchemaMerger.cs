@@ -68,21 +68,27 @@ namespace softWrench.sW4.Metadata.Validator {
                 if (displayable is IApplicationDisplayableContainer) {
 
                     var container = (IApplicationDisplayableContainer)displayable;
-                    bool containerReplaced = false;
+                    bool? containerReplaced = null;
 
                     if (container.Id != null && container is IApplicationIndentifiedDisplayable) {
                         var attrDisplayable = (IApplicationIndentifiedDisplayable)container;
                         //sections, tabs
+                        // first we'll try to customize the containers themselves, not their inner fields
                         containerReplaced = DoApplySingleCustomization(overridenSchema, components, customizations, customizationsActuallyApplied, attrDisplayable, resultDisplayables);
                     }
 
-                    if (!containerReplaced) {
-                        //applying customizations on inner fields of the container, since no maching customization was found
+                    if (containerReplaced == null || containerReplaced.Value == false) {
+                        //applying customizations on inner fields of the container, since no matching customization was found
+                        //now it's time to try to apply customizations to the container inner fields instead
                         DoApplyCustomizations((IApplicationDisplayableContainer)displayable,
                                 overridenSchema, components,
                                 customizations, customizationsActuallyApplied,
                                 fieldsThatShouldBeCustomized);
-                        resultDisplayables.Add(displayable);
+
+                        if (containerReplaced == null) {
+                            //if the container has an id, then the DoApplySingleCustomization workflow would have already added itself on the resultDisplayables list. We need to avoid such situation 
+                            resultDisplayables.Add(displayable);
+                        }
                     }
                     continue;
                 }

@@ -10,7 +10,8 @@
                          search-data="searchData"
                          search-sort="searchSort"
                          search-operator="searchOperator"
-                         mode="{{mode}}" />
+                         mode="{{mode}}"
+                         comm-log-datamap="getDetailDatamap"/>
 
     <div ng-show="hasRecords()" class="clearfix">
 
@@ -50,13 +51,6 @@
                         </div>
                     </div>
                 </scroll-pane>
-                <div ng-if="!!getDetailDatamap" class="commands">
-                    <div ng-controller="CommLogActionsController" class="buttons">
-                        <button class="btn btn-primary fa fa-mail-reply" ng-click="reply(getDetailDatamap)" title="Reply"></button>
-                        <button class="btn btn-primary fa fa-mail-reply-all" ng-click="replyAll(getDetailDatamap)" title="Reply all"></button>
-                        <button class="btn btn-primary fa fa-mail-forward" ng-click="forward(getDetailDatamap)" title="Forward"></button>
-                    </div>
-                </div>
                 <div ng-if="!compositiondata" class="no-records">
                     <i class="fa fa-info-circle"></i>&ensp;No records match your search.
                 </div>

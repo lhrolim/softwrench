@@ -16,7 +16,7 @@
     <a ng-switch-when="ActionMenuItemDefinition" ng-click="doAction(item, $event)" bc-menu-item>
         <i class="{{item.icon}}"></i>&ensp;{{item.title}}
     </a>
-    <a ng-switch-when="ApplicationMenuItemDefinition" ng-click="goToApplication(item, $event)" bc-menu-item>
+    <a ng-switch-when="ApplicationMenuItemDefinition" ng-click="goToApplication(item, $event, true)" bc-menu-item>
         <i class="{{item.icon}}"></i>&ensp;{{item.title}}
     </a>
     <a ng-switch-when="ExternalLinkMenuItemDefinition" href="{{item.link}}" target="_blank">

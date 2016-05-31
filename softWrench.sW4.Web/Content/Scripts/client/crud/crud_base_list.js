@@ -98,7 +98,7 @@
                 return column.rendererParameters.headericon;
             }
 
-            return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon" && column.rendererType != "statusicons" && column.rendererType != "iconbutton";
+            return (column.type === "ApplicationFieldDefinition" || column.type === "OptionField") && column.rendererType !== "color" && column.rendererType !== "icon" && column.rendererType !== "iconbutton";
         };
 
         $scope.headerIcon = function (column) {
@@ -121,6 +121,17 @@
 
         $scope.shouldShowHeaderFilter = function (column) {
             return $scope.shouldShowHeaderLabel(column) && !column.rendererParameters["hidefilter"];
+        };
+
+        $scope.changePriority = function (rowdm, attribute, newPriority) {
+            var column = fieldService.getDisplayableByKey($scope.schema, attribute);
+            var clickService = column.rendererParameters.onclick;
+            var newValue = {
+                attribute: attribute,
+                value: newPriority
+            }
+
+            commandService.executeClickCustomCommand(clickService, rowdm.fields, column, $scope.schema, $scope.panelid, newValue);
         };
 
         $scope.showDetail = function (rowdm, attribute, forceEdition) {

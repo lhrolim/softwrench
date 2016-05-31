@@ -26,6 +26,8 @@
         <attribute name="itdfirstcallresolution" type="boolean" required="false"/>
         <attribute name="createdby" type="varchar" required="false"/>
         <attribute name="department" type="varchar" required="false"/>
+        <attribute name="ismticketid" type="varchar" required="false"/>
+        <attribute name="ismticketuid" type="varchar" required="false"/>
       </attributes>
       <relationships>
         <relationship to="alndomain" qualifier="DEPARTMENT">
@@ -254,6 +256,9 @@
         
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail" redeclaring="true">
 
+          <field attribute="ismticketid" hidden="true"/>
+          <field attribute="ismticketuid" hidden="true"/>
+          
           <section orientation="horizontal">
             <field attribute="description" label="Summary" requiredexpression="true"/>
             <section id="statussection"/>

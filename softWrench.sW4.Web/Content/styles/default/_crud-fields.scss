@@ -384,7 +384,7 @@ input[type="date"], input[type="time"] {
         position: absolute;
         left: -30px;
         bottom: 0;
-        width: 100vw;
+        width: calc(100% + 60px);
         margin: 0;
         border-color: $cts-gray;
     }

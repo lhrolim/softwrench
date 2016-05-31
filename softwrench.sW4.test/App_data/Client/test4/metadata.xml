@@ -30,6 +30,7 @@
 
     <!--Workflow-->
     <template path="@workflow.xml"/>
+    <template path="@asset.xml"/>
 
   </templates>
 
@@ -132,6 +133,18 @@
         </list>
       </schemas>
     </application>
+
+    <application name="asset" title="Asset" entity="asset">
+      <schemas>
+        <schema id="detail" title="Asset Detail" stereotype="detail" platform="web" redeclaring="false">
+          <customization position="+item_.description">
+            <field attribute="pluspcustomer" label="Customer" readonly="true"/>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+
+
 
   </applications>
 
