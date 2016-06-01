@@ -363,12 +363,12 @@ app.directive('generictoolbar', ["contextService", function (contextService) {
             datamap: '=',
         },
 
-//        link: function (scope, element, attrs, ctrl) {
-//            scope.ctrlfns = {};
-//            angular.forEach(ctrl, function (fn, name) {
-//                if (angular.isFunction(fn)) scope.ctrlfns[name] = fn;
-//            });
-//        },
+        link: function (scope, element, attrs, ctrl) {
+            scope.ctrlfns = {};
+            angular.forEach(ctrl, function (fn, name) {
+                if (angular.isFunction(fn)) scope.ctrlfns[name] = fn;
+            });
+        },
 
         controller: sharedController
 
