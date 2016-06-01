@@ -96,10 +96,12 @@
                          * @param String columnName 
                          */
                         $scope.clearFilter = function (filter) {
-                            filter.options.forEach(function (option) {
-                                delete $scope.searchData[option.value];
-                                delete $scope.searchOperator[option.value];
-                            });
+                            if (filter.options) {
+                                filter.options.forEach(function(option) {
+                                    delete $scope.searchData[option.value];
+                                    delete $scope.searchOperator[option.value];
+                                });
+                            }
 
                             var filterAttribute = filter.attribute;
                             $(".dropdown.open").removeClass("open");
