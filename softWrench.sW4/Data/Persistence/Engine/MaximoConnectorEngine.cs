@@ -1,4 +1,6 @@
-﻿using softWrench.sW4.Data.Persistence.Operation;
+﻿using System;
+using softWrench.sW4.Data.Persistence.Engine.Exception;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -55,13 +57,13 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             operationWrapper.UserId = crudOperationData.UserId;
             switch (operationName) {
                 case OperationConstants.CRUD_CREATE:
-                    return crudConnector.Create(crudOperationData);
+                return crudConnector.Create(crudOperationData);
                 case OperationConstants.CRUD_UPDATE:
-                    return crudConnector.Update(crudOperationData);
+                return crudConnector.Update(crudOperationData);
                 case OperationConstants.CRUD_DELETE:
-                    return crudConnector.Delete(crudOperationData);
+                return crudConnector.Delete(crudOperationData);
                 case OperationConstants.CRUD_FIND_BY_ID:
-                    return crudConnector.FindById(crudOperationData);
+                return crudConnector.FindById(crudOperationData);
             }
 
             return null;
@@ -111,7 +113,12 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 _crudConnector.PopulateIntegrationObject(maximoTemplateData);
                 _crudConnector.BeforeCreation(maximoTemplateData);
                 _crudConnector.DoCreate(maximoTemplateData);
-                _crudConnector.AfterCreation(maximoTemplateData);
+                try {
+                    _crudConnector.AfterCreation(maximoTemplateData);
+                } catch (System.Exception e) {
+                    throw new AfterCreationException(maximoTemplateData.ResultObject,e);
+                }
+
                 return maximoTemplateData.ResultObject;
             }
             public TargetResult Delete(CrudOperationData operationData) {

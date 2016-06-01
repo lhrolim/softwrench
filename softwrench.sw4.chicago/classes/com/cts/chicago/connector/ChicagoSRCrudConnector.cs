@@ -4,7 +4,11 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Net;
+using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using softwrench.sw4.problem.classes;
 using softWrench.sW4.Data.Persistence.WS.API;
@@ -20,6 +24,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
         private const string ISMTicketUid = "ismticketuid";
 
         private IProblemManager _problemManager;
+        private IMaximoHibernateDAO _maximoHibernateDAO;
 
         private IProblemManager ProblemManager {
             get {
@@ -30,17 +35,36 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
                 return _problemManager;
             }
 
+
+        }
+
+        private IMaximoHibernateDAO MaximoDAO {
+            get {
+                if (_maximoHibernateDAO != null) {
+                    return _maximoHibernateDAO;
+                }
+                _maximoHibernateDAO =
+                    SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(typeof(IMaximoHibernateDAO));
+                return _maximoHibernateDAO;
+            }
         }
 
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;
 
-            if (w.GetRealValue(sr, "STATUS").Equals("INPROG")) {
+            var statusValue = w.GetRealValue(sr, "STATUS");
+            if (statusValue == null) {
+                base.BeforeUpdate(maximoTemplateData);
+                return;
+            }
+
+
+            if (statusValue.Equals("INPROG")) {
                 w.SetValueIfNull(sr, "ACTUALSTART", DateTime.Now.FromServerToRightKind());
-            } else if (w.GetRealValue(sr, "STATUS").Equals("RESOLVED")) {
+            } else if (statusValue.Equals("RESOLVED")) {
                 w.SetValue(sr, "ACTUALFINISH", DateTime.Now.FromServerToRightKind());
-            } else if (w.GetRealValue(sr, "STATUS").Equals("CLOSED")) {
+            } else if (statusValue.Equals("CLOSED")) {
                 w.SetValue(sr, "ITDCLOSEDATE", DateTime.Now.FromServerToRightKind());
             }
 
@@ -62,10 +86,13 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
                 AfterCreation(maximoTemplateData);
             } else {
                 //updating ISM Entry which already exists
-                crudOperationData.SetAttribute("ticketuid", crudOperationData.GetAttribute(ISMTicketUid));
+                var ismTicketUid = crudOperationData.GetAttribute(ISMTicketUid);
+                crudOperationData.SetAttribute("ticketuid", ismTicketUid);
                 crudOperationData.SetAttribute("ticketid", crudOperationData.GetAttribute(ISMTicketId));
 
                 crudOperationData.SetAttribute("underwaycall", true);
+
+                crudOperationData.Id = ismTicketUid as string;
 
                 var mifOperationWrapper = new OperationWrapper(crudOperationData,
                     OperationConstants.CRUD_UPDATE) {
@@ -94,17 +121,15 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             //entry was created locally, now we need to create it on ISM, using a rest call
             var result = maximoTemplateData.ResultObject;
 
-            var originalTicketid = crudOperationData.GetAttribute("ticketid");
-            var originalTicketuid = crudOperationData.GetAttribute("ticketuid");
+            var ticketOriginalData = GetTicketOriginalData(crudOperationData, maximoTemplateData.ResultObject);
 
+            crudOperationData.SetAttribute("underwaycall", true);
             crudOperationData.SetAttribute("ticketid", null);
             crudOperationData.SetAttribute("ticketuid", null);
 
-            crudOperationData.SetAttribute("underwaycall", true);
-
-            var originalId = crudOperationData.Id;
 
             crudOperationData.Id = null;
+            crudOperationData.UserId = null;
 
             //updating ISM instance using REST --> no ticketid, ticketuid, they would be generated out there
             var operationWrapper = new OperationWrapper(crudOperationData,
@@ -116,10 +141,15 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
             //updating local entry, reset the ticketids
 
-            crudOperationData.SetAttribute("ticketid", originalTicketid);
-            crudOperationData.SetAttribute("ticketuid", originalTicketuid);
+            crudOperationData.SetAttribute("ticketid", ticketOriginalData.Item1);
+            crudOperationData.SetAttribute("ticketuid", ticketOriginalData.Item2);
+            crudOperationData.SetAttribute("status", ticketOriginalData.Item3);
 
-            crudOperationData.Id = originalId;
+
+            
+            crudOperationData.Id = ticketOriginalData.Item1;
+            crudOperationData.UserId = ticketOriginalData.Item2;
+
 
             crudOperationData.SetAttribute(ISMTicketUid, restResult.Id);
             crudOperationData.SetAttribute(ISMTicketId, restResult.UserId);
@@ -130,10 +160,40 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
             ConnectorEngine.Execute(mifOperationWrapper);
 
+        }
+
+        /// <summary>
+        /// Returns ticketuid, ticketid, Status tuple
+        /// </summary>
+        /// <param name="crudOperationData"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        private Tuple<string, string, string> GetTicketOriginalData(CrudOperationData crudOperationData, TargetResult result) {
+            var originalTicketid = crudOperationData.GetAttribute("ticketid") as string;
+            var originalTicketuid = crudOperationData.GetAttribute("ticketuid") as string;
+            var status = crudOperationData.GetAttribute("status") as string;
+            if (originalTicketid != null && originalTicketuid != null) {
+                return new Tuple<string, string, string>(originalTicketuid, originalTicketid, status);
+            }
+
+            var originalSiteid = crudOperationData.GetAttribute("siteid");
+            var ticketUid = result.Id;
+            var ticketId = result.UserId;
+            if (ticketUid != null && ticketId != null) {
+                return new Tuple<string, string, string>(ticketUid, ticketId, status);
+            }
 
 
+            //mif returns only the ticketid. ticketuid needs to be picked from database
+            var obj = MaximoDAO.FindSingleByNativeQuery<object>("select ticketuid,status from sr where ticketid =? and siteid =? ", ticketId, originalSiteid) as dynamic;
+
+            ticketUid = obj[0].ToString();
+            result.Id = ticketUid;
+
+            return new Tuple<string, string, string>(ticketUid, ticketId, obj[1].ToString());
 
 
         }
+
     }
 }

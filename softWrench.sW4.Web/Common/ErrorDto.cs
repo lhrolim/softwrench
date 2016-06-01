@@ -1,6 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.Common {
@@ -13,6 +14,7 @@ namespace softWrench.sW4.Web.Common {
         public Type ErrorNativeType { get; set; }
         public string ErrorType { get { return ErrorNativeType == null ? null : ErrorNativeType.Name; } }
         public string OutlineInformation { get; set; }
+        public TargetResult ResultObject { get; set; }
 
 
         public ErrorDto(string errorMessage, string errorStack, string fullStack) {

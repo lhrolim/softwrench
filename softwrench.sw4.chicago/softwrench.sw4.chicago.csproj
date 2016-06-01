@@ -33,12 +33,14 @@
     <Reference Include="cts.commons.simpleinjector">
       <HintPath>..\softWrench.sW4.Web\Bin\cts.commons.simpleinjector.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\com\cts\chicago\connector\ChicagoSRCrudConnector.cs" />
     <Compile Include="classes\com\cts\chicago\dataset\ChicagoServiceRequestDataSet.cs" />
+    <Compile Include="classes\com\cts\chicago\exception\ISMSyncException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
