@@ -245,9 +245,11 @@
          * @returns boolean whether or not the options should be displayed (user has authorization) 
          */
         function filterSelectableApplications(option) {
+            if (!option) return false;
             const applications = crudContextHolderService.fetchEagerAssociationOptions("applications", { schemaId: "#modal" });
+            if (!applications || applications.length <= 0) return false;
             const appNames = applications.map(a => a.value);
-            const filterableName = option.value === "sr" ? "servicerequest" : option.value;
+            const filterableName = "sr".equalIc(option.value) ? "servicerequest" : option.value;
             // option is part of authorized apps
             return !!appNames.find(a =>  a === filterableName);
         }

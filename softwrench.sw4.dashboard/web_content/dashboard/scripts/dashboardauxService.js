@@ -142,7 +142,9 @@
 
         function setGraphicProvider(event) {
             // delegate call to provider api
-            var instance = graphicPanelServiceProvider.getService(event.fields.provider);
+            const provider = event.fields.provider;
+            if (!provider) return;
+            const instance = graphicPanelServiceProvider.getService(provider);
             return instance.onProviderSelected(event);
         }
 
