@@ -31,7 +31,8 @@
                         };
 
                         $scope.markDefaultOperator = function (filter) {
-                            if (!$scope.searchOperator[filter.attribute]) {
+                            var operator = $scope.searchOperator[filter.attribute];
+                            if (!operator || operator.id === "NF") {
                                 if (filter.type === "MetadataDateTimeFilter") {
                                     $scope.searchOperator[filter.attribute] = searchService.getSearchOperationById("GTE");
                                 } else {
@@ -95,10 +96,12 @@
                          * @param String columnName 
                          */
                         $scope.clearFilter = function (filter) {
-                            filter.options.forEach(function (option) {
-                                delete $scope.searchData[option.value];
-                                delete $scope.searchOperator[option.value];
-                            });
+                            if (filter.options) {
+                                filter.options.forEach(function(option) {
+                                    delete $scope.searchData[option.value];
+                                    delete $scope.searchOperator[option.value];
+                                });
+                            }
 
                             var filterAttribute = filter.attribute;
                             $(".dropdown.open").removeClass("open");

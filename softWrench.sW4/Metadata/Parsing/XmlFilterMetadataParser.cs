@@ -23,7 +23,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             var els = declaredFilters.Elements();
             var xElements = els as XElement[] ?? els.ToArray();
-            if (stereotype != null && xElements.Any() && stereotype != SchemaStereotype.List) {
+            if (stereotype != null && xElements.Any() && stereotype != SchemaStereotype.List && stereotype != SchemaStereotype.CompositionList) {
                 throw new MetadataException("filters can only be declared in list schemas");
             }
 

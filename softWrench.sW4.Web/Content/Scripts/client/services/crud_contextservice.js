@@ -67,7 +67,7 @@
              */
             _blockedAssociations: {},
 
-          
+            compositionLoadEventQueue :{},
 
             //TODO: below is yet to be implemented/refactored
             detail_previous: { id: "0" },
@@ -287,6 +287,7 @@
             if (!!clearTab) {
                 contextService.setActiveTab(null);
             }
+            context.compositionLoadEventQueue = {};
         }
 
         function compositionsLoaded(result, panelid) {
@@ -576,6 +577,10 @@
             getContext(panelid).isDetail = true;
         }
 
+        function compositionQueue(panelid) {
+            return getContext(panelid).compositionLoadEventQueue;
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -657,6 +662,7 @@
             setDirty: setDirty,
             getDirty: getDirty,
             clearDirty: clearDirty,
+            compositionQueue
         }
 
         var navigationServices = {

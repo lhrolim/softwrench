@@ -179,6 +179,7 @@
                 if (scope.metadata.type == "ApplicationCompositionDefinition" && isInline && !custom) {
                     //inline compositions should load automatically
                     doLoad();
+                 
                 }
 
                 scope.cancel = function (data, schema) {
@@ -222,12 +223,71 @@
     function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService, alertService,
         formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient, userPreferencesService, associationService,
         expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
-        schemaService, contextService, fixHeaderService, applicationService) {
+        schemaService, contextService, fixHeaderService, applicationService, searchService) {
 
         $scope.lookupObj = {};
 
         $scope.lookupAssociationsCode = [];
         $scope.lookupAssociationsDescriptions = [];
+
+        $scope.searchData = {};
+        $scope.searchOperator = {};
+        $scope.searchSort = {};
+        $scope.filtersDatamap = {};
+        $scope.panelId = null;
+        $scope.selectAllChecked = false;
+
+        $scope.filterForColumn = function (column) {
+            var schema = $scope.compositionlistschema;
+            if (!schema || !schema.schemaFilters || !schema.schemaFilters.filters) {
+                return null;
+            }
+            return schema.schemaFilters.filters.find(function (filter) {
+                return filter.attribute === column.attribute;
+            });
+        }
+
+        $scope.filterApplied = function () {
+            $scope.paginationData.pageNumber = 1;
+            var searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
+            compositionService.searchCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields || $scope.parentdata, searchDTO).then(
+                result => $scope.refreshList(result[$scope.relationship])
+            ).finally(() => crudContextHolderService.setDetailDataResolved());
+        };
+
+        $scope.shouldShowSort = function (column, orientation) {
+            if ($scope.hideFilter()) {
+                return false;
+            }
+            return !!column.attribute && ($scope.searchSort.field === column.attribute || $scope.searchSort.field === column.rendererParameters["sortattribute"]) && $scope.searchSort.order === orientation;
+        };
+
+        $scope.sort = function (column) {
+            var columnName = column.attribute;
+
+            var sorting = $scope.searchSort;
+            if (sorting.field && sorting.field === columnName) {
+                sorting.order = sorting.order === "desc" ? "asc" : "desc";
+            } else {
+                sorting.field = columnName;
+                sorting.order = "asc";
+            }
+            $scope.filterApplied();
+        };
+
+        $scope.sortLabel = function (column) {
+            return $scope.i18N("_grid.filter.clicksort", "{0}, Click to sort".format(column.label));
+        }
+
+        $scope.hideFilter = function () {
+            if ($scope.isBatch()) {
+                return true;
+            }
+            if (!$scope.compositionlistschema) {
+                return false;
+            }
+            return schemaService.isPropertyTrue($scope.compositionlistschema, "compositions.disable.filter");
+        }
 
         $scope.setForm = function (form) {
             $scope.crudform = form;
@@ -388,6 +448,11 @@
                 }
             }
 
+            var eventData = compositionService.pollCompositionEvent($scope.relationship);
+            if (eventData) {
+                $scope.onAfterCompositionResolved(null, eventData);
+            }
+
         }
 
         $scope.getApplicationPath = function (datamap, fieldMetadata) {
@@ -411,10 +476,13 @@
 
 
         $scope.onAfterCompositionResolved = function (event, compositiondata) {
+
             if (!compositiondata || !compositiondata.hasOwnProperty($scope.relationship)) {
                 //this is not the data this tab is interested
                 return;
             }
+
+            compositionService.pollCompositionEvent();
 
             var log = $log.get("compositionlist#resolved", ["composition"]);
 
@@ -1166,18 +1234,21 @@
             $scope.selecteditem = null;
             $scope.collapseAll();
 
-            var softrefresh = schemaService.isPropertyTrue($scope.parentschema, "compositions.softrefresh");
-            if (softrefresh) {
-                return redirectService.goToApplicationView($scope.parentschema.applicationName, $scope.parentschema.schemaId);
-            }
-
             if (!$scope.paginationData) {
                 $scope.clearNewCompositionData();
                 return $q.when(null);
             }
 
+            var keepfilters = schemaService.isPropertyTrue($scope.parentschema, "compositions.keepfilters");
+            var destinationPage = keepfilters ? $scope.paginationData.pageNumber : 1;
+            if (!keepfilters) {
+                $scope.searchData = {};
+                $scope.searchOperator = {};
+                $scope.searchSort = {};
+            }
+
             // select first page
-            return $scope.selectPage(1).then(function (result) {
+            return $scope.selectPage(destinationPage).then(() => {
                 $scope.clearNewCompositionData();
                 crudContextHolderService.setTabRecordCount($scope.relationship, null, $scope.paginationData.totalCount);
             });
@@ -1340,24 +1411,27 @@
 
             var fields = $scope.parentdata.fields || $scope.parentdata;
             crudContextHolderService.clearDetailDataResolved();
+
+            var searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
+            searchDTO.pageNumber = pageNumber;
+            searchDTO.pageSize = pageSize;
             return compositionService
-                .getCompositionList($scope.relationship, $scope.parentschema, fields, pageNumber, $scope.paginationData.pageSize)
-                .then(function (result) {
-                    $scope.clonedCompositionData = [];
-                    // clear lists
-                    var compositionData = result[$scope.relationship];
-
-                    //in order to use on onloadevent
-                    var previousData = $scope.compositiondata;
-
-                    $scope.compositiondata = compositionData.list;
-                    $scope.paginationData = compositionData.paginationData;
-
-                    init(previousData, true);
-                }).finally(function () {
-                    crudContextHolderService.setDetailDataResolved();
-                });
+                .searchCompositionList($scope.relationship, $scope.parentschema, fields, searchDTO)
+                .then(result => $scope.refreshList(result[$scope.relationship]))
+                .finally(() => crudContextHolderService.setDetailDataResolved());
         };
+
+        $scope.refreshList = function (compositionData) {
+            $scope.clonedCompositionData = [];
+
+            //in order to use on onloadevent
+            var previousData = $scope.compositiondata;
+
+            $scope.compositiondata = compositionData.list;
+            $scope.paginationData = compositionData.paginationData;
+
+            init(previousData, true);
+        }
 
         //#endregion
 
@@ -1383,7 +1457,7 @@
     CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService", "alertService",
             "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient", "userPreferencesService", "associationService",
             "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
-            "schemaService", "contextService", "fixHeaderService", "applicationService"];
+            "schemaService", "contextService", "fixHeaderService", "applicationService", "searchService"];
 
     window.CompositionListController = CompositionListController;
 

@@ -193,7 +193,7 @@ namespace softWrench.sW4.Metadata {
 
                     schema.DepandantFields(DependencyBuilder.BuildDependantFields(schema.Fields, schema.DependableFields));
                     schema._fieldWhichHaveDeps = schema.DependantFields().Keys;
-                    if (schema.Stereotype.Equals(SchemaStereotype.List)) {
+                    if (schema.Stereotype.Equals(SchemaStereotype.List) || schema.Stereotype.Equals(SchemaStereotype.CompositionList)) {
                         ApplyListSpecificLogic(app, schema);
                     }
 

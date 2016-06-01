@@ -134,7 +134,7 @@
       </filters>
       
       <schemas>
-        <schema id="compositionlist" title="Labor List">
+        <schema id="compositionlist" title="Labor List" stereotype="compositionlist">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="laborcode" label="Labor" qualifier="title"/>
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
