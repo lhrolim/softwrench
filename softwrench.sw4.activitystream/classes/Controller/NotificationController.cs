@@ -29,9 +29,14 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         [HttpGet]
         public NotificationResponse GetNotifications([FromUri]int? currentProfile) {
             var user = SecurityFacade.CurrentUser();
-            var securityGroups = user.Profiles;
-            var profileDTO = _notificationFacade.GetNotificationProfile(currentProfile,securityGroups);
+            var profileDTO = _notificationFacade.GetNotificationProfile(currentProfile, user);
             var securityGroup = profileDTO.SelectedProfile;
+
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            // ReSharper disable once HeuristicUnreachableCode
+            if (securityGroup == null) {
+                return null;
+            }
 
             var notificationResponse = _notificationFacade.GetNotificationStream(securityGroup.Name);
             if (notificationResponse != null) {

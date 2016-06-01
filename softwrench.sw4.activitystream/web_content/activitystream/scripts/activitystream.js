@@ -24,8 +24,8 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             scope.$name = 'crudbody';
         },
 
-        controller: ["$scope", "$http", "$log", "$interval", "$timeout", "redirectService", "contextService", "$rootScope", "alertService", "sidePanelService",
-            function ($scope, $http, $log, $interval, $timeout, redirectService, contextService, $rootScope, alertService, sidePanelService) {
+        controller: ["$scope", "$http", "$log", "$interval", "$timeout", "redirectService", "contextService", "$rootScope", "alertService", "sidePanelService", "userService", 
+            function ($scope, $http, $log, $interval, $timeout, redirectService, contextService, $rootScope, alertService, sidePanelService, userService) {
 
             var log = $log.getInstance('sw4.activityStream');
 
@@ -249,6 +249,12 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             // returns the style of the indicator of unread activities
             $scope.getUnreadStyle = function() {
                 return { top: sidePanelService.getContext($scope.panelid).top - 70 + "px" };
+            }
+
+            // hides the activitystream if user do not have the role
+            if (!userService.HasRole(["sysadmin"]) && !userService.HasRole(["ROLE_NOTIFICATIONS"])) {
+                sidePanelService.hide($scope.panelid);
+                return;
             }
 
             //get the current notifications, then automatically refresh

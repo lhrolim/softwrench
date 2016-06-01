@@ -59,7 +59,7 @@ namespace softWrench.sW4.Metadata.Security {
         private InMemoryUser() {
             _roles = new List<Role>();
             _personGroups = new HashedSet<PersonGroupAssociation>();
-            _profiles = new UserProfile[0];
+            _profiles = new List<UserProfile>();
             _dataConstraints = new List<DataConstraint>();
         }
 
