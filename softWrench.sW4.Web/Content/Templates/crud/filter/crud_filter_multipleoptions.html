@@ -1,5 +1,5 @@
 <div class="sw-combobox-container">
-    <div ng-if="filter.lazy" class="input-group lazy-search">
+    <div ng-if="filter.lazy && filter.rendererType !== 'statusicons'" class="input-group lazy-search">
         <input type="search" class="hidden-phone form-control typeahead" data-mode="filter" data-target="{{filter.attribute}}" data-filterprovider="{{filter.provider}}" placeholder="Find {{filter.label}}"/>
         <span class="input-group-addon last" ng-click="executeAsFreeText()">
             <i class="fa fa-search"></i>

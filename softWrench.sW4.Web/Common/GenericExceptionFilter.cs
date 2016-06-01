@@ -5,6 +5,7 @@ using System.Web.Http;
 using System.Web.Http.Filters;
 using System.Web.Mvc;
 using log4net;
+using softWrench.sW4.Data.Persistence.Engine.Exception;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Util;
@@ -48,7 +49,13 @@ namespace softWrench.sW4.Web.Common {
             var e = context.Exception;
             var rootException = ExceptionUtil.DigRootException(e);
             Log.Error(rootException, e);
-            var errorResponse = context.Request.CreateResponse(CodeOf(rootException), BuildErrorDto(rootException));
+            var errorDto = BuildErrorDto(rootException);
+            if (e is AfterCreationException)
+            {
+                errorDto.ResultObject = ((AfterCreationException) e).ResultObject;
+            }
+
+            var errorResponse = context.Request.CreateResponse(CodeOf(rootException), errorDto);
             throw new HttpResponseException(errorResponse);
         }
 

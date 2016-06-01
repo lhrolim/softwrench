@@ -109,7 +109,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
 
             // SWWEB-980 Additional logic to change status to queued if owner is selected
-            if (w.GetRealValue(sr, "STATUS").Equals("NEW") &&
+            var statusValue = w.GetRealValue(sr, "STATUS");
+
+            if (statusValue!=null && statusValue.Equals("NEW") &&
                 (w.GetRealValue(sr, "OWNER") != null || w.GetRealValue(sr, "OWNERGROUP") != null)) {
                 w.SetValue(sr, "STATUS", "QUEUED");
             }
