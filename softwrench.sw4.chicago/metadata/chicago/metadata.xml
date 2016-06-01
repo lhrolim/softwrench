@@ -489,6 +489,9 @@
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
+            <composition relationship="attachment" label="Attachments" printenabled="false" >
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+            </composition>
             <composition relationship="aticket" label="Audit Log" detailschema="">
               <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="compositionlist" orderbyfield="eaudittimestamp desc"/>
             </composition>
