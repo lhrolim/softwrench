@@ -287,10 +287,10 @@
             <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
             <field attribute="rotassetnum" label="Rotating Asset" readonly="true"/>
             <field attribute="item_.rotating" label="Rotating" enableexpression="false">
-              <renderer type="checkbox" params="formatter=numberToBoolean"/>
+              <renderer type="checkbox" params="formatter=numberToBoolean;inputsize=xsmall"/>
             </field>
             <field attribute="item_.iskit" label="Kit" enableexpression="false">
-              <renderer type="checkbox" params="formatter=numberToBoolean"/>
+              <renderer type="checkbox" params="formatter=numberToBoolean;inputsize=xsmall"/>
             </field>
             <field attribute="binnum" label="Bin" readonly="true"/>
             <field attribute="lotnum" label="Lot" readonly="true"/>
