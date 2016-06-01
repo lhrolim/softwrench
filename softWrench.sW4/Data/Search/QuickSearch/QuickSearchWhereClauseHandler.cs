@@ -58,7 +58,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
 
             var validFilterAttributes = schemaFilters.Filters
                     // filter out datetime and boolean filters
-                    .Where(f => !(f is MetadataBooleanFilter) && !(f is MetadataDateTimeFilter) && !(f is MetadataNumberFilter))
+                    .Where(f => !(f is MetadataBooleanFilter) && !(f is MetadataDateTimeFilter) && !(f is MetadataNumberFilter) && !StatusFilter(f.Attribute, schema))
                     .Select(f => AttribteAppendingApplicationPrefix(f.Attribute, entity, attributes));
 
             var sb = new StringBuilder();
@@ -78,7 +78,13 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
             return dto;
         }
 
-
+        private bool StatusFilter(string attribute, ApplicationSchemaDefinition schema) {
+            var attributeDef = schema.Fields.FirstOrDefault(f => f.Attribute.EqualsIc(attribute));
+            if (attributeDef == null) {
+                return false;
+            }
+            return attributeDef.RendererType.EqualsIc("statusicons");
+        }
 
 
         private string HandleCompositions(ApplicationSchemaDefinition schema, IEnumerable<string> compositionsToInclude) {
@@ -175,12 +181,13 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
         }
 
         private static bool IgnoreCoalesce(ApplicationFieldDefinition fieldDefinition) {
-            return fieldDefinition.DataType!=null && fieldDefinition.DataType.Equals("text") && !fieldDefinition.DeclaredAsQueryOnEntity;
+            return fieldDefinition.DataType != null && fieldDefinition.DataType.Equals("text") && !fieldDefinition.DeclaredAsQueryOnEntity;
         }
 
         private static string AttribteAppendingApplicationPrefix(string attribute, EntityMetadata entity, IEnumerable<EntityAttribute> attributes) {
 
             var result = entity.LocateNonCollectionAttribute(attribute, attributes);
+
             if (result.Item1.Query != null) {
                 return AssociationHelper.PrecompiledAssociationAttributeQuery(entity.Name, result.Item1);
             }
