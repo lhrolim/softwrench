@@ -593,6 +593,19 @@
                     $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave);
                 };
 
+                $scope.setSetIdAfterCreation =function(data) {
+                    if (data.id &&
+                     $scope.datamap.fields &&
+                        /* making sure not to update when it's not creation */
+                     (!$scope.datamap.fields.hasOwnProperty($scope.schema.idFieldName) ||
+                         !$scope.datamap.fields[$scope.schema.idFieldName])) {
+                        //updating the id, useful when it´s a creation and we need to update value return from the server side
+                        $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
+                        $scope.datamap.fields[$scope.schema.userIdFieldName] = data.userId;
+                    }
+                }
+
+
                 $scope.submitToServer = function (selecteditem, parameters, transformedFields, schemaToSave) {
                     $rootScope.$broadcast("sw_beforesubmitpostvalidate_internal", transformedFields);
                     parameters = parameters || {};
@@ -690,16 +703,7 @@
                                 }
                             }
 
-                            if (data.id &&
-                                $scope.datamap.fields &&
-                                /* making sure not to update when it's not creation */
-                                (!$scope.datamap.fields.hasOwnProperty($scope.schema.idFieldName) ||
-                                    !$scope.datamap.fields[$scope.schema.idFieldName])) {
-                                //updating the id, useful when it´s a creation and we need to update value return from the server side
-                                $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
-                                $scope.datamap.fields[$scope.schema.userIdFieldName] = data.userId;
-                            }
-
+                            $scope.setSetIdAfterCreation(data);
 
                             if (successCbk == null || applyDefaultSuccess) {
                                 defaultSuccessFunction(data);
@@ -714,16 +718,7 @@
                             var exceptionData = result.data;
                             var resultObject = exceptionData.resultObject;
 
-
-                            if (resultObject && resultObject.id &&
-                                $scope.datamap.fields &&
-                                /* making sure not to update when it's not creation */
-                                (!$scope.datamap.fields.hasOwnProperty($scope.schema.idFieldName) ||
-                                    !$scope.datamap.fields[$scope.schema.idFieldName])) {
-                                //this scenario hapens when there's a failure on a aftercreation hook for instance, but still the entry was generated
-                                $scope.datamap.fields[$scope.schema.idFieldName] = exceptionData.resultObject.id;
-                                $scope.datamap.fields[$scope.schema.userIdFieldName] = exceptionData.resultObject.userId;
-                            }
+                            $scope.setSetIdAfterCreation(resultObject);
 
                             if (failureCbk != null) {
                                 failureCbk(exceptionData);
