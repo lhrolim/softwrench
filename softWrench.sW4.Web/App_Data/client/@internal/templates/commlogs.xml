@@ -155,23 +155,31 @@
           <!--<field attribute="createdate" label="Created Date" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
           </field>-->
-          <field attribute="orgobject" label="Origination" hidden="true"/>
-          <association label="To" target="sendto" labelfield="email_.loweremail" valuefield="loweremail" orderbyfield="LOWER(emailaddress) desc" requiredexpression="true" >
-            <renderer type="multiselectautocompleteclient" stereotype="email"/>
-            <dataprovider postfilterfunction="EmailPostFilter"/>
-          </association>
-          <association label="CC" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
-            <renderer type="multiselectautocompleteclient" stereotype="email"/>
-            <dataprovider postfilterfunction="EmailPostFilter"/>
-          </association>
-          <association label="BCC" target="bcc" labelfield="2email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
-            <renderer type="multiselectautocompleteclient" stereotype="email"/>
-            <dataprovider postfilterfunction="EmailPostFilter"/>
-          </association>
 
-          <field attribute="sendfrom" label="From" requiredexpression="true" default="@user.email" readonly="true" >
-            <renderer type="email"/>
-          </field>
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=large" />
+            <field attribute="orgobject" label="Origination" hidden="true"/>
+            <association label="To" target="sendto" labelfield="email_.loweremail" valuefield="loweremail" orderbyfield="LOWER(emailaddress) desc" requiredexpression="true" >
+              <renderer type="multiselectautocompleteclient" stereotype="email"/>
+              <dataprovider postfilterfunction="EmailPostFilter"/>
+            </association>
+            <field attribute="sendfrom" label="From" requiredexpression="true" default="@user.email" readonly="true" >
+              <renderer type="email"/>
+            </field>
+          </section>
+
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=large" />
+            <association label="CC" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
+              <renderer type="multiselectautocompleteclient" stereotype="email"/>
+              <dataprovider postfilterfunction="EmailPostFilter"/>
+            </association>
+            <association label="BCC" target="bcc" labelfield="2email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
+              <renderer type="multiselectautocompleteclient" stereotype="email"/>
+              <dataprovider postfilterfunction="EmailPostFilter"/>
+            </association>
+          </section>
+          
           <field attribute="subject" label="Subject" requiredexpression="true"/>
           <field attribute="message" label="Message">
             <renderer type="richtext"/>

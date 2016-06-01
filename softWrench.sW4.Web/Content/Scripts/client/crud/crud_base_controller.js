@@ -79,6 +79,10 @@ function BaseController($scope, $log, i18NService, fieldService, commandService,
         return fieldService.isFieldHidden($scope.datamap, application, fieldMetadata);
     };
 
+    $scope.fieldHasValue = function (fieldMetadata) {
+        return fieldService.fieldHasValue($scope.datamap, fieldMetadata);
+    };
+
     $scope.shouldDisplayCommand = function (commandSchema, id) {
         return commandService.shouldDisplayCommand(commandSchema, id);
     };

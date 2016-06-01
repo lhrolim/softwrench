@@ -4,13 +4,14 @@
             margin-bottom: 10px;
         }
 
-        .row {
-            margin-left: -15px;
-            margin-right: -15px;
-        }
-
         .master {
             margin-bottom: 10px;
+            padding-left: 0;
+
+            .row {
+                margin-left: -15px;
+                margin-right: -15px;
+            }
 
             .quick-search {
                 padding-left: 0;
@@ -97,12 +98,20 @@
 
         .swpagination {
             margin: 20px 0 10px;
-            /*background: none;*/
             border: none;
         }
 
         .details {
+            margin-top: -10px;
             margin-bottom: 40px;
+
+            .form-horizontal {
+                padding: 0 0 0 15px !important;
+
+                .form-group {
+                    padding: 0 !important;
+                }
+            }
 
             .fields {
                 .field {

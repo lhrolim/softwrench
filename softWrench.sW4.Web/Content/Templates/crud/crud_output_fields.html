@@ -2,7 +2,7 @@
 
     <fieldset ng-repeat="fieldMetadata in nonTabFields(displayables)"
               class="form-group {{getFieldClass(fieldMetadata)}}"
-              ng-show="!isFieldHidden(schema,fieldMetadata)">
+              ng-hide="showField(schema, fieldMetadata)">
 
         <label class="control-label"
                ng-style="getLabelStyle(fieldMetadata)"
@@ -32,7 +32,8 @@
                                                 displayables="fieldMetadata.displayables"
                                                 orientation="{{fieldMetadata.orientation}}"
                                                 data-id="{{fieldMetadata.id}}"
-                                                renderer-parameters="fieldMetadata.rendererParameters">
+                                                renderer-parameters="fieldMetadata.rendererParameters"
+                                                hideempty="hideempty">
                             <!--keep it like this, do not close-->
                         </section-element-output>
                     </div>

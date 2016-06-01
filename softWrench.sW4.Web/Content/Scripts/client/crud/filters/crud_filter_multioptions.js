@@ -164,14 +164,13 @@
                             }
                             var label = "(" + option.value + ")";
         
-                            if (filter.rendererType == 'statusicons' && !!option.label) {
+                            if (filter.rendererType === 'statusicons' && !!option.label) {
                                 label = option.label;
                             } else if (!!option.label) {
                                 label += " - " + option.label;
                             }
                             return label;
                         }
-
 
                         $scope.executeAsFreeText = function () {
                             var searchData = $scope.searchData;

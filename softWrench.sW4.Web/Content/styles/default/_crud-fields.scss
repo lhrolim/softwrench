@@ -277,18 +277,6 @@ input[type=search] {
     -webkit-appearance: none;
 }
 
-.crud_output .field label {
-    text-align: left;
-    word-break: break-all;
-    word-break: break-word;
-
-    img {
-        max-width: 100%;
-        height: auto;
-        width: auto;
-    }
-}
-
 .issue-items [ng-switch-when="ApplicationCompositionDefinition"], .expandeddetails, .expanded-item-composition {
     background-image: -webkit-gradient(linear,left 0,left 100%,from(#f7f7f7),to(#ebebeb));
     background-image: -webkit-linear-gradient(top,#f7f7f7,0%,#ebebeb,100%);
@@ -483,4 +471,28 @@ input[type="date"], input[type="time"] {
     background-image: linear-gradient(to bottom, #428bca 0, #357ebd 100%);
     background-repeat: repeat-x;
     color: #fff;
+}
+
+.crud_output {
+    .form-group {
+        min-height: 0;
+    }
+
+    .field {
+        label {
+            text-align: left;
+            word-break: break-all;
+            word-break: break-word;
+
+            img {
+                max-width: 100%;
+                height: auto;
+                width: auto;
+            }
+        }
+    }
+
+    .haschildren > .field {
+        padding: 0;
+    }
 }
