@@ -652,61 +652,83 @@
                     var urlToUse = url("/api/data/" + applicationName + "/");
                     var command = id == null ? $http.post : $http.put;
 
-                    command(urlToUse, jsonString).then(function (result) {
-                        crudContextHolderService.afterSave();
-                        var data = result.data;
-                        var responseDataMap = data.resultObject;
+                    command(urlToUse, jsonString)
+                        .then(function(result) {
+                            crudContextHolderService.afterSave();
+                            var data = result.data;
+                            var responseDataMap = data.resultObject;
 
-                        if (!data.type.equalsAny("BlankApplicationResponse", "GenericApplicationResponse")) {
+                            if (!data.type.equalsAny("BlankApplicationResponse", "GenericApplicationResponse")) {
 
-                            // handle the case where the datamap had lazy compositions already fetched
-                            // and the response does not have them (for performance reasons)
-                            if (!data.type.equalsAny("ApplicationListResult")) {
-                                var compositions = compositionService.getLazyCompositions($scope.schema, $scope.datamap.fields);
-                                compositions.forEach(function(composition) {
-                                    var currentValue = $scope.datamap.fields[composition];
-                                    var updatedValue = responseDataMap.fields[composition];
-                                    // has previous data but has no updated data: not safe to update -> hydrate with previous value
-                                    if (!!currentValue && (!responseDataMap.fields.hasOwnProperty(composition) || !angular.isArray(updatedValue))) {
-                                        responseDataMap.fields[composition] = currentValue
-                                            .filter(function(c) { // filter out just created items
-                                                return !c["_iscreation"];
-                                            }).map(function(c) { // remove `#isDirty` flag from the items
-                                                delete c["#isDirty"];
-                                                return c;
-                                            });
-                                    }
-                                });
+                                // handle the case where the datamap had lazy compositions already fetched
+                                // and the response does not have them (for performance reasons)
+                                if (!data.type.equalsAny("ApplicationListResult")) {
+                                    var compositions = compositionService
+                                        .getLazyCompositions($scope.schema, $scope.datamap.fields);
+                                    compositions.forEach(function(composition) {
+                                        var currentValue = $scope.datamap.fields[composition];
+                                        var updatedValue = responseDataMap.fields[composition];
+                                        // has previous data but has no updated data: not safe to update -> hydrate with previous value
+                                        if (!!currentValue &&
+                                        (!responseDataMap.fields.hasOwnProperty(composition) ||
+                                            !angular.isArray(updatedValue))) {
+                                            responseDataMap.fields[composition] = currentValue
+                                                .filter(function(c) { // filter out just created items
+                                                    return !c["_iscreation"];
+                                                })
+                                                .map(function(c) { // remove `#isDirty` flag from the items
+                                                    delete c["#isDirty"];
+                                                    return c;
+                                                });
+                                        }
+                                    });
+                                }
+
+                                // not necessary to update the complete datamap after a composition save
+                                if (!parameters.dispatcherComposition) {
+                                    $scope.datamap = responseDataMap;
+                                }
                             }
 
-                            // not necessary to update the complete datamap after a composition save
-                            if (!parameters.dispatcherComposition) {
-                                $scope.datamap = responseDataMap;
+                            if (data.id &&
+                                $scope.datamap.fields &&
+                                /* making sure not to update when it's not creation */
+                                (!$scope.datamap.fields.hasOwnProperty($scope.schema.idFieldName) ||
+                                    !$scope.datamap.fields[$scope.schema.idFieldName])) {
+                                //updating the id, useful when it´s a creation and we need to update value return from the server side
+                                $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
+                                $scope.datamap.fields[$scope.schema.userIdFieldName] = data.userId;
                             }
-                        }
-
-                        if (data.id && $scope.datamap.fields &&
-                            /* making sure not to update when it's not creation */
-                            (!$scope.datamap.fields.hasOwnProperty($scope.schema.idFieldName) || !$scope.datamap.fields[$scope.schema.idFieldName])) {
-                            //updating the id, useful when it´s a creation and we need to update value return from the server side
-                            $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
-                        }
 
 
-                        if (successCbk == null || applyDefaultSuccess) {
-                            defaultSuccessFunction(data);
-                        }
-                        if (successCbk != null) {
-                            successCbk(data);
-                        }
+                            if (successCbk == null || applyDefaultSuccess) {
+                                defaultSuccessFunction(data);
+                            }
+                            if (successCbk != null) {
+                                successCbk(data);
+                            }
 
-                        $scope.$emit('sw.crud.detail.savecompleted', data);
-                    }).catch(function (result) {
-                        var data = result.data;
-                        if (failureCbk != null) {
-                            failureCbk(data);
-                        }
-                    })
+                            $scope.$emit('sw.crud.detail.savecompleted', data);
+                        })
+                        .catch(function(result) {
+                            var exceptionData = result.data;
+                            var resultObject = exceptionData.resultObject;
+
+
+                            if (resultObject && resultObject.id &&
+                                $scope.datamap.fields &&
+                                /* making sure not to update when it's not creation */
+                                (!$scope.datamap.fields.hasOwnProperty($scope.schema.idFieldName) ||
+                                    !$scope.datamap.fields[$scope.schema.idFieldName])) {
+                                //this scenario hapens when there's a failure on a aftercreation hook for instance, but still the entry was generated
+                                $scope.datamap.fields[$scope.schema.idFieldName] = exceptionData.resultObject.id;
+                                $scope.datamap.fields[$scope.schema.userIdFieldName] = exceptionData.resultObject.userId;
+                            }
+
+                            if (failureCbk != null) {
+                                failureCbk(exceptionData);
+                            }
+                        });
                 };
 
                 // adds a padding right to not be behind side panels handles
