@@ -539,11 +539,16 @@
               <renderer type="default" params="childinputsize=small" />
               <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@personid" orderbyfield="personid asc" >
                 <renderer type="lookup" params="columnlabel=Name;"/>
-                <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
+                <event type="afterchange" service="chicagosrService" method="afterChangeReportedBy"/>
               </association>
               <field attribute="reportedphone" label="Reported By Phone" readonly="true"/>
               <field attribute="reportedemail" label="Reported By Email" readonly="true"/>
-              <field attribute="reportdate" label="Reported Date" default="@now" readonly="true"/>
+              <field attribute="reportdate" label="Reported Date" default="@currentdatetime" readonly="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+              </field>
+              <field attribute="affecteddate" label="Affected Date" default="@currentdatetime" hidden="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+              </field>
             </section>
           </customization>
         </schema>

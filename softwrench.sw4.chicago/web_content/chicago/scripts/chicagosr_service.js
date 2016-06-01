@@ -78,10 +78,17 @@
                 personid: datamap['reportedby'],
                 isprimary: '1'
             };
+            var operation = searchService.getSearchOperationById("EQ");
+            var extraparams = {
+                searchOperators: {
+                    "personid": operation,
+                    "isprimary": operation
+                }
+            }
             datamap['department'] = datamap['reportedbyp_.department'];
             return $q.all([
-                searchService.searchWithData("email", searchData, "list"),
-                searchService.searchWithData("phone", searchData, "list")
+                searchService.searchWithData("email", searchData, "list", extraparams),
+                searchService.searchWithData("phone", searchData, "list", extraparams)
             ]).then(function(result) {
                 var emailResult = result[0].data.resultObject[0];
                 datamap['reportedemail'] = emailResult ? emailResult.fields['emailaddress'] : '';
