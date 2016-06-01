@@ -155,9 +155,9 @@
           <commandbars>
             <commandgroup position="actions">
               <command id="approvelabors" icon="fa fa-check-circle" label="Approve"
-                       service="labtransService" method="approveMultipleLabtrans" cssclasses="large-button"/>
+                       service="labtransService" method="approveMultipleLabtrans" cssclasses="large-button" showexpression="service:genericTicketService.hasSelectedItemsForBatchStatus"/>
               <command id="deletelabor" icon="fa fa-trash" label="Delete"
-                       service="labtransService" method="deleteMultipleLabtrans" cssclasses="large-button"/>
+                       service="labtransService" method="deleteMultipleLabtrans" cssclasses="large-button" showexpression="service:genericTicketService.hasSelectedItemsForBatchStatus"/>
             </commandgroup>
             <commandgroup position="multiselect.dropdown">
               <command id="approvelabors" icon="fa fa-check-circle" label="Approve Labor"

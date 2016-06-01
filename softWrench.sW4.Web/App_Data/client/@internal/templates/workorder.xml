@@ -276,7 +276,7 @@
               <command id="Create" icon="fa-pencil" label="Change Status"
                        showexpression="service:genericTicketService.hasSelectedItemsForBatchStatus"
                        service="genericTicketService" method="initBatchStatusChange"
-                       parameters="schema,datamap" />
+                       parameters="schema,datamap" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
           
@@ -384,9 +384,9 @@
           <field attribute="tophiddenfield" hidden="true"/>
 
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
+            <renderer type="default" params="childinputsize=large" />
             <field attribute="description" label="Summary" requiredexpression="true">
-              <renderer type="default" params="maxlength=100" />
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
             </field>
             <section id="statussection" />
             <section id="siteidsection"/>

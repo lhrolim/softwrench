@@ -255,16 +255,18 @@
           <field attribute="orgid" hidden="true"/>
           
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=small" />
-            <field attribute="assetnum" label="Asset:" readonly="true" hidden="true"/>  
-            <field attribute="description" label="Description" readonly="true"/>
+            <renderer type="default" params="childinputsize=large" />
+            <field attribute="assetnum" label="Asset:" readonly="true" hidden="true"/>
+            <field attribute="description" label="Description" readonly="true">
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+            </field>
             <field attribute="status" label="Status" readonly="true"/>
             <field attribute="siteid" label="Site" readonly="true"/>
           </section>
           
           <section orientation="horizontal">
             <header displacement="ontop" label="Asset Description" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=small" />
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="parent" label="Parent" readonly="true"/>
             <field attribute="parentasset_.description" label="Parent Description" readonly="true"/>
             <field attribute="location" label="Location" readonly="true"/>
@@ -276,7 +278,7 @@
           
           <section orientation="horizontal">
             <header displacement="ontop" label="Condition" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=small" />
+            <renderer type="default" params="childinputsize=medium" />
 
             <optionfield attribute="priority" label="Priority" providerattribute="_SWPriorityType" readonly="true">
               <renderer type="lookup"/>
@@ -295,7 +297,7 @@
           <section secondarycontent="true">
             <section orientation="horizontal">
               <header displacement="ontop" label="Supply Information" params="fieldset=true" />
-              <renderer type="default" params="childinputsize=small" />
+              <renderer type="default" params="childinputsize=medium" />
               <field attribute="vendor" label="Vendor" readonly="true"/>
               <field attribute="vendor_.name" label="Vendor Description" readonly="true"/>
               <field attribute="manufacturer" label="Manufacturer" readonly="true"/>
@@ -304,7 +306,7 @@
             
             <section orientation="horizontal">
               <header displacement="ontop" label="Budget Information" params="fieldset=true" />
-              <renderer type="default" params="childinputsize=small" />
+              <renderer type="default" params="childinputsize=medium" />
               <field attribute="installdate" label="Installation Date" readonly="true"/>
               <field attribute="purchaseprice" label="Purchase Price" readonly="true"/>
               <field attribute="replacecost" label="Replacement Cost" readonly="true"/>
@@ -317,7 +319,7 @@
             
             <section orientation="horizontal">
               <header displacement="ontop" label="Status" params="fieldset=true" />
-              <renderer type="default" params="childinputsize=small" />
+              <renderer type="default" params="childinputsize=medium" />
               <field attribute="isrunning" label="Asset Up?" enableexpression="false">
                 <renderer type="checkbox"/>
               </field>
@@ -327,7 +329,7 @@
             
             <section orientation="horizontal">
               <header displacement="ontop" label="Change Information" params="fieldset=true" />
-              <renderer type="default" params="childinputsize=small" />
+              <renderer type="default" params="childinputsize=medium" />
               <field attribute="changeby" label="Change By" readonly="true"/>
               <field attribute="changedate" label="Change Date" readonly="true"/>
             </section>

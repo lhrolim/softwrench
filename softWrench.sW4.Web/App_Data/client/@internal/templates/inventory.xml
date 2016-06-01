@@ -303,10 +303,12 @@
           <field attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
-            <field label="Item" attribute="itemnum" readonly="true" />
-            <field label="Description" attribute="item_.description" readonly="true" />
-            <field label="Lot" attribute="lotnum" readonly="true" />
+            <renderer type="default" params="childinputsize=large" />
+            <field label="Item" attribute="itemnum" readonly="true"/>
+            <field label="Lot" attribute="lotnum" readonly="true"/>
+            <field label="Description" attribute="item_.description" readonly="true">
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+            </field>
           </section>
 
           <section orientation="horizontal">
@@ -370,10 +372,12 @@
 
 
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
+            <renderer type="default" params="childinputsize=large" />
             <field label="Item" attribute="itemnum" readonly="true"/>
-            <field label="Description" attribute="item_.description" readonly="true"/>
             <field label="Lot" attribute="lotnum" readonly="true"/>
+            <field label="Description" attribute="item_.description" readonly="true">
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+            </field>
           </section>
 
           <section orientation="horizontal">
@@ -450,7 +454,7 @@
               <field attribute="requestedby" label="Requested By" readonly="true" />
               <field attribute="enterby" label="Entered By" readonly="true" default="@personid" />
               <field attribute="#issuetype" label="Issue Type" readonly="true" />
-              <field attribute="issueto" label="Issue To:\" readonly="true" />
+              <field attribute="issueto" label="Issue To" readonly="true" />
             </section>
           </section>
           <section>
@@ -588,10 +592,12 @@
           <field attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
 
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
+            <renderer type="default" params="childinputsize=large" />
             <field label="Item" attribute="itemnum" readonly="true"/>
-            <field label="Description" attribute="item_.description" readonly="true"/>
             <field label="Lot" attribute="lotnum" readonly="true"/>
+            <field label="Description" attribute="item_.description" readonly="true">
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+            </field>
           </section>
 
           <section orientation="horizontal">

@@ -175,7 +175,7 @@
               <command id="Create" icon="fa-pencil" label="Change Status"
                        showexpression="service:genericTicketService.hasSelectedItemsForBatchStatus"
                        service="genericTicketService" method="initBatchStatusChange"
-                       parameters="schema,datamap" />
+                       parameters="schema,datamap" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
           
@@ -193,11 +193,11 @@
           <field attribute="tophiddenfield" hidden="true"/>
           
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
+            <renderer type="default" params="childinputsize=large" />
             <field attribute="ticketid" label="SR#" hidden="true"/>
             <field attribute="ticketuid" label="SR#" hidden="true"/>
             <field attribute="description" label="Summary" requiredexpression="true">
-              <renderer type="default" params="maxlength=100;" />
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
             </field>
             <section id="ticketidsection"/>
             
@@ -259,7 +259,7 @@
             </field>
 
             <optionfield attribute="internalpriority" label="Priority" providerattribute="_SWPriorityType">
-              <renderer type="lookup" params="inputsize=small"/>
+              <renderer type="lookup" />
             </optionfield>
           </section>
 
@@ -448,11 +448,11 @@
           <section id="extrahiddenfields"/>
           
           <section orientation="horizontal" id="statussection">
-            <renderer type="default" params="childinputsize=medium" />
+            <renderer type="default" params="childinputsize=large" />
             <field attribute="ticketuid" label="SR#" hidden="true"/>
             <field label="Status" attribute="status" readonly="true" default="NEW" hidden="true"/>
             <field attribute="description" label="Summary" requiredexpression="true">
-              <renderer type="default" params="maxlength=100" />
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
             </field>
           </section>
 
@@ -506,9 +506,9 @@
           <field attribute="ticketid" label="SR#" readonly="true" hidden="true"/>
 
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
+            <renderer type="default" params="childinputsize=large" />
             <field attribute="description" label="Summary" requiredexpression="true">
-              <renderer type="default" params="maxlength=100" />
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
             </field>
             <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
               <renderer type="lookup"/>

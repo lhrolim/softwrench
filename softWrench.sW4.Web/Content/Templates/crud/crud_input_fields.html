@@ -2,7 +2,8 @@
     <div ng-init="setForm(crudbodyform)" />
     <div class="field-wrap">
         <fieldset ng-repeat="fieldMetadata in nonTabFields(displayables)"
-                  class="form-group {{getFieldClass(fieldMetadata)}}"
+                  class="form-group"
+                  ng-class="getFieldClass(fieldMetadata)"
                   ng-show="!isFieldHidden(schema,fieldMetadata)"
                   rel="input-form-repeat"
                   bodyrendered>

@@ -181,9 +181,11 @@
           <field attribute="description" label="Description" qualifier="excerpt"/>
         </schema>
         <detail>
+          <field attribute="description" label="Description"  requiredexpression="true" >
+            <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+          </field>
           <field attribute="locationsid" label="ID"  requiredexpression="true" />
           <field attribute="location" label="Location"  requiredexpression="true" />
-          <field attribute="description" label="Description"  requiredexpression="true" />
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="type"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
@@ -239,16 +241,18 @@
           <field attribute="orgid" showexpression="false"/>
 
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=small" />
+            <renderer type="default" params="childinputsize=large" />
             <field attribute="location" label="Location:" readonly="true" hidden="true"/>
-            <field attribute="description" label="Description:" readonly="true"/>
+            <field attribute="description" label="Description:" readonly="true">
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+            </field>
             <field attribute="status" label="Status" readonly="true"/>
-            <field attribute="siteid" label="Site:" readonly="true"/>
+            <field attribute="siteid" label="Site" readonly="true"/>            
           </section>
 
           <section orientation="horizontal">
             <header displacement="ontop" label="Location Information" params="fieldset=true" />
-            <renderer type="default" params="childinputsize=small" />
+            <renderer type="default" params="childinputsize=medium" />
             <field attribute="type" label="Type:" readonly="true"/>
 
             <optionfield attribute="locoper_.locpriority" label="Priority" providerattribute="_SWPriorityType" readonly="true">
