@@ -1567,7 +1567,7 @@
             <commandgroup position="actions">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
                 <command id="dispatchincident" icon="fa-warning" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD"
-                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident" cssclasses="large-button"/>
+                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident" cssclasses="large-button" enableexpression="$scope:enableSave"/>
                 
                 <!--<command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>-->
@@ -1575,7 +1575,7 @@
                 <!-- Create new SR as Related Record -->
                 <command id="createrelated"
                          service="srService" method="startRelatedSRCreation" parameters="schema,datamap"
-                         label="Create Request" icon="fa-ticket" cssclasses="large-button"/>
+                         label="Create Request" icon="fa-ticket" cssclasses="large-button" enableexpression="$scope:enableSave"/>
 
               <!--</container>-->
             </commandgroup>

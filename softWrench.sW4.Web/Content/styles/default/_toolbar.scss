@@ -218,6 +218,12 @@
                     color: #474949;
                 }
             }
+
+            .disabled {
+                .icon, .text {
+                    color: #969696;
+                }
+            }
         }
 
         &.mobile .context .group.pagination a {

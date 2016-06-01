@@ -66,7 +66,7 @@
     });
 
 
-    app.directive('crudBody', function (contextService) {
+    app.directive('crudBody', function (contextService, genericTicketService) {
         "ngInject";
 
         return {
@@ -128,6 +128,18 @@
                     }
 
                     return 'fa-arrow-left';
+                };
+
+                this.enableSave = function () {
+                    return !genericTicketService.isClosed();
+                };
+
+                this.saveTooltip = function () {
+                    if (genericTicketService.isClosed()) {
+                        return 'You can\'t change closed tickets.';
+                    }
+
+                    return '';
                 };
 
                 $(document).on("sw_autocompleteselected", function (event, key) {
@@ -523,9 +535,7 @@
                         }
                         var result = modalSavefn($scope.datamap.fields, schemaToSave);
                         if (result && result.then) {
-                            result.then(function () {
-                                modalService.hide();
-                            })
+                            result.then(() => modalService.hide());
                         } 
                         return;
                     }
@@ -718,6 +728,7 @@
                                 successCbk(data);
                             }
 
+                            crudContextHolderService.updateOriginalDatamap($scope.datamap);
                             $scope.$emit('sw.crud.detail.savecompleted', data);
                         })
                         .catch(function(result) {

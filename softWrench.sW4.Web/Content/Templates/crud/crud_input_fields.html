@@ -31,7 +31,9 @@
 
             <!--Read only section-->
 
-            <div ng-class="getInputClass(fieldMetadata)" ng-if="fieldMetadata.isReadOnly" ng-switch on="fieldMetadata.rendererType">
+        <div ng-class="getInputClass(fieldMetadata)"
+             ng-if="isReadOnlyField(fieldMetadata)"
+             ng-switch on="fieldMetadata.rendererType">
                 <input type="datetime" ng-switch-when="datetime"
                        ng-model="datamap[fieldMetadata.attribute]"
                        data-date-time
@@ -119,9 +121,7 @@
 
             </div>
 
-
-
-            <div ng-if="!fieldMetadata.isReadOnly"
+            <div ng-if="!isReadOnlyField(fieldMetadata)"
                  ng-show="fieldMetadata.attribute!=schema.idFieldName"
                  ng-switch on="fieldMetadata.rendererType"
                  ng-class="getInputClass(fieldMetadata)">                

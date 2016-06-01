@@ -1,8 +1,8 @@
 ﻿(function (app, angular) {
     "use strict";
 
-    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "fixHeaderService", "crudContextHolderService",
-        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, fixHeaderService, crudContextHolderService) {
+    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "fixHeaderService", "crudContextHolderService", "$injector", "genericTicketService",
+        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, fixHeaderService, crudContextHolderService, genericTicketService) {
 
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
         var methodname = expr.substr(7);
@@ -43,6 +43,10 @@
 
         if (tooltip.startsWith("$scope:")) {
             return $scope.invokeOuterScopeFn(tooltip);
+        }
+
+        if (commandService.isServiceMethod(tooltip)) {
+            return commandService.executeClickCustomCommand(tooltip);
         }
 
         return i18NService.get18nValue('_bars.gridtop' + command.id, tooltip);
@@ -98,8 +102,21 @@
         fn();
     };
 
-    $scope.executeService = function (command, toggleParentCommand) {
+    $scope.clickEnabled = function (command) {
+        var executeClick = true;
+        var expression = command.enableExpression;
 
+        var fn = $scope.ctrlfns[expression.split('$scope:')[1]];
+        if (!!fn && angular.isFunction(fn)) {
+            executeClick = fn();
+        } else if (commandService.isServiceMethod(expression)) {
+            executeClick = commandService.executeClickCustomCommand(expression);
+        }
+
+        return executeClick;
+    };
+
+    $scope.executeService = function (command, toggleParentCommand) {
         // if toggle parent command is passed toggles it state
         if (toggleParentCommand) {
             toggleParentCommand.state = !toggleParentCommand.state;
@@ -112,6 +129,11 @@
             //update header/footer layout
             fixHeaderService.callWindowResize();
         }, false);
+
+        //don't execute disabled commands
+        if (!$scope.clickEnabled(command)) {
+           return;
+        }
 
         return command.service === "$scope"
             ? $scope.executeScopeCommand(command)
@@ -168,9 +190,15 @@
 
     $scope.buttonClasses = function (command) {
         var classes = "btn ";
+
         if (command.pressed) {
             classes += "active ";
         }
+
+        if (!$scope.clickEnabled(command)) {
+            classes += "disabled ";
+        }
+
         return classes + command.cssClasses;
     };
 

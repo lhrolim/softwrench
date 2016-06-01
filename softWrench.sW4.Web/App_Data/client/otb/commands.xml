@@ -11,14 +11,13 @@
     <resourcecommand id="filter" path="/Content/Templates/commands/grid/refresh.html"/>
   </commandgroup>
 
+  <!--TODO: move $scope method to generic service with overrides for specific services-->
   <commandgroup position="detail.primary" platform="web">
     <!--<command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />-->
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" cssclasses="large-button"/>
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" cssclasses="large-button" tooltip="$scope:saveTooltip" enableexpression="$scope:enableSave"/>
     <command id="cancel" icon="$scope:getCancelIcon" service="$scope" method="cancel" label="$scope:getCancelLabel" cssclasses="large-button"/>
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint" cssclasses="large-button"/>
   </commandgroup>
-
-
 
 
   <commandgroup position="detail.secondary" platform="web">
