@@ -105,6 +105,17 @@
       </properties>
       <schemas>
         <schema id="list" stereotype="compositionlist">
+          <commandbars>
+            <commandgroup position="compositiontop" platform="web" removeundeclared="false">
+              <command id="additem"
+                       icon="fa fa-envelope-o"
+                       label="Add Communication"
+                       service="commlogService"
+                       method="addCommlog"
+                       parameters="schema"
+                       cssclasses="btn-primary"/>
+            </commandgroup>
+          </commandbars>
           <properties>
             <property key="expansible" value="false"/>
             <property key="masterdetail" value="true"/>
