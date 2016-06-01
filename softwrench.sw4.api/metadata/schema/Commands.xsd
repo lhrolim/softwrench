@@ -88,6 +88,7 @@
     </attribute>
 
     <attribute name="showexpression" type="string"></attribute>
+    <attribute name="enableexpression" type="string"></attribute>
     <attribute name="role" type="string" use="optional"></attribute>
     <attribute name="stereotype">
       <simpleType>

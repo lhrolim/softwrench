@@ -6,14 +6,13 @@
       
 
         function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params) {
-
+            var log = $log.getInstance("layoutservice#getDefaultColumnClassesForFieldSet", ["layout"]);
             var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
-            var log = $log.getInstance("layoutservice#getDefaultColumnClassesForFieldSet", ["layout"]);
-
-            //log.debug(params);
-
-            //console.log(params);
+            //if the field has a defined inputsize, override the section setting
+            if (params.columnCount) {
+                maxColumns = params.columnCount;
+            }
 
             //use full-width fields on xsmall screen
             var classes = ' col-xs-12';
@@ -57,9 +56,9 @@
 
                 if (fieldMetadata.rendererParameters['inputsize'] != null) {
                     inputSize = fieldMetadata.rendererParameters['inputsize'];
-                } 
+                }
 
-                columnCount = convertInputSizeToColumnCount(inputSize)
+                columnCount = convertInputSizeToColumnCount(inputSize);
             }
 
             return columnCount;

@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function configurationService(contextService, restService) {
+    function configurationService($rootScope, $timeout, contextService, restService, crudContextHolderService, compositionService) {
         //#region Utils
         var configsKey = "swconfigs";
         var timestampKey = "swconfigs.timestamp";
@@ -41,12 +41,21 @@
             });
         }
 
+        function loadConfigsComposition() {
+            var schema = crudContextHolderService.currentSchema();
+            var datamap = crudContextHolderService.rootDataMap();
+            compositionService.getCompositionList("#properties_", schema, datamap, 1, 10).then(function (result) {
+                compositionService.resolveCompositions(result);
+            });
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
             getConfigurationValue,
-            updateConfigurations
+            updateConfigurations,
+            loadConfigsComposition
         };
         return service;
         //#endregion
@@ -54,7 +63,7 @@
 
     //#region Service registration
 
-    angular.module("webcommons_services").factory("configurationService", ["contextService", "restService", configurationService]);
+    angular.module("webcommons_services").factory("configurationService", ["$rootScope", "$timeout", "contextService", "restService", "crudContextHolderService", "compositionService", configurationService]);
 
     //#endregion
 

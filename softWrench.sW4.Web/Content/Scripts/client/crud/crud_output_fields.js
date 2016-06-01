@@ -13,7 +13,8 @@ app.directive('sectionElementOutput', function ($compile) {
             displayables: '=',
             extraparameters: '=',
             rendererParameters: '=',
-            orientation: '@'
+            orientation: '@',
+            hideempty: '='
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
@@ -23,7 +24,7 @@ app.directive('sectionElementOutput', function ($compile) {
                                     "datamap='datamap'" +
                                     "displayables='displayables'" +
                                     "section-parameters='rendererParameters'" +
-                                    "orientation='{{orientation}}'></crud-output-fields>"
+                                    "orientation='{{orientation}}' hideempty='hideempty'></crud-output-fields>"
                 );
                 $compile(element.contents())(scope);
             }
@@ -44,7 +45,8 @@ app.directive('crudOutputFields', function (contextService) {
             datamap: '=',
             displayables: '=',
             sectionParameters: '=',
-            orientation: '@'
+            orientation: '@',
+            hideempty: '='
         },
 
         controller: function ($scope, $injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService, expressionService, richTextService, layoutservice) {
@@ -145,6 +147,28 @@ app.directive('crudOutputFields', function (contextService) {
                 var content = $scope.datamap[fieldMetadata.attribute];
                 $scope.datamap[fieldMetadata.attribute] = richTextService.getDecodedValue(content);
             }
+
+            $scope.showField = function (application, fieldMetadata) {
+                //always show sections
+                if (fieldMetadata.type === 'ApplicationSection') {
+                    return false;
+                }
+
+                //always hide hidden fields
+                var hidden = $scope.isFieldHidden(application, fieldMetadata);
+                if (hidden) {
+                    return hidden;
+                }
+
+                //if not hidding empty fields, show fields
+                if (!$scope.hideempty) {
+                    return false;
+                }
+
+                //if no value, hide empty fields
+                var hasValue = !$scope.fieldHasValue(fieldMetadata);
+                return hasValue;
+            };
 
             function init() {
                 $scope.countVisibleDisplayables = fieldService.countVisibleDisplayables($scope.datamap, $scope.schema, $scope.displayables);

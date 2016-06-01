@@ -16,7 +16,7 @@
 
 
 
-    function commlogService($rootScope, $http, contextService, restService, richTextService, crudContextHolderService, applicationService, printService, fieldService, commlogMessageheader) {
+    function commlogService($rootScope, $http, $q, contextService, restService, richTextService, crudContextHolderService, applicationService, printService, fieldService, commlogMessageheader, alertService, redirectService) {
        
         function updatereadflag(parameters) {
             if (parameters.compositionItemData["read"]) {
@@ -220,7 +220,26 @@
                 .then(eventDispatcher("Forward"));
         };
 
+        var addCommlog = function (parameters) {
+            $q.when(contextService.getUserData().email || restService.getPromise("User", "GetPrimaryEmail")).then(function (result) {
+                var email = isString(result) ? result : result.data;
+
+                if (!email || "null".equalIc(email)) {
+                    alertService.confirm2('The current user does not have an email registered. Do you want define it now?')
+                        .then(() => redirectService.goToApplicationView("Person", 'myprofiledetail', 'input', null, { userid: contextService.getUserData().maximoPersonId }, null))
+                        .then(() => redirectService.redirectToTab('email_'));
+                } else {
+                    var datamap = {
+                        _iscreation: true
+                    };
+
+                    dispatchEvent(datamap, "Communication Details");
+                }
+            });
+        };
+            
         const service = {
+            addCommlog,
             formatCommTemplate,
             updatereadflag,
             addSignature,
@@ -233,7 +252,7 @@
         return service;
     }
 
-    angular.module("sw_layout").factory("commlogService", ["$rootScope", "$http", "contextService", "restService", "richTextService", "crudContextHolderService", "applicationService", "printService", "fieldService", "commlog_messagheader", commlogService]);
+    angular.module("sw_layout").factory("commlogService", ["$rootScope", "$http", "$q", "contextService", "restService", "richTextService", "crudContextHolderService", "applicationService", "printService", "fieldService", "commlog_messagheader", "alertService", "redirectService", commlogService]);
 
 
 })(angular);

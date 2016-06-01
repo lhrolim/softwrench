@@ -2,7 +2,8 @@
     <div ng-init="setForm(crudbodyform)" />
     <div class="field-wrap">
         <fieldset ng-repeat="fieldMetadata in nonTabFields(displayables)"
-                  class="form-group {{getFieldClass(fieldMetadata)}}"
+                  class="form-group"
+                  ng-class="getFieldClass(fieldMetadata)"
                   ng-show="!isFieldHidden(schema,fieldMetadata)"
                   rel="input-form-repeat"
                   bodyrendered>
@@ -31,7 +32,9 @@
 
             <!--Read only section-->
 
-            <div ng-class="getInputClass(fieldMetadata)" ng-if="fieldMetadata.isReadOnly" ng-switch on="fieldMetadata.rendererType">
+        <div ng-class="getInputClass(fieldMetadata)"
+             ng-if="isReadOnlyField(fieldMetadata)"
+             ng-switch on="fieldMetadata.rendererType">
                 <input type="datetime" ng-switch-when="datetime"
                        ng-model="datamap[fieldMetadata.attribute]"
                        data-date-time
@@ -119,9 +122,7 @@
 
             </div>
 
-
-
-            <div ng-if="!fieldMetadata.isReadOnly"
+            <div ng-if="!isReadOnlyField(fieldMetadata)"
                  ng-show="fieldMetadata.attribute!=schema.idFieldName"
                  ng-switch on="fieldMetadata.rendererType"
                  ng-class="getInputClass(fieldMetadata)">                

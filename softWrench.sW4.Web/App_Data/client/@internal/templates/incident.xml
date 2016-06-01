@@ -173,9 +173,9 @@
           <field attribute="cinum" hidden="true"/>
 
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
+            <renderer type="default" params="childinputsize=large" />
             <field attribute="description" label="Summary">
-              <renderer type="default" params="maxlength=100"/>
+              <renderer type="default" params="maxlength=100;inputsize=xlarge"/>
             </field>
             <section id="statussection"/>
             <field label="Site" attribute="siteid" readonly="true"/>

@@ -80,6 +80,10 @@
                 return !expressionService.evaluate(fieldMetadata.enableExpression, datamap);
             },
 
+            fieldHasValue: function (datamap, fieldMetadata) {
+                return !!datamap[fieldMetadata.attribute];
+            },
+
             isPropertyTrue: function (field, propertyName) {
                 if (!field) {
                     return false;

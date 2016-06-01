@@ -135,6 +135,32 @@ angular.module('sw_layout')
             this.doExecuteService(scope, clientFunction, command);
         },
 
+        isServiceMethod: function (fullName) {
+            if (!fullName) {
+                return false;
+            }
+
+            var idx = fullName.indexOf(".");
+
+            var serviceName = fullName.substring(0, idx);
+            if (!serviceName) {
+                return false;
+            }
+
+            var service = $injector.getInstance(serviceName);
+            if (!service) {
+                return false;
+            }
+
+            var methodName = fullName.substring(idx + 1);
+            var method = service[methodName];
+            if (!method) {
+                return false;
+            }
+
+            return true;
+        },
+
         //TODO: make it generic
         executeClickCustomCommand: function (fullServiceName, rowdm, column, schema, panelid, newValue) {
             var idx = fullServiceName.indexOf(".");

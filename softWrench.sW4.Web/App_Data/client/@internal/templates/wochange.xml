@@ -92,14 +92,10 @@
         <schema id="adetail" title="Change Details" abstract="true" stereotype="detail" platform="web">
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <section id="statussection"/>
-          </section>
-
-          <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
             <field attribute="description" label="Summary">
-              <renderer type="default" params="maxlength=100"/>
+              <renderer type="default" params="maxlength=100;inputsize=xlarge"/>
             </field>
+            <section id="statussection"/>           
             <field attribute="location" label="Location"/>
             <field attribute="classstructureid" label="Classification"/>
             <field attribute="worktype" label="Category"/>
@@ -109,11 +105,9 @@
             <field attribute="backoutplan" label="Back Out Plan"/>
             <field attribute="backoutplan_.ldtext" label="Back Out Plan Detail"/>
             <field attribute="pretestdetail_.ldtext" label="Pretest Details"/>
-
             <optionfield attribute="wopriority" label="Priority" providerattribute="_SWPriorityType">
-              <renderer type="lookup" params="inputsize=small"/>
+              <renderer type="lookup"/>
             </optionfield>
-            
             <field attribute="longdescription_.ldtext" label="Remarks"/>
           </section>
 

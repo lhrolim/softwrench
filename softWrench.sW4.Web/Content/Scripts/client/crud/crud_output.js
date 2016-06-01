@@ -66,7 +66,8 @@ app.directive('crudOutput', function (contextService) {
             cancelfn: '&',
             previousschema: '=',
             previousdata: '=',
-            hasError: '='
+            hasError: '=',
+            hideempty: '='
         },
 
         controller: function ($scope, $injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService) {

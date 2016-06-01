@@ -342,6 +342,7 @@ function applicationController($scope, $http, $log, $timeout,
         //Save the originalDatamap after the body finishes rendering. This will be used in the submit service to update
         //associations that were "removed" with a " ". This is because a null value, when sent to the MIF, is ignored
         scope.originalDatamap = angular.copy(scope.datamap);
+        crudContextHolderService.updateOriginalDatamap(scope.originalDatamap);
 
         scope.extraparameters = instantiateIfUndefined(result.extraParameters);
         if (result.mode === undefined || "none".equalsIc(result.mode)) {

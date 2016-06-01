@@ -249,7 +249,7 @@ namespace softWrench.sW4.Data.Search {
             } else {
                 SearchValues += SearchUtils.NullOrPrefix + searchValue;
             }
-
+            _valuesDictionary = null; // cache is not valid anymore
         }
 
         public void AppendWhereClause(string toAppendwhereclause) {

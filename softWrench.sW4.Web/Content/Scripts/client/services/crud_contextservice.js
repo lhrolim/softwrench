@@ -13,6 +13,7 @@
         var _originalContext = {
             currentSchema: null,
             rootDataMap: null,
+            originalDatamap: null,
             isList: null,
             isDetail: null,
 
@@ -67,7 +68,7 @@
              */
             _blockedAssociations: {},
 
-          
+            compositionLoadEventQueue :{},
 
             //TODO: below is yet to be implemented/refactored
             detail_previous: { id: "0" },
@@ -165,6 +166,14 @@
             return context.rootDataMap;
         }
 
+        function originalDatamap(panelid, datamap) {
+            var context = getContext(panelid);
+            if (datamap) {
+                context.originalDatamap = datamap;
+            }
+            return context.originalDatamap;
+        }
+
         function getAffectedProfiles(panelid) {
             return getContext(panelid).affectedProfiles || [];
         }
@@ -242,6 +251,11 @@
             schemaCacheService.addSchemaToCache(schema);
         }
 
+        function updateOriginalDatamap(datamap, panelid) {
+            var context = getContext(panelid);
+            context.originalDatamap = datamap;
+        }
+
         function applicationChanged(schema, rootDataMap, panelid) {
             this.clearCrudContext(panelid);
             this.updateCrudContext(schema, rootDataMap, panelid);
@@ -287,6 +301,7 @@
             if (!!clearTab) {
                 contextService.setActiveTab(null);
             }
+            context.compositionLoadEventQueue = {};
         }
 
         function compositionsLoaded(result, panelid) {
@@ -576,6 +591,10 @@
             getContext(panelid).isDetail = true;
         }
 
+        function compositionQueue(panelid) {
+            return getContext(panelid).compositionLoadEventQueue;
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -592,10 +611,12 @@
             currentSchema: currentSchema,
             currentApplicationName: currentApplicationName,
             updateCrudContext: updateCrudContext,
+            updateOriginalDatamap: updateOriginalDatamap,
             applicationChanged: applicationChanged,
             clearCrudContext: clearCrudContext,
             needsServerRefresh: needsServerRefresh,
             rootDataMap: rootDataMap,
+            originalDatamap: originalDatamap,
             setDetailDataResolved: setDetailDataResolved,
             getDetailDataResolved: getDetailDataResolved,
             clearDetailDataResolved: clearDetailDataResolved,
@@ -609,8 +630,7 @@
             fetchEagerAssociationOptions: fetchEagerAssociationOptions,
             fetchEagerAssociationOption: fetchEagerAssociationOption,
             associationsResolved: associationsResolved,
-            markAssociationsResolved: markAssociationsResolved,
-
+            markAssociationsResolved: markAssociationsResolved
         }
 
         var hookServices = {
@@ -657,6 +677,7 @@
             setDirty: setDirty,
             getDirty: getDirty,
             clearDirty: clearDirty,
+            compositionQueue
         }
 
         var navigationServices = {

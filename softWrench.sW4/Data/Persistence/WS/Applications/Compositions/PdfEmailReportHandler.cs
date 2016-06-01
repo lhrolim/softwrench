@@ -50,8 +50,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             };
 
             //Comment to generate files for testing
-            //File.WriteAllBytes(@"C:\temp\test.pdf", dto.BinaryData);
-            //File.WriteAllText(@"C:\temp\test.html", processedHtml);
+            //System.IO.File.WriteAllBytes(@"C:\test.pdf", dto.BinaryData);
+            //System.IO.File.WriteAllText(@"C:\test.html", processedHtml);
 
             return dto;
         }

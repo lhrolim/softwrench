@@ -16,6 +16,11 @@
 
                 .print-logo {
                     margin: 0 15px 40px;
+
+                    img {
+                        max-height: 120px;
+                        width: auto;
+                    }
                 }
 
                 h4 {

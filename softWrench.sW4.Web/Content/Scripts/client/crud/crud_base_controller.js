@@ -79,6 +79,10 @@ function BaseController($scope, $log, i18NService, fieldService, commandService,
         return fieldService.isFieldHidden($scope.datamap, application, fieldMetadata);
     };
 
+    $scope.fieldHasValue = function (fieldMetadata) {
+        return fieldService.fieldHasValue($scope.datamap, fieldMetadata);
+    };
+
     $scope.shouldDisplayCommand = function (commandSchema, id) {
         return commandService.shouldDisplayCommand(commandSchema, id);
     };
@@ -172,6 +176,29 @@ function BaseController($scope, $log, i18NService, fieldService, commandService,
 
     $scope.getInputClass = function (fieldMetadata) {
         return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
+    }
+
+    $scope.isReadOnlyField = function (fieldMetadata) {
+        var isReadOnly = false;
+
+        if (fieldMetadata.isReadOnly) {
+            return true;
+        }
+
+        var originalDM = crudContextHolderService.originalDatamap().fields;
+        if (!originalDM) {
+            return false;
+        }
+
+        if ('CLOSED'.equalIc(originalDM['status']) || 'CLOSE'.equalIc(originalDM['status'])) {
+
+            //if there is a read only input
+            if (fieldMetadata.rendererType === 'checkbox' || fieldMetadata.rendererType === 'datetime' || (fieldMetadata.rendererType === 'default' && !!fieldMetadata.dataType) || fieldMetadata.rendererType === 'imagepreview' || fieldMetadata.rendererType === 'lookup' || fieldMetadata.rendererType === 'richtext' || fieldMetadata.rendererType === 'textarea') {
+                isReadOnly = true;
+            }
+        }
+
+        return isReadOnly;
     }
 
     $scope.getCheckboxLabelLeftClass = function (fieldMetadata) {

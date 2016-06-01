@@ -175,7 +175,7 @@
               <command id="Create" icon="fa-pencil" label="Change Status"
                        showexpression="service:genericTicketService.hasSelectedItemsForBatchStatus"
                        service="genericTicketService" method="initBatchStatusChange"
-                       parameters="schema,datamap" />
+                       parameters="schema,datamap" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
           
@@ -193,11 +193,11 @@
           <field attribute="tophiddenfield" hidden="true"/>
           
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=medium" />
+            <renderer type="default" params="childinputsize=large" />
             <field attribute="ticketid" label="SR#" hidden="true"/>
             <field attribute="ticketuid" label="SR#" hidden="true"/>
             <field attribute="description" label="Summary" requiredexpression="true">
-              <renderer type="default" params="maxlength=100;" />
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
             </field>
             <section id="ticketidsection"/>
             
@@ -382,10 +382,11 @@
             <commandgroup position="actions">
 <!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
                 <command id="dispatchwo" icon="fa-wrench" label="Create W.O."
-                          parameters="schema,datamap" service="dispatchService" method="dispatchWO" cssclasses="large-button"/>
+                          parameters="schema,datamap" service="dispatchService" method="dispatchWO" cssclasses="large-button" enableexpression="$scope:enableSave"/>
+              
                 <!-- Incident is for smart cloud only, allowing them to dispatch incidents on all images is a violation for maximo images -->
                 <command id="dispatchincident" icon="fa-warning" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD" 
-                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident" cssclasses="large-button"/>
+                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident" cssclasses="large-button" enableexpression="$scope:enableSave"/>
                 
                 <!--<command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap" 
                          showexpression="service:genericTicketService.isDeleteAllowed" successmessage="SR deleted" position="right" icon="fa-remove"/>-->
@@ -393,7 +394,7 @@
                 <!-- Create new SR as Related Record -->
                 <command id="createrelated" 
                          service="srService" method="startRelatedSRCreation" parameters="schema,datamap" 
-                         label="Create Request" icon="fa-ticket" cssclasses="large-button"/>
+                         label="Create Request" icon="fa-ticket" cssclasses="large-button" enableexpression="$scope:enableSave"/>
 <!--              </container>-->
             </commandgroup>
           </commandbars>
@@ -447,11 +448,11 @@
           <section id="extrahiddenfields"/>
           
           <section orientation="horizontal" id="statussection">
-            <renderer type="default" params="childinputsize=medium" />
+            <renderer type="default" params="childinputsize=large" />
             <field attribute="ticketuid" label="SR#" hidden="true"/>
             <field label="Status" attribute="status" readonly="true" default="NEW" hidden="true"/>
             <field attribute="description" label="Summary" requiredexpression="true">
-              <renderer type="default" params="maxlength=100" />
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
             </field>
           </section>
 
@@ -505,9 +506,9 @@
           <field attribute="ticketid" label="SR#" readonly="true" hidden="true"/>
 
           <section orientation="horizontal" id="statussection">
-            <renderer type="default" params="childinputsize=medium" />
+            <renderer type="default" params="childinputsize=large" />
             <field attribute="description" label="Summary" requiredexpression="true">
-              <renderer type="default" params="maxlength=100" />
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
             </field>
             <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
               <renderer type="lookup"/>

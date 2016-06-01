@@ -212,7 +212,14 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             var collectionAssociation = parameter.CollectionAssociation;
 
             var lookupAttributes = collectionAssociation.Attributes;
-            var searchRequestDto = (paginatedSearch == null || paginatedSearch.PageSize <= 0) ? new SearchRequestDto() : new PaginatedSearchRequestDto();
+            SearchRequestDto searchRequestDto;
+            if (paginatedSearch != null && (!string.IsNullOrEmpty(paginatedSearch.SearchParams) || !string.IsNullOrEmpty(paginatedSearch.SearchSort))){
+                searchRequestDto = paginatedSearch;
+            } else if (paginatedSearch != null && paginatedSearch.PageSize > 0) {
+                searchRequestDto = new PaginatedSearchRequestDto();
+            } else {
+                searchRequestDto = new SearchRequestDto();
+            }
 
             var lookupContext = ContextLookuper.LookupContext();
             var printMode = lookupContext.PrintMode;
@@ -234,7 +241,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
 
             var orderByField = parameter.CompositionSchema.CollectionProperties.OrderByField;
-            if (orderByField != null) {
+            if (orderByField != null && string.IsNullOrEmpty(searchRequestDto.SearchSort)) {
                 searchRequestDto.SearchSort = orderByField;
                 searchRequestDto.SearchAscending = !orderByField.EndsWith("desc");
             }

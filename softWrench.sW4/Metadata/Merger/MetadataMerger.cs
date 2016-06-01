@@ -71,7 +71,7 @@ namespace softWrench.sW4.Metadata.Validator {
                 ApplicationSchemaDefinition overridenSchema;
                 overridenApplication.Schemas().TryGetValue(schema.Key, out overridenSchema);
 
-                if (schema.Value.Stereotype.Equals(SchemaStereotype.List)) {
+                if (schema.Value.Stereotype.Equals(SchemaStereotype.List) || schema.Value.Stereotype.Equals(SchemaStereotype.CompositionList)) {
                     schema.Value.DeclaredFilters.Merge(resultFilters);
                 }
 
@@ -80,7 +80,7 @@ namespace softWrench.sW4.Metadata.Validator {
                     resultSchemas.Add(schema.Key, schema.Value);
                 } else {
 
-                    if (overridenSchema.Stereotype.Equals(SchemaStereotype.List)) {
+                    if (overridenSchema.Stereotype.Equals(SchemaStereotype.List) || overridenSchema.Stereotype.Equals(SchemaStereotype.CompositionList)) {
                         overridenSchema.DeclaredFilters.Merge(resultFilters);
                         if (overridenSchema.FiltersResolved) {
                             //second pass

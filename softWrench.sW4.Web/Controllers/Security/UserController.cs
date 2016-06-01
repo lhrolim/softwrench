@@ -15,6 +15,7 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Models.MyProfile;
+using System.Dynamic;
 
 namespace softWrench.sW4.Web.Controllers.Security {
     [Authorize]
@@ -23,10 +24,12 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private readonly SecurityFacade _facade = SecurityFacade;
         private static readonly SecurityFacade SecurityFacade = SecurityFacade.GetInstance();
 
-        private ISWDBHibernateDAO dao;
+        private readonly ISWDBHibernateDAO dao;
+        private readonly IMaximoHibernateDAO maxdao;
 
-        public UserController(ISWDBHibernateDAO dao) {
+        public UserController(ISWDBHibernateDAO dao, IMaximoHibernateDAO maxdao) {
             this.dao = dao;
+            this.maxdao = maxdao;
         }
 
         [SPFRedirect(Title = "User Setup")]
@@ -112,6 +115,21 @@ namespace softWrench.sW4.Web.Controllers.Security {
         public User Get(int id) {
             User fetchUser = _facade.FetchUser(id);
             return fetchUser;
+        }
+
+        /// <summary>
+        /// Gets the current users primary email address.
+        /// </summary>
+        /// <returns>The email address</returns>
+        public string GetPrimaryEmail() {
+            var currentUser = SecurityFacade.CurrentUser();
+
+            if (currentUser == null || string.IsNullOrWhiteSpace(currentUser.MaximoPersonId)) {
+                return null;
+            }
+
+            return maxdao.FindSingleByNativeQuery<string>(@"SELECT emailaddress FROM email WHERE emailaddress IS NOT NULL 
+                                                            AND isprimary = 1 AND personid = ?", currentUser.MaximoPersonId);
         }
 
         //public ICollection<User> Post(JObject userJson)

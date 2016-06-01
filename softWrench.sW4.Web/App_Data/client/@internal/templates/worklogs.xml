@@ -56,6 +56,10 @@
       </properties>
       <schemas>
         <schema id="list"  stereotype="compositionlist">
+          <filters>
+            <booleanfilter attribute="clientviewable"/>
+          </filters>
+          
           <field attribute="worklogid" hidden="true" />
           <field attribute="recordkey" label="Record Key" hidden="true" />
           <field attribute="class" label="Class" hidden="true" />

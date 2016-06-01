@@ -30,12 +30,12 @@
                 log.debug("finished rendering tabs of detail screen");
                 if (scope.$last === undefined) {
                     //0 tabs scenario
-                    return $rootScope.$broadcast("sw_alltabsloaded");
+                    return $rootScope.$broadcast("sw_alltabsloaded", null, scope.panelid);
                 }
 
                 // covers a redirect for same application and schema but to another entry
                 $rootScope.$on("sw_applicationrendered", function () {
-                    $rootScope.$broadcast("sw_alltabsloaded");
+                    $rootScope.$broadcast("sw_alltabsloaded", null, scope.panelid);
                 });
 
                 $timeout(function () {
@@ -57,7 +57,7 @@
                         });
 
                     });
-                    $rootScope.$broadcast("sw_alltabsloaded", firstTabId);
+                    $rootScope.$broadcast("sw_alltabsloaded", firstTabId, scope.panelid);
 
                 }, 0, false);
 
@@ -66,7 +66,7 @@
     });
 
 
-    app.directive('crudBody', function (contextService) {
+    app.directive('crudBody', function (contextService, genericTicketService) {
         "ngInject";
 
         return {
@@ -130,6 +130,18 @@
                     return 'fa-arrow-left';
                 };
 
+                this.enableSave = function () {
+                    return !genericTicketService.isClosed();
+                };
+
+                this.saveTooltip = function () {
+                    if (genericTicketService.isClosed()) {
+                        return 'You can\'t change closed tickets.';
+                    }
+
+                    return '';
+                };
+
                 $(document).on("sw_autocompleteselected", function (event, key) {
                     focusService.resetFocusToCurrent($scope.schema, key);
                 });
@@ -143,7 +155,10 @@
                     }
                 });
 
-                $scope.$on("sw_alltabsloaded", function (event, firstTabId) {
+                $scope.$on("sw_alltabsloaded", function (event, firstTabId, panelId) {
+                    if ($scope.panelid !== panelId) {
+                        return;
+                    }
                     $scope.allTabsLoaded(event, firstTabId);
                 });
 
@@ -247,6 +262,9 @@
                     }
                     $scope.save(parameters);
                 });
+
+               
+
 
                 $scope.$on('sw_compositiondataresolved', function (event, data) {
                     var tab = crudContextHolderService.getActiveTab();
@@ -517,9 +535,7 @@
                         }
                         var result = modalSavefn($scope.datamap.fields, schemaToSave);
                         if (result && result.then) {
-                            result.then(function () {
-                                modalService.hide();
-                            })
+                            result.then(() => modalService.hide());
                         } 
                         return;
                     }
@@ -712,6 +728,7 @@
                                 successCbk(data);
                             }
 
+                            crudContextHolderService.updateOriginalDatamap($scope.datamap);
                             $scope.$emit('sw.crud.detail.savecompleted', data);
                         })
                         .catch(function(result) {

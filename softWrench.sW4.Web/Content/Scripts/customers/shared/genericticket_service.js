@@ -207,9 +207,17 @@ adjustOrgId: function (event) {
             });
         },
 
-
         isDeleteAllowed: function (datamap, schema) {
             return datamap.fields['status'] === 'NEW' && datamap.fields['reportedby'] === userService.getPersonId();
+        },
+
+        isClosed: function () {
+            var originalDM = crudContextHolderService.originalDatamap().fields;
+            if (!originalDM) {
+                return false;
+            }
+
+            return 'CLOSED'.equalIc(originalDM['status']) || 'CLOSE'.equalIc(originalDM['status']);
         },
 
         //#region batch status change
