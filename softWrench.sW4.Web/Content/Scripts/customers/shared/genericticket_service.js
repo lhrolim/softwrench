@@ -212,7 +212,12 @@ adjustOrgId: function (event) {
         },
 
         isClosed: function () {
-            var originalDM = crudContextHolderService.originalDatamap().fields;
+            const datamap = crudContextHolderService.originalDatamap();
+            if (!datamap) {
+                return false;
+            }
+
+            var originalDM = datamap.fields;
             if (!originalDM) {
                 return false;
             }
