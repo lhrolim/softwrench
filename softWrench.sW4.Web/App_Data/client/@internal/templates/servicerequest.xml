@@ -466,8 +466,8 @@
               <renderer type="lookup" params="columnlabel=Name;"/>
               <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
             </association>
-            <field attribute="reportedphone" label="Reported By Phone" readonly="true"/>
-            <field attribute="reportedemail" label="Reported By Email" readonly="true"/>
+            <field attribute="reportedphone" label="Reported By Phone" default="@user.phone" readonly="true"/>
+            <field attribute="reportedemail" label="Reported By Email" default="@user.email" readonly="true"/>
             <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true">
               <renderer type="lookup"/>
             </association>
