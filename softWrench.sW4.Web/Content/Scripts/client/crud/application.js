@@ -58,7 +58,7 @@ app.controller("ApplicationController", applicationController);
 function applicationController($scope, $http, $log, $timeout,
     fixHeaderService, $rootScope, associationService, validationService, historyService,
     contextService, searchService, alertService, schemaService, userPreferencesService, 
-    checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService) {
+    checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService, redirectService) {
     "ngInject";
 
     $scope.$name = 'applicationController';
@@ -275,7 +275,12 @@ function applicationController($scope, $http, $log, $timeout,
                 if (printMode != undefined && printMode) {
                     $rootScope.printRequested = true;
                 };
+
                 $scope.renderData(data, printMode);
+
+                if (parameters.autoloadcomposition) {
+                    redirectService.redirectToTab(parameters.autoloadcomposition);
+                }
             });
     };
 

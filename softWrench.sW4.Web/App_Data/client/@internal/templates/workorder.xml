@@ -252,13 +252,13 @@
             <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
           </field>
           <field attribute="communicationcounter" tooltip="Communications" hidden="true">
-            <renderer type="icon" params="icon=fa-envelope-o"/>
+            <renderer type="icon" params="icon=fa-envelope-o;autoloadcomposition=commlog_"/>
           </field>
           <field attribute="attachmentcounter" tooltip="Attachments" hidden="true">
-            <renderer type="icon" params="icon=fa-paperclip"/>
+            <renderer type="icon" params="icon=fa-paperclip;autoloadcomposition=attachment_"/>
           </field>
           <field attribute="relatedcounter" tooltip="Related Records" hidden="true">
-            <renderer type="icon" params="icon=fa-tags"/>
+            <renderer type="icon" params="icon=fa-tags;autoloadcomposition=relatedrecord_"/>
           </field>
           <field attribute="statusicons" tooltip="Status Icons">
             <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter;icon=fa-tachometer;headericon=true;showsort=false"/>

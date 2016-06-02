@@ -236,7 +236,7 @@
             <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
           </field>
           <field attribute="workordercounter" tooltip="Active Work Orders" hidden="true">
-            <renderer type="icon" params="icon=fa-wrench"/>
+            <renderer type="icon" params="icon=fa-wrench;autoloadcomposition=workorder_"/>
           </field>
           <field attribute="statusicons" tooltip="Status Icons">
             <renderer type="statusicons" params="width=3%;iconcolumns=workordercounter;icon=fa-tachometer;headericon=true;showsort=false"/>
