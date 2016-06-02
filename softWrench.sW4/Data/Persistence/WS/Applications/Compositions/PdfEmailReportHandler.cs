@@ -22,7 +22,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             Log.Debug("init...");
         }
 
-
         public AttachmentDTO CreateDetailsAttachment(string detailsHtml, string appTitle, string userId) {
             var appContext = ProcessAppContext();
             var serverPath = AppDomain.CurrentDomain.BaseDirectory;
