@@ -8,10 +8,12 @@ using ctes = softwrench.sw4.dashboard.classes.service.statistics.StatisticsConst
 namespace softwrench.sw4.dashboard.classes.startup {
     public class ChartInitializer : ISWEventListener<ApplicationStartedEvent>, IOrdered {
 
-        private const string WoChartDashboardAlias = "workorder";
+        public const int ORDER = int.MaxValue - 51;
+
+        public const string WoChartDashboardAlias = "workorder";
         private const string WoChartDashboardTitle = "Work Orders";
 
-        private const string SrChartDashboardAlias = "servicerequest";
+        public const string SrChartDashboardAlias = "servicerequest";
         private const string SrChartDashboardTitle = "Service Requests";
 
         /// <summary>
@@ -49,7 +51,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
         private readonly DashboardInitializationService _service;
 
-        public int Order { get { return int.MaxValue - 51; } }
+        public int Order { get { return ORDER; } }
 
         public ChartInitializer(DashboardInitializationService service) {
             _service = service;
