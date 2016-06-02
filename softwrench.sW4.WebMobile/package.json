@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "grunt": "^0.4.5",
-    "cordova": "^5.1.1"
+    "cordova": "^5.2.0"
   },
   "repository": {
     "type": "git",

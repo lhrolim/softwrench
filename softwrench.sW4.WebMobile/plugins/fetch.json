@@ -53,7 +53,7 @@
     "cordova-plugin-network-information": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-network-information"
+            "id": "cordova-plugin-network-information@1.0.1"
         },
         "is_top_level": true,
         "variables": {}
@@ -76,16 +76,18 @@
     },
     "cordova-plugin-file": {
         "source": {
-            "type": "registry",
-            "id": "cordova-plugin-file@3.0.0"
+            "type": "git",
+            "url": "https://github.com/apache/cordova-plugin-file",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
     },
     "cordova-plugin-whitelist": {
         "source": {
-            "type": "registry",
-            "id": "cordova-plugin-whitelist@1.1.0"
+            "type": "git",
+            "url": "https://github.com/apache/cordova-plugin-whitelist.git",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
@@ -93,7 +95,25 @@
     "de.appplant.cordova.plugin.local-notification": {
         "source": {
             "type": "git",
-            "url": "https://github.com/controltechnologysolutions/cordova-plugin-local-notifications",
+            "url": "https://github.com/controltechnologysolutions/cordova-plugin-local-notifications.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-sqlite-storage": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/litehelpers/Cordova-sqlite-storage.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-app-version": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/whiteoctober/cordova-plugin-app-version.git",
             "subdir": "."
         },
         "is_top_level": true,
