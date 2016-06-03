@@ -358,7 +358,7 @@
                 $scope.isEditingAnyDashboard = false;
                 return;
             }
-            alertService.confirm2(
+            alertService.confirm(
                     "There are unsaved changes to the current dashboard. " +
                     "Any unsaved changes will be discarded. " +
                     "Are you sure sure you want to cancel editting.")
@@ -429,39 +429,35 @@
         };
 
         $scope.deleteDashboard = function (dashboard) {
-            alertService
-                .confirm2("Are you sure you want to remove the dashboard '" + dashboard.title + "' ?")
-                .then(function () {
-                    return dashboardAuxService.deactivateDashboard(dashboard);
-                })
-                .then(function () {
-                    $scope.dashboards = $scope.dashboards.filter(function (d) {
-                        return d.id !== dashboard.id;
-                    });
-                    markDashboardNotSelected(dashboard.id);
-                    deleteDashboardCheckpoint(dashboard.id);
-                    if ($scope.currentdashboardid === dashboard.id) {
-                        $scope.viewDashboard(null, $scope.dashboards.length > 0 ? $scope.dashboards[0].id : null);
-                    }
+            alertService.confirm("Are you sure you want to remove the dashboard '" + dashboard.title + "' ?").then(function () {
+                return dashboardAuxService.deactivateDashboard(dashboard);
+            }).then(function () {
+                $scope.dashboards = $scope.dashboards.filter(function (d) {
+                    return d.id !== dashboard.id;
                 });
+                markDashboardNotSelected(dashboard.id);
+                deleteDashboardCheckpoint(dashboard.id);
+                if ($scope.currentdashboardid === dashboard.id) {
+                    $scope.viewDashboard(null, $scope.dashboards.length > 0 ? $scope.dashboards[0].id : null);
+                }
+            });
         };
 
         $scope.removePanel = function (panelDataSource, dashboard) {
-            return alertService.confirm2("Are you sure you want to remove the widget '" + panelDataSource.panel.title + "' from this dashboard")
-                .then(function () {
-                    // remove panel's association
-                    dashboard.panels = dashboard.panels.filter(function (p) {
-                        return p.position !== panelDataSource.position;
-                    });
-                    // update positions
-                    dashboard.panels.forEach(function (p) {
-                        if (p.position > panelDataSource.position) {
-                            p.position--;
-                        }
-                    });
-                    // save dashboard
-                    return dashboardAuxService.saveDashboard(dashboard);
+            return alertService.confirm("Are you sure you want to remove the widget '" + panelDataSource.panel.title + "' from this dashboard").then(function () {
+                // remove panel's association
+                dashboard.panels = dashboard.panels.filter(function (p) {
+                    return p.position !== panelDataSource.position;
                 });
+                // update positions
+                dashboard.panels.forEach(function (p) {
+                    if (p.position > panelDataSource.position) {
+                        p.position--;
+                    }
+                });
+                // save dashboard
+                return dashboardAuxService.saveDashboard(dashboard);
+            });
         };
 
         //#endregion

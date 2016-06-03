@@ -101,7 +101,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                 log.debug('markAllRead');
 
                 var confirmationMessage = "Mark all notifications as read?";
-                return alertService.confirm(null, null, function () {
+                return alertService.confirm(confirmationMessage).then(function () {
                     var controllerToUse = "Notification";
                     var actionToUse = "UpdateNotificationReadFlag";
                     var parameters = {};
@@ -112,7 +112,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
                         log.debug('Mark All Read Complete');
                         $scope.refreshStream();
                     });
-                }, confirmationMessage);
+                });
             };
 
             $scope.markRead = function (activity) {

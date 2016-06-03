@@ -30,11 +30,13 @@ function AboutController($scope, $http, $templateCache, i18NService, restService
             return;
         }
 
-        alertService.confirmMsg('Are you sure you want to change client to {0}?'.format(newclient.toUpperCase()), function () {
-            restService.invokePost("Configuration", "ChangeClient", { clientName: newclient }, null, function (s) {
-                window.location.href = window.location.href;
-            });
-        });
+        alertService.confirm('Are you sure you want to change client to {0}?'.format(newclient.toUpperCase()))
+            .then(function () {
+                restService.invokePost("Configuration", "ChangeClient", { clientName: newclient }, null, function (s) {
+                    window.location.href = window.location.href;
+                });
+            }
+        );
     }
 
     $scope.restore = function () {
@@ -45,11 +47,13 @@ function AboutController($scope, $http, $templateCache, i18NService, restService
             return;
         }
 
-        alertService.confirmMsg('Are you sure you want to restore to default client?', function () {
-            restService.invokePost("Configuration", "Restore", null, null, function (s) {
-                window.location.href = window.location.href;
-            });
-        });
+        alertService.confirm('Are you sure you want to restore to default client?')
+            .then(function () {
+                restService.invokePost("Configuration", "Restore", null, null, function (s) {
+                    window.location.href = window.location.href;
+                });
+            }
+        );
     }
 
     $scope.keyDisabled = function (key) {

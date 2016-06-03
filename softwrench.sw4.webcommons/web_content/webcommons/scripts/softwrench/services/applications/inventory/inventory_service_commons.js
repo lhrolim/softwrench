@@ -76,9 +76,9 @@
             if (binnum != null) {
                 message = message + " (Bin: " + binnum + ")";
             }
-            return alertService.confirm(null, null, function () {
+            return alertService.confirm(message).then(function () {
                 parameters.continue();
-            }, message);
+            });
         };
 
     }

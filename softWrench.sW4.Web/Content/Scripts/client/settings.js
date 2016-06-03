@@ -47,7 +47,7 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
                 var urlToUse = $scope.type;
                 break;
         }
-        alertService.confirmMsg("You will be logged out in order to implement this change.Do you want to continue? ", function () {
+        alertService.confirm("You will be logged out in order to implement this change.Do you want to continue? ").then(function () {
             $http({
                 method: "PUT",
                 url: url(urlToUse),
@@ -62,7 +62,7 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
 
     $scope.savechanges = function () {
         if ($scope.comments != undefined) {
-            alertService.confirmMsg("Are you sure you want to save your changes to the Metadata? You will be logged out in order to implement this change. Do you want to continue?", function () {
+            alertService.confirm("Are you sure you want to save your changes to the Metadata? You will be logged out in order to implement this change. Do you want to continue?").then(function () {
                 var httpParameters = {
                     Comments: $scope.comments,
                     Metadata: ace.edit("editor").getValue(),
@@ -92,7 +92,7 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
        
             
     $scope.restore = function () {
-        alertService.confirmMsg("This will restore your XML to the default XML file, and none of your changes will be saved. Is this what you want to do? ", function () {
+        alertService.confirm("This will restore your XML to the default XML file, and none of your changes will be saved. Is this what you want to do? ").then(function () {
             var urlToCall = url("/api/generic/EntityMetadata/RestoreDefaultMetadata");
             $http.get(urlToCall).success(function (result) {
                 var editor = ace.edit("editor");
@@ -106,20 +106,14 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
             }).error(function (result) {
                 alertService.alert("Failed to Load your xml file.Please try again later");
             });
-            //alertService.confirmMsg("Are you sure you want to restore to default settings ? ", function () {
-            //    var urlToUse = url("/api/generic/EntityMetadata/RestoreMetadataEditor");
-            //    $http.get(urlToUse)
-            //    window.location.reload();
-            //});
-
         });
     };
        
     $scope.restorexml = function () {
-        alertService.confirmMsg("Select a Restore File from the table to restore your xml to selected file. None of your current changes will be saved. Is this what you want to do? ", function () {
+        alertService.confirm("Select a Restore File from the table to restore your xml to selected file. None of your current changes will be saved. Is this what you want to do?").then(function () {
             var urlToCall = url("/api/generic/EntityMetadata/RestoreSavedMetadata?metadataFileName=" + $scope.selectedTemplate.name);
             $http.get(urlToCall).success(function (result) {
-                                $scope.results = result;
+                $scope.results = result;
             }).error(function (result) {
                 alertService.alert("Failed to Load your xml file.Please try again later");
             });
@@ -127,8 +121,7 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
     };
 
     $scope.edit = function (Metadata) {
-        alertService.confirmMsg("The selected xml file will overwrite the existing xml file.None of your current changes will be saved. Is this what you want to do? ", function () {
-
+        alertService.confirm("The selected xml file will overwrite the existing xml file.None of your current changes will be saved. Is this what you want to do?").then(function () {
             var editor = ace.edit("editor");
             editor.getSession().setMode("ace/mode/xml");
             var data = $scope.resultData;

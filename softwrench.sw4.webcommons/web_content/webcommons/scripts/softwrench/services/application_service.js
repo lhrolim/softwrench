@@ -57,7 +57,7 @@
                 return toListSchema();
             }
 
-            return alertService.confirmCancel2().then(function () {
+            return alertService.confirmCancel().then(function () {
                 toListSchema();
                 crudContextHolderService.clearDirty();
                 crudContextHolderService.clearDetailDataResolved();

@@ -96,12 +96,12 @@
                     }
 
                     if (crudContextHolderService.getDirty()) {
-                        alertService.confirmCancel(null, null, function () {
+                        alertService.confirmCancel(msg).then(function () {
                             menuService.goToApplication(leaf, null, parameters);
                             crudContextHolderService.clearDirty();
                             crudContextHolderService.clearDetailDataResolved();
                             $scope.$digest();
-                        }, msg, function () { return; });
+                        });
                     } else {
                         menuService.goToApplication(leaf, null, parameters);
                     }
@@ -115,12 +115,12 @@
 
                     var msg = "Are you sure you want to leave the page?";
                     if (crudContextHolderService.getDirty()) {
-                        alertService.confirmCancel(null, null, function () {
+                        alertService.confirmCancel(msg).then(function () {
                             menuService.doAction(leaf, null);
                             crudContextHolderService.clearDirty();
                             crudContextHolderService.clearDetailDataResolved();
                             $scope.$digest();
-                        }, msg, function () { return; });
+                        });
                     } else {
                         menuService.doAction(leaf, null);
                     }

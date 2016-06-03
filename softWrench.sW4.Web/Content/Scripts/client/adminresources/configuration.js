@@ -198,10 +198,11 @@ function configController($scope, $http, $timeout, i18NService, alertService) {
     });
 
     $scope.restoreDefault = function (definition) {
-        alertService.confirm("", "", function (result) {
-            $scope.currentValues[definition.fullKey] = null;
-        }, "Are you sure you want to restore the default value?");
-
+        alertService.confirm('Are you sure you want to restore the default value?')
+            .then(function (result) {
+                $scope.currentValues[definition.fullKey] = null;
+            }
+        );
     };
 
     $scope.getCurrentCondition = function () {
@@ -217,7 +218,7 @@ function configController($scope, $http, $timeout, i18NService, alertService) {
             return;
         }
 
-        alertService.confirm('condition', condition.alias, function (result) {
+        alertService.confirm(null, 'condition', condition.alias).then(function (result) {
             var jsonString = angular.toJson(condition);
             $http.put(url("/api/generic/Configuration/DeleteCondition?currentKey=" + $scope.currentCategory.fullKey), jsonString)
                 .success(function (data) {

@@ -84,9 +84,9 @@ angular.module('sw_layout')
     return {
 
         exit: function (event) {
-            alertService.confirm(null, null, function (data) {
+            alertService.confirm("Any unsaved work will be lost. Are you sure you want to cancel this Batch?").then(function (data) {
                 redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
-            }, "Any unsaved work will be lost. Are you sure you want to cancel this Batch?");
+            });
         },
 
         newBatch: function (event) {
@@ -140,9 +140,10 @@ angular.module('sw_layout')
                 }
             });
             if (alreadyused.length != 0) {
-                alertService.confirm(null, null, function () {
+                alertService.confirm("The workorders {0} are already used on other batches and will not be included. Proceed?".format(alreadyused.join())).then(function () {
                     doSave(ids);
-                }, "The workorders {0} are already used on other batches and will not be included. Proceed?".format(alreadyused.join()));
+                });
+
                 return;
             }
             doSave(ids);
@@ -301,7 +302,7 @@ angular.module('sw_layout')
                 }
             });
             if (!hasAtLeastOne) {
-                alertService.confirmMsg("This batch has no closed entries.It will be deleted upon submission. Proceeed?", function () {
+                alertService.confirm("This batch has no closed entries.It will be deleted upon submission. Proceeed?").then(function () {
                     doSubmit(false, datamap);
                 });
                 return;

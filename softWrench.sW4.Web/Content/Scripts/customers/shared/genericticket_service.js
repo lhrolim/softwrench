@@ -74,15 +74,15 @@ angular.module('sw_layout')
                 //if it´s changing to the asset location, proceed. It might be due to the AfterChangeAsset callback.
                 return true;
             }
-
-            alertService.confirm(null, null, function () {
+            
+            alertService.confirm("The location you have entered does not contain the current asset. Would you like to remove the current asset from the ticket?").then(function () {
                 event.fields['assetnum'] = null;
                 //TODO: this should be done using watchers, so that we could remove scope from event, decoupling things
                 event.scope.lookupAssociationsCode['assetnum'] = null;
                 event.scope.lookupAssociationsDescription["assetnum"] = null;
 
                 event.continue();
-            }, "The location you have entered does not contain the current asset. Would you like to remove the current asset from the ticket?", function () {
+            }, function () {
                 event.interrupt();
             });
         },
@@ -91,14 +91,13 @@ angular.module('sw_layout')
             if (event.fields['owner'] == null || event.fields['status'] != "NEW") {
                 return true;
             }
-
-            alertService.confirm(null, null, function () {
+            
+            alertService.confirm("Changing the status to new would imply in removing the owner of this Service Request. Proceeed?").then(function () {
                 event.fields['owner'] = null;
                 event.continue();
-            }, "Changing the status to new would imply in removing the owner of this Service Request. Proceeed?", function () {
+            }, function () {
                 event.interrupt();
             });
-
         },
 
         afterChangeAsset: function (event) {

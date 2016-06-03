@@ -955,7 +955,7 @@
         }
 
         $scope.delete = function (item, column, $event, rowIndex) {
-            alertService.confirm2("Are you sure you want to delete this entry").then(function () {
+            alertService.confirm("Are you sure you want to delete this entry").then(function () {
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
 
                 compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {

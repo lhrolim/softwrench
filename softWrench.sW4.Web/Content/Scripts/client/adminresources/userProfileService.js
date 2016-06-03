@@ -813,7 +813,7 @@
         }
 
         function deleteProfile() {
-            return alertService.confirm2("Are you sure you want to delete this security group? This operation cannot be undone").then(function () {
+            return alertService.confirm("Are you sure you want to delete this security group? This operation cannot be undone").then(function () {
                 var id = crudContextHolderService.rootDataMap().fields["id"];
                 return restService.postPromise("UserProfile", "Delete", { id: id }).then(function (httpResponse) {
                     return redirectService.goToApplicationView("_UserProfile", "list");
