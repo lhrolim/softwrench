@@ -77,7 +77,7 @@
   </environment>
   
 
-  <environment key="demo">
+  <environment key="uat">
     <property key="basewsURL" value="http://173.193.44.2:9080/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=10.37.19.66;Initial Catalog=ISM;User Id=maximo;password=MAXIMO;" />
     <property key="maximo_DB_provider" value="System.Data.SQL" />
@@ -88,6 +88,7 @@
     ​
     <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="maxadmin"/>
+    <property key="iiscontextpath " value="http://uat.chi.softwrench.net"/>    
   </environment>
   ​
 
