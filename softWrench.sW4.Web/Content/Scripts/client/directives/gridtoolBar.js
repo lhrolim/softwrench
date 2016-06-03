@@ -1,7 +1,7 @@
 ﻿(function (app, angular) {
     "use strict";
 
-    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "fixHeaderService", "crudContextHolderService", "$injector", "genericTicketService",
+    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "fixHeaderService", "crudContextHolderService", "genericTicketService",
         function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, fixHeaderService, crudContextHolderService, genericTicketService) {
 
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
@@ -211,6 +211,10 @@
         return command;
     }
 
+    $scope.showCommLogButtons = function (commLogDatamap) {
+        return !!commLogDatamap && !genericTicketService.isClosed();
+    };
+
     $scope.toggleCommandOrNull = function(command) {
         return "ToggleCommand" === command.type ? command : null;
     }
@@ -250,7 +254,6 @@ app.directive('gridtoolbar', ["contextService", function (contextService) {
 
     };
 }]);
-
 
 app.directive('compositiontoolbar', ["contextService", function (contextService) {
     return {

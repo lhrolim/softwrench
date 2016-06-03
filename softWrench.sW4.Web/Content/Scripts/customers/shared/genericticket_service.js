@@ -38,7 +38,7 @@ angular.module('sw_layout')
             return $q.when();
         },
 
-adjustOrgId: function (event) {
+        adjustOrgId: function (event) {
             event.fields.orgid = event.fields.extrafields["site_.orgid"];
         },
 

@@ -368,7 +368,7 @@
 
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
-              <collectionproperties allowupdate="false" />
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
 
             <tab label="Location Address" id="saddress" icon="fa-map-o" showexpression="(@location_.serviceaddress_.latitudey &amp;&amp; @location_.serviceaddress_.longitudex) || @location_.serviceaddress_.streetaddress">
