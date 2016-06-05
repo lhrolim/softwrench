@@ -58,7 +58,7 @@ app.controller("ApplicationController", applicationController);
 function applicationController($scope, $http, $log, $timeout,
     fixHeaderService, $rootScope, associationService, validationService, historyService,
     contextService, searchService, alertService, schemaService, userPreferencesService, 
-    checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService) {
+    checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService, redirectService) {
     "ngInject";
 
     $scope.$name = 'applicationController';
@@ -87,12 +87,12 @@ function applicationController($scope, $http, $log, $timeout,
     $scope.$on('sw_navigaterequest', function (event, applicationName, schemaId, mode, title, parameters) {
         var msg = "Are you sure you want to leave the page?";
         if (crudContextHolderService.getDirty()) {
-            alertService.confirmCancel(null, null, function () {
+            alertService.confirmCancel(msg).then(function() {
                 $scope.renderView(applicationName, schemaId, mode, title, parameters);
                 crudContextHolderService.clearDirty();
                 crudContextHolderService.clearDetailDataResolved();
                 $scope.$digest();
-            }, msg, function () { return; });
+            });
         }
         else {
             $scope.renderView(applicationName, schemaId, mode, title, parameters);
@@ -275,7 +275,12 @@ function applicationController($scope, $http, $log, $timeout,
                 if (printMode != undefined && printMode) {
                     $rootScope.printRequested = true;
                 };
+
                 $scope.renderData(data, printMode);
+
+                if (parameters.autoloadcomposition) {
+                    redirectService.redirectToTab(parameters.autoloadcomposition);
+                }
             });
     };
 
@@ -404,12 +409,12 @@ function applicationController($scope, $http, $log, $timeout,
             return;
         }
 
-        alertService.confirmCancel(null, null, function () {
+        alertService.confirmCancel(msg).then(function() {
             $scope.toListSchema(data, schema);
             crudContextHolderService.clearDirty();
             crudContextHolderService.clearDetailDataResolved();
             $scope.$digest();
-        }, msg, function () { return; });
+        });
     }
 
     $scope.toConfirmCancel = function (data, schema) {

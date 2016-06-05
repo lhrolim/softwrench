@@ -225,7 +225,7 @@
                 var email = isString(result) ? result : result.data;
 
                 if (!email || "null".equalIc(email)) {
-                    alertService.confirm2('The current user does not have an email registered. Do you want define it now?')
+                    alertService.confirm('The current user does not have an email registered. Do you want define it now?')
                         .then(() => redirectService.goToApplicationView("Person", 'myprofiledetail', 'input', null, { userid: contextService.getUserData().maximoPersonId }, null))
                         .then(() => redirectService.redirectToTab('email_'));
                 } else {

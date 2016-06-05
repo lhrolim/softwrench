@@ -252,13 +252,13 @@
             <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
           </field>
           <field attribute="communicationcounter" tooltip="Communications" hidden="true">
-            <renderer type="icon" params="icon=fa-envelope-o"/>
+            <renderer type="icon" params="icon=fa-envelope-o;autoloadcomposition=commlog_"/>
           </field>
           <field attribute="attachmentcounter" tooltip="Attachments" hidden="true">
-            <renderer type="icon" params="icon=fa-paperclip"/>
+            <renderer type="icon" params="icon=fa-paperclip;autoloadcomposition=attachment_"/>
           </field>
           <field attribute="relatedcounter" tooltip="Related Records" hidden="true">
-            <renderer type="icon" params="icon=fa-tags"/>
+            <renderer type="icon" params="icon=fa-tags;autoloadcomposition=relatedrecord_"/>
           </field>
           <field attribute="statusicons" tooltip="Status Icons">
             <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter;icon=fa-tachometer;headericon=true;showsort=false"/>
@@ -591,27 +591,27 @@
 
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" orderbyfield="modifydate desc"/>
+              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSE'" orderbyfield="modifydate desc"/>
             </composition>
 
             <composition relationship="woactivity" label="WO Tasks">
               <collectionproperties allowupdate="false" allowcreation="false"  />
             </composition>
             <composition relationship="matusetrans" label="Materials">
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'"  />
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSE'" />
             </composition>
             <composition relationship="labtrans" label="Labor">
-              <collectionproperties listschema="compositionlist" allowupdate="true" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" />
+              <collectionproperties listschema="compositionlist" allowupdate="true" allowcreation="@status!='CLOSE'" allowremoval="@status!='CLOSE'" />
             </composition>
             <composition relationship="tooltrans" label="Tools">
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSE'" />
             </composition>
             <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"  orderbyfield="createdate desc"/>
+              <collectionproperties allowcreation="@status!='CLOSE'" allowupdate="false"  orderbyfield="createdate desc"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
             <composition relationship="attachment" label="Attachments" printenabled="false" >
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSE'" allowremoval="@status!='CLOSE'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
             </composition>
             <composition relationship="assetmeter" label="Asset Meter Reading" detailschema="" hidden="true" fetchtype="manual">
               <collectionproperties allowcreation="false" listschema="composition"/>
@@ -620,7 +620,7 @@
               <collectionproperties allowcreation="false" listschema="composition"/>
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
-              <collectionproperties allowupdate="false" />
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSE'"/>
             </composition>
 
             <tab label="Location Address" id="saddress" icon="fa-map-o" showexpression="(@location_.serviceaddress_.latitudey &amp;&amp; @location_.serviceaddress_.longitudex) || @location_.serviceaddress_.streetaddress">

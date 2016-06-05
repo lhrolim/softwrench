@@ -153,13 +153,13 @@
             <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
           </field>
           <field attribute="communicationcounter" tooltip="Communications" hidden="true">
-            <renderer type="icon" params="icon=fa-envelope-o"/>
+            <renderer type="icon" params="icon=fa-envelope-o;autoloadcomposition=commlog_"/>
           </field>
           <field attribute="attachmentcounter" tooltip="Attachments" hidden="true">
-            <renderer type="icon" params="icon=fa-paperclip"/>
+            <renderer type="icon" params="icon=fa-paperclip;autoloadcomposition=attachment_"/>
           </field>
           <field attribute="relatedcounter" tooltip="Related Records" hidden="true">
-            <renderer type="icon" params="icon=fa-tags"/>
+            <renderer type="icon" params="icon=fa-tags;autoloadcomposition=relatedrecord_"/>
           </field>
           <field attribute="statusicons" tooltip="Status Icons">
             <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter;icon=fa-tachometer;headericon=true;showsort=false"/>
@@ -368,7 +368,7 @@
 
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
-              <collectionproperties allowupdate="false" />
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
 
             <tab label="Location Address" id="saddress" icon="fa-map-o" showexpression="(@location_.serviceaddress_.latitudey &amp;&amp; @location_.serviceaddress_.longitudex) || @location_.serviceaddress_.streetaddress">
@@ -466,8 +466,8 @@
               <renderer type="lookup" params="columnlabel=Name;"/>
               <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
             </association>
-            <field attribute="reportedphone" label="Reported By Phone" readonly="true"/>
-            <field attribute="reportedemail" label="Reported By Email" readonly="true"/>
+            <field attribute="reportedphone" label="Reported By Phone" default="@user.phone" readonly="true"/>
+            <field attribute="reportedemail" label="Reported By Email" default="@user.email" readonly="true"/>
             <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true">
               <renderer type="lookup"/>
             </association>

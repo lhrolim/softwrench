@@ -61,7 +61,7 @@
 
             var reverseValue = originalValue == "0" ? "1" : "0";
 
-            return alertService.confirmMsg(msg, function () {
+            return alertService.confirm(msg).then(function () {
                 compositionitem["#isDirty"] = true;
                 compositionitem["progress2"] = reverseValue;
                 //sending minimum amount of data
@@ -83,6 +83,5 @@
                 $rootScope.$digest();
             });
         }
-
     }
 })();

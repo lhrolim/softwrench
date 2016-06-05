@@ -272,14 +272,12 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 					};
 
 					$('.richtext').on('click', function () {
-					    //console.log('click');
 					    $timeout(function () {
 					        $(window).trigger('resize');
 					    }, 0, false);
 					});
 
 					$('.richtext').on('blur', function () {
-					    //console.log('blur');
 					    $timeout(function () {
 					        $(window).trigger('resize');
 					    }, 250, false);
@@ -562,8 +560,11 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 					// note that focusout > focusin is called everytime we click a button - except bad support: http://www.quirksmode.org/dom/events/blurfocus.html
 					// cascades to displayElements.text and displayElements.html automatically.
 					_focusin = function(){
-						element.addClass(scope.classes.focussed);
-						_toolbars.focus();
+					    element.addClass(scope.classes.focussed);
+					    _toolbars.focus();
+					    $timeout(function () {
+					        $(window).trigger('resize');
+					    }, 250, false);
 					};
 					scope.displayElements.html.on('focus', _focusin);
 					scope.displayElements.text.on('focus', _focusin);

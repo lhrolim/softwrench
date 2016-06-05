@@ -234,11 +234,11 @@
                 modalService.hide();
                 var msg = "Are you sure you want to leave the page?";
                 if (crudContextHolderService.getDirty()) {
-                    alertService.confirmCancel(null, null, function () {
+                    alertService.confirmCancel(msg).then(function () {
                         redirectService.goToApplication("workorder", "newdetail", null, datamap);
                         crudContextHolderService.clearDirty();
                         crudContextHolderService.clearDetailDataResolved();
-                    }, msg, function () { return; });
+                    }, function () { return; });
                 }
                 else {
                     redirectService.goToApplication("workorder", "newdetail", null, datamap);

@@ -87,11 +87,11 @@
 
                 $scope.deleteFilter = function () {
                     var filter = $scope.selectedfilter;
-                    alertService.confirm(null, null, function () {
+                    alertService.confirm("Are you sure that you want to remove filter {0}?".format(filter.alias)).then(function () {
                         gridPreferenceService.deleteFilter(filter.id, filter.creatorId, function () {
                             $scope.selectedfilter = null;
                         });
-                    }, "Are you sure that you want to remove filter {0}?".format(filter.alias), null);
+                    });
                 }
 
                 $scope.createFilter = function (alias) {

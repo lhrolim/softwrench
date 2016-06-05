@@ -144,8 +144,8 @@
             var commandResult = null;
 
             var column = fieldService.getDisplayableByKey($scope.schema, attribute);
-
             var selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
+            var autoloadcomposition = column.rendererParameters.autoloadcomposition;
 
             //force edition means that the user has clicked the edition icon, so regardless of the mode we need to open the details
             if (selectionModel.selectionMode && !forceEdition) {
@@ -183,11 +183,11 @@
                 }
             };
 
-            $scope.doShowDetail(rowdm, schemaid, mode, popupmode);
+            $scope.doShowDetail(rowdm, schemaid, mode, popupmode, autoloadcomposition);
 
         };
 
-        $scope.doShowDetail = function (rowdm, schemaid, mode, popupmode) {
+        $scope.doShowDetail = function (rowdm, schemaid, mode, popupmode, loadcompositiontab) {
             var id = rowdm.fields[$scope.schema.idFieldName];
             if (id == null || id == "-666") {
                 window.alert('error id is null');
@@ -209,7 +209,7 @@
             //    return;
             //}
             $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, {
-                id: id, popupmode: popupmode, customParameters: $scope.getCustomParameters($scope.schema, rowdm)
+                id: id, popupmode: popupmode, customParameters: $scope.getCustomParameters($scope.schema, rowdm), autoloadcomposition: loadcompositiontab
             });
         }
 

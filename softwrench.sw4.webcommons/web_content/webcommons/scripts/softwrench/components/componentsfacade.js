@@ -88,19 +88,23 @@
                 return;
             }
             try {
+                var log = $log.getInstance('componentfacade#digestandrefresh', ["association"]);
                 scope.$digest();
                 this.refresh(displayable, scope, true, newValue, datamapId);
+                log.debug("calling digestandRefresh for {0} : {1}".format(displayable.attribute,newValue));
             } catch (e) {
                 //nothing to do, just checking if digest was already in place or not, because we need angular to update screen first of all
                 //if inside a digest already, exception would be thrown --> force a timeout with false flag
                 var fn = this;
+                log.debug("[timeout]registering digestandRefresh for {0} : {1}".format(displayable.attribute, newValue));
                 $timeout(
                     function () {
+                        log.debug("[timeout]calling digestandRefresh for {0} :{1} ".format(displayable.attribute,newValue));
                         fn.refresh(displayable, scope, true, newValue, datamapId);
                         try {
                             scope.$digest();
                         } catch (e) {
-                            $log.getInstance('componentfacade#digestandrefresh').warn('validating this is actually being thrown. if u see this, remove this log' + e);
+                            log.warn('validating this is actually being thrown. if u see this, remove this log' + e);
                             //nothing
                         }
                     }, 0, false);

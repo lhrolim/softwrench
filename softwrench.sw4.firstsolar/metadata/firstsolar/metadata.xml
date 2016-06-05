@@ -158,7 +158,7 @@
           <field attribute="classificationid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="#warning" tooltip="There are already one or more workorders associated with this location, click here to view them">
-            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%;updatable=true" />
+            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%;updatable=true;hideValueOnTooltip=true" />
           </field>
           <field attribute="specificLabel" label="Location"/>
           <field attribute="summary" label="Summary:" requiredexpression="true">
@@ -186,8 +186,8 @@
           <commandbars>
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
-              <command id="cancel" service="redirectService" method="goToApplication" parameters="location,list"/>
-              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="location" primary="true"/>
+              <command id="cancel" service="redirectService" method="goToApplication" parameters="location,list" cssclasses="large-button"/>
+              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="location" primary="true" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
         </schema>
@@ -198,7 +198,7 @@
           <field attribute="classificationid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="#warning" tooltip="There are already one or more workorders associated with this asset, click here to view them">
-            <renderer type="icon" params="expression={'true':'fa-warning','false':''};width=10%;updatable=true"/>
+            <renderer type="icon" params="expression={'true':'fa-warning','flase':''};width=10%;updatable=true;hideValueOnTooltip=true"/>
           </field>
           <field attribute="assetnum" label="Asset" readonly="true"/>
           <field attribute="specificLabel" label="Asset"/>
@@ -230,8 +230,8 @@
           <commandbars>
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
-              <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,list"/>
-              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="asset" primary="true"/>
+              <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,list" cssclasses="large-button"/>
+              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="asset" primary="true" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
         </schema>

@@ -112,11 +112,6 @@ namespace softWrench.sW4.Web.Controllers.Security {
             }
         }
 
-        public User Get(int id) {
-            User fetchUser = _facade.FetchUser(id);
-            return fetchUser;
-        }
-
         /// <summary>
         /// Gets the current users primary email address.
         /// </summary>

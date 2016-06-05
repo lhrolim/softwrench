@@ -10,6 +10,7 @@ using log4net;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.activitystream.classes.Model;
 using softwrench.sw4.activitystream.classes.Util;
+using softwrench.sw4.api.classes.user;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata.Security;
@@ -121,8 +122,8 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         }
 
         [NotNull]
-        internal NotificationSecurityGroupHelper.NotificationSecurityGroupDTO GetNotificationProfile(int? clientSelectedProfile, ICollection<UserProfile> profiles) {
-            return NotificationSecurityGroupHelper.GetNotificationProfile(NotificationStreams, clientSelectedProfile, profiles);
+        internal NotificationSecurityGroupHelper.NotificationSecurityGroupDTO GetNotificationProfile(int? clientSelectedProfile, InMemoryUser user) {
+            return NotificationSecurityGroupHelper.GetNotificationProfile(NotificationStreams, clientSelectedProfile, user);
         }
 
 

@@ -16,20 +16,11 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
             _maximoDao = maximoDao;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
-            // Get the reportedby phone number, email, and department
-            var values = _maximoDao.FindByNativeQuery(@"select person.department, email.emailaddress, phone.phonenum 
-                                                        from person
-                                                        left outer join phone on phone.personid = person.personid and phone.isprimary = 1
-                                                        left outer join email on email.personid = person.personid and email.isprimary = 1
-                                                        where person.personid = '{0}'".Fmt(user.MaximoPersonId));
-
-            result.ResultObject.SetAttribute("reportedphone", values[0]["phonenum"]);
-            result.ResultObject.SetAttribute("reportedemail", values[0]["emailaddress"]);
-            result.ResultObject.SetAttribute("department", values[0]["department"]);
-
-            return result;
+        public SearchRequestDto FilterClassification(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+            // Only show classifications with classstructures that have pluspcustassoc's to 'CPS-00'
+            filter.AppendWhereClause("classificationid in (select classstructure.classificationid from classstructure inner join pluspcustassoc on pluspcustassoc.ownertable = 'CLASSSTRUCTURE' and pluspcustassoc.ownerid = classstructure.classstructureuid and pluspcustassoc.customer = 'CPS-00')");
+            return filter;
         }
 
         public SearchRequestDto FilterQSRWorklogs(CompositionPreFilterFunctionParameters parameter) {

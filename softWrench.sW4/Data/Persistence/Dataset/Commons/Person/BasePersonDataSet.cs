@@ -151,6 +151,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             return detail;
         }
 
+        /// <summary>
+        /// Users are saved on SWDB but the person data come from Maximo, so we need to make sure to update both places.
+        /// </summary>
+        /// <param name="application"></param>
+        /// <param name="json"></param>
+        /// <param name="id"></param>
+        /// <param name="operation"></param>
+        /// <param name="isBatch"></param>
+        /// <param name="userIdSite"></param>
+        /// <returns></returns>
         public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
@@ -192,12 +202,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             user.Profiles = screenSecurityGroups;
 
+            //saving user on SWDB first
             UserManager.SaveUser(user);
+            //saving person on Maximo database
             var targetResult = Engine().Execute(operationWrapper);
+
             // Upate the in memory user if the change is for the currently logged in user
             var currentUser = SecurityFacade.CurrentUser();
-            if (user.UserName.EqualsIc(currentUser.Login)) {
-                targetResult.ResultObject = SecurityFacade.UpdateUserCache(user, currentUser.TimezoneOffset.ToString());
+            if (user.UserName.EqualsIc(currentUser.Login) && user.Id != null) {
+                var fullUser = SecurityFacade.GetInstance().FetchUser(user.Id.Value);
+                targetResult.ResultObject = SecurityFacade.UpdateUserCache(fullUser, currentUser.TimezoneOffset.ToString());
             }
             if (isCreation && isactive) {
                 _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);

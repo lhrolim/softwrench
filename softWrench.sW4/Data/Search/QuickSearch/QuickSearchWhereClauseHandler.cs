@@ -83,7 +83,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
             if (attributeDef == null) {
                 return false;
             }
-            return attributeDef.RendererType == null || attributeDef.RendererType.EqualsIc("statusicons");
+            return attributeDef.RendererType != null && attributeDef.RendererType.EqualsIc("statusicons");
         }
 
 

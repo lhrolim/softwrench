@@ -81,6 +81,11 @@
             },
 
             fieldHasValue: function (datamap, fieldMetadata) {
+                //if the message field doesn't have a value
+                if (fieldMetadata.attribute === 'message' && !!datamap.message && datamap.message === '\n                                    ') {
+                    return false;
+                }
+
                 return !!datamap[fieldMetadata.attribute];
             },
 

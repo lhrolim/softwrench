@@ -789,24 +789,27 @@
 
             if (fieldMetadata.events == undefined) {
                 event.continue();
-                return;
+                return true;
             }
             var beforeChangeEvent = fieldMetadata.events['beforechange'];
             if (beforeChangeEvent == undefined) {
                 event.continue();
+                return true;
             } else {
                 var fn = dispatcherService.loadService(beforeChangeEvent.service, beforeChangeEvent.method);
                 if (fn == undefined) {
                     //this should not happen, it indicates a metadata misconfiguration
                     event.continue();
-                    return;
+                    return true;
                 }
                 var result = fn(event);
                 //sometimes the event might be syncrhonous, returning either true of false
                 if (result != undefined && result == false) {
                     event.interrupt();
+                    return false;
                 }
                 event.continue();
+                return true;
             }
         };
 

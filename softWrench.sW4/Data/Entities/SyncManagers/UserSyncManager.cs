@@ -76,6 +76,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             return user;
         }
 
+        [CanBeNull]
         public static User GetUserFromMaximoBySwUser(User swUser) {
             if (swUser == null) throw new ArgumentNullException("swUser");
             User fullUser = null;

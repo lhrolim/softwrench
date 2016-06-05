@@ -323,10 +323,10 @@
               <header displacement="ontop" label="Issuing" params="fieldset=true" />
               <renderer type="default" params="childinputsize=medium" />
               <field label="Condition Code" attribute="conditioncode" readonly="true">
-                <renderer type="default" params="inputsize=small" />
+                <renderer type="default"/>
               </field>
               <field label="Issue Unit" attribute="inventory_.issueunit" readonly="true">
-                <renderer type="default" params="inputsize=small" />
+                <renderer type="default"/>
               </field>
             <field label="Last Count Date" attribute="#lastCountDate" readonly="true">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
@@ -469,10 +469,10 @@
               <event type="afterchange" service="inventoryService" method="afterChangeInvreserveAsset"/>
             </association>
             <field attribute="item_.rotating" label="Rotating" enableexpression="false">
-              <renderer type="checkbox" params="formatter=numberToBoolean"/>
+              <renderer type="checkbox" params="formatter=numberToBoolean;inputsize=xsmall"/>
             </field>
             <field attribute="item_.iskit" label="Kit" enableexpression="false">
-              <renderer type="checkbox" params="formatter=numberToBoolean"/>
+              <renderer type="checkbox" params="formatter=numberToBoolean;inputsize=xsmall"/>
             </field>
             <field attribute="invbalances_.curbal" label="Current Balance" readonly="true" />
             <field attribute="reservedqty" label="Reserved Quantity" readonly="true" />
@@ -612,10 +612,10 @@
             <header displacement="ontop" label="Issuing" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
             <field label="Rotating" attribute="item_.rotating" enableexpression="false">
-              <renderer type="checkbox" params="formatter=numberToBoolean"/>
+              <renderer type="checkbox" params="formatter=numberToBoolean;inputsize=xsmall"/>
             </field>
             <field label="Kit" attribute="item_.iskit" enableexpression="false">
-              <renderer type="checkbox" />
+              <renderer type="checkbox" params="inputsize=xsmall"/>
             </field>
             <field label="Issue Unit" attribute="item_.issueunit" readonly="true"/>
             <field label="Balance" attribute="curbal"/>

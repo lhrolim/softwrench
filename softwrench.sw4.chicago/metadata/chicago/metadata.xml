@@ -15,6 +15,12 @@
   </templates>
 
   <entities>
+    <entity name="persongroup" idAttribute="persongroupid">
+      <attributes>
+        <attribute name="pluspcustomer" type="varchar" required="false"/>
+      </attributes>
+    </entity>
+    
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
         <attribute name="outageduration" type="float" required="false"/>
@@ -24,6 +30,7 @@
         <attribute name="itdchcreatedbygroup" type="varchar" required="false"/>
         <attribute name="itdresolvergroup" type="varchar" required="false"/>
         <attribute name="itdfirstcallresolution" type="boolean" required="false"/>
+        <attribute name="itdclosurecode" type="varchar" required="false"/>
         <attribute name="createdby" type="varchar" required="false"/>
         <attribute name="department" type="varchar" required="false"/>
         <attribute name="ismticketid" type="varchar" required="false"/>
@@ -47,12 +54,23 @@
           <relationshipAttribute from="tickettype" to="value" primary="true"/>
           <relationshipAttribute literal="TICKETTYPE" to="domainid" quoteLiteral="true"/>
         </relationship>
+        <relationship to="alndomain" qualifier="CLOSURECODES">
+          <relationshipAttribute from="ITDCLOSURECODE" to="value" primary="true"/>
+          <relationshipAttribute literal="CLOSURECODES" to="domainid" quoteLiteral="true"/>
+        </relationship>
         <relationship to="phone" qualifier="reportedphone">
           <relationshipAttribute from="reportedby" to="personid" primary="true"/>
           <relationshipAttribute query="reportedphone_.isprimary = 1"/>
         </relationship>
+        <relationship to="person">
+          <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true" />
+        </relationship>
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="person" qualifier="reportedbyp">
+          <relationshipAttribute from="reportedby" to="personid" primary="true"/>
         </relationship>
         <relationship to="classification">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
@@ -93,6 +111,9 @@
         </relationship>
         <relationship to="persongroup" qualifier="itdchcreatedbygroup">
           <relationshipAttribute from="itdchcreatedbygroup" to="persongroup" primary="true"/>
+        </relationship>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -155,6 +176,9 @@
       </relationships>
     </entity>
     <entity name="person" idAttribute="personid">
+      <attributes>
+        <attribute name="pluspcustomer" type="varchar" required="false"/>
+      </attributes>
       <relationships>
         <relationship to="alndomain" qualifier="department">
           <relationshipAttribute from="department" to="value" primary="true"/>
@@ -209,7 +233,7 @@
       <schemas>
         <schema id="compositionlist" title="Ticket Audit List" stereotype="compositionlist">
           <field attribute="eaudittimestamp" label="e_Audit">
-            <renderer type="datetime"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
           </field>
           <field attribute="eauditusername" label="e_Audit User Name"/>
           <field attribute="internalpriority" label="Internal Priority"/>
@@ -241,13 +265,12 @@
           <field attribute="pluspcustomer" label="Customer"/>
           <field attribute="internalpriority" label="Internal Priority"/>
           <field attribute="status" label="Status"/>
-          <field attribute="reportdate" label="Reported Date"/>
-          <field attribute="targetfinish" label="Target Finish"/>
-          <field attribute="ownergroup" label="Owner Group"/>
-          <field attribute="isglobal" label="Is Global Issue">
-            <renderer type="checkbox"/>
+          <field attribute="reportdate" label="Reported Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
           </field>
-          <field attribute="itdresolvergroup" label="Resolver Group"/>
+          <field attribute="targetfinish" label="Target Finish">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+          </field>
           <field attribute="owner" label="Owner"/>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
@@ -290,7 +313,7 @@
           </section>
 
           <section orientation="horizontal">
-            <field attribute="reportedphone" label="Reported By Phone" readonly="true" requiredexpression="true"/>
+            <field attribute="reportedphone" label="Reported By Phone" default="@user.phone" requiredexpression="true"/>
             <association target="itdresolvergroup" labelfield="itdresolvergroup_.description" label="Resolver Group">
               <renderer type="lookup"/>
             </association>
@@ -311,14 +334,15 @@
                 </association>
                 <association target="classificationid" labelfield="classification_.description" label="Classification" requiredexpression="true">
                   <renderer type="lookup"/>
+                  <dataprovider prefilterfunction="FilterClassification"/>
                 </association>
               </section>
               <section orientation="horizontal">
-                <association target="impact" labelfield="impacturgency_.impactdesc_.description" label="Impact" extraprojectionvalues="internalpriority,impact,urgency" valuefield="impact">
+                <association target="impact" labelfield="impacturgency_.impactdesc_.description" label="Impact" extraprojectionvalues="internalpriority,impact,urgency" valuefield="impact" requiredexpression="true">
                   <renderer type="lookup" params="application=impacturgency;schemaId=list;"/>
                   <event type="afterchange" service="chicagosrService" method="afterChangeImpact"/>
                 </association>
-                <association target="urgency" labelfield="impacturgency_.urgencydesc_.description" label="Urgency" extraprojectionvalues="internalpriority,impact,urgency" valuefield="urgency">
+                <association target="urgency" labelfield="impacturgency_.urgencydesc_.description" label="Urgency" extraprojectionvalues="internalpriority,impact,urgency" valuefield="urgency" requiredexpression="true">
                   <renderer type="lookup" params="application=impacturgency;schemaId=list;"/>
                   <event type="afterchange" service="chicagosrService" method="afterChangeUrgency"/>
                 </association>
@@ -330,12 +354,16 @@
                 </association>
               </section>
               <section orientation="horizontal">
-                <association target="department" labelfield="DEPARTMENT_.description"  label="Department">
+                <association target="department" labelfield="DEPARTMENT_.description" default="@user.department"  label="Department">
                   <renderer type="lookup"/>
                 </association>
                 <field attribute="itdfirstcallresolution" label="First Call Resolution?">
                   <renderer type="checkbox"/>
                 </field>
+              </section>
+              <section orientation="horizontal">
+                <renderer type="default" params="childinputsize=large"/>
+                <field attribute="pluspcustomer" label="Customer" default="CPS-00" readonly="true"/>
               </section>
             </section>
             <section orientation="vertical">
@@ -343,33 +371,35 @@
               
               <section orientation="horizontal">
                 <field attribute="reportdate" label="Reported Date" default="@currentdatetime" readonly="true" requiredexpression="true">
-                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
                 </field>
                 <field attribute="affecteddate" label="Affected Date" default="@currentdatetime" requiredexpression="true">
-                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
                 </field>
               </section>
 
               <section orientation="horizontal">
                 <field attribute="actualstart" label="Actual Start" readonly="true">
-                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
                 </field>
                 <field attribute="actualfinish" label="Actual Finish" readonly="true">
-                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
                 </field>
               </section>
 
               <section orientation="horizontal">
                 <field attribute="changedate" label="Change Date" default="" readonly="true">
-                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
                 </field>
                 <field attribute="changeby" label="Changed By" default="@username" readonly="true"/>
               </section>
               
               <section orientation="horizontal">
-                <field attribute="statusdate" label="Last Status Change Date" readonly="true"/>
+                <field attribute="statusdate" label="Last Status Change Date" readonly="true">
+                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+                </field>
                 <field attribute="itdclosedate" label="Closed Date" readonly="true">
-                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
                 </field>
               </section>
 
@@ -377,6 +407,12 @@
                 <field attribute="outageduration" label="Outage Duration" readonly="true">
                   <renderer type="time" params="formatter=doubleToTime"/>
                 </field>
+                <association target="itdclosurecode" labelfield="CLOSURECODES_.description" label="Closure Code">
+                  <renderer type="lookup"/>
+                </association>
+              </section>
+              <section orientation="horizontal">
+                <renderer type="default" params="childinputsize=large"/>
                 <field attribute="outageduration" label="" readonly="true">
                   <renderer type="time" params="formatter=doubleToTimeExt"/>
                 </field>
@@ -389,16 +425,16 @@
             <section orientation="vertical">
               <section orientation="horizontal">
                 <field attribute="creationdate" label="Creation Date" default="@currentdatetime" readonly="true">
-                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
                 </field>
                 <field attribute="reportedbyp_.langcode" label="Language" readonly="true"/>
               </section>
               <section orientation="horizontal">
                 <field attribute="targetstart" label="Target Start">
-                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
                 </field>
                 <field attribute="targetfinish" label="Target Finish">
-                  <renderer type="datetime" params="format=MM/dd/yyyy"/>
+                  <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
                 </field>
               </section>
               <section orientation="horizontal">
@@ -599,8 +635,32 @@
       </schemas>
     </application>
 
+    
+    <application name="relatedrecord" title="Related Records" entity="relatedrecord" id="00000000-0000-0000-0000-000000000008" >
+      <schemas>
+        <detail stereotype="compositiondetail" title="Related Record" redeclaring="false">
+          <customization position="relatedrecclass">
+            <optionfield attribute="relatedrecclass" label="Application" requiredexpression="true" default="">
+              <option label="Service Request" value="SR" />
+              <event type="afterchange" service="relatedrecordService" method="clearSelectedRelatedEntityId"/>
+            </optionfield>
+          </customization>
+        </detail>
+      </schemas>
+    </application>
+    
+   
+   
     <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008">
       <schemas>
+        <schema id="list"  stereotype="compositionlist" redeclaring="false">
+          <customization position="modifydate">
+            <field attribute="modifydate" label="Last Changed Date" qualifier="subtitle">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            </field>
+          </customization>
+        </schema>
+        
         <detail stereotype="compositiondetail" title="Work Log" redeclaring="false">
           <customization position="logtype">
             <association target="logtype" labelfield="LOGTYPE_.description" label="Log Type">

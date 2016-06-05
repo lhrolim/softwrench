@@ -136,15 +136,27 @@
                             });
                         },
                         interrupt: function () {
+                            const originalOldValue = oldValue;
+                            if (oldValue != null && !oldValue.endsWith("$ignorewatch")) {
+                                oldValue = oldValue + "$ignorewatch";
+                            }
+
                             $parse(datamappropertiesName)($scope)[association.attribute] = oldValue;
+
                             //to avoid infinite recursion here.
                             shouldDoWatch = false;
-                            cmpfacade.digestAndrefresh(association, $scope);
+
+
+                            cmpfacade.digestAndrefresh(association, $scope, originalOldValue);
                             //turn it on for future changes
                             shouldDoWatch = true;
+
                         }
                     };
-                    associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
+                    var result = associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
+                    if (!result) {
+                        return;
+                    }
                     if (newValue == undefined) {
                         //we will distinguish between null or undefined to know when the call was made in the sense of really setting it to null, 
                         //from the scenario where the list was changed first and the value was simply undefined due to the workflow

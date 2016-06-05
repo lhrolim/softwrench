@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <div ng-if="!!commLogDatamap" class="buttons">
+        <div ng-if="showCommLogButtons(commLogDatamap)" class="buttons">
             <div class="separator">&nbsp;</div>
             <div class="buttons" ng-repeat="command in getCompositionToolbar()">
                 <button type="button"

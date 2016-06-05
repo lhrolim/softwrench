@@ -77,13 +77,6 @@ namespace softWrench.sW4.Web.Controllers.Routing {
 
             if (routerParameter.NoApplicationRedirectDetected ) {
 
-                if (routerParameter.DispatcherComposition != null) {
-                    var detailRequest = new DetailRequest(nextMetadata.Schema.GetSchemaKey(), null) { Id = id,UserIdSitetuple = userIdSiteTuple,CompositionsToFetch = routerParameter.DispatcherComposition };
-                    detailRequest.CompositionsToFetch = null; // for performance
-                    var response = dataSet.Get(nextMetadata, SecurityFacade.CurrentUser(), detailRequest);
-                    return response;
-                }
-
                 if (routerParameter.NextAction == null) {
                     Log.DebugFormat("No redirect needed");
                     return new BlankApplicationResponse {

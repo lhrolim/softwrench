@@ -8,16 +8,20 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
     public class MultiTenantCustomerWhereBuilder : IWhereBuilder {
         public string BuildWhereClause(string entityName, SearchRequestDto searchDto = null) {
             var entity = MetadataProvider.Entity(entityName);
-            if (!entity.Schema.Attributes.Any(a => a.Name.Equals("pluspcustomer"))) {
-                return null;
-            }
             var property = MetadataProvider.GlobalProperty("multitenantprefix");
             if (property == null) {
                 return null;
             }
-            return String.Format("{0}.pluspcustomer like '{1}'",entityName, property);
 
+            if (entity.Schema.Attributes.Any(a => a.Name.Equals("pluspcustomer"))) {
+                return String.Format("{0}.pluspcustomer like '{1}'", entityName, property);
+            }
 
+            if (entity.Schema.Attributes.Any(a => a.Name.Equals("pluspcustvendor"))) {
+                return String.Format("{0}.pluspcustvendor like '{1}'", entityName, property);
+            }
+
+            return null;
         }
 
         public IDictionary<string, object> GetParameters() {

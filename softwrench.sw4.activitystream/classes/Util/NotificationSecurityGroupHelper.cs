@@ -5,6 +5,7 @@ using System.Text;
 using JetBrains.Annotations;
 using softwrench.sw4.activitystream.classes.Controller;
 using softwrench.sw4.activitystream.classes.Model;
+using softwrench.sw4.api.classes.user;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Metadata.Security;
 
@@ -13,8 +14,14 @@ namespace softwrench.sw4.activitystream.classes.Util {
         private const int FakeDefaultProfileId = -1;
 
         [NotNull]
-        public static NotificationSecurityGroupDTO GetNotificationProfile(IDictionary<string, InMemoryNotificationStream> notificationStreams, int? clientSelectedProfile, ICollection<UserProfile> profiles) {
+        public static NotificationSecurityGroupDTO GetNotificationProfile(IDictionary<string, InMemoryNotificationStream> notificationStreams, int? clientSelectedProfile, InMemoryUser user) {
             var result = new NotificationSecurityGroupDTO();
+
+            if (!IsInRole(user)) {
+                return result;
+            }
+
+            var profiles = user.Profiles;
             var availableProfiles = profiles.Where(p => notificationStreams.ContainsKey(p.Name)).Select(s => s.ToDTO());
             var userProfileDtos = availableProfiles as UserProfile.UserProfileDTO[] ?? availableProfiles.ToArray();
             var deafaultProfile = new UserProfile.UserProfileDTO(FakeDefaultProfileId, ActivityStreamConstants.DefaultStreamName);
@@ -36,6 +43,12 @@ namespace softwrench.sw4.activitystream.classes.Util {
             return result;
         }
 
+        private static bool IsInRole(ISWUser user) {
+            var hasNotificationRole = user.IsInRole(NotificationsRolesManager.NotificationsRole);
+            var hasSysAdminRole = user.IsInRole(Role.SysAdmin);
+            return hasNotificationRole || hasSysAdminRole || user.IsSwAdmin();
+        }
+
         public static string GetApplicationNameByRole(string key) {
             //TODO: adjust role names to match application names, or create a external translator
             if (key.Equals("sr") || key.Equals("ssr")) {
@@ -44,10 +57,10 @@ namespace softwrench.sw4.activitystream.classes.Util {
             if (key.Equals("workorders")) {
                 return "workorder";
             }
-             if (key.Equals("incidents")) {
+            if (key.Equals("incidents")) {
                 return "incident";
             }
-            
+
             return key;
 
         }

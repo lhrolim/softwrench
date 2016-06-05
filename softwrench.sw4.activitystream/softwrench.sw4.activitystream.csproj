@@ -70,6 +70,7 @@
     <Compile Include="classes\Util\NotificationQueryBuilder.cs" />
     <Compile Include="classes\Util\NotificationResponseBuilder.cs" />
     <Compile Include="classes\Util\NotificationSecurityGroupHelper.cs" />
+    <Compile Include="classes\Util\NotificationsRolesManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

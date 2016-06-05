@@ -61,7 +61,7 @@ namespace softWrench.sW4.Security.Services {
             }
             var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.MaximoPersonId, dbUser.Id);
             if (maximoUser == null) {
-                Log.WarnFormat("maximo user {0} not found",dbUser.MaximoPersonId);
+                Log.WarnFormat("maximo user {0} not found", dbUser.MaximoPersonId);
                 return UserFound(dbUser, userTimezoneOffset);
             }
             maximoUser.MergeFromDBUser(dbUser);
@@ -300,8 +300,12 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public User FetchUser(int id) {
-            User swUser = UserManager.GetUserById(id);
-            return UserSyncManager.GetUserFromMaximoBySwUser(swUser);
+            var swUser = UserManager.GetUserById(id);
+            var maximoUser = UserSyncManager.GetUserFromMaximoBySwUser(swUser);
+            if (maximoUser == null) {
+                return swUser;
+            }
+            return maximoUser;
         }
 
         public User FetchUser(string maximopersonid) {

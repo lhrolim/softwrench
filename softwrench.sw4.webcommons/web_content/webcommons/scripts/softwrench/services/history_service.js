@@ -146,14 +146,15 @@
             }
 
             var confirmMsg = msg || "Are you sure you want to leave the page?";
-            alertService.confirmCancel(null, null, function () {
+
+            alertService.confirmCancel(confirmMsg).then(function () {
                 // alternative $scope.digest
                 $timeout(function () {
                     crudContextHolderService.clearDirty();
                     crudContextHolderService.clearDetailDataResolved();
                     innerRedirect(url, historyIndex, currentIndex);
                 }, 0);
-            }, confirmMsg, function () { return; });
+            }, function () { return; });
         }
 
         function doSaveCancelReturn() {

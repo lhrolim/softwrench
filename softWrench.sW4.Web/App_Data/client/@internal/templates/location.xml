@@ -69,7 +69,7 @@
         <attribute name="shiptoaddresscode" type="varchar" required="false" />
         <attribute name="serviceaddresscode" type="varchar" required="false" />
         <attribute name="workordercounter" type="int" query="(select count(*) from workorder where status not in ('CAN', 'CLOSE', 'COMP') and location = !@location and siteid = !@siteid)"/>
-        <attribute name="children" type="varchar" query="(select count(lochierarchy.parent) from lochierarchy where lochierarchy.parent = location.location and lochierarchy.systemid = parentlocation_.systemid)"/>
+        <attribute name="children" type="varchar" query="(select count(lochierarchy.parentzz)"/>
         <attribute name="assets" type="varchar" query="(select count(assetnum) from asset where asset.location = location.location and asset.orgid = location.orgid)"/>
       </attributes>
       <relationships>
@@ -210,7 +210,7 @@
             <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
           </field>
           <field attribute="workordercounter" tooltip="Active Work Orders" hidden="true">
-            <renderer type="icon" params="icon=fa-wrench"/>
+            <renderer type="icon" params="icon=fa-wrench;autoloadcomposition=workorder_"/>
           </field>
           <field attribute="statusicons" tooltip="Status Icons">
             <renderer type="statusicons" params="width=3%;iconcolumns=workordercounter;icon=fa-tachometer;headericon=true;showsort=false"/>

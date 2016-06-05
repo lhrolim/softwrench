@@ -176,12 +176,12 @@ app.directive('menuItem', function (contextService) {
                 var target = $event.target;
                 var msg = "Are you sure you want to leave the page?";
                 if (crudContextHolderService.getDirty()) {
-                    alertService.confirmCancel(null, null, function () {
+                    alertService.confirmCancel(msg).then(function () {
                         menuService.goToApplication(leaf, target);
                         crudContextHolderService.clearDirty();
                         crudContextHolderService.clearDetailDataResolved();
                         $scope.$digest();
-                    }, msg, function () { return; });
+                    });
                 }
                 else {
                     menuService.goToApplication(leaf, target);
@@ -195,12 +195,12 @@ app.directive('menuItem', function (contextService) {
 
                 var msg = "Are you sure you want to leave the page?";
                 if (crudContextHolderService.getDirty()) {
-                    alertService.confirmCancel(null, null, function () {
+                    alertService.confirmCancel(msg).then(function () {
                         menuService.doAction(leaf, target);
                         crudContextHolderService.clearDirty();
                         crudContextHolderService.clearDetailDataResolved();
                         $scope.$digest();
-                    }, msg, function () { return; });
+                    });
                 }
                 else {
                     menuService.doAction(leaf, target);
@@ -237,12 +237,12 @@ app.directive('menuItem', function (contextService) {
                 if (container.controller != null && !$(target).find("span").hasClass('bottom-caret') && !mockService.isMockedContainerDashBoard()) {
                     var msg = "Are you sure you want to leave the page?";
                     if (crudContextHolderService.getDirty()) {
-                        alertService.confirmCancel(null, null, function () {
+                        alertService.confirmCancel(msg).then(function () {
                             menuService.doAction(container, target);
                             crudContextHolderService.clearDirty();
                             crudContextHolderService.clearDetailDataResolved();
                             $scope.$digest();
-                        }, msg, function () { return; });
+                        });
                     }
                     else {
                         menuService.doAction(container, target);

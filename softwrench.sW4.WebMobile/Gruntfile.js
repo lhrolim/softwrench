@@ -38,7 +38,8 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/i18n_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/schema_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/field_service.js",
-        "www/Content/Shared/webcommons/scripts/softwrench/services/validation_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/validation/passwordvalidationservice.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/validation/validation_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/alert_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/format_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/event_service.js",
@@ -236,6 +237,14 @@ module.exports = function (grunt) {
                 src: solutionScripts,
                 dest: "<%= app.index %>"
             },
+            buildTranspiledScripts: {
+                options: {
+                    openTag: "<!-- start auto template script tags, grunt will generate it for dev environment, do not remove this -->",
+                    closeTag: "<!-- end auto template script tags -->"
+                },
+                src: solutionScripts.map(function(s) { return "www/Content/public/" + s; }),
+                dest: "<%= app.index %>"
+            },
             // vendors's js
             buildVendorScripts: {
                 options: {
@@ -365,10 +374,20 @@ module.exports = function (grunt) {
                 sourceMap: false,
                 presets: ["es2015"]
             },
-            dist: { // transpiles result of concat
+            release: { // transpiles result of concat
                 files: {
                     "tmp/es6/app.es6.js": "<%= concat.appScripts.dest %>"
                 }
+            },
+            debug: {
+                options: {
+                    sourceMap: "inline"
+                },
+                files: [{
+                    expand: true,
+                    src: solutionScripts,
+                    dest: "www/Content/public/"
+                }]
             }
         },
         //#endregion
@@ -418,13 +437,24 @@ module.exports = function (grunt) {
                 logLevel: "WARN",
                 files: ["overrides/cordova.js"].concat(allScripts),
                 browsers: ["PhantomJS"],
-                singleRun: true,
+                singleRun: true
             },
-            tdd: { // dev environment
+            tdd: { // TDD: local dev environment
                 autoWatch: true,
                 singleRun: false,
                 logLevel: "DEBUG",
                 browsers: ["Chrome"]
+            },
+            dev: { // single run: local dev environment
+                options: {
+                    babelPreprocessor: {
+                        options: {
+                            presets: ["es2015"],
+                            sourceMap: false
+                        }
+                    },
+                    preprocessors: getKarmaPreprocessorsConfig(solutionScripts.concat(testScripts))
+                }
             },
             debug: { // CI dev
                 options: {
@@ -434,7 +464,8 @@ module.exports = function (grunt) {
                             sourceMap: false
                         }
                     },
-                    preprocessors: getKarmaPreprocessorsConfig(solutionScripts.concat(testScripts))
+                    preprocessors: getKarmaPreprocessorsConfig(testScripts),
+                    files: ["overrides/cordova.js"].concat(vendorScripts).concat(solutionScripts.map(function (s) { return "www/Content/public/" + s; })).concat(testScripts)
                 }
             },
             release: { // CI release
@@ -472,8 +503,10 @@ module.exports = function (grunt) {
     //#region dev tasks
     grunt.registerTask("cleanall", ["clean:vendor", "clean:temp", "clean:pub"]);
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("fulldev", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "tagsdev"]);
-    grunt.registerTask("default", ["fulldev"]);
+    grunt.registerTask("tagsdevbuild", ["tags:buildTranspiledScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
+    grunt.registerTask("devlocal", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "tagsdev"]);
+    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "babel:debug", "tagsdevbuild"]);
+    grunt.registerTask("default", ["devlocal"]);
     //#endregion
 
     //#region release:prepare tasks
@@ -485,9 +518,10 @@ module.exports = function (grunt) {
         "cleanall", // cleans destination folders
         "bowercopy:prod", "bowercopy:css", "bowercopy:fontsrelease", // copy bower dependencies to appropriate project folders
         "concatall", // concats the scripts and stylesheets
-        "babel", // transpiles es6 app scripts
+        "babel:release", // transpiles es6 app scripts
         "minify", // uglyfies scripts and minifies stylesheets
-        "tagsrelease" // generates import tags for the prepared files in main template file (layout.html)
+        "tagsrelease", // generates import tags for the prepared files in main template file (layout.html)
+        "clean:temp"
     ]);
     //#endregion
 
@@ -539,8 +573,10 @@ module.exports = function (grunt) {
             }).then(function () {
                 // apply overrides
                 // TODO: copy all files in overrides
-                var ori = path.join(projectPath, "overrides", platform.trim(), "cordova", "lib", "build.js");
-                var dest = path.join(projectPath, "platforms", platform.trim(), "cordova", "lib", "build.js");
+                var platformName = platform.trim();
+                var ori = path.join(projectPath, "overrides", platformName, "cordova", "lib", "build.js");
+                var dest = path.join(projectPath, "platforms", platformName, "cordova", "lib", "build.js");
+                console.log("copying", ori, "to", dest);
                 return fs.copySync(ori, dest);
             });
 
@@ -602,7 +638,7 @@ module.exports = function (grunt) {
             case "release":
                 return grunt.task.run(["preparerelease", "karma:" + env, "build:" + env]);
             case "debug":
-                return grunt.task.run(["fulldev", "karma:" + env, "build:" + env]);
+                return grunt.task.run(["devbuild", "karma:" + env, "build:" + env]);
             default:
                 throw new Error("Unsupported build environment: " + env);
         }

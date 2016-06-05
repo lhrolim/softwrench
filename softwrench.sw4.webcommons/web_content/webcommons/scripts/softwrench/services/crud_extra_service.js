@@ -11,7 +11,8 @@ angular.module('sw_layout')
             var applicationName = schema.applicationName;
             var id = fields[idFieldName];
             var userId = fields[schema.userIdFieldName];
-            alertService.confirm(applicationName, id, function () {
+
+            alertService.confirm(null, applicationName, id).then(function () {
                 var parameters = submitService.createSubmissionParameters(fields, schema, null, id);
                 parameters.userId = userId;
                 parameters.siteId = fields["siteid"];
@@ -23,6 +24,7 @@ angular.module('sw_layout')
                         redirectService.goToApplication(applicationName, "list");
                     });
             });
+
         },
 
        

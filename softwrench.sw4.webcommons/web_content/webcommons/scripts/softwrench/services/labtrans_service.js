@@ -53,7 +53,7 @@
             };
 
             var deleteLabtrans = function(labtransIds) {
-                return alertService.confirm2("Are you sure you wish to delete the selected labor transaction(s)? This operation cannot be undone.").then(function() {
+                return alertService.confirm("Are you sure you wish to delete the selected labor transaction(s)? This operation cannot be undone.").then(function() {
                     return restService.postPromise("Labtrans", "DeleteLabtrans", {}, labtransIds).then(function(result) {
                         crudContextHolderService.clearSelectionBuffer(null);
                         searchService.refreshGrid();
@@ -62,7 +62,7 @@
             };
 
             var approveLabtrans = function(labtransIds) {
-                return alertService.confirm2("Are you sure you wish to approve the selected labor transaction(s)?").then(function () {
+                return alertService.confirm("Are you sure you wish to approve the selected labor transaction(s)?").then(function () {
                     return restService.postPromise("Labtrans", "ApproveLabtrans", {}, labtransIds).then(function (result) {
                         crudContextHolderService.clearSelectionBuffer(null);
                         searchService.refreshGrid();
