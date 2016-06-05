@@ -1,4 +1,5 @@
-﻿using cts.commons.persistence;
+﻿using System.Text;
+using cts.commons.persistence;
 using cts.commons.portable.Util;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
@@ -22,8 +23,13 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
             return filter;
         }
 
+        public SearchRequestDto FilterQSRWorklogs(CompositionPreFilterFunctionParameters parameter) {
+            parameter.BASEDto.AppendWhereClause(" clientviewable = 1 ");
+            return parameter.BASEDto;
+        }
+
         public override string ApplicationName() {
-            return "servicerequest";
+            return "servicerequest,quickservicerequest";
         }
 
         public override string ClientFilter() {

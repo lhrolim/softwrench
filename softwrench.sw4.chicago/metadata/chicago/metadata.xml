@@ -538,27 +538,104 @@
     </application>
 
     <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
-
       <schemas>
 
-        <schema id="quicknewdetail" redeclaring="false">
-          <customization position="extrahiddenfields">
-          <field attribute="ismticketid" hidden="true"/>
-          <field attribute="ismticketuid" hidden="true"/>
+        <schema id="quicksrgrid" title="Quick Request Grid" stereotype="list" redeclaring="false">
+          <customization position="owner"/>
+          <customization position="+reportedby">
+            <field attribute="reportdate" label="Reported Date"/>
+            <field attribute="department" label="Department"/>
+            <field attribute="tickettype" label="Ticket Type"/>
           </customization>
         </schema>
 
-        <schema id="quickeditdetail" redeclaring="false">
-          <customization position="extrahiddenfields">
-            <field attribute="ismticketid" hidden="true"/>
-            <field attribute="ismticketuid" hidden="true"/>
+        <schema id="quicknewdetail" stereotype="detailnew" title="New Quick Request" redeclaring="false">
+          <properties>
+            <property key="nextschema.schemaid" value="quicksrgrid"/>
+          </properties>
+          <customization position="statussection">
+            <section orientation="horizontal" id="statussection">
+              <renderer type="default" params="childinputsize=small" />
+              <field attribute="ticketuid" label="SR#" hidden="true"/>
+              <field attribute="description" label="Summary" requiredexpression="true">
+                <renderer type="default" params="maxlength=100" />
+              </field>
+              <association target="department" labelfield="DEPARTMENT_.description"  label="Department">
+                <renderer type="lookup"/>
+              </association>
+              <association target="tickettype" labelfield="tickettype_.description" label="Ticket Type" requiredexpression="true">
+                <renderer type="lookup"/>
+              </association>
+              <field label="Status" attribute="status" readonly="true" default="NEW"/>
+            </section>
+          </customization>
+
+          <customization position="reportedbysection">
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=small" />
+              <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@personid" orderbyfield="personid asc" >
+                <renderer type="lookup" params="columnlabel=Name;"/>
+                <event type="afterchange" service="chicagosrService" method="afterChangeReportedBy"/>
+              </association>
+              <field attribute="reportedphone" label="Reported By Phone" readonly="true"/>
+              <field attribute="reportedemail" label="Reported By Email" readonly="true"/>
+              <field attribute="reportdate" label="Reported Date" default="@currentdatetime" readonly="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+              </field>
+              <field attribute="affecteddate" label="Affected Date" default="@currentdatetime" hidden="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+              </field>
+            </section>
           </customization>
         </schema>
 
+        <schema id="quickeditdetail" stereotype="detail" title="New Quick Request" redeclaring="false">
+          <customization position="statussection">
+            <section orientation="horizontal" id="statussection">
+              <renderer type="default" params="childinputsize=small" />
+              <field attribute="description" label="Summary" requiredexpression="true">
+                <renderer type="default" params="maxlength=100" />
+              </field>
+              <association target="department" labelfield="DEPARTMENT_.description"  label="Department">
+                <renderer type="lookup"/>
+              </association>
+              <association target="tickettype" labelfield="tickettype_.description" label="Ticket Type" requiredexpression="true">
+                <renderer type="lookup"/>
+              </association>
+              <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
+                <renderer type="lookup"/>
+              </association>
+            </section>
+          </customization>
+          <customization position="reportedbysection">
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=small" />
+              <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" extraprojectionvalues="department" default="@personid" orderbyfield="personid asc" >
+                <renderer type="lookup" params="columnlabel=Name;"/>
+                <event type="afterchange" service="chicagosrService" method="afterChangeReportedBy"/>
+              </association>
+              <field attribute="reportedphone" label="Reported By Phone" readonly="true"/>
+              <field attribute="reportedemail" label="Reported By Email" readonly="true"/>
+              <field attribute="reportdate" label="Reported Date" default="@now" readonly="true"/>
+            </section>
+          </customization>
+          <customization position="location"/>
+          <customization position="compositions">
+            <section id="compositions">
+              <composition relationship="worklog" label="Work Logs" detailschema="qsrcompositiondetail">
+                <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" allowremoval="false" prefilterfunction="FilterQSRWorklogs"/>
+              </composition>
+              <composition relationship="attachment" label="Attachments" printenabled="false">
+                <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" allowremoval="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+              </composition>
+            </section>
+          </customization>
+        </schema>
 
       </schemas>
     </application>
 
+    
     <application name="relatedrecord" title="Related Records" entity="relatedrecord" id="00000000-0000-0000-0000-000000000008" >
       <schemas>
         <detail stereotype="compositiondetail" title="Related Record" redeclaring="false">
@@ -572,6 +649,8 @@
       </schemas>
     </application>
     
+   
+   
     <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008">
       <schemas>
         <schema id="list"  stereotype="compositionlist" redeclaring="false">
@@ -589,6 +668,29 @@
             </association>
           </customization>
         </detail>
+
+        <schema id="qsrcompositiondetail" stereotype="compositiondetail" title="Work Log">
+          <field attribute="createdate" hidden="true" />
+
+          <field attribute="description" label="Summary" requiredexpression="true">
+            <renderer type="default" params="maxlength=100"/>
+          </field>
+          <field attribute="wld_.ldtext" label="Details" >
+            <renderer type="richtext"/>
+          </field>
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="logtype" label="Log Type" default="CLIENTNOTE" readonly="true"/>
+            <field attribute="clientviewable" label="Client Viewable" default="1" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+          </section>
+
+          <!-- attachment placeholder -->
+          <!-- TODO: use section+id instead of field when it's eventually possible -->
+          <field attribute="position_attachment" hidden="true"></field>
+
+        </schema>
       </schemas>
     </application>
   </applications>
