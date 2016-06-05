@@ -307,7 +307,7 @@
 
         function filterAvailablePermissions(item) {
             var dm = crudContextHolderService.rootDataMap().fields;
-            if (!dm["selectedmode"] || !dm["selectedmode"].equalsAny("grid","view")) {
+            if (!dm["selectedmode"] || !dm["selectedmode"].equalsAny("grid", "view")) {
                 return true;
             }
             return item.value !== "readonly";
@@ -320,9 +320,9 @@
             var allowUpdate = dm["#appallowupdate"];
             var allowView = dm["#appallowview"];
 
-//            if (allowCreation && allowUpdate && allowView) {
-//                return true;
-//            }
+            //            if (allowCreation && allowUpdate && allowView) {
+            //                return true;
+            //            }
 
             if (!allowCreation && item.value === "creation") {
                 return false;
@@ -424,28 +424,29 @@
                 actionPermissionsToIterate = dispatcher["#actionPermissions_"];
             }
 
-
-            actionPermissionsToIterate.forEach(function (screenAction) {
-                var selected = screenAction["_#selected"];
-                var storedIdx = transientAppData.actionPermissions.findIndex(function (item) {
-                    return item.actionId === screenAction.actionid;
-                });
-                if (selected) {
-                    if (storedIdx !== -1) {
-                        simpleLog.debug("removing action restriction {0} for application {1}".format(screenAction["#actionlabel"], application));
-                        //if there was a previous action restriction, remove it
-                        transientAppData.actionPermissions.splice(storedIdx, 1);
+            if (actionPermissionsToIterate) {
+                actionPermissionsToIterate.forEach(function (screenAction) {
+                    var selected = screenAction["_#selected"];
+                    var storedIdx = transientAppData.actionPermissions.findIndex(function (item) {
+                        return item.actionId === screenAction.actionid;
+                    });
+                    if (selected) {
+                        if (storedIdx !== -1) {
+                            simpleLog.debug("removing action restriction {0} for application {1}".format(screenAction["#actionlabel"], application));
+                            //if there was a previous action restriction, remove it
+                            transientAppData.actionPermissions.splice(storedIdx, 1);
+                            transientAppData["_#isDirty"] = true;
+                        }
+                    } else if (storedIdx === -1) {
+                        simpleLog.debug("adding new action restriction {0} for application {1}".format(screenAction["#actionlabel"], application));
+                        transientAppData.actionPermissions.push({
+                            schema: schema,
+                            actionId: screenAction.actionid
+                        });
                         transientAppData["_#isDirty"] = true;
                     }
-                } else if (storedIdx === -1) {
-                    simpleLog.debug("adding new action restriction {0} for application {1}".format(screenAction["#actionlabel"], application));
-                    transientAppData.actionPermissions.push({
-                        schema: schema,
-                        actionId: screenAction.actionid
-                    });
-                    transientAppData["_#isDirty"] = true;
-                }
-            });
+                });
+            }
 
             //#endregion
 
@@ -741,7 +742,7 @@
             customParameters[0] = {};
             customParameters[0]["key"] = "profileId";
             customParameters[0]["value"] = profileId;
-            
+
             return redirectService.openAsModal("person", "userremovelist", {
                 title: "Remove Profile from Users",
                 searchDTO: {
@@ -830,7 +831,7 @@
             availableActionsRefreshed: availableActionsRefreshed,
             //activeUsersRefreshed: activeUsersRefreshed,
             beforeApplicationChange: beforeApplicationChange,
-            cmpRoleChanged:cmpRoleChanged,
+            cmpRoleChanged: cmpRoleChanged,
             basicRoleChanged: basicRoleChanged,
             beforeTabChange: beforeTabChange,
             beforeSchemaChange: beforeSchemaChange,
