@@ -181,7 +181,7 @@
 
                     //create html tooltip with label and count
                     if (text != null && text != 0) {
-                        var toolTip = "<span style='white-space: nowrap;'>";
+                        var toolTip = "<span>";
                         toolTip += column.toolTip ? column.toolTip : column.label;
                         if (column.rendererParameters && column.rendererParameters["hideValueOnTooltip"] !== "true") {
                             toolTip += ': ';

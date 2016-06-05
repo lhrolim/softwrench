@@ -186,8 +186,8 @@
           <commandbars>
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
-              <command id="cancel" service="redirectService" method="goToApplication" parameters="location,list"/>
-              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="location" primary="true"/>
+              <command id="cancel" service="redirectService" method="goToApplication" parameters="location,list" cssclasses="large-button"/>
+              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="location" primary="true" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
         </schema>
@@ -230,8 +230,8 @@
           <commandbars>
             <commandgroup id="#spreadsheet">
               <!--TODO: review framework to eventually avoid the need for these commands later-->
-              <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,list"/>
-              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="asset" primary="true"/>
+              <command id="cancel" service="redirectService" method="goToApplication" parameters="asset,list" cssclasses="large-button"/>
+              <command id="save" service="batchWorkorderService" method="submitBatch" parameters="asset" primary="true" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
         </schema>
