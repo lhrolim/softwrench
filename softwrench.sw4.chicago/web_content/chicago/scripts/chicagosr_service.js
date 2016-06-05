@@ -16,7 +16,10 @@
         function latestWorklogType(datamap) {
             var worklogType = '';
             var worklogs = datamap.fields["worklog_"];
-            worklogs.sort((a, b) => (a.createdate > b.createdate) ? 1 : ((b.createdate > a.createdate) ? -1 : 0));
+            if (worklogs == null || worklogs.length < 1) {
+                return '';
+            }
+            worklogs = worklogs.sort((a, b) => (a.createdate < b.createdate) ? 1 : ((b.createdate < a.createdate) ? -1 : 0));
             worklogType = worklogs[0]['logtype'];
             return worklogType;
         }
@@ -49,19 +52,19 @@
             }
         };
 
-        function beforeChangeStatus(datamap) {
-            var newStatus = datamap.newValue;
-            var owner = datamap.fields["owner"];
-            var resolverGroup = datamap.fields["itdresolvergroup"];
+        function beforeChangeStatus(event) {
+            const newStatus = event.newValue;
+            const owner = event.fields["owner"];
+            const resolverGroup = event.fields["itdresolvergroup"];
             if (newStatus.equalsIc('INPROG') && owner == null) {
                 alertService.alert("Owner field cannot be null when changing the status to INPROG.");
                 return false;
             }
-            if (newStatus.equalsIc('SLAHOLD') && !latestWorklogType(datamap).startsWith('SLA')) {
+            if (newStatus.equalsIc('SLAHOLD') && !latestWorklogType(event).toUpperCase().startsWith('SLA')) {
                 alertService.alert("The status of SLA Hold cannot be applied to an SR unless the most recent Work Log Type is SLA.");
                 return false;
             }
-            if (newStatus.equalsIc('Rejected') && !latestWorklogType(datamap).startsWith('Reason Rejecting')) {
+            if (newStatus.equalsIc('Rejected') && !latestWorklogType(event).toUpperCase().startsWith('REASON REJECTING')) {
                 alertService.alert("The status of Rejected cannot be applied to an SR unless the most recent Work Log Type is Reason Rejecting.");
                 return false;
             }

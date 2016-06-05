@@ -33,6 +33,8 @@
   <property key="notifications.activityStream.enabled" value="true"/>
   <property key="notifications.activityStream.refreshRate" value="2"/>
   <property key="notifications.updateJob.refreshRate" value="2"/>
+
+  <property key="multitenantprefix" value="CPS-00"/>
   
   <environment key="dev">
 <!--    <property key="basewsURL" value="http://10.50.100.195:9080/meaweb/wsdl/" />

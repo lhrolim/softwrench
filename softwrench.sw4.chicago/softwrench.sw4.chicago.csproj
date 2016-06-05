@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\com\cts\chicago\configuration\ChicagoChartInitializer.cs" />
+    <Compile Include="classes\com\cts\chicago\configuration\UserDepartmentFetcher.cs" />
     <Compile Include="classes\com\cts\chicago\connector\ChicagoSRCrudConnector.cs" />
     <Compile Include="classes\com\cts\chicago\dataset\ChicagoServiceRequestDataSet.cs" />
     <Compile Include="classes\com\cts\chicago\exception\ISMSyncException.cs" />

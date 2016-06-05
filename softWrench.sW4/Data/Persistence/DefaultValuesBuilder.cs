@@ -103,7 +103,7 @@ namespace softWrench.sW4.Data.Persistence {
         }
 
         public static String ConvertAllValues(String input, InMemoryUser user) {
-
+            // TODO: Update to remove need for properties['xxx'] to make consistant with front end
             string valueParsed = null;
 
             input = ReadFromUserGenericProperties(input, user);
@@ -187,6 +187,9 @@ namespace softWrench.sW4.Data.Persistence {
             }
             if (innerReference.Equals("email")) {
                 return user.Email;
+            }
+            if (user.Genericproperties.ContainsKey(innerReference)) {
+                return user.Genericproperties[innerReference].ToString();
             }
             return null;
         }
