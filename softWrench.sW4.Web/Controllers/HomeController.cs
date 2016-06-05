@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using softWrench.sW4.AUTH;
 using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -32,13 +33,14 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly ClassificationColorResolver _classificationColorResolver;
         private readonly ContextLookuper _lookuper;
         private MenuHelper.MenuHelper _menuHelper;
+        private readonly UserManager _userManager;
 
 
 
 
 
 
-        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver, StatusColorResolver statusColorResolver, ContextLookuper lookuper, MenuHelper.MenuHelper menuHelper, ClassificationColorResolver classificationColorResolver) {
+        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver, StatusColorResolver statusColorResolver, ContextLookuper lookuper, MenuHelper.MenuHelper menuHelper, ClassificationColorResolver classificationColorResolver, UserManager userManager) {
             //            _controllerFactory = (IAPIControllerFactory)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IAPIControllerFactory));
             _facade = facade;
             _i18NResolver = i18NResolver;
@@ -46,6 +48,7 @@ namespace softWrench.sW4.Web.Controllers {
             _lookuper = lookuper;
             _menuHelper = menuHelper;
             _classificationColorResolver = classificationColorResolver;
+            _userManager = userManager;
         }
 
         public ActionResult Index() {
@@ -83,6 +86,12 @@ namespace softWrench.sW4.Web.Controllers {
                 FormsAuthentication.SignOut();
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f&forbidden=true".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
+
+            if (_userManager.VerifyChangePassword(user)) {
+                Response.Redirect("~/UserSetup/ChangePassword");
+                return null;
+            }
+
             model = new HomeModel(url, title, FetchConfigs(), menuModel, user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), _classificationColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
             return View(model);
         }

@@ -35,6 +35,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _maximoPersonId;
         private readonly string _storeloc;
         private readonly string _signature;
+        private readonly bool _changePassword;
         private Boolean? _active;
         private int? _timezoneOffset;
         private readonly GridPreferences _gridPreferences;
@@ -80,6 +81,7 @@ namespace softWrench.sW4.Metadata.Security {
             _maximoPersonId = dbUser.MaximoPersonId;
             _personGroups = (dbUser.PersonGroups ?? new HashedSet<PersonGroupAssociation>());
             _mergedUserProfile = mergedProfile;
+            _changePassword = dbUser.ChangePassword ?? false;
             var userProfiles = initializedProfiles as UserProfile[] ?? initializedProfiles.ToArray();
             _profiles = userProfiles;
             var roles = new List<Role>(mergedProfile.Roles);
@@ -253,6 +255,11 @@ namespace softWrench.sW4.Metadata.Security {
         public int? DBId {
             get {
                 return _dbId;
+            }
+        }
+        public bool ChangePassword {
+            get {
+                return _changePassword;
             }
         }
 

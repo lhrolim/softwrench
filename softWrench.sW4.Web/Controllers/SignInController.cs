@@ -21,12 +21,14 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly IConfigurationFacade _facade;
         private readonly LdapManager _ldapManager;
         private readonly SWDBHibernateDAO _dao;
+        private readonly UserManager _userManager;
 
 
-        public SignInController(IConfigurationFacade facade, LdapManager ldapManager, SWDBHibernateDAO dao) {
+        public SignInController(IConfigurationFacade facade, LdapManager ldapManager, SWDBHibernateDAO dao, UserManager userManager) {
             _facade = facade;
             _ldapManager = ldapManager;
             _dao = dao;
+            _userManager = userManager;
         }
 
         public ActionResult Index(bool timeout = false, bool forbidden = false) {
@@ -111,8 +113,13 @@ namespace softWrench.sW4.Web.Controllers {
                 user.DBUser = UserManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
             }
             AuthenticationCookie.SetSessionCookie(userName, userTimezoneOffset, Response);
-            Response.Redirect(FormsAuthentication.GetRedirectUrl(userName, false));
+
             System.Threading.Thread.CurrentPrincipal = user;
+            if (_userManager.VerifyChangePassword(user)) {
+                Response.Redirect("~/UserSetup/ChangePassword");
+                return null;
+            }
+            Response.Redirect(FormsAuthentication.GetRedirectUrl(userName, false));
             return null;
         }
 

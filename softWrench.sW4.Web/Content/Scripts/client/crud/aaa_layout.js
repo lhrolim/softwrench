@@ -290,7 +290,8 @@
         function initController() {
             var configsJSON = $(hddn_configs)[0].value;
             var userJSON = $(hiddn_user)[0].value;
-            if (nullOrEmpty(configsJSON) || nullOrEmpty(userJSON)) {
+            if (nullOrEmpty(configsJSON) || nullOrEmpty(userJSON) || contextService.get("sw:changepasword")) {
+                contextService.deleteFromContext("sw:changepasword");
                 //this means user tried to hit back button after logout
                 logoutService.logout();
                 return;

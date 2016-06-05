@@ -55,8 +55,11 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 throw new SecurityException(ExpiredLinkException);
             }
             return View(new DefinePasswordModel {
+                Title = "Define Password",
+                ChangePasswordScenario = false,
                 Token = tokenLink,
-                FullName = user.FullName
+                FullName = user.FullName,
+                Username = user.UserName
             });
         }
 
@@ -76,14 +79,71 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 throw new SecurityException(ExpiredLinkException);
             }
             _userManager.ActivateAndDefinePassword(user, password);
+            AfterPasswordSet(user, password, userTimezoneOffset);
+            return null;
+        }
 
+        [System.Web.Http.Authorize]
+        [System.Web.Http.HttpGet]
+        public ActionResult ChangePassword() {
+            var user = SecurityFacade.CurrentUser();
+
+            // avoids a changing the password without the flag set
+            if (!VerifyChangePassword(user)) {
+                return null;
+            }
+
+            return View("DefinePassword", new DefinePasswordModel {
+                Title = "Expired Password",
+                ChangePasswordScenario = true,
+                FullName = user.FullName,
+                Username = user.Login
+            });
+        }
+
+        [System.Web.Http.Authorize]
+        [System.Web.Http.HttpPost]
+        [SPFRedirect(URL = "ChangePassword")]
+        public ActionResult DoChangePassword(string password, string userTimezoneOffset) {
+            Validate.NotNull(password, "password");
+            var memoryUser = SecurityFacade.CurrentUser();
+
+            // avoids a changing the password without the flag set
+            if (!VerifyChangePassword(memoryUser)) {
+                return null;
+            }
+
+            var user = memoryUser.DBUser;
+            _userManager.ActivateAndDefinePassword(user, password);
+            AfterPasswordSet(user, password, userTimezoneOffset);
+            return null;
+        }
+
+        [System.Web.Http.Authorize]
+        [System.Web.Http.HttpPost]
+        public JObject VerifySamePassword(string password) {
+            var user = SecurityFacade.CurrentUser();
+            var samePassword = AuthUtils.GetSha1HashData(password).Equals(user.DBUser.Password);
+            var json = new JObject();
+            json["samePassword"] = samePassword.ToString().ToLower();
+            return json;
+        }
+
+        private bool VerifyChangePassword(InMemoryUser user) {
+            // avoids a changing the password without the flag set
+            if (_userManager.VerifyChangePassword(user)) {
+                return true;
+            }
+            Response.Redirect(FormsAuthentication.GetRedirectUrl(user.Login, false));
+            return false;
+        }
+
+        private void AfterPasswordSet(SwUser user, string password, string userTimezoneOffset) {
             //logining in the user and redirecting him to home page
             var inMemoryUser = SecurityFacade.GetInstance().Login(user, password, userTimezoneOffset);
             AuthenticationCookie.SetSessionCookie(user.UserName, userTimezoneOffset, Response);
             FormsAuthentication.RedirectFromLoginPage(user.UserName, false);
             Thread.CurrentPrincipal = inMemoryUser;
-
-            return null;
         }
 
         protected override void OnException(ExceptionContext filterContext) {

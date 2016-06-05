@@ -17,7 +17,7 @@
             contextService.clearContext();
             sessionStorage['ctx_loggedin'] = false;
             contextService.deleteFromContext("swGlobalRedirectURL");
-
+            $window.location.href = url('/SignOut/SignOut');
         }
 
         var service = {

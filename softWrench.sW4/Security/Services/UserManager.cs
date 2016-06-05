@@ -13,6 +13,7 @@ using softwrench.sw4.user.classes.services.setup;
 using softWrench.sW4.AUTH;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Services {
@@ -71,6 +72,7 @@ namespace softWrench.sW4.Security.Services {
         public void ActivateAndDefinePassword(User user, string password) {
             user.Password = AuthUtils.GetSha1HashData(password);
             user.IsActive = true;
+            user.ChangePassword = false;
             var savedUser = DAO.Save(user);
             //TODO: wipeout link
             _userLinkManager.DeleteLink(savedUser);
@@ -209,6 +211,10 @@ namespace softWrench.sW4.Security.Services {
             }
             user = UserSyncManager.GetUserFromMaximoByUserName(user.UserName, user.Id);
             _userSetupEmailService.SendActivationEmail(user, email);
+        }
+
+        public bool VerifyChangePassword(InMemoryUser user) {
+            return !_ldapManager.IsLdapSetup() && user.ChangePassword;
         }
     }
 }

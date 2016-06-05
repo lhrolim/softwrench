@@ -117,6 +117,10 @@ namespace softwrench.sw4.user.classes.entities {
             get; set;
         }
 
+        [Property]
+        public bool? ChangePassword {
+            get; set;
+        }
 
         [JsonIgnore]
         [Set(0, Table = "SEC_PERSONGROUPASSOCIATION",
@@ -223,6 +227,7 @@ namespace softwrench.sw4.user.classes.entities {
             CustomRoles = dbUSer.CustomRoles;
             Profiles = !Profiles.IsEmpty ? Profiles : dbUSer.Profiles;
             MaximoPersonId = MaximoPersonId ?? dbUSer.MaximoPersonId;
+            ChangePassword = ChangePassword ?? dbUSer.ChangePassword;
         }
 
         public void MergeMaximoWithNewUser(User newUser) {
