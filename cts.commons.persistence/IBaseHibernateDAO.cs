@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using NHibernate;
+using cts.commons.simpleinjector;
 
 namespace cts.commons.persistence {
-    public interface IBaseHibernateDAO {
+    public interface IBaseHibernateDAO: IComponent {
         IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false,
             string queryAlias = null);
 
@@ -22,5 +23,6 @@ namespace cts.commons.persistence {
 
         int CountByNativeQuery(string queryst, ExpandoObject parameters, string queryAlias = null);
 
+        int ExecuteSql(string sql, params object[] parameters);
     }
 }

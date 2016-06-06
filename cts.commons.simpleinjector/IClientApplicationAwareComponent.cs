@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+﻿    using JetBrains.Annotations;
 
 namespace cts.commons.simpleinjector {
     public interface IClientApplicationAwareComponent : ISingletonComponent {

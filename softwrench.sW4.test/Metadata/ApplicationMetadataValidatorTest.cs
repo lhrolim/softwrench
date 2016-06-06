@@ -13,6 +13,7 @@ using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications.Validator;
 using softWrench.sW4.Security.Context;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.Metadata {
 

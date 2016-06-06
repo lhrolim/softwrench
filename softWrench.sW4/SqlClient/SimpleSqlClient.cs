@@ -1,4 +1,5 @@
 ﻿using cts.commons.persistence;
+using cts.commons.simpleinjector;
 using NHibernate;
 using softWrench.sW4.Data.Persistence;
 using System;
@@ -8,9 +9,9 @@ using System.Text.RegularExpressions;
 namespace softWrench.sW4.SqlClient {
     public class SimpleSqlClient : ISqlClient {
 
-        private readonly BaseHibernateDAO dao;
+        private readonly IBaseHibernateDAO dao;
 
-        public SimpleSqlClient(BaseHibernateDAO dao) {
+        public SimpleSqlClient(IBaseHibernateDAO dao) {
             this.dao = dao;
         }
 

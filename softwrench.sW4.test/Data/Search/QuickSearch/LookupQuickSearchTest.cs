@@ -8,6 +8,7 @@ using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Util;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.Data.Search.QuickSearch {
     [TestClass]

@@ -1,0 +1,72 @@
+﻿{
+  "workorderid": 2605,
+  "orgid": "PESCO",
+  "woclass": "WORKORDER",
+  "class": "WORKORDER",
+  "pmnum": null,
+  "cinum": null,
+  "description": "New WO May 13",
+  "wonum": "1090",
+  "siteid": "PVDISTRIBUTED",
+  "lostenergy": true,
+  "reportdate": "05/13/2016 23:05",
+  "targstartdate": "2016-05-14T12:30:00+05:30",
+  "targcompdate": "2016-05-15T12:30:00+05:30",
+  "schedstart": "2016-05-24T12:30:00+05:30",
+  "schedfinish": "2016-05-25T12:30:00+05:30",
+  "actstart": "2016-05-13T12:30:00+05:30",
+  "actfinish": null,
+  "jpnum": null,
+  "location": "ALAMEDA HS DAS ELECTRICAL ROOM",
+  "assetnum": "ALHS-DAS",
+  "classstructureid": null,
+  "worktype": "CM",
+  "wopriority": 1,
+  "owner": "AHABBU",
+  "ownergroup": null,
+  "reportedby": "AHABBU",
+  "failurecode": null,
+  "problemcode": null,
+  "glaccount": null,
+  "onbehalfof": "AHABBU",
+  "status": "INPRG",
+  "rowstamp": 10379433,
+  "extrafields": {
+    "location_": {
+      "serviceaddress_": {
+        "latitudey": null,
+        "longitudex": null,
+        "addresscode": null,
+        "description": null,
+        "streetaddress": null,
+        "city": null,
+        "stateprovince": null,
+        "country": null
+      },
+      "serviceaddress_.latitudey": null,
+      "serviceaddress_.longitudex": null,
+      "serviceaddress_.addresscode": null,
+      "serviceaddress_.description": null,
+      "serviceaddress_.streetaddress": null,
+      "serviceaddress_.city": null,
+      "serviceaddress_.stateprovince": null,
+      "serviceaddress_.country": null
+    },
+    "location_.serviceaddress_.latitudey": null,
+    "location_.serviceaddress_.longitudex": null,
+    "location_.serviceaddress_.addresscode": null,
+    "location_.serviceaddress_.description": null,
+    "location_.serviceaddress_.streetaddress": null,
+    "location_.serviceaddress_.city": null,
+    "location_.serviceaddress_.stateprovince": null,
+    "location_.serviceaddress_.country": null,
+    "asset_": {
+      "location": null
+    },
+    "asset_.location": null,
+    "failurelist_": {
+      "failurelist": null
+    },
+    "failurelist_.failurelist": null
+  }
+}

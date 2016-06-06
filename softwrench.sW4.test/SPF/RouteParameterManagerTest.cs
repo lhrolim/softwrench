@@ -9,6 +9,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.SPF {
     [TestClass]

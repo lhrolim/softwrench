@@ -7,6 +7,7 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.Metadata.Entities {
     [TestClass]

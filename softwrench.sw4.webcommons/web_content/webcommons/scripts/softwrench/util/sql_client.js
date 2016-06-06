@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function sqlClientController($scope, $http, i18NService) {
+    function sqlClientController($scope, $http) {
         //Scope properties
         $scope.queryString = '';
         $scope.executionMessage = '';
@@ -75,15 +75,11 @@
                 $scope.hasError = false;
             }
         };
-
-        $scope.i18N = function (key, defaultValue, paramArray) {
-            return i18NService.get18nValue(key, defaultValue, paramArray);
-        };
     }
 
     var mod = angular.module('sw_layout');
 
-    mod.controller("SQLClientController", ["$scope", "$http", "i18NService", sqlClientController]);
+    mod.controller("SQLClientController", ["$scope", "$http", sqlClientController]);
 
     mod.directive('shortenter', function(){
         return function (scope, element) {

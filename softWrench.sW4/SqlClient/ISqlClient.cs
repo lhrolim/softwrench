@@ -1,5 +1,4 @@
-﻿using NHibernate;
-using System;
+﻿using cts.commons.simpleinjector;
 using System.Collections.Generic;
 
 namespace softWrench.sW4.SqlClient {

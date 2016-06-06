@@ -13,8 +13,7 @@ namespace cts.commons.persistence
         T FindByPK<T>(Type type, object id, params string[] toEager);
         T FindSingleByQuery<T>(String queryst, params object[] parameters);
         IList<T> FindByQuery<T>(String queryst, params object[] parameters) where T : class;
-        IList<T> FindAll<T>(Type type) where T : class;
-        int ExecuteSql(string sql, params object[] parameters);
+        IList<T> FindAll<T>(Type type) where T : class;        
         ICollection<T> BulkSave<T>(ICollection<T> items) where T : class;
     }
 }

@@ -4,6 +4,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.Metadata.Entities {
     

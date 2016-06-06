@@ -6,6 +6,7 @@ using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Util;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.Metadata {
 

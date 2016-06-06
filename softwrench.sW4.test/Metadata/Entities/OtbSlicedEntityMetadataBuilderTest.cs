@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Linq;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.Metadata.Entities {
 

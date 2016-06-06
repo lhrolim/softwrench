@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using softwrench.sW4.TestBase;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
 using softWrench.sW4.Metadata;

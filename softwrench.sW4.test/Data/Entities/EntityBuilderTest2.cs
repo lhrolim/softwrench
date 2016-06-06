@@ -7,6 +7,7 @@ using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.Data.Entities {
     [TestClass]

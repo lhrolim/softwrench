@@ -9,8 +9,9 @@ using log4net;
 using Moq;
 using softWrench.sW4.Util;
 using SimpleInjector;
+using softwrench.sW4.TestBase.Extensions;
 
-namespace softwrench.sW4.test.Metadata {
+namespace softwrench.sW4.TestBase {
     public class TestSimpleInjectorScanner {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(TestSimpleInjectorScanner));
@@ -45,6 +46,22 @@ namespace softwrench.sW4.test.Metadata {
             foreach (var type in typeof(T).GetInterfaces().Where(type => typeof(IComponent).IsAssignableFrom(type)).Where(type => !_singletonMockTypes.Contains(type))) {
                 _singletonMockTypes.Add(type);
                 Container.RegisterSingle(type, () => mock.Object);
+                SimpleInjectorGenericFactory.RegisterNameAndType(type);
+            }
+        }
+
+        public void ResgisterSingletonObject<T>(T obj) where T : class, IComponent {
+            var mockType = typeof(T);
+            if (_singletonMockTypes.Contains(mockType)) {
+                return;
+            }
+            _singletonMockTypes.Add(mockType);
+            Container.RegisterSingle(mockType, () => obj);
+            SimpleInjectorGenericFactory.RegisterNameAndType(mockType);
+
+            foreach (var type in typeof(T).GetInterfaces().Where(type => typeof(IComponent).IsAssignableFrom(type)).Where(type => !_singletonMockTypes.Contains(type))) {
+                _singletonMockTypes.Add(type);
+                Container.RegisterSingle(type, () => obj);
                 SimpleInjectorGenericFactory.RegisterNameAndType(type);
             }
         }
@@ -88,7 +105,7 @@ namespace softwrench.sW4.test.Metadata {
 
         private void RegisterClassItSelf(Container container, Type registration, Registration reg) {
             if (registration.IsPublic) {
-                if (_singletonMockTypes.Contains(registration)){
+                if (_singletonMockTypes.Contains(registration)) {
                     return;
                 }
                 container.AddRegistration(registration, reg);

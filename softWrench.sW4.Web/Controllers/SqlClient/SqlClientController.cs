@@ -57,8 +57,8 @@ namespace softWrench.sW4.Web.Controllers.SqlClient {
                     var dbType = (DBType)Enum.Parse(typeof(DBType), datasource, true);
 
                     var sqlClient = dbType == DBType.Swdb ?
-                        new SimpleSqlClient(SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO))) :
-                        new SimpleSqlClient(SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO)));
+                        new SimpleSqlClient(SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>(typeof(ISWDBHibernateDAO))) :
+                        new SimpleSqlClient(SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(typeof(IMaximoHibernateDAO)));
 
                     if (sqlClient.IsCRUD(query)) {
                         if ((dbType == DBType.Maximo && CheckEnvironment()) || dbType == DBType.Swdb) {

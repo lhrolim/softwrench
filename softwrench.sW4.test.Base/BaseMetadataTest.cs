@@ -1,10 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace softwrench.sW4.test {
-
-
+namespace softwrench.sW4.TestBase {
     [DeploymentItem(@"App_data\Client\test_only", "Client\\test_only")]
     [DeploymentItem(@"App_data\Client\test2", "Client\\test2")]
     [DeploymentItem(@"App_data\Client\test3", "Client\\test3")]
@@ -29,8 +25,6 @@ namespace softwrench.sW4.test {
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\kongsberg", "Client\\kongsberg")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\tva", "Client\\tva")]
     [TestClass]
-    public abstract class BaseMetadataTest
-    {
-
+    public abstract class BaseMetadataTest {
     }
 }

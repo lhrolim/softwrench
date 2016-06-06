@@ -7,6 +7,7 @@ using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Util;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.Metadata {
     [TestClass]
@@ -21,21 +22,21 @@ namespace softwrench.sW4.test.Metadata {
             }
         }
 
-        [TestMethod]
-        public void TestMethod1() {
-            var woApp = MetadataProvider.Application("workorder");
-            var detailSchema = woApp.Schema(new ApplicationMetadataSchemaKey("detail", null, ClientPlatform.Mobile));
-            var syncSchema = woApp.Schema(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.SyncSchema));
-            Assert.IsTrue(syncSchema.Displayables.Count >= detailSchema.Displayables.Count);
-            Assert.AreEqual(detailSchema.Compositions().Count, syncSchema.Compositions().Count);
+        //[TestMethod]
+        //public void TestMethod1() {
+        //    var woApp = MetadataProvider.Application("workorder");
+        //    var detailSchema = woApp.Schema(new ApplicationMetadataSchemaKey("detail", null, ClientPlatform.Mobile));
+        //    var syncSchema = woApp.Schema(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.SyncSchema));
+        //    Assert.IsTrue(syncSchema.Displayables.Count >= detailSchema.Displayables.Count);
+        //    Assert.AreEqual(detailSchema.Compositions().Count, syncSchema.Compositions().Count);
 
-        }
+        //}
 
-        [TestMethod]
-        public void TestComposition() {
-            var woApp = MetadataProvider.Application("worklog");
-            var syncSchema = woApp.Schema(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.SyncSchema));
-            Assert.IsTrue(syncSchema.Fields.Any(f => f.Attribute.EqualsIc(RowStampUtil.RowstampColumnName)));
-        }
+        //[TestMethod]
+        //public void TestComposition() {
+        //    var woApp = MetadataProvider.Application("worklog");
+        //    var syncSchema = woApp.Schema(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.SyncSchema));
+        //    Assert.IsTrue(syncSchema.Fields.Any(f => f.Attribute.EqualsIc(RowStampUtil.RowstampColumnName)));
+        //}
     }
 }

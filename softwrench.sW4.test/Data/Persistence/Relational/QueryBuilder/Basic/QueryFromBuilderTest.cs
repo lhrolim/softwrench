@@ -8,6 +8,7 @@ using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Util;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
 

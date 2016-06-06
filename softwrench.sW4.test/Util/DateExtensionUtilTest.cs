@@ -3,6 +3,7 @@ using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.Util {
     [TestClass]

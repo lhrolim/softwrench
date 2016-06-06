@@ -8,6 +8,7 @@ using softWrench.sW4.Util;
 using System.Diagnostics;
 using cts.commons.portable.Util;
 using softWrench.sW4.Metadata.Menu;
+using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test.Metadata {
 
