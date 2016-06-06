@@ -1,7 +1,7 @@
 ﻿(function (angular, $) {
     "use strict";
 
-    function passwordValidationService($log, $http, configurationService) {
+    function passwordValidationService($log, $http, $injector) {
         //#region Utils
         class PasswordConfig {
             constructor() {
@@ -37,6 +37,12 @@
                 specialLast: "/Global/Password/PlacementSpecialLast",
                 login: "/Global/Password/Login"
             }
+        }
+
+        var configurationService = null;
+
+        function getConfigurationService() {
+            return configurationService = (configurationService || $injector.get("configurationService"));
         }
 
         function formatConfig(configDictionary) {
@@ -105,7 +111,7 @@
             }
             const numberRegexp = /[0-9]/;
             if (passwordConfig.number && !numberRegexp.test(password)) {
-                validations.push("Requires at leat one number character");
+                validations.push("Requires at least one number character");
             }
             const regularCharactersRegexp = /^[a-zA-Z0-9- ]*$/;
             if (passwordConfig.special && regularCharactersRegexp.test(password)) {
@@ -157,7 +163,7 @@
          */
         function getPasswordConfiguration() {
             const configDict = {};
-            Object.values(config.keys).forEach(key => configDict[key] = configurationService.getConfigurationValue(key));
+            Object.values(config.keys).forEach(key => configDict[key] = getConfigurationService().getConfigurationValue(key));
             const passwordConfig = formatConfig(configDict);
             return passwordConfig;
         }
@@ -201,7 +207,7 @@
     }
 
     //#region Service registration
-    angular.module("webcommons_services").factory("passwordValidationService", ["$log", "$http", "configurationService", passwordValidationService]);
+    angular.module("webcommons_services").factory("passwordValidationService", ["$log", "$http", "$injector", passwordValidationService]);
     //#endregion
 
 })(angular, jQuery);
