@@ -17,6 +17,10 @@ using System.Data;
 using softWrench.sW4.Metadata.Validator;
 using System.Collections.Generic;
 using System.IO;
+using softwrench.sw4.api.classes.email;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Configuration;
+using softWrench.sW4.Web.Email;
 
 namespace softWrench.sW4.Web.Controllers.Utilities {
 
@@ -24,10 +28,14 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
     public class EntityMetadataController : ApiController {
         private readonly SWDBHibernateDAO _swdbDao;
         private readonly IEventDispatcher _eventDispatcher;
+        private readonly MetadataEmailer metadataEmailer;
+        private readonly IConfigurationFacade configurationFacade;
 
-        public EntityMetadataController(SWDBHibernateDAO dao, IEventDispatcher eventDispatcher) {
+        public EntityMetadataController(SWDBHibernateDAO dao, IEventDispatcher eventDispatcher, MetadataEmailer metadataEmailer, IConfigurationFacade configurationFacade) {
             _swdbDao = dao;
             _eventDispatcher = eventDispatcher;
+            this.metadataEmailer = metadataEmailer;
+            this.configurationFacade = configurationFacade;
         }
         
         [HttpGet]
@@ -171,8 +179,23 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 BaselineVersion = ""
             };
 
+            var newFileContent = newMetadataEntry.SystemStringValue;
+            var oldFileContent = File.ReadAllText(newMetadataEntry.Path);
+
             _swdbDao.Save(newMetadataEntry);
             new MetadataProvider().Save(metadata, false, path);
+
+            var sendTo = configurationFacade.Lookup<string>(ConfigurationConstants.MetadataChangeReportEmailId);
+
+            if (!string.IsNullOrWhiteSpace(sendTo)) {
+                metadataEmailer.SendMetadataChangeEmail(newMetadataEntry.Name,
+                newFileContent,
+                oldFileContent,
+                newMetadataEntry.Comments,
+                SecurityFacade.CurrentUser().DBUser,
+                DateTime.Now,
+                sendTo);
+            }
         }
 
         [HttpPut]

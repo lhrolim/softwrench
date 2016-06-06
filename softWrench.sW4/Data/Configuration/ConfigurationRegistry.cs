@@ -140,6 +140,12 @@ namespace softWrench.sW4.Data.Configuration {
                 CachedOnClient = true
             });
 
+            facade.Register(ctes.MetadataChangeReportEmailId, new PropertyDefinition() {
+                Description = "The default email address for metadata change reporting",
+                DataType = "string",
+                DefaultValue = "devteam@controltechnologysolutions.com"
+            });
+
             #region Password Config
             facade.Register(ctes.Password.MinLengthKey, new PropertyDefinition() {
                 Description = "Password's minimum required length",

@@ -475,8 +475,9 @@ namespace softWrench.sW4.Metadata {
 
         public void Save([NotNull] string data, bool internalFramework = false, string path = null) {
             try {
-                var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(data));
-                Save(memoryStream, internalFramework, path);
+                using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(data))) {
+                    Save(memoryStream, internalFramework, path);
+                }                    
             } catch (Exception e) {
                 Log.Error("error saving metadata", e);
                 throw;

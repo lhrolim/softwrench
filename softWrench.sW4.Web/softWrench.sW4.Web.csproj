@@ -74,6 +74,10 @@
       <HintPath>Dependencies\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DotLiquid, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
@@ -337,6 +341,7 @@
     <Compile Include="DB_Migration\DB2 FluentMigrator\Db2Quoter.cs" />
     <Compile Include="DB_Migration\DB2 FluentMigrator\Db2TypeMap.cs" />
     <Compile Include="DB_Migration\DB2 FluentMigrator\EmptyDescriptionGenerator.cs" />
+    <Compile Include="Email\MetadataEmailer.cs" />
     <Compile Include="Formatting\JsonDateTimeConverter.cs" />
     <Compile Include="Formatting\LeanJsonContractResolver.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
@@ -363,6 +368,7 @@
     <Compile Include="UserControls\RichTextBox.aspx.designer.cs">
       <DependentUpon>RichTextBox.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Util\CustomerResourceResolver.cs" />
     <Compile Include="Util\ExcelUtil.cs" />
     <Compile Include="Util\I18NUtil.cs" />
     <Compile Include="Util\RequestUtil.cs" />
@@ -799,6 +805,7 @@
     <Content Include="Content\Scripts\client\crud\search\crud_search.js" />
     <Content Include="Content\Templates\crud\search\crud_search.html" />
     <Content Include="Content\Templates\crud\security\userprofile_permission.html" />
+    <Content Include="Content\Templates\metadata\metadatachangereport.html" />
     <Content Include="Content\Templates\notifications.html" />
     <Content Include="Content\Templates\breadcrumbDropdown.html" />
     <Content Include="Content\Templates\breadcrumb.html" />

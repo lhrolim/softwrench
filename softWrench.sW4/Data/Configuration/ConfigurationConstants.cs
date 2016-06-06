@@ -24,6 +24,8 @@
         public const string InvIssueListBeringScanOrder = "/Global/Grids/InvIssueBering/ScanBar";
         public const string NewKeyIssueDetailScanOrder = "/Global/Details/KeyIssue/ScanBar";
 
+        public const string MetadataChangeReportEmailId = "/Global/Metadata/NotificationEmail";
+
         //        public static class Global {
         //            public static class Rowstamps {
         //                public const string User = "/Global/Rowstamps/User";
