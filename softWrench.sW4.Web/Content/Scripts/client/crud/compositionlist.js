@@ -728,7 +728,10 @@
 
         //#endregion
 
-        $scope.$on("sw.composition.edit", function (event, datamap, actionTitle, forceModal) {
+        $scope.$on("sw.composition.edit", function (event, applicationName, datamap, actionTitle, forceModal) {
+            if (applicationName !== $scope.compositionlistschema.applicationName) {
+                return;
+            }
             $scope.edit(datamap, actionTitle, forceModal);
         });
 

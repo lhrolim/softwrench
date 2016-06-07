@@ -560,7 +560,7 @@
               <field attribute="description" label="Summary" requiredexpression="true">
                 <renderer type="default" params="maxlength=100" />
               </field>
-              <association target="department" labelfield="DEPARTMENT_.description"  label="Department">
+              <association target="department" labelfield="DEPARTMENT_.description"  label="Department" default="@user.department">
                 <renderer type="lookup"/>
               </association>
               <association target="tickettype" labelfield="tickettype_.description" label="Ticket Type" requiredexpression="true">
@@ -577,8 +577,8 @@
                 <renderer type="lookup" params="columnlabel=Name;"/>
                 <event type="afterchange" service="chicagosrService" method="afterChangeReportedBy"/>
               </association>
-              <field attribute="reportedphone" label="Reported By Phone" readonly="true"/>
-              <field attribute="reportedemail" label="Reported By Email" readonly="true"/>
+              <field attribute="reportedphone" label="Reported By Phone" readonly="true" default="@user.phone"/>
+              <field attribute="reportedemail" label="Reported By Email" readonly="true" default="@user.email"/>
               <field attribute="reportdate" label="Reported Date" default="@currentdatetime" readonly="true">
                 <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
               </field>

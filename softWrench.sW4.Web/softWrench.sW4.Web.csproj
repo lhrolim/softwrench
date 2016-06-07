@@ -267,7 +267,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Common\ClientAwareRazorViewEngine.cs" />
-    <Compile Include="Common\ErrorDto.cs" />
     <Compile Include="Common\GenericExceptionFilter.cs" />
     <Compile Include="Common\LogInfo.cs" />
     <Compile Include="Common\LogFilter.cs" />

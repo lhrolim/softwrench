@@ -15,27 +15,53 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private const string WrongRenderer = "orientation {0} not found. Possible options are horizontal and vertical";
 
-        public string Id { get; set; }
-        public string ApplicationName { get; set; }
-        public bool Abstract { get; set; }
-        public string Resourcepath { get; set; }
-        public string Label { get; set; }
-        public string Attribute { get; set; }
-        public IDictionary<string, object> Parameters { get; set; }
+        public string Id {
+            get; set;
+        }
+        public string ApplicationName {
+            get; set;
+        }
+        public bool Abstract {
+            get; set;
+        }
+        public string Resourcepath {
+            get; set;
+        }
+        public string Label {
+            get; set;
+        }
+        public string Attribute {
+            get; set;
+        }
+        public IDictionary<string, object> Parameters {
+            get; set;
+        }
 
         public string RequiredExpression {
             get; set;
         }
-        [DefaultValue("true")] public string ShowExpression { get; set; }
-        public string ToolTip { get; set; }
+        [DefaultValue("true")]
+        public string ShowExpression {
+            get; set;
+        }
+        public string ToolTip {
+            get; set;
+        }
         public bool IsReadOnly {
-            get { return false; }
-            set { }
+            get {
+                return false;
+            }
+            set {
+            }
         }
 
         public List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
-        public ApplicationSectionOrientation OrientationEnum { get; set; }
-        public ApplicationHeader Header { get; set; }
+        public ApplicationSectionOrientation OrientationEnum {
+            get; set;
+        }
+        public ApplicationHeader Header {
+            get; set;
+        }
 
         [JsonIgnore]
         public ApplicationSchemaDefinition.LazyComponentDisplayableResolver ComponentDisplayableResolver;
@@ -45,20 +71,32 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private FieldRenderer _renderer;
         private string _role;
         public string RendererType {
-            get { return _renderer.RendererType; }
+            get {
+                return _renderer == null ? null : _renderer.RendererType;
+            }
         }
 
         public IDictionary<string, object> RendererParameters {
-            get { return _renderer == null ? new Dictionary<string, object>() : _renderer.ParametersAsDictionary(); }
+            get {
+                return _renderer == null ? new Dictionary<string, object>() : _renderer.ParametersAsDictionary();
+            }
         }
 
         public FieldRenderer Renderer {
-            get { return _renderer; }
-            set { _renderer = value; }
+            get {
+                return _renderer;
+            }
+            set {
+                _renderer = value;
+            }
         }
-        public string Qualifier { get; set; }
+        public string Qualifier {
+            get; set;
+        }
 
-        public bool SecondaryContent { get; set; }
+        public bool SecondaryContent {
+            get; set;
+        }
 
         public bool IsHidden {
             get; set;
@@ -88,7 +126,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             Header = header;
             _renderer = renderer;
             Role = role;
-            }
+        }
         protected virtual void ValidateOrientation(string orientation) {
 
             ApplicationSectionOrientation result;
@@ -103,13 +141,24 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        public string Type { get { return GetType().Name; } }
-        public string Orientation { get { return OrientationEnum.ToString().ToLower(); } }
+        public string Type {
+            get {
+                return GetType().Name;
+            }
+        }
+        public string Orientation {
+            get {
+                return OrientationEnum.ToString().ToLower();
+            }
+        }
 
-        public string Role
-        {
-            get { return _role ?? ApplicationName + "." + Id; }
-            set { _role = value; }
+        public string Role {
+            get {
+                return _role ?? ApplicationName + "." + Id;
+            }
+            set {
+                _role = value;
+            }
         }
 
         public override string ToString() {
@@ -141,7 +190,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 }
                 return _displayables;
             }
-            set { _displayables = value; }
+            set {
+                _displayables = value;
+            }
         }
     }
 }

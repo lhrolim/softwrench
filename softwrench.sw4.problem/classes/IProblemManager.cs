@@ -13,12 +13,17 @@ namespace softwrench.sw4.problem.classes {
         /// <param name="handler"></param>
         /// <param name="assignee"></param>
         /// <param name="priority"></param>
+        /// <param name="recordUserId"></param>
         /// <param name="datamap"></param>
         /// <param name="stackTrace"></param>
         /// <param name="message"></param>
         /// <param name="profiles"></param>
-        Problem Register(string recordType, string recordId, string datamap, int? createdBy, string stackTrace,
-            string message,string handler=null, string assignee=null,int priority= 1,string profiles=null);
+        Problem Register(string recordType, string recordId,string recordUserId, string datamap, int? createdBy, string stackTrace,
+            string message,string problemType = null, string assignee=null,int priority= 1,string profiles=null);
+
+        Problem RegisterOrUpdateProblem(int currentUser,Problem problem, Func<string> queryToUse);
+
+        void DeleteProblems(string recordType, string recordId, string problemType);
 
 
         void List();

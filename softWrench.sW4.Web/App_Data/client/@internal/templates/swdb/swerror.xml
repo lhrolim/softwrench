@@ -1,27 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <entities>
+    <entity name="problem" idAttribute="id">
+      <attributes>
+        <attribute name="username" query="(select username from sw_user2 where id = !@createdby)" type="varchar"/>
+      </attributes>
+    </entity>
+  </entities>
+  
   <applications>
 
     <application name="SoftwrenchError" entity="Problem" title="Softwrench Error">
       <schemas>
         <schema id="list" stereotype="list" title="Softwrench Errors">
           <field attribute="id" hidden="true"/>
-          <field attribute="recordtype" label="Error Type"/>
-          <field attribute="recordid" label="Record ID"/>
-          <field attribute="description" label="Description"/>
-          <field attribute="createddate" label="Error Date"/>
-          <field attribute="createdby" label="Created By"/>
+          <field attribute="recordtype" label="Application"/>
+          <field attribute="recorduserid" label="Record ID"/>
+          <field attribute="problemtype" label="Problem Type"/>
+          
+          <field attribute="createddate" label="Error Date">
+            <renderer type="datetime"/>
+          </field>
+          <field attribute="createdby" hidden="true"/>
+          <field attribute="username" label="Created By"/>
           <field attribute="assignee" label="Assignee"/>
           <field attribute="priority" label="Priority"/>
           <field attribute="status" label="Status"/>
+          <properties>
+            <property key="list.defaultorderby" value="createddate desc"/>
+          </properties>
         </schema>
 
         <schema id="detail" stereotype="detail" mode="input" title="Softwrench Error Detail">
           <field attribute="id" hidden="true"/>
-          <field attribute="recordtype" label="Error Type" readonly="true"/>
+          <field attribute="problemtype" hidden="true"/>
+          <field attribute="recordschema" hidden="true"/>
+          <field attribute="recordtype" label="Application Type" readonly="true"/>
           <field attribute="recordid" label="Record ID" readonly="true"/>
-          <field attribute="description" label="Description" readonly="true"/>
+
+          <field attribute="message" label="Description" readonly="true"/>
           <field attribute="data" hidden="true"/>
           <field attribute="#dataasstring" label="Data">
             <renderer type="textarea"/>
@@ -34,6 +52,9 @@
             </commandgroup>
           </commandbars>
         </schema>
+
+        
+        
       </schemas>
     </application>
 

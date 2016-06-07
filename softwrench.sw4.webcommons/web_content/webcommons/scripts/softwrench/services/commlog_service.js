@@ -1,8 +1,6 @@
 ﻿(function (angular) {
     'use strict';
-
-    var module = angular.module('sw_layout');
-
+    const module = angular.module('sw_layout');
     module.constant("commlog_messagheader",
         //above this limit framework shall no longer produce the full rowstamp map, but rather just pass the maxrowstamp to the server
         "<br/><br/>{0}" +
@@ -22,17 +20,14 @@
             if (parameters.compositionItemData["read"]) {
                 return;
             }
-
-            var user = contextService.getUserData();
-            var parentIdFieldName = parameters.parentSchema.idFieldName;
-
-            var httpParameters = {
+            const user = contextService.getUserData();
+            const parentIdFieldName = parameters.parentSchema.idFieldName;
+            const httpParameters = {
                 application: parameters.parentSchema.applicationName,
                 applicationItemId: parameters.parentData["fields"][parentIdFieldName],
                 userId: user.dbId,
                 commlogId: parameters.compositionItemId
             };
-
             parameters.compositionItemData["read"] = true;
 
             restService.invokePost("Commlog", "UpdateReadFlag", httpParameters, null, null, function () {
@@ -41,25 +36,20 @@
         };
 
         function formatCommTemplate(parameters) {
-            var parentSchema = parameters.scope.parentschema || /* when commlog being edited in modal */ crudContextHolderService.currentSchema();
-
-            var parentIdFieldName = parentSchema.idFieldName;
-            var parentData = parameters.parentdata["fields"];
-            let templateId = parameters.fields['#templateid'];
-
+            const parentSchema = parameters.scope.parentschema || /* when commlog being edited in modal */ crudContextHolderService.currentSchema();
+            const parentIdFieldName = parentSchema.idFieldName;
+            const parentData = parameters.parentdata["fields"];
+            const templateId = parameters.fields['#templateid'];
             if (templateId == null) {
                 return;
             }
-
-            var httpParameters = {
+            const httpParameters = {
                 templateId: templateId,
                 json: parentData,
                 schemaId: parentSchema.schemaId,
                 applicationName: parentSchema.applicationName,
                 applicationItemId: parentData[parentIdFieldName]
             };
-
-
             restService.invokePost("CommTemplate", "MergeTemplateDefinition", null, angular.toJson(httpParameters), function (data) {
                 parameters.fields['subject'] = data.resultObject.subject;
                 parameters.fields['message'] = richTextService.getDecodedValue(data.resultObject.message);
@@ -67,25 +57,22 @@
             }, null);
         };
 
-        var addSignature = function (parameters) {
-            var datamap = crudContextHolderService.rootDataMap("#modal");
+        const addSignature = function (parameters) {
+            const datamap = crudContextHolderService.rootDataMap("#modal");
             if (datamap.message == undefined) {
-                var signature = contextService.getUserData().signature;
+                const signature = contextService.getUserData().signature;
                 datamap['message'] = signature !== "" ? "<br/><br/>" + signature : signature;
             }
-        }
-
+        };
         var buildDetailsHtml = function (commlogDatamap) {
-
-            var root = $("<html></html>");
+            const root = $("<html></html>");
             var head = $("<head></head>");
-            var styles = $("style, link[rel='stylesheet']").clone();
+            const styles = $("style, link[rel='stylesheet']").clone();
             styles.each(function (index, el) {
                 head.append(el);
             });
             root.append(head);
-
-            var body = $("<body></body>");
+            const body = $("<body></body>");
             body.addClass("pdf-root");
             body.append($("#printsectionform")[0].outerHTML);
             root.append(body);
@@ -93,35 +80,31 @@
             commlogDatamap["detailsHtml"] = root[0].outerHTML;
             applicationService.save();
         }
-
-        var send = function (commLogDatamap, commLogSchema) {
+        const send = function (commLogDatamap, commLogSchema) {
             var safeCommLogDatamap = commLogDatamap.fields ? commLogDatamap.fields : commLogDatamap;
-            var extraAtach = safeCommLogDatamap["extraattachments"];
+            const extraAtach = safeCommLogDatamap["extraattachments"];
             if (!extraAtach || extraAtach !== "details") {
                 applicationService.save();
                 return;
             }
-
-            var schema = crudContextHolderService.currentSchema();
-            var datamap = crudContextHolderService.rootDataMap();
-
-            var printCallback = function () {
+            const schema = crudContextHolderService.currentSchema();
+            const datamap = crudContextHolderService.rootDataMap();
+            const printCallback = function () {
                 buildDetailsHtml(safeCommLogDatamap);
-            }
-
-            var printOptions = {
+            };
+            const printOptions = {
                 shouldPageBreak: false,
                 shouldPrintMain: true,
                 printCallback: printCallback
             };
             printService.printDetail(schema, datamap, printOptions);
-        }
+        };
 
         function buildReplyAllSendTo(origTo, origFrom, newFrom) {
-            var transFrom = nullOrCommaSplit(origFrom);
-            var transTo = nullOrCommaSplit(origTo);
-            var newTo = transFrom.concat(transTo);
-            var userAddressIndex = newTo.indexOf(newFrom);
+            const transFrom = nullOrCommaSplit(origFrom);
+            const transTo = nullOrCommaSplit(origTo);
+            const newTo = transFrom.concat(transTo);
+            const userAddressIndex = newTo.indexOf(newFrom);
             if (userAddressIndex > -1) {
                 newTo.splice(userAddressIndex, 1);
             }
@@ -138,22 +121,20 @@
         };
 
         function buildMessage(originalItem) {
-            var preferences = contextService.getUserData().userPreferences;
-            var signature = preferences == null ? "" : preferences.signature;
+            const preferences = contextService.getUserData().userPreferences;
+            const signature = preferences == null ? "" : preferences.signature;
             return commlogMessageheader.format(signature, originalItem.sendfrom, originalItem.sendto, emptyIfNull(originalItem.cc), originalItem.subject, originalItem.message);
         };
 
         function commonstransform(originalItem, replyMode) {
             normalizeOriginal(originalItem);
-            var displayables = originalItem.schema.displayables;
-            var clonedItem = fieldService.fillDefaultValues(displayables, { commloguid: null }, null);
-
-            // If KOGT, set subject to null so that the default subject from metadata will populate
-            var client = contextService.client();
+            const displayables = originalItem.schema.displayables;
+            const clonedItem = fieldService.fillDefaultValues(displayables, { commloguid: null }, null); // If KOGT, set subject to null so that the default subject from metadata will populate
+            const client = contextService.client();
             if (client != null && client.equalIc("kongsberg") && originalItem['ownertable'].equalIc("SR")) {
                 clonedItem['subject'] = null;
             } else {
-                var subjectPrefix = replyMode ? "Re: " : "Fw: ";
+                const subjectPrefix = replyMode ? "Re: " : "Fw: ";
                 clonedItem['subject'] = subjectPrefix + originalItem.subject;
             }
 
@@ -174,19 +155,19 @@
         };
 
         function transformReply(originalItem) {
-            var detailItem = commonstransform(originalItem, true);
+            const detailItem = commonstransform(originalItem, true);
             detailItem['sendto'] = originalItem.sendfrom.indexOf(",") > -1 ? originalItem.sendfrom.split(',') : [originalItem.sendfrom];
             return detailItem;
         };
 
         function transformReplyAll(originalItem) {
-            var detailItem = commonstransform(originalItem, true);
+            const detailItem = commonstransform(originalItem, true);
             detailItem['sendto'] = buildReplyAllSendTo(originalItem.sendto, originalItem.sendfrom, detailItem['sendfrom']);
             return detailItem;
         };
 
         function transformForward(originalItem) {
-            var detailItem = commonstransform(originalItem, false);
+            const detailItem = commonstransform(originalItem, false);
             detailItem['sendto'] = detailItem['cc'] = null;
             return detailItem;
         };
@@ -198,7 +179,7 @@
         };
 
         function dispatchEvent(clonedItem, title) {
-            $rootScope.$broadcast("sw.composition.edit", clonedItem, title, true)
+            $rootScope.$broadcast("sw.composition.edit", "commlog", clonedItem, title, true);
             return clonedItem;
         };
 
@@ -220,24 +201,28 @@
                 .then(eventDispatcher("Forward"));
         };
 
-        var addCommlog = function (parameters) {
-            $q.when(contextService.getUserData().email || restService.getPromise("User", "GetPrimaryEmail")).then(function (result) {
-                var email = isString(result) ? result : result.data;
+        const addCommlog = function (parameters) {
+            const datamap = {
+                _iscreation: true
+            };
+            if (contextService.getUserData().email) {
+                return dispatchEvent(datamap, "Communication Details");
+            }
 
+            //not on client side user
+            $q.when(restService.getPromise("User", "GetPrimaryEmail")).then(function (result) {
+                const email = isString(result) ? result : result.data;
                 if (!email || "null".equalIc(email)) {
                     alertService.confirm('The current user does not have an email registered. Do you want define it now?')
                         .then(() => redirectService.goToApplicationView("Person", 'myprofiledetail', 'input', null, { userid: contextService.getUserData().maximoPersonId }, null))
                         .then(() => redirectService.redirectToTab('email_'));
                 } else {
-                    var datamap = {
-                        _iscreation: true
-                    };
-
+                    //update client side user with returned email
+                    contextService.getUserData().email = email;
                     dispatchEvent(datamap, "Communication Details");
                 }
             });
         };
-            
         const service = {
             addCommlog,
             formatCommTemplate,

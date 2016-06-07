@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using softwrench.sw4.api.classes.integration;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.API.Response {
@@ -34,6 +35,7 @@ namespace softWrench.sW4.Data.API.Response {
 
         public string ApplicationName { get { return Schemas.First().ApplicationName; } }
         public string Id { get; private set; }
+        public IErrorDto WarningDto { get; set; }
 
         public IList<ApplicationSchemaDefinition> Schemas { get; set; }
         public string RedirectURL { get; set; }

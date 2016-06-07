@@ -1,4 +1,5 @@
 ﻿using System;
+using softwrench.sw4.api.classes.integration;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.API.Response {
@@ -15,6 +16,8 @@ namespace softWrench.sW4.Data.API.Response {
         public string SuccessMessage { get; set; }
         public string ErrorMessage { get; set; }
 
+        public IErrorDto ErrorDto { get; set; }
+
         public DateTime TimeStamp { get; set; }
         public virtual string Type { get { return typeof (BlankApplicationResponse).Name; } }
         public ApplicationSchemaDefinition Schema { get; set; }
@@ -22,5 +25,6 @@ namespace softWrench.sW4.Data.API.Response {
         public string Mode { get; set; }
         public string ApplicationName { get; private set; }
         public string Id { get; set; }
+        public IErrorDto WarningDto { get; set; }
     }
 }

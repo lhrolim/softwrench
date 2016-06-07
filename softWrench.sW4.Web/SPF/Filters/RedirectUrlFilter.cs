@@ -69,7 +69,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
         }
 
         private void ClearSchemaIfCached(IApplicationResponse applicationResponse, HttpActionExecutedContext actionExecutedContext) {
-            if (applicationResponse == null || applicationResponse.Schema == null) {
+            if (applicationResponse == null || applicationResponse.Schema == null || applicationResponse.Schema.IgnoreCache) {
                 // if there´s no schema to cache, just return 
                 return;
             }

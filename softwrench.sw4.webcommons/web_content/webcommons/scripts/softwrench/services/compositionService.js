@@ -309,6 +309,26 @@
             return null;
         }
 
+        function updateCompositionDataAfterSave(schema, datamap, responseDataMap) {
+            const compositions = this.getLazyCompositions(schema, datamap.fields);
+            compositions.forEach(function (composition) {
+                const currentValue = datamap.fields[composition];
+                const updatedValue = responseDataMap.fields[composition];
+                // has previous data but has no updated data: not safe to update -> hydrate with previous value
+                if (!!currentValue &&(!responseDataMap.fields.hasOwnProperty(composition) ||
+                    !angular.isArray(updatedValue))) {
+                    responseDataMap.fields[composition] = currentValue
+                        .filter(function (c) { // filter out just created items
+                            return !c["_iscreation"];
+                        })
+                        .map(function (c) { // remove `#isDirty` flag from the items
+                            delete c["#isDirty"];
+                            return c;
+                        });
+                }
+            });
+        }
+
 
         //#endregion
 
@@ -320,6 +340,7 @@
             buildMergedDatamap,
             populateWithCompositionData,
             getCompositionList,
+            updateCompositionDataAfterSave,
             searchCompositionList,
             isCompositionLodaded,
             getLazyCompositions,

@@ -204,6 +204,7 @@
     <Compile Include="Data\Persistence\WS\Applications\Compositions\LabTransHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\MultiAssetLocciHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\RelatedRecordHandler.cs" />
+    <Compile Include="Data\Persistence\WS\Applications\Compositions\SolutionsHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Compositions\ToolsHandler.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Issue\InvIssueBatchConverter.cs" />
     <Compile Include="Data\Persistence\WS\Applications\Inventory\Transfer\InvTransferBatchConverter.cs" />
@@ -225,6 +226,7 @@
     <Compile Include="Data\Search\QuickSearch\QuickSearchWhereClauseHandler.cs" />
     <Compile Include="Email\CommLogTemplateMerger.cs" />
     <Compile Include="Email\EmailHistory.cs" />
+    <Compile Include="Exceptions\ErrorDto.cs" />
     <Compile Include="Exceptions\InvalidWhereClauseException.cs" />
     <Compile Include="Exceptions\MenuMetadataException.cs" />
     <Compile Include="Exceptions\UnauthorizedException.cs" />

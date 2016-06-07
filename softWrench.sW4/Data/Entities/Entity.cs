@@ -13,7 +13,7 @@ namespace softWrench.sW4.Data.Entities {
     public class Entity : AttributeHolder {
 
         private readonly String _id;
-        private readonly IDictionary<string, object> _associationAttributes;
+        private IDictionary<string, object> _associationAttributes;
         private readonly IDictionary<string, string> _unmappedAttributes = new Dictionary<string, string>();
         private readonly EntityMetadata _metadata;
 
@@ -67,6 +67,21 @@ namespace softWrench.sW4.Data.Entities {
             }
 
             return relationship;
+        }
+
+        public void ClearRelationShips(params string[] exceptFor) {
+            if (exceptFor == null) {
+                _associationAttributes.Clear();
+            } else {
+                var tempDict  = new Dictionary<string,object>();
+                var set = new HashSet<string>(exceptFor);
+                foreach (var association in AssociationAttributes) {
+                    if (set.Contains(association.Key)) {
+                        tempDict.Add(association.Key,association.Value);
+                    }
+                }
+                _associationAttributes = tempDict;
+            }
         }
 
         public static Entity TestInstance([NotNull] IDictionary<string, object> attributes) {

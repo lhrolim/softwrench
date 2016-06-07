@@ -93,8 +93,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
 
                 var attachments = GetAttachments(crudData, maximoTemplateData.ApplicationMetadata, entity);
-
-                maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, attachments));
+                if(!crudData.ContainsAttribute("underwaycall",true)) {
+                    //to avoid sending emails twice
+                    maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, attachments));
+                }
                 HandleAttachments(attachments, integrationObject, maximoTemplateData.ApplicationMetadata);
                 var username = user.Login;
                 var allAddresses = GetListOfAllAddressesUsed(integrationObject);
@@ -174,7 +176,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             return attachments;
         }
 
-     
+
 
         private async void UpdateEmailHistoryAsync(string userId, string[] emailAddresses) {
             await Task.Factory.NewThread(() => {

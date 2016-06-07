@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using softwrench.sw4.api.classes.integration;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.Pagination;
@@ -66,6 +67,8 @@ namespace softWrench.sW4.Data.API.Response {
         public string Id {
             get; private set;
         }
+
+        public IErrorDto WarningDto { get; set; }
 
         public string Type {
             get {

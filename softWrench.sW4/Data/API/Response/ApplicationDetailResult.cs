@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
+using softwrench.sw4.api.classes.integration;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
@@ -43,6 +44,8 @@ namespace softWrench.sW4.Data.API.Response {
         public string Id {
             get { return _id; }
         }
+
+        public IErrorDto WarningDto { get; set; }
 
         public IDictionary<string, ApplicationCompositionSchema> Compositions {
             get { return Schema.CompositionSchemas; }

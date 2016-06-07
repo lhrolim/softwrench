@@ -1,13 +1,15 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using softwrench.sw4.api.classes.integration;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Util;
 
-namespace softWrench.sW4.Web.Common {
-    public class ErrorDto {
+namespace softWrench.sW4.Exceptions {
+    public class ErrorDto :IErrorDto {
 
         public string ErrorMessage { get; set; }
+        public string WarnMessage { get; set; }
         public string ErrorStack { get; set; }
         public string FullStack { get; set; }
         [JsonIgnore]

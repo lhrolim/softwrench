@@ -73,7 +73,11 @@ angular.module('sw_layout')
                 if (!willRefresh) {
                     //use $timeout to make sure the notification timing works correctly
                     $timeout(function () {
-                        alertService.notifymessage('success', data.successMessage);
+                        if (data.warningDto) {
+                            alertService.notifyWarning(data);
+                        } else {
+                            alertService.notifymessage('success', data.successMessage);
+                        }
                     }, 0);
 
                 } else {

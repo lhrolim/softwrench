@@ -78,7 +78,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                     } catch (Exception e) {
                         if (options.GenerateProblems) {
                             var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
-                            var problem = _problemManager.Register(typeof(BatchItem).Name, "" + originalItem.Id,
+                            var problem = _problemManager.Register(typeof(BatchItem).Name, "" + originalItem.Id,null,
                                 problemDataMap, user.DBId, e.StackTrace, e.Message);
                             batch.Problems.Add(originalItem.RemoteId, problem);
                         } else {

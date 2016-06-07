@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using softWrench.sW4.Exceptions;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 

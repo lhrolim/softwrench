@@ -1,14 +1,17 @@
-﻿using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using System;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using softwrench.sw4.problem.classes;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Util;
+using softWrench.sW4.Exceptions;
+using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
@@ -17,19 +20,12 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
         private const string ISMTicketId = "ismticketid";
         private const string ISMTicketUid = "ismticketuid";
 
-        private IProblemManager _problemManager;
         private IMaximoHibernateDAO _maximoHibernateDAO;
 
         private IProblemManager ProblemManager {
             get {
-                if (_problemManager != null) {
-                    return _problemManager;
-                }
-                _problemManager = SimpleInjectorGenericFactory.Instance.GetObject<IProblemManager>(typeof(IProblemManager));
-                return _problemManager;
+                return SimpleInjectorGenericFactory.Instance.GetObject<IProblemManager>(typeof(IProblemManager));
             }
-
-
         }
 
         private IMaximoHibernateDAO MaximoDAO {
@@ -88,12 +84,32 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
                 crudOperationData.Id = ismTicketUid as string;
 
-                var mifOperationWrapper = new OperationWrapper(crudOperationData,
-                    OperationConstants.CRUD_UPDATE) {
-                    Wsprovider = WsProvider.REST
-                };
+                try {
+                    var mifOperationWrapper = new OperationWrapper(crudOperationData,
+                        OperationConstants.CRUD_UPDATE) {
+                        Wsprovider = WsProvider.REST
+                    };
+                    ConnectorEngine.Execute(mifOperationWrapper);
+                } catch (Exception e) {
 
-                ConnectorEngine.Execute(mifOperationWrapper);
+                    var schemaId = maximoTemplateData.ApplicationMetadata.Name == "servicerequest"
+                        ? "editdetail"
+                        : "quickeditdetail";
+
+                    ProblemManager.RegisterOrUpdateProblem(
+                        // ReSharper disable once PossibleInvalidOperationException
+                        SecurityFacade.CurrentUser().UserId.Value,
+                        Problem.BaseProblem(maximoTemplateData.ApplicationMetadata.Name, schemaId, crudOperationData.Id, crudOperationData.UserId, e.StackTrace, e.Message, "ismrestsync"),
+                        () => Problem.ByEntryAndType.Fmt(crudOperationData.Id, "servicerequest", "ismrestsync")
+                        );
+                    maximoTemplateData.ResultObject.WarningDto = new ErrorDto(e) {
+                        WarnMessage = "Failed to Sync ticket to ISM. An Error has been created"
+                    };
+                }
+
+
+
+
             }
         }
 
@@ -125,28 +141,52 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             crudOperationData.Id = null;
             crudOperationData.UserId = null;
 
-            //updating ISM instance using REST --> no ticketid, ticketuid, they would be generated out there
-            var operationWrapper = new OperationWrapper(crudOperationData,
-                OperationConstants.CRUD_CREATE) {
-                Wsprovider = WsProvider.REST
-            };
+            TargetResult restResult = null;
 
-            var restResult = ConnectorEngine.Execute(operationWrapper);
+            try {
+                //updating ISM instance using REST --> no ticketid, ticketuid, they would be generated out there
+                var operationWrapper = new OperationWrapper(crudOperationData,
+                    OperationConstants.CRUD_CREATE) {
+                    Wsprovider = WsProvider.REST
+                };
+                restResult = ConnectorEngine.Execute(operationWrapper);
+            } catch (Exception e) {
+
+                var schemaId = maximoTemplateData.ApplicationMetadata.Name == "servicerequest"
+                    ? "editdetail"
+                    : "quickeditdetail";
+
+                ProblemManager.RegisterOrUpdateProblem(
+                    // ReSharper disable once PossibleInvalidOperationException
+                    SecurityFacade.CurrentUser().UserId.Value,
+                    Problem.BaseProblem(maximoTemplateData.ApplicationMetadata.Name, schemaId, ticketOriginalData.TicketUId, ticketOriginalData.TicketId, e.StackTrace, e.Message, "ismrestsync"),
+                    () => Problem.ByEntryAndType.Fmt(ticketOriginalData.TicketUId, maximoTemplateData.ApplicationMetadata.Name, "ismrestsync")
+                    );
+                maximoTemplateData.ResultObject.WarningDto = new ErrorDto(e) {
+                    WarnMessage = "Failed to Sync ticket to ISM. An Error has been created"
+                };
+                return;
+            }
+
+            ProblemManager.DeleteProblems("servicerequest", ticketOriginalData.TicketUId, "ismrestsync");
+
 
             //updating local entry, reset the ticketids
 
-            crudOperationData.SetAttribute("ticketid", ticketOriginalData.Item1);
-            crudOperationData.SetAttribute("ticketuid", ticketOriginalData.Item2);
-            crudOperationData.SetAttribute("status", ticketOriginalData.Item3);
+            crudOperationData.SetAttribute("ticketid", ticketOriginalData.TicketId);
+            crudOperationData.SetAttribute("ticketuid", ticketOriginalData.TicketUId);
+            crudOperationData.SetAttribute("status", ticketOriginalData.Status);
 
 
-            
-            crudOperationData.Id = ticketOriginalData.Item1;
-            crudOperationData.UserId = ticketOriginalData.Item2;
+
+            crudOperationData.Id = ticketOriginalData.TicketUId;
+            crudOperationData.UserId = ticketOriginalData.TicketId;
 
 
             crudOperationData.SetAttribute(ISMTicketUid, restResult.Id);
             crudOperationData.SetAttribute(ISMTicketId, restResult.UserId);
+
+            crudOperationData.ClearRelationShips("ld_");
 
             var mifOperationWrapper = new OperationWrapper(crudOperationData,
                 OperationConstants.CRUD_UPDATE) {
@@ -162,19 +202,19 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
         /// <param name="crudOperationData"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        private Tuple<string, string, string> GetTicketOriginalData(CrudOperationData crudOperationData, TargetResult result) {
+        private TicketOriginalData GetTicketOriginalData(CrudOperationData crudOperationData, TargetResult result) {
             var originalTicketid = crudOperationData.GetAttribute("ticketid") as string;
             var originalTicketuid = crudOperationData.GetAttribute("ticketuid") as string;
             var status = crudOperationData.GetAttribute("status") as string;
             if (originalTicketid != null && originalTicketuid != null) {
-                return new Tuple<string, string, string>(originalTicketuid, originalTicketid, status);
+                return new TicketOriginalData(originalTicketuid, originalTicketid, status);
             }
 
             var originalSiteid = crudOperationData.GetAttribute("siteid");
             var ticketUid = result.Id;
             var ticketId = result.UserId;
             if (ticketUid != null && ticketId != null) {
-                return new Tuple<string, string, string>(ticketUid, ticketId, status);
+                return new TicketOriginalData(ticketUid, ticketId, status);
             }
 
 
@@ -184,9 +224,26 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             ticketUid = obj[0].ToString();
             result.Id = ticketUid;
 
-            return new Tuple<string, string, string>(ticketUid, ticketId, obj[1].ToString());
+            return new TicketOriginalData(ticketUid, ticketId, obj[1].ToString());
 
+        }
 
+        internal class TicketOriginalData {
+            internal string TicketUId {
+                get; set;
+            }
+            internal string TicketId {
+                get; set;
+            }
+            internal string Status {
+                get; set;
+            }
+
+            public TicketOriginalData(string ticketUId, string ticketId, string status) {
+                TicketUId = ticketUId;
+                TicketId = ticketId;
+                Status = status;
+            }
         }
 
     }

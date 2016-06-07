@@ -147,7 +147,7 @@
                 $scope.savefn({ selecteditem: selecteditem });
             };
 
-            $scope.$on('sw.crud.detail.savecompleted', function (event, modaldata) {
+            $scope.$on(JavascriptEventConstants.CrudSaved, function (event, modaldata) {
                 if ($scope.closeAfterSave) {
                     $scope.closeModal();
                 }

@@ -83,6 +83,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             _commlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 
             RelatedRecordHandler.HandleRelatedRecords(maximoTemplateData);
+            SolutionsHandler.HandleSolutions(crudData, sr);
 
             base.BeforeUpdate(maximoTemplateData);
         }

@@ -214,6 +214,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var response = _nextSchemaRouter.RedirectToNextSchema(routerParameters);
             response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult, operation);
+            response.WarningDto = maximoResult.WarningDto;
 
             // TODO: Implement some sort of interception
             if (true.Equals(applicationMetadata.AuditEnabled)) {

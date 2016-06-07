@@ -1,4 +1,5 @@
-﻿using softWrench.sW4.Metadata.Applications;
+﻿using softwrench.sw4.api.classes.integration;
+using softWrench.sW4.Metadata.Applications;
 
 namespace softWrench.sW4.Data.Persistence.WS.API {
  
@@ -8,6 +9,11 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         public string UserId { get; set; }
         public object ResultObject { get; set; }
         public string SuccessMessage { get; set; }
+        public string WarnMessage { get; set; }
+
+        public IErrorDto WarningDto { get; set; }
+
+
 
         public ApplicationMetadata NextApplication { get; set; }
 

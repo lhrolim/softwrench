@@ -604,11 +604,16 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get {
                 return SchemaId;
             }
+            set {
+                SchemaId = value;
+            }
         }
 
         public SchemaRepresentation NewSchemaRepresentation {
             get; set;
         }
+
+        public bool IgnoreCache { get; set; }
 
 
     }

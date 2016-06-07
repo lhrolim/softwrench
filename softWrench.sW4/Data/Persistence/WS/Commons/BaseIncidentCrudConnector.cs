@@ -62,7 +62,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             RelatedRecordHandler.HandleRelatedRecords(maximoTemplateData);
 
             // Update solution 
-            HandleSolutions(crudData, sr);
+            SolutionsHandler.HandleSolutions(crudData, sr);
             base.BeforeUpdate(maximoTemplateData);
         }
 
@@ -82,13 +82,5 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             base.BeforeCreation(maximoTemplateData);
         }
 
-        private void HandleSolutions(CrudOperationData crudDataEntity, object sr) {
-            var sympton = crudDataEntity.GetAttribute("symptom_.ldtext");
-            var cause = crudDataEntity.GetAttribute("cause_.ldtext");
-            var resolution = crudDataEntity.GetAttribute("resol_.ldtext");
-            w.SetValue(sr, "FR1CODE_LONGDESCRIPTION", cause);
-            w.SetValue(sr, "FR2CODE_LONGDESCRIPTION", resolution);
-            w.SetValue(sr, "PROBLEMCODE_LONGDESCRIPTION", sympton);
-        }
     }
 }
