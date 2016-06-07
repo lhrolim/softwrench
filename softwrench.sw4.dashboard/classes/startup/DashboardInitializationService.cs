@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using cts.commons.persistence;
 using cts.commons.persistence.Util;
 using cts.commons.simpleinjector;
 using softwrench.sw4.dashboard.classes.model.entities;
@@ -10,6 +9,7 @@ using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
+using WebGrease.Css.Extensions;
 
 namespace softwrench.sw4.dashboard.classes.startup {
     public class DashboardInitializationService : ISingletonComponent {
@@ -22,11 +22,14 @@ namespace softwrench.sw4.dashboard.classes.startup {
         }
 
         public bool DashBoardExists(string alias) {
-            var parameters = new ExpandoObject();
-            var parameterCollection = (ICollection<KeyValuePair<string, object>>)parameters;
-            parameterCollection.Add(new KeyValuePair<string, object>("alias", alias));
-
+            var parameters = FromDictionary(new Dictionary<string, object> { { "alias", alias } });
             var count = _dao.CountByNativeQuery("select count(id) from dash_dashboard where alias=:alias", parameters);
+            return count > 0;
+        }
+
+        public bool PanelExists(string alias) {
+            var parameters = FromDictionary(new Dictionary<string, object> { { "alias", alias } });
+            var count = _dao.CountByNativeQuery("select count(id) from dash_basepanel where alias_=:alias", parameters);
             return count > 0;
         }
 
@@ -109,6 +112,13 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     MetadataId = metadataId,
                 }
             });
+        }
+
+        private ExpandoObject FromDictionary(IDictionary<string, object> dict) {
+            var parameters = new ExpandoObject();
+            var parameterCollection = (ICollection<KeyValuePair<string, object>>)parameters;
+            dict.ForEach(e => parameterCollection.Add(e));
+            return parameters;
         }
 
         /// <summary>

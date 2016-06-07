@@ -10,6 +10,9 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration {
 
         protected static readonly ILog Log = LogManager.GetLogger(typeof(ChicagoChartInitializer));
 
+        private const string ChicagoSRDepartment = "chicago.sr.department";
+        private const string ChicagoSRTickettype = "chicago.sr.tickettype";
+
         private readonly DashboardInitializationService _service;
 
         public ChicagoChartInitializer(DashboardInitializationService service) {
@@ -25,15 +28,20 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration {
                 return;
             }
 
+            if (_service.PanelExists(ChicagoSRDepartment) || _service.PanelExists(ChicagoSRTickettype)) {
+                Log.Debug(string.Format("Chicago's widgets '{0}' '{1}' already exist. Skipping creation.", ChicagoSRDepartment, ChicagoSRTickettype));
+                return;
+            }
+
             var panels = new List<DashboardBasePanel> {
                 new DashboardGraphicPanel {
-                    Alias = "chicago.sr.department",
+                    Alias = ChicagoSRDepartment,
                     Title = "Service Requests by Department",
                     Size = 12,
                     Configuration = "application=sr;field=department;type=swRecordCountChart;limit=0;showothers=False"
                 },
                 new DashboardGraphicPanel {
-                    Alias = "chicago.sr.tickettype",
+                    Alias = ChicagoSRTickettype,
                     Title = "Service Requests by Ticket Type",
                     Size = 12,
                     Configuration = "application=sr;field=tickettype;type=swRecordCountChart;limit=0;showothers=False"

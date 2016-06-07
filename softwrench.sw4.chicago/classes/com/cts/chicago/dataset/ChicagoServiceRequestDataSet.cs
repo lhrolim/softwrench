@@ -1,13 +1,7 @@
-﻿using System.Text;
-using cts.commons.persistence;
-using cts.commons.portable.Util;
-using softWrench.sW4.Data.API;
-using softWrench.sW4.Data.API.Response;
+﻿using cts.commons.persistence;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
 using softWrench.sW4.Data.Search;
-using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
-using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
     class ChicagoServiceRequestDataSet : BaseServiceRequestDataSet {

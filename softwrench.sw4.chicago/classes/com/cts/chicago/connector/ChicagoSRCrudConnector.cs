@@ -4,16 +4,10 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Net;
 using cts.commons.persistence;
-using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using softwrench.sw4.problem.classes;
 using softWrench.sW4.Data.Persistence.WS.API;
-using softWrench.sW4.Metadata;
-using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
