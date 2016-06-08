@@ -123,6 +123,7 @@
             exception.type = data.errorType || data.exceptionType;
             exception.outline = data.outlineInformation;
             exception.stack = data.errorStack || (data.fullStack || data.stackTrace);
+            exception.message = message;
             return exception;
         };
 
@@ -138,7 +139,7 @@
             //get the message data
             const message = data.errorMessage || data.exceptionMessage;
             const exception = this.buildException(data);
-            notificationViewModel.createNotification('error', null, message, exception.type, exception.outline, exception.stack);
+            notificationViewModel.createNotification('error', null, exception.message, exception.type, exception.outline, exception.stack);
         };
 
         const notifyWarning = function (data) {
@@ -153,7 +154,9 @@
             if (data.successMessage) {
                 this.notifymessage('success', data.successMessage);
             }
-            notificationViewModel.createNotification('warning', null, message, exception.type, exception.outline, exception.stack);
+
+
+            notificationViewModel.createNotification('warning', null, message, exception.type, exception.message, exception.stack);
         };
 
         const service = {
