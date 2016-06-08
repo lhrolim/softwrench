@@ -24,6 +24,8 @@
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
         <attribute name="outageduration" type="float" required="false"/>
+        <attribute name="creationdate" type="datetime" required="false"/>
+        <attribute name="pluspcustomer" type="varchar" required="false"/>
         <attribute name="externalsystem" type="varchar" required="true"/>
         <attribute name="classificationid" type="varchar" required="true"/>
         <attribute name="itdclosedate" type="datetime" required="false"/>
