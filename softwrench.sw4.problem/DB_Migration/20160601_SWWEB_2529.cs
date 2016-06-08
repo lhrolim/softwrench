@@ -7,9 +7,9 @@ namespace softWrench.sW4.Web.DB_Migration._4._2._0 {
     public class Migration20160601SWWEB2529 : Migration {
 
         public override void Up() {
-            Alter.Table("PROB_PROBLEM").AddColumn("Problemtype").AsString(MigrationUtil.StringSmall);
-            Alter.Table("PROB_PROBLEM").AddColumn("recorduserid").AsString(MigrationUtil.StringSmall);
-            Alter.Table("PROB_PROBLEM").AddColumn("recordschema").AsString(MigrationUtil.StringSmall);
+            Alter.Table("PROB_PROBLEM").AddColumn("Problemtype").AsString(MigrationUtil.StringSmall).Nullable();
+            Alter.Table("PROB_PROBLEM").AddColumn("recorduserid").AsString(MigrationUtil.StringSmall).Nullable();
+            Alter.Table("PROB_PROBLEM").AddColumn("recordschema").AsString(MigrationUtil.StringSmall).Nullable();
         }
 
         public override void Down() {
