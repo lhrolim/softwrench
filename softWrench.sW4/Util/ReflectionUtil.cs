@@ -242,15 +242,22 @@ namespace softWrench.sW4.Util {
         /// <param name="propertyName"></param>
         /// <param name="markAsExclusive"></param>
         /// <returns></returns>
-        public static object InstantiateSingleElementFromArray(object baseObject, string propertyName, bool markAsInline=false) {
+        public static object InstantiateSingleElementFromArray(object baseObject, string propertyName, bool markAsInline = false) {
             if (baseObject == null) {
                 return null;
             }
             if (baseObject is IRestObjectWrapper) {
                 var wrapper = (IRestObjectWrapper)baseObject;
+                if (wrapper.Entries.ContainsKey(propertyName)) {
+                    //this happens on a composition inside of a composition scenario, where we need to keep the original array, just appending a new entry on top of it
+                    var internalComposedData = wrapper.Entries[propertyName] as RestComposedData;
+                    if (internalComposedData != null) {
+                        return internalComposedData.AddComposedData(null, propertyName);
+                    }
+                }
                 var restComposedData = new RestComposedData(markAsInline);
                 wrapper.AddEntry(propertyName, restComposedData);
-                return restComposedData.AddComposedData(null, 1, propertyName);
+                return restComposedData.AddComposedData(null, propertyName);
             }
 
             var prop = TypeDescriptor.GetProperties(baseObject)[propertyName];

@@ -16,7 +16,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
         }
 
         public void AddEntry(string key, object value) {
-            _entries.Add(key, value);
+            if (!_entries.ContainsKey(key)){
+                _entries.Add(key, value);
+            }
         }
 
         

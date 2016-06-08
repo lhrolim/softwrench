@@ -26,7 +26,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
         }
 
 
-        public InternalRestComposedData AddComposedData(CrudOperationData relatedData, int idx, string relationship) {
+        public InternalRestComposedData AddComposedData(CrudOperationData relatedData, string relationship) {
+            var idx = _composedDataCollection.Count + 1;
             var item = new InternalRestComposedData(relatedData, idx, relationship);
             _composedDataCollection.Add(item);
             return item;

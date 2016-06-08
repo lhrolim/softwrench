@@ -260,7 +260,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
                 for (var i = 0; i < crudOperationDatas.Count(); i++) {
                     var crudOperationData = crudOperationDatas[i];
-                    var cloneFromEntity = composedData.AddComposedData(crudOperationData, i, propertyName);
+                    var cloneFromEntity = composedData.AddComposedData(crudOperationData, propertyName);
                     if (itemHandlerDelegate != null) {
                         itemHandlerDelegate(cloneFromEntity, crudOperationData);
                     }

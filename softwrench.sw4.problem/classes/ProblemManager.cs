@@ -31,17 +31,10 @@ namespace softwrench.sw4.problem.classes {
             Problem resultingProblem = null;
             IProblemHandler handler = null;
             if (existingProblem != null) {
-                existingProblem.CreatedBy = currentUser;
-                existingProblem.CreatedDate = DateTime.Now;
-                resultingProblem = _swdbHibernateDAO.Save(existingProblem);
-                handler = _problemHandlerLookuper.FindHandler(problem.ProblemType, problem.RecordType);
-                if (handler != null) {
-                    handler.OnProblemRegister(resultingProblem);
-                }
-                return resultingProblem;
+                problem.Id = existingProblem.Id;
             }
             problem.CreatedBy = currentUser;
-            resultingProblem  = _swdbHibernateDAO.Save(problem);
+            resultingProblem = _swdbHibernateDAO.Save(problem);
             handler = _problemHandlerLookuper.FindHandler(problem.ProblemType, problem.RecordType);
             if (handler != null) {
                 handler.OnProblemRegister(resultingProblem);
