@@ -93,7 +93,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
 
                 var attachments = GetAttachments(crudData, maximoTemplateData.ApplicationMetadata, entity);
-                if(!crudData.ContainsAttribute("underwaycall",true)) {
+                if(!entity.ContainsAttribute("underwaycall",true)) {
                     //to avoid sending emails twice
                     maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, attachments));
                 }
