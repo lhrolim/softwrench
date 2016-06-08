@@ -83,7 +83,7 @@
                     dateFormat = field.rendererParameters['format'];
                     if (dateFormat == null) {
                         //TODO: make default client specific
-                        dateFormat = "MM/dd/yyyy hh:mm";
+                        dateFormat = "MM/dd/yyyy HH:mm";
                     }
                     return doFormatDate(value, dateFormat, false);
                 }
