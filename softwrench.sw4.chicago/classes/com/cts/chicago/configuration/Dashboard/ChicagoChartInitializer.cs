@@ -5,15 +5,18 @@ using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.dashboard.classes.startup;
 using softWrench.sW4.Util;
 
-namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration {
+namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Dashboard {
     public class ChicagoChartInitializer : ISWEventListener<ApplicationStartedEvent> {
 
         protected static readonly ILog Log = LogManager.GetLogger(typeof(ChicagoChartInitializer));
 
         private const string ChicagoSRDepartment = "chicago.sr.department";
         private const string ChicagoSRTickettype = "chicago.sr.tickettype";
+        private const string ChicagoSRDailyTickets = "chicago.sr.dailytickets";
 
         private readonly DashboardInitializationService _service;
+
+
 
         public ChicagoChartInitializer(DashboardInitializationService service) {
             _service = service;
@@ -45,13 +48,24 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration {
                     Title = "Service Requests by Ticket Type",
                     Size = 12,
                     Configuration = "application=sr;field=tickettype;type=swRecordCountChart;limit=0;showothers=False"
-                }
-            };
+                },
+                  new DashboardGraphicPanel() {
+                    Alias = ChicagoSRDailyTickets,
+                    Title = "Numbers of Opened Sr for current month",
+                    Size = 12,
+                    Configuration = "application=sr;field=day;type=swRecordCountChart;limit=0;showothers=False;keepServerSort=true"
+                },
 
+            };
+            _service.RegisterWhereClause("servicerequest", "@chicagoDashBoardWhereClausedProvider.GetTicketCountQuery", "SROpenedDaily", "dashboard:sr.dailytickets");
             _service.AddPanelsToDashboard(srDashboard, panels);
 
         }
 
-        public int Order { get { return ChartInitializer.ORDER + 1; } }
+        public int Order {
+            get {
+                return ChartInitializer.ORDER + 1;
+            }
+        }
     }
 }

@@ -48,10 +48,15 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 order by countBy desc",
             ctes.FIELD_VALUE_VARIABLE_NAME, ctes.FIELD_LABEL_VARIABLE_NAME, ctes.CONTEXT_FILTER_VARIABLE_NAME);
 
+   
 
         private readonly DashboardInitializationService _service;
 
-        public int Order { get { return ORDER; } }
+        public int Order {
+            get {
+                return ORDER;
+            }
+        }
 
         public ChartInitializer(DashboardInitializationService service) {
             _service = service;
@@ -65,13 +70,15 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 ExecuteSRChartInitialization();
             }
 
-            _service.RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE,      "WOOpenCloseDashBoardGauge",  "dashboard:wo.status.openclosed.gauge");
-            _service.RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE,      "WOOpenCloseDashBoardPie",    "dashboard:wo.status.openclosed");
-            _service.RegisterWhereClause("workorder", WO_STATUS_WHERECLAUSE_COMPLETE_QUERY,  "WOStatusDashboardQuery",     "dashboard:wo.status.top5");
+            _service.RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, "WOOpenCloseDashBoardGauge", "dashboard:wo.status.openclosed.gauge");
+            _service.RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, "WOOpenCloseDashBoardPie", "dashboard:wo.status.openclosed");
+            _service.RegisterWhereClause("workorder", WO_STATUS_WHERECLAUSE_COMPLETE_QUERY, "WOStatusDashboardQuery", "dashboard:wo.status.top5");
 
-            _service.RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQuery",     "dashboard:sr.status.top5");
+            _service.RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQuery", "dashboard:sr.status.top5");
             _service.RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryLine", "dashboard:sr.status.line");
-            _service.RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryPie",  "dashboard:sr.status.pie");
+            _service.RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryPie", "dashboard:sr.status.pie");
+
+            
         }
 
         #region SR Charts
@@ -112,6 +119,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     Size = 3,
                     Configuration = "application=sr;field=status;type=swRecordCountPie;statusfieldconfig=openclosed;limit=0;showothers=False;options={'series': {'type': 'doughnut'}, 'swChartsAddons': {'addPiePercentageTooltips': true}}"
                 },
+              
                 new DashboardGridPanel() {
                     Alias = "sr.grid",
                     Title = "Service Requests",
@@ -121,10 +129,11 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     SchemaRef = "list",
                     Limit = 15,
                     Size = 12
-                }
+                },
+
             };
 
-            return _service.CreateDashboard(SrChartDashboardTitle,SrChartDashboardAlias, panels);
+            return _service.CreateDashboard(SrChartDashboardTitle, SrChartDashboardAlias, panels);
         }
 
         #endregion

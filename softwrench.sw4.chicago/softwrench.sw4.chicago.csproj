@@ -42,8 +42,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="classes\com\cts\chicago\configuration\ChicagoChartInitializer.cs" />
+    <Compile Include="classes\com\cts\chicago\configuration\Dashboard\ChicagoChartInitializer.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\ChicagoConfigurationSetup.cs" />
+    <Compile Include="classes\com\cts\chicago\configuration\Dashboard\ChicagoDashBoarWhereClausedProvider.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\QuickSrChicagoISMProblemHandler.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\ChicagoISMProblemHandler.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\UserDepartmentFetcher.cs" />
