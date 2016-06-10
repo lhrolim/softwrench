@@ -728,7 +728,7 @@
         <attribute name="reportedpriority" type="int" required="false" />
         <attribute name="reportedversion" type="varchar" required="false" />
         <attribute name="responseslo" type="smallint" required="true" />
-        <attribute name="rigname " type="varchar" required="false" />
+        <attribute name="rigname" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="selfservsolaccess" type="smallint" required="true" />
         <attribute name="servicecompanytype" type="varchar" required="false" />
