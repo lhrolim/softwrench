@@ -1,0 +1,1 @@
+﻿var chicagomod = angular.module('chicago', ['sw_layout']);

@@ -61,7 +61,7 @@
                         }, 0, false);
                     });
 
-                    $scope.reloadGraphic = $window.debounce(function() {
+                    $scope.reloadGraphic = $window.debounce(()=> {
                         $($scope.data.container).empty();
                         $scope.loadGraphic();
                     }, 500, true);

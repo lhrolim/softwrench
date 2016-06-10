@@ -1,0 +1,45 @@
+﻿(function (angular) {
+    "use strict";
+
+    function chicagoChartService(searchService,formatService) {
+        //#region Utils
+
+        //#endregion
+
+        //#region Public methods
+
+        function dailyopenedTicketsClicked(chartClickParams) {
+            const originalDaySelected = chartClickParams.fieldValue;
+
+            const beginDate = new Date();
+            beginDate.setDate(originalDaySelected);
+            const beginDateString = formatService.formatDate(beginDate, "dd/MM/yyyy");
+
+            const searchData = {
+                ["creationdate"]: beginDateString,
+                ["creationdate_end"]: beginDateString,
+            };
+            const searchOperator = {
+                ["creationdate"]: searchService.getSearchOperationById("BTW")
+            };
+            return searchService.buildSearchDTO(searchData, null, searchOperator);
+        }
+
+        //#endregion
+
+        //#region Service Instance
+        const service = {
+            dailyopenedTicketsClicked,
+        };
+        return service;
+        //#endregion
+    }
+
+    //#region Service registration
+
+    angular.module('chicago')
+      .clientfactory('chicagoChartService', ["searchService", "formatService", chicagoChartService]);
+
+    //#endregion
+
+})(angular);

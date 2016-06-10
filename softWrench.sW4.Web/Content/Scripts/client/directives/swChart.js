@@ -1,7 +1,17 @@
 ﻿(function (angular, app) {
     "use strict";
 
-    app.directive("swChart", ["contextService", "chartService", "$log", "redirectService", "searchService", "$timeout", function (contextService, chartService, $log, redirectService, searchService, $timeout) {
+    app.directive("swChart", ["contextService", "chartService", "$log", "redirectService", "searchService", "$timeout", "dispatcherService", function (contextService, chartService, $log, redirectService, searchService, $timeout, dispatcherService) {
+
+        class chartClickParams {
+            constructor(originalDto, fieldName, fieldValue) {
+                /*original search dto that has been built upon the chart click, for loading its details */
+                this.originalDto = originalDto;
+                this.fieldName = fieldName;
+                this.fieldValue = fieldValue;
+            }
+        }
+
 
         return {
             restrict: "E",
@@ -13,13 +23,11 @@
                 panel: "=" // DashboardGraphicPanel entity
             },
             link: function (scope, element, attrs) {
-                scope.vm = { };
+                scope.vm = {};
                 scope.vm.labeloptions = {};
 
-                function goToFilteredGrid(application, fieldName, fieldValue) {
-                    var appName = application.equalsIc("sr") ? "servicerequest" : application;
-
-                    // open: search for 'not closed' --> !C('CLOSE')
+                function goToFilteredGrid(application, fieldName, fieldValue, clickDtoProvider) {
+                    const appName = application.equalsIc("sr") ? "servicerequest" : application; // open: search for 'not closed' --> !C('CLOSE')
                     // others: search for 'is not equal to all other entries' --> !=(<comma_separated_other_entries_values>)
                     // regular: search for 'is equal to value' --> =(fieldValue)
                     var searchDataValue, searchOperation;
@@ -38,42 +46,41 @@
                         searchDataValue = fieldValue.equalsIc("null") ? "nullor:" : fieldValue;
                         searchOperation = searchService.getSearchOperationBySymbol("=");
                     }
-
-                    var searchData = {};
-                    searchData[fieldName] = searchDataValue;
-                    var searchOperator = {};
-                    searchOperator[fieldName] = searchOperation;
-
-                    var searchDTO = searchService.buildSearchDTO(searchData, null, searchOperator);
-
-                    return redirectService.goToApplication(appName, "list", { 'SearchDTO' : searchDTO  });
+                    const searchData = {
+                        [fieldName]: searchDataValue
+                    };
+                    const searchOperator = {
+                        [fieldName] : searchOperation
+                    };
+                    let searchDTO = searchService.buildSearchDTO(searchData, null, searchOperator);
+                    if (clickDtoProvider) {
+                        searchDTO = dispatcherService.invokeServiceByString(clickDtoProvider, [new chartClickParams(searchDTO, fieldName, fieldValue)]);
+                    }
+                    return redirectService.goToApplication(appName, "list", { 'SearchDTO': searchDTO });
                 }
 
                 //#region user insteraction
                 function onChartClick(event) {
-
-                    var application = scope.panel.configurationDictionary.application;
-                    var fieldName = scope.panel.configurationDictionary.field;
-                    var target = event.target;
+                    let configurationDictionary = scope.panel.configurationDictionary;
+                    const application = configurationDictionary.application;
+                    const fieldName = configurationDictionary.field;
+                    const target = event.target;
                     var fieldLabel = angular.isString(target) || angular.isNumber(target) // clicked on legend
                                         ? target
                                         // clicked on chart point
                                         : target.argument;
                     // get actual value from label
-                    var fieldValue = scope.data.find(function(e) { return e.entry.fieldLabel === fieldLabel; }).entry.fieldValue;
-
-                    var log = $log.get("swChart#onChartClick", ["chart", "dashboard"]);
+                    const fieldValue = scope.data.find(function (e) { return e.entry.fieldLabel === fieldLabel; }).entry.fieldValue;
+                    const log = $log.get("swChart#onChartClick", ["chart", "dashboard"]);
                     log.debug("clicked: [application: {0}, fieldName: {1}, fieldValue: {2}, fieldLabel: {3}]".format(application, fieldName, fieldValue, fieldLabel));
 
-                    goToFilteredGrid(application, fieldName, fieldValue);
+                    goToFilteredGrid(application, fieldName, fieldValue, configurationDictionary.clickDtoProvider);
                 }
                 //#endregion
 
                 function init() {
                     //get the default options
-                    var chartOptions = chartService.getChartOptions(scope.chartType, scope.options, scope.data);
-
-                    //launch the correct chart
+                    const chartOptions = chartService.getChartOptions(scope.chartType, scope.options, scope.data); //launch the correct chart
                     switch (scope.chartType) {
                         case "dxChart":
                         case "swRecordCountChart":

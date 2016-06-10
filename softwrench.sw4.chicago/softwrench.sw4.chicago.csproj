@@ -59,6 +59,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <Content Include="auditchangedby.sql" />
+    <Content Include="web_content\chicago\scripts\aaa_chicagomodule.js" />
+    <Content Include="web_content\chicago\scripts\chicago_chart_service.js" />
     <Content Include="web_content\chicago\scripts\chicagosr_service.js" />
     <EmbeddedResource Include="metadata\chicago\properties.xml">
       <SubType>Designer</SubType>

@@ -267,13 +267,13 @@
 
         //#region Service Instance
         const service = {
-            loadGraphic: loadGraphic,
-            resizeGraphic: resizeGraphic,
-            onProviderSelected: onProviderSelected,
-            onBeforeAssociatePanel: onBeforeAssociatePanel,
-            onApplicationSelected: onApplicationSelected,
-            onDashboardSelected: onDashboardSelected,
-            filterSelectableApplications: filterSelectableApplications
+            loadGraphic,
+            resizeGraphic,
+            onProviderSelected,
+            onBeforeAssociatePanel,
+            onApplicationSelected,
+            onDashboardSelected,
+            filterSelectableApplications
         };
         return service;
         //#endregion
