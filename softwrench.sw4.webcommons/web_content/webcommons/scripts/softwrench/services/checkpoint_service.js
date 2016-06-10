@@ -26,20 +26,17 @@
                 if (gridData.vm) {
                     quickserarchDTO = gridData.vm.quickSearchDTO;
                 }
-                var searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quickserarchDTO);
-
+                const searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quickserarchDTO);
                 this.createGridCheckpoint(schema, searchDTO);
 
             };
 
             function createGridCheckpoint(schema, searchDTO) {
-                var applicationKey = schema.applicationName + "." + schema.schemaId;
-
-                var checkpointData = {
+                const applicationKey = schema.applicationName + "." + schema.schemaId;
+                const checkpointData = {
                     listContext: searchDTO,
                     applicationKey: applicationKey
-                }
-
+                };
                 var currentCheckpointItem = contextService.fetchFromContext('checkpointdata', true, false, false);
                 if (!currentCheckpointItem) {
                     currentCheckpointItem = {};
@@ -50,20 +47,19 @@
             };
 
             function fetchCheckpoint(applicationKey) {
-                var checkPointArray = this.fetchAllCheckpointInfo();
+                const checkPointArray = this.fetchAllCheckpointInfo();
                 return checkPointArray.firstOrDefault(function(item) {
                     return item.applicationKey === applicationKey;
                 });
             }
 
             function fetchAllCheckpointInfo() {
-                var checkPointItem = contextService.fetchFromContext('checkpointdata', true, false, false);
+                const checkPointItem = contextService.fetchFromContext('checkpointdata', true, false, false);
                 if (checkPointItem == null) {
                     return [];
                 }
-                var result = [];
-                //converting to array before sending to the server
-                for (var item in checkPointItem) {
+                const result = []; //converting to array before sending to the server
+                for (let item in checkPointItem) {
                     if (!checkPointItem.hasOwnProperty(item)) {
                         continue;
                     }
@@ -77,15 +73,13 @@
                 contextService.deleteFromContext('checkpointdata');
             }
 
-
-            var api = {
-                createGridCheckpointFromGridData: createGridCheckpointFromGridData,
-                createGridCheckpoint: createGridCheckpoint,
-                fetchAllCheckpointInfo: fetchAllCheckpointInfo,
-                fetchCheckpoint: fetchCheckpoint,
-                clearCheckpoints: clearCheckpoints
-            }
-
+            const api = {
+                createGridCheckpointFromGridData,
+                createGridCheckpoint,
+                fetchAllCheckpointInfo,
+                fetchCheckpoint,
+                clearCheckpoints
+            };
             return api;
 
         }]);

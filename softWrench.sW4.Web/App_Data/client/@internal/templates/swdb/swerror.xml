@@ -8,7 +8,7 @@
       </attributes>
     </entity>
   </entities>
-  
+
   <applications>
 
     <application name="SoftwrenchError" entity="Problem" title="Softwrench Error">
@@ -18,7 +18,7 @@
           <field attribute="recordtype" label="Application"/>
           <field attribute="recorduserid" label="Record ID"/>
           <field attribute="problemtype" label="Problem Type"/>
-          
+
           <field attribute="createddate" label="Error Date">
             <renderer type="datetime"/>
           </field>
@@ -30,6 +30,7 @@
           <properties>
             <property key="list.defaultorderby" value="createddate desc"/>
           </properties>
+          <event type="onschemafullyloaded" service="problemService" method="onListLoad" />
         </schema>
 
         <schema id="detail" stereotype="detail" mode="input" title="Softwrench Error Detail">
@@ -53,8 +54,8 @@
           </commandbars>
         </schema>
 
-        
-        
+
+
       </schemas>
     </application>
 

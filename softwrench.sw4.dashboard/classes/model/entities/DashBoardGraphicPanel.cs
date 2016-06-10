@@ -40,7 +40,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
             }
             set {
                 if (string.IsNullOrEmpty(value)) return;
-                value.Split(';')
+                value.Split(';').Where(s => !string.IsNullOrEmpty(s))
                     .Select(config => {
                         var entry = config.Split('=');
                         var entryKey = entry[0];

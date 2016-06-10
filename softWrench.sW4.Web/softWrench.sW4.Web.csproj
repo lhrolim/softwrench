@@ -467,7 +467,9 @@
     <Content Include="App_Data\Client\%40internal\templates\swdb\dashboard.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Data\Client\%40internal\templates\swdb\swerror.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\swdb\swerror.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\swdb\configuration.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -578,6 +580,7 @@
     <Content Include="Content\Scripts\automationscripts\StartWF.js" />
     <Content Include="Content\Scripts\automationscripts\OSIN.SWWO.js" />
     <Content Include="Content\Scripts\client\adminresources\adminmodule_setup.js" />
+    <Content Include="Content\Scripts\client\adminresources\problemService.js" />
     <Content Include="Content\Scripts\client\crud\composition_masterdetails.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_dropdown.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_multioptions.js" />

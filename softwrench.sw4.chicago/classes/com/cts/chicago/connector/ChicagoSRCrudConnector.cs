@@ -74,7 +74,11 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             if (!crudOperationData.ContainsAttribute(ISMTicketUid, true)) {
                 //instance already existed on service layer but not on ISM
                 AfterCreation(maximoTemplateData);
-            } else {
+            } else
+            {
+                var originalTicketUid = crudOperationData.Id;
+                var originalTicketid = crudOperationData.UserId;
+
                 //updating ISM Entry which already exists
                 var ismTicketUid = crudOperationData.GetAttribute(ISMTicketUid);
                 crudOperationData.SetAttribute("ticketuid", ismTicketUid);
@@ -99,8 +103,8 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
                     ProblemManager.RegisterOrUpdateProblem(
                         // ReSharper disable once PossibleInvalidOperationException
                         SecurityFacade.CurrentUser().UserId.Value,
-                        Problem.BaseProblem(maximoTemplateData.ApplicationMetadata.Name, schemaId, crudOperationData.Id, crudOperationData.UserId, e.StackTrace, e.Message, "ismrestsync"),
-                        () => Problem.ByEntryAndType.Fmt(crudOperationData.Id, "servicerequest", "ismrestsync")
+                        Problem.BaseProblem(maximoTemplateData.ApplicationMetadata.Name, schemaId, originalTicketUid, originalTicketid, e.StackTrace, e.Message, "ismrestsync"),
+                        () => Problem.ByEntryAndType.Fmt(originalTicketUid, "servicerequest", "ismrestsync")
                         );
                     maximoTemplateData.ResultObject.WarningDto = new ErrorDto(e) {
                         WarnMessage = "Failed to Sync ticket to ISM. An Error has been created"

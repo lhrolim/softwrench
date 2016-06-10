@@ -32,7 +32,8 @@
                 }
 
                 // covers a redirect for same application and schema but to another entry
-                $rootScope.$on("sw_applicationrendered", function () {
+                $rootScope.$on("sw_applicationrendered", function (event,applicationName, renderedSchema) {
+                    scope.schema = renderedSchema;
                     $rootScope.$broadcast("sw_alltabsloaded", null, scope.panelid);
                 });
 
@@ -153,7 +154,7 @@
                 });
 
                 $scope.$on("sw_alltabsloaded", function (event, firstTabId, panelId) {
-                    if ($scope.panelid !== panelId) {
+                    if ($scope.panelid !== panelId || (!schemaService.areTheSame($scope.schema, crudContextHolderService.currentSchema()))) {
                         return;
                     }
                     $scope.allTabsLoaded(event, firstTabId);

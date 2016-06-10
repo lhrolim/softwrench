@@ -24,7 +24,12 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
             var doLoad = function() {
                 scope.compositionschemadefinition = scope.metadata.schema;
                 scope.compositiondata = scope.parentdata[scope.metadata.relationship];
-                scope.parentdata = { id:scope.parentdata.id, fields: scope.parentdata };
+                // TODO: Find a better fix for this other than checking if the parent data is empty.
+                //       The configuration screen does not have the parent data when loaded so we need to instantiate it.
+                //       The labor reporting on the other had already has the parent data with the #laborlist_ on it which is not present on this parent data.
+                if (jQuery.isEmptyObject(scope.parentdata)) {
+                    scope.parentdata = { id:scope.parentdata.id, fields: scope.parentdata };
+                }
                 element.append(
                     "<inline-composition-list parentdata='parentdata' parentschema='parentschema'" +
                     "metadata='metadata' iscollection='iscollection' compositionschemadefinition='compositionschemadefinition' compositiondata='compositiondata' mode='mode' ismodal='ismodal'/>"
