@@ -53,7 +53,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Dashboard
                     Alias = ChicagoSRDailyTickets,
                     Title = "Numbers of Opened Sr for current month",
                     Size = 12,
-                    Configuration = "application=sr;field=day;type=swRecordCountChart;limit=0;showothers=False;keepServerSort=true"
+                    Configuration = "application=sr;field=day;type=swRecordCountChart;limit=0;showothers=False;keepServerSort=true;options={'argumentAxis':{'title':{'text': 'Days' }}}"
                 },
 
             };
