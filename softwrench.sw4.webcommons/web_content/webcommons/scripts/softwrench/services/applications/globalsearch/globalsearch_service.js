@@ -5,19 +5,18 @@
     function globalSearchService($rootScope, redirectService, contextService, checkpointService) {
 
         function listClick(datamap, schema) {
-            var detail = datamap["appschema"];
-            var mode = 'input';
-            var param = {};
+            const detail = datamap["appschema"];
+            const mode = 'input';
+            const param = {};
             param.id = datamap['recordid'];
-            var application = datamap['appname'];
+            const application = datamap['appname'];
             contextService.insertIntoContext('detail.cancel.click', 'globalsearch.list', null);
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
         }
 
-        var service = {
+        const service = {
             listClick: listClick
         };
-
         return service;
     }
 

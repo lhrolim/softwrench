@@ -101,7 +101,7 @@
 
     window.parseBooleanValue = parseBooleanValue;
 
-    app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
+    app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,eventService,
     fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService, classificationColorService, priorityService) {
         "ngInject";
 
@@ -495,6 +495,7 @@
                 scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
                     if (panelid === scope.panelid) {
                         scope.refreshGrid(datamap, schema);
+                        eventService.dispatchEvent(schema, "onschemafullyloaded");
                     }
                 });
 

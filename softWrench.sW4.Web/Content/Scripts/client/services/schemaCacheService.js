@@ -69,7 +69,7 @@
         }
 
         function addSchemaToCache(schema) {
-            if (!schema) return;
+            if (!schema || !!schema.ignoreCache) return;
 
             var log = $log.get("schemaCacheService#addSchemaToCache", ["performance"]);
 
