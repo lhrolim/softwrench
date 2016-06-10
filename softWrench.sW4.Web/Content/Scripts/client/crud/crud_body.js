@@ -154,7 +154,7 @@
                 });
 
                 $scope.$on("sw_alltabsloaded", function (event, firstTabId, panelId) {
-                    if ($scope.panelid !== panelId || (!schemaService.areTheSame($scope.schema,crudContextHolderService.currentSchema))) {
+                    if ($scope.panelid !== panelId || (!schemaService.areTheSame($scope.schema, crudContextHolderService.currentSchema()))) {
                         return;
                     }
                     $scope.allTabsLoaded(event, firstTabId);
