@@ -901,6 +901,7 @@
     <Content Include="Content\styles\default\_header.scss" />
     <Content Include="Content\styles\default\_page-signin.scss" />
     <Content Include="Content\styles\default\styles.scss" />
+    <Content Include="JMeter Users.jmx" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
