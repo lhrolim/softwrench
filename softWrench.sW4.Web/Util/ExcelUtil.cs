@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml.Spreadsheet;
 using softWrench.sW4.Data.API.Response;
@@ -14,6 +15,9 @@ using SpreadsheetLight;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using System.Text.RegularExpressions;
+using System.Web.Mvc;
+using cts.commons.portable.Util;
+using CompressionUtil = cts.commons.Util.CompressionUtil;
 
 namespace softWrench.sW4.Web.Util {
     public class ExcelUtil : ISingletonComponent {
@@ -26,12 +30,11 @@ namespace softWrench.sW4.Web.Util {
 
         private readonly StatusColorResolver _statusColorsService;
 
-        public ExcelUtil(I18NResolver i18NResolver, IContextLookuper contextLookuper, StatusColorResolver statusColorsService)
-        {
+        public ExcelUtil(I18NResolver i18NResolver, IContextLookuper contextLookuper, StatusColorResolver statusColorsService) {
             _i18NResolver = i18NResolver;
             _contextLookuper = contextLookuper;
             _statusColorsService = statusColorsService;
-            
+
             // setup style dictionary for back colors
             // 2 = red, 3 = green, 4 = yellow, 5 = orange, 6 = blue, 7 = white
             _cellStyleDictionary = new Dictionary<string, string>{
@@ -43,18 +46,17 @@ namespace softWrench.sW4.Web.Util {
                 {"white", "7"}
             };
         }
-            
 
-        public SLDocument ConvertGridToExcel(string application, ApplicationMetadataSchemaKey key, ApplicationListResult result, InMemoryUser user)
-        {
+    
+
+        public SLDocument ConvertGridToExcel(string application, ApplicationListResult result, InMemoryUser user) {
             {
-                var colorStatusDict = _statusColorsService.GetColorsAsDict(application) != null ? _statusColorsService.GetColorsAsDict(application) : _statusColorsService.GetDefaultColorsAsDict() ;
+                var colorStatusDict = _statusColorsService.GetColorsAsDict(application) ?? _statusColorsService.GetDefaultColorsAsDict();
 
                 var schema = result.Schema;
                 IEnumerable<ApplicationFieldDefinition> applicationFields = schema.Fields;
                 using (var ms = new System.IO.MemoryStream())
-                using (var xl = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))
-                {
+                using (var xl = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook)) {
                     // attributes of elements
                     // the xml writer
 
@@ -98,8 +100,7 @@ namespace softWrench.sW4.Web.Util {
                     rowIdx++;
 
                     // write data rows
-                    foreach (var item in result.ResultObject)
-                    {
+                    foreach (var item in result.ResultObject) {
                         var attributes = item.Attributes;
 
                         // create new row
@@ -107,12 +108,10 @@ namespace softWrench.sW4.Web.Util {
                         writer.WriteStartElement(new Row(), xmlAttributes);
 
                         var nonHiddenFields = applicationFields.Where(ShouldShowField());
-                        foreach (var applicationField in nonHiddenFields)
-                        {
+                        foreach (var applicationField in nonHiddenFields) {
                             object dataAux;
                             attributes.TryGetValue(applicationField.Attribute, out dataAux);
-                            if (dataAux == null && applicationField.Attribute.StartsWith("#") && Char.IsNumber(applicationField.Attribute[1]))
-                            {
+                            if (dataAux == null && applicationField.Attribute.StartsWith("#") && Char.IsNumber(applicationField.Attribute[1])) {
                                 attributes.TryGetValue(applicationField.Attribute.Substring(2), out dataAux);
                             }
 
@@ -123,25 +122,19 @@ namespace softWrench.sW4.Web.Util {
 
                             // that's the default style
                             var styleId = "1";
-                            if (applicationField.Attribute.Contains("status"))
-                            {
-                                var success = getColor(data.Trim(), schema.Name, ref styleId,colorStatusDict);
+                            if (applicationField.Attribute.Contains("status")) {
+                                var success = getColor(data.Trim(), schema.Name, ref styleId, colorStatusDict);
 
-                                if (!success)
-                                {
+                                if (!success) {
                                     // check if status is something like NEW 1/4 (and make sure it doesn't match e.g. NEW REQUEST).
                                     var match = Regex.Match(data.Trim(), "(([A-Z]+ )+)[1-9]+/[1-9]+");
-                                    if (match.Success)
-                                    {
+                                    if (match.Success) {
                                         var status = match.Groups[2].Value.Trim();
                                         var compundStatus = getColor(status, schema.Name, ref styleId, colorStatusDict);
-                                        if (!compundStatus)
-                                        {
+                                        if (!compundStatus) {
                                             styleId = "1";
                                         }
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         styleId = "1";
                                     }
                                 }
@@ -153,19 +146,16 @@ namespace softWrench.sW4.Web.Util {
                             // write cell content
                             DateTime dtTimeAux;
                             var formatToUse = "dd/MM/yyyy HH:mm";
-                            if (applicationField.RendererParameters.ContainsKey("format"))
-                            {
+                            if (applicationField.RendererParameters.ContainsKey("format")) {
                                 formatToUse = applicationField.RendererParameters["format"].ToString();
                             }
                             var dateParsed = DateTime.TryParse(data, out dtTimeAux);
                             var dataToCell = data;
 
-                            if (dateParsed)
-                            {
+                            if (dateParsed) {
                                 dataToCell = dtTimeAux.FromMaximoToUser(user).ToString(formatToUse);
                             }
-                            if (dataToCell == "-666")
-                            {
+                            if (dataToCell == "-666") {
                                 //this magic number should never be displayed! 
                                 //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
                                 dataToCell = "";
@@ -192,8 +182,7 @@ namespace softWrench.sW4.Web.Util {
                     writer.WriteStartElement(new Workbook());
                     writer.WriteStartElement(new Sheets());
 
-                    writer.WriteElement(new Sheet
-                    {
+                    writer.WriteElement(new Sheet {
                         Name = "Sheet1",
                         SheetId = 1,
                         Id = xl.WorkbookPart.GetIdOfPart(worksheetpart)
@@ -216,8 +205,7 @@ namespace softWrench.sW4.Web.Util {
             }
         }
 
-        private bool getColor(string status, string schemaName, ref string styleId, Dictionary<string, string> colorStatusDict)
-        {
+        private bool getColor(string status, string schemaName, ref string styleId, Dictionary<string, string> colorStatusDict) {
             var colorCode = colorStatusDict.ContainsKey(status.ToLower()) ? colorStatusDict[status.ToLower()] : null;
             if (colorCode != null) {
                 return _cellStyleDictionary.TryGetValue(colorCode, out styleId);
@@ -226,28 +214,23 @@ namespace softWrench.sW4.Web.Util {
             return false;
         }
 
-        private static Func<ApplicationFieldDefinition, bool> ShouldShowField()
-        {
-            return f =>
-            {
+        private static Func<ApplicationFieldDefinition, bool> ShouldShowField() {
+            return f => {
                 var rendererParameters = f.Renderer.ParametersAsDictionary();
-                if (rendererParameters.ContainsKey(FieldRendererConstants.EXPORTTOEXCEL))
-                {
+                if (rendererParameters.ContainsKey(FieldRendererConstants.EXPORTTOEXCEL)) {
                     return "true".Equals(rendererParameters[FieldRendererConstants.EXPORTTOEXCEL]);
                 }
                 return !f.IsHidden;
             };
         }
 
-        private void CreateHeaderRow(IEnumerable<ApplicationFieldDefinition> applicationFields, OpenXmlWriter writer, int rowIdx, string schemaId)
-        {
+        private void CreateHeaderRow(IEnumerable<ApplicationFieldDefinition> applicationFields, OpenXmlWriter writer, int rowIdx, string schemaId) {
             var xmlAttributes = new List<OpenXmlAttribute>
             {
                 new OpenXmlAttribute("r", null, rowIdx.ToString(CultureInfo.InvariantCulture))
             };
             writer.WriteStartElement(new Row(), xmlAttributes);
-            foreach (var applicationField in applicationFields.Where(ShouldShowField()))
-            {
+            foreach (var applicationField in applicationFields.Where(ShouldShowField())) {
                 //Exporting to Excel, even if field is hidden
                 xmlAttributes = new List<OpenXmlAttribute>{
                     // add new datatype for cell
@@ -255,7 +238,7 @@ namespace softWrench.sW4.Web.Util {
                     // add header style
                     new OpenXmlAttribute("s", null, "8")
                 };
-               
+
                 writer.WriteStartElement(new Cell(), xmlAttributes);
                 writer.WriteElement(new CellValue(GetI18NLabel(applicationField, schemaId)));
 
@@ -267,11 +250,9 @@ namespace softWrench.sW4.Web.Util {
             writer.WriteEndElement();
         }
 
-        private string GetI18NLabel(ApplicationFieldDefinition applicationField, string schemaId)
-        {
+        private string GetI18NLabel(ApplicationFieldDefinition applicationField, string schemaId) {
             var module = _contextLookuper.LookupContext().Module;
-            if (module != null)
-            {
+            if (module != null) {
                 return applicationField.Label;
             }
             var i18NKey = applicationField.ApplicationName + "." + applicationField.Attribute;
@@ -279,8 +260,7 @@ namespace softWrench.sW4.Web.Util {
             return i18NValue;
         }
 
-        private void CreateCellFormats(WorkbookStylesPart stylesPart)
-        {
+        private void CreateCellFormats(WorkbookStylesPart stylesPart) {
             stylesPart.Stylesheet.CellFormats = new CellFormats();
             // empty one for index 0, seems to be required
             stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat());
@@ -305,26 +285,22 @@ namespace softWrench.sW4.Web.Util {
             stylesPart.Stylesheet.CellFormats.Count = 8;
         }
 
-        private void createCellFormat(WorkbookStylesPart stylesPart, UInt32 formatId, UInt32 fontId, UInt32 borderId, UInt32 fillId, bool applyFill)
-        {
+        private void createCellFormat(WorkbookStylesPart stylesPart, UInt32 formatId, UInt32 fontId, UInt32 borderId, UInt32 fillId, bool applyFill) {
             stylesPart.Stylesheet.CellFormats.AppendChild(
-                new CellFormat
-                {
+                new CellFormat {
                     FormatId = formatId,
                     FontId = fontId,
                     BorderId = borderId,
                     FillId = fillId,
                     ApplyFill = applyFill
-                }).AppendChild(new Alignment
-                {
+                }).AppendChild(new Alignment {
                     Horizontal = HorizontalAlignmentValues.Left,
                     WrapText = BooleanValue.FromBoolean(true),
                     Vertical = VerticalAlignmentValues.Top
                 });
         }
 
-        private void createFonts(WorkbookStylesPart stylesPart)
-        {
+        private void createFonts(WorkbookStylesPart stylesPart) {
             stylesPart.Stylesheet.Fonts = new Fonts();
 
             // normal font
@@ -339,13 +315,11 @@ namespace softWrench.sW4.Web.Util {
             stylesPart.Stylesheet.Fonts.Count = 2;
         }
 
-        private void BuildFills(WorkbookStylesPart stylesPart)
-        {
+        private void BuildFills(WorkbookStylesPart stylesPart) {
             stylesPart.Stylesheet.Fills = new Fills();
 
             // create a solid red fill
-            var solidRed = new PatternFill
-            {
+            var solidRed = new PatternFill {
                 PatternType = PatternValues.Solid,
                 ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FFFF0000") },
                 BackgroundColor = new BackgroundColor { Indexed = 64 }
@@ -376,10 +350,8 @@ namespace softWrench.sW4.Web.Util {
             stylesPart.Stylesheet.Fills.Count = 7;
         }
 
-        private PatternFill createColor(string colorhex)
-        {
-            var color = new PatternFill
-            {
+        private PatternFill createColor(string colorhex) {
+            var color = new PatternFill {
                 PatternType = PatternValues.Solid,
                 ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString(colorhex) },
                 BackgroundColor = new BackgroundColor { Indexed = 64 }
@@ -388,15 +360,12 @@ namespace softWrench.sW4.Web.Util {
         }
 
 
-        private void SetColumnWidth(SLDocument excelFile, IEnumerable<ApplicationFieldDefinition> applicationFields)
-        {
+        private void SetColumnWidth(SLDocument excelFile, IEnumerable<ApplicationFieldDefinition> applicationFields) {
             var columnIndex = 1;
-            foreach (var applicationField in applicationFields)
-            {
+            foreach (var applicationField in applicationFields) {
                 double excelWidthAux = 0;
                 object excelwidthAux;
-                if (applicationField.IsHidden)
-                {
+                if (applicationField.IsHidden) {
                     continue;
                 }
                 applicationField.RendererParameters.TryGetValue("excelwidth", out excelwidthAux);

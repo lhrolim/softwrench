@@ -71,10 +71,10 @@ namespace softWrench.sW4.Web.Controllers {
                     PopulateReportParamters(request.SearchDTO.SearchParams, request.SearchDTO.SearchValues);
             }
             //Adding SCIM to parameters for IncidentPerLocationSCIMReport
-            string scimMatch = "SCIM";
-            Regex regex = new Regex(scimMatch, RegexOptions.IgnoreCase);
+            var scimMatch = "SCIM";
+            var regex = new Regex(scimMatch, RegexOptions.IgnoreCase);
             if (regex.IsMatch(request.ReportName) && parameters.ContainsKey("commodities_description_header")) {                
-                string[] arrTemp = parameters["commodities_description_header"].Split('-');
+                var arrTemp = parameters["commodities_description_header"].Split('-');
                 parameters.Add("system_header",arrTemp[0] + '-' + arrTemp[1]);
                 parameters.Add("component_header",(arrTemp.Length > 2) ? arrTemp[2] : MISSING);
                 parameters.Add("item_header",(arrTemp.Length > 3) ? arrTemp[3] : MISSING);
@@ -108,9 +108,9 @@ namespace softWrench.sW4.Web.Controllers {
         private IDictionary<string,string> PopulateReportParamters(string searchParams, string searchValues)
         {
             IDictionary<string, string> reportParameters = new Dictionary<string, string>();
-            string[] paramArray = searchParams.Split(new string[] { "&&" }, StringSplitOptions.RemoveEmptyEntries);
-            string[] valueArray = searchValues.Split(new string[] { ",,," }, StringSplitOptions.RemoveEmptyEntries);
-            for(int i=0; i<paramArray.Length; i++)
+            var paramArray = searchParams.Split(new string[] { "&&" }, StringSplitOptions.RemoveEmptyEntries);
+            var valueArray = searchValues.Split(new string[] { ",,," }, StringSplitOptions.RemoveEmptyEntries);
+            for(var i=0; i<paramArray.Length; i++)
             {                
                 if (paramArray[i].ToLower().Contains("date"))
                 {
@@ -130,7 +130,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <returns>String with no characters like(%,<,>,=)</returns>
         private string cleanString(string str)
         {
-            StringBuilder sb = new StringBuilder(str);
+            var sb = new StringBuilder(str);
             sb.Replace("___", "-");
             sb.Replace("<=", "");
             sb.Replace("=", "");
@@ -148,8 +148,8 @@ namespace softWrench.sW4.Web.Controllers {
         /// <returns>Module Filed Value and any trailing values.</returns>
         private static string ModuleFieldValue(string[] arrTemp)
         {
-            string strTemp = string.Empty;
-            for (int i = 4; i < arrTemp.Length; i++)
+            var strTemp = string.Empty;
+            for (var i = 4; i < arrTemp.Length; i++)
             {
                 strTemp += arrTemp[i] + '-';
             }

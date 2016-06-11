@@ -57,7 +57,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Dashboard
                 },
 
             };
-            _service.RegisterWhereClause("servicerequest", "@chicagoDashBoardWhereClausedProvider.GetTicketCountQuery", "SROpenedDaily", "dashboard:sr.dailytickets");
+            _service.RegisterWhereClause("servicerequest", "@chicagoDashBoardWhereClausedProvider.GetTicketCountQuery", "SROpenedDaily", "dashboard:chicago.sr.dailytickets");
             _service.AddPanelsToDashboard(srDashboard, panels);
 
         }

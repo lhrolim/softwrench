@@ -47,6 +47,7 @@
     <Compile Include="classes\com\cts\chicago\configuration\Dashboard\ChicagoDashBoarWhereClausedProvider.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\QuickSrChicagoISMProblemHandler.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\ChicagoISMProblemHandler.cs" />
+    <Compile Include="classes\com\cts\chicago\configuration\Reports\ChicagoReportProvider.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\UserDepartmentFetcher.cs" />
     <Compile Include="classes\com\cts\chicago\connector\ChicagoSRCrudConnector.cs" />
     <Compile Include="classes\com\cts\chicago\dataset\ChicagoServiceRequestDataSet.cs" />
