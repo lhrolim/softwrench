@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
-using NHibernate.Linq;
 
 namespace softWrench.sW4.Util {
     public static class DictionaryExtensions {

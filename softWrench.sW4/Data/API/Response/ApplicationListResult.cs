@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using softwrench.sw4.api.classes.integration;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.API.Association;
@@ -30,6 +31,12 @@ namespace softWrench.sW4.Data.API.Response {
             };
             AssociationOptions = associationOptions;
         }
+
+        public static ApplicationListResult FixedListResult(IEnumerable<AttributeHolder> dataMap, ApplicationSchemaDefinition schema) {
+            var attributeHolders = dataMap as AttributeHolder[] ?? dataMap.ToArray();
+            return new ApplicationListResult(attributeHolders.Count(), null, attributeHolders, schema, null);
+        }
+
 
         public ApplicationSchemaDefinition Schema {
             get; set;
@@ -68,7 +75,9 @@ namespace softWrench.sW4.Data.API.Response {
             get; private set;
         }
 
-        public IErrorDto WarningDto { get; set; }
+        public IErrorDto WarningDto {
+            get; set;
+        }
 
         public string Type {
             get {

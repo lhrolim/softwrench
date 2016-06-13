@@ -9,13 +9,15 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Reports {
     class ChicagoReportProvider {
 
         private const string COUNT_BY_DEPARTMENT =
-@"SELECT CONVERT(char(10), creationdate,126),department,count(department)
+@"SELECT CONVERT(char(10), creationdate,126) as creationdate,department as department,count(department) as countnumber
 from sr 
 where creationdate is not null and department is not null
 and year(creationdate) = {0}
-group by CONVERT(char(10), creationdate,126),department";
+group by CONVERT(char(10), creationdate,126),department
+order by creationdate,department
+";
 
-        public string GetTicketByDepartmentQuery() {
+        public static string GetTicketByDepartmentQuery() {
             return COUNT_BY_DEPARTMENT.Fmt(DateTime.Now.Year);
         }
 

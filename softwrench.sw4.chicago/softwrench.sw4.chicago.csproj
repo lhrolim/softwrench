@@ -38,8 +38,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="SpreadsheetLight, Version=3.4.1.0, Culture=neutral, PublicKeyToken=32fbb46dc1730c57, processorArchitecture=MSIL">
+      <HintPath>..\packages\SpreadsheetLight.3.4.1\lib\SpreadsheetLight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\com\cts\chicago\configuration\Dashboard\ChicagoChartInitializer.cs" />
@@ -47,6 +53,7 @@
     <Compile Include="classes\com\cts\chicago\configuration\Dashboard\ChicagoDashBoarWhereClausedProvider.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\QuickSrChicagoISMProblemHandler.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\ChicagoISMProblemHandler.cs" />
+    <Compile Include="classes\com\cts\chicago\configuration\Reports\ChicagoExcelController.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\Reports\ChicagoReportProvider.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\UserDepartmentFetcher.cs" />
     <Compile Include="classes\com\cts\chicago\connector\ChicagoSRCrudConnector.cs" />
@@ -102,6 +109,10 @@
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
       <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.web\cts.commons.web.csproj">
+      <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
+      <Name>cts.commons.web</Name>
     </ProjectReference>
     <ProjectReference Include="..\cts.commons\cts.commons.csproj">
       <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>

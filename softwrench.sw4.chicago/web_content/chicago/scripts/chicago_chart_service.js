@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function chicagoChartService(searchService,formatService) {
+    function chicagoChartService(searchService,formatService,fileService) {
         //#region Utils
 
         //#endregion
@@ -25,11 +25,16 @@
             return searchService.buildSearchDTO(searchData, null, searchOperator);
         }
 
+        function dailyTicketCount() {
+            fileService.download(url("/ChicagoExcel/GetDepartmentCount"));
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
             dailyopenedTicketsClicked,
+            dailyTicketCount
         };
         return service;
         //#endregion
@@ -38,7 +43,7 @@
     //#region Service registration
 
     angular.module('chicago')
-      .clientfactory('chicagoChartService', ["searchService", "formatService", chicagoChartService]);
+      .clientfactory('chicagoChartService', ["searchService", "formatService","fileService", chicagoChartService]);
 
     //#endregion
 

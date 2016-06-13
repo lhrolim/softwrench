@@ -11,8 +11,6 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
-using System.Web;
-using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Data.Entities;
 
