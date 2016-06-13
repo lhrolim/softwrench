@@ -382,8 +382,8 @@
 
                                 html += '<div class="cell-wrapper">' + scope.handleIcon(icon, column, formattedText, foreground, i);
 
-                                if (column.rendererParameters.changevalue != undefined && column.rendererParameters.changevalue == 'true') {
-                                    var closed = dm.fields['status'].equalIc('CLOSED') || dm.fields['status'].equalIc('CLOSE');
+                                if (column.rendererParameters.changevalue !== undefined && column.rendererParameters.changevalue === 'true') {
+                                    var closed = 'CLOSED'.equalIc(dm.fields['status']) || 'CLOSE'.equalIc(dm.fields['status']);
                                     html += scope.priorityDropdown(i, column, icon, closed);
                                 }
                             }
