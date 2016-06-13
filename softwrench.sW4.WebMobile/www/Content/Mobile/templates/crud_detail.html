@@ -1,8 +1,5 @@
 ﻿<ion-view>
 
-  
-
-
     <ion-nav-buttons side="left">
         <button class="button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
@@ -15,10 +12,8 @@
     <ion-header-bar class="bar-subheader bar-assertive" align-title="left">
 
         <div class="buttons" style="padding-left: 5px">
-
             <button class="button icon ion-arrow-left-c" ng-show="shouldShowBack()" ng-click="navigateBack()">Back</button>
             <button class="button icon ion-android-cancel" ng-show="hasDirtyChanges()" ng-click="cancelChanges()">Cancel</button>
-
 
             <button class="button icon ion-plus" ng-click="addCompositionItem()" ng-if="!isOnMainTab()" ng-show="!hasDirtyChanges()">Add</button>
         </div>
@@ -39,17 +34,9 @@
         <div class="header-item h4" ng-click="loadMainTab()" style="padding-left: 10px">
             {{tabTitle() || detailSummary()}}
         </div>
-        
-
 
         <ion-nav-view name="body" class="list"></ion-nav-view>
 
     </ion-content>
-
-<!--    <ion-footer-bar align-title="left" class="bar-dark" ng-if="!isOnMainTab()">-->
-<!---->
-<!--        <h5 class="title">{{tabTitle()}}</h5>-->
-<!---->
-<!--    </ion-footer-bar>-->
 
 </ion-view>

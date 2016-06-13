@@ -1,7 +1,7 @@
-﻿!(function (modules) {
+﻿!(function (modules, angular) {
     "use strict";
 
-    modules.webcommons.factory("contextService", ["$rootScope", function ($rootScope) {
+    modules.webcommons.factory("contextService", ["$log", "$rootScope", function ($log, $rootScope) {
 
         return {
             //using sessionstorage instead of rootscope, as the later would be lost upon F5.
@@ -80,39 +80,33 @@
                     //unit tests should be considerered local too
                     return true;
                 }
-
-                var contextValue = this.retrieveFromContext('isLocal');
-
-                if (contextValue != null) {
-                    return contextValue == "true";
-                } else {
-                    return false;
-                }
+                const contextValue = this.retrieveFromContext("isLocal");
+                return !!contextValue && contextValue === "true";
             },
 
             isDev: function () {
                 //return this.retrieveFromContext('environment') == "dev";
 
                 //return true if the environment begins with dev
-                return this.retrieveFromContext('environment').indexOf('dev') === 0;
+                const environment = this.retrieveFromContext("environment");
+                return !environment || environment.indexOf("dev") === 0;
             },
 
             client: function () {
-                return this.retrieveFromContext('clientName');
+                return this.retrieveFromContext("clientName");
             },
 
             isClient: function (name) {
-
-                var clientName = this.client();
+                const clientName = this.client();
                 if (name === clientName) {
                     return true;
                 }
-                if (typeof (name) === 'array') {
+                if (angular.isArray(name)) {
                     if (jQuery.inArray(clientName, name)) {
                         return true;
                     }
                 }
-                if (name == null) {
+                if (!name) {
                     $log.getInstance('contextService#isClient').warn("asked for null client name")
                     return false;
                 }
@@ -257,4 +251,4 @@
 
     }]);
 
-})(modules);
+})(modules, angular);

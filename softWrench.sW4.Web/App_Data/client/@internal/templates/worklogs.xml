@@ -105,9 +105,14 @@
 
           <!-- attachment placeholder -->
           <!-- TODO: use section+id instead of field when it's eventually possible -->
-          <field attribute="position_attachment" hidden="true"></field>
+          <field attribute="position_attachment" hidden="true" showexpression="false"></field>
 
         </detail>
+        
+        <!-- region: Mobile -->
+        
+        
+        <!-- endregion: Mobile -->
 
       </schemas>
     </application>

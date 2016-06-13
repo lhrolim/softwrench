@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<widget xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" id="io.cordova.softwrench.sW4.WebMobile" version="1.2-SNAPSHOT" xmlns="http://www.w3.org/ns/widgets">
+<widget xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" id="io.cordova.softwrench.sW4.WebMobile" version="1.4-SNAPSHOT" xmlns="http://www.w3.org/ns/widgets">
   <name>softwrench.sW4.WebMobile</name>
   <description>A blank project that uses Apache Cordova to help you build an app that targets multiple mobile platforms: Android, iOS, Windows, and Windows Phone.</description>
   <author href="http://cordova.io" email="dev@cordova.apache.org">Apache Cordova Team </author>
   <content src="layout.html" />
   <access origin="*" />
+  <allow-navigation href="*" />
   <preference name="SplashScreen" value="screen" />
   <preference name="AutoHideSplashScreen" value="false" />
   <preference name="SplashScreenDelay" value="10000" />
@@ -13,6 +14,8 @@
   <preference name="FadeSplashScreen" value="false" />
   <preference name="windows-target-version" value="8.0" />
   <preference name="windows-phone-target-version" value="8.1" />
+  <preference name="orientation" value="all" />
+  <preference name="BackupWebStorage" value="local" />
   <vs:platformSpecificValues />
   <platform name="android">
     <icon src="res/icons/android/icon-36-ldpi.png" density="ldpi" />
@@ -89,15 +92,20 @@
   <preference name="ShowTitle" value="True" />
   <preference name="InAppBrowserStorageEnabled" value="False" />
   <preference name="SuppressesIncrementalRendering" value="True" />
-  <vs:plugin name="io.litehelpers.cordova.sqlite" version="0.7.10" src="https://github.com/litehelpers/Cordova-sqlite-storage.git" />
-  <vs:plugin name="cordova-plugin-whitelist" version="1.1.0" src="https://github.com/apache/cordova-plugin-whitelist.git" />
-  <vs:plugin name="cordova-plugin-vs-taco-support" version="0.2.0" src="https://github.com/Chuxel/taco-cordova-support-plugin.git" />
-  <vs:plugin name="uk.co.whiteoctober.cordova.appversion" version="0.1.7" src="https://github.com/whiteoctober/cordova-plugin-app-version.git" />
-  <vs:plugin name="cordova-plugin-device" version="1.0.1" />
   <!--<vs:plugin name="android.support.v4" version="21.0.1" />-->
-  <vs:plugin name="cordova-plugin-network-information" version="1.0.1" />
-  <vs:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.2-dev" src="https://github.com/controltechnologysolutions/cordova-plugin-local-notifications.git" />
-  <vs:plugin name="cordova-plugin-file" version="3.0.0" src="https://github.com/apache/cordova-plugin-file" />
-  <vs:plugin name="com.ionic.keyboard" version="1.0.4" />
-  <vs:plugin name="cordova-plugin-splashscreen" version="2.1.0" />
+  <!-- hooks -->
+  <hook type="before_compile" src="hooks/hook-symlink-fix.js" />
+  <plugin name="cordova-plugin-app-event" version="1.2.0" />
+  <plugin name="cordova-sqlite-storage" version="0.7.10" />
+  <plugin name="cordova-plugin-whitelist" version="1.1.0" />
+  <plugin name="cordova-plugin-app-version" version="0.1.8" />
+  <plugin name="cordova-plugin-device" version="1.0.1" />
+  <plugin name="cordova-plugin-network-information" version="1.0.1" />
+  <plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.4" />
+  <plugin name="cordova-plugin-file" version="3.0.0" />
+  <plugin name="ionic-plugin-keyboard" version="1.0.4" />
+  <plugin name="cordova-plugin-splashscreen" version="2.1.0" />
+  <plugin name="cordova-plugin-camera" version="2.2.0" />
+  <plugin name="cordova-plugin-compat" version="1.0.0" />
+  <plugin name="cordova-plugin-vs-taco-support" version="0.2.0" src="https://github.com/Microsoft/cordova-plugin-vs-taco-support.git" />
 </widget>

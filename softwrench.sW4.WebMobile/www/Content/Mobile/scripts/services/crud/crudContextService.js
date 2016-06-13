@@ -210,31 +210,30 @@
             saveChanges: function (crudForm) {
                 var crudContext = crudContextHolderService.getCrudContext();
                 crudForm = crudForm || {};
-                var detailSchema = this.currentDetailSchema();
+                const detailSchema = this.currentDetailSchema();
                 var datamap = crudContext.currentDetailItem.datamap;
 
-                var validationErrors = validationService.validate(detailSchema, detailSchema.displayables, datamap, crudForm.$error);
+                const validationErrors = validationService.validate(detailSchema, detailSchema.displayables, datamap, crudForm.$error);
                 if (validationErrors.length > 0) {
                     //interrupting here, can´t be done inside service
                     return $q.when();
                 }
 
-                var that = this;
                 if (crudContext.composition && crudContext.composition.currentDetailItem) {
-                    var compositionItem = crudContext.composition.currentDetailItem;
-                    return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, crudContext.composition.currentTab).then(function () {
+                    const compositionItem = crudContext.composition.currentDetailItem;
+                    return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, crudContext.composition.currentTab).then(() => {
                         crudContext.originalDetailItemDatamap = datamap;
                         crudContext.composition.originalDetailItemDatamap = crudContext.composition.currentDetailItem;
-                        that.loadTab(crudContext.composition.currentTab);
+                        this.loadTab(crudContext.composition.currentTab);
                     });
                 }
 
-                return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem).then(function () {
+                return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem).then(() => {
                     crudContext.originalDetailItemDatamap = angular.copy(datamap);
                     contextService.insertIntoContext("crudcontext", crudContext);
                     if (crudContext.newItem) {
                         crudContext.newItem = false;
-                        that.refreshGrid();
+                        this.refreshGrid();
                     }
                 });
             },

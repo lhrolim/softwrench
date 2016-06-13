@@ -228,10 +228,10 @@
         });
 
         entities.Attachment = persistence.define('Attachment', {
-            rootentryRemoteId: 'TEXT',
-            rootApplication: 'TEXT',
-            doclinkId: 'TEXT',
-            path: 'TEXT',
+            application: "TEXT", // ROOT application of the entity that has the asset (e.g. workorder, sr, etc)
+            parentId: "TEXT", // local id of the ROOT entity
+            // compressed: "BOOL", // whether or not the file is compressed
+            path: "TEXT" // local file system path to the saved file (should be in an external storage directory)
         });
 
         entities.WhereClause = persistence.define("WhereClause", {
