@@ -34,6 +34,6 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.configuration {
         }
 
 
-        public int Order { get { return int.MaxValue - 50; } }
+        public int Order { get { return ChartInitializer.ORDER + 1; } }
     }
 }
