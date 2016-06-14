@@ -123,9 +123,10 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var icon = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandIconAttribute);
                 var service = xElement.AttributeValue(XmlBaseSchemaConstants.ServiceAttribute);
                 var method = xElement.AttributeValue(XmlBaseSchemaConstants.MethodAttribute);
+                var cssClasses = xElement.AttributeValue(XmlBaseSchemaConstants.CssClassesAttribute);
                 var inferiorThreshold = MetadataProvider.GlobalProperties.GlobalProperty("commands.actionsthreshold");
                 var commandDisplayables = ParseCommandDisplayables(xElement.Elements());
-                return new ContainerCommand(id, label, tooltip, role, position, icon, service, method, commandDisplayables, permissionExpression);
+                return new ContainerCommand(id, label, tooltip, role, position, icon, service, method, commandDisplayables, permissionExpression, cssClasses);
             }
             if (xElement.IsNamed(cnst.RemoveCommand)) {
                 return new RemoveCommand(id);

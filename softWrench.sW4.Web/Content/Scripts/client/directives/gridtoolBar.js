@@ -5,8 +5,8 @@
         function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, fixHeaderService, crudContextHolderService, genericTicketService) {
 
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
-        var methodname = expr.substr(7);
-        var fn = $scope.ctrlfns[methodname];
+        const methodname = expr.substr(7);
+        const fn = $scope.ctrlfns[methodname];
         if (angular.isFunction(fn)) {
             return fn();
         } else if (throwExceptionIfNotFound) {
@@ -28,9 +28,7 @@
     }
 
     $scope.commandtooltip = function (command) {
-        var tooltip = command.tooltip;
-
-        //if the label and tooltip are the same, only show the tooltip if the labels are hidden
+        const tooltip = command.tooltip; //if the label and tooltip are the same, only show the tooltip if the labels are hidden
         if (tooltip === command.label) {
             if ($scope.showLabel()) {
                 return "";
@@ -58,9 +56,7 @@
     }
 
     $scope.commandLabel = function (command) {
-        var label = command.label;
-
-        // the labels if needed
+        const label = command.label; // the labels if needed
         if (!$scope.showLabel()) {
             return "";
         }
@@ -77,7 +73,7 @@
     }
 
     $scope.commandIcon = function (command) {
-        var icon = command.icon;
+        const icon = command.icon;
         if (icon == null) {
             return null;
         }
@@ -93,7 +89,7 @@
     }
 
     $scope.executeScopeCommand = function (command) {
-        var fn = $scope.ctrlfns[command.method];
+        const fn = $scope.ctrlfns[command.method];
         if (!angular.isFunction(fn)) {
             $log.get("gridtoolBar#executeScopeCommand", ["command"])
                 .warn("method", command.method, "not found in the outer scope");
@@ -104,9 +100,12 @@
 
     $scope.clickEnabled = function (command) {
         var executeClick = true;
-        var expression = command.enableExpression;
+        const expression = command.enableExpression;
+        if (!expression) {
+            return true;
+        }
 
-        var fn = $scope.ctrlfns[expression.split('$scope:')[1]];
+        const fn = $scope.ctrlfns[expression.split('$scope:')[1]];
         if (!!fn && angular.isFunction(fn)) {
             executeClick = fn();
         } else if (commandService.isServiceMethod(expression)) {
@@ -141,9 +140,9 @@
     };
 
     $scope.shouldShowCommand = function (command) {
-        var showExpression = command.showExpression;
+        const showExpression = command.showExpression;
         if (showExpression && showExpression.startsWith("$scope:")) {
-            var result = $scope.invokeOuterScopeFn(showExpression);
+            const result = $scope.invokeOuterScopeFn(showExpression);
             if (result == null) {
                 return true;
             }
@@ -175,16 +174,16 @@
     }
 
     $scope.isCommandEnabled = function (command) {
-        var enableExpression = command.enableExpression;
+        const enableExpression = command.enableExpression;
         if (enableExpression && enableExpression.startsWith("$scope:")) {
-            var result = $scope.invokeOuterScopeFn(enableExpression);
+            const result = $scope.invokeOuterScopeFn(enableExpression);
             if (result == null) {
                 return true;
             }
             return result;
         }
-        var datamap = $scope.datamap;
-        var expressionToEval = expressionService.getExpression(enableExpression, datamap);
+        const datamap = $scope.datamap;
+        const expressionToEval = expressionService.getExpression(enableExpression, datamap);
         return eval(expressionToEval);
     }
 

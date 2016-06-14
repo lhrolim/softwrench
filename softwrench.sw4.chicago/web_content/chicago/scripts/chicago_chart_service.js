@@ -29,12 +29,17 @@
             fileService.download(url("/ChicagoExcel/GetDepartmentCount"));
         }
 
+        function ticketsByDepartment() {
+            fileService.download(url("/ChicagoExcel/TicketTypeByDepartment"));
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
             dailyopenedTicketsClicked,
-            dailyTicketCount
+            dailyTicketCount,
+            ticketsByDepartment
         };
         return service;
         //#endregion

@@ -17,8 +17,21 @@ group by CONVERT(char(10), creationdate,126),department
 order by creationdate,department
 ";
 
+        private const string TicketTypeByDepartment =
+@"SELECT department as department,tickettype as tickettype,count(department)as countnumber
+from sr 
+where tickettype is not null and department is not null
+and year(creationdate) = 2016
+group by department,tickettype
+order by department,tickettype
+";
+
         public static string GetTicketByDepartmentQuery() {
             return COUNT_BY_DEPARTMENT.Fmt(DateTime.Now.Year);
+        }
+
+        public static string GetTicketTypeByDepartment() {
+            return TicketTypeByDepartment.Fmt(DateTime.Now.Year);
         }
 
     }

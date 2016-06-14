@@ -28,6 +28,26 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Reports {
             _dao = dao;
         }
 
+        public FileContentResult TicketTypeByDepartment() {
+            var departmentQueryResult = _dao.FindByNativeQuery("Select distinct (tickettype) as tickettype from sr where tickettype is not null order by tickettype");
+            var departmentDisplayables = new List<IApplicationDisplayable>{
+                new ApplicationFieldDefinition(ApplicationName, "department", "City Department")
+            };
+            departmentDisplayables.AddRange(departmentQueryResult.Select(s => s["tickettype"]).ToHashSet().Select(s => new ApplicationFieldDefinition(ApplicationName, s, s)));
+            departmentDisplayables.Add(new ApplicationFieldDefinition(ApplicationName, "total", "Total"));
+            var queryResult = _dao.FindByNativeQuery(ChicagoReportProvider.GetTicketTypeByDepartment());
+            //Building excel spreadsheet, refer to https://controltechnologysolutions.atlassian.net/browse/SWWEB-2547
+            var datamaps = BuildDatamapsFromQuery(queryResult, "department", "tickettype");
+
+            var schema = new ApplicationSchemaDefinition {
+                ApplicationName = ApplicationName,
+                Displayables = departmentDisplayables
+            };
+
+            var listResult = ApplicationListResult.FixedListResult(datamaps, schema);
+            return DoExport("DepartmentByType.xlsx", listResult, SecurityFacade.CurrentUser());
+        }
+
         public FileContentResult GetDepartmentCount() {
 
 
@@ -46,7 +66,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Reports {
 
 
             //Building excel spreadsheet, refer to https://controltechnologysolutions.atlassian.net/browse/SWWEB-2547
-            var datamaps = BuildDatamapsFromQuery(queryResult);
+            var datamaps = BuildDatamapsFromQuery(queryResult, "creationdate", "department");
 
             var schema = new ApplicationSchemaDefinition {
                 ApplicationName = ApplicationName,
@@ -58,45 +78,55 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Reports {
 
         }
 
-        private static IEnumerable<DataMap> BuildDatamapsFromQuery(List<Dictionary<string, string>> queryResult) {
+        private static IEnumerable<DataMap> BuildDatamapsFromQuery(IEnumerable<Dictionary<string, string>> queryResult, string rowAttribute, string columnAttribute) {
 
             var datamaps = new List<DataMap>();
-            var dateTotal = 0;
-            string currentDate = null;
+            var rowTotal = 0;
+            string currentRow = null;
             var currentDatamap = new Dictionary<string, string>();
+            var lineGrandTotal = new Dictionary<string, object>();
+            lineGrandTotal[rowAttribute] = "Grand Total";
 
             foreach (var row in queryResult) {
-                var rowDate = row["creationdate"];
-                var rowDepartment = row["department"];
+                var rowAttributeValue = row[rowAttribute];
+                var columnAttributeValue = row[columnAttribute];
                 var countByDeptDate = row["countnumber"];
 
+                if (!lineGrandTotal.ContainsKey(columnAttributeValue)) {
+                    lineGrandTotal[columnAttributeValue] = int.Parse(countByDeptDate);
+                } else {
+                    var storedValue = (int)lineGrandTotal[columnAttributeValue];
+                    lineGrandTotal[columnAttributeValue] = storedValue + int.Parse(countByDeptDate);
+                }
 
-
-                if (rowDate != currentDate) {
-                    if (currentDate != null) {
+                if (rowAttributeValue != currentRow) {
+                    if (currentRow != null) {
                         //a new date has been reached --> let's finish the currentdatamap
-                        currentDatamap = CloseLine(currentDatamap, datamaps, ref dateTotal);
+                        currentDatamap = CloseLine(currentDatamap, datamaps, ref rowTotal);
                     }
-                    currentDate = rowDate;
+                    currentRow = rowAttributeValue;
 
                     //first time, date was null
-                    if (!currentDatamap.ContainsKey("creationdate")) {
-                        //first column of the excel will be a date
-                        currentDatamap["creationdate"] = currentDate;
+                    if (!currentDatamap.ContainsKey(rowAttribute)) {
+                        currentDatamap[rowAttribute] = currentRow;
                     }
-                    currentDatamap[rowDepartment] = countByDeptDate;
+                    currentDatamap[columnAttributeValue] = countByDeptDate;
 
-                    dateTotal += int.Parse(countByDeptDate);
+                    rowTotal += int.Parse(countByDeptDate);
 
                 } else {
                     //same date, but for a different department
-                    currentDatamap[rowDepartment] = countByDeptDate;
-                    dateTotal += int.Parse(countByDeptDate);
+                    currentDatamap[columnAttributeValue] = countByDeptDate;
+                    rowTotal += int.Parse(countByDeptDate);
                 }
             }
 
             //add last date found
-            CloseLine(currentDatamap, datamaps, ref dateTotal);
+            CloseLine(currentDatamap, datamaps, ref rowTotal);
+            lineGrandTotal["total"] = lineGrandTotal.Values.OfType<int>().Sum(s=> (int)s);
+
+            datamaps.Add(DataMap.GetInstanceFromDictionary(ApplicationName, lineGrandTotal));
+
             return datamaps;
         }
 
