@@ -50,7 +50,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
         [TestMethod]
         public void SecureBarsNewVersion() {
             var bars = new Dictionary<string, CommandBarDefinition>();
-            bars["app_schema_mode#actions"] = _commandBarDefinition2;
+            bars["app_schema_mode#gridtop"] = _commandBarDefinition2;
             var user = InMemoryUser.TestInstance("test");
             var actionPermissions = new HashedSet<ActionPermission>(){
                 new ActionPermission(){
@@ -68,7 +68,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             
 
 
-            var result = ApplicationCommandUtils.SecuredBars(user, bars)["app_schema_mode#actions"].Commands;
+            var result = ApplicationCommandUtils.SecuredBars(user, bars)["app_schema_mode#gridtop"].Commands;
             Assert.AreEqual(3, result.Count);
             Assert.AreEqual(result[0].Id, "c1");
             Assert.AreEqual(result[1].Id, "c2");

@@ -71,11 +71,11 @@ namespace softWrench.sW4.Security.Services {
                 return ProfileCache.Values;
             }
 
+            var profiles = new Dictionary<string, UserProfile>();
             using (var session = SWDBHibernateDAO.GetInstance().GetSession()) {
                 using (session.BeginTransaction()) {
                     var query = _dao.BuildQuery("from UserProfile", (object[])null, session);
                     var dbProfiles = query.List();
-                    var profiles = new Dictionary<string, UserProfile>();
                     foreach (var profile in dbProfiles) {
                         var userProfile = (UserProfile)profile;
                         if (eager) {
@@ -89,7 +89,6 @@ namespace softWrench.sW4.Security.Services {
                     return profiles.Values;
                 }
             }
-
         }
 
         public UserProfile SaveUserProfile(UserProfile profile) {
@@ -133,7 +132,7 @@ namespace softWrench.sW4.Security.Services {
 
         //TODO: remove customUserRoles and customUSerCOnstraints which were exclusions from this profile ==> They don´t make sense anymore (tough,they are useless anyway)
         public void DeleteProfile(int? profileId) {
-            using (ISession session = SWDBHibernateDAO.GetInstance().GetSession()) {
+            using (var session = SWDBHibernateDAO.GetInstance().GetSession()) {
                 using (session.BeginTransaction()) {
                     var profile = FindById(profileId);
                     if (profile == null) {
@@ -154,7 +153,7 @@ namespace softWrench.sW4.Security.Services {
 
         public CompositionFetchResult LoadAvailableFieldsAsCompositionData(ApplicationSchemaDefinition schema, string tab, int pageNumber) {
             var fields = schema.NonHiddenFieldsOfTab(tab).Where(f => !"true".Equals(f.RequiredExpression));
-            var pageSize = 10;
+            const int pageSize = 10;
             var applicationAttributeDisplayables = fields as IApplicationAttributeDisplayable[] ?? fields.ToArray();
             var totalCount = applicationAttributeDisplayables.Count();
             var fieldsToShow = applicationAttributeDisplayables.Skip((pageNumber - 1) * pageSize).Take(pageSize);
@@ -186,20 +185,22 @@ namespace softWrench.sW4.Security.Services {
 
         [CanBeNull]
         public CompositionFetchResult LoadAvailableActionsAsComposition(ApplicationSchemaDefinition schema, int pageNumber) {
-            var pageSize = 8;
-            CommandBarDefinition commandBar;
-            schema.CommandSchema.ApplicationCommands.TryGetValue("#actions", out commandBar);
-            if (commandBar == null) {
+            const int pageSize = 8;
+            var customizedCommands = new List<ICommandDisplayable>(schema.CommandSchema.ApplicationCommands.Values.SelectMany(s => s.CustomizedCommands));
+
+            if (!customizedCommands.Any()) {
                 return null;
             }
 
-            var commands = commandBar.Commands;
-            var actionsToShow = commands.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-            var totalCount = commands.Count();
 
-            var compositionData = new EntityRepository.SearchEntityResult();
-            compositionData.PaginationData = new PaginatedSearchRequestDto(totalCount, pageNumber, pageSize, null, new List<int>() { pageSize });
-            compositionData.ResultList = new List<Dictionary<string, object>>();
+            var actionsToShow = customizedCommands.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var totalCount = customizedCommands.Count();
+
+            var compositionData = new EntityRepository.SearchEntityResult {
+                PaginationData =
+                    new PaginatedSearchRequestDto(totalCount, pageNumber, pageSize, null, new List<int>() { pageSize }),
+                ResultList = new List<Dictionary<string, object>>()
+            };
 
             AddActionsToComposition(actionsToShow, compositionData);
             return CompositionFetchResult.SingleCompositionInstance("#actionPermissions_", compositionData);

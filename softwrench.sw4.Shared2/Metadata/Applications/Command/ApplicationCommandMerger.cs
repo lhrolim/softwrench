@@ -93,7 +93,9 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
                 }
             }
 
-            return new CommandBarDefinition(overridingBar.Id, baseBar.Position, baseBar.ExcludeUndeclared, listOfCommands);
+            return new CommandBarDefinition(overridingBar.Id, baseBar.Position, baseBar.ExcludeUndeclared, listOfCommands) {
+                OriginalCommandIds = baseBar.OriginalCommandIds
+            };
         }
 
         private static bool IsLeftOfCommand(ICommandDisplayable commandDisplayable, ICommandDisplayable originalCommand) {

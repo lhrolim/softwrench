@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using cts.commons.Util;
 using log4net;
 using cnst = softWrench.sW4.Metadata.Parsing.XmlCommandSchema;
 
@@ -65,6 +66,10 @@ namespace softWrench.sW4.Metadata.Parsing {
                     result[composedCommand.Id] = ApplicationCommandMerger.DoMergeBars(composedCommand, originalCommand);
                 }
             }
+            foreach (var commandBar in result.Values) {
+                commandBar.OriginalCommandIds = commandBar.Commands.Select(c => c.Id).ToHashSet();
+            }
+
             return result;
         }
 
