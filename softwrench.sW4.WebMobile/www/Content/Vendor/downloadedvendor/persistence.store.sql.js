@@ -449,11 +449,11 @@ function config(persistence, dialect) {
             var args = queryTuple[1];
             tx.executeSql(statement, args,
                 next, // success fn: go to next element
-                function (err) { // error fn
+                err => { // error fn
                     persistence.defaultTransactionErrorHandler(statement, args, err);
                     next(null, err); // next element with null result
                 });
-        }, function (result, err) {
+        }, (result, err) => {
             //if (err && callback) {
             //    callback(result, err);
             //    return;
@@ -936,7 +936,8 @@ if (typeof exports !== 'undefined') {
     exports.config = config;
 }
 else {
-    window = window || {};
+    //window = window || {};
+    if (!window) window = {};
     window.persistence = window.persistence || persistence || {};
     window.persistence.store = window.persistence.store || {};
     window.persistence.store.sql = {

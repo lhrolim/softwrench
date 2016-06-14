@@ -48,6 +48,7 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/scannerCommons.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/user_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/composition_commons.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/storage/compressionservice.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/storage/localstorageservice.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/data/datamapSanitize_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/notificationService.js",
@@ -106,7 +107,8 @@ module.exports = function (grunt) {
         "www/Content/Vendor/scripts/ng-cordova.js",
         "www/Content/Vendor/scripts/moment.js",
         "www/Content/Vendor/scripts/underscore.js",
-        "www/Content/Vendor/scripts/persistence.store.websql.js"
+        "www/Content/Vendor/scripts/persistence.store.websql.js",
+        "www/Content/Vendor/scripts/lz-string.js"
     ];
     
     
@@ -166,7 +168,8 @@ module.exports = function (grunt) {
                     "moment.js": "moment/moment.js",
                     "ionic.min.js": "ionic/release/js/ionic.js",
                     "ionic-angular.min.js": "ionic/release/js/ionic-angular.js",
-                    "underscore.js" : "underscore/underscore.js"
+                    "underscore.js": "underscore/underscore.js",
+                    "lz-string.js": "lz-string/libs/lz-string.js"
                 }
             },
             css: {
@@ -215,7 +218,8 @@ module.exports = function (grunt) {
                     "moment.js": "moment/min/moment.min.js",
                     "ionic.min.js": "ionic/release/js/ionic.min.js",
                     "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js",
-                    "underscore.js": "underscore/underscore-min.js"
+                    "underscore.js": "underscore/underscore-min.js",
+                    "lz-string.js": "lz-string/libs/lz-string.min.js"
                 }
             }
         },
@@ -396,7 +400,7 @@ module.exports = function (grunt) {
         uglify: {
             options: {
                 mangle: {
-                    except: ["jQuery", "angular", "persistence", "constants", "ionic", "_"]
+                    except: ["jQuery", "angular", "persistence", "constants", "ionic", "_", "LZString"]
                 }
             },
             release: {
@@ -505,7 +509,7 @@ module.exports = function (grunt) {
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
     grunt.registerTask("tagsdevbuild", ["tags:buildTranspiledScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
     grunt.registerTask("devlocal", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "tagsdev"]);
-    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "babel:debug", "tagsdevbuild"]);
+    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "babel:debug", "tagsdevbuild", "copy:build"]);
     grunt.registerTask("default", ["devlocal"]);
     //#endregion
 
@@ -562,7 +566,7 @@ module.exports = function (grunt) {
                 // Fix for when the plugins/<platform>.json file is accidently checked into source control 
                 // without the corresponding contents of the platforms folder. This can cause the behavior
                 // described here: http://stackoverflow.com/questions/30698118/tools-for-apache-cordova-installed-plugins-are-skipped-in-build 
-                var platformPluginJsonFile = path.join(projectPath, "plugins", platform.trim() + ".json")
+                var platformPluginJsonFile = path.join(projectPath, "plugins", platform.trim() + ".json");
                 if (fs.existsSync(platformPluginJsonFile)) {
                     console.log(platform + ".json file found at \"" + platformPluginJsonFile + "\". Removing to ensure plugins install properly in newly added platform.")
                     fs.unlinkSync(platformPluginJsonFile);

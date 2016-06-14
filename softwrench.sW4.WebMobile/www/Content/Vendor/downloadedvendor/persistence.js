@@ -47,8 +47,9 @@ if (typeof exports !== 'undefined') {
 
 }
 else {
-	window = window || {};
-	window.persistence = initPersistence(window.persistence || {});
+    //window = window || {};
+    if (!window) window = {};
+    window.persistence = initPersistence(window.persistence || {});
 }
 
 

@@ -7,5 +7,15 @@
             "password": "softwrench.offline",
             "keystoreType": ""
         }
+    },
+    "ios": {
+    	"debug": {
+    		"codeSignIdentity": "iOS Development",
+    		"provisioningProfile": "4cff9e9b-37e9-4718-908e-2f8447337cfd"
+    	},
+    	"release": {
+    		"codeSignIdentity": "iOS Distribution",
+    		"provisioningProfile": "eb3eb003-e2c3-45c3-9511-431368e39cf5"
+    	}
     }
 }

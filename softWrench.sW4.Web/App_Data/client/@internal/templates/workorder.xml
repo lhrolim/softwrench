@@ -656,13 +656,6 @@
           <event  type="onassociationsloaded" service="workorderService" method="setLocationFromAsset"/>
         </schema>
 
-        <list platform="mobile" title="Work Order Grid">
-          <field attribute="wonum" label="Number" qualifier="title"/>
-          <field attribute="asset_.description" label="Asset" qualifier="subtitle"/>
-          <field attribute="status" label="Status" qualifier="featured"/>
-          <field attribute="description" label="Description" qualifier="excerpt"/>
-        </list>
-
         <schema id="readings" title="Enter Meter Readings" platform="web">
           <field attribute="assetnum" hidden="true"></field>
           <field attribute="location" hidden="true"></field>
@@ -673,75 +666,6 @@
             <collectionproperties allowcreation="false" listschema="composition"/>
           </composition>
         </schema>
-
-
-        <schema id="newdetail" platform="mobile" stereotype="detailnew">
-          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
-          <field attribute="wopriority" label="Priority">
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-            <number decimals="0" min="0" max="999" />
-          </field>
-          <association label="Location" target="location" labelfield="location.description" />
-          <association label="Asset" target="assetnum" labelfield="asset.description" />
-          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
-          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
-          <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
-          <composition relationship="worklog" label="Work Logs" />
-          <composition relationship="matusetrans" label="Materials" />
-          <composition relationship="labtrans" label="Labor">
-            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
-          </composition>
-          <!--<composition relationship="attachment" label="Attachments" />-->
-          <field attribute="description" label="Description"  />
-          <field label="Details" attribute="ld_.ldtext">
-            <renderer type="richtext"/>
-          </field>
-
-        </schema>
-
-        <detail platform="mobile" title="Work Order">
-          <field attribute="workorderid" hidden="true"/>
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true"/>
-          <field attribute="woclass" hidden="true"/>
-          <field attribute="hasfollowupwork" hidden="true"/>
-          <field attribute="origrecordid" hidden="true"/>
-          <field attribute="origrecordclass" hidden="true"/>
-
-          <field attribute="wonum" label="Number" hidden="true" />
-          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
-          <field attribute="changeby" label="Changed By" hidden="true"/>
-          <field attribute="owner" label="Owner"  readonly="true"/>
-
-          <association label="Status" target="status" labelfield="synstatus.description">
-            <dataprovider prefilterfunction="FilterStatusCodes"/>
-            <renderer type="lookup" params="avoidautofocus=true"/>
-          </association>
-
-          <field attribute="wopriority" label="Priority">
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-            <number decimals="0" min="0" max="999" />
-          </field>
-
-          <association label="Location" target="location" labelfield="location.description" />
-
-          <association label="Asset" target="assetnum" labelfield="asset.description" />
-          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
-          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
-          <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
-          <composition relationship="worklog" label="Work Logs" />
-          <composition relationship="matusetrans" label="Materials" />
-          <composition relationship="labtrans" label="Labor">
-            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
-          </composition>
-          <!--<composition relationship="attachment" label="Attachments">
-            <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-          </composition>-->
-          <field attribute="description" label="Description"  />
-          <field label="Details" attribute="ld_.ldtext">
-            <renderer type="richtext"/>
-          </field>
-        </detail>
 
         <schema id="workordercreationmodal" title="Fill In Workorder Details" stereotype="detail.modal">
           <field attribute="description" label="Summary:" requiredexpression="true"/>
@@ -758,8 +682,82 @@
           <field attribute="siteid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
         </schema>
+        
+        <!-- region: mobile-->
+        <list platform="mobile" title="Work Order Grid">
+          <field attribute="wonum" label="Number" qualifier="title"/>
+          <field attribute="asset_.description" label="Asset" qualifier="subtitle"/>
+          <field attribute="status" label="Status" qualifier="featured"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+        </list>
 
+        <schema id="newdetail" platform="mobile" stereotype="detailnew">
+          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
+          <field attribute="wopriority" label="Priority">
+            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
+            <number decimals="0" min="0" max="999" />
+          </field>
+          <association label="Location" target="location" labelfield="location.description" />
+          <association label="Asset" target="assetnum" labelfield="asset.description" />
+          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
+          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
+          <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
+          <field attribute="description" label="Description"  />
+          <field label="Details" attribute="ld_.ldtext">
+            <renderer type="richtext"/>
+          </field>
 
+          <composition relationship="worklog" label="Work Logs" />
+          <composition relationship="matusetrans" label="Materials" />
+          <composition relationship="labtrans" label="Labor">
+            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+          </composition>
+          <composition relationship="attachment" label="Attachments" >
+            <collectionproperties allowupdate="false" />
+          </composition>
+        </schema>
+        
+        <detail platform="mobile" title="Work Order">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="woclass" hidden="true"/>
+          <field attribute="hasfollowupwork" hidden="true"/>
+          <field attribute="origrecordid" hidden="true"/>
+          <field attribute="origrecordclass" hidden="true"/>
+          <field attribute="wonum" label="Number" hidden="true" />
+          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
+          <field attribute="changeby" label="Changed By" hidden="true"/>
+          <field attribute="owner" label="Owner"  readonly="true"/>
+          <association label="Status" target="status" labelfield="synstatus.description">
+            <dataprovider prefilterfunction="FilterStatusCodes"/>
+            <renderer type="lookup" params="avoidautofocus=true"/>
+          </association>
+          <field attribute="wopriority" label="Priority">
+            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
+            <number decimals="0" min="0" max="999" />
+          </field>
+          <association label="Location" target="location" labelfield="location.description" />
+          <association label="Asset" target="assetnum" labelfield="asset.description" />
+          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
+          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
+          <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
+          <field attribute="description" label="Description" />
+          <field label="Details" attribute="ld_.ldtext">
+            <renderer type="richtext"/>
+          </field>
+          
+          <composition relationship="worklog" label="Work Logs" />
+          <composition relationship="matusetrans" label="Materials" />
+          <composition relationship="labtrans" label="Labor">
+            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+          </composition>
+          <composition relationship="attachment" label="Attachments">
+            <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+          </composition>
+          
+        </detail>
+        <!-- endregion -->
 
       </schemas>
 

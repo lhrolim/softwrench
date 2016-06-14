@@ -240,52 +240,33 @@
             },
 
             executeQueries: function (queriesToExecute, tx) {
-                var deferred = $q.defer();
-                var promise = deferred.promise;
-
-                var queries = queriesToExecute.map(function (query) {
-                    if (angular.isString(query)) {
+                const deferred = $q.defer();
+                const promise = deferred.promise;
+                
+                const queries = queriesToExecute.map(query => 
+                    angular.isString(query)
                         // using a formatted query String: tuple as [formatted query String, undefined]
                         // TODO: deprecate it
-                        return [query];
-                    }
-                    // using "prepared statement": tuple as [statement, query arguments]
-                    return [query.query, query.args];
-                });
+                        ? [query]
+                        // using "prepared statement": tuple as [statement, query arguments]
+                        : [query.query, query.args]
+                );
 
                 if (!tx) {
-                    persistence.transaction(function (closureTx) {
-                        persistence.executeQueriesSeq(closureTx, queries, function (res, err) {
-                            if (err) {
-                                deferred.reject(err);
-                            } else {
-                                deferred.resolve(res);
-                            }
-                        });
-                    });
+                    persistence.transaction((closureTx) =>
+                        persistence.executeQueriesSeq(closureTx, queries, (res, err) => err ? deferred.reject(err) : deferred.resolve(res))
+                    );
                 } else {
-                    persistence.executeQueriesSeq(tx, queries, function (res, err) {
-                        if (err) {
-                            deferred.reject(err);
-                        } else {
-                            deferred.resolve(res);
-                        }
-                    });
+                    persistence.executeQueriesSeq(tx, queries, (res, err) => err ? deferred.reject(err) : deferred.resolve(res));
                 }
                 return promise;
             },
 
             findSingleByQuery: function (entity, query, options) {
-                var optionsToUse = !!options ? angular.copy(options) : {};
+                const optionsToUse = !!options ? angular.copy(options) : {};
                 optionsToUse.pagesize = 1;
                 optionsToUse.pageNumber = 1;
-                return this.findByQuery(entity, query, options)
-                    .then(function (results) {
-                        if (!results || results.length <= 0) {
-                            return null;
-                        }
-                        return results[0];
-                    });
+                return this.findByQuery(entity, query, options).then(results => !results || results.length <= 0 ? null : results[0]);
             },
 
             /**
@@ -297,11 +278,9 @@
              * @returns Promise resolved with the count value 
              */
             countByQuery: function (entity, query) {
-                var deferred = $q.defer();
-                var filter = createFilter(entity, query);
-                filter.count(function (count) {
-                    deferred.resolve(count);
-                });
+                const deferred = $q.defer();
+                const filter = createFilter(entity, query);
+                filter.count(count => deferred.resolve(count));
                 return deferred.promise;
             },
 

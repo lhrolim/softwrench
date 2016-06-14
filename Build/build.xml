@@ -3,7 +3,7 @@
   <description>Softwrench</description>
   <property name="debug" value="true" overwrite="false" />
 
-
+  <property name="IsWindows" value="${platform::is-windows()}"/>
   <property name="MSBuildPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe" />
   <property name="MSDeployPath" value="C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" />
   <!--   <property name="MSTestPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSTest.exe" />-->
@@ -84,14 +84,14 @@
   </if>
   
   <!-- the property logtime if true turns on the log of targets time duration -->
-  <if test="${environment::variable-exists('logtime')}">
+  <if test="${IsWindows and environment::variable-exists('logtime')}">
     <property name="logtime" value="${environment::get-variable('logtime')}" />
   </if>
 
   <target name="fulldeploy" depends="compile,changelog,copydlls,copylinkedfolders,webcompile,deploy"/>
 
   <target name="fullmultideploy">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <echo message="Multiple Full Deploy Task" />
 
     <property name="basedeploy" value="${deploypath}"></property>
@@ -142,7 +142,7 @@
     <if test="${failure == 'true'}">
       <fail message="Failure in clients: ${failureclients}!!!!!!!!!!!!!!!!!!!!!!" />
     </if>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <target name="generatedeploynocompile" depends="copydlls,copylinkedfolders,webcompile"/>
@@ -159,11 +159,11 @@
       <arg value="/verbosity:quiet" />
       <arg value="/nologo" />
     </exec>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <target name="webcompile" description="Runs fron-end tools (package management, transpilers, etc)">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <!-- install npm dependencies -->
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
@@ -183,12 +183,12 @@
       <arg value="/c"></arg>
       <arg value='grunt --path="${deploypath}" --skiptest="${skiptest}"'></arg>
     </exec>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <!-- TODO: extract similar tasks. Copying just for the sake of trial-and-error testing -->
   <target name="webtest" description="Runs karma tests" depends="generatelinks">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <!-- install npm dependencies -->
     <echo message="installing npm dependencies"></echo>
     <exec program="cmd" workingdir="." failonerror="true">
@@ -201,12 +201,12 @@
       <arg value="/c"></arg>
       <arg value='grunt test'></arg>
     </exec>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
 
   <target name="rmnodemodules" description="Removes 'softWrench.sW4.Web/node_modules' directory if it exists">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <echo message="deleting 'softWrench.sW4.Web/node_modules' directory"></echo>
     <!-- Nant's <delete> task solution-->
     <!-- <delete dir="../softWrench.sW4.Web/node_modules" 
@@ -249,11 +249,11 @@
         <arg value="rmdir node_modules /S /Q"></arg>
       </exec>
     </if>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <target name="test">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <delete dir="${OutputDir}/testresults" failonerror="false"/>
     <delete file="TestResults.trx"/>
 
@@ -281,11 +281,11 @@
       <arg value="- -single-run"/>
     </exec>-->
     <call target="webtest"/>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <target name="mkdir">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <!--    <delete includeemptydirs="true">-->
     <!--      <fileset basedir="${OutputDir}/deploy">-->
     <!--        <include name="**\*" />-->
@@ -294,11 +294,11 @@
 
     <mkdir dir="${deploypath}"/>
     <mkdir dir="${deploypath}/bin"/>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <target name="copydlls" depends="mkdir">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <copy todir="${deploypath}" includeemptydirs="false">
       <fileset basedir="../softWrench.sW4.Web/">
         <include name="**/*" />
@@ -346,11 +346,11 @@
         <include name="**"/>
       </fileset>
     </attrib>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <target name="copylinkedfolders" depends="mkdir">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <echo message="Excluding ${platformtoexclude} files" />
 
 
@@ -414,12 +414,12 @@
         <echo message="Copied files for ${projectname}" />
       </if>
     </foreach>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
 
   <target name="releaseprepare" >
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <xmlpoke file="../softWrench.sW4.Web/Web.config"
                xpath="/configuration/appSettings/add[@key = 'version']/@value"
                value="${version}" failonerror="true"/>
@@ -432,12 +432,12 @@
         <namespace prefix="x" uri="http://www.w3.org/ns/widgets" />
       </namespaces>
     </xmlpoke>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
 
   <target name="readofflineversion">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <xmlpeek property="currentofflineversion" file="../softWrench.sW4.WebMobile/config.xml"
            xpath="//x:widget/@version">
       <namespaces>
@@ -450,11 +450,11 @@
     <property name="off_versiontest" value="${environment::get-variable('OFF_VERSION')}" />
 
     <echo message="${off_versiontest}" file="tmp_offversion.txt"/>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <target name="appendofflinecommit" >
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <xmlpeek property="currentofflineversion" file="../softWrench.sW4.WebMobile/config.xml"
             xpath="//x:widget/@version">
       <namespaces>
@@ -472,34 +472,34 @@
         </namespaces>
       </xmlpoke>
     </if>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
 
   <target name="setclient">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <xmlpoke file="${deploypath}/Web.config"
                xpath="/configuration/appSettings/add[@key = 'clientkey']/@value"
                value="${client}" failonerror="true"/>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <target name="setenv">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <xmlpoke file="${deploypath}/Web.config"
                xpath="/configuration/appSettings/add[@key = 'profile']/@value"
                value="${profile}" failonerror="true"/>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <target name="zip" depends="changelog,copydlls,copylinkedfolders,webcompile,setclient,setenv">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4_${platform}_${client}_${profile}_${build.date}.zip">
       <fileset basedir="${deploypath}">
         <include name="**/*" />
       </fileset>
     </zip>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
 
@@ -515,7 +515,7 @@
   <!--  </target>-->
 
   <target name="deploypeek" depends="setenv,setclient">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
 
     <property name="clientfile1" value="${deploypath}/App_Data/Client/${deployclientsw4}/deploy.xml" />
     <property name="clientfile2" value="../softwrench.sW4.${deployclientsw4}/metadata/${deployclientsw4}/deploy.xml" />
@@ -563,11 +563,11 @@
 
     <echo message="urlPath: + ${msdeploy_url}"/>
     <echo message="iisPath:  + ${iispath}"/>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <target name="deploy" depends="setenv,setclient,deploypeek">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <exec program="${MSDeployPath}">
       <arg line="-verb:sync" />
       <arg line="-source:iisApp=${deploypath},includeAcls=true" />
@@ -576,11 +576,11 @@
       <arg line="-enableRule:AppOffline" />
       <arg line="-verbose" />
     </exec>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <target name="generatelinks">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
 
     <exec program="cmd" workingdir="../softwrench.sW4.Web/Content"
           unless="${directory::exists('../softwrench.sW4.Web/Content/Customers')}">
@@ -654,12 +654,97 @@
         </if>
       </if>
     </foreach>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
+  <!-- #region: copy SWOFF dependencies  -->
+  <target name="copyLinksMobile" description="Copies the shared and customer folders instead of just linking them (useful for iOS remote build)">
+    <if test="${IsWindows}"><logtimestart/></if>
+    <foreach item="Folder" in="../" property="foldername">
+      <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
+      <property name="customerlinkcreated" value="1" />
+      <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
+      <property name="sharedcommonsplaceholder" value="${foldername}/shared_commons.placeholder" />
+      <property name="offlinefolder" value="${foldername}/offline_content" />
 
+      <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
+      <property name="length" value="${string::get-length(foldername)}" />
+      <property name="size" value="${string::get-length(foldername) - string::last-index-of(foldername, '.')-1}" />
+
+      <property name="clientname" value="${string::substring(foldername,indexof,size)}" />
+
+      <if test="${file::exists(customerplaceholder)}">
+        <echo message="${foldername}" />
+        <echo message="${clientname}"/>
+
+        <!--
+        <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/www/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <arg value="/c"/>
+          <arg line='mklink /D ${clientname} "${foldername}\web_content\${clientname}"'/>
+        </exec>-->
+
+        <if test="${directory::exists(offlinefolder)}">
+          <echo message="creating symbolic link for ${clientname}" />
+
+          <copy todir="../softwrench.sw4.WebMobile/www/Content/Customers/${clientname}_offline">
+          	<fileset basedir="${foldername}/offline_content/${clientname}/">
+     					<include name="**/*" />
+          	</fileset>
+          </copy>	
+        </if>
+
+        <if test="${customerlinkcreated =='0'}">
+          <echo message="copied contents for ${clientname}" />
+        </if>
+      </if>
+
+
+      <if test="${file::exists(sharedplaceholder)}">
+        <echo message="${foldername}" />
+        <echo message="${clientname}"/>
+
+        <if test="${directory::exists(offlinefolder)}">
+        	<copy todir="../softwrench.sw4.WebMobile/www/Content/Shared/${clientname}_offline">
+        		<fileset basedir="${foldername}/offline_content/${clientname}/">
+     					<include name="**/*" />
+  					</fileset>
+        	</copy>
+        </if>
+
+        <if test="${customerlinkcreated =='0'}">
+          <echo message="copied contents for ${clientname}" />
+        </if>
+      </if>
+
+      <if test="${file::exists(sharedcommonsplaceholder)}">
+        <echo message="${foldername}" />
+        <echo message="${clientname}"/>
+
+        <copy todir="../softwrench.sw4.WebMobile/www/Content/Shared/${clientname}">
+        	<fileset basedir="${foldername}/web_content/${clientname}/">
+        		<include name="**/*" />
+        	</fileset>
+        </copy>
+
+        <if test="${directory::exists(offlinefolder)}">
+          <copy todir="../softwrench.sw4.WebMobile/www/Content/Shared/${clientname}_offline">
+          	<fileset basedir="${foldername}/offline_content/${clientname}/">
+          		<include name="**/*"/>
+          	</fileset>
+          </copy>
+        </if>
+
+        <if test="${customerlinkcreated =='0'}">
+          <echo message="copied contents for ${clientname}" />
+        </if>
+      </if>
+
+    </foreach>
+    <if test="${IsWindows}"><logtimeend/></if>
+  </target>
+  <!-- #endregion -->
 
   <target name="generatelinksMobile">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
       <property name="customerlinkcreated" value="1" />
@@ -738,7 +823,7 @@
       </if>
 
     </foreach>
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
   <!-- - Builds the changelog and instalation tasks files (only if dochangelog env variavel is true); -->
@@ -746,7 +831,7 @@
   <!-- - Sends one email with release notes (only if changelogrntolist env variable is set); -->
   <!-- - Sends one email with instalation tasks (only if changelogittolist env variable is set). -->
   <target name="changelog" depends="mkdir">
-    <logtimestart/>
+    <if test="${IsWindows}"><logtimestart/></if>
 
     <property name="DoChangelog" value="false" />
     <if test="${environment::variable-exists('dochangelog')}">
@@ -828,10 +913,10 @@
       <echo message="Instalation tasks email not sent due to the absence of enviroment variable 'changelogittolist'." />
     </if> 
 
-    <logtimeend/>
+    <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
-  <script language="C#">
+  <script language="C#" if="${IsWindows}">
     <references>
       <include name="./dependencies/softWrench.sw4.nant.dll" />
     </references>

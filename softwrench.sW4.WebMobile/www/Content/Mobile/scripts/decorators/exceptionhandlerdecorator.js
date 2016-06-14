@@ -3,7 +3,7 @@
 
     mobileServices.config(["$provide", function ($provide) {
 
-        $provide.decorator("$exceptionHandler", ["$delegate", "$injector", "rollingLogFileConstants", function ($delegate, $injector, rollingLogFileConstants) {
+        $provide.decorator("$exceptionHandler", ["$delegate", "$injector", "fileConstants", "rollingLogFileConstants", function ($delegate, $injector, fileConstants, rollingLogFileConstants) {
             
             var swAlertPopup, $log, logger, contextService;
 
@@ -15,7 +15,7 @@
             }
 
             function logFilePath() {
-               var path = cordova.file[rollingLogFileConstants.logFileDirectory];
+                var path = cordova.file[fileConstants.logFileDirectory];
                 if (!path.endsWith("/")) {
                     path += "/";
                 }
@@ -32,13 +32,13 @@
             function alertLogLocation() {
                 // getting around circular deps: $rootScope <- contextService <- $exceptionHandler <- $rootScop
                 contextService = lazyInstance(contextService, "contextService");
-                if (!rollingLogFileConstants.logToFileEnabled || contextService.isDev()) {
+                if (!fileConstants.fileEnabled || contextService.isDev()) {
                     return;
                 }
                 // getting around circular deps: $exceptionHandler <- $interpolate <- $compile <- $ionicTemplateLoader <- $ionicPopup <- swAlertPopup <- $exceptionHandler <- $rootScope
                 swAlertPopup = lazyInstance(swAlertPopup, "swAlertPopup");
-
-                var path = logFilePath();
+                
+                const path = logFilePath();
                 swAlertPopup.alert({
                     title: "Unexpected error",
                     template: "Check the application logs in the files " + path

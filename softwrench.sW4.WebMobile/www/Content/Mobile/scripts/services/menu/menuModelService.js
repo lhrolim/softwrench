@@ -31,8 +31,10 @@
 
             initAndCacheFromDB: function () {
                 var log = $log.getInstance("menuModelService#initAndCacheFromDB");
-                return dao.findUnique("Menu").then(function (menu) {
-                    menuModel.dbData = menu;
+                return dao.findUnique("Menu").then(menu => {
+                    if (!!menu) {
+                        menuModel.dbData = menu;
+                    }
                     if (!menu) {
                         menu = new entities.Menu();
                         log.info("creating first menu");

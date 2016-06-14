@@ -89,7 +89,7 @@ String.format = function () {
     return s;
 };
 
-if (String.prototype.byteSize !== "function") {
+if (typeof String.prototype.byteSize !== "function") {
     /**
      * @returns String's size in bytes
      */

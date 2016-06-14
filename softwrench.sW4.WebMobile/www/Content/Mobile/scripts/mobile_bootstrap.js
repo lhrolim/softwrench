@@ -14,18 +14,26 @@ document.addEventListener("deviceready", function () {
  * @param {} element DOM element 
  * @returns {} $scope 
  */
-var $s = function (element) {
-    var elementWrapper = angular.element(element);
+window.$s = function (element) {
+    const elementWrapper = angular.element(element);
     if (typeof (elementWrapper["scope"]) !== "function") {
         return null;
     }
-    var scope = elementWrapper.scope();
+    const scope = elementWrapper.scope();
     //if (!scope || !scope['$parent']) {
     //    return scope;
     //}
     //return scope.$parent;
     return scope;
 };
+
+/**
+ * Allows screen tilt in mobile devices (required for iOS).
+ * 
+ * @param {Number} degrees 
+ * @returns {Boolean} 
+ */
+window.shouldRotateToOrientation = degrees => true;
 //#endregion
 
 //#region App Modules
@@ -77,10 +85,9 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             // that tells us about unregistered plugins
             if(isRippleEmulator()) $timeout(disableRipplePopup);
 
-            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-            // for form inputs)
+            // Show keyboard accessory bar
             if (window.cordova && window.cordova.plugins.Keyboard) {
-                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
             }
             // necessary to set fullscreen on Android in order for android:softinput=adjustPan to work
             if (ionic.Platform.isAndroid()) {
@@ -123,23 +130,28 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         }
 
         function loadInitialState() {
-            var authenticated = securityService.hasAuthenticatedUser();
+            const authenticated = securityService.hasAuthenticatedUser();
             crudContextService.restoreState();
             return routeService.loadInitialState(authenticated);
         }
 
-        $ionicPlatform.ready(function () {
+        function hideSplashScreen() {
+            return $timeout(() => {
+                if ($cordovaSplashscreen && angular.isFunction($cordovaSplashscreen.hide)) $cordovaSplashscreen.hide();
+            }, 1000);
+        }
+
+
+        $ionicPlatform.ready(() => {
             // loading eventual db stored values into context
-            initContext().then(function () {
+            initContext().then(() => {
                 attachEventListeners();
                 initCordovaPlugins();
                 initDataBaseDebuggingHelpers();
                 return loadInitialState();
-            }).then(function() {
-                $timeout(function() {
-                    $cordovaSplashscreen.hide();
-                }, 1000); // 1 second delay to prevent blank screen right after hiding the splash screen (empirically determined)
-            });
+            })
+            .then(hideSplashScreen); // 1 second delay to prevent blank screen right after hiding the splash screen (empirically determined)
+
         });
 
     }])
