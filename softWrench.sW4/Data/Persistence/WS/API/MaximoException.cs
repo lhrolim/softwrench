@@ -80,7 +80,9 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         public MaximoException([NotNull]Exception immediateCause, [NotNull]Exception rootCause, string additionalMessage = null) : base(rootCause.Message + " " + (additionalMessage ?? "")) {
             if (rootCause is SoapException) {
                 var ex = (SoapException)rootCause;
-                _soapStack = ex.Detail.InnerText;
+                if (ex.Detail != null) {
+                    _soapStack = ex.Detail.InnerText;
+                }
             }
 
             _immediate = immediateCause;
