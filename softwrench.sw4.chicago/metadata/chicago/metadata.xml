@@ -20,7 +20,7 @@
         <attribute name="pluspcustomer" type="varchar" required="false"/>
       </attributes>
     </entity>
-    
+
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
         <attribute name="outageduration" type="float" required="false"/>
@@ -216,7 +216,7 @@
         </schema>
       </schemas>
     </application>
-    
+
     <application entity="impacturgency" name="impacturgency" title="Impact Urgency">
       <schemas>
         <schema id="list" title="Impace Urgency List" stereotype="list">
@@ -230,7 +230,7 @@
         </schema>
       </schemas>
     </application>
-    
+
     <application entity="aticket" name="aticket" title="Ticket Audit">
       <schemas>
         <schema id="compositionlist" title="Ticket Audit List" stereotype="compositionlist">
@@ -253,7 +253,7 @@
         </schema>
       </schemas>
     </application>
-    
+
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
       <filters>
         <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
@@ -278,13 +278,27 @@
             <property key="list.click.schema" value="editdetail"/>
             <property key="list.defaultorderby" value="sr.ticketuid desc"/>
           </properties>
+
+          <commandbars>
+            <commandgroup position="gridtop">
+              <removecommand id="export"/>
+                
+              <container position="+export" id="" label="Reports" icon="fa-file-text-o" cssclasses="large-button">
+                <command id="export" icon="fa-file-text-o" label="Export Current Grid" service="excelService" method="exporttoexcel" parameters="schema,searchData,searchSort,searchOperator,paginationData" tooltip="Export to Excel" cssclasses="large-button"/>
+                <command id="dailyTicket" icon="fa-file-text-o" label="Daily Tickets By Department" service="chicagoChartService" method="dailyTicketCount" tooltip="Get the number of tickets opened daily for each department since the beginning of the year"
+                         cssclasses="large-button"/>
+                <command id="ticketByDepartment" icon="fa-file-text-o" label="Tickets Type By Department" service="chicagoChartService" method="ticketsByDepartment" tooltip="Get the number of tickets grouped by ticket type and department" cssclasses="large-button"/>
+              </container>
+            </commandgroup>
+          </commandbars>
+
         </schema>
-        
+
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail" redeclaring="true">
 
           <field attribute="ismticketid" hidden="true"/>
           <field attribute="ismticketuid" hidden="true"/>
-          
+
           <section orientation="horizontal">
             <field attribute="description" label="Summary" requiredexpression="true"/>
             <section id="statussection"/>
@@ -370,7 +384,7 @@
             </section>
             <section orientation="vertical">
               <header label="Dates" displacement="ontop" params="fieldset=true"/>
-              
+
               <section orientation="horizontal">
                 <field attribute="reportdate" label="Reported Date" default="@currentdatetime" readonly="true" requiredexpression="true">
                   <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
@@ -395,7 +409,7 @@
                 </field>
                 <field attribute="changeby" label="Changed By" default="@username" readonly="true"/>
               </section>
-              
+
               <section orientation="horizontal">
                 <field attribute="statusdate" label="Last Status Change Date" readonly="true">
                   <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
@@ -421,9 +435,9 @@
               </section>
             </section>
           </section>
-        
+
           <section orientation="horizontal" secondarycontent="true">
-            
+
             <section orientation="vertical">
               <section orientation="horizontal">
                 <field attribute="creationdate" label="Creation Date" default="@currentdatetime" readonly="true">
@@ -451,7 +465,7 @@
                 </association>
               </section>
             </section>
-            
+
             <section orientation="vertical">
               <section orientation="horizontal">
                 <field attribute="isglobal" label="Is Global Issue?">
@@ -477,13 +491,13 @@
           </section>
           <section id="compositions"/>
         </schema>
-        
+
         <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" redeclaring="true">
           <section id="statussection">
             <field attribute="status" label="Status" default="NEW" readonly="true"/>
           </section>
         </schema>
-      
+
         <schema id="editdetail" parentschema="adetail" stereotype="detail" title="Service Request Details" redeclaring="true">
           <section id="statussection">
             <association label="Status" target="status" labelfield="synstatus_.description" requiredexpression="true">
@@ -645,7 +659,7 @@
             </field>
           </customization>
         </schema>
-        
+
         <detail stereotype="compositiondetail" title="Work Log" redeclaring="false">
           <customization position="logtype">
             <association target="logtype" labelfield="LOGTYPE_.description" label="Log Type">

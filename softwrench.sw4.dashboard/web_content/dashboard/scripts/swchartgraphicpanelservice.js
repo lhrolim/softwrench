@@ -1,7 +1,7 @@
 ﻿(function (angular, $) {
     "use strict";
 
-    function swchartGraphicPanelService($rootScope, $compile, restService, crudContextHolderService) {
+    function swchartGraphicPanelService($rootScope,$log, $compile, restService, crudContextHolderService) {
         //#region Utils
 
         var config = {
@@ -64,9 +64,16 @@
                 });
         }
 
-        function processData(configuration , data) {
-            // sort by value descending
-            var processed = data.sort((d1, d2) => d2.fieldCount - d1.fieldCount);
+        function processData(configuration, data) {
+            const log = $log.get("swchartGraphicPanelService#processData", ["dashboard"]);
+            log.debug("processing data");
+
+            var processed = data;
+            if (!configuration.keepServerSort) {
+                // sort by value descending, unless specified on the server to keep original    
+                processed = data.sort((d1, d2) => d2.fieldCount - d1.fieldCount);
+                log.debug("sorting data descendently");
+            }
 
             // status -> open/close
             if (configuration.field === "status" && configuration.statusfieldconfig === "openclosed") {
@@ -91,6 +98,8 @@
                 const othersCount = processed.slice(configuration.limit).reduce((previous, current) => previous + current.fieldCount, 0);
                 // new array composed of top <limit> + 'others'
                 processed = topresults.concat({ fieldValue: "OTHERS", fieldLabel: "OTHERS", fieldCount: othersCount });
+
+                log.debug("overflowing data to others");
             }
 
             return processed;
@@ -258,13 +267,13 @@
 
         //#region Service Instance
         const service = {
-            loadGraphic: loadGraphic,
-            resizeGraphic: resizeGraphic,
-            onProviderSelected: onProviderSelected,
-            onBeforeAssociatePanel: onBeforeAssociatePanel,
-            onApplicationSelected: onApplicationSelected,
-            onDashboardSelected: onDashboardSelected,
-            filterSelectableApplications: filterSelectableApplications
+            loadGraphic,
+            resizeGraphic,
+            onProviderSelected,
+            onBeforeAssociatePanel,
+            onApplicationSelected,
+            onDashboardSelected,
+            filterSelectableApplications
         };
         return service;
         //#endregion
@@ -274,7 +283,7 @@
     angular
         .module("sw_layout")
         .factory("swchartGraphicPanelService",
-            ["$rootScope", "$compile", "restService", "crudContextHolderService", swchartGraphicPanelService]);
+            ["$rootScope","$log", "$compile", "restService", "crudContextHolderService", swchartGraphicPanelService]);
     //#endregion
 
 })(angular, jQuery);

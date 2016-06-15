@@ -38,14 +38,50 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SpreadsheetLight, Version=3.4.1.0, Culture=neutral, PublicKeyToken=32fbb46dc1730c57, processorArchitecture=MSIL">
+      <HintPath>..\packages\SpreadsheetLight.3.4.1\lib\SpreadsheetLight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20710.0\lib\net40\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="classes\com\cts\chicago\configuration\ChicagoChartInitializer.cs" />
+    <Compile Include="classes\com\cts\chicago\configuration\Dashboard\ChicagoChartInitializer.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\ChicagoConfigurationSetup.cs" />
+    <Compile Include="classes\com\cts\chicago\configuration\Dashboard\ChicagoDashBoarWhereClausedProvider.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\QuickSrChicagoISMProblemHandler.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\ChicagoISMProblemHandler.cs" />
+    <Compile Include="classes\com\cts\chicago\configuration\Reports\ChicagoExcelController.cs" />
+    <Compile Include="classes\com\cts\chicago\configuration\Reports\ChicagoReportProvider.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\UserDepartmentFetcher.cs" />
     <Compile Include="classes\com\cts\chicago\connector\ChicagoSRCrudConnector.cs" />
     <Compile Include="classes\com\cts\chicago\dataset\ChicagoServiceRequestDataSet.cs" />
@@ -58,6 +94,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <Content Include="auditchangedby.sql" />
+    <Content Include="web_content\chicago\scripts\aaa_chicagomodule.js" />
+    <Content Include="web_content\chicago\scripts\chicago_chart_service.js" />
     <Content Include="web_content\chicago\scripts\chicagosr_service.js" />
     <EmbeddedResource Include="metadata\chicago\properties.xml">
       <SubType>Designer</SubType>
@@ -98,6 +136,10 @@
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
       <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.web\cts.commons.web.csproj">
+      <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
+      <Name>cts.commons.web</Name>
     </ProjectReference>
     <ProjectReference Include="..\cts.commons\cts.commons.csproj">
       <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>

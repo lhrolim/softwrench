@@ -248,25 +248,25 @@ namespace softWrench.sW4.Web.Controllers.Application {
         }
 
 
-        public void ExportToExcel(string application, [FromUri]ApplicationMetadataSchemaKey key, [FromUri] PaginatedSearchRequestDto searchDTO, string module, string fileName) {
-            searchDTO.PageSize = searchDTO.TotalCount + 1;
-            if (module != null) {
-                _contextLookuper.LookupContext().Module = module;
-            }
-            var dataResponse = _dataController.Get(application,
-                                                      new DataRequestAdapter {
-                                                          Key = key,
-                                                          SearchDTO = searchDTO
-                                                      });
-            var loggedInUser = SecurityFacade.CurrentUser();
-
-            var excelFile = _excelUtil.ConvertGridToExcel(application, key, (ApplicationListResult)dataResponse, loggedInUser);
-            Response.Clear();
-            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.AddHeader("content-disposition", "attachment;filename={0}.xlsx".Fmt(fileName));
-            excelFile.SaveAs(Response.OutputStream);
-            Response.End();
-        }
+//        public void ExportToExcel(string application, [FromUri]ApplicationMetadataSchemaKey key, [FromUri] PaginatedSearchRequestDto searchDTO, string module, string fileName) {
+//            searchDTO.PageSize = searchDTO.TotalCount + 1;
+//            if (module != null) {
+//                _contextLookuper.LookupContext().Module = module;
+//            }
+//            var dataResponse = _dataController.Get(application,
+//                                                      new DataRequestAdapter {
+//                                                          Key = key,
+//                                                          SearchDTO = searchDTO
+//                                                      });
+//            var loggedInUser = SecurityFacade.CurrentUser();
+//
+//            var excelFile = _excelUtil.ConvertGridToExcel(application, (ApplicationListResult)dataResponse, loggedInUser);
+//            Response.Clear();
+//            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+//            Response.AddHeader("content-disposition", "attachment;filename={0}.xlsx".Fmt(fileName));
+//            excelFile.SaveAs(Response.OutputStream);
+//            Response.End();
+//        }
 
         public FileStreamResult DownloadFile(string fileName, string contentType, string path, bool setFileNameWithDate = false) {
             string content;

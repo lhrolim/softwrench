@@ -99,10 +99,10 @@ angular.module('sw_layout')
             activeRequests--;
             unLockCommandBars();
             unLockTabs();
-            if (activeRequests <= 0) {
+//            if (activeRequests <= 0) {
                 $rootScope.$broadcast('sw_ajaxerror', rejection.data);
                 alertService.notifyexception(rejection.data);
-            }
+//            }
         };
 
         return {

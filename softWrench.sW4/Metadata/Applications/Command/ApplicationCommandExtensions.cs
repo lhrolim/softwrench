@@ -27,7 +27,7 @@ namespace softWrench.sW4.Metadata.Applications.Command {
                     secureLeafs.Add(leaf);
                 }
             }
-            return !secureLeafs.Any() ? null : new ContainerCommand(container.Id, container.Label, container.Tooltip, container.Role, container.Position, container.Icon, container.Service, container.Method, secureLeafs, container.PermissionExpression);
+            return !secureLeafs.Any() ? null : new ContainerCommand(container.Id, container.Label, container.Tooltip, container.Role, container.Position, container.Icon, container.Service, container.Method, secureLeafs, container.PermissionExpression, container.CssClasses);
         }
 
         public static bool Permitted(this ICommandDisplayable command, InMemoryUser user, IList<ActionPermission> permissions) {

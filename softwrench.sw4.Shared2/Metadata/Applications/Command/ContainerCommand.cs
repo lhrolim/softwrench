@@ -37,6 +37,10 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             get; set;
         }
 
+        public string CssClasses {
+            get; set;
+        }
+
         public string ShowExpression {
             get; set;
         }
@@ -58,7 +62,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             return this;
         }
 
-        public ContainerCommand(string id, string label, string tooltip, string role, string position, string icon, string service, string method, IEnumerable<ICommandDisplayable> displayables, string permissionexpression) {
+        public ContainerCommand(string id, string label, string tooltip, string role, string position, string icon, string service, string method, IEnumerable<ICommandDisplayable> displayables, string permissionexpression,string cssClasses) {
             Id = id;
             Label = label;
             Tooltip = tooltip;
@@ -69,6 +73,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             Service = service;
             Method = method;
             PermissionExpression = permissionexpression;
+            CssClasses = cssClasses;
         }
 
         public bool IsDynamic() {

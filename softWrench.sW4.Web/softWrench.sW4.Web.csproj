@@ -70,8 +70,7 @@
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependencies\DocumentFormat.OpenXml.dll</HintPath>
+      <HintPath>..\packages\DocumentFormat.OpenXml.dll.1.0.2\lib\net45\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DotLiquid, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
@@ -368,7 +367,6 @@
       <DependentUpon>RichTextBox.aspx</DependentUpon>
     </Compile>
     <Compile Include="Util\CustomerResourceResolver.cs" />
-    <Compile Include="Util\ExcelUtil.cs" />
     <Compile Include="Util\I18NUtil.cs" />
     <Compile Include="Util\RequestUtil.cs" />
     <Compile Include="Util\RestUtil.cs" />
@@ -634,7 +632,6 @@
     <Compile Include="Controllers\Configuration\ConfigurationController.cs" />
     <Compile Include="Controllers\FaqApiController.cs" />
     <Compile Include="Controllers\Faq\FaqController.cs" />
-    <Compile Include="Controllers\FileDownloadController.cs" />
     <Compile Include="Controllers\HapagHomeController.cs" />
     <Compile Include="Common\MockingUtils.cs" />
     <Compile Include="Controllers\MyProfile\MyProfileController.cs" />
@@ -860,9 +857,6 @@
     <Content Include="Content\Templates\usersetup\forgotpassword.html" />
     <Content Include="Content\Templates\usersetup\welcomeemail_manualpassword.html" />
     <Content Include="Content\Templates\usersetup\welcomeemail_automaticpassword.html" />
-    <Content Include="Dependencies\DocumentFormat.OpenXml.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Dependencies\FluentMigrator.Runner.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -927,6 +921,12 @@
     <Content Include="Content\Templates\crud\crud_input.html" />
     <Content Include="Content\Templates\hapag\hapagsearch.html" />
     <Content Include="Content\Templates\menu\menuitem.html" />
+    <None Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.1.js" />
+    <Content Include="Scripts\jquery-2.1.1.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\nugetexample.js" />
     <Content Include="softWrench.sW4.Controls.WebForms.dll" />
     <Content Include="Content\Scripts\client\signin\signin.js" />
     <Content Include="UserControls\Report.ascx" />
@@ -962,6 +962,7 @@
     <Content Include="Views\UserSetup\DefinePassword.cshtml" />
     <Content Include="Views\Shared\_NoMenuLayout.cshtml" />
     <Content Include="Views\UserSetup\SecurityException.cshtml" />
+    <Content Include="Scripts\jquery-2.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />

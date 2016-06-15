@@ -287,6 +287,7 @@
     <attribute name="icon" type="string"></attribute>
     <attribute name="service" type="string"></attribute>
     <attribute name="method" type="string"></attribute>
+    <attribute name="cssclasses" type="string"></attribute>
   </complexType>
 
 

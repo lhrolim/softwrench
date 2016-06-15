@@ -23,6 +23,7 @@
                     <button ng-if="command.service != null && shouldShowCommand(command)"
                             type="button"
                             ng-click="executeService(command)"
+                            ng-class="buttonClasses(getCommand(command))"
                             href="#"
                             ng-enabled="command.service!=null"
                             data-original-title="{{commandtooltip(command)}}"

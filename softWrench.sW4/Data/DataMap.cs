@@ -77,5 +77,9 @@ namespace softWrench.sW4.Data {
             return new DataMap(application,fields.ToDictionary(f=> f.Key, f=> (object)f.Value));
         }
 
+        public static DataMap GetInstanceFromDictionary(string application, IDictionary<string, object> fields) {
+            return new DataMap(application, fields.ToDictionary(f => f.Key, f => f.Value));
+        }
+
     }
 }

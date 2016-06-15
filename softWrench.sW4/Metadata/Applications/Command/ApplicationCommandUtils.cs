@@ -35,8 +35,7 @@ namespace softWrench.sW4.Metadata.Applications.Command {
         }
 
         private static IList<ActionPermission> LocateActionPermissions(MergedUserProfile profile, string barKey) {
-            if (barKey.GetNumberOfItems("_") < 2 || !barKey.Contains("actions")) {
-                //only actions are customizable at this point
+            if (barKey.GetNumberOfItems("_") < 2 ) {
                 return new List<ActionPermission>();
             }
             var applicationFinalDelimiter = 1;

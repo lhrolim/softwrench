@@ -66,7 +66,7 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
             return resultSet.Cast<IDictionary<string, object>>()
                 // cast so ExpandoObject's properties can be indexed by string key
                 .Select(d => {
-                    var fieldValue = (string)d[propertyName];
+                    var fieldValue = d[propertyName].ToString();
                     var fieldCountLong = d[ctes.FIELD_VALUE_VARIABLE_NAME] as long?;
                     var fieldCount = fieldCountLong ?? Convert.ToInt64((int) d[ctes.FIELD_VALUE_VARIABLE_NAME]);
                     // value is `null`: label configured by request. Otherwise try and grab the label from the query

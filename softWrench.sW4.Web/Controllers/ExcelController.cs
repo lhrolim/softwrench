@@ -5,11 +5,14 @@ using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Security.Context;
 using System.Web.Http;
-using cts.commons.Util;
+using cts.commons.web.Controller;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Web.Util;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
+using CompressionUtil = cts.commons.Util.CompressionUtil;
 
 namespace softWrench.sW4.Web.Controllers {
 
@@ -19,8 +22,7 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly DataController _dataController;
         private readonly ExcelUtil _excelUtil;
 
-        public ExcelController(IContextLookuper contextLookuper, DataController dataController, ExcelUtil excelUtil)
-        {
+        public ExcelController(IContextLookuper contextLookuper, DataController dataController, ExcelUtil excelUtil) {
             _contextLookuper = contextLookuper;
             _dataController = dataController;
             _excelUtil = excelUtil;
@@ -40,18 +42,27 @@ namespace softWrench.sW4.Web.Controllers {
             });
 
             var loggedInUser = SecurityFacade.CurrentUser();
-
-            var excelFile = _excelUtil.ConvertGridToExcel(application, key, (ApplicationListResult)dataResponse, loggedInUser);
-            var stream = new MemoryStream();
-            excelFile.SaveAs(stream);
-            stream.Close();
             var fileName = GetFileName(application, key.SchemaId) + ".xls";
-            var result = new FileContentResult(CompressionUtil.Compress(stream.ToArray()), System.Net.Mime.MediaTypeNames.Application.Octet) {
-                FileDownloadName = (string)StringUtil.FirstLetterToUpper(fileName)
-            };
-            Response.AddHeader("Content-encoding", "gzip");
-            return result;
+
+            return DoExport(fileName, (ApplicationListResult) dataResponse, loggedInUser);
         }
+
+        //TODO: move to some sort of commons package
+        protected FileContentResult DoExport(string fileName, ApplicationListResult dataResponse, InMemoryUser loggedInUser) {
+
+            var excelFile = _excelUtil.ConvertGridToExcel(dataResponse, loggedInUser);
+            using (var stream = new MemoryStream()) {
+                excelFile.SaveAs(stream);
+                stream.Close();
+                var result = new FileContentResult(CompressionUtil.Compress(stream.ToArray()),
+                    System.Net.Mime.MediaTypeNames.Application.Octet) {
+                    FileDownloadName = (string)StringUtil.FirstLetterToUpper(fileName)
+                };
+                Response.AddHeader("Content-encoding", "gzip");
+                return result;
+            }
+        }
+
 
         public string GetFileName(string application, string schemaId) {
             if (application != "asset") {

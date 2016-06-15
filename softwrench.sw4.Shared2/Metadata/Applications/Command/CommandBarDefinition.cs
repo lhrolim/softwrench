@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Command;
 
@@ -25,6 +26,23 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
         [NotNull]
         public List<ICommandDisplayable> Commands {
             get; set;
+        }
+
+        /// <summary>
+        /// Holds the list of commands originally declared before any customization has happened
+        /// </summary>
+        [JsonIgnore]
+        [NotNull]
+        public ISet<string> OriginalCommandIds {
+            get; set;
+        }
+
+        [JsonIgnore]
+        [NotNull]
+        public IEnumerable<ICommandDisplayable> CustomizedCommands {
+            get {
+                return Commands.Where(c => !OriginalCommandIds.Contains(c.Id));
+            }
         }
 
         public ClientPlatform? Platform {
@@ -81,7 +99,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
         }
 
         public override string ToString() {
-            return string.Format("Id: {0} Number of Commands: {1}", Id,Commands.Count);
+            return string.Format("Id: {0} Number of Commands: {1}", Id, Commands.Count);
         }
     }
 }

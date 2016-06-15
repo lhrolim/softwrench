@@ -1234,6 +1234,7 @@
     <attribute name="service" type="string"></attribute>
     <attribute name="method" type="string"></attribute>
     <attribute name="permissionexpression" type="string" />
+    <attribute name="cssclasses" type="string"></attribute>
   </complexType>
 
   <complexType name="headerType">
