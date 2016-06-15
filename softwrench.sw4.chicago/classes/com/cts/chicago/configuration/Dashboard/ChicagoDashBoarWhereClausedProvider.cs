@@ -13,6 +13,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Dashboard
         /// </summary>
         private const string SR_STATUS_DAILY = @"select day(creationdate) as day, count(creationdate) as countBy from sr
                 where month(creationdate) = {0}
+                and SR.pluspcustomer like 'CPS-00'
                 group by day(creationdate)
                 order by day ";
 

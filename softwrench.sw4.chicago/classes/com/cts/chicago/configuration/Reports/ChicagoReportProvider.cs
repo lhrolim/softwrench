@@ -13,6 +13,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Reports {
 from sr 
 where creationdate is not null and department is not null
 and year(creationdate) = {0}
+and SR.pluspcustomer like 'CPS-00'
 group by CONVERT(char(10), creationdate,126),department
 order by creationdate,department
 ";
@@ -22,6 +23,7 @@ order by creationdate,department
 from sr 
 where tickettype is not null and department is not null
 and year(creationdate) = 2016
+and SR.pluspcustomer like 'CPS-00'
 group by department,tickettype
 order by department,tickettype
 ";
