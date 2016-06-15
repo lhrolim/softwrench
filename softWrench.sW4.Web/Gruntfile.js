@@ -170,7 +170,7 @@ module.exports = function (grunt) {
                     "<%= app.content %>/modules/**/*.js",
 
 
-               // base otb
+                    // base otb
                     "<%= app.content %>/Scripts/customers/otb/*.js",
                     // customers shared
                     "<%= app.content %>/Scripts/customers/shared/*.js",
@@ -186,7 +186,23 @@ module.exports = function (grunt) {
             },
             dev: {
                 browsers: ["PhantomJS"],
-                singleRun: true
+                singleRun: true,
+                options: {
+                    babelPreprocessor: {
+                        options: {
+                            presets: ["es2015"],
+                            sourceMap: false
+                        }
+                    },
+                    preprocessors: {
+                        'Content/Shared/**/*.js': ["babel"],
+                        'Content/Scripts/**/*.js': ["babel"],
+                        'Content/modules/**/*.js': ["babel"],
+                        'Content/Customers/**/scripts/**/*.js': ["babel"],
+                        '../softwrench.sw4.jstest/tests/**/*.js': ["babel"],
+                        'Content/Templates/**/*.html': ["ng-html2js"]
+                    }
+                }
             },
             tdd: {
                 browsers: ["Chrome"],
