@@ -1012,10 +1012,6 @@
       <Project>{639d7dc5-14f8-4cda-a10e-4f8395d1320b}</Project>
       <Name>softwrench.sw4.wopro</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.xerox\softwrench.sw4.xerox.csproj">
-      <Project>{d704fc33-6b04-44a1-b12f-a8c196127a08}</Project>
-      <Name>softwrench.sw4.xerox</Name>
-    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.activitystream\softwrench.sw4.activitystream.csproj">
       <Project>{34d2e894-c3aa-4f6e-b562-7a91d3078793}</Project>
       <Name>softwrench.sw4.activitystream</Name>
@@ -1064,10 +1060,6 @@
       <Project>{4812b935-8303-4b80-9e32-8cd81abefc9f}</Project>
       <Name>softwrench.sw4.firstsolar</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.fluor\softwrench.sw4.fluor.csproj">
-      <Project>{d31084ae-e36f-4328-a6e2-a92aa3aca623}</Project>
-      <Name>softwrench.sw4.fluor</Name>
-    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.gric\softwrench.sw4.gric.csproj">
       <Project>{3b4ed6c6-ba78-45cd-8af9-964f3dc409e6}</Project>
       <Name>softwrench.sw4.gric</Name>
@@ -1083,18 +1075,6 @@
     <ProjectReference Include="..\softwrench.sw4.manchester\softwrench.sw4.manchester.csproj">
       <Project>{75C4B153-E741-4D16-9F10-96B2F6335331}</Project>
       <Name>softwrench.sw4.manchester</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.nasco\softwrench.sw4.nasco.csproj">
-      <Project>{eca0c543-9a9a-48b8-bf22-4140656fff2c}</Project>
-      <Name>softwrench.sw4.nasco</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.ninewest\softwrench.sw4.ninewest.csproj">
-      <Project>{08b929a1-6e1c-4eb7-9357-57df9be07381}</Project>
-      <Name>softwrench.sw4.ninewest</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.nisource\softwrench.sw4.nisource.csproj">
-      <Project>{e15deedc-a4c9-45d2-b548-459c5da52a14}</Project>
-      <Name>softwrench.sw4.nisource</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.offlineserver\softwrench.sw4.offlineserver.csproj">
       <Project>{1a476897-dd39-49eb-8ab1-f1eed8ce9ab2}</Project>

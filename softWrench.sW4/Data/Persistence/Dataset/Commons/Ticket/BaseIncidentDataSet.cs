@@ -30,7 +30,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
             var origrecordid = parameter.BASEDto.ValuesDictionary["ownerid"].Value;
             var origrecordclass = parameter.BASEDto.ValuesDictionary["ownertable"].Value as string;
-
+            var ticketid = originalEntity.GetAttribute("ticketid");
             var ticketuid = originalEntity.GetAttribute("ticketuid");
 
 
@@ -56,6 +56,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                 or (ownertable='WOACTIVITY' and ownerid in (select workorderid from woactivity where origrecordid={1} and origrecordclass={2}))
                 or (ownertable='JOBPLAN' and ownerid in (select jobplanid from jobplan where jpnum in (select jpnum from woactivity where origrecordid={1} and origrecordclass={2})))
             ", "'" + ticketuid + "'", "'" + origrecordid + "'", "'" + origrecordclass + "'");
+
+            sb.AppendFormat(
+                @"or (ownertable='WORKLOG' and ownerid in (select worklogid from worklog where recordkey='{0}' and class='{1}'))",
+                ticketid, origrecordclass);
 
             if (assetnum != null) {
                 sb.AppendFormat(

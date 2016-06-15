@@ -188,6 +188,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\BaseAssetDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseLocationDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseMultiassetlocciDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\BaseRelatedRecordDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\GenericSWMethodInvoker.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Inventory\PhysicalCountWhereClauseProvider.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseProblemDataSet.cs" />

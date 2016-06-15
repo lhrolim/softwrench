@@ -44,7 +44,7 @@
           <field attribute="siteid" hidden="true" />
         </list>
         
-        <detail stereotype="compositiondetail" title="Related Record">
+        <detail stereotype="compositiondetail" title="Related Record" platform="web">
           <field attribute="relatedrecordid" hidden="true" />
           
           <!-- display detail -->
@@ -60,9 +60,9 @@
             <field attribute="siteid" defaultexpression="$.parentdata.fields.siteid" hidden="true"/>
             <field attribute="orgid"  defaultexpression="$.parentdata.fields.orgid"  hidden="true"/>
             
-            <optionfield attribute="relatedrecclass" label="Application" requiredexpression="true" default="">
-              <option label="Service Request" value="SR" />
-              <option label="Work Order" value="WORKORDER" />
+            <optionfield attribute="relatedrecclass" label="Application" requiredexpression="true" default="" providerattribute="_RelatedRecordTypes">
+              <!--<option label="Service Request" value="SR" />
+              <option label="Work Order" value="WORKORDER" />-->
               <event type="afterchange" service="relatedrecordService" method="clearSelectedRelatedEntityId"/>
             </optionfield>
             

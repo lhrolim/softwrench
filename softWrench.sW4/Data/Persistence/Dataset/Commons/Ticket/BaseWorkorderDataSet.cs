@@ -137,6 +137,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                 @"(ownertable = 'WORKORDER' and ownerid ='{0}') or(ownertable = 'WORKORDER' and ownerid in (select workorderid from workorder
                         where parent ='{1}' and istask = 1 and siteid ='{2}'))", workorderid, wonum, siteId);
 
+            sb.AppendFormat(
+                @"or (ownertable='WORKLOG' and ownerid in (select worklogid from worklog where recordkey='{0}' and class='{1}'))",
+                wonum, woclass);
+
             if (assetnum != null) {
                 sb.AppendFormat(
                     @" or(ownertable = 'ASSET' and ownerid in (select assetuid from asset where assetnum ='{0}' and siteid ='{1}'))",

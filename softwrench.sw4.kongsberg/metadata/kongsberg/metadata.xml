@@ -1852,12 +1852,6 @@
 
           <customization position="internalpriority">
           </customization>
-
-          <customization position="attachmentcounter">
-            <field attribute="attachmentcounter" tooltip="Attachments">
-            <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};autoloadcomposition=attachment_"/>
-          </field>
-          </customization>
           
           <properties>
             <property key="list.click.schema" value="editdetail"/>

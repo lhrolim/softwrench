@@ -69,7 +69,7 @@
         <attribute name="shiptoaddresscode" type="varchar" required="false" />
         <attribute name="serviceaddresscode" type="varchar" required="false" />
         <attribute name="workordercounter" type="int" query="(select count(*) from workorder where status not in ('CAN', 'CLOSE', 'COMP') and location = !@location and siteid = !@siteid)"/>
-        <attribute name="children" type="varchar" query="(select count(lochierarchy.parent) from lochierarchy where lochierarchy.parent = location.location and lochierarchy.systemid = parentlocation_.systemid)"/>
+        <!--<attribute name="children" type="varchar" query="(select count(lochierarchy.parent) from lochierarchy where lochierarchy.parent = location.location and lochierarchy.systemid = parentlocation_.systemid)"/>-->
         <attribute name="assets" type="varchar" query="(select count(assetnum) from asset where asset.location = location.location and asset.orgid = location.orgid)"/>
       </attributes>
       <relationships>
@@ -163,7 +163,7 @@
         <optionfilter attribute="parentlocation_.systemid" provider="parentlocation_.systemid" displaycode="true" allowblank="true" />
         <optionfilter attribute="siteid" provider="site_.siteid" />
         <optionfilter attribute="classstructure_.description" provider="classstructure_.description" whereclause="classstructure_.classstructureid in (!@#value)" allowblank="true"/>
-        <numericfilter attribute="children" label="Child Locations" position="children" />
+        <!--<numericfilter attribute="children" label="Child Locations" position="children" />-->
         <numericfilter attribute="assets" label="Assets" position="assets" />
         <optionfilter attribute="locoper_.locpriority" displaycode="true">
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="High" value="1" />
@@ -200,7 +200,7 @@
           <field attribute="classstructure_.description" label="Class Structure"/>
           <field attribute="parentlocation_.parent" label="Parent Location"/>
           <field attribute="parentlocation_.systemid" label="System"/>
-          <field attribute="children" label="Child Locations"/>
+          <!--<field attribute="children" label="Child Locations"/>-->
           <field attribute="assets" label="Assets"/>
           <field attribute="type" label="Type"/>
           <field attribute="status" label="Status"/>
