@@ -33,10 +33,17 @@
                         <span>&ensp;{{command.label}}</span>
                     </button>
 
-                    <button type="button" class="btn btn-context dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
-                        <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i>
-                        <span ng-show="showLabel()">&ensp;{{command.label}}</span>
-                        <span class="caret"></span>
+                    <button type="button"
+                            class="btn btn-context dropdown-toggle"
+                            data-toggle="dropdown"
+                            data-original-title="{{commandtooltip(command)}}"
+                            rel="tooltip"
+                            ng-class="buttonClasses(getCommand(command))">
+                        <i ng-if="command.service==null" class="icon fa" ng-class="command.icon"></i>
+                        <span class="text">
+                            <span ng-show="showLabel()"><span class="space">&ensp;</span>{{command.label}}</span>
+                            <span class="caret"></span>
+                        </span>
                     </button>
 
 

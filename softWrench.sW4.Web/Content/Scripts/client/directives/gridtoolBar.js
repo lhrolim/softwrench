@@ -29,7 +29,7 @@
 
     $scope.commandtooltip = function (command) {
         const tooltip = command.tooltip; //if the label and tooltip are the same, only show the tooltip if the labels are hidden
-        if (tooltip === command.label) {
+        if (tooltip === null || tooltip === command.label) {
             if ($scope.showLabel()) {
                 return "";
             }

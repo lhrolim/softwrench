@@ -219,6 +219,24 @@
                 }
             }
 
+            .btn-group.open {
+                .btn-context {
+                    background: #ddd;
+                }
+
+                .large-button {
+                    box-shadow: none;
+                }
+            }
+
+            .btn-group {
+                .large-button {
+                    &:active {
+                        box-shadow: none;
+                    }
+                }
+            }
+
             .disabled {
                 .icon, .text {
                     color: #969696;
