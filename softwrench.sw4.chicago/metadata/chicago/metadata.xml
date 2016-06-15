@@ -636,23 +636,6 @@
 
       </schemas>
     </application>
-
-    
-    <application name="relatedrecord" title="Related Records" entity="relatedrecord" id="00000000-0000-0000-0000-000000000008" >
-      <schemas>
-        <detail stereotype="compositiondetail" title="Related Record" redeclaring="false">
-          <customization position="relatedrecclass">
-            <optionfield attribute="relatedrecclass" label="Application" requiredexpression="true" default="">
-              <option label="Service Request" value="SR" />
-              <event type="afterchange" service="relatedrecordService" method="clearSelectedRelatedEntityId"/>
-            </optionfield>
-          </customization>
-        </detail>
-      </schemas>
-    </application>
-    
-   
-   
     <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008">
       <schemas>
         <schema id="list"  stereotype="compositionlist" redeclaring="false">

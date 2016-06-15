@@ -623,19 +623,6 @@
         </schema>
       </schemas>
     </application>
-    <application name="relatedrecord" title="Related Records" entity="relatedrecord">
-      <schemas>
-        <detail stereotype="compositiondetail" title="Related Record" redeclaring="false">
-          <customization position="relatedrecclass">
-            <optionfield attribute="relatedrecclass" label="Application" requiredexpression="true" default="">
-              <!--<option label="Service Request" value="SR" />-->
-              <option label="Work Order" value="WORKORDER" />
-              <event type="afterchange" service="relatedrecordService" method="clearSelectedRelatedEntityId"/>
-            </optionfield>  
-          </customization>
-        </detail>
-      </schemas>
-    </application>
   </applications>
 
 </metadata>
