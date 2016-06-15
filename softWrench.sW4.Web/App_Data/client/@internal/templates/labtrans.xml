@@ -143,6 +143,9 @@
           <field attribute="genapprservreceipt" label="Approved?">
             <renderer type="checkbox"/>
           </field>
+          <field attribute="linecost" label="Line Cost">
+            <renderer type="default" params="formatter=money"/>
+          </field>
           <event type="onremoval.validation" service="labtransService" method="validateEdit"/>
           <event type="onedit.validation" service="labtransService" method="validateEdit"/>
         </schema>

@@ -754,6 +754,9 @@
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
           </field>
           <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
+          <field label="Line Cost" attribute="linecost" showexpression="!@_iscreation">
+            <renderer type="default" params="formatter=money"/>
+          </field>
           <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.parentdata.fields.glaccount">
             <renderer type="lookup"/>
           </association>
