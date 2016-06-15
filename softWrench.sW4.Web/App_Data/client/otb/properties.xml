@@ -9,21 +9,19 @@
   <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
-  <property key="maxAttachmentSize" value="10"/>
-  <!--in MB-->
-  <property key="maxScreenshotSize" value="5"/>
-  <!-- in MB-->
+  <property key="maxAttachmentSize" value="10"/> <!--in MB-->
+  <property key="maxScreenshotSize" value="5"/> <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
   <property key="defaultOrgId" value="EAGLENA"/>
   <property key="defaultSiteId" value="BEDFORD"/>
   <property key="defaultStoreloc" value="CENTRAL"/>
   <property key="sourcemapping" value="maximo7.5"/>
-  <!--
-      maximoutc property set to the full name of the timezone the maximo 
+  
+  <!-- maximoutc property set to the full name of the timezone the maximo 
       server is set to, refer to the maximoutc.txt in the doc folder for 
-      a list of accepted values
-  -->
+      a list of accepted values -->
   <property key="maximoutc" value="US Mountain Standard Time"/>
+  
   <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>
@@ -38,8 +36,6 @@
   <property key="tableau_username" value="swadmin" />
   <property key="tableau_password" value="sw@dm1n" />
   <property key="tableau_site" value="default" />
-
-
   <!-- end tableau -->
 
   <environment key="dev">
@@ -49,8 +45,6 @@
     <property key="restcredentials.user" value="maxadmin"/>
     <property key="restcredentials.password" value="maxadmin"/>
   </environment>
-
-
 
   <environment key="dev_pr">
     <!--environment for pull requests-->
