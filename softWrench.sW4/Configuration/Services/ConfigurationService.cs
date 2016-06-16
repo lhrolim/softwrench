@@ -251,6 +251,10 @@ namespace softWrench.sW4.Configuration.Services {
             return _cache.UpdateCachedOnClient(cacheableOnClientValues, CurrentTimestamp());
         }
 
+        public void ClearCache(string configKey) {
+            _cache.ClearCache(configKey);
+        }
+
         private static long CurrentTimestamp() {
             return (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
         }

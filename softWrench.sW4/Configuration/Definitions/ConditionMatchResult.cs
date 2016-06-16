@@ -141,8 +141,8 @@ namespace softWrench.sW4.Configuration.Definitions {
         }
 
         public static ConditionMatch Calculate(string conditionString, string contextString) {
-            if (contextString == null) {
-                if (conditionString == null) {
+            if (string.IsNullOrEmpty(contextString)) {
+                if (string.IsNullOrEmpty(conditionString)) {
                     return ConditionMatch.Exact;
                 }
 

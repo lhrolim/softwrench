@@ -224,9 +224,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
               .ToList().FirstOrDefault();
         }
 
-        public IList<IEnumerable<KeyValuePair<string, object>>> GetSynchronizationData(SlicedEntityMetadata entityMetadata, Rowstamps rowstamps) {
+        public IList<IEnumerable<KeyValuePair<string, object>>> GetSynchronizationData(SlicedEntityMetadata entityMetadata, Rowstamps rowstamps, SearchRequestDto searchDto) {
 
-            var query = _entityQueryBuilder.AllRowsForSync(entityMetadata, rowstamps);
+            var query = _entityQueryBuilder.AllRowsForSync(entityMetadata, rowstamps, searchDto);
             //TODO: hack to avoid garbage data and limit size of list queries.
             var sql = query.Sql;
             var queryResult = GetDao(entityMetadata).FindByNativeQuery(sql, query.Parameters);

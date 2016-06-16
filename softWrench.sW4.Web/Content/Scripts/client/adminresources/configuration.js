@@ -37,7 +37,7 @@ app.directive('conditionmodal', function (contextService) {
             fullkey: '=',
             applications:"="
         },
-        controller: function ($scope, $http,$timeout, i18NService) {
+        controller: function ($scope, $http, $timeout, i18NService) {
 
             $scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
@@ -78,6 +78,21 @@ app.directive('conditionmodal', function (contextService) {
             $scope.init();
 
 
+        }
+    };
+});
+
+app.directive("conditionTextInput", function (contextService) {
+    "ngInject";
+
+    return {
+        restrict: 'A',
+        require: "ngModel",
+        link: function (scope, element, attrs, ngModel) {
+            ngModel.$parsers.push(function (value) {
+                if (value !== "") return value;
+                return null;
+            });
         }
     };
 });

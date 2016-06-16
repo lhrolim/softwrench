@@ -74,11 +74,14 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarAssetLookupDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarLocationDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPCSLocationHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarOtherWorkorderDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="metadata\firstsolar\menu.mobile.xml" />
+    <Content Include="metadata\firstsolar\menu.mobile.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="web_content\firstsolar\htmls\advancedSearchPcsButtons.html" />
     <Content Include="web_content\firstsolar\images\branding.png" />
     <Content Include="web_content\firstsolar\images\logo-pdf.png" />

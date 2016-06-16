@@ -68,6 +68,10 @@ namespace softWrench.sW4.Configuration.Services {
             return _configService.GetClientSideConfigurations(cacheTimestamp, _contextLookuper.LookupContext());
         }
 
+        public void ConditionAltered(string configKey) {
+            _configService.ClearCache(configKey);
+        }
+
         //execute last
         public int Order { get { return 1; } }
     }

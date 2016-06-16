@@ -15,5 +15,7 @@ namespace softWrench.sW4.Configuration.Services.Api {
         void SetValue([NotNull]string configkey, [NotNull]object value);
 
         ClientSideConfigurations GetClientSideConfigurations(long? cacheTimestamp);
+
+        void ConditionAltered(string configKey);
     }
 }

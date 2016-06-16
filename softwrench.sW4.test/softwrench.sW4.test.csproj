@@ -129,6 +129,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PaginationUtilsTest.cs" />
     <Compile Include="Util\CompressorUtilTest.cs" />
+    <Compile Include="Util\DateUtilTest.cs" />
     <Compile Include="Util\DisplayableUtilTest.cs" />
     <Compile Include="Util\FaqTest.cs" />
     <Compile Include="Util\TestUtil.cs" />

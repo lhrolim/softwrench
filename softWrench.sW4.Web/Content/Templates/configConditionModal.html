@@ -12,7 +12,7 @@
                     <div class="form-group">
                         <swlabel text="Alias" i18nkey="configuration.condition.alias" required="true" classes="col-md-5" helptext="Defines an user identifier to this condition" />
                         <div class="col-md-7">
-                            <input class="form-control" ng-model="condition.alias" />
+                            <input class="form-control" ng-model="condition.alias"/>
                         </div>
                     </div>
 
@@ -55,7 +55,7 @@
                         <div class="form-group">
                             <swlabel text="Schema" i18nkey="configuration.condition.schema" classes="col-md-5" helptext="Apply this whereclause only if the application is under a certain schema" />
                             <div class="col-md-7">
-                                <input class="form-control" ng-model="condition.appContext.schema" />
+                                <input class="form-control" ng-model="condition.appContext.schema" condition-text-input/>
                             </div>
                         </div>
 

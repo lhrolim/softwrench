@@ -8,7 +8,7 @@ namespace cts.commons.portable.Util {
 
         // added additional acceptance format 
         //TODO: modify this solution, as dd/mmy/yyyy and mm/dd/yyyy should need to be choosen based upon a locale rule (03/10/2016 could be parsed, both ways)
-        public static readonly string[] FormatOptions = { "yyyy/MM/dd", "yyyy/MM/dd hh:mm", "yyyy/MM/dd HH:mm", "MM/dd/yyyy hh:mm", "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm",  "MM/dd/yyyy HH:mm", "M/d/yyyy hh:mm", "dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-MM-dd hh:mm", "yyyy-MM-dd HH:mm", "yyyy-M-d" };
+        public static readonly string[] FormatOptions = { "yyyy/MM/dd", "yyyy/MM/dd hh:mm", "yyyy/MM/dd HH:mm", "MM/dd/yyyy hh:mm", "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm", "MM/dd/yyyy HH:mm", "M/d/yyyy hh:mm", "dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-MM-dd hh:mm", "yyyy-MM-dd HH:mm", "yyyy-M-d" };
 
         public static DateTime? Parse(string date) {
             DateTime temp;
@@ -75,6 +75,10 @@ namespace cts.commons.portable.Util {
                     case "months":
                         value = value.AddMonths(number);
                         break;
+                    case "week":
+                    case "weeks":
+                        value = ProcessWeeks(value, number);
+                        break;
                     case "day":
                     case "days":
                         value = value.AddDays(number);
@@ -98,6 +102,35 @@ namespace cts.commons.portable.Util {
             } catch (Exception) {
                 throw new FormatException("String representation of time in a incorrect format: " + valueToParse);
             }
+        }
+
+        /// <summary>
+        /// Process the number of weeks time. 
+        /// If past and one returs the 0h of the last sunday. 
+        /// If future and one returns the 0h of the next sunday. 
+        /// For values higher and lower than one more weeks are added to the result.
+        /// </summary>
+        /// <param name="baseTime"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public static DateTime ProcessWeeks(DateTime baseTime, int number) {
+            if (number == 0) {
+                return baseTime;
+            }
+            var future = number > 0;
+            var dayOfWeek = baseTime.DayOfWeek;
+            var dayOfWeekDelta = DayOfWeek.Sunday - dayOfWeek;
+            if (future) {
+                dayOfWeekDelta += 7;
+            }
+
+            var extraWeeks = future ? number - 1 : number + 1;
+            var resultTime = baseTime.AddDays(dayOfWeekDelta + extraWeeks * 7);
+            resultTime = resultTime.AddHours(-resultTime.Hour);
+            resultTime = resultTime.AddMinutes(-resultTime.Minute);
+            resultTime = resultTime.AddSeconds(-resultTime.Second);
+            resultTime = resultTime.AddMilliseconds(-resultTime.Millisecond);
+            return resultTime;
         }
     }
 }

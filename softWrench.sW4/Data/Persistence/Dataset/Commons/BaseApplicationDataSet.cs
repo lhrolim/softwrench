@@ -34,6 +34,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
 using softwrench.sw4.batch.api.services;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.API.Association.Lookup;
@@ -320,11 +321,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public virtual ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var totalCount = searchDto.TotalCount;
             IReadOnlyList<AttributeHolder> entities = null;
-
+            
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var schema = application.Schema;
             searchDto.BuildProjection(schema);
             ContextLookuper.FillGridContext(application.Name, SecurityFacade.CurrentUser());
+
+            if (searchDto.Key == null) {
+                searchDto.Key = new ApplicationMetadataSchemaKey();
+            }
+            searchDto.Key.ApplicationName = application.Name;
+            searchDto.Key.SchemaId = schema.SchemaId;
+            searchDto.Key.Platform = ClientPlatform.Web;
 
             if (searchDto.Context != null && searchDto.Context.MetadataId != null) {
                 searchDto.QueryAlias = searchDto.Context.MetadataId;

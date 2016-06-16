@@ -147,6 +147,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
                 throw new InvalidOperationException("error creating condition");
             }
             var storedCondition = _dao.Save(realCondition);
+            _facade.ConditionAltered(storedCondition.FullKey + "whereclause");
             return new GenericResponseResult<Condition> {
                 ResultObject = storedCondition,
                 SuccessMessage = "Condition successfully created"
@@ -156,6 +157,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         [HttpPut]
         public IGenericResponseResult DeleteCondition(WhereClauseRegisterCondition condition, [FromUri]string currentKey) {
             var updatedConditions = _conditionService.RemoveCondition(condition, currentKey);
+            _facade.ConditionAltered(condition.FullKey + "whereclause");
             return new GenericResponseResult<ICollection<Condition>> {
                 ResultObject = updatedConditions
             };

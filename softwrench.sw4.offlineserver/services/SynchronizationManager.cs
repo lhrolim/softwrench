@@ -21,6 +21,7 @@ using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Data.Search;
 using softWrench.sW4.Util;
 using SynchronizationResultDto = softwrench.sw4.offlineserver.dto.SynchronizationResultDto;
 
@@ -236,7 +237,14 @@ namespace softwrench.sw4.offlineserver.services {
             if (rowstamps == null) {
                 rowstamps = new Rowstamps();
             }
-            var enumerable = _repository.GetSynchronizationData(entityMetadata, rowstamps);
+
+            // no minimum rowstamp for sync -> sort by 'rowstamp' descending
+            var searchDto = string.IsNullOrWhiteSpace(rowstamps.Lowerlimit) ? new SearchRequestDto() { SearchSort = "rowstamp desc" } : new SearchRequestDto();
+            searchDto.Key = new ApplicationMetadataSchemaKey() {
+                ApplicationName = appMetadata.Name
+            };
+
+            var enumerable = _repository.GetSynchronizationData(entityMetadata, rowstamps, searchDto);
             if (!enumerable.Any()) {
                 return new List<DataMap>();
             }

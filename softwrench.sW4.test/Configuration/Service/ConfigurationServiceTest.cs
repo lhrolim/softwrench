@@ -81,7 +81,7 @@ namespace softwrench.sW4.test.Configuration.Service {
 
         [TestMethod]
         public void _MostCorrectCondition() {
-            var context = new ContextHolder { OfflineMode = true,ApplicationLookupContext = new ApplicationLookupContext { MetadataId = "zzz" } };
+            var context = new ContextHolder { OfflineMode = true, ApplicationLookupContext = new ApplicationLookupContext { MetadataId = "zzz" } };
             IEnumerable<PropertyValue> values = new List<PropertyValue>
             {
                 new PropertyValue {Value = "1", Condition = new WhereClauseCondition{OfflineOnly = false,AppContext = new ApplicationLookupContext{MetadataId = "zzz", }}},
@@ -89,6 +89,28 @@ namespace softwrench.sW4.test.Configuration.Service {
             };
             var result = ConfigurationService.BuildResultValues<string>(values, context);
             Assert.AreEqual("2", result.First().Value.Value);
+        }
+
+        [TestMethod]
+        public void _EmptyConditionString() {
+            var context = new ContextHolder { OfflineMode = true };
+            IEnumerable<PropertyValue> values = new List<PropertyValue>
+            {
+                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{OfflineOnly = true,AppContext = new ApplicationLookupContext{Schema = ""}}}
+            };
+            var result = ConfigurationService.BuildResultValues<string>(values, context);
+            Assert.AreEqual("1", result.First().Value.Value);
+        }
+
+        [TestMethod]
+        public void _EmptyContextString() {
+            var context = new ContextHolder { OfflineMode = true, ApplicationLookupContext = new ApplicationLookupContext { Schema = "" } };
+            IEnumerable<PropertyValue> values = new List<PropertyValue>
+            {
+                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{OfflineOnly = true}}
+            };
+            var result = ConfigurationService.BuildResultValues<string>(values, context);
+            Assert.AreEqual("1", result.First().Value.Value);
         }
 
         [TestMethod]
@@ -155,7 +177,7 @@ namespace softwrench.sW4.test.Configuration.Service {
         [TestMethod]
         public void AskWithCurrentSelectedProfile() {
             var context = new ContextHolder {
-                UserProfiles = new SortedSet<int?> { 2,3 },
+                UserProfiles = new SortedSet<int?> { 2, 3 },
                 CurrentSelectedProfile = 3
             };
             var result = ConfigurationService.BuildResultValues<string>(_values, context);
@@ -279,7 +301,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             {
                 new PropertyValue {Value = "1", Condition = new WhereClauseCondition{ OfflineOnly = false}},
                 new PropertyValue {Value = "2", Condition = new WhereClauseCondition{ Global = true,OfflineOnly = true}}
-                
+
             };
             var result = ConfigurationService.BuildResultValues<string>(offlineModeValues, context);
             Assert.AreEqual("2", result.First().Value.Value);
