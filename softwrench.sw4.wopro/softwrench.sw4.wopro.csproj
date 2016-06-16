@@ -51,6 +51,7 @@
     <Content Include="web_content\wopro\images\header.jpg" />
     <Content Include="web_content\wopro\images\logo-byline.png" />
     <Content Include="web_content\wopro\images\logo-main.png" />
+    <Content Include="web_content\wopro\images\logo-pdf.png" />
     <Content Include="web_content\wopro\images\signin-lg.jpg" />
     <Content Include="web_content\wopro\images\signin-md.jpg" />
     <Content Include="web_content\wopro\images\signin-sm.jpg" />
