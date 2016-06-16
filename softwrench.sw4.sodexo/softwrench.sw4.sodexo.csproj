@@ -37,6 +37,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="metadata\sodexo\properties.xml" />
     <Content Include="metadata\sodexo\readme.txt" />
     <Content Include="web_content\sodexo\images\header-email.jpg" />
     <Content Include="web_content\sodexo\images\header.jpg" />

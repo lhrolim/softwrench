@@ -42,6 +42,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <Content Include="metadata\umc\deploy.xml" />
+    <Content Include="metadata\umc\menu.web.xml" />
     <Content Include="metadata\umc\properties.xml" />
     <Content Include="metadata\umc\readme.txt" />
     <Content Include="web_content\umc\images\logo-byline.png" />

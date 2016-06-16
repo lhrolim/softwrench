@@ -37,6 +37,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="metadata\liggett\deploy.xml" />
+    <Content Include="metadata\liggett\properties.xml" />
     <Content Include="metadata\liggett\readme.txt" />
     <Content Include="web_content\liggett\images\footer.jpg" />
     <Content Include="web_content\liggett\images\header-email.jpg" />
