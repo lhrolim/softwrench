@@ -335,8 +335,13 @@
 
                     $scope.showActionSeparator = function () {
                         var commands = commandService.getBarCommands($scope.schema, 'actions');
+                        var buttons = $('.toolbar-secondary.actions button');
 
-                        if (commands == null) {
+                        if (commands === null) {
+                            return false;
+                        }
+
+                        if (buttons === null || buttons.length === 0) {
                             return false;
                         }
 
