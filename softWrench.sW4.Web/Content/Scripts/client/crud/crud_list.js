@@ -318,7 +318,9 @@
                             $scope.searchData = {};
                             $scope.searchSort = {};
                             $scope.searchOperator = {};
+                            $scope.searchValues = "";
                             $scope.vm.quickSearchDTO = { compositionsToInclude: [] };
+                            crudContextHolderService.setSelectedFilter({}, $scope.panelid);
                         }
 
                         $scope.selectPage(pagetogo, pageSize, printmode, extraparameters);
