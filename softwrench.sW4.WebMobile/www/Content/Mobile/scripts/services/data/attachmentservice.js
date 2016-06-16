@@ -1,7 +1,7 @@
 ﻿(function (angular, mobileServices) {
     "use strict";
 
-    function attachmentService($log, cameraService, $cordovaFile, fileConstants, crudContextService, swdbDAO) {
+    function offlineAttachmentService($log, cameraService, $cordovaFile, fileConstants, crudContextService, swdbDAO) {
         //#region Utils
         const config = {
             attachmentFieldName: "newattachment_path"
@@ -74,7 +74,7 @@
     }
 
     //#region Service registration
-    mobileServices.factory("attachmentService", ["$log", "cameraService", "$cordovaFile", "fileConstants", "crudContextService", "swdbDAO", attachmentService]);
+    mobileServices.factory("offlineAttachmentService", ["$log", "cameraService", "$cordovaFile", "fileConstants", "crudContextService", "swdbDAO", offlineAttachmentService]);
     //#endregion
 
 })(angular, mobileServices);

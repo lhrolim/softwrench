@@ -53,6 +53,7 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/data/datamapSanitize_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/notificationService.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/physicalinventory_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/commandcommons.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/applications/inventory/inventory_service_shared.js"
@@ -103,6 +104,8 @@ module.exports = function (grunt) {
         "www/Content/Vendor/scripts/angular-animate.js",
         "www/Content/Vendor/scripts/ionic.min.js",
         "www/Content/Vendor/scripts/ionic-angular.min.js",
+        "www/Content/Vendor/scripts/ng-material-floating-button.js",
+        "www/Content/Vendor/scripts/ng-material-floating-button-directive.js",
         "www/Content/Vendor/scripts/jquery.js",
         "www/Content/Vendor/scripts/ng-cordova.js",
         "www/Content/Vendor/scripts/moment.js",
@@ -162,6 +165,8 @@ module.exports = function (grunt) {
                     "angular-ui-router.js": "angular-ui-router/release/angular-ui-router.js",
                     "angular-animate.js": "angular-animate/angular-animate.js",
                     "angular.js": "angular/angular.js",
+                    "ng-material-floating-button.js": "ng-material-floating-button/mfb/dist/mfb.js",
+                    "ng-material-floating-button-directive.js": "ng-material-floating-button/src/mfb-directive.js",
                     "jquery.js": "jquery/dist/jquery.js",
                     "ng-cordova.js": "ngCordova/dist/ng-cordova.js",
                     "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",
@@ -178,7 +183,8 @@ module.exports = function (grunt) {
                 },
                 files: {
                     "ionic.min.css": "ionic/release/css/ionic.min.css",
-                    "ionautocomplete.min.css": "ion-autocomplete/dist/ion-autocomplete.min.css"
+                    "ionautocomplete.min.css": "ion-autocomplete/dist/ion-autocomplete.min.css",
+                    "ng-material-floating-button.css" : "ng-material-floating-button/mfb/dist/mfb.min.css"
                 }
             },
             fontsdev: {
@@ -212,6 +218,8 @@ module.exports = function (grunt) {
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.min.js",
                     "angular-ui-router.js": "angular-ui-router/release/angular-ui-router.min.js",
                     "angular-animate.js": "angular-animate/angular-animate.min.js",
+                    "ng-material-floating-button.js": "ng-material-floating-button/mfb/dist/mfb.min.js",
+                    "ng-material-floating-button-directive.js": "ng-material-floating-button/src/mfb-directive.js",
                     "jquery.js": "jquery/dist/jquery.min.js",
                     "ng-cordova.js": "ngCordova/dist/ng-cordova.min.js",
                     "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",

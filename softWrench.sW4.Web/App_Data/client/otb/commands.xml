@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <commands xmlns="http://www.controltechnologysolutions.com/commandmetadata">
 
-  
+  <!-- #region: web -->
   <commandgroup position="gridtop" platform="web">
     <command id="new" icon="fa-plus" service="$scope" method="newEntry" label="New" tooltip="$scope:newShemaLabel" showexpression="$scope:hasNewSchema" cssclasses="large-button"/>
     <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
@@ -137,5 +137,16 @@
     <command id="search" primary="true" icon="fa-search" service="dispatcherService" method="dispatchevent" label="Search" parameters="sw.crud.search,schema,datamap"/>
     <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
   </commandgroup>
+  
+  <!-- #endregion -->
+  
+  <!-- #region: mobile -->
+  <!-- Floating Action Button position -->
+  <commandgroup platform="mobile" position="mobile.fab"></commandgroup>
+  <!-- Footer Bar position -->
+  <commandgroup platform="mobile" position="mobile.footer"></commandgroup>
+  <!-- Header Bar position -->
+  <commandgroup platform="mobile" position="mobile.header"></commandgroup>
+  <!-- #endregion -->
 
 </commands>

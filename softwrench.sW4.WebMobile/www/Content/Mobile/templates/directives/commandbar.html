@@ -1,0 +1,17 @@
+﻿<div class="commandbar {{getCommandBarStyleClass()}}" ng-if="commandBar.hasCommands">
+    <ng-switch on="position">
+
+        <div ng-switch-when="mobile.fab">
+            <mfb-menu label="{{label}}"
+                      position="br" effect="slidein" toggling-method="click"
+                      active-icon="ion-close" resting-icon="ion-plus">
+                <a mfb-button ng-repeat="command in commandBar.commands"
+                   label="{{command.label}}" icon="{{command.icon}}"
+                   ng-click="executeCommand(command)" mfb-button-close>
+                </a>
+            </mfb-menu>
+        </div>
+
+    </ng-switch>
+
+</div>

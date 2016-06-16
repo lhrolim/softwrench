@@ -11,7 +11,8 @@
         <property key ="add.button.label" value="Add Attachment"/>
       </properties>
       <schemas>
-        <list stereotype="compositionlist" platform="mobile">
+        <!-- #region:Mobile -->
+        <list stereotype="compositionlist" platform="mobile" title="Attachments">
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field hidden="true" attribute="ownerid"/>
           <field hidden="true" attribute="doclinksid"/>
@@ -20,7 +21,28 @@
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="maximoURL"/>
         </list>
+        
+        <schema id="detail" platform="mobile" title="Attachments">
+          <field attribute="doclinksid" hidden="true"/>
+          <field attribute="ownerid" hidden="true" />
+          <field attribute="docinfoid" hidden="true"/>
+          <field attribute="createby" hidden="true"/>
+          <field attribute="createdate" hidden="true"/>
 
+          <field label="Title" attribute="document" requiredexpression="true" />
+          <field label="Description" attribute="docinfo_.description" />
+          <field label="Attachment" attribute="newattachment" requiredexpression="true">
+            <renderer type="upload"/>
+          </field>
+          <commandbars>
+            <commandgroup platform="mobile" position="mobile.fab">
+              <command id="picture" service="offlineAttachmentService" method="attachCameraPicture" 
+                       icon="ion-camera" label="Take Picture" />
+            </commandgroup>
+          </commandbars>
+        </schema>
+        
+        <!-- #endregion -->
 
         <list stereotype="compositionlist" platform="web">
           <properties>
@@ -65,7 +87,7 @@
           <section attribute="document" resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Faq;action=Download;idcolumn=docinfoid"/>
         </schema>
 
-        <schema id="detail" title="Attachments">
+        <schema id="detail" title="Attachments" platform="web">
           <field hidden="true" attribute="doclinksid"/>
           <field hidden="true" attribute="ownerid"/>
           <field label="Id" hidden="true" attribute="docinfoid"/>
@@ -80,13 +102,11 @@
           <!--          <field hidden="true" attribute="ownertable"/>-->
           <field hidden="true" attribute="createdate"/>
           <commandbars>
-            <commandgroup position="detail.primary"  >
+            <commandgroup position="detail.primary">
               <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                        showexpression="@status=='NEW'" successmessage="Attachment deleted"/>
             </commandgroup>
           </commandbars>
-
-          
           
         </schema>
 

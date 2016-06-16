@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace softwrench.sW4.Shared2.Metadata.Offline {
     public class MobileMetadataDownloadResponseDefinition {
 
-        public String MenuJson { get; set; }
+        public string MenuJson { get; set; }
 
-        public String TopLevelMetadatasJson { get; set; }
+        public string TopLevelMetadatasJson { get; set; }
 
-        public String CompositionMetadatasJson { get; set; }
+        public string CompositionMetadatasJson { get; set; }
 
-        public String AssociationMetadatasJson { get; set; }
+        public string AssociationMetadatasJson { get; set; }
+
+        public string CommandBarsJson { get; set; }
 
         public JObject AppConfiguration { get; set; }
 

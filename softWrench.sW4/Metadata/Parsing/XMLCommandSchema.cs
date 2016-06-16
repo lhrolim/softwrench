@@ -24,5 +24,7 @@
         public const string NextSchemaId = "nextSchemaId";
         public static string ContainerCommand = "container";
         public const string PermissionExpression = "permissionexpression";
+
+        public const string Platform = "platform";
     }
 }

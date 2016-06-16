@@ -604,8 +604,8 @@ namespace softWrench.sW4.Metadata {
             return targetMapping ?? GlobalProperty(MetadataProperties.Source);
         }
 
-        public static IDictionary<string, CommandBarDefinition> CommandBars() {
-            return _commandBars;
+        public static IDictionary<string, CommandBarDefinition> CommandBars(ClientPlatform? platform = null, bool includeNulls = true) {
+            return platform == null ? _commandBars : _commandBars.Where(c => c.Value.Platform == platform || (includeNulls && c.Value.Platform == null)).ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
         public static CompleteApplicationMetadataDefinition GetCompositionApplication(ApplicationSchemaDefinition schema, string relationship) {

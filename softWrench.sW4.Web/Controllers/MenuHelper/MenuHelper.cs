@@ -45,7 +45,7 @@ namespace softWrench.sW4.Web.Controllers.MenuHelper {
                     }
                     user.Genericproperties["menumanagerscached"] = true;
                 }
-                var securedBars = user.SecuredBars(platform, MetadataProvider.CommandBars());
+                var securedBars = user.SecuredBars(platform, MetadataProvider.CommandBars(platform));
                 return new MenuModel(securedMenu, securedBars, isSysAdmin, isClientAdmin, isDynamicAdmin);
             } catch (InvalidOperationException) {
                 FormsAuthentication.SignOut();

@@ -2,15 +2,11 @@
     "use strict";
 
     mobileServices.factory("metadataSynchronizationService",
-        ["$http", "$q", "offlineRestService", "menuModelService", "metadataModelService", "configurationService",
-            function ($http, $q, restService, menuModelService, metadataModelService, configurationService) {
+        ["$http", "$q", "offlineRestService", "menuModelService", "metadataModelService", "configurationService", "offlineCommandService",
+            function ($http, $q, restService, menuModelService, metadataModelService, configurationService, offlineCommandService) {
 
     var toConfigurationArray = function (configuration) {
-        var configArray = [];
-        for (var key in configuration) {
-            if (!configuration.hasOwnProperty(key)) continue;
-            configArray.push({ key: key, value: configuration[key] });
-        }
+        const configArray = Object.keys(configuration).map(k => ({ key: k, value: configuration[k] }));
         return configArray;
     };
 
@@ -18,21 +14,23 @@
         syncData: function (currentServerVersion) {
 
             return restService.get("Mobile", "DownloadMetadatas", {}).then(function (metadatasResult) {
-                var serverMenu = JSON.parse(metadatasResult.data.menuJson);
-                var topLevelMetadatas = JSON.parse(metadatasResult.data.topLevelMetadatasJson);
-                var associationMetadatasJson = JSON.parse(metadatasResult.data.associationMetadatasJson);
-                var compositionMetadatasJson = JSON.parse(metadatasResult.data.compositionMetadatasJson);
-                var config = metadatasResult.data.appConfiguration;
+                const serverMenu = JSON.parse(metadatasResult.data.menuJson);
+                const topLevelMetadatas = JSON.parse(metadatasResult.data.topLevelMetadatasJson);
+                const associationMetadatasJson = JSON.parse(metadatasResult.data.associationMetadatasJson);
+                const compositionMetadatasJson = JSON.parse(metadatasResult.data.compositionMetadatasJson);
+                const commandBars = JSON.parse(metadatasResult.data.commandBarsJson);
+                const config = metadatasResult.data.appConfiguration;
 
-                var menuPromise = menuModelService.updateMenu(serverMenu);
-                var topLevelPromise = metadataModelService.updateTopLevelMetadata(topLevelMetadatas);
-                var associationPromise = metadataModelService.updateAssociationMetadata(associationMetadatasJson);
-                var compositionPromise = metadataModelService.updateCompositionMetadata(compositionMetadatasJson);
+                const menuPromise = menuModelService.updateMenu(serverMenu);
+                const topLevelPromise = metadataModelService.updateTopLevelMetadata(topLevelMetadatas);
+                const associationPromise = metadataModelService.updateAssociationMetadata(associationMetadatasJson);
+                const compositionPromise = metadataModelService.updateCompositionMetadata(compositionMetadatasJson);
+                const commandBarsPromise = offlineCommandService.updateCommandBars(commandBars);
 
-                var configArray = toConfigurationArray(config);
-                var configServicePromise = configurationService.saveConfigs(configArray);
+                const configArray = toConfigurationArray(config);
+                const configServicePromise = configurationService.saveConfigs(configArray);
 
-                return $q.all([menuPromise, topLevelPromise, associationPromise, compositionPromise, configServicePromise]);
+                return $q.all([menuPromise, topLevelPromise, associationPromise, compositionPromise, commandBarsPromise, configServicePromise]);
 
             }).then(function (results) {
                 //TODO: return whether changes where downloaded or not

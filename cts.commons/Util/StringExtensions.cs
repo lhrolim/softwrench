@@ -70,5 +70,13 @@ namespace cts.commons.portable.Util {
             return source.ContainsAny(find, StringComparison.OrdinalIgnoreCase);
         }
 
+        public static T? ToEnum<T>(this string value, T? defaultValue = null) where T : struct {
+            if (string.IsNullOrEmpty(value)) {
+                return defaultValue;
+            }
+            T result;
+            return Enum.TryParse(value, true, out result) ? result : defaultValue;
+        }
+
     }
 }

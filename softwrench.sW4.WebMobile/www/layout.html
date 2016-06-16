@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,10 +6,12 @@
     <!-- start auto template VENDOR style tags, grunt will generate it for dev environment, do not remove this -->
     <link rel="stylesheet" type="text/css" href="Content/Vendor/css/ionautocomplete.min.css" />
     <link rel="stylesheet" type="text/css" href="Content/Vendor/css/ionic.min.css" />
+    <link rel="stylesheet" type="text/css" href="Content/Vendor/css/ng-material-floating-button.css" />
     <!-- end auto template VENDOR style tags -->
     <!-- start auto template style tags, grunt will generate it for dev environment, do not remove this -->
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
     <link rel="stylesheet" type="text/css" href="Content/Mobile/styles/detail.css"/>
+    <link rel="stylesheet" type="text/css" href="Content/Mobile/styles/directives/commandbar.css"/>
     <link rel="stylesheet" type="text/css" href="Content/Mobile/styles/directives/crud_fields.css"/>
     <link rel="stylesheet" type="text/css" href="Content/Mobile/styles/directives/optionfield.css"/>
     <link rel="stylesheet" type="text/css" href="Content/Mobile/styles/directives/swoperationicon.css"/>
@@ -25,6 +27,8 @@
     <script type="text/javascript" src="Content/Vendor/scripts/angular-animate.js"></script>
     <script type="text/javascript" src="Content/Vendor/scripts/ionic.min.js"></script>
     <script type="text/javascript" src="Content/Vendor/scripts/ionic-angular.min.js"></script>
+    <script type="text/javascript" src="Content/Vendor/scripts/ng-material-floating-button.js"></script>
+    <script type="text/javascript" src="Content/Vendor/scripts/ng-material-floating-button-directive.js"></script>
     <script type="text/javascript" src="Content/Vendor/scripts/jquery.js"></script>
     <script type="text/javascript" src="Content/Vendor/scripts/ng-cordova.js"></script>
     <script type="text/javascript" src="Content/Vendor/scripts/moment.js"></script>
@@ -73,6 +77,7 @@
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/data/datamapSanitize_service.js"></script>
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/notificationService.js"></script>
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/physicalinventory_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/commandcommons.js"></script>
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js"></script>
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"></script>
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/applications/inventory/inventory_service_shared.js"></script>
@@ -115,6 +120,7 @@
     <script type="text/javascript" src="Content/Mobile/scripts/services/device/networkconnectionservice.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/services/login/securityservice.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/services/menu/menuModelService.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/commandservice.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/metadataModelService.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/offlineAssociationService.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/offlineSchemaService.js"></script>
@@ -131,6 +137,7 @@
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/synchronizationOperationService.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/services/ui/swAlertPopup.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/directives/associationDescription.js"></script>
+    <script type="text/javascript" src="Content/Mobile/scripts/directives/commandbar.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/directives/crud/crud_input_fields.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/directives/crud/crud_output_fields.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/directives/dateconverter.js"></script>

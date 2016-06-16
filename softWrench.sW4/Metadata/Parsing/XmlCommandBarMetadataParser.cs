@@ -7,7 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using cts.commons.Util;
+using cts.commons.portable.Util;
 using log4net;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using cnst = softWrench.sW4.Metadata.Parsing.XmlCommandSchema;
 
 
@@ -77,7 +79,11 @@ namespace softWrench.sW4.Metadata.Parsing {
             var id = commandbar.AttributeValue(XmlBaseSchemaConstants.IdAttribute);
             var position = commandbar.AttributeValue(cnst.PositionAttribute);
             var excludeUndeclared = commandbar.Attribute(cnst.RemoveUndeclared).ValueOrDefault(false);
-            return new CommandBarDefinition(id, position, excludeUndeclared, ParseCommandDisplayables(commandbar.Elements()));
+            var platformString = commandbar.Attribute(cnst.Platform).ValueOrDefault((string) null);
+            var platform = platformString.ToEnum<ClientPlatform>();
+            return new CommandBarDefinition(id, position, excludeUndeclared, ParseCommandDisplayables(commandbar.Elements())) {
+                Platform = platform
+            };
         }
 
         private static IEnumerable<ICommandDisplayable> ParseCommandDisplayables(IEnumerable<XElement> elements) {

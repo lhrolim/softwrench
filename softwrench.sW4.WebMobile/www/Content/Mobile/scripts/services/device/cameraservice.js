@@ -71,9 +71,7 @@
         const service = {
             capture,
             captureData,
-            captureFile,
-            FileContentWrapper,
-            FilePathWrapper
+            captureFile
         };
         return service;
         //#endregion

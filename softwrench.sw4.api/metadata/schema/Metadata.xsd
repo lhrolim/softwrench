@@ -1201,16 +1201,6 @@
         </restriction>
       </simpleType>
     </attribute>
-
-    <attribute name="id" type="string">
-      <annotation>
-        <documentation>
-          The id describes a way to point to a completely
-          different commandbar, other than the one declared in
-          the
-        </documentation>
-      </annotation>
-    </attribute>
   </complexType>
 
   <complexType name="CommandContainer">

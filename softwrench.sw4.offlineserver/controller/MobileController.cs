@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using softwrench.sw4.batch.api.entities;
-using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softwrench.sw4.offlineserver.dto;
@@ -35,8 +34,6 @@ namespace softwrench.sw4.offlineserver.controller {
     public class MobileController : ApiController {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MobileController));
-
-        private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
 
         private readonly SynchronizationManager _syncManager;
 
@@ -73,16 +70,17 @@ namespace softwrench.sw4.offlineserver.controller {
 
             var associationApps = OffLineMetadataProvider.FetchAssociationApps(user);
             var compositonApps = OffLineMetadataProvider.FetchCompositionApps(user);
-
+            var commandBars = user.SecuredBars(ClientPlatform.Mobile, MetadataProvider.CommandBars(platform: ClientPlatform.Mobile, includeNulls: false));
 
             bool fromCache;
-            var securedMenu = _menuManager.Menu(user,ClientPlatform.Mobile, out fromCache);
+            var securedMenu = _menuManager.Menu(user, ClientPlatform.Mobile, out fromCache);
 
             var response = new MobileMetadataDownloadResponseDefinition {
-                TopLevelMetadatasJson = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
-                AssociationMetadatasJson = JsonConvert.SerializeObject(associationApps, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
-                CompositionMetadatasJson = JsonConvert.SerializeObject(compositonApps, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
-                MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
+                TopLevelMetadatasJson = JsonConvert.SerializeObject(securedMetadatas, Formatting.None, _jsonSerializerSettings),
+                AssociationMetadatasJson = JsonConvert.SerializeObject(associationApps, Formatting.None, _jsonSerializerSettings),
+                CompositionMetadatasJson = JsonConvert.SerializeObject(compositonApps, Formatting.None, _jsonSerializerSettings),
+                MenuJson = JsonConvert.SerializeObject(securedMenu, Formatting.None, _jsonSerializerSettings),
+                CommandBarsJson = JsonConvert.SerializeObject(commandBars, Formatting.None, _jsonSerializerSettings),
                 AppConfiguration = _appConfigurationProvider.AppConfig()
             };
 

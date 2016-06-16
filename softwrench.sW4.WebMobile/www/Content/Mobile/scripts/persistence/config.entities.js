@@ -250,6 +250,11 @@
         entities.Menu = persistence.define('Menu', {
             data: "JSON"
         });
+
+        entities.CommandBar = persistence.define("CommandBar", {
+            key: "TEXT",
+            data: "JSON"
+        });
         //#endregion
 
     }]);

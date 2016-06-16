@@ -19,18 +19,20 @@
             },
 
             updateMenu: function (serverMenu) {
-                return dao.instantiate("Menu", menuModel.dbData).then(function (menu) {
-                    menu.data = serverMenu;
-                    return dao.save(menu).then(function (item) {
-                        menuModel.dbData.data = serverMenu;
-                        menuModel.listItems = serverMenu.leafs;
-                        return item;
+                return !serverMenu || _.isEmpty(serverMenu)
+                    ? this.initAndCacheFromDB()
+                    : dao.instantiate("Menu", menuModel.dbData).then(menu => {
+                        menu.data = serverMenu;
+                        return dao.save(menu).then(item => {
+                            menuModel.dbData.data = serverMenu;
+                            menuModel.listItems = serverMenu.leafs;
+                            return item;
+                        });
                     });
-                });
             },
 
             initAndCacheFromDB: function () {
-                var log = $log.getInstance("menuModelService#initAndCacheFromDB");
+                const log = $log.getInstance("menuModelService#initAndCacheFromDB");
                 return dao.findUnique("Menu").then(menu => {
                     if (!!menu) {
                         menuModel.dbData = menu;

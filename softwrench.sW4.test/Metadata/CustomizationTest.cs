@@ -3,6 +3,7 @@ using System.Linq;
 using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -72,7 +73,7 @@ namespace softwrench.sW4.test.Metadata {
         public void TestReplace() {
 
             var app = MetadataProvider.Application("worklog");
-            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
+            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail", null, ClientPlatform.Web));
             var displayables = detailSchema.Fields;
             //parent fields=4 (auto-generated); customizations=2
             Assert.AreEqual(7, displayables.Count);

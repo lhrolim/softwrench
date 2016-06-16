@@ -3,8 +3,8 @@
 
 angular.module('sw_layout')
     .factory('commandService', [
-        "$q", "i18NService", "$injector", "expressionService", "contextService", "schemaService", "modalService", "applicationService", "$log", "alertService", 
-        function ($q, i18NService, $injector, expressionService, contextService, schemaService, modalService, applicationService, $log, alertService) {
+        "$q", "i18NService", "$injector", "expressionService", "contextService", "schemaService", "modalService", "applicationService", "$log", "alertService", "commandCommonsService",
+        function ($q, i18NService, $injector, expressionService, contextService, schemaService, modalService, applicationService, $log, alertService, commandCommonsService) {
 
     return {
         commandLabel: function (schema, id, defaultValue) {
@@ -188,30 +188,9 @@ angular.module('sw_layout')
         getBarCommands: function (schema, position) {
             schema.jscache = instantiateIfUndefined(schema.jscache);
             schema.jscache.commandbars = instantiateIfUndefined(schema.jscache.commandbars);
-            var log = $log.getInstance("commandService#getBarCommands");
-            if (schema.jscache.commandbars[position] !== undefined) {
-                //null should be considered as a cache hit also
-                return schema.jscache.commandbars[position];
-            }
-            var hasPossibilityOfbeingOverriden = schema.commandSchema.hasDeclaration;
-            var bar = contextService.fetchFromContext("commandbars", true);
-            var fallbackKey = "#" + position;
-            var commandKey = hasPossibilityOfbeingOverriden ? "{0}_{1}_{2}.#{3}".format(schema.applicationName, schema.schemaId, schema.mode.toLowerCase(), position) : fallbackKey;
-            var commandbar = bar[commandKey];
-            if (commandbar == null) {
-                if (hasPossibilityOfbeingOverriden && schema.mode.toLocaleLowerCase() != "none") {
-                    //let´s give the none schema a shot
-                    commandKey = "{0}_{1}_{2}.#{3}".format(schema.applicationName, schema.schemaId, "none", position);
-                    commandbar = bar[commandKey];
-                }
-                if (commandbar == null) {
-                    commandbar = bar[fallbackKey];
-                    if (commandbar == null) {
-                        log.warn("command bar {0}, and fallback {1} not found".format(commandKey, fallbackKey));
-                    }
-                }
-            }
-            var commands = commandbar != null ? commandbar.commands : null;
+
+            const bars = contextService.fetchFromContext("commandbars", true);
+            const commands = commandCommonsService.getCommands(schema, position, bars);
             schema.jscache.commandbars[position] = commands;
 
             return commands;

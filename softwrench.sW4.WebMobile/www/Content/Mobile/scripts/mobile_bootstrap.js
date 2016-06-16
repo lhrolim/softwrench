@@ -16,15 +16,11 @@ document.addEventListener("deviceready", function () {
  */
 window.$s = function (element) {
     const elementWrapper = angular.element(element);
-    if (typeof (elementWrapper["scope"]) !== "function") {
-        return null;
-    }
-    const scope = elementWrapper.scope();
+    return !angular.isFunction(elementWrapper["scope"]) ? null : elementWrapper.scope();
     //if (!scope || !scope['$parent']) {
     //    return scope;
     //}
     //return scope.$parent;
-    return scope;
 };
 
 /**
@@ -40,7 +36,7 @@ window.shouldRotateToOrientation = degrees => true;
 
 var mobileServices = angular.module('sw_mobile_services', ['webcommons_services', 'maximo_applications', 'persistence.offline', 'audit.offline', "rollingLog"]);
 var offlineMaximoApplications = angular.module('maximo_offlineapplications', ['persistence.offline', 'audit.offline']);
-var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications', 'maximo_offlineapplications', 'sw_scan'])
+var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications', 'maximo_offlineapplications', 'sw_scan', 'ng-mfb'])
 //#endregion
 
 //#region App.run
@@ -48,18 +44,19 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
     "localStorageService", "menuModelService", "metadataModelService", "routeService",
     "crudContextService", "synchronizationNotificationService",
     "offlinePersitenceBootstrap", "offlineEntities", "configurationService", "$rootScope", "$q",
-    "$cordovaSplashscreen", "$timeout",
+    "$cordovaSplashscreen", "$timeout", "offlineCommandService",
     function ($ionicPlatform, swdbDAO, $log, securityService, localStorageService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap,
-        entities, configService, $rootScope, $q, $cordovaSplashscreen, $timeout) {
+        entities, configService, $rootScope, $q, $cordovaSplashscreen, $timeout, offlineCommandService) {
 
         function initContext() {
             offlinePersitenceBootstrap.init();
-            var menuPromise = menuModelService.initAndCacheFromDB();
-            var metadataPromise = metadataModelService.initAndCacheFromDB();
+            const menuPromise = menuModelService.initAndCacheFromDB();
+            const metadataPromise = metadataModelService.initAndCacheFromDB();
+            const commandBarsPromise = offlineCommandService.initAndCacheFromDataBase();
             //server side + client side configs
-            var serverConfigPromise = configService.loadConfigs();
-            var clientConfigPromise = configService.loadClientConfigs();
-            return $q.all([menuPromise, metadataPromise, serverConfigPromise, clientConfigPromise]);
+            const serverConfigPromise = configService.loadConfigs();
+            const clientConfigPromise = configService.loadClientConfigs();
+            return $q.all([menuPromise, metadataPromise, serverConfigPromise, commandBarsPromise, clientConfigPromise]);
         }
 
         function initDataBaseDebuggingHelpers() {

@@ -80,7 +80,7 @@
 
         </schema>
 
-        <detail stereotype="compositiondetail" title="Work Log">
+        <detail stereotype="compositiondetail" title="Work Log" platform="web">
           <field attribute="createdate" hidden="true" />
 
           <field attribute="description" label="Summary" requiredexpression="true">
@@ -109,10 +109,27 @@
 
         </detail>
         
-        <!-- region: Mobile -->
-        
-        
-        <!-- endregion: Mobile -->
+        <!-- #region: Mobile -->
+        <detail stereotype="compositiondetail" title="Work Log" platform="mobile">
+          <field attribute="createdate" hidden="true" />
+          <field attribute="description" label="Summary" requiredexpression="true">
+            <renderer type="default" params="maxlength=100"/>
+          </field>
+          <field attribute="wld_.ldtext" label="Details" >
+            <renderer type="richtext"/>
+          </field>
+          <optionfield attribute="logtype" label="Log Type" default="CLIENTNOTE">
+            <option label="Appointment Note" value="APPTNOTE"/>
+            <option label="Client Note" value="CLIENTNOTE"/>
+            <option label="Update" value="UPDATE"/>
+            <option label="Work" value="WORK"/>
+          </optionfield>
+          <optionfield attribute="clientviewable" label="Client Viewable" default="0">
+            <option label="Yes" value="1"/>
+            <option label="No" value="0"/>
+          </optionfield>
+        </detail>
+        <!-- #endregion -->
 
       </schemas>
     </application>

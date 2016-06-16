@@ -2520,7 +2520,7 @@
           <section label="Document" attribute="document" resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Faq;action=Download;idcolumn=docinfoid"/>
         </schema>
 
-        <schema id="detail" title="Attachments" redeclaring="false">
+        <schema id="detail" title="Attachments" redeclaring="false" platform="web">
           <customization position="docinfo_.description">
           </customization>
           <commandbars>
@@ -3003,7 +3003,7 @@
 
     <application name="worklog" entity="worklog" title="worklogs">
       <schemas>
-        <detail stereotype="compositiondetail" redeclaring="false">
+        <detail stereotype="compositiondetail" redeclaring="false" platform="web">
           <customization position="+position_attachment">
             <!-- image attachment -->
             <section orientation="horizontal">

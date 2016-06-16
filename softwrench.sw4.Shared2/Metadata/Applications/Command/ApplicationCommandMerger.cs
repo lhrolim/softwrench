@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using softwrench.sw4.Shared2.Metadata.Exception;
 
 namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
@@ -94,7 +93,8 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             }
 
             return new CommandBarDefinition(overridingBar.Id, baseBar.Position, baseBar.ExcludeUndeclared, listOfCommands) {
-                OriginalCommandIds = baseBar.OriginalCommandIds
+                OriginalCommandIds = baseBar.OriginalCommandIds,
+                Platform = baseBar.Platform 
             };
         }
 

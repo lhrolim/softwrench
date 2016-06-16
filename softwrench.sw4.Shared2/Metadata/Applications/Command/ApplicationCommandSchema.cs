@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
-using softwrench.sw4.Shared2.Metadata.Exception;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
     public class ApplicationCommandSchema {
