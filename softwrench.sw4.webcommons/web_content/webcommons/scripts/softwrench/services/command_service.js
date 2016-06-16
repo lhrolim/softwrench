@@ -188,7 +188,10 @@ angular.module('sw_layout')
         getBarCommands: function (schema, position) {
             schema.jscache = instantiateIfUndefined(schema.jscache);
             schema.jscache.commandbars = instantiateIfUndefined(schema.jscache.commandbars);
-
+            if (schema.jscache.commandbars[position] !== undefined) {
+                //null should be considered as a cache hit also
+                return schema.jscache.commandbars[position];
+            }
             const bars = contextService.fetchFromContext("commandbars", true);
             const commands = commandCommonsService.getCommands(schema, position, bars);
             schema.jscache.commandbars[position] = commands;
