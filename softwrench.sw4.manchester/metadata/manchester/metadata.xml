@@ -203,7 +203,7 @@
           <field attribute="targetfinish" hidden="true"/>
           <field attribute="actualstart" hidden="true"/>
           <field attribute="actualfinish" hidden="true"/>
-
+          <field attribute="assetsiteid" hidden="true"/>
         </componentdisplayable>
       </components>
 
