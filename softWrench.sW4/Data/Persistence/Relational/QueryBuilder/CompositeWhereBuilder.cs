@@ -10,9 +10,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
         private const string And = " and ";
 
         private readonly IEnumerable<IWhereBuilder> _whereBuilders;
+        private bool _disregardWhere;
 
-        public CompositeWhereBuilder(IEnumerable<IWhereBuilder> whereBuilders) {
-            this._whereBuilders = whereBuilders;
+        public CompositeWhereBuilder(IEnumerable<IWhereBuilder> whereBuilders, bool disregardWhere = false) {
+            _whereBuilders = whereBuilders;
+            _disregardWhere = disregardWhere;
         }
 
         public String BuildWhereClause(string entityName, SearchRequestDto searchDto = null) {
@@ -24,7 +26,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
                     continue;
                 }
 
-                if (firstMatch) {
+                if (firstMatch && !_disregardWhere) {
                     sb.Append(" where ");
                     firstMatch = false;
                 }

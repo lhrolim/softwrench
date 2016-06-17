@@ -2,6 +2,7 @@
 using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
 using log4net;
+using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.dashboard.classes.startup;
 using softWrench.sW4.Util;
@@ -24,9 +25,14 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Dashboard
         }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
-            if (ApplicationConfiguration.ClientName != "chicago") return;
+            if (ApplicationConfiguration.ClientName != "chicago") {
+                return;
+            }
 
             var srDashboard = _service.FindByAlias(ChartInitializer.SrChartDashboardAlias);
+            StatisticsQueryProvider.AddCustomSelectQuery("dashboard:chicago.sr.dailytickets", ChicagoDashBoardWhereClausedProvider.SRStatusDaily);
+            _service.RegisterWhereClause("servicerequest", "@chicagoDashBoardWhereClausedProvider.GetTicketCountQuery", "SROpenedDaily", "dashboard:chicago.sr.dailytickets");
+
             if (srDashboard == null) {
                 Log.Warn(string.Format("Could not add chicago's SR charts because there is no dashboard with alias '{0}' registered", ChartInitializer.SrChartDashboardAlias));
                 return;
@@ -56,11 +62,8 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Dashboard
                     Size = 12,
                     Configuration = "application=sr;field=day;type=swRecordCountChart;limit=0;showothers=False;keepServerSort=true;clickDtoProvider=chicagoChartService.dailyopenedTicketsClicked;options={'argumentAxis':{'title':{'text': 'Days' }}}"
                 },
-
             };
-            _service.RegisterWhereClause("servicerequest", "@chicagoDashBoardWhereClausedProvider.GetTicketCountQuery", "SROpenedDaily", "dashboard:chicago.sr.dailytickets");
             _service.AddPanelsToDashboard(srDashboard, panels);
-
         }
 
         public int Order {

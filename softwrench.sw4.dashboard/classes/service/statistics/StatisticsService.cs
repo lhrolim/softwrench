@@ -7,9 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
+using softwrench.sw4.dashboard.classes.model;
+using softwrench.sw4.dashboard.classes.startup;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
+using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
@@ -19,7 +23,7 @@ using ctes = softwrench.sw4.dashboard.classes.service.statistics.StatisticsConst
 namespace softwrench.sw4.dashboard.classes.service.statistics {
     public class StatisticsService : ISingletonComponent {
 
-        private const string COUNT_BY_PROPERTY_ORDERED_TEMPLATE = "select COALESCE(CAST({1} as varchar), 'NULL') as {1}, count(*) as " + ctes.FIELD_VALUE_VARIABLE_NAME + 
+        private const string COUNT_BY_PROPERTY_ORDERED_TEMPLATE = "select COALESCE(CAST({1} as varchar), 'NULL') as {1}, count(*) as " + ctes.FIELD_VALUE_VARIABLE_NAME +
                                                                     @" from {0} 
                                                                         {2}
                                                                         group by {1}
@@ -30,15 +34,17 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
         private readonly IMaximoHibernateDAO _maxdao;
         private readonly ISWDBHibernateDAO _swdao;
         private readonly IWhereClauseFacade _whereClauseFacade;
-        private readonly DataConstraintsWhereBuilder _whereBuilder;
+        private readonly IWhereBuilder _whereBuilder;
         private readonly IContextLookuper _contextLookuper;
 
         public StatisticsService(IMaximoHibernateDAO maxdao, ISWDBHibernateDAO swdao,
-            IWhereClauseFacade whereClauseFacade, DataConstraintsWhereBuilder whereBuilder, IContextLookuper contextLookuper) {
+            IWhereClauseFacade whereClauseFacade, DataConstraintsWhereBuilder whereBuilder, StatisticsWhereBuilder statisticsWhereBuilder, IContextLookuper contextLookuper) {
             _maxdao = maxdao;
             _swdao = swdao;
             _whereClauseFacade = whereClauseFacade;
-            _whereBuilder = whereBuilder;
+            _whereBuilder = new CompositeWhereBuilder(new List<IWhereBuilder>(){
+               whereBuilder, new MultiTenantCustomerWhereBuilder(), statisticsWhereBuilder, new EntityWhereClauseBuilder()
+            });
             _contextLookuper = contextLookuper;
         }
 
@@ -54,7 +60,7 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
         public async Task<IEnumerable<StatisticsResponseEntry>> CountByProperty(StatisticsRequest request) {
             var pagination = request.Limit > 0 ? new PaginationData(request.Limit, 1, COUNT_ORDER) : null;
             var query = BuildStatisticsQuery(request);
-            var dao = IsMaximoApplication(request.Application) ?  (IBaseHibernateDAO) _maxdao : _swdao;
+            var dao = IsMaximoApplication(request.Application) ? (IBaseHibernateDAO)_maxdao : _swdao;
 
             return await Task.Run(() => {
                 var result = dao.FindByNativeQuery(query, new ExpandoObject(), pagination);
@@ -68,52 +74,56 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
                 .Select(d => {
                     var fieldValue = d[propertyName].ToString();
                     var fieldCountLong = d[ctes.FIELD_VALUE_VARIABLE_NAME] as long?;
-                    var fieldCount = fieldCountLong ?? Convert.ToInt64((int) d[ctes.FIELD_VALUE_VARIABLE_NAME]);
+                    var fieldCount = fieldCountLong ?? Convert.ToInt64((int)d[ctes.FIELD_VALUE_VARIABLE_NAME]);
                     // value is `null`: label configured by request. Otherwise try and grab the label from the query
-                    var label = string.IsNullOrEmpty(fieldValue) || string.Equals(fieldValue, "NULL")
-                        ? nullValueLabel
-                        : d.ContainsKey(ctes.FIELD_LABEL_VARIABLE_NAME) ? (string)d[ctes.FIELD_LABEL_VARIABLE_NAME] : null;
-
-                    return new StatisticsResponseEntry(fieldValue: fieldValue, fieldCount: fieldCount, fieldLabel: label);
+                    string label = null;
+                    if (string.IsNullOrEmpty(fieldValue) || string.Equals(fieldValue, "NULL")) {
+                        label = nullValueLabel;
+                    } else {
+                        if (d.ContainsKey(ctes.FIELD_LABEL_VARIABLE_NAME)) {
+                            label = d[ctes.FIELD_LABEL_VARIABLE_NAME] as string;
+                        }
+                    }
+                    return new StatisticsResponseEntry(fieldValue, fieldCount, label);
                 });
         }
 
         public async Task<IEnumerable<StatisticsResponseEntry>> GetDataByAction(string action, StatisticsRequest request) {
             switch (action) {
                 case "device_value":
-                    return await DeviceValuesMonthly(request);
+                return await DeviceValuesMonthly(request);
                 default:
-                    throw new InvalidOperationException(string.Format("No action that can provide statistical data for '{0}'", action));
+                throw new InvalidOperationException(string.Format("No action that can provide statistical data for '{0}'", action));
             }
         }
 
         #region Specific API-unfriendly stuff
 
         private async Task<IEnumerable<StatisticsResponseEntry>> DeviceValuesMonthly(StatisticsRequest request) {
-                var now = DateTime.Now.ToUniversalTime();
-                var normalizedNow = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-                var months = new List<DateTime>(12);
-                for (var i = 11; i > 0; i--) {
-                    months.Add(normalizedNow.AddMonths(-i));    
-                }
-                months.Add(normalizedNow);
+            var now = DateTime.Now.ToUniversalTime();
+            var normalizedNow = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+            var months = new List<DateTime>(12);
+            for (var i = 11; i > 0; i--) {
+                months.Add(normalizedNow.AddMonths(-i));
+            }
+            months.Add(normalizedNow);
 
-                var queryBuilder = new StringBuilder(@"
+            var queryBuilder = new StringBuilder(@"
                     select d.rng as monthyear, max(d.value) as maxmonthvalue, min(d.value) as minmonthvalue
                         from 
 	                        (
 		                    select valuelong as value,
 		                        case ");
 
-                months.ForEach(m => {
-                    var firstDayOfMonthTimestamp = m.ToUnixTimeStamp();
-                    var lastDayOfMonth = new DateTime(m.Year, m.Month, DateTime.DaysInMonth(m.Year, m.Month), 23, 59, 59, DateTimeKind.Utc);
-                    var lastDayOfMonthTimeStamp = lastDayOfMonth.ToUnixTimeStamp();
-                    var monthName = m.ToString("MMMM", CultureInfo.InvariantCulture);
-                    queryBuilder.AppendLine(string.Format("when timestamp between {0} and {1} then '{2}/{3}'", firstDayOfMonthTimestamp, lastDayOfMonthTimeStamp, monthName, m.Year));
-                });
+            months.ForEach(m => {
+                var firstDayOfMonthTimestamp = m.ToUnixTimeStamp();
+                var lastDayOfMonth = new DateTime(m.Year, m.Month, DateTime.DaysInMonth(m.Year, m.Month), 23, 59, 59, DateTimeKind.Utc);
+                var lastDayOfMonthTimeStamp = lastDayOfMonth.ToUnixTimeStamp();
+                var monthName = m.ToString("MMMM", CultureInfo.InvariantCulture);
+                queryBuilder.AppendLine(string.Format("when timestamp between {0} and {1} then '{2}/{3}'", firstDayOfMonthTimestamp, lastDayOfMonthTimeStamp, monthName, m.Year));
+            });
 
-                queryBuilder.Append(@"
+            queryBuilder.Append(@"
                         end as rng
 		                from pesco_device_value
 	                    ) d
@@ -131,7 +141,7 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
                                         { "monthyear", r["monthyear"] },
                                         { ctes.FIELD_LABEL_VARIABLE_NAME, r["monthyear"] }
                                     };
-                                }).Where(r => ((long) r[ctes.FIELD_VALUE_VARIABLE_NAME]) > 0 );
+                                }).Where(r => ((long)r[ctes.FIELD_VALUE_VARIABLE_NAME]) > 0);
 
                 return FormatQueryResult(results, "monthyear", "NULL");
             });
@@ -148,48 +158,25 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
         private string BuildStatisticsQuery(StatisticsRequest request) {
             _contextLookuper.FillGridContext(request.Application, SecurityFacade.CurrentUser());
 
-            var contextWhereClause = _whereBuilder.BuildWhereClause(request.Entity, null);
-
-            var requestWhereClause = "";
-
-            if (!string.IsNullOrEmpty(request.WhereClauseMetadataId)) {
-                var whereClauseResult = _whereClauseFacade.Lookup(request.Application, new ApplicationLookupContext() {
+            var contextWhereClause = _whereBuilder.BuildWhereClause(request.Entity, new PaginatedSearchRequestDto() {
+                Context = new ApplicationLookupContext() {
                     MetadataId = request.WhereClauseMetadataId
-                });
-                // this warning here is a lie: (WhereClauseFacade implements IWhereClauseFacade).Lookup can return null
-                if (whereClauseResult != null) {
-                    requestWhereClause = whereClauseResult.Query;
                 }
-            }
+            });
 
-            var hasContextFilter = !string.IsNullOrEmpty(contextWhereClause) && !string.Equals(contextWhereClause, requestWhereClause);
 
-            // full query -> use it
-            if (requestWhereClause.TrimStart().StartsWith("select ", StringComparison.OrdinalIgnoreCase)) {
-                return hasContextFilter 
-                    ? requestWhereClause.Replace(ctes.CONTEXT_FILTER_VARIABLE_NAME, string.Format(" and ({0})", contextWhereClause)) 
-                    : requestWhereClause;
-            }
+            string fixedSelectClause = null;
+            StatisticsQueryProvider.BaseStatisticsSelectQueries.TryGetValue(request.WhereClauseMetadataId,
+                out fixedSelectClause);
 
-            // combine both whereclauses
-            string fullWhereClause;
-            var hasRequestFilter = !string.IsNullOrEmpty(requestWhereClause);
-            if (!hasRequestFilter && !hasContextFilter) {
-                fullWhereClause = "";
-            } else if (!hasRequestFilter /*&& hasContextFilter*/) {
-                fullWhereClause = contextWhereClause;
-            } else if (/*hasRequestFilter &&*/ !hasContextFilter) {
-                fullWhereClause = requestWhereClause;
-            } else {
-                fullWhereClause = requestWhereClause + string.Format(" and ({0})", contextWhereClause);
-            }
-            if (!string.IsNullOrEmpty(fullWhereClause) && !fullWhereClause.StartsWith("where", StringComparison.OrdinalIgnoreCase)) {
-                fullWhereClause = "where " + fullWhereClause;
+            if (fixedSelectClause != null) {
+                var queryFormatted = string.Format(" {0} ", contextWhereClause);
+
+                return fixedSelectClause.Replace(ctes.CONTEXT_FILTER_VARIABLE_NAME, queryFormatted);
             }
 
             // format default query
-            var formattedQuery = string.Format(COUNT_BY_PROPERTY_ORDERED_TEMPLATE, request.Entity, request.Property, fullWhereClause);
-            return formattedQuery;
+            return string.Format(COUNT_BY_PROPERTY_ORDERED_TEMPLATE, request.Entity, request.Property, contextWhereClause);
         }
 
         #endregion

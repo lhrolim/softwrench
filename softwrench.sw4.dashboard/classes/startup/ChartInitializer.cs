@@ -22,33 +22,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         private const string WO_STATUS_OPENCLOSED_WHERECLAUSE = @"status = 'CLOSE' or 
                                                                     ((status = 'APPR' or status = 'WPCOND' or status = 'INPRG' or status = 'WORKING' or status = 'WAPPR' or status = 'WMATL') and 
                                                                     (woclass = 'WORKORDER' or woclass = 'ACTIVITY') and historyflag = 0 and istask = 0)";
-        /// <summary>
-        /// Complete SELECT statistics query for wo.status: includes the statuses's descriptions as labels.
-        /// </summary>
-        private static readonly string WO_STATUS_WHERECLAUSE_COMPLETE_QUERY = string.Format(
-            @"select COALESCE(CAST(status as varchar), 'NULL') as status, count(*) as {0}, s.description as {1} 
-                from workorder 
-                left join synonymdomain s
-       	            on status = s.value
-  	            where s.domainid = 'WOSTATUS' and s.description is not null {2}
-                group by status,s.description
-                order by countBy desc",
-            ctes.FIELD_VALUE_VARIABLE_NAME, ctes.FIELD_LABEL_VARIABLE_NAME, ctes.CONTEXT_FILTER_VARIABLE_NAME);
-
-        /// <summary>
-        /// Complete SELECT statistics query for sr.status: includes the statuses's descriptions as labels.
-        /// </summary>
-        private static readonly string SR_STATUS_WHERECLAUSE_COMPLETE_QUERY = string.Format(
-            @"select COALESCE(CAST(status as varchar), 'NULL') as status, count(*) as {0}, s.description as {1} 
-                from sr 
-                left join synonymdomain s
-       	            on status = s.value
-  	            where s.domainid = 'SRSTATUS' and s.description is not null {2}
-                group by status,s.description
-                order by countBy desc",
-            ctes.FIELD_VALUE_VARIABLE_NAME, ctes.FIELD_LABEL_VARIABLE_NAME, ctes.CONTEXT_FILTER_VARIABLE_NAME);
-
-   
+    
 
         private readonly DashboardInitializationService _service;
 
@@ -72,13 +46,13 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
             _service.RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, "WOOpenCloseDashBoardGauge", "dashboard:wo.status.openclosed.gauge");
             _service.RegisterWhereClause("workorder", WO_STATUS_OPENCLOSED_WHERECLAUSE, "WOOpenCloseDashBoardPie", "dashboard:wo.status.openclosed");
-            _service.RegisterWhereClause("workorder", WO_STATUS_WHERECLAUSE_COMPLETE_QUERY, "WOStatusDashboardQuery", "dashboard:wo.status.top5");
 
-            _service.RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQuery", "dashboard:sr.status.top5");
-            _service.RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryLine", "dashboard:sr.status.line");
-            _service.RegisterWhereClause("servicerequest", SR_STATUS_WHERECLAUSE_COMPLETE_QUERY, "SRStatusDashboardQueryPie", "dashboard:sr.status.pie");
+            _service.RegisterWhereClause("workorder", "s.domainid = 'WOSTATUS' and s.description is not null", "WOStatusDashboardQuery", "dashboard:wo.status.top5");
+            _service.RegisterWhereClause("servicerequest", "s.domainid = 'SRSTATUS' and s.description is not null", "SRStatusDashboardQuery", "dashboard:sr.status.top5");
+            _service.RegisterWhereClause("servicerequest", "s.domainid = 'SRSTATUS' and s.description is not null", "SRStatusDashboardQueryLine", "dashboard:sr.status.line");
+            _service.RegisterWhereClause("servicerequest", "s.domainid = 'SRSTATUS' and s.description is not null", "SRStatusDashboardQueryPie", "dashboard:sr.status.pie");
 
-            
+
         }
 
         #region SR Charts
@@ -119,7 +93,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
                     Size = 3,
                     Configuration = "application=sr;field=status;type=swRecordCountPie;statusfieldconfig=openclosed;limit=0;showothers=False;options={'series': {'type': 'doughnut'}, 'swChartsAddons': {'addPiePercentageTooltips': true}}"
                 },
-              
+
                 new DashboardGridPanel() {
                     Alias = "sr.grid",
                     Title = "Service Requests",

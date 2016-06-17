@@ -94,6 +94,7 @@
     <Compile Include="classes\model\migration\Migration20160402Swweb2315.cs" />
     <Compile Include="classes\model\migration\Migration20160331Swweb2334.cs" />
     <Compile Include="classes\model\migration\Migration20160601Swweb2538.cs" />
+    <Compile Include="classes\startup\StatisticsQueryProvider.cs" />
     <Compile Include="classes\service\graphic\exception\GraphicStorageSystemException.cs" />
     <Compile Include="classes\service\graphic\GraphicStorageSystemFacadeProvider.cs" />
     <Compile Include="classes\service\graphic\IGraphicStorageSystemAuthDto.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="classes\service\statistics\StatisticsRequest.cs" />
     <Compile Include="classes\service\statistics\StatisticsResponseEntry.cs" />
     <Compile Include="classes\service\statistics\StatisticsService.cs" />
+    <Compile Include="classes\service\statistics\StatisticsWhereBuilder.cs" />
     <Compile Include="classes\startup\DashboardInitializationService.cs" />
     <Compile Include="classes\startup\ChartInitializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

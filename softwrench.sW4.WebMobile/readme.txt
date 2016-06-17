@@ -36,3 +36,4 @@ util.getDefaultFileNameEndingExclusions = function () {
  5) On Ripple, open a second tab before hitting Chrome´s F12 or it will kill the application.
  
  6) On Ripple, Windows 8 Turn off Cross Domain Proxy Settings 
+
