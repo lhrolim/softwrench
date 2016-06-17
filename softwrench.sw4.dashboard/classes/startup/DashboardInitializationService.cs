@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using cts.commons.persistence.Util;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
+using JetBrains.Annotations;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -42,7 +44,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
             var hasPanels = dashboard.PanelsSet != null && dashboard.PanelsSet.Any();
 
             // save panels and replace references by hibernate-managed ones
-            panels = MergePanels(panels);
+            panels = MergePanels(dashboard.PanelsSet, panels);
 
             // create relationship entities
             var initialPosition = hasPanels ? dashboard.PanelsSet.Max(p => p.Position) + 1 : 0;
@@ -64,10 +66,20 @@ namespace softwrench.sw4.dashboard.classes.startup {
             }).ToList();
         }
 
-        private ICollection<DashboardBasePanel> MergePanels(ICollection<DashboardBasePanel> panels) {
+        private ICollection<DashboardBasePanel> MergePanels([CanBeNull]Iesi.Collections.Generic.ISet<DashboardPanelRelationship> databasePanels, ICollection<DashboardBasePanel> panels) {
             var now = DateTime.Now;
             // save panels and replace references by hibernate-managed ones
             foreach (var panel in panels) {
+
+                if (databasePanels != null) {
+                    var matchingPanel = databasePanels.FirstOrDefault(f => f.Panel.Alias.EqualsIc(panel.Alias));
+                    if (matchingPanel != null) {
+                        //if there was already a panel on the database, let's make sure we're not creating a new one, but rather updating it
+                        panel.Id = matchingPanel.Panel.Id;
+                        panel.CreatedBy = matchingPanel.Panel.CreatedBy;
+                    }
+                }
+
                 panel.CreationDate = now;
                 panel.UpdateDate = now;
                 panel.Visible = true;
@@ -83,7 +95,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         public Dashboard CreateDashboard(string title, string alias, ICollection<DashboardBasePanel> panels) {
 
             // save panels and replace references by hibernate-managed ones
-            panels = MergePanels(panels);
+            panels = MergePanels(null, panels);
 
             // create relationship entities
             var panelRelationships = BuildRelationShips(panels);

@@ -38,11 +38,6 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Dashboard
                 return;
             }
 
-            if (_service.PanelExists(ChicagoSRDepartment) || _service.PanelExists(ChicagoSRTickettype)) {
-                Log.Debug(string.Format("Chicago's widgets '{0}' '{1}' already exist. Skipping creation.", ChicagoSRDepartment, ChicagoSRTickettype));
-                return;
-            }
-
             var panels = new List<DashboardBasePanel> {
                 new DashboardGraphicPanel {
                     Alias = ChicagoSRDepartment,
