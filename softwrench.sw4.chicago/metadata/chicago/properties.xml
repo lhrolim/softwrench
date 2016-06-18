@@ -31,8 +31,8 @@
   <property key="sourcemapping" value="smartcloud7.5"/>
   
   <property key="notifications.activityStream.enabled" value="true"/>
-  <property key="notifications.activityStream.refreshRate" value="2"/>
-  <property key="notifications.updateJob.refreshRate" value="2"/>
+  <property key="notifications.activityStream.refreshRate" value="10"/>
+  <property key="notifications.updateJob.refreshRate" value="10"/>
 
   <property key="multitenantprefix" value="CPS-00"/>
   

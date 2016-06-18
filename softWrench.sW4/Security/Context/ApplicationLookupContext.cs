@@ -57,7 +57,7 @@ namespace softWrench.sW4.Security.Context {
             return string.Equals(Mode, other.Mode) && string.Equals(Schema, other.Schema)
                    && string.Equals(ParentApplication, other.ParentApplication) &&
                    string.Equals(ParentSchema, other.ParentSchema)
-                   && string.Equals(AttributeName, other.AttributeName) && string.Equals(ParentMode, other.ParentMode);
+                   && string.Equals(AttributeName, other.AttributeName) && string.Equals(ParentMode, other.ParentMode) && string.Equals(MetadataId, other.MetadataId);
         }
 
         public override bool Equals(object obj) {

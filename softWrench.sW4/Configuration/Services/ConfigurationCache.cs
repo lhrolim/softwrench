@@ -94,6 +94,9 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         private void ClearCachedOnClientIfNeeded(string key) {
+            if (_dao == null) {
+                return;
+            }
             var keyCache = GetCacheableOnClientKeyCache();
             if (keyCache.Contains(key)) {
                 _cachedOnClientCache = null;
