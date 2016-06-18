@@ -9,20 +9,19 @@
             if (!entities[entity]) {
                 throw new Error("entity {0} not found".format(entity));
             }
-            //return persistence.define(entity);
+//            return persistence.define(entity);
             return entities[entity];
         }
 
         function createFilter(entity, queryString, queryoptions) {
             queryoptions = queryoptions || {};
-            var pageNumber = queryoptions.pageNumber || 1;
-            var orderProperty = queryoptions.orderby || null;
-            var orderascending = queryoptions.orderbyascending;
-            var pageSize = queryoptions.pagesize;
-            var projectionFields = queryoptions.projectionFields || [];
-            var queryToUse = queryoptions.fullquery;
-            var prefetch = queryoptions.prefetch;
-
+            const pageNumber = queryoptions.pageNumber || 1;
+            const orderProperty = queryoptions.orderby || null;
+            const orderascending = queryoptions.orderbyascending;
+            const pageSize = queryoptions.pagesize;
+            const projectionFields = queryoptions.projectionFields || [];
+            const queryToUse = queryoptions.fullquery;
+            const prefetch = queryoptions.prefetch;
             var filter = getInstance(entity).all();
 
 
@@ -77,7 +76,7 @@
                 if (memoryObject.id == null || (memoryObject._type && memoryObject._type != entity)) {
                     //if the memory object doesn´t contain an id, then we don´t need to check on persistence cache, 
                     //just instantiate a new one
-                    var transientEntity = new ob();
+                    const transientEntity = new ob();
                     if (mergingFunction) {
                         deferred.resolve(mergingFunction(memoryObject, transientEntity));
                     } else {
@@ -105,7 +104,7 @@
 
             findById: function (entity, id) {
                 //var deferred = $q.defer();
-                var dbEntity = entities[entity];
+                const dbEntity = entities[entity];
                 if (!dbEntity) {
                     return $q.reject(new Error("entity {0} not found".format(entity)));
                 }
@@ -125,8 +124,7 @@
             /// <returns type=""></returns>
             findAll: function (entity, options) {
                 var deferred = $q.defer();
-                var filter = createFilter(entity, null, options);
-
+                const filter = createFilter(entity, null, options);
                 filter.list(null, function (result) {
                     deferred.resolve(result);
                 });
@@ -135,8 +133,7 @@
 
             findByQuery: function (entity, queryString, options) {
                 var deferred = $q.defer();
-                var filter = createFilter(entity, queryString, options);
-
+                const filter = createFilter(entity, queryString, options);
                 try {
                     filter.list(null, function (result) {
                         deferred.resolve(result);
@@ -149,7 +146,7 @@
 
             findUnique: function (entity) {
                 var deferred = $q.defer();
-                var promise = deferred.promise;
+                const promise = deferred.promise;
                 this.findAll(entity).then(function (result) {
                     if (result.length == 0) {
                         deferred.resolve(null);
@@ -164,7 +161,7 @@
                 persistence.add(obj);
 
                 var deferred = $q.defer();
-                var promise = deferred.promise;
+                const promise = deferred.promise;
                 if (tx) {
                     //flush has to be called from the outside
                     deferred.resolve();
@@ -196,11 +193,11 @@
                     return $q.when();
                 }
 
-                for (var i = 0; i < objArray.length; i++) {
+                for (let i = 0; i < objArray.length; i++) {
                     persistence.add(objArray[i]);
                 }
                 var deferred = $q.defer();
-                var promise = deferred.promise;
+                const promise = deferred.promise;
                 if (tx) {
                     //flush has to be called from the outside
                     deferred.resolve(objArray);
@@ -215,12 +212,12 @@
 
             bulkDelete: function (objArray, tx) {
                 var deferred = $q.defer();
-                var promise = deferred.promise;
+                const promise = deferred.promise;
                 if (!objArray || objArray.length == 0) {
                     deferred.resolve();
                     return promise;
                 }
-                for (var i = 0; i < objArray.length; i++) {
+                for (let i = 0; i < objArray.length; i++) {
                     persistence.remove(objArray[i]);
                 }
                 if (tx) {
@@ -291,8 +288,8 @@
              * @returns Promise 
              */
             resetDataBase: function (except) {
-                var queries = [];
-                for (var entity in entities) {
+                const queries = [];
+                for (let entity in entities) {
                     if (!entities.hasOwnProperty(entity) || except.indexOf(entity) >= 0) {
                          continue;
                     }
@@ -320,8 +317,8 @@
              * @returns Promise 
              */
             dropDataBase: function () {
-                var queries = [];
-                for (var entity in entities) {
+                const queries = [];
+                for (let entity in entities) {
                     if (!entities.hasOwnProperty(entity)) continue;
                     queries.push("drop table if exists `{0}`".format(entity));
                 }

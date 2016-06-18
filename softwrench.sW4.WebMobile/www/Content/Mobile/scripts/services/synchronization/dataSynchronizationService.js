@@ -75,9 +75,7 @@
             //ignoring composition number to SyncOperation table
             var numberOfDownloadedItems = queryArray.length;
             queryArray = queryArray.concat(offlineCompositionService.generateSyncQueryArrays(compositionData));
-            return swdbDAO.executeQueries(queryArray).then(function () {
-                return $q.when(numberOfDownloadedItems);
-            });
+            return swdbDAO.executeQueries(queryArray).then(()=> $q.when(numberOfDownloadedItems));
         };
 
 
@@ -125,8 +123,8 @@
                 });
         };
 
-        var api = {
-            syncData: syncData
+        const api = {
+            syncData
         };
 
         return api;

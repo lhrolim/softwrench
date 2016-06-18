@@ -1608,11 +1608,12 @@ persistence.get = function(arg1, arg2) {
       if(!this.queryCollectionCache[entityName]) {
         this.queryCollectionCache[entityName] = {};
       }
-      var uniqueString = coll.toUniqueString();
-      if(!this.queryCollectionCache[entityName][uniqueString]) {
-        this.queryCollectionCache[entityName][uniqueString] = coll;
-      }
-      return this.queryCollectionCache[entityName][uniqueString];
+        return coll;
+//      var uniqueString = coll.toUniqueString();
+//      if(!this.queryCollectionCache[entityName][uniqueString]) {
+//        this.queryCollectionCache[entityName][uniqueString] = coll;
+//      }
+//      return this.queryCollectionCache[entityName][uniqueString];
     }
 
     /**

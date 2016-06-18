@@ -108,4 +108,6 @@
   <plugin name="cordova-plugin-camera" version="2.2.0" />
   <plugin name="cordova-plugin-compat" version="1.0.0" />
   <plugin name="cordova-plugin-vs-taco-support" version="0.2.0" src="https://github.com/Microsoft/cordova-plugin-vs-taco-support.git" />
+  <plugin name="com.ionic.keyboard" version="1.0.4" />
+  <plugin name="io.litehelpers.cordova.sqlite" version="0.7.10" />
 </widget>
