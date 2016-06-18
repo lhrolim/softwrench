@@ -835,6 +835,7 @@
     <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
     <Content Include="Content\Templates\inputModal.html" />
     <Content Include="Content\Templates\menu\adminmenu.html" />
+    <Content Include="Content\Templates\otb\receipts.html" />
     <Content Include="Content\Templates\otb\saddress.html" />
     <Content Include="Content\Templates\otb\WotaskchangeStatus.html" />
     <Content Include="Content\Templates\otb\compositionlistdeleteaction.html" />
@@ -873,6 +874,8 @@
     <Content Include="App_Data\Client\hapag\i18n\de\labels.json" />
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
     <None Include="Doc\securitygroup.md" />
+    <Content Include="Doc\eventService.txt" />
+    <Content Include="Doc\maximoutc.txt" />
     <Content Include="Doc\scanner.txt" />
     <Content Include="Gruntfile.js" />
     <Content Include="IBM.Data.DB2.dll" />
@@ -921,12 +924,6 @@
     <Content Include="Content\Templates\crud\crud_input.html" />
     <Content Include="Content\Templates\hapag\hapagsearch.html" />
     <Content Include="Content\Templates\menu\menuitem.html" />
-    <None Include="Scripts\jquery-2.1.1.intellisense.js" />
-    <Content Include="Scripts\jquery-2.1.1.js" />
-    <Content Include="Scripts\jquery-2.1.1.min.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\nugetexample.js" />
     <Content Include="softWrench.sW4.Controls.WebForms.dll" />
     <Content Include="Content\Scripts\client\signin\signin.js" />
     <Content Include="UserControls\Report.ascx" />
@@ -962,7 +959,6 @@
     <Content Include="Views\UserSetup\DefinePassword.cshtml" />
     <Content Include="Views\Shared\_NoMenuLayout.cshtml" />
     <Content Include="Views\UserSetup\SecurityException.cshtml" />
-    <Content Include="Scripts\jquery-2.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />
@@ -971,6 +967,7 @@
     <Folder Include="Content\vendor\scripts\" />
     <Folder Include="Controllers\MaximoApps\" />
     <Folder Include="Controllers\Mobile\" />
+    <Folder Include="Scripts\" />
     <Folder Include="Views\HapagHome\" />
     <Folder Include="Views\SchedulerSetup\" />
   </ItemGroup>

@@ -37,10 +37,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\%24changecustomername%24\configuration\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\connector\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\dataset\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\migration\" />
+    <Folder Include="classes\com\cts\bering\configuration\" />
+    <Folder Include="classes\com\cts\bering\connector\" />
+    <Folder Include="classes\com\cts\bering\dataset\" />
+    <Folder Include="classes\com\cts\bering\migration\" />
     <Folder Include="web_content\bering\htmls\" />
     <Folder Include="web_content\bering\scripts\" />
   </ItemGroup>

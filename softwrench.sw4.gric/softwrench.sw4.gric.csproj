@@ -86,11 +86,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <Content Include="web_content\gric\images\branding.png" />
+    <Content Include="web_content\gric\images\header-email.jpg" />
     <Content Include="web_content\gric\images\logo-byline.png" />
     <Content Include="web_content\gric\images\logo-main.png" />
     <Content Include="web_content\gric\scripts\sr_service.js" />
     <None Include="web_content\gric\styles\branding.scss" />
-    <None Include="web_content\gric\styles\application\grids.scss" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

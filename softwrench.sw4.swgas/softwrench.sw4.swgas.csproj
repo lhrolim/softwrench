@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\swgas\readme.txt" />
+    <Content Include="web_content\swgas\images\header-email.jpg" />
     <Content Include="web_content\swgas\images\logo-byline.png" />
     <Content Include="web_content\swgas\images\logo-main.png" />
   </ItemGroup>
@@ -77,10 +78,10 @@
     <Folder Include="classes\swgas\cts\swgas\migration\" />
     <Folder Include="web_content\swgas\htmls\" />
     <Folder Include="web_content\swgas\scripts\" />
-    <Folder Include="web_content\swgas\styles\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="customer.placeholder" />
+    <None Include="web_content\swgas\styles\branding.scss" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
