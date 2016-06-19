@@ -32,7 +32,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             var schemaId = resultObject.GetStringAttribute("recordschema");
 
             var handler = _handlerLookuper.FindHandler(handlerType, applicationName);
-            if (handler != null && handler.DelegateToMainApplication()) {
+            if (handler == null || handler.DelegateToMainApplication()) {
                 var ds = _dataSetProvider.LookupDataSet(applicationName, null);
                 var schema = schemaId ?? "editdetail";
                 var schemaKey = new ApplicationMetadataSchemaKey(schema);

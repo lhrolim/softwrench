@@ -13,7 +13,7 @@ namespace softwrench.sw4.problem.classes {
         }
 
         public Problem Register(string recordType, string recordId, string recordUserId, string datamap, int? createdBy, string stackTrace,
-            string message, string handlerName = null, string assignee = null, int priority = 1, string profiles = null) {
+            string message, string handlerName, string assignee = null, int priority = 1, string profiles = null) {
             var problem = new Problem(recordType, recordId, recordUserId, datamap, DateTime.Now,
                 createdBy, assignee, priority, stackTrace, message,
                 profiles, handlerName, ProblemStatus.Open.ToString());
