@@ -620,6 +620,11 @@
                         crud_inputcommons.initField($scope, fieldMetadata, "datamap");
                     };
 
+                    $scope.getValidationPattern = function (fieldMetadata) {
+                        var type = fieldMetadata.rendererParameters['valtype'];
+                        return validationService.getValidationPattern(type);
+                    };
+
                     $scope.getHelpIconPos = function (fieldMetadata) {
                         return fieldMetadata.header ? fieldMetadata.header.helpIcon : fieldMetadata.helpIcon;
                     };

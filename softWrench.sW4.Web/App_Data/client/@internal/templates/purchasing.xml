@@ -179,7 +179,9 @@
                 <renderer type="lookup"/>
               </optionfield>
               
-              <field attribute="companies_.phone" label="Phone"/>
+              <field attribute="companies_.phone" label="Phone">
+                <renderer type="default" params="valtype=phonenumber;valmessage=enter a valid phone number;"/>
+              </field>
             </section>
           </section>
           

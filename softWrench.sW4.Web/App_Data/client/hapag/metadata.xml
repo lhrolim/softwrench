@@ -998,7 +998,9 @@
 
           <field label="Reported By:" attribute="hlagreportedby" default="@username" readonly="true" tooltip="Owner" />
           <!--wip-->
-          <field label="CallBack Number:" attribute="callbacknum" default="@user.phone" />
+          <field label="CallBack Number:" attribute="callbacknum" default="@user.phone">
+            <renderer type="default" params="valtype=phonenumber;valmessage=enter a valid phone number;"/>
+          </field>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.hlagdisplayname" default="@personid" extraprojectionvalues="pluspcustomer">
             <renderer type="autocompleteserver"/>
             <dataprovider prefilterfunction="FilterAffectedPerson" />

@@ -160,7 +160,7 @@
             <renderer type="default" params="childinputsize=large" />
             <field attribute="orgobject" label="Origination" hidden="true"/>
             <association label="To" target="sendto" labelfield="email_.loweremail" valuefield="loweremail" orderbyfield="LOWER(emailaddress) desc" requiredexpression="true" >
-              <renderer type="multiselectautocompleteclient" stereotype="email"/>
+              <renderer type="multiselectautocompleteclient" stereotype="email" params="valtype=email;valmessage=invalid email format;" />
               <dataprovider postfilterfunction="EmailPostFilter"/>
             </association>
             <field attribute="sendfrom" label="From" requiredexpression="true" default="@user.email" readonly="true" >
@@ -171,11 +171,11 @@
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=large" />
             <association label="CC" target="cc" labelfield="email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
-              <renderer type="multiselectautocompleteclient" stereotype="email"/>
+              <renderer type="multiselectautocompleteclient" stereotype="email" params="valtype=email;valmessage=invalid email format;" />
               <dataprovider postfilterfunction="EmailPostFilter"/>
             </association>
             <association label="BCC" target="bcc" labelfield="2email_.emailaddress" orderbyfield="LOWER(emailaddress) desc">
-              <renderer type="multiselectautocompleteclient" stereotype="email"/>
+              <renderer type="multiselectautocompleteclient" stereotype="email" params="valtype=email;valmessage=invalid email format;" />
               <dataprovider postfilterfunction="EmailPostFilter"/>
             </association>
           </section>

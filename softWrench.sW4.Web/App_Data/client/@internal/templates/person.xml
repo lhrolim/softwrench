@@ -229,7 +229,9 @@
             <event type="afterchange" service="personService" method="afterChangeUsername"/>
           </field>
           <field attribute="personid" label="Username" hidden="true" />
-          <field attribute="#primaryemail" requiredexpression="true" label="Primary Email" tooltip="The user will receive a confirmation link on this email"/>
+          <field attribute="#primaryemail" requiredexpression="true" label="Primary Email" tooltip="The user will receive a confirmation link on this email">
+            <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
+          </field>
 
           <optionfield attribute="passwordmode" default="auto" label="Password Generation" showexpression="!@ldapEnabled"
                        tooltip="If Automatic an email with a link will be sent to the new users where they will be able to select a password. 

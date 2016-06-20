@@ -33,6 +33,25 @@
             return validationArray;
         };
 
+        function getValidationPattern(validationType) {
+            let regexPattern = '';
+            switch (validationType) {
+                case "number":
+                    regexPattern = new RegExp(/^\d+$/);
+                    break;
+
+                case "phonenumber":
+                    regexPattern = new RegExp(/^\d+$/);
+                    break;
+
+                case "email":
+                    regexPattern = new RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/, 'i');
+                    break;
+            }
+
+            return regexPattern;
+        }
+
         function validateInlineComposition(compositionDisplayable, mainDatamap) {
             const listSchema = compositionDisplayable.schema.schemas.list;
             const rows = mainDatamap[compositionDisplayable.relationship];
@@ -151,10 +170,11 @@
         };
 
         var service = {
-            getInvalidLabels: getInvalidLabels,
-            validate: validate,
-            validateCurrent :validateCurrent,
-            validateInlineComposition: validateInlineComposition,
+            getInvalidLabels,
+            validate,
+            validateCurrent,
+            validateInlineComposition,
+            getValidationPattern
         };
 
         return service;

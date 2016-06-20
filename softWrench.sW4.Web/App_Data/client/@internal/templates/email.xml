@@ -36,7 +36,7 @@
           <field attribute="emailid" hidden="true"/>
           <field attribute="loweremail" hidden="true"/>
           <field attribute="emailaddress" label="Email Address" requiredexpression="true">
-            <renderer type="email"/>
+            <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
           </field>
           <optionfield attribute="type" label="Type" providerattribute="_EmailTypeOptions" requiredexpression="true">
             <renderer type="combo" />

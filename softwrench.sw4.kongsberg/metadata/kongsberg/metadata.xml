@@ -1651,7 +1651,9 @@
               <field attribute="servcomprep" label="Service Company Representative"/>
             </section>
             <section orientation="horizontal">
-              <field attribute="servcomprepemail" label="Service Company Representative Email"/>
+              <field attribute="servcomprepemail" label="Service Company Representative Email">
+                <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
+              </field>
               <field attribute="wellname" label="Well Name"/>
             </section>
             <section orientation="horizontal">
@@ -2854,7 +2856,7 @@
         <schema id="detail" stereotype="compositiondetail" redeclaring="false">
           <customization position="sendfrom">
             <field attribute="sendfrom" label="From:" requiredexpression="true" default="support@kogtsupport24.com">
-              <renderer type="email"/>
+              <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
             </field>
           </customization>
           <customization position="subject">
@@ -3034,7 +3036,7 @@
         <schema id="detail" stereotype="compositiondetail" redeclaring="false">
           <customization position="sendfrom">
             <field attribute="sendfrom" label="From:" requiredexpression="true" default="support@kogtsupport24.com">
-              <renderer type="email"/>
+              <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
             </field>
           </customization>
           <customization position="subject">

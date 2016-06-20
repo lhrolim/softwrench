@@ -43,7 +43,9 @@
         <schema id="detail" stereotype="compositiondetail" title="Phone Detail">
           <field attribute="personid" hidden="true"/>
           <field attribute="phoneid" hidden="true"/>
-          <field attribute="phonenum" label="Phone #" requiredexpression="true"/>
+          <field attribute="phonenum" label="Phone #" requiredexpression="true">
+            <renderer type="default" params="valtype=phonenumber;valmessage=enter a valid phone number;"/>
+          </field>
           <optionfield attribute="type" label="Type" providerattribute="_PhoneTypeOptions" requiredexpression="true">
             <renderer type="combo" />
           </optionfield>
