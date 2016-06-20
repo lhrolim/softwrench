@@ -456,7 +456,7 @@
             </field>
           </section>
 
-          <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
+          <field label="Details" attribute="ld_.ldtext" >
             <renderer type="richtext"/>
           </field>
 
@@ -515,7 +515,7 @@
             </association>
           </section>
 
-          <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
+          <field label="Details" attribute="ld_.ldtext" >
             <renderer type="richtext"/>
           </field>
 
