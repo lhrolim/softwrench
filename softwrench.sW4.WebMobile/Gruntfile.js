@@ -133,6 +133,8 @@ module.exports = function (grunt) {
         return preprocessors;
     }
 
+    var currentPlatform = grunt.option("platform") || "android";
+
     //#endregion
 
     grunt.initConfig({
@@ -436,7 +438,7 @@ module.exports = function (grunt) {
             build: {
                 // applies /overrides files
                 files: [
-                    { expand: true, src: ["**/*", "!cordova.js"], dest: "platforms/", cwd: "overrides/" }
+                    { expand: true, src: ["**/*", "!cordova.js"], dest: "platforms/" + currentPlatform, cwd: "overrides/" + currentPlatform }
                 ]
             }
         },

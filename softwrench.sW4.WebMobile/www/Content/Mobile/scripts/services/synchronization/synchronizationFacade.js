@@ -1,8 +1,9 @@
 ﻿(function (mobileServices, angular, _) {
     "use strict";
 
-    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, swdbDAO, $ionicLoading, $ionicPopup, crudConstants, entities) {
-        
+    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
+        asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, swdbDAO, loadingService, $ionicPopup, crudConstants, entities) {
+
         //#region Utils
 
         function getDownloadDataCount(dataDownloadResult) {
@@ -71,7 +72,7 @@
                     // resolve with the saved batches to transparently continue the promise 
                     // chain as it was before (not aware of syncoperations update)
                     .then(operations => batches))
-                .then(batches => 
+                .then(batches =>
                     dataSynchronizationService.syncData().then(downloadResults => {
                         var dataCount = getDownloadDataCount(downloadResults);
                         return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batches);
@@ -94,7 +95,7 @@
                 offlineAuditService.getEntriesForEntity(item.dataentry, batch.application).then(entries => {
                     item.additionaldata.auditentries = entries;
                     return item;
-            }));
+                }));
             return $q.all(promises).then(items => {
                 // substitute payload's items by items with auditentries
                 payload.items = items;
@@ -135,7 +136,7 @@
                     const associationDataDownloaded = results[1];
                     const dataDownloadedResult = results.subarray(2);
                     const totalNumber = getDownloadDataCount(dataDownloadedResult);
-                    
+
                     return synchronizationOperationService.createNonBatchOperation(start, end, totalNumber, associationDataDownloaded, metadataDownloadedResult);
                 });
         }
@@ -158,7 +159,7 @@
 
             // one Batch per application
             const batchPromises = dbapplications.map(dbapplication => batchService.createBatch(dbapplication));
-           
+
             return $q.all(batchPromises)
                 .then(batches => {
                     // no batches created: full download instead of full sync
@@ -188,7 +189,7 @@
                                     log.debug("Batch returned synchronously --> performing download");
                                     var dataCount = getDownloadDataCount(downloadResults);
                                     return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
-                            });
+                                });
                         });
                 });
         }
@@ -204,23 +205,22 @@
          * @returns Promise resolved with Boolean indicating the caller it can continue it's workflow. 
          */
         function attempSyncAndContinue(failPopupConfig) {
-            $ionicLoading.show({
-                template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Synchronizing data<span>"
-            });
+            loadingService.showDefault();
+            
             // try to sync
             return fullSync()
                 .then(() => {
-                    $ionicLoading.hide();
+                    loadingService.hide();
                     return true;
                 })
                 .catch(() => {
-                    $ionicLoading.hide();
+                    loadingService.hide();
                     // sync failed: check if user wishes to logout regardless
                     return $ionicPopup.confirm({
-                        title: failPopupConfig.title || "Synchronization failed",
-                        template: failPopupConfig.template || "Continue anyway?"
-                    })
-                    .then(continueAnyway => !!continueAnyway);
+                            title: failPopupConfig.title || "Synchronization failed",
+                            template: failPopupConfig.template || "Continue anyway?"
+                        })
+                        .then(continueAnyway => !!continueAnyway);
                 });
         }
 
@@ -245,7 +245,8 @@
     }
 
     //#region Service registration
-    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService", "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "$ionicLoading", "$ionicPopup", "crudConstants", "offlineEntities", synchronizationFacade]);
+    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService",
+        "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", synchronizationFacade]);
     //#endregion
 
 })(mobileServices, angular, _);

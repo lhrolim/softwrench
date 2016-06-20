@@ -14,7 +14,6 @@
   <preference name="FadeSplashScreen" value="false" />
   <preference name="windows-target-version" value="8.0" />
   <preference name="windows-phone-target-version" value="8.1" />
-  <preference name="orientation" value="all" />
   <preference name="BackupWebStorage" value="local" />
   <vs:platformSpecificValues />
   <platform name="android">
@@ -24,6 +23,7 @@
     <icon src="res/icons/android/icon-96-xhdpi.png" density="xhdpi" />
   </platform>
   <platform name="ios">
+    <preference name="Orientation" value="all" />
     <icon src="res/icons/ios/icon-60-3x.png" width="180" height="180" />
     <icon src="res/icons/ios/icon-60.png" width="60" height="60" />
     <icon src="res/icons/ios/icon-60-2x.png" width="120" height="120" />
@@ -96,7 +96,7 @@
   <!-- hooks -->
   <hook type="before_compile" src="hooks/hook-symlink-fix.js" />
   <plugin name="cordova-plugin-app-event" version="1.2.0" />
-  <plugin name="cordova-sqlite-storage" version="0.7.10" />
+  <plugin name="cordova-sqlite-storage" version="1.4.2" />
   <plugin name="cordova-plugin-whitelist" version="1.1.0" />
   <plugin name="cordova-plugin-app-version" version="0.1.8" />
   <plugin name="cordova-plugin-device" version="1.0.1" />
@@ -109,5 +109,4 @@
   <plugin name="cordova-plugin-compat" version="1.0.0" />
   <plugin name="cordova-plugin-vs-taco-support" version="0.2.0" src="https://github.com/Microsoft/cordova-plugin-vs-taco-support.git" />
   <plugin name="com.ionic.keyboard" version="1.0.4" />
-  <plugin name="io.litehelpers.cordova.sqlite" version="0.7.10" />
 </widget>

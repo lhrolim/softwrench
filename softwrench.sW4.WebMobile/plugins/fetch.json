@@ -88,18 +88,18 @@
         "is_top_level": true,
         "variables": {}
     },
-    "io.litehelpers.cordova.sqlite": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-sqlite-storage@0.7.10"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "com.ionic.keyboard": {
         "source": {
             "type": "registry",
             "id": "ionic-plugin-keyboard@1.0.4"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-sqlite-storage": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-sqlite-storage@1.4.2"
         },
         "is_top_level": true,
         "variables": {}

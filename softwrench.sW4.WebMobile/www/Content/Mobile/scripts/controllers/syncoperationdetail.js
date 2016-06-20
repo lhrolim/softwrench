@@ -2,8 +2,8 @@
     "use strict";
 
     softwrench.controller("SyncOperationDetailController",
-        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$ionicLoading", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$ionicScrollDelegate",
-        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $ionicLoading, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate) {
+        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$ionicScrollDelegate","loadingService",
+        function ($scope, service, routeService, synchronizationFacade, swAlertPopup,  $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate, loadingService) {
 
             $scope.data = {
                 operation: null,
@@ -14,11 +14,6 @@
                 applicationStateCollapsed: true,
             }
 
-            var loadingOptions = {
-                //template: "<i class='icon ion-looping'></i> Loading", -> ionicon-animations not added; using spinner instead
-                template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Loading<span>",
-                animation: "fade-in"
-            };
 
             var loadSyncOperation = function () {
                 var loadPromise = $scope.data.isLatestOperation ? service.getMostRecentOperation() : service.getOperation($stateParams.id);
@@ -48,14 +43,14 @@
             var loadData = function(initial) {
                 // show loading if initial page load
                 if (!!initial) {
-                    $ionicLoading.show(loadingOptions);
+                    loadingService.showDefault();
                 }
                 var operationPromise = loadSyncOperation();
                 var currentStatePromise = loadCurrentApplicationState();
                 return $q.all([operationPromise, currentStatePromise])
                     .finally(function () {
                         if (!!initial) {
-                            $ionicLoading.hide();
+                            loadingService.hide();
                         }
                     });
             };
@@ -72,9 +67,10 @@
                 // TODO: resubmit $scope.operation's Batches
             };
 
+
             $scope.fullSynchronize = function () {
                 $scope.data.isSynching = true;
-                $ionicLoading.show(loadingOptions);
+                loadingService.showDefault();
                 synchronizationFacade.fullSync()
                     .then(function (operation) {
                         swAlertPopup.show({
@@ -90,7 +86,7 @@
                     })
                     .finally(function () {
                         $scope.data.isSynching = false;
-                        $ionicLoading.hide();
+                        loadingService.hide();
                     });
             };
 

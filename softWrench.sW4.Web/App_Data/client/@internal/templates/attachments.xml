@@ -23,15 +23,9 @@
         </list>
         
         <schema id="detail" platform="mobile" title="Attachments">
-          <field attribute="doclinksid" hidden="true"/>
-          <field attribute="ownerid" hidden="true" />
-          <field attribute="docinfoid" hidden="true"/>
-          <field attribute="createby" hidden="true"/>
-          <field attribute="createdate" hidden="true"/>
-
           <field label="Title" attribute="document" requiredexpression="true" />
           <field label="Description" attribute="docinfo_.description" />
-          <field label="Attachment" attribute="newattachment" requiredexpression="true">
+          <field label="Attachment" attribute="#new_attachment" requiredexpression="true">
             <renderer type="upload"/>
           </field>
           <commandbars>

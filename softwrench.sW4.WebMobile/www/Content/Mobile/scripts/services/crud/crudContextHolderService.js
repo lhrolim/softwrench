@@ -223,7 +223,7 @@
 
         //#region Service Instance
 
-        var service = {
+        const service = {
             setPreviousAndNextItems: setPreviousAndNextItems,
             restoreState: restoreState,
             isList: isList,

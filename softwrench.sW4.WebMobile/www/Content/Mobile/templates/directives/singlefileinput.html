@@ -1,0 +1,13 @@
+﻿<div class="single-file-input">
+    
+    <input type="file" class="inputfile" />
+    <button class="button button-full button-positive icon-left ion-archive" ng-click="uploadFile()">
+        Choose a file...
+    </button>
+
+    <div ng-if="model.field.rendererParameters['showImagePreview'] === true || model.field.rendererParameters['showImagePreview'] === 'true'" class="imagepreview">
+        <img ng-src="{{ datamap[fieldName] }}" />
+    </div>
+
+
+</div>

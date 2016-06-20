@@ -49,15 +49,15 @@
                     queryArray.push(insertQuery);
                 });
 
-                angular.forEach(insertUpdateDatamap, function(insertOrUpdateDatamap) {
+                angular.forEach(insertUpdateDatamap, function (insertOrUpdateDatamap) {
                     var id = persistence.createUUID();
                     var newJson = JSON.stringify(insertOrUpdateDatamap.fields);
                     //newJson = datamapSanitizationService.sanitize(newJson);
-                    var insertOrUpdateQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [insertOrUpdateDatamap.application, newJson,newJson, insertOrUpdateDatamap.id, String(insertOrUpdateDatamap.approwstamp), id] };
+                    var insertOrUpdateQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [insertOrUpdateDatamap.application, newJson, newJson, insertOrUpdateDatamap.id, String(insertOrUpdateDatamap.approwstamp), id] };
                     queryArray.push(insertOrUpdateQuery);
                 });
 
-                angular.forEach(updatedDataMaps, function(updateDataMap) {
+                angular.forEach(updatedDataMaps, function (updateDataMap) {
                     var updateJson = JSON.stringify(updateDataMap.fields);
                     //updateJson = datamapSanitizationService.sanitize(updateJson);
                     var updateQuery = { query: entities.DataEntry.updateQueryPattern, args: [updateJson, String(updateDataMap.approwstamp), updateDataMap.id, updateDataMap.application] };
@@ -75,7 +75,7 @@
             //ignoring composition number to SyncOperation table
             var numberOfDownloadedItems = queryArray.length;
             queryArray = queryArray.concat(offlineCompositionService.generateSyncQueryArrays(compositionData));
-            return swdbDAO.executeQueries(queryArray).then(()=> $q.when(numberOfDownloadedItems));
+            return swdbDAO.executeQueries(queryArray).then(() =>  $q.when(numberOfDownloadedItems));
         };
 
 

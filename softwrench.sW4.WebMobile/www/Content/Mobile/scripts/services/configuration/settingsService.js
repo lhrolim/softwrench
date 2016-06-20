@@ -69,11 +69,11 @@
         //#endregion
 
         //#region Service Instance
-        var service = {
-            getSettings: getSettings,
-            getServerUrl: getServerUrl,
-            saveSettings: saveSettings,
-            initializeSettings: initializeSettings
+        const service = {
+            getSettings,
+            getServerUrl,
+            saveSettings,
+            initializeSettings
         };
         return service;
         //#endregion

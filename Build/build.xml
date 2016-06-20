@@ -360,6 +360,7 @@
       <property name="sharedcommonsplaceholder" value="${foldername}/shared_commons.placeholder" />
       <property name="onlinefolder" value="${foldername}/online_content" />
 
+
       <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
       <property name="length" value="${string::get-length(foldername)}" />
       <property name="size" value="${string::get-length(foldername) - string::last-index-of(foldername, '.')-1}" />
@@ -367,17 +368,20 @@
 
       <property name="projectname" value="${string::substring(foldername,indexof,size)}" />
 
-
+      <property name="webcontentfolder" value="${foldername}/web_content/${projectname}" />
 
 
       <if test="${(file::exists(customerplaceholder) and string::contains(profile, 'dev')) or (projectname == client)}">
 
-        <copy todir="${deploypath}/Content/Customers/${projectname}">
-          <fileset basedir="../softWrench.sW4.${projectname}/web_content/${projectname}">
-            <include name="**/*" />
-            <exclude name="**/*.${platformtoexclude}.*"/>
-          </fileset>
-        </copy>
+
+        <if test="${directory::exists(webcontentfolder)}">
+          <copy todir="${deploypath}/Content/Customers/${projectname}">
+            <fileset basedir="../softWrench.sW4.${projectname}/web_content/${projectname}">
+              <include name="**/*" />
+              <exclude name="**/*.${platformtoexclude}.*"/>
+            </fileset>
+          </copy>
+        </if>
 
         <if test="${directory::exists(onlinefolder)}">
           <copy todir="${deploypath}/Content/Customers/${projectname}">

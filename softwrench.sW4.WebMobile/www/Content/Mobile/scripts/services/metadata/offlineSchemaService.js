@@ -5,16 +5,6 @@
 
     function offlineSchemaService($log, fieldService, schemaService, securityService, dispatcherService) {
 
-        var service = {
-            loadDetailSchema: loadDetailSchema,
-            locateSchema: locateSchema,
-            locateSchemaByStereotype: locateSchemaByStereotype,
-            fillDefaultValues: fillDefaultValues,
-            locateAttributeByQualifier: locateAttributeByQualifier
-        };
-
-        return service;
-
         function loadDetailSchema(currentListSchema, currentApplication, selectedItem) {
             var detailSchemaId = "detail";
             var schemaDetailService = schemaService.getProperty(currentListSchema, "list.click.service");
@@ -107,6 +97,22 @@
             buildQualifierCache(schema);
             return schema.jscache.qualifiercache[qualifier].attribute;
         }
+
+        function getFieldByAttribute(schema, attribute) {
+            Validate.notEmpty(schema);
+            const fields = schema.displayables;
+            return !fields || fields.length <= 0 ? null : fields.find(f => f.attribute = attribute);
+        }
+
+        const service = {
+            loadDetailSchema: loadDetailSchema,
+            locateSchema: locateSchema,
+            locateSchemaByStereotype: locateSchemaByStereotype,
+            fillDefaultValues: fillDefaultValues,
+            locateAttributeByQualifier: locateAttributeByQualifier,
+            getFieldByAttribute: getFieldByAttribute
+        };
+        return service;
 
     }
 })(angular);

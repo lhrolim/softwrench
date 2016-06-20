@@ -1,4 +1,4 @@
-﻿//#region 'deviceready' listener
+//#region 'deviceready' listener
 document.addEventListener("deviceready", function () {
     // retrieve the DOM element that had the ng-app attribute
     // bootstrap angular app "softwrench" programatically
@@ -6,34 +6,7 @@ document.addEventListener("deviceready", function () {
 }, false);
 //#endregion
 
-//#region Global functions
-/**
- * Function that returns the angular $scope attached to an element.
- * It helps debug the app when deployed in Ripple (batarang's $scope inspection doesn't work in iframe);
- * 
- * @param {} element DOM element 
- * @returns {} $scope 
- */
-window.$s = function (element) {
-    const elementWrapper = angular.element(element);
-    return !angular.isFunction(elementWrapper["scope"]) ? null : elementWrapper.scope();
-    //if (!scope || !scope['$parent']) {
-    //    return scope;
-    //}
-    //return scope.$parent;
-};
-
-/**
- * Allows screen tilt in mobile devices (required for iOS).
- * 
- * @param {Number} degrees 
- * @returns {Boolean} 
- */
-window.shouldRotateToOrientation = degrees => true;
-//#endregion
-
 //#region App Modules
-
 var mobileServices = angular.module('sw_mobile_services', ['webcommons_services', 'maximo_applications', 'persistence.offline', 'audit.offline', "rollingLog"]);
 var offlineMaximoApplications = angular.module('maximo_offlineapplications', ['persistence.offline', 'audit.offline']);
 var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications', 'maximo_offlineapplications', 'sw_scan', 'ng-mfb'])
@@ -225,6 +198,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         })
         .state('main.crudlist', {
             url: "/crudlist",
+            cache: false,
             views: {
                 'main': {
                     templateUrl: "Content/Mobile/templates/crudlist.html",

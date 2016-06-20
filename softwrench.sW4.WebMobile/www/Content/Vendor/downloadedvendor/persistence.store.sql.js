@@ -338,9 +338,9 @@ function config(persistence, dialect) {
      */
     function rowToEntity(session, entityName, row, prefix) {
         prefix = prefix || '';
-//        if (session.trackedObjects[row[prefix + "id"]]) { // Cached version
-//            return session.trackedObjects[row[prefix + "id"]];
-//        }
+        //        if (session.trackedObjects[row[prefix + "id"]]) { // Cached version
+        //            return session.trackedObjects[row[prefix + "id"]];
+        //        }
         var tm = persistence.typeMapper;
         var rowMeta = persistence.getMeta(entityName);
         var ent = persistence.define(entityName); // Get entity
@@ -432,6 +432,16 @@ function config(persistence, dialect) {
         executeQueriesSeq(tx, queries, callback);
     }
 
+    function executeQueriesSeqForceBatch(tx, queries, callback) {
+        if (persistence.db.implementation === "sqliteplugin") {
+            tx.bulkSQL(queries,
+                () =>callback(queries, null),
+                (err) =>(null, err));
+        }
+        this.executeQueriesSeq(tx, queries, callback);
+    }
+
+
     /**
      * Utility function to execute a series of queries in an asynchronous way
      * @param tx the transaction to execute the queries on
@@ -439,31 +449,36 @@ function config(persistence, dialect) {
      * @param callback the function to call when all queries have been executed
      */
     function executeQueriesSeq(tx, queries, callback) {
+       
+
+
         // queries.reverse();
         //var callbackArgs = [];
         //for (var i = 3; i < arguments.length; i++) {
         //    callbackArgs.push(arguments[i]);
         //}
-        persistence.asyncForEach(queries, function (queryTuple, next) {
-            var statement = queryTuple[0];
-            var args = queryTuple[1];
-            tx.executeSql(statement, args,
-                next, // success fn: go to next element
-                err => { // error fn
-                    persistence.defaultTransactionErrorHandler(statement, args, err);
-                    next(null, err); // next element with null result
-                });
-        }, (result, err) => {
-            //if (err && callback) {
-            //    callback(result, err);
-            //    return;
-            //}
-            //if (callback) callback.apply(null, callbackArgs);
-            if (callback) callback(result, err);
-        });
+        persistence.asyncForEach(queries,
+            (queryTuple, next) => {
+                var statement = queryTuple[0];
+                var args = queryTuple[1];
+                tx.executeSql(statement, args,
+                    next, // success fn: go to next element
+                    err => { // error fn
+                        persistence.defaultTransactionErrorHandler(statement, args, err);
+                        next(null, err); // next element with null result
+                    });
+            }, (result, err) => {
+                //if (err && callback) {
+                //    callback(result, err);
+                //    return;
+                //}
+                //if (callback) callback.apply(null, callbackArgs);
+                if (callback) callback(result, err);
+            });
     }
 
     persistence.executeQueriesSeq = executeQueriesSeq;
+    persistence.executeQueriesSeqForceBatch = executeQueriesSeqForceBatch;
 
     /////////////////////////// QueryCollection patches to work in SQL environment
 
@@ -722,7 +737,7 @@ function config(persistence, dialect) {
         if (this._querytoUse) {
             sql = this._querytoUse;
             mainPrefix = "";
-        } 
+        }
 
         session.flush(tx, function () {
             tx.executeSql(sql, args, function (rows) {

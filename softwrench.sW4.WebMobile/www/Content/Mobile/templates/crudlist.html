@@ -1,4 +1,4 @@
-﻿<ion-view>
+﻿<ion-view cache-view="false">
 
     <ion-nav-buttons side="left">
         <button class="button-icon icon ion-navicon" menu-toggle="left"></button>
@@ -30,7 +30,7 @@
 
         <ion-list class="has-header">
 
-            <ion-item ng-repeat="item in list()" ng-class="{'pending': isPending(item),'missingsync': isDirty(item)  }" item="item">
+            <ion-item ng-repeat="item in list() track by item.id" ng-class="{'pending': isPending(item),'missingsync': isDirty(item)  }" item="item">
 
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">

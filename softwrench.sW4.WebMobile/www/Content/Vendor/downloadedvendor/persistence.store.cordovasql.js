@@ -71,11 +71,11 @@ persistence.store.cordovasql.config = function (persistence, dbname, dbversion, 
      */
     persistence.db.sqliteplugin.connect = function (dbname, backgroundProcessing) {
         var that = {};
-        var conn = window.sqlitePlugin.openDatabase({ name: dbname, bgType: backgroundProcessing });
+        var conn = window.sqlitePlugin.openDatabase({ name: dbname, bgType: backgroundProcessing, location:"default" });
 
         that.transaction = function (fn) {
             return conn.transaction(function (sqlt) {
-                return fn(persistence.db.websql.transaction(sqlt));
+                return fn(persistence.db.sqliteplugin.transaction(sqlt));
             });
         };
         return that;
@@ -112,6 +112,26 @@ persistence.store.cordovasql.config = function (persistence, dbname, dbversion, 
                 }
             });
         };
+
+        that.bulkSQL = function (queries, successFn, errorFn) {
+            if (persistence.debug) {
+                console.log(queries);
+            }
+            t.db.sqlBatch(queries, function () {
+                if (successFn) {
+                    successFn();
+                }
+            }, function (err) {
+                if (errorFn) {
+                    // error callback provided: execute it passing the error object
+                    errorFn(err);
+                } else {
+                    // otherwise use default error handling: logs a rich message in 'ERROR' level
+                    persistence.defaultTransactionErrorHandler(queries, args, err);
+                }
+            });
+        };
+
         return that;
     };
 
@@ -171,6 +191,10 @@ persistence.store.cordovasql.config = function (persistence, dbname, dbversion, 
                 }
             });
         };
+
+
+
+
         return that;
     };
 

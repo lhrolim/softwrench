@@ -5,14 +5,14 @@
         //#region Utils
         const config = {
             options: {
-                quality: 20,
+                quality: 50,
                 destinationType: Camera.DestinationType.FILE_URI,
                 sourceType: Camera.PictureSourceType.CAMERA,
                 mediaType: Camera.MediaType.PICTURE,
-                encodingType: Camera.EncodingType.PNG,
+                encodingType: Camera.EncodingType.JPEG,
                 cameraDirection: Camera.Direction.BACK,
-                targetWidth: window.innerWidth / 2,
-                targetHeight: window.innerHeight / 2,
+                targetWidth: window.innerWidth,
+                targetHeight: window.innerHeight,
                 allowEdit: false,
                 saveToPhotoAlbum: false,
                 correctOrientation: true,

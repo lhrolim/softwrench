@@ -3,9 +3,9 @@
     "use strict";
 
     softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', 'schemaService',
-    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService',
+    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService',"loadingService",
     function (log, $scope, $rootScope, schemaService,
-    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService) {
+    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService,loadingService) {
 
         function init() {
             $scope.displayables = crudContextService.mainDisplayables();

@@ -1,32 +1,32 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$rootScope', '$timeout', '$ionicPopover', 'eventService', 
-        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $rootScope, $timeout, $ionicPopover, eventService) {
+    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", 
+        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants) {
 
             function init() {
                 $scope.moreItemsAvailable = true;
                 $scope._searching = false;
 
-                $ionicPopover.fromTemplateUrl('Content/Mobile/templates/filteroptionsmenu.html', {
+                $ionicPopover.fromTemplateUrl("Content/Mobile/templates/filteroptionsmenu.html", {
                     scope: $scope,
-                }).then(function (popover) {
-                    $scope.filteroptionspopover = popover;
-                });
-                var schema = crudContextService.currentListSchema();
-                var datamap = crudContextService.itemlist();
+                }).then(popover => 
+                    $scope.filteroptionspopover = popover
+                );
+
+                $timeout(() => $ionicScrollDelegate.scrollTop(), 0, false);
+
+                const schema = crudContextService.currentListSchema();
+                const datamap = crudContextService.itemlist();
                 eventService.onload($scope, schema, datamap, { schemaId: schema.schemaId });
             }
 
             init();
 
-
-
             $scope.list = function () {
-                if (!this.isSearching() || nullOrEmpty($scope.searchQuery)) {
-                    return crudContextService.itemlist();
-                }
-                return crudContextService.getFilteredList();
+                return !this.isSearching() || window.nullOrEmpty($scope.searchQuery)
+                    ? crudContextService.itemlist()
+                    : crudContextService.getFilteredList();
             }
 
             $scope.isSearching = function () {
@@ -36,12 +36,12 @@
             $scope.enableSearch = function () {
                 $scope._searching = true;
                 $ionicScrollDelegate.scrollTop();
-                //        $scope.moreItemsAvailable = false;
+                // $scope.moreItemsAvailable = false;
             }
 
 
             $scope.filter = function (data) {
-                var text = data.searchQuery;
+                const text = data.searchQuery;
                 $scope.searchQuery = text;
                 crudContextService.filterList(text);
             };
@@ -74,8 +74,8 @@
             }
 
             $scope.itemTitle = function (item) {
-                var listSchema = crudContextService.currentListSchema();
-                var title = item[offlineSchemaService.locateAttributeByQualifier(listSchema, "title")];
+                const listSchema = crudContextService.currentListSchema();
+                const title = item[offlineSchemaService.locateAttributeByQualifier(listSchema, "title")];
                 if (title == null) {
                     return "New " + crudContextService.currentTitle();
                 }
@@ -83,17 +83,17 @@
             }
 
             $scope.itemSubTitle = function (item) {
-                var listSchema = crudContextService.currentListSchema();
+                const listSchema = crudContextService.currentListSchema();
                 return item[offlineSchemaService.locateAttributeByQualifier(listSchema, "subtitle")];
             }
 
             $scope.itemFeatured = function (item) {
-                var listSchema = crudContextService.currentListSchema();
+                const listSchema = crudContextService.currentListSchema();
                 return item[offlineSchemaService.locateAttributeByQualifier(listSchema, "featured")];
             }
 
             $scope.itemExcerpt = function (item) {
-                var listSchema = crudContextService.currentListSchema();
+                const listSchema = crudContextService.currentListSchema();
                 return item[offlineSchemaService.locateAttributeByQualifier(listSchema, "excerpt")];
             }
 
@@ -110,39 +110,39 @@
             }
 
             $scope.getStatusText = function (item) {
-                var status = item["status"];
+                const status = item["status"];
                 return status == null ? "N" : status.charAt(0);
             }
 
             $scope.getTextColor = function (item) {
-                var background = statuscolorService.getColor(item["status"], crudContextService.currentApplicationName());
-                if (background == "white" || background == "transparent") {
-                    return "black";
-                }
-                return "white";
+                const background = statuscolorService.getColor(item["status"], crudContextService.currentApplicationName());
+                return background === "white" || background === "transparent" ? "black" : "white";
             }
 
-
-            $rootScope.$on('$stateChangeSuccess',
+            $scope.$root.$on("$stateChangeSuccess",
                  function (event, toState, toParams, fromState, fromParams) {
-                     $log.get("crudlist#statehandler").debug("handler called");
+                     $log.get("crudlist#statehandler").debug("handler called", arguments);
                      if (!toState.name.startsWith("main.crud")) {
                          crudContextService.resetContext();
-                     }else if (!toState.name.startsWith("main.crudlist")) {
-                         $timeout(function () {
-                             //to avoid strange transitions on the screen
-                             //TODO: transition finished event??
-                             $scope.disableSearch();
-                         }, 500);
+                     } else if (!toState.name.startsWith("main.crudlist")) {
+                         //to avoid strange transitions on the screen
+                         //TODO: transition finished event??
+                         $timeout(() => $scope.disableSearch(), 500);
                      } else {
                          init();
                      }
                  });
 
+            $scope.$on(routeConstants.events.sameStateTransition, (event, state) => {
+                $log.get("crudlist#statehandler").debug("handler called", arguments);
+                if (!state.name.startsWith("main.crudlist")) return;
+                init();
+            });
+
             $scope.loadMore = function () {
-                var log = $log.get("crudListController#loadMore");
+                const log = $log.get("crudListController#loadMore");
                 log.debug("fetching more items");
-                crudContextService.loadMorePromise().then(function (results) {
+                crudContextService.loadMorePromise().then(results => {
                     $scope.$broadcast('scroll.infiniteScrollComplete');
                     $scope.moreItemsAvailable = results.length > 0;
                 });

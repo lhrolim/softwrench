@@ -230,8 +230,9 @@
         entities.Attachment = persistence.define('Attachment', {
             application: "TEXT", // ROOT application of the entity that has the asset (e.g. workorder, sr, etc)
             parentId: "TEXT", // local id of the ROOT entity
-            // compressed: "BOOL", // whether or not the file is compressed
-            path: "TEXT" // local file system path to the saved file (should be in an external storage directory)
+            path: "TEXT", // local file system path to the saved file (should be in an external storage directory),
+            compressed: "BOOL", // whether or not the file is compressed
+            content: "TEXT" // base64 encoded content
         });
 
         entities.WhereClause = persistence.define("WhereClause", {

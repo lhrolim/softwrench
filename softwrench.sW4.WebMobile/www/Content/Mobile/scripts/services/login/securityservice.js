@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, ionic) {
     "use strict";
 
-    function securityService($rootScope, localStorageService, routeService, $http, $q, swdbDAO, $ionicHistory) {
+    function securityService($rootScope,$state, localStorageService, routeService, $http, $q, swdbDAO, $ionicHistory) {
 
         //#region Utils
 
@@ -21,8 +21,7 @@
         };
 
         const isLoginState = function () {
-            const current = routeService.$state.current.name;
-            return current === "login";
+            return $state.current.name === "login";
         };
 
         /**
@@ -179,7 +178,7 @@
 
     //#region Service registration
 
-    mobileServices.factory("securityService", ["$rootScope", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", securityService]);
+    mobileServices.factory("securityService", ["$rootScope","$state", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", securityService]);
 
     //#endregion
 

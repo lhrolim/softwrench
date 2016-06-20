@@ -1,8 +1,8 @@
 ﻿(function(app) {
     "use strict";
 
-    app.controller('LoginController', ["$scope", "swAlertPopup", "routeService", "securityService", "$timeout", "$stateParams", "$ionicLoading",
-        function ($scope, swAlertPopup, routeService, securityService, $timeout, $stateParams, $ionicLoading) {
+    app.controller('LoginController', ["$scope", "swAlertPopup", "routeService", "securityService", "$timeout", "$stateParams", "loadingService",
+        function ($scope, swAlertPopup, routeService, securityService, $timeout, $stateParams, loadingService) {
 
             $scope.data = {};
 
@@ -12,18 +12,15 @@
                     template: message
                 });
             }
-
-            var showMessage = function() {
-                var message = $stateParams.message;
+            const showMessage = function() {
+                const message = $stateParams.message;
                 if (!!message) {
                     showAlert("Atention", message);
                 }
             };
-
             $scope.login = function () {
-                $ionicLoading.show({
-                    template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Loading<span>"
-                });
+                loadingService.showDefault();
+                
                 securityService.login($scope.data.username, $scope.data.password)
                     .then(function (data) {
                         routeService.go('main.home');
@@ -31,10 +28,11 @@
                         $scope.data = {};
                     })
                     .catch(function (error) {
+                        securityService.logout();
                         showAlert("Login failed", !!error && !!error.message ? error.message : "Please check your credentials.");
                     })
                     .finally(function() {
-                        $ionicLoading.hide();
+                        loadingService.hide();
                     });
             };
 

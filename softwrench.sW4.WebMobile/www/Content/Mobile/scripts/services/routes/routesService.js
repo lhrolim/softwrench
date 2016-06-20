@@ -1,37 +1,42 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    mobileServices.factory('routeService', ["$state", "contextService", "settingsService", "localStorageService", function ($state, contextService, settingsService, localStorageService) {
+    mobileServices.factory('routeService', ["$state", "contextService", "settingsService", "localStorageService", "loadingService", "$rootScope", "routeConstants",
+        function ($state, contextService, settingsService, localStorageService, loadingService, $rootScope, routeConstants) {
 
-    return {
+            const loginURL = () => settingsService.getServerUrl().then(url => url + "/SignIn/SignInReturningUserData");
 
-        loginURL: function () {
-            return settingsService.getServerUrl().then(function(url) {
-                return url + "/SignIn/SignInReturningUserData";
-            });
-        },
+            const go = function (stateName, params) {
+                // TODO: insert params in the context and recover
+                contextService.insertIntoContext("currentstate", stateName);
+                return loadingService.showDefault().finally(() => {
+                    const isSameState = $state.$current.name === stateName;
+                    const stateTransition = $state.go(stateName, params);
+                    if (isSameState) {
+                        stateTransition.then(state => $rootScope.$broadcast(routeConstants.events.sameStateTransition, state));
+                    }
+                    loadingService.hide();
+                });
+            };
 
-        go: function (stateName, params) {
-            // TODO: insert params in the context and recover
-            contextService.insertIntoContext("currentstate", stateName);
-            return $state.go(stateName, params);
-        },
+            const loadInitialState = function (authenticated) {
+                if (!authenticated) {
+                    return !localStorageService.get("settings:serverurl") ? this.go("settings") : this.go("login");
+                }
+                const currentState = contextService.getFromContext("currentstate");
+                if (isRippleEmulator() && currentState) {
+                    return this.go(currentState);
+                }
+                return this.go("main.home");
+            };
 
-        loadInitialState: function(authenticated) {
-            if (!authenticated) {
-                return !localStorageService.get("settings:serverurl") ? this.go("settings") : this.go("login");
+            const api = {
+                go,
+                loginURL,
+                loadInitialState
             }
-            var currentState = contextService.getFromContext("currentstate");
-            if (isRippleEmulator() && currentState) {
-                return this.go(currentState);
-            }
-            return this.go("main.home");
-        },
+            return api;
 
-        $state: $state
-
-    };
-
-}]);
+        }]);
 
 })(mobileServices)

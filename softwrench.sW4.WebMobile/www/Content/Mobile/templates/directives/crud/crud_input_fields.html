@@ -53,6 +53,13 @@
                                min="{{ dateHandler.getMinDateValue(field) | date:'yyyy-MM-dd' }}"
                                />
 
+                        <single-file-input ng-switch-when="dndupload"
+                                           datamap="datamap" schema="schema" field-name="{{ field.attribute }}">
+                        </single-file-input>
+                        <single-file-input ng-switch-when="upload"
+                                           datamap="datamap" schema="schema" field-name="{{ field.attribute }}">
+                        </single-file-input>
+
                         <input ng-switch-default type="text" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" />
                     </div>
 

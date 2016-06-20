@@ -6,11 +6,11 @@
     "$q", "$log", "$rootScope", "swdbDAO",
     "metadataModelService", "offlineSchemaService", "offlineCompositionService",
     "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
-    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService","menuModelService",
+    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService","menuModelService","loadingService",
     function ($q, $log, $rootScope, swdbDAO,
     metadataModelService, offlineSchemaService, offlineCompositionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
-    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService,menuModelService) {
+    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService,menuModelService,loadingService) {
 
         // ReSharper disable once InconsistentNaming
         var internalListContext = {
@@ -381,6 +381,7 @@
             },
 
             loadDetail: function (item) {
+                loadingService.showDefault();
                 var crudContext = crudContextHolderService.getCrudContext();
                 /// <summary>
                 ///  Loads a detail represented by the parameter item.
@@ -400,7 +401,10 @@
                 contextService.insertIntoContext("crudcontext", crudContext);
                 return routeService.go("main.cruddetail.maininput").then(function (result) {
                     $rootScope.$emit("sw_cruddetailrefreshed");
+                    loadingService.hide();
                 });
+                
+                
             },
 
             //#endregion
