@@ -100,7 +100,7 @@ angular.module('sw_layout')
                 "description", "longdescription_.ldtext", "ld_.ldtext",
                 "glaccount",
                 "location",
-                "orgig",
+                "orgid",
                 "reportedby", "reportedemail", "reportedphone", "reportedpriority",
                 "siteid", "source",
                 "virtualenv"

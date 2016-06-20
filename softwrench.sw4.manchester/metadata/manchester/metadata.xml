@@ -391,10 +391,12 @@
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <commandbars>
             <commandgroup position="actions">
-              <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command id ="dispatchwo" icon="fa-wrench" label="Create W.O."
-                          parameters="schema,datamap" service="dispatchService" method="dispatchWO" cssclasses="large-button" enableexpression="$scope:enableSave"/>
-              <!--</container>-->
+              <command id ="dispatchwo" icon="fa-wrench" label="Create W.O."
+                        parameters="schema,datamap" service="dispatchService" method="dispatchWO" cssclasses="large-button" enableexpression="$scope:enableSave"/>
+              <!-- Create new SR as Related Record -->
+              <command id="createrelated"
+                       service="srService" method="startRelatedSRCreation" parameters="schema,datamap"
+                       label="Create Request" icon="fa-ticket" cssclasses="large-button" enableexpression="$scope:enableSave"/>
             </commandgroup>
             <commandgroup position="detailform">
               <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
