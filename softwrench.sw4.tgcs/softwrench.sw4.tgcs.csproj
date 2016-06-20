@@ -34,11 +34,18 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\tgcs\dataset\ToshibaServiceRequestDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\tgcs\scripts\toshibasr_service.js" />
     <EmbeddedResource Include="metadata\tgcs\deploy.xml" />
     <EmbeddedResource Include="metadata\tgcs\properties.xml" />
+    <EmbeddedResource Include="metadata\tgcs\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Content Include="metadata\tgcs\metadata.xml" />
     <Content Include="metadata\tgcs\readme.txt" />
     <Content Include="web_content\tgcs\images\footer.jpg" />
     <Content Include="web_content\tgcs\images\header-email.jpg" />
@@ -60,10 +67,42 @@
   <ItemGroup>
     <Folder Include="classes\com\cts\tgcs\configuration\" />
     <Folder Include="classes\com\cts\tgcs\connector\" />
-    <Folder Include="classes\com\cts\tgcs\dataset\" />
     <Folder Include="classes\com\cts\tgcs\migration\" />
     <Folder Include="web_content\tgcs\htmls\" />
-    <Folder Include="web_content\tgcs\scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
+      <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
+      <Name>cts.commons.persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
+      <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
+      <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
+      <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
+      <Name>cts.commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
+      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
+      <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.dashboard\softwrench.sw4.dashboard.csproj">
+      <Project>{bb222b54-5670-4853-acf9-64bb36094021}</Project>
+      <Name>softwrench.sw4.dashboard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
+      <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>
+      <Name>softwrench.sw4.problem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
+      <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
+      <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
+      <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>
+      <Name>softWrench.sW4</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

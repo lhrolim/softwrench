@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata"  xmlns:f="http://www.controltechnologysolutions.com/filters">
+
+  <templates>
+    <template path="@servicerequest.xml"/>
+    <template path="@asset.xml"/>
+    <template path="@worklogs.xml"/>
+    <template path="@person.xml"/>
+    <template path="@workorder.xml"/>
+  </templates>
+
+  <entities>
+    <entity name="persongroup" idAttribute="persongroupid">
+      <attributes>
+        <attribute name="pluspcustomer" type="varchar" required="false"/>
+      </attributes>
+    </entity>
+
+    <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
+      <attributes>
+        <attribute name="outageduration" type="float" required="false"/>
+        <attribute name="creationdate" type="datetime" required="false"/>
+        <attribute name="pluspcustomer" type="varchar" required="false"/>
+        <attribute name="externalsystem" type="varchar" required="true"/>
+        <attribute name="classificationid" type="varchar" required="true"/>
+        <attribute name="itdclosedate" type="datetime" required="false"/>
+        <attribute name="itdchcreatedbygroup" type="varchar" required="false"/>
+        <attribute name="itdresolvergroup" type="varchar" required="false"/>
+        <attribute name="itdfirstcallresolution" type="boolean" required="false"/>
+        <attribute name="itdclosurecode" type="varchar" required="false"/>
+        <attribute name="createdby" type="varchar" required="false"/>
+        <attribute name="department" type="varchar" required="false"/>
+        <attribute name="ismticketid" type="varchar" required="false"/>
+        <attribute name="ismticketuid" type="varchar" required="false"/>
+        <attribute name="tickettype" type="varchar" required="false"/>
+      </attributes>
+      <relationships>
+        <relationship to="alndomain" qualifier="DEPARTMENT">
+          <relationshipAttribute from="department" to="value" primary="true"/>
+          <relationshipAttribute literal="DEPARTMENTS" to="domainid" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="synonymdomain" qualifier="TSDTKTSOURCE">
+          <relationshipAttribute from="externalsystem" to="value" primary="true"/>
+          <relationshipAttribute literal="TSDTKTSOURCE" to="domainid" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="numericdomain" qualifier="TICKETPRIORITY">
+          <relationshipAttribute from="reportedpriority" to="value" primary="true"/>
+          <relationshipAttribute literal="TICKETPRIORITY" to="domainid" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="alndomain" qualifier="TICKETTYPE">
+          <relationshipAttribute from="tickettype" to="value" primary="true"/>
+          <relationshipAttribute literal="TICKETTYPE" to="domainid" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="alndomain" qualifier="CLOSURECODES">
+          <relationshipAttribute from="ITDCLOSURECODE" to="value" primary="true"/>
+          <relationshipAttribute literal="CLOSURECODES" to="domainid" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="phone" qualifier="reportedphone">
+          <relationshipAttribute from="reportedby" to="personid" primary="true"/>
+          <relationshipAttribute query="reportedphone_.isprimary = 1"/>
+        </relationship>
+        <relationship to="person">
+          <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="person" qualifier="ownerperson">
+          <relationshipAttribute from="owner" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="person" qualifier="reportedbyp">
+          <relationshipAttribute from="reportedby" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="classification">
+          <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
+        </relationship>
+        <relationship to="aticket" collection="true">
+          <relationshipAttribute from="ticketuid" to="ticketuid" primary="true"/>
+        </relationship>
+        <relationship to ="solution" qualifier="solution" >
+          <relationshipAttribute from="solution" to ="solution" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="longdescription" qualifier="symptom">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="cause">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="resolution">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="persongroup" qualifier="itdresolvergroup">
+          <relationshipAttribute from="itdresolvergroup" to="persongroup" primary="true"/>
+        </relationship>
+        <relationship to="persongroup" qualifier="ownergroup">
+          <relationshipAttribute from="ownergroup" to="persongroup" primary="true"/>
+        </relationship>
+        <relationship to="persongroup" qualifier="itdchcreatedbygroup">
+          <relationshipAttribute from="itdchcreatedbygroup" to="persongroup" primary="true"/>
+        </relationship>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+        <relationship to="itdthirdparty" collection="true">
+          <relationshipAttribute from="ticketid" to="ticketid" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softwrench.sw4.chicago.classes.com.cts.chicago.connector.ChicagoSRCrudConnector" />
+      </connectorParameters>
+    </entity>
+    <entity name="worklog" idAttribute="worklogid">
+      <relationships>
+        <relationship to="synonymdomain" qualifier="LOGTYPE">
+          <relationshipAttribute from="logtype" to="value" primary="true"/>
+          <relationshipAttribute literal="LOGTYPE" to="domainid" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity name="itdthirdparty" idAttribute="itdthirdpartyid">
+      <attributes>
+        <attribute name="itdthirdpartyid" type="bigint" required="true"/>
+        <attribute name="description" type="varchar" required="false"/>
+        <attribute name="langcode" type="varchar" required="false"/>
+        <attribute name="hasid" type="smallint" required="false"/>
+        <attribute name="itdbridgeticketnumid" type="varchar" required="false"/>
+        <attribute name="itdticketsystemname" type="varchar" required="false"/>
+        <attribute name="itdbridgeticketnum" type="varchar" required="false"/>
+        <attribute name="itdmanualorbridged" type="smallint" required="false"/>
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="ticketid" type="varchar" required="false"/>
+        <attribute name="itdstatus" type="varchar" required="false"/>
+        <attribute name="itdpriority" type="varchar" required="false"/>
+        <attribute name="itdcreatedate" type="datetime" required="false"/>
+        <attribute name="itdclosedate" type="datetime" required="false"/>
+      </attributes>
+      <relationships>
+        <relationship to="longdescription" qualifier="ld">
+          <relationshipAttribute from="itdthirdpartyid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="ITDTHIRDPARTY" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="itdthirdparty" />
+      </connectorParameters>
+    </entity>
+  </entities>
+
+  <applications>
+    <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
+      <schemas>
+
+        <schema id="quicksrgrid" title="Quick Request Grid" stereotype="list" redeclaring="false">
+          <customization position="owner"/>
+          <customization position="+reportedby">
+            <field attribute="affectedperson" label="Affected Person"/>
+            <field attribute="creationdate" label="Created Date"/>
+          </customization>
+        </schema>
+
+        <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+          <section orientation="horizontal">
+            <field attribute="description" label="Summary" requiredexpression="true"/>
+            <field attribute="status" label="Status" readonly="true" default="NEW"/>
+            <association target="reportedpriority" labelfield="TICKETPRIORITY_.description" label="Reported Priority" enableexpression="@status == 'NEW'">
+              <renderer type="lookup"/>
+            </association>
+            <field attribute="internalpriority" label="Internal Priority" default="3" showexpression="@internalpriority != null" enableexpression="false"/>
+          </section>
+          <section orientation="horizontal">
+            <field label="Details" attribute="ld_.ldtext">
+              <renderer type="richtext"/>
+            </field>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="reportedby" label="Reported By" default="@personid" readonly="true"/>
+            <field attribute="reportedphone" label="Reported By Phone" default="@user.phone" readonly="true"/>
+            <field attribute="reportedemail" label="Reported By Email" default="@user.email" readonly="true"/>
+            <field attribute="reportdate" label="Reported Date" default="@now" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <association label="Affected Person" target="affectedperson" labelfield="person_.displayname" default="@personid" orderbyfield="personid asc" >
+              <event type="afterchange" service="toshibasrService" method="afterChangeAffectedPerson"/>
+              <renderer type="lookup" params="columnlabel=Name"/>
+            </association>
+            <field attribute="affectedphone" label="Affected By Phone" default="@user.phone" readonly="true"/>
+            <field attribute="affectedemail" label="Affected By Email" default="@user.email" readonly="true"/>
+            <field attribute="itdcloseate" label="Closed Date" readonly="true"/>
+          </section>
+          <section secondarycontent="true">
+            <composition relationship="itdthirdparty" inline="true" label="Third Party Tickets" detailschema="compositiondetail">
+              <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="compositionlist"/>
+            </composition>
+          </section>
+          <section id="hiddenfields" orientation="horizontal" showexpression="false">
+            <field attribute="classificationid" label="Classification" default="TOSHIBA WEB TICKET"/>
+            <field attribute="impact" label="Impact" default="2"/>
+            <field attribute="urgency" label="Urgency" default="2"/>
+            <field attribute="createdby" label="Created By" default="I-TTC-SD_WEBTICKET"/>
+            <field attribute="ownergroup" label="Owner Group" default="I-TTC-SD_WEBTICKET"/>
+            <field attribute="creationdate" label="Created Date" default="@now"/>
+            <field attribute="externalsystem" label="Source" default="SELFSERVICE" readonly="true"/>
+            <field attribute="ticketid" label="Ticket ID"/>
+            <field attribute="ticketuid" label="Ticket UID"/>
+            <field attribute="siteid" label="Site ID"/>
+            <field attribute="orgid" label="Org ID"/>
+          </section>
+          <section id="compositions"/>
+        </schema>
+
+        <schema id="quicknewdetail" parentschema="adetail" stereotype="detailnew" title="New Quick Request" redeclaring="true">
+          
+        </schema>
+
+        <schema id="quickeditdetail" parentschema="adetail" stereotype="detail" title="Quick Request Details" redeclaring="true">
+          <section id="compositions">
+            <composition relationship="worklog" label="Work Logs" detailschema="qsrcompositiondetail">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" allowremoval="false" prefilterfunction="FilterQSRWorklogs"/>
+            </composition>
+            <composition relationship="attachment" label="Attachments" printenabled="false">
+              <collectionproperties allowcreation="@status != 'CLOSED'" allowupdate="false" allowremoval="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+            </composition>
+          </section>
+        </schema>
+      </schemas>
+    </application>
+    
+    <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008">
+      <schemas>
+        <schema id="list"  stereotype="compositionlist" redeclaring="false">
+          <customization position="modifydate">
+            <field attribute="modifydate" label="Last Changed Date" qualifier="subtitle">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            </field>
+          </customization>
+        </schema>
+
+        <detail stereotype="compositiondetail" title="Work Log" redeclaring="false">
+          <customization position="logtype">
+            <association target="logtype" labelfield="LOGTYPE_.description" label="Log Type">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+        </detail>
+
+        <schema id="qsrcompositiondetail" stereotype="compositiondetail" title="Work Log">
+          <field attribute="createdate" hidden="true" />
+
+          <field attribute="description" label="Summary" requiredexpression="true">
+            <renderer type="default" params="maxlength=100"/>
+          </field>
+          <field attribute="wld_.ldtext" label="Details" >
+            <renderer type="richtext"/>
+          </field>
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="logtype" label="Log Type" default="CLIENTNOTE" readonly="true"/>
+            <field attribute="clientviewable" label="Client Viewable" default="1" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+          </section>
+
+          <!-- attachment placeholder -->
+          <!-- TODO: use section+id instead of field when it's eventually possible -->
+          <field attribute="position_attachment" hidden="true"></field>
+
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="itdthirdparty" title="Third Party Ticket" entity="itdthirdparty">
+      <schemas>
+        <schema id="compositionlist" stereotype="compositionlist" title="Third Party Ticket List">
+          <field attribute="itdthirdpartyid" hidden="true"/>
+          <field attribute="itdbridgeticketnum" label="Third Party SR#"/>
+          <field attribute="description" label="Summary"/>
+          <field attribute="itdstatus" label="Status"/>
+          <field attribute="itdpriority" label="Priority"/>
+          <field attribute="itdcreatedate" label="Created Date"/>
+          <field attribute="itdclosedate" label="Closed Date"/>
+        </schema>
+        <schema id="compositiondetail" stereotype="compositiondetail" title="Third Party Ticket Detail">
+          <section orientation="horizontal">
+            <field attribute="itdthirdpartyid" hidden="true"/>
+            <field attribute="itdbridgeticketnum" label="Third Party SR#"/>
+            <field attribute="description" label="Summary"/>
+            <field attribute="itdstatus" label="Status"/>
+            <field attribute="itdpriority" label="Priority"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="itdcreatedate" label="Created Date"/>
+            <field attribute="itdclosedate" label="Closed Date"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="ld_.ldtext" label="Description">
+              <renderer type="richtext"/>
+            </field>
+          </section>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>
