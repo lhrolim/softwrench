@@ -93,6 +93,16 @@ namespace softWrench.sW4.Security.Services {
             return user;
         }
 
+        public static User GetUserByPersonId(string maximoPersonId) {
+            User user = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByMaximoPersonId, maximoPersonId) ?? null;
+
+            return user;
+        }
+
+        public static IEnumerable<User> GetUserByPersonIds(IEnumerable<string> personIds ) {
+            return SWDBHibernateDAO.GetInstance().FindByQuery<User>(User.UserByMaximoPersonIds, personIds) ?? null;
+        }
+
         public static IEnumerable<User> GetUsersByUsername(List<string> usernames) {
             var param = BaseQueryUtil.GenerateInString(usernames);
             var querystring = string.Format("from User where lower(userName) in ({0})", param.ToLower());

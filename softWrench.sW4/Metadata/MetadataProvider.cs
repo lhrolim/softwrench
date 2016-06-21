@@ -39,6 +39,7 @@ using softWrench.sW4.Metadata.Stereotypes;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using EntityUtil = softWrench.sW4.Util.EntityUtil;
 using System.Text;
+using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 
 namespace softWrench.sW4.Metadata {
     public class MetadataProvider {
@@ -347,11 +348,21 @@ namespace softWrench.sW4.Metadata {
         }
 
 
-        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchTopLevelApps(ClientPlatform platform, [CanBeNull]ISWUser user) {
+        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchTopLevelApps(ClientPlatform? platform, [CanBeNull]ISWUser user) {
             var watch = Stopwatch.StartNew();
             var result = new HashSet<CompleteApplicationMetadataDefinition>();
-            var menu = Menu(platform);
-            var leafs = menu.ExplodedLeafs;
+            var leafs = new List<MenuBaseDefinition>();
+            if (platform == null) {
+                leafs.AddRange(Menu(ClientPlatform.Web).ExplodedLeafs);
+                var mobileMenu = Menu(ClientPlatform.Mobile);
+                if (mobileMenu != null) {
+                    leafs.AddRange(mobileMenu.ExplodedLeafs);
+                }
+            } else {
+                leafs.AddRange(Menu(platform.Value).ExplodedLeafs);
+            }
+
+
             foreach (var menuBaseDefinition in leafs) {
                 if (menuBaseDefinition is ApplicationMenuItemDefinition) {
                     var applicationMenu = (menuBaseDefinition as ApplicationMenuItemDefinition);

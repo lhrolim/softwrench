@@ -13,6 +13,7 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
@@ -28,13 +29,16 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         private readonly SWDBHibernateDAO _dao;
 
+        private readonly MaximoHibernateDAO maximoHibernateDAO;
+
         private readonly UserProfileManager _userProfileManager;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(UserProfileController));
 
-        public UserProfileController(SWDBHibernateDAO dao, UserProfileManager userProfileManager) {
+        public UserProfileController(SWDBHibernateDAO dao, UserProfileManager userProfileManager, MaximoHibernateDAO maximoHibernateDAO) {
             _dao = dao;
             _userProfileManager = userProfileManager;
+            this.maximoHibernateDAO = maximoHibernateDAO;
         }
 
 
@@ -180,15 +184,21 @@ namespace softWrench.sW4.Web.Controllers.Security {
         public BlankApplicationResponse ApplyMultiple(int profileId, [FromBody]List<string> usernames) {
             var newProfile = _userProfileManager.FindById(profileId);
             var usersEnum = usernames as IList<string> ?? usernames.ToList();
-            var users = new List<User>();
-            foreach (var userString in usersEnum) {
-                var user = UserManager.GetUserByUsername(userString);
+
+            var personIds = maximoHibernateDAO.FindByNativeQuery("select personid from person where personuid in (:p0)", usernames);
+            IList<string> results = new List<string>();
+            foreach (var personId in personIds){
+                results.Add(personId["personid"]);
+            }
+
+            var users =new List<User>(UserManager.GetUserByPersonIds(results));
+
+            foreach (var user in users) {
                 var profile = user.Profiles.FirstOrDefault(p => p.Id.Equals(profileId));
                 if (profile != null) {
                     continue;
                 }
                 user.Profiles.Add(newProfile);
-                users.Add(user);
             }
             SWDBHibernateDAO.GetInstance().BulkSave(users);
             return new BlankApplicationResponse() {
