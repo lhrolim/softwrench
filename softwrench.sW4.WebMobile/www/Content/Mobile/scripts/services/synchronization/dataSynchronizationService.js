@@ -8,8 +8,7 @@
         });
         return ids;
     };
-
-    var service = function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, entities) {
+    const service = function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, entities) {
 
         var errorHandlePromise = function (error) {
             if (!error) {
@@ -21,9 +20,9 @@
 
 
         function resultHandlePromise(result) {
-            var log = $log.get("dataSynchronizationService#createAppSyncPromise");
-            var topApplicationData = result.data.topApplicationData;
-            var compositionData = result.data.compositionData;
+            const log = $log.get("dataSynchronizationService#createAppSyncPromise");
+            const topApplicationData = result.data.topApplicationData;
+            const compositionData = result.data.compositionData;
             if (result.data.isEmpty) {
                 log.info("no new data returned from the server");
                 //interrupting async calls
@@ -32,48 +31,45 @@
 
             log.info("receiving new topLevel data from the server");
             var queryArray = [];
-            for (var i = 0; i < topApplicationData.length; i++) {
+            for (let i = 0; i < topApplicationData.length; i++) {
                 //multiple applications can be returned on a limit scenario where it´s the first sync, or on a server update.
-                var application = topApplicationData[i];
-                var newDataMaps = application.newdataMaps;
-                var updatedDataMaps = application.updatedDataMaps;
-                var insertUpdateDatamap = application.insertOrUpdateDataMaps;
-                var deletedIds = application.deletedRecordIds;
+                const application = topApplicationData[i];
+                const newDataMaps = application.newdataMaps;
+                const updatedDataMaps = application.updatedDataMaps;
+                const insertUpdateDatamap = application.insertOrUpdateDataMaps;
+                const deletedIds = application.deletedRecordIds;
                 log.debug("{0} topleveldata: inserting:{1} | updating:{2} | deleting: {3}".format(application.applicationName, newDataMaps.length, updatedDataMaps.length, deletedIds.length));
 
                 angular.forEach(newDataMaps, function (newDataMap) {
-                    var id = persistence.createUUID();
-                    var newJson = JSON.stringify(newDataMap.fields);
-                    //newJson = datamapSanitizationService.sanitize(newJson);
-                    var insertQuery = { query: entities.DataEntry.insertionQueryPattern, args: [newDataMap.application, newJson, newDataMap.id, String(newDataMap.approwstamp), id] };
+                    const id = persistence.createUUID();
+                    const newJson = JSON.stringify(newDataMap.fields); //newJson = datamapSanitizationService.sanitize(newJson);
+                    const insertQuery = { query: entities.DataEntry.insertionQueryPattern, args: [newDataMap.application, newJson, newDataMap.id, String(newDataMap.approwstamp), id] };
                     queryArray.push(insertQuery);
                 });
 
                 angular.forEach(insertUpdateDatamap, function (insertOrUpdateDatamap) {
-                    var id = persistence.createUUID();
-                    var newJson = JSON.stringify(insertOrUpdateDatamap.fields);
-                    //newJson = datamapSanitizationService.sanitize(newJson);
-                    var insertOrUpdateQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [insertOrUpdateDatamap.application, newJson, newJson, insertOrUpdateDatamap.id, String(insertOrUpdateDatamap.approwstamp), id] };
+                    const id = persistence.createUUID();
+                    const newJson = JSON.stringify(insertOrUpdateDatamap.fields); //newJson = datamapSanitizationService.sanitize(newJson);
+                    const insertOrUpdateQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [insertOrUpdateDatamap.application, newJson, newJson, insertOrUpdateDatamap.id, String(insertOrUpdateDatamap.approwstamp), id] };
                     queryArray.push(insertOrUpdateQuery);
                 });
 
                 angular.forEach(updatedDataMaps, function (updateDataMap) {
-                    var updateJson = JSON.stringify(updateDataMap.fields);
-                    //updateJson = datamapSanitizationService.sanitize(updateJson);
-                    var updateQuery = { query: entities.DataEntry.updateQueryPattern, args: [updateJson, String(updateDataMap.approwstamp), updateDataMap.id, updateDataMap.application] };
+                    const updateJson = JSON.stringify(updateDataMap.fields); //updateJson = datamapSanitizationService.sanitize(updateJson);
+                    const updateQuery = { query: entities.DataEntry.updateQueryPattern, args: [updateJson, String(updateDataMap.approwstamp), updateDataMap.id, updateDataMap.application] };
                     queryArray.push(updateQuery);
                 });
 
                 if (deletedIds.length > 0) {
-                    var deleteQuery = { query: entities.DataEntry.deleteQueryPattern, args: [buildIdsString(deletedIds), application.applicationName] };
+                    const deleteQuery = { query: entities.DataEntry.deleteQueryPattern, args: [buildIdsString(deletedIds), application.applicationName] };
                     queryArray.push(deleteQuery);
                     //TODO: treat the case where AuditEntries that have no refId shouldn't be deleted (e.g. crud_create operations)
-                    var deleteAuditQuery = { query: entities.AuditEntry.deleteRelatedByRefIdStatement, args: [application.apllicationName, buildIdsString(deletedIds)] };
+                    const deleteAuditQuery = { query: entities.AuditEntry.deleteRelatedByRefIdStatement, args: [application.apllicationName, buildIdsString(deletedIds)] };
                     queryArray.push(deleteAuditQuery);
                 }
             }
             //ignoring composition number to SyncOperation table
-            var numberOfDownloadedItems = queryArray.length;
+            const numberOfDownloadedItems = queryArray.length;
             queryArray = queryArray.concat(offlineCompositionService.generateSyncQueryArrays(compositionData));
             return swdbDAO.executeQueries(queryArray).then(() =>  $q.when(numberOfDownloadedItems));
         };
@@ -98,7 +94,7 @@
 
         function syncData() {
             var currentApps = metadataModelService.getApplicationNames();
-            var firstTime = currentApps.length === 0;
+            const firstTime = currentApps.length === 0;
             var params;
             if (firstTime) {
                 //upon first synchronization let's just bring them all, since we don´t even know what are the metadatas
@@ -114,9 +110,9 @@
 
             return rowstampService.generateCompositionRowstampMap()
                 .then(function (compositionMap) {
-                    var httpPromises = [];
-                    for (var i = 0; i < currentApps.length; i++) {
-                        var promise = createAppSyncPromise(i === 0, currentApps[i], currentApps, compositionMap).catch(errorHandlePromise);
+                    const httpPromises = [];
+                    for (let i = 0; i < currentApps.length; i++) {
+                        const promise = createAppSyncPromise(i === 0, currentApps[i], currentApps, compositionMap).catch(errorHandlePromise);
                         httpPromises.push(promise);
                     }
                     return $q.all(httpPromises);
@@ -129,7 +125,6 @@
 
         return api;
     };
-
     service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "offlineRestService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities"];
 
     mobileServices.factory('dataSynchronizationService', service);

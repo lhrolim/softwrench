@@ -93,7 +93,6 @@
                 return batchItem.operation.datamap;
             }
             var datamap = batchItem.dataentry.datamap;
-            var original = batchItem.dataentry.originalDatamap;
 
             //TODO: implement the diff, passing also the ID + siteid all the time
             return datamap;

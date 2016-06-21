@@ -43,7 +43,7 @@
         //#region Public methods
 
         function preSync(datamap,originaldatamap) {
-            datamap["#originallocation"] = originaldatamap["location"];
+            datamap["#originallocation"] = datamap["location"];
         }
 
         function initAssetDetailListener(scope, schema, datamap, parameters) {
