@@ -45,7 +45,7 @@
                            data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
                            class="form-control datetimereadonly"
                            value="{{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}" ng-readonly="true" readonly>
-                    <label ng-switch-when="label" class="control-label"
+                    <label ng-switch-when="label" class="form-control"
                            ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}">
                         {{datamap[fieldMetadata.attribute]}}
                     </label>
