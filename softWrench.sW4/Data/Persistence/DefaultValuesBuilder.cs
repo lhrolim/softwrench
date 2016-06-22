@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.Ajax.Utilities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence {
@@ -188,7 +189,7 @@ namespace softWrench.sW4.Data.Persistence {
             if (innerReference.Equals("email")) {
                 return user.Email;
             }
-            if (user.Genericproperties.ContainsKey(innerReference)) {
+            if (user.Genericproperties.ContainsKey(innerReference) && user.Genericproperties[innerReference] != null) {
                 return user.Genericproperties[innerReference].ToString();
             }
             return null;

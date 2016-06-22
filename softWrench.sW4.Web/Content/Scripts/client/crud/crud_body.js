@@ -362,7 +362,7 @@
                         if (data.type === 'ActionRedirectResponse') {
                             //we´ll not do a crud action on this case, so totally different workflow needed
                             redirectService.redirectToAction(null, data.controller, data.action, data.parameters);
-                        } else if (data.type !== 'BlankApplicationResponse') {
+                        } else if (data.type !== 'BlankApplicationResponse' && data.type !== 'GenericApplicationResponse') {
                             const nextSchema = data.schema;
                             $scope.$parent.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
                         }
@@ -652,7 +652,7 @@
                             crudContextHolderService.afterSave();
                             const data = result.data;
                             const responseDataMap = data.resultObject;
-                            if (!data.type.equalsAny("BlankApplicationResponse", "GenericApplicationResponse")) {
+                            if (!data.type.equalsAny("BlankApplicationResponse")) {
 
                                 // handle the case where the datamap had lazy compositions already fetched
                                 // and the response does not have them (for performance reasons)
