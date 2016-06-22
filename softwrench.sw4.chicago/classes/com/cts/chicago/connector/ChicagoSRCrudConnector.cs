@@ -53,7 +53,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             if (statusValue.Equals("INPROG")) {
                 w.SetValueIfNull(sr, "ACTUALSTART", DateTime.Now.FromServerToRightKind());
             } else if (statusValue.Equals("RESOLVED")) {
-                w.SetValue(sr, "ACTUALFINISH", DateTime.Now.FromServerToRightKind());
+                w.SetValueIfNull(sr, "ACTUALFINISH", DateTime.Now.FromServerToRightKind());
             } else if (statusValue.Equals("CLOSED")) {
                 w.SetValue(sr, "ITDCLOSEDATE", DateTime.Now.FromServerToRightKind());
             }
