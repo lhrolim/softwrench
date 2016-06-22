@@ -34,6 +34,8 @@ softWrench.sW4.WebMobile/www/Content/Customers/**/
 softWrench.sW4.WebMobile/www/Content/Shared/**/
 softWrench.sW4.WebMobile/www/Content/Vendor/scripts/*.js
 softWrench.sW4.WebMobile/www/Content/Vendor/fonts
+softWrench.sW4.WebMobile/www/css/**/*.css
+softWrench.sW4.WebMobile/www/css/**/*.map
 softWrench.sW4.WebMobile/bower_components
 softWrench.sW4.WebMobile/tests/results/
 softWrench.sW4.WebMobile/platforms/

@@ -1,4 +1,4 @@
-/// <binding />
+/// <binding ProjectOpened='watch' />
 module.exports = function (grunt) {
 
     // Project configuration.
@@ -448,6 +448,29 @@ module.exports = function (grunt) {
         },
         //#endregion
 
+        //#region sass
+        watch: {
+            files: [
+                "www/css/**/*.scss"
+            ],
+            tasks: [
+                "sass:dev"
+            ]
+        },
+        sass: {
+            dev: {
+                options: {
+                    sourceMap: true,
+                    outputStyle: "compact"
+                },
+                files: [
+                    { expand: true, cwd: "www/css/", dest: "www/css/", src: ["**/*.scss"], ext: ".css" }
+                ]
+            }
+        },
+        //#endregion
+
+
         //#region minify javascript
         uglify: {
             options: {
@@ -549,7 +572,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-bowercopy");
+    grunt.loadNpmTasks("grunt-sass");
     grunt.loadNpmTasks("grunt-script-link-tags");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
@@ -559,8 +584,8 @@ module.exports = function (grunt) {
     //#region dev tasks
     grunt.registerTask("cleanall", ["clean:vendor", "clean:temp", "clean:pub"]);
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("tagsdevbuild", ["tags:buildTranspiledScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("devlocal", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "tagsdev"]);
+    grunt.registerTask("tagsdevbuild", ["tags:buildTranspiledScripts", "tags:buildVendorScripts", "sass:dev", "tags:buildLinks", "tags:buildVendorLinks"]);
+    grunt.registerTask("devlocal", ["sass:dev", "cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "tagsdev"]);
     grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "babel:debug", "tagsdevbuild", "copy:build"]);
     grunt.registerTask("default", ["devlocal"]);
     //#endregion

@@ -25,6 +25,13 @@
     transition: 0.2s linear !important;
     -webkit-transition-property: -webkit-transform, all !important;
     transition-property: transform, all !important;
+
+    &:hover {
+        -webkit-transform: translate3d(0, -1px, 0) !important;
+        transform: translate3d(0, -1px, 0) !important;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4) !important;
+        background: darken(#ef473a, 10%) !important;
+    }
 }
 
 .button-status {
@@ -39,11 +46,17 @@
     transition-property: transform, all !important;
 }
 
-.button-float:hover {
-    -webkit-transform: translate3d(0, -1px, 0) !important;
-    transform: translate3d(0, -1px, 0) !important;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4) !important;
-    background: darken(#ef473a, 10%) !important;
+
+.item-icon-left .icon {
+    font-size: 24px;
+}
+
+.bar .button .icon:before {
+    font-size: 24px !important;
+}
+
+.menu .subleaf {
+    padding-left: 48px;
 }
 
 /* keeps side-menu open in tablets */
@@ -79,28 +92,32 @@
 }
 
 @media (min-width: 767px) {
-    .responsive-container.md {
-        width: 567px;
-        margin-left: auto;
-        margin-right: auto;
-    }
+    .responsive-container {
+        &.md {
+            width: 567px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-    .responsive-container .button-container, .responsive-container .button.button-block, .responsive-container .button.button-full {
-        padding-left: 0;
-        padding-right: 0;
+        .button-container, .button.button-block, .button.button-full {
+            padding-left: 0;
+            padding-right: 0;
+        }
     }
 }
 
 @media (min-width: 1024px) {
-    .responsive-container.lg {
-        width: 767px;
-        margin-left: auto;
-        margin-right: auto;
-    }
+    .responsive-container {
+        &.lg {
+            width: 767px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-    .responsive-container .button-container, .responsive-container .button.button-block, .responsive-container .button.button-full {
-        padding-left: 0;
-        padding-right: 0;
+        .button-container, .button.button-block, .button.button-full {
+            padding-left: 0;
+            padding-right: 0;
+        }
     }
 }
 
