@@ -84,12 +84,22 @@
             let validationArray = [];
             const allDisplayables = schemaService.flattenDisplayables(displayables);
 
+            /**
+             * Resolves a NgModel that has validation errors from a form's validation error array.
+             * 
+             * @param {Array<NgForm.$error>} validation errors from an NgForm 
+             * @param {String} type type of the validation error e.g. "email", "password"
+             * @param {String} name name of the form field 
+             * @returns {NgModel} controller instance with validation error (null if it has no error).
+             */
             const getNgModel = (errors, type, name) => {
-                const typeError = errors[type];
-                if (!typeError) return null;
+                const typedError = errors[type];
+                if (!typedError) return null;
                 // in case it's an array of NgModel or an array of NgForm
-                const error = typeError.find(e => e.$name === name) || typeError[0][name];
-                return error;
+                const error = /*[ngModel]*/ typedError.find(e => e.$name === name) || /*[ngForm]*/ typedError[0][name];
+                return !error && angular.isArray(typedError) && !!typedError[0].$error // search did not match but has child forms
+                    ? getNgModel(typedError[0].$error, type, name) // recursively search child forms
+                    : error; // end of search
             };
 
             const isInvalidEmail = (errors, name) => {
