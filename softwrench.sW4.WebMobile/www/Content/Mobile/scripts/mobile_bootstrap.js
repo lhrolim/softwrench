@@ -9,7 +9,7 @@ document.addEventListener("deviceready", function () {
 //#region App Modules
 var mobileServices = angular.module('sw_mobile_services', ['webcommons_services', 'maximo_applications', 'persistence.offline', 'audit.offline', "rollingLog"]);
 var offlineMaximoApplications = angular.module('maximo_offlineapplications', ['persistence.offline', 'audit.offline']);
-var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications', 'maximo_offlineapplications', 'sw_scan', 'ng-mfb'])
+var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngCordova', 'sw_mobile_services', 'webcommons_services', 'maximo_applications', 'maximo_offlineapplications', 'sw_scan', 'ng-mfb', "ui.tinymce"])
 //#endregion
 
 //#region App.run

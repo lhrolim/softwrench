@@ -29,11 +29,14 @@
                     <div ng-switch-default ng-switch on="field.rendererType">
                         <textarea ng-switch-when="textarea" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" rows="10" wrap="hard"
                                   data-ng-maxlength="{{field.rendererParameters['maxlength']}}"
-                                  maxlength="{{field.rendererParameters['maxlength']}}" ng-required="isFieldRequired(field.requiredExpression)"></textarea>
+                                  maxlength="{{field.rendererParameters['maxlength']}}" ng-required="isFieldRequired(field.requiredExpression)">
+                        </textarea>
 
-                        <textarea ng-switch-when="richtext" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" rows="10" wrap="hard"
-                                  data-ng-maxlength="{{field.rendererParameters['maxlength']}}"
-                                  maxlength="{{field.rendererParameters['maxlength']}}" ng-required="isFieldRequired(field.requiredExpression)"></textarea>
+                        <rich-text-field ng-switch-when="richtext"
+                                         data-value="datamap[field.attribute]" 
+                                         data-max-length="field.rendererParameters['maxlength']" data-is-required="isFieldRequired(field.requiredExpression)"
+                                         data-read-only="field.isReadOnly">
+                        </rich-text-field>
 
                         <input ng-switch-when="numericinput" type="number" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly"
                                min="{{field.rendererParameters['min']}}"

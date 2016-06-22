@@ -54,6 +54,7 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/notificationService.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/physicalinventory_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/commandcommons.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/components/richtext.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/applications/inventory/inventory_service_shared.js"
@@ -102,10 +103,17 @@ module.exports = function (grunt) {
         "www/Content/Vendor/scripts/angular-ui-router.js",
         "www/Content/Vendor/scripts/angular-sanitize.js",
         "www/Content/Vendor/scripts/angular-animate.js",
+
         "www/Content/Vendor/scripts/ionic.min.js",
         "www/Content/Vendor/scripts/ionic-angular.min.js",
+
         "www/Content/Vendor/scripts/ng-material-floating-button.js",
         "www/Content/Vendor/scripts/ng-material-floating-button-directive.js",
+
+        "www/Content/Vendor/scripts/tinymce.js",
+        "www/Content/Vendor/scripts/themes/modern/theme.js",
+        "www/Content/Vendor/scripts/angular-ui-tinymce.js",
+
         "www/Content/Vendor/scripts/jquery.js",
         "www/Content/Vendor/scripts/ng-cordova.js",
         "www/Content/Vendor/scripts/moment.js",
@@ -163,18 +171,27 @@ module.exports = function (grunt) {
                     destPrefix: "www/Content/Vendor/scripts"
                 },
                 files: {
+                    // angular
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.js",
                     "angular-ui-router.js": "angular-ui-router/release/angular-ui-router.js",
                     "angular-animate.js": "angular-animate/angular-animate.js",
                     "angular.js": "angular/angular.js",
+                    // ionic
+                    "ionic.min.js": "ionic/release/js/ionic.js",
+                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.js",
+                    // fab
                     "ng-material-floating-button.js": "ng-material-floating-button/mfb/dist/mfb.js",
                     "ng-material-floating-button-directive.js": "ng-material-floating-button/src/mfb-directive.js",
+                    // tinymce
+                    "tinymce.js": "tinymce-dist/tinymce.min.js",
+                    "angular-ui-tinymce.js": "angular-ui-tinymce/dist/tinymce.min.js",
+                    "themes/modern/theme.js": "tinymce-dist/themes/modern/theme.min.js",
+                    
+                    // utils
                     "jquery.js": "jquery/dist/jquery.js",
                     "ng-cordova.js": "ngCordova/dist/ng-cordova.js",
                     "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",
                     "moment.js": "moment/moment.js",
-                    "ionic.min.js": "ionic/release/js/ionic.js",
-                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.js",
                     "underscore.js": "underscore/underscore.js",
                     "lz-string.js": "lz-string/libs/lz-string.js"
                 }
@@ -186,7 +203,11 @@ module.exports = function (grunt) {
                 files: {
                     "ionic.min.css": "ionic/release/css/ionic.min.css",
                     "ionautocomplete.min.css": "ion-autocomplete/dist/ion-autocomplete.min.css",
-                    "ng-material-floating-button.css" : "ng-material-floating-button/mfb/dist/mfb.min.css"
+
+                    "ng-material-floating-button.css": "ng-material-floating-button/mfb/dist/mfb.min.css",
+
+                    "skins/lightgray/skin.css": "tinymce-dist/skins/lightgray/skin.min.css",
+                    "skins/lightgray/content.css": "tinymce-dist/skins/lightgray/content.min.css"
                 }
             },
             fontsdev: {
@@ -197,7 +218,15 @@ module.exports = function (grunt) {
                     "ionicons.eot": "ionic/release/fonts/ionicons.eot",
                     "ionicons.svg": "ionic/release/fonts/ionicons.svg",
                     "ionicons.ttf": "ionic/release/fonts/ionicons.ttf",
-                    "ionicons.woff": "ionic/release/fonts/ionicons.woff"
+                    "ionicons.woff": "ionic/release/fonts/ionicons.woff",
+                    "tinymce.eot" : "tinymce-dist/skins/lightgray/fonts/tinymce.eot",
+                    "tinymce.svg" : "tinymce-dist/skins/lightgray/fonts/tinymce.svg",
+                    "tinymce.ttf" : "tinymce-dist/skins/lightgray/fonts/tinymce.ttf",
+                    "tinymce.woff": "tinymce-dist/skins/lightgray/fonts/tinymce.woff",
+                    "tinymce-small.eot" : "tinymce-dist/skins/lightgray/fonts/tinymce-small.eot",
+                    "tinymce-small.svg" : "tinymce-dist/skins/lightgray/fonts/tinymce-small.svg",
+                    "tinymce-small.ttf" : "tinymce-dist/skins/lightgray/fonts/tinymce-small.ttf",
+                    "tinymce-small.woff" : "tinymce-dist/skins/lightgray/fonts/tinymce-small.woff",
                 }
             },
             fontsrelease: {
@@ -208,7 +237,15 @@ module.exports = function (grunt) {
                     "ionicons.eot": "ionic/release/fonts/ionicons.eot",
                     "ionicons.svg": "ionic/release/fonts/ionicons.svg",
                     "ionicons.ttf": "ionic/release/fonts/ionicons.ttf",
-                    "ionicons.woff": "ionic/release/fonts/ionicons.woff"
+                    "ionicons.woff": "ionic/release/fonts/ionicons.woff",
+                    "tinymce.eot": "tinymce-dist/skins/lightgray/fonts/tinymce.eot",
+                    "tinymce.svg": "tinymce-dist/skins/lightgray/fonts/tinymce.svg",
+                    "tinymce.ttf": "tinymce-dist/skins/lightgray/fonts/tinymce.ttf",
+                    "tinymce.woff": "tinymce-dist/skins/lightgray/fonts/tinymce.woff",
+                    "tinymce-small.eot": "tinymce-dist/skins/lightgray/fonts/tinymce-small.eot",
+                    "tinymce-small.svg": "tinymce-dist/skins/lightgray/fonts/tinymce-small.svg",
+                    "tinymce-small.ttf": "tinymce-dist/skins/lightgray/fonts/tinymce-small.ttf",
+                    "tinymce-small.woff": "tinymce-dist/skins/lightgray/fonts/tinymce-small.woff",
                 }
             },
             prod: {
@@ -216,18 +253,23 @@ module.exports = function (grunt) {
                     destPrefix: "www/Content/Vendor/scripts"
                 },
                 files: {
+                    // angular
                     "angular.js": "angular/angular.min.js",
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.min.js",
                     "angular-ui-router.js": "angular-ui-router/release/angular-ui-router.min.js",
                     "angular-animate.js": "angular-animate/angular-animate.min.js",
+                    // ionic
+                    "ionic.min.js": "ionic/release/js/ionic.min.js",
+                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js",
+                    // fab
                     "ng-material-floating-button.js": "ng-material-floating-button/mfb/dist/mfb.min.js",
                     "ng-material-floating-button-directive.js": "ng-material-floating-button/src/mfb-directive.js",
+                    
+                    // utils
                     "jquery.js": "jquery/dist/jquery.min.js",
                     "ng-cordova.js": "ngCordova/dist/ng-cordova.min.js",
                     "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",
                     "moment.js": "moment/min/moment.min.js",
-                    "ionic.min.js": "ionic/release/js/ionic.min.js",
-                    "ionic-angular.min.js": "ionic/release/js/ionic-angular.min.js",
                     "underscore.js": "underscore/underscore-min.js",
                     "lz-string.js": "lz-string/libs/lz-string.min.js"
                 }

@@ -80,7 +80,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     '<div class="ion-autocomplete-loading-icon" ng-if="showLoadingIcon && loadingIcon"><ion-spinner icon="{{loadingIcon}}"></ion-spinner></div>',
                     '<button class="ion-autocomplete-cancel button button-clear">{{cancelLabel}}</button>',
                     '</div>',
-                    '<ion-content class="has-header has-header">',
+                    '<ion-content class="has-header has-header" has-bouncing="false">',
                     '<ion-list>',
                     '<ion-item class="item-divider" ng-show="selectedItems.length > 0">{{selectedItemsLabel}}</ion-item>',
                     '<ion-item ng-repeat="selectedItem in selectedItems track by $index" type="item-text-wrap" class="item-icon-left item-icon-right">',

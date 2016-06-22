@@ -1,5 +1,5 @@
 ﻿<ion-popover-view ng-controller="FilterOptionController" style="height:180px" >
-    <ion-content>
+    <ion-content has-bouncing="false">
         <div>
             <ion-toggle ng-model="showdirty" toggle-class="toggle-calm" ng-change="changeDirty()">Show Dirty</ion-toggle>
             <ion-toggle ng-model="showpending" toggle-class="toggle-calm" ng-change="changePending()">Show Pending</ion-toggle>

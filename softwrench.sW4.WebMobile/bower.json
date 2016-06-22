@@ -26,7 +26,8 @@
     "persistence": "~0.3.0",
     "underscore": "~1.8.3",
     "ng-material-floating-button": "ng-mfb#^0.6.2",
-    "angular-mocks": "^1.5.6"
+    "angular-mocks": "^1.5.6",
+    "angular-ui-tinymce": "^0.0.16"
   },
   "resolutions": {
     "angular": "^1.5.0",

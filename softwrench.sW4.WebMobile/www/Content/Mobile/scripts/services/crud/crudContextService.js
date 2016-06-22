@@ -398,22 +398,17 @@
                 crudContext.currentDetailItem = item;
                 crudContext.originalDetailItemDatamap = angular.copy(crudContext.currentDetailItem.datamap);
                 crudContextHolderService.setPreviousAndNextItems(item);
-                contextService.insertIntoContext("crudcontext", crudContext);
+                if (isRippleEmulator()) {
+                    contextService.insertIntoContext("crudcontext", crudContext);
+                }
                 return routeService.go("main.cruddetail.maininput").then(function (result) {
                     $rootScope.$emit("sw_cruddetailrefreshed");
                     loadingService.hide();
                 });
                 
-                
             },
 
             //#endregion
-
-
-
-
-
-
         }
 
 

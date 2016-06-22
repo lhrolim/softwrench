@@ -113,3 +113,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
 .page-settings .settings-form label input {
     padding-left: 5px;
 }
+
+.ta-toolbar.hidden {
+    display: none;  
+}

@@ -138,6 +138,6 @@
         return service;
     }
 
-    angular.module('sw_layout').factory('richTextService', [richTextService]);
+    angular.module("webcommons_services").factory("richTextService", [richTextService]);
 
 })(angular);
