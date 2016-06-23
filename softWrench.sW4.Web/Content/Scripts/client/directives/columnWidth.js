@@ -81,6 +81,7 @@ angular.module('sw_layout').directive('columnWidths', function ($log, $timeout) 
                     //build css rules
                     var css = '';
                     css += getViewRules(widths, 'width', '768px', 'screen', scope.schema);
+                    css += buildMinWidthCSS(scope.schema, scope.schema.properties['list.width.min']);
                     css += getViewRules(widths, 'width', '1px', 'print', scope.schema);
 
                     if (css) {
@@ -197,12 +198,7 @@ function buildCSSrule(columnIndex, columnClass, properties, schema) {
 window.buildCSSrule = buildCSSrule;
 
 function buildCSSselector(columnIndex, columnClass, element, schema) {
-    var gridtype;
-    if (schema.stereotype === 'List') {
-        gridtype = 'listgrid';
-    } else if (schema.stereotype === 'CompositionList') {
-        gridtype = 'compositionlistgrid';
-    }
+    var gridtype = getGridType(schema);
 
     //if css class found, build selector using class, else use nth-child as a fallback
     if (columnClass) {
@@ -213,6 +209,38 @@ function buildCSSselector(columnIndex, columnClass, element, schema) {
 }
 
 window.buildCSSselector = buildCSSselector;
+
+function buildMinWidthCSS(schema, minWidth) {
+    var css = '';
+
+    if (!minWidth) {
+        minWidth = '1024px';
+    }
+
+    //build listgrid min-width rules
+    css += '@media screen and (min-width: 769px) {';
+    css += '#' + getGridType(schema) + '[data-application="' + schema.applicationName + '"][data-schema="' + schema.schemaId + '"] {';
+    css += 'min-width: ' + minWidth;
+    css += '}';
+    css += '}';
+
+    return css;
+}
+
+window.buildMinWidthCSS = buildMinWidthCSS;
+
+function getGridType(schema) {
+    var gridtype;
+    if (schema.stereotype === 'List') {
+        gridtype = 'listgrid';
+    } else if (schema.stereotype === 'CompositionList') {
+        gridtype = 'compositionlistgrid';
+    }
+
+    return gridtype;
+}
+
+window.getGridType = getGridType;
 
 function removePercent(value) {
     if (value) {

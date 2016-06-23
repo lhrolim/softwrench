@@ -194,6 +194,7 @@
             <property key="list.click.schema" value="locationdetail"/>
             <property key="list.click.customparams" value="parentlocation_.systemid"/>
             <property key="list.search.compositionstoexclude" value="assettrans"/>
+            <property key="list.width.min" value="1280px"/>
           </properties>
           <field attribute="location" label="Location" readonly="true"/>
           <field attribute="description" label="Description"/>
@@ -213,7 +214,7 @@
             <renderer type="icon" params="icon=fa-wrench;autoloadcomposition=workorder_"/>
           </field>
           <field attribute="statusicons" tooltip="Status Icons">
-            <renderer type="statusicons" params="width=3%;iconcolumns=workordercounter;icon=fa-tachometer;headericon=true;showsort=false"/>
+            <renderer type="statusicons" params="width=5%;iconcolumns=workordercounter;icon=fa-tachometer;headericon=true;showsort=false"/>
           </field>
           <!--Child Locations-->
           <!--Open Work Orders-->

@@ -91,6 +91,25 @@ angular.module('sw_layout')
             var rows = $('tbody tr', table);
             var firstRow = $('td', rows[0]);
 
+            //if no records to display, make sure the header row matches the table width
+            if (firstRow.length === 0) {
+                var headerRow = $('.header-row th', table);
+
+                table.hide();
+                headerRow.each(function () {
+                    var widthText = $(this).css('width');
+
+                    //set the min-width of each th
+                    if (widthText.indexOf('%') > 0) {
+                        var percentage = parseFloat(widthText.substring(0, widthText.length - 1)) / 100;
+                        $(this).css('min-width', table.width() * percentage);
+                    }
+                });
+                table.show();
+
+                return;
+            }
+
             firstRow.each(function() {
                 var tdClass = $(this)[0].classList[0];
                 var tdWidth = $(this).width();
@@ -104,6 +123,28 @@ angular.module('sw_layout')
 
     //register layout functions, debounced to stop repeated calls while resizing the browser window
     $(window).resize(window.debounce(setHeaderColumnWidths, 50));
+
+    function alignGridHeader() {
+        var offset = $('.scroll-helper').offset();
+
+        if (!!offset) {
+            $('#listgrid thead').css("left", 0 - offset.left);
+
+            setLeftOffset($('.site-header'), offset);
+            setLeftOffset($('#affixpagination'), offset);
+            setLeftOffset($('#affixpagination1'), offset);
+            setLeftOffset($('.site-footer'), offset);
+        }
+    };
+
+    function setLeftOffset(element, offset) {
+        if (element.css('position') === 'relative') {
+            element.css("left", offset.left);
+        }
+    }
+
+    //register layout functions, debounced to stop repeated calls while resizing the browser window
+    $(window).scroll(alignGridHeader);
 
     var topMessageAddClass = function (div) {
         div.addClass("affix-thead");

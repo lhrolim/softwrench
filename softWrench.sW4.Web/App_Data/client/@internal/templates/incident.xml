@@ -152,10 +152,11 @@
             <renderer type="icon" params="icon=fa-paperclip;autoloadcomposition=attachment_"/>
           </field>
           <field attribute="statusicons" tooltip="Status Icons">
-            <renderer type="statusicons" params="width=3%;iconcolumns=attachmentcounter;icon=fa-tachometer;headericon=true;showsort=false"/>
+            <renderer type="statusicons" params="width=5%;iconcolumns=attachmentcounter;icon=fa-tachometer;headericon=true;showsort=false"/>
           </field>
           <properties>
             <property key="list.click.schema" value="detail"/>
+            <property key="list.width.min" value="1280px"/>
           </properties>
         </list>
 

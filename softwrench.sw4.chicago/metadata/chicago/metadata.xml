@@ -277,6 +277,7 @@
           <properties>
             <property key="list.click.schema" value="editdetail"/>
             <property key="list.defaultorderby" value="sr.ticketuid desc"/>
+            <property key="list.width.min" value="1280px"/>
           </properties>
 
           <commandbars>

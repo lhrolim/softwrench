@@ -124,6 +124,7 @@
     <div class="divAuxTable">
         <!--build responsive css rules based on metadata-->
         <style column-widths schema="schema"></style>
+        <div class="scroll-helper"></div>
         <table class="table table-hover hidden-phone fixedtable listgrid-table" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" id="listgrid">
             <thead id="listgridthread" class="listgrid-thead">
                 <tr class="header-row">
@@ -137,28 +138,30 @@
                         ng-repeat="column in schema.displayables"
                         ng-show="!isFieldHidden(schema,column)"
                         ng-init="columnFilter = filterForColumn(column)">
-                        <div ng-if="shouldShowHeaderLabel(column)" class="cell-wrapper">
-                            <div ng-if="!!columnFilter" 
-                                 ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel(column)}}">
-                                {{i18NLabel(column)}} <i class="fa {{headerIcon(column)}}" ng-show="hasIcon(column)"></i>
-                            </div>
-                            <div ng-if="!columnFilter"
-                                 class="add-on part" data-container="body">
-                                {{i18NLabel(column)}} <i class="fa {{headerIcon(column)}}" ng-show="hasIcon(column)"></i>
-                            </div>
-                            <div class="fa fa-sort-amount-asc part"
-                                 ng-show="shouldShowSort(column,'asc')"
-                                 rel="tooltip" data-original-title="Sorted ascendant">
-                            </div>
-                            <div class="fa fa-sort-amount-desc part" ng-show="shouldShowSort(column,'desc')"
-                                 rel="tooltip" data-original-title="Sorted descendant">
-                            </div>
-                            <div class="filter-label part" ng-show="shouldShowGridNavigation()" filterrowrendered>
-                                <crud-filter-dropdown filter="columnFilter"
-                                                      schema="schema" datamap="datamap" panelid="panelid"
-                                                      advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
-                                                      search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()"
-                                                      filter-standalone />
+                        <div class="cell-wrapper">
+                            <div ng-if="shouldShowHeaderLabel(column)">
+                                <div ng-if="!!columnFilter"
+                                     ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel(column)}}">
+                                    {{i18NLabel(column)}} <i class="fa {{headerIcon(column)}}" ng-show="hasIcon(column)"></i>
+                                </div>
+                                <div ng-if="!columnFilter"
+                                     class="add-on part" data-container="body">
+                                    {{i18NLabel(column)}} <i class="fa {{headerIcon(column)}}" ng-show="hasIcon(column)"></i>
+                                </div>
+                                <div class="fa fa-sort-amount-asc part"
+                                     ng-show="shouldShowSort(column,'asc')"
+                                     rel="tooltip" data-original-title="Sorted ascendant">
+                                </div>
+                                <div class="fa fa-sort-amount-desc part" ng-show="shouldShowSort(column,'desc')"
+                                     rel="tooltip" data-original-title="Sorted descendant">
+                                </div>
+                                <div class="filter-label part" ng-show="shouldShowGridNavigation()" filterrowrendered>
+                                    <crud-filter-dropdown filter="columnFilter"
+                                                          schema="schema" datamap="datamap" panelid="panelid"
+                                                          advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
+                                                          search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()"
+                                                          filter-standalone/>
+                                </div>
                             </div>
                         </div>
                     </th>

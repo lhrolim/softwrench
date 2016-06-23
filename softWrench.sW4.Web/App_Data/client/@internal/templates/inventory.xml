@@ -269,6 +269,7 @@
         <schema stereotype="list" id="physicalcountList" title="Physical Count Grid" platform="web">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/PhysicalCount/ScanBar"/>
+            <property key="list.width.min" value="768px"/>
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
@@ -349,6 +350,7 @@
         <schema stereotype="list" id="physicaldeviationList" title="Physical Deviation Grid">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/PhysicalDeviation/ScanBar"/>
+            <property key="list.width.min" value="768px"/>
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
@@ -571,6 +573,7 @@
           <properties>
             <property key="list.click.schema" value="invbalancesdetail"/>
             <property key="config.fullKey" value="/Global/Grids/InvBalances/ScanBar"/>
+            <property key="list.width.min" value="1280px"/>
           </properties>
         </schema>
 
@@ -650,6 +653,7 @@
         <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfer Grid" platform="web">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/InventoryTransfer/ScanBar"/>
+            <property key="list.width.min" value="1280px"/>
           </properties>
           <commandbars>
             <commandgroup position="gridtop">

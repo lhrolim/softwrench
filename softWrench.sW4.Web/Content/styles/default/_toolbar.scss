@@ -358,6 +358,7 @@
 #affixpagination1 {
     border-bottom: none;
     border-top: #000 1px solid;
+    position: initial;
 }
 
 .toolbar-secondary {
@@ -372,5 +373,11 @@
     .buttons {
         display: inline-block;
         margin-right: 5px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    #affixpagination1 {
+        position: relative;
     }
 }

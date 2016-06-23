@@ -98,6 +98,9 @@
           <!--<field attribute="siteid" label="Site" qualifier="siteid" />-->
           <field attribute="propmanuf" label="Manufacturer"  qualifier="excerpt"/>
           <event type="onload" service="paeAssetService" method="initAssetGridListener"/>
+          <properties>
+            <property key="list.width.min" value="768px"/>
+          </properties>
         </list>
         <detail>
           <field attribute="plustsoldamt" hidden="true"/>

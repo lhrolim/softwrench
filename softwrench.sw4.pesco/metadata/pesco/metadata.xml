@@ -90,6 +90,7 @@
           </customization>
           <properties>
             <property key="list.click.service" value="pescoStatusService.changeStatusToPending"/>
+            <property key="list.width.min" value="1280px"/>
           </properties>
         </list>
 

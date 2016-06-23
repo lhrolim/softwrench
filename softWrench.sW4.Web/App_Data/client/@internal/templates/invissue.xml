@@ -167,6 +167,7 @@
           <properties>
             <property key="list.click.service" value="invissueService.invissuelistclick"/>
             <property key="config.fullKey" value="/Global/Grids/InvIssue/Scanbar"/>
+            <property key="list.width.min" value="1600px"/>
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
