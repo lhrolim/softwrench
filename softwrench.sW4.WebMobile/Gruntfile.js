@@ -409,8 +409,7 @@ module.exports = function (grunt) {
             },
             appStyles: {
                 src: [
-                    "www/css/**/*.css",
-                    "www/Content/Mobile/**/*.css"
+                    "www/css/**/*.css"
                 ],
                 dest: "tmp/concat/app.css"
             },
@@ -460,6 +459,15 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     sourceMap: true,
+                    outputStyle: "compressed"
+                },
+                files: [
+                    { expand: true, cwd: "www/css/", dest: "www/css/", src: ["**/*.scss"], ext: ".css" }
+                ]
+            },
+            prod: {
+                options: {
+                    sourceMap: false,
                     outputStyle: "compressed"
                 },
                 files: [
@@ -583,9 +591,9 @@ module.exports = function (grunt) {
     //#region dev tasks
     grunt.registerTask("cleanall", ["clean:vendor", "clean:temp", "clean:pub"]);
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("tagsdevbuild", ["tags:buildTranspiledScripts", "tags:buildVendorScripts", "sass:dev", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("devlocal", ["sass:dev", "cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "tagsdev"]);
-    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "babel:debug", "tagsdevbuild", "copy:build"]);
+    grunt.registerTask("tagsdevbuild", ["tags:buildTranspiledScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
+    grunt.registerTask("devlocal", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "tagsdev"]);
+    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "babel:debug", "tagsdevbuild", "copy:build"]);
     grunt.registerTask("default", ["devlocal"]);
     //#endregion
 
@@ -598,6 +606,7 @@ module.exports = function (grunt) {
         "cleanall", // cleans destination folders
         "bowercopy:prod", "bowercopy:css", "bowercopy:fontsrelease", // copy bower dependencies to appropriate project folders
         "concatall", // concats the scripts and stylesheets
+        "sass:prod", // compiles sass files
         "babel:release", // transpiles es6 app scripts
         "minify", // uglyfies scripts and minifies stylesheets
         "tagsrelease", // generates import tags for the prepared files in main template file (layout.html)
