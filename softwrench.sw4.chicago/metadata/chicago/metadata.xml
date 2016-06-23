@@ -573,6 +573,9 @@
             <section orientation="horizontal" id="statussection">
               <renderer type="default" params="childinputsize=small" />
               <field attribute="ticketuid" label="SR#" hidden="true"/>
+              <field attribute="creationdate" label="Creation Date" default="@currentdatetime" hidden="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+              </field>
               <field attribute="description" label="Summary" requiredexpression="true">
                 <renderer type="default" params="maxlength=100" />
               </field>
