@@ -1,4 +1,4 @@
-/// <binding />
+/// <binding ProjectOpened='watch' />
 module.exports = function (grunt) {
 
     // Project configuration.
@@ -264,7 +264,10 @@ module.exports = function (grunt) {
                     // fab
                     "ng-material-floating-button.js": "ng-material-floating-button/mfb/dist/mfb.min.js",
                     "ng-material-floating-button-directive.js": "ng-material-floating-button/src/mfb-directive.js",
-                    
+                    // tinymce
+                    "tinymce.js": "tinymce-dist/tinymce.min.js",
+                    "angular-ui-tinymce.js": "angular-ui-tinymce/dist/tinymce.min.js",
+                    "themes/modern/theme.js": "tinymce-dist/themes/modern/theme.min.js",
                     // utils
                     "jquery.js": "jquery/dist/jquery.min.js",
                     "ng-cordova.js": "ngCordova/dist/ng-cordova.min.js",
@@ -321,7 +324,6 @@ module.exports = function (grunt) {
                 },
                 src: [
                     "www/css/**/*.css",
-                    "www/Content/Mobile/**/*.css"
                 ],
                 dest: "<%= app.index %>"
             },
@@ -410,8 +412,7 @@ module.exports = function (grunt) {
             },
             appStyles: {
                 src: [
-                    "www/css/**/*.css",
-                    "www/Content/Mobile/**/*.css"
+                    "www/css/**/*.css"
                 ],
                 dest: "tmp/concat/app.css"
             },
@@ -447,6 +448,38 @@ module.exports = function (grunt) {
             }
         },
         //#endregion
+
+        //#region sass
+        watch: {
+            files: [
+                "www/css/**/*.scss"
+            ],
+            tasks: [
+                "sass:dev"
+            ]
+        },
+        sass: {
+            dev: {
+                options: {
+                    sourceMap: true,
+                    outputStyle: "compressed"
+                },
+                files: [
+                    { expand: true, cwd: "www/css/", dest: "www/css/", src: ["**/*.scss"], ext: ".css" }
+                ]
+            },
+            prod: {
+                options: {
+                    sourceMap: false,
+                    outputStyle: "compressed"
+                },
+                files: [
+                    { expand: true, cwd: "www/css/", dest: "www/css/", src: ["**/*.scss"], ext: ".css" }
+                ]
+            }
+        },
+        //#endregion
+
 
         //#region minify javascript
         uglify: {
@@ -549,7 +582,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-bowercopy");
+    grunt.loadNpmTasks("grunt-sass");
     grunt.loadNpmTasks("grunt-script-link-tags");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
@@ -560,8 +595,8 @@ module.exports = function (grunt) {
     grunt.registerTask("cleanall", ["clean:vendor", "clean:temp", "clean:pub"]);
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
     grunt.registerTask("tagsdevbuild", ["tags:buildTranspiledScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("devlocal", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "tagsdev"]);
-    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "babel:debug", "tagsdevbuild", "copy:build"]);
+    grunt.registerTask("devlocal", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "tagsdev"]);
+    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "babel:debug", "tagsdevbuild", "copy:build"]);
     grunt.registerTask("default", ["devlocal"]);
     //#endregion
 
@@ -574,6 +609,7 @@ module.exports = function (grunt) {
         "cleanall", // cleans destination folders
         "bowercopy:prod", "bowercopy:css", "bowercopy:fontsrelease", // copy bower dependencies to appropriate project folders
         "concatall", // concats the scripts and stylesheets
+        "sass:prod", // compiles sass files
         "babel:release", // transpiles es6 app scripts
         "minify", // uglyfies scripts and minifies stylesheets
         "tagsrelease", // generates import tags for the prepared files in main template file (layout.html)
