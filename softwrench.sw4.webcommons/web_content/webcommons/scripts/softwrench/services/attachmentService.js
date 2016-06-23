@@ -28,14 +28,14 @@
         });
 
         var service = {
-            isValid: isValid,
-            downloadFile: downloadFile,
-            selectAttachment: selectAttachment,
-            fetchDownloadUrl: fetchDownloadUrl,
-            redirectToAttachmentView: redirectToAttachmentView,
-            createAttachmentFromFile: createAttachmentFromFile,
-            createAttachmentFromElement: createAttachmentFromElement,
-            validateRemoval: validateRemoval
+            isValid,
+            downloadFile,
+            selectAttachment,
+            fetchDownloadUrl,
+            redirectToAttachmentView,
+            createAttachmentFromFile,
+            createAttachmentFromElement,
+            validateRemoval
         };
 
         return service;

@@ -40,13 +40,16 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             var compositionApplication = MetadataProvider.GetCompositionApplication(schema, relationship);
             var compositionResult = new CompositionSchemas();
             var applicationCompositionSchema = composition.Schema;
+            var platform = schema.Platform ?? ClientPlatform.Web;
             if (applicationCompositionSchema.Schemas != null) {
                 return applicationCompositionSchema;
             }
-            compositionResult.Detail = GetDetailSchema(compositionApplication, applicationCompositionSchema);
+            compositionResult.Detail = GetDetailSchema(compositionApplication, applicationCompositionSchema, platform);
             if (composition.Collection && applicationCompositionSchema is ApplicationCompositionCollectionSchema) {
-                compositionResult.List = GetListSchema(applicationCompositionSchema, compositionApplication);
-                compositionResult.Print = GetPrintSchema(applicationCompositionSchema, compositionApplication);
+                compositionResult.List = GetListSchema(applicationCompositionSchema, compositionApplication, platform);
+                if (platform != ClientPlatform.Mobile) {
+                    compositionResult.Print = GetPrintSchema(applicationCompositionSchema, compositionApplication);
+                }
                 if (!composition.IsSelfRelationship) {
                     //this won´t be needed into the synchronization
                     compositionResult.Sync = GetSyncSchema(applicationCompositionSchema, compositionApplication);
@@ -82,7 +85,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             if (applicationSchemaDefinitions.ContainsKey(syncKey)) {
                 return applicationSchemaDefinitions[syncKey];
             }
-            return GetDetailSchema(compositionApplication, compositionSchema);
+            return GetDetailSchema(compositionApplication, compositionSchema, ClientPlatform.Web);
         }
 
         /// <summary>
@@ -98,7 +101,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             if (applicationSchemaDefinitions.ContainsKey(printKey)) {
                 return applicationSchemaDefinitions[printKey];
             }
-            return GetDetailSchema(compositionApplication, compositionSchema);
+            return GetDetailSchema(compositionApplication, compositionSchema, ClientPlatform.Web);
         }
 
         private static bool ShouldFetchFromServer(ApplicationSchemaDefinition detail, ApplicationSchemaDefinition list) {
@@ -123,20 +126,19 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             return false;
         }
 
-        private static ApplicationSchemaDefinition GetListSchema(ApplicationCompositionSchema applicationCompositionSchema, CompleteApplicationMetadataDefinition compositionApplication) {
+        private static ApplicationSchemaDefinition GetListSchema(ApplicationCompositionSchema applicationCompositionSchema, CompleteApplicationMetadataDefinition compositionApplication, ClientPlatform platform) {
             var collectionSchema = (ApplicationCompositionCollectionSchema)applicationCompositionSchema;
             var listKey = new ApplicationMetadataSchemaKey(collectionSchema.CollectionProperties.ListSchema,
-                applicationCompositionSchema.RenderMode, ClientPlatform.Web);
+                applicationCompositionSchema.RenderMode, platform);
             return compositionApplication.Schemas()[listKey];
         }
 
-        private static ApplicationSchemaDefinition GetDetailSchema(CompleteApplicationMetadataDefinition compositionApplication,
-            ApplicationCompositionSchema compositionSchema) {
+        private static ApplicationSchemaDefinition GetDetailSchema(CompleteApplicationMetadataDefinition compositionApplication, ApplicationCompositionSchema compositionSchema, ClientPlatform clientPlatform) {
             if (compositionSchema.DetailSchema == "") {
                 //This means that the composition is only needed for list visualization
                 return null;
             }
-            var detailKey = new ApplicationMetadataSchemaKey(compositionSchema.DetailSchema, compositionSchema.RenderMode, ClientPlatform.Web);
+            var detailKey = new ApplicationMetadataSchemaKey(compositionSchema.DetailSchema, compositionSchema.RenderMode, clientPlatform);
             var applicationSchemaDefinitions = compositionApplication.Schemas();
             if (!applicationSchemaDefinitions.ContainsKey(detailKey)) {
                 throw ExceptionUtil.MetadataException(

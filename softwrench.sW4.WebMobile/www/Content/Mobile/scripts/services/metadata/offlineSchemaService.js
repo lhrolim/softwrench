@@ -101,7 +101,7 @@
         function getFieldByAttribute(schema, attribute) {
             Validate.notEmpty(schema);
             const fields = schema.displayables;
-            return !fields || fields.length <= 0 ? null : fields.find(f => f.attribute = attribute);
+            return !fields || fields.length <= 0 ? null : fields.find(f => f.attribute === attribute);
         }
 
         const service = {

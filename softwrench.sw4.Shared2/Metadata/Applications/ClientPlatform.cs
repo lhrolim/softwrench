@@ -3,6 +3,7 @@
     public enum ClientPlatform
     {
         Web,
-        Mobile        
+        Mobile,
+        Both        
     }
 }

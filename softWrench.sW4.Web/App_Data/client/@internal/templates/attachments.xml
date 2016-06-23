@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+ 
+  
   <applications>
     
     
@@ -20,14 +22,17 @@
           <field label="Created Date" attribute="createdate" qualifier="subtitle"/>
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="maximoURL"/>
+          <!--this shall hold the hash of the file to prevent a second offline download -->
+          <field hidden="true" attribute="docinfo_.urlparam"/>
         </list>
         
         <schema id="detail" platform="mobile" title="Attachments">
           <field label="Title" attribute="document" requiredexpression="true" />
           <field label="Description" attribute="docinfo_.description" />
-          <field label="Attachment" attribute="#new_attachment" requiredexpression="true">
+          <field label="Attachment" attribute="newattachment" requiredexpression="true">
             <renderer type="upload"/>
           </field>
+          <field attribute="createdate" default="@now" readonly="true" label="Created Date"/>
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
               <command id="picture" service="offlineAttachmentService" method="attachCameraPicture" 

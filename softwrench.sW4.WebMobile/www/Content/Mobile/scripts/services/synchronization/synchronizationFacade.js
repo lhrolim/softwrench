@@ -163,7 +163,7 @@
             return $q.all(batchPromises)
                 .then(batches => {
                     // no batches created: full download instead of full sync
-                    if (!batches || batches.length <= 0 || !batches[0]) {
+                    if (!batches || batches.length <= 0 || !batches.some(s=> s!=null)) {
                         log.info("No batches created: Executing full download instead of full sync.");
                         return fullDownload();
                     }

@@ -1,10 +1,11 @@
 ﻿(function (angular, mobileServices) {
     "use strict";
 
-    function offlineAttachmentService($log, cameraService, $cordovaFile, fileConstants, crudContextService, swdbDAO, offlineSchemaService) {
+    function offlineAttachmentService($log, cameraService, $cordovaFile, fileConstants, crudContextHolderService, swdbDAO, offlineSchemaService) {
         //#region Utils
         const config = {
             newAttachmentFieldName: "newattachment",
+            newAttachmentPathFieldName: "newattachment_path",
             fileNameFieldName: "document",
             defaultBaseFileName: "camera.jpg"
             //newAttachmentCompressedFlagFieldName: "#is_compressed"
@@ -15,7 +16,7 @@
         }
 
         function createAttachmentEntity(attachment) {
-            return swdbDAO.intantiate("Attachment", attachment).then(a => swdbDAO.save(a));
+            return swdbDAO.instantiate("Attachment", attachment).then(a => swdbDAO.save(a));
         }
         //#endregion
 
@@ -44,7 +45,7 @@
         function attachCameraPictureAsFile(schema, datamap) {
             return cameraService.captureFile()
                 .then(file => {
-                    const application = crudContextService.currentApplicationName();
+                    const application = crudContextHolderService.currentApplicationName();
                     return $cordovaFile.copyFile(file.dirPath, file.fileName, cordova.file[fileConstants.appDirectory], newFileName(application, file.fileName));
                 })
                 .then(fileEntry => datamap[config.newAttachmentFieldName] = fileEntry.nativeURL);
@@ -59,11 +60,11 @@
          */
         function attachCameraPicture(schema, datamap) {
             return cameraService.captureData().then(content => {
-                const application = crudContextService.currentApplicationName();
+                const application = crudContextHolderService.currentApplicationName();
                 const field = offlineSchemaService.getFieldByAttribute(schema, config.newAttachmentFieldName);
 
                 field.rendererParameters["showImagePreview"] = true;
-                datamap[config.fileNameFieldName] = newFileName(application);
+                datamap[config.fileNameFieldName] = datamap[config.newAttachmentPathFieldName] = newFileName(application);
                 datamap[config.newAttachmentFieldName] = content.data.value;
             });
         }
@@ -77,10 +78,11 @@
          */
         function saveAttachment(schema, datamap) {
             const attachment = {
-                application: crudContextService.currentApplicationName(),
-                parentId: crudContextService.currentDetailItem().id,
+                application: crudContextHolderService.currentApplicationName(),
+                parentId: crudContextHolderService.currentDetailItem().remoteId,
                 content: datamap[config.newAttachmentFieldName],
-                compressed: false
+                compressed: false,
+                compositionRemoteId: null
             };
             return createAttachmentEntity(attachment);
         }
@@ -94,8 +96,8 @@
          */
         function saveAttachmentAsFile(schema, datamap) {
             const attachment = {
-                application: crudContextService.currentApplicationName(),
-                parentId: crudContextService.currentDetailItem().id,
+                application: crudContextHolderService.currentApplicationName(),
+                parentId: crudContextHolderService.currentDetailItem().remoteId,
                 path: datamap[config.newAttachmentFieldName]
             };
             return createAttachmentEntity(attachment);
@@ -138,7 +140,7 @@
 
     //#region Service registration
     mobileServices.factory("offlineAttachmentService",
-        ["$log", "cameraService", "$cordovaFile", "fileConstants", "crudContextService", "swdbDAO", "offlineSchemaService", offlineAttachmentService]);
+        ["$log", "cameraService", "$cordovaFile", "fileConstants", "crudContextHolderService", "swdbDAO", "offlineSchemaService", offlineAttachmentService]);
     //#endregion
 
 })(angular, mobileServices);

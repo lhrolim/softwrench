@@ -28,7 +28,7 @@
 
             //#region delegateMethods
             restoreState: function () {
-                var savedState = crudContextHolderService.restoreState();
+                const savedState = crudContextHolderService.restoreState();
                 if (savedState && savedState.itemlist && !savedState.currentDetailItem) {
                     this.refreshGrid();
                 }
@@ -126,11 +126,11 @@
             //#region Compositions
 
             currentCompositionsToShow: function () {
-                var detailSchema = this.currentDetailSchema();
+                const detailSchema = this.currentDetailSchema();
                 if (!detailSchema) {
                     return [];
                 }
-                var allDisplayables = tabsService.tabsDisplayables(detailSchema);
+                const allDisplayables = tabsService.tabsDisplayables(detailSchema);
                 return allDisplayables;
             },
 
@@ -160,8 +160,8 @@
             },
 
             loadCompositionDetail: function (item) {
-                var crudContext = crudContextHolderService.getCrudContext();
-                var fields = this.getCompositionDetailSchema().displayables;
+                const crudContext = crudContextHolderService.getCrudContext();
+                const fields = this.getCompositionDetailSchema().displayables;
                 datamapSanitizationService.enforceNumericType(item, fields);
                 //for compositions item will be the datamap itself
                 crudContext.composition.currentDetailItem = item;
@@ -171,8 +171,8 @@
             },
 
             createNewCompositionItem: function () {
-                var crudContext = crudContextHolderService.getCrudContext();
-                var compositionParentDatamap = crudContext.currentDetailItem.datamap;
+                const crudContext = crudContextHolderService.getCrudContext();
+                const compositionParentDatamap = crudContext.currentDetailItem.datamap;
                 crudContext.composition.currentDetailItem = {};
                 offlineSchemaService.fillDefaultValues(crudContext.composition.currentDetailSchema, crudContext.composition.currentDetailItem, compositionParentDatamap);
                 crudContext.composition.originalDetailItemDatamap = {
@@ -193,7 +193,7 @@
             },
 
             cancelChanges: function () {
-                var crudContext = crudContextHolderService.getCrudContext();
+                const crudContext = crudContextHolderService.getCrudContext();
                 if (crudContext.composition.currentDetailItem) {
                     crudContext.composition.currentDetailItem = angular.copy(crudContext.composition.originalDetailItemDatamap);
                     return routeService.go("main.cruddetail.compositionlist");
@@ -208,11 +208,10 @@
             },
 
             saveChanges: function (crudForm) {
-                var crudContext = crudContextHolderService.getCrudContext();
+                const crudContext = crudContextHolderService.getCrudContext();
                 crudForm = crudForm || {};
                 const detailSchema = this.currentDetailSchema();
-                var datamap = crudContext.currentDetailItem.datamap;
-
+                const datamap = crudContext.currentDetailItem.datamap;
                 const validationErrors = validationService.validate(detailSchema, detailSchema.displayables, datamap, crudForm.$error);
                 if (validationErrors.length > 0) {
                     //interrupting here, can´t be done inside service
@@ -243,7 +242,7 @@
             //#region GridFNS
 
             filterList: function (text) {
-                var crudContext = crudContextHolderService.getCrudContext();
+                const crudContext = crudContextHolderService.getCrudContext();
                 internalListContext.searchQuery = text;
                 if (text == null) {
                     return;
@@ -288,8 +287,8 @@
                         if (filteredMode) {
                             crudContext.filteredList = [];
                         }
-                        var listToPush = filteredMode ? crudContext.filteredList : crudContext.itemlist;
-                        for (var i = 0; i < results.length; i++) {
+                        const listToPush = filteredMode ? crudContext.filteredList : crudContext.itemlist;
+                        for (let i = 0; i < results.length; i++) {
                             listToPush.push(results[i]);
                         }
                         return $q.when(results);
@@ -298,13 +297,10 @@
 
 
             loadApplicationGrid: function (applicationName, applicationTitle, schemaId) {
-                var crudContext = crudContextHolderService.getCrudContext();
-                //cleaning up
+                const crudContext = crudContextHolderService.getCrudContext(); //cleaning up
                 crudContext.currentDetailItem = null;
                 crudContext.composition = {};
-
-                var application = metadataModelService.getApplicationByName(applicationName);
-
+                const application = metadataModelService.getApplicationByName(applicationName);
                 crudContext.currentTitle = applicationTitle;
                 crudContext.currentApplicationName = applicationName;
                 crudContext.currentApplication = application;
@@ -321,8 +317,8 @@
             },
 
             hasNewSchemaAvailable: function () {
-                var crudContext = crudContextHolderService.getCrudContext();
-                var newDetailSchema = crudContext.currentNewDetailSchema;
+                const crudContext = crudContextHolderService.getCrudContext();
+                const newDetailSchema = crudContext.currentNewDetailSchema;
                 return newDetailSchema != null;
             },
 
@@ -331,7 +327,7 @@
             //#region detailFNs
 
             navigatePrevious: function () {
-                var crudContext = crudContextHolderService.getCrudContext();
+                const crudContext = crudContextHolderService.getCrudContext();
                 if (!crudContext.previousItem) {
                     routeService.go("main.crudlist");
                 } else {
@@ -358,7 +354,7 @@
             },
 
             createDetail: function () {
-                var crudContext = crudContextHolderService.getCrudContext();
+                const crudContext = crudContextHolderService.getCrudContext();
                 crudContext.currentDetailItem = {
                     datamap: {}
                 };
@@ -382,8 +378,7 @@
 
             loadDetail: function (item) {
                 loadingService.showDefault();
-                var crudContext = crudContextHolderService.getCrudContext();
-                /// <summary>
+                const crudContext = crudContextHolderService.getCrudContext(); /// <summary>
                 ///  Loads a detail represented by the parameter item.
                 /// </summary>
                 /// <param name="item"></param>
@@ -391,8 +386,7 @@
                 if (!crudContext.currentDetailSchema) {
                     crudContext.currentDetailSchema = offlineSchemaService.loadDetailSchema(crudContext.currentListSchema, crudContext.currentApplication, item);
                 }
-
-                var fields = this.mainDisplayables();
+                const fields = this.mainDisplayables();
                 datamapSanitizationService.enforceNumericType(item.datamap, fields);
 
                 crudContext.currentDetailItem = item;

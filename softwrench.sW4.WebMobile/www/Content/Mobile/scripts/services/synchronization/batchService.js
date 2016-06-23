@@ -2,10 +2,10 @@
     'use strict';
 
     //#region Service registration
-    mobileServices.factory('batchService', ['$q', 'offlineRestService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService', 'dispatcherService', 'offlineEntities', service]);
+    mobileServices.factory('batchService', ['$q', 'offlineRestService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService', 'dispatcherService', 'offlineEntities', "attachmentDataSynchronizationService", service]);
     //#endregion
 
-    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService, dispatcherService, entities) {
+    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService, dispatcherService, entities, attachmentDataSynchronizationService) {
 
         //#region Utils
 
@@ -23,7 +23,7 @@
             if (!logger.isLevelEnabled(level)) {
                 return;
             }
-            var ids = entities.map(function (e) {
+            const ids = entities.map(function (e) {
                 return "'{0}'".format(e.id);
             });
             logger[level](messageTemplate.format(ids));
@@ -35,7 +35,7 @@
          * @param [DataEntry] dataentry either an array of entries or a single entry
          */
         var addToRollbackContext = function (dataentry) {
-            var log = $log.get("BatchService#rollback");
+            const log = $log.get("BatchService#rollback");
             if (angular.isArray(dataentry)) {
                 logIdsIfEnabled(log, "debug", dataentry, "marking DataEntries {0} to rollback");
                 angular.forEach(dataentry, function(e) {
@@ -60,7 +60,7 @@
             var nonPendingEntries = [];
             while (rollbackContext.submittingEntries.length > 0) {
                 // evicting entries from internal state
-                var entry = rollbackContext.submittingEntries.shift();
+                const entry = rollbackContext.submittingEntries.shift();
                 if (!entry) continue;
                 // mark as not pending
                 entry.pending = false;
@@ -92,9 +92,7 @@
             if (batchItem.operation) {
                 return batchItem.operation.datamap;
             }
-            var datamap = batchItem.dataentry.datamap;
-
-            //TODO: implement the diff, passing also the ID + siteid all the time
+            const datamap = batchItem.dataentry.datamap; //TODO: implement the diff, passing also the ID + siteid all the time
             return datamap;
         };
 
@@ -150,10 +148,10 @@
         //#region Public methods
 
         function getIdsFromBatch(batch) {
-            var items = batch.items;
-            var ids = [];
-            for (var i = 0; i < items.length; i++) {
-                var batchItem = items[i];
+            const items = batch.items;
+            const ids = [];
+            for (let i = 0; i < items.length; i++) {
+                const batchItem = items[i];
                 ids.push(batchItem['remoteId']);
             }
             return ids;
@@ -201,7 +199,7 @@
          * @returns Promise: resolved with the updated Batch. 
          */
         function updateBatch(batch, remoteBatch) {
-            var log = $log.get("batchService#updateBatch");
+            const log = $log.get("batchService#updateBatch");
             var returnedBatchStatus = remoteBatch.status;
             batch.status = returnedBatchStatus; // always update status
             var indexedItems = {}; // items indexed by their id
@@ -219,23 +217,23 @@
             }
             // synchronous case: request already processed
             // has to update with problems and/or success
-            var problems = remoteBatch.problems; // indexed by related batchItem.id
-            var problemEntities = [];
-            for (var itemId in problems) {
+            const problems = remoteBatch.problems; // indexed by related batchItem.id
+            const problemEntities = [];
+            for (let itemId in problems) {
                 if (!problems.hasOwnProperty(itemId)) continue;
                 // instantiate Problem (synchronously actually helps in this case)
-                var problem = problems[itemId];
-                var problemEntity = new entities.Problem();
+                const problem = problems[itemId];
+                const problemEntity = new entities.Problem();
                 problemEntity.message = problem.message;
                 // item pointing to Problem and status update
-                var problematicItem = indexedItems[itemId.toUpperCase()]; // uppercasing in case the server camelcased the keys
+                const problematicItem = indexedItems[itemId.toUpperCase()]; // uppercasing in case the server camelcased the keys
                 problematicItem.problem = problemEntity;
                 // add to array
                 problemEntities.push(problemEntity);
             }
-            var successItems = remoteBatch.successItems;
+            const successItems = remoteBatch.successItems;
             angular.forEach(successItems, function(successId) {
-                var successItem = indexedItems[successId.toUpperCase()]; // uppercasing in case the server camelcased the keys
+                const successItem = indexedItems[successId.toUpperCase()]; // uppercasing in case the server camelcased the keys
                 if (successItem.problem) successItem.problem = null; // problem shouldn't be deleted for history purposes
             });
             // update items's DataEntries's flags
@@ -244,7 +242,7 @@
                 item.dataentry.isDirty = !!item.problem;
             });
             // save problems, update statuses and flags
-            var hasProblems = problemEntities.length;
+            const hasProblems = problemEntities.length;
             batch.hasProblems = hasProblems;
             if (hasProblems > 0) {
                 return saveBatch(batch, batch.loadeditems, problemEntities);
@@ -271,26 +269,23 @@
             // execute all handlers and send the result
             return executePostBatchHandlers(batch, batchParams, objectToSend)
                 .then(function (result) {
-                    var jsonToSend = !!result ? angular.toJson(result) : angular.toJson(objectToSend);
-                    // performing the request
+                    const jsonToSend = !!result ? angular.toJson(result) : angular.toJson(objectToSend); // performing the request
                     log.info("Submitting a Batch (id='{0}') to the server.".format(batch.id));
                     return restService.post("Mobile", "SubmitBatch", batchParams, jsonToSend);
                 }).then(function (response) {
-                    var returnedBatch = response.data;
+                    const returnedBatch = response.data;
                     return updateBatch(batch, returnedBatch);;
                 });;
         };
 
         function submitBatches(batches) {
-
-            var log = $log.getInstance('batchService#submitBatches');
-
+            const log = $log.getInstance('batchService#submitBatches');
             var promises = []; // parallel requests promises
             batches.forEach(function (batch) {
                 if (!batch || !batch.loadeditems) {
                     return;
                 }
-                var items = batch.loadeditems.map(function (batchItem) {
+                const items = batch.loadeditems.map(function (batchItem) {
                     return {
                         datamap: generateDatamapDiff(batchItem),
                         itemId: batchItem.dataentry.remoteId,
@@ -301,8 +296,7 @@
                         dataentry: batchItem.dataentry.id,
                         additionaldata: {}
                     };
-                });
-                // put the batch submission promise in the array
+                }); // put the batch submission promise in the array
                 promises.push(doSubmitBatch(batch, items));
             });
 
@@ -330,22 +324,22 @@
 
         function createBatch(dbapplication) {
             var applicationName = dbapplication.application;
-
-            var log = $log.getInstance('batchService#createBatch');
-
-            var detailSchema = offlineSchemaService.locateSchemaByStereotype(dbapplication, "detail");
-
+            const log = $log.getInstance('batchService#createBatch');
+            const detailSchema = offlineSchemaService.locateSchemaByStereotype(dbapplication, "detail");
             return swdbDAO.findByQuery('DataEntry', "isDirty=1 and pending=0 and application='{0}'".format(applicationName))
-                .then(function(dataEntries) {
+                .then(dataEntries => attachmentDataSynchronizationService.mergeAttachmentData(applicationName,dataEntries))
+                .then(dataEntries => {
+
                     if (!dataEntries || dataEntries.length <= 0) {
                         log.debug("no items to submit to the server. returning null batch");
                         return null;
                     }
+
                     var batchItemPromises = [];
 
                     angular.forEach(dataEntries, function(entry) {
                         // execute per application registered pre-sync service
-                        var mobilePresyncserviceName = dbapplication.data.parameters["mobile.presyncservice"];
+                        const mobilePresyncserviceName = dbapplication.data.parameters["mobile.presyncservice"];
                         if (!!mobilePresyncserviceName) {
                             dispatcherService.invokeServiceByString(mobilePresyncserviceName, [entry.datamap, entry.originaldatamap]);
                         }
@@ -373,15 +367,15 @@
                     if (!items) {
                         return items;
                     }
-                    var batch = items[0];
-                    var dataEntries = items[1];
-                    var batchItemsToCreate = items.subarray(2, length + 1);
+                    const batch = items[0];
+                    const dataEntries = items[1];
+                    const batchItemsToCreate = items.subarray(2, length + 1);
                     batch.application = applicationName;
                     batch.sentDate = new Date();
 
-                    for (var i = 0; i < batchItemsToCreate.length; i++) {
+                    for (let i = 0; i < batchItemsToCreate.length; i++) {
                         //creating relationships
-                        var item = batchItemsToCreate[i];
+                        const item = batchItemsToCreate[i];
                         batch.items.add(item);
                         item.batch = batch;
                     }
@@ -392,8 +386,7 @@
         //#endregion
         
         //#region Service instance
-
-        var api = {
+        const api = {
             getIdsFromBatch: getIdsFromBatch,
             submitBatches: submitBatches,
             generateDatamapDiff: generateDatamapDiff,
@@ -402,7 +395,6 @@
             updateBatch: updateBatch,
             onBeforeBatchSubmit: onBeforeBatchSubmit
         };
-
         return api;
 
         //#endregion

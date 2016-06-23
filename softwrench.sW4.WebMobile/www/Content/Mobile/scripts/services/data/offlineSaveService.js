@@ -1,16 +1,16 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    mobileServices.factory('offlineSaveService', ["$log", "swdbDAO", "$ionicPopup", "offlineEntities", function ($log, swdbDAO, $ionicPopup, offlineEntities) {
+    mobileServices.factory('offlineSaveService', ["$log", "swdbDAO", "$ionicPopup", "offlineEntities", "offlineAttachmentService", function ($log, swdbDAO, $ionicPopup, offlineEntities, offlineAttachmentService) {
 
         var entities = offlineEntities;
 
         var doSave = function (applicationName, item, messageEntry, showConfirmationMessage) {
-            var localId = item.id;
+            const localId = item.id;
             item.isDirty = true;
             var queryToExecute;
             item.datamap["#offlinesavedate"] = new Date();
-            var jsonString = JSON.stringify(item.datamap);
+            const jsonString = JSON.stringify(item.datamap);
             if (!localId) {
                 queryToExecute = { query: entities.DataEntry.insertLocalPattern, args: [applicationName, jsonString, persistence.createUUID()] };
             } else {
@@ -33,10 +33,20 @@
             },
 
             addAndSaveComposition: function (applicationName, item, compositionItem, compositionMetadata) {
-                var datamap = item.datamap;
-                var associationKey = compositionMetadata.associationKey;
+                const datamap = item.datamap;
+                const associationKey = compositionMetadata.associationKey;
                 datamap[associationKey] = datamap[associationKey] || [];
                 compositionItem[constants.localIdKey] = persistence.createUUID();
+                if (compositionMetadata.associationKey === "attachment_") {
+                    return offlineAttachmentService.saveAttachment(null, compositionItem).then((attachmentObj) => {
+                        compositionItem["#offlinehash"] = attachmentObj.id;
+                        //this will be stored on the Attachement entity instead
+                        delete compositionItem["newattachment"];
+                        datamap[associationKey].push(compositionItem);
+                        return doSave(applicationName, item, compositionMetadata.label);
+                    });
+                }
+
                 datamap[associationKey].push(compositionItem);
                 return doSave(applicationName, item, compositionMetadata.label);
             },

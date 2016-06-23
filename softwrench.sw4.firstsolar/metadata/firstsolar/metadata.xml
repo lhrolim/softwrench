@@ -102,7 +102,7 @@
           </properties>
         </schema>
 
-        <schema id="readonlyfixedlist" stereotype="list.modal.readonly">
+        <schema id="readonlyfixedlist" stereotype="list.modal.readonly" platform="web">
           <field attribute="wonum" label="WO#" >
             <renderer type="default"/>
           </field>
@@ -117,14 +117,14 @@
           </field>
         </schema>
 
-        <schema id="relatedwoconfirmationlist" parentschema="readonlyfixedlist" stereotype="list.modal.confirm">
+        <schema id="relatedwoconfirmationlist" parentschema="readonlyfixedlist" stereotype="list.modal.confirm" platform="web">
           <properties>
             <property key="commandbar.bottom" value="bottom.confirmation"/>
           </properties>
         </schema>
 
 
-        <schema id="workordercreationmodal" title="Fill In Workorder Details" stereotype="detail.modal" redeclaring="false">
+        <schema id="workordercreationmodal" title="Fill In Workorder Details" stereotype="detail.modal" redeclaring="false" platform="web">
           <customization position="classstructureid">
             <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true">
               <renderer type="autocompleteclient" />
@@ -135,7 +135,7 @@
           </customization>
         </schema>
 
-        <schema id="batchshared" title="Workorder Common Fields" stereotype="detail.modal">
+        <schema id="batchshared" title="Workorder Common Fields" stereotype="detail.modal" platform="web">
           <field attribute="summary" label="Summary:" requiredexpression="true"/>
           <field attribute="details" label="Details:">
             <renderer type="textarea"/>
@@ -152,7 +152,7 @@
           </properties>
         </schema>
 
-        <schema id="batchLocationSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet">
+        <schema id="batchLocationSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet" platform="web">
           <field attribute="location" hidden="true"/>
           <field attribute="workorderid" hidden="true"/>
           <field attribute="classificationid" hidden="true"/>
@@ -193,7 +193,7 @@
         </schema>
 
 
-        <schema id="batchAssetSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet">
+        <schema id="batchAssetSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="classificationid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
@@ -237,7 +237,7 @@
         </schema>
 
 
-        <schema id="batchLocationInlineEdit" title="Edit Workorder" stereotype="detail.modal">
+        <schema id="batchLocationInlineEdit" title="Edit Workorder" stereotype="detail.modal" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="userIdFieldName" hidden="true"/>
           <field attribute="specificLabel" label="Location" readonly="true"/>
@@ -268,7 +268,7 @@
         </schema>
 
 
-        <schema id="batchAssetInlineEdit" title="Edit Workorder" stereotype="detail.modal">
+        <schema id="batchAssetInlineEdit" title="Edit Workorder" stereotype="detail.modal" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="userIdFieldName" hidden="true"/>
           <field attribute="specificLabel" label="Asset" readonly="true"/>
@@ -298,7 +298,7 @@
           </commandbars>
         </schema>
 
-        <schema id="search" title="Location Search" stereotype="search">
+        <schema id="search" title="Location Search" stereotype="search" platform="web">
           <field attribute="status" hidden="true" default="INPRG,APPR,WOEN,ENRV,HOLD,WAPPR" searchoperation="eq"/>
           <field attribute="fslocationsearch" hidden="true" default="false" searchoperation="eq"/>
           <field attribute="fsincludesubloc" label="Include Sublocations?" defaultexpression="false" searchoperation="eq">

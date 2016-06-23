@@ -553,12 +553,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public bool IsWebPlatform() {
             //TODO: multi level hierarchy
-            return ClientPlatform.Web == Platform || (ParentSchema != null && ParentSchema.IsWebPlatform());
+            return (ClientPlatform.Web == Platform || ClientPlatform.Both == Platform) || (ParentSchema != null && ParentSchema.IsWebPlatform());
         }
 
         public bool IsMobilePlatform() {
             return SchemaId != ApplicationMetadataConstants.SyncSchema &&
-                (ClientPlatform.Mobile == Platform || null == Platform) || (ParentSchema != null && ParentSchema.IsMobilePlatform());
+                (ClientPlatform.Mobile == Platform || null == Platform || ClientPlatform.Both == Platform) || (ParentSchema != null && ParentSchema.IsMobilePlatform());
         }
 
         public bool IsPlatformSupported(ClientPlatform platform) {

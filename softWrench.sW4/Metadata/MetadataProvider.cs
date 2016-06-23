@@ -199,7 +199,7 @@ namespace softWrench.sW4.Metadata {
                     }
 
                     var instance = SlicedEntityMetadataBuilder.GetInstance(entityMetadata, schema, app.FetchLimit);
-                    SlicedEntityMetadataCache[new SlicedEntityMetadataKey(webSchema.Key, entityName)] = instance;
+                    SlicedEntityMetadataCache[new SlicedEntityMetadataKey(webSchema.Key, entityName, app.ApplicationName)] = instance;
 
                     if (schema.CommandSchema != null && schema.CommandSchema.HasDeclaration) {
                         //mobile schemas, dont have command schema for now...
@@ -466,12 +466,12 @@ namespace softWrench.sW4.Metadata {
 
         [NotNull]
         public static SlicedEntityMetadata SlicedEntityMetadata(ApplicationMetadata applicationMetadata) {
-            return SlicedEntityMetadataCache[new SlicedEntityMetadataKey(applicationMetadata.Schema.GetSchemaKey(), applicationMetadata.Entity)];
+            return SlicedEntityMetadataCache[new SlicedEntityMetadataKey(applicationMetadata.Schema.GetSchemaKey(), applicationMetadata.Entity, applicationMetadata.Name)];
         }
 
         [NotNull]
         public static SlicedEntityMetadata SlicedEntityMetadata(ApplicationSchemaDefinition applicationSchemaDefinition) {
-            return SlicedEntityMetadataCache[new SlicedEntityMetadataKey(applicationSchemaDefinition.GetSchemaKey(), applicationSchemaDefinition.EntityName)];
+            return SlicedEntityMetadataCache[new SlicedEntityMetadataKey(applicationSchemaDefinition.GetSchemaKey(), applicationSchemaDefinition.EntityName, applicationSchemaDefinition.Name)];
         }
 
         [NotNull]

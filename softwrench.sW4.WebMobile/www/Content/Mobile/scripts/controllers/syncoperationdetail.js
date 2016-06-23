@@ -1,9 +1,10 @@
-﻿(function(softwrench) {
+﻿(function (softwrench) {
     "use strict";
 
     softwrench.controller("SyncOperationDetailController",
-        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$ionicScrollDelegate","loadingService",
-        function ($scope, service, routeService, synchronizationFacade, swAlertPopup,  $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate, loadingService) {
+        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q",
+            "$ionicScrollDelegate", "loadingService","attachmentDataSynchronizationService",
+        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService) {
 
             $scope.data = {
                 operation: null,
@@ -17,30 +18,30 @@
 
             var loadSyncOperation = function () {
                 var loadPromise = $scope.data.isLatestOperation ? service.getMostRecentOperation() : service.getOperation($stateParams.id);
-                return loadPromise.then(function(operation) {
+                return loadPromise.then(function (operation) {
                     if (!operation) return operation;
                     $scope.data.operation = operation;
                     return service.getBatchItems(operation);
-                }).then(function(items) {
+                }).then(function (items) {
                     if (!items) return items;
-                    return items.map(function(item) {
+                    return items.map(function (item) {
                         if (item.problem) {
                             item.simpleproblem = { message: item.problem.message };
                         }
                         return item;
                     });
-                }).then(function(items) {
+                }).then(function (items) {
                     $scope.data.batchItems = items;
                 });
             };
 
-            var loadCurrentApplicationState = function() {
-                return applicationStateService.currentState().then(function(state) {
+            var loadCurrentApplicationState = function () {
+                return applicationStateService.currentState().then(function (state) {
                     $scope.data.currentApplicationState = state;
                 });
             };
 
-            var loadData = function(initial) {
+            var loadData = function (initial) {
                 // show loading if initial page load
                 if (!!initial) {
                     loadingService.showDefault();
@@ -55,15 +56,15 @@
                     });
             };
 
-            $scope.goToHistory = function() {
+            $scope.goToHistory = function () {
                 routeService.go("main.syncoperationhistory");
             };
 
-            $scope.goBack = function() {
+            $scope.goBack = function () {
                 $ionicHistory.goBack();
             };
 
-            $scope.solveProblems = function() {
+            $scope.solveProblems = function () {
                 // TODO: resubmit $scope.operation's Batches
             };
 
@@ -87,10 +88,11 @@
                     .finally(function () {
                         $scope.data.isSynching = false;
                         loadingService.hide();
+//                        attachmentDataSynchronizationService.downloadAttachments();
                     });
             };
 
-            $scope.toggleApplicationStateCollapsed = function() {
+            $scope.toggleApplicationStateCollapsed = function () {
                 $scope.data.applicationStateCollapsed = !$scope.data.applicationStateCollapsed;
                 if ($scope.data.applicationStateCollapsed) {
                     $ionicScrollDelegate.scrollTop(true);
@@ -102,6 +104,6 @@
             // initialize
             loadData(true);
 
-    }]);
+        }]);
 
 })(softwrench);

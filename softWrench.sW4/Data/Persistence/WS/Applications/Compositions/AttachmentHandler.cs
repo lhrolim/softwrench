@@ -109,6 +109,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                         Title = title,
                         Data = attachment.GetUnMappedAttribute("newattachment"),
                         Path = attachment.GetUnMappedAttribute("newattachment_path"),
+                        OffLineHash = attachment.GetUnMappedAttribute("#offlinehash"),
                         Description = desc
                     };
                     if (content.Data != null) {
@@ -164,30 +165,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             w.SetValue(docLink, "URLNAME", attachment.Path);
             w.SetValue(docLink, "UPLOAD", true);
             w.SetValue(docLink, "DOCTYPE", "Attachments");
+            if (attachment.OffLineHash != null) {
+                //for offline solution
+                w.SetValue(docLink, "URLPARAM", attachment.OffLineHash);
+            }
             w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
             w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? string.Empty);
 
             HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path, attachment.BinaryData);
         }
 
-        private void CommonCode(object maximoObj, object docLink, InMemoryUser user, AttachmentDTO attachment) {
-            w.SetValue(docLink, "ADDINFO", true);
-            w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
-            w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());
-            w.CopyFromRootEntity(maximoObj, docLink, "CHANGEBY", user.Login, "reportedby");
-            w.CopyFromRootEntity(maximoObj, docLink, "CHANGEDATE", DateTime.Now.FromServerToRightKind());
-            w.CopyFromRootEntity(maximoObj, docLink, "SITEID", user.SiteId);
-            w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
-            w.SetValue(docLink, "URLTYPE", "FILE");
-            w.SetValue(docLink, "URLNAME", attachment.Path);
-            Validate(attachment.Path, attachment.Data);
-
-            w.SetValue(docLink, "UPLOAD", true);
-            w.SetValue(docLink, "DOCTYPE", "Attachments");
-            //w.SetValue(docLink, "DOCUMENT", FileUtils.GetNameFromPath(attachmentPath, GetMaximoLength()));
-            w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
-            w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? String.Empty);
-        }
 
         public static bool Validate(string attachmentPath, string attachmentData, byte[] binaryData = null) {
             var allowedFiles = ApplicationConfiguration.AllowedFilesExtensions;

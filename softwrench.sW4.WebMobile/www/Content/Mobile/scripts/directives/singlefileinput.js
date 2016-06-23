@@ -33,6 +33,7 @@
                             $scope.datamap[$scope.fieldName] = loadEvent.target.result;
                             $scope.model.field.rendererParameters["showImagePreview"] = !!type && type.contains("image");
                             $scope.datamap["document"] = name;
+                            $scope.datamap["newattachment_path"] = name;
                         }).finally(() => loadingService.hide());
 
                     reader.readAsDataURL(file);

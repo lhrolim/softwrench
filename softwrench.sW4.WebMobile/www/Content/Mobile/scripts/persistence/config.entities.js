@@ -1,4 +1,4 @@
-﻿(function(angular, persistence) {
+﻿(function (angular, persistence) {
     "use strict";
     angular.module("persistence.offline").config(["offlineEntitiesProvider", function (offlineEntitiesProvider) {
 
@@ -97,18 +97,19 @@
 
         //#region CompositionDataEntry
         ///
-        /// Holds both Parent entities and compositions data.
-        /// This Entries needs to be reevaluated on every sync, since chances are that they do not needed to be present on client side after execution.
+        /// Holds Composition Data for the items already stored on server side. 
+        /// Items created/updated locally will be pushed straight into the parents datamap; this happens so that we can easily write the datamap to maximo, the exact same way as the online version.
+        ///
+        ///  Attachments compositions (doclinks) are an exception to this rule, as we need to generate them locally in order to be able to do a match to the attachment table
+        ///
+        ///  Whenever the list of compositions is to be shown, we need to do a union among the list of compositionDataEntries (persisted entries) and the list coming from the parent datamap (local entries).
+        ///
         ///
         entities.CompositionDataEntry = persistence.define('CompositionDataEntry', {
             application: 'TEXT',
             datamap: 'JSON',
-            //used to match the parent application for the items that were created locally (since they won´t have a remote id, the match needs to be performed differently)
-            parentlocalId: 'TEXT',
-            //The id of this entry in maximo, it will be null when it´s created locally
-            remoteId: 'TEXT',
-            //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
-            isDirty: 'BOOL',
+            remoteId: 'TEXT',//The id of this entry in maximo, it will be null when it´s created locally
+            isDirty: 'BOOL', //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
             rowstamp: 'INT',
         });
 
@@ -120,6 +121,38 @@
         entities.CompositionDataEntry.maxRowstampQueries = "select max(rowstamp) as rowstamp,application,id from CompositionDataEntry  group by application";
         entities.CompositionDataEntry.selectCompositions = "select max(rowstamp) as rowstamp,application,id from CompositionDataEntry  group by application";
         //#endregion
+
+        /**
+         * The attachment entity holds the raw base64 of the attachment itself. 
+         * It's equivalent to the docinfo table on the server side. 
+         * 
+         * The id will be used a unique cross-device/user identifier so that it can be used to download an already existing attachment that got created on that device on firstplace.
+         * 
+         * 
+         * Current implementation is storing every attachemnent's base64 but it would be possible just to point to a path of the file on the device FS instead.
+         * 
+         * 
+         */
+        entities.Attachment = persistence.define('Attachment', {
+            application: "TEXT", // ROOT application of the entity that has the asset (e.g. workorder, sr, etc)
+            parentId: "TEXT", // local id of the ROOT entity
+            compositionRemoteId:"TEXT", // the remoteId of the composition to link
+            path: "TEXT", // local file system path to the saved file (should be in an external storage directory),
+            compressed: "BOOL", // whether or not the file is compressed
+            content: "TEXT" // base64 encoded content
+        });
+
+        entities.Attachment.NonPendingAttachments = "select id,compositionRemoteId from Attachment where (path is not null or content is not null) and id in (?)";
+        entities.Attachment.UpdateRemoteIdOfExistingAttachments = "update Attachment set 'compositionRemoteId' = ? where id = ?";
+        entities.Attachment.CreateNewBlankAttachments = "insert into Attachment ('application','parentId','compositionRemoteId','id') values (?,?,?,?)";
+        //brings the attachments that need to be syncrhonized to the server. The ones which have a compositionRemoteId already point to a downloaded composition, and thus do not require to be uploaded
+        entities.Attachment.ByApplicationAndIds = "select id,parentId,content from Attachment where application = ? and parentId in (?) and compositionRemoteId is null";
+        /**
+         * query to fetch list of attachments which are pending synchronization against the server side
+         */
+        entities.Attachment.PendingAttachments = "select id from Attachment where (path is null and content is null) and compositionRemoteId is not null";
+
+        //('application','datamap','pending','isDirty','remoteId','rowstamp','id') values (:p0,:p1,0,0,:p2,:p3,:p4)
 
         //#region DataEntry
         ///
@@ -227,13 +260,7 @@
             data: "JSON"
         });
 
-        entities.Attachment = persistence.define('Attachment', {
-            application: "TEXT", // ROOT application of the entity that has the asset (e.g. workorder, sr, etc)
-            parentId: "TEXT", // local id of the ROOT entity
-            path: "TEXT", // local file system path to the saved file (should be in an external storage directory),
-            compressed: "BOOL", // whether or not the file is compressed
-            content: "TEXT" // base64 encoded content
-        });
+
 
         entities.WhereClause = persistence.define("WhereClause", {
             ///

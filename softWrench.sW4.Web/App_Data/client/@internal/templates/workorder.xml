@@ -282,20 +282,20 @@
           
         </schema>
 
-        <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status">
+        <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status" platform="web">
           <association label="Status" target="status" labelfield="synstatus.description">
             <dataprovider prefilterfunction="FilterStatusCodes"/>
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>
         </schema>
 
-        <schema id="wonumlookup" title="item" stereotype="list">
+        <schema id="wonumlookup" title="item" stereotype="list" platform="web">
           <field attribute="wonum"/>
           <field attribute="workorderid"/>
           <field attribute="siteid"/>
         </schema>
 
-        <schema id="locationwolist" title="Work Orders" stereotype="compositionlist">
+        <schema id="locationwolist" title="Work Orders" stereotype="compositionlist" platform="web">
           <properties>
             <property key="list.click.event" value="workorderService.goToDetail"/>
           </properties>
@@ -314,7 +314,7 @@
           </commandbars>
         </schema>
 
-        <schema id="assetwolist" title="Work Orders" stereotype="compositionlist">
+        <schema id="assetwolist" title="Work Orders" stereotype="compositionlist" platform="web">
           <properties>
             <property key="list.click.event" value="workorderService.goToDetail"/>
           </properties>
@@ -667,7 +667,7 @@
           </composition>
         </schema>
 
-        <schema id="workordercreationmodal" title="Fill In Workorder Details" stereotype="detail.modal">
+        <schema id="workordercreationmodal" title="Fill In Workorder Details" stereotype="detail.modal" platform="web">
           <field attribute="description" label="Summary:" requiredexpression="true"/>
           <field attribute="ld_.ldtext" label="Details:" requiredexpression="false">
             <renderer type="textarea"/>
