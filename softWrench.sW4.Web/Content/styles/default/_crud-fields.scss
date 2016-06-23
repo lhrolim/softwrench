@@ -258,6 +258,11 @@ label.form-control {
     font-weight: normal;
 }
 
+.tt-dropdown-menu {
+    height: 300px;
+    overflow-y: scroll;
+}
+
 .input-group-addon {
     cursor: pointer;
 
@@ -461,7 +466,7 @@ input[type="date"], input[type="time"] {
     }
 }
 
-.typeahead.dropdown-menu .active a, .combobox-container .active {
+.tt-cursor, .typeahead.dropdown-menu .active a, .combobox-container .active {
     background: #ddd;
     border-color: transparent;
     color: #333;

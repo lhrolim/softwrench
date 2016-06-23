@@ -229,7 +229,15 @@
                 this.idxShown = [];
             }
 
-            return this.process(this.source, initialPage);
+            //if there is no event, assume this is the inital lookup
+            if (!event) {
+                return this.process(this.source, initialPage);
+            }
+
+            //run this.process if the dropdown is hidden or any key besides the up/down arrows are pressed
+            if (!this.shown || (event.keyCode !== 38 && event.keyCode !== 40)) {
+                return this.process(this.source, initialPage);
+            }
         }
     }
 
@@ -571,7 +579,7 @@
         }
 
         //always display the dropdown
-        this.lookup();
+        this.lookup(e);
 
         e.stopPropagation();
         e.preventDefault();
