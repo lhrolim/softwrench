@@ -1,0 +1,135 @@
+﻿.center {
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    position: absolute !important;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.button-float {
+    background: #ef473a !important;
+    color: white !important;
+    z-index: 12 !important;
+    position: absolute !important;
+    bottom: 55px !important;
+    right: 10px !important;
+    border-radius: 50% !important;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
+    -webkit-transition: 0.2s linear !important;
+    transition: 0.2s linear !important;
+    -webkit-transition-property: -webkit-transform, all !important;
+    transition-property: transform, all !important;
+
+    &:hover {
+        -webkit-transform: translate3d(0, -1px, 0) !important;
+        transform: translate3d(0, -1px, 0) !important;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4) !important;
+        background: darken(#ef473a, 10%) !important;
+    }
+}
+
+.button-status {
+    z-index: 12 !important;
+    border-radius: 50% !important;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
+    -webkit-transition: 0.2s linear !important;
+    transition: 0.2s linear !important;
+    -webkit-transition-property: -webkit-transform, all !important;
+    transition-property: transform, all !important;
+}
+
+
+.item-icon-left .icon {
+    font-size: 24px;
+}
+
+.bar .button .icon:before {
+    font-size: 24px !important;
+}
+
+.menu {
+    .item-divider {
+        font-weight: bold;
+    }
+
+    .subleaf {
+        padding-left: 48px;
+    }
+}
+
+/* keeps side-menu open in tablets */
+@media (min-width: 767px) {
+    /* sidemenu is open: pushes content and sets it's width:  */
+    .menu-content {
+        transform: translate3d(270px, 0px, 0px) !important;
+        -moz-transform: translate3d(270px, 0px, 0px) !important;
+        -ms-transform: translate3d(270px, 0px, 0px) !important;
+        -webkit-transform: translate3d(270px, 0px, 0px) !important;
+        width: calc(100% - 270px) !important;
+    }
+    /* hides 'open menu' button */
+    .bar-header button.ion-navicon {
+        display: none;
+    }
+
+    .bar-header .button-menu {
+        display: none;
+    }
+}
+/* hide/show according to device type/size */
+@media (max-width: 567px) {
+    .show-tablet {
+        display: none !important;
+    }
+}
+
+@media (min-width: 568px) {
+    .show-phone {
+        display: none !important;
+    }
+}
+
+@media (min-width: 767px) {
+    .responsive-container {
+        &.md {
+            width: 567px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .button-container, .button.button-block, .button.button-full {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+}
+
+@media (min-width: 1024px) {
+    .responsive-container {
+        &.lg {
+            width: 767px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .button-container, .button.button-block, .button.button-full {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+}
+
+@media (min-width: 767px) {
+    .ion-autocomplete-container.modal {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

@@ -321,7 +321,6 @@ module.exports = function (grunt) {
                 },
                 src: [
                     "www/css/**/*.css",
-                    "www/Content/Mobile/**/*.css"
                 ],
                 dest: "<%= app.index %>"
             },
@@ -461,7 +460,7 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     sourceMap: true,
-                    outputStyle: "compact"
+                    outputStyle: "compressed"
                 },
                 files: [
                     { expand: true, cwd: "www/css/", dest: "www/css/", src: ["**/*.scss"], ext: ".css" }
