@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="vertical" indexitem="WO">
-  <application id="WO" title="Work Order" ref="workorder" schema="list" icon="ion-gear-b"/>
+  <application id="WO" title="Work Order" ref="workorder" schema="list" icon="ion-wrench"/>
 
-  <container title="Inventory" id="Inventory" role="inventory">
-    <application id="IN"  schema="invbalancesList"          title="Inventory"          ref="invbalances"          icon="ion-cube" />
+  <container title="Inventory" id="Inventory" role="inventory" icon="ion-cube" >
+    <application id="IN"  schema="invbalancesList"          title="Inventory Grid"     ref="invbalances"          icon="ion-filing" />
     <application id="IRG" schema="invIssueList"             title="Issues and Returns" ref="invissue"             icon="ion-arrow-swap" />
     <application id="ITG" schema="matrectransTransfersList" title="Inventory Transfer" ref="matrectransTransfers" icon="ion-arrow-right-c" />
     <application id="PC"  schema="physicalcountList"        title="Physical Count"     ref="physicalcount"        icon="ion-filing" />
