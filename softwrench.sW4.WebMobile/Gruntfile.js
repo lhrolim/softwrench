@@ -264,7 +264,10 @@ module.exports = function (grunt) {
                     // fab
                     "ng-material-floating-button.js": "ng-material-floating-button/mfb/dist/mfb.min.js",
                     "ng-material-floating-button-directive.js": "ng-material-floating-button/src/mfb-directive.js",
-                    
+                    // tinymce
+                    "tinymce.js": "tinymce-dist/tinymce.min.js",
+                    "angular-ui-tinymce.js": "angular-ui-tinymce/dist/tinymce.min.js",
+                    "themes/modern/theme.js": "tinymce-dist/themes/modern/theme.min.js",
                     // utils
                     "jquery.js": "jquery/dist/jquery.min.js",
                     "ng-cordova.js": "ngCordova/dist/ng-cordova.min.js",
