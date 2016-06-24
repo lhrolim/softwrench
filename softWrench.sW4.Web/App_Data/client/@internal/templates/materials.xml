@@ -191,7 +191,7 @@
 
     <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
       <properties>
-        <property key ="icon.composition.tab" value="fa fa-suitcase"/>
+        <property key ="icon.composition.tab" value="fa fa-suitcase ion-briefcase"/>
         <property key ="add.button.label" value="Add Material"/>
       </properties>
       <schemas>

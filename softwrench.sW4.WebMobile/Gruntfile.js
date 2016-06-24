@@ -452,7 +452,8 @@ module.exports = function (grunt) {
         //#region sass
         watch: {
             files: [
-                "www/css/**/*.scss"
+                "www/css/**/*.scss",
+                "www/Content/Mobile/styles/**/*.scss"
             ],
             tasks: [
                 "sass:dev"
