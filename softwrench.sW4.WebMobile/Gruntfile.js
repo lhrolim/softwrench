@@ -124,12 +124,13 @@ module.exports = function (grunt) {
     
     
     var testScripts = [
-        "bower_components/angular-mocks/angular-mocks.js",
         "tests/**/*.js"
     ];
 
+    var ngMockScript = ["bower_components/angular-mocks/angular-mocks.js"];
+
     var allScripts = []
-        .concat(vendorScripts)
+        .concat(vendorScripts).concat(ngMockScript)
         .concat(solutionScripts)
         .concat(testScripts);
 
@@ -555,7 +556,10 @@ module.exports = function (grunt) {
                         }
                     },
                     preprocessors: getKarmaPreprocessorsConfig(testScripts),
-                    files: ["overrides/cordova.js"].concat(vendorScripts).concat(solutionScripts.map(function (s) { return "www/Content/public/" + s; })).concat(testScripts)
+                    files: ["overrides/cordova.js"]
+                        .concat(vendorScripts).concat(ngMockScript)
+                        .concat(solutionScripts.map(function (s) { return "www/Content/public/" + s; }))
+                        .concat(testScripts)
                 }
             },
             release: { // CI release
@@ -596,8 +600,8 @@ module.exports = function (grunt) {
     grunt.registerTask("cleanall", ["clean:vendor", "clean:temp", "clean:pub"]);
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
     grunt.registerTask("tagsdevbuild", ["tags:buildTranspiledScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("devlocal", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "tagsdev"]);
-    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "babel:debug", "tagsdevbuild", "copy:build"]);
+    grunt.registerTask("devlocal", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", /*"sass:dev",*/ "tagsdev"]);
+    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", /*"sass:dev",*/ "babel:debug", "tagsdevbuild", "copy:build"]);
     grunt.registerTask("default", ["devlocal"]);
     //#endregion
 
