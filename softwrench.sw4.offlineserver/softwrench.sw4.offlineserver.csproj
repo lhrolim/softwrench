@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="controller\MobileController.cs" />
+    <Compile Include="controller\OfflineAttachmentController.cs" />
     <Compile Include="dto\association\AssociationSynchronizationResultDto.cs" />
     <Compile Include="dto\association\ClientAssociationCacheEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

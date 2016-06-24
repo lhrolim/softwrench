@@ -6,6 +6,7 @@ using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 
 namespace softWrench.sW4.Web.Controllers {
 
+    [System.Web.Mvc.Authorize]
     public class AttachmentController : FileDownloadController {
 
         private readonly AttachmentHandler _attachmentHandler;
@@ -31,9 +32,15 @@ namespace softWrench.sW4.Web.Controllers {
                     FileDownloadName = fileTuple.Item2
                 };
                 return result;
-            } else {
-                return null;
             }
+            return null;
+        }
+
+
+        public string DownloadBase64(string id, string mode) {
+            var fileTuple = _attachmentHandler.DownloadViaHttpById(id);
+            return fileTuple == null ? null : Convert.ToBase64String(fileTuple.Item1);
+
         }
 
         [HttpGet]

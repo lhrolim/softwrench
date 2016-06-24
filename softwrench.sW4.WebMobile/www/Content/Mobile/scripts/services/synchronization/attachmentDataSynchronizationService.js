@@ -1,20 +1,23 @@
 ﻿(function (mobileServices, angular) {
     "use strict";
 
-    function attachmentDataSynchronizationService($q,$log, swdbDAO, entities) {
+    function attachmentDataSynchronizationService($q,$log, swdbDAO, entities,restService) {
         //#region Utils
+
+        const numberOfParallelDownloads = 2;
+
 
         const matchinfFilesResolver = (matchingFiles, doclinksArray) => {
 
             //result will hold a list of matching files, ie, files whose hash(ids) match the ones returned from the server batch
             const attachmentsToUpdateQuery = doclinksArray.filter(syncItem => matchingFiles.some(m => m.id === syncItem.hash && m.compositionRemoteId != null)).map(item => {
                 //we only need to update the attachments whose compositionRemoteId are still null on the database, since the others would mean a useless operation
-                return { query: entities.Attachment.UpdateRemoteIdOfExistingAttachments, args: [String(item.compositionRemoteId), item.hash] }
+                return { query: entities.Attachment.UpdateRemoteIdOfExistingAttachments, args: [String(item.compositionRemoteId), String(item.docinfoid), item.hash] }
             });
 
             const attachmentsToInsertQuery = doclinksArray.filter(syncItem => !matchingFiles.some(m => m.id === syncItem.hash)).map(item => {
                 //we only need to update the attachments whose compositionRemoteId are still null on the database, since the others would mean a useless operation
-                return { query: entities.Attachment.CreateNewBlankAttachments, args: [item.ownerTable, String(item.ownerId), String(item.compositionRemoteId), persistence.createUUID()] }
+                return { query: entities.Attachment.CreateNewBlankAttachments, args: [item.ownerTable, String(item.ownerId), String(item.compositionRemoteId), String(item.docinfoid), persistence.createUUID()] }
             });
 
             return $q.when(attachmentsToUpdateQuery.concat(attachmentsToInsertQuery));
@@ -48,12 +51,78 @@
 
         }
 
+        function bufferedDownload(attachmentsToDownload, originalDeferred,log) {
+            const promiseDownloadBuffer = [];
+            if (attachmentsToDownload.length === 0) {
+                originalDeferred.resolve();
+                return;
+            }
+
+            for (let i = 0; i < numberOfParallelDownloads; i++) {
+                const promiseObj = attachmentsToDownload.shift();
+                promiseDownloadBuffer.push(promiseObj);
+            }
+            const promisesToExecute = promiseDownloadBuffer.filter(f=> f != null);
+            if (promisesToExecute.length === 0) {
+                originalDeferred.resolve();
+                return;
+            }
+
+            $q.all(promisesToExecute.map(p => p.promise)).then(function (results) {
+                const updateQueriesObject = [];
+                for (let i = 0; i < promiseDownloadBuffer.length; i++) {
+                    const result = results[i];
+                    if (!result) {
+                        log.warn("server returned with a null file result... saving a error file to prevent downloading");
+                        const queryObj = { query: entities.Attachment.UpdatePendingAttachment, args: ["error", "error", promiseDownloadBuffer[i].id] }
+                        updateQueriesObject.push(queryObj);
+                    } else {
+                        log.warn("server returned with a null file result... will");
+                        const data = result.data;
+                        const queryObj = { query: entities.Attachment.UpdatePendingAttachment, args: [data.content, data.mimeType, promiseDownloadBuffer[i].id] }
+                        updateQueriesObject.push(queryObj);
+                    }
+                    
+                }
+                swdbDAO.executeQueries(updateQueriesObject).then(bufferedDownload(attachmentsToDownload, originalDeferred,log));
+            });
+
+        }
+
         function downloadAttachments() {
-            return swdbDAO.executeQuery(entities.Attachment.PendingAttachments).then(() => {
+            const log = $log.get("attachmentDataSynchronizationService#downloadAttachments", ["attachment", "sync","download"]);
+
+            return swdbDAO.executeQuery(entities.Attachment.PendingAttachments).then((attachmentsToDownload) => {
+                if (attachmentsToDownload.length === 0) {
+                    log.debug("no attachments to download, resuming");
+                    return null;
+                }
+
+                var deferred = $q.defer();
+
+                var fullPromiseBuffer = [];
+                var length = attachmentsToDownload.length;
+
+                attachmentsToDownload.forEach(value => {
+                    const attachment = value;
+                    const promise = restService.get("OfflineAttachment", "DownloadBase64", { id: attachment.docinfoRemoteId });
+                    fullPromiseBuffer.push({ id: attachment.id, promise: promise });
+                });
+                bufferedDownload(fullPromiseBuffer, deferred,log);
+
+                return deferred.promise;
+
 
             });
         }
 
+        /**
+         * Called just before the sync to insert the base64 data into the parent datamaps. Amongst other possible reasons, we prevent this data on the datamap so that the global search doesn't get impacted.
+         * 
+         * @param {} applicationName the name of the application being synced. On a sync operation we might call this method each time per application
+         * @param {} dataEntries the parent entries in which the attachments should be inserted into
+         * @returns {Promise} the new dataentries containing the base64 data
+         */
         function mergeAttachmentData(applicationName, dataEntries) {
             const log = $log.get("attachmentDataSynchronizationService#mergeAttachmentData", ["attachment", "sync"]);
             if (!dataEntries || dataEntries.length <= 0) {
@@ -103,7 +172,7 @@
 
     //#region Service registration
 
-    mobileServices.factory("attachmentDataSynchronizationService", ["$q","$log", "swdbDAO", "offlineEntities", attachmentDataSynchronizationService]);
+    mobileServices.factory("attachmentDataSynchronizationService", ["$q", "$log", "swdbDAO", "offlineEntities", "offlineRestService", attachmentDataSynchronizationService]);
 
     //#endregion
 

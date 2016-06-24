@@ -66,6 +66,7 @@
                 field.rendererParameters["showImagePreview"] = true;
                 datamap[config.fileNameFieldName] = datamap[config.newAttachmentPathFieldName] = newFileName(application);
                 datamap[config.newAttachmentFieldName] = content.data.value;
+                datamap["#mimetype"] = "image/jpeg";
             });
         }
 
@@ -81,6 +82,7 @@
                 application: crudContextHolderService.currentApplicationName(),
                 parentId: crudContextHolderService.currentDetailItem().remoteId,
                 content: datamap[config.newAttachmentFieldName],
+                mimetype: datamap["#mimetype"],
                 compressed: false,
                 compositionRemoteId: null
             };

@@ -34,6 +34,7 @@
                             $scope.model.field.rendererParameters["showImagePreview"] = !!type && type.contains("image");
                             $scope.datamap["document"] = name;
                             $scope.datamap["newattachment_path"] = name;
+                            $scope.datamap["#mimetype"] = type;
                         }).finally(() => loadingService.hide());
 
                     reader.readAsDataURL(file);

@@ -6,7 +6,7 @@ namespace cts.commons.web.Controller {
     /// <summary>
     /// taken from http://johnculviner.com/jquery-file-download-plugin-for-ajax-like-feature-rich-file-downloads/
     /// </summary>
-    [System.Web.Http.Authorize]
+    [System.Web.Mvc.Authorize]
     public abstract class FileDownloadController : System.Web.Mvc.Controller {
 
         private const string FILE_DOWNLOAD_COOKIE_NAME = "fileDownload";

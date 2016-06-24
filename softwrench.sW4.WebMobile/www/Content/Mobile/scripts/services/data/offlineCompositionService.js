@@ -39,7 +39,7 @@
                     idsToDelete.push("'" + datamap.id + "'");
                     queryArray.push(query);
                     if (application.applicationName === "attachment_") {
-                        doclinksArray.push({ compositionRemoteId: fields.doclinksid, hash: fields["docinfo_.urlparam5"], ownerTable: fields.ownertable, ownerId: fields.ownerid });
+                        doclinksArray.push({ compositionRemoteId: fields.doclinksid, hash: fields["docinfo_.urlparam5"], ownerTable: fields.ownertable, ownerId: fields.ownerid, docinfoid: fields.docinfoid });
                     }
                 }
                 //let´s delete the old compositions first, to avoid any chance of errors due to server side updates

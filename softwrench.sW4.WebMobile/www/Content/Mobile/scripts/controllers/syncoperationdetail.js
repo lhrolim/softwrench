@@ -88,7 +88,7 @@
                     .finally(function () {
                         $scope.data.isSynching = false;
                         loadingService.hide();
-//                        attachmentDataSynchronizationService.downloadAttachments();
+                        attachmentDataSynchronizationService.downloadAttachments();
                     });
             };
 

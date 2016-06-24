@@ -85,6 +85,7 @@
                 }
                 if (_crudContext.originalDetailItemDatamap) {
                     // the persistence entries do not get serialized correctly
+                    _crudContext.currentDetailItem = _crudContext.currentDetailItem || {};
                     _crudContext.originalDetailItemDatamap = angular.copy(_crudContext.originalDetailItemDatamap);
                     _crudContext.currentDetailItem.datamap = _crudContext.originalDetailItemDatamap;
                     setPreviousAndNextItems(savedCrudContext.currentDetailItem);

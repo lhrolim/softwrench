@@ -7,16 +7,16 @@ namespace softWrench.sW4.Data.API {
 
         public ApplicationMetadataSchemaKey Key { get; set; }
 
-        public String Title { get; set; }
+        public string Title { get; set; }
 
         public IDictionary<string, string> CustomParameters { get; set; }
         
         public string CommandId { get; set; }
 
-        public String ParentId { get; set; }
+        public string ParentId { get; set; }
 
-        public String ParentApplication { get; set; }
+        public string ParentApplication { get; set; }
 
-        public String ParentSchemaId { get; set; }
+        public string ParentSchemaId { get; set; }
     }
 }

@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
-using cts.commons.persistence;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using log4net;
@@ -22,7 +23,6 @@ using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using r = softWrench.sW4.Util.ReflectionUtil;
@@ -278,6 +278,39 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 }
             }
         }
+
+        public async Task<Tuple<byte[], string>> DownloadViaHttpByIdReturningMime(string docInfoId) {
+            var file = AttachmentDao.ById(docInfoId);
+            var fileName = (string)file.GetAttribute("document");
+            var docinfoURL = (string)file.GetAttribute("urlname");
+            var finalURL = GetFileUrl(docinfoURL);
+            if (finalURL == null) {
+                return null;
+            }
+
+
+            using (var client = new HttpClient()) {
+                try {
+                    ServicePointManager.ServerCertificateValidationCallback +=
+                        (sender, certificate, chain, sslPolicyErrors) => true;
+
+                    ServicePointManager.Expect100Continue = true;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                                                           | SecurityProtocolType.Tls11
+                                                           | SecurityProtocolType.Tls12
+                                                           | SecurityProtocolType.Ssl3;
+                    var response = await client.GetAsync(finalURL);
+                    var filetype = response.Content.Headers.ContentType.MediaType;
+                    var fileBytes = await response.Content.ReadAsByteArrayAsync();
+                    return Tuple.Create(fileBytes, filetype);
+                } catch (Exception exception) {
+                    Log.ErrorFormat("Error Attachment Handler: {0} - {1}", exception.Message, exception.InnerException == null ? 
+                        "No Internal Error Message" : exception.InnerException.Message);
+                    return null;
+                }
+            }
+        }
+
 
         public Tuple<byte[], string> DownloadViaParentWS(string id, string parentId, string parentApplication, string parentSchemaId) {
 
