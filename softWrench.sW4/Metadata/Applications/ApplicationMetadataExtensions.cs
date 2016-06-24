@@ -75,7 +75,7 @@ namespace softWrench.sW4.Metadata.Applications {
         [CanBeNull]
         public static ApplicationSchemaDefinition SchemaByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName, ClientPlatform platform = ClientPlatform.Web,bool throwException = false) {
             try {
-                return application.Schemas().Values.Single(schema => (schema.Stereotype.ToString().EqualsIc(stereotypeName) && !schema.Abstract && !schema.IsPlatformSupported(platform)));
+                return application.Schemas().Values.Single(schema => (schema.Stereotype.ToString().EqualsIc(stereotypeName) && !schema.Abstract && schema.IsPlatformSupported(platform)));
             } catch (Exception) {
                 if (throwException) {
                     // More than one schema found of the specified type
