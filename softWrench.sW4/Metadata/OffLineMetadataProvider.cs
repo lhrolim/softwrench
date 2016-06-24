@@ -46,7 +46,7 @@ namespace softWrench.sW4.Metadata {
             return result;
         }
 
-        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchAssociationApps(InMemoryUser user) {
+        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchAssociationApps(InMemoryUser user, bool keepSyncSchema) {
             //TODO: cache
             var watch = Stopwatch.StartNew();
             var names = new List<Tuple<string, string>>();
@@ -94,11 +94,11 @@ namespace softWrench.sW4.Metadata {
                             "Application {0} | {1} is not available, things might go wrong on the offline application",
                             appNamedAsQualifier, appNamedAsEntity);
                     } else {
-                        result.Add(app.CloneSecuring(user));
+                        result.Add(app.CloneSecuring(user, keepSyncSchema));
                     }
 
                 } else {
-                    result.Add(app.CloneSecuring(user));
+                    result.Add(app.CloneSecuring(user, keepSyncSchema));
                 }
             }
 

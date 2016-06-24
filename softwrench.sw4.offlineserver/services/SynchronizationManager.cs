@@ -57,7 +57,7 @@ namespace softwrench.sw4.offlineserver.services {
             IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch;
             if (applicationToFetch == null) {
                 //let´s bring all the associations
-                applicationsToFetch = OffLineMetadataProvider.FetchAssociationApps(currentUser);
+                applicationsToFetch = OffLineMetadataProvider.FetchAssociationApps(currentUser,true);
             } else {
                 var app = MetadataProvider.Application(applicationToFetch);
                 applicationsToFetch = new List<CompleteApplicationMetadataDefinition>() { app };

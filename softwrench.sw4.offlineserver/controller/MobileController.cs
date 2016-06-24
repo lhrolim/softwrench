@@ -68,7 +68,7 @@ namespace softwrench.sw4.offlineserver.controller {
             //apply any user role constraints that would avoid bringing unwanted fields for that specific user.
             var securedMetadatas = topLevel.Select(metadata => metadata.CloneSecuring(user)).ToList();
 
-            var associationApps = OffLineMetadataProvider.FetchAssociationApps(user);
+            var associationApps = OffLineMetadataProvider.FetchAssociationApps(user,false);
             var compositonApps = OffLineMetadataProvider.FetchCompositionApps(user);
             var commandBars = user.SecuredBars(ClientPlatform.Mobile, MetadataProvider.CommandBars(platform: ClientPlatform.Mobile, includeNulls: false));
 

@@ -7,20 +7,21 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Metadata.Applications {
     public static class CompleteApplicationMetadataExtensions {
-
         /// <summary>
         /// retrieve a clone of the completemetadata, applying evental security restrictions associated for a given user
         /// </summary>
         /// <param name="originalMetadata"></param>
         /// <param name="user"></param>
+        /// <param name="keepSyncSchema"></param>
         /// <returns></returns>
         public static CompleteApplicationMetadataDefinition CloneSecuring(this CompleteApplicationMetadataDefinition originalMetadata,
-           InMemoryUser user) {
+           InMemoryUser user, bool keepSyncSchema=false) {
             var schemas = originalMetadata.SchemasList;
             var securedSchemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
 
             foreach (var applicationSchema in schemas) {
-                if (applicationSchema.IsWebPlatform() || applicationSchema.SchemaId.Equals(ApplicationMetadataConstants.SyncSchema)) {
+                var isSyncSchema = applicationSchema.SchemaId.Equals(ApplicationMetadataConstants.SyncSchema);
+                if (applicationSchema.IsWebPlatform() || (isSyncSchema&& !keepSyncSchema)) {
                     continue;
                 }
                 var securedMetadata = originalMetadata.ApplyPolicies(applicationSchema.GetSchemaKey(), user, ClientPlatform.Mobile, null);
