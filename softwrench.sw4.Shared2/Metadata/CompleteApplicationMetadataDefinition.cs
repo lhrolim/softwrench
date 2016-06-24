@@ -124,6 +124,10 @@ namespace softwrench.sW4.Shared2.Metadata {
             }
         }
 
+        public void AddSchema(ApplicationMetadataSchemaKey key, ApplicationSchemaDefinition schema) {
+            _schemas.Add(key,schema);
+            _schemasList.Add(schema);
+        }
 
         //Method to avoid serialization
         public virtual IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> Schemas() {

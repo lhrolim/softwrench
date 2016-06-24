@@ -73,7 +73,7 @@ namespace softWrench.sW4.Metadata {
         public static MetadataProviderInternalCache InternalCache {
             get; set;
         }
-        
+
         private const string Metadata = "metadata.xml";
         private const string StatusColor = "statuscolors.json";
         private const string ClassificationColor = "classificationcolors.json";
@@ -186,8 +186,9 @@ namespace softWrench.sW4.Metadata {
                 var entityName = app.Entity;
                 var entityMetadata = Entity(entityName);
                 if (isMobileEnabled() && app.IsMobileSupported()) {
-                    app.Schemas().Add(ApplicationMetadataSchemaKey.GetSyncInstance(),
-                        ApplicationSchemaFactory.GetSyncInstance(entityName, app.ApplicationName, app.IdFieldName, app.UserIdFieldName));
+                    app.AddSchema(ApplicationMetadataSchemaKey.GetSyncInstance(),
+                        ApplicationSchemaFactory.GetSyncInstance(entityName, app.ApplicationName, app.IdFieldName,
+                            app.UserIdFieldName));
                 }
                 foreach (var webSchema in app.Schemas()) {
                     var schema = webSchema.Value;
@@ -488,11 +489,11 @@ namespace softWrench.sW4.Metadata {
             try {
                 using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(data))) {
                     Save(memoryStream, internalFramework, path);
-                }                    
+                }
             } catch (Exception e) {
                 Log.Error("error saving metadata", e);
                 throw;
-            } finally {                
+            } finally {
             }
         }
 
@@ -503,7 +504,7 @@ namespace softWrench.sW4.Metadata {
                 _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
                 _swdbmetadataXmlInitializer.Validate(_commandBars);
 
-                var metadataPath = string.IsNullOrWhiteSpace(path) ? MetadataParsingUtils.GetPath(Metadata, internalFramework) : path; 
+                var metadataPath = string.IsNullOrWhiteSpace(path) ? MetadataParsingUtils.GetPath(Metadata, internalFramework) : path;
 
                 using (var stream = File.Create(metadataPath)) {
                     data.CopyTo(stream);
