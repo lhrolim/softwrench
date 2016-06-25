@@ -205,6 +205,8 @@ module.exports = function (grunt) {
                     "ionic.min.css": "ionic/release/css/ionic.min.css",
                     "ionautocomplete.min.css": "ion-autocomplete/dist/ion-autocomplete.min.css",
 
+                    "font-awesome.min.css": "font-awesome/css/font-awesome.min.css",
+
                     "ng-material-floating-button.css": "ng-material-floating-button/mfb/dist/mfb.min.css",
 
                     "skins/lightgray/skin.css": "tinymce-dist/skins/lightgray/skin.min.css",
@@ -216,10 +218,16 @@ module.exports = function (grunt) {
                     destPrefix: "www/Content/Vendor/fonts"
                 },
                 files: {
+                    "fontawesome-webfont.eot": "font-awesome/fonts/fontawesome-webfont.eot",
+                    "fontawesome-webfont.svg": "font-awesome/fonts/fontawesome-webfont.svg",
+                    "fontawesome-webfont.ttf": "font-awesome/fonts/fontawesome-webfont.ttf",
+                    "fontawesome-webfont.woff": "font-awesome/fonts/fontawesome-webfont.woff",
+
                     "ionicons.eot": "ionic/release/fonts/ionicons.eot",
                     "ionicons.svg": "ionic/release/fonts/ionicons.svg",
                     "ionicons.ttf": "ionic/release/fonts/ionicons.ttf",
                     "ionicons.woff": "ionic/release/fonts/ionicons.woff",
+
                     "tinymce.eot" : "tinymce-dist/skins/lightgray/fonts/tinymce.eot",
                     "tinymce.svg" : "tinymce-dist/skins/lightgray/fonts/tinymce.svg",
                     "tinymce.ttf" : "tinymce-dist/skins/lightgray/fonts/tinymce.ttf",
