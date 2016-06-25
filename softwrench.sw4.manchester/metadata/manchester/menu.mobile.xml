@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="vertical" indexitem="WO">
   <!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
-  <application id="WO" title="Work Order" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid" icon="ion-ios-gear"/>
+  <application id="WO" title="Work Order" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid" icon="fa-cog"/>
 </Menu>

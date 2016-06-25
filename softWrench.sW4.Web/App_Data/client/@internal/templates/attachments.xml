@@ -36,7 +36,7 @@
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
               <command id="picture" service="offlineAttachmentService" method="attachCameraPicture" 
-                       icon="ion-camera" label="Take Picture" />
+                       icon="fa-camera" label="Take Picture" />
             </commandgroup>
           </commandbars>
         </schema>

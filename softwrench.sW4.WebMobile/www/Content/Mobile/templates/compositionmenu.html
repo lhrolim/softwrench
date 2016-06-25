@@ -2,12 +2,12 @@
     <ion-content class="composition-menu-content" has-bouncing="false">
         <div class="list">
             
-            <a class="item icon ion-document" ng-click="loadTab()" target="_blank">
-                Main
+            <a class="item" ng-click="loadTab()" target="_blank">
+                <i class="fa fa-file-text-o"></i>&ensp;Main
             </a>
 
-            <a class="item icon {{getTabIcon(composition)}}" ng-repeat="composition in compositionMenus()" ng-click="loadTab(composition)" target="_blank">
-                {{composition.label}}
+            <a class="item" ng-repeat="composition in compositionMenus()" ng-click="loadTab(composition)" target="_blank">
+                <i class="fa {{getTabIcon(composition)}}"></i>&ensp;{{composition.label}}
             </a>
         </div>
     </ion-content>

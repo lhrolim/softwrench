@@ -5,65 +5,62 @@
         <ion-nav-bar class="bar-positive"
                      back-button-type="button-icon"
                      back-button-icon="ion-ios7-arrow-back"
-                     animation="nav-title-slide-ios7"
-                     >
-
-        </ion-nav-bar>
+                     animation="nav-title-slide-ios7"></ion-nav-bar>
         <ion-nav-view name="main"></ion-nav-view>
 
     </ion-side-menu-content>
 
     <ion-side-menu side="left">
         <ion-header-bar class="bar bar-header bar-assertive">
-            <h1 class="title">Menu</h1>
+            <h1 class="title"><i class="fa fa-times-o"></i>Menu</h1>
         </ion-header-bar>
 
         <ion-content has-header="true" has-bouncing="false">
 
             <ul class="list">
                 <!-- apps -->
-                <div ng-show="menuleafs().length" class="item item-divider icon ion-android-apps">
+                <div ng-show="menuleafs().length" class="item item-divider fa fa-th">
                     Applications
                 </div>
 
                 <ng-switch ng-repeat="leaf in menuleafs()" on="leaf.type">
                     <!-- container -->
                     <div ng-switch-when="MenuContainerDefinition" ng-init="collapsed = true" ng-click="collapsed = !collapsed">
-                        <div class="item app icon" ng-class="leaf.icon">
-                            &ensp;{{leaf.title}}&ensp;<span class="icon" ng-class="{ 'ion-arrow-down-b': collapsed, 'ion-arrow-up-b': !collapsed }"></span>
+                        <div class="item app">
+                            <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}&ensp;<span class="fa" ng-class="{ 'fa-caret-down': collapsed, 'fa-caret-up': !collapsed }"></span>
                         </div>
                         <div ng-show="!collapsed">
                             <!-- container's subitems -->
                             <a ng-repeat="subleaf in leaf.leafs"
                                ng-click="loadApplication(subleaf)" 
-                               class="item subleaf icon {{subleaf.icon}}">
-                                &ensp;{{subleaf.title}}
+                               class="item subleaf">
+                                <i class="fa" ng-class="subleaf.icon"></i>&ensp;{{subleaf.title}}
                             </a>
                         </div>
                     </div>
                     <!-- exploded items -->
-                    <a ng-switch-default class="item icon {{leaf.icon}}" ng-click="loadApplication(leaf)">
-                        &ensp;{{leaf.title}}
+                    <a ng-switch-default class="item" ng-click="loadApplication(leaf)">
+                        <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}
                     </a>
                 </ng-switch>
                 
 
-                <div class="item item-divider icon ion-android-archive">
-                    Admin
+                <div class="item item-divider">
+                    <i class="fa fa-cogs"></i>&ensp;Admin
                 </div>
 
-                <a class="item icon ion-refresh" ng-click="loadAction('main.home')">&nbsp;Synchronization</a>
+                <a class="item" ng-click="loadAction('main.home')"><i class="fa fa-refresh"></i>&ensp;Synchronization</a>
 
                 <!-- TODO: make audit presence configurable -->
                 <!--<a class="item icon ion-locked" ng-click="loadAction('main.audit.applicationselect')">&nbsp;Audit</a>-->
                 
-                <a class="item icon ion-gear-a" ng-click="loadAction('main.settings')">&nbsp;Settings</a>
+                <a class="item" ng-click="loadAction('main.settings')"><i class="fa fa-cog"></i>&ensp;Settings</a>
 
-                <div class="item item-divider icon ion-person">
-                    User
+                <div class="item item-divider">
+                    <i class="fa fa-user"></i>&ensp;User
                 </div>
 
-                <a class="item icon ion-log-out" ng-click="logout()">&nbsp;Logout</a>
+                <a class="item" ng-click="logout()"><i class="fa fa-sign-out"></i>&ensp;Logout</a>
 
 
                 <!--<a ui-sref="main.home" class="item" ng-click="toggleMenu()">Home</a>

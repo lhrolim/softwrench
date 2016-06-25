@@ -2,7 +2,7 @@
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="vertical" indexitem="WO">
   <application id="WO" title="Work Order" ref="workorder" schema="list" icon="fa-wrench"/>
 
-  <container title="Inventory" id="Inventory" role="inventory" icon="ion-cube" >
+  <container title="Inventory" id="Inventory" role="inventory" icon="fa-cube" >
     <application id="IN"  schema="invbalancesList"          title="Inventory Grid"     ref="invbalances"          icon="fa-table" />
     <application id="IRG" schema="invIssueList"             title="Issues and Returns" ref="invissue"             icon="fa-exchange" />
     <application id="ITG" schema="matrectransTransfersList" title="Inventory Transfer" ref="matrectransTransfers" icon="fa-long-arrow-right" />
