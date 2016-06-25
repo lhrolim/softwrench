@@ -9,7 +9,7 @@
     <application name="attachment" title="Attachments" entity="DOCLINKS">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
-        <property key ="icon.composition.tab" value="fa fa-paperclip ion-paperclip"/>
+        <property key ="icon.composition.tab" value="fa fa-paperclip"/>
         <property key ="add.button.label" value="Add Attachment"/>
       </properties>
       <schemas>

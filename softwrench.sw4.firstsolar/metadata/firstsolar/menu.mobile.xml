@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="vertical" indexitem="WO">
 
-  <container title="Work Order" id="workorder" icon="ion-wrench">
-    <application id="WO" title="Assigned to Me" ref="workorder" schema="list" icon="ion-filing"/>
-    <application id="OWO" title="Other" ref="otherworkorder" schema="list" icon="ion-filing"/>
+  <container title="Work Order" id="workorder" icon="fa-wrench">
+    <application id="WO" title="Assigned to Me" ref="workorder" schema="list" icon="fa-table"/>
+    <application id="OWO" title="Other" ref="otherworkorder" schema="list" icon="fa-table"/>
   </container>
 </Menu>

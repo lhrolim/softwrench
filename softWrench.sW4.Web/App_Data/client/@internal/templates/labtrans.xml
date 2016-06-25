@@ -126,7 +126,7 @@
   <applications>
     <application name="labtrans" entity="labtrans" title="Labor">
       <properties>
-        <property key ="icon.composition.tab" value="fa fa-clock-o ion-android-time"/>
+        <property key ="icon.composition.tab" value="fa fa-clock-o"/>
       </properties>
 
       <filters>
