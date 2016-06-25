@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, ionic) {
     "use strict";
 
-    function loadingService($ionicLoading, $q, $timeout) {
+    function loadingService($ionicLoading, $q, $timeout, $ionicPlatform) {
         //#region Utils
 
         const loadingOptions = {
@@ -9,6 +9,9 @@
             template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Loading<span>",
             animation: "fade-in",
         };
+
+
+      
 
 
         //#endregion
@@ -33,13 +36,18 @@
             hide
 
         };
+
+        $ionicPlatform.registerBackButtonAction(e=> {
+            service.hide();
+        }, 501);
+
         return service;
         //#endregion
     }
 
     //#region Service registration
 
-    mobileServices.factory("loadingService", ["$ionicLoading", "$q", "$timeout", loadingService]);
+    mobileServices.factory("loadingService", ["$ionicLoading", "$q", "$timeout", "$ionicPlatform", loadingService]);
 
     //#endregion
 

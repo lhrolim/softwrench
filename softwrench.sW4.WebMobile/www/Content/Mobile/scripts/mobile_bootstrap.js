@@ -124,6 +124,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
         });
 
+
     }])
 //#endregion
 

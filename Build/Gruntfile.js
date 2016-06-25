@@ -353,9 +353,9 @@ module.exports = function (grunt) {
                 },
 
                 babelPreprocessor: {
-                       options: {
-                           "presets": resolvedPresets
-                      }
+                    options: {
+                        "presets": resolvedPresets
+                    }
                 },
 
                 ngHtml2JsPreprocessor: {
@@ -375,8 +375,17 @@ module.exports = function (grunt) {
                 ]
             },
             target: {}
-        }
+        },
         //#endregion
+
+        rename: {
+            build: {
+                files: [
+                    { src: [''], dest: '' },
+                ]
+            }
+        }
+
 
     });
 
@@ -388,6 +397,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
+    grunt.loadNpmTasks("grunt-contrib-rename");
     grunt.loadNpmTasks("grunt-karma");
     require("load-grunt-tasks")(grunt);
 

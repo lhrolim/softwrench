@@ -6,11 +6,11 @@
     "$q", "$log", "$rootScope", "swdbDAO",
     "metadataModelService", "offlineSchemaService", "offlineCompositionService",
     "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
-    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService","menuModelService","loadingService",
+    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService","menuModelService","loadingService","offlineAttachmentService",
     function ($q, $log, $rootScope, swdbDAO,
     metadataModelService, offlineSchemaService, offlineCompositionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
-    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService,menuModelService,loadingService) {
+    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService,menuModelService,loadingService,offlineAttachmentService) {
 
         // ReSharper disable once InconsistentNaming
         var internalListContext = {
@@ -161,7 +161,7 @@
                     return routeService.go("main.cruddetail.compositionlist");
                 }
 
-                return offlineCompositionService.loadComposition(crudContext.currentDetailItem, tab).then(function (compositionItems) {
+                return offlineCompositionService.loadCompositionList(crudContext.currentDetailItem, tab).then(function (compositionItems) {
                     crudContext.composition.currentTab = tab;
                     crudContext.composition.itemlist = compositionItems;
                     crudContext.composition.currentListSchema = tab.schema.schemas.list;
@@ -172,9 +172,16 @@
                 });
             },
 
+            //TODO: move to offlinecompositionservice perhaps?
             loadCompositionDetail: function (item) {
                 const crudContext = crudContextHolderService.getCrudContext();
-                const fields = this.getCompositionDetailSchema().displayables;
+                const compositionDetailSchema = this.getCompositionDetailSchema();
+                const fields = compositionDetailSchema.displayables;
+                if (compositionDetailSchema.applicationName === "attachment") {
+                    return offlineAttachmentService.loadRealAttachment(item.document,item.docinfoid);
+                }
+
+
                 datamapSanitizationService.enforceNumericType(item, fields);
                 //for compositions item will be the datamap itself
                 crudContext.composition.currentDetailItem = item;

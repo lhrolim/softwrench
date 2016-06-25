@@ -70,16 +70,17 @@
 
             $q.all(promisesToExecute.map(p => p.promise)).then(function (results) {
                 const updateQueriesObject = [];
-                for (let i = 0; i < promiseDownloadBuffer.length; i++) {
+                for (let i = 0; i < promisesToExecute.length; i++) {
                     const result = results[i];
-                    if (!result) {
+                    const localFileId = promisesToExecute[i].id;
+                    if (!result || !result.data) {
                         log.warn("server returned with a null file result... saving a error file to prevent downloading");
-                        const queryObj = { query: entities.Attachment.UpdatePendingAttachment, args: ["error", "error", promiseDownloadBuffer[i].id] }
+                        const queryObj = { query: entities.Attachment.UpdatePendingAttachment, args: ["error", "error", localFileId] }
                         updateQueriesObject.push(queryObj);
                     } else {
-                        log.warn("server returned with a null file result... will");
+                        log.info("storing attachment for localid {0} ".format(localFileId));
                         const data = result.data;
-                        const queryObj = { query: entities.Attachment.UpdatePendingAttachment, args: [data.content, data.mimeType, promiseDownloadBuffer[i].id] }
+                        const queryObj = { query: entities.Attachment.UpdatePendingAttachment, args: [data.content, data.mimeType, localFileId] }
                         updateQueriesObject.push(queryObj);
                     }
                     

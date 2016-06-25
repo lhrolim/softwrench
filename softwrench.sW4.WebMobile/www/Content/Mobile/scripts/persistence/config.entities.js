@@ -138,7 +138,7 @@
             parentId: "TEXT", // local id of the ROOT entity
             compositionRemoteId: "TEXT", // the remoteId of the composition to link
             docinfoRemoteId: "TEXT", // the remoteId of the composition to link
-            path: "TEXT", // local file system path to the saved file (should be in an external storage directory),
+            path: "TEXT", // local file system path to the saved file (should be in an external storage directory), used to cache access to ios devices
             compressed: "BOOL", // whether or not the file is compressed
             content: "TEXT", // base64 encoded content,
             mimetype:"TEXT" //mimetype of the file
@@ -149,12 +149,17 @@
         entities.Attachment.CreateNewBlankAttachments = "insert into Attachment ('application','parentId','compositionRemoteId','docinfoRemoteId','id') values (?,?,?,?,?)";
         //brings the attachments that need to be syncrhonized to the server. The ones which have a compositionRemoteId already point to a downloaded composition, and thus do not require to be uploaded
         entities.Attachment.ByApplicationAndIds = "select id,parentId,content from Attachment where application = ? and parentId in (?) and compositionRemoteId is null";
+        
         /**
          * query to fetch list of attachments which are pending synchronization against the server side
          */
         entities.Attachment.PendingAttachments = "select id,docinfoRemoteId from Attachment where (path is null and content is null) and compositionRemoteId is not null";
 
         entities.Attachment.UpdatePendingAttachment = "update Attachment set content =? , mimetype=? where id =?";
+
+        entities.Attachment.UpdateAttachmentPath = "update Attachment set path =? where docinfoRemoteId =?";
+        
+        entities.Attachment.ByDocInfoId = "select content,mimetype,path from Attachment where docinfoRemoteId = ?";
 
         //('application','datamap','pending','isDirty','remoteId','rowstamp','id') values (:p0,:p1,0,0,:p2,:p3,:p4)
 

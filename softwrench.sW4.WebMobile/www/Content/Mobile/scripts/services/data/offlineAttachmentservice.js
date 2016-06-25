@@ -1,7 +1,7 @@
 ﻿(function (angular, mobileServices) {
     "use strict";
 
-    function offlineAttachmentService($log, cameraService, $cordovaFile, fileConstants, crudContextHolderService, swdbDAO, offlineSchemaService) {
+    function offlineAttachmentService($log, $q, cameraService, $cordovaFile, fileConstants, crudContextHolderService, swdbDAO, offlineSchemaService, entities, loadingService, swAlertPopup) {
         //#region Utils
         const config = {
             newAttachmentFieldName: "newattachment",
@@ -18,6 +18,113 @@
         function createAttachmentEntity(attachment) {
             return swdbDAO.instantiate("Attachment", attachment).then(a => swdbDAO.save(a));
         }
+
+
+        function base64ToBlob(b64Data, contentType, sliceSize) {
+            contentType = contentType || "";
+            sliceSize = sliceSize || 512;
+            const byteCharacters = atob(b64Data);
+            const byteArrays = [];
+            for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                const slice = byteCharacters.slice(offset, offset + sliceSize);
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            const blob = new Blob(byteArrays, { type: contentType });
+            return blob;
+        }
+
+        function createFile(fileName, base64Data, mimeType) {
+
+            var deferred = $q.defer();
+            const log = $log.get("attachmentService#createFile", ["attachment"]);
+
+            window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024, function (fs) {
+                log.debug('file system open directory: ' + fs.name);
+
+                fs.root.getFile(fileName, { create: true, exclusive: false }, function (fileEntry) {
+
+                    fileEntry.createWriter(function (fileWriter) {
+                        fileWriter.onwriteend = function () {
+                            log.info("Successful file read...");
+                            deferred.resolve(fileEntry);
+                        };
+                        fileWriter.onerror = function (e) {
+                            deferred.reject();
+                        };
+                        fileWriter.write(base64ToBlob(base64Data, mimeType));
+                    });
+
+                }, ()=>deferred.reject());
+
+            });
+
+            return deferred.promise;
+
+            // Creates a new file or returns the file if it already exists.
+
+        }
+
+        function createAndLoadTempFile(fileName, attachment, docinfoId) {
+            const deferred = $q.defer();
+
+            const mimeType = attachment.mimetype;
+            const cachedPath = attachment.path;
+
+            const creationPromise = cachedPath ? $q.when({
+                toInternalURL: function () {
+                    return attachment.path;
+                }
+            }) : createFile(fileName, attachment.content, mimeType);
+            const log = $log.get("attachmentService#createAndLoadTempFile", ["attachment"]);
+
+            creationPromise.then(fileEntry => {
+                var path = fileEntry.toURL();
+                
+                // if(ionic.Platform.isIOS()) {
+                // TODO: might not be the optmimal way to open office docs. Use: https://github.com/pwlin/cordova-plugin-fileopenener2/issues/60
+                const ref = window.open(path, "_blank", "location=yes,hidden=no,closebuttoncaption=Close");
+                ref.addEventListener("loadstop", evt => deferred.resolve());
+                ref.addEventListener("loaderror", evt => deferred.reject(evt));
+                    
+                /*} else {
+                    cordova.plugins.fileOpener2.open(path, mimeType, {
+                        error: () => {
+                            deferred.reject();
+                            log.warn("couldn´t open file {0} at location {1}".format(docinfoId,path));
+                        },
+                        success: () => {
+                            if (cachedPath) {
+                                log.info("opening cached file at location {0}".format(path));
+                                deferred.resolve();
+                                return;
+                            }
+
+                            var queryObj = {
+                                query: entities.Attachment.UpdateAttachmentPath,
+                                args: [path, docinfoId]
+                            }
+                            swdbDAO.executeQuery(queryObj).then(() => {
+                                //updating attachment path so that next time we can (try) load the same file.
+                                log.debug("updating cached location {0} for file {1}".format(path, docinfoId));
+                                deferred.resolve();
+                            });
+                        },
+                    });
+                }*/
+            }).catch(
+                error=> deferred.reject(error)
+            );
+
+            return deferred.promise;
+
+        }
+
+
         //#endregion
 
         //#region Public methods
@@ -122,12 +229,79 @@
                 .catch(e => log.warn(`Could not delete ${attachmentPath}`, e));
         }
 
+        function loadRealAttachment(fileName, docinfoId) {
+            const log = $log.get("attachmentService#loadRealAttachment", ["attachment"]);
+            const queryObj = {
+                query: entities.Attachment.ByDocInfoId,
+                args: [String(docinfoId)]
+            };
+            const deferred = $q.defer();
+            loadingService.showDefault();
+            swdbDAO.executeQuery(queryObj).then(result => {
+                if (result.length === 0) {
+                    deferred.reject();
+                    return;
+                }
+                var attachment = result[0];
+
+                var mimeType = attachment.mimetype;
+                var extension = mimeType.substring(mimeType.indexOf("/") + 1);
+
+                if (isRippleEmulator()) {
+                    swAlertPopup.show({
+                        title: "File Cannot be openend on Ripple" //TODO: maybe create a message for the popup?
+                    });
+                    deferred.resolve();
+                    loadingService.hide();
+                    return;
+                }
+
+                if (ionic.Platform.isAndroid()) {
+                    cordova.plugins.fileOpener2.openBase64(fileName, extension, attachment.content, mimeType, {
+                        error: function (e) {
+                            loadingService.hide();
+                            deferred.reject();
+                        },
+                        success: function () {
+                            loadingService.hide();
+                            deferred.resolve();
+                        }
+                    });
+                } else if (ionic.Platform.isIOS()) {
+                    // For IOS we need to create a temp file and load it afterwards, since there´s no plugin support for loading it straight from base64 string
+                    //trying to open already cached temp file
+                    createAndLoadTempFile(fileName, attachment, docinfoId)
+                        .then(() => deferred.resolve())
+                        .catch(() => {
+                            if (!attachment.path) {
+                                //file failed to create/load and
+                                log.warn("could not open file load file {0}".format(docinfoId));
+                                deferred.reject();
+                                return;
+                            }
+                            //attachment path is no longer valid... cleaning and trying again
+                            log.warn("could not open file at path {0}, creating temporary one... ".format(path));
+                            attachment.path = null;
+                            createAndLoadTempFile(fileName, attachment, docinfoId)
+                                .then(() => deferred.resolve())
+                                .catch(() => deferred.reject())
+                                .finally(() => loadingService.hide());
+                        }).finally(() => loadingService.hide());
+                }
+
+            });
+
+            return deferred.promise;
+
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
             // general
             getAttachment,
+            loadRealAttachment,
             // file
             attachCameraPictureAsFile,
             saveAttachmentAsFile,
@@ -142,7 +316,7 @@
 
     //#region Service registration
     mobileServices.factory("offlineAttachmentService",
-        ["$log", "cameraService", "$cordovaFile", "fileConstants", "crudContextHolderService", "swdbDAO", "offlineSchemaService", offlineAttachmentService]);
+        ["$log", "$q", "cameraService", "$cordovaFile", "fileConstants", "crudContextHolderService", "swdbDAO", "offlineSchemaService", "offlineEntities", "loadingService", "swAlertPopup", offlineAttachmentService]);
     //#endregion
 
 })(angular, mobileServices);

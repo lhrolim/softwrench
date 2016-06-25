@@ -6,6 +6,7 @@
   <content src="layout.html" />
   <access origin="*" />
   <allow-navigation href="*" />
+  <!--  <access origin="cdvfile://*" />-->
   <preference name="SplashScreen" value="screen" />
   <preference name="AutoHideSplashScreen" value="false" />
   <preference name="SplashScreenDelay" value="10000" />
@@ -109,4 +110,5 @@
   <plugin name="cordova-plugin-compat" version="1.0.0" />
   <plugin name="cordova-plugin-vs-taco-support" version="0.2.0" src="https://github.com/Microsoft/cordova-plugin-vs-taco-support.git" />
   <plugin name="com.ionic.keyboard" version="1.0.4" />
+  <plugin name="cordova-plugin-file-opener2" version="2.0.2" src="https://github.com/emilhuseynli/cordova-plugin-file-opener2" />
 </widget>
