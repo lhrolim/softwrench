@@ -69,8 +69,8 @@
                         // is online: prompt user for confirmation
                         return $ionicPopup.confirm({
                                 title: "Logout",
-                                template: "A synchronization will be performed before the logout, but some data might be lost.<br>" +
-                                          "A synchronization will be required after the next login.<br>" +
+                                template: "A synchronization will be performed before the logout, but some data might be lost. " +
+                                          "A synchronization will be required after the next login. " +
                                           "Are you sure you want to logout?"
                             })
                             .then(function(res) {

@@ -10,8 +10,8 @@
             authkey: "security:auth:user",
             previouskey: "security:auth:previous",
             message: {
-                sessionexpired: "Your session has expired. Please log in to resume your activities.",
-                unauthorizedaccess: "You're not authorized to access this resource." +
+                sessionexpired: "Your session has expired. Please log in to resume your activities. ",
+                unauthorizedaccess: "You're not authorized to access this resource. " +
                                     "Contact support if you're receiving this message in error."
             }
         };
