@@ -134,7 +134,7 @@
       </filters>
       
       <schemas>
-        <schema id="compositionlist" title="Labor List" stereotype="compositionlist">
+        <schema id="compositionlist" title="Labor List" stereotype="compositionlist" platform="web">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="laborcode" label="Labor" qualifier="title"/>
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
@@ -150,7 +150,7 @@
           <event type="onedit.validation" service="labtransService" method="validateEdit"/>
         </schema>
 
-        <schema id="list" stereotype="list.selection" title="Labor Reporting Grid">
+        <schema id="list" stereotype="list.selection" title="Labor Reporting Grid" platform="web">
           <properties>
             <property key="list.selectionstyle" value="multiple"/>
             <property key="list.click.service" value="labtransService.listClick"/>
@@ -420,57 +420,70 @@
             </field>
           </section>
         </schema>
+        
+        <!-- #region: mobile -->
 
-        <schema id="detail" stereotype="detail" title="Labor Reporting" platform="mobile">
+        <list title="Labor List" stereotype="compositionlist" platform="mobile">
           <field attribute="labtransid" hidden="true"/>
-          <field attribute="orgid" hidden="true"/>
-          <field attribute="siteid" hidden="true"/>
-          <field attribute="laborcode" hidden="true" />
-          <field attribute="transtype" hidden="true" />
-          <field attribute="genapprservreceipt" hidden="true"/>
-          <field attribute="refwo" hidden="true" />
-          <field attribute="enterby" hidden="true" />
-          <field attribute="laborcraftrate_.rate" hidden="true" attributeToServer="payrate"/>
+          <field attribute="laborcode" label="Labor" qualifier="title"/>
+          <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
+          <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
+          <field attribute="transdate" label="Created Date"/>
+          <field attribute="genapprservreceipt" label="Approved?"/>
+          <field attribute="linecost" label="Line Cost">
+            <renderer type="default" params="formatter=money"/>
+          </field>
+        </list>
+        
+        <detail stereotype="detail" title="Labor Reporting" platform="mobile">
+          <event type="onload" service="laborService" method="onDetailLoad" />
+
+          <field attribute="labtransid" hidden="true" />
+          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.fields.orgid"/>
+          <field attribute="siteid" hidden="true" defaultexpression="$.parentdata.fields.siteid"/>
+          
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
-          <field label="Labor" attribute="laborcode" showexpression="!@_iscreation"/>
-          <field label="Craft" attribute="craft" showexpression="!@_iscreation"/>
-          <field attribute="linecost" label="Line Cost" readonly="true" showexpression="!@_iscreation"/>
-          <field label="Start Date" requiredexpression="true" attribute="startdate">
-            <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
-            <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
+          
+          <field label="Labor" attribute="laborcode" readonly="true" requiredexpression="true" />
+          <field label="Pay Rate" attribute="payrate" readonly="true" requiredexpression="true"/>
+          <field label="Craft" attribute="craft" readonly="true" requiredexpression="true" />
+          <field label="Line Cost" attribute="linecost" readonly="true" requiredexpression="true" />
+
+          <field attribute="transtype" label="Work Type" 
+                 requiredexpression="true" readonly="true" 
+                 default="Work">
           </field>
-          <field label="Start Time" attribute="starttime" >
-            <renderer type="time" params="format=HH:mm;showdate=false" />
-            <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
-          </field>
-          <field label="End Date" attribute="finishdate">
-            <renderer type="date" params="format=MM/dd/yyyy;showtime=false" />
-            <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
-          </field>
-          <field label="End Time" attribute="finishtime" >
-            <renderer type="time" params="format=HH:mm;showdate=false" />
-            <event type="afterchange" service="labtransService" method="afterDateTimeChange"/>
+          
+          <field label="Start Date" attribute="startdate" default="@now" requiredexpression="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=true;allowfuture=false" />
           </field>
           <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8">
-            <event type="afterchange" service="labtransService" method="updateLineCost"/>
+            <event type="afterchange" service="laborService" method="updateLineCost"/>
           </field>
-          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.fields.glaccount">
-            <renderer type="lookup"/>
-          </association>
-        </schema>
+
+          <field attribute="gldebitacct" defaultexpression="$.parentdata.fields.glaccount" requiredexpression="false" hidden="true" readonly="true" />
+          <field attribute="location" defaultexpression="$.parentdata.fields.location" requiredexpression="false" hidden="true" readonly="true" />
+          <field attribute="assetnum" defaultexpression="$.parentdata.fields.assetnum" requiredexpression="false"  hidden="true" readonly="true" />
+          
+        </detail>
       </schemas>
+
+      <!-- #endregion -->
     
     </application>
 
     <application entity="laborcraftrate" name="laborcraftrate" title="Craft">
       <schemas>
+
+        <!-- #region: mobile -->
         <list platform="mobile">
           <field attribute="craft" />
           <field attribute="rate" />
           <field attribute="laborcode" />
           <field attribute="orgid" />
         </list>
+        <!-- #endregion -->
       </schemas>
     </application>
   </applications>

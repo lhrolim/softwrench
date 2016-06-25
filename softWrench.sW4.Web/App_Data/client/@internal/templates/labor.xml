@@ -30,11 +30,11 @@
         <property key="mobile.fetchlimit" value="300"/>
       </properties>
       <schemas>
-        <list>
+        <list platform="web">
           <field attribute="laborcode" label="Labor" qualifier="title"/>
           <field attribute="person_.displayname" hidden="true"/>
         </list>
-        <detail>
+        <detail platform="web">
           <field attribute="laborid" label="Labor"  requiredexpression="true" />
           <field attribute="orgid" label="Labor"  requiredexpression="true" />
           <field attribute="laborcode" label="Labor"  requiredexpression="true" />
@@ -42,6 +42,18 @@
           <field hidden="true" label="Person" attribute="person_.displayname" />
           <association label="Person" target="personid" labelfield="person.displayname" />
         </detail>
+        
+        <!-- #region: mobile -->
+        <list platform="mobile">
+          <!--<field attribute="laborid" />-->
+          <field attribute="orgid" />
+          <field attribute="laborcode" />
+          <field attribute="personid" />
+          <field attribute="worksite" />
+        </list>
+        <!-- #endregion -->
+        
+        
       </schemas>
     </application>
   </applications>

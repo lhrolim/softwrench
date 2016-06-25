@@ -29,16 +29,10 @@ angular.module('sw_layout')
             }
             return $.inArray(id, commandSchema.toExclude) == -1 && $.inArray(id, commandSchema.toInclude) == -1;
         },
-        //tabId parameter can be used in showexpression, do not remove it
+
+        // tabId parameter can be used in showexpression, do not remove it
         isCommandHidden: function (datamap, schema, command, tabId) {
-            if (command.remove) {
-                return true;
-            }
-            var expression = command.showExpression;
-            if (expression == undefined || expression === "") {
-                return false;
-            }
-            return !expressionService.evaluate(expression, datamap, { schema: schema }, null);
+            return commandCommonsService.isCommandHidden(datamap, schema, command, tabId);
         },
 
         isCommandEnabled: function (datamap, schema, command, tabId) {

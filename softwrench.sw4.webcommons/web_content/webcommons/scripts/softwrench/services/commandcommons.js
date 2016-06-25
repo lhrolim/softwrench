@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function commandCommonsService($log) {
+    function commandCommonsService($log, expressionService) {
         
         //#region Public methods
 
@@ -38,11 +38,24 @@
             return commands;
         }
 
+        //tabId parameter can be used in showexpression, do not remove it
+        function isCommandHidden(datamap, schema, command, tabId) {
+            if (command.remove) {
+                return true;
+            }
+            const expression = command.showExpression;
+            if (expression == undefined || expression === "") {
+                return false;
+            }
+            return !expressionService.evaluate(expression, datamap, { schema: schema }, null);
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
-            getCommands
+            getCommands,
+            isCommandHidden
         };
         return service;
         //#endregion
@@ -50,7 +63,7 @@
 
     //#region Service registration
 
-    angular.module("webcommons_services").factory("commandCommonsService", ["$log", commandCommonsService]);
+    angular.module("webcommons_services").factory("commandCommonsService", ["$log", "expressionService", commandCommonsService]);
 
     //#endregion
 

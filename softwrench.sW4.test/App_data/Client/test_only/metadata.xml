@@ -768,11 +768,13 @@
         <property key="mobile.userInteractionEnabled" value="false"/>
       </properties>
       <schemas>
-        <list>
+        <schema id="compositionlist" platform="mobile"></schema>
+        
+        <list platform="web">
           <field attribute="laborcode" label="Labor" qualifier="title"/>
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
         </list>
-        <detail>
+        <detail platform="web">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
@@ -829,10 +831,10 @@
         <property key="mobile.userInteractionEnabled" value="false"/>
       </properties>
       <schemas>
-        <list>
+        <list platform="web">
           <field attribute="laborcode" label="Labor" qualifier="title"/>
         </list>
-        <detail>
+        <detail platform="web">
           <field attribute="laborid" label="Labor"  requiredexpression="true" />
           <field attribute="orgid" label="Labor"  requiredexpression="true" />
           <field attribute="laborcode" label="Labor"  requiredexpression="true" />

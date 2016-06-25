@@ -27,6 +27,10 @@
         return {
 
             //#region delegateMethods
+            getCrudContext: function() {
+                return crudContextHolderService.getCrudContext();
+            },
+
             restoreState: function () {
                 const savedState = crudContextHolderService.restoreState();
                 if (savedState && savedState.itemlist && !savedState.currentDetailItem) {
@@ -132,6 +136,15 @@
                 }
                 const allDisplayables = tabsService.tabsDisplayables(detailSchema);
                 return allDisplayables;
+            },
+
+            currentCompositionTabByName: function(composition) {
+                return this.currentCompositionsToShow().find(c => c.attribute === composition);
+            },
+
+            currentCompositionSchemaById: function(composition, schemaId) {
+                const compositionMetadata = this.currentCompositionTabByName(composition);
+                return !compositionMetadata ? null : compositionMetadata.schema.schemas[schemaId];
             },
 
             loadTab: function (tab) {

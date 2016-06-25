@@ -128,8 +128,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
 
         private static ApplicationSchemaDefinition GetListSchema(ApplicationCompositionSchema applicationCompositionSchema, CompleteApplicationMetadataDefinition compositionApplication, ClientPlatform platform) {
             var collectionSchema = (ApplicationCompositionCollectionSchema)applicationCompositionSchema;
-            var listKey = new ApplicationMetadataSchemaKey(collectionSchema.CollectionProperties.ListSchema,
-                applicationCompositionSchema.RenderMode, platform);
+            var listKey = new ApplicationMetadataSchemaKey(collectionSchema.CollectionProperties.ListSchema, applicationCompositionSchema.RenderMode, platform);
             return compositionApplication.Schemas()[listKey];
         }
 

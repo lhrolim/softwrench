@@ -219,25 +219,13 @@ namespace softWrench.sW4.Web.Controllers {
             return Json(new UserReturningData(user));
         }
 
-
-
         internal class UserReturningData {
-            public bool Found {
-                get; set;
-            }
-            public string UserName {
-                get; set;
-            }
-            public string OrgId {
-                get; set;
-            }
-            public string SiteId {
-                get; set;
-            }
-
-            public long? UserTimezoneOffset {
-                get; set;
-            }
+            public bool Found { get; set; }
+            public string UserName { get; set; }
+            public string OrgId { get; set; }
+            public string SiteId { get; set; }
+            public string PersonId { get; set; }
+            public long? UserTimezoneOffset { get; set; }
 
             public UserReturningData(InMemoryUser user) {
                 if (user == null) {
@@ -247,6 +235,7 @@ namespace softWrench.sW4.Web.Controllers {
                     UserName = user.Login;
                     OrgId = user.OrgId;
                     SiteId = user.SiteId;
+                    PersonId = user.MaximoPersonId;
                     UserTimezoneOffset = user.TimezoneOffset;
                 }
             }

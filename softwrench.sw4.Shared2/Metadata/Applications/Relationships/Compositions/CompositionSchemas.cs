@@ -1,9 +1,9 @@
-﻿using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+﻿using Newtonsoft.Json;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions {
     public class CompositionSchemas {
         public CompositionSchemas() {
-
         }
 
         public CompositionSchemas(ApplicationSchemaDefinition detail, ApplicationSchemaDefinition list) {
@@ -17,6 +17,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         public ApplicationSchemaDefinition Print { get; set; }
 
+        [JsonIgnore]
         public ApplicationSchemaDefinition Sync { get; set; }
 
     }

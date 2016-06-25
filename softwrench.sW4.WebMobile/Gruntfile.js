@@ -608,8 +608,8 @@ module.exports = function (grunt) {
     grunt.registerTask("cleanall", ["clean:vendor", "clean:temp", "clean:pub"]);
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
     grunt.registerTask("tagsdevbuild", ["tags:buildTranspiledScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("devlocal", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "tagsdev"]);
-    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "babel:debug", "tagsdevbuild", "copy:build"]);
+    grunt.registerTask("devlocal", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", /*"sass:dev",*/ "tagsdev"]);
+    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", /*"sass:dev",*/ "babel:debug", "tagsdevbuild", "copy:build"]);
     grunt.registerTask("default", ["devlocal"]);
     //#endregion
 

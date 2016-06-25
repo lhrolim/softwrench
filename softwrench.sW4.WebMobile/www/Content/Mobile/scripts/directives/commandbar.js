@@ -1,14 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    class CommandBar {
-        constructor(commands) {
-            this.commands = commands;
-        }
-        get hasCommands() {
-            return angular.isArray(this.commands) && this.commands.length > 0;
-        }
-    }
+    
 
     angular.module("softwrench").directive("commandBar", [function () {
         const directive = {
@@ -24,11 +17,24 @@
 
             controller: ["$scope", "offlineCommandService", function ($scope, offlineCommandService) {
 
+                class CommandBar {
+                    constructor(commands) {
+                        this.commands = commands;
+                    }
+                    get hasActiveCommands() {
+                        return angular.isArray(this.commands) && 
+                            this.commands.length > 0 && 
+                            this.commands.some(c => !offlineCommandService.isCommandHidden($scope.datamap, $scope.schema, c));
+                    }
+                }
+
                 $scope.commandBar = new CommandBar([]);
 
                 $scope.getCommandBarStyleClass = () => window.replaceAll($scope.position, "\\.", "-");
 
                 $scope.executeCommand = command => offlineCommandService.executeCommand(command, $scope.schema, $scope.datamap);
+
+                $scope.isCommandHidden = command => !command || offlineCommandService.isCommandHidden($scope.datamap, $scope.schema, command);
                 
 
                 const init = () => {

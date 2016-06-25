@@ -20,7 +20,7 @@
                 if (showConfirmationMessage === undefined || showConfirmationMessage === true) {
                     return $ionicPopup.alert({
                         title: "{0} saved successfully".format(messageEntry),
-                    });
+                    }).then(() => item);
                 }
                 return item;
             });
@@ -36,9 +36,14 @@
                 const datamap = item.datamap;
                 const associationKey = compositionMetadata.associationKey;
                 datamap[associationKey] = datamap[associationKey] || [];
-                compositionItem[constants.localIdKey] = persistence.createUUID();
+
+                const isLocalCreate = !compositionItem[constants.localIdKey];
+                if (isLocalCreate) {
+                    compositionItem[constants.localIdKey] = persistence.createUUID();
+                }
+
                 if (compositionMetadata.associationKey === "attachment_") {
-                    return offlineAttachmentService.saveAttachment(null, compositionItem).then((attachmentObj) => {
+                    return offlineAttachmentService.saveAttachment(null, compositionItem).then( attachmentObj => {
                         compositionItem["#offlinehash"] = attachmentObj.id;
                         //this will be stored on the Attachement entity instead
                         delete compositionItem["newattachment"];
@@ -47,7 +52,13 @@
                     });
                 }
 
-                datamap[associationKey].push(compositionItem);
+                if (isLocalCreate) {
+                    datamap[associationKey].push(compositionItem);
+                } else {
+                    // TODO: when we allow update of remote compositions, change this to delete the corresponding CompositionDataEntry and then pushing to the array
+                    const itemPosition = datamap[associationKey].findIndex(e => e[constants.localIdKey] === compositionItem[constants.localIdKey]);
+                    datamap[associationKey][itemPosition] = compositionItem;
+                }
                 return doSave(applicationName, item, compositionMetadata.label);
             },
         }

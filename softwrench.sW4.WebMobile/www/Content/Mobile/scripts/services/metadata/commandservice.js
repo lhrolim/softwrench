@@ -48,15 +48,19 @@
             return q.promise;
         }
 
-        //#endregion
+        function isCommandHidden(datamap, schema, command) {
+            return commandCommonsService.isCommandHidden(datamap, schema, command);
+        }
 
+        //#endregion
 
         //#region Service Instance
         const service = {
             updateCommandBars,
             getCommands,
             initAndCacheFromDataBase,
-            executeCommand
+            executeCommand,
+            isCommandHidden
         };
         return service;
         //#endregion
