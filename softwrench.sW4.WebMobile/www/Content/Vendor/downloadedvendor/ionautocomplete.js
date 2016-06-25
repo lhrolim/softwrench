@@ -78,7 +78,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     '<input type="search" class="ion-autocomplete-search" ng-model="searchQuery" placeholder="{{placeholder}}"/>',
                     '</label>',
                     '<div class="ion-autocomplete-loading-icon" ng-if="showLoadingIcon && loadingIcon"><ion-spinner icon="{{loadingIcon}}"></ion-spinner></div>',
-                    '<button class="ion-autocomplete-cancel button button-clear">{{cancelLabel}}</button>',
+                    '<button class="ion-autocomplete-cancel button"><i class="icon ion-android-cancel"></i>&ensp;{{cancelLabel}}</button>',
                     '</div>',
                     '<ion-content class="has-header has-header" has-bouncing="false">',
                     '<ion-list>',
@@ -384,7 +384,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
     return {
         require: '?ngModel',
         restrict: 'E',
-        template: '<input ion-autocomplete type="text" readonly="readonly" class="ion-autocomplete item-text-wrap" autocomplete="off" />',
+        template: '<input ion-autocomplete type="text" class="ion-autocomplete item-text-wrap" autocomplete="off" />',
         replace: true
     }
 });

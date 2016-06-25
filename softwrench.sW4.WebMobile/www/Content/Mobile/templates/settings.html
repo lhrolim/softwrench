@@ -7,7 +7,7 @@
         
         <div class="settings-form list list-inset responsive-container lg">
             <label class="item item-input">
-                <input type="text" placeholder="URL" ng-model="settings.serverurl" autocapitalize="off" autocorrect="off" readonly="readonly">
+                <input type="url" placeholder="URL" ng-model="settings.serverurl" autocapitalize="off" autocorrect="off" readonly="readonly">
             </label>
         </div>
 
@@ -16,16 +16,16 @@
                 About
             </div>
             <div class="item item-text-wrap" ng-show="config.server">
-                Client name:&nbsp;{{config.server.client}}
+                Client Name:&nbsp;{{config.server.client}}
             </div>
             <div class="item item-text-wrap" ng-show="config.server">
-                Server environment:&nbsp;{{config.server.environment}}
+                Server Environment:&nbsp;{{config.server.environment}}
             </div>
             <div class="item item-text-wrap" ng-show="config.server">
-                Server version:&nbsp;{{config.server.version}}
+                Server Version:&nbsp;{{config.server.version}}
             </div>
             <div class="item item-text-wrap" ng-show="config.client">
-                App version:&nbsp;{{config.client.version}}
+                App Version:&nbsp;{{config.client.version}}
             </div>
             <div class="item item-text-wrap" ng-show="config.client && config.client.commit">
                 Commit:&nbsp;{{config.client.commit}}

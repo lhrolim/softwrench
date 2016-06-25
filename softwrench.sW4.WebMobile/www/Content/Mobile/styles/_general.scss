@@ -51,8 +51,18 @@
     font-size: 24px;
 }
 
-.bar .button .icon:before {
-    font-size: 24px !important;
+.bar {
+    .button {
+        background: none;
+
+        .icon:before {
+            font-size: 24px !important;
+        }
+
+        &.ion-autocomplete-cancel {
+            color: #000;
+        }
+    }
 }
 
 .menu {
@@ -63,6 +73,40 @@
     .subleaf {
         padding-left: 48px;
     }
+}
+
+.list-search-bar {
+    padding-top: 6px;
+    padding-bottom: 0;
+    width: calc(100% - 10px);
+}
+
+.composition.list {
+    .item {
+        .input-label, .output-label {
+            display: inline-block;
+        }
+
+        .input-label {
+            width: 45%;
+        }
+
+        .output-label {
+            padding: 7px 10px 7px 0;
+            width: calc(55% - 10px);
+        }
+    }
+}
+
+input[disabled], input[readonly]:not(.cloned-text-input), select[disabled], select[readonly], textarea[disabled], textarea[readonly]:not(.cloned-text-input) {
+    background-color: transparent;
+    cursor: not-allowed;
+    color: #aaa;
+}
+
+.input-label {
+    font-size: 14px;
+    font-weight: bold;
 }
 
 /* keeps side-menu open in tablets */

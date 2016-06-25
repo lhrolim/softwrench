@@ -2,19 +2,19 @@
 
     <ion-nav-buttons side="left">
         <!-- detail of specif syncoperation: back button -->
-        <button ng-if="!data.isLatestOperation" class="button button-clear" ng-click="goBack()">
+        <button ng-if="!data.isLatestOperation" class="button" ng-click="goBack()">
             <i class="ion-chevron-left"></i>
             Back
         </button>
         <!-- detail of latest syncoperation: toggle left-menu button -->
-        <button ng-if="data.isLatestOperation" class="button button-clear button-menu" menu-toggle="left">
+        <button ng-if="data.isLatestOperation" class="button button-menu" menu-toggle="left">
             <i class="icon ion-navicon"></i>
         </button>
     </ion-nav-buttons>
     
     <ion-nav-buttons side="right">
         <!-- detail of latest syncoperation: full sync button -->
-        <button ng-if="data.isLatestOperation" class="button button-clear sync-button" ng-click="fullSynchronize()" ng-disabled="data.isSynching">
+        <button ng-if="data.isLatestOperation" class="button sync-button" ng-click="fullSynchronize()" ng-disabled="data.isSynching">
             <i class="icon ion-loop"></i>
             Sync
         </button>
@@ -63,8 +63,8 @@
             <div ng-if="data.isLatestOperation" class="responsive-container lg">
 
                 <div class="row button-container">
-                    <button class="button button-positive button-full" ng-click="goToHistory()">
-                        Synchronization History
+                    <button class="button button-positive button-block" ng-click="goToHistory()">
+                        View Synchronization History
                     </button>
                 </div>
 

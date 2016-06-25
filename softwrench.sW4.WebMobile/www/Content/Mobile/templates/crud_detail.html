@@ -12,10 +12,10 @@
     <ion-header-bar class="bar-subheader bar-assertive" align-title="left">
 
         <div class="buttons" style="padding-left: 5px">
-            <button class="button icon ion-arrow-left-c" ng-show="shouldShowBack()" ng-click="navigateBack()">Back</button>
-            <button class="button icon ion-android-cancel" ng-show="hasDirtyChanges()" ng-click="cancelChanges()">Cancel</button>
+            <button class="button icon ion-arrow-left-c" ng-show="shouldShowBack()" ng-click="navigateBack()">&ensp;Back</button>
+            <button class="button icon ion-android-cancel" ng-show="hasDirtyChanges()" ng-click="cancelChanges()">&ensp;Cancel</button>
 
-            <button class="button icon ion-plus" ng-click="addCompositionItem()" ng-if="!isOnMainTab()" ng-show="!hasDirtyChanges()">Add</button>
+            <button class="button icon ion-plus" ng-click="addCompositionItem()" ng-if="!isOnMainTab()" ng-show="!hasDirtyChanges()">&ensp;Add</button>
         </div>
 
         <!-- empty title to position the buttons correctly -->
@@ -25,7 +25,7 @@
             <button class="button icon ion-arrow-left-a" ng-click="navigatePrevious()" ng-if="showNavigation()"></button>
             <button class="button icon ion-arrow-right-a" ng-click="navigateNext()" ng-if="showNavigation()"></button>
             <button class="button icon ion-android-apps" ng-click="expandCompositions($event)" ng-if="!hasDirtyChanges() && hasAnyComposition()"></button>
-            <button class="button icon ion-android-done" ng-click="saveChanges()" ng-if="hasDirtyChanges()">Save</button>
+            <button class="button icon ion-android-done" ng-click="saveChanges()" ng-if="hasDirtyChanges()">&ensp;Save</button>
         </div>
 
     </ion-header-bar>

@@ -15,7 +15,7 @@
             const showMessage = function() {
                 const message = $stateParams.message;
                 if (!!message) {
-                    showAlert("Atention", message);
+                    showAlert("Attention", message);
                 }
             };
             $scope.login = function () {
