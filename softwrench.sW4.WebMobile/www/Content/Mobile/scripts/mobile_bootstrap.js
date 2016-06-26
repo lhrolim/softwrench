@@ -134,6 +134,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
     // center page titles
     $ionicConfigProvider.navBar.alignTitle("center");
 
+
     $logProvider.debugEnabled(true);
 
     // Ionic uses AngularUI Router which uses the concept of states

@@ -203,7 +203,7 @@
                     .then(batch => batchService.submitBatches([batch])
                     .then(batchResults => {
                         return handleDeletableDataEntries(batchResults)
-                            .then(() => dataSynchronizationService.syncData(item))
+                            .then(() => dataSynchronizationService.syncSingleItem(item))
                             .then(downloadResults => {
                                 var dataCount = getDownloadDataCount(downloadResults);
                                 return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
