@@ -3,29 +3,29 @@
 
     modules.webcommons.factory('dispatcherService', ["$injector", "$log", "$q", "$rootScope", function ($injector, $log, $q, $rootScope) {
     var loadService = function(service, method) {
-        var log = $log.getInstance('dispatcherService#loadService');
+        const log = $log.getInstance('dispatcherService#loadService');
 
         if (service === undefined || method === undefined) {
             return null;
         }
         //see clientawareserviceprovider.js
-        var dispatcher = $injector.getInstance(service);
+        const dispatcher = $injector.getInstance(service);
         if (!dispatcher) {
-            log.warn('Service {0} missing '.format(service));
+            log.warn(`Service ${service} missing`);
             return null;
         }
-        var fn = dispatcher[method];
+        const fn = dispatcher[method];
         if (!fn) {
-            log.warn('Method {0} not found on service {1}'.format(method, service));
+            log.warn(`Method ${method} not found on service ${service}`);
             return null;
         }
-        return fn;
+        return fn.bind(dispatcher);
     };
     return {
 
         loadServiceByString:function(serviceString) {
             var serviceArray = serviceString.split(".");
-            if (serviceArray.length != 2) {
+            if (serviceArray.length !== 2) {
                 throw new Error("wrong metadata configuration. service string should be 'servicexxx.methodxxx'".format(serviceString));
             }
             return this.loadService(serviceArray[0], serviceArray[1]);
