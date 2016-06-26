@@ -95,7 +95,7 @@
             offlineSchemaService.fillDefaultValues(laborDetailSchema, labor, parent.datamap);
 
             return setInitialLaborAndCraft(labor)
-                .then(initialized =>  saveLabor(parent, initialized, true))
+                .then(initialized => saveLabor(parent, initialized, true))
                 .then(saved => {
                     cacheStartedLabor(parent.id, saved);
                     return saved;
@@ -186,6 +186,11 @@
             setInitialLaborAndCraft(datamap);
         }
 
+        function updateLineCost(event) {
+            const datamap = event.datamap;
+            datamap["linecost"] = calculateLineCost(datamap["regularhrs"], datamap["payrate"]);
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -194,7 +199,8 @@
             shouldAllowLaborStart,
             shouldAllowLaborFinish,
             startLaborTransaction,
-            finishLaborTransaction
+            finishLaborTransaction,
+            updateLineCost
         };
         return service;
         //#endregion
