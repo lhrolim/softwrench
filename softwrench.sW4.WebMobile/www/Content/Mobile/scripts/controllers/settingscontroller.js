@@ -10,6 +10,9 @@
                 settingsService.getSettings()
                     .then(function (settings) {
                         $scope.settings = settings || {};
+                        if (!$scope.settings.serverurl) {
+                            $scope.settings.serverurl = "http://";
+                        }
                         return applicationStateService.getAppConfig();
                     })
                     .then(function (result) {
