@@ -104,8 +104,15 @@ namespace softwrench.sw4.offlineserver.controller {
             return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), rowstampMap, applicationToFetch);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="application">Name of the application of this batch</param>
+        /// <param name="remoteId">Id of the batch on the remote end</param>
+        /// <param name="batchContent">The </param>
+        /// <returns></returns>
         [HttpPost]
-        public Batch SubmitBatch([FromUri]String application, [FromUri]String remoteId, JObject batchContent) {
+        public Batch SubmitBatch([FromUri]string application, [FromUri]string remoteId, JObject batchContent) {
             Log.InfoFormat("Creating batch for application {0}", application);
             // return the generated Batch to be serialized
             var batch = _offLineBatchService.SubmitBatch(application, remoteId, batchContent);

@@ -263,7 +263,8 @@
             // preparing the request
             var batchParams = {
                 application: batch.application,
-                remoteId: batch.id
+                remoteId: batch.id,
+                downloadImmediately: batch.forcedownload || false //used for quick sync
             }
             var objectToSend = { items: items };
             // execute all handlers and send the result
@@ -285,7 +286,7 @@
                 if (!batch || !batch.loadeditems) {
                     return;
                 }
-                const items = batch.loadeditems.map(function (batchItem) {
+                const items = batch.loadeditems.map(batchItem => {
                     return {
                         datamap: generateDatamapDiff(batchItem),
                         itemId: batchItem.dataentry.remoteId,
@@ -322,11 +323,20 @@
         };
 
 
-        function createBatch(dbapplication) {
+        /**
+         * Creates a batch for all the items marked as a dirty on a given application or for a particular item passed as a parameter
+         * @param {} dbapplication 
+         * @param {} dataEntryToSync 
+         * @returns {} 
+         */
+        function createBatch(dbapplication, dataEntryToSync) {
             var applicationName = dbapplication.application;
-            const log = $log.getInstance('batchService#createBatch');
+            const log = $log.getInstance('batchService#createBatch',["sync","batch"]);
             const detailSchema = offlineSchemaService.locateSchemaByStereotype(dbapplication, "detail");
-            return swdbDAO.findByQuery('DataEntry', "isDirty=1 and pending=0 and application='{0}'".format(applicationName))
+            const queryToUse = "isDirty=1 and pending=0 and application='{0}'".format(applicationName);
+            const promiseToUse = dataEntryToSync != null ? $q.when([dataEntryToSync]) : swdbDAO.findByQuery('DataEntry', queryToUse);
+
+            return promiseToUse
                 .then(dataEntries => attachmentDataSynchronizationService.mergeAttachmentData(applicationName,dataEntries))
                 .then(dataEntries => {
 
@@ -387,13 +397,13 @@
         
         //#region Service instance
         const api = {
-            getIdsFromBatch: getIdsFromBatch,
-            submitBatches: submitBatches,
-            generateDatamapDiff: generateDatamapDiff,
-            createBatch: createBatch,
-            saveBatch: saveBatch,
-            updateBatch: updateBatch,
-            onBeforeBatchSubmit: onBeforeBatchSubmit
+            getIdsFromBatch,
+            submitBatches,
+            generateDatamapDiff,
+            createBatch,
+            saveBatch,
+            updateBatch,
+            onBeforeBatchSubmit
         };
         return api;
 

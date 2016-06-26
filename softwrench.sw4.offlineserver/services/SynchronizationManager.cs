@@ -21,6 +21,7 @@ using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Util;
 using SynchronizationResultDto = softwrench.sw4.offlineserver.dto.SynchronizationResultDto;
@@ -57,7 +58,7 @@ namespace softwrench.sw4.offlineserver.services {
             IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch;
             if (applicationToFetch == null) {
                 //let´s bring all the associations
-                applicationsToFetch = OffLineMetadataProvider.FetchAssociationApps(currentUser,true);
+                applicationsToFetch = OffLineMetadataProvider.FetchAssociationApps(currentUser, true);
             } else {
                 var app = MetadataProvider.Application(applicationToFetch);
                 applicationsToFetch = new List<CompleteApplicationMetadataDefinition>() { app };
@@ -88,7 +89,7 @@ namespace softwrench.sw4.offlineserver.services {
                 }
 
                 tasks[i++] = Task.Factory.NewThread(() => {
-                    var datamaps = FetchData(entityMetadata, userAppMetadata, rowstamp);
+                    var datamaps = FetchData(entityMetadata, userAppMetadata, rowstamp, null);
                     results.AssociationData.Add(association1.ApplicationName, datamaps);
                 });
 
@@ -112,7 +113,7 @@ namespace softwrench.sw4.offlineserver.services {
                 rowstamps = new Rowstamps(rowstampDTO.MaxRowstamp, null);
             }
 
-            var topLevelAppData = FetchData(entityMetadata, userAppMetadata, rowstamps);
+            var topLevelAppData = FetchData(entityMetadata, userAppMetadata, rowstamps, request.ItemsToDownload);
             var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampDTO);
 
             result.AddTopApplicationData(appResultData);
@@ -233,7 +234,7 @@ namespace softwrench.sw4.offlineserver.services {
 
 
 
-        private List<DataMap> FetchData(SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata, Rowstamps rowstamps = null) {
+        private List<DataMap> FetchData(SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata, Rowstamps rowstamps = null, List<string> itemsToDownload = null) {
             if (rowstamps == null) {
                 rowstamps = new Rowstamps();
             }
@@ -243,6 +244,12 @@ namespace softwrench.sw4.offlineserver.services {
             searchDto.Key = new ApplicationMetadataSchemaKey() {
                 ApplicationName = appMetadata.Name
             };
+
+            if (itemsToDownload != null) {
+                //ensure only the specified items are downloaded
+                searchDto.AppendWhereClauseFormat("{0} in ({1})", appMetadata.IdFieldName,BaseQueryUtil.GenerateInString(itemsToDownload));
+            }
+
 
             var enumerable = _repository.GetSynchronizationData(entityMetadata, rowstamps, searchDto);
             if (!enumerable.Any()) {

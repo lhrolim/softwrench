@@ -50,7 +50,7 @@
                 angular.forEach(insertUpdateDatamap, function (insertOrUpdateDatamap) {
                     const id = persistence.createUUID();
                     const newJson = JSON.stringify(insertOrUpdateDatamap.fields); //newJson = datamapSanitizationService.sanitize(newJson);
-                    const insertOrUpdateQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [insertOrUpdateDatamap.application, newJson, newJson, insertOrUpdateDatamap.id, String(insertOrUpdateDatamap.approwstamp), id] };
+                    const insertOrUpdateQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [insertOrUpdateDatamap.application, newJson, insertOrUpdateDatamap.id, String(insertOrUpdateDatamap.approwstamp), id] };
                     queryArray.push(insertOrUpdateQuery);
                 });
 
@@ -94,6 +94,15 @@
                 }).then(resultHandlePromise);
         };
 
+        function syncSingleItem(item) {
+            const app = item.application;
+            const params = {
+                applicationName: app,
+                itemsToDownload : [item.remoteId]
+            };
+            return restService.post("Mobile", "PullNewData", params);
+        }
+
         function syncData() {
             var currentApps = metadataModelService.getApplicationNames();
             const firstTime = currentApps.length === 0;
@@ -109,7 +118,6 @@
                     .then(resultHandlePromise)
                     .catch(errorHandlePromise);
             }
-
             return rowstampService.generateCompositionRowstampMap()
                 .then(function (compositionMap) {
                     const httpPromises = [];
@@ -122,7 +130,8 @@
         };
 
         const api = {
-            syncData
+            syncData,
+            syncSingleItem
         };
 
         return api;

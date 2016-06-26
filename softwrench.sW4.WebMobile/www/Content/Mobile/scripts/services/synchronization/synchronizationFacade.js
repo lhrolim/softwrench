@@ -7,7 +7,7 @@
         //#region Utils
 
         function getDownloadDataCount(dataDownloadResult) {
-            var count = 0;
+            let count = 0;
             angular.forEach(dataDownloadResult, result => {
                 if (!angular.isArray(result)) {
                     count += result;
@@ -56,8 +56,8 @@
          * @param Object completionResult 
          */
         function onBatchesCompleted(completionResult) {
-            var log = $log.get("dataSynchronizationService#onBatchesCompleted");
-            var start = completionResult.start;
+            const log = $log.get("dataSynchronizationService#onBatchesCompleted");
+            const start = completionResult.start;
             const batchTuples = completionResult.batchTuples;
             const promises = _.map(batchTuples, tuple => {
                 const remoteBatch = tuple.remote;
@@ -118,7 +118,7 @@
          * @returns Promise: resolved with created SyncOperation; rejected with HTTP or Database error 
          */
         function fullDownload() {
-            var log = $log.get("synchronizationFacade#fullDownload");
+            const log = $log.get("synchronizationFacade#fullDownload");
             log.info("Executing full download");
             const start = new Date().getTime();
 
@@ -151,7 +151,7 @@
          * @returns Promise: resolved with created SyncOperation; rejected with HTTP or Database error
          */
         function fullSync() {
-            var log = $log.get("synchronizationFacade#fullSync");
+            const log = $log.get("synchronizationFacade#fullSync", ["sync"]);
             log.info("init full synchronization process");
 
             const start = new Date().getTime();
@@ -163,35 +163,54 @@
             return $q.all(batchPromises)
                 .then(batches => {
                     // no batches created: full download instead of full sync
-                    if (!batches || batches.length <= 0 || !batches.some(s=> s!=null)) {
+                    if (!batches || batches.length <= 0 || !batches.some(s=> s != null)) {
                         log.info("No batches created: Executing full download instead of full sync.");
                         return fullDownload();
                     }
                     // batches created: submit to server
                     log.info("Batches created locally: submitting to server.");
-                    return batchService.submitBatches(batches)
-                        .then(batchResults => {
-                            // check for synchronous or asynchronous case
-                            var asyncBatches = batchResults.filter(batch => batch.status !== "COMPLETE");
-                            // async case
-                            if (asyncBatches.length > 0) {
-                                // register async Batches for async processing
-                                angular.forEach(asyncBatches, asyncBatch => asyncSynchronizationService.registerForAsyncProcessing(asyncBatch));
-                                // create batch/offline SyncOperation
-                                return synchronizationOperationService.createBatchOperation(start, batchResults);
-                            }
-                            // sync case: 
-                            // - delete DataEntries that should be deleted
-                            // - download ONLY data and create a SyncOperation indicating both a Batch submission and a download
-                            return handleDeletableDataEntries(batchResults)
-                                .then(() => dataSynchronizationService.syncData())
-                                .then(downloadResults => {
-                                    log.debug("Batch returned synchronously --> performing download");
-                                    var dataCount = getDownloadDataCount(downloadResults);
-                                    return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
-                                });
-                        });
+                    return batchService.submitBatches(batches).then(batchResults => {
+                        // check for synchronous or asynchronous case
+                        var asyncBatches = batchResults.filter(batch => batch.status !== "COMPLETE");
+                        // async case
+                        if (asyncBatches.length > 0) {
+                            // register async Batches for async processing
+                            angular.forEach(asyncBatches, asyncBatch => asyncSynchronizationService.registerForAsyncProcessing(asyncBatch));
+                            // create batch/offline SyncOperation
+                            return synchronizationOperationService.createBatchOperation(start, batchResults);
+                        }
+                        // sync case: 
+                        // - delete DataEntries that should be deleted
+                        // - download ONLY data and create a SyncOperation indicating both a Batch submission and a download
+                        return handleDeletableDataEntries(batchResults)
+                            .then(() => dataSynchronizationService.syncData())
+                            .then(downloadResults => {
+                                log.debug("Batch returned synchronously --> performing download");
+                                var dataCount = getDownloadDataCount(downloadResults);
+                                return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
+                            });
+                    });
                 });
+        }
+
+        function syncItem(item) {
+            const log = $log.get("synchronizationFacade#fullSync", ["sync"]);
+            const dbapplication = metadataModelService.getMetadatas().find(a => a.application === item.application);
+            const start = new Date().getTime();
+            loadingService.showDefault();
+            // one Batch per application
+            return batchService.createBatch(dbapplication, item)
+                    .then(batch => batchService.submitBatches([batch])
+                    .then(batchResults => {
+                        return handleDeletableDataEntries(batchResults)
+                            .then(() => dataSynchronizationService.syncData(item))
+                            .then(downloadResults => {
+                                var dataCount = getDownloadDataCount(downloadResults);
+                                return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
+                            });
+                    })
+                   .finally(loadingService.hide()));
+
         }
 
         /**
@@ -206,7 +225,7 @@
          */
         function attempSyncAndContinue(failPopupConfig) {
             loadingService.showDefault();
-            
+
             // try to sync
             return fullSync()
                 .then(() => {
@@ -217,9 +236,9 @@
                     loadingService.hide();
                     // sync failed: check if user wishes to logout regardless
                     return $ionicPopup.confirm({
-                            title: failPopupConfig.title || "Synchronization failed",
-                            template: failPopupConfig.template || "Continue anyway?"
-                        })
+                        title: failPopupConfig.title || "Synchronization failed",
+                        template: failPopupConfig.template || "Continue anyway?"
+                    })
                         .then(continueAnyway => !!continueAnyway);
                 });
         }
@@ -237,6 +256,7 @@
             hasDataToSync,
             fullDownload,
             fullSync,
+            syncItem,
             attempSyncAndContinue,
             handleDeletableDataEntries
         };

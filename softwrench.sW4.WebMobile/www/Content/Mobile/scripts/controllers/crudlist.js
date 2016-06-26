@@ -1,8 +1,8 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", 
-        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants) {
+    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", "synchronizationFacade", 
+        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade) {
 
             function init() {
                 $scope.moreItemsAvailable = true;
@@ -117,6 +117,10 @@
             $scope.getTextColor = function (item) {
                 const background = statuscolorService.getColor(item["status"], crudContextService.currentApplicationName());
                 return background === "white" || background === "transparent" ? "black" : "white";
+            }
+
+            $scope.quickSync = function (item) {
+                synchronizationFacade.syncItem(item);
             }
 
             $scope.$root.$on("$stateChangeSuccess",

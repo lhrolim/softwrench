@@ -33,7 +33,7 @@ namespace softwrench.sw4.offlineserver.services {
 
         public Batch SubmitBatch(string application, string remoteId, JObject batchContent) {
 
-            var minSize = _configurationFacade.Lookup<Int32>(OfflineConstants.AsyncBatchMinSize);
+            var minSize = _configurationFacade.Lookup<int>(OfflineConstants.AsyncBatchMinSize);
 
             var batch = new Batch {
                 Application = application,
@@ -64,7 +64,7 @@ namespace softwrench.sw4.offlineserver.services {
         /// </summary>
         /// <param name="remoteIds"></param>
         /// <returns></returns>
-        public IList<Batch> GetBatchesByRemoteIds(IList<String> remoteIds) {
+        public IList<Batch> GetBatchesByRemoteIds(IList<string> remoteIds) {
             var batches = _swdbHibernateDAO.FindByQuery<Batch>(Batch.BatchesByRemoteId, remoteIds);
             FormatBatches(batches);
             return batches;
