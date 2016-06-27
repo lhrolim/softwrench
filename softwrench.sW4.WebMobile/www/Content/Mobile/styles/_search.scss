@@ -12,3 +12,9 @@
     height: 44px;
     background-color: #00acec !important;
 }
+
+.search-option {
+    text-overflow: ellipsis; 
+    overflow: hidden; 
+    padding-right: 30px
+}

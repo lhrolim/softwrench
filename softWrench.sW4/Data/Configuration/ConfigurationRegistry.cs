@@ -146,6 +146,12 @@ namespace softWrench.sW4.Data.Configuration {
                 DefaultValue = "devteam@controltechnologysolutions.com"
             });
 
+            facade.Register(ctes.DateTimeFormat, new PropertyDefinition() {
+                Description = "The default format for DateTime",
+                DataType = "string",
+                DefaultValue = "MM/dd/yyyy hh:mm"
+            });
+
             #region Password Config
             facade.Register(ctes.Password.MinLengthKey, new PropertyDefinition() {
                 Description = "Password's minimum required length",

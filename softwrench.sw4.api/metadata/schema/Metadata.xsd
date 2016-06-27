@@ -212,6 +212,7 @@
     <attribute name="primary" type="boolean"></attribute>
     <attribute name="literal" type="string"></attribute>
     <attribute name="query" type="string"></attribute>
+    <attribute name="includeonsync" type="boolean"></attribute>
     <attribute name="quoteLiteral" type="boolean"></attribute>
     <attribute name="allowsnull" type="boolean">
       <annotation>

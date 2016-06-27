@@ -79,6 +79,14 @@
                 $ionicScrollDelegate.scrollTop();
             }
 
+            $scope.gridTitle = function() {
+                const schema = crudContextHolderService.currentListSchema();
+                if (!schema || !schema.title) {
+                    return crudContextService.currentTitle();
+                }
+                return schema.title;
+            }
+
             $scope.itemTitle = function (item) {
                 const title = offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "title", item);
                 if (title == null) {
@@ -128,11 +136,15 @@
                     return status == null ? "N" : status.charAt(0);
                 }
 
-                if (displayable.attribute === "wopriority") {
-                    return "\u2691";
-                }
-
                 var value = item[displayable.attribute];
+
+                if (displayable.attribute === "wopriority") {
+                    if (!value) {
+                        return "\u2691";
+                    }
+                    return value.substring(0, 1) + "\u2691";
+                }
+                
                 if (!value) {
                     return null;
                 }

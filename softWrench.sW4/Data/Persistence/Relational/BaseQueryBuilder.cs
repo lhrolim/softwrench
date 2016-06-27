@@ -100,7 +100,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 //        }
 
         public static IWhereBuilder GetCompositeBuilder(EntityMetadata entityMetadata, InternalQueryRequest queryParameter) {
-            IList<IWhereBuilder> whereBuilders = new List<IWhereBuilder>();
+            List<IWhereBuilder> whereBuilders = new List<IWhereBuilder>();
             if (queryParameter.Id != null) {
                 //TODO: make some kind of hash to determine if this is needed...
                 whereBuilders.Add(new ByIdWhereBuilder(entityMetadata, queryParameter.Id));
@@ -125,6 +125,8 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 whereBuilders.Add(
                     SimpleInjectorGenericFactory.Instance.GetObject<DataConstraintsWhereBuilder>(
                         typeof(DataConstraintsWhereBuilder)));
+                whereBuilders.AddRange(SimpleInjectorGenericFactory.Instance.GetObjectsOfType<IDynamicWhereBuilder>(typeof(IDynamicWhereBuilder)));
+
             }
             whereBuilders.Add(new MultiTenantCustomerWhereBuilder());
             return new CompositeWhereBuilder(whereBuilders);

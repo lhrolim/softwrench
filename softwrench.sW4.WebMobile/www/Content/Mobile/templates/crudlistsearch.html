@@ -49,7 +49,7 @@
                     </label>
                 </div>
                 <label ng-switch-when="option" class="item item-input crud-search-option">
-                    {{searchValue(field).label}}
+                    <div class="search-option">{{searchValue(field).label}}</div>
                     <option-field header-text="{{searchFieldLabel(field)}}"
                                   allow-empty="true"
                                   value="searchValue(field).value"

@@ -26,6 +26,12 @@
 
         public const string MetadataChangeReportEmailId = "/Global/Metadata/NotificationEmail";
 
+        #region SW diaplayable formats
+
+        public const string DateTimeFormat = "/Global/Format/DateTimeFormat";
+
+        #endregion
+
         //        public static class Global {
         //            public static class Rowstamps {
         //                public const string User = "/Global/Rowstamps/User";

@@ -4,6 +4,21 @@
 
         var entities = offlineEntitiesProvider.entities;
 
+        /**
+         * Holds information of Eager-loaded OptionFields processed on the server side, by providerAttributes.
+         * 
+         * This is similar to an autocompleteclient implementation, whereas the server would return the full list upon the sync
+         * 
+         */
+        entities.OptionFieldData = persistence.define("OptionFieldData", {
+            application: 'TEXT',
+            schema: 'TEXT',
+            providerAttribute: 'TEXT', //used for matching which optionfields on the screen are bound to the data
+            optionkey: 'TEXT', // the remoteid of the option (assetnum, classificationid, etc..)
+            optionvalue: 'TEXT',
+            extraprojectionvalues: 'JSON', //usually null, but can contain a json with extra fields
+        });
+
         //#region AssociationData
         ///
         /// Holds top level application data.
@@ -122,6 +137,8 @@
         entities.CompositionDataEntry.selectCompositions = "select max(rowstamp) as rowstamp,application,id from CompositionDataEntry  group by application";
         //#endregion
 
+        //#region Attachment
+        
         /**
          * The attachment entity holds the raw base64 of the attachment itself. 
          * It's equivalent to the docinfo table on the server side. 
@@ -160,6 +177,8 @@
         entities.Attachment.UpdateAttachmentPath = "update Attachment set path =? where docinfoRemoteId =?";
         
         entities.Attachment.ByDocInfoId = "select content,mimetype,path from Attachment where docinfoRemoteId = ?";
+
+        //#endregion
 
         //('application','datamap','pending','isDirty','remoteId','rowstamp','id') values (:p0,:p1,0,0,:p2,:p3,:p4)
 

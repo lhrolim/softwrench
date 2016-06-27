@@ -32,17 +32,26 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
             return From != null && To != null;
         }
 
+        /// <summary>
+        /// If true this query should be included on the sync process. Not that this only makes sense for query attributes that does not, 
+        /// usually, rely on the parent entity itself, since we're dealing with fetching lit of entities.
+        /// 
+        /// For example a query that picks the userid and orgid of the current user
+        /// </summary>
+        public bool IncludeOnSync { get; set; }
+
         public EntityAssociationAttribute() {
         }
 
 
-        public EntityAssociationAttribute(string to, string @from, string query, bool primary = false, bool allowsNull = false) {
+        public EntityAssociationAttribute(string to, string @from, string query, bool primary = false, bool allowsNull = false, bool includeOnSync=false) {
 
             From = @from;
             To = to;
             Primary = primary;
             Query = query;
             AllowsNull = allowsNull;
+            IncludeOnSync = includeOnSync;
         }
 
 

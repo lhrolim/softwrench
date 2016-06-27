@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Response;
@@ -10,6 +11,8 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
     public class FirstSolarWorkorderDataSet : BaseWorkorderDataSet {
@@ -70,5 +73,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         public IEnumerable<IAssociationOption> GetFsPcsLocations(OptionFieldProviderParameters parameters) {
             return new List<IAssociationOption>();
         }
+
+      
     }
 }

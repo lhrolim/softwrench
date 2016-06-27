@@ -15,6 +15,7 @@
         <attribute name="openwo" query="(select count(1) from workorder where UPPER(workorder.status) not in ('CAN', 'COMP', 'CLOSE') and workorder.assetnum = !@assetnum and workorder.siteid = !@siteid and workorder.orgid = !@orgid)" type="int"/>
       </attributes>
     </entity>
+
     <entity name="workorder" idAttribute="workorderid">
       <attributes>
         <attribute name="schedstartnotime" query="DATEADD(dd, DATEDIFF(dd, 0, workorder.schedstart), 0)" type="date"/>
@@ -23,7 +24,7 @@
       <relationships>
         <relationship to="numericdomain" qualifier="realpriority" collection="true">
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
-          <relationshipAttribute to ="domainid" literal="WO PRIORITY" quoteLiteral="true"/>
+          <relationshipAttribute to ="domainid" literal="WOPRIORITY" quoteLiteral="true"/>
         </relationship>
       </relationships>
     </entity>
@@ -35,7 +36,93 @@
 
 
       <schemas>
-        <list redeclaring="false">
+        <list platform="mobile" title="WO - Assigned" redeclaring="true">
+          <filters>
+            <optionfilter attribute="wopriority" provider="realpriority_.description" />
+          </filters>
+
+          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
+          <field attribute="wopriority" label="Priority" qualifier="icon"/>
+          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
+          <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
+          <field attribute="schedfinish" label="Scheduled Finish Date" hidden="true"/>
+          <field attribute="schedfinishnotime" label="Scheduled Finish Date"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+
+          <properties>
+            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
+          </properties>
+        </list>
+
+        <detail platform="mobile" title="Work Order" redeclaring="true">
+          <reference id="detailhiddensoffline"/>
+
+          <association label="Location" target="location" labelfield="location.description" requiredexpression="true"/>
+          <association label="Asset" target="assetnum" labelfield="asset.description" requiredexpression="true"/>
+
+          <association label="Status" target="status" labelfield="synstatus.description" >
+            <dataprovider prefilterfunction="FilterStatusCodes"/>
+          </association>
+
+          <field attribute="description" label="Description" requiredexpression="true"/>
+          <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
+            <renderer type="richtext"/>
+          </field>
+
+          <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true"/>
+
+          <!--          <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true" />-->
+
+          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" requiredexpression="true"/>
+
+
+          <field label="Warranty Claim Number" attribute="WOLO10"/>
+          <field label="EPCR Number" attribute="EPCR_NUM"/>
+          <field label="JPNUM" attribute="JPNUM"/>
+
+          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" requiredexpression="@worktype == 'CM' "/>
+
+          <!-- Region Problems, cuase Remedy -->
+          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">
+            <renderer type="lookup"  />
+            <dataprovider prefilterfunction="FilterProblemCodes" />
+          </association>
+
+          <!--          <association label="Cause" enableexpression="@problemcode!=null" target="problemcode" labelfield="problemlist_.description">-->
+          <!--            <dataprovider prefilterfunction="FilterProblemCodes" />-->
+          <!--          </association>-->
+
+          <!--          <association label="Remedy" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">-->
+          <!--            <dataprovider prefilterfunction="FilterProblemCodes" />-->
+          <!--          </association>-->
+
+          <!-- EndRegion-->
+
+          <!-- Region Compositions: materials, labors, attachmets -->
+          <composition relationship="matusetrans" label="Materials" />
+          <composition relationship="labtrans" label="Labor">
+            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+          </composition>
+          <composition relationship="attachment" label="Attachments">
+            <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+          </composition>
+          <!-- EndRegion -->
+
+
+
+          <commandbars>
+            <commandgroup platform="mobile" position="mobile.fab">
+              <command id="startlabtrans" service="laborService" method="startLaborTransaction"
+                       icon="ion-ios-clock-outline" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
+              <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
+                       icon="ion-ios-clock" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
+            </commandgroup>
+          </commandbars>
+
+        </detail>
+
+
+        <list redeclaring="false" platform="web">
           <filters>
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Active" value="INPRG,APPR,WOEN,ENRV,HOLD,WAPPR" preselected="true" displaycode="false" tooltip="The status of active work orders. Matchs any work order of &quot;INPRG&quot;, &quot;APPR&quot;, &quot;WOEN&quot;, &quot;ENRV&quot;, &quot;HOLD&quot; or &quot;WAPPR&quot; status."/>
@@ -463,6 +550,11 @@
         </detail>
 
       </schemas>
+
+      <properties>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+      </properties>
     </application>
 
     <application name="numericdomain" title="Numeric Domain" entity="numericdomain">
@@ -474,19 +566,19 @@
         </list>
       </schemas>
     </application>
-    
+
     <application name="otherworkorder" title="Other Work Orders" entity="workorder" role="workorders">
       <properties>
         <property key="list.offline.text.indexlist" value="wonum,wopriority,description"/>
         <property key="list.offline.date.indexlist" value="schedstartnotime"/>
       </properties>
-      
+
       <schemas>
-        <list platform="mobile" title="Work Order Grid">
+        <list platform="mobile" title="WO - Other">
           <filters>
             <optionfilter attribute="wopriority" provider="realpriority_.description" />
           </filters>
-          
+
           <field attribute="wonum" label="Workorder Number" qualifier="title"/>
           <field attribute="wopriority" label="Priority" qualifier="icon"/>
           <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
@@ -496,7 +588,7 @@
           <field attribute="description" label="Description" qualifier="excerpt"/>
 
           <properties>
-            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority is null asc, wopriority asc"/>
+            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
           </properties>
         </list>
 
