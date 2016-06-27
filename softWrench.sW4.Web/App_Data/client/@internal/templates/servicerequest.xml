@@ -156,7 +156,7 @@
             <renderer type="icon" params="icon=fa-envelope-o;autoloadcomposition=commlog_"/>
           </field>
           <field attribute="attachmentcounter" tooltip="Attachments" hidden="true">
-            <renderer type="icon" params="icon=fa-paperclip;autoloadcomposition=attachment_"/>
+            <renderer type="icon" params="hideValueOnTooltip=true;icon=fa-paperclip;autoloadcomposition=attachment_"/>
           </field>
           <field attribute="relatedcounter" tooltip="Related Records" hidden="true">
             <renderer type="icon" params="icon=fa-tags;autoloadcomposition=relatedrecord_"/>
