@@ -3,11 +3,11 @@
     constants = constants || {};
 
     mobileServices.factory('crudContextService', [
-    "$q", "$log", "$rootScope", "swdbDAO",
+    "$q", "$log", "$rootScope", "swdbDAO", "searchIndexService",
     "metadataModelService", "offlineSchemaService", "offlineCompositionService",
     "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
-    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService","menuModelService","loadingService","offlineAttachmentService",
-    function ($q, $log, $rootScope, swdbDAO,
+    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService",
+    function ($q, $log, $rootScope, swdbDAO, searchIndexService,
     metadataModelService, offlineSchemaService, offlineCompositionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
     crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService,menuModelService,loadingService,offlineAttachmentService) {
@@ -22,7 +22,9 @@
             crudContextHolderService.reset();
             menuModelService.reset();
         });
-    
+
+        // used to know when to clear search and sort data structure
+        var lastGridApplication = null;
 
         return {
 
@@ -46,11 +48,6 @@
             isList: function () {
                 return crudContextHolderService.isList();
             },
-
-            getFilteredList: function () {
-                return crudContextHolderService.getFilteredList();
-            },
-
 
             currentTitle: function () {
                 return crudContextHolderService.currentTitle();
@@ -260,26 +257,15 @@
             //#endregion
 
             //#region GridFNS
-
-            filterList: function (text) {
-                const crudContext = crudContextHolderService.getCrudContext();
-                internalListContext.searchQuery = text;
-                if (text == null) {
-                    return;
-                }
-                crudContext.filteredList = crudContext.filteredList || [];
-                internalListContext.pageNumber = 1;
-                internalListContext.lastPageLoaded = 1;
-                this.loadMorePromise();
-            },
-
-            refreshGrid: function () {
+            refreshGrid: function (skipPostFilter) {
                 var crudContext = crudContextHolderService.getCrudContext();
-                internalListContext.searchQuery = null;
                 crudContext.itemlist = [];
                 internalListContext.lastPageLoaded = 1;
                 internalListContext.pageNumber = 1;
                 this.loadMorePromise().then(function () {
+                    if (skipPostFilter) {
+                        return;
+                    }
                     routeService.go("main.crudlist");
                     contextService.insertIntoContext("crudcontext", crudContext);
                 });
@@ -287,11 +273,14 @@
 
             loadMorePromise: function () {
                 var crudContext = crudContextHolderService.getCrudContext();
+                const gridSearch = crudContextHolderService.getGridSearchData();
+                const quickSearch = crudContextHolderService.getQuickSearch();
+                const listSchema = crudContextHolderService.currentListSchema();
+                const appName = crudContextHolderService.currentApplicationName();
+
                 var baseQuery = "application = '{0}'".format(crudContext.currentApplicationName);
-                var filteredMode = false;
-                if (internalListContext.searchQuery != null) {
-                    filteredMode = true;
-                    baseQuery += ' and datamap like \'%:"{0}%\''.format(internalListContext.searchQuery);
+                if (quickSearch.value) {
+                    baseQuery += ' and datamap like \'%:"{0}%\''.format(quickSearch.value);
                 }
                 if (!crudFilterContextService.showPending()) {
                     baseQuery += ' and pending = 0 ';
@@ -299,17 +288,16 @@
                 if (!crudFilterContextService.showDirty()) {
                     baseQuery += ' and isDirty = 0 ';
                 }
-                baseQuery += "order by rowstamp is null desc, rowstamp desc ";
+
+                baseQuery += searchIndexService.buildSearchQuery(appName, listSchema, gridSearch);
+
+                baseQuery += searchIndexService.buildSortQuery(appName, listSchema, gridSearch);
 
                 return swdbDAO.findByQuery("DataEntry", baseQuery, { pagesize: 10, pageNumber: internalListContext.lastPageLoaded })
                     .then(function (results) {
                         internalListContext.lastPageLoaded = internalListContext.lastPageLoaded + 1;
-                        if (filteredMode) {
-                            crudContext.filteredList = [];
-                        }
-                        const listToPush = filteredMode ? crudContext.filteredList : crudContext.itemlist;
-                        for (let i = 0; i < results.length; i++) {
-                            listToPush.push(results[i]);
+                        for (var i = 0; i < results.length; i++) {
+                            crudContext.itemlist.push(results[i]);
                         }
                         return $q.when(results);
                     });
@@ -317,6 +305,11 @@
 
 
             loadApplicationGrid: function (applicationName, applicationTitle, schemaId) {
+                if (lastGridApplication && lastGridApplication !== applicationName) {
+                    crudContextHolderService.clearGridSearch();
+                }
+                lastGridApplication = applicationName;
+
                 const crudContext = crudContextHolderService.getCrudContext(); //cleaning up
                 crudContext.currentDetailItem = null;
                 crudContext.composition = {};
@@ -419,7 +412,7 @@
                     $rootScope.$emit("sw_cruddetailrefreshed");
                     loadingService.hide();
                 });
-                
+
             },
 
             //#endregion

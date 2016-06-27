@@ -208,6 +208,15 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 }
             }
         })
+        .state('main.crudlist.search', {
+            url: "/crudlistsearch",
+            views: {
+                'main@main': {
+                    templateUrl: "Content/Mobile/templates/crudlistsearch.html",
+                    controller: 'CrudListSearchController'
+                }
+            }
+        })
         .state('main.cruddetail', {
             url: "/cruddetail",
             views: {

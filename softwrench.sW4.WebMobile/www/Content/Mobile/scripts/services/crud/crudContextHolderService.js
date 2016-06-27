@@ -13,7 +13,8 @@
         /// <returns type=""></returns>
 
         //#region Utils
-
+        const quickSearchValue = "_quicksearch";
+        const defaultSortValue = "default";
 
         var initialContext = {
             currentApplicationName: null,
@@ -22,13 +23,21 @@
 
             currentListSchema: null,
             itemlist: null,
-            filteredList: null,
 
             originalDetailItemDatamap: null,
             currentDetailItem: null,
             currentDetailSchema: null,
             currentNewDetailSchema: null,
             newItem: false,
+
+            // grid search
+            gridSearch: {
+                searchFields: {}, // the searchable fields as a object with attribute as key
+                searchValues: {}, // all the search values as a object with attribute as key
+                sortables: {}, // the sortableFields as a object with attribute as key
+                sortableFields: [], // the sortableFields as a array
+                sort: {} // sort value
+            },
 
             //composition
             composition: {
@@ -43,10 +52,31 @@
 
             },
 
+            // indexes for searching and ordering
+            indexes: null,
 
             previousItem: null,
-            nextItem: null,
+            nextItem: null
         };
+
+        // inits the search and sort data with defaults
+        function defaultGridSearch(gridSearch) {
+            gridSearch.searchFields[quickSearchValue] = {
+                label: "Quick Search",
+                value: quickSearchValue,
+                type: "BaseMetadataFilter"
+            }
+            const defaultSort = {
+                label: "Default",
+                value: defaultSortValue
+            }
+            gridSearch.sortables[defaultSortValue] = defaultSort;
+            gridSearch.sortableFields.push(defaultSort);
+            gridSearch.sort = defaultSort;
+        }
+
+        defaultGridSearch(initialContext.gridSearch);
+
         // ReSharper disable once InconsistentNaming
         var _crudContext = angular.copy(initialContext);
 
@@ -100,10 +130,6 @@
             return _crudContext.currentDetailItem == null;
         };
 
-        function getFilteredList() {
-            return _crudContext.filteredList;
-        };
-
         function currentTitle() {
             var tabTitle = this.tabTitle();
             if (tabTitle != null) {
@@ -112,7 +138,7 @@
 
             return _crudContext.currentTitle;
         };
-        
+
         function currentApplicationName() {
             return _crudContext.currentApplicationName;
         }
@@ -126,7 +152,7 @@
             var detailSchema = _crudContext.currentDetailSchema;
             if (!listSchema) {
                 return detailSchema;
-            }else if (!detailSchema) {
+            } else if (!detailSchema) {
                 return listSchema;
             }
             //both are defined, bigger devices
@@ -166,7 +192,7 @@
             _crudContext.composition.currentDetailItem = null;
         };
 
-        function isOnMainTab () {
+        function isOnMainTab() {
             return _crudContext.composition.currentTab == null;
         };
 
@@ -174,7 +200,7 @@
             _crudContext.composition.currentTab = null;
         };
 
-        function tabTitle () {
+        function tabTitle() {
             if (this.isOnMainTab()) {
                 return null;
             }
@@ -188,7 +214,7 @@
             return _crudContext.composition.currentTab.id;
         }
 
-        function compositionList () {
+        function compositionList() {
             return _crudContext.composition.itemlist;
         };
 
@@ -200,9 +226,76 @@
             return _crudContext.composition.currentDetailSchema;
         };
 
-        function getCompositionDetailItem () {
+        function getCompositionDetailItem() {
             return _crudContext.composition.currentDetailItem;
         };
+
+        function getGridSearchData() {
+            return _crudContext.gridSearch;
+        }
+
+        // parse the indexes from the application props
+        function parseIndexes(key, props) {
+            const indexes = [];
+            const indexesString = props[key];
+
+            if (!indexesString) {
+                return indexes;
+            }
+            angular.forEach(indexesString.split(","), index => {
+                const trimmed = index.trim();
+                if (trimmed) {
+                    indexes.push(trimmed);
+                }
+            });
+            return indexes;
+        }
+
+        function getIndexes() {
+            if (_crudContext.indexes) {
+                return _crudContext.indexes;
+            }
+
+            _crudContext.indexes = {};
+
+            const app = _crudContext.currentApplication;
+            if (!app || !app.data || !app.data.properties) {
+                return _crudContext.indexes;
+            }
+
+            _crudContext.indexes.textIndexes = parseIndexes("list.offline.text.indexlist", app.data.properties);
+            _crudContext.indexes.dateIndexes = parseIndexes("list.offline.date.indexlist", app.data.properties);
+            return _crudContext.indexes;
+        }
+
+        // clears the search and sort values
+        function clearGridSearchValues() {
+            angular.forEach(_crudContext.gridSearch.searchFields, (searchable, attribute) => {
+                if (_crudContext.gridSearch.searchFields.hasOwnProperty(attribute)) {
+                    _crudContext.gridSearch.searchValues[attribute] = {};
+                }
+            });
+            _crudContext.gridSearch.sort = _crudContext.gridSearch.sortables[defaultSortValue];
+        }
+
+        // reset search and sort structure to default - not only values
+        function clearGridSearch() {
+            _crudContext.gridSearch = {
+                searchFields: {},
+                searchValues: {},
+                sortables: {},
+                sortableFields: [],
+                sort: {}
+            }
+            defaultGridSearch(_crudContext.gridSearch);
+        }
+
+        function getQuickSearch() {
+            if (!_crudContext.gridSearch.searchValues[quickSearchValue]) {
+                _crudContext.gridSearch.searchValues[quickSearchValue] = {};
+            }
+            return _crudContext.gridSearch.searchValues[quickSearchValue];
+        }
 
         function getCrudContext() {
             return _crudContext;
@@ -212,7 +305,7 @@
             _crudContext = angular.copy(initialContext);
         }
 
-        function hasDirtyChanges () {
+        function hasDirtyChanges() {
             if (_crudContext.composition.currentDetailItem) {
                 return _crudContext.composition.currentDetailItem && (!angular.equals(_crudContext.composition.originalDetailItemDatamap, _crudContext.composition.currentDetailItem));
             }
@@ -228,7 +321,6 @@
             setPreviousAndNextItems: setPreviousAndNextItems,
             restoreState: restoreState,
             isList: isList,
-            getFilteredList: getFilteredList,
             currentTitle: currentTitle,
             currentApplicationName: currentApplicationName,
             currentListSchema: currentListSchema,
@@ -246,12 +338,17 @@
             getCompositionListSchema: getCompositionListSchema,
             getCompositionDetailSchema: getCompositionDetailSchema,
             getCompositionDetailItem: getCompositionDetailItem,
+            getGridSearchData: getGridSearchData,
+            getIndexes: getIndexes,
+            clearGridSearchValues: clearGridSearchValues,
+            clearGridSearch: clearGridSearch,
+            getQuickSearch: getQuickSearch,
             hasDirtyChanges: hasDirtyChanges,
             getActiveTab: getActiveTab,
-            reset:reset,
+            reset: reset,
             //below method to facilitate migration
             getCrudContext: getCrudContext
-            
+
         };
 
         return service;
@@ -266,7 +363,3 @@
     //#endregion
 
 })(angular);
-
-
-
-

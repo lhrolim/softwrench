@@ -15,6 +15,18 @@
         <attribute name="openwo" query="(select count(1) from workorder where UPPER(workorder.status) not in ('CAN', 'COMP', 'CLOSE') and workorder.assetnum = !@assetnum and workorder.siteid = !@siteid and workorder.orgid = !@orgid)" type="int"/>
       </attributes>
     </entity>
+    <entity name="workorder" idAttribute="workorderid">
+      <attributes>
+        <attribute name="schedstartnotime" query="DATEADD(dd, DATEDIFF(dd, 0, workorder.schedstart), 0)" type="date"/>
+        <attribute name="schedfinishnotime" query="DATEADD(dd, DATEDIFF(dd, 0, workorder.schedfinish), 0)" type="date"/>
+      </attributes>
+      <relationships>
+        <relationship to="numericdomain" qualifier="realpriority" collection="true">
+          <relationshipAttribute from="wopriority" to="value" primary="true"/>
+          <relationshipAttribute to ="domainid" literal="WO PRIORITY" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
@@ -77,7 +89,7 @@
 
 
           <customization position="worktype">
-            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" requiredexpression="true">
+            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" requiredexpression="true" >
               <renderer type="lookup" params="inputsize=small"/>
             </association>
           </customization>
@@ -453,21 +465,44 @@
       </schemas>
     </application>
 
+    <application name="numericdomain" title="Numeric Domain" entity="numericdomain">
+      <schemas>
+        <list platform="mobile" title="Numeric Domain">
+          <field attribute="description" label="Description"/>
+          <field attribute="value" label="Value"/>
+          <field attribute="domainid" label="Domain"/>
+        </list>
+      </schemas>
+    </application>
+    
     <application name="otherworkorder" title="Other Work Orders" entity="workorder" role="workorders">
+      <properties>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+      </properties>
+      
       <schemas>
         <list platform="mobile" title="Work Order Grid">
-          <field attribute="wonum" label="Number" qualifier="title"/>
-          <field attribute="asset_.description" label="Asset" qualifier="subtitle"/>
-          <field attribute="status" label="Status" qualifier="featured"/>
+          <filters>
+            <optionfilter attribute="wopriority" provider="realpriority_.description" />
+          </filters>
+          
+          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
+          <field attribute="wopriority" label="Priority" qualifier="icon"/>
+          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
+          <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
+          <field attribute="schedfinish" label="Scheduled Finish Date" hidden="true"/>
+          <field attribute="schedfinishnotime" label="Scheduled Finish Date"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
+
+          <properties>
+            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority is null asc, wopriority asc"/>
+          </properties>
         </list>
 
         <schema id="newdetail" platform="mobile" stereotype="detailnew">
           <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
-          <field attribute="wopriority" label="Priority">
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-            <number decimals="0" min="0" max="999" />
-          </field>
+          <association label="Priority" target="wopriority" labelfield="realpriority_.description"/>
           <association label="Location" target="location" labelfield="location.description" />
           <association label="Asset" target="assetnum" labelfield="asset.description" />
           <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
@@ -501,10 +536,7 @@
             <dataprovider prefilterfunction="FilterStatusCodes"/>
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>
-          <field attribute="wopriority" label="Priority">
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-            <number decimals="0" min="0" max="999" />
-          </field>
+          <association label="Priority" target="wopriority" labelfield="realpriority_.description"/>
           <association label="Location" target="location" labelfield="location.description" />
           <association label="Asset" target="assetnum" labelfield="asset.description" />
           <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />

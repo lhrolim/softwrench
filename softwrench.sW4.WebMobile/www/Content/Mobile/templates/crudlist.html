@@ -14,14 +14,15 @@
         <div class="list-search-bar item-input-inset" ng-show="isSearching() && isList()">
             <label class="item-input-wrapper">
                 <i class="icon ion-navicon ion-search placeholder-icon"></i>
-                <input type="search" class="ion-autocomplete-search" ng-model="searchQuery" ng-change="filter(this)" placeholder="Search" />
-            </label>
+                <input type="search" class="ion-autocomplete-search" ng-model="quickSearch.value" ng-change="filter()" placeholder="Quick Search" />
+                <button class="button-icon ion-android-cancel search-disable-button" ng-mouseup="disableSearch(true)"></button>
+            </label>            
         </div>
     </ion-nav-title>
 
    
     <ion-nav-buttons side="right">
-        <button class="button-icon ion-android-cancel" ng-show="isList() && isSearching()" ng-click="disableSearch()"></button>
+        <button class="button-icon ion-levels" ng-show="isList() && isSearching()" ng-click="goToAdvancedFilter()"></button>
         <!--this ng-show is needed due to a possible bug on ionic/ angular ui-router where the button shows on detail-->
         <button class="button-icon ion-search" ng-show="isList() && !isSearching()" ng-click="enableSearch()"></button>
     </ion-nav-buttons>
@@ -34,13 +35,14 @@
 
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">
-                        <button class="button button-status" ng-style="{background:getStatusColor(item.datamap),color:getTextColor(item.datamap)}">{{getStatusText(item.datamap)}}</button>
+                        <button class="button button-status" ng-style="{background:getIconColor(item.datamap),color:getTextColor(item.datamap)}">{{getIconText(item.datamap)}}</button>
                         <i class="icon ion-refresh" ng-show="isDirty(item) && !isPending(item)"></i>
                         <i class="icon ion-android-cloud" ng-show="isPending(item)"></i>
                     </div>
                     <div class="col-75">
                         <ul>
-                            <li>{{itemTitle(item.datamap)}} {{itemFeatured(item.datamap)}}</li>
+                            <li class="list-featured">{{itemFeatured(item.datamap)}}</li>
+                            <li>{{itemTitle(item.datamap)}}</li>
                             <li>{{itemSubTitle(item.datamap)}}</li>
                             <li>{{itemExcerpt(item.datamap)}}</li>
                         </ul>
