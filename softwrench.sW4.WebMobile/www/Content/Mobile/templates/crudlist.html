@@ -1,19 +1,19 @@
 <ion-view cache-view="false">
 
     <ion-nav-buttons side="left">
-        <button class="button-icon icon ion-navicon" menu-toggle="left"></button>
+        <button class="button-icon" menu-toggle="left"><i class="fa fa-bars"></i></button>
     </ion-nav-buttons>
 
     <ion-nav-title>
         <div ng-show="!isSearching()">{{title()}}
             <div class="buttons" style="position: absolute; right: 5px; top:5px" ng-show="isList()">
-                <button class="button icon ion-android-more-vertical" ng-click="showFilterOptions($event)"></button>
+                <button class="button" ng-click="showFilterOptions($event)"><i class="fa fa-fa-ellipsis-v"></i></button>
             </div>
         </div>
 
         <div class="list-search-bar item-input-inset" ng-show="isSearching() && isList()">
             <label class="item-input-wrapper">
-                <i class="icon ion-navicon ion-search placeholder-icon"></i>
+                <i class="placeholder-icon fa fa-search"></i>
                 <input type="search" class="ion-autocomplete-search" ng-model="quickSearch.value" ng-change="filter()" placeholder="Quick Search" />
                 <button class="button-icon ion-android-cancel search-disable-button" ng-mouseup="disableSearch(true)"></button>
             </label>            
@@ -22,9 +22,9 @@
 
    
     <ion-nav-buttons side="right">
-        <button class="button-icon ion-levels" ng-show="isList() && isSearching()" ng-click="goToAdvancedFilter()"></button>
+        <button class="button-icon" ng-show="isList() && isSearching()" ng-click="goToAdvancedFilter()"><i class="fa fa-sliders"></i></button>
         <!--this ng-show is needed due to a possible bug on ionic/ angular ui-router where the button shows on detail-->
-        <button class="button-icon ion-search" ng-show="isList() && !isSearching()" ng-click="enableSearch()"></button>
+        <button class="button-icon" ng-show="isList() && !isSearching()" ng-click="enableSearch()"><i class="fa fa-search"></i></button>
     </ion-nav-buttons>
 
     <ion-content has-header="true" has-bouncing="false">
@@ -36,8 +36,8 @@
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">
                         <button class="button button-status" ng-style="{background:getIconColor(item.datamap),color:getTextColor(item.datamap)}">{{getIconText(item.datamap)}}</button>
-                        <i class="icon ion-refresh" ng-show="isDirty(item) && !isPending(item)"></i>
-                        <i class="icon ion-android-cloud" ng-show="isPending(item)"></i>
+                        <i class="fa fa-refresh" ng-show="isDirty(item) && !isPending(item)"></i>
+                        <i class="fa fa-cloud" ng-show="isPending(item)"></i>
                     </div>
                     <div class="col-75">
                         <ul>
@@ -58,7 +58,7 @@
     </ion-content>
 
     <button class="button button-float" ng-click="createItem()" ng-if="hasNewSchemaAvailable()">
-        <i class="icon ion-plus"></i>
+        <i class="fa fa-plus"></i>
     </button>
 
 </ion-view>

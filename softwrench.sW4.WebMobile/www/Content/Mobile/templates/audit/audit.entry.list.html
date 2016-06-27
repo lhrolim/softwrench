@@ -2,8 +2,7 @@
 
     <ion-nav-buttons side="left">
         <button class="button" ng-click="back()">
-            <i class="icon ion-chevron-left"></i>
-            Back
+            <i class="fa fa-chevron-left"></i>&ensp;Back
         </button>
     </ion-nav-buttons>
 
@@ -12,7 +11,7 @@
         <div class="list">
             <div class="item item-icon-left entry-item" ng-repeat="entry in data.entryList" ng-click="openDetail(entry)">
                 <!--TODO: add support for other operations-->
-                <i class="icon" ng-class="{ 'ion-ios-barcode-outline': entry.operation === 'scan' }"></i>
+                <i class="fa" ng-class="{ 'fa-barcode': entry.operation === 'scan' }"></i>
                 <div>
                     <div class="row">
                         <div class="col col-center">
