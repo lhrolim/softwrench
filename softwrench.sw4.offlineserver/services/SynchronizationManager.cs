@@ -25,6 +25,7 @@ using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 using SynchronizationResultDto = softwrench.sw4.offlineserver.dto.SynchronizationResultDto;
 
@@ -33,12 +34,14 @@ namespace softwrench.sw4.offlineserver.services {
 
         private readonly OffLineCollectionResolver _resolver;
         private readonly EntityRepository _repository;
+        private readonly IContextLookuper _lookuper;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SynchronizationManager));
 
-        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository) {
+        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper) {
             _resolver = resolver;
             _repository = respository;
+            _lookuper = lookuper;
             Log.DebugFormat("init sync log");
         }
 
@@ -91,6 +94,9 @@ namespace softwrench.sw4.offlineserver.services {
                 }
 
                 tasks[i++] = Task.Factory.NewThread(() => {
+
+                    _lookuper.LookupContext().OfflineMode = true;
+
                     var datamaps = FetchData(entityMetadata, userAppMetadata, rowstamp, null);
                     results.AssociationData.Add(association1.ApplicationName, datamaps);
                 });
@@ -269,7 +275,7 @@ namespace softwrench.sw4.offlineserver.services {
 
             if (itemsToDownload != null) {
                 //ensure only the specified items are downloaded
-                searchDto.AppendWhereClauseFormat("{0} in ({1})", appMetadata.IdFieldName,BaseQueryUtil.GenerateInString(itemsToDownload));
+                searchDto.AppendWhereClauseFormat("{0} in ({1})", appMetadata.IdFieldName, BaseQueryUtil.GenerateInString(itemsToDownload));
             }
 
 

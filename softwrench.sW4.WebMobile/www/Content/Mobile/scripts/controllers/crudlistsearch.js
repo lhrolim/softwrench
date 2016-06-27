@@ -4,6 +4,7 @@
     softwrench.controller("CrudListSearchController", ["$log", "$scope", "crudContextHolderService", "crudContextService", "routeService", "offlineAssociationService", "fieldService",
         function ($log, $scope, crudContextHolderService, crudContextService, routeService, offlineAssociationService, fieldService) {
 
+
             const ascIcon = "android-arrow-up";
             const descIcon = "android-arrow-down";
 

@@ -78,6 +78,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string RelationshipAttributeTo = "to";
         public const string RelationshipAttributeToAttribute = "attribute";
         public const string RelationshipAttributePrimary = "primary";
+        public const string RelationshipAttributeIncludeOnSync = "includeonsync";
         public const string RelationshipAttributeCollection = "collection";
         public const string RelationshipCacheableAttribute = "cacheable";
         public const string RelationshipLazyAttribute = "lazy";

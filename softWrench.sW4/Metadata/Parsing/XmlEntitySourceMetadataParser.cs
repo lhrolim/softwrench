@@ -164,9 +164,10 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var allowsNull = attribute.Attribute(XmlMetadataSchema.RelationshipAttributeAttributeAllowsNull).ValueOrDefault(false);
                 var quoteLiteral = attribute.Attribute(XmlMetadataSchema.RelationshipAttributeAttributeQuoteLiteral).ValueOrDefault(true);
                 var primary = attribute.Attribute(XmlMetadataSchema.RelationshipAttributePrimary).ValueOrDefault(false);
+                var includeOnSync = attribute.Attribute(XmlMetadataSchema.RelationshipAttributeIncludeOnSync).ValueOrDefault(false);
 
                 return string.IsNullOrWhiteSpace(literal)
-                    ? new EntityAssociationAttribute(to, from, query, primary, allowsNull)
+                    ? new EntityAssociationAttribute(to, from, query, primary, allowsNull,includeOnSync)
                     : new EntityAssociationAttribute(quoteLiteral, to, from, literal);
             }
 

@@ -4,6 +4,7 @@
 
     function searchIndexService() {
 
+
         const indexColumnCache = {}; // cache of attribute -> index column
         const orderByBlackList = ["asc", "desc", "is", "null"]; // list of ignored terms on order by parsing
 
