@@ -1238,7 +1238,7 @@
           <field attribute="owner" label="Owner"/>
           <field attribute="ownergroup" label="Owner Group"/>
           <field attribute="changedate" label="Changed Date">
-            <renderer type="datetime" params="width=10%;format=MM/dd/yyyy HH:mm;showtime=false"/>
+            <renderer type="datetime" params="width=10%;showtime=false"/>
           </field>
           <field attribute="status" label="Status">
             <renderer type="statuscolor" params="width=10%;grid=servicerequest;column=status" />
@@ -1279,7 +1279,7 @@
           </field>
           <field attribute="ownergroup" label="Ass. Owner Group"></field>
           <field attribute="changedate" label="Changed Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=9%;showtime=false"/>
+            <renderer type="datetime" params="width=9%;showtime=false"/>
           </field>
           <field attribute="attachments" tooltip="Attachments">
             <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};autoloadcomposition=attachment_"/>
@@ -1349,7 +1349,7 @@
           </field>
           <field attribute="ownergroup" label="Ass. Owner Group"></field>
           <field attribute="changedate" label="Changed Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=9%;showtime=false"/>
+            <renderer type="datetime" params="width=9%;showtime=false"/>
           </field>
           <field attribute="attachments" tooltip="Attachments">
             <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};autoloadcomposition=attachment_"/>
@@ -1458,34 +1458,34 @@
             <section orientation="horizontal">
               <renderer type="default" params="childinputsize=medium" />
               <field label="Target Start:" attribute="targetstart" readonly="true">
-                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+                <renderer type="datetime" />
               </field>
               <field label="SLA Applied?" attribute="slaapplied" enableexpression="false">
                 <renderer type="checkbox" />
               </field>
               <field label="Adjusted Start:" attribute="adjustedtargetresponsetime" readonly="true">
-                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+                <renderer type="datetime" />
               </field>
               <field label="Target Finish:" attribute="targetfinish" readonly="true">
-                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+                <renderer type="datetime" />
               </field>
               <field label="SLA Hold Enabled?" attribute="accumulateslaholdtime" enableexpression="false">
                 <renderer type="checkbox" />
               </field>
               <field label="Adjusted Finish:" attribute="adjustedtargetresolutiontime" readonly="true">
-                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+                <renderer type="datetime" />
               </field>
               <field label="Actual Start Date:" attribute="actualstart" readonly="true">
-                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+                <renderer type="datetime" />
               </field>
               <field label="SLA Met?" attribute="slamet" enableexpression="false">
                 <renderer type="checkbox" />
               </field>
               <field label="Accumulated Hold Time(HH:MM):" attribute="accumulatedholdtime" readonly="true">
-                <renderer type="default" params="format=MM/dd/yyyy HH:mm;formatter=doubleToTime"/>
+                <renderer type="default" params="formatter=doubleToTime"/>
               </field>
               <field label="Actual End Date:" attribute="actualfinish" readonly="true">
-                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+                <renderer type="datetime" />
               </field>
               <field label="Response SLO?" attribute="responseslo" enableexpression="false">
                 <renderer type="checkbox" />
@@ -1602,7 +1602,7 @@
           <field attribute="reportedby" label="Reported By"/>
           <field attribute="status" label="Status"/>
           <field attribute="changedate" label="Changed Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=9%;showtime=false"/>
+            <renderer type="datetime" params="width=9%;showtime=false"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
@@ -1973,31 +1973,31 @@
           <section>
             <header displacement="ontop" label="Key Dates" params="fieldset=true" />
             <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
+              <renderer type="datetime" params="inputsize=small" />
             </field>
           </section>
           <section>
             <renderer type="default" params="childinputsize=medium" />
             <field label="Target Start Date:" attribute="targetstart" readonly="true">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+              <renderer type="datetime" />
             </field>
             <field label="SLA Applied?" attribute="slaapplied" enableexpression="false">
               <renderer type="checkbox" />
             </field>
             <field label="Adjusted Start:" attribute="adjustedtargetresponsetime" readonly="true">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+              <renderer type="datetime" />
             </field>
             <field label="Target Finish:" attribute="targetfinish" readonly="true">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+              <renderer type="datetime" />
             </field>
             <field label="SLA Hold Enabled?" attribute="accumulateslaholdtime" enableexpression="false">
               <renderer type="checkbox" />
             </field>
             <field label="Adjusted Finish:" attribute="adjustedtargetresolutiontime" readonly="true">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+              <renderer type="datetime" />
             </field>
             <field label="Actual Start Date:" attribute="actualstart" readonly="true">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+              <renderer type="datetime" />
             </field>
             <field label="SLA Met?" attribute="slamet" enableexpression="false">
               <renderer type="checkbox" />
@@ -2006,7 +2006,7 @@
               <renderer type="default" params="format=MM/dd/yyyy HH:mm;formatter=doubleToTime" />
             </field>
             <field label="Actual End Date:" attribute="actualfinish" readonly="true">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm" />
+              <renderer type="datetime" />
             </field>
             <field label="Response SLO?" attribute="responseslo" enableexpression="false">
               <renderer type="checkbox" />
@@ -2687,7 +2687,7 @@
             <renderer type="default" params="width=13%" />
           </field>
           <field attribute="requireddate" label="Required Date">
-            <renderer type="datetime" params="width=13%format=MM/dd/yyyy HH:mm;showtime=false" />
+            <renderer type="datetime" params="width=13%;showtime=false" />
           </field>
           <field attribute="vendor" label="Vendor">
             <renderer type="default" params="width=13%" />
@@ -2824,7 +2824,7 @@
           <field attribute="orderqty" label="Quantity"/>
           <field attribute="unitcost" label="Unit Cost"/>
           <field label="Entered Date" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            <renderer type="datetime" />
           </field>
         </schema>
 

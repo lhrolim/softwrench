@@ -134,10 +134,10 @@
             <renderer type="default" params="width=15%" />
           </field>
           <field attribute="targetfinish" label="Target Finish">
-            <renderer type="datetime" params="width=12%;format=MM/dd/yyyy HH:mm;showtime=false" />
+            <renderer type="datetime" params="width=12%;showtime=false" />
           </field>
           <field attribute="reportdate" label="Reported Date">
-            <renderer type="datetime" params="width=12%;format=MM/dd/yyyy HH:mm;showtime=false" />
+            <renderer type="datetime" params="width=12%;showtime=false" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
             <renderer type="default" params="width=12%" />

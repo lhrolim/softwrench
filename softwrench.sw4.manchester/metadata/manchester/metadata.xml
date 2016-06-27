@@ -258,7 +258,7 @@
 
             <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
             <field label="Reported Date" attribute="reportdate" readonly="true" default="@currentdatetime">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+              <renderer type="datetime" />
             </field>
 
             <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
@@ -579,7 +579,7 @@
           <!--Reported Date  OwnerGroup  -->
           <section orientation="horizontal">
             <field label="Reported Date" attribute="reportdate" readonly="true" default="@currentdatetime">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+              <renderer type="datetime" />
             </field>
 
             <!-- Added the Owner Group field-->

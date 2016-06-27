@@ -198,6 +198,8 @@
                 this.insertIntoContext('reservedMaterialsListScanOrder', config.reservedMaterialsListScanOrder);
                 this.insertIntoContext('invIssueListBeringScanOrder', config.invIssueListBeringScanOrder);
                 this.insertIntoContext('newKeyISsueDetailScanOrder', config.newKeyIssueDetailScanOrder);
+
+                this.insertIntoContext('dateTimeFormat', config.displayableFormats.dateTimeFormat);
             },
 
             getResourceUrl: function (path) {

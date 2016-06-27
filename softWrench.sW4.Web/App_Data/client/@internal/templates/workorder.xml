@@ -456,7 +456,7 @@
                 <renderer type="lookup" params="columnlabel=Name;"/>
               </association>
               <field label="Reported Date &amp; Time" attribute="reportdate" readonly="true" default="@currentdatetime">
-                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;" />
+                <renderer type="datetime" />
               </field>
             </section>
 

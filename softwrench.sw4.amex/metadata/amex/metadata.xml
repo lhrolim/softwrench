@@ -121,7 +121,7 @@
             <renderer type="lookup"/>
           </association>
           <field attribute="#recdate" label="Received Date" attributeToServer="recdate">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            <renderer type="datetime" />
           </field>
           
           <commandbars>

@@ -128,7 +128,7 @@
             <renderer type="icon" params="expression={'1':'fa-long-arrow-right green','0':'fa-long-arrow-left orange'}"/>
           </field>
           <field attribute="createdate" label="Created Date" qualifier="tag">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            <renderer type="datetime" />
           </field>
           <field attribute="sendto" label="To" qualifier="expression={'!@inbound':'title'}">
             <renderer type="default" params="formatter=lower"/>

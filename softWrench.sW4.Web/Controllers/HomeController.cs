@@ -113,6 +113,10 @@ namespace softWrench.sW4.Web.Controllers {
             var invIssueListBeringScanOrder = _facade.Lookup<string>(ConfigurationConstants.InvIssueListBeringScanOrder);
             var newKeyIssueDetailScanOrder = _facade.Lookup<string>(ConfigurationConstants.NewKeyIssueDetailScanOrder);
 
+            var SWdisplayableFormats = new SWdisplayableFormats() {
+                DateTimeFormat = _facade.Lookup<string>(ConfigurationConstants.DateTimeFormat)
+            };
+
             return new HomeConfigs() {
                 Logo = logoIcon,
                 MyProfileEnabled = myProfileEnabled,
@@ -134,7 +138,8 @@ namespace softWrench.sW4.Web.Controllers {
                 InvIssueListBeringScanOrder = invIssueListBeringScanOrder,
                 DefaultEmail = MetadataProvider.GlobalProperty("defaultEmail"),
                 UIShowClassicAdminMenu = ApplicationConfiguration.UIShowClassicAdminMenu,
-                UIShowToolbarLabels = ApplicationConfiguration.UIShowToolbarLabels
+                UIShowToolbarLabels = ApplicationConfiguration.UIShowToolbarLabels,
+                DisplayableFormats = SWdisplayableFormats
             };
         }
 
