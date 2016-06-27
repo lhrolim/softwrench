@@ -36,91 +36,7 @@
 
 
       <schemas>
-        <list platform="mobile" title="WO - Assigned" redeclaring="true">
-          <filters>
-            <optionfilter attribute="wopriority" provider="realpriority_.description" />
-          </filters>
-
-          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
-          <field attribute="wopriority" label="Priority" qualifier="icon"/>
-          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
-          <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
-          <field attribute="schedfinish" label="Scheduled Finish Date" hidden="true"/>
-          <field attribute="schedfinishnotime" label="Scheduled Finish Date"/>
-          <field attribute="description" label="Description" qualifier="excerpt"/>
-
-          <properties>
-            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
-          </properties>
-        </list>
-
-        <detail platform="mobile" title="Work Order" redeclaring="true">
-          <reference id="detailhiddensoffline"/>
-
-          <association label="Location" target="location" labelfield="location.description" requiredexpression="true"/>
-          <association label="Asset" target="assetnum" labelfield="asset.description" requiredexpression="true"/>
-
-          <association label="Status" target="status" labelfield="synstatus.description" >
-            <dataprovider prefilterfunction="FilterStatusCodes"/>
-          </association>
-
-          <field attribute="description" label="Description" requiredexpression="true"/>
-          <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
-            <renderer type="richtext"/>
-          </field>
-
-          <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true"/>
-
-          <!--          <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true" />-->
-
-          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" requiredexpression="true"/>
-
-
-          <field label="Warranty Claim Number" attribute="WOLO10"/>
-          <field label="EPCR Number" attribute="EPCR_NUM"/>
-          <field label="JPNUM" attribute="JPNUM"/>
-
-          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" requiredexpression="@worktype == 'CM' "/>
-
-          <!-- Region Problems, cuase Remedy -->
-          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">
-            <renderer type="lookup"  />
-            <dataprovider prefilterfunction="FilterProblemCodes" />
-          </association>
-
-          <!--          <association label="Cause" enableexpression="@problemcode!=null" target="problemcode" labelfield="problemlist_.description">-->
-          <!--            <dataprovider prefilterfunction="FilterProblemCodes" />-->
-          <!--          </association>-->
-
-          <!--          <association label="Remedy" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">-->
-          <!--            <dataprovider prefilterfunction="FilterProblemCodes" />-->
-          <!--          </association>-->
-
-          <!-- EndRegion-->
-
-          <!-- Region Compositions: materials, labors, attachmets -->
-          <composition relationship="matusetrans" label="Materials" />
-          <composition relationship="labtrans" label="Labor">
-            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
-          </composition>
-          <composition relationship="attachment" label="Attachments">
-            <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-          </composition>
-          <!-- EndRegion -->
-
-
-
-          <commandbars>
-            <commandgroup platform="mobile" position="mobile.fab">
-              <command id="startlabtrans" service="laborService" method="startLaborTransaction"
-                       icon="ion-ios-clock-outline" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
-              <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
-                       icon="ion-ios-clock" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
-            </commandgroup>
-          </commandbars>
-
-        </detail>
-
+        
 
         <list redeclaring="false" platform="web">
           <filters>
@@ -485,6 +401,25 @@
         </schema>
         
         <!-- #region: Mobile -->
+
+        <list platform="mobile" title="WO - Assigned" redeclaring="true">
+          <filters>
+            <optionfilter attribute="wopriority" provider="realpriority_.description" />
+          </filters>
+
+          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
+          <field attribute="wopriority" label="Priority" qualifier="icon"/>
+          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
+          <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
+          <field attribute="schedfinish" label="Scheduled Finish Date" hidden="true"/>
+          <field attribute="schedfinishnotime" label="Scheduled Finish Date"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+
+          <properties>
+            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
+          </properties>
+        </list>
+        
         <detail platform="mobile" title="Work Order" redeclaring="true">
           <reference id="detailhiddensoffline"/>
 
