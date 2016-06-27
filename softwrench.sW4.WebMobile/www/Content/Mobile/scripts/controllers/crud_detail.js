@@ -3,9 +3,9 @@
     "use strict";
 
     softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', 'schemaService',
-    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService',"loadingService",
+    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService",
     function (log, $scope, $rootScope, schemaService,
-    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService,loadingService) {
+    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService) {
 
         function init() {
             $scope.displayables = crudContextService.mainDisplayables();
@@ -86,6 +86,15 @@
         $scope.isOnMainTab = function () {
             return crudContextService.isOnMainTab();
         }
+
+        $scope.addCompositionAllowed = function() {
+            const context = crudContextService.getCrudContext();
+            const composition = context.composition;
+            return composition &&
+                composition.currentTab &&
+                composition.currentTab.schema &&
+                expressionService.evaluate(composition.currentTab.schema.allowInsertion, $scope.datamap, { schema: $scope.schema }, null);
+        };
 
 
         $scope.detailSummary = function () {

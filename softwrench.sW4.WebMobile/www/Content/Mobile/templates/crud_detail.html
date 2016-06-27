@@ -15,7 +15,7 @@
             <button class="button icon ion-arrow-left-c" ng-show="shouldShowBack()" ng-click="navigateBack()">&ensp;Back</button>
             <button class="button icon ion-android-cancel" ng-show="hasDirtyChanges()" ng-click="cancelChanges()">&ensp;Cancel</button>
 
-            <button class="button icon ion-plus" ng-click="addCompositionItem()" ng-if="!isOnMainTab()" ng-show="!hasDirtyChanges()">&ensp;Add</button>
+            <button class="button icon ion-plus" ng-click="addCompositionItem()" ng-if="!isOnMainTab() && addCompositionAllowed()" ng-show="!hasDirtyChanges()">&ensp;Add</button>
         </div>
 
         <!-- empty title to position the buttons correctly -->

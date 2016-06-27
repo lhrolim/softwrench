@@ -381,6 +381,49 @@
             <property key="search.startexpanded" value="true"/>
           </properties>
         </schema>
+        
+        <!-- #region: Mobile -->
+        <schema id="newdetail" stereotype="detailnew" platform="mobile" redeclaring="true">
+          <field attribute="orgid" hidden="true" requiredexpression="true" />
+          <field attribute="siteid" hidden="true" requiredexpression="true" />
+
+          <field attribute="description" label="Description" requiredexpression="true"/>
+          
+          <association target="location" labelfield="location.description"
+                       requiredexpression="true" label="Location">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="workorderService" method="clearAsset" />
+          </association>
+          <association target="assetnum" labelfield="asset.description" extraprojectionvalues="location"
+                       requiredexpression="true" label="Asset">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="workorderService" method="updateLocation" />
+          </association>
+
+          <!--<association target="classstructureid" labelfield="offlineclassification_.description"
+                       requiredexpression="true" label="Origination" >
+            <renderer type="lookup"/>
+          </association>-->
+
+          <optionfield attribute="worktype" requiredexpression="true" label="Work Type">
+            <option value="AD" label="Administrative"/>
+            <option value="CC" label="Construction and Commissioning"/>
+            <option value="INSP" label="Inspection"/>
+            <option value="PM" label="Preventative Maintenance"/>
+            <option value="SR" label="Safety / Environmental Work "/>
+            <option value="TRAIN" label="Training"/>
+            <option value="TRAVL" label="Travel"/>
+            <option value="TRBLS" label="Troubleshoot"/>
+            <option value="WO" label="General Work Order"/>
+          </optionfield>
+
+          <composition relationship="attachment" label="Attachments" >
+            <collectionproperties allowupdate="false" />
+          </composition>
+
+        </schema>
+        <!-- #endregion -->
+        
       </schemas>
     </application>
 

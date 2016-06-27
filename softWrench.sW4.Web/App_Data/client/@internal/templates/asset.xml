@@ -202,14 +202,13 @@
         
       </properties>
       <schemas>
-        <schema id="list" platform="mobile">
-          <properties>
-            <property key="list.click.schema" value="assetdetail"/>
-          </properties>
+        <list id="list" platform="mobile">
           <field attribute="assetnum" label="Asset" qualifier="title"/>
           <field attribute="location" label="Location" qualifier="subtitle"/>
           <field attribute="vendor" label="Vendor"  qualifier="featured"/>
-        </schema>
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true" />
+        </list>
         <!--<schema id="detail" stereotype="detail">
           <field attribute="assetid" label="ID"  requiredexpression="true" />
           <field attribute="assetnum" label="Asset"  requiredexpression="true" />
