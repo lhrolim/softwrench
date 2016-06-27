@@ -24,23 +24,32 @@
       <relationships>
         <relationship to="numericdomain" qualifier="realpriority" collection="true">
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
-          <relationshipAttribute to ="domainid" literal="WO PRIORITY" quoteLiteral="true"/>
+          <relationshipAttribute to ="domainid" literal="WOPRIORITY" quoteLiteral="true"/>
         </relationship>
-        
       </relationships>
     </entity>
-
-
-
-
   </entities>
 
   <applications>
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
-
-
-
       <schemas>
+        <list platform="mobile" title="WO - Assigned" redeclaring="true">
+          <filters>
+            <optionfilter attribute="wopriority" provider="realpriority_.description" />
+          </filters>
+
+          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
+          <field attribute="wopriority" label="Priority" qualifier="icon"/>
+          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
+          <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
+          <field attribute="schedfinish" label="Scheduled Finish Date" hidden="true"/>
+          <field attribute="schedfinishnotime" label="Scheduled Finish Date"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+
+          <properties>
+            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
+          </properties>
+        </list>
 
         <detail platform="mobile" title="Work Order" redeclaring="true">
           <reference id="detailhiddensoffline"/>
@@ -110,7 +119,7 @@
         </detail>
 
 
-        <list redeclaring="false">
+        <list redeclaring="false" platform="web">
           <filters>
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Active" value="INPRG,APPR,WOEN,ENRV,HOLD,WAPPR" preselected="true" displaycode="false" tooltip="The status of active work orders. Matchs any work order of &quot;INPRG&quot;, &quot;APPR&quot;, &quot;WOEN&quot;, &quot;ENRV&quot;, &quot;HOLD&quot; or &quot;WAPPR&quot; status."/>
@@ -471,10 +480,12 @@
             <property key="search.startexpanded" value="true"/>
           </properties>
         </schema>
-
-
-
       </schemas>
+
+      <properties>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+      </properties>
     </application>
 
     <application name="numericdomain" title="Numeric Domain" entity="numericdomain">
@@ -494,7 +505,7 @@
       </properties>
 
       <schemas>
-        <list platform="mobile" title="Work Order Grid">
+        <list platform="mobile" title="WO - Other">
           <filters>
             <optionfilter attribute="wopriority" provider="realpriority_.description" />
           </filters>
@@ -508,7 +519,7 @@
           <field attribute="description" label="Description" qualifier="excerpt"/>
 
           <properties>
-            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority is null asc, wopriority asc"/>
+            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
           </properties>
         </list>
 
@@ -807,15 +818,5 @@
         </schema>
       </schemas>
     </application>
-
-    <application entity="classstructure" name="classstructure" title="Classification">
-      <schemas>
-        <list>
-          <field attribute="classstructureid" hidden="true"/>
-          <field attribute="description" label="Description"/>
-        </list>
-      </schemas>
-    </application>
-  
   </applications>
 </metadata>

@@ -116,15 +116,21 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
             return parseInt(backgroundRGB.substring(1), 16) > 0xffffff / 2 ? '#000' : '#fff';
         },
 
-        getPriorityColor: function(priority) {
+        getPriorityColor: function (priority) {
             if (priority === 1 || priority === "1") {
-                return "#f65752"; //red
+                return "#39b54a"; //green
             }
             if (priority === 2 || priority === "2") {
-                return "#f2d935"; //yellow
+                return "#4488f2"; //blue
             }
             if (priority === 3 || priority === "3") {
-                return "#39b54a"; //green
+                return "#f2d935"; //yellow
+            }
+            if (priority === 4 || priority === "4") {
+                return "#e59323"; //orange
+            }
+            if (priority === 5 || priority === "5") {
+                return "#f65752"; //red
             }
             return "#777";
         }
