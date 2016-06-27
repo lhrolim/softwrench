@@ -149,7 +149,7 @@
             <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
           </field>
           <field attribute="attachmentcounter" tooltip="Attachments" hidden="true">
-            <renderer type="icon" params="icon=fa-paperclip;autoloadcomposition=attachment_"/>
+            <renderer type="icon" params="hideValueOnTooltip=true;icon=fa-paperclip;autoloadcomposition=attachment_"/>
           </field>
           <field attribute="statusicons" tooltip="Status Icons">
             <renderer type="statusicons" params="width=5%;iconcolumns=attachmentcounter;icon=fa-tachometer;headericon=true;showsort=false"/>
