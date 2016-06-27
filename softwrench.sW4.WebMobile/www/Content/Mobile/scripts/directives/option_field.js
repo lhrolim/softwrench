@@ -20,7 +20,7 @@ softwrench.directive('optionField',
                     'items': '=', /* Items list is mandatory */
                     'text': '=', /* Displayed text is mandatory */
                     'value': '=', /* Selected value binding is mandatory */
-                    'callback': '&'
+                    'callback': '='
                 },
 
                 link: function (scope, element, attrs) {
@@ -81,12 +81,14 @@ softwrench.directive('optionField',
                             scope.text = '';
 
                             // Loop on items
-                            jQuery.each(scope.items, function (index, item) {
-                                if (item.checked) {
-                                    scope.value = scope.value + item.value + ';';
-                                    scope.text = scope.text + item.label+ ', ';
-                                }
-                            });
+                            if (scope.items) {
+                                jQuery.each(scope.items, function(index, item) {
+                                    if (item.checked) {
+                                        scope.value = scope.value + item.value + ';';
+                                        scope.text = scope.text + item.label + ', ';
+                                    }
+                                });
+                            }
 
                             // Remove trailing comma
                             scope.value = scope.value.substr(0, scope.value.length - 1);

@@ -5,6 +5,10 @@
 
     function offlineSchemaService($log, fieldService, schemaService, securityService, dispatcherService) {
 
+        const dateFormat = "MMM DD";
+        const dateFormatHours = "MMM DD hh a";
+        const dateFormatMinutes = "MMM DD hh:mm a";
+
         function loadDetailSchema(currentListSchema, currentApplication, selectedItem) {
             var detailSchemaId = "detail";
             var schemaDetailService = schemaService.getProperty(currentListSchema, "list.click.service");
@@ -88,14 +92,45 @@
             fillDefaultOfflineValues(schema, item);
         };
 
-        function locateAttributeByQualifier(schema, qualifier) {
+        function locateDisplayableByQualifier(schema, qualifier) {
             schema.jscache = schema.jscache || {};
-            if (schema.jscache.qualifiercache && schema.jscache.qualifiercache[qualifier]) {
+            if (schema.jscache.qualifiercache) {
                 //already cached
-                return schema.jscache.qualifiercache[qualifier].attribute;
+                return schema.jscache.qualifiercache[qualifier];
             }
             buildQualifierCache(schema);
-            return schema.jscache.qualifiercache[qualifier].attribute;
+            const item = schema.jscache.qualifiercache[qualifier];
+            return item ? item.attribute : null;
+        }
+
+        function formatDate(dateString, showHours, showMinutes) {
+            if (!dateString) {
+                return null;
+            }
+            const dateMoment = moment(dateString);
+            if (showMinutes) {
+                return dateMoment.format(dateFormatMinutes);
+            }
+            if (showHours) {
+                return dateMoment.format(dateFormatHours);
+            }
+            return dateMoment.format(dateFormat);
+        }
+
+        function buildDisplayValue(schema, qualifier, item) {
+            const displayable = locateDisplayableByQualifier(schema, qualifier);
+            if (!displayable || !displayable.attribute || !item) {
+                return null;
+            }
+
+            if ("featured" === qualifier && ("datetime" === displayable.dataType || "timestamp" === displayable.dataType)) {
+                return formatDate(item[displayable.attribute], true, true);
+            }
+            if ("featured" === qualifier && "date" === displayable.dataType) {
+                return formatDate(item[displayable.attribute], false, false);
+            }
+
+            return item[displayable.attribute];
         }
 
         function getFieldByAttribute(schema, attribute) {
@@ -109,7 +144,8 @@
             locateSchema: locateSchema,
             locateSchemaByStereotype: locateSchemaByStereotype,
             fillDefaultValues: fillDefaultValues,
-            locateAttributeByQualifier: locateAttributeByQualifier,
+            locateDisplayableByQualifier: locateDisplayableByQualifier,
+            buildDisplayValue: buildDisplayValue,
             getFieldByAttribute: getFieldByAttribute
         };
         return service;

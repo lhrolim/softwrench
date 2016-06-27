@@ -72,6 +72,15 @@
         /// </summary>
         public const string ListQuickSearchCompositionsToExclude = "list.search.compositionstoexclude";
 
+        /// <summary>
+        /// Comma separated list of text fields that should be used as index on ofline search.
+        /// </summary>
+        public const string ListOfflineTextIndexes = "list.offline.text.indexlist";
+
+        /// <summary>
+        /// Comma separated list of date fields that should be used as index on ofline search.
+        /// </summary>
+        public const string ListOfflineDateIndexes = "list.offline.date.indexlist";
 
         /// <summary>
         /// Use this property to specify a custom controller/action to redirect after the save has been performed.Value should be on the format serviceName.methodName

@@ -30,7 +30,10 @@
                 <div class="option-field-icon" ng-if="item.icon != null">
                     <i class="icon-{{item.text}}" style="background-image: url({{item.icon}})"></i>
                 </div>
-                {{item.label}}
+                {{item.label}} <i ng-if="item.afterLabelIcon" class="ion-{{item.afterLabelIcon}}"></i>
+                <div class="option-field-check" ng-if="value === item.value">
+                    <i class="ion-checkmark"></i>
+                </div>
             </label>
         </div>
     </ion-content>

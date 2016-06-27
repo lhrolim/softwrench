@@ -230,5 +230,12 @@ namespace softwrench.sW4.Shared2.Metadata {
         public bool HasCreationSchema {
             get; set;
         }
+
+        public string GetProperty(string propertyKey) {
+            if (Properties == null || !Properties.ContainsKey(propertyKey)) {
+                return null;
+            }
+            return Properties[propertyKey];
+        }
     }
 }

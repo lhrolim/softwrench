@@ -1,7 +1,7 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    mobileServices.factory('offlineSaveService', ["$log", "swdbDAO", "$ionicPopup", "offlineEntities", "offlineAttachmentService", function ($log, swdbDAO, $ionicPopup, offlineEntities, offlineAttachmentService) {
+    mobileServices.factory('offlineSaveService', ["$log", "swdbDAO", "$ionicPopup", "offlineEntities", "offlineAttachmentService", "crudContextHolderService", "searchIndexService", function ($log, swdbDAO, $ionicPopup, offlineEntities, offlineAttachmentService, crudContextHolderService, searchIndexService) {
 
         var entities = offlineEntities;
 
@@ -10,11 +10,15 @@
             item.isDirty = true;
             var queryToExecute;
             item.datamap["#offlinesavedate"] = new Date();
+
+            const idxArrays = crudContextHolderService.getIndexes();
+            const idx = searchIndexService.buildIndexes(idxArrays.textIndexes, idxArrays.dateIndexes, item.datamap);
+
             const jsonString = JSON.stringify(item.datamap);
             if (!localId) {
-                queryToExecute = { query: entities.DataEntry.insertLocalPattern, args: [applicationName, jsonString, persistence.createUUID()] };
+                queryToExecute = { query: entities.DataEntry.insertLocalPattern, args: [applicationName, jsonString, persistence.createUUID(), idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.d1, idx.d2, idx.d3] };
             } else {
-                queryToExecute = { query: entities.DataEntry.updateLocalPattern, args: [jsonString, localId] };
+                queryToExecute = { query: entities.DataEntry.updateLocalPattern, args: [jsonString, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.d1, idx.d2, idx.d3, localId] };
             }
             return swdbDAO.executeQuery(queryToExecute).then(function () {
                 if (showConfirmationMessage === undefined || showConfirmationMessage === true) {

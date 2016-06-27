@@ -603,7 +603,7 @@
         <connectorParameter key="dbtable" value="SITE" />
       </connectorParameters>
     </entity>
-    <entity name="numericdomain" idAttribute="domainid">
+    <entity name="numericdomain" idAttribute="numericdomainid" useridAttribute="domainid">
       <attributes>
         <attribute name="domainid" type="varchar" required="true" />
         <attribute name="value" type="varchar" required="true" />

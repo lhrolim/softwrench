@@ -114,6 +114,19 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
             }
 
             return parseInt(backgroundRGB.substring(1), 16) > 0xffffff / 2 ? '#000' : '#fff';
+        },
+
+        getPriorityColor: function(priority) {
+            if (priority === 1 || priority === "1") {
+                return "#f65752"; //red
+            }
+            if (priority === 2 || priority === "2") {
+                return "#f2d935"; //yellow
+            }
+            if (priority === 3 || priority === "3") {
+                return "#39b54a"; //green
+            }
+            return "#777";
         }
     };
 }]);

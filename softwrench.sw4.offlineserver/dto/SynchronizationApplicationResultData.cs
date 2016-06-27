@@ -43,12 +43,22 @@ namespace softwrench.sw4.offlineserver.dto {
             get; set;
         }
 
+        public IList<string> TextIndexes {
+            get; set;
+        }
+
+        public IList<string> DateIndexes {
+            get; set;
+        }
+
         public SynchronizationApplicationResultData() {
             NewdataMaps = new List<DataMap>();
             UpdatedDataMaps = new List<DataMap>();
             DeletedRecordIds = new List<string>();
             AlreadyExistingDatamaps = new List<DataMap>();
             InsertOrUpdateDataMaps = new List<DataMap>();
+            TextIndexes = new List<string>();
+            DateIndexes = new List<string>();
         }
 
         public SynchronizationApplicationResultData(String applicationName, IList<DataMap> newdataMaps, IList<DataMap> updateDataMaps, IList<string> deletedRecords = null) {
@@ -57,6 +67,8 @@ namespace softwrench.sw4.offlineserver.dto {
             UpdatedDataMaps = updateDataMaps ?? new List<DataMap>();
             DeletedRecordIds = deletedRecords ?? new List<string>();
             InsertOrUpdateDataMaps = new List<DataMap>();
+            TextIndexes = new List<string>();
+            DateIndexes = new List<string>();
         }
 
 
