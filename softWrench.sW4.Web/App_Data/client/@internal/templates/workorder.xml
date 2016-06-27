@@ -207,9 +207,33 @@
           </association>
         </componentdisplayable>
 
+        <componentdisplayable id="detailhiddensoffline">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="woclass" hidden="true"/>
+          <field attribute="hasfollowupwork" hidden="true"/>
+          <field attribute="origrecordid" hidden="true"/>
+          <field attribute="origrecordclass" hidden="true"/>
+          <field attribute="wonum" hidden="true" />
+          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
+          <field attribute="changeby" label="Changed By" hidden="true"/>
+        </componentdisplayable>
 
+        <componentdisplayable id="statuslookup">
+          <association label="Status" target="status" labelfield="synstatus.description">
+            <dataprovider prefilterfunction="FilterStatusCodes"/>
+            <renderer type="lookup" params="avoidautofocus=true"/>
+          </association>
+        </componentdisplayable>
+
+
+        
       </components>
 
+      
+      
+      
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
         <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
@@ -718,21 +742,11 @@
         </schema>
         
         <detail platform="mobile" title="Work Order">
-          <field attribute="workorderid" hidden="true"/>
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true"/>
-          <field attribute="woclass" hidden="true"/>
-          <field attribute="hasfollowupwork" hidden="true"/>
-          <field attribute="origrecordid" hidden="true"/>
-          <field attribute="origrecordclass" hidden="true"/>
-          <field attribute="wonum" label="Number" hidden="true" />
-          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
-          <field attribute="changeby" label="Changed By" hidden="true"/>
+          <reference id="detailhiddensoffline"/>
+          
           <field attribute="owner" label="Owner"  readonly="true"/>
-          <association label="Status" target="status" labelfield="synstatus.description">
-            <dataprovider prefilterfunction="FilterStatusCodes"/>
-            <renderer type="lookup" params="avoidautofocus=true"/>
-          </association>
+          
+          <reference id="statuslookup"/>
           <field attribute="wopriority" label="Priority">
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             <number decimals="0" min="0" max="999" />

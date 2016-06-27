@@ -97,6 +97,7 @@ softwrench.directive('crudInputFields', [function () {
                         name: f.attribute,
                         event: f.events["afterchange"]
                     }));
+                    //properties on the datamap that must be watched
                     this.expressions = _.sortBy(this.eventDescriptors, "position").map(e => `datamap.${e.name}`);
                 }
                 getEvent(position) {
