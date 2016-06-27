@@ -61,6 +61,14 @@ namespace softWrench.sW4.Data {
                 object value;
                 if (pair.Key == RowStampUtil.RowstampColumnName || pair.Key.Contains("." + RowStampUtil.RowstampColumnName)) {
                     value = RowStampUtil.Convert(pair.Value);
+                } else if (pair.Value is decimal) {
+                    // workaround to remove the trailing zeros after the '.' on decimal values
+                    if (pair.Value == null) {
+                        value = null;
+                    } else {
+                        var stringValue = Convert.ToString(pair.Value);
+                        value = stringValue.Contains(".") ? stringValue.TrimEnd('0').TrimEnd('.') : stringValue;
+                    }
                 } else {
                     // let the serializer take care of date convertion
                     value = pair.Value == null ? null : (pair.Value is DateTime ? pair.Value : Convert.ToString(pair.Value));

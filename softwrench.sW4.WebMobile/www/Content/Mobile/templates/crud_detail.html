@@ -1,7 +1,7 @@
 ﻿<ion-view>
 
     <ion-nav-buttons side="left">
-        <button class="button-icon icon ion-navicon" menu-toggle="left"></button>
+        <button class="button-icon" menu-toggle="left"><i class="fa fa-bars"></i></button>
     </ion-nav-buttons>
     
     <ion-nav-title>
@@ -12,20 +12,19 @@
     <ion-header-bar class="bar-subheader bar-assertive" align-title="left">
 
         <div class="buttons" style="padding-left: 5px">
-            <button class="button icon ion-arrow-left-c" ng-show="shouldShowBack()" ng-click="navigateBack()">&ensp;Back</button>
-            <button class="button icon ion-android-cancel" ng-show="hasDirtyChanges()" ng-click="cancelChanges()">&ensp;Cancel</button>
-
-            <button class="button icon ion-plus" ng-click="addCompositionItem()" ng-if="!isOnMainTab() && addCompositionAllowed()" ng-show="!hasDirtyChanges()">&ensp;Add</button>
+            <button class="button" ng-show="shouldShowBack()" ng-click="navigateBack()"><i class="fa fa-arrow-left"></i>&ensp;Back</button>
+            <button class="button" ng-show="hasDirtyChanges()" ng-click="cancelChanges()"><i class="fa fa-times-circle"></i>&ensp;Cancel</button>
+            <button class="button" ng-click="addCompositionItem()" ng-if="!isOnMainTab()" ng-show="!hasDirtyChanges() && addCompositionAllowed()"><i class="fa fa-plus"></i>&ensp;Add</button>
         </div>
 
         <!-- empty title to position the buttons correctly -->
         <h1 class="title"></h1>
 
         <div class="buttons" style="white-space: nowrap">
-            <button class="button icon ion-arrow-left-a" ng-click="navigatePrevious()" ng-if="showNavigation()"></button>
-            <button class="button icon ion-arrow-right-a" ng-click="navigateNext()" ng-if="showNavigation()"></button>
-            <button class="button icon ion-android-apps" ng-click="expandCompositions($event)" ng-if="!hasDirtyChanges() && hasAnyComposition()"></button>
-            <button class="button icon ion-android-done" ng-click="saveChanges()" ng-if="hasDirtyChanges()">&ensp;Save</button>
+            <button class="button" ng-click="navigatePrevious()" ng-if="showNavigation()"><i class="fa fa-chevron-left"></i></button>
+            <button class="button" ng-click="navigateNext()" ng-if="showNavigation()"><i class="fa fa-chevron-right"></i></button>
+            <button class="button" ng-click="expandCompositions($event)" ng-if="!hasDirtyChanges() && hasAnyComposition()"><i class="fa fa-th"></i></button>
+            <button class="button" ng-click="saveChanges()" ng-if="hasDirtyChanges()"><i class="fa fa-check"></i>&ensp;Save</button>
         </div>
 
     </ion-header-bar>

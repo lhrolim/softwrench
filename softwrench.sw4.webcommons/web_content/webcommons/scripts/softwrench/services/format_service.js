@@ -1,11 +1,10 @@
 ﻿(function (angular) {
     "use strict";
 
-    function formatService($filter, i18NService, dispatcherService) {
-
+    function formatService($filter, i18NService, dispatcherService, contextService) {
         //#region Utils
 
-        var doFormatDate = function (value, dateFormat, forceConversion) {
+        var doFormatDate = function (value, dateFormat, forceConversion, contextService) {
             if (value == null) {
                 return null;
             }
@@ -44,7 +43,7 @@
 
         //#region Public methods
 
-        function format (value, field, datamap) {
+        function format(value, field, datamap) {
             if (field == undefined || value==null) {
                 return value;
             }
@@ -83,7 +82,7 @@
                     dateFormat = field.rendererParameters['format'];
                     if (dateFormat == null) {
                         //TODO: make default client specific
-                        dateFormat = "MM/dd/yyyy HH:mm";
+                        dateFormat = contextService.retrieveFromContext('dateTimeFormat');;
                     }
                     return doFormatDate(value, dateFormat, false);
                 }
@@ -156,22 +155,23 @@
 
         function formatDate(value, dateFormat) {
             if (!dateFormat) {
-                dateFormat = "MM/dd/yyyy hh:mm";
+                dateFormat = contextService.retrieveFromContext('dateTimeFormat');
             }
             return doFormatDate(value, dateFormat, true);
         };
 
-        function adjustDateFormatForAngular (dateFormat, showTime) {
-            if (dateFormat == undefined || dateFormat == '') {
+        function adjustDateFormatForAngular(dateFormat, showTime) {
+            if (!dateFormat) {
+                var globalDateTimeFormat = contextService.retrieveFromContext('dateTimeFormat');
                 //default ==> should be client specific
-                return showTime ? "MM/dd/yyyy hh:mm" : "MM/dd/yyyy";
+                return showTime ? globalDateTimeFormat : globalDateTimeFormat.replace('hh:mm', '');
             } else {
                 return dateFormat.trim();
             }
         };
 
 
-        function adjustDateFormatForPicker (dateFormat, showTime) {
+        function adjustDateFormatForPicker(dateFormat, showTime) {
             /// <summary>
             ///  Bootstrap picker uses mm for month, and ii for minutes.
             ///  Angular, however, uses MM for month and hh mm for minutes.
@@ -179,9 +179,14 @@
             /// <param name="dateFormat"></param>
             /// <param name="showTime"></param>
             /// <returns type=""></returns>
-            if (dateFormat == undefined || dateFormat == '') {
+            if (!dateFormat) {
+                dateFormat = contextService.retrieveFromContext('dateTimeFormat');
+                dateFormat = dateFormat.replace('dd', 'DD');
+                dateFormat = dateFormat.replace('yyyy', 'YYYY');
+                dateFormat = dateFormat.replace('hh', 'HH');
+
                 //default ==> should be client specific
-                return showTime ? "MM/DD/YYYY HH:mm" : "MM/DD/YYYY";
+                return showTime ? dateFormat : dateFormat.replace('HH:mm', '');
             } else {
                 dateFormat = dateFormat.replace('dd', 'DD');
                 dateFormat = dateFormat.replace('yyyy', 'YYYY');
@@ -194,7 +199,7 @@
         };
 
         function doContentStringConversion(datamap) {
-            angular.forEach(datamap, function(value, index) {
+            angular.forEach(datamap, function (value, index) {
                 datamap[index] = value == null
                    ? null
                    : angular.isArray(value)
@@ -240,7 +245,7 @@
 
     //#region Service registration
 
-    angular.module("webcommons_services").factory("formatService", ['$filter', 'i18NService', 'dispatcherService', formatService]);
+    angular.module("webcommons_services").factory("formatService", ['$filter', 'i18NService', 'dispatcherService', 'contextService', formatService]);
 
     //#endregion
 

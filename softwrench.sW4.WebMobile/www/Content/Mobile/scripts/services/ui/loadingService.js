@@ -5,14 +5,9 @@
         //#region Utils
 
         const loadingOptions = {
-            //template: "<i class='icon ion-looping'></i> Loading", -> ionicon-animations not added; using spinner instead
             template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Loading<span>",
-            animation: "fade-in",
+            animation: "fade-in"
         };
-
-
-      
-
 
         //#endregion
 

@@ -3,20 +3,18 @@
     <ion-nav-buttons side="left">
         <!-- detail of specif syncoperation: back button -->
         <button ng-if="!data.isLatestOperation" class="button" ng-click="goBack()">
-            <i class="ion-chevron-left"></i>
-            Back
+            <i class="fa fa-chevron-left"></i>&ensp;Back
         </button>
         <!-- detail of latest syncoperation: toggle left-menu button -->
         <button ng-if="data.isLatestOperation" class="button button-menu" menu-toggle="left">
-            <i class="icon ion-navicon"></i>
+            <i class="fa fa-bars"></i>
         </button>
     </ion-nav-buttons>
     
     <ion-nav-buttons side="right">
         <!-- detail of latest syncoperation: full sync button -->
         <button ng-if="data.isLatestOperation" class="button sync-button" ng-click="fullSynchronize()" ng-disabled="data.isSynching">
-            <i class="icon ion-loop"></i>
-            Sync
+            <i class="fa fa-refresh"></i>&ensp;Sync
         </button>
     </ion-nav-buttons>
 
@@ -49,7 +47,7 @@
                         <h5>Application Uploads: {{data.batchItems.length}}</h5>
                         <ul class="item-list">
                             <li ng-repeat="item in data.batchItems">
-                                <i class="icon" ng-class="{'ion-alert-circled': item.simpleproblem, 'ion-checkmark': !item.simpleproblem}"></i>
+                                <i class="fa" ng-class="{'fa-exclamation-triangle': item.simpleproblem, 'fa-check': !item.simpleproblem}"></i>
                                 {{item.label}}
                                 <span ng-if="item.simpleproblem">:&nbsp;{{item.simpleproblem.message}}</span>
                             </li>
@@ -69,9 +67,8 @@
                 </div>
 
                 <div class="list">
-                    <div class="item item-divider item-icon-left app-summary-title" ng-click="toggleApplicationStateCollapsed()">
-                        <i class="icon" ng-class="{'ion-arrow-down-b': data.applicationStateCollapsed, 'ion-arrow-up-b': !data.applicationStateCollapsed}"></i>
-                        Application summary
+                    <div class="item item-divider app-summary-title" ng-click="toggleApplicationStateCollapsed()">
+                        <i class="fa" ng-class="{'fa-caret-down': data.applicationStateCollapsed, 'fa-caret-up': !data.applicationStateCollapsed}"></i>&ensp;Application Summary
                     </div>
                 </div>
 
@@ -80,21 +77,20 @@
                         <div class="item item-divider">
                             {{app.application | capitalize}}
                         </div>
-                        <div class="item item-text-wrap item-icon-left">
-                            <i class="icon ion-checkmark"></i>
-                            Number of items:&nbsp;{{app.all}}
+                        <div class="item item-text-wrap">
+                            <i class="fa fa-check fa-fw"></i>&ensp;Items:&nbsp;{{app.all}}
                         </div>
-                        <div class="item item-text-wrap item-icon-left">
-                            <i class="icon ion-loop"></i>
-                            Number of pending items:&nbsp;{{app.pending}}
+                        <div class="item item-text-wrap">
+                            <i class="fa fa-refresh fa-fw"></i>&ensp;
+                            Pending Items:&nbsp;{{app.pending}}
                         </div>
-                        <div class="item item-text-wrap item-icon-left">
-                            <i class="icon ion-asterisk"></i>
-                            Number of dirty items:&nbsp;{{app.dirty}}
+                        <div class="item item-text-wrap">
+                            <i class="fa fa-asterisk fa-fw"></i>&ensp;
+                            Dirty Items:&nbsp;{{app.dirty}}
                         </div>
-                        <div class="item item-text-wrap item-icon-left">
-                            <i class="icon ion-alert-circled"></i>
-                            Number of problematic items:&nbsp;{{app.problematic}}
+                        <div class="item item-text-wrap">
+                            <i class="fa fa-exclamation-triangle fa-fw"></i>&ensp;
+                            Problematic Items:&nbsp;{{app.problematic}}
                         </div>
                     </div>
                 </div>

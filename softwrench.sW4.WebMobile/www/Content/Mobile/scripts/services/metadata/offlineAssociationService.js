@@ -25,9 +25,8 @@ mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", 
                     "(" + testEmptyExpression(label) + " ? (\' - \'  + " + label + ") : \'\')";
         },
 
-        filterPromise: function (parentSchema, parentdatamap, associationName, filterText) {
-            var displayable = fieldService.getDisplayablesByAssociationKey(parentSchema, associationName)[0];
-            
+        filterPromise: function (parentSchema, parentdatamap, associationName, filterText, preCalcDisplayable) {
+            const displayable = preCalcDisplayable || fieldService.getDisplayablesByAssociationKey(parentSchema, associationName)[0];
 
             if (associationName.endsWith("_")) {
                 associationName = associationName.substring(0, associationName.length-1);

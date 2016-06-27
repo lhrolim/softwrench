@@ -23,6 +23,9 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 using SynchronizationResultDto = softwrench.sw4.offlineserver.dto.SynchronizationResultDto;
 
@@ -31,12 +34,14 @@ namespace softwrench.sw4.offlineserver.services {
 
         private readonly OffLineCollectionResolver _resolver;
         private readonly EntityRepository _repository;
+        private readonly IContextLookuper _lookuper;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SynchronizationManager));
 
-        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository) {
+        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper) {
             _resolver = resolver;
             _repository = respository;
+            _lookuper = lookuper;
             Log.DebugFormat("init sync log");
         }
 
@@ -89,6 +94,9 @@ namespace softwrench.sw4.offlineserver.services {
                 }
 
                 tasks[i++] = Task.Factory.NewThread(() => {
+
+                    _lookuper.LookupContext().OfflineMode = true;
+
                     var datamaps = FetchData(entityMetadata, userAppMetadata, rowstamp, null);
                     results.AssociationData.Add(association1.ApplicationName, datamaps);
                 });
@@ -114,7 +122,7 @@ namespace softwrench.sw4.offlineserver.services {
             }
 
             var topLevelAppData = FetchData(entityMetadata, userAppMetadata, rowstamps, request.ItemsToDownload);
-            var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampDTO);
+            var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampDTO, topLevelApp);
 
             result.AddTopApplicationData(appResultData);
             Log.DebugFormat("SYNC:Finished handling top level app. Ellapsed {0}", LoggingUtil.MsDelta(watch));
@@ -186,12 +194,14 @@ namespace softwrench.sw4.offlineserver.services {
 
 
 
-        private SynchronizationApplicationResultData FilterData(string applicationName, ICollection<DataMap> topLevelAppData, ClientStateJsonConverter.AppRowstampDTO rowstampDTO) {
+        private SynchronizationApplicationResultData FilterData(string applicationName, ICollection<DataMap> topLevelAppData, ClientStateJsonConverter.AppRowstampDTO rowstampDTO, CompleteApplicationMetadataDefinition topLevelApp) {
             var watch = Stopwatch.StartNew();
 
             var result = new SynchronizationApplicationResultData {
                 AllData = topLevelAppData
             };
+
+            ParseIndexes(result, topLevelApp);
 
             if (rowstampDTO.MaxRowstamp != null) {
                 //SWOFF-140 
@@ -232,7 +242,25 @@ namespace softwrench.sw4.offlineserver.services {
             return result;
         }
 
+        private static void ParseIndexes(SynchronizationApplicationResultData syncData, CompleteApplicationMetadataDefinition topLevelApp) {
+            var indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineTextIndexes);
+            if (!string.IsNullOrEmpty(indexesString)) {
+                indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, syncData.TextIndexes));
+            }
 
+            indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineDateIndexes);
+            if (!string.IsNullOrEmpty(indexesString)) {
+                indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, syncData.DateIndexes));
+            }
+        }
+
+        private static void ParseIndex(string index, IList<string> indexList) {
+            var trimmed = index.Trim();
+            if (string.IsNullOrEmpty(trimmed)) {
+                return;
+            }
+            indexList.Add(trimmed);
+        }
 
         private List<DataMap> FetchData(SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata, Rowstamps rowstamps = null, List<string> itemsToDownload = null) {
             if (rowstamps == null) {
@@ -247,7 +275,7 @@ namespace softwrench.sw4.offlineserver.services {
 
             if (itemsToDownload != null) {
                 //ensure only the specified items are downloaded
-                searchDto.AppendWhereClauseFormat("{0} in ({1})", appMetadata.IdFieldName,BaseQueryUtil.GenerateInString(itemsToDownload));
+                searchDto.AppendWhereClauseFormat("{0} in ({1})", appMetadata.IdFieldName, BaseQueryUtil.GenerateInString(itemsToDownload));
             }
 
 

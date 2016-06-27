@@ -144,7 +144,7 @@
             <renderer type="default" params="width=12%" />
           </field>
           <field attribute ="requireddate" label="Required Date">
-            <renderer type="datetime" params="width=15%;format=MM/dd/yyyy HH:mm;showtime=false"/>
+            <renderer type="datetime" params="width=15%;showtime=false"/>
           </field>
           <field attribute ="totalcost" label="Total Cost">
             <renderer type="default" params="width=12%" />
@@ -249,7 +249,7 @@
           <field attribute="itemsetid" hidden="true"/>
           <field attribute="linetype" hidden="true"/>
           <field label="Entered Date" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            <renderer type="datetime" />
           </field>
           <section resourcepath="/Content/Templates/otb/receiving.html">
             <renderer type="default" params="width=4%"/>
@@ -308,7 +308,7 @@
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="requireddate" label="Required Date">
-            <renderer type="datetime" params="width=15%;format=MM/dd/yyyy HH:mm;showtime=false" />
+            <renderer type="datetime" params="width=15%;showtime=false" />
           </field>
           <field attribute="vendor" label="Vendor">
             <renderer type="default" params="width=12%;" />
@@ -395,7 +395,7 @@
           <field attribute="orderqty" label="Quantity"/>
           <field attribute="unitcost" label="Unit Cost"/>
           <field label="Entered Date" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            <renderer type="datetime" />
           </field>
         </schema>
 

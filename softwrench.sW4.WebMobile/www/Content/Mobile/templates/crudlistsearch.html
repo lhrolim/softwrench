@@ -1,0 +1,71 @@
+﻿<ion-view>
+
+    <ion-nav-buttons side="left">
+        <button class="button-icon ion-chevron-left" ng-click="cancel()">&nbsp;Back</button>
+    </ion-nav-buttons>
+
+    <ion-nav-title>
+        <div>Advanced</div>
+    </ion-nav-title>
+
+
+    <ion-nav-buttons side="right">
+        <button class="button-icon ion-checkmark" ng-click="apply()">&nbsp;Apply</button>
+    </ion-nav-buttons>
+
+    <ion-content has-header="true" class="crud-fields-wrapper">
+        <ion-header-bar class="bar-positive" align-title="center" style="position:relative">
+            <h1 class="title">Sort</h1>
+        </ion-header-bar>
+
+        <div class="list card responsive-container lg">
+            <div class="item item-divider">
+                Sort By
+            </div>
+            <div class="item item-text-wrap">
+                {{sortFieldLabel()}}&nbsp;<i ng-if="gridSearch.sort.afterLabelIcon" class="ion-{{gridSearch.sort.afterLabelIcon}}"></i>
+                <option-field header-text="Sort By" allow-empty="false" value="gridSearch.sort.value" text="Choose" items="gridSearch.sortableFields" callback="sortChanged" />
+            </div>
+        </div>
+
+        <ion-header-bar class="bar-positive" align-title="center" style="position:relative">
+            <h1 class="title">Search</h1>
+        </ion-header-bar>
+
+        <div class="list card responsive-container lg" ng-repeat="field in gridSearch.searchFields">
+            <div class="item item-divider">
+                {{field.label}}
+            </div>
+
+            <div ng-switch on="getSearchType(field)">
+                <div ng-switch-when="date">
+                    <label class="item item-input">
+                        <span class="input-label">After</span>
+                        <input type="date" ng-model="searchValue(field).start" ng-change="searchDateStartChanged(field)" />
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Before</span>
+                        <input type="date" ng-model="searchValue(field).end" ng-change="searchDateEndChanged(field)" />
+                    </label>
+                </div>
+                <label ng-switch-when="option" class="item item-input crud-search-option">
+                    <div class="search-option">{{searchValue(field).label}}</div>
+                    <option-field header-text="{{searchFieldLabel(field)}}"
+                                  allow-empty="true"
+                                  value="searchValue(field).value"
+                                  text="Choose"
+                                  items="field.options"
+                                  multi-select="true"
+                                  callback="field.optionChanged" />
+                </label>
+                <label ng-switch-default class="item item-input">
+                    <input type="text" ng-model="searchValue(field).value" />
+                </label>
+            </div>
+        </div>
+    </ion-content>
+
+    <ion-footer-bar class="search-clear-bar">
+        <button class="button button-calm button-block search-clear-button" ng-click="clear()">Clear</button>
+    </ion-footer-bar>
+</ion-view>

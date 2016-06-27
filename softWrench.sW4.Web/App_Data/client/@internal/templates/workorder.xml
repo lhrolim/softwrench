@@ -58,7 +58,7 @@
         </relationship>
         <relationship to="failurecode" >
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
-          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
         <relationship to="worktype" >
           <relationshipAttribute from="worktype" to="worktype" primary="true"/>
@@ -207,9 +207,33 @@
           </association>
         </componentdisplayable>
 
+        <componentdisplayable id="detailhiddensoffline">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="woclass" hidden="true"/>
+          <field attribute="hasfollowupwork" hidden="true"/>
+          <field attribute="origrecordid" hidden="true"/>
+          <field attribute="origrecordclass" hidden="true"/>
+          <field attribute="wonum" hidden="true" />
+          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
+          <field attribute="changeby" label="Changed By" hidden="true"/>
+        </componentdisplayable>
 
+        <componentdisplayable id="statuslookup">
+          <association label="Status" target="status" labelfield="synstatus.description">
+            <dataprovider prefilterfunction="FilterStatusCodes"/>
+            <renderer type="lookup" params="avoidautofocus=true"/>
+          </association>
+        </componentdisplayable>
+
+
+        
       </components>
 
+      
+      
+      
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
         <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
@@ -255,7 +279,7 @@
             <renderer type="icon" params="icon=fa-envelope-o;autoloadcomposition=commlog_"/>
           </field>
           <field attribute="attachmentcounter" tooltip="Attachments" hidden="true">
-            <renderer type="icon" params="icon=fa-paperclip;autoloadcomposition=attachment_"/>
+            <renderer type="icon" params="hideValueOnTooltip=true;icon=fa-paperclip;autoloadcomposition=attachment_"/>
           </field>
           <field attribute="relatedcounter" tooltip="Related Records" hidden="true">
             <renderer type="icon" params="icon=fa-tags;autoloadcomposition=relatedrecord_"/>
@@ -456,7 +480,7 @@
                 <renderer type="lookup" params="columnlabel=Name;"/>
               </association>
               <field label="Reported Date &amp; Time" attribute="reportdate" readonly="true" default="@currentdatetime">
-                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;" />
+                <renderer type="datetime" />
               </field>
             </section>
 
@@ -718,21 +742,11 @@
         </schema>
         
         <detail platform="mobile" title="Work Order">
-          <field attribute="workorderid" hidden="true"/>
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true"/>
-          <field attribute="woclass" hidden="true"/>
-          <field attribute="hasfollowupwork" hidden="true"/>
-          <field attribute="origrecordid" hidden="true"/>
-          <field attribute="origrecordclass" hidden="true"/>
-          <field attribute="wonum" label="Number" hidden="true" />
-          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
-          <field attribute="changeby" label="Changed By" hidden="true"/>
+          <reference id="detailhiddensoffline"/>
+          
           <field attribute="owner" label="Owner"  readonly="true"/>
-          <association label="Status" target="status" labelfield="synstatus.description">
-            <dataprovider prefilterfunction="FilterStatusCodes"/>
-            <renderer type="lookup" params="avoidautofocus=true"/>
-          </association>
+          
+          <reference id="statuslookup"/>
           <field attribute="wopriority" label="Priority">
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             <number decimals="0" min="0" max="999" />
@@ -759,9 +773,9 @@
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
               <command id="startlabtrans" service="laborService" method="startLaborTransaction" 
-                       icon="ion-ios-clock-outline" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
+                       icon="fa fa-play" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
               <command id="finishlabtrans" service="laborService" method="finishLaborTransaction" 
-                       icon="ion-ios-clock" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
+                       icon="fa fa-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
             </commandgroup>
           </commandbars>
           

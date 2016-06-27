@@ -19,8 +19,8 @@
 
             <ul class="list">
                 <!-- apps -->
-                <div ng-show="menuleafs().length" class="item item-divider fa fa-th">
-                    Applications
+                <div ng-show="menuleafs().length" class="item item-divider">
+                    <i class="fa fa-th"></i>&ensp;Applications
                 </div>
 
                 <ng-switch ng-repeat="leaf in menuleafs()" on="leaf.type">
@@ -52,7 +52,7 @@
                 <a class="item" ng-click="loadAction('main.home')"><i class="fa fa-refresh"></i>&ensp;Synchronization</a>
 
                 <!-- TODO: make audit presence configurable -->
-                <!--<a class="item icon ion-locked" ng-click="loadAction('main.audit.applicationselect')">&nbsp;Audit</a>-->
+                <!--<a class="fa fa-lock" ng-click="loadAction('main.audit.applicationselect')">&ensp;Audit</a>-->
                 
                 <a class="item" ng-click="loadAction('main.settings')"><i class="fa fa-cog"></i>&ensp;Settings</a>
 

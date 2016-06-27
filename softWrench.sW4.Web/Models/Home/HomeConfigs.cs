@@ -27,5 +27,11 @@ namespace softWrench.sW4.Web.Models.Home {
         public string DefaultEmail { get; set; }
         public Boolean UIShowClassicAdminMenu { get; set; }
         public Boolean UIShowToolbarLabels { get; set; }
+
+        public SWdisplayableFormats DisplayableFormats { get; set; }
+    }
+
+    public class SWdisplayableFormats {
+        public string DateTimeFormat { get; set; }
     }
 }

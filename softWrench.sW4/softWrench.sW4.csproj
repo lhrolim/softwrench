@@ -78,7 +78,7 @@
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
       <Private>False</Private>
     </Reference>
-	<Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.dll.1.0.2\lib\net45\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -205,6 +205,7 @@
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\ByUserIdSiteWhereBuilder.cs" />
+    <Compile Include="Data\Persistence\Relational\QueryBuilder\IDynamicWhereBuilder.cs" />
     <Compile Include="Data\Persistence\WS\AMEX\AmexAssetConnectors.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoException.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoWebServiceNotResolvedException.cs" />

@@ -41,7 +41,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly OffLineBatchService _offLineBatchService;
 
-        private MenuSecurityManager _menuManager;
+        private readonly MenuSecurityManager _menuManager;
 
         readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()

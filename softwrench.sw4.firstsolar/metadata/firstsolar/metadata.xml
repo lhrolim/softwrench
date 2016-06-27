@@ -15,12 +15,114 @@
         <attribute name="openwo" query="(select count(1) from workorder where UPPER(workorder.status) not in ('CAN', 'COMP', 'CLOSE') and workorder.assetnum = !@assetnum and workorder.siteid = !@siteid and workorder.orgid = !@orgid)" type="int"/>
       </attributes>
     </entity>
+
+    <entity name="workorder" idAttribute="workorderid">
+      <attributes>
+        <attribute name="schedstartnotime" query="DATEADD(dd, DATEDIFF(dd, 0, workorder.schedstart), 0)" type="date"/>
+        <attribute name="schedfinishnotime" query="DATEADD(dd, DATEDIFF(dd, 0, workorder.schedfinish), 0)" type="date"/>
+      </attributes>
+      <relationships>
+        <relationship to="numericdomain" qualifier="realpriority" collection="true">
+          <relationshipAttribute from="wopriority" to="value" primary="true"/>
+          <relationshipAttribute to ="domainid" literal="WOPRIORITY" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
+
+
+
       <schemas>
-        <list redeclaring="false">
+        <list platform="mobile" title="WO - Assigned" redeclaring="true">
+          <filters>
+            <optionfilter attribute="wopriority" provider="realpriority_.description" />
+          </filters>
+
+          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
+          <field attribute="wopriority" label="Priority" qualifier="icon"/>
+          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
+          <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
+          <field attribute="schedfinish" label="Scheduled Finish Date" hidden="true"/>
+          <field attribute="schedfinishnotime" label="Scheduled Finish Date"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+
+          <properties>
+            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
+          </properties>
+        </list>
+
+        <detail platform="mobile" title="Work Order" redeclaring="true">
+          <reference id="detailhiddensoffline"/>
+
+          <association label="Location" target="location" labelfield="location.description" requiredexpression="true"/>
+          <association label="Asset" target="assetnum" labelfield="asset.description" requiredexpression="true"/>
+
+          <association label="Status" target="status" labelfield="synstatus.description" >
+            <dataprovider prefilterfunction="FilterStatusCodes"/>
+          </association>
+
+          <field attribute="description" label="Description" requiredexpression="true"/>
+          <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
+            <renderer type="richtext"/>
+          </field>
+
+          <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true"/>
+
+          <!--          <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true" />-->
+
+          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" requiredexpression="true"/>
+
+
+          <field label="Warranty Claim Number" attribute="WOLO10"/>
+          <field label="EPCR Number" attribute="EPCR_NUM"/>
+          <field label="JPNUM" attribute="JPNUM"/>
+
+          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" requiredexpression="@worktype == 'CM' "/>
+
+          <!-- Region Problems, cuase Remedy -->
+          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">
+            <renderer type="lookup"  />
+            <dataprovider prefilterfunction="FilterProblemCodes" />
+          </association>
+
+          <!--          <association label="Cause" enableexpression="@problemcode!=null" target="problemcode" labelfield="problemlist_.description">-->
+          <!--            <dataprovider prefilterfunction="FilterProblemCodes" />-->
+          <!--          </association>-->
+
+          <!--          <association label="Remedy" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">-->
+          <!--            <dataprovider prefilterfunction="FilterProblemCodes" />-->
+          <!--          </association>-->
+
+          <!-- EndRegion-->
+
+          <!-- Region Compositions: materials, labors, attachmets -->
+          <composition relationship="matusetrans" label="Materials" />
+          <composition relationship="labtrans" label="Labor">
+            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+          </composition>
+          <composition relationship="attachment" label="Attachments">
+            <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+          </composition>
+          <!-- EndRegion -->
+
+
+
+          <commandbars>
+            <commandgroup platform="mobile" position="mobile.fab">
+              <command id="startlabtrans" service="laborService" method="startLaborTransaction"
+                       icon="ion-ios-clock-outline" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
+              <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
+                       icon="ion-ios-clock" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
+            </commandgroup>
+          </commandbars>
+
+        </detail>
+
+
+        <list redeclaring="false" platform="web">
           <filters>
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Active" value="INPRG,APPR,WOEN,ENRV,HOLD,WAPPR" preselected="true" displaycode="false" tooltip="The status of active work orders. Matchs any work order of &quot;INPRG&quot;, &quot;APPR&quot;, &quot;WOEN&quot;, &quot;ENRV&quot;, &quot;HOLD&quot; or &quot;WAPPR&quot; status."/>
@@ -47,7 +149,7 @@
           <properties>
             <property key="attachments.skiprelatedattachments" value="true"/>
           </properties>
-          
+
           <customization position="assetnum">
             <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" requiredexpression="true">
               <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
@@ -55,8 +157,8 @@
               <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
             </association>
           </customization>
-          
-          
+
+
           <customization position="location">
             <section orientation="horizontal">
               <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" requiredexpression="true">
@@ -70,11 +172,11 @@
               <renderer type="autocompleteclient" params="inputsize=large" />
             </optionfield>
           </customization>
-          
-          
-          
+
+
+
           <customization position="worktype">
-            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" requiredexpression="true">
+            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" requiredexpression="true" >
               <renderer type="lookup" params="inputsize=small"/>
             </association>
           </customization>
@@ -374,7 +476,7 @@
               <command id="new" cssclasses="searchbutton" icon="fa-plus" service="advancedSearchService" method="newWorkOrder" label="New WO" parameters="schema,datamap"/>
             </commandgroup>
           </commandbars>
-          
+
           <properties>
             <property key="search.panelwidth" value="180"/>
             <property key="crud.disableautofocus" value="true"/>
@@ -383,6 +485,72 @@
         </schema>
         
         <!-- #region: Mobile -->
+        <detail platform="mobile" title="Work Order" redeclaring="true">
+          <reference id="detailhiddensoffline"/>
+
+          <association label="Location" target="location" labelfield="location.description" requiredexpression="true"/>
+          <association label="Asset" target="assetnum" labelfield="asset.description" requiredexpression="true"/>
+
+          <association label="Status" target="status" labelfield="synstatus.description" >
+            <dataprovider prefilterfunction="FilterStatusCodes"/>
+          </association>
+
+          <field attribute="description" label="Description" requiredexpression="true"/>
+          <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
+            <renderer type="richtext"/>
+          </field>
+
+          <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true"/>
+
+          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" requiredexpression="true"/>
+
+          
+          <field label="Warranty Claim Number" attribute="WOLO10"/>
+          <field label="EPCR Number" attribute="EPCR_NUM"/>
+          <field label="JPNUM" attribute="JPNUM"/>
+
+          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" requiredexpression="@worktype == 'CM' "/>
+
+          <!-- Region Problems, cuase Remedy -->
+          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">
+            <renderer type="lookup"  />
+            <dataprovider prefilterfunction="FilterProblemCodes" />
+          </association>
+
+          <!--          <association label="Cause" enableexpression="@problemcode!=null" target="problemcode" labelfield="problemlist_.description">-->
+          <!--            <dataprovider prefilterfunction="FilterProblemCodes" />-->
+          <!--          </association>-->
+
+          <!--          <association label="Remedy" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">-->
+          <!--            <dataprovider prefilterfunction="FilterProblemCodes" />-->
+          <!--          </association>-->
+
+          <!-- EndRegion-->
+
+          <!-- Region Compositions: materials, labors, attachmets -->
+          <composition relationship="matusetrans" label="Materials" />
+          <composition relationship="labtrans" label="Labor">
+            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+          </composition>
+          <composition relationship="attachment" label="Attachments">
+            <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+          </composition>
+          <!-- EndRegion -->
+
+
+
+          <commandbars>
+            <commandgroup platform="mobile" position="mobile.fab">
+              <command id="startlabtrans" service="laborService" method="startLaborTransaction"
+                       icon="ion-ios-clock-outline" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
+              <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
+                       icon="ion-ios-clock" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
+            </commandgroup>
+          </commandbars>
+
+        </detail>
+
+        
         <schema id="newdetail" stereotype="detailnew" platform="mobile" redeclaring="true">
           <field attribute="orgid" hidden="true" requiredexpression="true" />
           <field attribute="siteid" hidden="true" requiredexpression="true" />
@@ -425,23 +593,51 @@
         <!-- #endregion -->
         
       </schemas>
+
+      <properties>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+      </properties>
+    </application>
+
+    <application name="numericdomain" title="Numeric Domain" entity="numericdomain">
+      <schemas>
+        <list platform="mobile" title="Numeric Domain">
+          <field attribute="description" label="Description"/>
+          <field attribute="value" label="Value"/>
+          <field attribute="domainid" label="Domain"/>
+        </list>
+      </schemas>
     </application>
 
     <application name="otherworkorder" title="Other Work Orders" entity="workorder" role="workorders">
+      <properties>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+      </properties>
+
       <schemas>
-        <list platform="mobile" title="Work Order Grid">
-          <field attribute="wonum" label="Number" qualifier="title"/>
-          <field attribute="asset_.description" label="Asset" qualifier="subtitle"/>
-          <field attribute="status" label="Status" qualifier="featured"/>
+        <list platform="mobile" title="WO - Other">
+          <filters>
+            <optionfilter attribute="wopriority" provider="realpriority_.description" />
+          </filters>
+
+          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
+          <field attribute="wopriority" label="Priority" qualifier="icon"/>
+          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
+          <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
+          <field attribute="schedfinish" label="Scheduled Finish Date" hidden="true"/>
+          <field attribute="schedfinishnotime" label="Scheduled Finish Date"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
+
+          <properties>
+            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
+          </properties>
         </list>
 
         <schema id="newdetail" platform="mobile" stereotype="detailnew">
           <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
-          <field attribute="wopriority" label="Priority">
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-            <number decimals="0" min="0" max="999" />
-          </field>
+          <association label="Priority" target="wopriority" labelfield="realpriority_.description"/>
           <association label="Location" target="location" labelfield="location.description" />
           <association label="Asset" target="assetnum" labelfield="asset.description" />
           <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
@@ -475,10 +671,7 @@
             <dataprovider prefilterfunction="FilterStatusCodes"/>
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>
-          <field attribute="wopriority" label="Priority">
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-            <number decimals="0" min="0" max="999" />
-          </field>
+          <association label="Priority" target="wopriority" labelfield="realpriority_.description"/>
           <association label="Location" target="location" labelfield="location.description" />
           <association label="Asset" target="assetnum" labelfield="asset.description" />
           <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
@@ -497,7 +690,7 @@
         </detail>
       </schemas>
     </application>
-    
+
     <application name="location" title="Location" entity="location" >
 
       <filters>
@@ -516,11 +709,11 @@
         <schema id="list"  redeclaring="false" stereotype="list.selection">
           <commandbars>
             <commandgroup position="actions">
-<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command id="Create" icon="fa-wrench" label="Create W.O."
-                         service="locationService" method="initBatchWorkorder"
-                         parameters="schema,datamap" cssclasses="large-button"/>
-<!--              </container>-->
+              <!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+              <command id="Create" icon="fa-wrench" label="Create W.O."
+                       service="locationService" method="initBatchWorkorder"
+                       parameters="schema,datamap" cssclasses="large-button"/>
+              <!--              </container>-->
             </commandgroup>
           </commandbars>
 
@@ -628,15 +821,15 @@
 
       <schemas>
 
-        
+
         <schema id="list"  redeclaring="false" stereotype="list.selection" platform="web">
           <commandbars>
             <commandgroup position="actions">
-<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command id="Create" icon="fa-wrench" label="Create W.O."
-                         service="assetService" method="initBatchWorkorder"
-                         parameters="schema,datamap" cssclasses="large-button"/>
-<!--              </container>-->
+              <!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+              <command id="Create" icon="fa-wrench" label="Create W.O."
+                       service="assetService" method="initBatchWorkorder"
+                       parameters="schema,datamap" cssclasses="large-button"/>
+              <!--              </container>-->
             </commandgroup>
           </commandbars>
 
@@ -651,8 +844,8 @@
             <property key="search.schemaid" value="search"/>
           </properties>
         </schema>
-        
-        
+
+
 
         <schema id="search" title="Location Search" stereotype="search">
           <field attribute="fslocationsearch" hidden="true" default="true" searchoperation="eq"/>
