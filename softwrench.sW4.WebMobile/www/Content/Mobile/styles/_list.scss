@@ -67,28 +67,41 @@ input.ion-autocomplete[readonly] {
     background-color: lightgrey !important;
 }
 
-.page-syncoperation-list .operation-list .operation-item {
-    padding: 10px 0;
+.page-syncoperation-list {
+
+    .operation-list {
+
+        .operation-item {
+            padding: 10px 0;
+
+            h3 {
+                font-weight: bold;
+            }
+            .details {
+                color: #ccc;
+            }
+
+            .operation-item-col {
+                vertical-align: middle;
+                padding: 0 5px 0 0;
+            }
+
+            .operation-item-col:first-child {
+                text-align: center;
+            }
+
+            .operation-item-col:last-child {
+                padding-right: 0;
+                text-align: right;
+            }
+
+            .operation-status-text {
+                padding-left: 0;
+                font-size: 14px;
+            }
+        }
+    }
 }
-
-    .page-syncoperation-list .operation-list .operation-item .operation-item-col {
-        vertical-align: middle;
-        padding: 0 5px 0 0;
-    }
-
-        .page-syncoperation-list .operation-list .operation-item .operation-item-col:first-child {
-            text-align: center;
-        }
-
-        .page-syncoperation-list .operation-list .operation-item .operation-item-col:last-child {
-            padding-right: 0;
-            text-align: right;
-        }
-
-    .page-syncoperation-list .operation-list .operation-item .operation-status-text {
-        padding-left: 0;
-        font-size: 14px;
-    }
 
 .page-audit-entrylist .entry-item {
     padding-right: 0;
