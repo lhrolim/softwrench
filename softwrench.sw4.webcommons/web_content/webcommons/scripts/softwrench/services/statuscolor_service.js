@@ -124,12 +124,15 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
                 return "#4488f2"; //blue
             }
             if (priority === 3 || priority === "3") {
-                return "#f2d935"; //yellow
+                return "#D850FA"; //purple
             }
             if (priority === 4 || priority === "4") {
-                return "#e59323"; //orange
+                return "#f2d935"; //yellow
             }
             if (priority === 5 || priority === "5") {
+                return "#e59323"; //orange
+            }
+            if (priority === 6 || priority === "6") {
                 return "#f65752"; //red
             }
             return "#777";
