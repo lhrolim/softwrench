@@ -47,7 +47,7 @@
 }
 
 .spinner {
-  stroke: #fff;
+    stroke: #fff;
 }
 
 .item-icon-left .icon {
@@ -76,6 +76,14 @@
     .subleaf {
         padding-left: 48px;
     }
+}
+
+.mfb-component__button--main {
+    background-color: #F65752;
+}
+
+.mfb-component__button--child {
+    background-color: #808080;
 }
 
 .list-search-bar {
