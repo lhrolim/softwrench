@@ -1,19 +1,17 @@
 ﻿(function (angular) {
     "use strict";
 
-mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", function (swdbDAO, fieldService) {
+    mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", "crudContextHolderService", "$log", function (swdbDAO, fieldService, crudContextHolderService,$log) {
 
     function testEmptyExpression(label) {
         return "(!!" + label + " && " + label + " !== \'null\' && " + label + " !== \'undefined\')";
     }
 
-    return {
-
-        fieldValueExpression: function(fieldMetadata) {
+        function fieldValueExpression(fieldMetadata) {
             return "datamap." + fieldMetadata.valueField;
-        },
+        };
 
-        fieldLabelExpression: function(fieldMetadata) {
+        function fieldLabelExpression(fieldMetadata) {
             var associationValueField = this.fieldValueExpression(fieldMetadata);
             if ("true" === fieldMetadata.hideDescription) {
                 return associationValueField;
@@ -23,9 +21,9 @@ mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", 
 
             return "(" + testEmptyExpression(associationValueField) + " ? " + associationValueField + " : \'\' ) + " +
                     "(" + testEmptyExpression(label) + " ? (\' - \'  + " + label + ") : \'\')";
-        },
+        };
 
-        filterPromise: function (parentSchema, parentdatamap, associationName, filterText, preCalcDisplayable) {
+        function filterPromise (parentSchema, parentdatamap, associationName, filterText, preCalcDisplayable) {
             const displayable = preCalcDisplayable || fieldService.getDisplayablesByAssociationKey(parentSchema, associationName)[0];
 
             if (associationName.endsWith("_")) {
@@ -64,7 +62,36 @@ mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", 
             return swdbDAO.findByQuery("AssociationData", baseQuery, { projectionFields: ["remoteId", "datamap"] });
         }
 
-    }
-}]);
+        function updateExtraProjections(associationDataEntry, associationKey) {
+            const log = $log.get("offlineAssociationService#updateExtraProjections", ["association"]);
+            const detailSchema = crudContextHolderService.currentDetailSchema();
+            const associationMetadata = fieldService.getDisplayablesByAssociationKey(detailSchema, associationKey)[0];
+            if (!associationMetadata || !associationMetadata.extraProjectionFields) {
+                log.trace(`no extraprojectionfields to update for ${associationKey}`);
+                return;
+            }
+            
+            const dm = crudContextHolderService.currentDetailItemDataMap();
+            const associationDataMap = associationDataEntry.datamap;
+            log.info(`updating extraprojection fields for ${associationKey}`);
+            associationMetadata.extraProjectionFields.forEach(item => {
+                const projectedKey = associationKey + "." + item;
+                const value = associationDataMap[item];
+                log.debug(`updating ${projectedKey} to ${value}`);
+                dm[projectedKey] = value;
+            });
+
+        }
+
+
+        const api = {
+        filterPromise,
+        fieldLabelExpression,
+        fieldValueExpression,
+        updateExtraProjections
+        }
+        return api;
+
+    }]);
 
 })(angular);

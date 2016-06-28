@@ -22,10 +22,22 @@
         <attribute name="schedfinishnotime" query="DATEADD(dd, DATEDIFF(dd, 0, workorder.schedfinish), 0)" type="date"/>
       </attributes>
       <relationships>
+        
         <relationship to="numericdomain" qualifier="realpriority" collection="true">
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="WOPRIORITY" quoteLiteral="true"/>
         </relationship>
+        
+        <relationship to="causelist" qualifier="offlinecauselist">
+          <relationshipAttribute from="fr1code" to="failurecode" primary="true"/>
+          <relationshipAttribute from="problemlist_.failurelist" to="parent" />
+        </relationship>
+        
+        <relationship to="remedylist" qualifier="offlineremedylist">
+          <relationshipAttribute from="fr2code" to="failurecode" primary="true"/>
+          <relationshipAttribute from="offlinecauselist_.failurelist" to="parent" />
+        </relationship>
+        
       </relationships>
     </entity>
   </entities>
@@ -36,7 +48,7 @@
 
 
       <schemas>
-        
+
 
         <list redeclaring="false" platform="web">
           <filters>
@@ -399,7 +411,7 @@
             <property key="search.startexpanded" value="true"/>
           </properties>
         </schema>
-        
+
         <!-- #region: Mobile -->
 
         <list platform="mobile" title="WO - Assigned" redeclaring="true">
@@ -419,7 +431,7 @@
             <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
           </properties>
         </list>
-        
+
         <detail platform="mobile" title="Work Order" redeclaring="true">
           <reference id="detailhiddensoffline"/>
 
@@ -435,30 +447,33 @@
             <renderer type="richtext"/>
           </field>
 
-          <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true"/>
+<!--          <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true"/>-->
+
+          <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true"/>
 
           <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" requiredexpression="true"/>
 
-          
+
           <field label="Warranty Claim Number" attribute="WOLO10"/>
           <field label="EPCR Number" attribute="EPCR_NUM"/>
           <field label="JPNUM" attribute="JPNUM"/>
 
-          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" requiredexpression="@worktype == 'CM' "/>
+          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" requiredexpression="@worktype == 'CM'"/>
 
           <!-- Region Problems, cuase Remedy -->
-          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">
-            <renderer type="lookup"  />
-            <dataprovider prefilterfunction="FilterProblemCodes" />
+          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description" 
+                       requiredexpression="@worktype == 'CM'" extraprojectionvalues="failurelist" >
           </association>
 
-          <!--          <association label="Cause" enableexpression="@problemcode!=null" target="problemcode" labelfield="problemlist_.description">-->
-          <!--            <dataprovider prefilterfunction="FilterProblemCodes" />-->
-          <!--          </association>-->
+          <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="offlinecauselist_.description" requiredexpression="@worktype == 'CM'"
+                       extraprojectionvalues="failurelist"
+                       >
+          </association>
 
-          <!--          <association label="Remedy" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">-->
-          <!--            <dataprovider prefilterfunction="FilterProblemCodes" />-->
-          <!--          </association>-->
+          <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="offlineremedylist_.description" requiredexpression="@worktype == 'CM'"
+                       extraprojectionvalues="failurelist"
+                       >
+          </association>
 
           <!-- EndRegion-->
 
@@ -485,13 +500,13 @@
 
         </detail>
 
-        
+
         <schema id="newdetail" stereotype="detailnew" platform="mobile" redeclaring="true">
           <field attribute="orgid" hidden="true" requiredexpression="true" />
           <field attribute="siteid" hidden="true" requiredexpression="true" />
 
           <field attribute="description" label="Description" requiredexpression="true"/>
-          
+
           <association target="location" labelfield="location.description"
                        requiredexpression="true" label="Location">
             <renderer type="lookup"/>
@@ -526,7 +541,7 @@
 
         </schema>
         <!-- #endregion -->
-        
+
       </schemas>
 
       <properties>
@@ -865,5 +880,47 @@
         </schema>
       </schemas>
     </application>
+
+    <application name="classstructure" title="ClassStructure" entity="classstructure">
+      <schemas>
+        <list>
+          <field attribute="classstructureid" hidden="true"/>
+          <field attribute="description" label="Description"/>
+        </list>
+      </schemas>
+    </application>
+
+    <application name="problemlist" title="ClassStructure" entity="problemlist">
+      <schemas>
+        <list>
+          <field attribute="failurecode" hidden="true"/>
+          <field attribute="failurelist" hidden="true"/>
+          <field attribute="description" label="Description"/>
+        </list>
+      </schemas>
+    </application>
+
+    <application name="causelist" title="ClassStructure" entity="causelist">
+      <schemas>
+        <list>
+          <field attribute="failurecode" hidden="true"/>
+          <field attribute="failurelist" hidden="true"/>
+          <field attribute="description" label="Description"/>
+        </list>
+      </schemas>
+    </application>
+
+    <application name="remedylist" title="ClassStructure" entity="remedylist">
+      <schemas>
+        <list>
+          <field attribute="failurecode" hidden="true"/>
+          <field attribute="failurelist" hidden="true"/>
+          <field attribute="description" label="Description"/>
+        </list>
+      </schemas>
+    </application>
+
+    
+    
   </applications>
 </metadata>

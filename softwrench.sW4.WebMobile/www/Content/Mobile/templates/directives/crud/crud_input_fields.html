@@ -1,4 +1,4 @@
-﻿<div ng-repeat="it in displayables" class="crud-fields-wrapper">
+<div ng-repeat="it in displayables" class="crud-fields-wrapper">
     <!-- group inputs 2-by-2 in landscape tablets: -->
     <!-- http://stackoverflow.com/questions/27239735/ionic-framwork-gridlayout-with-multiple-rows-and-column-on-which-buttons-placed -->
     <!-- http://stackoverflow.com/questions/23779773/angularjs-loops-and-formatting/27080632#27080632 -->
@@ -13,8 +13,10 @@
                         <ion-autocomplete ng-model="datamap[field.target]"
                                           component-id="{{field.associationKey}}"
                                           items-method="associationSearch(query,componentId)"
+                                          items-clicked-method="itemSelected(callback)"
                                           item-value-key="{{getAssociationValueField(field)}}"
-                                          item-view-value-key="{{getAssociationLabelField(field)}}" 
+                                          item-view-value-key="{{getAssociationLabelField(field)}}"
+                                           
                                           association-description />
 
                     </div>

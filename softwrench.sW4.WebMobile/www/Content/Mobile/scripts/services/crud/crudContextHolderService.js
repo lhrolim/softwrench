@@ -88,8 +88,8 @@
             if (!item) {
                 return;
             }
-            var itemlist = _crudContext.itemlist;
-            var idx = itemlist.indexOf(item);
+            const itemlist = _crudContext.itemlist;
+            const idx = itemlist.indexOf(item);
             if (idx == 0) {
                 _crudContext.previousItem = null;
             } else {
@@ -107,7 +107,7 @@
             if (!isRippleEmulator()) {
                 return null; //this is used for F5 (refresh) upon development mode, so that we can return to the page we were before quickier
             }
-            var savedCrudContext = contextService.getFromContext("crudcontext");
+            const savedCrudContext = contextService.getFromContext("crudcontext");
             if (savedCrudContext) {
                 _crudContext = JSON.parse(savedCrudContext);
                 if (_crudContext.itemlist) {
@@ -131,7 +131,7 @@
         };
 
         function currentTitle() {
-            var tabTitle = this.tabTitle();
+            const tabTitle = this.tabTitle();
             if (tabTitle != null) {
                 return _crudContext.currentTitle + " / " + tabTitle;
             }
@@ -148,8 +148,8 @@
         }
 
         function currentSchema() {
-            var listSchema = _crudContext.currentListSchema;
-            var detailSchema = _crudContext.currentDetailSchema;
+            const listSchema = _crudContext.currentListSchema;
+            const detailSchema = _crudContext.currentDetailSchema;
             if (!listSchema) {
                 return detailSchema;
             } else if (!detailSchema) {

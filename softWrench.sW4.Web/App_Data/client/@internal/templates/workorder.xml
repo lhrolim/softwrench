@@ -183,11 +183,25 @@
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Applications.Workorder.BaseWorkOrderCrudConnector" />
       </connectorParameters>
     </entity>
+    
     <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
       <attributes>
         <attribute name="description" query="(select description from failurecode where failurecode = !@failurecode and orgid = !@orgid)" type="varchar"/>
       </attributes>
     </entity>
+
+    <entity name ="causelist" parententity="failurelist" idAttribute="failurelist" whereclause="((causelist.TYPE like 'CAUSE')) " >
+      <attributes>
+        <attribute name="description" query="(select description from failurecode where failurecode = !@failurecode and orgid = !@orgid)" type="varchar"/>
+      </attributes>
+    </entity>
+
+    <entity name ="remedylist" parententity="failurelist" idAttribute="failurelist" whereclause="((remedylist.TYPE like 'REMEDY')) " >
+      <attributes>
+        <attribute name="description" query="(select description from failurecode where failurecode = !@failurecode and orgid = !@orgid)" type="varchar"/>
+      </attributes>
+    </entity>
+    
   </entities>
 
   <applications>

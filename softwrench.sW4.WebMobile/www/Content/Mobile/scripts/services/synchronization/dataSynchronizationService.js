@@ -103,7 +103,8 @@
                 applicationName: app,
                 itemsToDownload : [item.remoteId]
             };
-            return restService.post("Mobile", "PullNewData", params);
+            var promise = restService.post("Mobile", "PullNewData", params).then(resultHandlePromise).catch(errorHandlePromise);
+            return $q.all([promise]);
         }
 
         function syncData() {

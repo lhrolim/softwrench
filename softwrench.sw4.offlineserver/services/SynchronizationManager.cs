@@ -120,9 +120,10 @@ namespace softwrench.sw4.offlineserver.services {
             if (rowstampDTO.MaxRowstamp != null) {
                 rowstamps = new Rowstamps(rowstampDTO.MaxRowstamp, null);
             }
+            var isQuickSync = request.ItemsToDownload != null;
 
             var topLevelAppData = FetchData(entityMetadata, userAppMetadata, rowstamps, request.ItemsToDownload);
-            var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampDTO, topLevelApp);
+            var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampDTO, topLevelApp, isQuickSync);
 
             result.AddTopApplicationData(appResultData);
             Log.DebugFormat("SYNC:Finished handling top level app. Ellapsed {0}", LoggingUtil.MsDelta(watch));
@@ -194,7 +195,7 @@ namespace softwrench.sw4.offlineserver.services {
 
 
 
-        private SynchronizationApplicationResultData FilterData(string applicationName, ICollection<DataMap> topLevelAppData, ClientStateJsonConverter.AppRowstampDTO rowstampDTO, CompleteApplicationMetadataDefinition topLevelApp) {
+        private SynchronizationApplicationResultData FilterData(string applicationName, ICollection<DataMap> topLevelAppData, ClientStateJsonConverter.AppRowstampDTO rowstampDTO, CompleteApplicationMetadataDefinition topLevelApp, bool isQuickSync) {
             var watch = Stopwatch.StartNew();
 
             var result = new SynchronizationApplicationResultData {
@@ -203,7 +204,7 @@ namespace softwrench.sw4.offlineserver.services {
 
             ParseIndexes(result, topLevelApp);
 
-            if (rowstampDTO.MaxRowstamp != null) {
+            if (rowstampDTO.MaxRowstamp != null || isQuickSync) {
                 //SWOFF-140 
                 result.InsertOrUpdateDataMaps = topLevelAppData;
                 return result;
