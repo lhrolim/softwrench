@@ -1,21 +1,23 @@
-﻿.single-file-input .imagepreview {
-    height: 250px;
-    border: 1px solid #808080;
-    text-align: center;
-    border-radius: 5px;
-}
+﻿.single-file-input {
+    .imagepreview {
+        height: 250px;
+        border: 1px solid #808080;
+        text-align: center;
+        border-radius: 5px;
 
-.single-file-input .imagepreview img {
-    height: 100%;
-    width: 100%;
-    object-fit: contain;
-}
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+        }
+    }
 
-.single-file-input .inputfile {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
+    .inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
 }

@@ -1,14 +1,16 @@
-﻿.crud-fields-wrapper .row {
-    padding: 0;
-    margin: 0;
-}
-
-    .crud-fields-wrapper .row .col-50 {
+﻿.crud-fields-wrapper {
+    .row {
+        padding: 0;
         margin: 0;
+
+        .col-50 {
+            margin: 0;
+        }
     }
 
-.crud-fields-wrapper .full-width {
-    width: calc(65% - 10px);
+    .full-width {
+        width: calc(65% - 10px);
+    }
 }
 
 @media(min-width: 1024px) {
@@ -17,10 +19,10 @@
     */
     .crud-fields-wrapper .row .col-50 {
         display: flex;
-    }
 
-        .crud-fields-wrapper .row .col-50 .item:last-child {
+        .item:last-child {
             width: 100%;
             border-left: none;
         }
+    }
 }

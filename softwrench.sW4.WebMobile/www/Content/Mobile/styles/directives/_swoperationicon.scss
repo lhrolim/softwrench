@@ -1,31 +1,33 @@
-﻿.sw-operation-icon .operation-status-icon {
-    color: white;
-    text-align: center;
-    height: 50px;
-    width: 50px;
-    border-radius: 100%;
-    font-size: 25px;
-}
+﻿.sw-operation-icon {
+    .operation-status-icon {
+        color: white;
+        text-align: center;
+        height: 50px;
+        width: 50px;
+        border-radius: 100%;
+        font-size: 25px;
 
-    .sw-operation-icon .operation-status-icon.statussuccess {
-        background-color: rgb(57, 181, 74);
-    }
-
-    .sw-operation-icon .operation-status-icon.statuspending {
-        background-color: rgb(128, 128, 128);
-    }
-
-    .sw-operation-icon .operation-status-icon.statusproblem {
-        background-color: rgb(229, 147, 35);
-    }
-
-    .sw-operation-icon .operation-status-icon .row {
-        height: 100%;
-        padding: 0;
-    }
-
-        .sw-operation-icon .operation-status-icon .row .col {
-            padding: 0;
-            margin-top: auto;
-            margin-bottom: auto;
+        &.statussuccess {
+            background-color: rgb(57, 181, 74);
         }
+
+        &.statuspending {
+            background-color: rgb(128, 128, 128);
+        }
+
+        &.statusproblem {
+            background-color: rgb(229, 147, 35);
+        }
+
+        .row {
+            height: 100%;
+            padding: 0;
+
+            .col {
+                padding: 0;
+                margin-top: auto;
+                margin-bottom: auto;
+            }
+        }
+    }
+}
