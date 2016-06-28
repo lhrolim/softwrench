@@ -2017,6 +2017,7 @@
           </section>
           <section id="attachmentsection" />
           <section id="compositions" />
+          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
         </schema>
         <schema id="newdetail" parentschema="adetail" title="New Incident" stereotype="detailnew">
           <section id="ticketsection">
@@ -2079,6 +2080,8 @@
             <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus" />
           </section>
         </schema>
+
+        
       </schemas>
     </application>
 
