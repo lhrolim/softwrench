@@ -66,6 +66,12 @@
         $scope.saveChanges = function () {
             crudContextService.saveChanges().then(function () {
                 init();
+            }).catch(validationErrors => {
+                const options={
+                    title : "There are validation Errors:<p>",
+                    subTitle : validationErrors.join("<br>"),
+                }
+                $ionicPopup.alert(options);
             });
         }
 

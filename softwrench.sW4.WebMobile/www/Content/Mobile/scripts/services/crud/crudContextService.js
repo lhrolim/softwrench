@@ -232,7 +232,7 @@
                 const validationErrors = validationService.validate(detailSchema, detailSchema.displayables, datamap, crudForm.$error);
                 if (validationErrors.length > 0) {
                     //interrupting here, can´t be done inside service
-                    return $q.when();
+                    return $q.reject(validationErrors);
                 }
 
                 if (crudContext.composition && crudContext.composition.currentDetailItem) {
