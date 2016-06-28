@@ -43,6 +43,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             var user = SecurityFacade.CurrentUser();
             var wo = maximoTemplateData.IntegrationObject;
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+            CommonTransaction(maximoTemplateData);
             if (crudData.ContainsAttribute("#hasstatuschange")) {
                 //first let´s 'simply change the status --> this is needed to create a WOSTATUS TX entry
                 WsUtil.SetValue(wo, "STATUSIFACE", true);
@@ -73,7 +74,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 }
             }
 
-            CommonTransaction(maximoTemplateData);
+            
 
             // This will prevent multiple action on these items
             WorkLogHandler.HandleWorkLogs(crudData, wo);
