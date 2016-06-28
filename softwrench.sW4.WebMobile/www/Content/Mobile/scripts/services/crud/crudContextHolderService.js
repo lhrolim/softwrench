@@ -303,6 +303,7 @@
 
         function reset() {
             _crudContext = angular.copy(initialContext);
+            defaultGridSearch(_crudContext.gridSearch);
         }
 
         function hasDirtyChanges() {

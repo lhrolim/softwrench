@@ -107,14 +107,14 @@
                 return offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "excerpt", item);
             }
 
-            $scope.getIconColor = function (item) {
+            $scope.getIconColor = function (datamap) {
                 const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
                 if (!displayable || !displayable.attribute || displayable.attribute === "status") {
-                    return statuscolorService.getColor(item["status"], crudContextService.currentApplicationName());
+                    return statuscolorService.getColor(datamap["status"], crudContextService.currentApplicationName());
                 }
 
                 if (displayable.attribute === "wopriority") {
-                    return statuscolorService.getPriorityColor(item[displayable.attribute]);
+                    return statuscolorService.getPriorityColor(datamap[displayable.attribute]);
                 }
 
                 return "#777";
@@ -129,20 +129,23 @@
             }
 
             $scope.getIconText = function (item) {
+                if ($scope.isDirty(item) || $scope.isPending(item)) {
+                    return "";
+                }
+
+                const datamap = item.datamap;
                 const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
 
                 if (!displayable || !displayable.attribute || displayable.attribute === "status") {
-                    const status = item["status"];
+                    const status = datamap["status"];
                     return status == null ? "N" : status.charAt(0);
                 }
 
-                var value = item[displayable.attribute];
+                var value = datamap[displayable.attribute];
 
                 if (displayable.attribute === "wopriority") {
-                    if (!value) {
-                        return "\u2691";
-                    }
-                    return value.substring(0, 1) + "\u2691";
+                    item.icon = value ? null : "flag";
+                    return value ? value.substring(0, 1) : "";
                 }
                 
                 if (!value) {
@@ -152,8 +155,26 @@
                 return value.substring(0, 1);
             }
 
-            $scope.getTextColor = function (item) {
-                const background = $scope.getIconColor(item);
+            $scope.getIconIcon = function (item) {
+                if ($scope.isPending(item)) {
+                    return "cloud";
+                }
+
+                if ($scope.isDirty(item)) {
+                    return "refresh";
+                }
+
+                const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
+                const value = item.datamap[displayable.attribute];
+                if (displayable.attribute === "wopriority" && !value) {
+                    return "flag";
+                }
+
+                return null;
+            }
+
+            $scope.getTextColor = function (datamap) {
+                const background = $scope.getIconColor(datamap);
                 return background === "white" || background === "transparent" ? "black" : "white";
             }
 

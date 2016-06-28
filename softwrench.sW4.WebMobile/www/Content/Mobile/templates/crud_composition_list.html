@@ -2,7 +2,7 @@
     <ion-list class="has-header" ng-show="!empty()">
 
         <ion-item ng-repeat="item in list()" item="item" ng-class="{'missingsync': isDirty(item)}">
-            <div class="row" ng-click="loadCompositionDetail(item)">
+            <div class="row" ng-click="loadCompositionDetail(item)"  on-hold="startDeleteLocalComposition(item)">
                 <div class="col">
                     <ul>
                         <li ng-repeat="field in visibleFields()" ng-init="value = fieldValue(item, field)" ng-show="!!value">

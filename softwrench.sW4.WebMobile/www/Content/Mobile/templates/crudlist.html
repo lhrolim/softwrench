@@ -35,9 +35,8 @@
 
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">
-                        <button class="button button-status" ng-style="{background:getIconColor(item.datamap),color:getTextColor(item.datamap)}">{{getIconText(item.datamap)}}</button>
-                        <i class="fa fa-refresh" ng-show="isDirty(item) && !isPending(item)"></i>
-                        <i class="fa fa-cloud" ng-show="isPending(item)"></i>
+                        <button class="button button-status" ng-style="{background:getIconColor(item.datamap),color:getTextColor(item.datamap)}">{{getIconText(item)}}</button>
+                        <i class="crud-list-icon fa fa-{{getIconIcon(item)}}" ng-style="{color:getTextColor(item.datamap)}" ng-show="getIconIcon(item)"></i>
                     </div>
                     <div class="col-75">
                         <ul>
