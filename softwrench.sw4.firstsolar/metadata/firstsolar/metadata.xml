@@ -466,8 +466,9 @@
           </association>
 
           <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="offlinecauselist_.description" requiredexpression="@worktype == 'CM'"
-                       extraprojectionvalues="failurelist"
-                       >
+                       extraprojectionvalues="failurelist">
+            <event type="afterchange" service=""/>
+          
           </association>
 
           <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="offlineremedylist_.description" requiredexpression="@worktype == 'CM'"
@@ -905,7 +906,9 @@
         <list>
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
+          <field attribute="parent" hidden="true"/>
           <field attribute="description" label="Description"/>
+          
         </list>
       </schemas>
     </application>
@@ -915,6 +918,7 @@
         <list>
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
+          <field attribute="parent" hidden="true"/>
           <field attribute="description" label="Description"/>
         </list>
       </schemas>
