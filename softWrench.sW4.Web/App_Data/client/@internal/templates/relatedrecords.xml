@@ -9,6 +9,11 @@
           <relationshipAttribute from="siteid" to="siteid" allowsnull="true" />
           <relationshipAttribute from="orgid"  to="orgid"  allowsnull="true" />
         </relationship>
+        <relationship to="INCIDENT" qualifier="relatedincident">
+          <relationshipAttribute from="relatedreckey" to="ticketid" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" allowsnull="true" />
+          <relationshipAttribute from="orgid"  to="orgid"  allowsnull="true" />
+        </relationship>
         <relationship to="workorder" qualifier="relatedworkorder">
           <relationshipAttribute from="relatedreckey" to="wonum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" allowsnull="true" />
@@ -74,6 +79,15 @@
                          requiredexpression="true"
                          label="Related To"
                          showexpression="@relatedrecclass==='SR'">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="relatedrecordService" method="onAfterRelatedEntitySelected"/>
+            </association>
+
+            <association target="relatedreckey" labelfield="relatedincident_.description"
+                         extraprojectionvalues="siteid,orgid,ticketuid" orderbyfield="ticketuid desc"
+                         requiredexpression="true"
+                         label="Related To"
+                         showexpression="@relatedrecclass==='INCIDENT'">
               <renderer type="lookup"/>
               <event type="afterchange" service="relatedrecordService" method="onAfterRelatedEntitySelected"/>
             </association>
