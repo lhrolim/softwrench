@@ -24,15 +24,15 @@
     left: 0;
     width: 100%;
     height: 100%;
-}
 
-.option-field-items .item {
-    overflow: hidden;
-}
+    .item {
+        overflow: hidden;
+    }
 
-.option-field-items label p {
-    height: 32px;
-    line-height: 32px;
+    label p {
+        height: 32px;
+        line-height: 32px;
+    }
 }
 
 .option-field-icon {

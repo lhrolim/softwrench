@@ -45,46 +45,52 @@
 }
 
 /* syncdetail page */
-.page-syncdetail .no-operation {
-    text-align: center;
-}
-
-.page-syncdetail .row.operation-details {
-    padding-top: 0;
-}
-
-.page-syncdetail .operation-details .detail-section {
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-    .page-syncdetail .operation-details .detail-section.upload-section .item-list {
-        color: gray;
+.page-syncdetail {
+    .no-operation {
+        text-align: center;
     }
 
-        .page-syncdetail .operation-details .detail-section.upload-section .item-list .icon {
-            padding-right: 5px;
+    .operation-details {
+        padding-top: 0;
+
+        .detail-section {
+            padding-top: 5px;
+            padding-bottom: 5px;
         }
 
-    .page-syncdetail .operation-details .detail-section.upload-section .problem-button {
-        background-color: rgb(229, 147, 35);
-        color: white;
-        border: none;
-        margin-top: 10px;
+        &.upload-section {
+            .item-list {
+                color: gray;
+
+                .icon {
+                    padding-right: 5px;
+                }
+            }
+
+            .problem-button {
+                background-color: rgb(229, 147, 35);
+                color: white;
+                border: none;
+                margin-top: 10px;
+            }
+        }
     }
 
-.page-syncdetail .operation-status h4 {
-    margin-bottom: 0;
-}
+    .operation-status {
+        h4 {
+            margin-bottom: 0;
+        }
 
-.page-syncdetail .operation-status h5 {
-    margin-bottom: 0;
-    margin-top: 0;
-}
+        h5 {
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+    }
 
-.page-syncdetail .app-summary-title {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    .app-summary-title {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
 }
 
 .requiredfieldmark {
@@ -98,22 +104,27 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
 }
 
-.page-audit-entrydetail .operation-icon {
-    font-size: 75px;
+.page-audit-entrydetail {
+    .operation-icon {
+        font-size: 75px;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
 }
 
-.page-audit-entrydetail .bold {
-    font-weight: bold;
-}
+.page-settings {
+    .settings-form label {
+        padding-left: 5px;
+        padding-right: 5px;
 
-.page-settings .settings-form label {
-    padding-left: 5px;
-    padding-right: 5px;
-}
-.page-settings .settings-form label input {
-    padding-left: 5px;
+        input {
+            padding-left: 5px;
+        }
+    }
 }
 
 .ta-toolbar.hidden {
-    display: none;  
+    display: none;
 }

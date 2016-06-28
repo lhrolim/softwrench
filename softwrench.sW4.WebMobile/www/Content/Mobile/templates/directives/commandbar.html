@@ -4,7 +4,7 @@
         <div ng-switch-when="mobile.fab">
             <mfb-menu label="{{label}}"
                       position="br" effect="slidein" toggling-method="click"
-                      active-icon="ion-close" resting-icon="ion-plus">
+                      active-icon="fa fa-times" resting-icon="fa fa-plus">
                 <a mfb-button ng-repeat="command in commandBar.commands" ng-if="!isCommandHidden(command)"
                    label="{{command.label}}" icon="{{command.icon}}"
                    ng-click="executeCommand(command)" mfb-button-close>

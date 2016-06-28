@@ -1,24 +1,34 @@
-﻿.page-login .login-settings {
-    margin-top: 10px; 
-    color: rgb(68, 68, 68);  
+﻿.page-login {
+    .login-settings {
+        margin-top: 10px;
+        color: rgb(68, 68, 68);
+    }
+
+    .login-form-container {
+        .action-bar {
+            padding-left: 0;
+            padding-right: 0;
+
+            .action-button {
+                padding: 0;
+                text-align: center;
+
+                .button.icon-left:before {
+                    margin-right: -18px; /* compensating for icon width to center text */
+                }
+            }
+        }
+
+        .login-form {
+            margin-bottom: 0;
+
+            .login-input {
+                margin-bottom: 0;
+            }
+        }
+    }
 }
-.page-login .login-form-container .action-bar {
-    padding-left: 0;
-    padding-right: 0;
-}
-.page-login .login-form-container .action-bar .action-button {
-    padding: 0;
-    text-align: center;
-}
-.page-login .login-form-container .action-bar .action-button .button.icon-left:before {
-    margin-right: -18px; /* compensating for icon width to center text */
-}
-.page-login .login-form-container .login-form {
-    margin-bottom: 0;
-}
-.page-login .login-form-container .login-form .login-input {
-    margin-bottom: 0;
-}
+
 /* center form container in >= portrait tablet  */
 @media (min-width: 767px) {
     .page-login .login-form-container {

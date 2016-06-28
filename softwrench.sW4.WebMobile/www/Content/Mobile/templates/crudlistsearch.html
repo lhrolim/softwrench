@@ -1,7 +1,7 @@
 ﻿<ion-view>
 
     <ion-nav-buttons side="left">
-        <button class="button-icon ion-chevron-left" ng-click="cancel()">&nbsp;Back</button>
+        <button class="button-icon" ng-click="cancel()"><i class="fa fa-chevron-left"></i>&ensp;Back</button>
     </ion-nav-buttons>
 
     <ion-nav-title>
@@ -10,11 +10,11 @@
 
 
     <ion-nav-buttons side="right">
-        <button class="button-icon ion-checkmark" ng-click="apply()">&nbsp;Apply</button>
+        <button class="button-icon" ng-click="apply()"><i class="fa fa-check"></i>&ensp;Apply</button>
     </ion-nav-buttons>
 
-    <ion-content has-header="true" class="crud-fields-wrapper">
-        <ion-header-bar class="bar-positive" align-title="center" style="position:relative">
+    <ion-content has-header="true" class="crud-fields-wrapper advanced-search">
+        <ion-header-bar class="bar-secondary" align-title="center" style="position:relative">
             <h1 class="title">Sort</h1>
         </ion-header-bar>
 
@@ -24,11 +24,18 @@
             </div>
             <div class="item item-text-wrap">
                 {{sortFieldLabel()}}&nbsp;<i ng-if="gridSearch.sort.afterLabelIcon" class="ion-{{gridSearch.sort.afterLabelIcon}}"></i>
-                <option-field header-text="Sort By" allow-empty="false" value="gridSearch.sort.value" text="Choose" items="gridSearch.sortableFields" callback="sortChanged" />
+                <option-field
+                    header-text="Sort By"
+                    allow-empty="false"
+                    value="gridSearch.sort.value"
+                    text="Choose"
+                    items="gridSearch.sortableFields"
+                    callback="sortChanged"
+                    class="option-sort" />
             </div>
         </div>
 
-        <ion-header-bar class="bar-positive" align-title="center" style="position:relative">
+        <ion-header-bar class="bar-secondary" align-title="center" style="position:relative">
             <h1 class="title">Search</h1>
         </ion-header-bar>
 
@@ -56,7 +63,8 @@
                                   text="Choose"
                                   items="field.options"
                                   multi-select="true"
-                                  callback="field.optionChanged" />
+                                  callback="field.optionChanged"
+                                  class="option-search" />
                 </label>
                 <label ng-switch-default class="item item-input">
                     <input type="text" ng-model="searchValue(field).value" />
