@@ -9,15 +9,25 @@
             animation: "fade-in"
         };
 
+        var deregisterFn;
+
+
         //#endregion
 
         //#region Public methods
 
         function showDefault() {
+            deregisterFn = $ionicPlatform.registerBackButtonAction(e=> {
+                this.hide();
+            }, 501);
             return $ionicLoading.show(loadingOptions);
         }
 
         function hide() {
+            if (deregisterFn) {
+                deregisterFn();
+            }
+
             ionic.requestAnimationFrame(() => {
                 $ionicLoading.hide();
             });
@@ -29,12 +39,9 @@
         const service = {
             showDefault,
             hide
-
         };
 
-        $ionicPlatform.registerBackButtonAction(e=> {
-            service.hide();
-        }, 501);
+      
 
         return service;
         //#endregion
