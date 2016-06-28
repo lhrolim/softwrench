@@ -104,6 +104,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\asset_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_shared.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\workorder\workorder_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\previousfilter_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\commandcommons.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\configurationservice.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\history_service.js" />

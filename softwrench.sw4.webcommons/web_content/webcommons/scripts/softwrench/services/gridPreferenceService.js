@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('gridPreferenceService', function (contextService, restService, $log, searchService) {
+    .factory('gridPreferenceService', function (contextService, restService, $log, searchService, previousFilterService) {
     "ngInject";
 
     function compareFilters(a, b) {
@@ -34,7 +34,15 @@ angular.module('sw_layout')
                 result.push(association.filter);
             }
         });
-        return result.sort(compareFilters);
+        result = result.sort(compareFilters);
+
+        var applicationKey = application + '.' + schema;
+        var previousFilter = previousFilterService.fetchPreviousFilter(applicationKey);
+        if (previousFilter != null && previousFilter !== {}) {
+            log.debug("Adding previous filter for schema {0}".format(schema));
+            result.push(previousFilter);
+        }
+        return result;
     }
 
     return {
@@ -57,7 +65,7 @@ angular.module('sw_layout')
             return filters.length > 0;
         },
 
-        saveFilter: function (schema, searchData,template, searchOperators, advancedSearch, alias, id, filterowner, successCbk) {
+        saveFilter: function (schema, searchData, template, searchOperators, searchSort, advancedSearch, alias, id, filterowner, successCbk) {
             var fields = "";
             var operators = "";
             var values = "";
@@ -146,8 +154,9 @@ angular.module('sw_layout')
             }
             
             var template = filter.template;
-            
-            searchService.refreshGrid(searchData, searchOperator, { searchTemplate: template, quickSearchDTO: quickSearchDTO, panelid: panelid });
+            var searchSort = filter.searchSort || {};
+
+            searchService.refreshGrid(searchData, searchOperator, { searchTemplate: template, quickSearchDTO: quickSearchDTO, panelid: panelid, searchSort: searchSort });
         }
     };
 

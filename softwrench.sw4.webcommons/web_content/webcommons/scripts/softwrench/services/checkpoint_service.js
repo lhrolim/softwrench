@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('sw_layout')
-        .factory('checkpointService', ["contextService", "searchService", function (contextService, searchService) {
+        .factory('checkpointService', ["contextService", "searchService", "previousFilterService", function (contextService, searchService, previousFilterService) {
 
 
             /// <summary>
@@ -28,7 +28,7 @@
                 }
                 const searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quickserarchDTO);
                 this.createGridCheckpoint(schema, searchDTO);
-
+                previousFilterService.createPreviousFilter(schema, gridData.searchData, gridData.searchOperator, gridData.searchSort);
             };
 
             function createGridCheckpoint(schema, searchDTO) {

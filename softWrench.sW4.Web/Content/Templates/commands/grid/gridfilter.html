@@ -9,9 +9,10 @@
                 <i class="fa fa-trash-o"></i>
             </button>
         </div>
+        
         <select class="hidden-phone form-control combobox"
                 ng-model="selectedfilter"
-                ng-options="option.alias for option in nonSharedFilters()"
+                ng-options="option.alias for option in nonSharedFilters() track by option.id"
                 ng-change="filterChanged()">
             <option value=""></option>
         </select>

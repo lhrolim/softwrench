@@ -87,6 +87,10 @@
 
                 $scope.deleteFilter = function () {
                     var filter = $scope.selectedfilter;
+                    if (filter["id"] === -2) {
+                        alertService.notifyWarning({ "warningDto": { "warnMessage": "The Previous Unsaved Filter cannot be deleted." } });
+                        return;
+                    }
                     alertService.confirm("Are you sure that you want to remove filter {0}?".format(filter.alias)).then(function () {
                         gridPreferenceService.deleteFilter(filter.id, filter.creatorId, function () {
                             $scope.selectedfilter = null;
@@ -99,7 +103,7 @@
                     var owner = $scope.selectedfilter ? $scope.selectedfilter.creatorId : null;
                     var advancedSearch = hasAdvancedSearch() ? JSON.stringify($scope.quickSearchDto) : null;
 
-                    gridPreferenceService.saveFilter($scope.schema, $scope.searchData, $scope.searchTemplate, $scope.searchOperator, advancedSearch, alias, id, owner,
+                    gridPreferenceService.saveFilter($scope.schema, $scope.searchData, $scope.searchTemplate, $scope.searchOperator, null, advancedSearch, alias, id, owner,
                         function (filter) {
                             $scope.selectedfilter = filter;
                         });

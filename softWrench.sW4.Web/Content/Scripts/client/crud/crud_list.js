@@ -277,7 +277,7 @@
 
                         $scope.paginationData = $scope.paginationData || {};
                         $scope.searchData = $scope.searchData || {};
-                        $scope.searchSort = $scope.searchSort || {};
+                        $scope.searchSort = extraparameters.searchSort || $scope.searchSort || {};
                         $scope.vm.quickSearchDTO = extraparameters.quickSearchDTO || $scope.vm.quickSearchDTO;
                         if (extraparameters.quickSearchDTO) {
                             $scope.vm.quickSearchDTO = extraparameters.quickSearchDTO;
