@@ -9,7 +9,7 @@
             animation: "fade-in"
         };
 
-        var deregisterFn;
+        var deregisterFn=[];
 
 
         //#endregion
@@ -17,15 +17,15 @@
         //#region Public methods
 
         function showDefault() {
-            deregisterFn = $ionicPlatform.registerBackButtonAction(e=> {
+            deregisterFn.push($ionicPlatform.registerBackButtonAction(e=> {
                 this.hide();
-            }, 501);
+            }, 501));
             return $ionicLoading.show(loadingOptions);
         }
 
         function hide() {
             if (deregisterFn) {
-                deregisterFn();
+                deregisterFn.forEach((deregisterFn) => deregisterFn());
             }
 
             ionic.requestAnimationFrame(() => {
