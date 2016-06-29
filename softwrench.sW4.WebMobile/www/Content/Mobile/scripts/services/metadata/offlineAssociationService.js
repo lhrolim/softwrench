@@ -23,7 +23,9 @@
                     "(" + testEmptyExpression(label) + " ? (\' - \'  + " + label + ") : \'\')";
         };
 
-        function filterPromise (parentSchema, parentdatamap, associationName, filterText, preCalcDisplayable) {
+        function filterPromise(parentSchema, parentdatamap, associationName, filterText, preCalcDisplayable) {
+            const log = $log.get("offlineAssociationService#filterPromise", ["association", "query"]);
+
             const displayable = preCalcDisplayable || fieldService.getDisplayablesByAssociationKey(parentSchema, associationName)[0];
 
             if (associationName.endsWith("_")) {
@@ -55,7 +57,13 @@
                 if (allowsNull) {
                     baseQuery += ' and ( datamap like \'%"{0}":"{1}"%\' or datamap like \'%"{0}":null%\' )'.format(attribute.to, fromValue);
                 } else {
-                    baseQuery += !!fromValue ? ' and datamap like \'%"{0}":"{1}"%\''.format(attribute.to, fromValue) : "";
+                    if (!fromValue) {
+                        log.info(`field ${attribute.from} could not be found on the datamap ignoring it`);
+                    } else {
+                        baseQuery += ' and datamap like \'%"{0}":"{1}"%\''.format(attribute.to, fromValue);
+                    }
+
+                    
                 }
             });
 

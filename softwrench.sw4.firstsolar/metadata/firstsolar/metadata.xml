@@ -27,7 +27,13 @@
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="WOPRIORITY" quoteLiteral="true"/>
         </relationship>
-        
+
+
+        <relationship to="problemlist" qualifier="offlineproblemlist">
+          <relationshipAttribute from="problemcode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="failurelistonly_.failurelist" to="parent"/>
+        </relationship>
+
         <relationship to="causelist" qualifier="offlinecauselist">
           <relationshipAttribute from="fr1code" to="failurecode" primary="true"/>
           <relationshipAttribute from="problemlist_.failurelist" to="parent" />
@@ -36,6 +42,10 @@
         <relationship to="remedylist" qualifier="offlineremedylist">
           <relationshipAttribute from="fr2code" to="failurecode" primary="true"/>
           <relationshipAttribute from="offlinecauselist_.failurelist" to="parent" />
+        </relationship>
+
+        <relationship to="failurelistonly" qualifier="failurelistonly">
+          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
         </relationship>
         
       </relationships>
@@ -473,12 +483,12 @@
           <field label="EPCR Number" attribute="EPCR_NUM"/>
           <field label="JPNUM" attribute="JPNUM"/>
 
-          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" requiredexpression="@worktype_.type == 'CM'">
+          <association label="Failure Class" target="failurecode" labelfield="failurelistonly_.description" requiredexpression="@worktype_.type == 'CM'" extraprojectionvalues="failurelist">
               <event type="afterchange" service="fsWorkorderOfflineService" method="afterFailureChanged"/>
           </association>
 
           <!-- Region Problems, cuase Remedy -->
-          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description" requiredexpression="@worktype_.type == 'CM'" extraprojectionvalues="failurelist" >
+          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="offlineproblemlist_.description" requiredexpression="@worktype_.type == 'CM'" extraprojectionvalues="failurelist" >
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterProblemChanged"/>
           </association>
 
@@ -898,11 +908,23 @@
       </schemas>
     </application>
 
+    <application name="failurelistonly" title="Failure List" entity="failurelistonly">
+      <schemas>
+        <list>
+          <field attribute="failurecode" hidden="true"/>
+          <field attribute="failurelist" hidden="true"/>
+          <field attribute="parent" hidden="true"/>
+          <field attribute="description" label="Description"/>
+        </list>
+      </schemas>
+    </application>
+
     <application name="problemlist" title="ClassStructure" entity="problemlist">
       <schemas>
         <list>
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
+          <field attribute="parent" hidden="true"/>
           <field attribute="description" label="Description"/>
         </list>
       </schemas>

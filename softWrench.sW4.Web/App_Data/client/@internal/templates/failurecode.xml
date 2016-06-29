@@ -37,6 +37,7 @@
         <detail>
           <field attribute="failurecodeid" label="ID"  requiredexpression="true" />
           <field attribute="failurecode" label="Failure Class"  requiredexpression="true" />
+          <field attribute="failurelist" hidden="true" />
           <field attribute="description" label="Description"  requiredexpression="true" />
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
