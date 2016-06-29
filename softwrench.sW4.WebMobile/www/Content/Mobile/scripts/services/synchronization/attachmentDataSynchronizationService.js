@@ -150,6 +150,10 @@
                     }
 //                    #offlinehash
                     var rightAttachmentDatamap = attachmentArray.find(a => a["#offlinehash"] === attachment.id);
+                    if (rightAttachmentDatamap == null) {
+                        log.warn(`could not locate attachment ${attachment.id} in any of the ${applicationName} of ids ${ids}`);
+                        return;
+                    }
                     rightAttachmentDatamap["newattachment"] = attachment.content;
 
                 });
