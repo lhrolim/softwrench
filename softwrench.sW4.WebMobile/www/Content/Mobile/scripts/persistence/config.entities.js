@@ -177,6 +177,7 @@
         entities.Attachment.UpdateAttachmentPath = "update Attachment set path =? where docinfoRemoteId =?";
         
         entities.Attachment.ByDocInfoId = "select content,mimetype,path from Attachment where docinfoRemoteId = ?";
+        entities.Attachment.ByHashId = "select content,mimetype,path from Attachment where id = ?";
 
         //#endregion
 

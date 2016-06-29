@@ -175,7 +175,7 @@
                 const compositionDetailSchema = this.getCompositionDetailSchema();
                 const fields = compositionDetailSchema.displayables;
                 if (compositionDetailSchema.applicationName === "attachment") {
-                    return offlineAttachmentService.loadRealAttachment(item.document, item.docinfoid);
+                    return offlineAttachmentService.loadRealAttachment(item);
                 }
 
 

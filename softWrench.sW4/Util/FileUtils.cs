@@ -56,10 +56,13 @@ namespace softWrench.sW4.Util {
             return System.Convert.FromBase64String(base64String);
         }
 
-      
+
 
         public static string GetB64PartOnly(string content) {
             var indexOf = content.IndexOf(',');
+            if (indexOf == -1) {
+                return content;
+            }
             var base64String = content.Substring(indexOf + 1);
             return base64String;
         }

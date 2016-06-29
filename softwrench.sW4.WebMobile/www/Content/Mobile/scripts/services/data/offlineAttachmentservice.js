@@ -158,6 +158,16 @@
                 .then(fileEntry => datamap[config.newAttachmentFieldName] = fileEntry.nativeURL);
         }
 
+        function handleBase64Prefix(content, mimeType) {
+            const replacementString = `data:${mimeType};base64,`;
+            const indexOf = content.indexOf(replacementString);
+            if (indexOf !== -1) {
+                //data stored locally need to be 
+                return content.substring(replacementString.length);
+            }
+            return content;
+        }
+
         /**
          * Takes a picture and sets the base64 encoded content in the datamap.
          * 
@@ -193,6 +203,7 @@
                 compressed: false,
                 compositionRemoteId: null
             };
+            attachment.content = handleBase64Prefix(attachment.content, attachment.mimetype);
             return createAttachmentEntity(attachment);
         }
 
@@ -229,17 +240,28 @@
                 .catch(e => log.warn(`Could not delete ${attachmentPath}`, e));
         }
 
-        function loadRealAttachment(fileName, docinfoId) {
+        function loadRealAttachment(doclinkEntry) {
+
+            const fileName = doclinkEntry.document;
+            const docinfoId = doclinkEntry.docinfoId;
+            const localHash = doclinkEntry["#offlinehash"];
+
             const log = $log.get("attachmentService#loadRealAttachment", ["attachment"]);
             const queryObj = {
-                query: entities.Attachment.ByDocInfoId,
-                args: [String(docinfoId)]
+                query: !!docinfoId ? entities.Attachment.ByDocInfoId : entities.Attachment.ByHashId,
+                args: !!docinfoId ? [String(docinfoId)] : [String(localHash)]
             };
             const deferred = $q.defer();
             loadingService.showDefault();
             swdbDAO.executeQuery(queryObj).then(result => {
                 if (result.length === 0) {
                     deferred.reject();
+                    const error = `Could not open attachment ${docinfoId}, not found on database...`;
+                    log.warn(error);
+                    swAlertPopup.show({
+                        title: error //TODO: maybe create a message for the popup?
+                    });
+                    loadingService.hide();
                     return;
                 }
                 var attachment = result[0];
@@ -257,7 +279,8 @@
                 }
 
                 if (ionic.Platform.isAndroid()) {
-                    cordova.plugins.fileOpener2.openBase64(fileName, extension, attachment.content, mimeType, {
+                    const content = handleBase64Prefix(attachment.content, attachment.mimetype);
+                    cordova.plugins.fileOpener2.openBase64(fileName, extension, content, mimeType, {
                         error: function (e) {
                             loadingService.hide();
                             deferred.reject();
