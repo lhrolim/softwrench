@@ -467,8 +467,6 @@
 
           <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="offlinecauselist_.description" requiredexpression="@worktype == 'CM'"
                        extraprojectionvalues="failurelist">
-            <event type="afterchange" service=""/>
-          
           </association>
 
           <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="offlineremedylist_.description" requiredexpression="@worktype == 'CM'"
