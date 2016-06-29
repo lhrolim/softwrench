@@ -63,19 +63,19 @@
             });
         }
 
+        function showValidationErrors(validationErrors) {
+            const options = {
+                title: "There are validation Errors:<p>",
+                subTitle: validationErrors.join("<br>"),
+            }
+            $ionicPopup.alert(options);
+        }
+
         $scope.saveChanges = function () {
             crudContextService.saveChanges().then(function () {
                 init();
-            }).catch(validationErrors => {
-                const options={
-                    title : "There are validation Errors:<p>",
-                    subTitle : validationErrors.join("<br>"),
-                }
-                $ionicPopup.alert(options);
-            });
+            }).catch(showValidationErrors);
         }
-
-
 
         $scope.hasDirtyChanges = function () {
             return crudContextService.hasDirtyChanges();
@@ -108,7 +108,14 @@
         }
 
         $scope.addCompositionItem = function () {
-            crudContextService.createNewCompositionItem();
+            const validationErrors = crudContextService.validateDetail();
+            if (validationErrors.length === 0) {
+                crudContextService.createNewCompositionItem();
+                return;
+            }
+
+            $scope.navigateBack();
+            showValidationErrors(validationErrors);
         }
 
         $scope.navigateNext = function () {
