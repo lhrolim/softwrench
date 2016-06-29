@@ -520,9 +520,9 @@
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
               <command id="startlabtrans" service="laborService" method="startLaborTransaction"
-                       icon="ion-ios-clock-outline" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
+                       icon="fa fa-start" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
               <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
-                       icon="ion-ios-clock" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
+                       icon="fa fa-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
             </commandgroup>
           </commandbars>
 
