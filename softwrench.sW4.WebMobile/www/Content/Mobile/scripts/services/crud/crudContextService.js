@@ -10,7 +10,7 @@
     function ($q, $log, $rootScope, swdbDAO, searchIndexService,
     metadataModelService, offlineSchemaService, offlineCompositionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
-    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService,menuModelService,loadingService,offlineAttachmentService) {
+    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService) {
 
         // ReSharper disable once InconsistentNaming
         var internalListContext = {
@@ -29,7 +29,7 @@
         return {
 
             //#region delegateMethods
-            getCrudContext: function() {
+            getCrudContext: function () {
                 return crudContextHolderService.getCrudContext();
             },
 
@@ -135,11 +135,11 @@
                 return allDisplayables;
             },
 
-            currentCompositionTabByName: function(composition) {
+            currentCompositionTabByName: function (composition) {
                 return this.currentCompositionsToShow().find(c => c.attribute === composition);
             },
 
-            currentCompositionSchemaById: function(composition, schemaId) {
+            currentCompositionSchemaById: function (composition, schemaId) {
                 const compositionMetadata = this.currentCompositionTabByName(composition);
                 return !compositionMetadata ? null : compositionMetadata.schema.schemas[schemaId];
             },
@@ -175,7 +175,7 @@
                 const compositionDetailSchema = this.getCompositionDetailSchema();
                 const fields = compositionDetailSchema.displayables;
                 if (compositionDetailSchema.applicationName === "attachment") {
-                    return offlineAttachmentService.loadRealAttachment(item.document,item.docinfoid);
+                    return offlineAttachmentService.loadRealAttachment(item.document, item.docinfoid);
                 }
 
 
@@ -223,18 +223,23 @@
                 }
 
             },
-
-            saveChanges: function (crudForm) {
+            validateDetail: function (crudForm) {
                 const crudContext = crudContextHolderService.getCrudContext();
                 crudForm = crudForm || {};
                 const detailSchema = this.currentDetailSchema();
                 const datamap = crudContext.currentDetailItem.datamap;
-                const validationErrors = validationService.validate(detailSchema, detailSchema.displayables, datamap, crudForm.$error);
+                return validationService.validate(detailSchema, detailSchema.displayables, datamap, crudForm.$error);
+            },
+            saveChanges: function (crudForm) {
+                const crudContext = crudContextHolderService.getCrudContext();
+                crudForm = crudForm || {};
+                const validationErrors = this.validateDetail(crudForm);
                 if (validationErrors.length > 0) {
                     //interrupting here, can´t be done inside service
                     return $q.reject(validationErrors);
                 }
 
+                const datamap = crudContext.currentDetailItem.datamap;
                 if (crudContext.composition && crudContext.composition.currentDetailItem) {
                     const compositionItem = crudContext.composition.currentDetailItem;
                     return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, crudContext.composition.currentTab).then(() => {
