@@ -120,7 +120,8 @@ module.exports = function (grunt) {
         "www/Content/Vendor/scripts/moment.js",
         "www/Content/Vendor/scripts/underscore.js",
         "www/Content/Vendor/scripts/persistence.store.websql.js",
-        "www/Content/Vendor/scripts/lz-string.js"
+        "www/Content/Vendor/scripts/lz-string.js",
+        "www/Content/Vendor/scripts/ngTouch.js"
     ];
     
     
@@ -195,7 +196,8 @@ module.exports = function (grunt) {
                     "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",
                     "moment.js": "moment/moment.js",
                     "underscore.js": "underscore/underscore.js",
-                    "lz-string.js": "lz-string/libs/lz-string.js"
+                    "lz-string.js": "lz-string/libs/lz-string.js",
+                    "ngTouch.js": "ngtouch/src/ngTouch.js"
                 }
             },
             css: {
@@ -284,7 +286,8 @@ module.exports = function (grunt) {
                     "persistence.store.websql.js": "persistence/lib/persistence.store.websql.js",
                     "moment.js": "moment/min/moment.min.js",
                     "underscore.js": "underscore/underscore-min.js",
-                    "lz-string.js": "lz-string/libs/lz-string.min.js"
+                    "lz-string.js": "lz-string/libs/lz-string.min.js",
+                    "ngTouch.js": "ngtouch/build/ngTouch.min.js"
                 }
             }
         },

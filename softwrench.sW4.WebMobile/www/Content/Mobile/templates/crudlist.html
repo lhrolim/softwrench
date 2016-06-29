@@ -15,16 +15,16 @@
             <label class="item-input-wrapper">
                 <i class="placeholder-icon fa fa-search"></i>
                 <input type="search" class="ion-autocomplete-search" ng-model="quickSearch.value" ng-change="filter()" placeholder="Quick Search" />
-                <button class="button-icon search-disable-button" ng-mouseup="disableSearch(true)"><i class="fa fa-times-circle"></i></button>
+                <button class="button-icon search-disable-button" ng-touchstart="disableSearch(true)"><i class="fa fa-times-circle"></i></button>
             </label>            
         </div>
     </ion-nav-title>
 
    
     <ion-nav-buttons side="right">
-        <button class="button-icon" ng-show="isList() && isSearching()" ng-click="goToAdvancedFilter()"><i class="fa fa-sliders"></i></button>
+        <button class="button-icon" ng-show="isList() && isSearching()" ng-touchstart="goToAdvancedFilter()"><i class="fa fa-sliders"></i></button>
         <!--this ng-show is needed due to a possible bug on ionic/ angular ui-router where the button shows on detail-->
-        <button class="button-icon" ng-show="isList() && !isSearching()" ng-click="enableSearch()"><i class="fa fa-search"></i></button>
+        <button class="button-icon" ng-show="isList() && !isSearching()" ng-touchstart="enableSearch()"><i class="fa fa-search"></i></button>
     </ion-nav-buttons>
 
     <ion-content has-header="true" has-bouncing="false">
