@@ -205,7 +205,7 @@
                 const indexColumn = getIndexColumn(appName, listSchema, gridSearch.sort.attribute);
                 if (indexColumn) {
                     const direction = gridSearch.sort.direction;
-                    return ` order by ${indexColumn} is null ${direction}, lower(${indexColumn}) ${direction} `;
+                    return ` order by isDirty desc, ${indexColumn} is null ${direction}, lower(${indexColumn}) ${direction} `;
                 }
             }
 
@@ -213,10 +213,10 @@
                 const orderBy = listSchema.properties["list.defaultorderby"];
                 if (orderBy) {
                     const parsedOrderBy = buildDefaultOrderBy(appName, listSchema, orderBy);
-                    return ` order by ${parsedOrderBy}`;
+                    return ` order by isDirty desc, ${parsedOrderBy}`;
                 }
             }
-            return " order by rowstamp is null desc, rowstamp desc ";
+            return " order by isDirty desc, rowstamp is null desc, rowstamp desc ";
         }
 
         const service = {
