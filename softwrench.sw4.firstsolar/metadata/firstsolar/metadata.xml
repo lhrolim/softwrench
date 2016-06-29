@@ -45,6 +45,21 @@
   <applications>
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
 
+      <components>
+        <componentdisplayable id="offlineworktypes">
+          <optionfield attribute="worktype" requiredexpression="true" label="Work Type">
+            <option value="AD" label="Administrative" extraprojections="type=PM"/>
+            <option value="CC" label="Construction and Commissioning" extraprojections="type=CM"/>
+            <option value="INSP" label="Inspection" extraprojections="type=PM"/>
+            <option value="PM" label="Preventative Maintenance" extraprojections="type=PM"/>
+            <option value="SR" label="Safety / Environmental Work " extraprojections="type=PM"/>
+            <option value="TRAIN" label="Training" extraprojections="type=PM"/>
+            <option value="TRAVL" label="Travel" extraprojections="type=PM"/>
+            <option value="TRBLS" label="Troubleshoot" extraprojections="type=CM"/>
+            <option value="WO" label="General Work Order" extraprojections="type=CM"/>
+          </optionfield>
+        </componentdisplayable>
+      </components>
 
 
       <schemas>
@@ -451,29 +466,30 @@
 
           <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true"/>
 
-          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" requiredexpression="true"/>
+          <reference id="offlineworktypes"/>
 
 
           <field label="Warranty Claim Number" attribute="WOLO10"/>
           <field label="EPCR Number" attribute="EPCR_NUM"/>
           <field label="JPNUM" attribute="JPNUM"/>
 
-          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" requiredexpression="@worktype == 'CM'"/>
+          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" requiredexpression="@worktype_.type == 'CM'">
+              <event type="afterchange" service="fsWorkorderOfflineService" method="afterFailureChanged"/>
+          </association>
 
           <!-- Region Problems, cuase Remedy -->
-          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description" 
-                       requiredexpression="@worktype == 'CM'" extraprojectionvalues="failurelist" >
+          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description" requiredexpression="@worktype_.type == 'CM'" extraprojectionvalues="failurelist" >
+            <event type="afterchange" service="fsWorkorderOfflineService" method="afterProblemChanged"/>
           </association>
 
-          <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="offlinecauselist_.description" requiredexpression="@worktype == 'CM'"
+          <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="offlinecauselist_.description" requiredexpression="@worktype_.type == 'CM'"
                        extraprojectionvalues="failurelist">
-            <event type="afterchange" service=""/>
-          
+            <event type="afterchange" service="fsWorkorderOfflineService" method="afterCauseChanged"/>
           </association>
 
-          <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="offlineremedylist_.description" requiredexpression="@worktype == 'CM'"
-                       extraprojectionvalues="failurelist"
-                       >
+          <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="offlineremedylist_.description" requiredexpression="@worktype_.type == 'CM'"
+                       extraprojectionvalues="failurelist">
+            <event type="afterchange" service="fsWorkorderOfflineService" method="afterRemedyChanged"/>
           </association>
 
           <!-- EndRegion-->
@@ -524,17 +540,8 @@
             <renderer type="lookup"/>
           </association>-->
 
-          <optionfield attribute="worktype" requiredexpression="true" label="Work Type">
-            <option value="AD" label="Administrative"/>
-            <option value="CC" label="Construction and Commissioning"/>
-            <option value="INSP" label="Inspection"/>
-            <option value="PM" label="Preventative Maintenance"/>
-            <option value="SR" label="Safety / Environmental Work "/>
-            <option value="TRAIN" label="Training"/>
-            <option value="TRAVL" label="Travel"/>
-            <option value="TRBLS" label="Troubleshoot"/>
-            <option value="WO" label="General Work Order"/>
-          </optionfield>
+          <reference id="offlineworktypes"/>
+          
 
           <composition relationship="attachment" label="Attachments" >
             <collectionproperties allowupdate="false" />

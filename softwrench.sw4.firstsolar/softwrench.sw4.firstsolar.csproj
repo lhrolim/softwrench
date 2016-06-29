@@ -83,6 +83,7 @@
     <Content Include="metadata\firstsolar\menu.mobile.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="offline_content\firstsolar\scripts\fsWorkorderService.mobile.js" />
     <Content Include="web_content\firstsolar\htmls\advancedSearchPcsButtons.html" />
     <Content Include="web_content\firstsolar\images\branding.png" />
     <Content Include="web_content\firstsolar\images\logo-pdf.png" />

@@ -60,8 +60,8 @@
                 scope.name = "crud_input_fields";
             },
 
-            controller: ["$scope", "offlineAssociationService","crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log",
-                function ($scope, offlineAssociationService,crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log) {
+            controller: ["$scope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log",
+                function ($scope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log) {
 
                     $scope.associationSearch = function (query, componentId) {
                         return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query);
@@ -69,6 +69,10 @@
 
                     $scope.itemSelected = function (callback) {
                         return offlineAssociationService.updateExtraProjections(callback.item, callback.componentId);
+                    }
+
+                    $scope.optionFieldSelected = function (callback) {
+                        return offlineAssociationService.updateExtraProjectionsForOptionField(callback.item, callback.componentId);
                     }
 
                     $scope.getAssociationLabelField = function (fieldMetadata) {
@@ -97,7 +101,6 @@
                             this.timeout = timeout;
                             this.logger = logger;
                             this.eventDescriptors = this.fields.map((f, i) => ({
-                                position: i,
                                 name: f.attribute,
                                 shouldWatch: true,
                                 event: f.events["afterchange"]
@@ -105,16 +108,21 @@
                             //properties on the datamap that must be watched
                             this.expressions = _.sortBy(this.eventDescriptors, "position").map(e => `datamap.${e.name}`);
                         }
-                        getEvent(position) {
-                            return this.eventDescriptors.find(e => e.position === position);
+                        getEvent(expression) {
+                            return this.eventDescriptors.find(e => `datamap.${e.name}` === expression);
                         }
 
-                        handleIgnoreWatchScenario(descriptor, newValue,ignoreWatchIdx) {
+                        handleIgnoreWatchScenario(descriptor, newValue, datamap, ignoreWatchIdx) {
                             descriptor.shouldWatch = false;
-                            const realValue = newValue.substring(0, ignoreWatchIdx);
-                            this.logger.debug(`setting real value ${newValue} for association ${descriptor.name}`);
+                            let realValue = newValue.substring(0, ignoreWatchIdx);
+                            if (realValue === "null") {
+                                realValue = null;
+                            }
+
+                            this.logger.debug(`setting real value ${realValue} for association ${descriptor.name}`);
                             const dm = crudContextService.currentDetailItemDataMap();
                             dm[descriptor.name] = realValue;
+                            datamap[descriptor.name] = realValue;
                             try {
                                 $scope.$digest();
                                 descriptor.shouldWatch = true;
@@ -130,17 +138,17 @@
                                 this.logger.trace(`ignoring event for ${descriptor.name}`);
                                 return;
                             }
-                            const ignoreWatchIdx = newValue.indexOf("$ignorewatch");
+                            const ignoreWatchIdx = newValue == null ? -1 : newValue.indexOf("$ignorewatch");
                             if (ignoreWatchIdx >= 0) {
-                                return this.handleIgnoreWatchScenario(descriptor,newValue, ignoreWatchIdx);
+                                return this.handleIgnoreWatchScenario(descriptor, newValue, datamap, ignoreWatchIdx);
                             }
 
                             const service = descriptor.event.service;
                             const method = descriptor.event.method;
                             const handler = this.dispatcher.loadService(service, method);
-                            const params = { schema, datamap };
+                            const params = { schema, datamap, newValue };
 
-                            this.logger.debug(`dispatching 'afterchange' event for field '${descriptor.name}'`);
+                            this.logger.debug(`dispatching 'afterchange' event for field '${descriptor.name}'. Value: ${newValue}`);
                             this.timeout(() => handler(params))
                                 .catch(e => this.logger.error(`Failed to execute ${service}.${method} on 'afterchange' of field '${descriptor.name}'`, e));
                         }
@@ -151,17 +159,17 @@
                         const watchableFields = $scope.displayables.filter(f => f.events.hasOwnProperty("afterchange") && !!f.events["afterchange"]);
                         if (!watchableFields || watchableFields.length <= 0) return;
 
-                        const logger = $log.get("crud_input_fields", ["datamap", "event","association"]);
+                        const logger = $log.get("crud_input_fields", ["datamap", "event", "association"]);
                         const dispatcher = new ChangeEventDispatcher(watchableFields, dispatcherService, $timeout, logger);
 
-
-
                         logger.debug(`watching ${dispatcher.expressions}`);
-                        $scope.$watchGroup(dispatcher.expressions, (newValues, oldValues) => {
-                            angular.forEach(newValues, (val, index) => {
 
-                                if (val === oldValues[index]) return;
-                                dispatcher.dispatchEventFor(index, $scope.schema, $scope.datamap,val);
+                        dispatcher.expressions.forEach(expression => {
+                            $scope.$watch(expression, (newValue, oldValue) => {
+                                if (newValue === oldValue) {
+                                    return;
+                                }
+                                dispatcher.dispatchEventFor(expression, $scope.schema, $scope.datamap, newValue);
                             });
                         });
                     }

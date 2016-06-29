@@ -66,19 +66,19 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (renderer == null) {
                 switch (ftype) {
                     case FieldRendererType.ASSOCIATION:
-                        return new AssociationFieldRenderer();
+                    return new AssociationFieldRenderer();
                     case FieldRendererType.COMPOSITION:
-                        return new CompositionFieldRenderer();
+                    return new CompositionFieldRenderer();
                     case FieldRendererType.OPTION:
-                        return new OptionFieldRenderer();
+                    return new OptionFieldRenderer();
                     default:
-                        if (entity != null) {
-                            var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
-                            if (attr != null && (attr.Type == "timestamp" || attr.Type == "datetime")) {
-                                return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName, null);
-                            }
+                    if (entity != null) {
+                        var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
+                        if (attr != null && (attr.Type == "timestamp" || attr.Type == "datetime")) {
+                            return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName, null);
                         }
-                        return new FieldRenderer();
+                    }
+                    return new FieldRenderer();
                 }
             }
             var type = renderer.Attribute(XmlMetadataSchema.RendererAttributeType).Value;
@@ -86,13 +86,13 @@ namespace softWrench.sW4.Metadata.Parsing {
             var stereotype = renderer.Attribute(XmlMetadataSchema.RendererAttributeStereotype).ValueOrDefault((string)null);
             switch (ftype) {
                 case FieldRendererType.ASSOCIATION:
-                    return new AssociationFieldRenderer(type, parameters, targetName, stereotype);
+                return new AssociationFieldRenderer(type, parameters, targetName, stereotype);
                 case FieldRendererType.COMPOSITION:
-                    return new CompositionFieldRenderer(type, parameters, targetName);
+                return new CompositionFieldRenderer(type, parameters, targetName);
                 case FieldRendererType.OPTION:
-                    return new OptionFieldRenderer(type, parameters, targetName);
+                return new OptionFieldRenderer(type, parameters, targetName);
                 default:
-                    return new FieldRenderer(type, parameters, targetName, stereotype);
+                return new FieldRenderer(type, parameters, targetName, stereotype);
             }
         }
 
@@ -107,7 +107,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var defaultValue = renderer.Attribute(XmlMetadataSchema.FilterAttributeDefault).ValueOrDefault((string)null);
             var clientFunction = renderer.AttributeValue("clientfunction");
 
-            return new FieldFilter(operation, parameters, defaultValue, targetName,clientFunction);
+            return new FieldFilter(operation, parameters, defaultValue, targetName, clientFunction);
         }
 
         /// <summary>
@@ -346,6 +346,13 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static IAssociationOption ParseOption(XElement xElement) {
             var label = xElement.Attribute(XmlMetadataSchema.OptionElementLabelAttribute).Value;
             var value = xElement.Attribute(XmlMetadataSchema.OptionElementValueAttribute).Value;
+
+            var extraProjection = xElement.Attribute(XmlMetadataSchema.OptionElementExtraProjection).ValueOrDefault((string)null);
+            if (extraProjection != null) {
+                var dict = PropertyUtil.ConvertToDictionary(extraProjection);
+                return new MultiValueAssociationOption(value, label, dict);
+            }
+
             return new AssociationOption(value, label);
         }
 

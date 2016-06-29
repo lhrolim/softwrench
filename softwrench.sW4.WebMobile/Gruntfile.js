@@ -85,7 +85,8 @@ module.exports = function (grunt) {
     var customer = grunt.option("customer") || "pae"; // -> harcoding the only customer that has custom scripts
     //if (customer) {
     customerScripts = [
-        "www/Content/Customers/" + customer + "_offline/scripts/**/*.mobile.js"
+        "www/Content/Customers/pae_offline/scripts/**/*.mobile.js",
+        "www/Content/Customers/firstsolar_offline/scripts/**/*.mobile.js"
     ];
     //}
 

@@ -14,6 +14,7 @@
         <detail>
           <field attribute="worktypeid" label="ID"  requiredexpression="true" />
           <field attribute="worktype" label="Work Type"  requiredexpression="true" />
+          <field attribute="type" hidden="true" />
           <field attribute="wtypedesc" label="Description"  requiredexpression="true" />
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>

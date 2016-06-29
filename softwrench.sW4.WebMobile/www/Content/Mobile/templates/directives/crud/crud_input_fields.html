@@ -16,7 +16,6 @@
                                           items-clicked-method="itemSelected(callback)"
                                           item-value-key="{{getAssociationValueField(field)}}"
                                           item-view-value-key="{{getAssociationLabelField(field)}}"
-                                           
                                           association-description />
 
                     </div>
@@ -24,9 +23,12 @@
                         {{datamap[field.target]}}
                         <option-field header-text="{{field.label}}"
                                       allow-empty="false"
+                                      component-id="{{field.associationKey}}"
                                       value="datamap[field.target]"
                                       text="Choose"
-                                      items="field.options" />
+                                      items="field.options"
+                                      callback2="optionFieldSelected(callback)"
+                                      />
                     </div>
                     <div ng-switch-default ng-switch on="field.rendererType">
                         <textarea ng-switch-when="textarea" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" rows="10" wrap="hard"

@@ -141,8 +141,9 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                             compiledTemplate.scope.itemsClickedMethod({
                                 callback: {
                                     item: item,
-                                    selectedItems: compiledTemplate.scope.selectedItems.slice(),
-                                    componentId: compiledTemplate.scope.componentId
+                                    componentId: compiledTemplate.scope.componentId,
+                                    selectedItems: compiledTemplate.scope.selectedItems.slice()
+                                    
                                 }
                             });
                         }

@@ -840,6 +840,7 @@
   <complexType name="OptionType">
     <attribute name="label" type="string" use="required"></attribute>
     <attribute name="value" type="string" use="required"></attribute>
+    <attribute name="extraprojections" type="string" use="required"></attribute>
   </complexType>
 
 

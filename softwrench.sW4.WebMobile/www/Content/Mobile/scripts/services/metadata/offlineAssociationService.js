@@ -83,12 +83,35 @@
 
         }
 
+        function updateExtraProjectionsForOptionField(optionFieldEntry, associationKey) {
+            const log = $log.get("offlineAssociationService#updateExtraProjections", ["association"]);
+            const detailSchema = crudContextHolderService.currentDetailSchema();
+            const associationMetadata = fieldService.getDisplayablesByAssociationKey(detailSchema, associationKey)[0];
+            const extrafields = optionFieldEntry.extrafields;
+
+            if (!associationMetadata || !extrafields) {
+                log.trace(`no extraprojectionfields to update for ${associationKey}`);
+                return;
+            }
+            const dm = crudContextHolderService.currentDetailItemDataMap();
+
+            log.info(`updating extraprojection fields for ${associationKey}`);
+            Object.keys(extrafields).forEach((item )=> {
+                const projectedKey = associationKey + "_." + item;
+                const value = extrafields[item];
+                log.debug(`updating ${projectedKey} to ${value}`);
+                dm[projectedKey] = value;
+            });
+
+        }
+
 
         const api = {
         filterPromise,
         fieldLabelExpression,
         fieldValueExpression,
-        updateExtraProjections
+        updateExtraProjections,
+        updateExtraProjectionsForOptionField,
         }
         return api;
 
