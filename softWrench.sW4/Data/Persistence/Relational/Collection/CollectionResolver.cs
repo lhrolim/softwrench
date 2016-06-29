@@ -34,7 +34,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
         }
 
-        private readonly ILog _log = LogManager.GetLogger(typeof(CollectionResolver));
+        protected readonly ILog Log = LogManager.GetLogger(typeof(CollectionResolver));
 
         private IContextLookuper _contextLookuper;
 
@@ -74,7 +74,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
 
             var before = Stopwatch.StartNew();
-            _log.DebugFormat("Init Collection Resolving for {0} Collections", String.Join(",", compositionSchemas.Keys));
+            Log.DebugFormat("Init Collection Resolving for {0} Collections", String.Join(",", compositionSchemas.Keys));
 
             var collectionAssociations = entityMetadata
                 .ListAssociations()
@@ -88,7 +88,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 var entityAssociation = collectionAssociations[0];
                 var internalParameter = BuildInternalParameter(parameters, entityAssociation, results);
                 FetchAsync(internalParameter, paginatedSearch);
-                _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections", entityAssociation.Qualifier));
+                Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections", entityAssociation.Qualifier));
                 return results;
             }
             // multiple compositions being fetched: each in a new Thread
@@ -100,7 +100,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 tasks[i++] = Task.Factory.NewThread(() => FetchAsync(internalParameter, perThreadPaginatedSearch));
             }
             Task.WaitAll(tasks);
-            _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections", String.Join(",", compositionSchemas.Keys)));
+            Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections", String.Join(",", compositionSchemas.Keys)));
             return results;
         }
 

@@ -17,6 +17,7 @@ namespace softwrench.sw4.offlineserver.services {
         //TODO: this will work on MSSQL Maximos, but need to review for DB2/ Oracle
         //TODO:(2) this won´t bring compositions whose joined tables were updated, should be a minor bug, since compositions are rarely updated after all.
         private const string BothQueryTemplate = "({0} in ({1}) and Cast({4}.rowstamp AS BIGINT)  > {2}) or ({0} in ({3}))";
+        private const string BothQueryTemplateNoRowstamp = "({0} in ({1})) or ({0} in ({2}))";
         private const string NewRowstampTemplate = "Cast({0}.rowstamp AS BIGINT)  > {1}";
         private const string AllNewTemplate = "{0} in ({1})";
 
@@ -55,8 +56,13 @@ namespace softwrench.sw4.offlineserver.services {
 
             var updateIdsForQuery = BaseQueryUtil.GenerateInString(offParameter.ExistingEntities, lookupAttribute.From);
 
+            if (rowstamp == null) {
+                Log.WarnFormat("rowstamp is null for item {0}",relationshipName);
+                searchRequestDto.AppendWhereClauseFormat(BothQueryTemplateNoRowstamp, columnName, updateIdsForQuery,  newIdsForQuery);
+            } else {
+                searchRequestDto.AppendWhereClauseFormat(BothQueryTemplate, columnName, updateIdsForQuery, rowstamp, newIdsForQuery, relationshipName);
+            }
 
-            searchRequestDto.AppendWhereClauseFormat(BothQueryTemplate, columnName, updateIdsForQuery, rowstamp, newIdsForQuery, relationshipName);
         }
 
         protected override CollectionMatchingResultWrapper GetResultWrapper() {
@@ -71,8 +77,12 @@ namespace softwrench.sw4.offlineserver.services {
                 ExistingEntities = alreadyExisting;
             }
 
-            public IEnumerable<DataMap> NewEntities { get; set; }
-            public IEnumerable<DataMap> ExistingEntities { get; set; }
+            public IEnumerable<DataMap> NewEntities {
+                get; set;
+            }
+            public IEnumerable<DataMap> ExistingEntities {
+                get; set;
+            }
         }
 
 
