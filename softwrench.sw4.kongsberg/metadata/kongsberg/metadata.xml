@@ -1899,7 +1899,7 @@
             </association>
           </section>
           <section>
-            <header displacement="ontop" label="Service Request Details" params="fieldset=true" />
+            <header displacement="ontop" label="Incident Details" params="fieldset=true" />
             <field attribute="statusdate" hidden="true" />
             <field attribute="description" label="Summary:" requiredexpression="true">
               <renderer type="default" params="maxlength=100"/>
