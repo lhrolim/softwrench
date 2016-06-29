@@ -10,6 +10,7 @@
     <template path="@tooltrans.xml"/>
     <template path="@woactivity.xml"/>
     <template path="@asset.xml"/>
+    <template path="@jobplan.xml"/>
 
     <template path="@glcomponents.xml"/>
     <template path="@failurecode.xml"/>
@@ -172,6 +173,11 @@
         </relationship>
         <relationship to="classstructure">
           <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+
+        <relationship to="jobplan">
+          <relationshipAttribute from="jpnum" to="jpnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
         
         

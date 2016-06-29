@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+
+  <entities>
+    <entity name="jobplan" idAttribute="jpnum">
+      <attributes>
+        <attribute name="jpnum" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="jpduration" type="float" required="true" />
+        <attribute name="laborcode" type="varchar" required="false" />
+        <attribute name="downtime" type="smallint" required="true" />
+        <attribute name="supervisor" type="varchar" required="false" />
+        <attribute name="calendar" type="varchar" required="false" />
+        <attribute name="priority" type="int" required="false" />
+        <attribute name="crewid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="owner" type="varchar" required="false" />
+        <attribute name="jobplanid" type="bigint" required="true" />
+        <attribute name="persongroup" type="varchar" required="false" />
+        <attribute name="ownergroup" type="varchar" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="interruptible" type="smallint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="classstructureid" type="varchar" required="false" />
+        <attribute name="templatetype" type="varchar" required="true" />
+        <attribute name="suspendflow" type="smallint" required="true" />
+        <attribute name="flowcontrolled" type="smallint" required="true" />
+        <attribute name="flowaction" type="varchar" required="false" />
+        <attribute name="flowactionassist" type="smallint" required="true" />
+        <attribute name="launchentryname" type="varchar" required="false" />
+        <attribute name="assignedownergroup" type="varchar" required="false" />
+        <attribute name="pluscchangeby" type="varchar" required="true" />
+        <attribute name="pluscchangedate" type="datetime" required="true" />
+        <attribute name="pluscrevcom" type="varchar" required="false" />
+        <attribute name="pluscrevnum" type="int" required="true" />
+        <attribute name="pluscstatusdate" type="datetime" required="false" />
+        <attribute name="inctasksinsched" type="smallint" required="true" />
+        <attribute name="stconoffset" type="float" required="false" />
+        <attribute name="fnconoffset" type="float" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="hasnestedjp" type="smallint" required="true" />
+        <attribute name="amcrew" type="varchar" required="false" />
+        <attribute name="crewworkgroup" type="varchar" required="false" />
+        <attribute name="reqasstdwntime" type="smallint" required="true" />
+        <attribute name="apptrequired" type="smallint" required="true" />
+        <attribute name="aos" type="smallint" required="true" />
+        <attribute name="ams" type="smallint" required="true" />
+        <attribute name="los" type="smallint" required="true" />
+        <attribute name="lms" type="smallint" required="true" />
+        <attribute name="repairlocflag" type="smallint" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="jobplan" />
+      </connectorParameters>
+    </entity>
+    
+  </entities>
+
+  <applications>
+
+    <application name="jobplan" entity="jobplan" title="Job Plan">
+      <schemas>
+        <list>
+          <field attribute="description" label="Description"/>
+          <field attribute="jpnum" hidden="true"/>
+        </list>
+      </schemas>
+    </application>
+
+  </applications>
+
+
+
+
+</metadata>

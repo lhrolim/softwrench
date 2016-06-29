@@ -481,7 +481,8 @@
 
           <field label="Warranty Claim Number" attribute="WOLO10"/>
           <field label="EPCR Number" attribute="EPCR_NUM"/>
-          <field label="JPNUM" attribute="JPNUM"/>
+          
+          <association label="JP Number" target="jpnum" labelfield="jobplan_.description" requiredexpression="@worktype_.type == 'CM'" extraprojectionvalues="failurelist"/>
 
           <association label="Failure Class" target="failurecode" labelfield="failurelistonly_.description" requiredexpression="@worktype_.type == 'CM'" extraprojectionvalues="failurelist">
               <event type="afterchange" service="fsWorkorderOfflineService" method="afterFailureChanged"/>
