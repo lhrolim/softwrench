@@ -11,6 +11,8 @@
             }
         };
 
+        const truncateHours = hours => parseFloat(hours.toFixed(2));
+
         function cacheStartedLabor (parentId, labor) {
             localStorageService.put(constants.cache.laborParentKey, parentId);
             localStorageService.put(constants.cache.laborKey, labor);
@@ -105,7 +107,8 @@
         function doStopLaborTransaction(parentId) {
             const labor = getActiveLabor();
             const startdate = new Date(labor["startdate"]);
-            const hours = ((new Date().getTime() - startdate.getTime()) / (1000 * 60 * 60));
+            const hoursDelta = ((new Date().getTime() - startdate.getTime()) / (1000 * 60 * 60));
+            const hours = truncateHours(hoursDelta); // truncating and rounding to have 2 decimal
             labor["regularhrs"] = hours;
             labor["linecost"] = calculateLineCost(hours, labor["payrate"]);
 
@@ -181,14 +184,64 @@
             .then(res =>  res ? doStopLaborTransaction() : null);
         }
 
+        /**
+         * Executed when detail schema is loaded:
+         * - formats 'regularhrs' as hh.mm
+         * - if it's a creation schema will set laborer, payrate and linecost information.  
+         * 
+         * @param {$scope} scope 
+         * @param {Schema} schema 
+         * @param {Datamap} datamap 
+         */
         function onDetailLoad(scope, schema, datamap) {
-            if (!!datamap["labtransid"]) return;
-            setInitialLaborAndCraft(datamap);
+            const regularHours = datamap["regularhrs"];
+            if (angular.isNumber(regularHours) && !Number.isInteger(regularHours)) {
+                datamap["regularhrs"] = truncateHours(regularHours);
+            }
+            if (!datamap["labtransid"]) {
+                setInitialLaborAndCraft(datamap);
+            }
         }
 
+        /**
+         * Updates linecost when regularhrs changes.
+         * 
+         * @param {events.afterchange} event 
+         */
         function updateLineCost(event) {
             const datamap = event.datamap;
             datamap["linecost"] = calculateLineCost(datamap["regularhrs"], datamap["payrate"]);
+        }
+
+        /**
+         * Formats the 'rugularhrs' field as `HHh MMm {SSs}`. 
+         * 
+         * @param {formatter.params} params 
+         * @returns {String} 
+         */
+        function formatRegularHours(params) {
+            const value = params.value;
+            if (!value) return value;
+            const hours = Math.trunc(value);
+            const minutes = Math.round((value * 60) % 60);
+            if (hours === 0 && minutes === 0) {
+                const seconds = Math.round((value * 3600) % 3600);
+                return `${hours}h ${minutes}m ${seconds}s`;
+            }
+            return `${hours}h ${minutes}m`;
+        }
+
+        /**
+         * Formats 'genapprservreceipt' boolean field to "Yes" and "No".
+         * 
+         * @param {formatter.params} params 
+         * @returns {String} 
+         */
+        function formatApproved(params) {
+            const value = params.value;
+            if (!value) return value;
+            const approved = _.contains([true, "true", "True", 1, "1", "yes", "Yes"], value);
+            return approved ? "Yes" : "No";
         }
 
         //#endregion
@@ -200,7 +253,9 @@
             shouldAllowLaborFinish,
             startLaborTransaction,
             finishLaborTransaction,
-            updateLineCost
+            updateLineCost,
+            formatRegularHours,
+            formatApproved
         };
         return service;
         //#endregion
