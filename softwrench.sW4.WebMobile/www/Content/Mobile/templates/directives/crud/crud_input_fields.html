@@ -44,7 +44,9 @@
 
                         <input ng-switch-when="numericinput" type="number" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly"
                                min="{{field.rendererParameters['min']}}"
-                               max="{{setMaxNumericInput(datamap,field)}}" ng-required="isFieldRequired(field.requiredExpression)" />
+                               max="{{setMaxNumericInput(datamap,field)}}"
+                               step="{{ field.rendererParameters['step'] || 1 }}"
+                               ng-required="isFieldRequired(field.requiredExpression)" />
 
                         <input ng-switch-when="date" type="date" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" 
                                dateconverter

@@ -138,7 +138,9 @@
                                 this.logger.trace(`ignoring event for ${descriptor.name}`);
                                 return;
                             }
-                            const ignoreWatchIdx = newValue == null ? -1 : newValue.indexOf("$ignorewatch");
+                            const ignoreWatchIdx = newValue === null || newValue === undefined || !angular.isFunction(newValue.indexOf)
+                                ? -1
+                                : newValue.indexOf("$ignorewatch");
                             if (ignoreWatchIdx >= 0) {
                                 return this.handleIgnoreWatchScenario(descriptor, newValue, datamap, ignoreWatchIdx);
                             }

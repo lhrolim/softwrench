@@ -6,7 +6,7 @@
                 <div class="col">
                     <ul>
                         <li ng-repeat="field in visibleFields()" ng-init="value = fieldValue(item, field)" ng-show="!!value">
-                            <span class="input-label">{{field.label}}</span><span class="output-label">{{value}}</span>
+                            <span class="input-label">{{field.label}}</span><span class="output-label">&nbsp;{{value}}</span>
                         </li>
                     </ul>
                 </div>

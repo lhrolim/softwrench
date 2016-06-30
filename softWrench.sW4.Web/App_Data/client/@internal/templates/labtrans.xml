@@ -424,14 +424,20 @@
         <!-- #region: mobile -->
 
         <list title="Labor List" stereotype="compositionlist" platform="mobile">
-          <field attribute="labtransid" hidden="true"/>
-          <field attribute="laborcode" label="Labor" qualifier="title"/>
-          <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
-          <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
-          <field attribute="transdate" label="Created Date"/>
-          <field attribute="genapprservreceipt" label="Approved?"/>
+          <field attribute="laborcode" label="Labor" />
+          <field attribute="startdate" label="Start Date" >
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=true"/>
+          </field>
+          <field attribute="regularhrs" label="Regular Hours">
+            <renderer type="default" params="formatter=@laborService.formatRegularHours"/>
+          </field>
           <field attribute="linecost" label="Line Cost">
             <renderer type="default" params="formatter=money"/>
+          </field>
+          <field attribute="transtype" label="Work Type"/>
+          <field attribute="gldebitacct" label="GL Debit Account" />
+          <field attribute="genapprservreceipt" label="Approved?">
+            <renderer type="default" params="formatter=@laborService.formatApproved"/>
           </field>
         </list>
         
