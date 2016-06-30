@@ -36,20 +36,22 @@
 
                 $scope.isCommandHidden = command => !command || offlineCommandService.isCommandHidden($scope.datamap, $scope.schema, command);
                 
-
-                const init = () => {
-                    const commands = offlineCommandService.getCommands($scope.schema, $scope.position);
-                    $scope.commandBar.commands = commands;
-                };
-                const commandBarWatcher = (newValue, oldValue) => {
-                    if (newValue === oldValue) return;
-                    init();
-                };
+                const updateCommandBar = (schema, position) => {
+                    const commands = offlineCommandService.getCommands(schema || $scope.schema, position || $scope.position);
+                    $scope.commandBar = new CommandBar(commands);
+                } 
+                const init = () => updateCommandBar();
 
                 init();
                 
-                $scope.$watch("schema", commandBarWatcher);
-                $scope.$watch("position", commandBarWatcher);
+                $scope.$watch("schema", (newSchema, oldSchema) => {
+                    if (newSchema === oldSchema || angular.equals(newSchema, oldSchema)) return;
+                    updateCommandBar(newSchema);
+                }, true);
+                $scope.$watch("position", (newPosition, oldPosition) => {
+                    if (newPosition === oldPosition) return;
+                    updateCommandBar(null, newPosition);
+                });
             }]
         };
 

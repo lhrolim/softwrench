@@ -202,13 +202,15 @@
         
       </properties>
       <schemas>
+        
+        <!--#region: Mobile-->
         <list id="list" platform="mobile">
           <field attribute="assetnum" label="Asset" qualifier="title"/>
           <field attribute="location" label="Location" qualifier="subtitle"/>
           <field attribute="vendor" label="Vendor"  qualifier="featured"/>
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true" />
         </list>
+        
+        <!--#endregion-->
         <!--<schema id="detail" stereotype="detail">
           <field attribute="assetid" label="ID"  requiredexpression="true" />
           <field attribute="assetnum" label="Asset"  requiredexpression="true" />

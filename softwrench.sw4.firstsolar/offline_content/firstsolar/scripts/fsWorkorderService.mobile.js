@@ -39,6 +39,17 @@
 
         }
 
+        function updateLocation(event) {
+            const datamap = event.datamap;
+            const location = datamap["offlineasset_.location"];
+            datamap["location"] = `${location}$ignorewatch`;
+        }
+
+        function clearAsset(event) {
+            const datamap = event.datamap;
+            datamap["assetnum"] = "null$ignorewatch";
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -47,6 +58,8 @@
             afterProblemChanged,
             afterCauseChanged,
             afterRemedyChanged,
+            updateLocation,
+            clearAsset
         };
         return service;
         //#endregion

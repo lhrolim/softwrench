@@ -106,7 +106,7 @@
                                 event: f.events["afterchange"]
                             }));
                             //properties on the datamap that must be watched
-                            this.expressions = _.sortBy(this.eventDescriptors, "position").map(e => `datamap.${e.name}`);
+                            this.expressions = this.eventDescriptors.map(e => `datamap.${e.name}`);
                         }
                         getEvent(expression) {
                             return this.eventDescriptors.find(e => `datamap.${e.name}` === expression);

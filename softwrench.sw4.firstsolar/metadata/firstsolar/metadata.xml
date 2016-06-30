@@ -48,6 +48,13 @@
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
         </relationship>
         
+        <relationship to="asset" qualifier="offlineasset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+        </relationship>
+        <relationship to="location" qualifier="offlinelocation" >
+          <relationshipAttribute from="location" to="location" primary="true"/>
+        </relationship>
+        
       </relationships>
     </entity>
   </entities>
@@ -457,11 +464,11 @@
           </properties>
         </list>
 
-        <detail platform="mobile" title="Work Order" redeclaring="true">
+        <detail platform="mobile" title="Work Order" redeclaring="true" stereotype="detail">
           <reference id="detailhiddensoffline"/>
 
-          <association label="Location" target="location" labelfield="location.description" requiredexpression="true"/>
-          <association label="Asset" target="assetnum" labelfield="asset.description" requiredexpression="true"/>
+          <association label="Location" target="location" labelfield="offlinelocation.description" requiredexpression="true"/>
+          <association label="Asset" target="assetnum" labelfield="offlineasset.description" requiredexpression="true"/>
 
           <association label="Status" target="status" labelfield="synstatus.description" >
             <dataprovider prefilterfunction="FilterStatusCodes"/>
@@ -477,6 +484,7 @@
           <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true"/>
 
           <reference id="offlineworktypes"/>
+
 
 
           <field label="Warranty Claim Number" attribute="WOLO10"/>
@@ -528,28 +536,27 @@
 
         </detail>
 
-
         <schema id="newdetail" stereotype="detailnew" platform="mobile" redeclaring="true">
           <field attribute="orgid" hidden="true" requiredexpression="true" />
           <field attribute="siteid" hidden="true" requiredexpression="true" />
 
           <field attribute="description" label="Description" requiredexpression="true"/>
 
-          <association target="location" labelfield="location.description"
+          <association target="location" labelfield="offlinelocation.description"
                        requiredexpression="true" label="Location">
             <renderer type="lookup"/>
-            <event type="afterchange" service="workorderService" method="clearAsset" />
+            <event type="afterchange" service="fsWorkorderOfflineService" method="clearAsset" />
           </association>
-          <association target="assetnum" labelfield="asset.description" extraprojectionvalues="location"
+          <association target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location"
                        requiredexpression="true" label="Asset">
             <renderer type="lookup"/>
-            <event type="afterchange" service="workorderService" method="updateLocation" />
+            <event type="afterchange" service="fsWorkorderOfflineService" method="updateLocation" />
           </association>
 
-          <!--<association target="classstructureid" labelfield="offlineclassification_.description"
-                       requiredexpression="true" label="Origination" >
+          <association  target="classstructureid" labelfield="classstructure_.description"
+                        requiredexpression="true" label="Origination">
             <renderer type="lookup"/>
-          </association>-->
+          </association>
 
           <reference id="offlineworktypes"/>
           
@@ -955,6 +962,25 @@
     </application>
 
     
+    
+    <application name="offlinelocation" entity="location" title="Location">
+      <schemas>
+        <list platform="mobile">
+          <field attribute="location" label="Location" />
+          <field attribute="description" label="Description"/>
+        </list>
+      </schemas>
+    </application>
+
+    <application name="offlineasset" entity="asset" title="Asset">
+      <schemas>
+        <list platform="mobile">
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="location" label="Location"/>
+          <field attribute="description" label="Description"/>
+        </list>
+      </schemas>
+    </application>
     
   </applications>
 </metadata>
