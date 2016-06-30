@@ -40,33 +40,33 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
 
             var statuscolorJson = $rootScope.statusColor;
             if (statuscolorJson === undefined) {
-                //cache
                 statuscolorJson = contextService.fetchFromContext("statuscolor", true);
                 $rootScope.statusColor = statuscolorJson;
             }
+
+            //if the color json is missing, stop here
             if (statuscolorJson == null) {
                 return fallbackFunction(status, applicationname);
             }
 
+            //if the application is missing from the json file
             var applicationObject = statuscolorJson[applicationname];
-            if (applicationObject == null) {
+            if (!applicationObject) {
 
-                //since the application was not found, check for a customer default colors
+                //if there is no default application in the json, stop here
                 var applicationObject = statuscolorJson["default"];
-                if (applicationObject == null) {
+                if (!applicationObject) {
                     return fallbackFunction(status, applicationname);
                 }
             }
 
-            if (status.toLowerCase() in applicationObject) {
+            //check for the status in the application/default
+            if (status in applicationObject || status.toLowerCase() in applicationObject) {
                 return applicationObject[status.toLowerCase()];
             }
 
-            if (status in applicationObject) {
-                return applicationObject[status];
-            }
-
-            return "#777";
+            //nothing else worked
+            return fallbackFunction(status, applicationname);
         },
 
         load: function (jsonString) {
