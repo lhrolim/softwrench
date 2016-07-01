@@ -28,13 +28,13 @@
           <field attribute="description" label="Description"  requiredexpression="true" />
         </detail>
 
-        <schema id="itemlookupreserved" stereotype="detail" mode="output">
+        <schema id="itemlookupreserved" stereotype="detail" mode="output" platform="web">
           <field attribute="itemnum" label="Item" qualifier="title"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
           <field attribute="reserved" label="Reserved" />
         </schema>
         
-        <schema id="itemlookup" stereotype="detail" mode="output">
+        <schema id="itemlookup" stereotype="detail" mode="output" platform="web">
           <field attribute="itemnum"/>
           <field attribute="description"/>
           <field attribute="issueunit"/>
