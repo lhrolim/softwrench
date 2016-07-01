@@ -1,4 +1,4 @@
-/// <binding ProjectOpened='watch' />
+/// <binding ProjectOpened='watch:sass, watch:scripts, default' />
 module.exports = function (grunt) {
 
     // Project configuration.
@@ -462,15 +462,29 @@ module.exports = function (grunt) {
         },
         //#endregion
 
-        //#region sass
+        //#region watch
         watch: {
-            files: [
-                "www/css/**/*.scss",
-                "www/Content/Mobile/styles/**/*.scss"
-            ],
-            tasks: [
-                "sass:dev"
-            ]
+            sass: {
+                files: [
+                    "www/css/**/*.scss",
+                    "www/Content/Mobile/styles/**/*.scss"
+                ],
+                tasks: [
+                    "sass:dev"
+                ]
+            },
+            scripts: {
+                files: [
+                    "www/Content/Mobile/scripts/**/*.js",
+                    "www/Content/Shared/**/*.js"
+                ],
+                options: {
+                    event: ["added", "deleted"]
+                },
+                tasks: [
+                    "tags:buildScripts"
+                ]
+            }
         },
         sass: {
             dev: {

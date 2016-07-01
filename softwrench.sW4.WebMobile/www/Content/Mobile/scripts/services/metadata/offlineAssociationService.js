@@ -72,7 +72,10 @@
 
         function updateExtraProjections(associationDataEntry, associationKey) {
             const log = $log.get("offlineAssociationService#updateExtraProjections", ["association"]);
-            const detailSchema = crudContextHolderService.currentDetailSchema();
+            const isComposition = !crudContextHolderService.isOnMainTab();
+            const detailSchema = isComposition
+                ? crudContextHolderService.getCompositionDetailSchema()
+                : crudContextHolderService.currentDetailSchema();
             const associationMetadata = fieldService.getDisplayablesByAssociationKey(detailSchema, associationKey)[0];
             if (!associationMetadata || !associationMetadata.extraProjectionFields) {
                 log.trace(`no extraprojectionfields to update for ${associationKey}`);
@@ -93,7 +96,10 @@
 
         function updateExtraProjectionsForOptionField(optionFieldEntry, associationKey) {
             const log = $log.get("offlineAssociationService#updateExtraProjections", ["association"]);
-            const detailSchema = crudContextHolderService.currentDetailSchema();
+            const isComposition = !crudContextHolderService.isOnMainTab();
+            const detailSchema = isComposition
+                ? crudContextHolderService.getCompositionDetailSchema() 
+                : crudContextHolderService.currentDetailSchema();
             const associationMetadata = fieldService.getDisplayablesByAssociationKey(detailSchema, associationKey)[0];
             const extrafields = optionFieldEntry.extrafields;
 
