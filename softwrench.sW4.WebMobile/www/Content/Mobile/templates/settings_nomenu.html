@@ -1,4 +1,4 @@
-﻿<ion-view title="Settings">
+﻿<ion-view title="Settings" class="page-settings">
     <ion-header-bar align-title="center" class="bar-positive">
         <div class="buttons">
             <button class="button button-positive" ng-click="goToLogin()">
@@ -9,12 +9,15 @@
     </ion-header-bar>
 
     <ion-content class="padding" has-header="true" has-bouncing="false">
-        <div class="list list-inset responsive-container lg">
-            <label class="item item-input">
-                <input type="url" placeholder="URL" ng-model="settings.serverurl">
-            </label>
-            <button class="button button-calm button-block" ng-click="save()">Save</button>
+        <div class="list card responsive-container lg">
+            <div class="item item-divider">
+                Server
+            </div>
+            <div class="item item-text-wrap server">
+                <input type="text" placeholder="URL" ng-model="settings.serverurl" autocapitalize="off" autocorrect="off">
+            </div>
         </div>
+        <button class="button button-calm button-block" ng-click="save()">Save</button>
 
         <div class="list card responsive-container lg" ng-if="config">
             <div class="item item-divider">

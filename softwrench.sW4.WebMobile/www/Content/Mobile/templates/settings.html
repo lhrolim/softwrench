@@ -4,11 +4,13 @@
     </ion-nav-buttons>
 
     <ion-content class="padding" has-header="true" has-bouncing="false">
-        
-        <div class="settings-form list list-inset responsive-container lg">
-            <label class="item item-input">
+        <div class="list card responsive-container lg">
+            <div class="item item-divider">
+                Server
+            </div>
+            <div class="item item-text-wrap server">
                 <input type="url" placeholder="URL" ng-model="settings.serverurl" autocapitalize="off" autocorrect="off" readonly="readonly">
-            </label>
+            </div>
         </div>
 
         <div class="list card responsive-container lg" ng-if="config">

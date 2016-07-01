@@ -1,3 +1,62 @@
 ﻿.commandbar.mobile-fab {
     padding-top: 100px;
 }
+
+.bar {
+    &.bar-assertive {
+        border-color: #6d6e70;
+        background-color: #6d6e70;
+        background-image: linear-gradient(0deg,#6d6e70,#6d6e70 50%,transparent 50%);
+
+        .button {
+            border-color: transparent;
+            background-color: #6d6e70;
+        }
+    }
+
+    &.bar-positive {
+        border-color: #00acec;
+        background-color: #00acec;
+        background-image: linear-gradient(0deg,#00acec,#00acec 50%,transparent 50%);
+
+        .button {
+            border-color: #00acec;
+            background-color: #00acec;
+        }
+    }
+
+    &.bar-secondary {
+        border-color: #808080;
+        background-color: #808080;
+
+        h1 {
+            color: #fff;
+        }
+    }
+
+    .buttons {
+        .button {
+            background: none;
+            font-size: 16px;
+        }
+    }
+}
+
+//overrides for StatusBar plugin - iOS
+.platform-ios.platform-cordova:not(.fullscreen) {
+    .bar-header:not(.bar-subheader) {
+        height: 44px;
+
+        & > * {
+            margin-top: 0;
+        }
+    }
+
+    .bar-subheader, .has-header, .tabs-top > .tabs, .tabs.tabs-top {
+        top: 44px;
+    }
+
+    .has-subheader {
+        top: 88px;
+    }
+}

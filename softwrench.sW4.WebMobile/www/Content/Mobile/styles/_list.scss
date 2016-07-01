@@ -22,13 +22,21 @@ input.ion-autocomplete[readonly] {
     left: 30px !important;
 }
 
-.missingsync {
-    background-color: wheat !important;
+.missingsync, .pending {
+    button {
+        //background: #fff !important;
+        background: rgba($cts_red, 0.1) !important;
+        border: 3px solid $cts_red;
+    }
+
+    i {
+        color: $cts_red !important;
+    }
 }
 
-.pending {
+/*.pending {
     background-color: lightgrey !important;
-}
+}*/
 
 .page-syncoperation-list {
     .operation-list {
@@ -69,16 +77,38 @@ input.ion-autocomplete[readonly] {
     padding-right: 0;
 }
 
-.list-featured {
-    float: right;
-    font-size: 12px;
+.crud-list {
+    .crud-item {
+        cursor: pointer;
+
+        .featured {
+            float: right;
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+        .subtitle {
+        }
+
+        .excerpt {
+            color: #aaa;
+            white-space: normal;
+        }
+
+        .details {
+            padding-right: 0;
+            color: #ccc;
+        }
+    }
 }
 
 .search-disable-button {
     color: #aaa !important;
 }
 
-.crud-list-icon{
+.crud-list-icon {
     top: 36px;
     left: 40px;
     z-index: 99;

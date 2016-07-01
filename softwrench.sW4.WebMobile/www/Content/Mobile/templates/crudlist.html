@@ -29,9 +29,9 @@
 
     <ion-content has-header="true" has-bouncing="false">
 
-        <ion-list class="has-header">
+        <ion-list class="has-header crud-list">
 
-            <ion-item ng-repeat="item in list() track by item.id" ng-class="{'pending': isPending(item),'missingsync': isDirty(item)  }" item="item" on-swipe-left="quickSync(item)">
+            <ion-item class="crud-item" ng-repeat="item in list() track by item.id" ng-class="{'pending': isPending(item),'missingsync': isDirty(item)  }" item="item" on-swipe-left="quickSync(item)">
 
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">
@@ -40,14 +40,13 @@
                     </div>
                     <div class="col-75">
                         <ul>
-                            <li class="list-featured">{{itemFeatured(item.datamap)}}</li>
-                            <li>{{itemTitle(item.datamap)}}</li>
-                            <li>{{itemSubTitle(item.datamap)}}</li>
-                            <li>{{itemExcerpt(item.datamap)}}</li>
+                            <li class="featured">{{itemFeatured(item.datamap)}}&ensp;<span class="details"><i class="fa fa-chevron-right"></i></span></li>
+                            <li class="title">{{itemTitle(item.datamap)}}</li>
+                            <li class="subtitle">{{itemSubTitle(item.datamap)}}</li>
+                            <li class="excerpt">{{itemExcerpt(item.datamap)}}</li>
                         </ul>
                     </div>
                 </div>
-
             </ion-item>
 
         </ion-list>

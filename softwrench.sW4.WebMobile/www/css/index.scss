@@ -1,8 +1,12 @@
-﻿/*standard styles*/
+﻿/*base styles*/
+@import "../Content/Mobile/styles/sw-colors";
+
+/*standard styles*/
 @import "../Content/Mobile/styles/detail";
 @import "../Content/Mobile/styles/list";
 @import "../Content/Mobile/styles/login";
 @import "../Content/Mobile/styles/menu";
+@import "../Content/Mobile/styles/popup";
 @import "../Content/Mobile/styles/search";
 
 /*directives styles*/
