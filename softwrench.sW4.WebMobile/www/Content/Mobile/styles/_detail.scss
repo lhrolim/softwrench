@@ -114,13 +114,16 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     }
 }
 
-.page-settings {
-    .settings-form label {
-        padding-left: 5px;
-        padding-right: 5px;
+.page-settings, .page-syncdetail, page-login {
+    .item-divider {
+        font-weight: bold;
+    }
 
+    .server {
         input {
-            padding-left: 5px;
+            width: 100%;
+            color: #444 !important;
+            font-size: 16px;
         }
     }
 }

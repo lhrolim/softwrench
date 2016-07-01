@@ -32,7 +32,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 if (!ngModel) return;
 
                 // set the default values of the passed in attributes
-                scope.placeholder = !scope.placeholder ? 'Click to enter a value...' : scope.placeholder;
+                scope.placeholder = !scope.placeholder ? 'Search values...' : scope.placeholder;
                 scope.cancelLabel = !scope.cancelLabel ? scope.multipleSelect === "true" ? 'Done' : 'Cancel' : scope.cancelLabel;
                 scope.selectItemsLabel = !scope.selectItemsLabel ? 'Select an item...' : scope.selectItemsLabel;
                 scope.selectedItemsLabel = !scope.selectedItemsLabel ? 'Selected items:' : scope.selectedItemsLabel;

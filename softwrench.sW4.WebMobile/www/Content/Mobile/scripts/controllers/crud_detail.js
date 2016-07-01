@@ -65,8 +65,9 @@
 
         function showValidationErrors(validationErrors) {
             const options = {
-                title: "There are validation Errors:<p>",
+                title: "There are Validation Errors:<p>",
                 subTitle: validationErrors.join("<br>"),
+                cssClass: "alert"
             }
             $ionicPopup.alert(options);
         }

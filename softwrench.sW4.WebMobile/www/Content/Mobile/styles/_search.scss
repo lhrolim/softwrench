@@ -11,10 +11,29 @@
     bottom: 8px;
     height: 44px;
     background-color: #00acec !important;
+    font-size: 16px !important;
 }
 
 .search-option {
-    text-overflow: ellipsis; 
-    overflow: hidden; 
-    padding-right: 30px
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-right: 30px;
+}
+
+.list-search-bar {
+    padding-top: 6px;
+    padding-bottom: 0;
+    width: calc(100% - 10px);
+}
+
+.platform-ios.platform-cordova {
+    .advanced-search {
+        .bar-secondary {
+            .title {
+                font-weight: bold;
+                font-size: 17px;
+                margin-top: 11px;
+            }
+        }
+    }
 }

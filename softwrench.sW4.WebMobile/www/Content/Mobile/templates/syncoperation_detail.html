@@ -30,7 +30,7 @@
                     </div>
                     <div class="col col-80">
                         <h4>{{data.operation.formattedstatus}}</h4>
-                        <h5 ng-if="!data.operation.ispending">{{data.operation.elapsedtime}}&nbsp;seconds</h5>
+                        <h5 ng-if="!data.operation.ispending" style="color: #aaa;">{{data.operation.elapsedtime}}&nbsp;seconds</h5>
                     </div>
                 </div>
             </div>
@@ -38,13 +38,13 @@
             <div class="operation-details row">
                 <div class="col col-offset-20">
                     <div class="detail-section" ng-if="!data.operation.ispending">
-                        <h5>Application Downloads: {{data.operation.numberofdownloadeditems}}</h5>
+                        <h5><i class="fa fa-download"></i>&ensp;Application Downloads: {{data.operation.numberofdownloadeditems}}</h5>
                     </div>
                     <div class="detail-section" ng-if="data.operation.issuccess">
-                        <h5>Support Data Downloads: {{data.operation.numberofdownloadedsupportdata}}</h5>
+                        <h5><i class="fa fa-download"></i>&ensp;Support Data Downloads: {{data.operation.numberofdownloadedsupportdata}}</h5>
                     </div>
                     <div class="detail-section upload-section">
-                        <h5>Application Uploads: {{data.batchItems.length}}</h5>
+                        <h5><i class="fa fa-upload"></i>&ensp;Application Uploads: {{data.batchItems.length}}</h5>
                         <ul class="item-list">
                             <li ng-repeat="item in data.batchItems">
                                 <i class="fa" ng-class="{'fa-exclamation-triangle': item.simpleproblem, 'fa-check': !item.simpleproblem}"></i>
@@ -102,7 +102,7 @@
         <div ng-if="!data.operation">
             <div class="row">
                 <div class="col">
-                    <p>Click 'Sync' to start using the system</p>
+                    <p class="message-user-sync">Click <span class="highlight" ng-click="fullSynchronize()"><i class="fa fa-refresh"></i>&ensp;Sync</span> to start.</p>
                 </div>
             </div>
         </div>

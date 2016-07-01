@@ -1,4 +1,8 @@
-﻿.center {
+﻿a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+    font-family: "-apple-system", "Helvetica Neue", Roboto, "Segoe UI", sans-serif;
+}
+
+.center {
     top: 50%;
     -webkit-transform: translateY(-50%);
     -moz-transform: translateY(-50%);
@@ -11,7 +15,7 @@
 }
 
 .button-float {
-    background: #ef473a !important;
+    background: $cts_red !important;
     color: white !important;
     z-index: 12 !important;
     position: absolute !important;
@@ -58,58 +62,12 @@
     width: 100%;
 }
 
-/*.advanced-search {
-    .option-sort, .option-search {
-        float: right;
-
-        .item-icon-right {
-            padding-right: 0;
-        }
-    }
-}*/
-
-.bar {
-    &.bar-assertive {
-        border-color: #6d6e70;
-        background-color: #6d6e70;
-        background-image: linear-gradient(0deg,#6d6e70,#6d6e70 50%,transparent 50%);
-
-        .button {
-            border-color: transparent;
-            background-color: #6d6e70;
-        }
-    }
-
-    &.bar-positive {
-        border-color: #00acec;
-        background-color: #00acec;
-        background-image: linear-gradient(0deg,#00acec,#00acec 50%,transparent 50%);
-
-        .button {
-            border-color: #00acec;
-            background-color: #00acec;
-        }
-    }
-
-    &.bar-secondary {
-        border-color: #808080;
-        background-color: #808080;
-
-        h1 {
-            color: #fff;
-        }
-    }
-
-    .buttons {
-        .button {
+.ion-autocomplete-container {
+    .bar {
+        button {
             background: none;
+            color: #000;
             font-size: 16px;
-            /*.icon:before {
-                font-size: 24px !important;
-            }*/
-            &.ion-autocomplete-cancel {
-                color: #000;
-            }
         }
     }
 }
@@ -133,13 +91,24 @@
 }
 
 .mfb-component__button--child {
-    background-color: #808080;
+    background-color: $cts_gray;
 }
 
-.list-search-bar {
-    padding-top: 6px;
-    padding-bottom: 0;
-    width: calc(100% - 10px);
+.action-fab {
+    .mfb-component__button--main {
+        background-color: $cts_green;
+    }
+}
+
+.message-user-sync {
+    font-size: 14px;
+
+    .highlight {
+        background: #ebebeb;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 }
 
 .composition.list {
@@ -189,6 +158,7 @@ input[disabled], input[readonly]:not(.cloned-text-input), select[disabled], sele
         display: none;
     }
 }
+
 /* hide/show according to device type/size */
 @media (max-width: 567px) {
     .show-tablet {

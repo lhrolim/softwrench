@@ -1,0 +1,40 @@
+﻿.popup-container {
+    .popup {
+        border: 2px solid rgba($cts_blue, 0.9);
+
+        .popup-head {
+            padding: 15px;
+
+            h3 {
+                font-weight: bold;
+            }
+        }
+
+        .popup-sub-title {
+            font-size: 15px;
+        }
+
+        .popup-body {
+            font-size: 15px;
+            padding: 10px 15px;
+        }
+
+        .popup-buttons {
+            .button-positive {
+                background: $cts_blue;
+            }
+        }
+    }
+
+    &.alert {
+        .popup {
+            border: 2px solid rgba($cts_red, 0.9);
+
+            .popup-buttons {
+                .button-positive {
+                    background: $cts_red;
+                }
+            }
+        }
+    }
+}
