@@ -2,6 +2,8 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
+    <template path="@woactivity.xml"/>
+    <template path="@worklogs.xml"/>
     <template path="@person.xml"/>
     <template path="@workorder.xml"/>
     <template path="@location.xml"/>
@@ -26,16 +28,104 @@
   </entities>
 
   <applications>
+    <application entity="SR" name="servicerequest" title="Service Request" role="sr">
+      <schemas>
+        <list title="Service Request Grid" stereotype="list.selection" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request">
+              <renderer type="default" params="excelwidth=50" />
+            </field>
+          </customization>
+        </list>
+        <schema id="adetail" title="Request Details" abstract="true" stereotype="detail" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request" requiredexpression="true">
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+            </field>
+          </customization>
+          <customization position="ld_.ldtext">
+            <field label="Details/Location" attribute="ld_.ldtext">
+              <renderer type="richtext"/>
+            </field>
+          </customization>
+        </schema>
+
+        <schema id="editdetail" parentschema="adetail" title="Service Request Details" redeclaring="false">
+        
+        </schema>
+
+        <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" redeclaring="false">
+          
+        </schema>
+        
+      </schemas>
+    </application>
+
+    <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
+      <schemas>
+        <schema id="quicksrgrid" title="Quick Request Grid" stereotype="list" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request">
+              <renderer type="default" params="excelwidth=50" />
+            </field>
+          </customization>         
+        </schema>
+        
+        <schema id="quicknewdetail" stereotype="detailnew" title="New Quick Request" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request" requiredexpression="true">
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+            </field>
+          </customization>
+          <customization position="ld_.ldtext">
+            <field label="Details/Location" attribute="ld_.ldtext" >
+              <renderer type="richtext"/>
+            </field>
+          </customization>
+        </schema>
+
+        <schema id="quickeditdetail" stereotype="detail" title="Quick Request Details" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request" requiredexpression="true">
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+            </field>
+          </customization>
+          <customization position="ld_.ldtext">
+            <field label="Details/Location" attribute="ld_.ldtext" >
+              <renderer type="richtext"/>
+            </field>
+          </customization>
+        </schema>          
+      </schemas>
+    </application>
+    
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
       <schemas>
+        <schema id="list" stereotype="list.selection" title="Work Order Grid" platform="web" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          </customization>
+        </schema>
+        
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request" requiredexpression="true">
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+            </field>
+          </customization>
+          <customization position="ld_.ldtext">
+            <field label="Details/Location" attribute="ld_.ldtext">
+              <renderer type="richtext"/>
+            </field>
+          </customization>
         </schema>
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
           
           <customization position="failurecode"/>
           <customization position="problemcode"/>
-          
-              
+
           <customization position="+hiddenfield">
             <section orientation="horizontal">
               <association label="Failure Class" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc" requiredexpression="true">
@@ -56,6 +146,31 @@
             </association>
           </customization>
         </schema>
+
+        <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web" stereotype="detailnew" redeclaring="false">
+       
+        </schema>
+
+        <schema id="workordercreationmodal" title="Fill In Workorder Details" stereotype="detail.modal" platform="web" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request:" requiredexpression="true"/>
+          </customization>
+          <customization position="ld_.ldtext">
+            <field attribute="ld_.ldtext" label="Details/Location:" requiredexpression="false">
+              <renderer type="textarea"/>
+            </field>
+          </customization>
+          
+        </schema>
+
+        <schema id="newdetail" platform="mobile" stereotype="detailnew" redeclaring="false">
+          <customization position="ld_.ldtext">
+            <field label="Details/Location" attribute="ld_.ldtext">
+              <renderer type="richtext"/>
+            </field>
+          </customization>
+        </schema>
+        
       </schemas>
     </application>
 
@@ -68,6 +183,71 @@
         </schema>
         
       </schemas>
+    </application>
+
+    <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008">
+      <schemas>
+        <schema id="list"  stereotype="compositionlist" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request" qualifier="title"/>
+          </customization>
+        </schema>
+
+        <detail stereotype="compositiondetail" title="Work Log" platform="web" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request" requiredexpression="true">
+              <renderer type="default" params="maxlength=100"/>
+            </field>
+          </customization>
+          
+          <customization position="wld_.ldtext">
+            <field attribute="wld_.ldtext" label="Details/Location" >
+              <renderer type="richtext"/>
+            </field>
+          </customization>          
+        </detail>
+
+        <detail stereotype="compositiondetail" title="Work Log" platform="mobile" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request" requiredexpression="true">
+              <renderer type="default" params="maxlength=100"/>
+            </field>
+          </customization>
+
+          <customization position="wld_.ldtext">
+            <field attribute="wld_.ldtext" label="Work Request" >
+              <renderer type="richtext"/>
+            </field>
+          </customization>          
+        </detail>
+        
+      </schemas>      
+    </application>
+
+    <application entity="woactivity" name="woactivity" title="WO Activity">
+      <schemas>
+        <schema id="list" title="woactivity" stereotype="compositionlist" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request"/>
+          </customization>
+        </schema>
+
+        <detail stereotype="compositiondetail" redeclaring="false">
+          <customization position="description">
+            <field attribute="description" label="Work Request" requiredexpression="true">
+              <renderer type="default" params="maxlength=100"/>
+            </field>
+          </customization>
+          <customization position="ld_.ldtext">
+            <field attribute="ld_.ldtext" label="Details/Location" >
+              <renderer type="textarea"/>
+            </field>
+          </customization>
+          
+        </detail>
+        
+      </schemas>
+      
     </application>
     
   </applications>
