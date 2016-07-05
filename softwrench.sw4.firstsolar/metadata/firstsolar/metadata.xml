@@ -549,6 +549,8 @@
         </detail>
 
         <schema id="newdetail" stereotype="detailnew" platform="mobile" redeclaring="true">
+          <event type="onload" service="fsWorkorderOfflineService" method="onNewDetailLoad"/>
+          
           <field attribute="orgid" hidden="true" requiredexpression="true" />
           <field attribute="siteid" hidden="true" requiredexpression="true" />
 

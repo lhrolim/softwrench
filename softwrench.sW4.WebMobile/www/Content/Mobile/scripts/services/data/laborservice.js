@@ -11,7 +11,7 @@
             }
         };
 
-        const truncateHours = hours => parseFloat(hours.toFixed(2));
+        const truncateDecimal = value => parseFloat(value.toFixed(2));
 
         function cacheStartedLabor (parentId, labor) {
             localStorageService.put(constants.cache.laborParentKey, parentId);
@@ -27,7 +27,7 @@
             const calcHours = !regularhours ? 0 : parseFloat(regularhours);
             const calcRate = !payrate ? 0 : parseFloat(payrate);
             const linecost = calcHours * calcRate;
-            return _.isNaN(linecost) ? 0 : linecost;
+            return _.isNaN(linecost) ? 0 : truncateDecimal(linecost);
         }
 
         const getActiveLabor = () => localStorageService.get(constants.cache.laborKey);
@@ -108,7 +108,7 @@
             const labor = getActiveLabor();
             const startdate = new Date(labor["startdate"]);
             const hoursDelta = ((new Date().getTime() - startdate.getTime()) / (1000 * 60 * 60));
-            const hours = truncateHours(hoursDelta); // truncating and rounding to have 2 decimal
+            const hours = truncateDecimal(hoursDelta); // truncating and rounding to have 2 decimal
             labor["regularhrs"] = hours;
             labor["linecost"] = calculateLineCost(hours, labor["payrate"]);
 
@@ -196,7 +196,7 @@
         function onDetailLoad(scope, schema, datamap) {
             const regularHours = datamap["regularhrs"];
             if (angular.isNumber(regularHours) && !Number.isInteger(regularHours)) {
-                datamap["regularhrs"] = truncateHours(regularHours);
+                datamap["regularhrs"] = truncateDecimal(regularHours);
             }
             if (!datamap["labtransid"]) {
                 setInitialLaborAndCraft(datamap);
