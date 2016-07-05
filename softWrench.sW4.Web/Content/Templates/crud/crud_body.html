@@ -9,14 +9,14 @@
     </section>
 
     <div id="affixpagination" class="hiddenonprint toolbar-primary" ng-class="{'affix-pagination' : ismodal !== 'true' }" ng-if="ismodal !== 'true'">
-        <div class="context clearfix header-menu" ng-if="isDetail" ng-class="schema.stereotypeAttr">
+        <div class="context clearfix header-menu" ng-if="isDetail" ng-class="schema.stereotypeAttr" ng-init="showdirbutons = showdirectionButtons()">
             <div class="left"> 
                 <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.primary','detail.primary')}}" schema="schema" class="detail-primary"/>
                 <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.secondary','detail.secondary')}}" schema="schema" class="detail-secondary"/>
                 <div class="separator large-button" ng-if="ismodal !== 'true'" ng-show="showActionSeparator(getPosition(schema,'toolbar.detail.actions','actions'))">&nbsp;</div>
                 <crudbodydetailtoolbar datamap="datamap" mode="'input'" position="{{getPosition(schema,'toolbar.detail.actions','actions')}}" schema="schema" />
             </div>
-            <div class="right large-button" ng-if="ismodal !== 'true'" ng-show="showdirectionButtons()">
+            <div class="right large-button" ng-show="ismodal !== 'true' && showdirbutons">
                 <div class="group pagination">
                     <a ng-click="crawl(1)" ng-disabled="!disableNavigationButton(0)" href="" rel="tooltip" data-original-title="Previous"><i class="icon fa fa-chevron-left"></i></a>&ensp;
                     <a ng-click="crawl(0)" ng-disabled="!disableNavigationButton(1)" href="" rel="tooltip" data-original-title="Next"><i class="icon fa fa-chevron-right"></i></a>
