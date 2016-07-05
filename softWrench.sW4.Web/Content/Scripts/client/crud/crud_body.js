@@ -376,8 +376,10 @@
                 };
 
                 $scope.showdirectionButtons = function () {
+                    const value = contextService.fetchFromContext("crud_context", true);
+
                     // is detail and is not creation
-                    return schemaService.isDetail($scope.schema) && !!$scope.datamap.fields[$scope.schema.idFieldName];
+                    return schemaService.isDetail($scope.schema) && !!$scope.datamap.fields[$scope.schema.idFieldName] && (value && (value.detail_previous || value.detail_next));
                 };
 
                 $scope.disableNavigationButton = function (direction) {
