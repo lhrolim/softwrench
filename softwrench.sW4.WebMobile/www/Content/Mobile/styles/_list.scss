@@ -24,12 +24,11 @@ input.ion-autocomplete[readonly] {
 
 .missingsync, .pending {
     button {
-        //background: #fff !important;
         background: rgba($cts_red, 0.1) !important;
         border: 3px solid $cts_red;
     }
 
-    i {
+    i.crud-list-icon {
         color: $cts_red !important;
     }
 }

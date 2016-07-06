@@ -52,7 +52,14 @@
                     if (newPosition === oldPosition) return;
                     updateCommandBar(null, newPosition);
                 });
-            }]
+            }],
+
+            link: function (scope, element, attrs) {
+                //set the inital position of the floating action button
+                var windowHeight = $(window).height();
+                var offset = windowHeight - 242;
+                $(element).css('top', offset);
+            }
         };
 
         return directive;

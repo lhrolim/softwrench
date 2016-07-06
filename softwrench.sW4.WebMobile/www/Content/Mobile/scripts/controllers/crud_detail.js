@@ -1,4 +1,4 @@
-﻿
+
 (function (softwrench) {
     "use strict";
 
@@ -141,6 +141,19 @@
         $scope.onSwipeRight = function() {
             if ($scope.showNavigation()) {
                 $scope.navigatePrevious();
+            }
+        };
+
+        $scope.onScroll = function() {
+            var position = $ionicScrollDelegate.getScrollPosition();
+
+            //update the position of the detail's floating action button when the user scrolls
+            if (!!position) {
+                var top = position.top;
+                var element = $('command-bar[position="mobile.fab"]');
+                var windowHeight = $(window).height();
+                var offset = (windowHeight - 242) + top;
+                $(element).css('top', offset);
             }
         };
 
