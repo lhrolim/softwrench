@@ -31,7 +31,7 @@
 
         <ion-list class="has-header crud-list">
 
-            <ion-item class="crud-item" ng-repeat="item in list() track by item.id" ng-class="{'pending': isPending(item),'missingsync': isDirty(item)  }" item="item" on-swipe-left="quickSync(item)">
+            <ion-item class="crud-item" ng-repeat="item in crudlist.items track by item.id" ng-class="{'pending': isPending(item),'missingsync': isDirty(item)  }" item="item" on-swipe-left="quickSync(item)">
 
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">
@@ -51,7 +51,7 @@
 
         </ion-list>
 
-        <ion-infinite-scroll ng-if="moreItemsAvailable" on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>
+        <ion-infinite-scroll ng-if="crudlist.moreItemsAvailable" on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>
 
     </ion-content>
 

@@ -4,8 +4,14 @@
     softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", "synchronizationFacade", "routeService", "crudContextHolderService", 
         function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService) {
 
+            $scope.crudlist = {
+                items: [],
+                moreItemsAvailable: true
+            };
+
             function init() {
-                $scope.moreItemsAvailable = true;
+                $scope.crudlist.moreItemsAvailable = true;
+                $scope.crudlist.items = crudContextService.itemlist().map(i => i);
                 $scope._searching = false;
 
                 $ionicPopover.fromTemplateUrl("Content/Mobile/templates/filteroptionsmenu.html", {
@@ -207,7 +213,8 @@
                 log.debug("fetching more items");
                 crudContextService.loadMorePromise().then(results => {
                     $scope.$broadcast('scroll.infiniteScrollComplete');
-                    $scope.moreItemsAvailable = results.length > 0;
+                    $scope.crudlist.items = $scope.crudlist.items.concat(results);
+                    $scope.crudlist.moreItemsAvailable = results.length > 0;
                 });
             }
 
