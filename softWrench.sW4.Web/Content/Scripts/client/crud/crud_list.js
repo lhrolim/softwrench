@@ -185,6 +185,7 @@
                             $scope.searchData = {};
                             $scope.searchOperator = {};
                             $scope.searchSort = {};
+                            $scope.vm.quickSearchDTO = {};
 
                             if (data.pageResultDto) {
                                 if (data.pageResultDto.quickSearchDTO) {

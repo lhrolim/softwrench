@@ -340,7 +340,7 @@
                     <div ng-switch-when="dndupload">
                         <input id="uploadFile" ng-model="datamap.newattachment_path" class="form-control" placeholder="No file chosen" disabled="disabled" />
 
-                        <div file-dropzone="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] || 'pdf,zip,txt,doc,docx,dwg,gif,jpg,csv,xls,xlsx,ppt,xml,xsl,bmp,html,png,lic' }} "
+                        <div file-dropzone="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }} "
                              class="dropzone form-control" data-file-name="datamap.newattachment_path" data-file="datamap[fieldMetadata.attribute]"
                              data-dropzone-hover-class="file-over"
                              data-field="fieldMetadata">
@@ -350,12 +350,12 @@
                             <input ng-if="!fieldMetadata.rendererParameters['multiple'] || fieldMetadata.rendererParameters['multiple'] === false || fieldMetadata.rendererParameters['multiple'] === 'false'"
                                    id="uploadInput" type="file"
                                    fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"
-                                   data-accepted-extensions="{{fieldMetadata.rendererParameters['acceptedFileExtensions'] || 'pdf,zip,txt,doc,docx,dwg,gif,jpg,csv,xls,xlsx,ppt,xml,xsl,bmp,html,png,lic'}}" />
+                                   data-accepted-extensions="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }}" />
 
                             <input ng-if="!!fieldMetadata.rendererParameters['multiple'] && (fieldMetadata.rendererParameters['multiple'] === true || fieldMetadata.rendererParameters['multiple'] === 'true')"
                                    id="uploadInput" type="file"
                                    fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"
-                                   data-accepted-extensions="{{fieldMetadata.rendererParameters['acceptedFileExtensions'] || 'pdf,zip,txt,doc,docx,dwg,gif,jpg,csv,xls,xlsx,ppt,xml,xsl,bmp,html,png,lic'}}"
+                                   data-accepted-extensions="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }}"
                                    multiple="multiple" />
 
                             <a href="" id="uploadInputLink" ng-click="browseFile($event)">browse</a>
