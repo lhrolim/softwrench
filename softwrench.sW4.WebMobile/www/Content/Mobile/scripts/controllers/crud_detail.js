@@ -144,8 +144,8 @@
             }
         };
 
-        $scope.onScroll = function() {
-            var position = $ionicScrollDelegate.getScrollPosition();
+        $scope.onScroll = function () {
+            var position = $ionicScrollDelegate.$getByHandle('detailHandler').getScrollPosition();
 
             //update the position of the detail's floating action button when the user scrolls
             if (!!position) {
