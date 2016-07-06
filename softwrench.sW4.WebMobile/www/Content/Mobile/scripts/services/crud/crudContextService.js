@@ -379,6 +379,7 @@
 
             createDetail: function () {
                 const crudContext = crudContextHolderService.getCrudContext();
+                crudContext.wizardStateIndex = 0;
                 crudContext.currentDetailItem = {
                     datamap: {}
                 };
