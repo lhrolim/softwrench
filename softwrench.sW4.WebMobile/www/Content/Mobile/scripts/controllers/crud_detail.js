@@ -2,13 +2,14 @@
 (function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', 'schemaService',
+    softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', 'schemaService', "crudContextHolderService", "wizardService", 
     'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService",
-    function (log, $scope, $rootScope, schemaService,
+    function (log, $scope, $rootScope, schemaService, crudContextHolderService, wizardService,
     crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService) {
 
         function init() {
-            $scope.displayables = crudContextService.mainDisplayables();
+            $scope.allDisplayables = crudContextService.mainDisplayables();
+            $scope.displayables = wizardService.getWizardFields($scope.allDisplayables);
             $scope.schema = crudContextService.currentDetailSchema();
             $scope.datamap = crudContextService.currentDetailItemDataMap();
             eventService.onload($scope, $scope.schema, $scope.datamap, {});
@@ -105,7 +106,8 @@
 
 
         $scope.detailSummary = function () {
-            return schemaService.getTitle(crudContextService.currentDetailSchema(), $scope.datamap, true);
+            const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
+            return schemaService.getTitle(crudContextService.currentDetailSchema(), datamap, true);
         }
 
         $scope.addCompositionItem = function () {
@@ -141,6 +143,27 @@
                 $scope.navigatePrevious();
             }
         };
+
+        $scope.shouldShowWizardBack = function() {
+            return wizardService.canReturn();
+        }
+
+        $scope.shouldShowWizardForward = function () {
+            return wizardService.isInWizardState($scope.allDisplayables);
+        }
+
+        $scope.wizardNavigateBack = function () {
+            $scope.displayables = wizardService.previous($scope.allDisplayables);
+        }
+
+        $scope.wizardNavigateForward = function () {
+            const validationErrors = crudContextService.validateDetail({}, $scope.displayables);
+            if (validationErrors.length !== 0) {
+                showValidationErrors(validationErrors);
+                return;
+            }
+            $scope.displayables = wizardService.next($scope.allDisplayables);
+        }
 
         $rootScope.$on('sw_cruddetailrefreshed', function () {
             $scope.datamap = crudContextService.currentDetailItemDataMap();

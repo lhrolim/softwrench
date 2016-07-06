@@ -24,7 +24,7 @@
         <attribute name="schedfinishnotime" query="DATEADD(dd, DATEDIFF(dd, 0, workorder.schedfinish), 0)" type="date"/>
       </attributes>
       <relationships>
-                
+        
         <relationship to="numericdomain" qualifier="realpriority" collection="true">
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="WOPRIORITY" quoteLiteral="true"/>
@@ -68,7 +68,18 @@
         </relationship>
       </relationships>
     </entity>
-    
+
+    <entity name="locancestor" idAttribute="locancestorid">
+      <attributes>
+        <attribute name="locancestorid" type="bigint" required="true"/>
+        <attribute name="location" type="varchar" required="true"/>
+        <attribute name="ancestor" type="varchar" required="true"/>
+        <attribute name="systemid" type="varchar" required="true"/>
+        <attribute name="siteid" type="varchar" required="true"/>
+        <attribute name="orgid" type="varchar" required="true"/>
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+    </entity>
   </entities>
 
   <applications>
@@ -548,7 +559,7 @@
 
         </detail>
 
-        <schema id="newdetail" stereotype="detailnew" platform="mobile" redeclaring="true">
+        <schema id="newdetail" title="Work Order" stereotype="detailnew" platform="mobile" redeclaring="true">
           <event type="onload" service="fsWorkorderOfflineService" method="onNewDetailLoad"/>
           
           <field attribute="orgid" hidden="true" requiredexpression="true" />
@@ -556,15 +567,16 @@
 
           <field attribute="description" label="Description" requiredexpression="true"/>
 
-          <association target="location" labelfield="offlinelocation.description"
-                       requiredexpression="true" label="Location">
-            <renderer type="lookup"/>
+          <association target="location" labelfield="offlinelocation.description" requiredexpression="true" label="Location">
+            <renderer type="lookup" params="wizard=0;wizardBehavior=readonly"/>
             <event type="afterchange" service="fsWorkorderOfflineService" method="clearAsset" />
+            <dataprovider whereClause="textindex01 in ( select textindex04 from DataEntry where application = 'workorder' and textindex04 is not null ) or ( textindex01 in ( select textindex01 from associationdata where application = 'locancestor' and textindex02 in ( select textindex04 from DataEntry where application = 'workorder' and textindex04 is not null ) ) )"/>
           </association>
           <association target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location"
                        requiredexpression="true" label="Asset">
-            <renderer type="lookup"/>
+            <renderer type="lookup" params="wizard=1;wizardBehavior=readonly"/>
             <event type="afterchange" service="fsWorkorderOfflineService" method="updateLocation" />
+            <dataprovider whereClause="textindex01 = @location or ( textindex01 in ( select textindex01 from associationdata where application = 'locancestor' and textindex02 = @location ) )"/>
           </association>
 
           <association  target="classstructureid" labelfield="classstructure_.description"
@@ -585,7 +597,7 @@
       </schemas>
 
       <properties>
-        <property key="list.offline.text.indexlist" value="wonum,wopriority,description"/>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
         <property key="list.offline.date.indexlist" value="schedstartnotime"/>
       </properties>
     </application>
@@ -600,9 +612,25 @@
       </schemas>
     </application>
 
+    <application name="locancestor" title="Location Ancestry" entity="locancestor">
+      <properties>
+        <property key="list.offline.text.indexlist" value="location,ancestor"/>
+        <property key="offline.force.assoc.sync" value="true"/>
+        <property key="mobile.fetchlimit" value="3000"/>
+      </properties>
+      
+      <schemas>
+        <list platform="mobile" title="Numeric Domain">
+          <field attribute="location" label="Location"/>
+          <field attribute="ancestor" label="Ancestor"/>
+          <field attribute="locancestorid" label="Id"/>
+        </list>
+      </schemas>
+    </application>
+
     <application name="otherworkorder" title="Other Work Orders" entity="workorder" role="workorders">
       <properties>
-        <property key="list.offline.text.indexlist" value="wonum,wopriority,description"/>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
         <property key="list.offline.date.indexlist" value="schedstartnotime"/>
       </properties>
 
@@ -621,7 +649,7 @@
           <field attribute="description" label="Description" qualifier="excerpt"/>
 
           <properties>
-            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
+            <property key="list.defaultorderby" value="wopriority desc, schedstartnotime is null asc, schedstartnotime asc"/>
           </properties>
         </list>
 
@@ -800,10 +828,18 @@
           </properties>
         </schema>
       </schemas>
+    
+      <properties>
+        <property key="list.offline.text.indexlist" value="location"/>
+      </properties>
     </application>
 
 
     <application name="asset" title="Asset" entity="asset" >
+      <properties>
+        <property key="list.offline.text.indexlist" value="location"/>
+      </properties>
+      
       <filters>
         <optionfilter attribute="location" provider="@firstSolarPCSLocationHandler.HandlePCSLocationProvider" displaycode="false"
               allowblank="true" whereclause="@firstSolarPCSLocationHandler.HandlePCSLocation"/>

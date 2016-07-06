@@ -56,7 +56,8 @@
             indexes: null,
 
             previousItem: null,
-            nextItem: null
+            nextItem: null,
+            wizardStateIndex: 0
         };
 
         // inits the search and sort data with defaults

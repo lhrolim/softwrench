@@ -196,7 +196,7 @@
         </optionfilter>
       </filters>
       <properties>
-        <property key="mobile.fetchlimit" value="30"/>
+        <property key="mobile.fetchlimit" value="1000"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
         <property key="icon.composition.tab" value="fa fa-tags"/>
         

@@ -54,14 +54,15 @@
                 schema: '=',
                 datamap: '=',
                 displayables: '=',
+                allDisplayables: "="
             },
 
             link: function (scope, element, attrs) {
                 scope.name = "crud_input_fields";
             },
 
-            controller: ["$scope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log",
-                function ($scope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log) {
+            controller: ["$scope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService",
+                function ($scope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService) {
 
                     $scope.associationSearch = function (query, componentId) {
                         return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query);
@@ -81,6 +82,10 @@
 
                     $scope.getAssociationValueField = function (fieldMetadata) {
                         return offlineAssociationService.fieldValueExpression(fieldMetadata);
+                    }
+
+                    $scope.isReadOnly = function(field) {
+                        return field.isReadOnly || wizardService.isReadOnly(field, $scope.allDisplayables);
                     }
 
                     $scope.isFieldHidden = function (fieldMetadata) {
@@ -158,7 +163,7 @@
 
                     function init() {
                         // watching for changes to trigger afterchange event handlers
-                        const watchableFields = $scope.displayables.filter(f => f.events.hasOwnProperty("afterchange") && !!f.events["afterchange"]);
+                        const watchableFields = $scope.allDisplayables.filter(f => f.events.hasOwnProperty("afterchange") && !!f.events["afterchange"]);
                         if (!watchableFields || watchableFields.length <= 0) return;
 
                         const logger = $log.get("crud_input_fields", ["datamap", "event", "association"]);

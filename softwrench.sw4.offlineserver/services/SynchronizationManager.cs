@@ -99,6 +99,14 @@ namespace softwrench.sw4.offlineserver.services {
 
                     var datamaps = FetchData(entityMetadata, userAppMetadata, rowstamp, null);
                     results.AssociationData.Add(association1.ApplicationName, datamaps);
+
+                    var textIndexes = new List<string>();
+                    results.TextIndexes.Add(association1.ApplicationName, textIndexes);
+
+                    var dateIndexes = new List<string>();
+                    results.DateIndexes.Add(association1.ApplicationName, dateIndexes);
+
+                    ParseIndexes(textIndexes, dateIndexes, association1);
                 });
 
             }
@@ -202,7 +210,7 @@ namespace softwrench.sw4.offlineserver.services {
                 AllData = topLevelAppData
             };
 
-            ParseIndexes(result, topLevelApp);
+            ParseIndexes(result.TextIndexes, result.DateIndexes, topLevelApp);
 
             if (rowstampDTO.MaxRowstamp != null || isQuickSync) {
                 //SWOFF-140 
@@ -243,15 +251,15 @@ namespace softwrench.sw4.offlineserver.services {
             return result;
         }
 
-        private static void ParseIndexes(SynchronizationApplicationResultData syncData, CompleteApplicationMetadataDefinition topLevelApp) {
+        private static void ParseIndexes(IList<string> textIndexes, IList<string> dateIndexes, CompleteApplicationMetadataDefinition topLevelApp) {
             var indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineTextIndexes);
             if (!string.IsNullOrEmpty(indexesString)) {
-                indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, syncData.TextIndexes));
+                indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, textIndexes));
             }
 
             indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineDateIndexes);
             if (!string.IsNullOrEmpty(indexesString)) {
-                indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, syncData.DateIndexes));
+                indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, dateIndexes));
             }
         }
 

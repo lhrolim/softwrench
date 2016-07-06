@@ -152,7 +152,7 @@
   <applications>
     <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
       <properties>
-        <property key="mobile.fetchlimit" value="1000"/>
+        <property key="mobile.fetchlimit" value="3000"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
       </properties>
 
