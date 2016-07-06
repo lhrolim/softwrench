@@ -9,9 +9,14 @@
                 moreItemsAvailable: true
             };
 
-            function init() {
+            function initializeList() {
                 $scope.crudlist.moreItemsAvailable = true;
+                // getting references to elements instead of to the whole list
                 $scope.crudlist.items = crudContextService.itemlist().map(i => i);
+            }
+
+            function init() {
+                initializeList();
                 $scope._searching = false;
 
                 $ionicPopover.fromTemplateUrl("Content/Mobile/templates/filteroptionsmenu.html", {
@@ -34,10 +39,6 @@
 
             init();
 
-            $scope.list = function () {
-                return crudContextService.itemlist();
-            }
-
             $scope.isSearching = function () {
                 return $scope._searching;
             }
@@ -53,7 +54,7 @@
             }
 
             $scope.filter = function () {
-                crudContextService.refreshGrid(true);
+                crudContextService.refreshGrid(true).then(initializeList);
             };
 
             $scope.isDirty = function (item) {
@@ -193,6 +194,8 @@
                      $log.get("crudlist#statehandler").debug("handler called", arguments);
                      if (!toState.name.startsWith("main.crud")) {
                          crudContextService.resetContext();
+                         $scope.crudlist.items = [];
+                         $scope.crudlist.moreItemsAvailable = false;
                      } else if (!toState.name.startsWith("main.crudlist")) {
                          //to avoid strange transitions on the screen
                          //TODO: transition finished event??

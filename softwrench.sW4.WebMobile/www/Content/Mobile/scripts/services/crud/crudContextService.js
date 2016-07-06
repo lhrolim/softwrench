@@ -267,7 +267,7 @@
                 crudContext.itemlist = [];
                 internalListContext.lastPageLoaded = 1;
                 internalListContext.pageNumber = 1;
-                this.loadMorePromise().then(function () {
+                return this.loadMorePromise().then(function () {
                     if (skipPostFilter) {
                         return;
                     }
