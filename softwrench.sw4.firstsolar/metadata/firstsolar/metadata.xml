@@ -76,7 +76,7 @@
 
       <components>
         <componentdisplayable id="offlineworktypes">
-          <optionfield attribute="worktype" requiredexpression="false" label="Work Type">
+          <optionfield attribute="worktype" requiredexpression="true" label="Work Type">
             <option value="AD" label="Administrative" extraprojections="type=PM"/>
             <option value="CC" label="Construction and Commissioning" extraprojections="type=CM"/>
             <option value="INSP" label="Inspection" extraprojections="type=PM"/>

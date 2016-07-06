@@ -35,7 +35,7 @@
             const schema = event.schema;
             const datamap = event.datamap;
             const value = event.newValue;
-            datamap["description"] = datamap["item_.description"];
+            datamap["description"] = datamap["#description"] = datamap["item_.description"];
             
             // cleanup
             datamap["storeloc"] = "null$ignorewatch";

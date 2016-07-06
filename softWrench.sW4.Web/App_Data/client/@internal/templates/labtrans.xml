@@ -458,7 +458,7 @@
 
           <field attribute="transtype" label="Work Type" 
                  requiredexpression="true" readonly="true" 
-                 default="Work">
+                 default="WORK">
           </field>
           
           <field label="Start Date" attribute="startdate" default="@now" requiredexpression="true">
