@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", "crudContextHolderService", "$log", function (swdbDAO, fieldService, crudContextHolderService,$log) {
+    mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", "crudContextHolderService", "$log", "searchIndexService", function (swdbDAO, fieldService, crudContextHolderService, $log, searchIndexService) {
 
     function testEmptyExpression(label) {
         return "(!!" + label + " && " + label + " !== \'null\' && " + label + " !== \'undefined\')";
@@ -66,6 +66,11 @@
                     
                 }
             });
+
+            if (displayable.schema && displayable.schema.dataProvider && displayable.schema.dataProvider.whereClause) {
+                const whereClause = searchIndexService.parseWhereClause(displayable.schema.dataProvider.whereClause, parentdatamap);
+                baseQuery += ` and (${whereClause}) `;
+            }
 
             return swdbDAO.findByQuery("AssociationData", baseQuery, { projectionFields: ["remoteId", "datamap"] });
         }

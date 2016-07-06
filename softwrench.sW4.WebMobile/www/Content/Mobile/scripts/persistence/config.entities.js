@@ -30,7 +30,16 @@
             application: 'TEXT',
             datamap: 'JSON',
             remoteId: 'TEXT',
-            rowstamp: 'INT'
+            rowstamp: 'INT',
+            // index for use on searches
+            textindex01: "TEXT",
+            textindex02: "TEXT",
+            textindex03: "TEXT",
+            textindex04: "TEXT",
+            textindex05: "TEXT",
+            dateindex01: "DATE",
+            dateindex02: "DATE",
+            dateindex03: "DATE"
         });
 
         entities.AssociationCache = persistence.define('AssociationCache', {
@@ -66,7 +75,7 @@
         ///
         /// Inserts or updates associationData based upon the uniqueness of the entries
         ///
-        entities.AssociationData.InsertionPattern = "INSERT OR REPLACE INTO AssociationData (application,datamap,remoteId,rowstamp,id) values (?,?,?,?,?)";
+        entities.AssociationData.InsertionPattern = "INSERT OR REPLACE INTO AssociationData (application,datamap,remoteId,rowstamp,id,textindex01,textindex02,textindex03,textindex04,textindex05,dateindex01,dateindex02,dateindex03) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         entities.AssociationData.maxRowstampQueries = "select max(rowstamp) as rowstamp,application,id from AssociationData group by application";
 

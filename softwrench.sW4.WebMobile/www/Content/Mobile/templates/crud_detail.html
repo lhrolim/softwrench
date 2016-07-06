@@ -13,7 +13,8 @@
 
         <div class="buttons" style="padding-left: 5px">
             <button class="button" ng-show="shouldShowBack()" ng-click="navigateBack()"><i class="fa fa-arrow-left"></i>&ensp;Back</button>
-            <button class="button" ng-show="hasDirtyChanges()" ng-click="cancelChanges()"><i class="fa fa-times-circle"></i>&ensp;Cancel</button>
+            <button class="button" ng-show="hasDirtyChanges() && !shouldShowWizardBack()" ng-click="cancelChanges()"><i class="fa fa-times-circle"></i>&ensp;Cancel</button>
+            <button class="button" ng-show="shouldShowWizardBack()" ng-click="wizardNavigateBack()"><i class="fa fa-arrow-left"></i>&ensp;Back</button>
             <button class="button" ng-click="addCompositionItem()" ng-if="!isOnMainTab()" ng-show="!hasDirtyChanges() && addCompositionAllowed()"><i class="fa fa-plus"></i>&ensp;Add</button>
         </div>
 
@@ -24,13 +25,14 @@
             <button class="button" ng-click="navigatePrevious()" ng-if="showNavigation()"><i class="fa fa-chevron-left"></i></button>
             <button class="button" ng-click="navigateNext()" ng-if="showNavigation()"><i class="fa fa-chevron-right"></i></button>
             <button class="button" ng-click="expandCompositions($event)" ng-if="!hasDirtyChanges() && hasAnyComposition()"><i class="fa fa-th"></i></button>
-            <button class="button" ng-click="saveChanges()" ng-if="hasDirtyChanges()"><i class="fa fa-check"></i>&ensp;Save</button>
+            <button class="button" ng-click="saveChanges()" ng-if="hasDirtyChanges() && !shouldShowWizardForward()"><i class="fa fa-check"></i>&ensp;Save</button>
+            <button class="button" ng-click="wizardNavigateForward()" ng-if="shouldShowWizardForward()"><i class="fa fa-arrow-right"></i>&ensp;Next</button>
         </div>
 
     </ion-header-bar>
 
     <ion-content has-header="true" has-subheader="true" has-bouncing="false" 
-                 on-swipe-left="onSwipeLeft()" on-swipe-right="onSwipeRight()">
+                 on-swipe-left="onSwipeLeft()" on-swipe-right="onSwipeRight()" on-scroll="onScroll()" delegate-handle="detailHandler">
         <div class="header-item h4" ng-click="loadMainTab()" style="padding-left: 10px">
             {{tabTitle() || detailSummary()}}
         </div>

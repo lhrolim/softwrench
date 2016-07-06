@@ -10,7 +10,9 @@
                 <span class="input-label">{{field.label}}</span>
                 <ng-switch on="field.type" class="full-width">
                     <div ng-switch-when="ApplicationAssociationDefinition">
-                        <ion-autocomplete ng-model="datamap[field.target]"
+                        <input ng-if="isReadOnly(field)" type="text" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"/>
+                        <ion-autocomplete ng-if="!isReadOnly(field)"
+                                          ng-model="datamap[field.target]"
                                           component-id="{{field.associationKey}}"
                                           items-method="associationSearch(query,componentId)"
                                           items-clicked-method="itemSelected(callback)"
@@ -27,11 +29,10 @@
                                       value="datamap[field.target]"
                                       text="Choose"
                                       items="field.options"
-                                      callback2="optionFieldSelected(callback)"
-                                      />
+                                      callback2="optionFieldSelected(callback)"/>
                     </div>
                     <div ng-switch-default ng-switch on="field.rendererType">
-                        <textarea ng-switch-when="textarea" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" rows="10" wrap="hard"
+                        <textarea ng-switch-when="textarea" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)" rows="10" wrap="hard"
                                   data-ng-maxlength="{{field.rendererParameters['maxlength']}}"
                                   maxlength="{{field.rendererParameters['maxlength']}}" ng-required="isFieldRequired(field.requiredExpression)">
                         </textarea>
@@ -42,21 +43,21 @@
                                          data-read-only="field.isReadOnly">
                         </rich-text-field>
 
-                        <input ng-switch-when="numericinput" type="number" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly"
+                        <input ng-switch-when="numericinput" type="number" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"
                                min="{{field.rendererParameters['min']}}"
                                max="{{setMaxNumericInput(datamap,field)}}"
                                step="{{ field.rendererParameters['step'] || 1 }}"
                                ng-required="isFieldRequired(field.requiredExpression)" />
 
-                        <input ng-switch-when="date" type="date" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" 
+                        <input ng-switch-when="date" type="date" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)" ng-required="isFieldRequired(field.requiredExpression)" 
                                dateconverter
                                max="{{ dateHandler.getMaxDateValue(field) | date:'yyyy-MM-dd' }}"
                                min="{{ dateHandler.getMinDateValue(field) | date:'yyyy-MM-dd' }}"
                                />
 
-                        <input ng-switch-when="time" type="time" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" dateconverter />
+                        <input ng-switch-when="time" type="time" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)" ng-required="isFieldRequired(field.requiredExpression)" dateconverter />
 
-                        <input ng-switch-when="datetime" type="datetime-local" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" 
+                        <input ng-switch-when="datetime" type="datetime-local" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)" ng-required="isFieldRequired(field.requiredExpression)" 
                                dateconverter 
                                max="{{ dateHandler.getMaxDateValue(field) | date:'yyyy-MM-dd' }}"
                                min="{{ dateHandler.getMinDateValue(field) | date:'yyyy-MM-dd' }}"
@@ -69,7 +70,7 @@
                                            datamap="datamap" schema="schema" field-name="{{ field.attribute }}">
                         </single-file-input>
 
-                        <input ng-switch-default type="text" ng-model="datamap[field.attribute]" ng-readonly="field.isReadOnly" ng-required="isFieldRequired(field.requiredExpression)" />
+                        <input ng-switch-default type="text" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)" ng-required="isFieldRequired(field.requiredExpression)" />
                     </div>
 
 

@@ -223,12 +223,13 @@
                 }
 
             },
-            validateDetail: function (crudForm) {
+            validateDetail: function (crudForm, displayables) {
                 const crudContext = crudContextHolderService.getCrudContext();
                 crudForm = crudForm || {};
                 const detailSchema = this.currentDetailSchema();
                 const datamap = crudContext.currentDetailItem.datamap;
-                return validationService.validate(detailSchema, detailSchema.displayables, datamap, crudForm.$error);
+                const toValidateDisplayables = displayables || detailSchema.displayables;
+                return validationService.validate(detailSchema, toValidateDisplayables, datamap, crudForm.$error);
             },
             saveChanges: function (crudForm) {
                 const crudContext = crudContextHolderService.getCrudContext();
@@ -370,9 +371,15 @@
                 this.loadDetail(crudContext.nextItem);
                 return $q.when();
             },
+            
+            isCreation: function () {
+                const crudContext = this.getCrudContext();
+                return !crudContext.originalDetailItemDatamap || crudContext.originalDetailItemDatamap["_newitem#$"];
+            },
 
             createDetail: function () {
                 const crudContext = crudContextHolderService.getCrudContext();
+                crudContext.wizardStateIndex = 0;
                 crudContext.currentDetailItem = {
                     datamap: {}
                 };

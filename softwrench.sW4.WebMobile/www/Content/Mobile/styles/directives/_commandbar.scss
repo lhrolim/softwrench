@@ -1,5 +1,10 @@
-﻿.commandbar.mobile-fab {
-    padding-top: 100px;
+﻿command-bar[position="mobile.fab"] {
+    position: fixed;
+    z-index: 12;
+
+    .mfb-component--br {
+        bottom: auto;
+    }
 }
 
 .bar {

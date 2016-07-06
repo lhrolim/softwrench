@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using cts.commons.portable.Util;
 using cts.commons.Util;
 using log4net;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
-using softwrench.sW4.Shared2.Util;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
+using softWrench.sW4.Util;
+using EntityUtil = softwrench.sW4.Shared2.Util.EntityUtil;
 
 namespace softWrench.sW4.Metadata {
     public class OffLineMetadataProvider {
@@ -52,9 +55,10 @@ namespace softWrench.sW4.Metadata {
             var names = new List<Tuple<string, string>>();
             var lookupTable = new HashSet<string>(); // control: don't add the same association more than once
 
-            foreach (var app in MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user)) {
-                var mobileSchemas = app.Schemas().Where(a => a.Value.IsMobilePlatform());
-                foreach (var schema in mobileSchemas.Where(schema => schema.Value.IsMobilePlatform())) {
+            var topLevelApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user).ToList();
+            foreach (var app in topLevelApps) {
+                var mobileSchemas = app.Schemas().Where(schema => schema.Value.IsMobilePlatform());
+                foreach (var schema in mobileSchemas) {
 
                     // resolve the associations
                     var topAssociations = schema.Value.Associations()
@@ -102,11 +106,19 @@ namespace softWrench.sW4.Metadata {
                 }
             }
 
+            // adds the forced sync applications
+            var forcedSyncApps = MetadataProvider.Applications(ClientPlatform.Mobile).Where(DoForceSync);
+            result.AddAll(forcedSyncApps);
+
             Log.DebugFormat("fetching available associations took: {0} ", LoggingUtil.MsDelta(watch));
 
             return result;
         }
-        
+
+        private static bool DoForceSync(CompleteApplicationMetadataDefinition app) {
+            var force = app.GetProperty(ApplicationSchemaPropertiesCatalog.OfflineForceAssocSync);
+            return !string.IsNullOrEmpty(force) && "true".EqualsIc(force);
+        }
     }
     
 }

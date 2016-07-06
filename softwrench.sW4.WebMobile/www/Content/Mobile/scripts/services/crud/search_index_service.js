@@ -219,12 +219,29 @@
             return " order by isDirty desc, rowstamp is null desc, rowstamp desc ";
         }
 
+        const parseWhereClause = function(whereClause, datamap) {
+            const parameterRegex = /@[\w]+/g;
+            const parameters = parameterRegex.exec(whereClause);
+            if (!parameters) {
+                return whereClause;
+            }
+
+            angular.forEach(parameters, parameter => {
+                const parameterName = parameter.substring(1);
+                const value = datamap[parameterName] || "";
+                whereClause = whereClause.replace(new RegExp(parameter, "g"), `'${value}'`);
+            });
+
+            return whereClause;
+        }
+
         const service = {
             buildIndexes: buildIndexes,
             getIndexColumn: getIndexColumn,
             buildDefaultOrderBy: buildDefaultOrderBy,
             buildSearchQuery: buildSearchQuery,
-            buildSortQuery: buildSortQuery
+            buildSortQuery: buildSortQuery,
+            parseWhereClause: parseWhereClause
         };
 
         return service;

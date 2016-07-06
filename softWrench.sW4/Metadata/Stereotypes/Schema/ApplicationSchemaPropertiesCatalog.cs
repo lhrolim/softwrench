@@ -83,6 +83,11 @@
         public const string ListOfflineDateIndexes = "list.offline.date.indexlist";
 
         /// <summary>
+        /// If true forces the sync of an application as association data.
+        /// </summary>
+        public const string OfflineForceAssocSync = "offline.force.assoc.sync";
+
+        /// <summary>
         /// Use this property to specify a custom controller/action to redirect after the save has been performed.Value should be on the format serviceName.methodName
         /// </summary>
         public const string AfterSubmitAction = "aftersubmit.redirectaction";

@@ -490,7 +490,7 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     sourceMap: true,
-                    outputStyle: "compressed"
+                    outputStyle: "nested"
                 },
                 files: [
                     { expand: true, cwd: "www/css/", dest: "www/css/", src: ["**/*.scss"], ext: ".css" }
