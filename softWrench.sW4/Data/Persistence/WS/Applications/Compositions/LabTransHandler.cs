@@ -133,8 +133,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 double payRate;
                 double.TryParse(payRateAux.ToString(), out payRate);
                 var regularHrsAux = WsUtil.GetRealValue(integrationObject, "REGULARHRS");
-                int regularHrs;
-                int.TryParse(regularHrsAux.ToString(), out regularHrs);
+                double regularHrs;
+                double.TryParse(regularHrsAux.ToString(), out regularHrs);
                 var lineCost = (payRate * regularHrs);
                 WsUtil.SetValue(integrationObject, "LINECOST", lineCost);
             } catch {
