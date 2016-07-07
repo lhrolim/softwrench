@@ -25,27 +25,55 @@
             }
         }
 
-        const curbalNumberValue = curbal => !curbal ? null : parseInt(window.replaceAll(curbal, ",", "")); 
+        const numberValue = value => !value ? 0 : parseFloat(value.replace(",", "."));
 
-        //#endregion
+        const setItemValues = (datamap, values) => {
+            datamap["curbal"] = numberValue(values["curbal"]);
+            datamap["physcnt"] = numberValue(values["physcnt"]);
+            datamap["itemsetid"] = values["itemsetid"];
+            datamap["conditioncode"] = values["conditioncode"];
+        };
 
-        //#region Public methods
-
-        function itemSelected(event) {
-            const schema = event.schema;
-            const datamap = event.datamap;
-            const value = event.newValue;
-            datamap["description"] = datamap["#description"] = datamap["item_.description"];
-            
-            // cleanup
+        const cleanItemData = (datamap, itemSelected) => {
+            const numberValue = itemSelected ? 0 : null;
             datamap["storeloc"] = "null$ignorewatch";
             datamap["binnum"] = "null$ignorewatch";
             datamap["lotnum"] = "null$ignorewatch";
             datamap["storeloc_.#bins"] = null;
             datamap["binnum_.#lots"] = null;
             datamap["lotnum_.#itemvalues"] = null;
-            datamap["curbal"] = null;
+            datamap["curbal"] = numberValue;
+            datamap["physcnt"] = numberValue;
+            datamap["itemsetid"] = null;
             datamap["conditioncode"] = null;
+            datamap["item_.description"] = null;
+        }
+
+        const cleanMaterialData = (datamap, materialSelected) => {
+            const numberValue = materialSelected ? 0 : null;
+            datamap["description"] = null;
+            datamap["unitcost"] = numberValue;
+        }
+
+        //#endregion
+
+        //#region Public methods
+
+        function lineSelected(event) {
+            const datamap = event.datamap;
+            const linetype = datamap.linetype;
+            cleanItemData(datamap, linetype === "ITEM");
+            cleanMaterialData(datamap, linetype === "MATERIAL");
+        }
+
+        function itemSelected(event) {
+            const schema = event.schema;
+            const datamap = event.datamap;
+            const value = event.newValue;
+            datamap["#description"] = datamap["item_.description"];
+            
+            // cleanup
+            cleanItemData(datamap, true);
 
             if (!value) return;
 
@@ -77,8 +105,7 @@
             if (options.length === 1) { // selecting single option
                 const selectedOption = options[0];
                 offlineAssociationService.updateExtraProjectionsForOptionField(selectedOption, lotnumField.associationKey);
-                datamap["curbal"] = selectedOption.extrafields["#itemvalues"].curbal;
-                datamap["conditioncode"] = selectedOption.extrafields["#itemvalues"].conditioncode;
+                setItemValues(datamap, selectedOption.extrafields["#itemvalues"]);
                 datamap["lotnum"] = `${selectedOption.value}$ignorewatch`;
             }
         }
@@ -87,14 +114,14 @@
             const datamap = event.datamap;
             const itemvalues = datamap["lotnum_.#itemvalues"];
             if (!itemvalues) return;
-            datamap["curbal"] = itemvalues.curbal;
-            datamap["conditioncode"] = itemvalues.conditioncode;
+            setItemValues(datamap, itemvalues);
         }
 
         //#endregion
 
         //#region Service Instance
         const service = {
+            lineSelected,
             itemSelected,
             storeRoomSelected,
             binSelected,

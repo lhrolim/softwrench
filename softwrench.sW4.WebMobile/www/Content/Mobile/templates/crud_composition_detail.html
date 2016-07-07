@@ -1,9 +1,9 @@
 ﻿<div class="list">
     <div ng-if="!allowsUpdate">
-        <crud-output-fields schema="schema" displayables="displayables" datamap="datamap"/>
+        <crud-output-fields schema="schema" displayables="displayables" all-displayables="displayables" datamap="datamap"/>
     </div>
     <div ng-if="allowsUpdate">
-        <crud-input-fields schema="schema" displayables="displayables" datamap="datamap"/>
+        <crud-input-fields schema="schema" displayables="displayables" all-displayables="displayables" datamap="datamap"/>
     </div>
     <div>
         <command-bar schema="schema" datamap="datamap" position="mobile.fab" label="Actions"></command-bar>

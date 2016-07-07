@@ -481,6 +481,8 @@
           <field attribute="schedfinish" label="Scheduled Finish Date" hidden="true"/>
           <field attribute="schedfinishnotime" label="Scheduled Finish Date"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
+          <!-- TODO: had to add it here because the value was not being fetched on sync. Find out why, fix it, remove this field -->
+          <field attribute="worktype" label="Work Type" /> 
 
           <properties>
             <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
@@ -982,6 +984,8 @@
           
           <field attribute="matusetransid" hidden="true" />
           <field attribute="refwo" hidden="true" />
+          <field attribute="physcnt" hidden="true" />
+          <field attribute="itemsetid" hidden="true" />
           <field attribute="orgid" defaultexpression="$.parentdata.fields.orgid" hidden="true" />
           <field attribute="siteid" defaultexpression="$.parentdata.fields.siteid" hidden="true" />
 
@@ -990,11 +994,12 @@
           </field>
 
           <optionfield attribute="linetype" label="Type">
+            <event type="afterchange" service="materialService" method="lineSelected"/>
             <option label="ITEM" value="ITEM"/>
             <option label="MATERIAL" value="MATERIAL"/>
           </optionfield>
 
-          <association target="itemnum" labelfield="item_.description" extraprojectionvalues="description" 
+          <association target="itemnum" labelfield="item_.description" extraprojectionvalues="description,commoditygroup" 
                        showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'" 
                        label="Item" >
             <renderer type="lookup"/>
@@ -1038,6 +1043,7 @@
           <field attribute="status" label="Status"/>
           <field attribute="itemtype" label="Type"/>
           <field attribute="rotating" label="Rotating"/>
+          <field attribute="commoditygroup" label="Commodity Group"/>
         </list>
       </schemas>
     </application>
@@ -1045,12 +1051,14 @@
     <application name="offlineinvbalances" entity="invbalances" title="InvBalance">
       <schemas>
         <list platform="mobile">
-          <field attribute="itemnum" label="Item"/>
+          <field attribute="itemnum" label="Item" />
           <field attribute="location" label="Storeroom" />
           <field attribute="binnum" label="Bin" />
           <field attribute="lotnum" label="Lot" />
           <field attribute="curbal" label="Balance" />
           <field attribute="conditioncode" label="Condition Code" />
+          <field attribute="physcnt" label="Physical Count" />
+          <field attribute="itemsetid" />
         </list>
       </schemas>
     </application>
