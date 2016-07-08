@@ -21,9 +21,9 @@
                 queryToExecute = { query: entities.DataEntry.updateLocalPattern, args: [jsonString, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.d1, idx.d2, idx.d3, localId] };
             }
             return swdbDAO.executeQuery(queryToExecute).then(function () {
-                if (showConfirmationMessage === undefined || showConfirmationMessage === true) {
+                if (showConfirmationMessage === undefined || showConfirmationMessage === null || showConfirmationMessage === true) {
                     return $ionicPopup.alert({
-                        title: "{0} saved successfully".format(messageEntry),
+                        title: `${messageEntry} saved successfully`
                     }).then(() => item);
                 }
                 return item;

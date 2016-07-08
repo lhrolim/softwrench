@@ -69,9 +69,9 @@
                 // update the related syncoperations as 'COMPLETE'
                 // TODO: assuming there's only a single batch/application per syncoperation -> develop generic case
                 .then(batches => synchronizationOperationService.completeFromAsyncBatch(batches)
-                    // resolve with the saved batches to transparently continue the promise 
-                    // chain as it was before (not aware of syncoperations update)
-                    .then(operations => batches))
+                // resolve with the saved batches to transparently continue the promise 
+                // chain as it was before (not aware of syncoperations update)
+                .then(operations => batches))
                 .then(batches =>
                     dataSynchronizationService.syncData().then(downloadResults => {
                         var dataCount = getDownloadDataCount(downloadResults);
@@ -239,7 +239,7 @@
                         title: failPopupConfig.title || "Synchronization failed",
                         template: failPopupConfig.template || "Continue anyway?"
                     })
-                        .then(continueAnyway => !!continueAnyway);
+                    .then(continueAnyway => !!continueAnyway);
                 });
         }
 

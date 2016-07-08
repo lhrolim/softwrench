@@ -338,7 +338,7 @@
             hasNewSchemaAvailable: function () {
                 const crudContext = crudContextHolderService.getCrudContext();
                 const newDetailSchema = crudContext.currentNewDetailSchema;
-                return newDetailSchema != null;
+                return !!newDetailSchema;
             },
 
             //#endregion

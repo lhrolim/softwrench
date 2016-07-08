@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function fsWorkorderOfflineService(crudContextHolderService, dao, $timeout) {
+    function fsWorkorderOfflineService(crudContextService, dao, $timeout, securityService) {
         //#region Utils
 
         //#endregion
@@ -9,7 +9,7 @@
         //#region Public methods
 
         function afterFailureChanged() {
-            const dm = crudContextHolderService.currentDetailItemDataMap();
+            const dm = crudContextService.currentDetailItemDataMap();
             if (dm["problemcode"] != null) {
                 dm["problemcode"] = "null$ignorewatch";
             }
@@ -21,7 +21,7 @@
             }
         }
         function afterProblemChanged() {
-            const dm = crudContextHolderService.currentDetailItemDataMap();
+            const dm = crudContextService.currentDetailItemDataMap();
             if (dm["fr1code"] != null) {
                 dm["fr1code"] = "null$ignorewatch";
             }
@@ -30,7 +30,7 @@
             }
         }
         function afterCauseChanged() {
-            const dm = crudContextHolderService.currentDetailItemDataMap();
+            const dm = crudContextService.currentDetailItemDataMap();
             if (dm["fr2code"] != null) {
                 dm["fr2code"] = "null$ignorewatch";
             }
@@ -74,6 +74,19 @@
                 });
         }
 
+        /**
+         * Sets the owner of the current item to be the current user and then saves it.
+         * 
+         * @param {Schema} schema 
+         * @param {Datamap} datamap 
+         * @returns {Promise<entities.DataEntry>} 
+         */
+        function assignWorkOrder(schema, datamap) {
+            const user = securityService.currentFullUser();
+            datamap["owner"] = user["PersonId"];
+            return crudContextService.saveChanges();
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -84,7 +97,8 @@
             afterRemedyChanged,
             updateLocation,
             clearAsset,
-            onNewDetailLoad
+            onNewDetailLoad,
+            assignWorkOrder
         };
         return service;
         //#endregion
@@ -93,7 +107,7 @@
     //#region Service registration
 
     angular.module("maximo_offlineapplications")
-        .factory("fsWorkorderOfflineService", ["crudContextHolderService", "swdbDAO", "$timeout", fsWorkorderOfflineService]);
+        .factory("fsWorkorderOfflineService", ["crudContextService", "swdbDAO", "$timeout", "securityService", fsWorkorderOfflineService]);
 
     //#endregion
 
