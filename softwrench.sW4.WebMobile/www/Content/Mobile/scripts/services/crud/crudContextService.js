@@ -3,11 +3,11 @@
     constants = constants || {};
 
     mobileServices.factory('crudContextService', [
-    "$q", "$log", "$rootScope", "swdbDAO", "searchIndexService",
+    "$q", "$log", "$rootScope", "swdbDAO", "searchIndexService", "problemService", 
     "metadataModelService", "offlineSchemaService", "offlineCompositionService",
     "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
     "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService",
-    function ($q, $log, $rootScope, swdbDAO, searchIndexService,
+    function ($q, $log, $rootScope, swdbDAO, searchIndexService, problemService, 
     metadataModelService, offlineSchemaService, offlineCompositionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
     crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService) {
@@ -377,6 +377,13 @@
                 return !crudContext.originalDetailItemDatamap || crudContext.originalDetailItemDatamap["_newitem#$"];
             },
 
+            gridTitle: function(gridSchema) {
+                if (!gridSchema || !gridSchema.title) {
+                    return this.currentTitle();
+                }
+                return gridSchema.title;
+            },
+
             createDetail: function () {
                 const crudContext = crudContextHolderService.getCrudContext();
                 crudContext.wizardStateIndex = 0;
@@ -420,12 +427,15 @@
                 if (isRippleEmulator()) {
                     contextService.insertIntoContext("crudcontext", crudContext);
                 }
-                return routeService.go("main.cruddetail.maininput").then(function (result) {
+
+                return problemService.getProblems(item.id).then(problems => {
+                    crudContext.currentProblems = problems;
+                    return routeService.go("main.cruddetail.maininput");
+                }).then(() => {
                     $rootScope.$emit("sw_cruddetailrefreshed");
                     loadingService.hide();
                 });
-
-            },
+            }
 
             //#endregion
         }

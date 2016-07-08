@@ -3,8 +3,8 @@
 
     softwrench.controller("SyncOperationDetailController",
         ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q",
-            "$ionicScrollDelegate", "loadingService","attachmentDataSynchronizationService",
-        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService) {
+            "$ionicScrollDelegate", "loadingService","attachmentDataSynchronizationService", "metadataModelService", "offlineSchemaService", "crudContextService", 
+        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService, metadataModelService, offlineSchemaService, crudContextService) {
 
             $scope.data = {
                 operation: null,
@@ -38,6 +38,11 @@
             var loadCurrentApplicationState = function () {
                 return applicationStateService.currentState().then(function (state) {
                     $scope.data.currentApplicationState = state;
+                    angular.forEach(state, appState => {
+                        const appMetadata = metadataModelService.getApplicationByName(appState.application);
+                        const gridSchema = offlineSchemaService.locateSchema(appMetadata, "list");
+                        appState.gridTitle = gridSchema ? crudContextService.gridTitle(gridSchema) : appState.application;
+                    });
                 });
             };
 

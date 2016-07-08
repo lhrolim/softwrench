@@ -9,14 +9,9 @@
         
         const countPending = app => swdbDAO.countByQuery("DataEntry", `application='${app}' and pending = 1`);
 
-        const countDirty = app => swdbDAO.countByQuery("DataEntry", `application='${app}' and isDirty=1`);
+        const countDirty = app => swdbDAO.countByQuery("DataEntry", `application='${app}' and isDirty=1 and (hasProblem = 0 or hasProblem is null)`);
 
-        const countProblematic = app =>
-            swdbDAO.executeStatement(`select count(d.id) from DataEntry d where d.application=? and d.isDirty=1 and
-                                    (select count(b.id) from BatchItem b where b.dataentry=d.id and problem is not null) > 0`,
-                                    [app])
-                .then(r => !r ? 0 : r[0]["count(d.id)"]);
-        
+        const countProblematic = app => swdbDAO.countByQuery("DataEntry", `application='${app}' and hasProblem = 1`);
 
         //#endregion
 
@@ -53,7 +48,7 @@
                                 application: app,
                                 all,
                                 pending,
-                                dirty: dirty - problematic, // just dirty
+                                dirty,
                                 problematic
                             }));
                     });

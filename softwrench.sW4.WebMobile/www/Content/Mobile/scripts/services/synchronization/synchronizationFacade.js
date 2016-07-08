@@ -2,7 +2,7 @@
     "use strict";
 
     function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
-        asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, swdbDAO, loadingService, $ionicPopup, crudConstants, entities) {
+        asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, swdbDAO, loadingService, $ionicPopup, crudConstants, entities, problemService) {
 
         //#region Utils
 
@@ -66,6 +66,7 @@
             });
             $q.all(promises)
                 .then(batches => handleDeletableDataEntries(batches))
+                .then(batches => problemService.updateHasProblemToDataEntries(batches))
                 // update the related syncoperations as 'COMPLETE'
                 // TODO: assuming there's only a single batch/application per syncoperation -> develop generic case
                 .then(batches => synchronizationOperationService.completeFromAsyncBatch(batches)
@@ -181,8 +182,10 @@
                         }
                         // sync case: 
                         // - delete DataEntries that should be deleted
+                        // - updates the hasProblem flag on DataEntries
                         // - download ONLY data and create a SyncOperation indicating both a Batch submission and a download
                         return handleDeletableDataEntries(batchResults)
+                            .then(() => problemService.updateHasProblemToDataEntries(batchResults))
                             .then(() => dataSynchronizationService.syncData())
                             .then(downloadResults => {
                                 log.debug("Batch returned synchronously --> performing download");
@@ -203,6 +206,7 @@
                     .then(batch => batchService.submitBatches([batch])
                     .then(batchResults => {
                         return handleDeletableDataEntries(batchResults)
+                            .then(() => problemService.updateHasProblemToDataEntries(batchResults, item))
                             .then(() => dataSynchronizationService.syncSingleItem(item))
                             .then(downloadResults => {
                                 var dataCount = getDownloadDataCount(downloadResults);
@@ -266,7 +270,7 @@
 
     //#region Service registration
     mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService",
-        "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", synchronizationFacade]);
+        "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", synchronizationFacade]);
     //#endregion
 
 })(mobileServices, angular, _);

@@ -26,6 +26,7 @@
 
             originalDetailItemDatamap: null,
             currentDetailItem: null,
+            currentProblems: null,
             currentDetailSchema: null,
             currentNewDetailSchema: null,
             newItem: false,
@@ -171,6 +172,9 @@
             return _crudContext.currentDetailItem;
         }
 
+        function currentProblems() {
+            return _crudContext.currentProblems;
+        }
 
         function itemlist() {
             return _crudContext.itemlist;
@@ -328,6 +332,7 @@
             currentListSchema: currentListSchema,
             currentDetailSchema: currentDetailSchema,
             currentDetailItem: currentDetailItem,
+            currentProblems: currentProblems,
             currentSchema: currentSchema,
             itemlist: itemlist,
             currentDetailItemDataMap: currentDetailItemDataMap,
