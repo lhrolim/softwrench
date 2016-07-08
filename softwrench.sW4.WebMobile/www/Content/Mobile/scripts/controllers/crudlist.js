@@ -73,9 +73,11 @@
                 $scope.filteroptionspopover.hide();
             });
 
-            $scope.hasNewSchemaAvailable = function () {
-                return crudContextService.hasNewSchemaAvailable();
-            }
+            $scope.createEnabled = function() {
+                const schema = crudContextService.currentListSchema();
+                const disabled = schema.properties["list.offline.create.disabled"];
+                return disabled !== "true" && disabled !== true && crudContextService.hasNewSchemaAvailable();
+            };
 
             $scope.disableSearch = function (clear) {
                 $scope._searching = false;

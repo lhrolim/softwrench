@@ -539,9 +539,11 @@
           <!-- EndRegion-->
 
           <!-- Region Compositions: materials, labors, attachmets -->
-          <composition relationship="matusetrans" label="Materials" />
+          <composition relationship="matusetrans" label="Materials" >
+            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'"/>
+          </composition>
           <composition relationship="labtrans" label="Labor">
-            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'" />
           </composition>
           <composition relationship="attachment" label="Attachments">
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
@@ -632,8 +634,7 @@
 
     <application name="otherworkorder" title="Other Work Orders" entity="workorder" role="workorders">
       <properties>
-        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
-        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location,estdur"/>
       </properties>
 
       <schemas>
@@ -645,68 +646,47 @@
           <field attribute="wonum" label="Workorder Number" qualifier="title"/>
           <field attribute="wopriority" label="Priority" qualifier="icon"/>
           <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
-          <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
-          <field attribute="schedfinish" label="Scheduled Finish Date" hidden="true"/>
-          <field attribute="schedfinishnotime" label="Scheduled Finish Date"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
+          <field attribute="estdur" label="Estimated Duration" qualifier="subtitle">
+            <renderer type="default" params="showLabel=true" />
+          </field>
 
           <properties>
-            <property key="list.defaultorderby" value="wopriority desc, schedstartnotime is null asc, schedstartnotime asc"/>
+            <property key="list.defaultorderby" value="wopriority desc, estdur asc"/>
+            <property key="list.offline.create.disabled" value="true"/>
           </properties>
         </list>
 
-        <schema id="newdetail" platform="mobile" stereotype="detailnew">
-          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
-          <association label="Priority" target="wopriority" labelfield="realpriority_.description"/>
-          <association label="Location" target="location" labelfield="location.description" />
-          <association label="Asset" target="assetnum" labelfield="asset.description" />
-          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
-          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
-          <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
-          <field attribute="description" label="Description"  />
-          <field label="Details" attribute="ld_.ldtext">
-            <renderer type="richtext"/>
-          </field>
-
-          <composition relationship="worklog" label="Work Logs" />
-          <composition relationship="matusetrans" label="Materials" />
-          <composition relationship="labtrans" label="Labor">
-            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
-          </composition>
-        </schema>
-
         <detail platform="mobile" title="Work Order">
           <field attribute="workorderid" hidden="true"/>
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true"/>
-          <field attribute="woclass" hidden="true"/>
-          <field attribute="hasfollowupwork" hidden="true"/>
-          <field attribute="origrecordid" hidden="true"/>
-          <field attribute="origrecordclass" hidden="true"/>
           <field attribute="wonum" label="Number" hidden="true" />
-          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
-          <field attribute="changeby" label="Changed By" hidden="true"/>
-          <field attribute="owner" label="Owner"  readonly="true"/>
-          <association label="Status" target="status" labelfield="synstatus.description">
-            <dataprovider prefilterfunction="FilterStatusCodes"/>
-            <renderer type="lookup" params="avoidautofocus=true"/>
-          </association>
-          <association label="Priority" target="wopriority" labelfield="realpriority_.description"/>
-          <association label="Location" target="location" labelfield="location.description" />
-          <association label="Asset" target="assetnum" labelfield="asset.description" />
-          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
-          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
-          <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
-          <field attribute="description" label="Description" />
-          <field label="Details" attribute="ld_.ldtext">
+          <field attribute="orgid" hidden="true" requiredexpression="true" />
+          <field attribute="siteid" hidden="true" requiredexpression="true" />
+          
+          <field attribute="owner" readonly="true" showexpression="!!@owner" label="Owner"/>
+          <field attribute="description" readonly="true" label="Description"/>
+          <field attribute="status" readonly="true" label="Status" />
+          <field attribute="location" readonly="true" label="Location" />
+          <field attribute="assetnum" readonly="true" label="Asset" />
+          <field attribute="classstructureid" readonly="true" label="Origination" />
+          <field attribute="ld_.ldtext" readonly="true" label="Details">
             <renderer type="richtext"/>
           </field>
 
-          <composition relationship="worklog" label="Work Logs" />
-          <composition relationship="matusetrans" label="Materials" />
-          <composition relationship="labtrans" label="Labor">
-            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+          <composition relationship="matusetrans" label="Materials" >
+            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSED' &amp;&amp; !!@owner" />
           </composition>
+          <composition relationship="labtrans" label="Labor">
+            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSED' &amp;&amp; !!@owner" />
+          </composition>
+          
+          <commandbars>
+            <commandgroup position="mobile.fab" platform="mobile">
+              <command id="assignworkorder" service="fsWorkorderOfflineService" method="assignWorkOrder" 
+                       showexpression="!@owner" icon="ion-android-person-add" label="Assign To Me" />
+            </commandgroup>
+          </commandbars>
+      
         </detail>
       </schemas>
     </application>

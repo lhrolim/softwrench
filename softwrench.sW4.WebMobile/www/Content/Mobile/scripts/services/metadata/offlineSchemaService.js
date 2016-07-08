@@ -1,5 +1,5 @@
-﻿(function (angular) {
-    'use strict';
+﻿(function (angular, _) {
+    "use strict";
 
     angular.module("sw_mobile_services").factory("offlineSchemaService", ["$log", "fieldService", "schemaService", "securityService", "dispatcherService", offlineSchemaService]);
 
@@ -130,6 +130,10 @@
                 return formatDate(item[displayable.attribute], false, false);
             }
 
+            if (_.contains([true, "true"], displayable.rendererParameters["showLabel"])) {
+                return `${displayable.label}: ${item[displayable.attribute]}`;
+            }
+
             return item[displayable.attribute];
         }
 
@@ -151,4 +155,4 @@
         return service;
 
     }
-})(angular);
+})(angular, _);
