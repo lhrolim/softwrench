@@ -37,6 +37,13 @@
             {{tabTitle() || detailSummary()}}
         </div>
 
+        <div class="header-description">
+            <div ng-if="hasProblems()" class="problem-description">
+                <i class="fa fa-exclamation-triangle"></i>
+                {{lastProblemMesage()}}
+            </div>
+        </div>
+
         <ion-nav-view name="body" class="list" style="height: initial"></ion-nav-view>
 
     </ion-content>

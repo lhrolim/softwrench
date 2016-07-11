@@ -65,6 +65,10 @@
                 return item.pending;
             }
 
+            $scope.hasProblem = function (item) {
+                return item.hasProblem;
+            }
+
             $scope.showFilterOptions = function ($event) {
                 $scope.filteroptionspopover.show($event);
             }
@@ -90,10 +94,7 @@
 
             $scope.gridTitle = function() {
                 const schema = crudContextHolderService.currentListSchema();
-                if (!schema || !schema.title) {
-                    return crudContextService.currentTitle();
-                }
-                return schema.title;
+                return crudContextService.gridTitle(schema);
             }
 
             $scope.itemTitle = function (item) {
@@ -138,7 +139,7 @@
             }
 
             $scope.getIconText = function (item) {
-                if ($scope.isDirty(item) || $scope.isPending(item)) {
+                if ($scope.isDirty(item) || $scope.isPending(item) || $scope.hasProblem(item)) {
                     return "";
                 }
 
@@ -167,6 +168,10 @@
             $scope.getIconIcon = function (item) {
                 if ($scope.isPending(item)) {
                     return "cloud";
+                }
+
+                if ($scope.hasProblem(item)) {
+                    return "exclamation-triangle";
                 }
 
                 if ($scope.isDirty(item)) {

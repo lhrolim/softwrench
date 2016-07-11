@@ -64,12 +64,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
             throw new NotImplementedException();
         }
 
-        protected override object DoProxyInvocation() {
+        protected override object DoProxyInvocation()
+        {
+
+            var authToken = GenerateAuthHeader();
+
 
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                {"MAXAUTH", GenerateAuthHeader()},
-                {"Content-Type", "application/x-www-form-urlencoded"}
+                {"MAXAUTH", authToken},
+                {"Content-Type", "application/x-www-form-urlencoded"},
+                {"Authorization","Basic " + authToken }
             };
 
             var callRestApiSync = RestUtil.CallRestApiSync(_baseRestURL, MethodName(), headers, GeneratePayLoad());

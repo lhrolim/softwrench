@@ -209,6 +209,8 @@
             remoteId: 'TEXT',
             //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
             isDirty: 'BOOL',
+            //if this flag is true, it will indicate that the dataentry had a problem on the last sync
+            hasProblem: 'BOOL',
             rowstamp: 'INT',
             // index for use on searches
             textindex01: "TEXT",
@@ -248,6 +250,10 @@
 
         entities.DataEntry.updateLocalPattern = "update DataEntry set 'datamap'=?,'isDirty'=1,'textindex01'=?,'textindex02'=?,'textindex03'=?,'textindex04'=?,'textindex05'=?,'dateindex01'=?,'dateindex02'=?,'dateindex03'=? where id =?";
         entities.DataEntry.insertLocalPattern = "insert into DataEntry ('application','datamap','isDirty','pending','remoteId','rowstamp','id','textindex01','textindex02','textindex03','textindex04','textindex05','dateindex01','dateindex02','dateindex03') values (?,?,1,0,null,null,?,?,?,?,?,?,?,?,?)";
+
+        entities.DataEntry.clearProblem = "update DataEntry set 'hasProblem'=0 where id in(?)";
+        entities.DataEntry.setProblem = "update DataEntry set 'hasProblem'=1 where id in(?)";
+        entities.DataEntry.findProblems = "select p.* from Problem p left join batchitem bi on p.id = bi.problem left join batch b on b.id = bi.batch where bi.dataentry = ? order by b.sentDate desc";
 
         //here because of the order of the files
         entities.BatchItem.hasOne('dataentry', entities.DataEntry);

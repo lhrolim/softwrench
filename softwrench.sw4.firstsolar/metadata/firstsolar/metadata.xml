@@ -621,7 +621,7 @@
       <properties>
         <property key="list.offline.text.indexlist" value="location,ancestor"/>
         <property key="offline.force.assoc.sync" value="true"/>
-        <property key="mobile.fetchlimit" value="3000"/>
+        <property key="mobile.fetchlimit" value="1000"/>
       </properties>
       
       <schemas>

@@ -22,7 +22,14 @@ input.ion-autocomplete[readonly] {
     left: 30px !important;
 }
 
-.missingsync, .pending {
+.problem-description {
+    color: white;
+    background: $cts_red;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.missingsync, .pending, .hasproblem {
     button {
         background: rgba($cts_red, 0.1) !important;
         border: 3px solid $cts_red;

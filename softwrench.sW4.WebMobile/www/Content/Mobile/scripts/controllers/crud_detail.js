@@ -12,6 +12,7 @@
             $scope.displayables = wizardService.getWizardFields($scope.allDisplayables);
             $scope.schema = crudContextService.currentDetailSchema();
             $scope.datamap = crudContextService.currentDetailItemDataMap();
+            $scope.item = crudContextHolderService.currentDetailItem();
             eventService.onload($scope, $scope.schema, $scope.datamap, {});
         }
 
@@ -176,6 +177,18 @@
                 return;
             }
             $scope.displayables = wizardService.next($scope.allDisplayables);
+        }
+
+        $scope.hasProblems = function() {
+            return $scope.item.hasProblem;
+        }
+
+        $scope.lastProblemMesage = function() {
+            const problems = crudContextHolderService.currentProblems();
+            if (!problems || problems.length === 0) {
+                return null;
+            }
+            return problems[0].message;
         }
 
         $rootScope.$on('sw_cruddetailrefreshed', function () {
