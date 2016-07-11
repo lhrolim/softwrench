@@ -62,11 +62,12 @@
 
     <entity name="matusetrans" idAttribute="matusetransid" >
       <relationships>
-        <relationship to="invbalances" qualifier="offlineinvbalances">
-          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
-          <relationshipAttribute from="location" to="location" />
+        <relationship to="inventory" qualifier="offlineinventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE"/>
         </relationship>
       </relationships>
+      
     </entity>
 
     <entity name="locancestor" idAttribute="locancestorid">
@@ -948,7 +949,7 @@
           <field attribute="linetype" label="Type" />
           <field attribute="storeloc" label="Storeroom" />
           <field attribute="qtyrequested" label="Quantity" />
-          <field attribute="unitcost" label="Unit Cost">
+          <field attribute="unitcost" showexpression="@linetype==='MATERIAL'" label="Unit Cost">
             <renderer type="default" params="formatter=money"/>
           </field>
           <field attribute="transdate" label="Created Date" >
@@ -958,14 +959,12 @@
 
         <detail stereotype="compositiondetail" platform="mobile">
           <!-- declared just so it can be fetched in sync -->
-          <association target="#invbalance" labelfield="offlineinvbalances.itemnum" 
+          <association target="#inventory" labelfield="offlineinventory.itemnum" 
                        showexpression="false" enableexpression="false" 
-                       label="#invbalance" />
+                       label="#inventory" />
           
           <field attribute="matusetransid" hidden="true" />
           <field attribute="refwo" hidden="true" />
-          <field attribute="physcnt" hidden="true" />
-          <field attribute="itemsetid" hidden="true" />
           <field attribute="orgid" defaultexpression="$.parentdata.fields.orgid" hidden="true" />
           <field attribute="siteid" defaultexpression="$.parentdata.fields.siteid" hidden="true" />
 
@@ -979,7 +978,7 @@
             <option label="MATERIAL" value="MATERIAL"/>
           </optionfield>
 
-          <association target="itemnum" labelfield="item_.description" extraprojectionvalues="description,commoditygroup" 
+          <association target="itemnum" labelfield="item_.description" extraprojectionvalues="description" 
                        showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'" 
                        label="Item" >
             <renderer type="lookup"/>
@@ -989,17 +988,7 @@
           <optionfield attribute="storeloc" 
                        showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'" 
                        label="Storeroom">
-            <event type="afterchange" service="materialService" method="storeRoomSelected"/>
           </optionfield>
-          <optionfield attribute="binnum" showexpression="@linetype==='ITEM'" label="Bin">
-            <event type="afterchange" service="materialService" method="binSelected" />
-          </optionfield>
-          <optionfield attribute="lotnum" showexpression="@linetype==='ITEM'" label="Lot">
-            <event type="afterchange" service="materialService" method="lotSelected" />
-          </optionfield>
-          
-          <field attribute="conditioncode" readonly="true" showexpression="@linetype==='ITEM'" label="Condition" />
-          <field attribute="curbal" readonly="true" showexpression="@linetype==='ITEM'" label="Available Balances" />
           
           <field attribute="description" label="Material Description" requiredexpression="true" showexpression="@linetype==='MATERIAL'"/>
           <field attribute="unitcost" label="Unit Cost" qualifier="quantity" requiredexpression="@linetype==='MATERIAL'" showexpression="@linetype==='MATERIAL'">
@@ -1027,18 +1016,12 @@
         </list>
       </schemas>
     </application>
-    
-    <application name="offlineinvbalances" entity="invbalances" title="InvBalance">
+
+    <application name="offlineinventory" entity="inventory" title="Inventory">
       <schemas>
         <list platform="mobile">
+          <field attribute="location" label="Location" />
           <field attribute="itemnum" label="Item" />
-          <field attribute="location" label="Storeroom" />
-          <field attribute="binnum" label="Bin" />
-          <field attribute="lotnum" label="Lot" />
-          <field attribute="curbal" label="Balance" />
-          <field attribute="conditioncode" label="Condition Code" />
-          <field attribute="physcnt" label="Physical Count" />
-          <field attribute="itemsetid" />
         </list>
       </schemas>
     </application>

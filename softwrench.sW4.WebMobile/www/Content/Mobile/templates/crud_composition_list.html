@@ -5,7 +5,7 @@
             <div class="row" ng-click="loadCompositionDetail(item)"  on-hold="startDeleteLocalComposition(item)">
                 <div class="col">
                     <ul>
-                        <li ng-repeat="field in visibleFields()" ng-init="value = fieldValue(item, field)" ng-show="!!value">
+                        <li ng-repeat="field in visibleFields(item)" ng-init="value = fieldValue(item, field)" ng-show="!!value">
                             <span class="input-label">{{field.label}}</span><span class="output-label">&nbsp;{{value}}</span>
                         </li>
                     </ul>
