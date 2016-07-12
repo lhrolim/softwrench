@@ -324,6 +324,7 @@
     <Compile Include="DB_Migration\4.2.0\Migration201507201700Swweb1166Part4.cs" />
     <Compile Include="DB_Migration\4.4.1\20150723_SWWEB_1275.cs" />
     <Compile Include="DB_Migration\5.10.0\20160601_SWWEB_2526.cs" />
+    <Compile Include="DB_Migration\5.11.1\20160707_SWWEB_2609.cs" />
     <Compile Include="DB_Migration\5.3.0\20160127_SWWEB_2020.cs" />
     <Compile Include="DB_Migration\5.8.0\20160504_SWWEB_2437.cs" />
     <Compile Include="DB_Migration\5.9.0\20160518_SWWEB_2513.cs" />

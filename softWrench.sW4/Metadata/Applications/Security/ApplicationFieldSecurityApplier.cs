@@ -83,10 +83,11 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                 if (field is ApplicationTabDefinition) {
                     //tabs change the ApplicationContainer
                     var tab = (ApplicationTabDefinition)field;
+                    var tabPermission = permissions.FirstOrDefault(p => p.ContainerKey.EqualsIc(tab.TabId));
                     tab.Displayables = GetAllowedFields(applicationPermission,
                         fieldsToRetain, tab.Displayables, compositionPermissions, permissions, tab.TabId);
-                    if (tab.Displayables.Any()) {
-                        //if at least one field remained, let´s keep the tab
+                    if (tab.Displayables.Any() && (tabPermission == null || tabPermission.AllowView)) {
+                        //if at least one field remained and the tab is not set to be hidden, let´s keep the tab
                         resultingFields.Add(tab);
                     }
                 } else {

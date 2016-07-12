@@ -113,6 +113,14 @@
               </optionfield>
             </section>
 
+            <!-- Tab section -->
+            <section showexpression="@istab &amp;&amp; @#selectedtab!='' &amp;&amp; @#selectedtab!='main'" orientation="horizontal">
+              <field attribute="#hidecontainer" label="Hide Tab">
+                <renderer type="checkbox" params="layout=left"/>
+                <!--<event type="afterchange" service="userProfileService" method="tabRoleChanged"/>-->
+              </field>
+            </section>
+
             <!-- Composition selection  -->
             <section showexpression="@iscompositiontab" orientation="horizontal">
               <field attribute="#compallowview" label="Read Only?">
@@ -130,15 +138,20 @@
             </section>
 
             <!-- Fields and Action selection  -->
-            <section orientation="horizontal" showexpression="@schema!=null &amp;&amp; @#selectedtab=='main'">
+            <section orientation="horizontal" showexpression="@schema!=null &amp;&amp; @#selectedtab!=null &amp;&amp; !@iscompositiontab">
 
               <composition detailschema="" fetchtype="lazy"  relationship="#fieldPermissions"  printschema="" inline="true">
                 <collectionproperties allowcreation="false" listschema="fieldRepresentation"/>
               </composition>
-
-              <composition detailschema="" fetchtype="lazy"  relationship="#actionPermissions"  printschema="" inline="true">
-                <collectionproperties allowcreation="false" listschema="actionRepresentation"/>
-              </composition>
+              
+              <!-- Only show actions for the main tab -->
+              <section showexpression="@#selectedtab=='main'">
+                
+                <composition detailschema="" fetchtype="lazy"  relationship="#actionPermissions"  printschema="" inline="true">
+                  <collectionproperties allowcreation="false" listschema="actionRepresentation"/>
+                </composition>
+                
+              </section>
             </section>
 
           </section>
