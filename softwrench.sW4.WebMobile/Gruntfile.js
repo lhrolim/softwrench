@@ -212,8 +212,8 @@ module.exports = function (grunt) {
 
                     "ng-material-floating-button.css": "ng-material-floating-button/mfb/dist/mfb.min.css",
 
-                    "skins/lightgray/skin.css": "tinymce-dist/skins/lightgray/skin.min.css",
-                    "skins/lightgray/content.css": "tinymce-dist/skins/lightgray/content.min.css"
+                    "skins/lightgray/skin.min.css": "tinymce-dist/skins/lightgray/skin.min.css",
+                    "skins/lightgray/content.min.css": "tinymce-dist/skins/lightgray/content.min.css"
                 }
             },
             fontsdev: {
