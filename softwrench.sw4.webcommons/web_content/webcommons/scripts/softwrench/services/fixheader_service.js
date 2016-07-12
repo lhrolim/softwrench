@@ -56,6 +56,8 @@ angular.module('sw_layout')
 
                 var dashToolbar = $('.toolbar-primary:not(.affix-pagination)');
                 $('.dash-header').css('margin-top', dashToolbar.height() + theaderHeight - 1);
+            } else {
+                $('#crudbodyform:not([data-modal="true"])').css('margin-top', 'auto');
             }
 
             //only adjust if table header is fixed
