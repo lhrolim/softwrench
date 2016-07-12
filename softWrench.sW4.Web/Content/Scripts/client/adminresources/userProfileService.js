@@ -63,6 +63,8 @@
             //allow creation/allow update flags only make sense for composition(collection)tabs
             var isCompositionTab = fullObject.extrafields["type"] === "ApplicationCompositionDefinition";
             dm["iscompositiontab"] = isCompositionTab;
+            var isTab = fullObject.extrafields["type"] === "ApplicationTabDefinition";
+            dm["istab"] = isTab;
 
             if (!isCompositionTab) {
                 var queryParameters = {
@@ -159,7 +161,6 @@
             fields["anybasicpermission"] = fields["#appallowview"] || fields["#appallowupdate"] || fields["#appallowcreation"];
 
         }
-
 
         function cmpRoleChanged(parameters) {
             var fields = parameters.fields;
@@ -474,6 +475,13 @@
 
                 var hasAnyChange = false;
 
+                // Store value for hiding containers for all but main container.
+                if (dispatcher["tab"] !== 'main') {
+                    if (actualContainerPermission["allowView"] != !dm["#hidecontainer"]) {
+                        actualContainerPermission["allowView"] = !dm["#hidecontainer"];
+                        hasAnyChange = hasAnyChange || true;
+                    }
+                }
 
                 var fieldPermissionsToIterate = dm["#fieldPermissions_"];
 
@@ -620,6 +628,8 @@
                             screenField.permission = item.permission;
                         }
                     });
+                    // Restore view setting
+                    dm['#hidecontainer'] = container.allowView != undefined ? !container.allowView : false;
                 }
             }
 

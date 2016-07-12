@@ -32,6 +32,11 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
+        [Property]
+        public bool AllowView {
+            get; set;
+        }
+
 
         [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "schema_id")]
