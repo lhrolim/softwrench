@@ -41,7 +41,7 @@
         };
     })
 
-    .directive('sectionElementInput', ["$compile", "$timeout", function ($compile, $timeout) {
+    .directive('sectionElementInput', ["$compile", "$timeout", "crudContextHolderService", function ($compile, $timeout, crudContextHolderService) {
         return {
             restrict: "E",
             replace: true,
@@ -80,8 +80,12 @@
                     "></crud-input-fields>"
                     );
                     $timeout(function () {
+                        // mark data as not resolved since the template has not yet been compiled: can still trigger formatters and default values
+                        crudContextHolderService.clearDetailDataResolved();
                         $compile(element.contents())(scope);
-                    }, 0, false);
+                    }, 0, false)
+                    .finally(() => // section already compiled, formatters and default values already triggered: mark data as resolved
+                        crudContextHolderService.setDetailDataResolved());
                 }
             }
         }
