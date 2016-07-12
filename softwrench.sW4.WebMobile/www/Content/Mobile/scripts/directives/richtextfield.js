@@ -21,7 +21,8 @@
                         debounce: true,
                         inline: false,
                         theme: "modern",
-                        skin_url: "lightgray",
+                        skin_url: "Content/Vendor/css/skins/lightgray",
+                        content_css: 'css/tinymce.css',
                         menubar: false,
                         readonly: $scope.readOnly,
                         // so it doesn't mess base64 images coming from the server
