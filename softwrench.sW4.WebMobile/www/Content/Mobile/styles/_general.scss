@@ -19,8 +19,8 @@
     color: white !important;
     z-index: 12 !important;
     position: absolute !important;
-    bottom: 55px !important;
-    right: 10px !important;
+    bottom: 0px !important;
+    right: 17px !important;
     border-radius: 50% !important;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
     -webkit-transform: translate3d(0, 0, 0) !important;
@@ -29,6 +29,9 @@
     transition: 0.2s linear !important;
     -webkit-transition-property: -webkit-transform, all !important;
     transition-property: transform, all !important;
+    margin: 25px 25px 31px;
+    width: 56px;
+    height: 56px;
 
     &:hover {
         -webkit-transform: translate3d(0, -1px, 0) !important;

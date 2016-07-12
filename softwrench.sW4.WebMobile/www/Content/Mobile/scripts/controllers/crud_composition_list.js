@@ -21,9 +21,9 @@
             return formatService.format(item[field.attribute], field, item);
         }
 
-        $scope.visibleFields = function () {
-            var schema = crudContextService.getCompositionListSchema();
-            return fieldService.getVisibleDisplayables({}, schema);
+        $scope.visibleFields = function (item) {
+            const schema = crudContextService.getCompositionListSchema();
+            return fieldService.getVisibleDisplayables(item, schema);
         }
 
         $scope.loadCompositionDetail = function (item) {
