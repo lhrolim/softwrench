@@ -41,6 +41,12 @@
 
         function updateLocation(event) {
             const datamap = event.datamap;
+
+            const asset = datamap["assetnum"];
+            if (!asset || (angular.isArray(asset) && asset.length === 0)) {
+                return;
+            }
+
             const location = datamap["offlineasset_.location"];
             datamap["location"] = `${location}$ignorewatch`;
         }
@@ -87,6 +93,13 @@
             return crudContextService.saveChanges();
         }
 
+        function getLocationsWhereClause() {
+            return "textindex01 in ( select textindex04 from DataEntry where application = 'workorder' and textindex04 is not null ) or ( textindex01 in ( select textindex01 from associationdata where application = 'locancestor' and textindex02 in ( select textindex04 from DataEntry where application = 'workorder' and textindex04 is not null ) ) )";
+        }
+
+        function getAssetWhereClause() {
+            return "textindex01 = @location or ( textindex01 in ( select textindex01 from associationdata where application = 'locancestor' and textindex02 = @location ) )";
+        }
         //#endregion
 
         //#region Service Instance
@@ -98,7 +111,9 @@
             updateLocation,
             clearAsset,
             onNewDetailLoad,
-            assignWorkOrder
+            assignWorkOrder,
+            getLocationsWhereClause,
+            getAssetWhereClause
         };
         return service;
         //#endregion

@@ -67,11 +67,41 @@
 
 .ion-autocomplete-container {
     .bar {
+        &.ion-autocomplete-topbar{
+            background-size: 0px;
+        }
+
+        &.ion-autocomplete-botbar {
+            font-size: 16px;
+
+            button {
+                position: absolute;
+                right: 20px;
+                top: 4px;
+            }
+        }
+
+        .item-toggle {
+            height: 44px;
+            border-width: 0px;
+            top: -4px;
+            padding-left: 6px;
+            padding-right: 52px;
+
+            &[disabled] {
+                color: $cts_gray;
+            }
+        }
+
         button {
             background: none;
             color: #000;
             font-size: 16px;
         }
+    }
+
+    ion-content {
+        top: 88px;
     }
 }
 

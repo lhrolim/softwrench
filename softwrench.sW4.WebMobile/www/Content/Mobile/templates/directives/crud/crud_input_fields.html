@@ -13,10 +13,13 @@
                         <ion-autocomplete ng-if="!isReadOnly(field)"
                                           ng-model="datamap[field.target]"
                                           component-id="{{field.associationKey}}"
-                                          items-method="associationSearch(query,componentId)"
+                                          items-method="associationSearch(query,componentId,pageNumber,useWhereClause)"
                                           items-clicked-method="itemSelected(callback)"
                                           item-value-key="{{getAssociationValueField(field)}}"
                                           item-view-value-key="{{getAssociationLabelField(field)}}"
+                                          has-use-where-clause="hasUseWhereClause(field)"
+                                          use-where-clause-label="{{useWhereClauseLabel(field)}}"
+                                          loading-icon="spiral"
                                           association-description />
 
                     </div>

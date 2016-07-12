@@ -24,7 +24,9 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 itemsRemovedMethod: '&',
                 componentId: '@',
                 modelToItemMethod: '&',
-                loadingIcon: '@'
+                loadingIcon: '@',
+                hasUseWhereClause: '=',
+                useWhereClauseLabel: '@'
             },
             link: function (scope, element, attrs, ngModel) {
 
@@ -38,6 +40,8 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 scope.selectedItemsLabel = !scope.selectedItemsLabel ? 'Selected items:' : scope.selectedItemsLabel;
                 scope.templateUrl = !scope.templateUrl ? '' : scope.templateUrl;
                 scope.loadingIcon = !scope.loadingIcon ? '' : scope.loadingIcon;
+                scope.useWhereClauseLabel = scope.useWhereClauseLabel || "Show Less";
+                scope.useWhereClause = true;
 
                 // loading flag if the items-method is a function
                 scope.showLoadingIcon = false;
@@ -72,13 +76,18 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 // the search container template
                 var searchContainerTemplate = [
                     '<div class="ion-autocomplete-container modal">',
-                    '<div class="bar bar-header item-input-inset">',
+                    '<div class="bar bar-header item-input-inset ion-autocomplete-topbar">',
                     '<label class="item-input-wrapper">',
                     '<i class="placeholder-icon fa fa-search"></i>',
                     '<input type="search" class="ion-autocomplete-search" ng-model="searchQuery" placeholder="{{placeholder}}"/>',
                     '</label>',
                     '<div class="ion-autocomplete-loading-icon" ng-if="showLoadingIcon && loadingIcon"><ion-spinner icon="{{loadingIcon}}"></ion-spinner></div>',
                     '<button class="ion-autocomplete-cancel button"><i class="fa fa-times-circle"></i>&ensp;{{cancelLabel}}</button>',
+                    '</div>',
+                    '<div class="bar bar-header item-input-inset ion-autocomplete-botbar" >',
+                    '<div>{{useWhereClauseLabel}}</div>',
+                    '<ion-toggle toggle-class="toggle-dark" ng-model="useWhereClause" ng-show="hasUseWhereClause"></ion-toggle>',
+                    '<button class="ion-autocomplete-clear button"><i class="fa fa-eraser"></i>&ensp;Clear</button>',
                     '</div>',
                     '<ion-content class="has-header has-header" has-bouncing="false">',
                     '<ion-list>',
@@ -89,10 +98,12 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     '<i class="fa fa-trash" style="cursor:pointer" ng-click="removeItem($index)"></i>',
                     '</ion-item>',
                     '<ion-item class="item-divider" ng-show="items.length > 0">{{selectItemsLabel}}</ion-item>',
+                    '<ion-item class="item-divider" ng-show="!items || items.length === 0">No results were found.</ion-item>',
                     '<ion-item collection-repeat="item in items" item-height="55" item-width="100%" type="item-text-wrap" ng-click="selectItem(item)" class="item item-text-wrap">',
                     '{{getItemValue(item, itemViewValueKey)}}',
                     '</ion-item>',
                     '</ion-list>',
+                    '<ion-infinite-scroll ng-if="moreItemsAvailable" on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>',
                     '</ion-content>',
                     '</div>'
                 ].join('');
@@ -172,14 +183,17 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         }
                     };
 
-                    function doQuery(query) {
+                    function doQuery(query, pageNumber) {
+                        pageNumber = pageNumber || 1;
+                        compiledTemplate.scope.lastPage = pageNumber;
+
                         // right away return if the query is undefined to not call the items method for nothing
                         if (query === undefined) {
                             return;
                         }
 
                         // if the search query is empty, clear the items
-                        if (query == '') {
+                        if (query == '' && pageNumber === 1) {
                             compiledTemplate.scope.items = [];
                         }
 
@@ -188,11 +202,15 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                             // show the loading icon
                             compiledTemplate.scope.showLoadingIcon = true;
 
-                            var queryObject = { query: query };
+                            const queryObject = {
+                                query: query,
+                                useWhereClause: compiledTemplate.scope.useWhereClause,
+                                pageNumber: pageNumber
+                            };
 
                             // if the component id is set, then add it to the query object
                             if (compiledTemplate.scope.componentId) {
-                                queryObject = { query: query, componentId: compiledTemplate.scope.componentId }
+                                queryObject["componentId"] = compiledTemplate.scope.componentId;
                             }
 
                             // convert the given function to a $q promise to support promises too
@@ -207,8 +225,14 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                                 }
 
                                 // set the items which are returned by the items method
-                                compiledTemplate.scope.items = compiledTemplate.scope.getItemValue(promiseData,
-                                    compiledTemplate.scope.itemsMethodValueKey);
+                                const newItems = compiledTemplate.scope.getItemValue(promiseData, compiledTemplate.scope.itemsMethodValueKey);
+                                if (pageNumber === 1) {
+                                    compiledTemplate.scope.items = newItems;
+                                } else {
+                                    compiledTemplate.scope.$broadcast('scroll.infiniteScrollComplete');
+                                    compiledTemplate.scope.items = compiledTemplate.scope.items.concat(newItems);
+                                }
+                                compiledTemplate.scope.moreItemsAvailable = newItems.length > 0;
 
                                 // force the collection repeat to redraw itself as there were issues when the first items were added
                                 $ionicScrollDelegate.resize();
@@ -216,14 +240,27 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                                 // hide the loading icon
                                 compiledTemplate.scope.showLoadingIcon = false;
                             }, function (error) {
+                                // hide the loading icon
+                                compiledTemplate.scope.showLoadingIcon = false;
+
                                 // reject the error because we do not handle the error here
                                 return $q.reject(error);
                             });
                         }
                     }
 
+                    compiledTemplate.scope.loadMore = function() {
+                        const query = compiledTemplate.scope.searchQuery === undefined ? "" : compiledTemplate.scope.searchQuery;
+                        doQuery(query, compiledTemplate.scope.lastPage + 1);
+                    }
+
                     // watcher on the search field model to update the list according to the input
                     compiledTemplate.scope.$watch('searchQuery', function (query) {
+                        doQuery(query);
+                    });
+
+                    compiledTemplate.scope.$watch('useWhereClause', function () {
+                        const query = compiledTemplate.scope.searchQuery === undefined ? "" : compiledTemplate.scope.searchQuery;
                         doQuery(query);
                     });
 
@@ -342,7 +379,15 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
 
                     // cancel handler for the cancel button which clears the search input field model and hides the
                     // search container and the ionic backdrop
-                    compiledTemplate.element.find('button').bind('click', function (event) {
+                    $(compiledTemplate.element).find(".ion-autocomplete-cancel").bind('click', function (event) {
+                        compiledTemplate.scope.searchQuery = undefined;
+                        hideSearchContainer();
+                    });
+
+                    $(compiledTemplate.element).find(".ion-autocomplete-clear").bind('click', function (event) {
+                        compiledTemplate.scope.items = [];
+                        ngModel.$setViewValue(compiledTemplate.scope.selectedItems);
+                        ngModel.$render();
                         compiledTemplate.scope.searchQuery = undefined;
                         hideSearchContainer();
                     });

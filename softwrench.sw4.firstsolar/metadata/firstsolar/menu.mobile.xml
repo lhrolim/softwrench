@@ -3,6 +3,7 @@
 
   <container title="Work Order" id="workorder" icon="fa-wrench">
     <application id="WO" title="Assigned to Me" ref="workorder" schema="list" icon="fa-table"/>
+    <application id="GWO" title="Assigned to Group" ref="groupworkorder" schema="list" icon="fa-table"/>
     <application id="OWO" title="Other" ref="otherworkorder" schema="list" icon="fa-table"/>
   </container>
 </Menu>
