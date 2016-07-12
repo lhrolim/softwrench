@@ -263,7 +263,7 @@
             <renderer type="autocompleteclient" />
             <event type="afterchange" service="labtransService" method="aftercraftchange"/>
           </association>
-          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="rate">
+          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="rate,premiumpay_.defaultrate">
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
             <renderer type="lookup"/>
           </association>
