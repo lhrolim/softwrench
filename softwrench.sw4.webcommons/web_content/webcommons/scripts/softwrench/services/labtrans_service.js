@@ -23,7 +23,7 @@
                     var regularHours = parentdatamap['regularhrs'];
                     var regularRate = event.fields['payrate'];
                     var premiumHours = parentdatamap['premiumpayhours'];
-                    var premiumRate = event.fields['ppcraftrate_.rate'];
+                    var premiumRate = event.fields['ppcraftrate_.rate'] || event.fields['ppcraftrate_.premiumpay_.defaultrate'];
                     event.fields['premiumpayrate'] = premiumRate;
                     event.fields['linecost'] = calcLineCost(regularHours, regularRate, premiumHours, premiumRate);
                 } else if (event.fields['#laborlist_'] && (event.fields['_iscreation'] || event.fields['mode'] == 'batch')) {
@@ -37,7 +37,7 @@
                         var regularHours = event.fields['regularhrs'];
                         var regularRate = currentLabor['payrate'];
                         var premiumHours = event.fields['premiumpayhours'];
-                        var premiumRate = currentLabor['ppcraftrate_.rate'];
+                        var premiumRate = currentLabor['ppcraftrate_.rate'] || currentLabor['ppcraftrate_.premiumpay_.defaultrate'];
                         currentLabor['premiumpayrate'] = premiumRate;
                         currentLabor['linecost'] = calcLineCost(regularHours, regularRate, premiumHours, premiumRate);
                     }
@@ -46,7 +46,7 @@
                     var regularHours = event.fields['regularhrs'];
                     var regularRate = event.fields['laborcraftrate_.rate'];
                     var premiumHours = event.fields['premiumpayhours'];
-                    var premiumRate = event.fields['ppcraftrate_.rate'];
+                    var premiumRate = event.fields['ppcraftrate_.rate'] || event.fields['ppcraftrate_.premiumpay_.defaultrate'];
                     event.fields['premiumpayrate'] = premiumRate;
                     event.fields['linecost'] = calcLineCost(regularHours, regularRate, premiumHours, premiumRate);
                 }
