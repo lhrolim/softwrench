@@ -79,6 +79,9 @@
 
             $scope.createEnabled = function() {
                 const schema = crudContextService.currentListSchema();
+                if (!schema) {
+                    return false;
+                }
                 const disabled = schema.properties["list.offline.create.disabled"];
                 return disabled !== "true" && disabled !== true && crudContextService.hasNewSchemaAvailable();
             };
