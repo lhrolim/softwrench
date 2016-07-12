@@ -280,6 +280,7 @@
           <field attribute="itdthirdpartyid" hidden="true"/>
           <field attribute="itdbridgeticketnum" label="Third Party SR#"/>
           <field attribute="description" label="Summary"/>
+          <field attribute="itdticketsystemname" label="Third Party Ticket System"/>
           <field attribute="itdstatus" label="Status"/>
           <field attribute="itdpriority" label="Priority"/>
           <field attribute="itdcreatedate" label="Created Date"/>
