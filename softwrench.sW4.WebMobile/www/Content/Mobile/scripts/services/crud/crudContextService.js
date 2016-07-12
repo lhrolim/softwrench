@@ -223,10 +223,10 @@
                 }
 
             },
-            validateDetail: function (crudForm, displayables) {
+            validateDetail: function (crudForm, schemaToValidate, displayables) {
                 const crudContext = crudContextHolderService.getCrudContext();
                 crudForm = crudForm || {};
-                const detailSchema = this.currentDetailSchema();
+                const detailSchema = schemaToValidate || this.currentDetailSchema();
                 const datamap = crudContext.currentDetailItem.datamap;
                 const toValidateDisplayables = displayables || detailSchema.displayables;
                 return validationService.validate(detailSchema, toValidateDisplayables, datamap, crudForm.$error);
@@ -241,12 +241,19 @@
                 }
 
                 const datamap = crudContext.currentDetailItem.datamap;
-                if (crudContext.composition && crudContext.composition.currentDetailItem) {
-                    const compositionItem = crudContext.composition.currentDetailItem;
-                    return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, crudContext.composition.currentTab).then(() => {
+                const composition = crudContext.composition;
+                if (composition && composition.currentDetailItem) {
+                    const compositionItem = composition.currentDetailItem;
+                    const validationErrors = validationService.validate(composition.currentDetailSchema, composition.currentDetailSchema.displayables, compositionItem, crudForm.$error);
+                    if (validationErrors.length > 0) {
+                        //interrupting here, can´t be done inside service
+                        return $q.reject(validationErrors);
+                    }
+
+                    return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, composition.currentTab).then(() => {
                         crudContext.originalDetailItemDatamap = datamap;
-                        crudContext.composition.originalDetailItemDatamap = crudContext.composition.currentDetailItem;
-                        this.loadTab(crudContext.composition.currentTab);
+                        composition.originalDetailItemDatamap = composition.currentDetailItem;
+                        this.loadTab(composition.currentTab);
                     });
                 }
 

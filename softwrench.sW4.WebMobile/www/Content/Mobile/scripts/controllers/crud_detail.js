@@ -171,7 +171,7 @@
         }
 
         $scope.wizardNavigateForward = function () {
-            const validationErrors = crudContextService.validateDetail({}, $scope.displayables);
+            const validationErrors = crudContextService.validateDetail({},null, $scope.displayables);
             if (validationErrors.length !== 0) {
                 showValidationErrors(validationErrors);
                 return;
