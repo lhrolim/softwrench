@@ -95,7 +95,11 @@
 
 .requiredfieldmark {
     font-family: Arial Round;
-    color: red;
+    color: transparent;
+
+    &.is-required {
+        color: $cts_red;
+    }
 }
 
 input.ng-dirty.ng-invalid, .not-found:focus {

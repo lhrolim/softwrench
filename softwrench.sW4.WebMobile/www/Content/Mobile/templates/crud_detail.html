@@ -15,7 +15,6 @@
             <button class="button" ng-show="shouldShowBack()" ng-click="navigateBack()"><i class="fa fa-arrow-left"></i>&ensp;Back</button>
             <button class="button" ng-show="hasDirtyChanges() && !shouldShowWizardBack()" ng-click="cancelChanges()"><i class="fa fa-times-circle"></i>&ensp;Cancel</button>
             <button class="button" ng-show="shouldShowWizardBack()" ng-click="wizardNavigateBack()"><i class="fa fa-arrow-left"></i>&ensp;Back</button>
-            <button class="button" ng-click="addCompositionItem()" ng-if="!isOnMainTab()" ng-show="!hasDirtyChanges() && addCompositionAllowed()"><i class="fa fa-plus"></i>&ensp;Add</button>
         </div>
 
         <!-- empty title to position the buttons correctly -->
@@ -47,5 +46,9 @@
         <ion-nav-view name="body" class="list" style="height: initial"></ion-nav-view>
 
     </ion-content>
+
+    <button class="button button-float" ng-click="addCompositionItem()" ng-if="!isOnMainTab()" ng-show="!hasDirtyChanges() && addCompositionAllowed()">
+        <i class="fa fa-plus"></i>
+    </button>
 
 </ion-view>

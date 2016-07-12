@@ -6,8 +6,7 @@
         <div ng-repeat="i in [0,1]" ng-if="(fieldIndex + i) < displayables.length" class="col-50" ng-init="field = displayables[fieldIndex+i]" ng-show="!isFieldHidden(field)">
             
             <label class="item item-input">
-                <span ng-show="isFieldRequired(field.requiredExpression)" class="requiredfieldmark">* </span>
-                <span class="input-label">{{field.label}}</span>
+                <span class="input-label"><span ng-class="{'is-required' : isFieldRequired(field.requiredExpression)}" class="requiredfieldmark">* </span>{{field.label}}</span>
                 <ng-switch on="field.type" class="full-width">
                     <div ng-switch-when="ApplicationAssociationDefinition">
                         <input ng-if="isReadOnly(field)" type="text" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"/>
