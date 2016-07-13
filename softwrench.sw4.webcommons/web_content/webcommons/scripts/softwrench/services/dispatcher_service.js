@@ -46,6 +46,8 @@
                     args.push(parameters[i]);
                 }
                 return fn.apply(this, args);
+            } else {
+                return fn.apply(this);
             }
         },
 

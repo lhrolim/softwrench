@@ -41,6 +41,12 @@
 
         function updateLocation(event) {
             const datamap = event.datamap;
+
+            const asset = datamap["assetnum"];
+            if (!asset || (angular.isArray(asset) && asset.length === 0)) {
+                return;
+            }
+
             const location = datamap["offlineasset_.location"];
             datamap["location"] = `${location}$ignorewatch`;
         }
@@ -87,6 +93,33 @@
             return crudContextService.saveChanges();
         }
 
+        //#region WhereClauses
+        // textindex04 = location of the wo
+        const locationsOfAssignedWos = "select textindex04 from DataEntry where application = 'workorder' and textindex04 is not null";
+
+        // textindex01 = location of locancestor
+        // textindex02 = ancestor of locancestor
+        const childLocationOfAssignedWos = `select textindex01 from associationdata where application = 'locancestor' and textindex02 in (${locationsOfAssignedWos})`;
+        
+        // textindex01 = location of location
+        const preferredLocations = `textindex01 in (${locationsOfAssignedWos}) or textindex01 in (${childLocationOfAssignedWos})`;
+
+        function getLocationsWhereClause() {
+            return preferredLocations;
+        }
+
+        // textindex01 = location of locancestor
+        // textindex02 = ancestor of locancestor
+        const childLocationsOfGivenLocation = "select textindex01 from associationdata where application = 'locancestor' and textindex02 = @location";
+
+        // textindex01 = location of asset
+        const assetsWithLocationEqualOrDescendant = `textindex01 = @location or textindex01 in (${childLocationsOfGivenLocation})`;
+
+        function getAssetWhereClause() {
+            return assetsWithLocationEqualOrDescendant;
+        }
+        //#endregion
+
         //#endregion
 
         //#region Service Instance
@@ -98,7 +131,9 @@
             updateLocation,
             clearAsset,
             onNewDetailLoad,
-            assignWorkOrder
+            assignWorkOrder,
+            getLocationsWhereClause,
+            getAssetWhereClause
         };
         return service;
         //#endregion

@@ -61,11 +61,11 @@
                 scope.name = "crud_input_fields";
             },
 
-            controller: ["$scope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService",
-                function ($scope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService) {
+            controller: ["$scope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService", "crudContextHolderService", 
+                function ($scope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService, crudContextHolderService) {
 
-                    $scope.associationSearch = function (query, componentId) {
-                        return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query);
+                    $scope.associationSearch = function (query, componentId, pageNumber, useWhereClause) {
+                        return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query, null, pageNumber, useWhereClause);
                     };
 
                     $scope.itemSelected = function (callback) {
@@ -98,6 +98,22 @@
                         }
                         return requiredExpression;
                     };
+
+                    $scope.hasUseWhereClause = function (field) {
+                        const params = field.rendererParameters;
+                        if (!params) {
+                            return false;
+                        }
+                        return "true" === params["hasUseWhereClause"];
+                    }
+
+                    $scope.useWhereClauseLabel = function (field) {
+                        const params = field.rendererParameters;
+                        if (!params) {
+                            return null;
+                        }
+                        return params["useWhereClauseLabel"];
+                    }
 
                     class ChangeEventDispatcher {
                         constructor(fields, dispatcher, timeout, logger) {
