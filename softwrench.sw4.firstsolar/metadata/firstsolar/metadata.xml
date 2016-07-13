@@ -59,16 +59,28 @@
         
       </relationships>
     </entity>
-
-    <entity name="matusetrans" idAttribute="matusetransid" >
+    
+    <!-- only load items that have inventory entries -->
+    <entity name="offlineitem" parententity="item" idAttribute="itemnum" 
+            whereclause="((select count(invx.inventoryid) from inventory invx where invx.itemnum = !@itemnum and invx.siteid=@siteid) > 0)">
+    </entity>
+    
+    <entity name="matusetrans" idAttribute="matusetransid">
       <relationships>
         <relationship to="inventory" qualifier="offlineinventory">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
           <relationshipAttribute to="status" literal="ACTIVE"/>
         </relationship>
+        <relationship to="offlineitem">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+          <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>
+        </relationship>
       </relationships>
-      
     </entity>
+    
 
     <entity name="locancestor" idAttribute="locancestorid">
       <attributes>
@@ -666,28 +678,48 @@
         </list>
 
         <detail platform="mobile" title="Work Order">
+          <!-- #region: detailhiddensoffline -->
           <field attribute="workorderid" hidden="true"/>
-          <field attribute="wonum" label="Number" hidden="true" />
-          <field attribute="orgid" hidden="true" requiredexpression="true" />
-          <field attribute="siteid" hidden="true" requiredexpression="true" />
-          
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="woclass" hidden="true"/>
+          <field attribute="hasfollowupwork" hidden="true"/>
+          <field attribute="origrecordid" hidden="true"/>
+          <field attribute="origrecordclass" hidden="true"/>
+          <field attribute="wonum" hidden="true" />
+          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
+          <field attribute="changeby" label="Changed By" hidden="true"/>
+          <!-- #endregion -->
+          <!-- #region: visible fields -->
           <field attribute="owner" readonly="true" showexpression="!!@owner" label="Owner"/>
           <field attribute="description" readonly="true" label="Description"/>
           <field attribute="status" readonly="true" label="Status" />
           <field attribute="location" readonly="true" label="Location" />
           <field attribute="assetnum" readonly="true" label="Asset" />
           <field attribute="classstructureid" readonly="true" label="Origination" />
+          <field attribute="worktype" readonly="true" label="Work Type" />
           <field attribute="ld_.ldtext" readonly="true" label="Details">
             <renderer type="richtext"/>
           </field>
-
+          <!-- #endregion -->
+          <!-- #region: hidden fields from FS.WO.detail -->
+          <field attribute="failurecode" readonly="true" hidden="true" />
+          <field attribute="WOLO10" readonly="true" hidden="true" />
+          <field attribute="EPCR_NUM" readonly="true" hidden="true" />
+          <field attribute="jobplan_.description" readonly="true" hidden="true"/>
+          <field attribute="problemcode" readonly="true" hidden="true" />
+          <field attribute="fr1code" readonly="true" hidden="true" />
+          <field attribute="fr2code" readonly="true" hidden="true" />
+          <!-- #endregion -->
+          <!-- #region: compositions -->
           <composition relationship="matusetrans" label="Materials" >
-            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSED' &amp;&amp; !!@owner" />
+            <collectionproperties allowupdate="false" allowcreation="false" />
           </composition>
           <composition relationship="labtrans" label="Labor">
-            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSED' &amp;&amp; !!@owner" />
+            <collectionproperties allowupdate="false" allowcreation="false" />
           </composition>
-          
+          <!-- #endregion -->
+
           <commandbars>
             <commandgroup position="mobile.fab" platform="mobile">
               <command id="assignworkorder" service="fsWorkorderOfflineService" method="assignWorkOrder" 
@@ -1044,7 +1076,7 @@
             <option label="MATERIAL" value="MATERIAL"/>
           </optionfield>
 
-          <association target="itemnum" labelfield="item_.description" extraprojectionvalues="description" 
+          <association target="itemnum" labelfield="offlineitem_.description" extraprojectionvalues="description" 
                        showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'" 
                        label="Item" >
             <renderer type="lookup"/>
@@ -1070,7 +1102,7 @@
       </schemas>
     </application>
 
-    <application name="item" entity="item" title="Item">
+    <application name="offlineitem" entity="offlineitem" title="Item">
       <schemas>
         <list platform="mobile">
           <field attribute="itemnum" label="Item" />

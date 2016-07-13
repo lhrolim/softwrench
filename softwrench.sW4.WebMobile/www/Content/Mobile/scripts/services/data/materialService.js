@@ -41,16 +41,32 @@
             const schema = event.schema;
             const datamap = event.datamap;
             const value = event.newValue;
+
+            if (!value) {
+                cleanItemData(datamap);
+                return;
+            }
+
             datamap["#description"] = datamap["item_.description"];
-
-            if (!value) return;
-
             return dao.findByQuery("AssociationData", `application='offlineinventory' and datamap like '%"itemnum":"${value}"%'`)
                 .then(r => {
                     if (!r || r.length <= 0) {
-                        return swAlertPopup.show({ title: "Item not available", template: "This item is not available in the inventory.<br>Please select a different one" }, 3000);
+                        // should not happen: server whereclauses should only bring items that have inventory entries associated with it
+                        return swAlertPopup.show({
+                            title: "Item not available",
+                            template: "This item is not available in the inventory.<br>Please select a different one"
+                        }, 3000)
+                        .then(() => {
+                            cleanItemData(datamap);
+                            datamap["itemnum"] = "null$ignorewatch";
+                        });
                     }
-                    const options = r.map(a => new associationConstants.Option(a.datamap["location"]));
+                    const options = _.chain(r)
+                        .map(a => a.datamap["location"])
+                        .uniq()
+                        .map(l => new associationConstants.Option(l))
+                        .value();
+
                     setOptionList(schema, datamap, "storeloc", options);
                 });
         }

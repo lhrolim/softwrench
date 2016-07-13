@@ -257,13 +257,14 @@
                     });
                 }
 
-                return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem).then(() => {
+                return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem).then(saved => {
                     crudContext.originalDetailItemDatamap = angular.copy(datamap);
                     contextService.insertIntoContext("crudcontext", crudContext);
                     if (crudContext.newItem) {
                         crudContext.newItem = false;
-                        this.refreshGrid();
+                        return this.refreshGrid().then(() => saved);
                     }
+                    return saved;
                 });
             },
 
@@ -279,8 +280,8 @@
                     if (skipPostFilter) {
                         return;
                     }
-                    routeService.go("main.crudlist");
                     contextService.insertIntoContext("crudcontext", crudContext);
+                    return routeService.go("main.crudlist");
                 });
             },
 
@@ -339,7 +340,7 @@
                     //if this property is true, then the detail schema will also be used as the newschema
                     crudContext.currentNewDetailSchema = crudContext.currentDetailSchema;
                 }
-                this.refreshGrid();
+                return this.refreshGrid();
             },
 
             hasNewSchemaAvailable: function () {

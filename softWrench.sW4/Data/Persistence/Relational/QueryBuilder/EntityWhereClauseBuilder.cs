@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
@@ -17,6 +18,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
             var queryReplacingMarker = EntityUtil.GetQueryReplacingMarker(entityMetadata.Schema.WhereClause, entityName);
             if (queryReplacingMarker != null && queryReplacingMarker.StartsWith("@")) {
                 queryReplacingMarker = GetServiceQuery(queryReplacingMarker);
+            } else {
+                var user = SecurityFacade.CurrentUser();
+                queryReplacingMarker = DefaultValuesBuilder.ConvertAllValues(queryReplacingMarker, user);
             }
             return queryReplacingMarker;
         }

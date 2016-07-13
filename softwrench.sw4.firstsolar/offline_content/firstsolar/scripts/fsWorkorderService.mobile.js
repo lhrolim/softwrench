@@ -89,8 +89,16 @@
          */
         function assignWorkOrder(schema, datamap) {
             const user = securityService.currentFullUser();
+            const item = crudContextService.currentDetailItem();
             datamap["owner"] = user["PersonId"];
-            return crudContextService.saveChanges();
+            item["application"] = "workorder";
+            return crudContextService.saveChanges()
+                .then(saved =>
+                    // TODO: set list model (in the crud context) and list view (in the history stack) manually so screen transition is not so agravating
+                    crudContextService.loadApplicationGrid("workorder", "WO - Assigned", "list")
+                        // $timeout required so list controller has time to get and dispose it's viewmodel
+                        .then(() => $timeout(() => crudContextService.loadDetail(saved), 0, false)) 
+                );
         }
 
         //#region WhereClauses

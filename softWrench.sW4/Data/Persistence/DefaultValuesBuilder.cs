@@ -137,19 +137,11 @@ namespace softWrench.sW4.Data.Persistence {
             key = key.ToLower();
 
             if (key.Equals("@orgid")) {
-                if (ApplicationConfiguration.DefaultOrgId != null) {
-                    return ApplicationConfiguration.DefaultOrgId;
-                }
-                //falling back to current logged user
-                key = "@user.orgid";
+                return user.OrgId ?? ApplicationConfiguration.DefaultOrgId;
             }
 
             if (key.Equals("@siteid")) {
-                if (ApplicationConfiguration.DefaultSiteId != null) {
-                    return ApplicationConfiguration.DefaultSiteId;
-                }
-                //falling back to current logged user
-                key = "@user.siteid";
+                return user.SiteId ?? ApplicationConfiguration.DefaultSiteId;
             }
 
             if (key.Equals("@username")) {
