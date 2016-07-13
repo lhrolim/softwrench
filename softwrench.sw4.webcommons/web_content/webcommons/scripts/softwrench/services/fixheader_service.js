@@ -55,7 +55,7 @@ angular.module('sw_layout')
                 $('#crudbodyform:not([data-modal="true"])').css('margin-top', offsetMargin);
 
                 var dashToolbar = $('.toolbar-primary:not(.affix-pagination)');
-                $('.dash-header').css('margin-top', dashToolbar.height() + theaderHeight - 1);
+                $('.dash-header').css('margin-top', dashToolbar.height());
             } else {
                 $('#crudbodyform:not([data-modal="true"])').css('margin-top', 'auto');
             }
