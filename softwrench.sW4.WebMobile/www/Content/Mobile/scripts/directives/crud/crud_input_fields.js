@@ -61,8 +61,8 @@
                 scope.name = "crud_input_fields";
             },
 
-            controller: ["$scope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService", "crudContextHolderService", 
-                function ($scope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService, crudContextHolderService) {
+            controller: ["$scope", "$rootScope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService",
+                function ($scope, $rootScope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService) {
 
                     $scope.associationSearch = function (query, componentId, pageNumber, useWhereClause) {
                         return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query, null, pageNumber, useWhereClause);
@@ -177,7 +177,7 @@
                         }
                     }
 
-                    function init() {
+                    function watchFields() {
                         // watching for changes to trigger afterchange event handlers
                         const watchableFields = $scope.allDisplayables.filter(f => f.events.hasOwnProperty("afterchange") && !!f.events["afterchange"]);
                         if (!watchableFields || watchableFields.length <= 0) return;
@@ -187,14 +187,24 @@
 
                         logger.debug(`watching ${dispatcher.expressions}`);
 
+                        // flag that decides if change events should be dispatched
+                        $rootScope.areChangeEventsEnabled = true;
+
                         dispatcher.expressions.forEach(expression => {
                             $scope.$watch(expression, (newValue, oldValue) => {
                                 if (newValue === oldValue) {
                                     return;
                                 }
-                                dispatcher.dispatchEventFor(expression, $scope.schema, $scope.datamap, newValue);
+
+                                if ($rootScope.areChangeEventsEnabled) {
+                                    dispatcher.dispatchEventFor(expression, $scope.schema, $scope.datamap, newValue);
+                                }
                             });
                         });
+                    }
+
+                    function init() {
+                        watchFields();
                     }
 
                     init();

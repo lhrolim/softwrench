@@ -57,7 +57,7 @@
             }
 
             const compositionSchema = crudContextHolderService.getCompositionDetailSchema();
-            const compositionTitle = compositionSchema["title"];
+            const compositionTitle = compositionSchema["title"] || compositionSchema["applicationTitle"];
             console.log(crudContextService);
 
             $ionicPopup.confirm({
@@ -81,6 +81,8 @@
                 const compositionList = $scope.list();
                 const index = compositionList.indexOf(item);
                 compositionList.splice(index, 1);
+
+                crudContextService.saveChanges(null, false);
             });
         }
 

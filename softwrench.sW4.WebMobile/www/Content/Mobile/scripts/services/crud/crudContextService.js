@@ -231,7 +231,7 @@
                 const toValidateDisplayables = displayables || detailSchema.displayables;
                 return validationService.validate(detailSchema, toValidateDisplayables, datamap, crudForm.$error);
             },
-            saveChanges: function (crudForm) {
+            saveChanges: function (crudForm, showConfirmationMessage) {
                 const crudContext = crudContextHolderService.getCrudContext();
                 crudForm = crudForm || {};
                 const validationErrors = this.validateDetail(crudForm);
@@ -251,13 +251,13 @@
                     }
 
                     return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, composition.currentTab).then(() => {
-                        crudContext.originalDetailItemDatamap = datamap;
+                        crudContext.originalDetailItemDatamap = angular.copy(datamap);
                         composition.originalDetailItemDatamap = composition.currentDetailItem;
                         this.loadTab(composition.currentTab);
                     });
                 }
 
-                return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem).then(saved => {
+                return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem, showConfirmationMessage).then(saved => {
                     crudContext.originalDetailItemDatamap = angular.copy(datamap);
                     contextService.insertIntoContext("crudcontext", crudContext);
                     if (crudContext.newItem) {

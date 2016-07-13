@@ -2,9 +2,9 @@
 (function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', 'schemaService', "crudContextHolderService", "wizardService", 
+    softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", 
     'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService",
-    function (log, $scope, $rootScope, schemaService, crudContextHolderService, wizardService,
+    function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService,
     crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService) {
 
         function init() {
@@ -59,8 +59,12 @@
             });
             confirmPopup.then(function (res) {
                 if (res) {
+                    $rootScope.areChangeEventsEnabled = false;
                     crudContextService.cancelChanges();
                     $scope.datamap = crudContextService.currentDetailItemDataMap();
+
+                    // to force change the flag after the events are trigged
+                    $timeout(() => $rootScope.areChangeEventsEnabled = true, 0, false);
                 }
             });
         }
