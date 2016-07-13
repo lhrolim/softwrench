@@ -589,6 +589,10 @@
         <relationship to="asset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true" />
         </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus" cacheable="true">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="SOLUTIONSTATUS" quoteLiteral="true" />
+        </relationship>
       </relationships>
     </entity>
 
@@ -652,7 +656,7 @@
           <relationshipAttribute from="servcomp" to="value"/>
           <relationshipAttribute to="domainid" literal="SERVICECOMPANY" quoteLiteral="true" primary="true"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="timezones" ignoreprimary="true">
+        <relationship to="synonymdomain" qualifier="timezones" ignoreprimary="true" cacheable="true">
           <relationshipAttribute from="wellsitetimezone" to="value"/>
           <relationshipAttribute to="domainid" literal="TIMEZONE" quoteLiteral="true" primary="true"/>
         </relationship>
@@ -1647,6 +1651,7 @@
     <application name="solution" title="solution" entity="solution">
        <filters>
         <booleanfilter attribute="selfservaccess"/>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>     
       </filters>
       
       <properties>
@@ -1805,6 +1810,10 @@
 
       
     <application name="projectrequest" title="Project Request" entity="projectrequest">
+      <filters>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>       
+      </filters>
+
       <schemas>
         <schema id="list" stereotype="list" title="Project Request Grid">
           <field attribute="ticketid" label="Project Request"/>
