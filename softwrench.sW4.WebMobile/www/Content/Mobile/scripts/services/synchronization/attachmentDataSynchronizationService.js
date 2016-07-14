@@ -132,7 +132,7 @@
 
 
 
-            const ids = dataEntries.map(entry => entry.remoteId).join("','");
+            const ids = dataEntries.map(entry => entry.id).join("','");
 
 
             const queryObj = { query: entities.Attachment.ByApplicationAndIds, args: [applicationName, ids] };
@@ -142,10 +142,10 @@
                     return $q.when(dataEntries);
                 }
                 attachments.forEach(attachment => {
-                    var dataEntry = dataEntries.find(f => f.remoteId === attachment.parentId);
+                    var dataEntry = dataEntries.find(f => f.id === attachment.parentId);
                     var attachmentArray = dataEntry.datamap["attachment_"];
                     if (attachmentArray == null) {
-                        log.trace("skipping entry {0} since it hold no attachment".format(dataEntry.remoteId));
+                        log.trace("skipping entry {0} since it hold no attachment".format(dataEntry.id));
                         return;
                     }
 //                    #offlinehash

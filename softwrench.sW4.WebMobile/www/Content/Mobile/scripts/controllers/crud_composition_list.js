@@ -1,8 +1,8 @@
-﻿(function (softwrench) {
+﻿(function (softwrench, _) {
     "use strict";
 
-    softwrench.controller('CrudCompositionListController', ["$log", "$scope", "$rootScope", "$ionicPopup", "crudContextService", "fieldService", "formatService", "crudContextHolderService",
-    function ($log, $scope, $rootScope, $ionicPopup, crudContextService, fieldService, formatService, crudContextHolderService) {
+    softwrench.controller('CrudCompositionListController', ["$log", "$scope", "$rootScope", "$ionicPopup", "crudContextService", "fieldService", "formatService", "crudContextHolderService", "offlineAttachmentService",
+    function ($log, $scope, $rootScope, $ionicPopup, crudContextService, fieldService, formatService, crudContextHolderService, offlineAttachmentService) {
 
         $scope.empty = function () {
             var compositionList = crudContextService.compositionList();
@@ -36,17 +36,11 @@
             if (!compositions) {
                 return;
             }
-            var indexOnArray;
-            angular.forEach(compositions, (composition, index) => {
-                if (composition["#localswdbid"] === localId) {
-                    indexOnArray = index;
-                }
-            });
 
-            // ReSharper disable once ConditionIsAlwaysConst
-            // ReSharper disable once HeuristicallyUnreachableCode
-            if (typeof indexOnArray !== "undefined") {
-                compositions.splice(indexOnArray, 1);
+            const index = _.findIndex(compositions, composition => composition["#localswdbid"] === localId);
+            
+            if (index >= 0) {
+                compositions.splice(index, 1);
             }
         }
 
@@ -82,7 +76,11 @@
                 const index = compositionList.indexOf(item);
                 compositionList.splice(index, 1);
 
-                crudContextService.saveChanges(null, false);
+                const savePromise = crudContextService.saveChanges(null, false);
+
+                return compositionSchema.applicationName === "attachment" 
+                    ? savePromise.then(saved => offlineAttachmentService.deleteRelatedAttachment(item).then(() => saved))
+                    : savePromise;
             });
         }
 
@@ -92,7 +90,7 @@
 
     }]);
 
-})(softwrench);
+})(softwrench, _);
 
 
 

@@ -197,7 +197,7 @@
         function saveAttachment(schema, datamap) {
             const attachment = {
                 application: crudContextHolderService.currentApplicationName(),
-                parentId: crudContextHolderService.currentDetailItem().remoteId,
+                parentId: crudContextHolderService.currentDetailItem().id,
                 content: datamap[config.newAttachmentFieldName],
                 mimetype: datamap["#mimetype"],
                 compressed: false,
@@ -217,7 +217,7 @@
         function saveAttachmentAsFile(schema, datamap) {
             const attachment = {
                 application: crudContextHolderService.currentApplicationName(),
-                parentId: crudContextHolderService.currentDetailItem().remoteId,
+                parentId: crudContextHolderService.currentDetailItem().id,
                 path: datamap[config.newAttachmentFieldName]
             };
             return createAttachmentEntity(attachment);
@@ -318,6 +318,17 @@
 
         }
 
+        /**
+         * Deletes the entities.Attachment related to the composition datamap.
+         * 
+         * @param {Datamap} composition 
+         * @returns {Promise<Array<Void>>} 
+         */
+        function deleteRelatedAttachment(composition) {
+            const attachmentHash = composition["#offlinehash"];
+            return swdbDAO.executeStatement(entities.Attachment.DeleteById, [attachmentHash]);
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -325,6 +336,7 @@
             // general
             getAttachment,
             loadRealAttachment,
+            deleteRelatedAttachment,
             // file
             attachCameraPictureAsFile,
             saveAttachmentAsFile,
