@@ -1,13 +1,13 @@
 ﻿(function (app) {
     "use strict";
 
-app.directive("fileread", function ($log, alertService, attachmentService) {
-    "ngInject";
+    app.directive("fileread", ["$log", "alertService", "attachmentService", function ($log, alertService, attachmentService) {
 
     return {
         scope: {
             fileread: "=",
-            path: "="
+            path: "=",
+            field: "=fileReadField"
         },
 
         link: function (scope, element, attrs) {
@@ -20,6 +20,7 @@ app.directive("fileread", function ($log, alertService, attachmentService) {
 
             var readFiles = function (changeEvent, fileRead, reader, current) {
                 var fileNew = changeEvent.target.files[current]; // get the first from queue and store in file
+                
                 current++;
                 if (current == changeEvent.target.files.length + 1) {
                     scope.fileread = fileRead;
@@ -28,6 +29,9 @@ app.directive("fileread", function ($log, alertService, attachmentService) {
                 reader.onloadend = function (loadEvent) { // when finished reading file, call recursive readFiles function
                     scope.$apply(function () {
                         fileRead.push(loadEvent.target.result);
+                        if (changeEvent.target.files.length === 1 && !!scope.field) {
+                            scope.field.rendererParameters["showImagePreview"] = !!fileNew.type && fileNew.type.startsWith("image");
+                        }
                         readFiles(changeEvent, fileRead, reader, current);
                     });
                 };
@@ -82,6 +86,6 @@ app.directive("fileread", function ($log, alertService, attachmentService) {
             });;
         }
     };
-});
+}]);
 
 })(app);

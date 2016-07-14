@@ -648,7 +648,10 @@
         function onAttachmentFileDropped(event, file) {
             // remove preview element if a new file is added
             getFileUploadFields().forEach(function (field) {
-                field.rendererParameters["showImagePreview"] = false;
+                if (file.field !== field.attribute) {
+                    // this field was handled by the event emitter: no need to clean it
+                    field.rendererParameters["showImagePreview"] = false;
+                }
                 $scope.$emit("sw.attachment.file.changed", file.name);
             });
 

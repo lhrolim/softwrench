@@ -81,7 +81,8 @@
                             file: scope.file,
                             type: type,
                             name: name,
-                            size: size
+                            size: size,
+                            field: scope.field.attribute
                         });
                     };
                     file = getDataTransfer(event).files[0];

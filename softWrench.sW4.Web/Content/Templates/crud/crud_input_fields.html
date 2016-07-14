@@ -349,12 +349,12 @@
 
                             <input ng-if="!fieldMetadata.rendererParameters['multiple'] || fieldMetadata.rendererParameters['multiple'] === false || fieldMetadata.rendererParameters['multiple'] === 'false'"
                                    id="uploadInput" type="file"
-                                   fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"
+                                   fileread="datamap[fieldMetadata.attribute]" data-file-read-field="fieldMetadata" path="datamap.newattachment_path" 
                                    data-accepted-extensions="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }}" />
 
                             <input ng-if="!!fieldMetadata.rendererParameters['multiple'] && (fieldMetadata.rendererParameters['multiple'] === true || fieldMetadata.rendererParameters['multiple'] === 'true')"
                                    id="uploadInput" type="file"
-                                   fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"
+                                   fileread="datamap[fieldMetadata.attribute]" data-file-read-field="fieldMetadata" path="datamap.newattachment_path"
                                    data-accepted-extensions="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }}"
                                    multiple="multiple" />
 
