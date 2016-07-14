@@ -1128,7 +1128,7 @@
       </schemas>
     </application>
     
-    <application name="classstructure" title="ClassStructure" entity="classstructure">
+    <application name="classstructure" title="Class Structure" entity="classstructure">
       <schemas>
         <list>
           <field attribute="classstructureid" hidden="true"/>
@@ -1148,7 +1148,7 @@
       </schemas>
     </application>
 
-    <application name="problemlist" title="ClassStructure" entity="problemlist">
+    <application name="problemlist" title="Problem List" entity="problemlist">
       <schemas>
         <list>
           <field attribute="failurecode" hidden="true"/>
@@ -1159,7 +1159,7 @@
       </schemas>
     </application>
 
-    <application name="causelist" title="ClassStructure" entity="causelist">
+    <application name="causelist" title="Cause List" entity="causelist">
       <schemas>
         <list>
           <field attribute="failurecode" hidden="true"/>
@@ -1171,7 +1171,7 @@
       </schemas>
     </application>
 
-    <application name="remedylist" title="ClassStructure" entity="remedylist">
+    <application name="remedylist" title="Remedy List" entity="remedylist">
       <schemas>
         <list>
           <field attribute="failurecode" hidden="true"/>

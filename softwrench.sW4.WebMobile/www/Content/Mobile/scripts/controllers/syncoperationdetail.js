@@ -38,7 +38,7 @@
             var loadCurrentApplicationState = function () {
                 return applicationStateService.currentState().then(function (state) {
                     $scope.data.currentApplicationState = state;
-                    angular.forEach(state, appState => {
+                    angular.forEach(state.applications, appState => {
                         const appMetadata = metadataModelService.getApplicationByName(appState.application);
                         const gridSchema = offlineSchemaService.locateSchema(appMetadata, "list");
                         appState.gridTitle = gridSchema ? crudContextService.gridTitle(gridSchema) : appState.application;
