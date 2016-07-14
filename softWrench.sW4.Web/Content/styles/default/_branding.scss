@@ -32,6 +32,12 @@ $asset_path: "../../Images";
 
         /*.branding {
             background: url(#{$asset_path}/branding.png) no-repeat top left;
+
+            @media all and (min-width: 330px) {
+                .logo img {
+                    height: 90px;
+                }
+            }
         }*/
     }
 
@@ -59,12 +65,6 @@ $asset_path: "../../Images";
         }
     }
 }
-
-/*@media all and (min-width: 330px) {
-    .container header .branding .logo img {
-       height: 60px;
-    }
-}*/
 
 @media only screen and (min-width: 480px) and (max-width: 767px) {
     .page-signin {
