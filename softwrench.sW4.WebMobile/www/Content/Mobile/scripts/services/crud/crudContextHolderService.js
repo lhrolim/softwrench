@@ -276,17 +276,8 @@
         // clears the search and sort values
         function clearGridSearchValues() {
             angular.forEach(_crudContext.gridSearch.searchFields, (searchable, attribute) => {
-                if (!_crudContext.gridSearch.searchFields.hasOwnProperty(attribute)) {
-                    return;
-                }
-
-                // clear the values
-                _crudContext.gridSearch.searchValues[attribute] = {};
-
-                // set option checks to false
-                const searchField = _crudContext.gridSearch.searchFields[attribute];
-                if (searchField.options) {
-                    angular.forEach(searchField.options, option => option.checked = false);
+                if (_crudContext.gridSearch.searchFields.hasOwnProperty(attribute)) {
+                    _crudContext.gridSearch.searchValues[attribute] = {};
                 }
             });
             _crudContext.gridSearch.sort = _crudContext.gridSearch.sortables[defaultSortValue];
