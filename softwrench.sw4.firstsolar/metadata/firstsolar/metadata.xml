@@ -20,8 +20,8 @@
 
     <entity name="workorder" idAttribute="workorderid">
       <attributes>
-        <attribute name="schedstartnotime" query="DATEADD(dd, DATEDIFF(dd, 0, workorder.schedstart), 0)" type="date"/>
-        <attribute name="schedfinishnotime" query="DATEADD(dd, DATEDIFF(dd, 0, workorder.schedfinish), 0)" type="date"/>
+        <attribute name="schedstartnotime" query="(select DATEADD(dd, DATEDIFF(dd, 0, scheduledate), 0) from assignment where wonum = !@wonum and siteid = !@siteid and orgid = !@orgid and laborcode = @personid)" type="date"/>
+        <attribute name="schedassigneddate" query="(select scheduledate from assignment where wonum = !@wonum and siteid = !@siteid and orgid = !@orgid and laborcode = @personid)" type="date"/>
       </attributes>
       <relationships>
         
@@ -489,10 +489,8 @@
 
           <field attribute="wonum" label="Workorder Number" qualifier="title"/>
           <field attribute="wopriority" label="Priority" qualifier="icon"/>
-          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
+          <field attribute="schedassigneddate" label="Scheduled Start Date" hidden="true"/>
           <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
-          <field attribute="schedfinish" label="Scheduled Finish Date" hidden="true"/>
-          <field attribute="schedfinishnotime" label="Scheduled Finish Date"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
           <!-- TODO: had to add it here because the value was not being fetched on sync. Find out why, fix it, remove this field -->
           <field attribute="worktype" label="Work Type" /> 
@@ -504,6 +502,9 @@
 
         <detail platform="mobile" title="Work Order" redeclaring="true" stereotype="detail">
           <reference id="detailhiddensoffline"/>
+
+          <!-- do not remove - added to force the sync of numeric domains for priorities -->
+          <association label="Priority" target="wopriority" labelfield="realpriority_.description" showexpression="false"/>
 
           <association label="Location" target="location" labelfield="offlinelocation.description" requiredexpression="true">
             <renderer type="lookup" params="hasUseWhereClause=true;useWhereClauseLabel=Preferred Locations"/>
@@ -689,6 +690,9 @@
           <field attribute="wonum" hidden="true" />
           <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
           <field attribute="changeby" label="Changed By" hidden="true"/>
+
+          <!-- do not remove - added to force the sync of numeric domains for priorities -->
+          <association label="Priority" target="wopriority" labelfield="realpriority_.description" showexpression="false"/>
           <!-- #endregion -->
           <!-- #region: visible fields -->
           <field attribute="owner" readonly="true" showexpression="!!@owner" label="Owner"/>

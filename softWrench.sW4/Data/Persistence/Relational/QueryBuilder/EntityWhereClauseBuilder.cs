@@ -10,19 +10,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
 
         public string BuildWhereClause(string entityName, SearchRequestDto searchDto = null) {
             var entityMetadata = MetadataProvider.Entity(entityName);
-            if (!entityMetadata.HasWhereClause) {
-                return null;
-            }
-
-            //double check
-            var queryReplacingMarker = EntityUtil.GetQueryReplacingMarker(entityMetadata.Schema.WhereClause, entityName);
-            if (queryReplacingMarker != null && queryReplacingMarker.StartsWith("@")) {
-                queryReplacingMarker = GetServiceQuery(queryReplacingMarker);
-            } else {
-                var user = SecurityFacade.CurrentUser();
-                queryReplacingMarker = DefaultValuesBuilder.ConvertAllValues(queryReplacingMarker, user);
-            }
-            return queryReplacingMarker;
+            return !entityMetadata.HasWhereClause ? null : EntityUtil.GetQueryReplacingMarkers(entityMetadata.Schema.WhereClause, entityName);
         }
 
         public IDictionary<string, object> GetParameters() {

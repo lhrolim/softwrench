@@ -1,6 +1,10 @@
 ﻿using System;
 using cts.commons.portable.Util;
+using cts.commons.simpleinjector;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Metadata;
+using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Util {
 
@@ -41,8 +45,41 @@ namespace softWrench.sW4.Util {
             return relationship.EndsWith("_") ? relationship.Trim('\'') : relationship.Trim('\'') + "_";
         }
 
-        public static string GetQueryReplacingMarker(string query, string entityName) {
-            return query.Replace("!@", entityName + ".");
+        public static string GetServiceQuery(string query, string context = null) {
+            //removing leading @
+            query = query.Substring(1);
+            var split = query.Split('.');
+            var ob = SimpleInjectorGenericFactory.Instance.GetObject<object>(split[0]);
+            if (ob == null) {
+                throw new InvalidOperationException("cannot locate service {0}".Fmt(split[0]));
+            }
+            object result = null;
+            if (context != null) {
+                result = ReflectionUtil.Invoke(ob, split[1], new object[] { context });
+            } else {
+                result = ReflectionUtil.Invoke(ob, split[1], new object[] { });
+            }
+            if (!(result is String)) {
+                throw ExceptionUtil.InvalidOperation("method need to return string for join whereclause");
+            }
+            query = result.ToString();
+            return query;
+        }
+
+        public static string GetQueryReplacingMarkers(string query, string entityName, string fromValue = null) {
+            var queryReplacingMarker = query.Replace("!@", entityName + ".");
+
+            if (fromValue != null) {
+                queryReplacingMarker = queryReplacingMarker.Replace("@from", fromValue);
+            }
+
+            if (queryReplacingMarker.StartsWith("@")) {
+                queryReplacingMarker = GetServiceQuery(queryReplacingMarker);
+            } else {
+                var user = SecurityFacade.CurrentUser();
+                queryReplacingMarker = DefaultValuesBuilder.ConvertAllValues(queryReplacingMarker, user);
+            }
+            return queryReplacingMarker;
         }
 
         public static string EvaluateQuery(string query, AttributeHolder holder) {

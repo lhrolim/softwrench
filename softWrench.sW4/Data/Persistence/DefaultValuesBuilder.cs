@@ -121,6 +121,12 @@ namespace softWrench.sW4.Data.Persistence {
 
             foreach (var keyword in StringUtil.GetSubStrings(input, "@")) {
                 valueParsed = GetDefaultValue(keyword, user);
+
+                // replaces the keyword only if its found
+                if (keyword.Equals(valueParsed)) {
+                    continue;
+                }
+
                 input = input.Replace("'" + keyword + "'", "'" + valueParsed + "'").Replace(keyword, "'" + valueParsed + "'");
             }
 
