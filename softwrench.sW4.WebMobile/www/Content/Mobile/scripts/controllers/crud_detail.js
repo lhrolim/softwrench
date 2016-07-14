@@ -2,9 +2,9 @@
 (function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", 
+    softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", 
     'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService",
-    function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService,
+    function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform,
     crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService) {
         
         function turnOffChangeEvents() {
@@ -215,6 +215,20 @@
             }
             return problems[0].message;
         }
+
+
+        // handles device back button
+        const deregisterHardwareBack = $ionicPlatform.registerBackButtonAction(() => {
+            if ($scope.shouldShowBack()) {
+                $scope.navigateBack();
+            } else if ($scope.shouldShowWizardBack()) {
+                $scope.wizardNavigateBack();
+                $scope.$apply();
+            } else{
+                $scope.cancelChanges();
+            }
+        }, 100);
+        $scope.$on("$destroy", deregisterHardwareBack);
 
         $rootScope.$on('sw_cruddetailrefreshed', function () {
             $scope.datamap = crudContextService.currentDetailItemDataMap();
