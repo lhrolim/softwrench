@@ -41,7 +41,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private IDictionary<string, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
         /// <summary>
-        /// This fields can only be resolved once the entire metadata.xml are parsed, so that´s why we are using this Lazy strategy.
+        /// This fields can only be resolved once the entire metadata.xml are parsed, so thatÂ´s why we are using this Lazy strategy.
         /// 
         /// 
         /// 
@@ -55,7 +55,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public delegate IEnumerable<IApplicationDisplayable> LazyComponentDisplayableResolver(ReferenceDisplayable reference, ApplicationSchemaDefinition schema, IEnumerable<DisplayableComponent> components);
 
         /// <summary>
-        /// let´s wait to resolve the filters after all customizations, hirarchy merges have been applied
+        /// letÂ´s wait to resolve the filters after all customizations, hirarchy merges have been applied
         /// </summary>
         /// <returns></returns>
         public delegate SchemaFilters LazySchemaFilterResolver(ApplicationSchemaDefinition definition);
@@ -553,7 +553,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public bool IsWebPlatform() {
             //TODO: multi level hierarchy
-            return (ClientPlatform.Web == Platform || ClientPlatform.Both == Platform) || (ParentSchema != null && ParentSchema.IsWebPlatform());
+            return (ClientPlatform.Web == Platform || ClientPlatform.Both == Platform || null == Platform) || (ParentSchema != null && ParentSchema.IsWebPlatform());
         }
 
         public bool IsMobilePlatform() {
