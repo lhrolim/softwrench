@@ -15,6 +15,12 @@ $asset_path: "../../Images";
                 }
             }
         }
+
+        @media all and (max-width: 480px) {
+            .divider.bottom, .logo.byline {
+                display: none;
+            }
+        }
     }
 }
 
