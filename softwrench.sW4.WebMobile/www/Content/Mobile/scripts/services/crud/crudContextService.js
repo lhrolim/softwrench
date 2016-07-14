@@ -356,9 +356,9 @@
             navigatePrevious: function () {
                 const crudContext = crudContextHolderService.getCrudContext();
                 if (!crudContext.previousItem) {
-                    routeService.go("main.crudlist");
+                    return routeService.go("main.crudlist");
                 } else {
-                    this.loadDetail(crudContext.previousItem);
+                    return this.loadDetail(crudContext.previousItem);
                 }
 
             },

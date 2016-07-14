@@ -6,6 +6,15 @@
     'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService",
     function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService,
     crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService) {
+        
+        function turnOffChangeEvents() {
+            $rootScope.areChangeEventsEnabled = false;
+        }
+
+        function turnOnChangeEvents() {
+            // to force change the flag after the events are trigged
+            $timeout(() => $rootScope.areChangeEventsEnabled = true, 0, false);
+        }
 
         function init() {
             $scope.allDisplayables = crudContextService.mainDisplayables();
@@ -14,6 +23,7 @@
             $scope.datamap = crudContextService.currentDetailItemDataMap();
             $scope.item = crudContextHolderService.currentDetailItem();
             eventService.onload($scope, $scope.schema, $scope.datamap, {});
+            $rootScope.areChangeEventsEnabled = true;
         }
 
         $ionicPopover.fromTemplateUrl('Content/Mobile/templates/compositionmenu.html', {
@@ -63,12 +73,13 @@
             });
             confirmPopup.then(function (res) {
                 if (res) {
-                    $rootScope.areChangeEventsEnabled = false;
+                    turnOffChangeEvents();
                     crudContextService.cancelChanges();
                     $scope.datamap = crudContextService.currentDetailItemDataMap();
 
                     // to force change the flag after the events are trigged
                     $timeout(() => $rootScope.areChangeEventsEnabled = true, 0, false);
+                    turnOnChangeEvents();
                 }
             });
         }
@@ -130,15 +141,21 @@
             showValidationErrors(validationErrors);
         }
 
-        $scope.navigateNext = function () {
-            crudContextService.navigateNext().then(function () {
+        const arrowNavigate = function(navigate) {
+            turnOffChangeEvents();
+            crudContextService[navigate]().then(function () {
                 $scope.datamap = crudContextService.currentDetailItemDataMap();
+            }).finally(() => {
+                turnOnChangeEvents();
             });
         }
 
+        $scope.navigateNext = function () {
+            arrowNavigate("navigateNext");
+        }
+
         $scope.navigatePrevious = function () {
-            crudContextService.navigatePrevious();
-            $scope.datamap = crudContextService.currentDetailItemDataMap();
+            arrowNavigate("navigatePrevious");
         }
 
         $scope.onSwipeLeft = function() {
