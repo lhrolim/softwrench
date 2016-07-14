@@ -45,8 +45,12 @@
 
 
         $scope.showNavigation = function () {
-            return this.isOnMainTab() && !crudContextService.hasDirtyChanges();
+            return $scope.isOnMainTab() && !crudContextService.hasDirtyChanges();
         }
+
+        $scope.hasNextItem = function() {
+            return !!crudContextHolderService.getCrudContext().nextItem;
+        };
 
         $scope.hasAnyComposition = function () {
             return crudContextService.currentCompositionsToShow().length > 0;

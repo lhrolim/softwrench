@@ -364,20 +364,21 @@
             },
 
             navigateNext: function () {
-                var crudContext = crudContextHolderService.getCrudContext();
-                var outer = this;
+                const crudContext = crudContextHolderService.getCrudContext();
                 if (!crudContext.nextItem) {
-                    return this.loadMorePromise().then(function (results) {
-                        if (!results) {
+                    return this.loadMorePromise().then(results => {
+                        if (!results || results.length <= 0) {
                             //end has reached;
-                            return;
+                            return $q.when();
                         }
                         crudContextHolderService.setPreviousAndNextItems(crudContext.currentDetailItem);
-                        outer.loadDetail(crudContext.nextItem);
+                        if (!!crudContext.nextItem) {
+                            return this.loadDetail(crudContext.nextItem);
+                        }
+                        return $q.when();
                     });
                 }
-                this.loadDetail(crudContext.nextItem);
-                return $q.when();
+                return this.loadDetail(crudContext.nextItem);
             },
             
             isCreation: function () {

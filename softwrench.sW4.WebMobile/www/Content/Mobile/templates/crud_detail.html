@@ -22,7 +22,7 @@
 
         <div class="buttons" style="white-space: nowrap">
             <button class="button" ng-click="navigatePrevious()" ng-if="showNavigation()"><i class="fa fa-chevron-left"></i></button>
-            <button class="button" ng-click="navigateNext()" ng-if="showNavigation()"><i class="fa fa-chevron-right"></i></button>
+            <button class="button" ng-click="navigateNext()" ng-if="showNavigation() && hasNextItem()"><i class="fa fa-chevron-right"></i></button>
             <button class="button" ng-click="expandCompositions($event)" ng-if="!hasDirtyChanges() && hasAnyComposition()"><i class="fa fa-th"></i></button>
             <button class="button" ng-click="saveChanges()" ng-if="hasDirtyChanges() && !shouldShowWizardForward()"><i class="fa fa-check"></i>&ensp;Save</button>
             <button class="button" ng-click="wizardNavigateForward()" ng-if="shouldShowWizardForward()"><i class="fa fa-arrow-right"></i>&ensp;Next</button>

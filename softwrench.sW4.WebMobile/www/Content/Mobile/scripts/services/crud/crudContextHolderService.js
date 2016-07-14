@@ -92,12 +92,12 @@
             }
             const itemlist = _crudContext.itemlist;
             const idx = itemlist.indexOf(item);
-            if (idx == 0) {
+            if (idx === 0) { // first on the list: has no previous
                 _crudContext.previousItem = null;
             } else {
                 _crudContext.previousItem = itemlist[idx - 1];
             }
-            if (idx >= itemlist.length - 2) {
+            if (idx === itemlist.length - 1) { // last on the list: has no next
                 _crudContext.nextItem = null;
             } else {
                 _crudContext.nextItem = itemlist[idx + 1];
