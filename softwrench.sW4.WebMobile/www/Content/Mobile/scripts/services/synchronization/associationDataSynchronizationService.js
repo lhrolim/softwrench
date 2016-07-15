@@ -30,12 +30,13 @@
                 for (var app in associationData) {
                     var dataToInsert = associationData[app];
                     const textIndexes = result.data.textIndexes[app];
+                    const numericIndexes = result.data.numericIndexes[app];
                     const dateIndexes = result.data.dateIndexes[app];
                     for (var j = 0; j < dataToInsert.length; j++) {
                         var datamap = dataToInsert[j];
                         var id = persistence.createUUID();
-                        const idx = searchIndexService.buildIndexes(textIndexes, dateIndexes, datamap);
-                        var query = { query: offlineEntities.AssociationData.InsertionPattern, args: [datamap.application, JSON.stringify(datamap.fields), datamap.id, String(datamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.d1, idx.d2, idx.d3] };
+                        const idx = searchIndexService.buildIndexes(textIndexes, numericIndexes, dateIndexes, datamap);
+                        var query = { query: offlineEntities.AssociationData.InsertionPattern, args: [datamap.application, JSON.stringify(datamap.fields), datamap.id, String(datamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
                         queryArray.push(query);
                     }
                 }
