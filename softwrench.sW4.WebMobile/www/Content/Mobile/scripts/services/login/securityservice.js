@@ -1,4 +1,4 @@
-﻿(function (mobileServices, ionic) {
+﻿(function (mobileServices, ionic, _) {
     "use strict";
 
     function securityService($rootScope,$state, localStorageService, routeService, $http, $q, swdbDAO, $ionicHistory) {
@@ -132,7 +132,7 @@
          */
         const logout = function () {
             // invalidate current session
-            var current = localStorageService.remove(config.authkey);
+            const current = localStorageService.remove(config.authkey); 
             // making sure the previous user is always the last "active" user
             if (!!current) {
                 localStorageService.put(config.previouskey, current);
@@ -143,6 +143,26 @@
                 $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
                 return current;
             });
+        };
+
+        /**
+         * Updates the current user's properties.
+         * Get the updated properties by using {@link #currentFullUser}.properties.
+         * 
+         * @param {Object} properties 
+         */
+        const updateCurrentUserProperties = function (properties) {
+            const current = currentFullUser();
+            if (!properties || _.isEmpty(properties)) {
+                delete current["properties"];
+            } else {
+                current["properties"] = properties;
+                if (properties["siteid"]) current["SiteId"] = properties["siteid"];
+                if (properties["SiteId"]) current["SiteId"] = properties["SiteId"];
+                if (properties["orgid"]) current["OrgId"] = properties["orgid"];
+                if (properties["OrgId"]) current["OrgId"] = properties["OrgId"];
+            }
+            localStorageService.put(config.authkey, current);
         };
 
         /**
@@ -169,7 +189,8 @@
             currentFullUser,
             hasAuthenticatedUser,
             logout,
-            handleUnauthorizedRemoteAccess
+            handleUnauthorizedRemoteAccess,
+            updateCurrentUserProperties
         };
         return service;
 
@@ -182,4 +203,4 @@
 
     //#endregion
 
-})(mobileServices, ionic);
+})(mobileServices, ionic, _);

@@ -75,13 +75,18 @@ namespace softwrench.sw4.offlineserver.controller {
             bool fromCache;
             var securedMenu = _menuManager.Menu(user, ClientPlatform.Mobile, out fromCache);
 
+            var userProperties = user.Genericproperties.Where(p => p.Key.StartsWith("sync.")).ToDictionary(p => p.Key, p => p.Value);
+            userProperties["siteid"] = user.SiteId;
+            userProperties["orgid"] = user.OrgId;
+
             var response = new MobileMetadataDownloadResponseDefinition {
                 TopLevelMetadatasJson = JsonConvert.SerializeObject(securedMetadatas, Formatting.None, _jsonSerializerSettings),
                 AssociationMetadatasJson = JsonConvert.SerializeObject(associationApps, Formatting.None, _jsonSerializerSettings),
                 CompositionMetadatasJson = JsonConvert.SerializeObject(compositonApps, Formatting.None, _jsonSerializerSettings),
                 MenuJson = JsonConvert.SerializeObject(securedMenu, Formatting.None, _jsonSerializerSettings),
                 CommandBarsJson = JsonConvert.SerializeObject(commandBars, Formatting.None, _jsonSerializerSettings),
-                AppConfiguration = _appConfigurationProvider.AppConfig()
+                AppConfiguration = _appConfigurationProvider.AppConfig(),
+                UserProperties = userProperties
             };
 
             Log.InfoFormat("Download Metadata executed in {0}", LoggingUtil.MsDelta(watch));

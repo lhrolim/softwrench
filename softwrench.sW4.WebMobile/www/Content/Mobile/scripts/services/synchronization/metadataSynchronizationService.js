@@ -2,8 +2,8 @@
     "use strict";
 
     mobileServices.factory("metadataSynchronizationService",
-        ["$http", "$q", "offlineRestService", "menuModelService", "metadataModelService", "configurationService", "offlineCommandService",
-            function ($http, $q, restService, menuModelService, metadataModelService, configurationService, offlineCommandService) {
+        ["$http", "$q", "offlineRestService", "menuModelService", "metadataModelService", "configurationService", "offlineCommandService", "securityService",
+            function ($http, $q, restService, menuModelService, metadataModelService, configurationService, offlineCommandService, securityService) {
 
     var toConfigurationArray = function (configuration) {
         const configArray = Object.keys(configuration).map(k => ({ key: k, value: configuration[k] }));
@@ -20,6 +20,9 @@
                 const compositionMetadatasJson = JSON.parse(metadatasResult.data.compositionMetadatasJson);
                 const commandBars = JSON.parse(metadatasResult.data.commandBarsJson);
                 const config = metadatasResult.data.appConfiguration;
+
+                const userProperties = metadatasResult.data.userProperties;
+                securityService.updateCurrentUserProperties(userProperties);
 
                 const menuPromise = menuModelService.updateMenu(serverMenu);
                 const topLevelPromise = metadataModelService.updateTopLevelMetadata(topLevelMetadatas);
