@@ -1130,7 +1130,7 @@
     
     <application name="classstructure" title="Class Structure" entity="classstructure">
       <schemas>
-        <list>
+        <list platform="mobile">
           <field attribute="classstructureid" hidden="true"/>
           <field attribute="description" label="Description"/>
         </list>
@@ -1139,7 +1139,7 @@
 
     <application name="failurelistonly" title="Failure List" entity="failurelistonly">
       <schemas>
-        <list>
+        <list platform="mobile">
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
           <field attribute="parent" hidden="true"/>
@@ -1150,7 +1150,7 @@
 
     <application name="problemlist" title="Problem List" entity="problemlist">
       <schemas>
-        <list>
+        <list platform="mobile">
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
           <field attribute="parent" hidden="true"/>
@@ -1161,19 +1161,19 @@
 
     <application name="causelist" title="Cause List" entity="causelist">
       <schemas>
-        <list>
+        <list platform="mobile">
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
           <field attribute="parent" hidden="true"/>
           <field attribute="description" label="Description"/>
-          
+
         </list>
       </schemas>
     </application>
 
     <application name="remedylist" title="Remedy List" entity="remedylist">
       <schemas>
-        <list>
+        <list platform="mobile">
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
           <field attribute="parent" hidden="true"/>
