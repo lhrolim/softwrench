@@ -1,4 +1,6 @@
 ﻿using cts.commons.persistence;
+using Iesi.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.Attributes;
 
@@ -24,6 +26,15 @@ namespace softwrench.sw4.user.classes.entities {
         public string Signature{
             get; set;
         }
+
+
+        [Set(0, Table = "PREF_GENERICPROPERTIES",Lazy = CollectionLazy.False, Cascade = "all")]
+        [Key(1, Column = "preference_id")]
+        [OneToMany(2, ClassType = typeof(GenericProperties))]
+        public ISet<GenericProperties> GenericProperties {
+            get; set;
+        }
+
 
         public static UserPreferences FromJson(JToken jObject) {
             var preferences = new UserPreferences();

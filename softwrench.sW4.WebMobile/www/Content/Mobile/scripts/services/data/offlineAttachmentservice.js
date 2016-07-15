@@ -243,7 +243,7 @@
         function loadRealAttachment(doclinkEntry) {
 
             const fileName = doclinkEntry.document;
-            const docinfoId = doclinkEntry.docinfoId;
+            const docinfoId = doclinkEntry.docinfoid;
             const localHash = doclinkEntry["#offlinehash"];
 
             const log = $log.get("attachmentService#loadRealAttachment", ["attachment"]);

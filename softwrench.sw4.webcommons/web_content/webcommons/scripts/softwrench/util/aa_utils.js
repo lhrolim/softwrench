@@ -792,9 +792,9 @@ if (typeof (window.debounce !== "function") && (!window._ || typeof (window._.de
      */
     window.debounce = function debounce(func, wait, immediate) {
         var timeout;
-        return function () {
+        return function() {
             var context = this, args = arguments;
-            var later = function () {
+            var later = function() {
                 timeout = null;
                 if (!immediate) func.apply(context, args);
             };
@@ -804,6 +804,8 @@ if (typeof (window.debounce !== "function") && (!window._ || typeof (window._.de
             if (callNow) func.apply(context, args);
         };
     };
+} else {
+    window.debounce = window._.debounce;
 }
 
 // only create throttle function if underscore is not present
@@ -829,13 +831,13 @@ if (typeof (window.throttle !== "function") && (!window._ || typeof (window._.th
         var timeout = null;
         var previous = 0;
         if (!options) options = {};
-        var later = function () {
+        var later = function() {
             previous = options.leading === false ? 0 : Date.now();
             timeout = null;
             result = func.apply(context, args);
             if (!timeout) context = args = null;
         };
-        return function () {
+        return function() {
             var now = Date.now();
             if (!previous && options.leading === false) previous = now;
             var remaining = wait - (now - previous);
@@ -855,6 +857,8 @@ if (typeof (window.throttle !== "function") && (!window._ || typeof (window._.th
             return result;
         };
     }
+} else {
+    window.throttle = window._.throttle;
 }
 
 // returns the value of the given parameter name from the current url

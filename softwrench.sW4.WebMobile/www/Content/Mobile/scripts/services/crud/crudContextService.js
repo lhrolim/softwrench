@@ -331,6 +331,7 @@
                 crudContext.currentTitle = applicationTitle;
                 crudContext.currentApplicationName = applicationName;
                 crudContext.currentApplication = application;
+                crudContext.newItem = false;
 
 
                 crudContext.currentListSchema = offlineSchemaService.locateSchema(application, schemaId);

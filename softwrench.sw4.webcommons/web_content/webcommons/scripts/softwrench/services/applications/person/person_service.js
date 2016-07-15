@@ -5,17 +5,7 @@
     angular.module('maximo_applications').factory('personService', ['$rootScope',"$log", 'alertService', 'redirectService', 'applicationService', 'contextService', 'crudContextHolderService', 'dispatcherService', personService]);
 
     function personService($rootScope,$log, alertService, redirectService, applicationService, contextService, crudContextHolderService, dispatcherService) {
-
-        var service = {
-            afterChangeUsername: afterChangeUsername,
-            validatePerson: validatePerson,
-            cancelEdition: cancelEdition,
-            submitPerson: submitPerson,
-            loadPhone: loadPhone,
-            loadEmail:loadEmail
-        };
-
-        return service;
+     
 
         function handlePrimaryForCreation(compositionDatamap,type) {
             //phone creation
@@ -88,6 +78,16 @@
                 }
             });
         }
+
+        const service = {
+            afterChangeUsername,
+            validatePerson,
+            cancelEdition,
+            submitPerson,
+            loadPhone,
+            loadEmail
+        };
+        return service;
 
     }
 })(angular);

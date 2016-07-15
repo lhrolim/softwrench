@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using log4net;
 using Newtonsoft.Json.Linq;
@@ -17,6 +18,7 @@ using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sw4.offlineserver.dto;
 using softwrench.sw4.offlineserver.dto.association;
+using softwrench.sw4.offlineserver.events;
 using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -35,20 +37,22 @@ namespace softwrench.sw4.offlineserver.services {
         private readonly OffLineCollectionResolver _resolver;
         private readonly EntityRepository _repository;
         private readonly IContextLookuper _lookuper;
+        private readonly IEventDispatcher _iEventDispatcher;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SynchronizationManager));
 
-        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper) {
+        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper, IEventDispatcher iEventDispatcher) {
             _resolver = resolver;
             _repository = respository;
             _lookuper = lookuper;
+            _iEventDispatcher = iEventDispatcher;
             Log.DebugFormat("init sync log");
         }
 
 
         public SynchronizationResultDto GetData(SynchronizationRequestDto request, InMemoryUser user, JObject rowstampMap) {
             var topLevelApps = GetTopLevelAppsToCollect(request, user);
-
+            _iEventDispatcher.Dispatch(new PreSyncEvent());
             var result = new SynchronizationResultDto();
 
             foreach (var topLevelApp in topLevelApps) {

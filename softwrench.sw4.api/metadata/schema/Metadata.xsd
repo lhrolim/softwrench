@@ -23,6 +23,7 @@
         <element name="applications" type="tns:Applications"
 					maxOccurs="1" minOccurs="1">
         </element>
+
         <element name="templates" type="tns:TemplatesType"></element>
         <element name="commandbars"
 					type="tns:CommandsDeclarationsType">
@@ -66,11 +67,14 @@
   </complexType>
 
   <complexType name="Applications">
-    <sequence>
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="options" type="tns:Options"
+       maxOccurs="unbounded" minOccurs="0">
+      </element>
       <element name="application" type="tns:Application"
 				maxOccurs="unbounded" minOccurs="1">
       </element>
-    </sequence>
+    </choice>
   </complexType>
 
   <complexType name="Entity">
@@ -837,10 +841,20 @@
     </attribute>
   </complexType>
 
+  <complexType name="Options">
+    <sequence>
+      <element name="option" type="tns:OptionType"
+				maxOccurs="unbounded" minOccurs="0">
+      </element>
+    </sequence>
+    <attribute name="id" type="string" use="required"></attribute>
+  </complexType>
+
+
   <complexType name="OptionType">
     <attribute name="label" type="string" use="required"></attribute>
     <attribute name="value" type="string" use="required"></attribute>
-    <attribute name="extraprojections" type="string" use="required"></attribute>
+    <attribute name="extraprojections" type="string" ></attribute>
   </complexType>
 
 
@@ -869,7 +883,7 @@
       <enumeration value="manual"></enumeration>
     </restriction>
   </simpleType>
-  
+
   <simpleType name="StereotypeType">
     <restriction base="string">
       <enumeration value="list"></enumeration>
@@ -1020,7 +1034,7 @@
       </annotation>
     </attribute>
   </complexType>
-  
+
   <simpleType name="NewSimpleType">
     <restriction base="string">
       <enumeration value="input"></enumeration>

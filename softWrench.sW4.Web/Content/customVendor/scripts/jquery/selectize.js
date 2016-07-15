@@ -2475,22 +2475,28 @@
                     if (inputMode === 'single') self.close();
                     return;
                 }
-                
-                if (!self.options.hasOwnProperty(value.toLowerCase().trim()) && !self.options.hasOwnProperty(value)) {
+
+                var hasLowerCase = self.options.hasOwnProperty(value.toLowerCase().trim());
+                var valueToUse = hasLowerCase ? value.toLowerCase().trim() : value;
+
+                if (!hasLowerCase && !self.options.hasOwnProperty(value)) {
                     //cts:luiz --> add lower case comparison
                     return;
                 }
                 if (inputMode === 'single') self.clear(silent);
                 if (inputMode === 'multi' && self.isFull()) return;
                 //cts:luiz --> add lower case comparison
-                $item = $(self.render('item', self.options[value.toLowerCase().trim()]));
+
+                $item = $(self.render('item', self.options[valueToUse]));
+
+
                 if (self.settings.beforeItemAdd != null && !self.settings.beforeItemAdd(value)) {
                     //cts:ken --> adding before item hook
-                     return;
+                    return;
                 }
                 wasFull = self.isFull();
                 //cts:luiz --> add lower case comparison
-                self.items.splice(self.caretPos, 0, value.toLowerCase().trim());
+                self.items.splice(self.caretPos, 0, valueToUse);
                 self.insertAtCaret($item);
                 if (!self.isPending || (!wasFull && self.isFull())) {
                     self.refreshState();
