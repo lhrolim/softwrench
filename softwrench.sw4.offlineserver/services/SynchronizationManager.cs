@@ -107,10 +107,13 @@ namespace softwrench.sw4.offlineserver.services {
                     var textIndexes = new List<string>();
                     results.TextIndexes.Add(association1.ApplicationName, textIndexes);
 
+                    var numericIndexes = new List<string>();
+                    results.NumericIndexes.Add(association1.ApplicationName, numericIndexes);
+
                     var dateIndexes = new List<string>();
                     results.DateIndexes.Add(association1.ApplicationName, dateIndexes);
 
-                    ParseIndexes(textIndexes, dateIndexes, association1);
+                    ParseIndexes(textIndexes, numericIndexes, dateIndexes, association1);
                 });
 
             }
@@ -214,7 +217,7 @@ namespace softwrench.sw4.offlineserver.services {
                 AllData = topLevelAppData
             };
 
-            ParseIndexes(result.TextIndexes, result.DateIndexes, topLevelApp);
+            ParseIndexes(result.TextIndexes, result.NumericIndexes, result.DateIndexes, topLevelApp);
 
             if (rowstampDTO.MaxRowstamp != null || isQuickSync) {
                 //SWOFF-140 
@@ -255,10 +258,15 @@ namespace softwrench.sw4.offlineserver.services {
             return result;
         }
 
-        private static void ParseIndexes(IList<string> textIndexes, IList<string> dateIndexes, CompleteApplicationMetadataDefinition topLevelApp) {
+        private static void ParseIndexes(IList<string> textIndexes, IList<string> numericIndexes, IList<string> dateIndexes, CompleteApplicationMetadataDefinition topLevelApp) {
             var indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineTextIndexes);
             if (!string.IsNullOrEmpty(indexesString)) {
                 indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, textIndexes));
+            }
+
+            indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineNumericIndexes);
+            if (!string.IsNullOrEmpty(indexesString)) {
+                indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, numericIndexes));
             }
 
             indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineDateIndexes);

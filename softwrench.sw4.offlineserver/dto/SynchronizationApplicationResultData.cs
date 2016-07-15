@@ -47,6 +47,10 @@ namespace softwrench.sw4.offlineserver.dto {
             get; set;
         }
 
+        public IList<string> NumericIndexes {
+            get; set;
+        }
+
         public IList<string> DateIndexes {
             get; set;
         }
@@ -58,6 +62,7 @@ namespace softwrench.sw4.offlineserver.dto {
             AlreadyExistingDatamaps = new List<DataMap>();
             InsertOrUpdateDataMaps = new List<DataMap>();
             TextIndexes = new List<string>();
+            NumericIndexes = new List<string>();
             DateIndexes = new List<string>();
         }
 
@@ -68,6 +73,7 @@ namespace softwrench.sw4.offlineserver.dto {
             DeletedRecordIds = deletedRecords ?? new List<string>();
             InsertOrUpdateDataMaps = new List<DataMap>();
             TextIndexes = new List<string>();
+            NumericIndexes = new List<string>();
             DateIndexes = new List<string>();
         }
 
