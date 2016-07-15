@@ -7,15 +7,6 @@
   <access origin="*" />
   <allow-navigation href="*" />
   <!--  <access origin="cdvfile://*" />-->
-  <preference name="SplashScreen" value="screen" />
-  <preference name="AutoHideSplashScreen" value="false" />
-  <preference name="SplashScreenDelay" value="10000" />
-  <preference name="SplashMaintainAspectRatio" value="true" />
-  <preference name="ShowSplashScreenSpinner" value="false" />
-  <preference name="FadeSplashScreen" value="false" />
-  <preference name="windows-target-version" value="8.0" />
-  <preference name="windows-phone-target-version" value="8.1" />
-  <preference name="BackupWebStorage" value="local" />
   <vs:platformSpecificValues />
   <platform name="android">
     <icon src="res/icons/android/icon-36-ldpi.png" density="ldpi" />
@@ -90,14 +81,30 @@
   <platform name="wp8">
     <splash src="res/screens/wp8/SplashScreenImage.jpg" width="480" height="800" />
   </platform>
+  
+  <!-- #region: preferences -->
+  <preference name="SplashScreen" value="screen" />
+  <preference name="AutoHideSplashScreen" value="false" />
+  <preference name="SplashScreenDelay" value="10000" />
+  <preference name="SplashMaintainAspectRatio" value="true" />
+  <preference name="ShowSplashScreenSpinner" value="false" />
+  <preference name="FadeSplashScreen" value="false" />
+  <preference name="windows-target-version" value="8.0" />
+  <preference name="windows-phone-target-version" value="8.1" />
+  <preference name="BackupWebStorage" value="local" />
   <preference name="Fullscreen" value="False" />
   <preference name="KeepRunning" value="False" />
   <preference name="ShowTitle" value="True" />
   <preference name="InAppBrowserStorageEnabled" value="False" />
   <preference name="SuppressesIncrementalRendering" value="True" />
-  <!--<vs:plugin name="android.support.v4" version="21.0.1" />-->
-  <!-- hooks -->
+  <!--#endregion-->
+  
+  <!-- #region: hooks -->
   <hook type="before_compile" src="hooks/hook-symlink-fix.js" />
+  <!--#endregion-->
+
+  <!--#region: plugins -->
+  <!--<vs:plugin name="android.support.v4" version="21.0.1" />-->
   <plugin name="cordova-plugin-app-event" version="1.2.0" />
   <plugin name="cordova-sqlite-storage" version="1.4.2" />
   <plugin name="cordova-plugin-whitelist" version="1.1.0" />
@@ -114,4 +121,6 @@
   <plugin name="com.ionic.keyboard" version="1.0.4" />
   <plugin name="cordova-plugin-file-opener2" version="2.0.2" src="https://github.com/emilhuseynli/cordova-plugin-file-opener2" />
   <plugin name="cordova-plugin-inappbrowser" version="1.4.0" />
+  <!--#endregion-->
+
 </widget>
