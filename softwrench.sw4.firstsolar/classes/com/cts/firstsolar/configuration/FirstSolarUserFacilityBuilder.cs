@@ -79,8 +79,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
             if (genericproperties.ContainsKey("sync.availablefacilities")) {
                 genericproperties.Remove("sync.availablefacilities");
-                genericproperties.Add("sync.availablefacilities", facilityList);
             }
+            genericproperties.Add("sync.availablefacilities", facilityList);
 
             return genericproperties;
 
