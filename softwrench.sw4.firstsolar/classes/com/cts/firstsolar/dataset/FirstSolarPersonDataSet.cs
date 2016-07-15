@@ -17,7 +17,7 @@ using softWrench.sW4.Security.Services;
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
     public class FirstSolarPersonDataSet : BasePersonDataSet {
 
-        private FirstSolarUserFacilityBuilder _userFacilityBuilder;
+        private readonly FirstSolarUserFacilityBuilder _userFacilityBuilder;
 
         public FirstSolarPersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService,
             UserLinkManager userLinkManager, UserStatisticsService userStatisticsService,
@@ -31,10 +31,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var baseUser = base.PopulateSwdbUser(application, json, id, operation);
             var facilitiesToken = ParseFacilities(json);
             var preferences = baseUser.UserPreferences;
-            var facilitiesProp = preferences.GenericProperties.FirstOrDefault(f => f.Key.Equals("facilities"));
+            var facilitiesProp = preferences.GenericProperties.FirstOrDefault(f => f.Key.Equals("sync.facilities"));
             if (facilitiesProp == null) {
                 preferences.GenericProperties.Add(new GenericProperty() {
-                    Key = "facilities",
+                    Key = "sync.facilities",
                     Value = facilitiesToken,
                     UserPreferences = preferences,
                     Type = "list"
@@ -58,12 +58,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 resultProperties =
                     _userFacilityBuilder.AdjustUserFacilityProperties(new Dictionary<string, object>(), maximoPersonId);
             }
-            if (resultProperties.ContainsKey("facilities") && !detail.ResultObject.ContainsAttribute("facilities")) {
+            if (resultProperties.ContainsKey("sync.facilities") && !detail.ResultObject.ContainsAttribute("facilities")) {
                 //if the facility was already stored on the database it would already have been set on the AdjustDatamapFromUser method
                 detail.ResultObject.SetAttribute("facilities", resultProperties["facilities"]);
             }
-            if (resultProperties.ContainsKey("persongroups")) {
-                detail.ResultObject.SetAttribute("persongroups", resultProperties["persongroups"]);
+            if (resultProperties.ContainsKey("sync.availablefacilities")) {
+                detail.ResultObject.SetAttribute("availablefacilities", resultProperties["sync.availablefacilities"]);
             }
             return detail;
         }

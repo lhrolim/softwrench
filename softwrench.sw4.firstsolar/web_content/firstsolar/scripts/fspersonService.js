@@ -8,8 +8,8 @@
         function filterFacilitiesBySite(item) {
             const dm = crudContextHolderService.rootDataMap();
             const siteid = dm.fields["locationsite"];
-            const groups = dm.fields["persongroups"] || [];
-            return item.extrafields["site"] === siteid && groups.some(s => s === item.extrafields["group"]);
+            const availableFacilities = dm.fields["sync.availablefacilities"] || [];
+            return item.extrafields["site"] === siteid && availableFacilities.some(s => s === item.value);
         }
 
 

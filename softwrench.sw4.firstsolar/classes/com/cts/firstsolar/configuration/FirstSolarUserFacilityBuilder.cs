@@ -57,7 +57,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         }
 
         public IDictionary<string, object> AdjustUserFacilityProperties(IDictionary<string, object> genericproperties, string maximoPersonId) {
-            if (genericproperties.ContainsKey("facilities") && genericproperties.ContainsKey("persongroups")) {
+            var hasStoredFacilities = genericproperties.ContainsKey("sync.facilities");
+
+            if (hasStoredFacilities && genericproperties.ContainsKey("sync.availablefacilities")) {
                 //the list of facilities is already saved on the swdb database, let's use it
                 return genericproperties;
             }
@@ -65,15 +67,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             var groups =
                 _dao.FindByNativeQuery("select persongroup from persongroupview where personid = ? and status = 'ACTIVE'",
                     maximoPersonId);
-            if (genericproperties.ContainsKey("persongroups")) {
-                genericproperties.Remove("persongroups");
-            }
-            genericproperties.Add("persongroups", groups.Select(s => s["persongroup"]));
 
-            if (genericproperties.ContainsKey("facilities")) {
-                //the list of facilities is already stored as a generic property
-                return genericproperties;
-            }
 
             var facilityList = new List<string>();
             foreach (var groupRow in groups) {
@@ -83,9 +77,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 }
             }
 
-            if (!genericproperties.ContainsKey("facilities")) {
-                genericproperties.Add("facilities", facilityList);
+            if (genericproperties.ContainsKey("sync.availablefacilities")) {
+                genericproperties.Remove("sync.availablefacilities");
+                genericproperties.Add("sync.availablefacilities", facilityList);
             }
+
             return genericproperties;
 
         }
