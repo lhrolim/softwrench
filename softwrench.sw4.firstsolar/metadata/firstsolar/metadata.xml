@@ -717,7 +717,7 @@
       </schemas>
     </application>
 
-    <application name="otherworkorder" title="Other Work Orders" entity="workorder" role="workorders">
+    <application name="otherworkorder" title="Group Work Orders" entity="workorder" role="workorders">
       <properties>
         <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location,estdur"/>
       </properties>
@@ -799,66 +799,7 @@
       </schemas>
     </application>
 
-
-    <application name="groupworkorder" title="Group Work Orders" entity="workorder" role="workorders">
-      <properties>
-        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location,estdur"/>
-      </properties>
-
-      <schemas>
-        <list platform="mobile" title="WO - Group">
-          <filters>
-            <optionfilter attribute="wopriority" provider="realpriority_.description" />
-          </filters>
-
-          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
-          <field attribute="wopriority" label="Priority" qualifier="icon"/>
-          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
-          <field attribute="description" label="Description" qualifier="excerpt"/>
-          <field attribute="estdur" label="Estimated Duration" qualifier="subtitle">
-            <renderer type="default" params="showLabel=true" />
-          </field>
-
-          <properties>
-            <property key="list.defaultorderby" value="wopriority desc, estdur asc"/>
-            <property key="list.offline.create.disabled" value="true"/>
-          </properties>
-        </list>
-
-        <detail platform="mobile" title="Work Order">
-          <field attribute="workorderid" hidden="true"/>
-          <field attribute="wonum" label="Number" hidden="true" />
-          <field attribute="orgid" hidden="true" requiredexpression="true" />
-          <field attribute="siteid" hidden="true" requiredexpression="true" />
-
-          <field attribute="owner" readonly="true" showexpression="!!@owner" label="Owner"/>
-          <field attribute="description" readonly="true" label="Description"/>
-          <field attribute="status" readonly="true" label="Status" />
-          <field attribute="location" readonly="true" label="Location" />
-          <field attribute="assetnum" readonly="true" label="Asset" />
-          <field attribute="classstructureid" readonly="true" label="Origination" />
-          <field attribute="ld_.ldtext" readonly="true" label="Details">
-            <renderer type="richtext"/>
-          </field>
-
-          <composition relationship="matusetrans" label="Materials" >
-            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSED' &amp;&amp; !!@owner" />
-          </composition>
-          <composition relationship="labtrans" label="Labor">
-            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSED' &amp;&amp; !!@owner" />
-          </composition>
-
-          <commandbars>
-            <commandgroup position="mobile.fab" platform="mobile">
-              <command id="assignworkorder" service="fsWorkorderOfflineService" method="assignWorkOrder"
-                       showexpression="!@owner" icon="ion-android-person-add" label="Assign To Me" />
-            </commandgroup>
-          </commandbars>
-
-        </detail>
-      </schemas>
-    </application>
-
+    
     <application name="location" title="Location" entity="location" >
 
       <filters>
