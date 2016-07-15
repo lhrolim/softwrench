@@ -26,7 +26,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration {
             if (results != null && results.Count == 1) {
                 var result = results[0];
                 var department = result["department"];
-                user.Genericproperties.Add("department", department);
+                user.AddGenericProperties("department", department);
             }
         }
     }

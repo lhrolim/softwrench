@@ -1,4 +1,5 @@
-﻿using cts.commons.persistence;
+﻿using System.Collections.Generic;
+using cts.commons.persistence;
 using cts.commons.simpleinjector.Events;
 using log4net;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
@@ -45,20 +46,22 @@ namespace softWrench.sW4.Data.Entities.Labor {
                 var result = results[0];
                 var craft = result.GetAttribute("craft");
                 var rate = result.GetAttribute("rate");
-                user.Genericproperties.Add("defaultcraft", craft);
-                user.Genericproperties.Add("defaultcraftrate", rate);
+                user.AddGenericProperties("defaultcraft", craft);
+                user.AddGenericProperties("defaultcraftrate", rate);
             }
         }
 
         private void PopulateLabor(UserLoginEvent userEvent) {
             var user = userEvent.InMemoryUser;
             var labor = _maximoHibernateDAO.FindSingleByNativeQuery<object>("select distinct(laborcode) from labor where personid = ? and orgid = ?", user.MaximoPersonId, user.OrgId);
+            var genericproperties = user.Genericproperties;
             if (labor != null) {
-                user.Genericproperties.Add("laborcode", labor);
+                genericproperties.Remove("laborcode");
+                genericproperties.Add("laborcode", labor);
             } else {
                 //usually the labor can be the personid, but sometimes its values can be overriden
                 //TODO:double check with Tina
-                user.Genericproperties.Add("laborcode", user.MaximoPersonId);
+                genericproperties.Add("laborcode", user.MaximoPersonId);
             }
         }
     }
