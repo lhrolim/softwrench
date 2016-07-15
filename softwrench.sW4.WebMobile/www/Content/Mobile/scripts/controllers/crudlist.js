@@ -203,9 +203,9 @@
                  function (event, toState, toParams, fromState, fromParams) {
                      $log.get("crudlist#statehandler").debug("handler called", arguments);
                      if (!toState.name.startsWith("main.crud")) {
-                         crudContextService.resetContext();
-                         $scope.crudlist.items = [];
-                         $scope.crudlist.moreItemsAvailable = false;
+//                         crudContextService.resetContext();
+//                         $scope.crudlist.items = [];
+//                         $scope.crudlist.moreItemsAvailable = false;
                      } else if (!toState.name.startsWith("main.crudlist")) {
                          //to avoid strange transitions on the screen
                          //TODO: transition finished event??
