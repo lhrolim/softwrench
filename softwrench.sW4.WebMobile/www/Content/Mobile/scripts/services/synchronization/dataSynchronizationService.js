@@ -43,23 +43,23 @@
                 angular.forEach(newDataMaps, function (newDataMap) {
                     const id = persistence.createUUID();
                     const newJson = JSON.stringify(newDataMap.fields); //newJson = datamapSanitizationService.sanitize(newJson);
-                    const idx = searchIndexService.buildIndexes(application.textIndexes, application.dateIndexes, newDataMap);
-                    const insertQuery = { query: entities.DataEntry.insertionQueryPattern, args: [newDataMap.application, newJson, newDataMap.id, String(newDataMap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.d1, idx.d2, idx.d3] };
+                    const idx = searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, newDataMap);
+                    const insertQuery = { query: entities.DataEntry.insertionQueryPattern, args: [newDataMap.application, newJson, newDataMap.id, String(newDataMap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
                     queryArray.push(insertQuery);
                 });
 
                 angular.forEach(insertUpdateDatamap, function (insertOrUpdateDatamap) {
                     const id = persistence.createUUID();
                     const newJson = JSON.stringify(insertOrUpdateDatamap.fields); //newJson = datamapSanitizationService.sanitize(newJson);
-                    const idx = searchIndexService.buildIndexes(application.textIndexes, application.dateIndexes, insertOrUpdateDatamap);
-                    const insertOrUpdateQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [insertOrUpdateDatamap.application, newJson, insertOrUpdateDatamap.id, String(insertOrUpdateDatamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.d1, idx.d2, idx.d3] };
+                    const idx = searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, insertOrUpdateDatamap);
+                    const insertOrUpdateQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [insertOrUpdateDatamap.application, newJson, insertOrUpdateDatamap.id, String(insertOrUpdateDatamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
                     queryArray.push(insertOrUpdateQuery);
                 });
 
                 angular.forEach(updatedDataMaps, function (updateDataMap) {
                     const updateJson = JSON.stringify(updateDataMap.fields); //updateJson = datamapSanitizationService.sanitize(updateJson);
-                    const idx = searchIndexService.buildIndexes(application.textIndexes, application.dateIndexes, updateDataMap);
-                    const updateQuery = { query: entities.DataEntry.updateQueryPattern, args: [updateJson, String(updateDataMap.approwstamp), idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.d1, idx.d2, idx.d3, updateDataMap.id, updateDataMap.application] };
+                    const idx = searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, updateDataMap);
+                    const updateQuery = { query: entities.DataEntry.updateQueryPattern, args: [updateJson, String(updateDataMap.approwstamp), idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3, updateDataMap.id, updateDataMap.application] };
                     queryArray.push(updateQuery);
                 });
 

@@ -269,6 +269,7 @@
             }
 
             _crudContext.indexes.textIndexes = parseIndexes("list.offline.text.indexlist", app.data.properties);
+            _crudContext.indexes.numericIndexes = parseIndexes("list.offline.numeric.indexlist", app.data.properties);
             _crudContext.indexes.dateIndexes = parseIndexes("list.offline.date.indexlist", app.data.properties);
             return _crudContext.indexes;
         }
