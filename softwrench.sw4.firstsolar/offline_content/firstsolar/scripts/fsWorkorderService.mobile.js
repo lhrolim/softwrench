@@ -127,12 +127,60 @@
         function getAssetWhereClause() {
             return assetsWithLocationEqualOrDescendant;
         }
+
+        function getFacilityFilterWhereClause(option) {
+            const facilities = option.split(",");
+            const terms = [];
+            angular.forEach(facilities, facility => {
+                const trimmed = facility.trim();
+                if (!trimmed) {
+                    return;
+                }
+
+                // textindex04 = location of the wo
+                terms.push(`textindex04 like '${trimmed}%'`);
+            });
+
+            return `(${terms.join(" or ")})`;
+        }
+
+        //#endregion
+
+        //#region Filter providers
+        function getFacilityFilterOptions() {
+            const options = [];
+
+            const user = securityService.currentFullUser();
+            if (!user) {
+                return options;
+            }
+
+            const props = user.properties;
+            if (!props) {
+                return options;
+            }
+
+            const facilities = props["sync.availablefacilities"];
+            if (!facilities) {
+                return options;
+            }
+
+            angular.forEach(facilities.sort(), facility => {
+                const option = { value: facility };
+                option.label = option.value;
+                option.text = option.value;
+                options.push(option);
+            });
+
+            return options;
+        }
         //#endregion
 
         //#endregion
 
         //#region Service Instance
         const service = {
+            // change event handlers
             afterFailureChanged,
             afterProblemChanged,
             afterCauseChanged,
@@ -141,8 +189,12 @@
             clearAsset,
             onNewDetailLoad,
             assignWorkOrder,
+            // whereclauses
             getLocationsWhereClause,
-            getAssetWhereClause
+            getAssetWhereClause,
+            getFacilityFilterWhereClause,
+            // filter providers
+            getFacilityFilterOptions
         };
         return service;
         //#endregion

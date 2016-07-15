@@ -547,8 +547,10 @@
         <list platform="mobile" title="WO - Assigned" redeclaring="true">
           <filters>
             <optionfilter attribute="wopriority" provider="realpriority_.description" />
+            <optionfilter attribute="location" label="Facility" whereclause="@fsWorkorderOfflineService.getFacilityFilterWhereClause" provider="@fsWorkorderOfflineService.getFacilityFilterOptions"/>
           </filters>
 
+          <field attribute="location" label="Location"/>
           <field attribute="wonum" label="Workorder Number" qualifier="title"/>
           <field attribute="wopriority" label="Priority" qualifier="icon"/>
           <field attribute="schedassigneddate" label="Scheduled Start Date" hidden="true"/>
@@ -724,14 +726,15 @@
       </properties>
 
       <schemas>
-        <list platform="mobile" title="WO - Other">
+        <list platform="mobile" title="WO - Group">
           <filters>
             <optionfilter attribute="wopriority" provider="realpriority_.description" />
+            <optionfilter attribute="location" label="Facility" whereclause="@fsWorkorderOfflineService.getFacilityFilterWhereClause" provider="@fsWorkorderOfflineService.getFacilityFilterOptions"/>
           </filters>
 
+          <field attribute="location" label="Location"/>
           <field attribute="wonum" label="Workorder Number" qualifier="title"/>
           <field attribute="wopriority" label="Priority" qualifier="icon"/>
-          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
           <field attribute="estdur" label="Estimated Duration" qualifier="subtitle">
             <renderer type="default" params="showLabel=true" />
