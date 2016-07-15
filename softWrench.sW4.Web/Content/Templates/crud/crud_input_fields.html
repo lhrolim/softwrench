@@ -271,8 +271,9 @@
                         </div>
                     </div>
                     <div ng-switch-when="multiselectautocompleteclient">
-                        <selectize config="{create:true, valueField:'value', labelField:'label', searchField: ['label'], createOnBlur:'true', beforeItemAdd:getDispatchFn(fieldMetadata.rendererParameters['newItemValidation']), }"
+                        <selectize config="{valueField:'value', labelField:'label',hideSelected:true, searchField: ['label'], createOnBlur:'true', beforeItemAdd:getDispatchFn(fieldMetadata.rendererParameters['newItemValidation']), }"
                                    options="GetAssociationOptions(fieldMetadata)"
+                                   creationallowed="{{fieldMetadata.rendererParameters['creationallowed']}}"
                                    ng-model="datamap[fieldMetadata.target]">
                         </selectize>
                     </div>

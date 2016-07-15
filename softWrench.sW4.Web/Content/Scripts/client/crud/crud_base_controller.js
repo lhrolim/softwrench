@@ -7,7 +7,10 @@
     function BaseController($scope, $log, i18NService, fieldService, commandService, formatService, layoutservice, expressionService, crudContextHolderService, dispatcherService, compositionService, genericTicketService,$timeout) {
 
         const blankArray = [];
-        
+
+        //to overcome an angular issue with infinite loops
+        var lastArray = [];
+        var lastArrayValues = [];
 
         /* i18N functions */
         $scope.i18NLabelTooltip = function (fieldMetadata) {
@@ -132,12 +135,26 @@
 
         function applyFilter(filter, options) {
             if (options && filter && filter.clientFunction) {
-                var fn = dispatcherService.loadServiceByString(filter.clientFunction);
+                const fn = dispatcherService.loadServiceByString(filter.clientFunction);
                 if (fn == null) {
                     $log.get("baselist#getoptionfields", ["association", "optionfield"]).warn("method {0} not found. review your metadata".format(filter.clientFunction));
                     return options;
                 }
-                let filteredOptions = options.filter(fn);
+                const filteredOptions = options.filter(fn);
+
+                const currentValues = filteredOptions.map(item => {
+                    return item.value;
+                });
+
+                const arrayEquals = currentValues.equals(lastArrayValues);
+                //this code is used due to a bug on angular where it consider two arrays to be different even though they are exactly the same
+                //TODO: improve this solution
+                if (arrayEquals) {
+                    return lastArray;
+                }
+                lastArray = filteredOptions;
+                lastArrayValues = currentValues;
+
                 if (filteredOptions.length === 0) {
                     //need to return this very same array every time to avoid angular infinite digest loops
                     

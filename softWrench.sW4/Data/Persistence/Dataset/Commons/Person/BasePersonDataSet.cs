@@ -120,11 +120,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                     statistics = _userStatisticsService.LocateStatistics(swUser);
                     activationLink = _userLinkManager.GetLinkByUser(swUser);
                 }
-                var isActive = (swUser.IsActive.HasValue && swUser.IsActive == false) ? "false" : "true";
-                dataMap.SetAttribute("#isactive", isActive);
-                var preferences = swUser.UserPreferences;
-                var signature = preferences != null ? preferences.Signature : "";
-                dataMap.SetAttribute("#signature", signature);
+                AdjustDatamapFromUser(swUser, dataMap);
             } else {
                 dataMap.SetAttribute("email_", new JArray());
                 dataMap.SetAttribute("phone_", new JArray());
@@ -149,6 +145,15 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             dataMap.SetAttribute("#userid", swUser.Id);
             dataMap.SetAttribute("#maxactive", maxActive);
             return detail;
+        }
+
+        protected virtual void AdjustDatamapFromUser(User swUser, DataMap dataMap)
+        {
+            var isActive = (swUser.IsActive.HasValue && swUser.IsActive == false) ? "false" : "true";
+            dataMap.SetAttribute("#isactive", isActive);
+            var preferences = swUser.UserPreferences;
+            var signature = preferences != null ? preferences.Signature : "";
+            dataMap.SetAttribute("#signature", signature);
         }
 
         /// <summary>
@@ -224,7 +229,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             user.Profiles = screenSecurityGroups;
             return user;
-            
+
 
 
         }

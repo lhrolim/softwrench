@@ -14,11 +14,9 @@
             if (!propertyExpression.startsWith("@")) {
                 return propertyExpression;
             }
-
-            var user = contextService.getUserData();
-
+            const user = contextService.getUserData();
             if (propertyExpression.startsWith("@user.")) {
-                var propName = propertyExpression.substring(6);
+                const propName = propertyExpression.substring(6);
                 if (user.hasOwnProperty(propName)) {
                     return user[propName];
                 }
@@ -27,7 +25,7 @@
             else if (propertyExpression.equalsAny("@userid")) {
                 return user.username;
             }
-            else if (propertyExpression.equalsAny("@personid","@username")) {
+            else if (propertyExpression.equalsAny("@personid", "@username")) {
                 return user.maximoPersonId == null ? user.username : user.maximoPersonId;
             }
             //TODO: finish this;
@@ -36,8 +34,8 @@
         };
 
         function getPersonId() {
-            var user = contextService.getUserData();
-            var personId = user.maximoPersonId;
+            const user = contextService.getUserData();
+            const personId = user.maximoPersonId;
             if (!personId && contextService.isLocal() && "swadmin".equalsIc(user.login)) {
                 return "SWADMIN";
             }
@@ -48,7 +46,7 @@
             if (roleArray == null) {
                 return true;
             }
-            var user = contextService.getUserData();
+            const user = contextService.getUserData();
             var userroles = user.roles;
             var result = false;
             $.each(roleArray, function (key, value) {
@@ -63,29 +61,34 @@
         }
 
         function inGroup(groupName) {
-            if (group == null) {
+            if (groupName == null) {
                 return true;
             }
-            var user = contextService.getUserData();
-            var personGroups = user.personGroups;
-            var result = false;
-
-            for (var i = 0; i < personGroups.length; i++) {
-                var userGroup = personGroups[i];
-                if (userGroup.personGroup.name == groupName) {
+            const user = contextService.getUserData();
+            
+            const personGroups = user.personGroups;
+            if (!personGroups || personGroups.length === 0) {
+                //fallingback to generic property
+                const groupsFromProperty = user.genericproperties["persongroups"] || [];
+                return groupsFromProperty.some(s => s === groupName);
+            }
+            for (let i = 0; i < personGroups.length; i++) {
+                const userGroup = personGroups[i];
+                if (userGroup.personGroup.name === groupName) {
                     return true;
                 }
             }
+
+
             return false;
         };
 
-        var service = {
-            getPersonId: getPersonId,
-            HasRole: hasRole,
-            InGroup: inGroup,
-            readProperty: readProperty
+        const service = {
+            getPersonId,
+            hasRole,
+            inGroup,
+            readProperty
         };
-
         return service;
 
     }

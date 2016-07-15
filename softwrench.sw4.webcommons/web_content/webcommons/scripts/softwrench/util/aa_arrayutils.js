@@ -75,6 +75,12 @@ Array.prototype.findIndex = Array.prototype.findIndex || function (predicate, th
     return lastIndex;
 }
 
+Array.prototype.equals = function (array) {
+    return this.length == array.length &&
+           this.every(function (this_i, i) { return this_i == array[i] })
+}
+
+
 if (typeof (Array.prototype.distinct) !== "function") {
     // from http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array#answer-9229821
     Array.prototype.distinct = function () {

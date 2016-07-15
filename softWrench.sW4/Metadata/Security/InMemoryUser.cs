@@ -34,7 +34,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _language;
         private readonly string _maximoPersonId;
         private readonly string _storeloc;
-        private readonly string _signature;
+        private string _signature;
         private readonly bool _changePassword;
         private Boolean? _active;
         private int? _timezoneOffset;
@@ -116,9 +116,20 @@ namespace softWrench.sW4.Metadata.Security {
             Identity = new GenericIdentity(_login);
             _gridPreferences = gridPreferences;
             _userPreferences = userPreferences;
-            _signature = userPreferences != null ? userPreferences.Signature : "";
+            HandleUserPreferences(userPreferences);
             _mergedUserProfile = mergedProfile;
             _active = dbUser.IsActive;
+        }
+
+        private void HandleUserPreferences(UserPreferences userPreferences) {
+            if (userPreferences != null) {
+                _signature = userPreferences.Signature;
+                if (_userPreferences.GenericProperties != null) {
+                    foreach (var genericProperty in _userPreferences.GenericProperties) {
+                        Genericproperties.Add(genericProperty.Key, genericProperty.Convert());
+                    }
+                }
+            }
         }
 
         private InMemoryUser(string mock) : this() {

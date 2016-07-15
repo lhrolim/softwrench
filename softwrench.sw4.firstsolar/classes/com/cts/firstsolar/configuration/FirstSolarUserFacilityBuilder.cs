@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using cts.commons.persistence;
 using cts.commons.simpleinjector.Events;
 using softwrench.sw4.offlineserver.events;
@@ -52,18 +53,28 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 return;
             }
             var user = userEvent.InMemoryUser;
-            AdjustUserFacilityProperties(user);
+            AdjustUserFacilityProperties(user.Genericproperties, user.MaximoPersonId);
         }
 
-        private void AdjustUserFacilityProperties(InMemoryUser user) {
-            if (user.Genericproperties.ContainsKey("facilities")) {
+        public IDictionary<string, object> AdjustUserFacilityProperties(IDictionary<string, object> genericproperties, string maximoPersonId) {
+            if (genericproperties.ContainsKey("facilities") && genericproperties.ContainsKey("persongroups")) {
                 //the list of facilities is already saved on the swdb database, let's use it
-                return;
+                return genericproperties;
             }
             //otherwise that list should be populated defaulting to the persongroups of the user
             var groups =
                 _dao.FindByNativeQuery("select persongroup from persongroupview where personid = ? and status = 'ACTIVE'",
-                    user.MaximoPersonId);
+                    maximoPersonId);
+            if (genericproperties.ContainsKey("persongroups")) {
+                genericproperties.Remove("persongroups");
+            }
+            genericproperties.Add("persongroups", groups.Select(s => s["persongroup"]));
+
+            if (genericproperties.ContainsKey("facilities")) {
+                //the list of facilities is already stored as a generic property
+                return genericproperties;
+            }
+
             var facilityList = new List<string>();
             foreach (var groupRow in groups) {
                 var group = groupRow["persongroup"];
@@ -71,12 +82,18 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                     facilityList.AddRange(PersonGroupFacilityMap[@group]);
                 }
             }
-            user.Genericproperties.Add("facilities", facilityList);
+
+            if (!genericproperties.ContainsKey("facilities")) {
+                genericproperties.Add("facilities", facilityList);
+            }
+            return genericproperties;
+
         }
 
 
         public void HandleEvent(PreSyncEvent eventToDispatch) {
-            AdjustUserFacilityProperties(SecurityFacade.CurrentUser());
+            var user = SecurityFacade.CurrentUser();
+            AdjustUserFacilityProperties(user.Genericproperties, user.MaximoPersonId);
         }
     }
 }

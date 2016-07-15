@@ -7,13 +7,16 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
     return {
         restrict: 'EA',
         require: '^ngModel',
-        scope: { ngModel: '=', config: '=?', options: '=?', ngDisabled: '=', ngRequired: '&' },
+        scope: { ngModel: '=', config: '=?', options: '=?', ngDisabled: '=', ngRequired: '&', creationallowed: '@' },
         link: function (scope, element, attrs, modelCtrl) {
 
             Selectize.defaults.maxItems = null; //default to tag editor
 
             var selectize,
                 config = angular.extend({}, Selectize.defaults, selectizeConfig, scope.config);
+
+            config.create = scope.creationallowed !== "false";
+            config.hideSelected = true;
 
             modelCtrl.$isEmpty = function (val) {
                 return val === undefined || val === null || !val.length; //override to support checking empty arrays
@@ -116,7 +119,7 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
                     angularCallback(selectize);
                 }
 
-                //cts:luiz --> add model to list to include the cases where for some reason the element gets created with pre-filled elements, and then a lsit comes from the server without these elements 
+                //cts:luiz --> add model to list to include the cases where for some reason the element gets created with pre-filled elements, and then a list comes from the server without these elements 
                 //(ex: reply all to an email which doesn´t belong to original list)
                 //https://controltechnologysolutions.atlassian.net/browse/SWWEB-1643
                 function updateOptionsWithSelectedModel(model, options) {

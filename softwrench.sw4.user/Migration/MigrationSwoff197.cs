@@ -8,10 +8,13 @@ namespace softwrench.sw4.user.Migration {
         public override void Up()
         {
             Create.Table("PREF_GENERICPROPERTIES")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
-                .WithColumn("key").AsString(MigrationUtil.StringSmall)
-                .WithColumn("value").AsString(MigrationUtil.StringLarge)
-                .WithColumn("preference_id").AsInt32().ForeignKey("fk_propprefid", "PREF_GENERALUSER", "id").NotNullable();
+               .WithColumn("id").AsInt32().PrimaryKey().Identity()
+               .WithColumn("key_").AsString(MigrationUtil.StringSmall)
+               .WithColumn("value_").AsString(MigrationUtil.StringLarge)
+               .WithColumn("type_").AsString(MigrationUtil.StringSmall).Nullable()
+               .WithColumn("preference_id").AsInt32().ForeignKey("fk_propprefid", "PREF_GENERALUSER", "id").NotNullable();
+
+            Create.UniqueConstraint("uq_key_prefid").OnTable("PREF_GENERICPROPERTIES").Columns("key_", "preference_id");
         }
 
         public override void Down() {

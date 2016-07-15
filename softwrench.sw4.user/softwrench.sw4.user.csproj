@@ -78,7 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\config\UserConfigurationConstants.cs" />
-    <Compile Include="classes\entities\GenericProperties.cs" />
+    <Compile Include="classes\entities\GenericProperty.cs" />
     <Compile Include="classes\entities\MergedUserProfile.cs" />
     <Compile Include="classes\entities\security\ContainerPermission.cs" />
     <Compile Include="classes\entities\security\FieldPermission.cs" />
