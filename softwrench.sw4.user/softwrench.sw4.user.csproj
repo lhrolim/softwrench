@@ -105,6 +105,7 @@
     <Compile Include="classes\services\setup\UserSetupEmailService.cs" />
     <Compile Include="classes\services\setup\UserLinkManager.cs" />
     <Compile Include="classes\services\UserStatisticsService.cs" />
+    <Compile Include="Migration\MigrationSwoff197_2.cs" />
     <Compile Include="Migration\MigrationSwweb1216.cs" />
     <Compile Include="Migration\MigrationSwweb2284.cs" />
     <Compile Include="Migration\MigrationSwoff197.cs" />

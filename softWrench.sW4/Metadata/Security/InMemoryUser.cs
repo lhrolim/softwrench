@@ -407,5 +407,11 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
 
+        public void AddGenericProperties(string key, object value) {
+            if (Genericproperties.ContainsKey(key)) {
+                Genericproperties.Remove(key);
+            }
+            Genericproperties.Add(key,value);
+        }
     }
 }
