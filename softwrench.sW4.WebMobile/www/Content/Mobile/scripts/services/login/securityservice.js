@@ -16,13 +16,21 @@
             }
         };
 
-        const $event = function (name) {
-            return config.eventnamespace + name;
+        const $event = name => config.eventnamespace + name;
+
+        const isLoginState = () => $state.current.name === "login";
+
+        const setUserProperties = (user, properties) => {
+            if (!properties || _.isEmpty(properties)) {
+                delete user["properties"];
+            } else {
+                user["properties"] = properties;
+                if (!!properties["siteid"]) user["SiteId"] = properties["siteid"];
+                if (!!properties["orgid"]) user["OrgId"] = properties["orgid"];
+            }
+            delete user["Properties"];
         };
 
-        const isLoginState = function () {
-            return $state.current.name === "login";
-        };
 
         /**
          * Authenticates the user locally initializing it's client-side session
@@ -37,9 +45,10 @@
          * 
          * @param {} user 
          */
-        const loginLocal = function (user) {
+        const loginLocal = user => {
             var previous = localStorageService.get(config.authkey);
             previous = !!previous ? previous : localStorageService.get(config.previouskey);
+            setUserProperties(user, user["Properties"]);
             localStorageService.put(config.authkey, user);
             $rootScope.$broadcast($event("login"), user, previous);
         };
@@ -153,15 +162,7 @@
          */
         const updateCurrentUserProperties = function (properties) {
             const current = currentFullUser();
-            if (!properties || _.isEmpty(properties)) {
-                delete current["properties"];
-            } else {
-                current["properties"] = properties;
-                if (properties["siteid"]) current["SiteId"] = properties["siteid"];
-                if (properties["SiteId"]) current["SiteId"] = properties["SiteId"];
-                if (properties["orgid"]) current["OrgId"] = properties["orgid"];
-                if (properties["OrgId"]) current["OrgId"] = properties["OrgId"];
-            }
+            setUserProperties(current, properties);
             localStorageService.put(config.authkey, current);
         };
 

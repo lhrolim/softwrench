@@ -1,6 +1,4 @@
-﻿using cts.commons.persistence.Util;
-using FluentMigrator;
-using NHibernate.Mapping;
+﻿using FluentMigrator;
 
 namespace softwrench.sw4.user.Migration {
     [Migration(201607151540)]

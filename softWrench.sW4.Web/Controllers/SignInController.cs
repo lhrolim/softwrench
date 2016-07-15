@@ -226,6 +226,7 @@ namespace softWrench.sW4.Web.Controllers {
             public string SiteId { get; set; }
             public string PersonId { get; set; }
             public long? UserTimezoneOffset { get; set; }
+            public IDictionary<string, object> Properties { get; set; }
 
             public UserReturningData(InMemoryUser user) {
                 if (user == null) {
@@ -237,6 +238,7 @@ namespace softWrench.sW4.Web.Controllers {
                     SiteId = user.SiteId;
                     PersonId = user.MaximoPersonId;
                     UserTimezoneOffset = user.TimezoneOffset;
+                    Properties = user.GenericSyncProperties;
                 }
             }
         }
