@@ -42,8 +42,14 @@
         }
 
         .divider {
-            height: 60px;
+            height: 40px;
             margin: 0 auto;
+        }
+
+        @media all and (min-width: 480px) {
+            .divider {
+                height: 60px;
+            }
         }
 
         input[type="text"], input[type="email"], input[type="password"] {
@@ -86,10 +92,6 @@
             margin-bottom: 30px;
             font-size: 14px;
             line-height: 1.5;
-        }
-
-        .buttons {
-            margin-top: 10px;
         }
 
         a {

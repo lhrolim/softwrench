@@ -43,6 +43,39 @@
                         scope.noteImg = attrs.noteImg || '';
                         scope.noteImgClass = attrs.noteImgClass || '';
 
+                        const valueChanged = function (value) {
+                            angular.forEach(scope.items, item => {
+                                if (item.value === value) {
+                                    item.checked = true;
+                                }
+                            });
+                        }
+
+                        const valuesChanged = function (values) {
+                            angular.forEach(values, value => {
+                                if (value) {
+                                    valueChanged(value);
+                                }
+                            });
+                        }
+
+                        // watch changes on value to update the multiple select checked state
+                        const watchForValueChanges = function () {
+                            return scope.$watch("value", function (newValue, oldValue) {
+                                if (newValue === oldValue || !scope.items || !scope.multiSelect) {
+                                    return;
+                                }
+
+                                angular.forEach(scope.items, item => item.checked = false);
+
+                                if (newValue) {
+                                    valuesChanged(newValue.split(";"));
+                                }
+                            });
+                        }
+
+                        scope.deWatchValueChanges = watchForValueChanges();
+
                         /* Optionnal callback function */
                         // scope.callback = attrs.callback || null;
 
@@ -78,6 +111,10 @@
                             // Construct selected values and selected text
                             if (scope.multiSelect == true) {
 
+                                // turns off the watch for value
+                                // multiple select toggles are updated at this point
+                                scope.deWatchValueChanges();
+
                                 // Clear values
                                 scope.value = '';
                                 scope.text = '';
@@ -95,6 +132,9 @@
                                 // Remove trailing comma
                                 scope.value = scope.value.substr(0, scope.value.length - 1);
                                 scope.text = scope.text.substr(0, scope.text.length - 2);
+
+                                // turns the watch again on timeout to force - on timeout to force the watch run first
+                                scope.deWatchValueChanges = watchForValueChanges();
                             }
 
                             // Select first value if not nullable
