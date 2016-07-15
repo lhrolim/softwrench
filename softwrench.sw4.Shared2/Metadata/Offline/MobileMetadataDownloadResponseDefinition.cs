@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace softwrench.sW4.Shared2.Metadata.Offline {
     public class MobileMetadataDownloadResponseDefinition {
@@ -15,5 +16,7 @@ namespace softwrench.sW4.Shared2.Metadata.Offline {
 
         public JObject AppConfiguration { get; set; }
 
+        public IDictionary<string, object> UserProperties { get; set; }
     }
+
 }

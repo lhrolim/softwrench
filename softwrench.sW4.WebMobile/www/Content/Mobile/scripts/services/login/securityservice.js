@@ -1,4 +1,4 @@
-﻿(function (mobileServices, ionic) {
+﻿(function (mobileServices, ionic, _) {
     "use strict";
 
     function securityService($rootScope,$state, localStorageService, routeService, $http, $q, swdbDAO, $ionicHistory) {
@@ -16,13 +16,21 @@
             }
         };
 
-        const $event = function (name) {
-            return config.eventnamespace + name;
+        const $event = name => config.eventnamespace + name;
+
+        const isLoginState = () => $state.current.name === "login";
+
+        const setUserProperties = (user, properties) => {
+            if (!properties || _.isEmpty(properties)) {
+                delete user["properties"];
+            } else {
+                user["properties"] = properties;
+                if (!!properties["siteid"]) user["SiteId"] = properties["siteid"];
+                if (!!properties["orgid"]) user["OrgId"] = properties["orgid"];
+            }
+            delete user["Properties"];
         };
 
-        const isLoginState = function () {
-            return $state.current.name === "login";
-        };
 
         /**
          * Authenticates the user locally initializing it's client-side session
@@ -37,9 +45,10 @@
          * 
          * @param {} user 
          */
-        const loginLocal = function (user) {
+        const loginLocal = user => {
             var previous = localStorageService.get(config.authkey);
             previous = !!previous ? previous : localStorageService.get(config.previouskey);
+            setUserProperties(user, user["Properties"]);
             localStorageService.put(config.authkey, user);
             $rootScope.$broadcast($event("login"), user, previous);
         };
@@ -132,7 +141,7 @@
          */
         const logout = function () {
             // invalidate current session
-            var current = localStorageService.remove(config.authkey);
+            const current = localStorageService.remove(config.authkey); 
             // making sure the previous user is always the last "active" user
             if (!!current) {
                 localStorageService.put(config.previouskey, current);
@@ -143,6 +152,18 @@
                 $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
                 return current;
             });
+        };
+
+        /**
+         * Updates the current user's properties.
+         * Get the updated properties by using {@link #currentFullUser}.properties.
+         * 
+         * @param {Object} properties 
+         */
+        const updateCurrentUserProperties = function (properties) {
+            const current = currentFullUser();
+            setUserProperties(current, properties);
+            localStorageService.put(config.authkey, current);
         };
 
         /**
@@ -169,7 +190,8 @@
             currentFullUser,
             hasAuthenticatedUser,
             logout,
-            handleUnauthorizedRemoteAccess
+            handleUnauthorizedRemoteAccess,
+            updateCurrentUserProperties
         };
         return service;
 
@@ -182,4 +204,4 @@
 
     //#endregion
 
-})(mobileServices, ionic);
+})(mobileServices, ionic, _);

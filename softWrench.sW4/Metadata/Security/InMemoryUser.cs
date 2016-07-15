@@ -362,6 +362,18 @@ namespace softWrench.sW4.Metadata.Security {
             }
         }
 
+        public IDictionary<string, object> GenericSyncProperties {
+            get {
+                var allProperties = Genericproperties;
+                var syncProperties = allProperties == null
+                    ? new Dictionary<string, object>()
+                    : allProperties.Where(p => p.Key.StartsWith("sync.")).ToDictionary(p => p.Key, p => p.Value);
+                syncProperties.Add("siteid", SiteId);
+                syncProperties.Add("orgid", OrgId);
+                return syncProperties;
+            }
+        }
+
         public string GetPersonGroupsForQuery() {
             var personGroups = PersonGroups.Select(f => f.PersonGroup.Name).ToArray();
             var strPersonGroups = String.Join("','", personGroups);

@@ -81,7 +81,8 @@ namespace softwrench.sw4.offlineserver.controller {
                 CompositionMetadatasJson = JsonConvert.SerializeObject(compositonApps, Formatting.None, _jsonSerializerSettings),
                 MenuJson = JsonConvert.SerializeObject(securedMenu, Formatting.None, _jsonSerializerSettings),
                 CommandBarsJson = JsonConvert.SerializeObject(commandBars, Formatting.None, _jsonSerializerSettings),
-                AppConfiguration = _appConfigurationProvider.AppConfig()
+                AppConfiguration = _appConfigurationProvider.AppConfig(),
+                UserProperties = user.GenericSyncProperties
             };
 
             Log.InfoFormat("Download Metadata executed in {0}", LoggingUtil.MsDelta(watch));
