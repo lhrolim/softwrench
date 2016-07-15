@@ -247,10 +247,10 @@
                           crudContextService.resetTab();
                       }
                   } else{
-                      crudContextService.leavingDetail();
-                      if (!toState.name.startsWith("main.crud")) {
-                          crudContextService.resetContext();
-                      }
+//                      crudContextService.leavingDetail();
+//                      if (!toState.name.startsWith("main.crud")) {
+//                          crudContextService.resetContext();
+//                      }
                   }
               });
 

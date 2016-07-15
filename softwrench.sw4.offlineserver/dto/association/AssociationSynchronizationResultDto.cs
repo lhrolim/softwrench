@@ -10,11 +10,13 @@ namespace softwrench.sw4.offlineserver.dto.association {
 
         public IDictionary<string, List<DataMap>> AssociationData { get; set; }
         public IDictionary<string, IList<string>> TextIndexes { get; set; }
+        public IDictionary<string, IList<string>> NumericIndexes { get; set; }
         public IDictionary<string, IList<string>> DateIndexes { get; set; }
 
         public AssociationSynchronizationResultDto() {
             AssociationData = new ConcurrentDictionary<string, List<DataMap>>();
             TextIndexes = new ConcurrentDictionary<string, IList<string>>();
+            NumericIndexes = new ConcurrentDictionary<string, IList<string>>();
             DateIndexes = new ConcurrentDictionary<string, IList<string>>();
         }
 

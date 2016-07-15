@@ -73,12 +73,17 @@
         public const string ListQuickSearchCompositionsToExclude = "list.search.compositionstoexclude";
 
         /// <summary>
-        /// Comma separated list of text fields that should be used as index on ofline search.
+        /// Comma separated list of text fields that should be used as index on offline search.
         /// </summary>
         public const string ListOfflineTextIndexes = "list.offline.text.indexlist";
 
         /// <summary>
-        /// Comma separated list of date fields that should be used as index on ofline search.
+        /// Comma separated list of numeric fields that should be used as index on offline search.
+        /// </summary>
+        public const string ListOfflineNumericIndexes = "list.offline.numeric.indexlist";
+
+        /// <summary>
+        /// Comma separated list of date fields that should be used as index on offline search.
         /// </summary>
         public const string ListOfflineDateIndexes = "list.offline.date.indexlist";
 

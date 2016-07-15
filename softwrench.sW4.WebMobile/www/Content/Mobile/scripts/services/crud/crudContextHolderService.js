@@ -269,6 +269,7 @@
             }
 
             _crudContext.indexes.textIndexes = parseIndexes("list.offline.text.indexlist", app.data.properties);
+            _crudContext.indexes.numericIndexes = parseIndexes("list.offline.numeric.indexlist", app.data.properties);
             _crudContext.indexes.dateIndexes = parseIndexes("list.offline.date.indexlist", app.data.properties);
             return _crudContext.indexes;
         }
@@ -324,37 +325,37 @@
         //#region Service Instance
 
         const service = {
-            setPreviousAndNextItems: setPreviousAndNextItems,
-            restoreState: restoreState,
-            isList: isList,
-            currentTitle: currentTitle,
-            currentApplicationName: currentApplicationName,
-            currentListSchema: currentListSchema,
-            currentDetailSchema: currentDetailSchema,
-            currentDetailItem: currentDetailItem,
-            currentProblems: currentProblems,
-            currentSchema: currentSchema,
-            itemlist: itemlist,
-            currentDetailItemDataMap: currentDetailItemDataMap,
-            leavingDetail: leavingDetail,
-            isOnMainTab: isOnMainTab,
-            resetTab: resetTab,
-            tabTitle: tabTitle,
-            leavingCompositionDetail: leavingCompositionDetail,
-            compositionList: compositionList,
-            getCompositionListSchema: getCompositionListSchema,
-            getCompositionDetailSchema: getCompositionDetailSchema,
-            getCompositionDetailItem: getCompositionDetailItem,
-            getGridSearchData: getGridSearchData,
-            getIndexes: getIndexes,
-            clearGridSearchValues: clearGridSearchValues,
-            clearGridSearch: clearGridSearch,
-            getQuickSearch: getQuickSearch,
-            hasDirtyChanges: hasDirtyChanges,
-            getActiveTab: getActiveTab,
-            reset: reset,
+            setPreviousAndNextItems,
+            restoreState,
+            isList,
+            currentTitle,
+            currentApplicationName,
+            currentListSchema,
+            currentDetailSchema,
+            currentDetailItem,
+            currentProblems,
+            currentSchema,
+            itemlist,
+            currentDetailItemDataMap,
+            leavingDetail,
+            isOnMainTab,
+            resetTab,
+            tabTitle,
+            leavingCompositionDetail,
+            compositionList,
+            getCompositionListSchema,
+            getCompositionDetailSchema,
+            getCompositionDetailItem,
+            getGridSearchData,
+            getIndexes,
+            clearGridSearchValues,
+            clearGridSearch,
+            getQuickSearch,
+            hasDirtyChanges,
+            getActiveTab,
+            reset,
             //below method to facilitate migration
-            getCrudContext: getCrudContext
+            getCrudContext
 
         };
 

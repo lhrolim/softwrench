@@ -719,7 +719,8 @@
 
     <application name="otherworkorder" title="Group Work Orders" entity="workorder" role="workorders">
       <properties>
-        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location,estdur"/>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
+        <property key="list.offline.numeric.indexlist" value="estdur"/>
       </properties>
 
       <schemas>

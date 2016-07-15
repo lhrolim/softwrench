@@ -38,6 +38,11 @@
                 parseIndexColumn(appCache, textIndexes.split(","), "textindex");
             }
 
+            const numericIndexes = listSchema.properties["list.offline.numeric.indexlist"];
+            if (numericIndexes) {
+                parseIndexColumn(appCache, numericIndexes.split(","), "numericindex");
+            }
+
             const dateIndexes = listSchema.properties["list.offline.date.indexlist"];
             if (dateIndexes) {
                 parseIndexColumn(appCache, dateIndexes.split(","), "dateindex");
@@ -120,13 +125,15 @@
         //#endregion
 
         // builds an array of index values parameters to be stored on client db
-        const buildIndexes = function (textIndexes, dateIndexes, newDataMap) {
+        const buildIndexes = function (textIndexes, numericIndexes, dateIndexes, newDataMap) {
             const indexesData = {
                 t1: null,
                 t2: null,
                 t3: null,
                 t4: null,
                 t5: null,
+                n1: null,
+                n2: null,
                 d1: null,
                 d2: null,
                 d3: null
@@ -136,6 +143,13 @@
                 angular.forEach(textIndexes, (indexName, i) => {
                     const data = newDataMap.fields || newDataMap;
                     indexesData[`t${i + 1}`] = data[indexName] || null;
+                });
+            }
+
+            if (numericIndexes) {
+                angular.forEach(numericIndexes, (indexName, i) => {
+                    const data = newDataMap.fields || newDataMap;
+                    indexesData[`n${i + 1}`] = data[indexName] || null;
                 });
             }
 
@@ -205,7 +219,10 @@
                 const indexColumn = getIndexColumn(appName, listSchema, gridSearch.sort.attribute);
                 if (indexColumn) {
                     const direction = gridSearch.sort.direction;
-                    return ` order by isDirty desc, ${indexColumn} is null ${direction}, lower(${indexColumn}) ${direction} `;
+                    if (indexColumn.startsWith("text")) {
+                        return ` order by isDirty desc, ${indexColumn} is null ${direction}, lower(${indexColumn}) ${direction} `;
+                    }
+                    return ` order by isDirty desc, ${indexColumn} is null ${direction}, ${indexColumn} ${direction} `;
                 }
             }
 
