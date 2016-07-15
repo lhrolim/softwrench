@@ -3,8 +3,11 @@
 
     angular.module("sw_layout").controller("BaseController", BaseController);
     //idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-    BaseController.$inject = ["$scope", "$log", "i18NService", "fieldService", "commandService", "formatService", "layoutservice", "expressionService", "crudContextHolderService", "dispatcherService", "compositionService", "genericTicketService"];
-    function BaseController($scope, $log, i18NService, fieldService, commandService, formatService, layoutservice, expressionService, crudContextHolderService, dispatcherService, compositionService, genericTicketService) {
+    BaseController.$inject = ["$scope", "$log", "i18NService", "fieldService", "commandService", "formatService", "layoutservice", "expressionService", "crudContextHolderService", "dispatcherService", "compositionService", "genericTicketService","$timeout"];
+    function BaseController($scope, $log, i18NService, fieldService, commandService, formatService, layoutservice, expressionService, crudContextHolderService, dispatcherService, compositionService, genericTicketService,$timeout) {
+
+        const blankArray = [];
+        
 
         /* i18N functions */
         $scope.i18NLabelTooltip = function (fieldMetadata) {
@@ -134,7 +137,13 @@
                     $log.get("baselist#getoptionfields", ["association", "optionfield"]).warn("method {0} not found. review your metadata".format(filter.clientFunction));
                     return options;
                 }
-                return options.filter(fn);
+                let filteredOptions = options.filter(fn);
+                if (filteredOptions.length === 0) {
+                    //need to return this very same array every time to avoid angular infinite digest loops
+                    
+                    return blankArray;
+                }
+                return filteredOptions;
             }
             return options;
         }

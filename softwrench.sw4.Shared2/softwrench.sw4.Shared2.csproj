@@ -79,6 +79,7 @@
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationFieldContainer.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IDependableField.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IPropertyHolder.cs" />
+    <Compile Include="Metadata\Applications\Schema\OptionContainer.cs" />
     <Compile Include="Metadata\Applications\Schema\ReferenceDisplayable.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationSchemaCustomization.cs" />
     <Compile Include="Metadata\Applications\Schema\SchemaRepresentation.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Metadata\Menu\Interfaces\MenuBaseDefinition.cs" />
     <Compile Include="Metadata\Modules\ModuleDefinition.cs" />
     <Compile Include="Metadata\Offline\MobileMetadataDownloadResponseDefinition.cs" />
+    <Compile Include="Metadata\SharedApplicationData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\DisplayableUtil.cs" />
     <Compile Include="Util\EntityUtil.cs" />

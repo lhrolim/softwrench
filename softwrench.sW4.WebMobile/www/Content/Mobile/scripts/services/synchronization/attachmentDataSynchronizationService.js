@@ -1,16 +1,16 @@
 ﻿(function (mobileServices, angular) {
     "use strict";
 
-    function attachmentDataSynchronizationService($q,$log, swdbDAO, entities,restService) {
+    function attachmentDataSynchronizationService($q, $log, swdbDAO, entities, restService) {
         //#region Utils
 
         const numberOfParallelDownloads = 2;
 
 
-        const matchinfFilesResolver = (matchingFiles, doclinksArray) => {
+        const matchinfFilesResolver = (matchingFiles, doclinksArray, log) => {
 
             //result will hold a list of matching files, ie, files whose hash(ids) match the ones returned from the server batch
-            const attachmentsToUpdateQuery = doclinksArray.filter(syncItem => matchingFiles.some(m => m.id === syncItem.hash && m.compositionRemoteId != null)).map(item => {
+            const attachmentsToUpdateQuery = doclinksArray.filter(syncItem => matchingFiles.some(m => m.id === syncItem.hash && (m.compositionRemoteId == null || m.docinfoRemoteId == null))).map(item => {
                 //we only need to update the attachments whose compositionRemoteId are still null on the database, since the others would mean a useless operation
                 return { query: entities.Attachment.UpdateRemoteIdOfExistingAttachments, args: [String(item.compositionRemoteId), String(item.docinfoid), item.hash] }
             });
@@ -19,15 +19,34 @@
                 //we only need to update the attachments whose compositionRemoteId are still null on the database, since the others would mean a useless operation
                 return { query: entities.Attachment.CreateNewBlankAttachments, args: [item.ownerTable, String(item.ownerId), String(item.compositionRemoteId), String(item.docinfoid), persistence.createUUID()] }
             });
+            const attachmentQueries = attachmentsToUpdateQuery.concat(attachmentsToInsertQuery);
 
-            return $q.when(attachmentsToUpdateQuery.concat(attachmentsToInsertQuery));
+            if (attachmentQueries.length === 0) {
+                log.debug("no attachments to be inserted/updated");
+            }
 
+            if (attachmentsToUpdateQuery.length !== 0) {
+                log.debug(`${attachmentsToUpdateQuery.length} locally created attachments will get updated`);
+            }
+
+            if (attachmentsToInsertQuery.length !== 0) {
+                log.debug(`${attachmentsToInsertQuery.length} attachments will get created locally`);
+            }
+
+            return $q.when(attachmentQueries);
         }
 
         //#endregion
 
         //#region Public methods
-
+        /**
+         *  Generates the queries for 
+         *  1) inserting into Attachments ones that were not created locally (either on other devices or on the online mode)
+         *  2) updating the remoteids for the attachments that were created locally on this particular device
+         * 
+         * @param {} doclinksArray 
+         * @returns {} 
+         */
         function generateAttachmentsQueryArray(doclinksArray) {
 
             if (doclinksArray.length === 0) {
@@ -35,23 +54,23 @@
             }
             const querySt = entities.Attachment.NonPendingAttachments;
             //gathering the list of hashs that is coming from the server sync, and checking which ones already exist locally
-            let ids = doclinksArray.filter(f => f.hash != null).map(item => item.hash).join("','");
-
-
-            if (ids !== "") {
+            //hashs would only exist for files that got created on offline devices!!
+            const ids = doclinksArray.filter(f => f.hash != null).map(item => item.hash);
+            const log = $log.get("attachmentDataSynchronizationService#generateAttachmentsQueryArray", ["attachment", "sync", "download"]);
+            if (ids.length !== 0) {
                 //there's at least one file with a hash returned, perhaps we need to update it locally...
-                ids = "'" + ids + "'";
-                const query = { query: entities.Attachment.NonPendingAttachments, args: ids };
-                return swdbDAO.executeQuery(query).then((results) => {
-                    return matchinfFilesResolver(results, doclinksArray);
+                log.debug(`determining which attachments should be downloaded amongst ${ids} `);
+                return swdbDAO.executeStatement(entities.Attachment.NonPendingAttachments,[ids]).then((results) => {
+                    return matchinfFilesResolver(results, doclinksArray, log);
                 });
             }
-            //not a single file returned contained a hash, let's simply skip this query, since we know for sure, we won't need to update any attachment, but rather just create some
-            return matchinfFilesResolver([], doclinksArray);
+            //not a single file returned contained a hash (they were all created on online mode),
+            //let's simply skip this query, since we know for sure, we won't need to update any attachment, but rather just create some
+            return matchinfFilesResolver([], doclinksArray, log);
 
         }
 
-        function bufferedDownload(attachmentsToDownload, originalDeferred,log) {
+        function bufferedDownload(attachmentsToDownload, originalDeferred, log) {
             const promiseDownloadBuffer = [];
             if (attachmentsToDownload.length === 0) {
                 originalDeferred.resolve();
@@ -83,15 +102,15 @@
                         const queryObj = { query: entities.Attachment.UpdatePendingAttachment, args: [data.content, data.mimeType, localFileId] }
                         updateQueriesObject.push(queryObj);
                     }
-                    
+
                 }
-                swdbDAO.executeQueries(updateQueriesObject).then(bufferedDownload(attachmentsToDownload, originalDeferred,log));
+                swdbDAO.executeQueries(updateQueriesObject).then(bufferedDownload(attachmentsToDownload, originalDeferred, log));
             });
 
         }
 
         function downloadAttachments() {
-            const log = $log.get("attachmentDataSynchronizationService#downloadAttachments", ["attachment", "sync","download"]);
+            const log = $log.get("attachmentDataSynchronizationService#downloadAttachments", ["attachment", "sync", "download"]);
 
             return swdbDAO.executeQuery(entities.Attachment.PendingAttachments).then((attachmentsToDownload) => {
                 if (attachmentsToDownload.length === 0) {
@@ -109,7 +128,7 @@
                     const promise = restService.get("OfflineAttachment", "DownloadBase64", { id: attachment.docinfoRemoteId });
                     fullPromiseBuffer.push({ id: attachment.id, promise: promise });
                 });
-                bufferedDownload(fullPromiseBuffer, deferred,log);
+                bufferedDownload(fullPromiseBuffer, deferred, log);
 
                 return deferred.promise;
 
@@ -148,7 +167,7 @@
                         log.trace("skipping entry {0} since it hold no attachment".format(dataEntry.id));
                         return;
                     }
-//                    #offlinehash
+                    //                    #offlinehash
                     var rightAttachmentDatamap = attachmentArray.find(a => a["#offlinehash"] === attachment.id);
                     if (rightAttachmentDatamap == null) {
                         log.warn(`could not locate attachment ${attachment.id} in any of the ${applicationName} of ids ${ids}`);

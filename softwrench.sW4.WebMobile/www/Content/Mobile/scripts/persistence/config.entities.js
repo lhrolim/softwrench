@@ -170,7 +170,7 @@
             mimetype:"TEXT" //mimetype of the file
         });
 
-        entities.Attachment.NonPendingAttachments = "select id,compositionRemoteId from Attachment where (path is not null or content is not null) and id in (?)";
+        entities.Attachment.NonPendingAttachments = "select id,compositionRemoteId,docinfoRemoteId from Attachment where (path is not null or content is not null) and id in (?)";
         entities.Attachment.UpdateRemoteIdOfExistingAttachments = "update Attachment set 'compositionRemoteId' = ?, 'docinfoRemoteId'=? where id = ?";
         entities.Attachment.CreateNewBlankAttachments = "insert into Attachment ('application','parentId','compositionRemoteId','docinfoRemoteId','id') values (?,?,?,?,?)";
         //brings the attachments that need to be syncrhonized to the server. The ones which have a compositionRemoteId already point to a downloaded composition, and thus do not require to be uploaded

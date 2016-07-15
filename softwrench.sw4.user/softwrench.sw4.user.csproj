@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\config\UserConfigurationConstants.cs" />
+    <Compile Include="classes\entities\GenericProperties.cs" />
     <Compile Include="classes\entities\MergedUserProfile.cs" />
     <Compile Include="classes\entities\security\ContainerPermission.cs" />
     <Compile Include="classes\entities\security\FieldPermission.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="classes\services\UserStatisticsService.cs" />
     <Compile Include="Migration\MigrationSwweb1216.cs" />
     <Compile Include="Migration\MigrationSwweb2284.cs" />
+    <Compile Include="Migration\MigrationSwoff197.cs" />
     <Compile Include="Migration\MigrationSWWEB2356.cs" />
     <Compile Include="Migration\MigrationSWWEB2355.cs" />
     <Compile Include="Migration\MigrationSwweb1340.cs" />

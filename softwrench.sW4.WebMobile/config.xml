@@ -121,6 +121,7 @@
   <plugin name="com.ionic.keyboard" version="1.0.4" />
   <plugin name="cordova-plugin-file-opener2" version="2.0.2" src="https://github.com/emilhuseynli/cordova-plugin-file-opener2" />
   <plugin name="cordova-plugin-inappbrowser" version="1.4.0" />
+  <plugin name="cordova-plugin-statusbar" version="2.1.3" />
   <!--#endregion-->
 
 </widget>

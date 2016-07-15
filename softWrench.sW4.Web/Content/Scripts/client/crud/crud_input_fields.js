@@ -593,6 +593,10 @@
                     }
 
                     $scope.getDispatchFn = function (serviceCall) {
+                        if (serviceCall == null) {
+                            return () => true;
+                        }
+
                         var validationFunction = dispatcherService.loadServiceByString(serviceCall);
                         if (validationFunction == null) {
                             validationFunction = function () { return true };

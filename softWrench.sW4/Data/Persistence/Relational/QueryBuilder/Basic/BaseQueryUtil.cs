@@ -41,7 +41,12 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
 
         public static string GenerateOrLikeString(string columnName, IEnumerable<string> items) {
             var sb = new StringBuilder();
-            foreach (var item in items) {
+            var enumerable = items as IList<string> ?? items.ToList();
+            if (items == null || !enumerable.Any()) {
+                return "1=1";
+            }
+
+            foreach (var item in enumerable) {
                 var escapedItem = item.Replace("'", "''");
                 if (escapedItem.Contains("%")) {
                     sb.AppendFormat(" {0} like '{1}'", columnName, escapedItem);

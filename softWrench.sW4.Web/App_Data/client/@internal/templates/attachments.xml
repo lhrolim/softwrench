@@ -23,7 +23,7 @@
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="maximoURL"/>
           <!--this shall hold the hash of the file to prevent a second offline download -->
-          <field hidden="true" attribute="docinfo_.urlparam"/>
+          <field hidden="true" attribute="docinfo_.urlparam1"/>
         </list>
         
         <schema id="detail" platform="mobile" title="Attachments">

@@ -22,8 +22,8 @@ namespace softwrench.sW4.test.Data.Persistence.Relational {
             var user = InMemoryUser.TestInstance();
             user.Genericproperties.Add("siteid", "a1");
             user.Genericproperties.Add("orgid", "a2");
-            var result = qb.ConvertAllValues("sr.siteid=@user.properties['siteid'] and sr.orgid=@user.properties['orgid']", user);
-            Assert.AreEqual("sr.siteid=a1 and sr.orgid=a2", result);
+            var result = qb.ConvertAllValues("sr.siteid='@user.properties['siteid']' and sr.orgid='@user.properties['orgid']'", user);
+            Assert.AreEqual("sr.siteid='a1' and sr.orgid='a2'", result);
         }
 
         [TestMethod]

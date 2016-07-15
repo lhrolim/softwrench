@@ -162,9 +162,40 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         /// <param name="userIdSite"></param>
         /// <returns></returns>
         public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
+            var isactive = json.GetValue("#isactive").ToString().EqualsAny("1", "true");
+            string primaryEmail = null;
+            var isCreation = application.Schema.Stereotype == SchemaStereotype.DetailNew;
+            var primaryEmailToken = json.GetValue("#primaryemail");
+            if (primaryEmailToken != null) {
+                primaryEmail = primaryEmailToken.ToString();
+            }
+            var user = PopulateSwdbUser(application, json, id, operation);
+            user = UserManager.SaveUser(user);
+
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
+            //saving person on Maximo database
+            var targetResult = Engine().Execute(operationWrapper);
 
+            // Upate the in memory user if the change is for the currently logged in user
+            var currentUser = SecurityFacade.CurrentUser();
+            if (user.UserName.EqualsIc(currentUser.Login) && user.Id != null) {
+                var fullUser = SecurityFacade.GetInstance().FetchUser(user.Id.Value);
+                var userResult = SecurityFacade.UpdateUserCache(fullUser, currentUser.TimezoneOffset.ToString());
+                targetResult.ResultObject = new DataMap(application.Name, ToDictionary(userResult)).Fields;
+            }
+
+            var passwordString = HandlePassword(json, user);
+
+            if (isCreation && isactive) {
+                _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
+            }
+
+            return targetResult;
+        }
+
+        //saving user on SWDB first
+        protected virtual User PopulateSwdbUser(ApplicationMetadata application, JObject json, string id, string operation) {
             // Save the updated sw user record
             var username = json.GetValue("personid").ToString();
             var firstName = json.GetValue("firstname").ToString();
@@ -177,14 +208,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 FirstName = firstName,
                 LastName = lastName
             };
-            var isCreation = application.Schema.Stereotype == SchemaStereotype.DetailNew;
-            var primaryEmailToken = json.GetValue("#primaryemail");
-            string primaryEmail = null;
-            if (primaryEmailToken != null) {
-                primaryEmail = primaryEmailToken.ToString();
-            }
-
-            var passwordString = HandlePassword(json, user);
             user.IsActive = isactive;
             if (user.UserPreferences == null) {
                 user.UserPreferences = new UserPreferences() {
@@ -194,31 +217,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             user.UserPreferences.Signature = signature;
             var screenSecurityGroups = LoadProfiles(json);
 
-
             var validSecurityGroupOperation = ValidateSecurityGroups(application.Schema.SchemaId, dbUser, screenSecurityGroups);
             if (!validSecurityGroupOperation) {
                 throw new SecurityException("you do not have enough permissions to perform this operation");
             }
 
             user.Profiles = screenSecurityGroups;
+            return user;
+            
 
-            //saving user on SWDB first
-            UserManager.SaveUser(user);
-            //saving person on Maximo database
-            var targetResult = Engine().Execute(operationWrapper);
 
-            // Upate the in memory user if the change is for the currently logged in user
-            var currentUser = SecurityFacade.CurrentUser();
-            if (user.UserName.EqualsIc(currentUser.Login) && user.Id != null) {
-                var fullUser = SecurityFacade.GetInstance().FetchUser(user.Id.Value);
-                var userResult = SecurityFacade.UpdateUserCache(fullUser, currentUser.TimezoneOffset.ToString());
-                targetResult.ResultObject = new DataMap(application.Name, ToDictionary(userResult)).Fields;
-            }
-            if (isCreation && isactive) {
-                _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
-            }
-
-            return targetResult;
         }
 
         private IDictionary<string, object> ToDictionary(InMemoryUser definition) {

@@ -386,7 +386,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
 
                     $(compiledTemplate.element).find(".ion-autocomplete-clear").bind('click', function (event) {
                         compiledTemplate.scope.items = [];
-                        ngModel.$setViewValue(compiledTemplate.scope.selectedItems);
+                        ngModel.$setViewValue(null);
                         ngModel.$render();
                         compiledTemplate.scope.searchQuery = undefined;
                         hideSearchContainer();

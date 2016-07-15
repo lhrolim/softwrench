@@ -167,7 +167,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             w.SetValue(docLink, "DOCTYPE", "Attachments");
             if (attachment.OffLineHash != null) {
                 //for offline solution
-                w.SetValue(docLink, "URLPARAM", attachment.OffLineHash);
+                w.SetValue(docLink, "URLPARAM1", attachment.OffLineHash);
             }
             w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
             w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? string.Empty);

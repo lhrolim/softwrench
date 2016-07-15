@@ -14,7 +14,7 @@ using Microsoft.Ajax.Utilities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence {
-    class DefaultValuesBuilder {
+    public class DefaultValuesBuilder {
 
         private const string UserPrefix = "@user.";
         private const string PastFunctionPrefix = "@past(";
@@ -193,6 +193,12 @@ namespace softWrench.sW4.Data.Persistence {
             return null;
         }
 
+        /// <summary>
+        /// @user.properties[xxx]
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         private static string ReadFromUserGenericProperties(string text, InMemoryUser user) {
             try {
                 var innerReference = Regex.Split(text, UserPrefix);

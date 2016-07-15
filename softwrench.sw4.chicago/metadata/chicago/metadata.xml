@@ -299,6 +299,7 @@
 
           <field attribute="ismticketid" hidden="true"/>
           <field attribute="ismticketuid" hidden="true"/>
+          
 
           <section orientation="horizontal">
             <field attribute="description" label="Summary" requiredexpression="true"/>
@@ -573,6 +574,7 @@
           <customization position="statussection">
             <section orientation="horizontal" id="statussection">
               <renderer type="default" params="childinputsize=small" />
+              <field attribute="pluspcustomer" hidden="true" default="CPS-00"/>
               <field attribute="ticketuid" label="SR#" hidden="true"/>
               <field attribute="creationdate" label="Creation Date" default="@currentdatetime" hidden="true">
                 <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
@@ -611,6 +613,7 @@
 
         <schema id="quickeditdetail" stereotype="detail" title="New Quick Request" redeclaring="false">
           <customization position="statussection">
+            <field attribute="pluspcustomer" hidden="true" default="CPS-00"/>
             <section orientation="horizontal" id="statussection">
               <renderer type="default" params="childinputsize=small" />
               <field attribute="description" label="Summary" requiredexpression="true">

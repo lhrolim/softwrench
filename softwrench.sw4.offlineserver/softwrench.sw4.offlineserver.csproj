@@ -55,6 +55,7 @@
     <Compile Include="controller\OfflineAttachmentController.cs" />
     <Compile Include="dto\association\AssociationSynchronizationResultDto.cs" />
     <Compile Include="dto\association\ClientAssociationCacheEntry.cs" />
+    <Compile Include="events\IPreSyncEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="dto\SynchronizationApplicationResultData.cs" />
     <Compile Include="services\OffLineCollectionResolver.cs" />

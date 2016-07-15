@@ -202,12 +202,12 @@
         }
 
         const service = {
-            getWizardFields: getWizardFields,
-            isInWizardState: isInWizardState,
-            canReturn: canReturn,
-            next: next,
-            previous: previous,
-            isReadOnly: isReadOnly
+            getWizardFields,
+            isInWizardState,
+            canReturn,
+            next,
+            previous,
+            isReadOnly
         };
 
         return service;
