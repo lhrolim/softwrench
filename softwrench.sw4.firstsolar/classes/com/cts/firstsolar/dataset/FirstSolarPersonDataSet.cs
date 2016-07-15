@@ -16,6 +16,8 @@ using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
     public class FirstSolarPersonDataSet : BasePersonDataSet {
+        private const string SyncFacilitiesConstant = "sync.facilities";
+        private const string SyncAvailablefacilities = "sync.availablefacilities";
 
         private readonly FirstSolarUserFacilityBuilder _userFacilityBuilder;
 
@@ -31,10 +33,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var baseUser = base.PopulateSwdbUser(application, json, id, operation);
             var facilitiesToken = ParseFacilities(json);
             var preferences = baseUser.UserPreferences;
-            var facilitiesProp = preferences.GenericProperties.FirstOrDefault(f => f.Key.Equals("sync.facilities"));
+            var facilitiesProp = preferences.GenericProperties.FirstOrDefault(f => f.Key.Equals(SyncFacilitiesConstant));
             if (facilitiesProp == null) {
                 preferences.GenericProperties.Add(new GenericProperty() {
-                    Key = "sync.facilities",
+                    Key = SyncFacilitiesConstant,
                     Value = facilitiesToken,
                     UserPreferences = preferences,
                     Type = "list"
@@ -58,12 +60,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 resultProperties =
                     _userFacilityBuilder.AdjustUserFacilityProperties(new Dictionary<string, object>(), maximoPersonId);
             }
-            if (resultProperties.ContainsKey("sync.facilities") && !detail.ResultObject.ContainsAttribute("facilities")) {
+            if (resultProperties.ContainsKey(SyncFacilitiesConstant) && !detail.ResultObject.ContainsAttribute("facilities")) {
                 //if the facility was already stored on the database it would already have been set on the AdjustDatamapFromUser method
                 detail.ResultObject.SetAttribute("facilities", resultProperties["facilities"]);
             }
-            if (resultProperties.ContainsKey("sync.availablefacilities")) {
-                detail.ResultObject.SetAttribute("availablefacilities", resultProperties["sync.availablefacilities"]);
+            if (resultProperties.ContainsKey(SyncAvailablefacilities)) {
+                detail.ResultObject.SetAttribute("availablefacilities", resultProperties[SyncAvailablefacilities]);
             }
             return detail;
         }
@@ -71,8 +73,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         protected override void AdjustDatamapFromUser(User swUser, DataMap dataMap) {
             base.AdjustDatamapFromUser(swUser, dataMap);
             if (swUser.UserPreferences != null &&
-                swUser.UserPreferences.GenericProperties.Any(p => p.Key.Equals("facilities"))) {
-                var fac = swUser.UserPreferences.GenericProperties.FirstOrDefault(p => p.Key.Equals("facilities"));
+                swUser.UserPreferences.GenericProperties.Any(p => p.Key.Equals(SyncFacilitiesConstant))) {
+                var fac = swUser.UserPreferences.GenericProperties.FirstOrDefault(p => p.Key.Equals(SyncFacilitiesConstant));
                 if (fac != null) {
                     dataMap.SetAttribute("facilities", fac.Convert());
                 }
