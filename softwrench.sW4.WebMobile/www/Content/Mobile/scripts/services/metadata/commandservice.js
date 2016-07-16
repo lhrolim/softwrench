@@ -14,6 +14,7 @@
                 if (!bars || bars.length <= 0) {
                     return commandBars;
                 }
+                $log.get("offlineCommandService#initAndCacheFromDataBase").debug("init ");
                 angular.forEach(bars, (bar) => commandBars[bar.key] = bar.data);
                 return cachedCommands = commandBars;
             });
@@ -25,7 +26,7 @@
                 ? $q.when()
                 : dao.deleteTable("CommandBar")
                     .then(() => $q.all(Object.keys(bars).map(key => dao.instantiate("CommandBar", { key, data: bars[key] }))))
-                    .then(b => dao.bulkSave(b))
+                    .then(b => $q.when(persistence.transaction(tx => dao.bulkSave(b, tx))))
                     .then(b => cachedCommands = bars);
         }
 

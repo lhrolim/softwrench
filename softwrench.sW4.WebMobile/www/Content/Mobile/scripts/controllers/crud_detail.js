@@ -17,6 +17,7 @@
         }
 
         function init() {
+            log.get("crud_detail#init").debug("crud detail init");
             $scope.allDisplayables = crudContextService.mainDisplayables();
             $scope.displayables = wizardService.getWizardFields($scope.allDisplayables);
             $scope.schema = crudContextService.currentDetailSchema();

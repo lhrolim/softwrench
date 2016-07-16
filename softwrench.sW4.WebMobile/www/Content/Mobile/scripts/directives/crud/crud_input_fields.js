@@ -204,6 +204,7 @@
                     }
 
                     function init() {
+                        $log.get("crud_input_fieldsl#init").debug("crud_input_fields init");
                         watchFields();
                     }
 
