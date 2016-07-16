@@ -2,9 +2,9 @@
 (function (angular) {
     "use strict";
 
-    angular.module("softwrench").factory("crudContextHolderService", ["$log", "contextService", crudContextHolderService]);
+    angular.module("softwrench").factory("crudContextHolderService", ["$log","$state", "contextService", crudContextHolderService]);
 
-    function crudContextHolderService($log, contextService) {
+    function crudContextHolderService($log,$state, contextService) {
         /// <summary>
         /// 
         /// </summary>
@@ -129,7 +129,7 @@
         };
 
         function isList() {
-            return _crudContext.currentDetailItem == null;
+            return $state.current.name === "main.crudlist";
         };
 
         function currentTitle() {

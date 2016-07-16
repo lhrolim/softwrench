@@ -1,7 +1,7 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller('MainController', ["$scope", "routeService", "$ionicSideMenuDelegate", "menuModelService", "crudContextService", "swAlertPopup", "$ionicPopup", "securityService", "synchronizationFacade", "networkConnectionService",
+    softwrench.controller('MainController', ["$scope","routeService", "$ionicSideMenuDelegate", "menuModelService", "crudContextService", "swAlertPopup", "$ionicPopup", "securityService", "synchronizationFacade", "networkConnectionService",
         function ($scope, routeService, $ionicSideMenuDelegate, menuModelService, crudContextService, swAlertPopup, $ionicPopup, securityService, synchronizationFacade, networkConnectionService) {
 
             $scope.data = {};
