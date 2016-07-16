@@ -605,9 +605,8 @@ module.exports = function (grunt) {
                     preprocessors: getKarmaPreprocessorsConfig(testScripts),
                     files: [
                         "overrides/cordova.js",
-                        "www/Content/public/vendor/vendor.min.js",
-                        "www/Content/public/app.min.js"
-                    ].concat(testScripts)
+                        "www/Content/public/vendor/vendor.min.js"
+                    ].concat(ngMockScript).concat(["www/Content/public/app.min.js"]).concat(testScripts)
                 }
             }
         },
