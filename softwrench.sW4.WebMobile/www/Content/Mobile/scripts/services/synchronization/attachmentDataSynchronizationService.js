@@ -9,14 +9,21 @@
 
         const matchinfFilesResolver = (matchingFiles, doclinksArray, log) => {
 
+            
+
+            const updateFiltercondition = syncItem => matchingFiles.some(m => m.id === syncItem.hash && (m.compositionRemoteId == null || m.docinfoRemoteId == null));
+
             //result will hold a list of matching files, ie, files whose hash(ids) match the ones returned from the server batch
-            const attachmentsToUpdateQuery = doclinksArray.filter(syncItem => matchingFiles.some(m => m.id === syncItem.hash && (m.compositionRemoteId == null || m.docinfoRemoteId == null))).map(item => {
+            const attachmentsToUpdateQuery = doclinksArray.filter(updateFiltercondition).map(item => {
                 //we only need to update the attachments whose compositionRemoteId are still null on the database, since the others would mean a useless operation
                 return { query: entities.Attachment.UpdateRemoteIdOfExistingAttachments, args: [String(item.compositionRemoteId), String(item.docinfoid), item.hash] }
             });
 
-            const attachmentsToInsertQuery = doclinksArray.filter(syncItem => !matchingFiles.some(m => m.id === syncItem.hash)).map(item => {
-                //we only need to update the attachments whose compositionRemoteId are still null on the database, since the others would mean a useless operation
+            //using == instead of === to avoid string/numeric breakings
+            const attachmentsToInsertQuery = doclinksArray.filter(syncItem => !matchingFiles.some(m => (m.docinfoRemoteId == syncItem.docinfoid)))
+                .filter(syncItem => !matchingFiles.some(m => m.id === syncItem.hash && (m.compositionRemoteId == null || m.docinfoRemoteId == null)))
+                .map(item => {
+                //creating the attachments which could not be found for a given composition, excluding the ones that just got updated on the previous condition
                 return { query: entities.Attachment.CreateNewBlankAttachments, args: [item.ownerTable, String(item.ownerId), String(item.compositionRemoteId), String(item.docinfoid), persistence.createUUID()] }
             });
             const attachmentQueries = attachmentsToUpdateQuery.concat(attachmentsToInsertQuery);
@@ -55,19 +62,25 @@
             const querySt = entities.Attachment.NonPendingAttachments;
             //gathering the list of hashs that is coming from the server sync, and checking which ones already exist locally
             //hashs would only exist for files that got created on offline devices!!
-            const ids = doclinksArray.filter(f => f.hash != null).map(item => item.hash);
-            const log = $log.get("attachmentDataSynchronizationService#generateAttachmentsQueryArray", ["attachment", "sync", "download"]);
-            if (ids.length !== 0) {
-                //there's at least one file with a hash returned, perhaps we need to update it locally...
-                log.debug(`determining which attachments should be downloaded amongst ${ids} `);
-                return swdbDAO.executeStatement(entities.Attachment.NonPendingAttachments,[ids]).then((results) => {
-                    return matchinfFilesResolver(results, doclinksArray, log);
-                });
-            }
-            //not a single file returned contained a hash (they were all created on online mode),
-            //let's simply skip this query, since we know for sure, we won't need to update any attachment, but rather just create some
-            return matchinfFilesResolver([], doclinksArray, log);
 
+            let ids = doclinksArray.filter(f => f.hash != null).map(item => item.hash).join("','");
+
+            let docinfoRemoteId = "'" + doclinksArray.map(item => item.docinfoid).join("','") + "'";
+
+            const log = $log.get("attachmentDataSynchronizationService#generateAttachmentsQueryArray", ["attachment", "sync", "download"]);
+
+            if (ids !== "") {
+                ids = "'" + ids + "'";
+            } else {
+                //not a single file returned contained a hash (they were all created on online mode),
+                //let's simply skip this query, since we know for sure, we won't need to update any attachment, but rather just create some
+                return matchinfFilesResolver([], doclinksArray, log);
+            }
+
+            log.debug(`determining which attachments should be downloaded amongst ${ids} and remoteids ${docinfoRemoteId} `);
+            return swdbDAO.executeQuery(entities.Attachment.NonPendingAttachments.format(ids, docinfoRemoteId)).then((results) => {
+                return matchinfFilesResolver(results, doclinksArray, log);
+            });
         }
 
         function bufferedDownload(attachmentsToDownload, originalDeferred, log) {

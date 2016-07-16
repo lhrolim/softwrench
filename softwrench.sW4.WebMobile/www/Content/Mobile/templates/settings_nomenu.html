@@ -17,8 +17,9 @@
                 <input type="text" placeholder="URL" ng-model="settings.serverurl" autocapitalize="off" autocorrect="off">
             </div>
         </div>
-        <button class="button button-calm button-block" ng-click="save()">Save</button>
-
+        <div class="responsive-container lg">
+            <button class="button button-calm button-block" ng-click="save()">Save</button>
+        </div>
         <div class="list card responsive-container lg" ng-if="config">
             <div class="item item-divider">
                 About

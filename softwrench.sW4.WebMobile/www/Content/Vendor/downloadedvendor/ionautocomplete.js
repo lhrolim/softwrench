@@ -183,7 +183,16 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         }
                     };
 
+                    // object to store search container state
+                    var searchContainer = {
+                        showing: false
+                    };
+
                     function doQuery(query, pageNumber) {
+                        if (searchContainer && !searchContainer.showing) {
+                            return;
+                        }
+
                         pageNumber = pageNumber || 1;
                         compiledTemplate.scope.lastPage = pageNumber;
 
@@ -263,11 +272,6 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         const query = compiledTemplate.scope.searchQuery === undefined ? "" : compiledTemplate.scope.searchQuery;
                         doQuery(query);
                     });
-
-                    // object to store search container state
-                    var searchContainer = {
-                        showing: false
-                    };
 
                     var displaySearchContainer = function () {
                         // container already showing: do nothing

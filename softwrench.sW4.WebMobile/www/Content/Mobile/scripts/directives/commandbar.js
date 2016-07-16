@@ -57,7 +57,7 @@
             link: function (scope, element, attrs) {
                 //set the inital position of the floating action button
                 var windowHeight = $(window).height();
-                var offset = windowHeight - 242;
+                var offset = windowHeight - 263;
                 $(element).css('top', offset);
             }
         };
