@@ -1,4 +1,18 @@
-﻿.composition-menu {
+﻿.menu {
+    .item-divider {
+        font-weight: bold;
+    }
+
+    .leaf {
+        cursor: pointer;
+
+        .subleaf {
+            padding-left: 48px;
+        }
+    }
+}
+
+.composition-menu {
     height: auto;
 
     .composition-menu-content {

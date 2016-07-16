@@ -192,6 +192,7 @@
         entities.Attachment.ByDocInfoId = "select content,mimetype,path from Attachment where docinfoRemoteId = ?";
         entities.Attachment.ByHashId = "select content,mimetype,path from Attachment where id = ?";
         entities.Attachment.DeleteById = "delete from Attachment where id = ?";
+        entities.Attachment.DeleteMultipleByIdsPattern = "delete from Attachment where id = in ({0})";
 
         //#endregion
 
@@ -254,9 +255,13 @@
 
         entities.DataEntry.deleteQueryPattern = "delete from DataEntry where 'remoteId' in(?) and 'application'=?";
         entities.DataEntry.deleteInIdsStatement = "delete from DataEntry where id in(?) and application=?";
+        entities.DataEntry.deleteLocalStatement = "delete from DataEntry where id=? and application=?";
 
         entities.DataEntry.updateLocalPattern = "update DataEntry set 'datamap'=?,'isDirty'=1,'textindex01'=?,'textindex02'=?,'textindex03'=?,'textindex04'=?,'textindex05'=?,'numericindex01'=?,'numericindex02'=?,'dateindex01'=?,'dateindex02'=?,'dateindex03'=? where id =?";
+        entities.DataEntry.updateLocalSetOriginalPattern = "update DataEntry set 'datamap'=?,'originaldatamap'=?,'isDirty'=1,'textindex01'=?,'textindex02'=?,'textindex03'=?,'textindex04'=?,'textindex05'=?,'numericindex01'=?,'numericindex02'=?,'dateindex01'=?,'dateindex02'=?,'dateindex03'=? where id =?";
         entities.DataEntry.insertLocalPattern = "insert into DataEntry ('application','datamap','isDirty','pending','remoteId','rowstamp','id','textindex01','textindex02','textindex03','textindex04','textindex05','numericindex01','numericindex02','dateindex01','dateindex02','dateindex03') values (?,?,1,0,null,null,?,?,?,?,?,?,?,?,?,?,?)";
+
+        entities.DataEntry.restoreToOriginalStateStatement = "update DataEntry set datamap=originaldatamap,isDirty=0 where id=? and application=?";
 
         entities.DataEntry.clearProblem = "update DataEntry set 'hasProblem'=0 where id in(?)";
         entities.DataEntry.setProblem = "update DataEntry set 'hasProblem'=1 where id in(?)";

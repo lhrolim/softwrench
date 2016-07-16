@@ -73,8 +73,26 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     return item;
                 };
 
+                // render the view value of the model
+                ngModel.$render = function () {
+                    element.val(scope.getItemValue(ngModel.$viewValue, scope.itemViewValueKey));
+                };
+
+                // set the view value of the model
+                ngModel.$formatters.push(function (modelValue) {
+                    var viewValue = scope.getItemValue(modelValue, scope.itemViewValueKey);
+                    if (!viewValue) return "";
+                    viewValue = replaceAll(viewValue, "undefined|null", "");
+                    return viewValue.startsWith(" -") || viewValue.endsWith("- ") ? replaceAll(viewValue, " - | -|- ", "") : viewValue;
+                });
+
+                // set the model value of the model
+                ngModel.$parsers.push(function (viewValue) {
+                    return scope.getItemValue(viewValue, scope.itemValueKey);
+                });
+
                 // the search container template
-                var searchContainerTemplate = [
+                const searchContainerTemplate = [
                     '<div class="ion-autocomplete-container modal">',
                     '<div class="bar bar-header item-input-inset ion-autocomplete-topbar">',
                     '<label class="item-input-wrapper">',
@@ -108,325 +126,321 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     '</div>'
                 ].join('');
 
-                // compile the popup template
-                $ionicTemplateLoader.compile({
-                    templateUrl: scope.templateUrl,
-                    template: searchContainerTemplate,
-                    scope: scope,
-                    appendTo: $document[0].body
-                }).then(function (compiledTemplate) {
+                scope.templateCompileStarted = false;
 
-                    // get the compiled search field
-                    var searchInputElement = angular.element(compiledTemplate.element.find('input'));
+                const compileTemplate = function () {
+                    if (scope.templateCompileStarted) {
+                        return;
+                    }
+                    scope.templateCompileStarted = true;
 
-                    // function which selects the item, hides the search container and the ionic backdrop if it is not a multiple select autocomplete
-                    compiledTemplate.scope.selectItem = function (item) {
+                    // compile the popup template
+                    $ionicTemplateLoader.compile({
+                        templateUrl: scope.templateUrl,
+                        template: searchContainerTemplate,
+                        scope: scope,
+                        appendTo: $document[0].body
+                    }).then(function (compiledTemplate) {
 
-                        // clear the items and the search query
-                        compiledTemplate.scope.items = [];
-                        compiledTemplate.scope.searchQuery = undefined;
+                        // get the compiled search field
+                        var searchInputElement = angular.element(compiledTemplate.element.find('input'));
 
-                        // if multiple select is on store the selected items
-                        if (compiledTemplate.scope.multipleSelect === "true") {
+                        // function which selects the item, hides the search container and the ionic backdrop if it is not a multiple select autocomplete
+                        compiledTemplate.scope.selectItem = function (item) {
 
-                            if (!isKeyValueInObjectArray(compiledTemplate.scope.selectedItems,
-                                    compiledTemplate.scope.itemValueKey, scope.getItemValue(item, scope.itemValueKey))) {
-                                // create a new array to update the model. See https://github.com/angular-ui/ui-select/issues/191#issuecomment-55471732
-                                compiledTemplate.scope.selectedItems = compiledTemplate.scope.selectedItems.concat([item]);
+                            // clear the items and the search query
+                            compiledTemplate.scope.items = [];
+                            compiledTemplate.scope.searchQuery = undefined;
+
+                            // if multiple select is on store the selected items
+                            if (compiledTemplate.scope.multipleSelect === "true") {
+
+                                if (!isKeyValueInObjectArray(compiledTemplate.scope.selectedItems,
+                                        compiledTemplate.scope.itemValueKey, scope.getItemValue(item, scope.itemValueKey))) {
+                                    // create a new array to update the model. See https://github.com/angular-ui/ui-select/issues/191#issuecomment-55471732
+                                    compiledTemplate.scope.selectedItems = compiledTemplate.scope.selectedItems.concat([item]);
+                                }
+
+                                // set the view value and render it
+                                ngModel.$setViewValue(compiledTemplate.scope.selectedItems);
+                                ngModel.$render();
+                            } else {
+                                // set the view value and render it
+                                ngModel.$setViewValue(item);
+                                ngModel.$render();
+
+                                // hide the container and the ionic backdrop
+                                hideSearchContainer();
                             }
+
+                            // call items clicked callback
+                            if (angular.isFunction(compiledTemplate.scope.itemsClickedMethod)) {
+                                compiledTemplate.scope.itemsClickedMethod({
+                                    callback: {
+                                        item: item,
+                                        componentId: compiledTemplate.scope.componentId,
+                                        selectedItems: compiledTemplate.scope.selectedItems.slice()
+
+                                    }
+                                });
+                            }
+                        };
+
+                        // function which removes the item from the selected items.
+                        compiledTemplate.scope.removeItem = function (index) {
+                            // remove the item from the selected items and create a copy of the array to update the model.
+                            // See https://github.com/angular-ui/ui-select/issues/191#issuecomment-55471732
+                            var removed = compiledTemplate.scope.selectedItems.splice(index, 1)[0];
+                            compiledTemplate.scope.selectedItems = compiledTemplate.scope.selectedItems.slice();
 
                             // set the view value and render it
                             ngModel.$setViewValue(compiledTemplate.scope.selectedItems);
                             ngModel.$render();
-                        } else {
-                            // set the view value and render it
-                            ngModel.$setViewValue(item);
-                            ngModel.$render();
 
-                            // hide the container and the ionic backdrop
-                            hideSearchContainer();
-                        }
+                            // call items clicked callback
+                            if (angular.isFunction(compiledTemplate.scope.itemsRemovedMethod)) {
+                                compiledTemplate.scope.itemsRemovedMethod({
+                                    callback: {
+                                        item: removed,
+                                        selectedItems: compiledTemplate.scope.selectedItems.slice(),
+                                        componentId: compiledTemplate.scope.componentId
+                                    }
+                                });
+                            }
+                        };
 
-                        // call items clicked callback
-                        if (angular.isFunction(compiledTemplate.scope.itemsClickedMethod)) {
-                            compiledTemplate.scope.itemsClickedMethod({
-                                callback: {
-                                    item: item,
-                                    componentId: compiledTemplate.scope.componentId,
-                                    selectedItems: compiledTemplate.scope.selectedItems.slice()
-                                    
-                                }
-                            });
-                        }
-                    };
+                        // object to store search container state
+                        var searchContainer = {
+                            showing: false
+                        };
 
-                    // function which removes the item from the selected items.
-                    compiledTemplate.scope.removeItem = function (index) {
-                        // remove the item from the selected items and create a copy of the array to update the model.
-                        // See https://github.com/angular-ui/ui-select/issues/191#issuecomment-55471732
-                        var removed = compiledTemplate.scope.selectedItems.splice(index, 1)[0];
-                        compiledTemplate.scope.selectedItems = compiledTemplate.scope.selectedItems.slice();
-
-                        // set the view value and render it
-                        ngModel.$setViewValue(compiledTemplate.scope.selectedItems);
-                        ngModel.$render();
-
-                        // call items clicked callback
-                        if (angular.isFunction(compiledTemplate.scope.itemsRemovedMethod)) {
-                            compiledTemplate.scope.itemsRemovedMethod({
-                                callback: {
-                                    item: removed,
-                                    selectedItems: compiledTemplate.scope.selectedItems.slice(),
-                                    componentId: compiledTemplate.scope.componentId
-                                }
-                            });
-                        }
-                    };
-
-                    // object to store search container state
-                    var searchContainer = {
-                        showing: false
-                    };
-
-                    function doQuery(query, pageNumber) {
-                        if (searchContainer && !searchContainer.showing) {
-                            return;
-                        }
-
-                        pageNumber = pageNumber || 1;
-                        compiledTemplate.scope.lastPage = pageNumber;
-
-                        // right away return if the query is undefined to not call the items method for nothing
-                        if (query === undefined) {
-                            return;
-                        }
-
-                        // if the search query is empty, clear the items
-                        if (query == '' && pageNumber === 1) {
-                            compiledTemplate.scope.items = [];
-                        }
-
-                        if (angular.isFunction(compiledTemplate.scope.itemsMethod)) {
-
-                            // show the loading icon
-                            compiledTemplate.scope.showLoadingIcon = true;
-
-                            const queryObject = {
-                                query: query,
-                                useWhereClause: compiledTemplate.scope.useWhereClause,
-                                pageNumber: pageNumber
-                            };
-
-                            // if the component id is set, then add it to the query object
-                            if (compiledTemplate.scope.componentId) {
-                                queryObject["componentId"] = compiledTemplate.scope.componentId;
+                        function doQuery(query, pageNumber) {
+                            if (searchContainer && !searchContainer.showing) {
+                                return;
                             }
 
+                            pageNumber = pageNumber || 1;
+                            compiledTemplate.scope.lastPage = pageNumber;
+
+                            // right away return if the query is undefined to not call the items method for nothing
+                            if (query === undefined) {
+                                return;
+                            }
+
+                            // if the search query is empty, clear the items
+                            if (query == '' && pageNumber === 1) {
+                                compiledTemplate.scope.items = [];
+                            }
+
+                            if (angular.isFunction(compiledTemplate.scope.itemsMethod)) {
+
+                                // show the loading icon
+                                compiledTemplate.scope.showLoadingIcon = true;
+
+                                const queryObject = {
+                                    query: query,
+                                    useWhereClause: compiledTemplate.scope.useWhereClause,
+                                    pageNumber: pageNumber
+                                };
+
+                                // if the component id is set, then add it to the query object
+                                if (compiledTemplate.scope.componentId) {
+                                    queryObject["componentId"] = compiledTemplate.scope.componentId;
+                                }
+
+                                // convert the given function to a $q promise to support promises too
+                                var promise = $q.when(compiledTemplate.scope.itemsMethod(queryObject));
+
+                                promise.then(function (promiseData) {
+
+                                    // if the given promise data object has a data property use this for the further processing as the
+                                    // standard httpPromises from the $http functions store the response data in a data property
+                                    if (promiseData && promiseData.data) {
+                                        promiseData = promiseData.data;
+                                    }
+
+                                    // set the items which are returned by the items method
+                                    const newItems = compiledTemplate.scope.getItemValue(promiseData, compiledTemplate.scope.itemsMethodValueKey);
+                                    if (pageNumber === 1) {
+                                        compiledTemplate.scope.items = newItems;
+                                    } else {
+                                        compiledTemplate.scope.$broadcast('scroll.infiniteScrollComplete');
+                                        compiledTemplate.scope.items = compiledTemplate.scope.items.concat(newItems);
+                                    }
+                                    compiledTemplate.scope.moreItemsAvailable = newItems.length > 0;
+
+                                    // force the collection repeat to redraw itself as there were issues when the first items were added
+                                    $ionicScrollDelegate.resize();
+
+                                    // hide the loading icon
+                                    compiledTemplate.scope.showLoadingIcon = false;
+                                }, function (error) {
+                                    // hide the loading icon
+                                    compiledTemplate.scope.showLoadingIcon = false;
+
+                                    // reject the error because we do not handle the error here
+                                    return $q.reject(error);
+                                });
+                            }
+                        }
+
+                        compiledTemplate.scope.loadMore = function () {
+                            const query = compiledTemplate.scope.searchQuery === undefined ? "" : compiledTemplate.scope.searchQuery;
+                            doQuery(query, compiledTemplate.scope.lastPage + 1);
+                        }
+
+                        // watcher on the search field model to update the list according to the input
+                        compiledTemplate.scope.$watch('searchQuery', function (query) {
+                            doQuery(query);
+                        });
+
+                        compiledTemplate.scope.$watch('useWhereClause', function () {
+                            const query = compiledTemplate.scope.searchQuery === undefined ? "" : compiledTemplate.scope.searchQuery;
+                            doQuery(query);
+                        });
+
+                        var displaySearchContainer = function () {
+                            // container already showing: do nothing
+                            if (searchContainer.showing) {
+                                return;
+                            }
+                            $ionicBackdrop.retain();
+                            compiledTemplate.element.css('display', 'block');
+                            scope.$deregisterBackButton = $ionicPlatform.registerBackButtonAction(function () {
+                                hideSearchContainer();
+                            }, 300);
+                            // mark container as showing
+                            searchContainer.showing = true;
+                        };
+
+                        var hideSearchContainer = function () {
+                            compiledTemplate.element.css('display', 'none');
+                            $ionicBackdrop.release();
+                            scope.$deregisterBackButton && scope.$deregisterBackButton();
+                            // mark container as not showing anymore
+                            searchContainer.showing = false;
+                        };
+
+                        // object to store if the user moved the finger to prevent opening the modal
+                        var scrolling = {
+                            moved: false,
+                            startX: 0,
+                            startY: 0
+                        };
+
+                        // store the start coordinates of the touch start event
+                        var onTouchStart = function (e) {
+                            scrolling.moved = false;
+                            // Use originalEvent when available, fix compatibility with jQuery
+                            if (typeof (e.originalEvent) !== 'undefined') {
+                                e = e.originalEvent;
+                            }
+                            scrolling.startX = e.touches[0].clientX;
+                            scrolling.startY = e.touches[0].clientY;
+                        };
+
+                        // check if the finger moves more than 10px and set the moved flag to true
+                        var onTouchMove = function (e) {
+                            // Use originalEvent when available, fix compatibility with jQuery
+                            if (typeof (e.originalEvent) !== 'undefined') {
+                                e = e.originalEvent;
+                            }
+                            if (Math.abs(e.touches[0].clientX - scrolling.startX) > 10 ||
+                                Math.abs(e.touches[0].clientY - scrolling.startY) > 10) {
+                                scrolling.moved = true;
+                            }
+                        };
+
+                        // click handler on the input field to show the search container
+                        const onClick = ionic.debounce(function (event) {
+                            // only open the dialog if was not touched at the beginning of a legitimate scroll event
+                            if (scrolling.moved) {
+                                return;
+                            }
+
+                            if (event) {
+                                // prevent the default event and the propagation
+                                event.preventDefault();
+                                event.stopPropagation();
+                            }
+
+                            // show the ionic backdrop and the search container
+                            displaySearchContainer();
+
+                            doQuery("");
+
+                            // focus on the search input field
+                            if (searchInputElement.length > 0) {
+                                searchInputElement[0].focus();
+                                setTimeout(function () {
+                                    searchInputElement[0].focus();
+                                }, 0);
+                            }
+
+                            // force the collection repeat to redraw itself as there were issues when the first items were added
+                            $ionicScrollDelegate.resize();
+                        }, 0);
+
+                        var isKeyValueInObjectArray = function (objectArray, key, value) {
+                            for (var i = 0; i < objectArray.length; i++) {
+                                if (scope.getItemValue(objectArray[i], key) === value) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        };
+
+                        // function to call the model to item method and select the item
+                        var resolveAndSelectModelItem = function (modelValue) {
                             // convert the given function to a $q promise to support promises too
-                            var promise = $q.when(compiledTemplate.scope.itemsMethod(queryObject));
+                            var promise = $q.when(compiledTemplate.scope.modelToItemMethod({ modelValue: modelValue }));
 
                             promise.then(function (promiseData) {
-
-                                // if the given promise data object has a data property use this for the further processing as the
-                                // standard httpPromises from the $http functions store the response data in a data property
-                                if (promiseData && promiseData.data) {
-                                    promiseData = promiseData.data;
-                                }
-
-                                // set the items which are returned by the items method
-                                const newItems = compiledTemplate.scope.getItemValue(promiseData, compiledTemplate.scope.itemsMethodValueKey);
-                                if (pageNumber === 1) {
-                                    compiledTemplate.scope.items = newItems;
-                                } else {
-                                    compiledTemplate.scope.$broadcast('scroll.infiniteScrollComplete');
-                                    compiledTemplate.scope.items = compiledTemplate.scope.items.concat(newItems);
-                                }
-                                compiledTemplate.scope.moreItemsAvailable = newItems.length > 0;
-
-                                // force the collection repeat to redraw itself as there were issues when the first items were added
-                                $ionicScrollDelegate.resize();
-
-                                // hide the loading icon
-                                compiledTemplate.scope.showLoadingIcon = false;
+                                // select the item which are returned by the model to item method
+                                compiledTemplate.scope.selectItem(promiseData);
                             }, function (error) {
-                                // hide the loading icon
-                                compiledTemplate.scope.showLoadingIcon = false;
-
                                 // reject the error because we do not handle the error here
                                 return $q.reject(error);
                             });
-                        }
-                    }
+                        };
 
-                    compiledTemplate.scope.loadMore = function() {
-                        const query = compiledTemplate.scope.searchQuery === undefined ? "" : compiledTemplate.scope.searchQuery;
-                        doQuery(query, compiledTemplate.scope.lastPage + 1);
-                    }
+                        // bind the handlers to the click and touch events of the input field
+                        element.bind('touchstart', onTouchStart);
+                        element.bind('touchmove', onTouchMove);
+                        element.bind('touchend click focus', onClick);
 
-                    // watcher on the search field model to update the list according to the input
-                    compiledTemplate.scope.$watch('searchQuery', function (query) {
-                        doQuery(query);
-                    });
-
-                    compiledTemplate.scope.$watch('useWhereClause', function () {
-                        const query = compiledTemplate.scope.searchQuery === undefined ? "" : compiledTemplate.scope.searchQuery;
-                        doQuery(query);
-                    });
-
-                    var displaySearchContainer = function () {
-                        // container already showing: do nothing
-                        if (searchContainer.showing) {
-                            return;
-                        }
-                        $ionicBackdrop.retain();
-                        compiledTemplate.element.css('display', 'block');
-                        scope.$deregisterBackButton = $ionicPlatform.registerBackButtonAction(function () {
+                        // cancel handler for the cancel button which clears the search input field model and hides the
+                        // search container and the ionic backdrop
+                        $(compiledTemplate.element).find(".ion-autocomplete-cancel").bind('click', function (event) {
+                            compiledTemplate.scope.searchQuery = undefined;
                             hideSearchContainer();
-                        }, 300);
-                        // mark container as showing
-                        searchContainer.showing = true;
-                    };
-
-                    var hideSearchContainer = function () {
-                        compiledTemplate.element.css('display', 'none');
-                        $ionicBackdrop.release();
-                        scope.$deregisterBackButton && scope.$deregisterBackButton();
-                        // mark container as not showing anymore
-                        searchContainer.showing = false;
-                    };
-
-                    // object to store if the user moved the finger to prevent opening the modal
-                    var scrolling = {
-                        moved: false,
-                        startX: 0,
-                        startY: 0
-                    };
-
-                    // store the start coordinates of the touch start event
-                    var onTouchStart = function (e) {
-                        scrolling.moved = false;
-                        // Use originalEvent when available, fix compatibility with jQuery
-                        if (typeof (e.originalEvent) !== 'undefined') {
-                            e = e.originalEvent;
-                        }
-                        scrolling.startX = e.touches[0].clientX;
-                        scrolling.startY = e.touches[0].clientY;
-                    };
-
-                    // check if the finger moves more than 10px and set the moved flag to true
-                    var onTouchMove = function (e) {
-                        // Use originalEvent when available, fix compatibility with jQuery
-                        if (typeof (e.originalEvent) !== 'undefined') {
-                            e = e.originalEvent;
-                        }
-                        if (Math.abs(e.touches[0].clientX - scrolling.startX) > 10 ||
-                            Math.abs(e.touches[0].clientY - scrolling.startY) > 10) {
-                            scrolling.moved = true;
-                        }
-                    };
-
-                    // click handler on the input field to show the search container
-                    var onClick =  ionic.debounce(function (event) {
-                        // only open the dialog if was not touched at the beginning of a legitimate scroll event
-                        if (scrolling.moved) {
-                            return;
-                        }
-
-                        // prevent the default event and the propagation
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        // show the ionic backdrop and the search container
-                        displaySearchContainer();
-
-                        doQuery("");
-
-                        // focus on the search input field
-                        if (searchInputElement.length > 0) {
-                            searchInputElement[0].focus();
-                            setTimeout(function () {
-                                searchInputElement[0].focus();
-                            }, 0);
-                        }
-
-                        // force the collection repeat to redraw itself as there were issues when the first items were added
-                        $ionicScrollDelegate.resize();
-                    }, 0);
-
-                    var isKeyValueInObjectArray = function (objectArray, key, value) {
-                        for (var i = 0; i < objectArray.length; i++) {
-                            if (scope.getItemValue(objectArray[i], key) === value) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    };
-
-                    // function to call the model to item method and select the item
-                    var resolveAndSelectModelItem = function (modelValue) {
-                        // convert the given function to a $q promise to support promises too
-                        var promise = $q.when(compiledTemplate.scope.modelToItemMethod({ modelValue: modelValue }));
-
-                        promise.then(function (promiseData) {
-                            // select the item which are returned by the model to item method
-                            compiledTemplate.scope.selectItem(promiseData);
-                        }, function (error) {
-                            // reject the error because we do not handle the error here
-                            return $q.reject(error);
                         });
-                    };
 
-                    // bind the handlers to the click and touch events of the input field
-                    element.bind('touchstart', onTouchStart);
-                    element.bind('touchmove', onTouchMove);
-                    element.bind('touchend click focus', onClick);
+                        $(compiledTemplate.element).find(".ion-autocomplete-clear").bind('click', function (event) {
+                            compiledTemplate.scope.items = [];
+                            ngModel.$setViewValue(null);
+                            ngModel.$render();
+                            compiledTemplate.scope.searchQuery = undefined;
+                            hideSearchContainer();
+                        });
 
-                    // cancel handler for the cancel button which clears the search input field model and hides the
-                    // search container and the ionic backdrop
-                    $(compiledTemplate.element).find(".ion-autocomplete-cancel").bind('click', function (event) {
-                        compiledTemplate.scope.searchQuery = undefined;
-                        hideSearchContainer();
-                    });
-
-                    $(compiledTemplate.element).find(".ion-autocomplete-clear").bind('click', function (event) {
-                        compiledTemplate.scope.items = [];
-                        ngModel.$setViewValue(null);
-                        ngModel.$render();
-                        compiledTemplate.scope.searchQuery = undefined;
-                        hideSearchContainer();
-                    });
-
-                    // prepopulate view and selected items if model is already set
-                    if (compiledTemplate.scope.model && angular.isFunction(compiledTemplate.scope.modelToItemMethod)) {
-                        if (compiledTemplate.scope.multipleSelect === "true" && angular.isArray(compiledTemplate.scope.model)) {
-                            angular.forEach(compiledTemplate.scope.model, function (modelValue) {
-                                resolveAndSelectModelItem(modelValue);
-                            });
-                        } //else {
+                        // prepopulate view and selected items if model is already set
+                        if (compiledTemplate.scope.model && angular.isFunction(compiledTemplate.scope.modelToItemMethod)) {
+                            if (compiledTemplate.scope.multipleSelect === "true" && angular.isArray(compiledTemplate.scope.model)) {
+                                angular.forEach(compiledTemplate.scope.model, function (modelValue) {
+                                    resolveAndSelectModelItem(modelValue);
+                                });
+                            } //else {
                             //resolveAndSelectModelItem(compiledTemplate.scope.model);
-                        //}
-                    }
+                            //}
+                        }
 
-                });
+                        // opens the modal on template compiled
+                        onClick();
+                    });
+                }
 
-                // render the view value of the model
-                ngModel.$render = function () {
-                    element.val(scope.getItemValue(ngModel.$viewValue, scope.itemViewValueKey));
-                };
-
-                // set the view value of the model
-                ngModel.$formatters.push(function (modelValue) {
-                    var viewValue = scope.getItemValue(modelValue, scope.itemViewValueKey);
-                    if (!viewValue) return ""; 
-                    viewValue = replaceAll(viewValue, "undefined|null", "");
-                    return viewValue.startsWith(" -") || viewValue.endsWith("- ") ? replaceAll(viewValue, " - | -|- ", "") : viewValue;
-                });
-
-                // set the model value of the model
-                ngModel.$parsers.push(function (viewValue) {
-                    return scope.getItemValue(viewValue, scope.itemValueKey);
-                });
-
+                element.bind("touchend click focus", compileTemplate);
             }
         };
     }

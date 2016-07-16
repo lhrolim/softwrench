@@ -26,7 +26,7 @@
                 <ng-switch ng-repeat="leaf in menuleafs()" on="leaf.type">
                     <!-- container -->
                     <div ng-switch-when="MenuContainerDefinition" ng-init="collapsed = true" ng-click="collapsed = !collapsed">
-                        <div class="item app">
+                        <div class="item leaf">
                             <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}&ensp;<span class="fa" ng-class="{ 'fa-caret-down': collapsed, 'fa-caret-up': !collapsed }"></span>
                         </div>
                         <div ng-show="!collapsed">

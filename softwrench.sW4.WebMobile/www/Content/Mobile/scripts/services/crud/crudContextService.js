@@ -1,4 +1,4 @@
-﻿(function (mobileServices, angular, constants) {
+﻿(function (mobileServices, angular, constants, _) {
     "use strict";
     constants = constants || {};
 
@@ -6,11 +6,11 @@
     "$q", "$log", "$rootScope", "swdbDAO", "searchIndexService", "problemService", 
     "metadataModelService", "offlineSchemaService", "offlineCompositionService",
     "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
-    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService",
-    function ($q, $log, $rootScope, swdbDAO, searchIndexService, problemService, 
+    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService", "offlineEntities",
+    function ($q, $log, $rootScope, dao, searchIndexService, problemService, 
     metadataModelService, offlineSchemaService, offlineCompositionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
-    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService) {
+    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService, entities) {
 
         // ReSharper disable once InconsistentNaming
         var internalListContext = {
@@ -223,6 +223,7 @@
                 }
 
             },
+
             validateDetail: function (crudForm, schemaToValidate, displayables) {
                 const crudContext = crudContextHolderService.getCrudContext();
                 crudForm = crudForm || {};
@@ -231,6 +232,7 @@
                 const toValidateDisplayables = displayables || detailSchema.displayables;
                 return validationService.validate(detailSchema, toValidateDisplayables, datamap, crudForm.$error);
             },
+
             saveChanges: function (crudForm, showConfirmationMessage) {
                 const crudContext = crudContextHolderService.getCrudContext();
                 crudForm = crudForm || {};
@@ -268,9 +270,47 @@
                 });
             },
 
+            restoreItemToOriginalState: function (item) {
+                const crudContext = crudContextHolderService.getCrudContext();
+                const application = crudContext.currentApplicationName;
+
+                const newAttachments = (() => {
+                    const originalAttachments = item.originaldatamap["attachment_"] || [];
+                    const allAttachments = item.datamap["attachment_"] || [];
+
+                    if (allAttachments.length <= 0) return [];
+
+                    const allHashes = allAttachments.map(a => a["#offlinehash"]);
+                    const originalHashes = originalAttachments.map(a => a["#offlinehash"]);
+                    const newHashes = _.difference(allHashes, originalHashes);
+
+                    return allAttachments.filter(a => _.contains(newHashes, a["#offlinehash"]));
+                })();
+
+                const promise = dao.executeStatement(entities.DataEntry.restoreToOriginalStateStatement, [item.id, application]);
+
+                return newAttachments.length > 0 
+                    ? promise.then(() => offlineAttachmentService.deleteRelatedAttachments(newAttachments))
+                    : promise;
+            },
+
+            deleteLocalItem: function(item) {
+                const crudContext = crudContextHolderService.getCrudContext();
+                const application = crudContext.currentApplicationName;
+
+                const newAttachments = item.datamap["attachment_"] || [];
+
+                const promise = dao.executeStatement(entities.DataEntry.deleteLocalStatement, [item.id, application]);
+
+                return newAttachments.length > 0 
+                    ? promise.then(() => offlineAttachmentService.deleteRelatedAttachments(newAttachments))
+                    : promise;
+            },
+
             //#endregion
 
             //#region GridFNS
+
             refreshGrid: function (skipPostFilter) {
                 var crudContext = crudContextHolderService.getCrudContext();
                 crudContext.itemlist = [];
@@ -307,7 +347,7 @@
 
                 baseQuery += searchIndexService.buildSortQuery(appName, listSchema, gridSearch);
 
-                return swdbDAO.findByQuery("DataEntry", baseQuery, { pagesize: 10, pageNumber: internalListContext.lastPageLoaded })
+                return dao.findByQuery("DataEntry", baseQuery, { pagesize: 10, pageNumber: internalListContext.lastPageLoaded })
                     .then(function (results) {
                         internalListContext.lastPageLoaded = internalListContext.lastPageLoaded + 1;
                         for (var i = 0; i < results.length; i++) {
@@ -454,4 +494,4 @@
 
     }]);
 
-})(mobileServices, angular, constants);
+})(mobileServices, angular, constants, _);
