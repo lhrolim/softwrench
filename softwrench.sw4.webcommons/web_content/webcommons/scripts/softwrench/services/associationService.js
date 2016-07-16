@@ -821,7 +821,7 @@
             updateAssociations: updateAssociations,
             loadSchemaAssociations: loadSchemaAssociations,
             updateDependentAssociationValues: updateDependentAssociationValues,
-            updateFromServerSchemaLoadResult: updateFromServerSchemaLoadResult,
+            updateFromServerSchemaLoadResult,
             updateUnderlyingAssociationObject: updateUnderlyingAssociationObject
         };
         return service;
