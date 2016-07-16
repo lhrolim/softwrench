@@ -35,7 +35,8 @@
                       ng-repeat="item in crudlist.items track by item.id"
                       ng-class="{'pending': isPending(item),'missingsync': isDirty(item) && !hasProblem(item), 'hasproblem':  hasProblem(item)}"
                       item="item"
-                      on-swipe-left="quickSync(item)">
+                      on-swipe-left="quickSync(item)"
+                      on-hold="deleteOrRestoreItem(item)">
 
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">

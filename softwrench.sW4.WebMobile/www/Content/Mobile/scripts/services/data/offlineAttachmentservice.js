@@ -329,6 +329,20 @@
             return swdbDAO.executeStatement(entities.Attachment.DeleteById, [attachmentHash]);
         }
 
+        /**
+         * Deletes the entities.Attachments related to the compositions datamaps.
+         * 
+         * @param {Datamap} compositions 
+         * @returns {Promise<Array<Void>>} 
+         */
+        function deleteRelatedAttachments(compositions) {
+            const hashes = compositions.map(c => c["#offlinehash"]).filter(h => !!h).map(h => `'${h}'`);
+            if (hashes.length <= 0) return $q.when();
+
+            const query = entities.Attachment.DeleteMultipleByIdsPattern.format(hashes);
+            return swdbDAO.executeQuery(query);
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -337,6 +351,7 @@
             getAttachment,
             loadRealAttachment,
             deleteRelatedAttachment,
+            deleteRelatedAttachments,
             // file
             attachCameraPictureAsFile,
             saveAttachmentAsFile,
