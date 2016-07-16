@@ -246,10 +246,16 @@ module.exports = function (grunt) {
                     destPrefix: "www/Content/public/fonts"
                 },
                 files: {
+                		"fontawesome-webfont.eot": "font-awesome/fonts/fontawesome-webfont.eot",
+                    "fontawesome-webfont.svg": "font-awesome/fonts/fontawesome-webfont.svg",
+                    "fontawesome-webfont.ttf": "font-awesome/fonts/fontawesome-webfont.ttf",
+                    "fontawesome-webfont.woff": "font-awesome/fonts/fontawesome-webfont.woff",
+
                     "ionicons.eot": "ionic/release/fonts/ionicons.eot",
                     "ionicons.svg": "ionic/release/fonts/ionicons.svg",
                     "ionicons.ttf": "ionic/release/fonts/ionicons.ttf",
                     "ionicons.woff": "ionic/release/fonts/ionicons.woff",
+                    
                     "tinymce.eot": "tinymce-dist/skins/lightgray/fonts/tinymce.eot",
                     "tinymce.svg": "tinymce-dist/skins/lightgray/fonts/tinymce.svg",
                     "tinymce.ttf": "tinymce-dist/skins/lightgray/fonts/tinymce.ttf",
@@ -605,9 +611,8 @@ module.exports = function (grunt) {
                     preprocessors: getKarmaPreprocessorsConfig(testScripts),
                     files: [
                         "overrides/cordova.js",
-                        "www/Content/public/vendor/vendor.min.js",
-                        "www/Content/public/app.min.js"
-                    ].concat(testScripts)
+                        "www/Content/public/vendor/vendor.min.js"
+                    ].concat(ngMockScript).concat(["www/Content/public/app.min.js"]).concat(testScripts)
                 }
             }
         },
