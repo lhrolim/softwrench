@@ -2,7 +2,7 @@
     "use strict";
 
 
-    function searchIndexService() {
+    function searchIndexService(dispatcherService) {
 
 
         const indexColumnCache = {}; // cache of attribute -> index column
@@ -110,7 +110,18 @@
                     if (!trimmed) {
                         return;
                     }
-                    termQueries.push(`${indexColumn} = '${term}'`);
+
+                    if (!field.whereClause) {
+                        termQueries.push(`${indexColumn} = '${term}'`);
+                        return;
+                    }
+
+                    if (field.whereClause.startsWith("@")) {
+                        const serviceString = field.whereClause.substring(1);
+                        termQueries.push(dispatcherService.invokeServiceByString(serviceString, [term]));
+                    }
+
+                    // TODO: add support for option filter whereclauses that are not services
                 });
 
                 return ` and (${termQueries.join(" or ")}) `;
@@ -265,5 +276,5 @@
 
     }
 
-    mobileServices.factory("searchIndexService", [searchIndexService]);
+    mobileServices.factory("searchIndexService", ["dispatcherService", searchIndexService]);
 })(angular);
