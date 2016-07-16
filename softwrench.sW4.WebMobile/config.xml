@@ -103,7 +103,6 @@
   <!--#region: plugins -->
   <!--<vs:plugin name="android.support.v4" version="21.0.1" />-->
   <plugin name="cordova-plugin-app-event" version="1.2.0" />
-  <plugin name="cordova-sqlite-storage" version="1.4.2" />
   <plugin name="cordova-plugin-whitelist" version="1.1.0" />
   <plugin name="cordova-plugin-app-version" version="0.1.8" />
   <plugin name="cordova-plugin-device" version="1.0.1" />
@@ -120,4 +119,5 @@
   <plugin name="cordova-plugin-inappbrowser" version="1.4.0" />
   <plugin name="cordova-plugin-statusbar" version="2.1.3" />
   <!--#endregion-->
+  <plugin name="cordova-sqlite-evcore-extbuild-free" version="0.8.0" src="https://github.com/litehelpers/Cordova-sqlite-evcore-extbuild-free" />
 </widget>

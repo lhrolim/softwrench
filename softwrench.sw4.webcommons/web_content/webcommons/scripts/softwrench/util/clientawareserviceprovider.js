@@ -28,7 +28,7 @@
                 }
                 return clientService;
             }
-            if (client !== "otb") {
+            if (client && client !== "otb") {
                 log.debug("Client specific service", clientServiceName, "not found. Attempting to instantiate base service", serviceName);
             }
             // if there's no base implementation let the error go up

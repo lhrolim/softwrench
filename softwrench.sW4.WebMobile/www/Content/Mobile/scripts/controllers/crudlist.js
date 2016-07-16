@@ -1,7 +1,7 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", "synchronizationFacade", "routeService", "crudContextHolderService", 
+    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", "synchronizationFacade", "routeService", "crudContextHolderService",
         function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService) {
 
             $scope.crudlist = {
@@ -18,12 +18,12 @@
             function init() {
                 initializeList();
                 $scope._searching = false;
-
-                $ionicPopover.fromTemplateUrl("Content/Mobile/templates/filteroptionsmenu.html", {
-                    scope: $scope,
-                }).then(popover => 
-                    $scope.filteroptionspopover = popover
-                );
+                //
+                //                $ionicPopover.fromTemplateUrl("Content/Mobile/templates/filteroptionsmenu.html", {
+                //                    scope: $scope,
+                //                }).then(popover => 
+                //                    $scope.filteroptionspopover = popover
+                //                );
 
                 $timeout(() => $ionicScrollDelegate.scrollTop(), 0, false);
 
@@ -77,7 +77,7 @@
                 $scope.filteroptionspopover.hide();
             });
 
-            $scope.createEnabled = function() {
+            $scope.createEnabled = function () {
                 const schema = crudContextService.currentListSchema();
                 if (!schema) {
                     return false;
@@ -95,7 +95,7 @@
                 $ionicScrollDelegate.scrollTop();
             }
 
-            $scope.gridTitle = function() {
+            $scope.gridTitle = function () {
                 const schema = crudContextHolderService.currentListSchema();
                 return crudContextService.gridTitle(schema);
             }
@@ -160,7 +160,7 @@
                     item.icon = value ? null : "flag";
                     return value ? value.substring(0, 1) : "";
                 }
-                
+
                 if (!value) {
                     return null;
                 }
@@ -199,13 +199,13 @@
                 synchronizationFacade.syncItem(item);
             }
 
-            $scope.$root.$on("$stateChangeSuccess",
+            $scope.$on("$stateChangeSuccess",
                  function (event, toState, toParams, fromState, fromParams) {
                      $log.get("crudlist#statehandler").debug("handler called", arguments);
                      if (!toState.name.startsWith("main.crud")) {
-//                         crudContextService.resetContext();
-//                         $scope.crudlist.items = [];
-//                         $scope.crudlist.moreItemsAvailable = false;
+                         //                         crudContextService.resetContext();
+                         //                         $scope.crudlist.items = [];
+                         //                         $scope.crudlist.moreItemsAvailable = false;
                      } else if (!toState.name.startsWith("main.crudlist")) {
                          //to avoid strange transitions on the screen
                          //TODO: transition finished event??
