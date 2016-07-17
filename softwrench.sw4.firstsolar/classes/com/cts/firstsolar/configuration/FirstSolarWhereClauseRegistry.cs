@@ -66,8 +66,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             var user = SecurityFacade.CurrentUser();
             var sb = new StringBuilder();
             sb.Append(DefaultValuesBuilder.ConvertAllValues(WOGroupByBaseWhereClause, user));
-            if (user.Genericproperties.ContainsKey("sync.facilities")) {
-                var facilities = (IEnumerable<string>)user.Genericproperties["sync.facilities"];
+            if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
+                var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
                 var locationQuery = BaseQueryUtil.GenerateOrLikeString("workorder.location", facilities.Select(f => f + "%"));
                 sb.AppendFormat(" and ({0})", locationQuery);
             }
@@ -77,8 +77,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         private string BaseFacilityQuery(string columnName) {
             var user = SecurityFacade.CurrentUser();
             var sb = new StringBuilder();
-            if (user.Genericproperties.ContainsKey("sync.facilities")) {
-                var facilities = (IEnumerable<string>)user.Genericproperties["sync.facilities"];
+            if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
+                var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
                 var locationQuery = BaseQueryUtil.GenerateOrLikeString(columnName, facilities.Select(f => f + "%"));
                 sb.AppendFormat("({0})", locationQuery);
             }

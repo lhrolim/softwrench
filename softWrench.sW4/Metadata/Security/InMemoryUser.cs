@@ -307,6 +307,15 @@ namespace softWrench.sW4.Metadata.Security {
             }
         }
 
+        public bool IsAllowedInApp(string applicationName) {
+            if (IsInRolInternal(applicationName)) {
+                return true;
+            }
+            var applicationPermission = MergedUserProfile.Permissions.FirstOrDefault(a => a.ApplicationName.Equals(applicationName));
+            return applicationPermission != null && !applicationPermission.HasNoPermissions;
+        }
+
+
         public bool IsInRole(string role) {
             return IsInRolInternal(role);
         }
@@ -392,6 +401,8 @@ namespace softWrench.sW4.Metadata.Security {
             return Login.Equals("swadmin") || (IsInRolInternal(Role.SysAdmin, false) && IsInRolInternal(Role.ClientAdmin, false));
         }
 
+
+
         public IDictionary<string, CommandBarDefinition> SecuredBars(ClientPlatform platform, IDictionary<string, CommandBarDefinition> commandBars, ApplicationSchemaDefinition currentSchema = null) {
             if (currentSchema == null && _cachedBars.ContainsKey(platform)) {
                 return _cachedBars[platform];
@@ -423,7 +434,7 @@ namespace softWrench.sW4.Metadata.Security {
             if (Genericproperties.ContainsKey(key)) {
                 Genericproperties.Remove(key);
             }
-            Genericproperties.Add(key,value);
+            Genericproperties.Add(key, value);
         }
     }
 }
