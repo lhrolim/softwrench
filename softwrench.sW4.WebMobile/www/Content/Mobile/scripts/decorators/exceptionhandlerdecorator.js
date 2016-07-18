@@ -15,7 +15,7 @@
             }
 
             function logFilePath() {
-                var path = cordova.file[fileConstants.logFileDirectory];
+                var path = cordova.file[fileConstants.appDirectory];
                 if (!path.endsWith("/")) {
                     path += "/";
                 }
@@ -39,7 +39,7 @@
                 swAlertPopup = lazyInstance(swAlertPopup, "swAlertPopup");
                 
                 const path = logFilePath();
-                swAlertPopup.alert({
+                swAlertPopup.show({
                     title: "Unexpected error",
                     template: "Check the application logs in the files " + path
                 }, 3000);

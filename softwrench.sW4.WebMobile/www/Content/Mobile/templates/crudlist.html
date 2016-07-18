@@ -14,7 +14,7 @@
         <div class="list-search-bar item-input-inset" ng-show="isSearching() && isList()">
             <label class="item-input-wrapper">
                 <i class="placeholder-icon fa fa-search"></i>
-                <input type="search" class="ion-autocomplete-search" ng-model="quickSearch.value" ng-change="filter()" placeholder="Quick Search" />
+                <input type="search" class="ion-autocomplete-search" ng-model="quickSearch.value" ng-change="filter()" placeholder="Quick Search" ng-model-options="{ debounce: 500 }"/>
                 <button class="button-icon search-disable-button" ng-touchstart="disableSearch(true)"><i class="fa fa-times-circle"></i></button>
             </label>            
         </div>
