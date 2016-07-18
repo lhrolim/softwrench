@@ -1,7 +1,8 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    mobileServices.factory('associationDataSynchronizationService', ["$http", "$log", "$q", "swdbDAO", "offlineRestService", "rowstampService", "offlineEntities", "searchIndexService", function ($http, $log, $q, swdbDAO, restService, rowstampService, offlineEntities, searchIndexService) {
+    mobileServices.factory('associationDataSynchronizationService', ["$http", "$log", "$q", "swdbDAO", "metadataModelService", "offlineRestService", "rowstampService",
+        "offlineEntities", "searchIndexService", function ($http, $log, $q, swdbDAO, metadataModelService, restService, rowstampService, offlineEntities, searchIndexService) {
     return {
 
         /// <summary>
@@ -12,6 +13,9 @@
         syncData: function (applicationToFetch) {
             var log = $log.get("associationDataSynchronizationService#syncData");
 
+            const currentApps = metadataModelService.getApplicationNames();
+            const firstTime = currentApps.length === 0;
+
             var methodToUse = applicationToFetch ? "PullSingleAssociationData" : "PullAssociationData";
             var params = {};
             if (applicationToFetch) {
@@ -20,23 +24,27 @@
             return rowstampService.generateAssociationRowstampMap(applicationToFetch).then(function (rowstampMap) {
                 return restService.post("Mobile", methodToUse, params, rowstampMap);
             }).then(function (result) {
-                var associationData = result.data.associationData;
+                const associationData = result.data.associationData;
                 if (result.data.isEmpty) {
                     log.info("no new data returned from the server");
                     //interrupting async calls
                     return $q.reject();
                 }
                 var queryArray = [];
-                for (var app in associationData) {
-                    var dataToInsert = associationData[app];
+                //for first time, let´s not use the replace keyword in order to make the query faster (we know for sure they are all insertions)
+                //TODO: check possibility of having different arrays
+                const queryToUse = firstTime ? offlineEntities.AssociationData.InsertionPattern.format("") : offlineEntities.AssociationData.InsertionPattern.format(" or REPLACE ");
+
+                for (let app in associationData) {
+                    const dataToInsert = associationData[app];
                     const textIndexes = result.data.textIndexes[app];
                     const numericIndexes = result.data.numericIndexes[app];
                     const dateIndexes = result.data.dateIndexes[app];
-                    for (var j = 0; j < dataToInsert.length; j++) {
-                        var datamap = dataToInsert[j];
-                        var id = persistence.createUUID();
+                    for (let j = 0; j < dataToInsert.length; j++) {
+                        const datamap = dataToInsert[j];
+                        const id = persistence.createUUID();
                         const idx = searchIndexService.buildIndexes(textIndexes, numericIndexes, dateIndexes, datamap);
-                        var query = { query: offlineEntities.AssociationData.InsertionPattern, args: [datamap.application, JSON.stringify(datamap.fields), datamap.id, String(datamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
+                        const query = { query: queryToUse, args: [datamap.application, JSON.stringify(datamap.fields), datamap.id, String(datamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
                         queryArray.push(query);
                     }
                 }

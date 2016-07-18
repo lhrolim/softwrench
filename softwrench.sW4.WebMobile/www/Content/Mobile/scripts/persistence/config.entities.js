@@ -77,7 +77,7 @@
         ///
         /// Inserts or updates associationData based upon the uniqueness of the entries
         ///
-        entities.AssociationData.InsertionPattern = "INSERT OR REPLACE INTO AssociationData (application,datamap,remoteId,rowstamp,id,textindex01,textindex02,textindex03,textindex04,textindex05,numericindex01,numericindex02,dateindex01,dateindex02,dateindex03) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        entities.AssociationData.InsertionPattern = "INSERT {0} INTO AssociationData (application,datamap,remoteId,rowstamp,id,textindex01,textindex02,textindex03,textindex04,textindex05,numericindex01,numericindex02,dateindex01,dateindex02,dateindex03) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         entities.AssociationData.maxRowstampQueries = "select max(rowstamp) as rowstamp,application,id from AssociationData group by application";
 
