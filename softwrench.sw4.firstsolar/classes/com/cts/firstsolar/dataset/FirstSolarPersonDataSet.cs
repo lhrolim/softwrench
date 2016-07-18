@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
+using Iesi.Collections;
+using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration;
 using softwrench.sw4.user.classes.entities;
@@ -31,6 +33,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var baseUser = base.PopulateSwdbUser(application, json, id, operation);
             var facilitiesToken = ParseFacilities(json);
             var preferences = baseUser.UserPreferences;
+            if (preferences.GenericProperties == null) {
+                preferences.GenericProperties = new HashedSet<GenericProperty>();;
+            }
             var facilitiesProp = preferences.GenericProperties.FirstOrDefault(f => f.Key.Equals(FirstSolarConstants.FacilitiesProp));
             if (facilitiesProp == null) {
                 preferences.GenericProperties.Add(new GenericProperty() {
