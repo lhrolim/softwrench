@@ -435,10 +435,11 @@ function config(persistence, dialect) {
     function executeQueriesSeqForceBatch(tx, queries, callback) {
         if (persistence.db.implementation === "sqliteplugin") {
             tx.bulkSQL(queries,
-                () =>callback(queries, null),
-                (err) =>(null, err));
+            () => callback(queries, null),
+            (err) => (null, err));
+        } else {
+            this.executeQueriesSeq(tx, queries, callback);
         }
-        this.executeQueriesSeq(tx, queries, callback);
     }
 
 
