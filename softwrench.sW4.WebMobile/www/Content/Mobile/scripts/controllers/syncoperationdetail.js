@@ -3,8 +3,8 @@
 
     softwrench.controller("SyncOperationDetailController",
         ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q",
-            "$ionicScrollDelegate", "loadingService","attachmentDataSynchronizationService", "metadataModelService", "offlineSchemaService", "crudContextService", 
-        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService, metadataModelService, offlineSchemaService, crudContextService) {
+            "$ionicScrollDelegate", "loadingService","attachmentDataSynchronizationService", "metadataModelService", "offlineSchemaService", "crudContextService", "crudContextHolderService", 
+        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService, metadataModelService, offlineSchemaService, crudContextService, crudContextHolderService) {
 
             $scope.data = {
                 operation: null,
@@ -77,6 +77,10 @@
             $scope.fullSynchronize = function () {
                 $scope.data.isSynching = true;
                 loadingService.showDefault();
+
+                // clears grid search data to consider changes on the metadata
+                crudContextHolderService.clearGridSearch();
+
                 synchronizationFacade.fullSync()
                     .then(function (operation) {
                         swAlertPopup.show({
