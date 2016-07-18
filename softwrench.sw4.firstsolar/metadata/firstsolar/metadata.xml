@@ -568,7 +568,7 @@
           <reference id="detailhiddensoffline"/>
 
           <association label="Location" target="location" labelfield="offlinelocation.description" requiredexpression="true">
-            <renderer type="lookup" params="hasUseWhereClause=true;useWhereClauseLabel=s Locations"/>
+            <renderer type="lookup" params="hasUseWhereClause=true;useWhereClauseLabel=Locations"/>
             <event type="afterchange" service="fsWorkorderOfflineService" method="clearAsset" />
             <dataprovider whereClause="@fsWorkorderOfflineService.getLocationsWhereClause"/>
           </association>
