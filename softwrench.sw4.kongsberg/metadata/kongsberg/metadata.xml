@@ -275,6 +275,20 @@
         <!--relationship to="srclassifications" qualifier="srclassifications">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
         </relationship-->
+        <relationship to="commodities" qualifier="commoditygroup">
+          <relationshipAttribute from="commoditygroup" to="commodity" primary="true" />
+           <relationshipAttribute query="parent IS NULL"/>
+        </relationship>		
+      
+        <relationship to="commodities" qualifier="commodity">
+          <relationshipAttribute from="commodity" to="commodity" primary="true" />
+           <relationshipAttribute query="parent IS NOT NULL"/>
+        </relationship>		
+        
+        <relationship to="alndomain" qualifier="servicecompanytype">
+          <relationshipAttribute from="servicecompanytype" to="value" primary="true" />
+          <relationshipAttribute to ="domainid" literal="SERVCOMPTYPE" quoteLiteral="true"/>        
+        </relationship>		
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="sr" />
@@ -936,17 +950,23 @@
                 <renderer type="lookup" />
               </association>
               <field label="Region:" attribute="region" />
-              <field label="Service Group:" attribute="commoditygroup" />
+              <association label ="Service Group:" target="commoditygroup" labelfield="commoditygroup_.description">
+                <renderer type="lookup" />
+              </association>
               <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
                 <renderer type="lookup" />
               </association>
               <field label="Rig Name:" attribute="rigname" />
-              <field label="Service:" attribute="commodity" />
+              <association label ="Service:" target="commodity" labelfield="commodity_.description">
+                <renderer type="lookup" />
+              </association>
               <field label="Feature Request?" attribute="feature_request">
                 <renderer type="checkbox" />
               </field>
               <field label="Well Name:" attribute="wellname" />
-              <field label="Service Company Type:" attribute="servicecompanytype" />
+              <association label ="Service Company Type:" target="servicecompanytype" labelfield="servicecompanytype_.description">
+                <renderer type="lookup" />
+              </association>
             </section>
           </section>
 
