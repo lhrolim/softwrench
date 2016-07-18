@@ -175,6 +175,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 primaryEmail = primaryEmailToken.ToString();
             }
             var user = PopulateSwdbUser(application, json, id, operation);
+            var passwordString = HandlePassword(json, user);
             user = UserManager.SaveUser(user);
 
             var entityMetadata = MetadataProvider.Entity(application.Entity);
@@ -190,7 +191,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 targetResult.ResultObject = new DataMap(application.Name, ToDictionary(userResult)).Fields;
             }
 
-            var passwordString = HandlePassword(json, user);
+            
 
             if (isCreation && isactive) {
                 _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
@@ -226,7 +227,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             if (!validSecurityGroupOperation) {
                 throw new SecurityException("you do not have enough permissions to perform this operation");
             }
-
+            
             user.Profiles = screenSecurityGroups;
             return user;
 

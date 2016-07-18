@@ -55,8 +55,8 @@ namespace softWrench.sW4.Data.Entities.Labor {
             var user = userEvent.InMemoryUser;
             var labor = _maximoHibernateDAO.FindSingleByNativeQuery<object>("select distinct(laborcode) from labor where personid = ? and orgid = ?", user.MaximoPersonId, user.OrgId);
             var genericproperties = user.Genericproperties;
+            genericproperties.Remove("laborcode");
             if (labor != null) {
-                genericproperties.Remove("laborcode");
                 genericproperties.Add("laborcode", labor);
             } else {
                 //usually the labor can be the personid, but sometimes its values can be overriden
