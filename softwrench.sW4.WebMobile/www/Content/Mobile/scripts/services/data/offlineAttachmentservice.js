@@ -254,7 +254,7 @@
             const deferred = $q.defer();
             loadingService.showDefault();
             swdbDAO.executeQuery(queryObj).then(result => {
-                if (result.length === 0) {
+                if (result.length === 0 || result[0].content==null) {
                     deferred.reject();
                     const error = `Could not open attachment ${docinfoId}, not found on database...`;
                     log.warn(error);

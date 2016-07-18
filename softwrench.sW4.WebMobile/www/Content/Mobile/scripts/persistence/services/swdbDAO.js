@@ -232,10 +232,14 @@
         };
 
         function executeQuery(query, tx) {
-            return this.executeQueries([query], tx);
+            return this.executeQueries([query], tx, false);
         };
 
-        function executeQueries(queriesToExecute, tx) {
+        function executeQueries(queriesToExecute, tx, batchMode) {
+            if (batchMode == undefined) {
+                batchMode = true;
+            }
+            
             const deferred = $q.defer();
             const promise = deferred.promise;
 
@@ -248,12 +252,23 @@
                     : [query.query, query.args]
             );
 
+            //TODO: refactor
             if (!tx) {
-                persistence.transaction((closureTx) =>
-                    persistence.executeQueriesSeqForceBatch(closureTx, queries, (res, err) => err ? deferred.reject(err) : deferred.resolve(res))
+                persistence.transaction((closureTx) => {
+                    if (batchMode) {
+                        persistence.executeQueriesSeqForceBatch(closureTx, queries, (res, err) => err ? deferred.reject(err) : deferred.resolve(res));
+                    } else {
+                        persistence.executeQueriesSeq(closureTx, queries, (res, err) => err ? deferred.reject(err) : deferred.resolve(res));
+                    }
+                }
                 );
             } else {
-                persistence.executeQueriesSeqForceBatch(tx, queries, (res, err) => err ? deferred.reject(err) : deferred.resolve(res));
+                if (batchMode) {
+                    persistence.executeQueriesSeqForceBatch(tx, queries, (res, err) => err ? deferred.reject(err) : deferred.resolve(res));
+                }
+                else {
+                    persistence.executeQueriesSeq(tx, queries, (res, err) => err ? deferred.reject(err) : deferred.resolve(res));
+                }
             }
             return promise;
         };
