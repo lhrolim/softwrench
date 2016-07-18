@@ -160,7 +160,7 @@
                 return options;
             }
 
-            const facilities = props["sync.availablefacilities"];
+            const facilities = props["sync.facilities"];
             if (!facilities) {
                 return options;
             }

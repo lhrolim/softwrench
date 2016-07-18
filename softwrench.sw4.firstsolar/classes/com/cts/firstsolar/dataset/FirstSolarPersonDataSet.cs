@@ -60,7 +60,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             }
             if (resultProperties.ContainsKey(FirstSolarConstants.FacilitiesProp) && !detail.ResultObject.ContainsAttribute("facilities")) {
                 //if the facility was already stored on the database it would already have been set on the AdjustDatamapFromUser method
-                detail.ResultObject.SetAttribute("facilities", resultProperties["facilities"]);
+                detail.ResultObject.SetAttribute("facilities", resultProperties[FirstSolarConstants.FacilitiesProp]);
             }
             if (resultProperties.ContainsKey(FirstSolarConstants.AvailableFacilitiesProp)) {
                 detail.ResultObject.SetAttribute("availablefacilities", resultProperties[FirstSolarConstants.AvailableFacilitiesProp]);
