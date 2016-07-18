@@ -231,11 +231,11 @@
         }, 100);
         $scope.$on("$destroy", deregisterHardwareBack);
 
-        $rootScope.$on('sw_cruddetailrefreshed', function () {
+        $scope.$on('sw_cruddetailrefreshed', function () {
             $scope.datamap = crudContextService.currentDetailItemDataMap();
         });
 
-        $rootScope.$on('$stateChangeSuccess',
+        $scope.$on('$stateChangeSuccess',
               function (event, toState, toParams, fromState, fromParams) {
                   if (fromState.name === "main.cruddetail.compositiondetail") {
                       crudContextService.leavingCompositionDetail();

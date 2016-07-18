@@ -13,7 +13,7 @@
             eventService.onload($scope, $scope.schema, $scope.datamap, {});
         }
 
-        $rootScope.$on('$stateChangeSuccess',
+        $scope.$on('$stateChangeSuccess',
         function (event, toState, toParams, fromState, fromParams) {
             if (toState.name.startsWith("main.cruddetail.compositiondetail")) {
                 //needs to refresh the displayables and datamap everytime the detail page is loaded.
