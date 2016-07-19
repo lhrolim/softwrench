@@ -444,6 +444,10 @@
         <detail stereotype="detail" title="Labor Reporting" platform="mobile">
           <event type="onload" service="laborService" method="onDetailLoad" />
 
+          <!-- declared just so it can fetched in sync -->
+          <association target="#laborcode" labelfield="labor_.laborcode" label="Labor" showexpression="false" enableexpression="false" />
+          <association target="#craft" labelfield="laborcraftrate_.craft" label="Craft" showexpression="false" enableexpression="false" />
+          
           <field attribute="labtransid" hidden="true" />
           <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.fields.orgid"/>
           <field attribute="siteid" hidden="true" defaultexpression="$.parentdata.fields.siteid"/>
@@ -481,7 +485,6 @@
 
     <application entity="laborcraftrate" name="laborcraftrate" title="Craft">
       <schemas>
-
         <!-- #region: mobile -->
         <list platform="mobile">
           <field attribute="craft" />
