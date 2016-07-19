@@ -65,7 +65,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             }
             //otherwise that list should be populated defaulting to the persongroups of the user
             var groups =
-                _dao.FindByNativeQuery("select persongroup from persongroupview where personid = ? and status = 'ACTIVE'",
+                _dao.FindByNativeQuery("select persongroup from persongroupview where personid = ? and status = 'ACTIVE' and persongroup is not null",
                     maximoPersonId);
 
 

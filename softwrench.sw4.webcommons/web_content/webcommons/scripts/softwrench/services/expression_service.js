@@ -367,6 +367,8 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
                 return false;
             }
             
+            datamap = datamap || {};
+
             if (expression.startsWith('service:')) {
                 // Trim service: from the expression
                 var realServiceDefinition = expression.substr(8);
