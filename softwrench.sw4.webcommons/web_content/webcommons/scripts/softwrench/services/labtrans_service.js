@@ -46,7 +46,7 @@
                     var regularHours = event.fields['regularhrs'];
                     var regularRate = event.fields['laborcraftrate_.rate'];
                     var premiumHours = event.fields['premiumpayhours'];
-                    var premiumRate = event.fields['ppcraftrate_.rate'] || event.fields['ppcraftrate_.premiumpay_.defaultrate'];
+                    var premiumRate = event.fields['ppcraftrate_.rate'] || event.fields['ppcraftrate_premiumpay_.defaultrate'];
                     event.fields['premiumpayrate'] = premiumRate;
                     event.fields['linecost'] = calcLineCost(regularHours, regularRate, premiumHours, premiumRate);
                 }
