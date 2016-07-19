@@ -83,6 +83,8 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
                 var ismTicketUid = crudOperationData.GetAttribute(ISMTicketUid);
                 crudOperationData.SetAttribute("ticketuid", ismTicketUid);
                 crudOperationData.SetAttribute("ticketid", crudOperationData.GetAttribute(ISMTicketId));
+                //also required for all the rest operations
+                crudOperationData.SetAttribute("pluspcustomer", "CPS-00");
 
                 crudOperationData.SetAttribute("underwaycall", true);
 
@@ -149,6 +151,8 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
             try {
                 //updating ISM instance using REST --> no ticketid, ticketuid, they would be generated out there
+                //also required for all the rest operations
+                crudOperationData.SetAttribute("pluspcustomer", "CPS-00");
                 var operationWrapper = new OperationWrapper(crudOperationData,
                     OperationConstants.CRUD_CREATE) {
                     Wsprovider = WsProvider.REST

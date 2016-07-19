@@ -39,6 +39,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 and a.laborcode = '@user.properties['laborcode']' and a.scheduledate >= @past(1week) and a.scheduledate <= @future(1week))";
 
 
+        private const string UserLaborWhereClause = "labor.laborcode='@user.properties['laborcode']' and labor.orgid=@orgid";
+        private const string UserLaborCraftWhereClause = "laborcraftrate.laborcode='@user.properties['laborcode']' and laborcraftrate.orgid=@orgid";
 
 
         public FirstSolarWhereClauseRegistry(IWhereClauseFacade whereClauseFacade) {
@@ -58,8 +60,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             _whereClauseFacade.Register("offlinelocation", "@firstSolarWhereClauseRegistry.LocationWhereClauseByFacility", offLineCondition);
             _whereClauseFacade.Register("offlineasset", "@firstSolarWhereClauseRegistry.AssetWhereClauseByFacility", offLineCondition);
             _whereClauseFacade.Register("locancestor", "@firstSolarWhereClauseRegistry.LocAncestorWhereClauseByFacility", offLineCondition);
-
-
+            _whereClauseFacade.Register("labor", UserLaborWhereClause, offLineCondition);
+            _whereClauseFacade.Register("laborcraftrate", UserLaborCraftWhereClause, offLineCondition);
         }
 
         public string WorkordersByGroup() {

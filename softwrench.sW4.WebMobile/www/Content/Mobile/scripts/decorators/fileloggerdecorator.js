@@ -23,7 +23,7 @@
                     console: rollingLogFileConstants.logToConsole,
                     debug: rollingLogFileConstants.debug,
                     prefix: rollingLogFileConstants.logFileName,
-                    directory: rollingLogFileConstants.logFileDirectory
+                    directory: rollingLogFileConstants.appDirectory
                 }
             }
 

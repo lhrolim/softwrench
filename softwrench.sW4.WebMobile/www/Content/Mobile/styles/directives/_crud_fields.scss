@@ -1,4 +1,10 @@
-﻿.crud-fields-wrapper {
+﻿.crud-details {
+    .list[state="main.cruddetail.compositiondetail"] {
+        min-height: calc(100vh - 129px);
+    }
+}
+
+.crud-fields-wrapper {
     .row {
         padding: 0;
         margin: 0;

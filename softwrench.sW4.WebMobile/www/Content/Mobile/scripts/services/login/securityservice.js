@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, ionic, _) {
     "use strict";
 
-    function securityService($rootScope,$state, localStorageService, routeService, $http, $q, swdbDAO, $ionicHistory) {
+    function securityService($rootScope, $state, localStorageService, routeService, $http, $q, swdbDAO, $ionicHistory) {
 
         //#region Utils
 
@@ -13,7 +13,8 @@
                 sessionexpired: "Your session has expired. Please log in to resume your activities. ",
                 unauthorizedaccess: "You're not authorized to access this resource. " +
                                     "Contact support if you're receiving this message in error."
-            }
+            },
+            keyblacklist: [ "security:", "settings:" ]
         };
 
         const $event = name => config.eventnamespace + name;
@@ -53,6 +54,12 @@
             $rootScope.$broadcast($event("login"), user, previous);
         };
 
+        const cleanLocalStorage = () => {
+            Object.keys(localStorage)
+                .filter(k => !config.keyblacklist.some(b => k.startsWith(b)))
+                .forEach(k => localStorageService.remove(k));
+        };
+
         //#endregion
 
         //#region Public methods
@@ -70,16 +77,16 @@
          * @param String password 
          * @returns Promise resolved with the user retuned from the server
          */
-        const login = function (username, password) {
-            //this was setted during bootstrap of the application, or on settingscontroller.js (settings screen)
-            return routeService.loginURL().then(url => {
-                return $http({
+        const login = (username, password) => 
+            //this was set during bootstrap of the application, or on settingscontroller.js (settings screen)
+            routeService.loginURL().then(url => 
+                $http({
                     method: "POST",
                     url: url,
                     data: { username: username, password: password, userTimezoneOffset: new Date().getTimezoneOffset() },
                     timeout: 20 * 1000 // 20 seconds
-                });
-            })
+                })
+            )
             .then(response => {
                 //cleaning history so that back button does not return user to login page
                 $ionicHistory.clearCache();
@@ -91,7 +98,7 @@
                 }
                 return $q.reject(new Error("Invalid username or password"));
             });
-        }
+        
 
         /**
          * User has the following format:
@@ -150,6 +157,7 @@
 
             return swdbDAO.resetDataBase(["Settings"]).then(() => {
                 $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
+                cleanLocalStorage(); // clean non-blacklisted localstorage entries used by apps as cache
                 return current;
             });
         };

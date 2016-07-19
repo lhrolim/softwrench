@@ -176,10 +176,16 @@
 
             //update the position of the detail's floating action button when the user scrolls
             if (!!position) {
+                var toolbarPrimary = $('.bar-header.bar-positive:visible').outerHeight(true);
+                var toolbarSecondary = $('.bar-subheader.bar-assertive:visible').outerHeight(true);
+                var headerTitle = $('.crud-details .header-title:visible').outerHeight(true);
+                var headerDescription = $('.crud-details .header-description:visible').outerHeight(true);
+                var componetHeights = toolbarPrimary + toolbarSecondary + headerTitle + headerDescription;
+
                 var top = position.top;
                 var element = $('command-bar[position="mobile.fab"]');
                 var windowHeight = $(window).height();
-                var offset = (windowHeight - 242) + top;
+                var offset = (windowHeight - componetHeights - 134) + top;
                 $(element).css('top', offset);
             }
         };

@@ -25,7 +25,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
         private readonly string _baseRestURL;
         private readonly bool _isUpdate;
 
-        
+
 
         public RestExecutionContext(CrudOperationData operationData) : base(operationData) {
             _baseRestURL = GenerateRestUrl(operationData.EntityMetadata, operationData.Id);
@@ -79,7 +79,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
             var payLoad = GeneratePayLoad();
 
             if (Log.IsDebugEnabled) {
-                Log.DebugFormat("invoking web service at {0} with headers {1} and payload {2}",_baseRestURL,headers,payLoad);
+                Log.DebugFormat("invoking web service at {0} with headers {1} and payload {2}", _baseRestURL, headers, payLoad);
             }
 
             var callRestApiSync = RestUtil.CallRestApiSync(_baseRestURL, MethodName(), headers, payLoad);
@@ -113,6 +113,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
             sb.Append("_action=AddChange");
             foreach (var entry in dict) {
                 if (!(entry.Value is RestComposedData) && !obj.HasNonInlineComposition) {
+                    //appending non-composition fields only if we do not have a composition present on the datamap
                     if (entry.Key.Contains(".")) {
                         Log.WarnFormat("ignoring entry {0} for url call {1}", entry.Key, _baseRestURL);
                         continue;
@@ -126,6 +127,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
                             sb.Append(WebUtility.UrlEncode(entry.Value.ToString()));
                         }
                     }
+                } else if (entry.Key.Equals("PLUSPCUSTOMER", StringComparison.InvariantCultureIgnoreCase)) {
+                    //making sure we're always passing the pluspcustomer, regardless
+                    sb.Append("&").Append(entry.Key).Append("=");
+                    sb.Append(WebUtility.UrlEncode(entry.Value.ToString()));
                 }
 
                 if (entry.Value is RestComposedData) {
