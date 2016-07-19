@@ -603,21 +603,21 @@
 
           <field label="JP Number" attribute="jobplan_.description" enableexpression="false" readonly="true"/>
 
-          <association label="Failure Class" target="failurecode" labelfield="failurelistonly_.description" requiredexpression="@worktype_.type == 'CM'" extraprojectionvalues="failurelist">
+          <association label="Failure Class" target="failurecode" labelfield="failurelistonly_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'" extraprojectionvalues="failurelist">
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterFailureChanged"/>
           </association>
 
           <!-- Region Problems, cuase Remedy -->
-          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="offlineproblemlist_.description" requiredexpression="@worktype_.type == 'CM'" extraprojectionvalues="failurelist" >
+          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="offlineproblemlist_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'" extraprojectionvalues="failurelist" >
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterProblemChanged"/>
           </association>
 
-          <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="offlinecauselist_.description" requiredexpression="@worktype_.type == 'CM'"
+          <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="offlinecauselist_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'"
                        extraprojectionvalues="failurelist">
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterCauseChanged"/>
           </association>
 
-          <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="offlineremedylist_.description" requiredexpression="@worktype_.type == 'CM'"
+          <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="offlineremedylist_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'"
                        extraprojectionvalues="failurelist">
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterRemedyChanged"/>
           </association>
