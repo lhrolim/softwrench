@@ -30,16 +30,15 @@
 
     </ion-header-bar>
 
-    <ion-content class="crud details" has-header="true" has-subheader="true" has-bouncing="false" 
+    <ion-content class="crud-details" has-header="true" has-subheader="true" has-bouncing="false" 
                  on-swipe-left="onSwipeLeft()" on-swipe-right="onSwipeRight()" on-scroll="onScroll()" delegate-handle="detailHandler">
-        <div class="header-item h4" ng-click="loadMainTab()" style="padding-left: 10px">
+        <div class="header-title h4" ng-click="loadMainTab()" style="padding-left: 10px">
             {{tabTitle() || detailSummary()}}
         </div>
 
         <div class="header-description">
             <div ng-if="hasProblems()" class="problem-description">
-                <i class="fa fa-exclamation-triangle"></i>
-                {{lastProblemMesage()}}
+                <i class="fa fa-exclamation-triangle"></i>&ensp;{{lastProblemMesage()}}
             </div>
         </div>
 

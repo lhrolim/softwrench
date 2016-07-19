@@ -56,16 +56,16 @@
 
             link: function (scope, element, attrs) {
                 //set the crud details list height
-                //var headerPrimaryHeight = $('.bar-header.bar-positive:visible').outerHeight(true);
-                //var headerSecondaryHeight = $('.bar-subheader.bar-assertive:visible').outerHeight(true);
-                //var crudHeaderHeight = $('.crud.details .header-item:visible').outerHeight(true);
-                //var offset = headerPrimaryHeight + headerSecondaryHeight + crudHeaderHeight;
-                //$('.crud.details [state="main.cruddetail.compositiondetail"]:visible').css('min-height', 'calc(100vh - ' + offset + 'px');
+                var toolbarPrimary = $('.bar-header.bar-positive:visible').outerHeight(true);
+                var toolbarSecondary = $('.bar-subheader.bar-assertive:visible').outerHeight(true);
+                var headerTitle = $('.crud-details .header-title:visible').outerHeight(true);
+                var headerDescription = $('.crud-details .header-description:visible').outerHeight(true);
+                var componetHeights = toolbarPrimary + toolbarSecondary + headerTitle + headerDescription;
 
                 //TODO: impove this solution, move the fab to the crud details.html (outside of the content) and use only css
                 //set the inital position of the floating action button
                 var windowHeight = $(window).height();
-                var offset = windowHeight - 263;
+                var offset = windowHeight - componetHeights - 134;
                 $(element).css('top', offset);
             }
         };

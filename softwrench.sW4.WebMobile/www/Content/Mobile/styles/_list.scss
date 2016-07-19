@@ -17,16 +17,18 @@ input.ion-autocomplete[readonly] {
     cursor: text;
 }
 
-.header-item {
+.header-title {
     right: 20px !important;
     left: 30px !important;
 }
 
-.problem-description {
-    color: white;
-    background: $cts_red;
-    padding: 10px;
-    font-size: 14px;
+.header-description {
+    .problem-description {
+        color: white;
+        background: $cts_red;
+        padding: 10px;
+        font-size: 14px;
+    }
 }
 
 .missingsync, .pending, .hasproblem {
