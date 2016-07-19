@@ -32,6 +32,11 @@
                 routeService.go("login");
             };
 
+            $scope.saveDemo = function () {
+                $scope.settings.serverurl = 'http://demo.softwrench.net/';
+                $scope.save();
+            }
+
             $scope.save = function () {
                 if (!$scope.settings.serverurl.startsWith("http")) {
                     $scope.settings.serverurl = "http://" + $scope.settings.serverurl;
@@ -42,7 +47,7 @@
                     // otherwise go to 'login'
                     var next = securityService.hasAuthenticatedUser() ? "main.home" : "login";
                     routeService.go(next);
-                });
+                });                                   
             }
 
             init();
