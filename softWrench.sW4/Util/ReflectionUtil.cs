@@ -9,6 +9,7 @@ using cts.commons.Util;
 using Newtonsoft.Json;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Rest;
+using softWrench.sW4.Util.DeployValidation;
 
 namespace softWrench.sW4.Util {
     public static class ReflectionUtil {
@@ -189,6 +190,10 @@ namespace softWrench.sW4.Util {
                 return null;
             }
             var prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
+            if (prop == null) {
+                DeployValidationService.AddMissingProperty(propertyName);
+                throw new MaximoException(string.Format("Array {0} is not declared in object {1}. Please contact support.", propertyName, baseObject.GetType()));
+            }
             var type = prop.PropertyType;
             if (!type.IsArray) {
                 throw new ArgumentException(String.Format("property {0} is not an array", propertyName));
@@ -224,6 +229,10 @@ namespace softWrench.sW4.Util {
                 return null;
             }
             var prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
+            if (prop == null) {
+                DeployValidationService.AddMissingProperty(propertyName);
+                throw new MaximoException(string.Format("Array {0} is not declared in object {1}. Please contact support.", propertyName, baseObject.GetType()));
+            }
             var type = prop.PropertyType;
             if (!type.IsArray) {
                 throw new ArgumentException(String.Format("property {0} is not an array", propertyName));
@@ -263,6 +272,7 @@ namespace softWrench.sW4.Util {
             var prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
 
             if (prop == null) {
+                DeployValidationService.AddMissingProperty(propertyName);
                 throw new MaximoException(string.Format("Array {0} is not declared in object {1}. Please contact support.", propertyName, baseObject.GetType()));
             }
 
