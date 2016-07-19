@@ -26,6 +26,28 @@
                 margin-bottom: 0;
             }
         }
+
+        .demo-mode-note {
+            .item-divider {
+                color: #fff;
+                background-color: $cts-blue;
+            }
+
+            .item {
+                border-color: $cts-blue;
+            }
+
+            .demo-note {
+                overflow: visible;
+                white-space: normal;
+
+                .users {
+                    .name {
+                        width: 140px;
+                    }
+                }
+            }
+        }
     }
 }
 

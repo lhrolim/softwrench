@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using WcfSamples.DynamicProxy;
+using softWrench.sW4.Util.DeployValidation;
 using r = softWrench.sW4.Util.ReflectionUtil;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
@@ -97,7 +98,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
                 types.SetValue(parameterList.GetValue(i).GetType(), i);
 
             }
-            var result = Proxy.CallMethod(MethodName(), types, parameterList);
+
+            object result = null;
+            if (!DeployValidationService.MockProxyInvocation()) {
+                result = Proxy.CallMethod(MethodName(), types, parameterList);
+            }
             return result;
         }
 

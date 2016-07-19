@@ -82,12 +82,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             var idProperty = maximoTemplateData.Metadata.Schema.IdAttribute.Name;
             var siteIdAttribute = maximoTemplateData.Metadata.Schema.SiteIdAttribute;
             var userIdProperty = maximoTemplateData.Metadata.Schema.UserIdAttribute.Name;
-            var resultOb = (Array)resultData;
-            var firstOb = resultOb.GetValue(0);
-            var id = WsUtil.GetRealValue(firstOb, idProperty);
-            var userId = WsUtil.GetRealValue(firstOb, userIdProperty);
+            var resultOb = resultData == null ? null : (Array)resultData;
+            var firstOb = resultOb == null ? null : resultOb.GetValue(0);
+            var id = firstOb == null ? null : WsUtil.GetRealValue(firstOb, idProperty);
+            var userId = firstOb == null ? null : WsUtil.GetRealValue(firstOb, userIdProperty);
             string siteId = null;
-            if (siteIdAttribute != null) {
+            if (siteIdAttribute != null && firstOb != null) {
                 //not all entities will have a siteid...
                 siteId = WsUtil.GetRealValue(firstOb, siteIdAttribute.Name) as string;
             }

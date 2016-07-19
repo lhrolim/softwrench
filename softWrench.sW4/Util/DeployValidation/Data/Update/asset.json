@@ -1,0 +1,542 @@
+{
+  "assetid": 1430,
+  "orgid": "EAGLENA",
+  "assetnum": "V1050",
+  "description": "MS Visio",
+  "status": "OPERATING",
+  "siteid": "BEDFORD",
+  "parent": "A7704",
+  "location": "OFF104",
+  "assettype": "IT",
+  "itemnum": "VISIO",
+  "conditioncode": null,
+  "failurecode": null,
+  "serialnum": null,
+  "groupname": null,
+  "usage": null,
+  "vendor": "ELECTRON",
+  "manufacturer": "MICROSOF",
+  "installdate": "2004-09-08T12:30:00+05:30",
+  "purchaseprice": 54.71,
+  "replacecost": 55,
+  "totalcost": 0,
+  "ytdcost": 0,
+  "budgetcost": 0,
+  "invcost": 0,
+  "isrunning": 1,
+  "totdowntime": 0,
+  "changeby": "MAXADMIN",
+  "changedate": "2016-02-19T22:29:42+05:30",
+  "priority": null,
+  "rowstamp": 33171321,
+  "parentasset_.description": "Standard Desktop Computer",
+  "parentasset_.assetnum": "A7704",
+  "location_.description": "Office #104",
+  "item_.description": "MS Visio",
+  "condition_.description": null,
+  "metergroup_.description": null,
+  "vendor_.name": "Electronic Super Supply",
+  "assettrans_.ponum": null,
+  "assetstatus_.changedate": null,
+  "sparepart_": [
+    {
+      "itemnum": "0-0031",
+      "item_.description": "Elbow, Street- 1-1/8 In X 90 Deg",
+      "quantity": 1,
+      "issuedqty": 0,
+      "description": null,
+      "sparepartid": 668,
+      "itemsetid": "SET1",
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "itemnum": "117041",
+      "item_.description": "Connecting Link - Repair",
+      "quantity": 1,
+      "issuedqty": 0,
+      "description": null,
+      "sparepartid": 667,
+      "itemsetid": "SET1",
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "itemnum": "11R22.5GS-10",
+      "item_.description": "Goodyear 11R22.5 G327 Steer Tire",
+      "quantity": 1,
+      "issuedqty": 0,
+      "description": null,
+      "sparepartid": 666,
+      "itemsetid": "SET1",
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "itemnum": "11406",
+      "item_.description": "AC Spark Plug",
+      "quantity": 1,
+      "issuedqty": 0,
+      "description": null,
+      "sparepartid": 665,
+      "itemsetid": "SET1",
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "itemnum": "0-0514",
+      "item_.description": "Tubing, Copper- 15/16 In ID X .030 In Wall",
+      "quantity": 1,
+      "issuedqty": 0,
+      "description": null,
+      "sparepartid": 664,
+      "itemsetid": "SET1",
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "itemnum": "0-0048",
+      "item_.description": "Tubing, Copper- 1-1/16 In ID X .030 In Wall",
+      "quantity": 1,
+      "issuedqty": 0,
+      "description": null,
+      "sparepartid": 663,
+      "itemsetid": "SET1",
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "itemnum": "0-0031",
+      "item_.description": "Elbow, Street- 1-1/8 In X 90 Deg",
+      "quantity": 1,
+      "issuedqty": 0,
+      "description": null,
+      "sparepartid": 662,
+      "itemsetid": "SET1",
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "itemnum": "1002",
+      "item_.description": "5 ft. X 6 ft. window pane",
+      "quantity": 1,
+      "issuedqty": 0,
+      "description": null,
+      "sparepartid": 661,
+      "itemsetid": "SET1",
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "itemnum": "0-0048",
+      "item_.description": "Tubing, Copper- 1-1/16 In ID X .030 In Wall",
+      "quantity": 1,
+      "issuedqty": 0,
+      "description": null,
+      "sparepartid": 660,
+      "itemsetid": "SET1",
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "itemnum": "0-0031",
+      "item_.description": "Elbow, Street- 1-1/8 In X 90 Deg",
+      "quantity": 1,
+      "issuedqty": 0,
+      "description": null,
+      "sparepartid": 659,
+      "itemsetid": "SET1",
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    }
+  ],
+  "assetmeter_": [
+    {
+      "sequence": null,
+      "metername": "GUARD RAIL",
+      "meter_.description": "Rail Meter - Guard rail loss",
+      "meter_.metertype": "CHARACTERISTIC",
+      "measureunitid": null,
+      "active": 1,
+      "assetmeterid": 238,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "sequence": null,
+      "metername": "GENROTOR",
+      "meter_.description": "Generator Rotor Ground Leakage",
+      "meter_.metertype": "GAUGE",
+      "measureunitid": null,
+      "active": 1,
+      "assetmeterid": 237,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "sequence": null,
+      "metername": "GENINSP",
+      "meter_.description": "General Inspection",
+      "meter_.metertype": "CHARACTERISTIC",
+      "measureunitid": null,
+      "active": 1,
+      "assetmeterid": 236,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "sequence": null,
+      "metername": "BAD TIE",
+      "meter_.description": "Observational meter used to support track inspections",
+      "meter_.metertype": "CHARACTERISTIC",
+      "measureunitid": null,
+      "active": 1,
+      "assetmeterid": 235,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "sequence": null,
+      "metername": "ASSETNOISE",
+      "meter_.description": "Asset Noise",
+      "meter_.metertype": "CHARACTERISTIC",
+      "measureunitid": null,
+      "active": 1,
+      "assetmeterid": 234,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "sequence": null,
+      "metername": "ALARM1",
+      "meter_.description": "Alarm 1",
+      "meter_.metertype": "CONTINUOUS",
+      "measureunitid": null,
+      "active": 1,
+      "assetmeterid": 233,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "sequence": null,
+      "metername": "AIRCOMPTEM",
+      "meter_.description": "Air Compressor Temperature",
+      "meter_.metertype": "GAUGE",
+      "measureunitid": null,
+      "active": 1,
+      "assetmeterid": 232,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "sequence": null,
+      "metername": "AIRCOMPPSI",
+      "meter_.description": "Air Compressor PSI",
+      "meter_.metertype": "GAUGE",
+      "measureunitid": null,
+      "active": 1,
+      "assetmeterid": 231,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "sequence": null,
+      "metername": "ACWSTRAINE",
+      "meter_.description": "ACW Strainer DP",
+      "meter_.metertype": "GAUGE",
+      "measureunitid": null,
+      "active": 1,
+      "assetmeterid": 230,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    },
+    {
+      "sequence": null,
+      "metername": "ACW STRAIN",
+      "meter_.description": "ACW Strainer DP",
+      "meter_.metertype": "CONTINUOUS",
+      "measureunitid": null,
+      "active": 1,
+      "assetmeterid": 229,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD"
+    }
+  ],
+  "subassembly_": [],
+  "workorder_": [
+    {
+      "workorderid": 5698,
+      "wonum": "2199",
+      "description": "WO2Thru Asset",
+      "assetnum": "V1050",
+      "status": "WAPPR",
+      "schedstart": null,
+      "wopriority": null,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA",
+      "location": "OFF104"
+    },
+    {
+      "workorderid": 5697,
+      "wonum": "2198",
+      "description": "WO thru Asset",
+      "assetnum": "V1050",
+      "status": "WAPPR",
+      "schedstart": null,
+      "wopriority": null,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA",
+      "location": "OFF104"
+    },
+    {
+      "workorderid": 5672,
+      "wonum": "2179",
+      "description": "Asset WO",
+      "assetnum": "V1050",
+      "status": "WAPPR",
+      "schedstart": null,
+      "wopriority": 2,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA",
+      "location": "OFF104"
+    },
+    {
+      "workorderid": 5572,
+      "wonum": "2128",
+      "description": "Test emesquita",
+      "assetnum": "V1050",
+      "status": "WAPPR",
+      "schedstart": null,
+      "wopriority": null,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA",
+      "location": "OFF104"
+    },
+    {
+      "workorderid": 5271,
+      "wonum": "2031",
+      "description": "Testing swweb-2143",
+      "assetnum": "V1050",
+      "status": "COMP",
+      "schedstart": null,
+      "wopriority": 3,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA",
+      "location": "OFF104"
+    },
+    {
+      "workorderid": 5270,
+      "wonum": "2030",
+      "description": "Test",
+      "assetnum": "V1050",
+      "status": "COMP",
+      "schedstart": null,
+      "wopriority": 4,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA",
+      "location": "OFF104"
+    },
+    {
+      "workorderid": 5215,
+      "wonum": "1972",
+      "description": "Test",
+      "assetnum": "V1050",
+      "status": "WAPPR",
+      "schedstart": null,
+      "wopriority": null,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA",
+      "location": "OFF104"
+    },
+    {
+      "workorderid": 5189,
+      "wonum": "1946",
+      "description": "Test",
+      "assetnum": "V1050",
+      "status": "WAPPR",
+      "schedstart": null,
+      "wopriority": null,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA",
+      "location": "OFF104"
+    },
+    {
+      "workorderid": 5188,
+      "wonum": "1945",
+      "description": "Test",
+      "assetnum": "V1050",
+      "status": "WAPPR",
+      "schedstart": null,
+      "wopriority": null,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA",
+      "location": "OFF104"
+    },
+    {
+      "workorderid": 5186,
+      "wonum": "1943",
+      "description": "Test",
+      "assetnum": "V1050",
+      "status": "WAPPR",
+      "schedstart": null,
+      "wopriority": null,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA",
+      "location": "OFF104"
+    }
+  ],
+  "assetspec_": [
+    {
+      "classstructure_.description": "Business Software",
+      "classstructure_.classificationid": "43231500",
+      "assetspecid": 2236,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD",
+      "classstructure_.hierarchypath": " 43000000 / 43230000 / 43231500"
+    },
+    {
+      "classstructure_.description": "Business Software",
+      "classstructure_.classificationid": "43231500",
+      "assetspecid": 2235,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD",
+      "classstructure_.hierarchypath": " 43000000 / 43230000 / 43231500"
+    },
+    {
+      "classstructure_.description": "Business Software",
+      "classstructure_.classificationid": "43231500",
+      "assetspecid": 2234,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD",
+      "classstructure_.hierarchypath": " 43000000 / 43230000 / 43231500"
+    },
+    {
+      "classstructure_.description": "Business Software",
+      "classstructure_.classificationid": "43231500",
+      "assetspecid": 2233,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD",
+      "classstructure_.hierarchypath": " 43000000 / 43230000 / 43231500"
+    },
+    {
+      "classstructure_.description": "Business Software",
+      "classstructure_.classificationid": "43231500",
+      "assetspecid": 2232,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD",
+      "classstructure_.hierarchypath": " 43000000 / 43230000 / 43231500"
+    },
+    {
+      "classstructure_.description": "Business Software",
+      "classstructure_.classificationid": "43231500",
+      "assetspecid": 2231,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD",
+      "classstructure_.hierarchypath": " 43000000 / 43230000 / 43231500"
+    },
+    {
+      "classstructure_.description": "Business Software",
+      "classstructure_.classificationid": "43231500",
+      "assetspecid": 2230,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD",
+      "classstructure_.hierarchypath": " 43000000 / 43230000 / 43231500"
+    },
+    {
+      "classstructure_.description": "Business Software",
+      "classstructure_.classificationid": "43231500",
+      "assetspecid": 2228,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD",
+      "classstructure_.hierarchypath": " 43000000 / 43230000 / 43231500"
+    },
+    {
+      "classstructure_.description": "Business Software",
+      "classstructure_.classificationid": "43231500",
+      "assetspecid": 2227,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD",
+      "classstructure_.hierarchypath": " 43000000 / 43230000 / 43231500"
+    },
+    {
+      "classstructure_.description": "Business Software",
+      "classstructure_.classificationid": "43231500",
+      "assetspecid": 2226,
+      "assetnum": "V1050",
+      "siteid": "BEDFORD",
+      "classstructure_.hierarchypath": " 43000000 / 43230000 / 43231500"
+    }
+  ],
+  "assetlocrelation_": [
+    {
+      "relsequencenum": null,
+      "sourceassetnum": "V1050",
+      "assetrelationnum": "INCLUDES",
+      "targetassetnum": "1012",
+      "assetlocrelationid": 341
+    },
+    {
+      "relsequencenum": null,
+      "sourceassetnum": "V1050",
+      "assetrelationnum": "INCLUDES",
+      "targetassetnum": "1011",
+      "assetlocrelationid": 339
+    },
+    {
+      "relsequencenum": null,
+      "sourceassetnum": "V1050",
+      "assetrelationnum": "INCLUDES",
+      "targetassetnum": "1010",
+      "assetlocrelationid": 337
+    },
+    {
+      "relsequencenum": null,
+      "sourceassetnum": "V1050",
+      "assetrelationnum": "INCLUDES",
+      "targetassetnum": "1009",
+      "assetlocrelationid": 335
+    },
+    {
+      "relsequencenum": null,
+      "sourceassetnum": "V1050",
+      "assetrelationnum": "INCLUDES",
+      "targetassetnum": "1008",
+      "assetlocrelationid": 333
+    },
+    {
+      "relsequencenum": null,
+      "sourceassetnum": "V1050",
+      "assetrelationnum": "INCLUDES",
+      "targetassetnum": "1007",
+      "assetlocrelationid": 331
+    },
+    {
+      "relsequencenum": null,
+      "sourceassetnum": "V1050",
+      "assetrelationnum": "INCLUDES",
+      "targetassetnum": "1006",
+      "assetlocrelationid": 329
+    },
+    {
+      "relsequencenum": null,
+      "sourceassetnum": "V1050",
+      "assetrelationnum": "INCLUDES",
+      "targetassetnum": "1005",
+      "assetlocrelationid": 327
+    },
+    {
+      "relsequencenum": null,
+      "sourceassetnum": "V1050",
+      "assetrelationnum": "INCLUDES",
+      "targetassetnum": "1004",
+      "assetlocrelationid": 325
+    },
+    {
+      "relsequencenum": null,
+      "sourceassetnum": "V1050",
+      "assetrelationnum": "INCLUDES",
+      "targetassetnum": "1003",
+      "assetlocrelationid": 323
+    }
+  ]
+}
