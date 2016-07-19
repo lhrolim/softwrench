@@ -253,10 +253,13 @@
             return schemaA.applicationName === schemaB.applicationName && schemaA.schemaId === schemaB.schemaId;
         }
 
-        function flattenDisplayables(fields, context) {
+        function flattenDisplayables(fields, context, datamap) {
             if (!fields) return [];
             context = context || [];
             fields.forEach(function (f) {
+                if (fieldService.isNullInvisible(f, datamap)) {
+                    return;
+                }
                 if (angular.isArray(f.displayables)) {
                     flattenDisplayables(f.displayables, context);
                 } else {
