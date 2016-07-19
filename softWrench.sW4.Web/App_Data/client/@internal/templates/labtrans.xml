@@ -470,6 +470,7 @@
           </field>
           <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8">
             <event type="afterchange" service="laborService" method="updateLineCost"/>
+            <renderer type="numericinput" params="min=0;step=0.01;numberType=double"/>
           </field>
 
           <field attribute="gldebitacct" defaultexpression="$.parentdata.fields.glaccount" requiredexpression="false" hidden="true" readonly="true" />

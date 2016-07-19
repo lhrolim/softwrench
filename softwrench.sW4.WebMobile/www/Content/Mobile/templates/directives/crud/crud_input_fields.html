@@ -45,11 +45,26 @@
                                          data-read-only="field.isReadOnly">
                         </rich-text-field>
 
-                        <input ng-switch-when="numericinput" type="number" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"
-                               min="{{field.rendererParameters['min']}}"
-                               max="{{setMaxNumericInput(datamap,field)}}"
-                               step="{{ field.rendererParameters['step'] || 1 }}"
-                               ng-required="isFieldRequired(field.requiredExpression)" />
+
+
+                        <div ng-switch-when="numericinput">
+
+                            <input ng-if="field.rendererParameter['numberType'] === 'double' || field.rendererParameter['numberType'] === 'float'"
+                                   type="number" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"
+                                   min="{{field.rendererParameters['min']}}"
+                                   max="{{setMaxNumericInput(datamap,field)}}"
+                                   step="{{ field.rendererParameters['step'] || 1 }}"
+                                   ng-model-options="{ debounce : 500 }"
+                                   sw-float-converter
+                                   ng-required="isFieldRequired(field.requiredExpression)"/>
+
+                            <input ng-if="field.rendererParameter['numberType'] !== 'double' && field.rendererParameter['numberType'] !== 'float'"
+                                   type="number" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"
+                                   min="{{field.rendererParameters['min']}}"
+                                   max="{{setMaxNumericInput(datamap,field)}}"
+                                   ng-required="isFieldRequired(field.requiredExpression)" />
+
+                        </div>
 
                         <input ng-switch-when="date" type="date" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)" ng-required="isFieldRequired(field.requiredExpression)" 
                                dateconverter

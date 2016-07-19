@@ -47,10 +47,12 @@
         
         const getLabTransMetadata = () => crudContextService.currentCompositionTabByName("labtrans");
 
-        function setInitialLaborAndCraft(datamap) {
+        function setInitialLaborAndCraft(datamap, overrideRegularHours) {
             const currentUser = securityService.currentFullUser();
             return dao.findSingleByQuery("AssociationData", `application = 'labor' and datamap like '%"personid":"${currentUser.PersonId}"%'`)
                 .then(association => {
+                    if (!association) return $q.reject(new Error(`There is no labor registered for the current user with personid '${currentUser.PersonId}'`));
+
                     const labor = association.datamap;
                     datamap["laborcode"] = labor.laborcode;
                     datamap["labor_.worksite"] = labor.worksite;
@@ -59,15 +61,24 @@
                     return dao.findSingleByQuery("AssociationData", `application = 'laborcraftrate' and datamap like '%"laborcode":"${labor.laborcode}"%'`);
                 })
                 .then(association => {
+                    if (!association) return $q.reject(new Error(`There is no laborcraftrate registered for the labor '${datamap["laborcode"]}'`));
+
                     const craft = association.datamap;
                     datamap["craft"] = craft.craft;
                     const payrate = craft.rate;
                     datamap["payrate"] = payrate;
 
+                    if (angular.isNumber(overrideRegularHours) && overrideRegularHours >= 0) {
+                        datamap["regularhrs"] = overrideRegularHours;
+                    }
+
                     datamap["linecost"] = calculateLineCost(datamap["regularhrs"], payrate);
 
                     return datamap;
-                });
+                })
+                .catch(error =>
+                    $ionicPopup.alert({ title: "Labor Reporting Error", template: error.message }).then(() => $q.reject(error))
+                );
         }
 
         function saveLabor(parent, labor, inCurrentParent) {
@@ -96,7 +107,7 @@
             const labor = { "_newitem#$": true };
             offlineSchemaService.fillDefaultValues(laborDetailSchema, labor, parent.datamap);
 
-            return setInitialLaborAndCraft(labor)
+            return setInitialLaborAndCraft(labor, 0)
                 .then(initialized => saveLabor(parent, initialized, true))
                 .then(saved => {
                     cacheStartedLabor(parent.id, saved);

@@ -261,7 +261,7 @@
                     return;
                 }
                 if (angular.isArray(f.displayables)) {
-                    flattenDisplayables(f.displayables, context);
+                    flattenDisplayables(f.displayables, context, datamap);
                 } else {
                     context.push(f);
                 }
