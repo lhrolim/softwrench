@@ -1,8 +1,8 @@
 ﻿(function(app) {
     "use strict";
 
-    app.controller('LoginController', ["$scope", "swAlertPopup", "routeService", "securityService", "$timeout", "$stateParams", "loadingService",
-        function ($scope, swAlertPopup, routeService, securityService, $timeout, $stateParams, loadingService) {
+    app.controller('LoginController', ["$scope", "swAlertPopup", "routeService", "securityService", "$timeout", "$stateParams", "loadingService", "settingsService",
+        function ($scope, swAlertPopup, routeService, securityService, $timeout, $stateParams, loadingService, settingsService) {
 
             $scope.data = {};
 
@@ -12,12 +12,14 @@
                     template: message
                 });
             }
+
             const showMessage = function() {
                 const message = $stateParams.message;
                 if (!!message) {
                     showAlert("Attention", message);
                 }
             };
+
             $scope.login = function () {
                 loadingService.showDefault();
                 
@@ -36,12 +38,25 @@
                     });
             };
 
-            $scope.settings = function() {
+            $scope.viewSettings = function() {
                 routeService.go("settings");
             };
 
+            $scope.getIsDemoMode = function () {
+                settingsService.getServerUrl().then(function (url) {
+                    $scope.isDemoMode = url.indexOf('demo.softwrench.net') > 0;   
+                });
+            }
+
+            $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+                 $timeout(function () {
+                     $scope.getIsDemoMode();
+                 });
+             });
+
             // init
             $timeout(showMessage);
+            $scope.getIsDemoMode();
         }
     ]);
 

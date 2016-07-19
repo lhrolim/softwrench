@@ -53,6 +53,12 @@
     transition-property: transform, all !important;
 }
 
+.button.cts-blue {
+    border-color: transparent;
+    background-color: $cts-blue;
+    color: #fff;
+}
+
 .spinner {
     stroke: #fff;
 }
@@ -67,7 +73,7 @@
 
 .ion-autocomplete-container {
     .bar {
-        &.ion-autocomplete-topbar{
+        &.ion-autocomplete-topbar {
             background-size: 0px;
         }
 
