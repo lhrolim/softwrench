@@ -143,6 +143,8 @@
                     }
 
                     scope.compositionschemadefinition = metadata.schema;
+                    scope.compositionlistschema = scope.compositionschemadefinition.schemas.list;
+                    scope.compositiondetailschema = scope.compositionschemadefinition.schemas.detail;
                     scope.relationship = metadata.relationship;
 
                     //display the list composition by default

@@ -203,7 +203,7 @@
             });
 
             scope.isModifiableEnabled = function (fieldMetadata) {
-                var result = expressionService.evaluate(fieldMetadata.enableExpression, scope.datamap);
+                var result = expressionService.evaluate(fieldMetadata.enableExpression, scope.datamap, scope);
                 return result;
             };
 
@@ -225,6 +225,7 @@
             scope: {
                 schema: '=',
                 datamap: '=',
+                parentdata: '=',
                 fieldMetadata: "=",
                 panelid: '@',
                 //the 

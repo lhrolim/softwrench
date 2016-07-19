@@ -205,7 +205,7 @@
         }
 
         $scope.isReadOnlyField = function (fieldMetadata,datamap) {
-            const isDefaultReadOnly = fieldService.isFieldReadOnly(datamap, null, fieldMetadata);
+            const isDefaultReadOnly = fieldService.isFieldReadOnly(datamap, null, fieldMetadata, $scope);
             if (isDefaultReadOnly) {
                 return true;
             }
