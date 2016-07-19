@@ -49,16 +49,15 @@
 
                         <div ng-switch-when="numericinput">
 
-                            <input ng-if="field.rendererParameter['numberType'] === 'double' || field.rendererParameter['numberType'] === 'float'"
+                            <input ng-if="field.rendererParameters['numberType'] === 'double' || field.rendererParameters['numberType'] === 'float'"
                                    type="number" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"
                                    min="{{field.rendererParameters['min']}}"
                                    max="{{setMaxNumericInput(datamap,field)}}"
                                    step="{{ field.rendererParameters['step'] || 1 }}"
-                                   ng-model-options="{ debounce : 500 }"
-                                   sw-float-converter
+                                   float-converter ng-model-options="{ debounce : 500 }"
                                    ng-required="isFieldRequired(field.requiredExpression)"/>
 
-                            <input ng-if="field.rendererParameter['numberType'] !== 'double' && field.rendererParameter['numberType'] !== 'float'"
+                            <input ng-if="field.rendererParameters['numberType'] !== 'double' && field.rendererParameters['numberType'] !== 'float'"
                                    type="number" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"
                                    min="{{field.rendererParameters['min']}}"
                                    max="{{setMaxNumericInput(datamap,field)}}"

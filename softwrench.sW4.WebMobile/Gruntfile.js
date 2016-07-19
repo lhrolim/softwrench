@@ -55,6 +55,7 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/physicalinventory_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/commandcommons.js",
         "www/Content/Shared/webcommons/scripts/softwrench/components/richtext.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/directive/floatconverter.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/applications/inventory/inventory_service_shared.js"

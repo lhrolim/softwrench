@@ -359,6 +359,7 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
 
         evaluate: function (expression, datamap, scope, displayable) {
             var log = $log.getInstance('expressionService#evaluate');
+            datamap = datamap || {};
             if (expression === "true" || expression === true) {
                 return true;
             }

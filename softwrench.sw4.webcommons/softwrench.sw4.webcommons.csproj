@@ -91,6 +91,7 @@
     <Content Include="web_content\Templates\usefulFaqLinks.html" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\combo.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\constants\JavascriptEventConstants.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\directive\floatconverter.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\intervaltrigger.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\richtext.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />

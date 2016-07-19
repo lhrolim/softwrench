@@ -114,7 +114,7 @@
                         var hours = difference / 3600000;
                         hours = hours.toPrecision(6);
                         // set the labor hours
-                        event.fields['regularhrs'] = hours;
+                        event.fields['regularhrs'] = parseFloat(hours);
                     }
                 },
                 openNewDetailModal: function (modalschemaId) {
