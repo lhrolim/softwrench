@@ -25,7 +25,7 @@
             var redirectUrl;
             if (target == 'new') {
                 redirectUrl = url(controller + "/" + action + "?" + $.param(parameters));
-                var w = window.open(redirectUrl);
+                const w = window.open(redirectUrl);
                 w.moveTo(0, 0);
                 return $q.when();
             }
@@ -52,10 +52,10 @@
                     }
                 }).error(
                 function (data) {
-                    var errordata = {
+                    const errordata = {
                         errorMessage: "error opening action {0} of controller {1} ".format(action, controller),
                         errorStack: data.message
-                    }
+                    };
                     $rootScope.$broadcast("sw_ajaxerror", errordata);
                     alertService.notifyexception(errordata);
                 });
@@ -69,7 +69,7 @@
             return $timeout(function () {
                 //this timeout is needed because a digest might already be in progress
                 contextService.setActiveTab(tabId);
-                var tab = $('a[href="#' + tabId + '"]');
+                const tab = $('a[href="#' + tabId + '"]');
                 tab.trigger('click');
             }, 0, false);
         };
@@ -109,15 +109,12 @@
             }
 
             var mode = extraParameters.mode ? extraParameters.mode : "none";
-
-            var log = $log.getInstance("redirectService#redirectWithData");
-
-            var searchDTO = searchService.buildSearchDTO(searchData, {}, searchOperator);
+            const log = $log.getInstance("redirectService#redirectWithData");
+            const searchDTO = searchService.buildSearchDTO(searchData, {}, searchOperator);
             searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
             searchDTO.totalCount = 0;
             searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
-
-            var restParameters = {
+            const restParameters = {
                 key: {
                     schemaId: schemaId,
                     mode: mode,
@@ -125,15 +122,15 @@
                 },
                 SearchDTO: searchDTO
             };
-            var queryString = $.param(restParameters);
-            var urlToUse = url("/api/Data/{0}?{1}".format(applicationName, queryString));
+            const queryString = $.param(restParameters);
+            const urlToUse = url("/api/Data/{0}?{1}".format(applicationName, queryString));
             log.info("invoking url {0}".format(urlToUse));
             var jsonData = {};
             historyService.addToHistory(urlToUse);
             $http.get(urlToUse).success(function (data) {
                 jsonData = data;
                 innerGoToApplicationGet(data, null, null, mode, applicationName, null, extraParameters);
-            }). error(function (data) { });
+            }).error(function (data) { });
         };
 
         /**
@@ -147,9 +144,10 @@
         function openAsModal(applicationName, schemaId, parameters, jsonData) {
             parameters = parameters || {};
             parameters.popupmode = "modal";
-            return this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData).then(function (resultObject) {
-                return contextService.insertIntoContext("grid_refreshdata", { data: resultObject, panelid: "#modal" }, true);
-            });
+            return this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData)
+                .then(resultObject => 
+                    contextService.insertIntoContext("grid_refreshdata", { data: resultObject, panelid: "#modal" }, true)
+                );
         };
 
         /**
@@ -172,14 +170,14 @@
         };
 
         function goToApplicationView(applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook, type) {
-            var log = $log.getInstance('redirectService#goToApplication', ["redirect"]);
+            const log = $log.getInstance('redirectService#goToApplication', ["redirect"]);
             parameters = parameters || {};
 
             $rootScope.$broadcast('sw_applicationredirected', parameters);
 
             // let´s exclude functions from possible parameters, otherwise it would be evaluated by $.param
-            var savefn = parameters.savefn;
-            var postProcessFn = parameters.postProcessFn;
+            const savefn = parameters.savefn;
+            const postProcessFn = parameters.postProcessFn;
             delete parameters.savefn;
             delete parameters.postProcessFn;
             // building url without the function parameters
@@ -196,9 +194,9 @@
                     window.open(redirectUrl);
                     //                    w.moveto(0, 0);
                 } else {
-                    var x = screen.width / 2 - 800 / 2;
-                    var y = screen.height / 2 - 600 / 2;
-                    var w = window.open(redirectUrl, '_blank', 'height=600px,width=800px,left=' + x + ',top=' + y + ',resizable=yes,scrollbars=yes', false);
+                    const x = screen.width / 2 - 800 / 2;
+                    const y = screen.height / 2 - 600 / 2;
+                    const w = window.open(redirectUrl, '_blank', 'height=600px,width=800px,left=' + x + ',top=' + y + ',resizable=yes,scrollbars=yes', false);
                     w.focus();
                 }
                 //to keep promise consitent
@@ -218,7 +216,7 @@
 
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
                 return $http.get(redirectUrl).then(function (httpResponse) {
-                    var data = httpResponse.data;
+                    const data = httpResponse.data;
                     if (angular.isFunction(parameters.postProcessFn)) {
                         parameters.postProcessFn(data);
                     }
@@ -226,12 +224,12 @@
                     return $q.when(data);
                 });
             } else {
-                var jsonString = angular.toJson(jsonData);
+                const jsonString = angular.toJson(jsonData);
                 if (log.isLevelEnabled("info")) {
                     log.info('invoking post on datacontroller for {0} | content: '.format(applicationName, jsonString));
                 }
-                return $http.post(redirectUrl, jsonString).then(function (httpResponse) {
-                    var data = httpResponse.data;
+                return $http.post(redirectUrl, jsonString).then(httpResponse =>{
+                    const data = httpResponse.data;
                     if (angular.isFunction(parameters.postProcessFn)) {
                         parameters.postProcessFn(data);
                     }
@@ -265,14 +263,12 @@
 
             if (contextService.isLocal()) {
                 //easier to debug on chrome like this
-                var w = window.open(newWindowURL);
+                const w = window.open(newWindowURL);
                 w.moveTo(0, 0);
                 return;
             }
-
-            var cbk = function (view) {
-                var x = window.open('', '_blank', 'height=600px,width=800px,left=350px,top=100px,resizable=yes,scrollbars=yes', false);
-
+            const cbk = function (view) {
+                const x = window.open('', '_blank', 'height=600px,width=800px,left=350px,top=100px,resizable=yes,scrollbars=yes', false);
                 x.document.open();
                 x.document.write(view);
                 x.document.close();
@@ -288,28 +284,26 @@
             if (initialData == undefined) {
                 $http.post(newWindowURL).success(cbk);
             } else {
-                var jsonString = angular.toJson(initialData);
+                const jsonString = angular.toJson(initialData);
                 $http.post(newWindowURL, jsonString).success(cbk);
             }
 
         }
 
-
-        var service = {
-            getActionUrl: getActionUrl,
-            getApplicationUrl: getApplicationUrl,
-            goToAction: goToAction,
-            goToApplication: goToApplication,
-            redirectFromServerResponse: redirectFromServerResponse,
-            goToApplicationView: goToApplicationView,
-            openAsModal: openAsModal,
-            redirectNewWindow: redirectNewWindow,
-            redirectToAction: redirectToAction,
-            redirectToHome: redirectToHome,
-            redirectToTab: redirectToTab,
-            redirectWithData: redirectWithData
+        const service = {
+            getActionUrl,
+            getApplicationUrl,
+            goToAction,
+            goToApplication,
+            redirectFromServerResponse,
+            goToApplicationView,
+            openAsModal,
+            redirectNewWindow,
+            redirectToAction,
+            redirectToHome,
+            redirectToTab,
+            redirectWithData
         };
-
         return service;
     }
 

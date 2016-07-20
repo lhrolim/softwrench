@@ -39,6 +39,8 @@
     <Compile Include="classes\application\IApplicationFiltereable.cs" />
     <Compile Include="classes\email\EmailAttachment.cs" />
     <Compile Include="classes\email\EmailData.cs" />
+    <Compile Include="classes\exception\BaseSwException.cs" />
+    <Compile Include="classes\exception\BlankListException.cs" />
     <Compile Include="classes\fwk\context\IMemoryContextLookuper.cs" />
     <Compile Include="classes\fwk\context\RedirectService.cs" />
     <Compile Include="classes\fwk\context\SwHttpContext.cs" />
