@@ -291,6 +291,7 @@
         <schema id="userselectlist" stereotype="list.selection.modal" title="Users">
           <properties>
             <property key="schema.customparamprovider" value="userProfileService.getProfileId"/>
+            <property key="list.preventnoresultsnew" value="true"/>
           </properties>
 
           <field attribute="personuid" hidden="true"/>
@@ -309,6 +310,7 @@
         <schema id="userremovelist" stereotype="list.selection.modal" title="Users">
           <properties>
             <property key="schema.customparamprovider" value="userProfileService.getProfileId"/>
+            <property key="list.preventnoresultsnew" value="true"/>
           </properties>
 
           <field attribute="personuid" hidden="true"/>

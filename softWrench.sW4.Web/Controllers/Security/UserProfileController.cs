@@ -187,11 +187,11 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
             var personIds = maximoHibernateDAO.FindByNativeQuery("select personid from person where personuid in (:p0)", usernames);
             IList<string> results = new List<string>();
-            foreach (var personId in personIds){
+            foreach (var personId in personIds) {
                 results.Add(personId["personid"]);
             }
 
-            var users =new List<User>(UserManager.GetUserByPersonIds(results));
+            var users = new List<User>(UserManager.GetUserByPersonIds(results));
 
             foreach (var user in users) {
                 var profile = user.Profiles.FirstOrDefault(p => p.Id.Equals(profileId));
@@ -209,16 +209,27 @@ namespace softWrench.sW4.Web.Controllers.Security {
         [HttpPost]
         public BlankApplicationResponse RemoveMultiple(int profileId, [FromBody]List<string> usernames) {
             var usersEnum = usernames as IList<string> ?? usernames.ToList();
-            var users = new List<User>();
-            foreach (var userString in usersEnum) {
-                var user = UserManager.GetUserByUsername(userString);
+            if (usernames == null || !usernames.Any()) {
+                return new BlankApplicationResponse() {
+                    SuccessMessage = "{0} users successfully updated".Fmt(usersEnum.Count())
+                };
+            }
+
+
+            var personIds = maximoHibernateDAO.FindByNativeQuery("select personid from person where personuid in (:p0)", usernames);
+            IList<string> results = new List<string>();
+            foreach (var personId in personIds) {
+                results.Add(personId["personid"]);
+            }
+
+            var users = new List<User>(UserManager.GetUserByPersonIds(results));
+
+            foreach (var user in users) {
                 var profile = user.Profiles.FirstOrDefault(p => p.Id.Equals(profileId));
-                if (profile == null)
-                {
+                if (profile == null) {
                     continue;
                 }
                 user.Profiles.Remove(profile);
-                users.Add(user);
             }
             SWDBHibernateDAO.GetInstance().BulkSave(users);
             return new BlankApplicationResponse() {

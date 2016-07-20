@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
+using cts.commons.Util;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
@@ -30,8 +31,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         }
 
         public static string GenerateInString(IEnumerable<string> items) {
+            var enumerable = items as IList<string> ?? items.ToList();
+            Validate.NotEmpty(enumerable,"items");
+
             var sb = new StringBuilder();
-            foreach (var item in items) {
+            foreach (var item in enumerable) {
                 var escapedItem = item.Replace("'", "''");
                 sb.Append("'").Append(escapedItem).Append("'");
                 sb.Append(",");

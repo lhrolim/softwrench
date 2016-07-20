@@ -17,8 +17,7 @@
                     }
                     sessionStorage[urlContext + ':ctx_' + key] = value;
                 }
-
-
+                return value;
             },
 
             set: function (key, value, userootscope) {

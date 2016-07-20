@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using NHibernate.Criterion;
 using NHibernate.Util;
 using Quartz.Util;
+using softwrench.sw4.api.classes.exception;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.services;
 using softwrench.sw4.user.classes.services.setup;
@@ -53,10 +54,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 var inclusion = application.Schema.SchemaId.EqualsIc("userselectlist") ? " NOT IN " : " IN ";
                 var profileId = searchDto.CustomParameters["profileId"];
                 var validUsernamesList = _swdbDAO.FindByNativeQuery("SELECT MAXIMOPERSONID FROM SW_USER2 WHERE MAXIMOPERSONID IS NOT NULL AND ID {0} (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {1})".FormatInvariant(inclusion, profileId)).ToList();
-                var userList = validUsernamesList.SelectMany(u => u.Values).ToArray();
-                var usernameString = BaseQueryUtil.GenerateInString(userList);
-                if (query == null) {
-                    query = "person.personid in ({0})".FormatInvariant(usernameString);
+                if (!validUsernamesList.Any()) {
+                    throw new BlankListException();
+                } else {
+                    var userList = validUsernamesList.SelectMany(u => u.Values).ToArray();
+                    var usernameString = BaseQueryUtil.GenerateInString(userList);
+                    if (query == null) {
+                        query = "person.personid in ({0})".FormatInvariant(usernameString);
+                    }
                 }
             }
             if (query != null) {
@@ -147,8 +152,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             return detail;
         }
 
-        protected virtual void AdjustDatamapFromUser(User swUser, DataMap dataMap)
-        {
+        protected virtual void AdjustDatamapFromUser(User swUser, DataMap dataMap) {
             var isActive = (swUser.IsActive.HasValue && swUser.IsActive == false) ? "false" : "true";
             dataMap.SetAttribute("#isactive", isActive);
             var preferences = swUser.UserPreferences;
@@ -191,7 +195,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 targetResult.ResultObject = new DataMap(application.Name, ToDictionary(userResult)).Fields;
             }
 
-            
+
 
             if (isCreation && isactive) {
                 _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
@@ -227,7 +231,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             if (!validSecurityGroupOperation) {
                 throw new SecurityException("you do not have enough permissions to perform this operation");
             }
-            
+
             user.Profiles = screenSecurityGroups;
             return user;
 

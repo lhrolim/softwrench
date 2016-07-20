@@ -15,7 +15,7 @@ namespace cts.commons.Util {
             if(string.IsNullOrEmpty(value)) throw new ArgumentException("Empty or Null string", name);
         }
 
-        public static void NotEmpty<T>(ICollection<T> value, string name) {
+        public static void NotEmpty<T>(IEnumerable<T> value, string name) {
             if (value == null) throw new ArgumentNullException(name);
             if(!value.Any()) throw new ArgumentException("Empty or Null Enumerable", name);
         }
