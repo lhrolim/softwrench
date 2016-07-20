@@ -178,8 +178,8 @@
             if (!!position) {
                 var toolbarPrimary = $('.bar-header.bar-positive:visible').outerHeight(true);
                 var toolbarSecondary = $('.bar-subheader.bar-dark:visible').outerHeight(true);
-                var headerTitle = $('.crud-details .header-title:visible').outerHeight(true);
-                var headerDescription = $('.crud-details .header-description:visible').outerHeight(true);
+                var headerTitle = $('.crud-details .crud-title:visible').outerHeight(true);
+                var headerDescription = $('.crud-details .crud-description:visible').outerHeight(true);
                 var componetHeights = toolbarPrimary + toolbarSecondary + headerTitle + headerDescription;
 
                 var top = position.top;

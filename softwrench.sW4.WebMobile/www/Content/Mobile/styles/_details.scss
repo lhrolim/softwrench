@@ -44,6 +44,17 @@
     }
 }
 
+.crud-details {
+    .crud-description {
+        .problem-description {
+            color: white;
+            background: $cts_red;
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
+}
+
 /* syncdetail page */
 .page-syncdetail {
     .no-operation {
