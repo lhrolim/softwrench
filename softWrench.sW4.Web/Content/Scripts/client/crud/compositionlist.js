@@ -517,7 +517,7 @@
         $scope.$on("sw_compositiondataresolved", $scope.onAfterCompositionResolved);
 
         $scope.getBooleanClass = function (compositionitem, attribute) {
-            if (compositionitem[attribute] == "true" || compositionitem[attribute] == 1) {
+            if (formatService.isChecked(compositionitem[attribute])) {
                 return 'fa-check-square-o';
             }
             return 'fa-square-o';
