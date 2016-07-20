@@ -287,6 +287,7 @@
                     return allAttachments.filter(a => _.contains(newHashes, a["#offlinehash"]));
                 })();
 
+                item.isDirty = false;
                 const promise = dao.executeStatement(entities.DataEntry.restoreToOriginalStateStatement, [item.id, application]);
 
                 return newAttachments.length > 0 

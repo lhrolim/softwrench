@@ -82,16 +82,16 @@
         }
 
         /**
-         * Sets the owner of the current item to be the current user and then saves it.
+         * Moves current item to 'workorder' application. 
          * 
          * @param {Schema} schema 
          * @param {Datamap} datamap 
          * @returns {Promise<entities.DataEntry>} 
          */
         function assignWorkOrder(schema, datamap) {
-            const user = securityService.currentFullUser();
+            // const user = securityService.currentFullUser();
             const item = crudContextService.currentDetailItem();
-            datamap["owner"] = user["PersonId"];
+            // datamap["owner"] = user["PersonId"];
             item["application"] = "workorder";
             return crudContextService.saveChanges()
                 .then(saved =>
