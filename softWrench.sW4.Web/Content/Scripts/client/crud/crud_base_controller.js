@@ -27,7 +27,7 @@
         };
 
         $scope.getBooleanClass = function (item, attribute) {
-            if (item[attribute] == "true" || item[attribute] === 1 || item[attribute] === "1") {
+            if (formatService.isChecked(item[attribute])) {
                 return 'fa-check-square-o';
             }
             return 'fa-square-o';
