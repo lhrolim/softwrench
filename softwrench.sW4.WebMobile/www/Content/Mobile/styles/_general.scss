@@ -73,36 +73,36 @@
 
 .ion-autocomplete-container {
     .bar {
-        &.ion-autocomplete-topbar {
-            background-size: 0px;
+        .item-input-wrapper {
+            &.preferred {
+                background: none;
+
+                .label {
+                    margin-left: 24px;
+                }
+            }
         }
 
-        &.ion-autocomplete-botbar {
-            font-size: 16px;
-
-            button {
-                position: absolute;
-                right: 20px;
-                top: 4px;
-            }
+        input[type=search] {
+            height: initial;
+            background: none;
         }
 
         .item-toggle {
-            height: 44px;
-            border-width: 0px;
-            top: -4px;
-            padding-left: 6px;
-            padding-right: 52px;
+            border: none;
+            padding: 4px;
+            background: transparent;
+            top: initial;
+            position: relative;
+            right: initial;
+            margin-top: 3px;
+            margin-left: 10px;
 
-            &[disabled] {
-                color: $cts_gray;
+            .toggle {
+                top: initial;
+                position: relative;
+                right: initial;
             }
-        }
-
-        button {
-            background: none;
-            color: #000;
-            font-size: 16px;
         }
     }
 

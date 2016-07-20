@@ -57,7 +57,7 @@
             link: function (scope, element, attrs) {
                 //set the crud details list height
                 var toolbarPrimary = $('.bar-header.bar-positive:visible').outerHeight(true);
-                var toolbarSecondary = $('.bar-subheader.bar-assertive:visible').outerHeight(true);
+                var toolbarSecondary = $('.bar-subheader.bar-dark:visible').outerHeight(true);
                 var headerTitle = $('.crud-details .header-title:visible').outerHeight(true);
                 var headerDescription = $('.crud-details .header-description:visible').outerHeight(true);
                 var componetHeights = toolbarPrimary + toolbarSecondary + headerTitle + headerDescription;
