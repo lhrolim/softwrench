@@ -92,7 +92,7 @@
     <property key="mifcredentials.password" value="maxadmin"/>
     <property key="iiscontextpath " value="http://uat.chi.softwrench.net"/>    
     
-    <property key="basewsRestURL" value="https://ism.smi.ibm.com/maxrest-uat/rest/mbo/" />
+    <property key="basewsRestURL" value="https://ism.smi.ibm.com/maxrest-uat/rest/os/" />
     <property key="restcredentials.user" value="cts2@cps.tds"/>
     <property key="restcredentials.password" value="$@$Pass2"/> 
 
