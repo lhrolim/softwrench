@@ -34,7 +34,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 if (!ngModel) return;
 
                 // set the default values of the passed in attributes
-                scope.placeholder = !scope.placeholder ? 'Search values...' : scope.placeholder;
+                scope.placeholder = !scope.placeholder ? 'Search for...' : scope.placeholder;
                 scope.cancelLabel = !scope.cancelLabel ? scope.multipleSelect === "true" ? 'Done' : 'Cancel' : scope.cancelLabel;
                 scope.selectItemsLabel = !scope.selectItemsLabel ? 'Select an item...' : scope.selectItemsLabel;
                 scope.selectedItemsLabel = !scope.selectedItemsLabel ? 'Selected items:' : scope.selectedItemsLabel;
@@ -94,35 +94,46 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 // the search container template
                 const searchContainerTemplate = [
                     '<div class="ion-autocomplete-container modal">',
-                    '<div class="bar bar-header item-input-inset ion-autocomplete-topbar">',
-                    '<label class="item-input-wrapper">',
-                    '<i class="placeholder-icon fa fa-search"></i>',
-                    '<input type="search" class="ion-autocomplete-search" ng-model="searchQuery" ng-model-options="{ debounce: 500 }" placeholder="{{placeholder}}"/>',
-                    '</label>',
-                    '<div class="ion-autocomplete-loading-icon" ng-if="showLoadingIcon && loadingIcon"><ion-spinner icon="{{loadingIcon}}"></ion-spinner></div>',
-                    '<button class="ion-autocomplete-cancel button"><i class="fa fa-times-circle"></i>&ensp;{{cancelLabel}}</button>',
-                    '</div>',
-                    '<div class="bar bar-header item-input-inset ion-autocomplete-botbar" >',
-                    '<div>{{useWhereClauseLabel}}</div>',
-                    '<ion-toggle toggle-class="toggle-dark" ng-model="useWhereClause" ng-show="hasUseWhereClause"></ion-toggle>',
-                    '<button class="ion-autocomplete-clear button"><i class="fa fa-eraser"></i>&ensp;Clear</button>',
-                    '</div>',
-                    '<ion-content class="has-header has-header" has-bouncing="false">',
-                    '<ion-list>',
-                    '<ion-item class="item-divider" ng-show="selectedItems.length > 0">{{selectedItemsLabel}}</ion-item>',
-                    '<ion-item ng-repeat="selectedItem in selectedItems track by $index" type="item-text-wrap" class="item-icon-left item-icon-right">',
-                    '<i class="fa fa-check"></i>',
-                    '{{getItemValue(selectedItem, itemViewValueKey)}}',
-                    '<i class="fa fa-trash" style="cursor:pointer" ng-click="removeItem($index)"></i>',
-                    '</ion-item>',
-                    '<ion-item class="item-divider" ng-show="items.length > 0">{{selectItemsLabel}}</ion-item>',
-                    '<ion-item class="item-divider" ng-show="!items || items.length === 0">No results were found.</ion-item>',
-                    '<ion-item collection-repeat="item in items" item-height="55" item-width="100%" type="item-text-wrap" ng-click="selectItem(item)" class="item item-text-wrap">',
-                    '{{getItemValue(item, itemViewValueKey)}}',
-                    '</ion-item>',
-                    '</ion-list>',
-                    '<ion-infinite-scroll ng-if="moreItemsAvailable" on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>',
-                    '</ion-content>',
+                        '<ion-header-bar class="bar-positive bar bar-header" align-title="center">',
+                            '<div class="buttons buttons-left">',
+                              '<span class="left-buttons">',
+                                 '<button class="ion-autocomplete-cancel button-icon"><i class="fa fa-chevron-left"></i>&ensp;Back</button>',     
+                              '</span>',
+                            '</div>',
+                            '<div class="title title-center header-item" style="left: 86px; right: 86px;">{{useWhereClauseLabel}}</div>',
+                            '<div class="buttons buttons-right">',
+                              '<span class="right-buttons">',
+                                 '<button class="ion-autocomplete-clear button-icon"><i class="fa fa-eraser"></i>&ensp;Clear</button>',
+                              '</span>',
+                            '</div>',
+                        '</ion-header-bar>',
+                        '<ion-header-bar class="bar-subheader bar-dark bar bar-header" align-title="center">',
+                            '<label class="item-input-wrapper">',
+                                '<i class="placeholder-icon fa fa-search"></i>',
+                                '<input type="search" class="ion-autocomplete-search" ng-model="searchQuery" ng-model-options="{ debounce: 500 }" placeholder="{{placeholder}}"/>',
+                            '</label>',
+                            //'<div class="ion-autocomplete-loading-icon" ng-if="showLoadingIcon && loadingIcon"><ion-spinner icon="{{loadingIcon}}"></ion-spinner></div>',
+                            '<label class="item-input-wrapper preferred" ng-show="hasUseWhereClause">',
+                                '<div class="label">Preferred</div>',
+                                '<ion-toggle toggle-class="toggle-light" ng-model="useWhereClause"></ion-toggle>',
+                            '</label>',
+                        '</ion-header-bar>',
+                        '<ion-content class="has-header" has-bouncing="false">',
+                            '<ion-list>',
+                                '<ion-item class="item-divider" ng-show="selectedItems.length > 0">{{selectedItemsLabel}}</ion-item>',
+                                '<ion-item ng-repeat="selectedItem in selectedItems track by $index" type="item-text-wrap" class="item-icon-left item-icon-right">',
+                                    '<i class="fa fa-check"></i>',
+                                    '{{getItemValue(selectedItem, itemViewValueKey)}}',
+                                    '<i class="fa fa-trash" style="cursor:pointer" ng-click="removeItem($index)"></i>',
+                                '</ion-item>',
+                                '<ion-item class="item-divider" ng-show="items.length > 0">{{selectItemsLabel}}</ion-item>',
+                                '<ion-item class="item-divider" ng-show="!items || items.length === 0">No results were found.</ion-item>',
+                                '<ion-item collection-repeat="item in items" item-height="getItemHeight(getItemValue(item, itemViewValueKey))" item-width="100%" type="item-text-wrap" ng-click="selectItem(item)" class="item item-text-wrap">',
+                                    '{{getItemValue(item, itemViewValueKey)}}',
+                                '</ion-item>',
+                            '</ion-list>',
+                            '<ion-infinite-scroll ng-if="moreItemsAvailable" on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>',
+                        '</ion-content>',
                     '</div>'
                 ].join('');
 
@@ -144,6 +155,20 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
 
                         // get the compiled search field
                         var searchInputElement = angular.element(compiledTemplate.element.find('input'));
+
+                        //calculate the item height based on the text length
+                        compiledTemplate.scope.getItemHeight = function (value) {
+                            var width = $(window).width();
+
+                            //number of character per line, based on 43 character on a 360px wide device
+                            var characters = Math.ceil(width * (43 / 360));
+
+                            //total number of lines
+                            var lines = Math.ceil(value.length / characters);
+
+                            //calculated height
+                            return lines * 20 + 32;
+                        }
 
                         // function which selects the item, hides the search container and the ionic backdrop if it is not a multiple select autocomplete
                         compiledTemplate.scope.selectItem = function (item) {
