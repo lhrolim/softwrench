@@ -2,8 +2,8 @@
     "use strict";
 
 angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
-    '$ionicTemplateLoader', '$ionicBackdrop', '$ionicScrollDelegate', '$rootScope', '$document', '$q', '$parse', '$ionicPlatform',
-    function ($ionicTemplateLoader, $ionicBackdrop, $ionicScrollDelegate, $rootScope, $document, $q, $parse, $ionicPlatform) {
+    '$ionicTemplateLoader', '$ionicBackdrop', '$ionicScrollDelegate', '$rootScope', '$document', '$q', '$parse', '$ionicPlatform','$log' ,
+    function ($ionicTemplateLoader, $ionicBackdrop, $ionicScrollDelegate, $rootScope, $document, $q, $parse, $ionicPlatform, $log) {
         return {
             require: '?ngModel',
             restrict: 'A',
@@ -330,6 +330,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
 
                         // store the start coordinates of the touch start event
                         var onTouchStart = function (e) {
+                            $log.get("ionautocomplete#ontouchstart").trace("ontouchstart handler");
                             scrolling.moved = false;
                             // Use originalEvent when available, fix compatibility with jQuery
                             if (typeof (e.originalEvent) !== 'undefined') {
@@ -341,6 +342,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
 
                         // check if the finger moves more than 10px and set the moved flag to true
                         var onTouchMove = function (e) {
+                            $log.get("ionautocomplete#ontouchmove").trace("ontouchmove handler");
                             // Use originalEvent when available, fix compatibility with jQuery
                             if (typeof (e.originalEvent) !== 'undefined') {
                                 e = e.originalEvent;
@@ -353,8 +355,9 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
 
                         // click handler on the input field to show the search container
                         const onClick = ionic.debounce(function (event) {
+                            $log.get("ionautocomplete#onclick").trace("onclick handler");
                             // only open the dialog if was not touched at the beginning of a legitimate scroll event
-                            if (scrolling.moved) {
+                            if (scrolling.moved || ionic.scroll.isScrolling) {
                                 return;
                             }
 
@@ -407,7 +410,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         // bind the handlers to the click and touch events of the input field
                         element.bind('touchstart', onTouchStart);
                         element.bind('touchmove', onTouchMove);
-                        element.bind('touchend click focus', onClick);
+                        element.bind('click focus', onClick);
 
                         // cancel handler for the cancel button which clears the search input field model and hides the
                         // search container and the ionic backdrop

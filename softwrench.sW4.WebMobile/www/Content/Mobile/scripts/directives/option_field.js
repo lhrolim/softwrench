@@ -6,8 +6,8 @@
 
     softwrench.directive('optionField',
         [
-            '$ionicModal',
-            function ($ionicModal) {
+            '$ionicModal','$log',
+            function ($ionicModal,$log) {
                 return {
                     /* Only use as <option-field> tag */
                     restrict: 'E',
@@ -106,6 +106,50 @@
                             scope.modal = modal;
                         });
 
+                        // object to store if the user moved the finger to prevent opening the modal
+                        var scrolling = {
+                            moved: false,
+                            startX: 0,
+                            startY: 0
+                        };
+
+                        // store the start coordinates of the touch start event
+                        scope.onTouchStart = function (e) {
+                            $log.get("optionfield#ontouchstart",["association"]).trace("ontouchstart handler");
+                            scrolling.moved = false;
+                            // Use originalEvent when available, fix compatibility with jQuery
+                            if (typeof (e.originalEvent) !== 'undefined') {
+                                e = e.originalEvent;
+                            }
+                            scrolling.startX = e.touches[0].clientX;
+                            scrolling.startY = e.touches[0].clientY;
+                        };
+
+                        // check if the finger moves more than 10px and set the moved flag to true
+                        scope.onTouchMove = function (e) {
+                            $log.get("optionfield#ontouchmove", ["association"]).trace("ontouchmove handler");
+                            // Use originalEvent when available, fix compatibility with jQuery
+                            if (typeof (e.originalEvent) !== 'undefined') {
+                                e = e.originalEvent;
+                            }
+                            if (Math.abs(e.touches[0].clientX - scrolling.startX) > 10 ||
+                                Math.abs(e.touches[0].clientY - scrolling.startY) > 10) {
+                                scrolling.moved = true;
+                            }
+                        };
+
+                        /* Show list */
+                        scope.showItems = function (event) {
+                            if (scrolling.moved || ionic.scroll.isScrolling) {
+                                return;
+                            }
+                            scrolling.moved = false;
+                            event.preventDefault();
+                            scope.modal.show();
+                        }
+
+
+
                         /* Validate selection from header bar */
                         scope.validate = function (event) {
                             // Construct selected values and selected text
@@ -159,11 +203,7 @@
                             }
                         }
 
-                        /* Show list */
-                        scope.showItems = function (event) {
-                            event.preventDefault();
-                            scope.modal.show();
-                        }
+                    
 
                         /* Hide list */
                         scope.hideItems = function () {
