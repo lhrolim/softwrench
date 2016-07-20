@@ -39,6 +39,12 @@
 
                     reader.readAsDataURL(file);
                 };
+
+                angular.element(fileInput).on("change", changeListener);
+                $scope.$on("$destroy", function () {
+                    angular.element(fileInput).off("change", changeListener);
+                    $scope.model.field.rendererParameters["showImagePreview"] = originalImagePreview;
+                });
             }]
 
         };
