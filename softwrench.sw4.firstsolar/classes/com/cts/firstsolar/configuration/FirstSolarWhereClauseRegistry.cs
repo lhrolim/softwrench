@@ -60,6 +60,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             _whereClauseFacade.Register("offlinelocation", "@firstSolarWhereClauseRegistry.LocationWhereClauseByFacility", offLineCondition);
             _whereClauseFacade.Register("offlineasset", "@firstSolarWhereClauseRegistry.AssetWhereClauseByFacility", offLineCondition);
             _whereClauseFacade.Register("locancestor", "@firstSolarWhereClauseRegistry.LocAncestorWhereClauseByFacility", offLineCondition);
+            _whereClauseFacade.Register("synstatus", "value in ('WOEN','COMP')", offLineCondition);
             _whereClauseFacade.Register("labor", UserLaborWhereClause, offLineCondition);
             _whereClauseFacade.Register("laborcraftrate", UserLaborCraftWhereClause, offLineCondition);
         }
