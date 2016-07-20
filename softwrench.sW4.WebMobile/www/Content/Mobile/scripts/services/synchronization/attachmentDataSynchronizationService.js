@@ -71,11 +71,7 @@
 
             if (ids !== "") {
                 ids = "'" + ids + "'";
-            } else {
-                //not a single file returned contained a hash (they were all created on online mode),
-                //let's simply skip this query, since we know for sure, we won't need to update any attachment, but rather just create some
-                return matchinfFilesResolver([], doclinksArray, log);
-            }
+            } 
 
             log.debug(`determining which attachments should be downloaded amongst ${ids} and remoteids ${docinfoRemoteId} `);
             return swdbDAO.executeQuery(entities.Attachment.NonPendingAttachments.format(ids, docinfoRemoteId)).then((results) => {
