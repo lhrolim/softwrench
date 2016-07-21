@@ -42,11 +42,15 @@ namespace softWrench.sW4.Exceptions {
             get; set;
         }
 
+        public ErrorDto() {
+            NotifyException = true;
+        }
 
         public ErrorDto(string errorMessage, string errorStack, string fullStack) {
             ErrorMessage = PrettyMessage(errorMessage);
             ErrorStack = errorStack;
             FullStack = fullStack;
+            NotifyException = true;
         }
 
         public ErrorDto([NotNull]Exception rootException) {
