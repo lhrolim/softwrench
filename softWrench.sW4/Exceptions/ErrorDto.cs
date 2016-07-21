@@ -56,6 +56,7 @@ namespace softWrench.sW4.Exceptions {
             ErrorNativeType = rootException.GetType();
             OutlineInformation = ExceptionUtil.FirstProjectStackTraceLine(rootException);
             var baseSwException = rootException as BaseSwException;
+            NotifyException = true;
             if (baseSwException != null) {
                 NotifyException = baseSwException.NotifyException;
             }
