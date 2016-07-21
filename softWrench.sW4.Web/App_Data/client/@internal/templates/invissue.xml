@@ -433,7 +433,7 @@
             <dataprovider prefilterfunction="FilterBins"/>
           </association>
           
-          <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1" showexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1"
+          <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" extraprojectionvalues="binnum" enableexpression="$.parentdata.inventory_!=undefined &amp;&amp; $.parentdata.inventory_.item_.rotating==1" showexpression="$.parentdata.inventory_!=undefined &amp;&amp; $.parentdata.inventory_.item_.rotating==1"
                        requiredexpression="@inventory_.item_.rotating==1">
             <dataprovider prefilterfunction="FilterAssets"/>
             <renderer type="lookup"/>
