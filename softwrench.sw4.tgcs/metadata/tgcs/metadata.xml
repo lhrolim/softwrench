@@ -203,8 +203,9 @@
             <field attribute="impact" label="Impact" default="2"/>
             <field attribute="urgency" label="Urgency" default="2"/>
             <field attribute="createdby" label="Created By" default="I-TTC-SD_WEBTICKET"/>
-            <field attribute="ownergroup" label="Owner Group" default="I-TTC-SD_WEBTICKET"/>
+            <field attribute="ownergroup" label="Owner Group" default="I-TTC-SERVICEDESK"/>
             <field attribute="creationdate" label="Created Date" default="@now"/>
+            <field attribute="affecteddate" label="Affected Date" default="@now"/>
             <field attribute="externalsystem" label="Source" default="SELFSERVICE" readonly="true"/>
             <field attribute="ticketid" label="Ticket ID"/>
             <field attribute="ticketuid" label="Ticket UID"/>
