@@ -126,7 +126,7 @@
 
                 var doLoad = function () {
                     $log.getInstance('compositionlistwrapper#doLoad').debug('loading composition {0}'.format(scope.tabid));
-                    var metadata = scope.metadata;
+                    const metadata = scope.metadata;
                     scope.tabLabel = i18NService.get18nValue(metadata.schema.schemas.list.applicationName + '._title', metadata.label);
                     if (scope.parentdata.fields) {
                         scope.compositiondata = scope.parentdata.fields[scope.metadata.relationship];
@@ -134,7 +134,7 @@
                         scope.compositiondata = scope.parentdata[scope.metadata.relationship];
                     }
                     if (!scope.compositiondata) {
-                        var arr = [];
+                        const arr = [];
                         scope.parentdata[scope.metadata.relationship] = arr;
 
                         //a blank array if nothing exists, scenario for selfcompositions
@@ -174,10 +174,8 @@
                     //controls tab lazy loading
                     scope.loaded = true;
                 }
-
-                var custom = scope.metadata.schema.renderer.rendererType == 'custom';
-                var isInline = scope.metadata.inline;
-
+                const custom = scope.metadata.schema.renderer.rendererType == 'custom';
+                const isInline = scope.metadata.inline;
                 if (scope.metadata.type == "ApplicationCompositionDefinition" && isInline && !custom) {
                     //inline compositions should load automatically
                     doLoad();
@@ -191,7 +189,7 @@
                 scope.$on("sw.modal.show", function (event, modalData) {
                     if (scope.ismodal === "true") {
                         //inline compositions inside of the modal need to be refreshed (relinked)
-                        var datamap = modalData.datamap;
+                        const datamap = modalData.datamap;
                         scope.parentdata = datamap;
                         doLoad();
                     }
@@ -240,7 +238,7 @@
         $scope.selectAllChecked = false;
 
         $scope.filterForColumn = function (column) {
-            var schema = $scope.compositionlistschema;
+            const schema = $scope.compositionlistschema;
             if (!schema || !schema.schemaFilters || !schema.schemaFilters.filters) {
                 return null;
             }
@@ -251,7 +249,7 @@
 
         $scope.filterApplied = function () {
             $scope.paginationData.pageNumber = 1;
-            var searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
+            const searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
             compositionService.searchCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields || $scope.parentdata, searchDTO).then(
                 result => $scope.refreshList(result[$scope.relationship])
             ).finally(() => crudContextHolderService.setDetailDataResolved());
@@ -265,9 +263,8 @@
         };
 
         $scope.sort = function (column) {
-            var columnName = column.attribute;
-
-            var sorting = $scope.searchSort;
+            const columnName = column.attribute;
+            const sorting = $scope.searchSort;
             if (sorting.field && sorting.field === columnName) {
                 sorting.order = sorting.order === "desc" ? "asc" : "desc";
             } else {
@@ -301,11 +298,11 @@
         };
 
         $scope.clearCompositionData = function () {
-            var arr = $scope.compositionData();
-            var previousCompositionData = $scope.compositionData();
+            const arr = $scope.compositionData();
+            const previousCompositionData = $scope.compositionData();
             arr.splice(0, arr.length);
             $scope.paginationData = null;
-            var parameters = {
+            const parameters = {
                 parentdata: $scope.parentdata,
                 parentschema: $scope.parentschema,
                 relationship: $scope.relationship,
@@ -335,14 +332,13 @@
         }
 
         $scope.isCompositionItemFieldHidden = function (application, fieldMetadata, item) {
-            var datamap = item == null ? $scope.parentdata : compositionService.buildMergedDatamap(item, $scope.parentdata);
-
+            const datamap = item == null ? $scope.parentdata : compositionService.buildMergedDatamap(item, $scope.parentdata);
             return fieldService.isFieldHidden(datamap, application, fieldMetadata);
         };
 
 
         $scope.initField = function (fieldMetadata, item) {
-            var idx = $scope.compositionData().indexOf(item);
+            const idx = $scope.compositionData().indexOf(item);
             crud_inputcommons.initField($scope, fieldMetadata, "compositiondata[{0}]".format(idx), idx);
         };
 
@@ -433,8 +429,8 @@
 
                 $scope.compositionData().forEach(function (value, index, array) {
                     //for eventually already existing items
-                    var id = schemaService.getId(value, $scope.compositionlistschema);
-                    var watches = crud_inputcommons.configureAssociationChangeEvents($scope,
+                    const id = schemaService.getId(value, $scope.compositionlistschema);
+                    const watches = crud_inputcommons.configureAssociationChangeEvents($scope,
                         "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables, id);
                     watches.push(watchForDirty(index));
 
@@ -458,7 +454,7 @@
         }
 
         $scope.getApplicationPath = function (datamap, fieldMetadata) {
-            var path = fieldMetadata.applicationPath + schemaService.getId(datamap, $scope.compositionlistschema);
+            const path = fieldMetadata.applicationPath + schemaService.getId(datamap, $scope.compositionlistschema);
             return replaceAll(path, "\\.", "_");
         }
 
@@ -485,18 +481,15 @@
             }
 
             compositionService.pollCompositionEvent();
-
-            var log = $log.get("compositionlist#resolved", ["composition"]);
-
+            const log = $log.get("compositionlist#resolved", ["composition"]);
             spinService.stop({ compositionSpin: true });
-            var thisCompData = compositiondata[$scope.relationship];
+            const thisCompData = compositiondata[$scope.relationship];
             if (thisCompData == null) {
                 log.debug("cleaning up composition data (but keeping same array)");
                 $scope.clearCompositionData();
                 return;
             }
-            var list = thisCompData.list || thisCompData.resultList;
-
+            const list = thisCompData.list || thisCompData.resultList;
             log.debug("composition data refreshed for {0} | entries: {1}".format($scope.relationship, list.length));
 
             $scope.paginationData = thisCompData.paginationData;
@@ -533,7 +526,7 @@
 
         $scope.isRowHidden = function (compositionlistschema, collectionproperties, compositionitem) {
             if (collectionproperties.hideExistingData == true) {
-                var idFieldName = compositionlistschema.idFieldName;
+                const idFieldName = compositionlistschema.idFieldName;
                 return compositionitem[idFieldName] != null;
             }
             return false;
@@ -543,32 +536,30 @@
             if (fieldMetadata.rendererParameters["clickservice"] == null) {
                 return;
             }
-            var customfn = dispatcherService.loadServiceByString(fieldMetadata.rendererParameters["clickservice"]);
+            const customfn = dispatcherService.loadServiceByString(fieldMetadata.rendererParameters["clickservice"]);
             $q.when(customfn(fieldMetadata, $scope.parentdata, datamap));
             $event.stopImmediatePropagation();
         }
 
 
         $scope.isModifiableEnabled = function (fieldMetadata, item) {
-            var result = expressionService.evaluate(fieldMetadata.enableExpression, compositionService.buildMergedDatamap(item, $scope.parentdata), $scope);
+            const result = expressionService.evaluate(fieldMetadata.enableExpression, compositionService.buildMergedDatamap(item, $scope.parentdata), $scope);
             return result;
         };
 
 
         $scope.compositionProvider = function () {
-            var localCommands = {};
-            var toAdd = [];
+            const localCommands = {};
+            const toAdd = [];
             localCommands.toAdd = toAdd;
-            var log = $log.getInstance('composition_service#compositionProvider');
-
+            const log = $log.getInstance('composition_service#compositionProvider');
             localCommands.toKeep = compositionService.getListCommandsToKeep($scope.compositionschemadefinition);
 
             if (!expressionService.evaluate($scope.collectionproperties.allowInsertion, $scope.parentdata) || $scope.inline) {
                 log.debug('local commands without add. {0} '.format(JSON.stringify(localCommands)));
                 return localCommands;
             }
-
-            var addCommand = {};
+            const addCommand = {};
             addCommand.label = $scope.i18N($scope.relationship + '.add', 'Add ' + $scope.title);
             addCommand.method = $scope.newDetailFn;
             addCommand.defaultPosition = 'left';
@@ -610,8 +601,7 @@
         }
 
         this.getAddLabel = function () {
-            var labelOverride = $scope.compositiondetailschema.properties['add.button.label'];
-
+            const labelOverride = $scope.compositiondetailschema.properties['add.button.label'];
             if (labelOverride) {
                 return $scope.i18N($scope.relationship + '.add', labelOverride);
             } else {
@@ -621,9 +611,9 @@
 
         this.newDetailFn = function () {
             $scope.isUpdate = true;
-            var datamap = {
+            const datamap = {
                 _iscreation: true
-            }
+            };
             $scope.edit(datamap);
         };
 
@@ -637,7 +627,7 @@
 
         this.cancel = function () {
             $('#crudmodal').modal('hide');
-            if (GetPopUpMode() == 'browser') {
+            if (GetPopUpMode() === 'browser') {
                 close();
             }
 
@@ -668,21 +658,21 @@
 
             function dragStartListener(event) {
                 // resolve composition item from the event
-                var evt = (event.originalEvent || event);
-                var src = evt.srcElement;
-                var item = angular.element(src).scope().compositionitem;
+                const evt = (event.originalEvent || event);
+                const src = evt.srcElement;
+                const item = angular.element(src).scope().compositionitem;
                 if (!item) return;
 
                 // add extension to fileName if it does't have
                 var fileName = item["document"];
                 if (fileName.lastIndexOf(".") < 0) {
-                    var fileUrl = item["docinfo_.urlname"];
-                    var extension = fileUrl.substring(fileUrl.lastIndexOf(".") + 1);
+                    const fileUrl = item["docinfo_.urlname"];
+                    const extension = fileUrl.substring(fileUrl.lastIndexOf(".") + 1);
                     fileName += ("." + extension);
 
 
                     // download = '<mime_type>:<file_name_on_save>:<file_download_url>'
-                    var downloadData = "application/octet-stream:" + fileName + ":" + item["download_url"];
+                    const downloadData = "application/octet-stream:" + fileName + ":" + item["download_url"];
                     evt.dataTransfer.setData("DownloadURL", downloadData);
                 }
                 // adding the listener to the parent element so it still triggers on pagination
@@ -699,7 +689,7 @@
         function getFileUploadFields() {
             return $scope.compositiondetailschema.displayables
                 .filter(function (field) { // file upload fields
-                    var renderer = field.renderer.rendererType;
+                    const renderer = field.renderer.rendererType;
                     return !!renderer && renderer.endsWith("upload");
                 });
         }
@@ -743,8 +733,8 @@
         $scope.edit = function (datamap, actionTitle, forceModal) {
             if (!!forceModal || shouldEditInModal()) {
                 // Check that main tab has all required fields filled before opening modal
-                var parentDatamap = crudContextHolderService.rootDataMap();
-                var parentSchema = crudContextHolderService.currentSchema();
+                const parentDatamap = crudContextHolderService.rootDataMap();
+                const parentSchema = crudContextHolderService.currentSchema();
                 if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap.fields).length > 0) {
                     //crudContextHolderService.setActiveTab(null);
                     redirectService.redirectToTab('main');
@@ -781,18 +771,16 @@
                 $scope.detailData[id].data = formatService.doContentStringConversion(item);
                 $scope.detailData[id].data["_iscreation"] = id == null || id < 0;
             }
-
-            var newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
+            const newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
             $scope.detailData[id].expanded = newState;
 
             if (newState) {
-                var parameters = {};
+                const parameters = {};
                 parameters.compositionItemId = id;
                 parameters.compositionItemData = originalListItem;
                 parameters.parentData = $scope.parentdata;
                 parameters.parentSchema = $scope.parentschema;
-
-                var compositionSchema = $scope.parentschema.cachedCompositions[$scope.relationship];
+                const compositionSchema = $scope.parentschema.cachedCompositions[$scope.relationship];
                 eventService.onviewdetail(compositionSchema, parameters);
             }
         };
@@ -803,8 +791,7 @@
         }
 
         $scope.expansionAllowed = function (item) {
-            var compositionId = item[$scope.compositionlistschema.idFieldName];
-            //we cannot expand an item that doesn´t have an id
+            const compositionId = item[$scope.compositionlistschema.idFieldName]; //we cannot expand an item that doesn´t have an id
             return compositionId != null;
         }
 
@@ -812,9 +799,9 @@
             if (!this.isSingleSelection()) {
                 return;
             }
-            var items = this.compositionData();
-            var previousValue = item["#selected"];
-            for (var i = 0; i < items.length; i++) {
+            const items = this.compositionData();
+            const previousValue = item["#selected"];
+            for (let i = 0; i < items.length; i++) {
                 items[i]["#selected"] = "false";
                 $scope.compositiondata[i]["#selected"] = "false";
             }
@@ -835,10 +822,9 @@
         $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex) {
 
             $scope.isUpdate = columnMode === "edit";
-
-            var event = $scope.compositionlistschema.events["onedit.validation"];
+            const event = $scope.compositionlistschema.events["onedit.validation"];
             if ($scope.isUpdate && event) {
-                var fn = dispatcherService.loadService(event.service, event.method);
+                const fn = dispatcherService.loadService(event.service, event.method);
                 fn(item, $scope.compositionlistschema).then(function () {
                     $scope.executeToggleDetails(item, column, columnMode, $event, rowIndex);
                 });
@@ -850,7 +836,7 @@
         };
         $scope.executeToggleDetails = function (item, column, columnMode, $event, rowIndex) {
             // if there is a custom list click action, do it
-            var customAction = $scope.compositionlistschema.properties["list.click.event"];
+            const customAction = $scope.compositionlistschema.properties["list.click.event"];
             if (customAction) {
                 dispatcherService.invokeServiceByString(customAction, [item]);
                 return;
@@ -861,9 +847,7 @@
                 $event.stopImmediatePropagation();
             }
             this.handleSingleSelectionClick(item, rowIndex);
-
-            var log = $log.get("compositionlist#toggleDetails");
-
+            const log = $log.get("compositionlist#toggleDetails");
             if (column != null && column.attribute == null) {
                 //for sections inside compositionlist, ex: reply/replyall of commlogs
                 return;
@@ -876,21 +860,16 @@
             }
 
             var compositionId = item[$scope.compositionlistschema.idFieldName];
-
-
-            var updating = parseBooleanValue($scope.collectionproperties.allowUpdate);
-
-            var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
-            var clonedItem = angular.copy(item);
+            const updating = parseBooleanValue($scope.collectionproperties.allowUpdate);
+            const fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
+            const clonedItem = angular.copy(item);
             if (fullServiceName != null) {
-                var compositionschema = $scope.compositionschemadefinition['schemas']['detail'];
-                // TODO: watch for siteid changes to recalculate the whole composition list
+                const compositionschema = $scope.compositionschemadefinition['schemas']['detail']; // TODO: watch for siteid changes to recalculate the whole composition list
 
                 if (clonedItem.hasOwnProperty("siteid") && !clonedItem["siteid"]) {
                     clonedItem.siteid = $scope.parentdata.fields["siteid"];
                 }
-
-                var shouldToggle = commandService.executeClickCustomCommand(fullServiceName, clonedItem, column, $scope.compositionlistschema);
+                const shouldToggle = commandService.executeClickCustomCommand(fullServiceName, clonedItem, column, $scope.compositionlistschema);
                 if (shouldToggle && $scope.hasDetailSchema()) {
                     doToggle(compositionId, clonedItem, item);
                 }
@@ -916,8 +895,7 @@
                 $scope.doToggle(compositionId, clonedItem, item);
                 return;
             }
-
-            var needServerFetching = $scope.fetchfromserver || $scope.detailData[compositionId] == undefined;
+            const needServerFetching = $scope.fetchfromserver || $scope.detailData[compositionId] == undefined;
             if (!needServerFetching) {
                 //opening it using already existing cached instance
                 $scope.innerToggleDetails(false, compositionId, $scope.detailData[compositionId].data, item);
@@ -932,7 +910,7 @@
             }
 
             compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
-                var datamap = result.resultObject.fields;
+                const datamap = result.resultObject.fields;
                 if ($scope.isUpdate) {
                     datamap["#edited"] = 1;
                 }
@@ -952,8 +930,8 @@
             }
 
             // Check that main tab has all required fields filled before opening modal
-            var parentDatamap = crudContextHolderService.rootDataMap();
-            var parentSchema = crudContextHolderService.currentSchema();
+            const parentDatamap = crudContextHolderService.rootDataMap();
+            const parentSchema = crudContextHolderService.currentSchema();
             if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap.fields).length > 0) {
                 //crudContextHolderService.setActiveTab(null);
                 redirectService.redirectToTab('main');
@@ -964,14 +942,13 @@
 
         $scope.delete = function (item, column, $event, rowIndex) {
             alertService.confirm("Are you sure you want to delete this entry").then(function () {
-                var compositionId = item[$scope.compositionlistschema.idFieldName];
-
+                const compositionId = item[$scope.compositionlistschema.idFieldName];
                 compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
                     //TODO: generate composition deletion method
                     var compositionItem = result.resultObject.fields;
-                    var event = $scope.compositionlistschema.events["onremoval.validation"];
+                    const event = $scope.compositionlistschema.events["onremoval.validation"];
                     if (event) {
-                        var fn = dispatcherService.loadService(event.service, event.method);
+                        const fn = dispatcherService.loadService(event.service, event.method);
                         fn(compositionItem, $scope.compositionlistschema).then(function () {
                             compositionItem["#deleted"] = 1;
                             $scope.save(compositionItem, null, "crud_delete");
@@ -1011,9 +988,9 @@
 
             // validates the last row
             if (idx !== 0) {
-                var itemMap = $scope.compositionData()[idx - 1];
-                var mergedDataMap = compositionService.buildMergedDatamap(itemMap, $scope.parentdata);
-                var arr = validationService.validate($scope.compositionlistschema, $scope.compositionlistschema.displayables, mergedDataMap);
+                const itemMap = $scope.compositionData()[idx - 1];
+                const mergedDataMap = compositionService.buildMergedDatamap(itemMap, $scope.parentdata);
+                const arr = validationService.validate($scope.compositionlistschema, $scope.compositionlistschema.displayables, mergedDataMap);
                 if (!!arr && arr.length > 0) {
                     return;
                 }
@@ -1034,7 +1011,7 @@
             var fakeNegativeId = -Date.now().getTime();
             newItem[$scope.compositionlistschema.idFieldName] = fakeNegativeId;
             $scope.compositionData().push(newItem);
-            var watches = crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables, fakeNegativeId);
+            const watches = crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables, fakeNegativeId);
             watches.push(watchForDirty(idx));
 
             $scope.unWatcherArray = $scope.unWatcherArray.concat(watches);
@@ -1050,7 +1027,7 @@
             //time for the components to be rendered
             $timeout(function () {
                 // inits autocomplete clients if needed
-                var bodyElement = $("[composition-list-key='{0}'][composition-list-id='{1}']".format($scope.getCompositionListKey(), fakeNegativeId));
+                const bodyElement = $("[composition-list-key='{0}'][composition-list-id='{1}']".format($scope.getCompositionListKey(), fakeNegativeId));
                 if (bodyElement.length > 0) {
                     cmpAutocompleteClient.init(bodyElement, null, $scope.compositionlistschema);
                 }
@@ -1063,7 +1040,7 @@
         }
 
         $scope.isItemExpanded = function (item) {
-            var compositionId = item[$scope.compositionlistschema.idFieldName];
+            const compositionId = item[$scope.compositionlistschema.idFieldName];
             return $scope.detailData[compositionId] && $scope.detailData[compositionId].expanded;
         }
 
@@ -1073,11 +1050,9 @@
         }
 
         $scope.removeBatchItem = function (rowindex) {
-            var compositionData = $scope.compositionData();
-            var item = compositionData[rowindex];
-            var id = item[$scope.compositionlistschema.idFieldName];
-
-            //since the watchers were created using the composition index, we need to regenerate them once the item is fully removed
+            const compositionData = $scope.compositionData();
+            const item = compositionData[rowindex];
+            const id = item[$scope.compositionlistschema.idFieldName]; //since the watchers were created using the composition index, we need to regenerate them once the item is fully removed
             //otherwise the index would be out of sync with the data (ex: add 2 items, delete item[0] , add item[1] again --> there would be two watchers at item 1)
             $scope.unWatcherArray.forEach(function (unwatcher) {
                 unwatcher();
@@ -1090,8 +1065,8 @@
             //readding the necessary watches
             $scope.compositionData().forEach(function (value, index, array) {
                 //for eventually already existing items
-                var itemId = schemaService.getId(value, $scope.compositionlistschema);
-                var watches = crud_inputcommons.configureAssociationChangeEvents($scope,
+                const itemId = schemaService.getId(value, $scope.compositionlistschema);
+                const watches = crud_inputcommons.configureAssociationChangeEvents($scope,
                     "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables, itemId);
                 watches.push(watchForDirty(index));
 
@@ -1104,9 +1079,9 @@
 
         $scope.newDetailFn = function () {
             $scope.isUpdate = true;
-            var datamap = {
+            const datamap = {
                 _iscreation: true
-            }
+            };
             $scope.edit(datamap);
         };
 
@@ -1130,9 +1105,8 @@
         }
 
         $scope.hasModified = function (key, displayables) {
-            for (var index = 0; index < displayables.length; index++) {
-                var attribute = displayables[index].attribute;
-
+            for (let index = 0; index < displayables.length; index++) {
+                const attribute = displayables[index].attribute;
                 if ($scope.clonedData[key] == null) {
                     return false;
                 } else if ($scope.clonedData[key].data[attribute] == $scope.detailData[key].data[attribute]) {
@@ -1161,10 +1135,10 @@
             }
 
             // Validation should happen before adding items to the composition list to allow invalid data to pass into the system.
-            var detailSchema = $scope.compositionschemadefinition.schemas.detail;
+            const detailSchema = $scope.compositionschemadefinition.schemas.detail;
             var validationErrors;
             if (selecteditem != undefined && selecteditem["#deleted"] !== 1) {
-                var crudFormCtrl = getModalCrudFormController();
+                const crudFormCtrl = getModalCrudFormController();
                 validationErrors = validationService.validate(detailSchema, detailSchema.displayables, selecteditem, crudFormCtrl.$error);
                 if (validationErrors.length > 0) {
                     //interrupting here, can´t be done inside service
@@ -1176,8 +1150,7 @@
                 //ensure new item is captured as well
                 safePush($scope.parentdata.fields, $scope.relationship, selecteditem);
             }
-
-            var log = $log.getInstance('compositionlist#save');
+            const log = $log.getInstance('compositionlist#save');
             if (!$scope.collectionproperties.autoCommit) {
                 log.warn('autocommit=false is yet to be implemented for compositions');
                 return;
@@ -1223,7 +1196,7 @@
 
         $scope.onSaveError = function (data, selecteditem) {
             $scope.clearNewCompositionData();
-            var idx = $scope.compositiondata.indexOf(selecteditem);
+            const idx = $scope.compositiondata.indexOf(selecteditem);
             if (idx !== -1) {
                 $scope.compositiondata.splice(idx, 1);
             }
@@ -1246,9 +1219,8 @@
                 $scope.clearNewCompositionData();
                 return $q.when(null);
             }
-
-            var keepfilters = schemaService.isPropertyTrue($scope.parentschema, "compositions.keepfilters");
-            var destinationPage = keepfilters ? $scope.paginationData.pageNumber : 1;
+            const keepfilters = schemaService.isPropertyTrue($scope.parentschema, "compositions.keepfilters");
+            const destinationPage = keepfilters ? $scope.paginationData.pageNumber : 1;
             if (!keepfilters) {
                 $scope.searchData = {};
                 $scope.searchOperator = {};
@@ -1282,7 +1254,7 @@
             // if schema is not present, then it should default back normal expansion commands
             if ($scope.compositionlistschema.properties != null) {
                 //this is fix for GRIC-98. Don't remove it
-                var isExpansible = $scope.compositionlistschema.properties.expansible;
+                const isExpansible = $scope.compositionlistschema.properties.expansible;
                 if (isExpansible != undefined && isExpansible == "false") {
                     return false;
                 }
@@ -1321,21 +1293,19 @@
         };
 
         function buildExpandAllParams() {
-            var params = {};
+            const params = {};
             params.key = {};
             params.options = {};
             params.application = $scope.parentschema.applicationName;
             params.detailRequest = {};
-            var key = {};
+            const key = {};
             params.detailRequest.key = key;
-
-            var parentSchema = $scope.parentschema;
+            const parentSchema = $scope.parentschema;
             params.detailRequest.id = fieldService.getId($scope.parentdata, parentSchema);
             key.schemaId = parentSchema.schemaId;
             key.mode = parentSchema.mode;
             key.platform = platform();
-
-            var compositionsToExpand = {};
+            const compositionsToExpand = {};
             compositionsToExpand[$scope.relationship] = { schema: $scope.compositionlistschema, value: true };
             //                var compositionsToExpand = { 'worklog_': true };
 
@@ -1354,17 +1324,16 @@
             }
 
             var compositionListData = [];
-            for (var i = 0; i < $scope.compositiondata.length; i++) {
-                var data = $scope.compositiondata[i];
-                var id = data[$scope.compositiondetailschema.idFieldName];
+            for (let i = 0; i < $scope.compositiondata.length; i++) {
+                const data = $scope.compositiondata[i];
+                const id = data[$scope.compositiondetailschema.idFieldName];
                 compositionListData[id] = data;
             }
-
-            var urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(buildExpandAllParams())));
+            const urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(buildExpandAllParams())));
             $http.get(urlToInvoke).success(function (result) {
                 $.each(result.resultObject[$scope.relationship], function (key, value) {
                     //TODO: This function is not utilizing the needServerFetching optimization as found in the toggleDetails function
-                    var itemId = value[$scope.compositiondetailschema.idFieldName];
+                    const itemId = value[$scope.compositiondetailschema.idFieldName];
                     $scope.doToggle(itemId, value, compositionListData[itemId], true);
                 });
                 $scope.wasExpandedBefore = true;
@@ -1402,7 +1371,7 @@
         //#region command interception
         (function (self) {
             $scope.$on("sw:command:scope", function ($event, method) {
-                var selectedTab = crudContextHolderService.getActiveTab();
+                const selectedTab = crudContextHolderService.getActiveTab();
                 if (selectedTab === $scope.relationship) {
                     self[method]();
                 }
@@ -1416,11 +1385,9 @@
                 $scope.paginationData.pageNumber = pageNumber;
                 return $q.when();
             }
-
-            var fields = $scope.parentdata.fields || $scope.parentdata;
+            const fields = $scope.parentdata.fields || $scope.parentdata;
             crudContextHolderService.clearDetailDataResolved();
-
-            var searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
+            const searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
             searchDTO.pageNumber = pageNumber;
             searchDTO.pageSize = pageSize;
             return compositionService
@@ -1433,8 +1400,7 @@
             $scope.clonedCompositionData = [];
 
             //in order to use on onloadevent
-            var previousData = $scope.compositiondata;
-
+            const previousData = $scope.compositiondata;
             $scope.compositiondata = compositionData.list;
             $scope.paginationData = compositionData.paginationData;
 
@@ -1445,12 +1411,12 @@
 
         //#region modal helpers
         function shouldEditInModal() {
-            var openInLine = $scope.compositionlistschema.properties && "true" === $scope.compositionlistschema.properties["list.click.openinline"];
+            const openInLine = $scope.compositionlistschema.properties && "true" === $scope.compositionlistschema.properties["list.click.openinline"];
             return !openInLine && $scope.isUpdate;
         }
 
         function getModalCrudFormController() {
-            var crudModalForm = document.querySelector("#crudmodal").querySelector("#crudbodyform");
+            const crudModalForm = document.querySelector("#crudmodal").querySelector("#crudbodyform");
             return !crudModalForm ? null : angular.element(crudModalForm).scope()["crudbodyform"];
         }
 

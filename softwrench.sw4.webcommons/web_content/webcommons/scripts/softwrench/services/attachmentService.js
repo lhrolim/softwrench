@@ -8,10 +8,8 @@
     function attachmentService($rootScope, $q, $timeout, contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService, $http, userService, crudContextHolderService) {
 
         $rootScope.$on("sw.attachment.file.changed", function (event, fileNames) {
-
-            var panelId = crudContextHolderService.isShowingModal ? "#modal" : null;
-            var dm = crudContextHolderService.rootDataMap(panelId);
-
+            const panelId = crudContextHolderService.isShowingModal ? "#modal" : null;
+            const dm = crudContextHolderService.rootDataMap(panelId);
             if (fileNames && nullOrEmpty(dm.document)) {
                 if (angular.isArray(fileNames)) {
                     dm.document = fileNames.join(",");
@@ -26,8 +24,7 @@
                 
             }
         });
-
-        var service = {
+        const service = {
             isValid,
             downloadFile,
             selectAttachment,
@@ -37,28 +34,23 @@
             createAttachmentFromElement,
             validateRemoval
         };
-
         return service;
 
         function fetchDownloadUrl(item) {
-            var id = item["docinfoid"];
-            var params = { id: id };
-            var serviceUrl = url("/Attachment/DownloadUrl?" + $.param(params));
-
+            const id = item["docinfoid"];
+            const params = { id: id };
+            const serviceUrl = url("/Attachment/DownloadUrl?" + $.param(params));
             return $http.get(serviceUrl, { avoidspin: true }).then(function (response) {
                 return response.data;
             });
         }
 
         function downloadFile(item, column, schema) {
-
-            var parameters = {};
+            const parameters = {};
             var id = item["docinfoid"];
             parameters.id = id;
             parameters.mode = "http";
-
-            var rawUrl = url("/Attachment/Download" + "?" + $.param(parameters));
-
+            const rawUrl = url("/Attachment/Download" + "?" + $.param(parameters));
             $.fileDownload(rawUrl, {
 
                 failCallback: function (html, url) {
@@ -69,12 +61,12 @@
         }
 
         function getUrl(item, column, schema) {
-            var searchData = {};
+            const searchData = {};
             searchData.docinfoid = item.docinfoid.toString();
             searchService.searchWithData("attachment", searchData).success(function (data) {
-                var resultObject = data.resultObject;
-                var resultFields = resultObject[0].fields;
-                var resultUrl = resultFields['docinfo_.urlname'];
+                const resultObject = data.resultObject;
+                const resultFields = resultObject[0].fields;
+                const resultUrl = resultFields['docinfo_.urlname'];
                 window.open(resultUrl);
             }).error(function () {
                 return null;
@@ -94,9 +86,9 @@
         function isValid(value, types) {
             if (!value) return false;
             // var fileName = value.match(/[^\/\\]+$/);
-            var validFileTypes = types || contextService.fetchFromContext("allowedfiles", true) || staticvalidFileTypes;
-            var extensionIdx = value.lastIndexOf(".");
-            var extension = value.substring(extensionIdx + 1).toLowerCase();
+            const validFileTypes = types || contextService.fetchFromContext("allowedfiles", true) || staticvalidFileTypes;
+            const extensionIdx = value.lastIndexOf(".");
+            const extension = value.substring(extensionIdx + 1).toLowerCase();
             return $.inArray(extension, validFileTypes) !== -1;
         }
 
@@ -111,11 +103,11 @@
 
         function redirectToAttachmentView(schema) {
             // find the attachment view and redirect to i
-            var tabs = tabsService.tabsDisplayables(schema);
+            const tabs = tabsService.tabsDisplayables(schema);
             if (!tabs) {
                 return $q.reject(new Error("no displayable tabs for schema {0}.{1}".format(schema.applicationName, schema.schemaId)));
             }
-            var attachmentTab = tabs.filter(function (tab) {
+            const attachmentTab = tabs.filter(function (tab) {
                 return tab.tabId.startsWith("attachment");
             });
             if (!attachmentTab) {
@@ -143,24 +135,18 @@
         function base64ToBlob(b64Data, contentType, sliceSize) {
             contentType = contentType || "";
             sliceSize = sliceSize || 512;
-
-            var byteCharacters = atob(b64Data);
-            var byteArrays = [];
-
-            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-                var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-                var byteNumbers = new Array(slice.length);
-                for (var i = 0; i < slice.length; i++) {
+            const byteCharacters = atob(b64Data);
+            const byteArrays = [];
+            for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                const slice = byteCharacters.slice(offset, offset + sliceSize);
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
                     byteNumbers[i] = slice.charCodeAt(i);
                 }
-
-                var byteArray = new Uint8Array(byteNumbers);
-
+                const byteArray = new Uint8Array(byteNumbers);
                 byteArrays.push(byteArray);
             }
-
-            var blob = new Blob(byteArrays, { type: contentType });
+            const blob = new Blob(byteArrays, { type: contentType });
             return blob;
         }
 
@@ -169,7 +155,7 @@
         }
 
         function broadCastAttachmentLoaded(file) {
-            var timer = $timeout(function () {
+            const timer = $timeout(function () {
                 $rootScope.$broadcast("sw.attachment.file.load", file);
             }, 500); // empiracally determined
 
@@ -197,7 +183,7 @@
             // file data has to be querried before returning the promise (can't be done inside the callbacks)
             // because the file gets disposed (no content and empty properties) after the function returns
             var blob = (file instanceof Blob || file instanceof File) ? file : file.getAsFile();
-            var extension = file.type.split("/")[1];
+            const extension = file.type.split("/")[1];
             var fileName = !!blob.name ? blob.name : newAttachmentFileName(extension);
 
             return redirectToAttachmentView(schema)
@@ -240,7 +226,7 @@
                     return promise;
                 }
                 // get the image as base64 encoded from child image Node
-                var child = contentHolder.childNodes[0];
+                const child = contentHolder.childNodes[0];
                 contentHolder.innerHTML = "";
                 if (!child) return $q.reject(new Error("image was not pasted"));
                 if (child.tagName !== "IMG") return $q.reject(new Error("can only support images"));

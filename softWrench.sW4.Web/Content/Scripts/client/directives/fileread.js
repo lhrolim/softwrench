@@ -11,6 +11,7 @@
         },
 
         link: function (scope, element, attrs) {
+            scope.jselement = element;
 
             var validExtensions = !attrs.acceptedExtensions
                                 ? null
@@ -37,6 +38,16 @@
                 };
                 reader.readAsDataURL(fileNew);
             };
+
+            scope.$on("sw.modal.hide", function (event) {
+                //making sure to clean up the file 
+                scope.fileread = undefined;
+                scope.path = undefined;
+                // took from here http://stackoverflow.com/a/13351234
+                const e = scope.jselement;
+                e.wrap('<form>').closest('form').get(0).reset();
+                e.unwrap();
+            });
 
             element.bind("change", function (changeEvent) {
 
