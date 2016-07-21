@@ -120,24 +120,20 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
 
 
     function buildScopeVariables(variables, scopeVariables, datamap, onlyReturnRootNode, scope) {
-        for (var i = 0; i < scopeVariables.length; i++) {
-            var referenceVariable = scopeVariables[i];
-
-            //If the referenceVariable is simply $. (i.e. is not followed with a word)
+        for (let i = 0; i < scopeVariables.length; i++) {
+            const referenceVariable = scopeVariables[i]; //If the referenceVariable is simply $. (i.e. is not followed with a word)
             //replace with 'scope' instead of 'scope.'
-            var scopeReplaceStr = referenceVariable.length == 2 ? 'scope' : 'scope.'
+            const scopeReplaceStr = referenceVariable.length == 2 ? 'scope' : 'scope.';
             var realVariable = referenceVariable.replace(/\$\./, scopeReplaceStr);
 
             //Remove white spaces from expression. This is needed when passing parameters to a function.
             realVariable = realVariable.replace(/\s/g, '');
 
             //Tests whether or not the realVariable has a subVariable within it
-            var subVariable = compiledScopeRegex.test(realVariable) || compiledServiceRegex.test(realVariable);
+            const subVariable = compiledScopeRegex.test(realVariable) || compiledServiceRegex.test(realVariable);
             if (subVariable == true) {
                 //Updates the realValue of current with the evaluation of its child nodes
-                var subVariables = getVariables(realVariable, datamap, onlyReturnRootNode, scope);
-
-                //For each sub variable, updated the real variable reference
+                const subVariables = getVariables(realVariable, datamap, onlyReturnRootNode, scope); //For each sub variable, updated the real variable reference
                 //(the variable's true reference upon being evaluated) and add
                 // the variable sub variable to our current variables list.
                 $.each(subVariables, function (key, value) {
@@ -158,7 +154,7 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
 
 
     function buildServiceVariables(variables, serviceVariables, datamap, onlyReturnRootNode, scope) {
-        for (var i = 0; i < serviceVariables.length; i++) {
+        for (let i = 0; i < serviceVariables.length; i++) {
             var referenceVariable = serviceVariables[i];
             var realVariable = referenceVariable.replace(/fn\:/, '');
 
@@ -169,11 +165,9 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
             var declaration = extractFnSignatureFromExpression(realVariable);
 
             //Tests whether or not the realVariable has a $. or fn: subVariable within it
-            var subVariable = compiledScopeRegex.test(realVariable) || compiledServiceRegex.test(realVariable);
+            const subVariable = compiledScopeRegex.test(realVariable) || compiledServiceRegex.test(realVariable);
             if (subVariable == true) {
-                var subVariables = getVariables(realVariable, datamap, onlyReturnRootNode, scope);
-
-                //For each sub variable, updated the real variable reference
+                const subVariables = getVariables(realVariable, datamap, onlyReturnRootNode, scope); //For each sub variable, updated the real variable reference
                 //(the variable's true reference upon being evaluated) and add
                 // the variable sub variable to our current variables list.
                 $.each(subVariables, function (key, value) {
@@ -194,19 +188,13 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
             }
 
             //Captures character up to the first open parenthises (
-            var functionCallStr = realVariable.substring(0, realVariable.indexOf('('));
-
-            var functionCall = functionCallStr.split('.');
-            var service = functionCall[0];
-            var method = functionCall[1];
-
-            //Regex to identify commas that are not within a nested string or parenthesis. This
+            const functionCallStr = realVariable.substring(0, realVariable.indexOf('('));
+            const functionCall = functionCallStr.split('.');
+            const service = functionCall[0];
+            const method = functionCall[1]; //Regex to identify commas that are not within a nested string or parenthesis. This
             //will be used to extract the parameters from the custom service's function declaration
-            var functionParameterRegex = new RegExp(/,(?=[^\)]*(?:\(|$))(?=(?:[^']*'[^']*')*[^']*$)/g);
-
-            var parameters = declaration.split(functionParameterRegex);
-
-            //Calls dispatcherService to load the custom service
+            const functionParameterRegex = new RegExp(/,(?=[^\)]*(?:\(|$))(?=(?:[^']*'[^']*')*[^']*$)/g);
+            const parameters = declaration.split(functionParameterRegex); //Calls dispatcherService to load the custom service
             realVariable = dispatcherService.invokeService(service, method, parameters)
         }
 
@@ -219,9 +207,9 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
         if (datamap.fields != undefined) {
             datamapPath = 'datamap.fields';
         }
-        for (var i = 0; i < datamapVariables.length; i++) {
-            var referenceVariable = datamapVariables[i];
-            var realVariable = referenceVariable.replace(/\@/, '');
+        for (let i = 0; i < datamapVariables.length; i++) {
+            const referenceVariable = datamapVariables[i];
+            let realVariable = referenceVariable.replace(/\@/, '');
             realVariable = datamapPath + "['" + realVariable + "']";
             variables[referenceVariable] = realVariable;
         }
@@ -242,7 +230,7 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
                 parenCount--;
             }
         }
-        var signature = expression.substring(0, i - 1);
+        const signature = expression.substring(0, i - 1);
         return signature;
     }
 
@@ -254,22 +242,16 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
         When the flag is false, the resulting list will have all variables, including nested
         variables.                                                                     */
     function getVariables(expression, datamap, onlyReturnRootNode, scope) {
-        var variables = {};
-
-        var scopeVariables = expression.match(compiledScopeRegex);
-
+        const variables = {};
+        const scopeVariables = expression.match(compiledScopeRegex);
         if (scopeVariables != null) {
             buildScopeVariables(variables, scopeVariables, datamap, onlyReturnRootNode, scope);
         }
-
-        var serviceVariables = expression.match(compiledServiceRegex);
-
+        const serviceVariables = expression.match(compiledServiceRegex);
         if (serviceVariables != null) {
             buildServiceVariables(variables, serviceVariables, datamap, onlyReturnRootNode, scope);
         }
-
-        var datamapVariables = expression.match(compiledDatamapRegex);
-
+        const datamapVariables = expression.match(compiledDatamapRegex);
         if (datamapVariables != null) {
             buildDatamapVariables(variables, datamapVariables, datamap);
         }
@@ -295,9 +277,7 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
                   method to evaluate sub variables and only return a mapping for
                   the root nodes. This means that nested variables will not have
                   their own key/value pair in the resulting dictionary          */
-            var variables = getVariables(expression, datamap, true, scope);
-
-            /*  Each dictionary key is used to quickly update an expression with its
+            const variables = getVariables(expression, datamap, true, scope); /*  Each dictionary key is used to quickly update an expression with its
                 true value. We loop through each variable, replacing any instance of the
                 key (original reference in metadata) with an expression we can evaluate   */
             if (variables != null) {
@@ -316,9 +296,9 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
         },
 
         getVariablesBeforeJordanFuckedUp: function (expression) {
-            var variables = expression.match(preCompiledReplaceRegex);
+            const variables = expression.match(preCompiledReplaceRegex);
             if (variables != null) {
-                for (var i = 0; i < variables.length; i++) {
+                for (let i = 0; i < variables.length; i++) {
                     variables[i] = variables[i].replace(/[\@\(\)]/g, '').trim();
                 }
             }
@@ -337,14 +317,13 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
             /// <param name="placeholder">if blank, than datamap. will be used, but this might not be what the scope needs for binding the watch</param>
             /// <returns type="Array"></returns>
             placeholder = placeholder || "datamap.";
-
-            var variables = this.getVariablesBeforeJordanFuckedUp(expression);
+            const variables = this.getVariablesBeforeJordanFuckedUp(expression);
             if (variables == null) {
                 return null;
             }
 
             var collWatch = '[';
-            for (var i = 0; i < variables.length; i++) {
+            for (let i = 0; i < variables.length; i++) {
                 collWatch += placeholder + variables[i];
                 if (i != variables.length - 1) {
                     collWatch += ",";
@@ -358,8 +337,7 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
 
 
         evaluate: function (expression, datamap, scope, displayable) {
-            var log = $log.getInstance('expressionService#evaluate');
-            datamap = datamap || {};
+            const log = $log.getInstance('expressionService#evaluate');
             if (expression === "true" || expression === true) {
                 return true;
             }
@@ -367,19 +345,20 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
                 return false;
             }
             
-            datamap = datamap || {};
+            const dmObj = datamap || {};
 
             if (expression.startsWith('service:')) {
                 // Trim service: from the expression
-                var realServiceDefinition = expression.substr(8);
-                var targetFunction = dispatcherService.loadServiceByString(realServiceDefinition);
-                // If the service.function is not found
-                var schema = scope ? scope.schema : null;
-                return targetFunction(datamap, schema, displayable);
+                const realServiceDefinition = expression.substr(8);
+                const targetFunction = dispatcherService.loadServiceByString(realServiceDefinition); // If the service.function is not found
+                const schema = scope ? scope.schema : null;
+                return targetFunction(dmObj, schema, displayable);
             }
 
             expression = expression.replace(/\$/g, 'scope');
-            var expressionToEval = this.getExpression(expression, datamap,scope);
+            
+
+            const expressionToEval = this.getExpression(expression, dmObj, scope);
             try {
                 return eval(expressionToEval);
             } catch (e) {
