@@ -148,6 +148,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             if (!Validate(attachment.Path, attachment.Data, attachment.BinaryData)) {
                 return;
             }
+
+            var url = attachment.Path;
+
+            if (ApplicationConfiguration.Is76()) {
+                //due to a bug on Maximo 7.6 where attachemtns with spaces saved with inconsistent naming
+                //https://controltechnologysolutions.atlassian.net/browse/SWWEB-2616
+                url = url.Replace(" ", "_");
+            }
+
+
             var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
             w.SetValue(docLink, "ADDINFO", true);
             w.SetValue(docLink, "CREATEBY", user.MaximoPersonId);
@@ -162,7 +172,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             w.CopyFromRootEntity(maximoObj, docLink, "SITEID", user.SiteId);
             w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
             w.SetValue(docLink, "URLTYPE", "FILE");
-            w.SetValue(docLink, "URLNAME", attachment.Path);
+            w.SetValue(docLink, "URLNAME", url);
             w.SetValue(docLink, "UPLOAD", true);
             w.SetValue(docLink, "DOCTYPE", "Attachments");
             if (attachment.OffLineHash != null) {
@@ -304,7 +314,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     var fileBytes = await response.Content.ReadAsByteArrayAsync();
                     return Tuple.Create(fileBytes, filetype);
                 } catch (Exception exception) {
-                    Log.ErrorFormat("Error Attachment Handler: {0} - {1}", exception.Message, exception.InnerException == null ? 
+                    Log.ErrorFormat("Error Attachment Handler: {0} - {1}", exception.Message, exception.InnerException == null ?
                         "No Internal Error Message" : exception.InnerException.Message);
                     return null;
                 }

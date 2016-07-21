@@ -12,8 +12,8 @@
   <property key="defaultOrgId" value="PESCO"/>
   <property key="defaultSiteId" value="PVDISTRIBUTED"/>
   <property key="defaultStoreloc" value="CENTRAL"/>
-  
-  <property key="sourcemapping" value="maximo7.5"/>
+
+  <property key="sourcemapping" value="maximo7.6"/>
   <!--
       maximoutc property set to the full name of the timezone the maximo 
       server is set to, refer to the maximoutc.txt in the doc folder for 
