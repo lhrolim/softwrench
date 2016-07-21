@@ -4,8 +4,9 @@
   "description": "cordova softwrench",
   "main": "index.js",
   "dependencies": {
+    "cordova": "5.2.0",
     "grunt": "^0.4.5",
-    "cordova": "5.2.0"
+    "grunt-xmlpoke": "^0.8.2"
   },
   "repository": {
     "type": "git",
