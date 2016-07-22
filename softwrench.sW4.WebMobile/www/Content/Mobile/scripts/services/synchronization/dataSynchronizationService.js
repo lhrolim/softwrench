@@ -101,10 +101,17 @@
             const app = item.application;
             const params = {
                 applicationName: app,
-                itemsToDownload : [item.remoteId]
+                itemsToDownload: [item.remoteId]
             };
-            var promise = restService.post("Mobile", "PullNewData", params).then(resultHandlePromise).catch(errorHandlePromise);
-            return $q.all([promise]);
+            return rowstampService.generateCompositionRowstampMap().then(compositionMap => {
+                const rowstampMap = {
+                    compositionmap: compositionMap
+                }
+                var promise = restService.post("Mobile", "PullNewData", params, rowstampMap).then(resultHandlePromise).catch(errorHandlePromise);
+                return $q.all([promise]);
+            });
+
+
         }
 
         function syncData() {
@@ -123,7 +130,7 @@
                     .catch(errorHandlePromise);
             }
             return rowstampService.generateCompositionRowstampMap()
-                .then(function (compositionMap) {
+                 .then(function (compositionMap) {
                     const httpPromises = [];
                     for (let i = 0; i < currentApps.length; i++) {
                         const promise = createAppSyncPromise(i === 0, currentApps[i], currentApps, compositionMap).catch(errorHandlePromise);
