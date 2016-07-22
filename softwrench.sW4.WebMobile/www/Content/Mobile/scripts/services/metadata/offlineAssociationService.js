@@ -1,26 +1,28 @@
-﻿(function (angular) {
+﻿(function (angular, _) {
     "use strict";
 
     mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", "crudContextHolderService", "$log", "searchIndexService", "dispatcherService", function (swdbDAO, fieldService, crudContextHolderService, $log, searchIndexService, dispatcherService) {
 
-    function testEmptyExpression(label) {
-        return "(!!" + label + " && " + label + " !== \'null\' && " + label + " !== \'undefined\')";
-    }
+        function testEmptyExpression(label) {
+            return `(!!${label} && ${label} !== \'null\' && ${label} !== \'undefined\')`;
+        }
 
         function fieldValueExpression(fieldMetadata) {
-            return "datamap." + fieldMetadata.valueField;
+            return `datamap.${fieldMetadata.valueField}`;
         };
 
         function fieldLabelExpression(fieldMetadata) {
-            var associationValueField = this.fieldValueExpression(fieldMetadata);
+            const associationValueField = this.fieldValueExpression(fieldMetadata);
             if ("true" === fieldMetadata.hideDescription) {
                 return associationValueField;
             }
+            const label = `datamap.${fieldMetadata.labelFields[0]}`;
 
-            var label = "datamap." + fieldMetadata.labelFields[0];
-
-            return "(" + testEmptyExpression(associationValueField) + " ? " + associationValueField + " : \'\' ) + " +
-                    "(" + testEmptyExpression(label) + " ? (\' - \'  + " + label + ") : \'\')";
+            return _.contains([false, "false", "False", 0, "0"], fieldMetadata.rendererParameters["showCode"])
+                // show only label/description
+                ? `(${testEmptyExpression(label)} ? ${label} : \'\')`
+                // show <code> - <label>
+                : `(${testEmptyExpression(associationValueField)} ? ${associationValueField} : \'\' ) + (${testEmptyExpression(label)} ? (\' - \'  + ${label}) : \'\')`;
         };
 
         function getWhereClause(displayable, parentdatamap) {
@@ -134,14 +136,14 @@
 
 
         const api = {
-        filterPromise,
-        fieldLabelExpression,
-        fieldValueExpression,
-        updateExtraProjections,
-        updateExtraProjectionsForOptionField,
+            filterPromise,
+            fieldLabelExpression,
+            fieldValueExpression,
+            updateExtraProjections,
+            updateExtraProjectionsForOptionField,
         }
         return api;
 
     }]);
 
-})(angular);
+})(angular, _);

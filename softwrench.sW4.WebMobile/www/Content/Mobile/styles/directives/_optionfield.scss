@@ -1,8 +1,5 @@
 ﻿option-field {
-    position: absolute;
-    left: 0px;
     width: 100%;
-    top: 6px;
 
     .list {
         margin: -1px 0;
@@ -10,6 +7,16 @@
 
     .value-container {
         height: 30px;
+        padding-right: 10px;
+
+        i {
+            position: absolute;
+            top: 30%;        
+        }
+        input {
+            height: 100%;
+            padding-right: 10px;
+        }
     }
 
     i {
