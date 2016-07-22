@@ -101,6 +101,7 @@ module.exports = function (grunt) {
 
     var vendorScripts = [
         // complete paths to guarantee load order (instead of **/*.js)
+        "www/Content/Vendor/scripts/polyfill.js",
         "www/Content/Vendor/scripts/angular.js",
         "www/Content/Vendor/scripts/angular-ui-router.js",
         "www/Content/Vendor/scripts/angular-sanitize.js",
@@ -175,6 +176,8 @@ module.exports = function (grunt) {
                     destPrefix: "www/Content/Vendor/scripts"
                 },
                 files: {
+                    // es6 polyfills
+                    "polyfill.js": "babel-polyfill/browser-polyfill.js",
                     // angular
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.js",
                     "angular-ui-router.js": "angular-ui-router/release/angular-ui-router.js",
@@ -247,7 +250,7 @@ module.exports = function (grunt) {
                     destPrefix: "www/Content/public/fonts"
                 },
                 files: {
-                		"fontawesome-webfont.eot": "font-awesome/fonts/fontawesome-webfont.eot",
+                	"fontawesome-webfont.eot": "font-awesome/fonts/fontawesome-webfont.eot",
                     "fontawesome-webfont.svg": "font-awesome/fonts/fontawesome-webfont.svg",
                     "fontawesome-webfont.ttf": "font-awesome/fonts/fontawesome-webfont.ttf",
                     "fontawesome-webfont.woff": "font-awesome/fonts/fontawesome-webfont.woff",
@@ -272,6 +275,8 @@ module.exports = function (grunt) {
                     destPrefix: "www/Content/Vendor/scripts"
                 },
                 files: {
+                    // es6 polyfills
+                    "polyfill.js": "babel-polyfill/browser-polyfill.js",
                     // angular
                     "angular.js": "angular/angular.min.js",
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.min.js",
