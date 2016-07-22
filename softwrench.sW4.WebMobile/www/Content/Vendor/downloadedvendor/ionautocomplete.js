@@ -73,18 +73,33 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                     return item;
                 };
 
-                // render the view value of the model
-                ngModel.$render = function () {
-                    element.val(scope.getItemValue(ngModel.$viewValue, scope.itemViewValueKey));
-                };
-
-                // set the view value of the model
-                ngModel.$formatters.push(function (modelValue) {
-                    var viewValue = scope.getItemValue(modelValue, scope.itemViewValueKey);
+                function getDisplayableValue(item) {
+                    var viewValue = scope.getItemValue(item, scope.itemViewValueKey);
                     if (!viewValue) return "";
                     viewValue = replaceAll(viewValue, "undefined|null", "");
                     return viewValue.startsWith(" -") || viewValue.endsWith("- ") ? replaceAll(viewValue, " - | -|- ", "") : viewValue;
+                }
+
+                function setViewValue(item) {
+                    const viewValue = getDisplayableValue(item);
+                    element.val(viewValue);
+                }
+
+                scope.$on("sw:association:resolved", (event, values) => {
+                    // TODO: implement full path association identification --> case where there are inline compositions
+                    const value = values[scope.componentId];
+                    if (!value) return;
+                    setViewValue(value.item);
                 });
+
+                // render the view value of the model
+                ngModel.$render = function () {
+                    const viewValue = getDisplayableValue(ngModel.$viewValue);
+                    element.val(viewValue);
+                };
+
+                // set the view value of the model
+                ngModel.$formatters.push(getDisplayableValue);
 
                 // set the model value of the model
                 ngModel.$parsers.push(function (viewValue) {

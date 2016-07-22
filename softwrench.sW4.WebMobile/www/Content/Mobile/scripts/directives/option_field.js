@@ -242,6 +242,16 @@
                                 });
                             }
                         }
+
+                        // $formatter to show label
+                        const inputElement = element[0].querySelector(".js_option_input");
+                        const ngModel = angular.element(inputElement).controller("ngModel");
+                        ngModel.$formatters.push(model => {
+                            if (!model || !scope.items) return model;
+                            const option = scope.items.find(o => o.value === model);
+                            return !option ? model : option.label;
+                        });
+
                     }
                 };
             }

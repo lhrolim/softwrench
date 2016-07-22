@@ -61,8 +61,8 @@
                 scope.name = "crud_input_fields";
             },
 
-            controller: ["$scope", "$rootScope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService",
-                function ($scope, $rootScope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService) {
+            controller: ["$scope", "$rootScope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService", "swdbDAO",
+                function ($scope, $rootScope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService, dao) {
 
                     $scope.associationSearch = function (query, componentId, pageNumber, useWhereClause) {
                         return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query, null, pageNumber, useWhereClause);
@@ -115,6 +115,70 @@
                         return params["useWhereClauseLabel"];
                     }
 
+                    //#region assosiations and options label init
+
+                    /**
+                     * $broadcast's "sw:association:resolved" event with the entity.AssociationData for setting initial labels in the $viewValues.
+                     */
+                    function triggerAssociationsInitialLabels() {
+                        const log = $log.get("crud_input_fields#triggerAssociationsInitialLabels", ["association"]);
+
+                        // association fields that have a value set in the datamap
+                        const associationFields = fieldService
+                                                    .getDisplayablesOfTypes($scope.allDisplayables, ["ApplicationAssociationDefinition"])
+                                                    .filter(field => $scope.datamap.hasOwnProperty(field.attribute) && !!$scope.datamap[field.attribute]);
+
+                        if (associationFields.length <= 0) {
+                            log.debug("no associationfields with value set in the current datamap");
+                            return;
+                        }
+
+                        if (log.isLevelEnabled("debug")) log.debug(`fetching values for fields ${associationFields.map(f => f.attribute)}`);
+
+                        const whereClauses = associationFields.map(f => {
+                            const associationKey = f.associationKey;
+                            const associationName = associationKey.endsWith("_")
+                                ? associationKey.substring(0, associationKey.length - 1)
+                                : associationKey;
+                            const associationEntityName = f.entityAssociation.to;
+                            const associationValue = $scope.datamap[f.attribute];
+
+                            // local transient name cache to be used further down the promise chain
+                            f["#associationLocalCache"] = { associationName, associationEntityName }
+
+                            // fetching by application and by value
+                            return `((application='${associationName}' or application='${associationEntityName}') and datamap like '%"${f.valueField}":"${associationValue}"%')`;
+                        });
+
+                        const query = whereClauses.join("or");
+
+                        log.debug(`fetching labels with query '${query}'`);
+
+                        dao.findByQuery("AssociationData", query).then(results => {
+                            const values = results.map(association => {
+                                // field that corresponds to the AssociationData fetched: same application and same value on the datamap 
+                                const correspondingField = associationFields.find(field =>
+                                    (association.application === field["#associationLocalCache"].associationName || association.application === field["#associationLocalCache"].associationEntityName)
+                                    && association.datamap[field.valueField] === $scope.datamap[field.attribute]
+                                );                                
+
+                                return { associationKey: correspondingField.associationKey, item: association };
+                            });
+
+                            associationFields.forEach(f => delete f["#associationLocalCache"]);
+
+                            // indexing by associationKey to facilitate lookup
+                            const indexed = _.indexBy(values, "associationKey");
+
+                            log.debug(`resolved items for labels: ${indexed}`);
+
+                            $scope.$broadcast("sw:association:resolved", indexed);
+                        });
+                    }
+
+                    //#endregion
+
+                    //#region afterchangeevent dispatcher
                     class ChangeEventDispatcher {
                         constructor(fields, dispatcher, timeout, logger) {
                             this.fields = fields;
@@ -202,9 +266,11 @@
                             });
                         });
                     }
+                    //#endregion
 
                     function init() {
                         $log.get("crud_input_fieldsl#init").debug("crud_input_fields init");
+                        triggerAssociationsInitialLabels();
                         watchFields();
                     }
 
