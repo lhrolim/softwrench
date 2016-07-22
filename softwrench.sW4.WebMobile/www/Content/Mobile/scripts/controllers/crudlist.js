@@ -196,7 +196,10 @@
             }
 
             $scope.quickSync = function (item) {
-                synchronizationFacade.syncItem(item);
+                synchronizationFacade.syncItem(item).then(() => {
+                    //updating the item on the list after it has been synced
+                    crudContextService.refreshGrid();
+                });
             }
 
   		
