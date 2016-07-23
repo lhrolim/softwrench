@@ -101,6 +101,7 @@ module.exports = function (grunt) {
 
     var vendorScripts = [
         // complete paths to guarantee load order (instead of **/*.js)
+        "www/Content/Vendor/scripts/polyfill.js",
         "www/Content/Vendor/scripts/angular.js",
         "www/Content/Vendor/scripts/angular-ui-router.js",
         "www/Content/Vendor/scripts/angular-sanitize.js",
@@ -175,6 +176,8 @@ module.exports = function (grunt) {
                     destPrefix: "www/Content/Vendor/scripts"
                 },
                 files: {
+                    // es6 polyfills
+                    "polyfill.js": "babel-polyfill/browser-polyfill.js",
                     // angular
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.js",
                     "angular-ui-router.js": "angular-ui-router/release/angular-ui-router.js",
@@ -247,7 +250,7 @@ module.exports = function (grunt) {
                     destPrefix: "www/Content/public/fonts"
                 },
                 files: {
-                		"fontawesome-webfont.eot": "font-awesome/fonts/fontawesome-webfont.eot",
+                	"fontawesome-webfont.eot": "font-awesome/fonts/fontawesome-webfont.eot",
                     "fontawesome-webfont.svg": "font-awesome/fonts/fontawesome-webfont.svg",
                     "fontawesome-webfont.ttf": "font-awesome/fonts/fontawesome-webfont.ttf",
                     "fontawesome-webfont.woff": "font-awesome/fonts/fontawesome-webfont.woff",
@@ -272,6 +275,8 @@ module.exports = function (grunt) {
                     destPrefix: "www/Content/Vendor/scripts"
                 },
                 files: {
+                    // es6 polyfills
+                    "polyfill.js": "babel-polyfill/browser-polyfill.js",
                     // angular
                     "angular.js": "angular/angular.min.js",
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.min.js",
@@ -619,7 +624,26 @@ module.exports = function (grunt) {
         },
         //#endregion
 
-        
+        //#region xmlpoke
+        xmlpoke: {
+            bundleid: {
+                options: {
+                    namespaces: {
+                        "w": "http://www.w3.org/ns/widgets"
+                    },
+                    replacements: [{
+                        xpath: "/w:widget/@id",
+                        value: function(node) {
+                            return currentPlatform === "ios" ? "ControlTechnologySolutions.softWrench" : "io.cordova.softwrench.sW4.WebMobile";
+                        }
+                    }]
+                },
+                files: {
+                    "config.xml" : "config.xml"
+                }
+            }
+        }
+        //#endregion
 
     });
 
@@ -634,16 +658,17 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-script-link-tags");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
-    grunt.loadNpmTasks('grunt-contrib-rename');
+    grunt.loadNpmTasks("grunt-contrib-rename");
     grunt.loadNpmTasks("grunt-karma");
+    grunt.loadNpmTasks("grunt-xmlpoke");
     //#endregion
 
     //#region dev tasks
     grunt.registerTask("cleanall", ["clean:vendor", "clean:temp", "clean:pub"]);
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
     grunt.registerTask("tagsdevbuild", ["tags:buildTranspiledScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("devlocal", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "tagsdev"]);
-    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "babel:debug", "tagsdevbuild", "copy:buildjson","copy:build"]);
+    grunt.registerTask("devlocal", ["cleanall", "xmlpoke:bundleid", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "tagsdev"]);
+    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "xmlpoke:bundleid", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "babel:debug", "tagsdevbuild", "copy:buildjson","copy:build"]);
     grunt.registerTask("default", ["devlocal"]);
     //#endregion
 
@@ -655,6 +680,7 @@ module.exports = function (grunt) {
     grunt.registerTask("preparerelease", "prepares the project for release build", [
         "cleanall", // cleans destination folders
         "copy:buildjson", //copy build.json
+        "xmlpoke:bundleid", // update bundleid according to the platform
         "bowercopy:prod", "bowercopy:css", "bowercopy:fontsrelease", // copy bower dependencies to appropriate project folders
         "concatall", // concats the scripts and stylesheets
         "sass:prod", // compiles sass files
