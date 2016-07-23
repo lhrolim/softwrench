@@ -9,7 +9,7 @@ using softWrench.sW4.Metadata.Applications;
 namespace softwrench.sw4.offlineserver.dto {
     public class SynchronizationApplicationResultData {
 
-        private readonly string _applicationName;
+        public string ApplicationName { get; set; }
 
 
         public ICollection<DataMap> InsertOrUpdateDataMaps {
@@ -55,7 +55,7 @@ namespace softwrench.sw4.offlineserver.dto {
             get; set;
         }
 
-        public SynchronizationApplicationResultData() {
+        public SynchronizationApplicationResultData(string applicationName) {
             NewdataMaps = new List<DataMap>();
             UpdatedDataMaps = new List<DataMap>();
             DeletedRecordIds = new List<string>();
@@ -64,10 +64,11 @@ namespace softwrench.sw4.offlineserver.dto {
             TextIndexes = new List<string>();
             NumericIndexes = new List<string>();
             DateIndexes = new List<string>();
+            ApplicationName = applicationName;
         }
 
         public SynchronizationApplicationResultData(String applicationName, IList<DataMap> newdataMaps, IList<DataMap> updateDataMaps, IList<string> deletedRecords = null) {
-            _applicationName = applicationName;
+            ApplicationName = applicationName;
             NewdataMaps = newdataMaps;
             UpdatedDataMaps = updateDataMaps ?? new List<DataMap>();
             DeletedRecordIds = deletedRecords ?? new List<string>();
@@ -78,11 +79,7 @@ namespace softwrench.sw4.offlineserver.dto {
         }
 
 
-        public string ApplicationName {
-            get {
-                return _applicationName;
-            }
-        }
+      
 
 
         public Boolean IsEmpty {
@@ -95,9 +92,16 @@ namespace softwrench.sw4.offlineserver.dto {
         public ApplicationMetadata Metadata {
             get; set;
         }
-        public Boolean HasNewEntries {
+
+        public bool HasNewEntries {
             get {
                 return NewdataMaps.Count > 0;
+            }
+        }
+
+        public int NewCount {
+            get {
+                return NewdataMaps.Count;
             }
         }
 

@@ -213,8 +213,8 @@ namespace softwrench.sw4.offlineserver.services {
         private SynchronizationApplicationResultData FilterData(string applicationName, ICollection<DataMap> topLevelAppData, ClientStateJsonConverter.AppRowstampDTO rowstampDTO, CompleteApplicationMetadataDefinition topLevelApp, bool isQuickSync) {
             var watch = Stopwatch.StartNew();
 
-            var result = new SynchronizationApplicationResultData {
-                AllData = topLevelAppData
+            var result = new SynchronizationApplicationResultData(applicationName) {
+                AllData = topLevelAppData,
             };
 
             ParseIndexes(result.TextIndexes, result.NumericIndexes, result.DateIndexes, topLevelApp);

@@ -19,6 +19,7 @@ using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Offline;
 using softWrench.sW4.Metadata.Menu;
+using softWrench.sW4.Security.Context;
 
 namespace softwrench.sw4.offlineserver.controller {
 
@@ -35,6 +36,8 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MobileController));
 
+        private IContextLookuper _contextLookuper;
+
         private readonly SynchronizationManager _syncManager;
 
         private readonly AppConfigurationProvider _appConfigurationProvider;
@@ -47,11 +50,13 @@ namespace softwrench.sw4.offlineserver.controller {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        public MobileController(SynchronizationManager syncManager, AppConfigurationProvider appConfigurationProvider, OffLineBatchService offLineBatchService, MenuSecurityManager menuManager) {
+        public MobileController(SynchronizationManager syncManager, AppConfigurationProvider appConfigurationProvider,
+            OffLineBatchService offLineBatchService, MenuSecurityManager menuManager, IContextLookuper contextLookuper) {
             _syncManager = syncManager;
             _appConfigurationProvider = appConfigurationProvider;
             _offLineBatchService = offLineBatchService;
             _menuManager = menuManager;
+            _contextLookuper = contextLookuper;
         }
 
         /// <summary>
@@ -68,7 +73,7 @@ namespace softwrench.sw4.offlineserver.controller {
             //apply any user role constraints that would avoid bringing unwanted fields for that specific user.
             var securedMetadatas = topLevel.Select(metadata => metadata.CloneSecuring(user)).ToList();
 
-            var associationApps = OffLineMetadataProvider.FetchAssociationApps(user,false);
+            var associationApps = OffLineMetadataProvider.FetchAssociationApps(user, false);
             var compositonApps = OffLineMetadataProvider.FetchCompositionApps(user);
             var commandBars = user.SecuredBars(ClientPlatform.Mobile, MetadataProvider.CommandBars(platform: ClientPlatform.Mobile, includeNulls: false));
 
@@ -89,6 +94,43 @@ namespace softwrench.sw4.offlineserver.controller {
             return response;
         }
 
+        [HttpGet]
+        public string Counts() {
+
+            var req = new SynchronizationRequestDto() {
+                ReturnNewApps = true
+            };
+
+            _contextLookuper.LookupContext().OfflineMode = true;
+
+            var watch = Stopwatch.StartNew();
+            var appData = _syncManager.GetData(req, SecurityFacade.CurrentUser(), null);
+            watch.Stop();
+            var appEllapsed = watch.ElapsedMilliseconds;
+
+            watch.Restart();
+            var associationResult = _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), null);
+            watch.Stop();
+            var associationEllapsed = watch.ElapsedMilliseconds;
+
+            var topCountData = appData.TopApplicationData.ToDictionary(applicationData => applicationData.ApplicationName, applicationData => applicationData.NewCount);
+            var associationCounts = associationResult.AssociationData.ToDictionary(applicationData => applicationData.Key, applicationData => applicationData.Value.Count);
+            var compositionCounts = appData.CompositionData.ToDictionary(applicationData => applicationData.ApplicationName, applicationData => applicationData.NewCount);
+
+            var report = new MobileCountReport() {
+                TopAppCounts = topCountData,
+                AssociationCounts = associationCounts,
+                CompositionCounts = compositionCounts,
+                AppTimeEllapsed = appEllapsed,
+                AssociationTimeEllapsed = associationEllapsed
+            };
+
+            return JsonConvert.SerializeObject(report, Newtonsoft.Json.Formatting.Indented,
+            new JsonSerializerSettings() {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+        }
+
         [HttpPost]
         public SynchronizationResultDto PullNewData([FromUri]SynchronizationRequestDto synchronizationRequest, JObject rowstampMap) {
             return _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser(), rowstampMap);
@@ -104,6 +146,15 @@ namespace softwrench.sw4.offlineserver.controller {
         public AssociationSynchronizationResultDto PullSingleAssociationData([FromUri]String applicationToFetch, JObject rowstampMap) {
             return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), rowstampMap, applicationToFetch);
         }
+
+        public class MobileCountReport {
+            public IDictionary<string, int> TopAppCounts = new Dictionary<string, int>();
+            public IDictionary<string, int> AssociationCounts = new Dictionary<string, int>();
+            public IDictionary<string, int> CompositionCounts = new Dictionary<string, int>();
+            public long AssociationTimeEllapsed;
+            public long AppTimeEllapsed;
+        }
+
 
         /// <summary>
         /// 
@@ -123,7 +174,7 @@ namespace softwrench.sw4.offlineserver.controller {
         [HttpGet]
         public IList<Batch> BatchStatus([FromUri]IList<String> ids) {
             return _offLineBatchService.GetBatchesByRemoteIds(ids);
-        } 
-     
+        }
+
     }
 }
