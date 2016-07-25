@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, ionic, _) {
     "use strict";
 
-    function securityService($rootScope, $state, localStorageService, routeService, $http, $q, swdbDAO, $ionicHistory) {
+    function securityService($rootScope, $state, localStorageService, routeService, $http, $q, dao, $ionicHistory) {
 
         //#region Utils
 
@@ -155,7 +155,7 @@
             }
             $rootScope.$broadcast($event("logout"), current);
 
-            return swdbDAO.resetDataBase(["Settings"]).then(() => {
+            return dao.resetDataBase(["Settings"]).then(() => {
                 $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
                 cleanLocalStorage(); // clean non-blacklisted localstorage entries used by apps as cache
                 return current;
