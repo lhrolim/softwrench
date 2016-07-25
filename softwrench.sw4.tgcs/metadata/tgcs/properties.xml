@@ -32,6 +32,8 @@
   <property key="notifications.activityStream.refreshRate" value="20"/>
   <property key="notifications.updateJob.refreshRate" value="20"/>
 
+  <property key="multitenantprefix" value="TTC-00"/>
+
   <environment key="dev">
     <!--<property key="basewsURL" value="http://10.50.100.196:9080/meaweb/wsdl/" />
     <property key="maximo_DB_provider" value="IBM.Data.DB2" />
