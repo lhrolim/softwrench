@@ -38,8 +38,10 @@ namespace softWrench.sW4.Metadata.Entities.Connectors {
             if (provider != null) {
                 providerName = provider.ToString().ToLower();
             }
-            if (!_parameters.TryGetValue(providerName + "_" + keyToUse, out entityKey)) {
-                _parameters.TryGetValue(keyToUse, out entityKey);
+            if (!_parameters.TryGetValue(ApplicationConfiguration.Profile + "_" + providerName + "_" + keyToUse, out entityKey)) {
+                if (!_parameters.TryGetValue(providerName + "_" + keyToUse, out entityKey)) {
+                    _parameters.TryGetValue(keyToUse, out entityKey);
+                }
             }
             if (providerName == "rest") {
 
