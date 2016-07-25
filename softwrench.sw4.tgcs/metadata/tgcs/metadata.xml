@@ -16,6 +16,12 @@
       </attributes>
     </entity>
 
+    <entity name="person" idAttribute="personid">
+      <attributes>
+        <attribute name="pluspcustomer" type="varchar" required="false"/>
+      </attributes>
+    </entity>
+
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
         <attribute name="outageduration" type="float" required="false"/>
