@@ -7,6 +7,7 @@ using System;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
+using log4net;
 using softwrench.sw4.problem.classes;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Util;
@@ -21,6 +22,8 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
         private const string ISMTicketUid = "ismticketuid";
 
         private IMaximoHibernateDAO _maximoHibernateDAO;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ChicagoSRCrudConnector));
 
         private IProblemManager ProblemManager {
             get {
@@ -37,6 +40,10 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
                     SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(typeof(IMaximoHibernateDAO));
                 return _maximoHibernateDAO;
             }
+        }
+
+        public ChicagoSRCrudConnector() {
+            Log.Debug("init log...");
         }
 
 
@@ -67,22 +74,28 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             var crudOperationData = (CrudOperationData)maximoTemplateData.OperationData;
 
             if (crudOperationData.ContainsAttribute("underwaycall", true) || string.IsNullOrEmpty(ApplicationConfiguration.RestCredentialsUser)) {
+                Log.DebugFormat("returning from underway call");
                 //avoid infinite loop
                 return;
             }
 
             if (!crudOperationData.ContainsAttribute(ISMTicketUid, true)) {
+                Log.InfoFormat("creating new ticket at ISM side");
                 //instance already existed on service layer but not on ISM
                 AfterCreation(maximoTemplateData);
-            } else
-            {
+            } else {
                 var originalTicketUid = crudOperationData.Id;
                 var originalTicketid = crudOperationData.UserId;
+                
 
                 //updating ISM Entry which already exists
                 var ismTicketUid = crudOperationData.GetAttribute(ISMTicketUid);
                 crudOperationData.SetAttribute("ticketuid", ismTicketUid);
-                crudOperationData.SetAttribute("ticketid", crudOperationData.GetAttribute(ISMTicketId));
+                var ismTicketId = crudOperationData.GetAttribute(ISMTicketId);
+                crudOperationData.SetAttribute("ticketid", ismTicketId);
+
+                Log.InfoFormat("updating already existing ticket at ism for {0}, ISM : {1}", originalTicketid, ISMTicketId);
+
                 //also required for all the rest operations
                 crudOperationData.SetAttribute("pluspcustomer", "CPS-00");
 
@@ -185,7 +198,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             crudOperationData.SetAttribute("ticketuid", ticketOriginalData.TicketUId);
             crudOperationData.SetAttribute("status", ticketOriginalData.Status);
 
-
+            Log.DebugFormat("updating ism ticketids for ticket {0} ", ticketOriginalData.TicketId);
 
             crudOperationData.Id = ticketOriginalData.TicketUId;
             crudOperationData.UserId = ticketOriginalData.TicketId;
