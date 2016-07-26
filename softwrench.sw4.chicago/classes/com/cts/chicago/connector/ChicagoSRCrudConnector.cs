@@ -198,7 +198,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             crudOperationData.SetAttribute("ticketuid", ticketOriginalData.TicketUId);
             crudOperationData.SetAttribute("status", ticketOriginalData.Status);
 
-            Log.DebugFormat("updating ism ticketids for ticket {0} ", ticketOriginalData.TicketId);
+            Log.DebugFormat("updating ism ticketids for ticket {0}. id: {1}, uid:{2} ", ticketOriginalData.TicketId, restResult.UserId, restResult.Id);
 
             crudOperationData.Id = ticketOriginalData.TicketUId;
             crudOperationData.UserId = ticketOriginalData.TicketId;
