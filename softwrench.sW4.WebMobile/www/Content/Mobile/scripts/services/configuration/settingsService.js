@@ -24,7 +24,7 @@
          * @returns Promise resolved with the saved Settings entity
          */
         function getSettings() {
-            var settings = localStorageService.get(key("settings"));
+            const settings = localStorageService.get(key("settings"));
             return !!settings
                 // resolve immediately on cache hit
                 ? $q.when(settings)
@@ -33,9 +33,7 @@
         }
 
         function getServerUrl() {
-            return getSettings().then(function(settings) {
-                return settings.serverurl;
-            });
+            return getSettings().then(settings => settings.serverurl);
         }
         /**
          * Saves the settings as Settings entity to local database 
@@ -46,9 +44,7 @@
          */
         function saveSettings(settings) {
             return dao.instantiate("Settings", settings)
-                .then(function (settingsInstance) {
-                    return dao.save(settingsInstance);
-                })
+                .then(settingsInstance => dao.save(settingsInstance))
                 .then(cacheSettings);
         }
 

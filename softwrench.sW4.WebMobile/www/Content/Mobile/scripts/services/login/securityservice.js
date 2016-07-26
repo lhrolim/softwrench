@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, ionic, _) {
     "use strict";
 
-    function securityService($rootScope, $state, localStorageService, routeService, $http, $q, dao, $ionicHistory) {
+    function securityService($rootScope, $state, localStorageService, routeService, $http, $q, dao, $ionicHistory, cookieService) {
 
         //#region Utils
 
@@ -9,6 +9,7 @@
             eventnamespace:"sw4:security:",
             authkey: "security:auth:user",
             previouskey: "security:auth:previous",
+            authCookieName: "swcookie",
             message: {
                 sessionexpired: "Your session has expired. Please log in to resume your activities. ",
                 unauthorizedaccess: "You're not authorized to access this resource. " +
@@ -31,10 +32,10 @@
             }
             delete user["Properties"];
         };
-
+        
 
         /**
-         * Authenticates the user locally initializing it's client-side session
+         * Authenticates the user locally initializing it's client-side session, persisting the authentication cookie
          * and $broadcasts the event "security:login" in $rootScope with two parameters
          * the current just logged in user and the last logged user.
          * Users have the following format:
@@ -44,15 +45,18 @@
          * "SiteId": String
          * }
          * 
-         * @param {} user 
+         * @param {Object} user
+         * @return {Object} user
          */
-        const loginLocal = user => {
-            var previous = localStorageService.get(config.authkey);
-            previous = !!previous ? previous : localStorageService.get(config.previouskey);
-            setUserProperties(user, user["Properties"]);
-            localStorageService.put(config.authkey, user);
-            $rootScope.$broadcast($event("login"), user, previous);
-        };
+        const loginLocal = user => 
+            cookieService.persistCookie(config.authCookieName).then(() => {
+                var previous = localStorageService.get(config.authkey);
+                previous = !!previous ? previous : localStorageService.get(config.previouskey);
+                setUserProperties(user, user["Properties"]);
+                localStorageService.put(config.authkey, user);
+                $rootScope.$broadcast($event("login"), user, previous);
+                return user;
+            });
 
         const cleanLocalStorage = () => {
             Object.keys(localStorage)
@@ -92,11 +96,10 @@
                 $ionicHistory.clearCache();
 
                 const userdata = response.data;
-                if (!!userdata["Found"]) {
-                    loginLocal(userdata);
-                    return userdata;
-                }
-                return $q.reject(new Error("Invalid username or password"));
+
+                return !!userdata["Found"]
+                    ? loginLocal(userdata)
+                    : $q.reject(new Error("Invalid username or password"));
             });
         
 
@@ -155,7 +158,10 @@
             }
             $rootScope.$broadcast($event("logout"), current);
 
-            return dao.resetDataBase(["Settings"]).then(() => {
+            return $q.all([
+                dao.resetDataBase(["Settings"]),
+                cookieService.clearCookies() // clear cookies 
+            ]).then(() => {
                 $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
                 cleanLocalStorage(); // clean non-blacklisted localstorage entries used by apps as cache
                 return current;
@@ -187,6 +193,15 @@
             }
         }, 0, true); //debouncing for when multiple parallel requests are unauthorized
 
+        /**
+         * Restores locally persisted authentication cookie to the webview.
+         * 
+         * @returns {Promise<String>} cookie value 
+         */
+        const restoreAuthCookie = function() {
+            return cookieService.restoreCookie(config.authCookieName);
+        };
+
         //#endregion
 
         //#region Service Instance
@@ -199,16 +214,16 @@
             hasAuthenticatedUser,
             logout,
             handleUnauthorizedRemoteAccess,
-            updateCurrentUserProperties
+            updateCurrentUserProperties,
+            restoreAuthCookie
         };
         return service;
 
         //#endregion
     }
-
     //#region Service registration
 
-    mobileServices.factory("securityService", ["$rootScope","$state", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", securityService]);
+    mobileServices.factory("securityService", ["$rootScope","$state", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", "cookieService", securityService]);
 
     //#endregion
 
