@@ -19,6 +19,7 @@ using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Offline;
 using softWrench.sW4.Metadata.Menu;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 
 namespace softwrench.sw4.offlineserver.controller {
@@ -104,25 +105,32 @@ namespace softwrench.sw4.offlineserver.controller {
             _contextLookuper.LookupContext().OfflineMode = true;
 
             var watch = Stopwatch.StartNew();
-            var appData = _syncManager.GetData(req, SecurityFacade.CurrentUser(), null);
+            var user = SecurityFacade.CurrentUser();
+            var appData = _syncManager.GetData(req, user, null);
             watch.Stop();
             var appEllapsed = watch.ElapsedMilliseconds;
 
             watch.Restart();
-            var associationResult = _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), null);
+            var associationResult = _syncManager.GetAssociationData(user, null);
             watch.Stop();
             var associationEllapsed = watch.ElapsedMilliseconds;
 
-            var topCountData = appData.TopApplicationData.ToDictionary(applicationData => applicationData.ApplicationName, applicationData => applicationData.NewCount);
-            var associationCounts = associationResult.AssociationData.ToDictionary(applicationData => applicationData.Key, applicationData => applicationData.Value.Count);
-            var compositionCounts = appData.CompositionData.ToDictionary(applicationData => applicationData.ApplicationName, applicationData => applicationData.NewCount);
+            var topCountData = appData.TopApplicationData.OrderBy(a => a.ApplicationName).ToDictionary(applicationData => applicationData.ApplicationName, applicationData => applicationData.NewCount);
+            var associationCounts = associationResult.AssociationData.OrderBy(a => a.Key).ToDictionary(applicationData => applicationData.Key, applicationData => applicationData.Value.Count);
+            var compositionCounts = appData.CompositionData.OrderBy(a => a.ApplicationName).ToDictionary(applicationData => applicationData.ApplicationName, applicationData => applicationData.NewCount);
+
+            var associationTotals = associationCounts.Sum(s => s.Value);
+            var topAppTotals = topCountData.Sum(s => s.Value);
 
             var report = new MobileCountReport() {
                 TopAppCounts = topCountData,
                 AssociationCounts = associationCounts,
+                AssociationTotals = associationTotals,
+                TopAppTotals = topAppTotals,
                 CompositionCounts = compositionCounts,
                 AppTimeEllapsed = appEllapsed,
-                AssociationTimeEllapsed = associationEllapsed
+                AssociationTimeEllapsed = associationEllapsed,
+                UserData = new MobileUserDtoReport(user)
             };
 
             return JsonConvert.SerializeObject(report, Newtonsoft.Json.Formatting.Indented,
@@ -153,6 +161,34 @@ namespace softwrench.sw4.offlineserver.controller {
             public IDictionary<string, int> CompositionCounts = new Dictionary<string, int>();
             public long AssociationTimeEllapsed;
             public long AppTimeEllapsed;
+            public int AssociationTotals;
+            public int TopAppTotals;
+
+            public MobileUserDtoReport UserData {
+                get; set;
+            }
+
+        }
+
+        public class MobileUserDtoReport {
+
+            public MobileUserDtoReport(InMemoryUser user) {
+                PersonId = user.MaximoPersonId;
+                Properties = user.Genericproperties;
+                Username = user.Login;
+            }
+
+            public string PersonId {
+                get; set;
+            }
+
+            public string Username {
+                get; set;
+            }
+
+            public IDictionary<string, object> Properties {
+                get; set;
+            }
         }
 
 
