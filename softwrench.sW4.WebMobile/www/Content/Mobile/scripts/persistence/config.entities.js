@@ -347,6 +347,17 @@
             key: "TEXT",
             data: "JSON"
         });
+
+        entities.Cookie = persistence.define("Cookie", {
+            name: "TEXT",
+            value: "TEXT"
+        });
+        entities.Cookie.index(["name"], { unique: true });
+
+        entities.Cookie.insertStatement = "insert into Cookie (id, name, value) values (?,?,?)";
+        entities.Cookie.updateByNameStatement = "update Cookie set value=? where name=?";
+        entities.Cookie.deleteByNameStatement = "delete from Cookie where name=?";
+        entities.Cookie.deleteAllStatement = "delete from Cookie";
         //#endregion
 
     }]);
