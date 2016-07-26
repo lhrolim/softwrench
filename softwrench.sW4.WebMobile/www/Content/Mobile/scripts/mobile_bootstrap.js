@@ -122,7 +122,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     return;
                 }
                 // has serverurl -> do nothing
-                var serverurl = localStorageService.get("settings:serverurl");
+                const serverurl = localStorageService.get("settings:serverurl");
                 if (!!serverurl) {
                     return;
                 }
@@ -132,8 +132,9 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 routeService.go("settings");
             });
 
-            document.addEventListener("resume", initContext , false);
-
+            document.addEventListener("resume", () =>
+                initContext().then(() => securityService.restoreAuthCookie())
+                , false);
         }
 
         function loadInitialState() {
