@@ -121,6 +121,7 @@
       <connectorParameters>
         <connectorParameter key="customconnector" value="softwrench.sw4.chicago.classes.com.cts.chicago.connector.ChicagoSRCrudConnector" />
         <connectorParameter key="rest_integration_interface" value="MXISSR" />
+        <connectorParameter key="dev_rest_integration_interface" value="SWSR" />
       </connectorParameters>
     </entity>
     <entity name="impacturgency" idAttribute="impacturgencyid">
