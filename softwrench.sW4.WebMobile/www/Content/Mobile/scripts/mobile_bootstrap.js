@@ -134,7 +134,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 routeService.go("settings");
             });
 
-            document.addEventListener("resume", () => initContext, false);
+            document.addEventListener("resume", initContext, false);
 
         }
 
