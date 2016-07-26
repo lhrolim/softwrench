@@ -72,6 +72,10 @@ app.directive('printSection', function (contextService) {
                 $scope.displayableID = prefix + " " + id;
             }
 
+            $scope.printComposition = function (item, composition) {
+                return item.fields[composition.key].length > 0;
+            };
+
             $scope.doStartPrint = function (compositionData, shouldPageBreak, shouldPrintMain, printCallback) {
                 fixHeaderService.unfix();
                 var compositionstoprint = [];
