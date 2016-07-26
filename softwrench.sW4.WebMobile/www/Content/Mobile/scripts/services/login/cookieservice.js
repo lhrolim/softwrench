@@ -37,7 +37,7 @@
          * @returns {String} 
          */
         function getCookie(name) {
-            return dao.findSingleByQuery("Cookie", `name='${name}'`).then(c => c.value);
+            return dao.findSingleByQuery("Cookie", `name='${name}'`).then(c => !c ? null : c.value);
         }
 
         /**
@@ -110,7 +110,7 @@
         function restoreCookie(name) {
             const logger = $log.get("cookieService#restoreCookie", ["cookie"]);
 
-            const promise = getCookie(name).then(value => setWebCookie(name, value));
+            const promise = getCookie(name).then(value => !value ? null : setWebCookie(name, value));
 
             return logger.isLevelEnabled("debug")
                 ? promise.then(value => {
