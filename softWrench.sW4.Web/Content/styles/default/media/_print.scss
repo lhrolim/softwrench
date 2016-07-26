@@ -4,6 +4,7 @@
 
         & > .container {
             display: block;
+            min-height: initial;
         }
     }
 
@@ -99,7 +100,7 @@
     #rootprintdiv {
         .print-logo {
             img {
-                max-height: 120px;
+                max-height: 100px;
                 width: auto;
             }
         }
