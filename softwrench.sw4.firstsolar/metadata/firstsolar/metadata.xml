@@ -592,7 +592,9 @@
 
           <!--          <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true"/>-->
 
-          <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true"/>
+          <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true">
+            <renderer type="lookup" params="showCode=false"/>
+          </association>
 
           <reference id="offlineworktypes"/>
 
@@ -672,7 +674,7 @@
 
           <association  target="classstructureid" labelfield="classstructure_.description"
                         requiredexpression="true" label="Origination" showexpression="@assetnum !=null">
-            <renderer type="lookup"/>
+            <renderer type="lookup" params="showCode=false"/>
           </association>
 
           <reference id="offlineworktypes" showexpression="@assetnum !=null"/>
@@ -768,7 +770,7 @@
           <field attribute="status" readonly="true" label="Status" />
           <field attribute="location" readonly="true" label="Location" />
           <field attribute="assetnum" readonly="true" label="Asset" />
-          <field attribute="classstructureid" readonly="true" label="Origination" />
+          <field attribute="classstructure_.description" readonly="true" label="Origination"/>
           <field attribute="worktype" readonly="true" label="Work Type" />
           <field attribute="ld_.ldtext" readonly="true" label="Details">
             <renderer type="richtext"/>
