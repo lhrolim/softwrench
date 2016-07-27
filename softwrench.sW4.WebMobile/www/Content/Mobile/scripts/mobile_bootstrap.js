@@ -29,7 +29,9 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             //server side + client side configs
             const serverConfigPromise = configService.loadConfigs();
             const clientConfigPromise = configService.loadClientConfigs();
-            return $q.all([menuPromise, metadataPromise, serverConfigPromise, commandBarsPromise, clientConfigPromise]);
+            const restoreAuthPromise = securityService.restoreAuthCookie();
+
+            return $q.all([menuPromise, metadataPromise, serverConfigPromise, commandBarsPromise, clientConfigPromise, restoreAuthPromise]);
         }
 
         function disableRipplePopup() {
@@ -122,7 +124,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     return;
                 }
                 // has serverurl -> do nothing
-                var serverurl = localStorageService.get("settings:serverurl");
+                const serverurl = localStorageService.get("settings:serverurl");
                 if (!!serverurl) {
                     return;
                 }
@@ -132,7 +134,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 routeService.go("settings");
             });
 
-            document.addEventListener("resume", initContext , false);
+            document.addEventListener("resume", initContext, false);
 
         }
 
