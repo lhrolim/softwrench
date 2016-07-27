@@ -491,7 +491,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
     return {
         require: '?ngModel',
         restrict: 'E',
-        template: '<textarea ion-autocomplete type="text" class="ion-autocomplete item-text-wrap" autocomplete="off" autosize-textarea></textarea>',
+        template: '<input ion-autocomplete type="text" class="ion-autocomplete item-text-wrap" autocomplete="off" />',
         replace: true
     }
 });
