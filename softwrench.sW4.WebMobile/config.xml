@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?><widget xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" id="io.cordova.softwrench.sW4.WebMobile" version="2.0.2" xmlns="http://www.w3.org/ns/widgets">
-  <name>softWrench</name>
-  <description>softWrench™ simplifies, enhances, and mobilizes the capabilities of IBM Maximo.</description>
-  <author href="http://controltechnologysolutions.com/softwrench/" email="info@controltechnologysolutions.com">Control Technology Solutions</author>
+<?xml version="1.0" encoding="utf-8"?>
+<widget xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" id="io.cordova.softwrench.sW4.WebMobile" version="2.0.3.1" xmlns="http://www.w3.org/ns/widgets">
+  <name>softwrench.sW4.WebMobile</name>
+  <description>A blank project that uses Apache Cordova to help you build an app that targets multiple mobile platforms: Android, iOS, Windows, and Windows Phone.</description>
+  <author href="http://cordova.io" email="dev@cordova.apache.org">Apache Cordova Team </author>
   <content src="layout.html"/>
   <access origin="*"/>
   <allow-navigation href="*"/>
