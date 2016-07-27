@@ -2,6 +2,7 @@
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.simpleinjector.Events;
+using log4net;
 using softwrench.sw4.offlineserver.events;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
@@ -12,6 +13,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
 
         private readonly IMaximoHibernateDAO _dao;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof (FirstSolarOfflineSiteIdBuilder));
 
         private static readonly IDictionary<string, string[]> PersonGroupFacilityMap = new Dictionary<string, string[]>()
         {
@@ -60,6 +63,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             var hasStoredFacilities = genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp);
 
             if (hasStoredFacilities && genericproperties.ContainsKey(FirstSolarConstants.AvailableFacilitiesProp)) {
+                Log.DebugFormat("user already has stored facilities: {0}, returning", genericproperties[FirstSolarConstants.FacilitiesProp]);
                 //the list of facilities is already saved on the swdb database, let's use it
                 return genericproperties;
             }
@@ -68,6 +72,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 _dao.FindByNativeQuery("select persongroup from persongroupview where personid = ? and status = 'ACTIVE' and persongroup is not null",
                     maximoPersonId);
 
+            Log.InfoFormat("fetching persongroups for user {0}",maximoPersonId);
 
             var facilityList = new List<string>();
             foreach (var groupRow in groups) {
@@ -76,6 +81,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                     facilityList.AddRange(PersonGroupFacilityMap[@group]);
                 }
             }
+
+            Log.InfoFormat("Available facilities for user {0}: {1} ", maximoPersonId,facilityList);
 
             if (!hasStoredFacilities) {
                 if (genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
