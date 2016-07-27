@@ -234,6 +234,7 @@
     <Compile Include="Data\Search\QuickSearch\QuickSearchHelper.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchDTO.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchWhereClauseHandler.cs" />
+    <Compile Include="Data\UnboundedDatamap.cs" />
     <Compile Include="Email\CommLogTemplateMerger.cs" />
     <Compile Include="Email\EmailHistory.cs" />
     <Compile Include="Exceptions\ErrorDto.cs" />

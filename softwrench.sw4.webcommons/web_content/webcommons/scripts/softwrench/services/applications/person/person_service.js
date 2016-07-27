@@ -9,7 +9,7 @@
 
         function handlePrimaryForCreation(compositionDatamap,type) {
             //phone creation
-            var personData = crudContextHolderService.rootDataMap().fields;
+            const personData = crudContextHolderService.rootDataMap().fields;
             if (!personData[type] || personData[type].length === 0) {
                 compositionDatamap["isprimary"] = true;
                 compositionDatamap["originalprimary"] = true;
@@ -17,7 +17,7 @@
         }
 
         function loadPhone() {
-            var dm = crudContextHolderService.rootDataMap("#modal");
+            const dm = crudContextHolderService.rootDataMap("#modal");
             if (dm.phoneid) {
                 //edition
                 dm["#originalphonenum"] = dm.phonenum;
@@ -30,7 +30,7 @@
         };
 
         function loadEmail() {
-            var dm = crudContextHolderService.rootDataMap("#modal");
+            const dm = crudContextHolderService.rootDataMap("#modal");
             if (dm.emailid) {
                 //edition
                 dm["#originalemailaddress"] = dm.emailaddress;
@@ -44,7 +44,7 @@
 
 
         function cancelEdition() {
-            var schema = crudContextHolderService.currentSchema();
+            const schema = crudContextHolderService.currentSchema();
             if (schema.schemaId === 'myprofiledetail') {
                 return redirectService.redirectToHome();
             }
@@ -61,7 +61,7 @@
             if (!datamap["#password"]) {
                 return true;
             }
-            var errors = [];
+            const errors = [];
             if (datamap["#password"] != datamap["#retypepassword"]) {
                 errors.push("Passwords do not match");
             }
@@ -71,10 +71,32 @@
 
         function submitPerson(schema, datamap) {
             var currentSchema = crudContextHolderService.currentSchema();
+            const fields = datamap.fields;
+
             applicationService.save().then(function (response) {
-                var ro = response.resultObject;
-                if (currentSchema.schemaId === "myprofiledetail" && ro) {
-                    contextService.loadUserContext(ro);
+
+                if (currentSchema.schemaId === "myprofiledetail") {
+                    const ro = response.resultObject;
+                    let updatedUser = angular.copy(fields);
+                    updatedUser.orgid = fields.locationorg;
+                    updatedUser.siteid = fields.locationsite;
+                    const primaryEmail = fields.email_.find(e=> e.isprimary);
+                    const primaryPhone = fields.phone_.find(e=> e.isprimary);
+                    if (primaryEmail) {
+                        updatedUser.email = primaryEmail.emailaddress;
+                    }
+                    if (primaryPhone) {
+                        updatedUser.phone = primaryPhone.phonenum;
+                    }
+
+
+                    updatedUser = angular.extend(updatedUser, ro.fields);
+                    updatedUser.firstName = fields.firstname;
+                    updatedUser.lastName = fields.lastname;
+
+
+                    contextService.loadUserContext(updatedUser);
+
                 }
             });
         }

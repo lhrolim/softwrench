@@ -176,7 +176,13 @@ namespace softwrench.sw4.offlineserver.controller {
                 PersonId = user.MaximoPersonId;
                 Properties = user.Genericproperties;
                 Username = user.Login;
+                OrgId = user.OrgId;
+                SiteId = user.SiteId;
             }
+
+            public string SiteId { get; set; }
+
+            public string OrgId { get; set; }
 
             public string PersonId {
                 get; set;
