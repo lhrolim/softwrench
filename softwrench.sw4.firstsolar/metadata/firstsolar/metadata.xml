@@ -771,6 +771,7 @@
           <field attribute="location" readonly="true" label="Location" />
           <field attribute="assetnum" readonly="true" label="Asset" />
           <field attribute="classstructure_.description" readonly="true" label="Origination"/>
+          <field attribute="classstructureid" readonly="true" hidden="true" /> <!-- assign to me needs this -->
           <field attribute="worktype" readonly="true" label="Work Type" />
           <field attribute="ld_.ldtext" readonly="true" label="Details">
             <renderer type="richtext"/>
@@ -797,7 +798,7 @@
           <commandbars>
             <commandgroup position="mobile.fab" platform="mobile">
               <command id="assignworkorder" service="fsWorkorderOfflineService" method="assignWorkOrder"
-                       showexpression="!@owner" icon="ion-android-person-add" label="Assign To Me" />
+                       icon="ion-android-person-add" label="Assign To Me" />
             </commandgroup>
           </commandbars>
 
