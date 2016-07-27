@@ -192,9 +192,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             if (user.UserName.EqualsIc(currentUser.Login) && user.Id != null) {
                 var fullUser = SecurityFacade.GetInstance().FetchUser(user.Id.Value);
                 var userResult = SecurityFacade.UpdateUserCache(fullUser, currentUser.TimezoneOffset.ToString());
-                targetResult.ResultObject = new DataMap(application.Name, ToDictionary(userResult)).Fields;
+                targetResult.ResultObject = new UnboundedDatamap(application.Name, ToDictionary(userResult));
             }
-
 
 
             if (isCreation && isactive) {
@@ -240,31 +239,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         }
 
         private IDictionary<string, object> ToDictionary(InMemoryUser definition) {
+            //TODO: review this piece
             var dict = new Dictionary<string, object>();
-            dict["active"] = definition.Active;
-            dict["changepassword"] = definition.ChangePassword;
-            dict["dataconstraints"] = definition.DataConstraints;
-            dict["dbId"] = definition.DBId;
-            dict["department"] = definition.Department;
-            dict["email"] = definition.Email;
-            dict["firstname"] = definition.FirstName;
-            dict["fullname"] = definition.FullName;
             dict["genericproperties"] = definition.Genericproperties;
             dict["gridpreferences"] = definition.GridPreferences;
-            dict["lastname"] = definition.LastName;
-            dict["login"] = definition.Login;
-            dict["maximopersonid"] = definition.MaximoPersonId;
-            dict["orgid"] = definition.OrgId;
-            dict["persongroups"] = definition.PersonGroups;
-            dict["phone"] = definition.Phone;
             dict["profileIds"] = definition.ProfileIds;
             dict["profiles"] = definition.Profiles;
-            dict["roles"] = definition.Roles;
             dict["signature"] = definition.Signature;
-            dict["siteid"] = definition.SiteId;
-            dict["userid"] = definition.UserId;
             dict["userpreferences"] = definition.UserPreferences;
-
             return dict;
         }
 

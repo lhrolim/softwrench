@@ -170,7 +170,7 @@
 
             loadUserContext: function (userData) {
                 //clear cache
-                $rootScope.user = null;
+                $rootScope.user = userData;
                 this.insertIntoContext('user', JSON.stringify(userData));
             },
 
