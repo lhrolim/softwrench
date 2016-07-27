@@ -2,6 +2,10 @@
     .list[state="main.cruddetail.compositiondetail"] {
         min-height: calc(100vh - 129px);
     }
+
+    textarea[autosize-textarea] {
+        resize: none;
+    }
 }
 
 .crud-fields-wrapper {
