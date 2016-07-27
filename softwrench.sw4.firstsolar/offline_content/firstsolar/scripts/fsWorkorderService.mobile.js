@@ -69,7 +69,7 @@
                     // setting just the viewValue to show description
                     // TODO: make $formatters do their job correctly
                     // TODO: load association descriptions correctly, similar to online mode
-                    const input = document.querySelector("input[ion-autocomplete][item-value-key='datamap.classstructureid']");
+                    const input = document.querySelector("textarea[ion-autocomplete][item-value-key='datamap.classstructureid']");
                     if (!input) {
                         return;
                     }

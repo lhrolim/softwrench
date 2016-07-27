@@ -82,6 +82,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
 
                 function setViewValue(item) {
                     const viewValue = getDisplayableValue(item);
+                    scope.$emit("sw:ionAutocomplete:viewValue", viewValue);
                     element.val(viewValue);
                 }
 
@@ -96,6 +97,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 ngModel.$render = function () {
                     const viewValue = getDisplayableValue(ngModel.$viewValue);
                     element.val(viewValue);
+                    scope.$emit("sw:ionAutocomplete:viewValue", viewValue);
                 };
 
                 // set the view value of the model
@@ -491,7 +493,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
     return {
         require: '?ngModel',
         restrict: 'E',
-        template: '<input ion-autocomplete type="text" class="ion-autocomplete item-text-wrap" autocomplete="off" />',
+        template: '<textarea ion-autocomplete class="ion-autocomplete item-text-wrap" autocomplete="off" autosize-textarea></textarea>',
         replace: true
     }
 });

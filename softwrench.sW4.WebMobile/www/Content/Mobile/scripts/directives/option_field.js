@@ -249,7 +249,10 @@
                         ngModel.$formatters.push(model => {
                             if (!model || !scope.items) return model;
                             const option = scope.items.find(o => o.value === model);
-                            return !option ? model : option.label;
+                            const label = !option ? model : option.label;
+
+                            scope.$emit("sw:optionField:viewValue", label);
+                            return label;
                         });
 
                     }
