@@ -153,6 +153,40 @@ namespace softwrench.sw4.offlineserver.controller {
             public IDictionary<string, int> CompositionCounts = new Dictionary<string, int>();
             public long AssociationTimeEllapsed;
             public long AppTimeEllapsed;
+            public int AssociationTotals;
+            public int TopAppTotals;
+
+            public MobileUserDtoReport UserData {
+                get; set;
+            }
+
+        }
+
+        public class MobileUserDtoReport {
+
+            public MobileUserDtoReport(InMemoryUser user) {
+                PersonId = user.MaximoPersonId;
+                Properties = user.Genericproperties;
+                Username = user.Login;
+                OrgId = user.OrgId;
+                SiteId = user.SiteId;
+            }
+
+            public string SiteId { get; set; }
+
+            public string OrgId { get; set; }
+
+            public string PersonId {
+                get; set;
+            }
+
+            public string Username {
+                get; set;
+            }
+
+            public IDictionary<string, object> Properties {
+                get; set;
+            }
         }
 
 
