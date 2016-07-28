@@ -68,16 +68,16 @@
         }
 
         function getIconClass(item) {
-            if (item.pending) {
-                return 'ispending';
-            }
-
             if (item.hasProblem) {
                 return 'hasproblem';
             }
 
             if (item.isDirty) {
                 return 'isdirty';
+            }
+
+            if (item.pending) {
+                return 'ispending';
             }
 
             return null;
@@ -111,14 +111,16 @@
         }
 
         function getIconIcon(item) {
-            if (item.pending) {
-                return "cloud";
-            }
             if (item.hasProblem) {
                 return "exclamation-triangle";
             }
+
             if (item.isDirty) {
                 return "refresh";
+            }
+
+            if (item.pending) {
+                return "cloud";
             }
 
             const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
