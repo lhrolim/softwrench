@@ -22,6 +22,11 @@ using softWrench.sW4.Util;
 using softWrench.sW4.wsWorkorder;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.Metadata.Applications;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Net;
+using System.IO;
+using System.Text;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
     public class CommLogHandler : ISingletonComponent {
@@ -92,12 +97,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
 
-                var attachments = GetAttachments(crudData, maximoTemplateData.ApplicationMetadata, entity);
-                if(!entity.ContainsAttribute("underwaycall",true)) {
-                    //to avoid sending emails twice
-                    maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, attachments));
+                var mailAttachments = new List<AttachmentDTO>();
+                mailAttachments.AddRange(GetNewAttachments(crudData, maximoTemplateData.ApplicationMetadata, entity));
+                mailAttachments.AddRange(GetExistingAttachments(crudData, maximoTemplateData.ApplicationMetadata, entity));
+
+                if (!entity.ContainsAttribute("underwaycall",true)) {
+                    //to avoid sending emails twice                    
+                    maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, mailAttachments));
                 }
-                HandleAttachments(attachments, integrationObject, maximoTemplateData.ApplicationMetadata);
+
+                HandleAttachments(mailAttachments, integrationObject, maximoTemplateData.ApplicationMetadata);
                 var username = user.Login;
                 var allAddresses = GetListOfAllAddressesUsed(integrationObject);
                 UpdateEmailHistoryAsync(username, allAddresses.ToLower().Split(','));
@@ -162,11 +171,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             };
         }
 
-        private List<AttachmentDTO> GetAttachments(CrudOperationData commlog, ApplicationMetadata appMetadata, CrudOperationData entity) {
+        private List<AttachmentDTO> GetNewAttachments(CrudOperationData commlog, ApplicationMetadata appMetadata, CrudOperationData entity) {
             var attachmentData = commlog.GetUnMappedAttribute("attachment");
             var attachmentPath = commlog.GetUnMappedAttribute("newattachment_path");
             var attachments = _attachmentHandler.BuildAttachments(attachmentPath, attachmentData);
-
+            
             var detailsHtml = commlog.GetUnMappedAttribute("detailsHtml");
             if (string.IsNullOrEmpty(detailsHtml)) {
                 return attachments;
@@ -176,8 +185,52 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             return attachments;
         }
 
+        private List<AttachmentDTO> GetExistingAttachments(CrudOperationData commlog, ApplicationMetadata appMetadata, CrudOperationData entity) {
+            var attachments = new List<AttachmentDTO>();
 
+            var existingAttachments = string.Format("[{0}]", commlog.GetUnMappedAttribute("attachments"));
+            if (!string.IsNullOrWhiteSpace(existingAttachments)) {
 
+                var attachmentList = JsonConvert.DeserializeObject<List<dynamic>>(existingAttachments);
+
+                if(attachmentList != null && attachmentList.Count > 0) {
+                    WebClient client = null;
+
+                    try {
+                        client = new WebClient();
+
+                        foreach (var att in attachmentList) {
+                            string attachmentUrl = att["url"];
+                            if (!string.IsNullOrWhiteSpace(attachmentUrl)) {
+                                var data = client.DownloadData(attachmentUrl);
+
+                                var attachment = new AttachmentDTO() {
+                                    Title = att["name"],
+                                    Path = att["name"],
+                                    BinaryData = data,
+                                    DocumentInfoId = att["docinfoid"],
+                                    ServerPath = att["urlname"]
+                                };
+
+                                attachments.Add(attachment);
+                            }
+                        }
+                    } catch(Exception e) {
+                        Log.Error("Error downloading the attachment", e);
+                        throw;
+                    } finally {
+                        if(client != null) {
+                            client.Dispose();
+                            client = null;
+                        }
+                    }                    
+                }
+              
+            }
+            
+            return attachments;
+        }
+        
         private async void UpdateEmailHistoryAsync(string userId, string[] emailAddresses) {
             await Task.Factory.NewThread(() => {
                 string[] userIds = { userId.ToLower() };

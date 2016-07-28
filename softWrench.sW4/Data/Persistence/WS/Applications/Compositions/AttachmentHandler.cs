@@ -182,7 +182,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
             w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? string.Empty);
 
-            HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path, attachment.BinaryData);
+            if(attachment.DocumentInfoId != null) {
+                w.SetValue(docLink, "URLNAME", attachment.ServerPath);
+                w.SetValue(docLink, "NEWURLNAME", attachment.ServerPath);
+            } else {
+                HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path, attachment.BinaryData);
+            }
         }
 
 
@@ -394,7 +399,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             for (int i = 0, j = 0; i < attachmentsPath.Length; i++, j += 2) {
                 var dto = new AttachmentDTO() {
                     Data = attachmentsData[j] + ',' + attachmentsData[j + 1],
-                    Path = attachmentsPath[i]
+                    Path = attachmentsPath[i],
+                    DocumentInfoId = null
                 };
                 dtos.Add(dto);
             }

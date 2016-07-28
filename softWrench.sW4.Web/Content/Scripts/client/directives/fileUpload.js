@@ -12,6 +12,16 @@ app.directive('fileUpload', function (contextService, $log, attachmentService) {
         link: function (scope, element, attrs) {
             var fileInput = $('#uploadBtn', element);
 
+            scope.$on('sw.modal.hide', function (event, selfThrown) {
+                if ($('#uploadFile')) {
+                    $('#uploadFile', element).val('');
+                }
+
+                if (fileInput) {
+                    fileInput.attr('title', '');
+                }
+            });
+
             fileInput.on('change', function (e) {
                 log.debug('upload');
 
@@ -31,6 +41,7 @@ app.directive('fileUpload', function (contextService, $log, attachmentService) {
                 }
 
                 $('#uploadFile', element).attr('value', fileName);
+                $('#uploadFile', element).val(fileName);
 
                 //update the file input title
                 var title = 'No file selected';

@@ -189,7 +189,7 @@
             <renderer type="multipleupload"/>
           </field>
           
-          <field label="Attachments" attribute="attachments" showexpression="!!@commlogid &amp;&amp; !!@attachments &amp;&amp; @attachments.length > 0">
+          <field label="Attachments" attribute="attachments" showexpression="!!@attachments &amp;&amp; @attachments.length > 0">
             <renderer type="link" params="linkUrlField=url;linkNameField=name"/>
           </field>
 
