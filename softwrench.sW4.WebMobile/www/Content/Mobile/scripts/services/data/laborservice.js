@@ -266,7 +266,8 @@
             finishLaborTransaction,
             updateLineCost,
             formatRegularHours,
-            formatApproved
+            formatApproved,
+            getActiveLaborParent
         };
         return service;
         //#endregion

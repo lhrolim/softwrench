@@ -40,8 +40,7 @@
 
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col-25">
-                        <button class="button button-status" ng-style="{background:getIconColor(item.datamap),color:getTextColor(item.datamap)}">{{getIconText(item)}}</button>
-                        <i class="crud-list-icon fa fa-{{getIconIcon(item)}}" ng-style="{color:getTextColor(item.datamap)}" ng-show="getIconIcon(item)"></i>
+                        <crud-icon item="item"></crud-icon>
                     </div>
                     <div class="col-75">
                         <ul>

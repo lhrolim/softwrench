@@ -120,19 +120,6 @@
                 return offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "excerpt", item);
             }
 
-            $scope.getIconColor = function (datamap) {
-                const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
-                if (!displayable || !displayable.attribute || displayable.attribute === "status") {
-                    return statuscolorService.getColor(datamap["status"], crudContextService.currentApplicationName());
-                }
-
-                if (displayable.attribute === "wopriority") {
-                    return statuscolorService.getPriorityColor(datamap[displayable.attribute]);
-                }
-
-                return "#777";
-            }
-
             $scope.openDetail = function (item) {
                 crudContextService.loadDetail(item);
             }
@@ -141,67 +128,12 @@
                 crudContextService.createDetail();
             }
 
-            $scope.getIconText = function (item) {
-                if ($scope.isDirty(item) || $scope.isPending(item) || $scope.hasProblem(item)) {
-                    return "";
-                }
-
-                const datamap = item.datamap;
-                const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
-
-                if (!displayable || !displayable.attribute || displayable.attribute === "status") {
-                    const status = datamap["status"];
-                    return status == null ? "N" : status.charAt(0);
-                }
-
-                var value = datamap[displayable.attribute];
-
-                if (displayable.attribute === "wopriority") {
-                    item.icon = value ? null : "flag";
-                    return value ? value.substring(0, 1) : "";
-                }
-
-                if (!value) {
-                    return null;
-                }
-                value += "";
-                return value.substring(0, 1);
-            }
-
-            $scope.getIconIcon = function (item) {
-                if ($scope.isPending(item)) {
-                    return "cloud";
-                }
-
-                if ($scope.hasProblem(item)) {
-                    return "exclamation-triangle";
-                }
-
-                if ($scope.isDirty(item)) {
-                    return "refresh";
-                }
-
-                const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
-                const value = item.datamap[displayable.attribute];
-                if (displayable.attribute === "wopriority" && !value) {
-                    return "flag";
-                }
-
-                return null;
-            }
-
-            $scope.getTextColor = function (datamap) {
-                const background = $scope.getIconColor(datamap);
-                return background === "white" || background === "transparent" ? "black" : "white";
-            }
-
             $scope.quickSync = function (item) {
                 synchronizationFacade.syncItem(item).then(() => {
                     //updating the item on the list after it has been synced
                     crudContextService.refreshGrid();
                 });
             }
-
   		
             $scope.deleteOrRestoreItem = function(item) {
                 const restorable = item.remoteId && item.isDirty && !!item.originaldatamap;
