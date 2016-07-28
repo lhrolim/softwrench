@@ -1,7 +1,7 @@
-﻿(function (angular) {
+﻿(function (angular, _) {
     "use strict";
 
-    function fsWorkorderOfflineService(crudContextService, dao, $timeout, securityService) {
+    function fsWorkorderOfflineService(crudContextService, dao, $timeout, securityService, offlineSchemaService) {
         //#region Utils
 
         //#endregion
@@ -56,7 +56,7 @@
             datamap["assetnum"] = "null$ignorewatch";
         }
 
-        function onNewDetailLoad(scope, schmema, datamap) {
+        function onNewDetailLoad(scope, schema, datamap) {
             // defaults origination to 'Field Analysis'
             dao.findSingleByQuery("AssociationData", `application='classstructure' and datamap like '%"description":"Field Analysis"%'`)
                 .then(a => {
@@ -70,12 +70,15 @@
                     // TODO: make $formatters do their job correctly
                     // TODO: load association descriptions correctly, similar to online mode
                     const input = document.querySelector("textarea[ion-autocomplete][item-value-key='datamap.classstructureid']");
+                    const originationField = offlineSchemaService.getFieldByAttribute(schema, "classstructureid");
+                    const showId = !_.contains([false, "false", "False", 0, "0"], originationField.rendererParameters["showCode"]);
+
                     if (!input) {
                         return;
                     }
                     $timeout(() => {
                         const $ngModel = angular.element(input).controller("ngModel");
-                        $ngModel.$viewValue = `${id} - ${description}`;
+                        $ngModel.$viewValue = showId ? `${id} - ${description}` : description;
                         $ngModel.$render();
                     });
                 });
@@ -203,8 +206,8 @@
     //#region Service registration
 
     angular.module("maximo_offlineapplications")
-        .factory("fsWorkorderOfflineService", ["crudContextService", "swdbDAO", "$timeout", "securityService", fsWorkorderOfflineService]);
+        .factory("fsWorkorderOfflineService", ["crudContextService", "swdbDAO", "$timeout", "securityService", "offlineSchemaService", fsWorkorderOfflineService]);
 
     //#endregion
 
-})(angular);
+})(angular, _);

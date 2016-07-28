@@ -4,23 +4,22 @@
     function laborTimerIconProvider(laborService) {
         //#region Utils
 
+        const hasActiveLabor = item => laborService.getActiveLaborParent() === item.id;
+
         //#endregion
 
         //#region Public methods
 
         function getIconIcon(item) {
-            const activeLaborParent = laborService.getActiveLaborParent();
-            return item.id === activeLaborParent ? "clock-o" : null;
+            return hasActiveLabor(item) ? "clock-o" : null;
         }
 
         function getIconColor(item) {
-            //const activeLaborParent = laborService.getActiveLaborParent();
-            return 'green';
+            return hasActiveLabor(item) ?  "green !important" : null;
         }
 
         function getTextColor(item) {
-            //const activeLaborParent = laborService.getActiveLaborParent();
-            return 'green';
+            return hasActiveLabor(item) ? "white !important" : null;
         }
 
         //#endregion
