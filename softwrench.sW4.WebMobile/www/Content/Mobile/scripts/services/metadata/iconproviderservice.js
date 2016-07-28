@@ -67,6 +67,22 @@
             return background === "white" || background === "transparent" ? "black" : "white";
         }
 
+        function getIconClass(item) {
+            if (item.pending) {
+                return 'ispending';
+            }
+
+            if (item.hasProblem) {
+                return 'hasproblem';
+            }
+
+            if (item.isDirty) {
+                return 'isdirty';
+            }
+
+            return null;
+        }
+
         function getIconText(item) {
             if (item.isDirty || item.pending || item.hasProblem) {
                 return "";
@@ -118,6 +134,7 @@
 
         //#region Service Instance
         const service = {
+            getIconClass: delegateToDeclaredServiceProxy(getIconClass),
             getIconColor: delegateToDeclaredServiceProxy(getIconColor),
             getTextColor: delegateToDeclaredServiceProxy(getTextColor),
             getIconText: delegateToDeclaredServiceProxy(getIconText),

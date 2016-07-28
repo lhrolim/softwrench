@@ -8,28 +8,24 @@
 
         //#region Public methods
 
+        function getIconClass(item) {
+            console.log('getIconClass');
+
+            const activeLaborParent = laborService.getActiveLaborParent();
+            return item.id === activeLaborParent ? 'hasaction' : null;
+        }
+
         function getIconIcon(item) {
             const activeLaborParent = laborService.getActiveLaborParent();
-            return item.id === activeLaborParent ? "clock-o" : null;
-        }
-
-        function getIconColor(item) {
-            //const activeLaborParent = laborService.getActiveLaborParent();
-            return 'green';
-        }
-
-        function getTextColor(item) {
-            //const activeLaborParent = laborService.getActiveLaborParent();
-            return 'green';
+            return item.id === activeLaborParent ? 'clock-o' : null;
         }
 
         //#endregion
 
         //#region Service Instance
         const service = {
-            getIconColor,
-            getIconIcon,
-            getTextColor
+            getIconClass,
+            getIconIcon
         };
         return service;
         //#endregion
