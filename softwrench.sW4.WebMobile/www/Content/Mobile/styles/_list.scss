@@ -17,20 +17,53 @@ input.ion-autocomplete[readonly] {
     cursor: text;
 }
 
-.missingsync, .pending, .hasproblem {
+crud-icon {
     button {
-        background: rgba($cts_red, 0.1) !important;
-        border: 3px solid $cts_red;
+        z-index: 12 !important;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
+
+        &.hasaction {
+            background: rgba($cts_green, 0.1) !important;
+            border: 3px solid $cts_green;
+        }
+
+        &.hasproblem {
+            background: rgba($cts_red, 0.1) !important;
+            border: 3px solid $cts_red;
+        }
+
+        &.isdirty {
+            background: rgba($cts_orange, 0.1) !important;
+            border: 3px solid $cts_orange;
+        }
+
+        &.ispending {
+            background: rgba($cts_gray, 0.1) !important;
+            border: 3px solid $cts_gray;
+        }
     }
 
-    i.crud-list-icon {
-        color: $cts_red !important;
+    .crud-list-icon {
+        &.hasaction {
+            color: $cts_green !important;
+        }
+
+        &.hasproblem {
+            color: $cts_red !important;
+        }
+
+        &.isdirty {
+            color: $cts_orange !important;
+        }
+
+        &.ispending {
+            color: $cts_gray !important;
+        }
     }
 }
-
-/*.pending {
-    background-color: lightgrey !important;
-}*/
 
 .page-syncoperation-list {
     .operation-list {

@@ -67,6 +67,22 @@
             return background === "white" || background === "transparent" ? "black" : "white";
         }
 
+        function getIconClass(item) {
+            if (item.hasProblem) {
+                return 'hasproblem';
+            }
+
+            if (item.isDirty) {
+                return 'isdirty';
+            }
+
+            if (item.pending) {
+                return 'ispending';
+            }
+
+            return null;
+        }
+
         function getIconText(item) {
             if (item.isDirty || item.pending || item.hasProblem) {
                 return "";
@@ -95,14 +111,16 @@
         }
 
         function getIconIcon(item) {
-            if (item.pending) {
-                return "cloud";
-            }
             if (item.hasProblem) {
                 return "exclamation-triangle";
             }
+
             if (item.isDirty) {
                 return "refresh";
+            }
+
+            if (item.pending) {
+                return "cloud";
             }
 
             const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
@@ -118,6 +136,7 @@
 
         //#region Service Instance
         const service = {
+            getIconClass: delegateToDeclaredServiceProxy(getIconClass),
             getIconColor: delegateToDeclaredServiceProxy(getIconColor),
             getTextColor: delegateToDeclaredServiceProxy(getTextColor),
             getIconText: delegateToDeclaredServiceProxy(getIconText),

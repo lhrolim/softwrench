@@ -12,6 +12,8 @@
             },
             controller: ["$scope", "iconProviderService", function ($scope, iconProviderService) {
 
+                $scope.getIconClass = item => iconProviderService.getIconClass(item);
+
                 $scope.getIconColor = item => iconProviderService.getIconColor(item);
 
                 $scope.getIconText = item => iconProviderService.getIconText(item);

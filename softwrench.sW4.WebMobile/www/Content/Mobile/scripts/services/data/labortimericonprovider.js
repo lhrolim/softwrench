@@ -10,25 +10,20 @@
 
         //#region Public methods
 
+        function getIconClass(item) {
+            return hasActiveLabor(item) ? "hasaction" : null;
+        }
+
         function getIconIcon(item) {
             return hasActiveLabor(item) ? "clock-o" : null;
-        }
-
-        function getIconColor(item) {
-            return hasActiveLabor(item) ?  "green !important" : null;
-        }
-
-        function getTextColor(item) {
-            return hasActiveLabor(item) ? "white !important" : null;
         }
 
         //#endregion
 
         //#region Service Instance
         const service = {
-            getIconColor,
-            getIconIcon,
-            getTextColor
+            getIconClass,
+            getIconIcon
         };
         return service;
         //#endregion
