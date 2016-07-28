@@ -436,7 +436,7 @@ function config(persistence, dialect) {
         if (persistence.db.implementation === "sqliteplugin") {
             tx.bulkSQL(queries,
             () => callback(queries, null),
-            (err) => (null, err));
+            (err) => callback(null, err));
         } else {
             this.executeQueriesSeq(tx, queries, callback);
         }
