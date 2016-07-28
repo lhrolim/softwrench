@@ -23,10 +23,10 @@ namespace softWrench.sW4.SqlClient {
         int ExecuteUpdate(string query);
 
         /// <summary>
-        /// Checks if the sql string has CRUD operations
+        /// Checks if the sql string has DDL or DML operations
         /// </summary>
         /// <param name="sql">The sql string</param>
         /// <returns>True if the sql has CRUD operations; otherwise returns false.</returns>
-        bool IsCRUD(string sql);
+        bool IsDefinitionOrManipulation(string sql);
     }
 }
