@@ -27,7 +27,7 @@ namespace softWrench.sW4.Web.Test.Controllers {
             var swdbMock = new Mock<ISWDBHibernateDAO>();
             var maximodbMock = new Mock<IMaximoHibernateDAO>();
 
-            sqlClientMock.Setup(a => a.IsCRUD(It.IsAny<string>()))
+            sqlClientMock.Setup(a => a.IsDefinitionOrManipulation(It.IsAny<string>()))
                .Returns(() => false);
 
             swdbMock.Setup(x => x.FindByNativeQuery(It.IsAny<string>(), It.IsAny<ExpandoObject>(), It.IsAny<IPaginationData>(), It.IsAny<string>()))
@@ -99,7 +99,7 @@ namespace softWrench.sW4.Web.Test.Controllers {
             var swdbMock = new Mock<ISWDBHibernateDAO>();
             var maximodbMock = new Mock<IMaximoHibernateDAO>();
 
-            sqlClientMock.Setup(a => a.IsCRUD(It.IsAny<string>()))
+            sqlClientMock.Setup(a => a.IsDefinitionOrManipulation(It.IsAny<string>()))
                .Returns(() => false);
 
             swdbMock.Setup(x => x.FindByNativeQuery(It.IsAny<string>(), It.IsAny<ExpandoObject>(), It.IsAny<IPaginationData>(), It.IsAny<string>()))
