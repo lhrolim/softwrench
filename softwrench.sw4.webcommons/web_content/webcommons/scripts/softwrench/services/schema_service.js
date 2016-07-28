@@ -161,14 +161,31 @@
             } else {
                 result = titleId + " " + idValue;
             }
-            if (fields.description != null) {
-                if (smallDevices) {
-                    result += ": " + fields.description;
-                } else {
-                    result += " Summary: " + fields.description;
-                }
 
+            return result;
+        };
+
+        function getSummary(schema, datamap, smallDevices) {
+            if (!schema) {
+                return null;
             }
+
+            if (!datamap) {
+                return null;
+            }
+
+            var fields = datamap.fields ? datamap.fields : datamap;
+
+            if (!fields) {
+                return null;
+            }
+
+            var result;
+
+            if (fields.description != null) {
+                result = fields.description;
+            }
+
             return result;
         };
 
@@ -285,6 +302,7 @@
             buildApplicationMetadataSchemaKey: buildApplicationMetadataSchemaKey,
             getId: getId,
             getProperty: getProperty,
+            getSummary: getSummary,
             getTitle: getTitle,
             hasAnyFieldOnMainTab: hasAnyFieldOnMainTab,
             hasEditableProperty: hasEditableProperty,

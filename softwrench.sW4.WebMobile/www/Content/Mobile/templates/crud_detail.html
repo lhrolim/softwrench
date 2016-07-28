@@ -32,14 +32,18 @@
 
     <ion-content class="crud-details" has-header="true" has-subheader="true" has-bouncing="false" 
                  on-swipe-left="onSwipeLeft()" on-swipe-right="onSwipeRight()" on-scroll="onScroll()" delegate-handle="detailHandler">
-
-        <div class="crud-title h4" ng-click="loadMainTab()" style="padding-left: 15px; padding-top: 15px; margin-top: 0; margin-bottom: 15px;" ng-if="isOnMainTab()">
+        <div class="crud-title" ng-click="loadMainTab()" style="padding-left: 15px; padding-top: 15px; margin-top: 0; margin-bottom: 15px;" ng-if="isOnMainTab()">
             <div class="row">
-                <div class="col-25">
+                <div class="col-25" ng-class="{'pending': isPending(),'missingsync': isDirty() && !hasProblem(), 'hasproblem':  hasProblem()}">
                     <crud-icon item="item"></crud-icon>
                 </div>
                 <div class="col-75">
-                    {{detailSummary()}}
+                    <div class="title row">
+                        {{detailTitle()}}
+                    </div>
+                    <div class="summary row">
+                        {{detailSummary()}}
+                    </div>
                 </div>
             </div>
         </div>

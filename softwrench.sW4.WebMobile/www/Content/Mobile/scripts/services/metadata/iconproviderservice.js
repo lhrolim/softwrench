@@ -59,7 +59,7 @@
                 return statuscolorService.getPriorityColor(datamap[displayable.attribute]);
             }
 
-            return "#777";
+            return "#808080";
         }
 
         function getTextColor(item) {

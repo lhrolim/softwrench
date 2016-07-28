@@ -125,10 +125,14 @@
                 expressionService.evaluate(composition.currentTab.schema.allowInsertion, $scope.datamap, { schema: $scope.schema }, null);
         };
 
+        $scope.detailTitle = function () {
+            const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
+            return schemaService.getTitle(crudContextService.currentDetailSchema(), datamap, true);
+        }
 
         $scope.detailSummary = function () {
             const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
-            return schemaService.getTitle(crudContextService.currentDetailSchema(), datamap, true);
+            return schemaService.getSummary(crudContextService.currentDetailSchema(), datamap, true);
         }
 
         $scope.addCompositionItem = function () {
@@ -211,7 +215,15 @@
             $scope.displayables = wizardService.next($scope.allDisplayables);
         }
 
-        $scope.hasProblems = function() {
+        $scope.isDirty = function (item) {
+            return $scope.item.isDirty;
+        }
+
+        $scope.isPending = function (item) {
+            return $scope.item.pending;
+        }
+
+        $scope.hasProblems = function () {
             return $scope.item.hasProblem;
         }
 

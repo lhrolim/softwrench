@@ -13,11 +13,23 @@
             return item.id === activeLaborParent ? "clock-o" : null;
         }
 
+        function getIconColor(item) {
+            //const activeLaborParent = laborService.getActiveLaborParent();
+            return 'green';
+        }
+
+        function getTextColor(item) {
+            //const activeLaborParent = laborService.getActiveLaborParent();
+            return 'green';
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
+            getIconColor,
             getIconIcon,
+            getTextColor
         };
         return service;
         //#endregion
