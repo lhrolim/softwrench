@@ -32,16 +32,20 @@
 
     <ion-content class="crud-details" has-header="true" has-subheader="true" has-bouncing="false" 
                  on-swipe-left="onSwipeLeft()" on-swipe-right="onSwipeRight()" on-scroll="onScroll()" delegate-handle="detailHandler">
-        
-        <div class="crud-title h4" ng-click="loadMainTab()" style="padding-left:15px;padding-top:15px;margin-top:0;margin-bottom:15px;">
+
+        <div class="crud-title h4" ng-click="loadMainTab()" style="padding-left: 15px; padding-top: 15px; margin-top: 0; margin-bottom: 15px;" ng-if="isOnMainTab()">
             <div class="row">
                 <div class="col-25">
                     <crud-icon item="item"></crud-icon>
                 </div>
                 <div class="col-75">
-                    {{tabTitle() || detailSummary()}}
+                    {{detailSummary()}}
                 </div>
             </div>
+        </div>
+
+        <div div class="crud-title h4" ng-click="loadMainTab()" style="padding-left: 10px;" ng-if="!isOnMainTab()">
+            {{tabTitle()}}
         </div>
 
         <div class="crud-description">
