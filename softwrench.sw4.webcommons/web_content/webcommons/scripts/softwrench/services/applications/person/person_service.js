@@ -89,7 +89,7 @@
                         updatedUser.phone = primaryPhone.phonenum;
                     }
 
-
+                    updatedUser.maximoPersonId = fields.personid;
                     updatedUser = angular.extend(updatedUser, ro.fields);
                     updatedUser.firstName = fields.firstname;
                     updatedUser.lastName = fields.lastname;
