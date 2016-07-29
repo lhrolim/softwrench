@@ -20,7 +20,7 @@
     z-index: 12 !important;
     position: absolute !important;
     bottom: 0px !important;
-    right: 17px !important;
+    right: 0px !important;
     border-radius: 50% !important;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
     -webkit-transform: translate3d(0, 0, 0) !important;
@@ -38,6 +38,13 @@
         transform: translate3d(0, -1px, 0) !important;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4) !important;
         background: darken(#ef473a, 10%) !important;
+    }
+}
+
+/*ripple override*/
+.ripple {
+    .button-float {
+        right: 17px !important;
     }
 }
 
@@ -71,9 +78,19 @@
     width: 100%;
 }
 
+[nav-view-transition=ios][nav-view-direction=forward], [nav-view-transition=ios][nav-view-direction=back] {
+    background: #fff;
+}
+
 .ion-autocomplete-container {
     .bar {
         .item-input-wrapper {
+            flex: none;
+
+            &.search {
+                width: calc(100% - 150px);
+            }
+
             &.preferred {
                 background: none;
 

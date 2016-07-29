@@ -5,9 +5,13 @@
         function ($scope, routeService, $ionicSideMenuDelegate, menuModelService, crudContextService, swAlertPopup, $ionicPopup, securityService, synchronizationFacade, networkConnectionService) {
 
             $scope.data = {};
-
+           
             function init() {
                 //$scope.menuleafs = ;
+
+                if (window.parent.ripple !== undefined) {
+                    $('body').addClass('ripple');
+                }
             }
 
             $scope.menuleafs = function () {

@@ -125,7 +125,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                             '</div>',
                         '</ion-header-bar>',
                         '<ion-header-bar class="bar-subheader bar-dark bar bar-header" align-title="center">',
-                            '<label class="item-input-wrapper">',
+                            '<label class="item-input-wrapper search">',
                                 '<i class="placeholder-icon fa fa-search"></i>',
                                 '<input type="search" class="ion-autocomplete-search" ng-model="searchQuery" ng-model-options="{ debounce: 500 }" placeholder="{{placeholder}}"/>',
                             '</label>',
