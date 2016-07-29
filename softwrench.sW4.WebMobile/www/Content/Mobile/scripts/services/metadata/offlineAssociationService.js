@@ -82,7 +82,7 @@
             }
 
             pageNumber = pageNumber || 1;
-            return swdbDAO.findByQuery("AssociationData", baseQuery, { pagesize: 10, pageNumber: pageNumber, projectionFields: ["remoteId", "datamap"] });
+            return swdbDAO.findByQuery("AssociationData", baseQuery, { pagesize: 10, pageNumber: pageNumber, projectionFields: ["datamap"] });
         }
 
         function updateExtraProjections(associationDataEntry, associationKey) {

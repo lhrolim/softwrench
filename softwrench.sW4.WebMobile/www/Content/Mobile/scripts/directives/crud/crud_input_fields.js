@@ -84,8 +84,8 @@
                         return offlineAssociationService.fieldValueExpression(fieldMetadata);
                     }
 
-                    $scope.isReadOnly = function(field) {
-                        return field.isReadOnly || wizardService.isReadOnly(field, $scope.allDisplayables);
+                    $scope.isReadOnly = function (field) {
+                        return fieldService.isFieldReadOnly($scope.datamap, $scope.schema, field, $scope) || wizardService.isReadOnly(field, $scope.allDisplayables);
                     }
 
                     $scope.isFieldHidden = function (fieldMetadata) {

@@ -124,6 +124,10 @@
             }
 
             const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
+            if (!displayable) {
+                return null;
+            }
+
             const value = item.datamap[displayable.attribute];
             if (displayable.attribute === "wopriority" && !value) {
                 return "flag";

@@ -61,7 +61,7 @@
         const cleanLocalStorage = () => {
             Object.keys(localStorage)
                 .filter(k => !config.keyblacklist.some(b => k.startsWith(b)))
-                .forEach(k => localStorageService.remove(k));
+                .forEach(k => localStorage.removeItem(k));
         };
 
         //#endregion

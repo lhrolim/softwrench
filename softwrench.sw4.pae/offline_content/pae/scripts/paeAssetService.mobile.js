@@ -27,6 +27,7 @@
                     })
                     .then(function (asset) {
                         loadedAsset = asset;
+                        // TODO remoteId is not on associations anymore - it has to be parsed from the datamap
                         return offlineAuditService.registerEvent("scan", "asset", asset.id, asset.remoteId, data);
                     })
                     .then(function (auditentry) {

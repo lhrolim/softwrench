@@ -255,6 +255,7 @@
         <property key="mobile.fetchlimit" value="300"/>
         <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
         <property key="icon.composition.tab" value="fa fa-wrench"/>
+        <property key="list.offline.text.indexlist" value="wonum,description,status,location,asset_.description"/>
       </properties>
       <schemas>
         <schema id="list" stereotype="list.selection" title="Work Order Grid" platform="web">
@@ -747,15 +748,6 @@
           <field label="Details" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
-
-          <composition relationship="worklog" label="Work Logs" />
-          <composition relationship="matusetrans" label="Materials" />
-          <composition relationship="labtrans" label="Labor">
-            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
-          </composition>
-          <composition relationship="attachment" label="Attachments" >
-            <collectionproperties allowupdate="false" />
-          </composition>
         </schema>
         
         <detail platform="mobile" title="Work Order">
@@ -779,7 +771,6 @@
           </field>
           
           <composition relationship="worklog" label="Work Logs" />
-          <composition relationship="matusetrans" label="Materials" />
           <composition relationship="labtrans" label="Labor">
             <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
           </composition>
@@ -800,7 +791,6 @@
         <!-- endregion -->
 
       </schemas>
-
     </application>
 
 

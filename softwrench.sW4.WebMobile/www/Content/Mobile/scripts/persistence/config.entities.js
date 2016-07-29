@@ -29,7 +29,6 @@
         entities.AssociationData = persistence.define('AssociationData', {
             application: 'TEXT',
             datamap: 'JSON',
-            remoteId: 'TEXT',
             rowstamp: 'INT',
             // index for use on searches
             textindex01: "TEXT",
@@ -77,13 +76,11 @@
         ///
         /// Inserts or updates associationData based upon the uniqueness of the entries
         ///
-        entities.AssociationData.InsertionPattern = "INSERT {0} INTO AssociationData (application,datamap,remoteId,rowstamp,id,textindex01,textindex02,textindex03,textindex04,textindex05,numericindex01,numericindex02,dateindex01,dateindex02,dateindex03) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        entities.AssociationData.InsertionPattern = "INSERT {0} INTO AssociationData (application,datamap,rowstamp,id,textindex01,textindex02,textindex03,textindex04,textindex05,numericindex01,numericindex02,dateindex01,dateindex02,dateindex03) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         entities.AssociationData.maxRowstampQueries = "select max(rowstamp) as rowstamp,application,id from AssociationData group by application";
 
         entities.AssociationData.maxRowstampQueryByApp = "select max(rowstamp) as rowstamp,application,id from AssociationData where application = '{0}' group by application";
-
-        entities.AssociationData.index(['application', 'remoteId'], { unique: true });
 
         //#endregion
 

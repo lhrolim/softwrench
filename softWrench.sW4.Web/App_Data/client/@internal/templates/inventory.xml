@@ -265,6 +265,10 @@
 
 
     <application name="physicalcount" entity="physicalCount" title="Physical Count">
+      <properties>
+        <property key="list.offline.text.indexlist" value="itemnum,inventory_.siteid,location,binnum"/>
+      </properties>
+
       <schemas>
         <schema stereotype="list" id="physicalcountList" title="Physical Count Grid" platform="web">
           <properties>
@@ -332,10 +336,10 @@
             <field label="Last Count Date" attribute="#lastCountDate" readonly="true">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
-            <field label="Count Date" attribute="physcntdate">
+            <field label="Count Date" attribute="physcntdate" enableexpression="!isMobile()">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
-            <field label="New Count" attribute="physcnt">
+            <field label="New Count" attribute="physcnt" enableexpression="!isMobile()">
               <renderer type="numericinput" params="min=0;"/>
             </field>
           </section>
@@ -533,6 +537,8 @@
         
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
+        <property key="list.offline.numeric.indexlist" value="curbal"/>
+        <property key="list.offline.text.indexlist" value="itemnum,item_.description,location"/>
       </properties>
       <schemas>
         <schema stereotype="list" id="invbalancesList" title="Inventory Grid" platform="web">
@@ -621,7 +627,7 @@
               <renderer type="checkbox" params="inputsize=xsmall"/>
             </field>
             <field label="Issue Unit" attribute="item_.issueunit" readonly="true"/>
-            <field label="Balance" attribute="curbal"/>
+            <field label="Balance" attribute="curbal" enableexpression="!isMobile()"/>
             <field attribute="physcnt" hidden="true"/>
           </section>
         </schema>
@@ -649,6 +655,11 @@
     </application>
 
     <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfer Grid">
+      <properties>
+        <property key="list.offline.numeric.indexlist" value="quantity"/>
+        <property key="list.offline.text.indexlist" value="itemnum,fromstoreloc,tostoreloc"/>
+      </properties>
+      
       <schemas>
         <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfer Grid" platform="web">
           <properties>
