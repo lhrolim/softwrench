@@ -1,27 +1,39 @@
 ﻿<article class="container page" ng-controller="SQLClientController">
-    <form class="form-horizontal">
+    <form class="form-horizontal" name="sqlClientForm">
         <div class="form-group">
-            <div class="col-lg-2" style="width: 100%;">
-                <textarea rows="10" cols="50" class="form-control" shortenter ng-model="queryString"></textarea>
+            <div class="col-md-10">
+                <textarea rows="10" cols="50" class="form-control" shortenter id="queryTextArea" ng-model="queryString"></textarea>                
+            </div>
+            <div class="col-md-2">
+                <select style="margin-left:10px; width:100%;height:100%" multiple size="14" ng-model="queryHistorySelection" ng-change="selectHistoryQuery(queryHistorySelection)">
+                    <option ng-repeat="x in queryHistory" value="{{x.key}}" title="{{x.data.query}}">{{x.data.query}}</option>
+                </select>
             </div>
         </div>
 
         <div class="form-actions form-group">
             <div class="row" style="width: 100%;">
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <span>
                         <label>Datasource:</label>
                         <select ng-model="dataSource">
                             <option ng-repeat="x in dataSources" value="{{x.value}}">{{x.name}}</option>
                         </select>
-                        <input style="margin-left:20px;" type="checkbox" name="limitFetchRows" ng-model="limitRows"> Limit to 10 rows
+                        <input style="margin-left:20px;" type="checkbox" name="limitFetchRows" ng-model="limitRows"> Limit rows
+                        <input type="text" name="limitFetchRowsCountInput" ng-model="limitFetchRowsCount" ng-disabled="!limitRows" ng-pattern="/^\d+$/" />
+                        <label ng-show="sqlClientForm.limitFetchRowsCountInput.$invalid && !sqlClientForm.limitFetchRowsCountInput.$pristine" style="color: red;margin-left:5px;">enter a valid integer number</label>                         
                     </span>
                     
                 </div>
-                <div class="col-md-4 col-md-offset-4">
-                    <button type="submit" id="executeQuery" class="btn btn-primary pull-right" ng-click="runSqlQuery()">
-                        <i class="fa fa-check"></i>&ensp;Execute
-                    </button>
+                <div class="col-md-4">
+                    <div class="pull-right">
+                        <button type="submit" id="executeQuery" class="btn btn-primary" ng-click="runSqlQuery()" title="Use CTRL + ENTER as a shorthand">
+                            <i class="fa fa-flash"></i>&ensp;Execute SQL
+                        </button>
+                        <button type="submit" id="executeQuery" style="margin-left:20px" class="btn btn-primary" ng-click="clearHistory()" title="Clear the client history">
+                            <i class="fa fa-trash"></i>&ensp;Clear History
+                        </button>     
+                    </div>
                 </div>
             </div>
         </div>

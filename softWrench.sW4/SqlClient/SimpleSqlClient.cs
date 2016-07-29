@@ -24,7 +24,7 @@ namespace softWrench.sW4.SqlClient {
             return dao.ExecuteSql(query, null);
         }
 
-        public bool IsCRUD(string sql) {
+        public bool IsDefinitionOrManipulation(string sql) {
             var regex = new Regex(@"(?:insert|update|delete|alter|drop|create).+", RegexOptions.IgnoreCase | RegexOptions.Multiline);
             return regex.IsMatch(sql);
         }

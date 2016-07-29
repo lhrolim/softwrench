@@ -60,7 +60,7 @@ namespace softWrench.sW4.Web.Controllers.SqlClient {
                         new SimpleSqlClient(SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>(typeof(ISWDBHibernateDAO))) :
                         new SimpleSqlClient(SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(typeof(IMaximoHibernateDAO)));
 
-                    if (sqlClient.IsCRUD(query)) {
+                    if (sqlClient.IsDefinitionOrManipulation(query)) {
                         if ((dbType == DBType.Maximo && CheckEnvironment()) || dbType == DBType.Swdb) {
                             var result = sqlClient.ExecuteUpdate(query);                           
                             model.ExecutionMessage = string.Format("{0} records(s) affected", result);
