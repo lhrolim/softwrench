@@ -336,7 +336,7 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
 
 
 
-        evaluate: function (expression, datamap, scope, displayable) {
+        evaluate: function (expression, dm, scope, displayable) {
             const log = $log.getInstance('expressionService#evaluate');
             if (expression === "true" || expression === true) {
                 return true;
@@ -345,20 +345,20 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
                 return false;
             }
             
-            const dmObj = datamap || {};
+            const datamap = dm || {};
 
             if (expression.startsWith('service:')) {
                 // Trim service: from the expression
                 const realServiceDefinition = expression.substr(8);
                 const targetFunction = dispatcherService.loadServiceByString(realServiceDefinition); // If the service.function is not found
                 const schema = scope ? scope.schema : null;
-                return targetFunction(dmObj, schema, displayable);
+                return targetFunction(datamap, schema, displayable);
             }
 
             expression = expression.replace(/\$/g, 'scope');
             
 
-            const expressionToEval = this.getExpression(expression, dmObj, scope);
+            const expressionToEval = this.getExpression(expression, datamap, scope);
             try {
                 return eval(expressionToEval);
             } catch (e) {

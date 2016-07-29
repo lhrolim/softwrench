@@ -246,6 +246,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             dict["profileIds"] = definition.ProfileIds;
             dict["profiles"] = definition.Profiles;
             dict["signature"] = definition.Signature;
+            dict["roles"] = definition.Roles;
             dict["userpreferences"] = definition.UserPreferences;
             return dict;
         }

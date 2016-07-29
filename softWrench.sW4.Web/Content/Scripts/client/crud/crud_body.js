@@ -97,6 +97,12 @@
 
             link: function (scope, element, attrs) {
                 scope.$name = 'crudbody';
+
+                if (scope.ismodal === "true") {
+                    //handling the case where the modal is opened for the firsttime before the directive was even compiled
+                    scope.allTabsLoaded();
+                }
+
             },
 
             controller: function ($scope, $http, $q, $element, $rootScope, $filter, $injector,
