@@ -131,6 +131,7 @@
                         scope.$on('sw.modal.show', function (event, modaldata) {
                             scope.lookupAssociationsCode = {};
                             scope.lookupAssociationsDescription = {};
+                            scope.crudInputForm.$setPristine();
                         });
                     }
                 }
@@ -207,15 +208,13 @@
                         }
                     });
 
-//                    $scope.$on("sw.modal.hide", function () {
-//
-//                        if ($scope.ismodal === "true" && $scope.unWatcherArray) {
-//                            $scope.unWatcherArray.forEach(function (fn) {
-//                                //unregistering previously watches
-//                                fn();
-//                            });
-//                        }
-//                    });
+                    //$scope.$on("sw.modal.hide", function () {
+
+                    //    if ($scope.ismodal === "true" && $scope.crudform) {
+                    //        //fixing SWWEB-2660
+                    //        $scope.crudform.$setPristine();
+                    //    }
+                    //});
 
 
                     //this will get called when the input form is done rendering
