@@ -93,6 +93,10 @@
         };
 
         function locateDisplayableByQualifier(schema, qualifier) {
+            if (schema == null) {
+                return null;
+            }
+
             schema.jscache = schema.jscache || {};
             if (schema.jscache.qualifiercache) {
                 //already cached
@@ -118,6 +122,10 @@
         }
 
         function buildDisplayValue(schema, qualifier, item) {
+            if (schema == null) {
+                return null;
+            }
+
             const displayable = locateDisplayableByQualifier(schema, qualifier);
             if (!displayable || !displayable.attribute || !item) {
                 return null;

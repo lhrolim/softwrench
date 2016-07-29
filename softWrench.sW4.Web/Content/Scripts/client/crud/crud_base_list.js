@@ -7,6 +7,8 @@
     BaseList.$inject = ["$scope", "$log", "formatService", "expressionService", "searchService", "fieldService", "i18NService", "commandService", "crudContextHolderService", "gridSelectionService", "dispatcherService", "controllerInheritanceService"];
     function BaseList($scope, $log, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService, dispatcherService, controllerInheritanceService) {
 
+        
+
         $scope.getFormattedValue = function (value, column, datamap) {
             var formattedValue = formatService.format(value, column, datamap);
             if (formattedValue === "-666") {

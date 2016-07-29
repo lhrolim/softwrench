@@ -75,7 +75,9 @@
                         "cc": 'cc1@a.com,cc2@a.com',
                         "subject": 'test subject',
                         "message": 'original message',
-                        "commloguid": 10
+                        "commloguid": 10,
+                        "newattachment_path": '',
+                        "attachments" : []
                     }
                 }
             }
@@ -88,7 +90,9 @@
             "subject": 'Re: test subject',
             "message": "thank youFrom:origfrom@a.com To:origto@a.com,origto2@a.com CC:cc1@a.com,cc2@a.com Subject:test subject Message:original message",
             "commloguid": null,
-            "createdate": "mockeddate!"
+            "createdate": "mockeddate!",
+            "newattachment_path": '',
+            "attachments": []
         }
 
         testSetup(mockedResult1, resultCompositionData, "replyAll", true, defaultSignature, "Reply All");
@@ -106,7 +110,9 @@
                         "cc": 'cc1@a.com,cc2@a.com',
                         "subject": 'test subject',
                         "message": 'original message',
-                        "commloguid": 10
+                        "commloguid": 10,
+                        "newattachment_path": '',
+                        "attachments": []
                     }
                 }
             }
@@ -119,7 +125,9 @@
             "subject": 'Re: test subject',
             "message": "thank youFrom:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC:cc1@a.com,cc2@a.com Subject:test subject Message:original message",
             "commloguid": null,
-            "createdate": "mockeddate!"
+            "createdate": "mockeddate!",
+            "newattachment_path": '',
+            "attachments": []
         }
 
         testSetup(mockedResult1, resultCompositionData, "replyAll", true, defaultSignature, "Reply All");
@@ -137,7 +145,9 @@
                         "cc": null,
                         "subject": 'test subject',
                         "message": 'original message',
-                        "commloguid": 10
+                        "commloguid": 10,
+                        "newattachment_path": '',
+                        "attachments": []
                     }
                 }
             }
@@ -150,7 +160,9 @@
             "cc": null,
             "subject": 'Re: test subject',
             "message": "thank youFrom:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC: Subject:test subject Message:original message",
-            "createdate": "mockeddate!"
+            "createdate": "mockeddate!",
+            "newattachment_path": '',
+            "attachments": []
         }
 
         testSetup(mockedResult1, resultCompositionData, "replyAll", false, defaultSignature, "Reply All");
@@ -168,7 +180,9 @@
                         "cc": null,
                         "subject": 'test subject',
                         "message": 'original message',
-                        "commloguid": 10
+                        "commloguid": 10,
+                        "newattachment_path": '',
+                        "attachments": []
                     }
                 }
             }
@@ -181,7 +195,9 @@
             "subject": 'Re: test subject',
             "message": "thank youFrom:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC: Subject:test subject Message:original message",
             "commloguid": null,
-            "createdate": "mockeddate!"
+            "createdate": "mockeddate!",
+            "newattachment_path": '',
+            "attachments": []
         }
 
         testSetup(mockedResult1, resultCompositionData, "reply", false, defaultSignature, "Reply");
@@ -199,7 +215,9 @@
                         "cc": 'a@b.com',
                         "subject": 'test subject',
                         "message": 'original message',
-                        "commloguid": 10
+                        "commloguid": 10,
+                        "newattachment_path": '',
+                        "attachments": []
                     }
                 }
             }
@@ -212,7 +230,9 @@
             "subject": 'Fw: test subject',
             "message": "thank youFrom:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC:a@b.com Subject:test subject Message:original message",
             "commloguid": null,
-            "createdate": "mockeddate!"
+            "createdate": "mockeddate!",
+            "newattachment_path": '',
+            "attachments": []
         }
 
         testSetup(mockedResult1, resultCompositionData, "forward", false, defaultSignature, "Forward");
@@ -230,7 +250,9 @@
                         "cc": null,
                         "subject": 'test subject',
                         "message": 'original message',
-                        "commloguid": 10
+                        "commloguid": 10,
+                        "newattachment_path": '',
+                        "attachments": []
                     }
                 }
             }
@@ -243,7 +265,9 @@
             "subject": 'Re: test subject',
             "message": "From:origfrom@a.com To:origto@a.com,origto2@a.com,default@default.com CC: Subject:test subject Message:original message",
             "commloguid": null,
-            "createdate": "mockeddate!"
+            "createdate": "mockeddate!",
+            "newattachment_path": '',
+            "attachments": []
         }
 
         testSetup(mockedResult1, resultCompositionData, "reply", false, "", "Reply");

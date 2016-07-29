@@ -13,6 +13,18 @@
         public byte[] BinaryData { get; set; }
 
         /// <summary>
+        /// The file url 
+        /// This is set if the file already exists in the server
+        /// </summary>
+        public string ServerPath { get; set; }
+
+        /// <summary>
+        /// The document info ID
+        /// This is set if the attachment already exists and is not newly created.
+        /// </summary>
+        public long? DocumentInfoId { get; set; }
+
+        /// <summary>
         /// this is a hash used to uniquely indentify an attachment file on an offline device so that it is not downloaded  afterwards 
         /// if it has been created out of that particular device
         /// </summary>

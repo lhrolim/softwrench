@@ -80,9 +80,9 @@
             ttHint.addClass('form-control');
             ttHint.css('width', '96%');
             $('input.tt-query', parElement).css('width', '97%');
-            var dropDownMenu = $('span.tt-dropdown-menu', parElement);
-            var width = element.outerWidth();
-            dropDownMenu.width(width);
+            //var dropDownMenu = $('span.tt-dropdown-menu', parElement);
+            //var width = element.outerWidth();
+            //dropDownMenu.width(width);
         }
 
         var setInitialText = function (element, scope) {
@@ -203,7 +203,7 @@
             });
 
             scope.isModifiableEnabled = function (fieldMetadata) {
-                var result = expressionService.evaluate(fieldMetadata.enableExpression, scope.datamap);
+                var result = expressionService.evaluate(fieldMetadata.enableExpression, scope.datamap, scope);
                 return result;
             };
 
@@ -225,6 +225,7 @@
             scope: {
                 schema: '=',
                 datamap: '=',
+                parentdata: '=',
                 fieldMetadata: "=",
                 panelid: '@',
                 //the 

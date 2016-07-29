@@ -6,6 +6,8 @@ namespace softWrench.sW4.Util {
         public static readonly string BaseWsPrefix = ApplicationConfiguration.WsUrl;
         public static readonly string WsProvider = ApplicationConfiguration.WsProvider;
 
+        public static readonly string MultiTenantPrefix = "multitenantprefix";
+
         public const string AUTH_LOG = "AUTH.LOG";
         public const string SQL_LOG = "MAXIMO.SQL";
         public const string NHIBERNATE_LOG = "NHIBERNATE.SQL";

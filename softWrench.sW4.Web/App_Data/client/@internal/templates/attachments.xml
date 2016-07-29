@@ -23,7 +23,7 @@
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="maximoURL"/>
           <!--this shall hold the hash of the file to prevent a second offline download -->
-          <field hidden="true" attribute="docinfo_.urlparam"/>
+          <field hidden="true" attribute="docinfo_.urlparam1"/>
         </list>
         
         <schema id="detail" platform="mobile" title="Attachments">
@@ -36,7 +36,7 @@
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
               <command id="picture" service="offlineAttachmentService" method="attachCameraPicture" 
-                       icon="fa-camera" label="Take Picture" />
+                       icon="ion-android-camera" label="Take Picture" />
             </commandgroup>
           </commandbars>
         </schema>

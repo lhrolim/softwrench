@@ -313,11 +313,13 @@
             const compositions = this.getLazyCompositions(schema, datamap.fields);
             compositions.forEach(function (composition) {
                 const currentValue = datamap.fields[composition];
-                const updatedValue = responseDataMap.fields[composition];
+                const updateFields = responseDataMap.fields ? responseDataMap.fields : responseDataMap;
+
+                const updatedValue = updateFields[composition];
                 // has previous data but has no updated data: not safe to update -> hydrate with previous value
-                if (!!currentValue &&(!responseDataMap.fields.hasOwnProperty(composition) ||
+                if (!!currentValue && (!updateFields.hasOwnProperty(composition) ||
                     !angular.isArray(updatedValue))) {
-                    responseDataMap.fields[composition] = currentValue
+                    updateFields[composition] = currentValue
                         .filter(function (c) { // filter out just created items
                             return !c["_iscreation"];
                         })

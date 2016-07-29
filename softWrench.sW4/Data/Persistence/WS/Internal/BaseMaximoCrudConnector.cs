@@ -6,6 +6,8 @@ using softWrench.sW4.Security.Services;
 using System;
 using Microsoft.Ajax.Utilities;
 using softwrench.sw4.user.classes.entities;
+using softWrench.sW4.Metadata;
+using softWrench.sW4.Util;
 using WcfSamples.DynamicProxy;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
@@ -31,15 +33,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             TargetConstantHandler.SetConstantValues(integrationObject, entityMetadata);
             TargetAttributesHandler.SetValuesFromJSON(integrationObject, entityMetadata, operationData);
 
-         
+
             long id;
             if (long.TryParse(operationData.Id, out id) && id < 0) {
-            // The negative ID is used by the front end to identify new records. 
-            //The back end does not support this. therefore, it should be nullified when submitted to Maximo
+                // The negative ID is used by the front end to identify new records. 
+                //The back end does not support this. therefore, it should be nullified when submitted to Maximo
                 operationData.Id = null;
                 operationData.Attributes[entityMetadata.IdFieldName] = null;
             }
-            
+
 
             foreach (var attribute in operationData.Attributes) {
                 if (attribute.Value == null) {
@@ -53,6 +55,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                                                                       attribute.Key.ToUpper(), entityName, e.Message), e);
                 }
             }
+            var pluspCustomer = MetadataProvider.GlobalProperty(SwConstants.MultiTenantPrefix);
+            if (pluspCustomer != null) {
+                w.SetValue(integrationObject, "PLUSPCUSTOMER", pluspCustomer);
+            }
+
             var idFieldName = entityMetadata.IdFieldName;
             if (!string.IsNullOrEmpty(operationData.Id)) {
                 w.SetValueIfNull(integrationObject, idFieldName, operationData.Id);
@@ -82,12 +89,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             var idProperty = maximoTemplateData.Metadata.Schema.IdAttribute.Name;
             var siteIdAttribute = maximoTemplateData.Metadata.Schema.SiteIdAttribute;
             var userIdProperty = maximoTemplateData.Metadata.Schema.UserIdAttribute.Name;
-            var resultOb = (Array)resultData;
-            var firstOb = resultOb.GetValue(0);
-            var id = WsUtil.GetRealValue(firstOb, idProperty);
-            var userId = WsUtil.GetRealValue(firstOb, userIdProperty);
+            var resultOb = resultData == null ? null : (Array)resultData;
+            var firstOb = resultOb == null ? null : resultOb.GetValue(0);
+            var id = firstOb == null ? null : WsUtil.GetRealValue(firstOb, idProperty);
+            var userId = firstOb == null ? null : WsUtil.GetRealValue(firstOb, userIdProperty);
             string siteId = null;
-            if (siteIdAttribute != null) {
+            if (siteIdAttribute != null && firstOb != null) {
                 //not all entities will have a siteid...
                 siteId = WsUtil.GetRealValue(firstOb, siteIdAttribute.Name) as string;
             }

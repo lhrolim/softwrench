@@ -1,7 +1,7 @@
 ﻿(function (angular, app) {
     "use strict";
 
-    app.directive('scrollPane', function (contextService, $log, $timeout) {
+    app.directive('scrollPane', function (contextService, $log, $timeout,$window) {
         return {
             restrict: 'E',
             replace: false,

@@ -252,7 +252,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             }
 
             // hides the activitystream if user do not have the role
-            if (!userService.HasRole(["sysadmin"]) && !userService.HasRole(["ROLE_NOTIFICATIONS"])) {
+            if (!userService.hasRole(["sysadmin"]) && !userService.hasRole(["ROLE_NOTIFICATIONS"])) {
                 sidePanelService.hide($scope.panelid);
                 return;
             }

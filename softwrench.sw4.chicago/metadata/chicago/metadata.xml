@@ -120,6 +120,8 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softwrench.sw4.chicago.classes.com.cts.chicago.connector.ChicagoSRCrudConnector" />
+        <connectorParameter key="rest_integration_interface" value="MXISSR" />
+        <connectorParameter key="dev_rest_integration_interface" value="SWSR" />
       </connectorParameters>
     </entity>
     <entity name="impacturgency" idAttribute="impacturgencyid">
@@ -283,7 +285,7 @@
           <commandbars>
             <commandgroup position="gridtop">
               <removecommand id="export"/>
-                
+
               <container position="+export" id="" label="Report" icon="fa-file-text-o" cssclasses="large-button">
                 <command id="export" icon="fa-file-text-o" label="Export Current Grid" service="excelService" method="exporttoexcel" parameters="schema,searchData,searchSort,searchOperator,paginationData" tooltip="Export to Excel" cssclasses="large-button"/>
                 <command id="dailyTicket" icon="fa-file-text-o" label="Daily Tickets By Department" service="chicagoChartService" method="dailyTicketCount" tooltip="Get the number of tickets opened daily for each department since the beginning of the year"
@@ -299,6 +301,7 @@
 
           <field attribute="ismticketid" hidden="true"/>
           <field attribute="ismticketuid" hidden="true"/>
+
 
           <section orientation="horizontal">
             <field attribute="description" label="Summary" requiredexpression="true"/>
@@ -464,6 +467,9 @@
                   <dataprovider prefilterfunction="FilterAssets"/>
                   <event type="afterchange" service="srService" method="afterChangeAsset"/>
                 </association>
+                <field label="Ism Ticket Id" attribute="ismticketid"/>
+                <field label="Ism Ticket UId" attribute="ismticketuid"/>
+              
               </section>
             </section>
 
@@ -573,6 +579,7 @@
           <customization position="statussection">
             <section orientation="horizontal" id="statussection">
               <renderer type="default" params="childinputsize=small" />
+              <field attribute="pluspcustomer" hidden="true" default="CPS-00"/>
               <field attribute="ticketuid" label="SR#" hidden="true"/>
               <field attribute="creationdate" label="Creation Date" default="@currentdatetime" hidden="true">
                 <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
@@ -611,6 +618,9 @@
 
         <schema id="quickeditdetail" stereotype="detail" title="New Quick Request" redeclaring="false">
           <customization position="statussection">
+            <field attribute="pluspcustomer" hidden="true" default="CPS-00"/>
+            <field attribute="ismticketid" hidden="true"/>
+            <field attribute="ismticketuid" hidden="true"/>
             <section orientation="horizontal" id="statussection">
               <renderer type="default" params="childinputsize=small" />
               <field attribute="description" label="Summary" requiredexpression="true">
@@ -650,6 +660,7 @@
               </composition>
             </section>
           </customization>
+          
         </schema>
 
       </schemas>

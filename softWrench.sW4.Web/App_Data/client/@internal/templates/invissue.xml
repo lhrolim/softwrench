@@ -124,7 +124,7 @@
 
         <componentdisplayable id="issuestoreloc">
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" extraprojectionvalues="description" requiredexpression="true"
-                       enableexpression="(@mode=='batch' &amp;&amp; @itemnum!=null) || (@mode!='batch' &amp;&amp; @siteid!=null)">
+                       enableexpression="@mode!='batch' &amp;&amp; @siteid!=null">
             <renderer type="lookup"/>
             <event type="afterchange" service="invissueService" method="afterChangeStoreloc"/>
             <dataprovider prefilterfunction="FilterStoreRooms"/>
@@ -419,14 +419,32 @@
         </schema>
         <!-- -->
 
-        <schema id="batchitemline" platform="web">
-          <reference id="issuestoreloc"/>
-          <reference id="issuebin"/>
-          <reference id="rotasset" showexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1" />
+        <schema id="batchitemline" stereotype="compositionlist" platform="web">
+          <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" extraprojectionvalues="description" requiredexpression="true"
+                       enableexpression="($.parentdata.mode=='batch' &amp;&amp; $.parentdata.itemnum!=null)">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="invissueService" method="afterChangeStoreloc"/>
+            <dataprovider prefilterfunction="FilterStoreRooms"/>
+          </association>
+          
+          <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="$.parentdata.itemnum!=null &amp;&amp; @storeloc!=null">
+            <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
+            <event type="afterchange" service="invissueService" method="afterChangeBin"/>
+            <dataprovider prefilterfunction="FilterBins"/>
+          </association>
+          
+          <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" extraprojectionvalues="binnum" enableexpression="$.parentdata.inventory_!=undefined &amp;&amp; $.parentdata.inventory_.item_.rotating==1" showexpression="$.parentdata.inventory_!=undefined &amp;&amp; $.parentdata.inventory_.item_.rotating==1"
+                       requiredexpression="@inventory_.item_.rotating==1">
+            <dataprovider prefilterfunction="FilterAssets"/>
+            <renderer type="lookup"/>
+            <event type="afterchange" service="invissueService" method="afterChangeRotAsset"/>
+          </association>
 
           <field attribute="binbalances_.curbal" label="Current Balance" readonly="true"/>
 
-          <reference id="issuequantity"/>
+          <field attribute="quantity" label="Quantity" default="1" requiredexpression="true" enableexpression="@binnum != null">
+            <renderer type="numericinput" params="min=1;max=@curbal"/>
+          </field>
         </schema>
 
         <schema id="batchitemlinedetail" platform="web">
@@ -457,58 +475,17 @@
               <renderer type="lookup"/>
             </association>
           </section>
-
-          <section showexpression="@mode != 'batch'">
-            <section orientation="horizontal">
-              <header displacement="ontop" label="Location" params="fieldset=true"/>
-              <renderer type="default" params="childinputsize=medium" />
-              
-              <reference id="issuestoreloc"/>
-
-            </section>
-            <section>
-              <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
-              <renderer type="default" params="childinputsize=medium" />
-              <reference id="issueitem"/>
-              <reference id="issuebin"/>
-              <field label="Lot" attribute="binbalances_.lotnum" readonly="true">
-                <event type="afterchange" service="invissueService" method="afterChangeLotnum"/>
-              </field>
-              <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
-              <reference id="rotasset"/>
-              <field attribute="inventory_.item_.rotating" label="Rotating" enableexpression="false">
-                <renderer type="checkbox" params="formatter=numberToBoolean"/>
-              </field>
-              <field attribute="inventory_.item_.iskit" label="Kit" enableexpression="false">
-                <renderer type="checkbox" params="formatter=numberToBoolean"/>
-              </field>
-              <field attribute="binbalances_.curbal" label="Current Balance" readonly="true">
-                <event type="afterchange" service="invissueService" method="afterChangeCurbal"/>
-              </field>
-              <reference id="issuequantity"/>
-            </section>
-            <section orientation="horizontal">
-              <header displacement="ontop" label="Cost Details" params="fieldset=true"/>
-              <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
-              <field attribute="unitcost" label="Unit Cost" readonly="true"/>
-              <field attribute="inventory_.costtype" hidden="true"/>
-            </section>
-
-          </section>
-
+          
           <section showexpression="@mode == 'batch'">
-
-
             <section>
               <renderer type="default" params="childinputsize=medium" />
               <reference id="issueitem" />
             </section>
 
-            <composition inline="true" relationship="#batchitem" label="Batch Items" detailschema="batchitemlinedetail" showexpression="@itemnum!=null">
+            <composition inline="true" relationship="#batchitem" label="Batch Items" detailschema="batchitemlinedetail">
               <collectionproperties listschema="batchitemline" autocommit="false"/>
-              <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
+              <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true;childinputsize=small"/>
             </composition>
-
           </section>
 
           <section orientation="horizontal">

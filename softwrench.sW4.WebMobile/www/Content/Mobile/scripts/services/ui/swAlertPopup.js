@@ -23,12 +23,12 @@
 
             // schedule next popup to be shown
             $timeout(function () {
-                var config = control.queue.shift();
+                const config = control.queue.shift();
                 var popup = $ionicPopup.alert(config);
                 control.showing = true;
                 // schedule preconfigured (by the caller) alert popup close
                 var timeid = null;
-                var timeout = config.timeout;
+                const timeout = config.timeout;
                 if (angular.isNumber(timeout) && timeout > 0) {
                     timeid = $timeout(function () {
                         showNext(popup);
@@ -73,8 +73,8 @@
         //#endregion
 
         //#region Service Instance
-        var service = {
-            show: show
+        const service = {
+            show
         };
         return service;
         //#endregion

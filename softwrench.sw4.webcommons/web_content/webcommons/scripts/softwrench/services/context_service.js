@@ -17,8 +17,7 @@
                     }
                     sessionStorage[urlContext + ':ctx_' + key] = value;
                 }
-
-
+                return value;
             },
 
             set: function (key, value, userootscope) {
@@ -171,7 +170,7 @@
 
             loadUserContext: function (userData) {
                 //clear cache
-                $rootScope.user = null;
+                $rootScope.user = userData;
                 this.insertIntoContext('user', JSON.stringify(userData));
             },
 

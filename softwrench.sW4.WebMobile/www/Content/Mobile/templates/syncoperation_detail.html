@@ -52,7 +52,7 @@
                                 <span ng-if="item.simpleproblem">:&nbsp;{{item.simpleproblem.message}}</span>
                             </li>
                         </ul>
-                        <button ng-if="data.operation.hasproblems" class="button problem-button" ng-click="solveProblems()">Fix Issues</button>
+                        <!--<button ng-if="data.operation.hasproblems" class="button problem-button" ng-click="solveProblems()">Fix Issues</button>-->
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                 </div>
 
                 <div ng-show="!data.applicationStateCollapsed">
-                    <div class="list card" ng-repeat="app in data.currentApplicationState">
+                    <div class="list card" ng-repeat="app in data.currentApplicationState.applications track by app.application">
                         <div class="item item-divider">
                             {{app.gridTitle | capitalize}}
                         </div>
@@ -91,6 +91,14 @@
                         <div class="item item-text-wrap">
                             <i class="fa fa-exclamation-triangle fa-fw"></i>&ensp;
                             Problematic Items:&nbsp;{{app.problematic}}
+                        </div>
+                    </div>
+                    <div class="list card" ng-init="associationStateCollapsed = true">
+                        <div class="item item-divider" ng-click="associationStateCollapsed = !associationStateCollapsed">
+                            <i class="fa" ng-class="{'fa-caret-down': associationStateCollapsed, 'fa-caret-up': !associationStateCollapsed}"></i>&nbsp;&nbsp;Association Data
+                        </div>
+                        <div ng-repeat="association in data.currentApplicationState.associations track by association.application" ng-hide="associationStateCollapsed" class="item item-text-wrap">
+                            {{association.title}}:&nbsp;{{association.count}}
                         </div>
                     </div>
                 </div>

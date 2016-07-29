@@ -8,14 +8,14 @@
 }
 
 .bar {
-    &.bar-assertive {
-        border-color: #6d6e70;
-        background-color: #6d6e70;
-        background-image: linear-gradient(0deg,#6d6e70,#6d6e70 50%,transparent 50%);
+    &.bar-dark {
+        border-color: $cts-gray;
+        background-color: $cts-gray;
+        background-image: linear-gradient(0deg,$cts-gray,$cts-gray 50%,transparent 50%);
 
         .button {
             border-color: transparent;
-            background-color: #6d6e70;
+            background-color: $cts-gray;
         }
     }
 
@@ -28,11 +28,16 @@
             border-color: #00acec;
             background-color: #00acec;
         }
+
+        .title {
+            right: 20px !important;
+            left: 30px !important;
+        }
     }
 
     &.bar-secondary {
-        border-color: #808080;
-        background-color: #808080;
+        border-color: $cts-gray;
+        background-color: $cts-gray;
 
         h1 {
             color: #fff;

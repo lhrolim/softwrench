@@ -1,4 +1,7 @@
-﻿using cts.commons.persistence;
+﻿using System.Linq;
+using cts.commons.persistence;
+using Iesi.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.Attributes;
 
@@ -21,9 +24,18 @@ namespace softwrench.sw4.user.classes.entities {
         }
 
         [Property(Column = "signature")]
-        public string Signature{
+        public string Signature {
             get; set;
         }
+
+
+        [Set(0, Table = "PREF_GENERICPROPERTIES", Lazy = CollectionLazy.False, Inverse = true, Cascade = "all-delete-orphan")]
+        [Key(1, Column = "preference_id")]
+        [OneToMany(2, ClassType = typeof(GenericProperty))]
+        public ISet<GenericProperty> GenericProperties {
+            get; set;
+        }
+
 
         public static UserPreferences FromJson(JToken jObject) {
             var preferences = new UserPreferences();
@@ -46,6 +58,13 @@ namespace softwrench.sw4.user.classes.entities {
 
         public override int GetHashCode() {
             return Id.GetHashCode();
+        }
+
+        public GenericProperty GetGenericProperty(string propKey) {
+            if (GenericProperties == null) {
+                return null;
+            }
+            return GenericProperties.FirstOrDefault(g => g.Key.Equals(propKey));
         }
     }
 }

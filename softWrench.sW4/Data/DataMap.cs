@@ -89,5 +89,9 @@ namespace softWrench.sW4.Data {
             return new DataMap(application, fields.ToDictionary(f => f.Key, f => f.Value));
         }
 
+        public string Type {
+            get { return GetType().Name; }
+        }
+
     }
 }

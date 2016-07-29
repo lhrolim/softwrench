@@ -281,6 +281,7 @@
     <Compile Include="Controllers\MetadataController.cs" />
     <Compile Include="Controllers\LabtransController.cs" />
     <Compile Include="Controllers\SqlClient\SqlClientController.cs" />
+    <Compile Include="Controllers\Utilities\DeployValidationController.cs" />
     <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Controllers\CommLogController.cs" />
     <Compile Include="Controllers\CommTemplateController.cs" />
@@ -535,6 +536,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Controller\DeployValidation.html" />
     <Content Include="Content\Controller\SqlClient.html" />
     <Content Include="Content\customVendor\css\bootstrap-combobox.css" />
     <Content Include="Content\customVendor\css\bootstrap-multiselect.css" />
@@ -597,6 +599,7 @@
     <Content Include="Content\Scripts\client\directives\searchbox.js" />
     <Content Include="Content\Scripts\client\directives\notifications.js" />
     <Content Include="Content\Scripts\client\directives\stringtonumber.js" />
+    <Content Include="Content\Scripts\client\deployValidationController.js" />
     <Content Include="Content\Scripts\client\services\breadcrumbService.js" />
     <Content Include="Content\Scripts\client\services\chartService.js" />
     <Content Include="Content\Scripts\client\services\controllerinheritanceservice.js" />
@@ -764,6 +767,7 @@
     <Content Include="Content\customVendor\scripts\jquery\jquery.scannerdetection.js" />
     <Content Include="Content\customVendor\scripts\angular\textAngular.js" />
     <Content Include="Content\customVendor\scripts\angular\textAngular-sanitize.js" />
+    <Content Include="Content\styles\default\_deploy-validation.scss" />
     <None Include="Content\styles\default\_toolbar.scss" />
     <Content Include="Content\styles\default\_crud-masterdetails.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />

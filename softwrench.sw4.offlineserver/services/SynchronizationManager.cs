@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using log4net;
 using Newtonsoft.Json.Linq;
@@ -17,6 +18,7 @@ using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sw4.offlineserver.dto;
 using softwrench.sw4.offlineserver.dto.association;
+using softwrench.sw4.offlineserver.events;
 using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -35,20 +37,22 @@ namespace softwrench.sw4.offlineserver.services {
         private readonly OffLineCollectionResolver _resolver;
         private readonly EntityRepository _repository;
         private readonly IContextLookuper _lookuper;
+        private readonly IEventDispatcher _iEventDispatcher;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SynchronizationManager));
 
-        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper) {
+        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper, IEventDispatcher iEventDispatcher) {
             _resolver = resolver;
             _repository = respository;
             _lookuper = lookuper;
+            _iEventDispatcher = iEventDispatcher;
             Log.DebugFormat("init sync log");
         }
 
 
         public SynchronizationResultDto GetData(SynchronizationRequestDto request, InMemoryUser user, JObject rowstampMap) {
             var topLevelApps = GetTopLevelAppsToCollect(request, user);
-
+            _iEventDispatcher.Dispatch(new PreSyncEvent());
             var result = new SynchronizationResultDto();
 
             foreach (var topLevelApp in topLevelApps) {
@@ -103,10 +107,13 @@ namespace softwrench.sw4.offlineserver.services {
                     var textIndexes = new List<string>();
                     results.TextIndexes.Add(association1.ApplicationName, textIndexes);
 
+                    var numericIndexes = new List<string>();
+                    results.NumericIndexes.Add(association1.ApplicationName, numericIndexes);
+
                     var dateIndexes = new List<string>();
                     results.DateIndexes.Add(association1.ApplicationName, dateIndexes);
 
-                    ParseIndexes(textIndexes, dateIndexes, association1);
+                    ParseIndexes(textIndexes, numericIndexes, dateIndexes, association1);
                 });
 
             }
@@ -206,11 +213,11 @@ namespace softwrench.sw4.offlineserver.services {
         private SynchronizationApplicationResultData FilterData(string applicationName, ICollection<DataMap> topLevelAppData, ClientStateJsonConverter.AppRowstampDTO rowstampDTO, CompleteApplicationMetadataDefinition topLevelApp, bool isQuickSync) {
             var watch = Stopwatch.StartNew();
 
-            var result = new SynchronizationApplicationResultData {
-                AllData = topLevelAppData
+            var result = new SynchronizationApplicationResultData(applicationName) {
+                AllData = topLevelAppData,
             };
 
-            ParseIndexes(result.TextIndexes, result.DateIndexes, topLevelApp);
+            ParseIndexes(result.TextIndexes, result.NumericIndexes, result.DateIndexes, topLevelApp);
 
             if (rowstampDTO.MaxRowstamp != null || isQuickSync) {
                 //SWOFF-140 
@@ -251,10 +258,15 @@ namespace softwrench.sw4.offlineserver.services {
             return result;
         }
 
-        private static void ParseIndexes(IList<string> textIndexes, IList<string> dateIndexes, CompleteApplicationMetadataDefinition topLevelApp) {
+        private static void ParseIndexes(IList<string> textIndexes, IList<string> numericIndexes, IList<string> dateIndexes, CompleteApplicationMetadataDefinition topLevelApp) {
             var indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineTextIndexes);
             if (!string.IsNullOrEmpty(indexesString)) {
                 indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, textIndexes));
+            }
+
+            indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineNumericIndexes);
+            if (!string.IsNullOrEmpty(indexesString)) {
+                indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, numericIndexes));
             }
 
             indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineDateIndexes);

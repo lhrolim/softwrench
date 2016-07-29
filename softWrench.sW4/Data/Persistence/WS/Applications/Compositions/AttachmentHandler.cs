@@ -148,6 +148,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             if (!Validate(attachment.Path, attachment.Data, attachment.BinaryData)) {
                 return;
             }
+
+            var url = attachment.Path;
+
+            if (ApplicationConfiguration.Is76()) {
+                //due to a bug on Maximo 7.6 where attachemtns with spaces saved with inconsistent naming
+                //https://controltechnologysolutions.atlassian.net/browse/SWWEB-2616
+                url = url.Replace(" ", "_");
+            }
+
+
             var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
             w.SetValue(docLink, "ADDINFO", true);
             w.SetValue(docLink, "CREATEBY", user.MaximoPersonId);
@@ -162,17 +172,22 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             w.CopyFromRootEntity(maximoObj, docLink, "SITEID", user.SiteId);
             w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
             w.SetValue(docLink, "URLTYPE", "FILE");
-            w.SetValue(docLink, "URLNAME", attachment.Path);
+            w.SetValue(docLink, "URLNAME", url);
             w.SetValue(docLink, "UPLOAD", true);
             w.SetValue(docLink, "DOCTYPE", "Attachments");
             if (attachment.OffLineHash != null) {
                 //for offline solution
-                w.SetValue(docLink, "URLPARAM", attachment.OffLineHash);
+                w.SetValue(docLink, "URLPARAM1", attachment.OffLineHash);
             }
             w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
             w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? string.Empty);
 
-            HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path, attachment.BinaryData);
+            if(attachment.DocumentInfoId != null) {
+                w.SetValue(docLink, "URLNAME", attachment.ServerPath);
+                w.SetValue(docLink, "NEWURLNAME", attachment.ServerPath);
+            } else {
+                HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path, attachment.BinaryData);
+            }
         }
 
 
@@ -304,7 +319,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     var fileBytes = await response.Content.ReadAsByteArrayAsync();
                     return Tuple.Create(fileBytes, filetype);
                 } catch (Exception exception) {
-                    Log.ErrorFormat("Error Attachment Handler: {0} - {1}", exception.Message, exception.InnerException == null ? 
+                    Log.ErrorFormat("Error Attachment Handler: {0} - {1}", exception.Message, exception.InnerException == null ?
                         "No Internal Error Message" : exception.InnerException.Message);
                     return null;
                 }
@@ -384,7 +399,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             for (int i = 0, j = 0; i < attachmentsPath.Length; i++, j += 2) {
                 var dto = new AttachmentDTO() {
                     Data = attachmentsData[j] + ',' + attachmentsData[j + 1],
-                    Path = attachmentsPath[i]
+                    Path = attachmentsPath[i],
+                    DocumentInfoId = null
                 };
                 dtos.Add(dto);
             }

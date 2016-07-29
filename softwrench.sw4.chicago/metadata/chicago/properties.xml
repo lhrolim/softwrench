@@ -9,11 +9,12 @@
 
   <property key="defaultOrgId" value="CCP"/>
   <property key="defaultSiteId" value="NASP"/>
-  <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
+  <property key="email.smtp.host" value="173.193.44.5"/>
   <!--  <property key="email.smtp.timeout" value="10000"/>-->
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="true"/>
 
+  
   <!--Sample UNC Doclink Path-->
   <!--<property key="maximourldoclinkspath" value="https://10.10.10.10"/>-->
 
@@ -31,8 +32,8 @@
   <property key="sourcemapping" value="smartcloud7.5"/>
   
   <property key="notifications.activityStream.enabled" value="true"/>
-  <property key="notifications.activityStream.refreshRate" value="10"/>
-  <property key="notifications.updateJob.refreshRate" value="10"/>
+  <property key="notifications.activityStream.refreshRate" value="2"/>
+  <property key="notifications.updateJob.refreshRate" value="2"/>
 
   <property key="multitenantprefix" value="CPS-00"/>
   
@@ -91,15 +92,35 @@
     <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="maxadmin"/>
     <property key="iiscontextpath " value="http://uat.chi.softwrench.net"/>    
-    
-    <property key="basewsRestURL" value="https://ism.smi.ibm.com/maxrest-uat/rest/mbo/" />
+	
+	<property key="maximoutc" value="Central Standard Time"/>
+
+    <property key="basewsRestURL" value="https://ism.smi.ibm.com/maxrest-uat/rest/os/" />
     <property key="restcredentials.user" value="cts2@cps.tds"/>
     <property key="restcredentials.password" value="$@$Pass2"/> 
-
   </environment>
   ​
+  <environment key="prod">
+    <property key="basewsURL" value="http://173.193.44.5:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.37.19.66;Initial Catalog=MXPROD;User Id=maximo;password=MAXIMO;" />
+    <property key="maximo_DB_provider" value="System.Data.SQL" />
+    <!--<property key="swdb_provider" value="IBM.Data.DB2" />
+    <property key="swdb_url" value="Server=10.50.100.195:50000;Database=SWDB_CCP;UID=sw;PWD=sw@dm1n;CurrentSchema=SW" />  -->
+	<property key="swdb_provider" value="System.Data.SQL"/>
+    <property key="swdb_url" value="Data Source=10.37.19.66;Initial Catalog=SWDB_MXPROD;User Id=sw;password=softwrench;" />
 
+    <property key="mifcredentials.user" value="maxadmin"/>
+    <property key="mifcredentials.password" value="maxadmin"/>
+    <property key="iiscontextpath " value="http://chi.softwrench.net"/>	
 
+	<property key="maximoutc" value="Central Standard Time"/>
+
+<!-- NEED TO CONFIRM THE FOLLOWING	
+    <property key="basewsRestURL" value="https://ism.smi.ibm.com/maxrest/rest/os/" />
+    <property key="restcredentials.user" value="cts3@cps.tds"/>
+    <property key="restcredentials.password" value="$@$Pass11"/> 
+//-->	
+  </environment>
 
 </Properties>
 

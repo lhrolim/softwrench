@@ -1,4 +1,4 @@
-﻿(function (angular, mobileServices) {
+﻿(function (angular, mobileServices, _) {
     "use strict";
 
     /**
@@ -6,13 +6,16 @@
      */
     mobileServices.config(["$provide", function ($provide) {
 
-        $provide.decorator("$log", ["$delegate", "$injector", "rollingLogFileConstants", function ($delegate, $injector, rollingLogFileConstants) {
+        $provide.decorator("$log", ["$delegate", "$injector", "rollingLogFileConstants", "fileConstants", function ($delegate, $injector, rollingLogFileConstants, fileConstants) {
 
             //#region Utils
 
             var $roll;
 
-            var rollingLog = {
+            /**
+             * $roll config + internal state meta
+             */
+            const rollingLog = {
                 enabled: rollingLogFileConstants.logToFileEnabled,
                 configured: false,
                 started: false,
@@ -23,22 +26,20 @@
                     console: rollingLogFileConstants.logToConsole,
                     debug: rollingLogFileConstants.debug,
                     prefix: rollingLogFileConstants.logFileName,
-                    directory: rollingLogFileConstants.logFileDirectory
+                    directory: fileConstants.appDirectory
                 }
             }
 
-            var logMethods = ["log", "info", "warn", "debug", "trace", "error"];
+            const logMethods = ["log", "info", "warn", "debug", "trace", "error"];
 
-            var startRollingLogService = ionic.debounce(function () {
+            const startRollingLogService = ionic.debounce(function () {
                 // deboucing as workaround to the fact that $roll.start is async:
                 // multiple $roll.starts called before setting rollingLog.started = true
                 // debounce makes all those calls 'turn into' a single one (debounce time determined empirically)
                 if (!rollingLog.started) {
-                    $roll.start().then(function () {
-                        rollingLog.started = true;
-                    }).catch(function (error) {
-                        console.error("Couldn't start file logger", error);
-                    });
+                    $roll.start()
+                        .then(() => rollingLog.started = true)
+                        .catch(error => console.error("Couldn't start file logger", error));
                 }
             }, 100);
 
@@ -59,14 +60,19 @@
                 startRollingLogService();
             }
 
+            /**
+             * Logs args to file if the level is enabled.
+             * 
+             * @param {String} level 
+             * @param {Array<Object>} args 
+             */
             function logToFile(level, args) {
                 if (!rollingLog.enabled || !rollingLog.started) return;
                 $roll[level].apply($roll, args);
             }
 
-            function isLoggingMethod(name) {
-                return logMethods.indexOf(name) >= 0;
-            }
+            const isLoggingMethod = name => _.contains(logMethods, name);
+            
 
             /**
              * Enhances the logger's method by logging it's arguments to 
@@ -80,8 +86,8 @@
                 // needs the method reference because if the method is retrieved by name at this point 
                 // it leads to a stackoverflow being thrown (infinite recursion enhancing it)
                 return function () {
-                    var args = [].slice.call(arguments);
-                    var logs = method.apply(logger, args);
+                    const args = [].slice.call(arguments);
+                    const logs = method.apply(logger, args);
                     // only log to file if enabled
                     if (logger.isLevelEnabled(methodName) && !!logs && logs.length > 0) {
                         logToFile(methodName, logs);
@@ -95,7 +101,7 @@
              * @param {} logger instance of a logger service
              */
             function enhanceLogger(logger) {
-                for (var method in logger) {
+                for (let method in logger) {
                     if (!logger.hasOwnProperty(method) || !angular.isFunction(logger[method]) || !isLoggingMethod(method)) continue;
                     logger[method] = enhanceLoggingMethod(logger[method], method, logger);
                 }
@@ -110,8 +116,8 @@
             $delegate.getInstance = function () {
                 initRollingLog();
 
-                var args = [].slice.call(arguments);
-                var instance = getInstance.apply($delegate, args);
+                const args = [].slice.call(arguments);
+                const instance = getInstance.apply($delegate, args);
                 enhanceLogger(instance);
                 return instance;
             }
@@ -123,4 +129,4 @@
     }]);
 
 
-})(angular, mobileServices);
+})(angular, mobileServices, _);

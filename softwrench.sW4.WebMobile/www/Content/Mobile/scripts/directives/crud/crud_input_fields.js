@@ -61,11 +61,11 @@
                 scope.name = "crud_input_fields";
             },
 
-            controller: ["$scope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService",
-                function ($scope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService) {
+            controller: ["$scope", "$rootScope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService", "swdbDAO",
+                function ($scope, $rootScope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService, dao) {
 
-                    $scope.associationSearch = function (query, componentId) {
-                        return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query);
+                    $scope.associationSearch = function (query, componentId, pageNumber, useWhereClause) {
+                        return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query, null, pageNumber, useWhereClause);
                     };
 
                     $scope.itemSelected = function (callback) {
@@ -99,6 +99,86 @@
                         return requiredExpression;
                     };
 
+                    $scope.hasUseWhereClause = function (field) {
+                        const params = field.rendererParameters;
+                        if (!params) {
+                            return false;
+                        }
+                        return "true" === params["hasUseWhereClause"];
+                    }
+
+                    $scope.useWhereClauseLabel = function (field) {
+                        const params = field.rendererParameters;
+                        if (!params) {
+                            return null;
+                        }
+                        return params["useWhereClauseLabel"];
+                    }
+
+                    //#region assosiations and options label init
+
+                    /**
+                     * $broadcast's "sw:association:resolved" event with the entity.AssociationData for setting initial labels in the $viewValues.
+                     */
+                    function triggerAssociationsInitialLabels() {
+                        const log = $log.get("crud_input_fields#triggerAssociationsInitialLabels", ["association"]);
+
+                        // association fields that have a value set in the datamap
+                        const associationFields = fieldService
+                                                    .getDisplayablesOfTypes($scope.allDisplayables, ["ApplicationAssociationDefinition"])
+                                                    .filter(field => $scope.datamap.hasOwnProperty(field.attribute) && !!$scope.datamap[field.attribute]);
+
+                        if (associationFields.length <= 0) {
+                            log.debug("no associationfields with value set in the current datamap");
+                            return;
+                        }
+
+                        if (log.isLevelEnabled("debug")) log.debug(`fetching values for fields ${associationFields.map(f => f.attribute)}`);
+
+                        const whereClauses = associationFields.map(f => {
+                            const associationKey = f.associationKey;
+                            const associationName = associationKey.endsWith("_")
+                                ? associationKey.substring(0, associationKey.length - 1)
+                                : associationKey;
+                            const associationEntityName = f.entityAssociation.to;
+                            const associationValue = $scope.datamap[f.attribute];
+
+                            // local transient name cache to be used further down the promise chain
+                            f["#associationLocalCache"] = { associationName, associationEntityName }
+
+                            // fetching by application and by value
+                            return `((application='${associationName}' or application='${associationEntityName}') and datamap like '%"${f.valueField}":"${associationValue}"%')`;
+                        });
+
+                        const query = whereClauses.join("or");
+
+                        log.debug(`fetching labels with query '${query}'`);
+
+                        dao.findByQuery("AssociationData", query).then(results => {
+                            const values = results.map(association => {
+                                // field that corresponds to the AssociationData fetched: same application and same value on the datamap 
+                                const correspondingField = associationFields.find(field =>
+                                    (association.application === field["#associationLocalCache"].associationName || association.application === field["#associationLocalCache"].associationEntityName)
+                                    && association.datamap[field.valueField] === $scope.datamap[field.attribute]
+                                );                                
+
+                                return { associationKey: correspondingField.associationKey, item: association };
+                            });
+
+                            associationFields.forEach(f => delete f["#associationLocalCache"]);
+
+                            // indexing by associationKey to facilitate lookup
+                            const indexed = _.indexBy(values, "associationKey");
+
+                            log.debug(`resolved items for labels: ${indexed}`);
+
+                            $scope.$broadcast("sw:association:resolved", indexed);
+                        });
+                    }
+
+                    //#endregion
+
+                    //#region afterchangeevent dispatcher
                     class ChangeEventDispatcher {
                         constructor(fields, dispatcher, timeout, logger) {
                             this.fields = fields;
@@ -161,7 +241,7 @@
                         }
                     }
 
-                    function init() {
+                    function watchFields() {
                         // watching for changes to trigger afterchange event handlers
                         const watchableFields = $scope.allDisplayables.filter(f => f.events.hasOwnProperty("afterchange") && !!f.events["afterchange"]);
                         if (!watchableFields || watchableFields.length <= 0) return;
@@ -171,14 +251,27 @@
 
                         logger.debug(`watching ${dispatcher.expressions}`);
 
+                        // flag that decides if change events should be dispatched
+                        $rootScope.areChangeEventsEnabled = true;
+
                         dispatcher.expressions.forEach(expression => {
                             $scope.$watch(expression, (newValue, oldValue) => {
                                 if (newValue === oldValue) {
                                     return;
                                 }
-                                dispatcher.dispatchEventFor(expression, $scope.schema, $scope.datamap, newValue);
+
+                                if ($rootScope.areChangeEventsEnabled) {
+                                    dispatcher.dispatchEventFor(expression, $scope.schema, $scope.datamap, newValue);
+                                }
                             });
                         });
+                    }
+                    //#endregion
+
+                    function init() {
+                        $log.get("crud_input_fieldsl#init").debug("crud_input_fields init");
+                        triggerAssociationsInitialLabels();
+                        watchFields();
                     }
 
                     init();

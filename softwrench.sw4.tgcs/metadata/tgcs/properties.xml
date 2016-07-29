@@ -32,6 +32,8 @@
   <property key="notifications.activityStream.refreshRate" value="20"/>
   <property key="notifications.updateJob.refreshRate" value="20"/>
 
+  <property key="multitenantprefix" value="TTC-00"/>
+
   <environment key="dev">
     <!--<property key="basewsURL" value="http://10.50.100.196:9080/meaweb/wsdl/" />
     <property key="maximo_DB_provider" value="IBM.Data.DB2" />
@@ -45,7 +47,26 @@
     <property key="swdb_url" value="Server=10.50.100.196:50000;Database=SWDB_TGS;UID=sw;PWD=sw@dm1n;CurrentSchema=SW" />-->
 
 	  <property key="swdb_provider" value="System.Data.SQL"/>
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_CCP75DEV;User Id=sw;password=softwrench;" />
+    <property key="swdb_url" value="Data Source=10.50.100.54;Initial Catalog=SWDB_TSBDEV;User Id=sw;password=softwrench;" />
+
+    <property key="mifcredentials.user" value="maxadmin"/>
+    <property key="mifcredentials.password" value="maxadmin"/>
+  </environment>
+
+  <environment key="qa">
+    <!--<property key="basewsURL" value="http://10.50.100.196:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_provider" value="IBM.Data.DB2" />
+    <property key="maximo_DB_url" value="Server=10.50.100.196:50000;Database=TGSDEV;UID=MAXIMO;PWD=$@$Pass;CurrentSchema=maximo" />-->
+
+    <property key="basewsURL" value="http://10.50.100.178:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.54;Initial Catalog=ISMDEV;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="maximo_DB_provider" value="System.Data.SQL" />
+
+    <!--<property key="swdb_provider" value="IBM.Data.DB2" />
+    <property key="swdb_url" value="Server=10.50.100.196:50000;Database=SWDB_TGS;UID=sw;PWD=sw@dm1n;CurrentSchema=SW" />-->
+
+    <property key="swdb_provider" value="System.Data.SQL"/>
+    <property key="swdb_url" value="Data Source=10.50.100.54;Initial Catalog=SWDB_TSBQA;User Id=sw;password=softwrench;" />
 
     <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="maxadmin"/>

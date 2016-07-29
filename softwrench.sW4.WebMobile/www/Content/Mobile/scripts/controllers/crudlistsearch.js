@@ -1,8 +1,8 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudListSearchController", ["$log", "$scope", "crudContextHolderService", "crudContextService", "routeService", "offlineAssociationService", "fieldService",
-        function ($log, $scope, crudContextHolderService, crudContextService, routeService, offlineAssociationService, fieldService) {
+    softwrench.controller("CrudListSearchController", ["$log", "$scope", "crudContextHolderService", "crudContextService", "routeService", "offlineAssociationService", "fieldService", "dispatcherService",
+        function ($log, $scope, crudContextHolderService, crudContextService, routeService, offlineAssociationService, fieldService, dispatcherService) {
 
 
             const ascIcon = "android-arrow-up";
@@ -53,6 +53,8 @@
                 if (filter.type !== "MetadataOptionFilter") {
                     return searchable;
                 }
+
+                searchable.whereClause = filter.whereClause;
                 
                 if (!filter.provider) {
                     searchable.options = filter.options;
@@ -68,8 +70,16 @@
                 searchable.options = [];
                 searchable.optionChanged = $scope.searchOptionChangedFunction(filter.attribute, searchable.options);
 
-                // TODO: for now is required a association on detail schema to force the sync
-                // of the data for use on the option filter
+                // a service provides the options
+                if (filter.provider.startsWith("@")) {
+                    const serviceString = filter.provider.substring(1);
+                    const options = dispatcherService.invokeServiceByString(serviceString);
+                    searchable.options.push(...options);
+                    return searchable;
+                }
+
+                // options are provided by a relathionship
+                // TODO: for now is required a association on detail schema to force the sync of the data for use on the option filter
                 const parentSchema = crudContextHolderService.currentDetailSchema();
                 const providerTokens = filter.provider.split(".");
                 const associationName = providerTokens[0];

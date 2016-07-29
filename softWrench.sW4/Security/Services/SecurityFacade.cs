@@ -126,6 +126,9 @@ namespace softWrench.sW4.Security.Services {
 
             var inMemoryUser = new InMemoryUser(dbUser, profiles, gridPreferences, userPreferences, userTimezoneOffsetInt, mergedProfile);
             if (Users.ContainsKey(inMemoryUser.Login)) {
+                //some generic properties are evaluated upon login, so we might need to keep the old properties in case we´re not doing a login workflow
+                //TODO: refactor
+                inMemoryUser.Genericproperties = Users[inMemoryUser.Login].Genericproperties;
                 Users.Remove(inMemoryUser.Login);
             }
             try {

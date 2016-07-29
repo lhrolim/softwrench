@@ -89,13 +89,15 @@
             $scope.appenders = appenders;
             $scope.initiallogs = logs;
             $scope.logname = "";
-            $scope.chooselog = 'changeviewlog';
+            $scope.chooselog = 'viewdownloadlog';
 
             $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
                 if (oldValue != newValue && $scope.resultObject.redirectURL.indexOf("LogAdmin.html") != -1) {
                     init($scope.resultData);
                 }
             });
+
+            $scope.setDefaultAppender();
         };
 
         $scope.setDefaultAppender = function () {

@@ -1,0 +1,17 @@
+﻿#deploy-validation {
+    .deploy-success {
+        color: green;
+    }
+
+    .deploy-failure {
+        color: red;
+    }
+
+    .deploy-no-creation {
+        color: gray;
+    }
+
+    .has-failure {
+        cursor: pointer;
+    }
+}

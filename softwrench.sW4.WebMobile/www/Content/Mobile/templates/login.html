@@ -1,4 +1,11 @@
-﻿<ion-view view-title="Login" name="login-view" class="page-login">
+﻿<ion-view view-title="softWrench" name="login-view" class="page-login">
+
+    <ion-nav-bar class="bar-positive"></ion-nav-bar>
+
+    <ion-nav-buttons side="right">
+        <button class="button-icon" ng-click="viewSettings()"><i class="fa fa-cog"></i></button>
+    </ion-nav-buttons>
+
     <ion-content class="padding" has-bouncing="false">
         <div class="login-form-container">
             <section class="login-form list list-inset">
@@ -14,28 +21,39 @@
                     <input type="password" placeholder="Password" ng-model="data.password">
                 </label>
             </section>
-            <section class="row action-bar show-phone">
-                <div class="col col-80 action-button">
-                    <button class="button button-calm button-block" ng-click="login()">Login</button>
-                </div>
-                <div class="col col-20 action-button">
-                    <a class="button button-icon fa fa-cog login-settings" ng-click="settings()"></a>
+            <section class="action-bar">
+                <div class="action-button">
+                    <button class="button button-calm button-block" ng-click="login()"><i class="fa fa-sign-in"></i>&ensp;Login</button>
                 </div>
             </section>
-            <section class="action-bar show-tablet">
-                <div class="action-button">
-                    <button class="button button-calm button-block" ng-click="login()">
-                        Login
-                    </button>
+
+            <section class="list list-inset demo-mode-note" ng-if="isDemoMode">
+                <div class="item item-divider">
+                    Demo Mode
                 </div>
-                <div class="action-button">
-                    <button class="button button-block button-outline button-positive fa fa-cog icon-left" ng-click="settings()">
-                        Settings
-                    </button>
-                </div>
+                <label class="item demo-note">
+                    <div class="row">
+                        To access the softWrench demo, please use the following credentials to login:
+                    </div>
+                    <div class="users">
+                        <div class="row">
+                            <div class="name"><i class="fa fa-user"></i>&ensp;enduser</div>
+                            <div class="password"><i class="fa fa-unlock-alt"></i>&ensp;password</div>
+                        </div>
+                        <div class="row">
+                            <div class="name"><i class="fa fa-user"></i>&ensp;supervisor</div>
+                            <div class="password"><i class="fa fa-unlock-alt"></i>&ensp;password</div>
+                        </div>
+                        <div class="row">
+                            <div class="name"><i class="fa fa-user"></i>&ensp;administrator
+                            </div>
+                            <div class="password"><i class="fa fa-unlock-alt"></i>&ensp;password
+                            </div>
+                        </div>
+                    </div>
+                </label>
             </section>
         </div>
-
     </ion-content>
 </ion-view>
 

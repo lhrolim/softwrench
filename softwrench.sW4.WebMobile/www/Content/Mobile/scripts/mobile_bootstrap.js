@@ -17,9 +17,9 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
     "localStorageService", "menuModelService", "metadataModelService", "routeService",
     "crudContextService", "synchronizationNotificationService",
     "offlinePersitenceBootstrap", "offlineEntities", "configurationService", "$rootScope", "$q",
-    "$cordovaSplashscreen", "$timeout", "offlineCommandService",
+    "$cordovaSplashscreen", "$timeout", "offlineCommandService", "$ionicScrollDelegate",
     function ($ionicPlatform, swdbDAO, $log, securityService, localStorageService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap,
-        entities, configService, $rootScope, $q, $cordovaSplashscreen, $timeout, offlineCommandService) {
+        entities, configService, $rootScope, $q, $cordovaSplashscreen, $timeout, offlineCommandService, $ionicScrollDelegate) {
 
         function initContext() {
             offlinePersitenceBootstrap.init();
@@ -29,42 +29,78 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             //server side + client side configs
             const serverConfigPromise = configService.loadConfigs();
             const clientConfigPromise = configService.loadClientConfigs();
-            return $q.all([menuPromise, metadataPromise, serverConfigPromise, commandBarsPromise, clientConfigPromise]);
-        }
+            const restoreAuthPromise = securityService.restoreAuthCookie();
 
-        function initDataBaseDebuggingHelpers() {
-            // DataBase debug mode: set swdbDAO service as global variable
-            if (!!persistence.debug) window.swdbDAO = swdbDAO;
+            return $q.all([menuPromise, metadataPromise, serverConfigPromise, commandBarsPromise, clientConfigPromise, restoreAuthPromise]);
         }
 
         function disableRipplePopup() {
-            var dialogBody = parent.document.getElementById("exec-dialog");
-            var overlay = parent.document.querySelector(".ui-widget-overlay");
-            var ngDialog = angular.element(dialogBody.parentElement);
-            var ngOverlay = angular.element(overlay);
-            var hideRules = { "height": "0px", "width": "0px", "display": "none" };
+            const dialogBody = parent.document.getElementById("exec-dialog");
+            const overlay = parent.document.querySelector(".ui-widget-overlay");
+            const ngDialog = angular.element(dialogBody.parentElement);
+            const ngOverlay = angular.element(overlay);
+            const hideRules = { "height": "0px", "width": "0px", "display": "none" };
             ngDialog.css(hideRules); // hide annoying popup
             ngOverlay.css(hideRules); // hide annoying popup's backdrop
         }
 
         function initCordovaPlugins() {
-            var log = $log.get("bootstrap#initCordovaPlugins");
+            const log = $log.get("bootstrap#initCordovaPlugins");
             log.info("init cordova plugins");
             
             // first of all let's schedule the disable of ripple's annoying popup 
             // that tells us about unregistered plugins
             if(isRippleEmulator()) $timeout(disableRipplePopup);
 
-            // Show keyboard accessory bar
+            // Show/Hide keyboard accessory bar
             if (window.cordova && window.cordova.plugins.Keyboard) {
-                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(ionic.Platform.isAndroid());
             }
             // necessary to set fullscreen on Android in order for android:softinput=adjustPan to work
             if (ionic.Platform.isAndroid()) {
-                ionic.Platform.isFullScreen = true;
+                if (window.StatusBar) window.StatusBar.styleDefault();
+                //ionic.Platform.isFullScreen = true;
             }
             // local notification 
             synchronizationNotificationService.prepareNotificationFeature();
+        }
+
+        /**
+         * Handles Android's softinput covering inputs that are close to the bottom of the screen.
+         */
+        function adjustAndroidSoftInput() {
+            window.adjustAndroidSoftInput = adjustAndroidSoftInput;
+            if (!ionic.Platform.isAndroid()) return;
+
+            // native.showkeyboard callback
+            // e contains keyboard height
+            window.addEventListener("native.showkeyboard", e => {
+                $timeout(() => {
+                    const focusedElement = document.activeElement;
+                    if (!focusedElement) return;
+
+                    // no need to subtract e.keyboardHeight: by this point window.innerHeight is the viewport's height which is equal to keyboard's top's position
+                    const keyBoardTopPosition = window.innerHeight;
+                    const rect = focusedElement.getBoundingClientRect();
+                    const elementBottomPosition = rect.bottom;
+
+                    // if input is hidden by keyboard (position is calculated top to bottom)
+                    if (keyBoardTopPosition < elementBottomPosition) {
+                        // scroll with animation
+                        const scrollOffsetY = elementBottomPosition - keyBoardTopPosition;
+                        $ionicScrollDelegate.scrollBy(0, scrollOffsetY, true);
+                    }
+                }, 0, false);
+            });
+
+            window.addEventListener('native.hidekeyboard', e => {
+                // remove focus from activeElement 
+                // which is naturally an input since the nativekeyboard is hiding
+                const focusedElement = document.activeElement;
+                if (focusedElement) focusedElement.blur();
+                // resize scroll after keyboard is gone
+                $timeout(() => $ionicScrollDelegate.resize(), 0, false);
+            });
         }
 
         function attachEventListeners() {
@@ -88,7 +124,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     return;
                 }
                 // has serverurl -> do nothing
-                var serverurl = localStorageService.get("settings:serverurl");
+                const serverurl = localStorageService.get("settings:serverurl");
                 if (!!serverurl) {
                     return;
                 }
@@ -97,6 +133,9 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 // go to settings instead
                 routeService.go("settings");
             });
+
+            document.addEventListener("resume", initContext, false);
+
         }
 
         function loadInitialState() {
@@ -115,9 +154,9 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
         $ionicPlatform.ready(() => {
             // loading eventual db stored values into context
             initContext().then(() => {
+                adjustAndroidSoftInput();
                 attachEventListeners();
                 initCordovaPlugins();
-                initDataBaseDebuggingHelpers();
                 return loadInitialState();
             })
             .then(hideSplashScreen); // 1 second delay to prevent blank screen right after hiding the splash screen (empirically determined)

@@ -2,9 +2,9 @@
 (function (angular) {
     "use strict";
 
-    angular.module("softwrench").factory("crudContextHolderService", ["$log", "contextService", crudContextHolderService]);
+    angular.module("softwrench").factory("crudContextHolderService", ["$log","$state", "contextService", crudContextHolderService]);
 
-    function crudContextHolderService($log, contextService) {
+    function crudContextHolderService($log,$state, contextService) {
         /// <summary>
         /// 
         /// </summary>
@@ -92,12 +92,12 @@
             }
             const itemlist = _crudContext.itemlist;
             const idx = itemlist.indexOf(item);
-            if (idx == 0) {
+            if (idx === 0) { // first on the list: has no previous
                 _crudContext.previousItem = null;
             } else {
                 _crudContext.previousItem = itemlist[idx - 1];
             }
-            if (idx >= itemlist.length - 2) {
+            if (idx === itemlist.length - 1) { // last on the list: has no next
                 _crudContext.nextItem = null;
             } else {
                 _crudContext.nextItem = itemlist[idx + 1];
@@ -129,7 +129,7 @@
         };
 
         function isList() {
-            return _crudContext.currentDetailItem == null;
+            return $state.current.name === "main.crudlist";
         };
 
         function currentTitle() {
@@ -269,6 +269,7 @@
             }
 
             _crudContext.indexes.textIndexes = parseIndexes("list.offline.text.indexlist", app.data.properties);
+            _crudContext.indexes.numericIndexes = parseIndexes("list.offline.numeric.indexlist", app.data.properties);
             _crudContext.indexes.dateIndexes = parseIndexes("list.offline.date.indexlist", app.data.properties);
             return _crudContext.indexes;
         }
@@ -324,37 +325,37 @@
         //#region Service Instance
 
         const service = {
-            setPreviousAndNextItems: setPreviousAndNextItems,
-            restoreState: restoreState,
-            isList: isList,
-            currentTitle: currentTitle,
-            currentApplicationName: currentApplicationName,
-            currentListSchema: currentListSchema,
-            currentDetailSchema: currentDetailSchema,
-            currentDetailItem: currentDetailItem,
-            currentProblems: currentProblems,
-            currentSchema: currentSchema,
-            itemlist: itemlist,
-            currentDetailItemDataMap: currentDetailItemDataMap,
-            leavingDetail: leavingDetail,
-            isOnMainTab: isOnMainTab,
-            resetTab: resetTab,
-            tabTitle: tabTitle,
-            leavingCompositionDetail: leavingCompositionDetail,
-            compositionList: compositionList,
-            getCompositionListSchema: getCompositionListSchema,
-            getCompositionDetailSchema: getCompositionDetailSchema,
-            getCompositionDetailItem: getCompositionDetailItem,
-            getGridSearchData: getGridSearchData,
-            getIndexes: getIndexes,
-            clearGridSearchValues: clearGridSearchValues,
-            clearGridSearch: clearGridSearch,
-            getQuickSearch: getQuickSearch,
-            hasDirtyChanges: hasDirtyChanges,
-            getActiveTab: getActiveTab,
-            reset: reset,
+            setPreviousAndNextItems,
+            restoreState,
+            isList,
+            currentTitle,
+            currentApplicationName,
+            currentListSchema,
+            currentDetailSchema,
+            currentDetailItem,
+            currentProblems,
+            currentSchema,
+            itemlist,
+            currentDetailItemDataMap,
+            leavingDetail,
+            isOnMainTab,
+            resetTab,
+            tabTitle,
+            leavingCompositionDetail,
+            compositionList,
+            getCompositionListSchema,
+            getCompositionDetailSchema,
+            getCompositionDetailItem,
+            getGridSearchData,
+            getIndexes,
+            clearGridSearchValues,
+            clearGridSearch,
+            getQuickSearch,
+            hasDirtyChanges,
+            getActiveTab,
+            reset,
             //below method to facilitate migration
-            getCrudContext: getCrudContext
+            getCrudContext
 
         };
 

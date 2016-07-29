@@ -235,6 +235,7 @@
           </section>
           <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8">
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
+            <renderer type="numericinput" params="numberType=double;min=0"/>
           </field>
           <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.fields.glaccount">
             <renderer type="lookup"/>
@@ -263,7 +264,7 @@
             <renderer type="autocompleteclient" />
             <event type="afterchange" service="labtransService" method="aftercraftchange"/>
           </association>
-          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="rate">
+          <association target="premiumpaycode" label="Premium Pay Code" labelfield="ppcraftrate_.premiumpay_.description" extraprojectionvalues="rate,premiumpay_.defaultrate">
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
             <renderer type="lookup"/>
           </association>
@@ -444,6 +445,10 @@
         <detail stereotype="detail" title="Labor Reporting" platform="mobile">
           <event type="onload" service="laborService" method="onDetailLoad" />
 
+          <!-- declared just so it can fetched in sync -->
+          <association target="#laborcode" labelfield="labor_.laborcode" label="Labor" showexpression="false" enableexpression="false" />
+          <association target="#craft" labelfield="laborcraftrate_.craft" label="Craft" showexpression="false" enableexpression="false" />
+          
           <field attribute="labtransid" hidden="true" />
           <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.fields.orgid"/>
           <field attribute="siteid" hidden="true" defaultexpression="$.parentdata.fields.siteid"/>
@@ -466,6 +471,7 @@
           </field>
           <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8">
             <event type="afterchange" service="laborService" method="updateLineCost"/>
+            <renderer type="numericinput" params="min=0;step=0.01;numberType=double;formatter=@laborService.formatRegularHours"/>
           </field>
 
           <field attribute="gldebitacct" defaultexpression="$.parentdata.fields.glaccount" requiredexpression="false" hidden="true" readonly="true" />
@@ -481,7 +487,6 @@
 
     <application entity="laborcraftrate" name="laborcraftrate" title="Craft">
       <schemas>
-
         <!-- #region: mobile -->
         <list platform="mobile">
           <field attribute="craft" />

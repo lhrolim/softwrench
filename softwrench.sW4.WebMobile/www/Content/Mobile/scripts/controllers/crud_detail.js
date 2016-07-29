@@ -2,18 +2,29 @@
 (function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', 'schemaService', "crudContextHolderService", "wizardService", 
+    softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", 
     'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService",
-    function (log, $scope, $rootScope, schemaService, crudContextHolderService, wizardService,
+    function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform,
     crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService) {
+        
+        function turnOffChangeEvents() {
+            $rootScope.areChangeEventsEnabled = false;
+        }
+
+        function turnOnChangeEvents() {
+            // to force change the flag after the events are trigged
+            $timeout(() => $rootScope.areChangeEventsEnabled = true, 0, false);
+        }
 
         function init() {
+            log.get("crud_detail#init").debug("crud detail init");
             $scope.allDisplayables = crudContextService.mainDisplayables();
             $scope.displayables = wizardService.getWizardFields($scope.allDisplayables);
             $scope.schema = crudContextService.currentDetailSchema();
             $scope.datamap = crudContextService.currentDetailItemDataMap();
             $scope.item = crudContextHolderService.currentDetailItem();
             eventService.onload($scope, $scope.schema, $scope.datamap, {});
+            $rootScope.areChangeEventsEnabled = true;
         }
 
         $ionicPopover.fromTemplateUrl('Content/Mobile/templates/compositionmenu.html', {
@@ -45,8 +56,12 @@
 
 
         $scope.showNavigation = function () {
-            return this.isOnMainTab() && !crudContextService.hasDirtyChanges();
+            return $scope.isOnMainTab() && !crudContextService.hasDirtyChanges();
         }
+
+        $scope.hasNextItem = function() {
+            return !!crudContextHolderService.getCrudContext().nextItem;
+        };
 
         $scope.hasAnyComposition = function () {
             return crudContextService.currentCompositionsToShow().length > 0;
@@ -59,8 +74,13 @@
             });
             confirmPopup.then(function (res) {
                 if (res) {
+                    turnOffChangeEvents();
                     crudContextService.cancelChanges();
                     $scope.datamap = crudContextService.currentDetailItemDataMap();
+
+                    // to force change the flag after the events are trigged
+                    $timeout(() => $rootScope.areChangeEventsEnabled = true, 0, false);
+                    turnOnChangeEvents();
                 }
             });
         }
@@ -105,10 +125,14 @@
                 expressionService.evaluate(composition.currentTab.schema.allowInsertion, $scope.datamap, { schema: $scope.schema }, null);
         };
 
+        $scope.detailTitle = function () {
+            const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
+            return schemaService.getTitle(crudContextService.currentDetailSchema(), datamap, true);
+        }
 
         $scope.detailSummary = function () {
             const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
-            return schemaService.getTitle(crudContextService.currentDetailSchema(), datamap, true);
+            return schemaService.getSummary(crudContextService.currentDetailSchema(), datamap, true);
         }
 
         $scope.addCompositionItem = function () {
@@ -122,15 +146,21 @@
             showValidationErrors(validationErrors);
         }
 
-        $scope.navigateNext = function () {
-            crudContextService.navigateNext().then(function () {
+        const arrowNavigate = function(navigate) {
+            turnOffChangeEvents();
+            crudContextService[navigate]().then(function () {
                 $scope.datamap = crudContextService.currentDetailItemDataMap();
+            }).finally(() => {
+                turnOnChangeEvents();
             });
         }
 
+        $scope.navigateNext = function () {
+            arrowNavigate("navigateNext");
+        }
+
         $scope.navigatePrevious = function () {
-            crudContextService.navigatePrevious();
-            $scope.datamap = crudContextService.currentDetailItemDataMap();
+            arrowNavigate("navigatePrevious");
         }
 
         $scope.onSwipeLeft = function() {
@@ -150,10 +180,16 @@
 
             //update the position of the detail's floating action button when the user scrolls
             if (!!position) {
+                var toolbarPrimary = $('.bar-header.bar-positive:visible').outerHeight(true);
+                var toolbarSecondary = $('.bar-subheader.bar-dark:visible').outerHeight(true);
+                var headerTitle = $('.crud-details .crud-title:visible').outerHeight(true);
+                var headerDescription = $('.crud-details .crud-description:visible').outerHeight(true);
+                var componetHeights = toolbarPrimary + toolbarSecondary + headerTitle + headerDescription;
+
                 var top = position.top;
                 var element = $('command-bar[position="mobile.fab"]');
                 var windowHeight = $(window).height();
-                var offset = (windowHeight - 242) + top;
+                var offset = (windowHeight - componetHeights - 134) + top;
                 $(element).css('top', offset);
             }
         };
@@ -179,7 +215,15 @@
             $scope.displayables = wizardService.next($scope.allDisplayables);
         }
 
-        $scope.hasProblems = function() {
+        $scope.isDirty = function (item) {
+            return $scope.item.isDirty;
+        }
+
+        $scope.isPending = function (item) {
+            return $scope.item.pending;
+        }
+
+        $scope.hasProblems = function () {
             return $scope.item.hasProblem;
         }
 
@@ -191,11 +235,25 @@
             return problems[0].message;
         }
 
-        $rootScope.$on('sw_cruddetailrefreshed', function () {
+
+        // handles device back button
+        const deregisterHardwareBack = $ionicPlatform.registerBackButtonAction(() => {
+            if ($scope.shouldShowBack()) {
+                $scope.navigateBack();
+            } else if ($scope.shouldShowWizardBack()) {
+                $scope.wizardNavigateBack();
+                $scope.$apply();
+            } else{
+                $scope.cancelChanges();
+            }
+        }, 100);
+        $scope.$on("$destroy", deregisterHardwareBack);
+
+        $scope.$on('sw_cruddetailrefreshed', function () {
             $scope.datamap = crudContextService.currentDetailItemDataMap();
         });
 
-        $rootScope.$on('$stateChangeSuccess',
+        $scope.$on('$stateChangeSuccess',
               function (event, toState, toParams, fromState, fromParams) {
                   if (fromState.name === "main.cruddetail.compositiondetail") {
                       crudContextService.leavingCompositionDetail();
@@ -208,10 +266,10 @@
                           crudContextService.resetTab();
                       }
                   } else{
-                      crudContextService.leavingDetail();
-                      if (!toState.name.startsWith("main.crud")) {
-                          crudContextService.resetContext();
-                      }
+//                      crudContextService.leavingDetail();
+//                      if (!toState.name.startsWith("main.crud")) {
+//                          crudContextService.resetContext();
+//                      }
                   }
               });
 

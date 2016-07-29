@@ -4,7 +4,7 @@
     angular.module('webcommons_services').factory('validationService', ['$log', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionCommons', 'schemaService', 'alertService', 'crudContextHolderService', "passwordValidationService", validationService]);
 
     function validationService($log, i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService, compositionCommons, schemaService, alertService, crudContextHolderService, passwordValidationService) {
-      
+
         /**
          * Similar to the validate method, but only returning the array of items, for custom handling
          * 
@@ -82,7 +82,7 @@
             angularformerrors = angularformerrors || {};
             const log = $log.get("validationService#validate");
             let validationArray = [];
-            const allDisplayables = schemaService.flattenDisplayables(displayables);
+            const allDisplayables = schemaService.flattenDisplayables(displayables, null, datamap);
 
             /**
              * Resolves a NgModel that has validation errors from a form's validation error array.
@@ -110,9 +110,6 @@
             allDisplayables.forEach(displayable => {
                 var label = displayable.label;
                 log.debug("performing validation on field {0}".format(label));
-                if (fieldService.isNullInvisible(displayable, datamap)) {
-                    return;
-                }
                 var isRequired = !!displayable.requiredExpression
                     ? expressionService.evaluate(displayable.requiredExpression, datamap)
                     : false;
@@ -162,7 +159,7 @@
                     }
                 }
             });
-            
+
             if (innerValidation == undefined || !innerValidation) {
                 const customErrorArray = eventService.beforesubmit_onvalidation(schema, datamap);
                 if (customErrorArray != null && Array.isArray(customErrorArray)) {

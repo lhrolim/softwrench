@@ -447,6 +447,14 @@ input[type="date"], input[type="time"] {
     }
 }
 
+.typeahead.dropdown-menu {
+    z-index: 1010;
+}
+
+.tt-dropdown-menu {
+    width: 100% !important;
+}
+
 .tt-suggestion {
     cursor: pointer;
 

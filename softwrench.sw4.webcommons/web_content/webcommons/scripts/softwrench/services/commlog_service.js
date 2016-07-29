@@ -143,6 +143,8 @@
             clonedItem['cc'] = nullOrCommaSplit(originalItem.cc);
             clonedItem['message'] = buildMessage(originalItem);
             clonedItem['createdate'] = fieldService.currentDate();
+            clonedItem['newattachment_path'] = "";
+            clonedItem['attachments'] = originalItem.attachments;
             return clonedItem;
         };
 
@@ -156,7 +158,7 @@
 
         function transformReply(originalItem) {
             const detailItem = commonstransform(originalItem, true);
-            detailItem['sendto'] = originalItem.sendfrom.indexOf(",") > -1 ? originalItem.sendfrom.split(',') : [originalItem.sendfrom];
+            detailItem['sendto'] = originalItem.sendfrom.indexOf(",") > -1 ? originalItem.sendfrom.split(',') : [originalItem.sendfrom];            
             return detailItem;
         };
 
@@ -203,7 +205,9 @@
 
         const addCommlog = function (parameters) {
             const datamap = {
-                _iscreation: true
+                _iscreation: true,
+                attachment: [],
+                newattachment_path: ''
             };
             if (contextService.getUserData().email) {
                 return dispatchEvent(datamap, "Communication Details");

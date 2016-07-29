@@ -1,8 +1,8 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", "synchronizationFacade", "routeService", "crudContextHolderService", 
-        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService) {
+    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", "synchronizationFacade", "routeService", "crudContextHolderService", "$ionicPopup", 
+        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, $ionicPopup) {
 
             $scope.crudlist = {
                 items: [],
@@ -18,12 +18,12 @@
             function init() {
                 initializeList();
                 $scope._searching = false;
-
-                $ionicPopover.fromTemplateUrl("Content/Mobile/templates/filteroptionsmenu.html", {
-                    scope: $scope,
-                }).then(popover => 
-                    $scope.filteroptionspopover = popover
-                );
+                //
+                //                $ionicPopover.fromTemplateUrl("Content/Mobile/templates/filteroptionsmenu.html", {
+                //                    scope: $scope,
+                //                }).then(popover => 
+                //                    $scope.filteroptionspopover = popover
+                //                );
 
                 $timeout(() => $ionicScrollDelegate.scrollTop(), 0, false);
 
@@ -77,7 +77,7 @@
                 $scope.filteroptionspopover.hide();
             });
 
-            $scope.createEnabled = function() {
+            $scope.createEnabled = function () {
                 const schema = crudContextService.currentListSchema();
                 if (!schema) {
                     return false;
@@ -95,7 +95,7 @@
                 $ionicScrollDelegate.scrollTop();
             }
 
-            $scope.gridTitle = function() {
+            $scope.gridTitle = function () {
                 const schema = crudContextHolderService.currentListSchema();
                 return crudContextService.gridTitle(schema);
             }
@@ -120,19 +120,6 @@
                 return offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "excerpt", item);
             }
 
-            $scope.getIconColor = function (datamap) {
-                const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
-                if (!displayable || !displayable.attribute || displayable.attribute === "status") {
-                    return statuscolorService.getColor(datamap["status"], crudContextService.currentApplicationName());
-                }
-
-                if (displayable.attribute === "wopriority") {
-                    return statuscolorService.getPriorityColor(datamap[displayable.attribute]);
-                }
-
-                return "#777";
-            }
-
             $scope.openDetail = function (item) {
                 crudContextService.loadDetail(item);
             }
@@ -141,71 +128,44 @@
                 crudContextService.createDetail();
             }
 
-            $scope.getIconText = function (item) {
-                if ($scope.isDirty(item) || $scope.isPending(item) || $scope.hasProblem(item)) {
-                    return "";
-                }
-
-                const datamap = item.datamap;
-                const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
-
-                if (!displayable || !displayable.attribute || displayable.attribute === "status") {
-                    const status = datamap["status"];
-                    return status == null ? "N" : status.charAt(0);
-                }
-
-                var value = datamap[displayable.attribute];
-
-                if (displayable.attribute === "wopriority") {
-                    item.icon = value ? null : "flag";
-                    return value ? value.substring(0, 1) : "";
-                }
-                
-                if (!value) {
-                    return null;
-                }
-                value += "";
-                return value.substring(0, 1);
-            }
-
-            $scope.getIconIcon = function (item) {
-                if ($scope.isPending(item)) {
-                    return "cloud";
-                }
-
-                if ($scope.hasProblem(item)) {
-                    return "exclamation-triangle";
-                }
-
-                if ($scope.isDirty(item)) {
-                    return "refresh";
-                }
-
-                const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
-                const value = item.datamap[displayable.attribute];
-                if (displayable.attribute === "wopriority" && !value) {
-                    return "flag";
-                }
-
-                return null;
-            }
-
-            $scope.getTextColor = function (datamap) {
-                const background = $scope.getIconColor(datamap);
-                return background === "white" || background === "transparent" ? "black" : "white";
-            }
-
             $scope.quickSync = function (item) {
-                synchronizationFacade.syncItem(item);
+                synchronizationFacade.syncItem(item).then(() => {
+                    //updating the item on the list after it has been synced
+                    crudContextService.refreshGrid();
+                });
             }
+  		
+            $scope.deleteOrRestoreItem = function(item) {
+                const restorable = item.remoteId && item.isDirty && !!item.originaldatamap;
+                const deletable = !item.remoteId;
+                if (item.pending || (!restorable && !deletable)) return;
 
-            $scope.$root.$on("$stateChangeSuccess",
+                const gridTitle = $scope.gridTitle();
+                const confirmConfig = restorable
+                    ? { title: "Cancel Changes", template: `Are you sure you want to cancel changes made to this ${gridTitle}` }
+                    : { title: `Delete ${gridTitle}`, template: `Are you sure you want to delete this ${gridTitle} created locally` }
+
+                return $ionicPopup.confirm(confirmConfig).then(res => {
+                    if (!res) return;
+
+                    const promise = restorable
+                        ? crudContextService.restoreItemToOriginalState(item)
+                        : crudContextService.deleteLocalItem(item);
+
+                    return promise
+                        .then(() => $ionicPopup.alert({ title: `${gridTitle} was successfuly ${restorable ? "restored" : "deleted"}` }))
+                        .then(crudContextService.refreshGrid());
+                });
+            };
+
+
+            $scope.$on("$stateChangeSuccess",
                  function (event, toState, toParams, fromState, fromParams) {
                      $log.get("crudlist#statehandler").debug("handler called", arguments);
                      if (!toState.name.startsWith("main.crud")) {
-                         crudContextService.resetContext();
-                         $scope.crudlist.items = [];
-                         $scope.crudlist.moreItemsAvailable = false;
+                         //                         crudContextService.resetContext();
+                         //                         $scope.crudlist.items = [];
+                         //                         $scope.crudlist.moreItemsAvailable = false;
                      } else if (!toState.name.startsWith("main.crudlist")) {
                          //to avoid strange transitions on the screen
                          //TODO: transition finished event??

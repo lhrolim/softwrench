@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+
+
   <templates>
     <template path="@person.xml"/>
     <template path="@workorder.xml"/>
@@ -11,7 +13,11 @@
     <template path="@item.xml"/>
   </templates>
 
+
+
   <entities>
+
+
     <entity name="asset" idAttribute="assetid">
       <attributes>
         <attribute name="openwo" query="(select count(1) from workorder where UPPER(workorder.status) not in ('CAN', 'COMP', 'CLOSE') and workorder.assetnum = !@assetnum and workorder.siteid = !@siteid and workorder.orgid = !@orgid)" type="int"/>
@@ -20,11 +26,11 @@
 
     <entity name="workorder" idAttribute="workorderid">
       <attributes>
-        <attribute name="schedstartnotime" query="DATEADD(dd, DATEDIFF(dd, 0, workorder.schedstart), 0)" type="date"/>
-        <attribute name="schedfinishnotime" query="DATEADD(dd, DATEDIFF(dd, 0, workorder.schedfinish), 0)" type="date"/>
+        <attribute name="schedstartnotime" query="(select DATEADD(dd, DATEDIFF(dd, 0, scheduledate), 0) from assignment where wonum = !@wonum and siteid = !@siteid and orgid = !@orgid and laborcode = @personid)" type="date"/>
+        <attribute name="schedassigneddate" query="(select scheduledate from assignment where wonum = !@wonum and siteid = !@siteid and orgid = !@orgid and laborcode = @personid)" type="date"/>
       </attributes>
       <relationships>
-        
+
         <relationship to="numericdomain" qualifier="realpriority" collection="true">
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="WOPRIORITY" quoteLiteral="true"/>
@@ -40,7 +46,7 @@
           <relationshipAttribute from="fr1code" to="failurecode" primary="true"/>
           <relationshipAttribute from="problemlist_.failurelist" to="parent" />
         </relationship>
-        
+
         <relationship to="remedylist" qualifier="offlineremedylist">
           <relationshipAttribute from="fr2code" to="failurecode" primary="true"/>
           <relationshipAttribute from="offlinecauselist_.failurelist" to="parent" />
@@ -49,25 +55,35 @@
         <relationship to="failurelistonly" qualifier="failurelistonly">
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
         </relationship>
-        
+
         <relationship to="asset" qualifier="offlineasset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
         </relationship>
         <relationship to="location" qualifier="offlinelocation" >
           <relationshipAttribute from="location" to="location" primary="true"/>
         </relationship>
-        
+
       </relationships>
     </entity>
 
-    <entity name="matusetrans" idAttribute="matusetransid" >
+    <entity name="offlineitem" parententity="item" idAttribute="itemnum"
+        whereclause="((select count(invx.inventoryid) from inventory invx where invx.itemnum = !@itemnum and invx.siteid=@siteid) > 0)">
+    </entity>
+
+    <entity name="matusetrans" idAttribute="matusetransid">
       <relationships>
         <relationship to="inventory" qualifier="offlineinventory">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
           <relationshipAttribute to="status" literal="ACTIVE"/>
         </relationship>
+        <relationship to="offlineitem">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+          <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>
+        </relationship>
       </relationships>
-      
     </entity>
 
     <entity name="locancestor" idAttribute="locancestorid">
@@ -84,7 +100,60 @@
   </entities>
 
   <applications>
+
+    <options id="facilities">
+      <option label="ACS1"  value="ACS01" extraprojections="site=1801;group=1801-ACS"/>
+      <option label="AES1"  value="AES11" extraprojections="site=1803;group=1803-TPZ"/>
+      <option label="AMH1"  value="AMH11" extraprojections="site=1808;group=1808-SAR"/>
+      <option label="AMH2"  value="AMR03,AMR04" extraprojections="site=1808;group=1808-SAR"/>
+      <option label="ALM1"  value="ALM01" extraprojections="site=1801;group=1801-CIM"/>
+      <option label="ALP1"  value="ALP11" extraprojections="site=1803;group=1803-AVS"/>
+      <option label="AVS1"  value="AVS11" extraprojections="site=1803;group=1803-AVS"/>
+      <option label="AVV1"  value="AVV11" extraprojections="site=1801;group=1801-AVV"/>
+      <option label="BEL1"  value="BEL11" extraprojections="site=1808;group=1808-SAR"/>
+      <option label="BRS1"  value="BRS11" extraprojections="site=1801;group=1801-CIM"/>
+      <option label="BWS1"  value="BWS11" extraprojections="site=1803;group=1803-TPZ"/>
+      <option label="CBLA"  value="CBLA1" extraprojections="site=1801;group=1801-CIM"/>
+      <option label="CCS1"  value="CCS11" extraprojections="site=1803;group=1803-TPZ"/>
+      <option label="CGL1"  value="CGL11" extraprojections="site=1803;group=1803-TPZ"/>
+      <option label="CID1"  value="CID11" extraprojections="site=1803;group=1803-TPZ"/>
+      <option label="CIM1"  value="CIM01" extraprojections="site=1801"/>
+      <option label="CVS1"  value="CVS11" extraprojections="site=1803;group=1803-SGSO"/>
+      <option label="DSS1"  value="DSS11,DSS21" extraprojections="site=1803"/>
+      <option label="GAL1"  value="GAL01" extraprojections="site=1801;group=1801-CIM"/>
+      <option label="HON1"  value="HON01" extraprojections="site=1801;group=1801-CIM"/>
+      <option label="IVS1"  value="IVS11" extraprojections="site=1803;group=1803-IVS"/>
+      <option label="IVW1"  value="IVW11" extraprojections="site=1803;group=1803-IVS"/>
+      <option label="KBSA"  value="KBSA1" extraprojections="site=1803;group=1803-KBS"/>
+      <option label="KBSB"  value="KBSB1" extraprojections="site=1803;group=1803-KBS"/>
+      <option label="KNS1"  value="KNS11" extraprojections="site=1803;group=1801-TPZ"/>
+      <option label="KSS1"  value="KSS11" extraprojections="site=1803;group=1801-TPZ"/>
+      <option label="LHS1"  value="LHS11" extraprojections="site=1803;group=1803-TPZ"/>
+      <option label="LMS1"  value="LMS01" extraprojections="site=1801;group=1801-CIM"/>
+      <option label="MAN1"  value="MAN11" extraprojections="site=1803;group=1801-CIM"/>
+      <option label="MLK1"  value="MLK11" extraprojections="site=1801;group=1801-CIM"/>
+      <option label="MSS1"  value="MSS11" extraprojections="site=1801;group=1801-CIM"/>
+      <option label="NSS1"  value="NSS11" extraprojections="site=1803;group=1803-TPZ"/>
+      <option label="ORS1"  value="ORS11" extraprojections="site=1803;group=1803-TPZ"/>
+      <option label="OTE1"  value="OTE11" extraprojections="site=1801;group=1801-CIM"/>
+      <option label="REE1"  value="REE01" extraprojections="site=1801;group=1801-CIM"/>
+      <option label="SAR1"  value="SAR01,SAR02,SAR03,SAR04,SAR05,SAR06,SAR07,SAR08" extraprojections="site=1808;group=1808-SAR"/>
+      <option label="SDVL"  value="SDVL1" extraprojections="site=1803;group=1801-CIM"/>
+      <option label="SES1"  value="SES10" extraprojections="site=1803;group=1803-SGSO"/>
+      <option label="SES2"  value="SES20" extraprojections="site=1803;group=1803-SGSO"/>
+      <option label="SGAH"  value="SGAH1" extraprojections="site=1803;group=1803-SGSO"/>
+      <option label="SGAK"  value="SGAK1" extraprojections="site=1803;group=1803-SGSO"/>
+      <option label="SGSO"  value="SGSO1" extraprojections="site=1803;group=1803-SGSO"/>
+      <option label="SLS1"  value="SLS11" extraprojections="site=1803;group=1803-SLS"/>
+      <option label="SSN1"  value="SSN01" extraprojections="site=1801;group=1801-SSN"/>
+      <option label="STT1"  value="STT01" extraprojections="site=1801;group=1801-CIM"/>
+      <option label="TIL1"  value="TIL02" extraprojections="site=1808;group=1808-SAR"/>
+      <option label="TPZ1"  value="TPZ11" extraprojections="site=1803;group=1803-TPZ"/>
+    </options>
+
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
+
+
 
       <components>
         <componentdisplayable id="offlineworktypes">
@@ -104,6 +173,9 @@
 
 
       <schemas>
+
+
+        <!--#region online-->
 
 
         <list redeclaring="false" platform="web">
@@ -391,7 +463,7 @@
             <renderer type="checkbox" params="layout=left"/>
           </field>
           <optionfield attribute="fsfacility" label="Facility" requiredexpression="true" searchoperation="eq" default="">
-            <option label="ACS1"  value="ACS01"/>
+            <option label="ACS1"  value="ACS01" extraprojections="site=1801"/>
             <option label="AES1"  value="AES11"/>
             <option label="AMH1"  value="AMH11"/>
             <option label="AMH2"  value="AMR03,AMR04"/>
@@ -468,22 +540,24 @@
           </properties>
         </schema>
 
-        <!-- #region: Mobile -->
+        <!--#endregion-->
 
+        <!-- #region: Mobile -->
+        
         <list platform="mobile" title="WO - Assigned" redeclaring="true">
           <filters>
             <optionfilter attribute="wopriority" provider="realpriority_.description" />
+            <optionfilter attribute="location" label="Facility" whereclause="@fsWorkorderOfflineService.getFacilityFilterWhereClause" provider="@fsWorkorderOfflineService.getFacilityFilterOptions"/>
           </filters>
 
+          <field attribute="location" label="Location"/>
           <field attribute="wonum" label="Workorder Number" qualifier="title"/>
           <field attribute="wopriority" label="Priority" qualifier="icon"/>
-          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
+          <field attribute="schedassigneddate" label="Scheduled Start Date" hidden="true"/>
           <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
-          <field attribute="schedfinish" label="Scheduled Finish Date" hidden="true"/>
-          <field attribute="schedfinishnotime" label="Scheduled Finish Date"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
           <!-- TODO: had to add it here because the value was not being fetched on sync. Find out why, fix it, remove this field -->
-          <field attribute="worktype" label="Work Type" /> 
+          <field attribute="worktype" label="Work Type" />
 
           <properties>
             <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
@@ -493,8 +567,19 @@
         <detail platform="mobile" title="Work Order" redeclaring="true" stereotype="detail">
           <reference id="detailhiddensoffline"/>
 
-          <association label="Location" target="location" labelfield="offlinelocation.description" requiredexpression="true"/>
-          <association label="Asset" target="assetnum" labelfield="offlineasset.description" requiredexpression="true"/>
+          <association label="Location" target="location" labelfield="offlinelocation.description" requiredexpression="true">
+            <renderer type="lookup" params="hasUseWhereClause=true;useWhereClauseLabel=Locations"/>
+            <event type="afterchange" service="fsWorkorderOfflineService" method="clearAsset" />
+            <dataprovider whereClause="@fsWorkorderOfflineService.getLocationsWhereClause"/>
+          </association>
+          <association label="Asset" target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location" requiredexpression="true">
+            <event type="afterchange" service="fsWorkorderOfflineService" method="updateLocation" />
+            <dataprovider whereClause="@fsWorkorderOfflineService.getAssetWhereClause"/>
+          </association>
+
+          <!-- do not remove - added to force the sync of numeric domains for priorities -->
+          <association label="Priority" target="wopriority" labelfield="realpriority_.description" showexpression="false"/>
+
 
           <association label="Status" target="status" labelfield="synstatus.description" >
             <dataprovider prefilterfunction="FilterStatusCodes"/>
@@ -505,9 +590,11 @@
             <renderer type="richtext"/>
           </field>
 
-<!--          <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true"/>-->
+          <!--          <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true"/>-->
 
-          <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true"/>
+          <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true">
+            <renderer type="lookup" params="showCode=false"/>
+          </association>
 
           <reference id="offlineworktypes"/>
 
@@ -515,24 +602,24 @@
 
           <field label="Warranty Claim Number" attribute="WOLO10"/>
           <field label="EPCR Number" attribute="EPCR_NUM"/>
-          
+
           <field label="JP Number" attribute="jobplan_.description" enableexpression="false" readonly="true"/>
 
-          <association label="Failure Class" target="failurecode" labelfield="failurelistonly_.description" requiredexpression="@worktype_.type == 'CM'" extraprojectionvalues="failurelist">
-              <event type="afterchange" service="fsWorkorderOfflineService" method="afterFailureChanged"/>
+          <association label="Failure Class" target="failurecode" labelfield="failurelistonly_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'" extraprojectionvalues="failurelist">
+            <event type="afterchange" service="fsWorkorderOfflineService" method="afterFailureChanged"/>
           </association>
 
           <!-- Region Problems, cuase Remedy -->
-          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="offlineproblemlist_.description" requiredexpression="@worktype_.type == 'CM'" extraprojectionvalues="failurelist" >
+          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="offlineproblemlist_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'" extraprojectionvalues="failurelist" >
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterProblemChanged"/>
           </association>
 
-          <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="offlinecauselist_.description" requiredexpression="@worktype_.type == 'CM'"
+          <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="offlinecauselist_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'"
                        extraprojectionvalues="failurelist">
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterCauseChanged"/>
           </association>
 
-          <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="offlineremedylist_.description" requiredexpression="@worktype_.type == 'CM'"
+          <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="offlineremedylist_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'"
                        extraprojectionvalues="failurelist">
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterRemedyChanged"/>
           </association>
@@ -566,31 +653,32 @@
 
         <schema id="newdetail" title="Work Order" stereotype="detailnew" platform="mobile" redeclaring="true">
           <event type="onload" service="fsWorkorderOfflineService" method="onNewDetailLoad"/>
-          
+
           <field attribute="orgid" hidden="true" requiredexpression="true" />
           <field attribute="siteid" hidden="true" requiredexpression="true" />
 
-          <field attribute="description" label="Description" requiredexpression="true"/>
 
           <association target="location" labelfield="offlinelocation.description" requiredexpression="true" label="Location">
-            <renderer type="lookup" params="wizard=0;wizardBehavior=readonly"/>
+            <renderer type="lookup" params="hasUseWhereClause=true;useWhereClauseLabel=Preferred Locations"/>
             <event type="afterchange" service="fsWorkorderOfflineService" method="clearAsset" />
-            <dataprovider whereClause="textindex01 in ( select textindex04 from DataEntry where application = 'workorder' and textindex04 is not null ) or ( textindex01 in ( select textindex01 from associationdata where application = 'locancestor' and textindex02 in ( select textindex04 from DataEntry where application = 'workorder' and textindex04 is not null ) ) )"/>
+            <dataprovider whereClause="@fsWorkorderOfflineService.getLocationsWhereClause"/>
           </association>
           <association target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location"
-                       requiredexpression="true" label="Asset">
-            <renderer type="lookup" params="wizard=1;wizardBehavior=readonly"/>
+                       requiredexpression="true" label="Asset" showexpression="@location !=null">
+            <renderer type="lookup" />
             <event type="afterchange" service="fsWorkorderOfflineService" method="updateLocation" />
-            <dataprovider whereClause="textindex01 = @location or ( textindex01 in ( select textindex01 from associationdata where application = 'locancestor' and textindex02 = @location ) )"/>
+            <dataprovider whereClause="@fsWorkorderOfflineService.getAssetWhereClause"/>
           </association>
+
+          <field attribute="description" label="Description" requiredexpression="true" showexpression="@assetnum !=null"/>
 
           <association  target="classstructureid" labelfield="classstructure_.description"
-                        requiredexpression="true" label="Origination">
-            <renderer type="lookup"/>
+                        requiredexpression="true" label="Origination" showexpression="@assetnum !=null">
+            <renderer type="lookup" params="showCode=false"/>
           </association>
 
-          <reference id="offlineworktypes"/>
-          
+          <reference id="offlineworktypes" showexpression="@assetnum !=null"/>
+
 
           <composition relationship="attachment" label="Attachments" >
             <collectionproperties allowupdate="false" />
@@ -604,6 +692,7 @@
       <properties>
         <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
         <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+        <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
       </properties>
     </application>
 
@@ -623,7 +712,7 @@
         <property key="offline.force.assoc.sync" value="true"/>
         <property key="mobile.fetchlimit" value="1000"/>
       </properties>
-      
+
       <schemas>
         <list platform="mobile" title="Numeric Domain">
           <field attribute="location" label="Location"/>
@@ -633,20 +722,22 @@
       </schemas>
     </application>
 
-    <application name="otherworkorder" title="Other Work Orders" entity="workorder" role="workorders">
+    <application name="otherworkorder" title="Group Work Orders" entity="workorder" role="workorders">
       <properties>
-        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location,estdur"/>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
+        <property key="list.offline.numeric.indexlist" value="estdur"/>
       </properties>
 
       <schemas>
-        <list platform="mobile" title="WO - Other">
+        <list platform="mobile" title="WO - Group">
           <filters>
             <optionfilter attribute="wopriority" provider="realpriority_.description" />
+            <optionfilter attribute="location" label="Facility" whereclause="@fsWorkorderOfflineService.getFacilityFilterWhereClause" provider="@fsWorkorderOfflineService.getFacilityFilterOptions"/>
           </filters>
 
+          <field attribute="location" label="Location"/>
           <field attribute="wonum" label="Workorder Number" qualifier="title"/>
           <field attribute="wopriority" label="Priority" qualifier="icon"/>
-          <field attribute="schedstart" label="Scheduled Start Date" hidden="true"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
           <field attribute="estdur" label="Estimated Duration" qualifier="subtitle">
             <renderer type="default" params="showLabel=true" />
@@ -659,39 +750,66 @@
         </list>
 
         <detail platform="mobile" title="Work Order">
+          <!-- #region: detailhiddensoffline -->
           <field attribute="workorderid" hidden="true"/>
-          <field attribute="wonum" label="Number" hidden="true" />
-          <field attribute="orgid" hidden="true" requiredexpression="true" />
-          <field attribute="siteid" hidden="true" requiredexpression="true" />
-          
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="woclass" hidden="true"/>
+          <field attribute="hasfollowupwork" hidden="true"/>
+          <field attribute="origrecordid" hidden="true"/>
+          <field attribute="origrecordclass" hidden="true"/>
+          <field attribute="wonum" hidden="true" />
+          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
+          <field attribute="changeby" label="Changed By" hidden="true"/>
+
+          <!-- do not remove - added to force the sync of numeric domains for priorities -->
+          <association label="Priority" target="wopriority" labelfield="realpriority_.description" showexpression="false"/>
+          <!-- #endregion -->
+          <!-- #region: visible fields -->
           <field attribute="owner" readonly="true" showexpression="!!@owner" label="Owner"/>
           <field attribute="description" readonly="true" label="Description"/>
           <field attribute="status" readonly="true" label="Status" />
           <field attribute="location" readonly="true" label="Location" />
           <field attribute="assetnum" readonly="true" label="Asset" />
-          <field attribute="classstructureid" readonly="true" label="Origination" />
+          <field attribute="classstructure_.description" readonly="true" label="Origination"/>
+          <field attribute="classstructureid" readonly="true" hidden="true" /> <!-- assign to me needs this -->
+          <field attribute="worktype" readonly="true" label="Work Type" />
           <field attribute="ld_.ldtext" readonly="true" label="Details">
             <renderer type="richtext"/>
           </field>
-
+          <!-- #endregion -->
+          <!-- #region: hidden fields from FS.WO.detail -->
+          <field attribute="failurecode" readonly="true" hidden="true" />
+          <field attribute="WOLO10" readonly="true" hidden="true" />
+          <field attribute="EPCR_NUM" readonly="true" hidden="true" />
+          <field attribute="jobplan_.description" readonly="true" hidden="true"/>
+          <field attribute="problemcode" readonly="true" hidden="true" />
+          <field attribute="fr1code" readonly="true" hidden="true" />
+          <field attribute="fr2code" readonly="true" hidden="true" />
+          <!-- #endregion -->
+          <!-- #region: compositions -->
           <composition relationship="matusetrans" label="Materials" >
-            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSED' &amp;&amp; !!@owner" />
+            <collectionproperties allowupdate="false" allowcreation="false" />
           </composition>
           <composition relationship="labtrans" label="Labor">
-            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSED' &amp;&amp; !!@owner" />
+            <collectionproperties allowupdate="false" allowcreation="false" />
           </composition>
-          
+          <!-- #endregion -->
+
           <commandbars>
             <commandgroup position="mobile.fab" platform="mobile">
-              <command id="assignworkorder" service="fsWorkorderOfflineService" method="assignWorkOrder" 
-                       showexpression="!@owner" icon="ion-android-person-add" label="Assign To Me" />
+              <command id="assignworkorder" service="fsWorkorderOfflineService" method="assignWorkOrder"
+                       icon="ion-android-person-add" label="Assign To Me" />
             </commandgroup>
           </commandbars>
-      
+
+
+
         </detail>
       </schemas>
     </application>
 
+    
     <application name="location" title="Location" entity="location" >
 
       <filters>
@@ -811,18 +929,90 @@
           </properties>
         </schema>
       </schemas>
-    
+
       <properties>
         <property key="list.offline.text.indexlist" value="location"/>
       </properties>
     </application>
 
+    <application name="person" title="Person" entity="person">
+
+      <components>
+        <componentdisplayable id="facilities">
+          <optionfield attribute="facilities" label="Preferred Facilities" searchoperation="eq" default="">
+            <renderer type="multiselectautocompleteclient" params="creationallowed=false"/>
+            <filter clientfunction="personService.filterFacilitiesBySite"/>
+            <option label="ACS1"  value="ACS" extraprojections="site=1801;group=1801-ACS"/>
+            <option label="AES1"  value="AES" extraprojections="site=1803;group=1803-TPZ"/>
+            <option label="AMH1"  value="AMH" extraprojections="site=1808;group=1808-SAR"/>
+            <option label="AMH2"  value="AMR03,AMR04" extraprojections="site=1808;group=1808-SAR"/>
+            <option label="ALM1"  value="ALM" extraprojections="site=1801;group=1801-CIM"/>
+            <option label="ALP1"  value="ALP" extraprojections="site=1803;group=1803-AVS"/>
+            <option label="AVS1"  value="AVS" extraprojections="site=1803;group=1803-AVS"/>
+            <option label="AVV1"  value="AVV" extraprojections="site=1801;group=1801-AVV"/>
+            <option label="BEL1"  value="BEL" extraprojections="site=1808;group=1808-SAR"/>
+            <option label="BRS1"  value="BRS" extraprojections="site=1801;group=1801-CIM"/>
+            <option label="BWS1"  value="BWS" extraprojections="site=1803;group=1803-TPZ"/>
+            <option label="CBLA"  value="CBLA" extraprojections="site=1801;group=1801-CIM"/>
+            <option label="CCS1"  value="CCS" extraprojections="site=1803;group=1803-TPZ"/>
+            <option label="CGL1"  value="CGL" extraprojections="site=1803;group=1803-TPZ"/>
+            <option label="CID1"  value="CID" extraprojections="site=1803;group=1803-TPZ"/>
+            <option label="CIM1"  value="CIM" extraprojections="site=1801"/>
+            <option label="CVS1"  value="CVS" extraprojections="site=1803;group=1803-SGSO"/>
+            <option label="DSS1"  value="DSS" extraprojections="site=1803"/>
+            <option label="GAL1"  value="GAL" extraprojections="site=1801;group=1801-CIM"/>
+            <option label="HON1"  value="HON" extraprojections="site=1801;group=1801-CIM"/>
+            <option label="IVS1"  value="IVS" extraprojections="site=1803;group=1803-IVS"/>
+            <option label="IVW1"  value="IVW" extraprojections="site=1803;group=1803-IVS"/>
+            <option label="KBSA"  value="KBSA" extraprojections="site=1803;group=1803-KBS"/>
+            <option label="KBSB"  value="KBSB" extraprojections="site=1803;group=1803-KBS"/>
+            <option label="KNS1"  value="KNS" extraprojections="site=1803;group=1801-TPZ"/>
+            <option label="KSS1"  value="KSS" extraprojections="site=1803;group=1801-TPZ"/>
+            <option label="LHS1"  value="LHS" extraprojections="site=1803;group=1803-TPZ"/>
+            <option label="LMS1"  value="LMS" extraprojections="site=1801;group=1801-CIM"/>
+            <option label="MAN1"  value="MAN" extraprojections="site=1803;group=1801-CIM"/>
+            <option label="MLK1"  value="MLK" extraprojections="site=1801;group=1801-CIM"/>
+            <option label="MSS1"  value="MSS" extraprojections="site=1801;group=1801-CIM"/>
+            <option label="NSS1"  value="NSS" extraprojections="site=1803;group=1803-TPZ"/>
+            <option label="ORS1"  value="ORS" extraprojections="site=1803;group=1803-TPZ"/>
+            <option label="OTE1"  value="OTE" extraprojections="site=1801;group=1801-CIM"/>
+            <option label="REE1"  value="REE" extraprojections="site=1801;group=1801-CIM"/>
+            <option label="SAR1"  value="SAR01,SAR02,SAR03,SAR04,SAR05,SAR06,SAR07,SAR08" extraprojections="site=1808;group=1808-SAR"/>
+            <option label="SDVL"  value="SDVL" extraprojections="site=1803;group=1801-CIM"/>
+            <option label="SES1"  value="SES" extraprojections="site=1803;group=1803-SGSO"/>
+            <option label="SES2"  value="SES" extraprojections="site=1803;group=1803-SGSO"/>
+            <option label="SGAH"  value="SGAH" extraprojections="site=1803;group=1803-SGSO"/>
+            <option label="SGAK"  value="SGAK" extraprojections="site=1803;group=1803-SGSO"/>
+            <option label="SGSO"  value="SGSO" extraprojections="site=1803;group=1803-SGSO"/>
+            <option label="SLS1"  value="SLS" extraprojections="site=1803;group=1803-SLS"/>
+            <option label="SSN1"  value="SSN" extraprojections="site=1801;group=1801-SSN"/>
+            <option label="STT1"  value="STT" extraprojections="site=1801;group=1801-CIM"/>
+            <option label="TIL1"  value="TIL" extraprojections="site=1808;group=1808-SAR"/>
+            <option label="TPZ1"  value="TPZ" extraprojections="site=1803;group=1803-TPZ"/>
+          </optionfield>
+        </componentdisplayable>
+      </components>
+
+      <schemas>
+        <schema id="detail" redeclaring="false">
+          <customization position="location">
+            <reference id="facilities"/>
+          </customization>
+        </schema>
+
+        <schema id="myprofiledetail" redeclaring="false">
+          <customization position="location">
+            <reference id="facilities"/>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
 
     <application name="asset" title="Asset" entity="asset" >
       <properties>
         <property key="list.offline.text.indexlist" value="location"/>
       </properties>
-      
+
       <filters>
         <optionfilter attribute="location" provider="@firstSolarPCSLocationHandler.HandlePCSLocationProvider" displaycode="false"
               allowblank="true" whereclause="@firstSolarPCSLocationHandler.HandlePCSLocation"/>
@@ -959,10 +1149,10 @@
 
         <detail stereotype="compositiondetail" platform="mobile">
           <!-- declared just so it can be fetched in sync -->
-          <association target="#inventory" labelfield="offlineinventory.itemnum" 
-                       showexpression="false" enableexpression="false" 
+          <association target="#inventory" labelfield="offlineinventory.itemnum"
+                       showexpression="false" enableexpression="false"
                        label="#inventory" />
-          
+
           <field attribute="matusetransid" hidden="true" />
           <field attribute="refwo" hidden="true" />
           <field attribute="orgid" defaultexpression="$.parentdata.fields.orgid" hidden="true" />
@@ -978,33 +1168,33 @@
             <option label="MATERIAL" value="MATERIAL"/>
           </optionfield>
 
-          <association target="itemnum" labelfield="item_.description" extraprojectionvalues="description" 
-                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'" 
+          <association target="itemnum" labelfield="offlineitem_.description" extraprojectionvalues="description"
+                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
                        label="Item" >
             <renderer type="lookup"/>
             <event type="afterchange" service="materialService" method="itemSelected"/>
           </association>
 
-          <optionfield attribute="storeloc" 
-                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'" 
+          <optionfield attribute="storeloc"
+                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
                        label="Storeroom">
           </optionfield>
-          
+
           <field attribute="description" label="Material Description" requiredexpression="true" showexpression="@linetype==='MATERIAL'"/>
           <field attribute="unitcost" label="Unit Cost" qualifier="quantity" requiredexpression="@linetype==='MATERIAL'" showexpression="@linetype==='MATERIAL'">
             <renderer type="numericinput" params="min=0;step=0.01" />
           </field>
-          
+
           <field attribute="qtyrequested" label="Quantity" requiredexpression="true" qualifier="quantity" default="1">
             <renderer type="numericinput" params="min=1;max=100;decimals=0;step=1"/>
           </field>
-        
+
         </detail>
         <!-- #endregion -->
       </schemas>
     </application>
 
-    <application name="item" entity="item" title="Item">
+    <application name="offlineitem" entity="offlineitem" title="Item">
       <schemas>
         <list platform="mobile">
           <field attribute="itemnum" label="Item" />
@@ -1017,6 +1207,8 @@
       </schemas>
     </application>
 
+    <!-- #region: Mobile offline association data -->
+
     <application name="offlineinventory" entity="inventory" title="Inventory">
       <schemas>
         <list platform="mobile">
@@ -1025,10 +1217,10 @@
         </list>
       </schemas>
     </application>
-    
-    <application name="classstructure" title="ClassStructure" entity="classstructure">
+
+    <application name="classstructure" title="Class Structure" entity="classstructure">
       <schemas>
-        <list>
+        <list platform="mobile">
           <field attribute="classstructureid" hidden="true"/>
           <field attribute="description" label="Description"/>
         </list>
@@ -1037,7 +1229,7 @@
 
     <application name="failurelistonly" title="Failure List" entity="failurelistonly">
       <schemas>
-        <list>
+        <list platform="mobile">
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
           <field attribute="parent" hidden="true"/>
@@ -1046,9 +1238,9 @@
       </schemas>
     </application>
 
-    <application name="problemlist" title="ClassStructure" entity="problemlist">
+    <application name="problemlist" title="Problem List" entity="problemlist">
       <schemas>
-        <list>
+        <list platform="mobile">
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
           <field attribute="parent" hidden="true"/>
@@ -1057,21 +1249,21 @@
       </schemas>
     </application>
 
-    <application name="causelist" title="ClassStructure" entity="causelist">
+    <application name="causelist" title="Cause List" entity="causelist">
       <schemas>
-        <list>
+        <list platform="mobile">
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
           <field attribute="parent" hidden="true"/>
           <field attribute="description" label="Description"/>
-          
+
         </list>
       </schemas>
     </application>
 
-    <application name="remedylist" title="ClassStructure" entity="remedylist">
+    <application name="remedylist" title="Remedy List" entity="remedylist">
       <schemas>
-        <list>
+        <list platform="mobile">
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
           <field attribute="parent" hidden="true"/>
@@ -1079,7 +1271,7 @@
         </list>
       </schemas>
     </application>
-    
+
     <application name="offlinelocation" entity="location" title="Location">
       <schemas>
         <list platform="mobile">
@@ -1087,6 +1279,10 @@
           <field attribute="description" label="Description"/>
         </list>
       </schemas>
+
+      <properties>
+        <property key="list.offline.text.indexlist" value="location"/>
+      </properties>
     </application>
 
     <application name="offlineasset" entity="asset" title="Asset">
@@ -1097,7 +1293,13 @@
           <field attribute="description" label="Description"/>
         </list>
       </schemas>
+
+      <properties>
+        <property key="list.offline.text.indexlist" value="location"/>
+      </properties>
     </application>
-    
+
+    <!-- #endregion-->
+
   </applications>
 </metadata>

@@ -34,7 +34,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _language;
         private readonly string _maximoPersonId;
         private readonly string _storeloc;
-        private readonly string _signature;
+        private string _signature;
         private readonly bool _changePassword;
         private Boolean? _active;
         private int? _timezoneOffset;
@@ -116,9 +116,20 @@ namespace softWrench.sW4.Metadata.Security {
             Identity = new GenericIdentity(_login);
             _gridPreferences = gridPreferences;
             _userPreferences = userPreferences;
-            _signature = userPreferences != null ? userPreferences.Signature : "";
+            HandleUserPreferences(userPreferences);
             _mergedUserProfile = mergedProfile;
             _active = dbUser.IsActive;
+        }
+
+        private void HandleUserPreferences(UserPreferences userPreferences) {
+            if (userPreferences != null) {
+                _signature = userPreferences.Signature;
+                if (_userPreferences.GenericProperties != null) {
+                    foreach (var genericProperty in _userPreferences.GenericProperties) {
+                        Genericproperties.Add(genericProperty.Key, genericProperty.Convert());
+                    }
+                }
+            }
         }
 
         private InMemoryUser(string mock) : this() {
@@ -296,6 +307,15 @@ namespace softWrench.sW4.Metadata.Security {
             }
         }
 
+        public bool IsAllowedInApp(string applicationName) {
+            if (IsInRolInternal(applicationName)) {
+                return true;
+            }
+            var applicationPermission = MergedUserProfile.Permissions.FirstOrDefault(a => a.ApplicationName.Equals(applicationName));
+            return applicationPermission != null && !applicationPermission.HasNoPermissions;
+        }
+
+
         public bool IsInRole(string role) {
             return IsInRolInternal(role);
         }
@@ -351,6 +371,18 @@ namespace softWrench.sW4.Metadata.Security {
             }
         }
 
+        public IDictionary<string, object> GenericSyncProperties {
+            get {
+                var allProperties = Genericproperties;
+                var syncProperties = allProperties == null
+                    ? new Dictionary<string, object>()
+                    : allProperties.Where(p => p.Key.StartsWith("sync.")).ToDictionary(p => p.Key, p => p.Value);
+                syncProperties.Add("siteid", SiteId);
+                syncProperties.Add("orgid", OrgId);
+                return syncProperties;
+            }
+        }
+
         public string GetPersonGroupsForQuery() {
             var personGroups = PersonGroups.Select(f => f.PersonGroup.Name).ToArray();
             var strPersonGroups = String.Join("','", personGroups);
@@ -368,6 +400,8 @@ namespace softWrench.sW4.Metadata.Security {
         public bool IsSwAdmin() {
             return Login.Equals("swadmin") || (IsInRolInternal(Role.SysAdmin, false) && IsInRolInternal(Role.ClientAdmin, false));
         }
+
+
 
         public IDictionary<string, CommandBarDefinition> SecuredBars(ClientPlatform platform, IDictionary<string, CommandBarDefinition> commandBars, ApplicationSchemaDefinition currentSchema = null) {
             if (currentSchema == null && _cachedBars.ContainsKey(platform)) {
@@ -396,5 +430,11 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
 
+        public void AddGenericProperties(string key, object value) {
+            if (Genericproperties.ContainsKey(key)) {
+                Genericproperties.Remove(key);
+            }
+            Genericproperties.Add(key, value);
+        }
     }
 }

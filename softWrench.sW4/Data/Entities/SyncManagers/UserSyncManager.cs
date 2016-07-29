@@ -81,7 +81,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             if (swUser == null) throw new ArgumentNullException("swUser");
             User fullUser = null;
             var dto = new SearchRequestDto {
-                WhereClause = (" person.personid = '" + swUser.UserName + "'").ToUpper()
+                WhereClause = (" person.personid = '" + swUser.MaximoPersonId + "'").ToUpper()
             };
             var query = MetadataProvider.GlobalProperty(SwUserConstants.PersonUserQuery);
             if (query != null) {

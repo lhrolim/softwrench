@@ -69,10 +69,7 @@
           <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
-        <relationship to="synonymdomain" qualifier="synstatus">
-          <relationshipAttribute from="status" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
-        </relationship>
+       
         <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />

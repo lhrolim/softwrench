@@ -155,7 +155,7 @@
                 padding: 15px 20px 10px;
                 cursor: pointer;
                 background-color: #878787;
-                border-bottom: #000 1px solid;
+                border-top: #000 1px solid;
             }
 
             div.menu-open + .menu-items {
@@ -247,12 +247,6 @@
                 }
             }
         }
-    }
-}
-
-@media all and (min-width: 330px) {
-    .container header .branding .logo img {
-       height: 60px;
     }
 }
 

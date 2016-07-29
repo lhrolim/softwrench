@@ -271,8 +271,9 @@
                         </div>
                     </div>
                     <div ng-switch-when="multiselectautocompleteclient">
-                        <selectize config="{create:true, valueField:'value', labelField:'label', searchField: ['label'], createOnBlur:'true', beforeItemAdd:getDispatchFn(fieldMetadata.rendererParameters['newItemValidation']), }"
+                        <selectize config="{valueField:'value', labelField:'label',hideSelected:true, searchField: ['label'], createOnBlur:'true', beforeItemAdd:getDispatchFn(fieldMetadata.rendererParameters['newItemValidation']), }"
                                    options="GetAssociationOptions(fieldMetadata)"
+                                   creationallowed="{{fieldMetadata.rendererParameters['creationallowed']}}"
                                    ng-model="datamap[fieldMetadata.target]">
                         </selectize>
                     </div>
@@ -349,12 +350,12 @@
 
                             <input ng-if="!fieldMetadata.rendererParameters['multiple'] || fieldMetadata.rendererParameters['multiple'] === false || fieldMetadata.rendererParameters['multiple'] === 'false'"
                                    id="uploadInput" type="file"
-                                   fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"
+                                   fileread="datamap[fieldMetadata.attribute]" data-file-read-field="fieldMetadata" path="datamap.newattachment_path" 
                                    data-accepted-extensions="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }}" />
 
                             <input ng-if="!!fieldMetadata.rendererParameters['multiple'] && (fieldMetadata.rendererParameters['multiple'] === true || fieldMetadata.rendererParameters['multiple'] === 'true')"
                                    id="uploadInput" type="file"
-                                   fileread="datamap[fieldMetadata.attribute]" path="datamap.newattachment_path"
+                                   fileread="datamap[fieldMetadata.attribute]" data-file-read-field="fieldMetadata" path="datamap.newattachment_path"
                                    data-accepted-extensions="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }}"
                                    multiple="multiple" />
 
@@ -389,13 +390,38 @@
                             </div>
                         </div>
                     </div>
+
+                    <div ng-switch-when="link">
+                        <ul ng-if="isArray(datamap[fieldMetadata.attribute])">
+                            
+                            <li ng-repeat="link in datamap[fieldMetadata.attribute]">
+                                <a href="{{ link[fieldMetadata.rendererParameters['linkUrlField'] || 'url' ] }}" target="_blank">
+                                    {{ link[fieldMetadata.rendererParameters['linkNameField'] || 'name' ] }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                     <div ng-switch-when="screenshot">
                         <div ng-show="!isIE()" id="imgHolder_{{fieldMetadata.attribute}}" name="{{fieldMetadata.attribute}}" contenteditable='true' class="form-control image-holder"></div>
                         <iframe id="richTextBox_{{fieldMetadata.attribute}}" ng-show="isIE()" ng-src="{{contextPath('/UserControls/RichTextBox.aspx')}}"
                                 class="richtextbox" frameborder="0" />
                     </div>
                     <div ng-switch-when="numericinput">
-                        <input data-field="{{fieldMetadata.attribute}}"
+
+                        <input ng-if="fieldMetadata.rendererParameters['numberType'] === 'double' || fieldMetadata.rendererParameters['numberType'] === 'float'"
+                               data-field="{{fieldMetadata.attribute}}"
+                               id="spinner"
+                               class="hidden-phone form-control"
+                               ng-model="datamap[fieldMetadata.attribute]"
+                               ng-init="initField(fieldMetadata)"
+                               min="{{fieldMetadata.rendererParameters['min']}}"
+                               max="{{setMaxNumericInput(datamap,fieldMetadata)}}"
+                               number-spinner ng-model-options="{ debounce : 500 }"
+                               float-converter />
+
+                        <input ng-if="fieldMetadata.rendererParameters['numberType'] !== 'double' && fieldMetadata.rendererParameters['numberType'] !== 'float'"
+                               data-field="{{fieldMetadata.attribute}}"
                                id="spinner"
                                class="hidden-phone form-control"
                                ng-model="datamap[fieldMetadata.attribute]"
@@ -403,6 +429,8 @@
                                min="{{fieldMetadata.rendererParameters['min']}}"
                                max="{{setMaxNumericInput(datamap,fieldMetadata)}}"
                                number-spinner />
+
+
                     </div>
                     <div ng-switch-when="combodropdown">
                         <div class="multiselect-div">

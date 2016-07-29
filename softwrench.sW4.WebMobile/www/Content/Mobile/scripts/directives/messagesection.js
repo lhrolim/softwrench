@@ -11,7 +11,7 @@
             },
             controller: ["$scope", function ($scope) {
 
-                $rootScope.$on('$stateChangeSuccess',
+                $scope.$on('$stateChangeSuccess',
                  function (event, toState, toParams, fromState, fromParams) {
                      $scope.hasValidationError = false;
                      $scope.validationArray = null;

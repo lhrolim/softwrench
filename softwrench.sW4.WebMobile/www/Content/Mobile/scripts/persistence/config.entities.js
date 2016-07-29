@@ -37,6 +37,8 @@
             textindex03: "TEXT",
             textindex04: "TEXT",
             textindex05: "TEXT",
+            numericindex01: "NUMERIC",
+            numericindex02: "NUMERIC",
             dateindex01: "DATE",
             dateindex02: "DATE",
             dateindex03: "DATE"
@@ -75,7 +77,7 @@
         ///
         /// Inserts or updates associationData based upon the uniqueness of the entries
         ///
-        entities.AssociationData.InsertionPattern = "INSERT OR REPLACE INTO AssociationData (application,datamap,remoteId,rowstamp,id,textindex01,textindex02,textindex03,textindex04,textindex05,dateindex01,dateindex02,dateindex03) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        entities.AssociationData.InsertionPattern = "INSERT {0} INTO AssociationData (application,datamap,remoteId,rowstamp,id,textindex01,textindex02,textindex03,textindex04,textindex05,numericindex01,numericindex02,dateindex01,dateindex02,dateindex03) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         entities.AssociationData.maxRowstampQueries = "select max(rowstamp) as rowstamp,application,id from AssociationData group by application";
 
@@ -170,7 +172,9 @@
             mimetype:"TEXT" //mimetype of the file
         });
 
-        entities.Attachment.NonPendingAttachments = "select id,compositionRemoteId from Attachment where (path is not null or content is not null) and id in (?)";
+        entities.Attachment.NonPendingAttachments = "select id,compositionRemoteId,docinfoRemoteId from Attachment where (path is not null or content is not null) and (id in ({0}) or docinfoRemoteId in ({1}) )";
+
+
         entities.Attachment.UpdateRemoteIdOfExistingAttachments = "update Attachment set 'compositionRemoteId' = ?, 'docinfoRemoteId'=? where id = ?";
         entities.Attachment.CreateNewBlankAttachments = "insert into Attachment ('application','parentId','compositionRemoteId','docinfoRemoteId','id') values (?,?,?,?,?)";
         //brings the attachments that need to be syncrhonized to the server. The ones which have a compositionRemoteId already point to a downloaded composition, and thus do not require to be uploaded
@@ -187,6 +191,8 @@
         
         entities.Attachment.ByDocInfoId = "select content,mimetype,path from Attachment where docinfoRemoteId = ?";
         entities.Attachment.ByHashId = "select content,mimetype,path from Attachment where id = ?";
+        entities.Attachment.DeleteById = "delete from Attachment where id = ?";
+        entities.Attachment.DeleteMultipleByIdsPattern = "delete from Attachment where id = in ({0})";
 
         //#endregion
 
@@ -218,6 +224,8 @@
             textindex03: "TEXT",
             textindex04: "TEXT",
             textindex05: "TEXT",
+            numericindex01: "NUMERIC",
+            numericindex02: "NUMERIC",
             dateindex01: "DATE",
             dateindex02: "DATE",
             dateindex03: "DATE"
@@ -239,17 +247,21 @@
         entities.DataEntry.maxRowstampByAppQuery = "select max(rowstamp) as rowstamp,application,id from DataEntry where application = '{0}'";
 
         //query to be performed after synchronization has occurred, for new items
-        entities.DataEntry.insertionQueryPattern = "insert into DataEntry ('application','datamap','pending','isDirty','remoteId','rowstamp','id','textindex01','textindex02','textindex03','textindex04','textindex05','dateindex01','dateindex02','dateindex03') values (:p0,:p1,0,0,:p2,:p3,:p4,:p5,:p6,:p7,:p8,:p9,:p10,:p11,:p12)";
+        entities.DataEntry.insertionQueryPattern = "insert into DataEntry ('application','datamap','pending','isDirty','remoteId','rowstamp','id','textindex01','textindex02','textindex03','textindex04','textindex05','numericindex01','numericindex02','dateindex01','dateindex02','dateindex03') values (:p0,:p1,0,0,:p2,:p3,:p4,:p5,:p6,:p7,:p8,:p9,:p10,:p11,:p12,:p13,:p14)";
         //query to be performed after synchronization has occurred, for existing items
-        entities.DataEntry.updateQueryPattern = "update DataEntry set 'datamap'=:p0,'pending'=0,'rowstamp'=:p1,'textindex01'=:p2,'textindex02'=:p3,'textindex03'=:p4,'textindex04'=:p5,'textindex05'=:p6,'dateindex01'=:p7,'dateindex02'=:p8,'dateindex03'=:p9 where remoteId=:p10 and application=:p11";
+        entities.DataEntry.updateQueryPattern = "update DataEntry set 'datamap'=:p0,'pending'=0,'rowstamp'=:p1,'textindex01'=:p2,'textindex02'=:p3,'textindex03'=:p4,'textindex04'=:p5,'textindex05'=:p6,'numericindex01'=:p7,'numericindex02'=:p8,'dateindex01'=:p9,'dateindex02'=:p10,'dateindex03'=:p11 where remoteId=:p12 and application=:p13";
 
-        entities.DataEntry.insertOrReplacePattern = "INSERT OR REPLACE INTO DataEntry (application,datamap,pending,isDirty,remoteId,rowstamp,id,textindex01,textindex02,textindex03,textindex04,textindex05,dateindex01,dateindex02,dateindex03) values (?,?,0,0,?,?,?,?,?,?,?,?,?,?,?)";
+        entities.DataEntry.insertOrReplacePattern = "INSERT OR REPLACE INTO DataEntry (application,datamap,pending,isDirty,remoteId,rowstamp,id,textindex01,textindex02,textindex03,textindex04,textindex05,numericindex01,numericindex02,dateindex01,dateindex02,dateindex03) values (?,?,0,0,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         entities.DataEntry.deleteQueryPattern = "delete from DataEntry where 'remoteId' in(?) and 'application'=?";
         entities.DataEntry.deleteInIdsStatement = "delete from DataEntry where id in(?) and application=?";
+        entities.DataEntry.deleteLocalStatement = "delete from DataEntry where id=? and application=?";
 
-        entities.DataEntry.updateLocalPattern = "update DataEntry set 'datamap'=?,'isDirty'=1,'textindex01'=?,'textindex02'=?,'textindex03'=?,'textindex04'=?,'textindex05'=?,'dateindex01'=?,'dateindex02'=?,'dateindex03'=? where id =?";
-        entities.DataEntry.insertLocalPattern = "insert into DataEntry ('application','datamap','isDirty','pending','remoteId','rowstamp','id','textindex01','textindex02','textindex03','textindex04','textindex05','dateindex01','dateindex02','dateindex03') values (?,?,1,0,null,null,?,?,?,?,?,?,?,?,?)";
+        entities.DataEntry.updateLocalPattern = "update DataEntry set 'datamap'=?,'isDirty'=1,'textindex01'=?,'textindex02'=?,'textindex03'=?,'textindex04'=?,'textindex05'=?,'numericindex01'=?,'numericindex02'=?,'dateindex01'=?,'dateindex02'=?,'dateindex03'=? where id =?";
+        entities.DataEntry.updateLocalSetOriginalPattern = "update DataEntry set 'datamap'=?,'originaldatamap'=?,'isDirty'=1,'textindex01'=?,'textindex02'=?,'textindex03'=?,'textindex04'=?,'textindex05'=?,'numericindex01'=?,'numericindex02'=?,'dateindex01'=?,'dateindex02'=?,'dateindex03'=? where id =?";
+        entities.DataEntry.insertLocalPattern = "insert into DataEntry ('application','datamap','isDirty','pending','remoteId','rowstamp','id','textindex01','textindex02','textindex03','textindex04','textindex05','numericindex01','numericindex02','dateindex01','dateindex02','dateindex03') values (?,?,1,0,null,null,?,?,?,?,?,?,?,?,?,?,?)";
+
+        entities.DataEntry.restoreToOriginalStateStatement = "update DataEntry set isDirty=0,datamap=originaldatamap where id=? and application=?";
 
         entities.DataEntry.clearProblem = "update DataEntry set 'hasProblem'=0 where id in(?)";
         entities.DataEntry.setProblem = "update DataEntry set 'hasProblem'=1 where id in(?)";
@@ -335,6 +347,17 @@
             key: "TEXT",
             data: "JSON"
         });
+
+        entities.Cookie = persistence.define("Cookie", {
+            name: "TEXT",
+            value: "TEXT"
+        });
+        entities.Cookie.index(["name"], { unique: true });
+
+        entities.Cookie.insertStatement = "insert into Cookie (id, name, value) values (?,?,?)";
+        entities.Cookie.updateByNameStatement = "update Cookie set value=? where name=?";
+        entities.Cookie.deleteByNameStatement = "delete from Cookie where name=?";
+        entities.Cookie.deleteAllStatement = "delete from Cookie";
         //#endregion
 
     }]);

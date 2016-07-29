@@ -1,37 +1,32 @@
-﻿(function (mobileServices, angular) {
+﻿(function (mobileServices, angular, _) {
     "use strict";
 
-    function applicationStateService(swdbDAO, $q, entities, configurationService, $cordovaAppVersion) {
+    function applicationStateService(dao, $q, entities, configurationService, $cordovaAppVersion) {
 
         //#region Utils
 
-        const countAll = app => swdbDAO.countByQuery("DataEntry", `application='${app}'`);
+        const countAll = app => dao.countByQuery("DataEntry", `application='${app}'`);
         
-        const countPending = app => swdbDAO.countByQuery("DataEntry", `application='${app}' and pending = 1`);
+        const countPending = app => dao.countByQuery("DataEntry", `application='${app}' and pending = 1`);
 
-        const countDirty = app => swdbDAO.countByQuery("DataEntry", `application='${app}' and isDirty=1 and (hasProblem = 0 or hasProblem is null)`);
+        const countDirty = app => dao.countByQuery("DataEntry", `application='${app}' and isDirty=1 and (hasProblem = 0 or hasProblem is null)`);
 
-        const countProblematic = app => swdbDAO.countByQuery("DataEntry", `application='${app}' and hasProblem = 1`);
+        const countProblematic = app => dao.countByQuery("DataEntry", `application='${app}' and hasProblem = 1`);
 
-        //#endregion
+        function associationState() {
+            return dao.findByQuery("Application", "association=1")
+                .then(r => r.map(a => ({
+                    name: a.application, title: a.data.title
+                })))
+                .then(a => {
+                    const titleLookupTable = _.indexBy(a, "name");
+                    return dao.executeStatement("select application,count(id) from AssociationData group by application")
+                        .then(c => c.map(i => ({ application: i.application, count: i["count(id)"], title: titleLookupTable[i.application].title })));
+                });
+        }
 
-        //#region Public methods
-
-        /**
-         * Fetches the status of each 'viewable' application (not association nor composition) in the system.
-         * Each status is a dictionary: 
-         * { 
-         *  application: String, // application's name 
-         *  all: Integer, // count of all entities
-         *  pending: Integer, // count of pending entities 
-         *  dirty: Integer, // count of all dirty entities (just dirty, not including problematic)
-         *  problematic: Integer, // count of problematic entities 
-         * }
-         * 
-         * @returns Promised resolved with array of each application's states 
-         */
-        function currentState() {
-            return swdbDAO.findByQuery("Application", "composition=0 and association=0")
+        function topLevelApplicationState() {
+            return dao.findByQuery("Application", "composition=0 and association=0")
                 .then(results => {
                     const apps = results.map(app => app.application);
 
@@ -55,6 +50,34 @@
                     return $q.all(promises);
                 });
         }
+
+        //#endregion
+
+        //#region Public methods
+
+        /**
+         * Fetches the status of each 'top level' application and each association in the system and groups them:
+         * { 
+         * applications: [{ 
+         *      application: String, // application's name 
+         *      all: Integer, // count of all entities
+         *      pending: Integer, // count of pending entities 
+         *      dirty: Integer, // count of all dirty entities (just dirty, not including problematic)
+         *      problematic: Integer, // count of problematic entities 
+         *  }],
+         *  associations: [{
+         *      application: String, // application's name
+         *      title: String, // application's title
+         *      count: Integer, // count of all associations
+         *  }]
+         * }
+         * 
+         * @returns Promised resolved with array of each application's states 
+         */
+        function currentState() {
+            return $q.all([topLevelApplicationState(), associationState()])
+                .spread((applications, associations) => ({ applications, associations }));
+        }
         
         /**
          * Fetches the app's configuration (server and client info).
@@ -76,8 +99,8 @@
 
         //#region Service Instance
         const service = {
-            currentState: currentState,
-            getAppConfig: getAppConfig
+            currentState,
+            getAppConfig
         };
         return service;
         //#endregion
@@ -89,4 +112,4 @@
 
     //#endregion
 
-})(mobileServices, angular);
+})(mobileServices, angular, _);

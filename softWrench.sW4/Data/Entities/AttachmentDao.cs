@@ -15,7 +15,7 @@ namespace softWrench.sW4.Data.Entities {
     public class AttachmentDao : ISingletonComponent {
 
         private const string EntityName = "DOCINFO";
-        private const string ATTACHMENTS_BY_OWNER = @"select L.document,L.ownertable,L.ownerid,L.doctype,L.createdate,L.createby,I.urlname,I.description 
+        private const string ATTACHMENTS_BY_OWNER = @"select L.document,L.ownertable,L.ownerid,L.doctype,L.createdate,L.createby,I.urlname,I.description,I.docinfoid,I.urlname
                                                         from docinfo I
 	                                                    inner join doclinks L
 		                                                    on I.docinfoid = L.docinfoid

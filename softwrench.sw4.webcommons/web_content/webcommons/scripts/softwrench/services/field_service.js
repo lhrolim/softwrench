@@ -66,7 +66,7 @@
                 return requiredExpression;
             },
 
-            isFieldReadOnly: function (datamap, application, fieldMetadata) {
+            isFieldReadOnly: function (datamap, application, fieldMetadata, scope) {
                 //test the metadata read-only property
                 var isReadOnly = fieldMetadata.isReadOnly;
 
@@ -77,7 +77,7 @@
                 if (fieldMetadata.enableExpression == null) {
                     return false;
                 }
-                return !expressionService.evaluate(fieldMetadata.enableExpression, datamap);
+                return !expressionService.evaluate(fieldMetadata.enableExpression, datamap, scope);
             },
 
             fieldHasValue: function (datamap, fieldMetadata) {

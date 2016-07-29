@@ -7,9 +7,18 @@ $asset_path: "../../Images";
 
     .form-signin {
         .logo.main {
-            img {
-                height: 130px;
-                width: auto;
+
+            @media all and (min-width: 480px) {
+                img {
+                    height: 120px;
+                    width: auto;
+                }
+            }
+        }
+
+        @media all and (max-width: 480px) {
+            .divider.bottom, .logo.byline {
+                display: none;
             }
         }
     }
@@ -31,6 +40,12 @@ $asset_path: "../../Images";
         }
 
         .branding {
+            /*background: url(#{$asset_path}/branding.png) no-repeat top left;*/
+            /*@media all and (min-width: 330px) {*/
+            .logo img {
+                height: 60px;
+            }
+            /*}*/
         }
     }
 
@@ -77,14 +92,9 @@ $asset_path: "../../Images";
         .shadow {
             box-shadow: 0 0 30px 5px rgba(#000, 0.6);
         }
-        /*.logo.main img {
-            padding: 0;
-        }*/
+
         .form-signin {
             background-color: $signin_background;
-            /*.user-links {
-                margin-bottom: 0;
-            }*/
         }
     }
 }

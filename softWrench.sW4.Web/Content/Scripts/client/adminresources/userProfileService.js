@@ -16,8 +16,8 @@
 
         function afterSchemaListLoaded(parameters) {
             simpleLog.debug("schema provider has changed");
-            var dm = parameters.fields;
-            var options = parameters.options;
+            const dm = parameters.fields;
+            const options = parameters.options;
             if (!!options && options.length > 0) {
                 dm["schema"] = options[0].value;
                 //not needed to show schema combo if there´s only one available option. Mode makes more sense to the user
@@ -27,8 +27,8 @@
 
         function afterTabsLoaded(parameters) {
             simpleLog.debug("tabs provider has changed");
-            var dm = parameters.fields;
-            var options = parameters.options;
+            const dm = parameters.fields;
+            const options = parameters.options;
             dm["showtabscombo"] = options.length > 1;
 
             if (options.length === 1) {
@@ -39,20 +39,18 @@
         }
 
         function tabvaluechanged(parameters) {
-            var dm = parameters.fields;
+            const dm = parameters.fields;
             var tab = parameters.fields["#selectedtab"];
             if (tab == null) {
                 //due to mode changes
                 return;
             }
-
-            var application = parameters.fields["application"];
-            var schemaId = parameters.fields["schema"];
+            const application = parameters.fields["application"];
+            const schemaId = parameters.fields["schema"];
             dm["#fieldPermissions_"] = [];
 
             simpleLog.debug("tab changed to {0}".format(tab));
-
-            var fullObject = crudContextHolderService.fetchEagerAssociationOptions("selectableTabs").filter(function (item) {
+            const fullObject = crudContextHolderService.fetchEagerAssociationOptions("selectableTabs").filter(function (item) {
                 return item.value === tab;
             })[0];
             if (!fullObject) {
@@ -61,21 +59,20 @@
             }
 
             //allow creation/allow update flags only make sense for composition(collection)tabs
-            var isCompositionTab = fullObject.extrafields["type"] === "ApplicationCompositionDefinition";
+            const isCompositionTab = fullObject.extrafields["type"] === "ApplicationCompositionDefinition";
             dm["iscompositiontab"] = isCompositionTab;
-            var isTab = fullObject.extrafields["type"] === "ApplicationTabDefinition";
+            const isTab = fullObject.extrafields["type"] === "ApplicationTabDefinition";
             dm["istab"] = isTab;
 
             if (!isCompositionTab) {
-                var queryParameters = {
+                const queryParameters = {
                     application: application,
                     schemaId: schemaId,
                     tab: tab,
                     pageNumber: 1
-                }
-
+                };
                 restService.getPromise("UserProfile", "LoadAvailableFields", queryParameters).then(function (httpResponse) {
-                    var compositionData = httpResponse.data.resultObject;
+                    const compositionData = httpResponse.data.resultObject;
                     $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
                     mergeTransientIntoDatamap({ tab: tab });
                 });
@@ -90,8 +87,7 @@
         }
 
         function afterModeChanged(parameters) {
-            var dm = parameters.fields;
-            //cleaning up data
+            const dm = parameters.fields; //cleaning up data
             simpleLog.debug("resting tab");
             dm["schema"] = null;
         }
@@ -127,7 +123,7 @@
 
         function cleanUpCompositions(cleanUpActions) {
             //cleaning up compositions
-            var compositionData = {};
+            const compositionData = {};
             compositionData["#fieldPermissions_"] = null;
             if (false !== cleanUpActions) {
                 compositionData["#actionPermissions_"] = null;
@@ -137,15 +133,14 @@
         }
 
         function resetAssociations() {
-            var args = Array.prototype.slice.call(arguments);
+            const args = Array.prototype.slice.call(arguments);
             args.forEach(function (association) {
                 crudContextHolderService.updateEagerAssociationOptions(association, []);
             });
         }
 
         function basicRoleChanged(parameters) {
-            var fields = parameters.fields;
-
+            const fields = parameters.fields;
             if (parameters.target.attribute === "#appallowview") {
                 if (parameters.oldValue === false && parameters.newValue === true) {
                     fields["#appallowcreation"] = false;
@@ -163,8 +158,7 @@
         }
 
         function cmpRoleChanged(parameters) {
-            var fields = parameters.fields;
-
+            const fields = parameters.fields;
             if (parameters.target.attribute === "#compallowview") {
                 if (parameters.oldValue === false && parameters.newValue === true) {
                     fields["#compallowcreation"] = false;
@@ -202,23 +196,17 @@
                 mergeTransientIntoDatamap({ application: nextApplication });
                 return $q.when();
             }
-
-
-            var queryParameters = {
+            const queryParameters = {
                 profileId: dm["id"] ? dm["id"] : -1,
                 application: nextApplication
             };
-
-
-
             simpleLog.debug("application has changed. No transient data found. fetching application permission from server");
 
 
             return restService.getPromise("UserProfile", "LoadApplicationPermissions", queryParameters).then(function (httpResponse) {
-                var data = httpResponse.data;
-                var appPermission = data.appPermission;
-                var hasCreationSchema = data.hasCreationSchema;
-
+                const data = httpResponse.data;
+                const appPermission = data.appPermission;
+                const hasCreationSchema = data.hasCreationSchema;
                 dm["hasCreationSchema"] = hasCreationSchema;
                 dm["#currentloadedapplication"] = appPermission;
 
@@ -238,29 +226,24 @@
         }
 
         function afterSchemaChanged(parameters) {
-            var dm = parameters.fields;
-            //cleaning up data
+            const dm = parameters.fields; //cleaning up data
             dm["#selectedtab"] = dm["iscompositiontab"] = null;
             cleanUpCompositions();
             crudContextHolderService.updateEagerAssociationOptions("selectableTabs", []);
-
-
-            var application = parameters.fields["application"];
+            const application = parameters.fields["application"];
             var schemaId = parameters.fields["schema"];
             if (schemaId == null) {
                 return;
             }
 
             simpleLog.debug("schema has been set to {0}, going to server for fetching available actions".format(schemaId));
-
-            var queryParameters = {
+            const queryParameters = {
                 application: application,
                 schemaId: schemaId,
                 pageNumber: 1
-            }
-
+            };
             restService.getPromise("UserProfile", "LoadAvailableActions", queryParameters).then(function (httpResponse) {
-                var compositionData = httpResponse.data.resultObject;
+                const compositionData = httpResponse.data.resultObject;
                 $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
                 mergeTransientIntoDatamap({ schema: schemaId });
             });
@@ -271,7 +254,7 @@
         function availableFieldsRefreshed(scope, schema, datamap, parameters) {
             if (parameters.relationship === "#fieldPermissions_") {
                 simpleLog.debug("list of fields changed for tab {0}".format(parameters.parentdata["#selectedtab"]));
-                var compositionData = parameters.previousData;
+                const compositionData = parameters.previousData;
                 if (compositionData && !!parameters.paginationApplied) {
                     //first store old page
                     storeFromDmIntoTransient({ "#fieldPermissions_": compositionData });
@@ -284,7 +267,7 @@
         function availableActionsRefreshed(scope, schema, datamap, parameters) {
             if (parameters.relationship === "#actionPermissions_") {
                 simpleLog.debug("list of fields changed for tab {0}".format(parameters.parentdata["#selectedtab"]));
-                var compositionData = parameters.previousData;
+                const compositionData = parameters.previousData;
                 if (compositionData && !!parameters.paginationApplied) {
                     storeFromDmIntoTransient({ "#actionPermissions_": compositionData });
                 }
@@ -307,7 +290,7 @@
         //#region api methods for tests
 
         function filterAvailablePermissions(item) {
-            var dm = crudContextHolderService.rootDataMap().fields;
+            const dm = crudContextHolderService.rootDataMap().fields;
             if (!dm["selectedmode"] || !dm["selectedmode"].equalsAny("grid", "view")) {
                 return true;
             }
@@ -315,13 +298,10 @@
         }
 
         function filterAvailableModes(item) {
-            var dm = crudContextHolderService.rootDataMap().fields;
-
-            var allowCreation = dm["#appallowcreation"];
-            var allowUpdate = dm["#appallowupdate"];
-            var allowView = dm["#appallowview"];
-
-            //            if (allowCreation && allowUpdate && allowView) {
+            const dm = crudContextHolderService.rootDataMap().fields;
+            const allowCreation = dm["#appallowcreation"];
+            const allowUpdate = dm["#appallowupdate"];
+            const allowView = dm["#appallowview"]; //            if (allowCreation && allowUpdate && allowView) {
             //                return true;
             //            }
 
@@ -427,8 +407,8 @@
 
             if (actionPermissionsToIterate) {
                 actionPermissionsToIterate.forEach(function (screenAction) {
-                    var selected = screenAction["_#selected"];
-                    var storedIdx = transientAppData.actionPermissions.findIndex(function (item) {
+                    const selected = screenAction["_#selected"];
+                    const storedIdx = transientAppData.actionPermissions.findIndex(function (item) {
                         return item.actionId === screenAction.actionid;
                     });
                     if (selected) {
@@ -491,7 +471,7 @@
                 }
 
                 fieldPermissionsToIterate.forEach(function (screnItem) {
-                    var idx = actualContainerPermission.fieldPermissions.findIndex(function (storedItem) {
+                    const idx = actualContainerPermission.fieldPermissions.findIndex(function (storedItem) {
                         return storedItem.fieldKey === screnItem.fieldKey;
                     });
                     if (idx === -1) {
@@ -505,7 +485,7 @@
                             hasAnyChange = hasAnyChange || true;
                         }
                     } else {
-                        var storedItem = actualContainerPermission.fieldPermissions[idx];
+                        const storedItem = actualContainerPermission.fieldPermissions[idx];
                         hasAnyChange = hasAnyChange || storedItem.permission !== screnItem.permission;
                         if (storedItem.permission !== "fullcontrol" && screnItem.permission === "fullcontrol") {
                             //remove the item since now it is fullcontrol...
@@ -568,11 +548,10 @@
             if (dm.fields) {
                 dm = dm.fields;
             }
-            var application = dm.application;
+            const application = dm.application;
             var schema = dm.schema;
             var tab = dm["#selectedtab"];
-
-            var transientAppData = $rootScope["#transientprofiledata"][application];
+            const transientAppData = $rootScope["#transientprofiledata"][application];
             if (transientAppData == null) {
                 simpleLog.debug("no transient data found for app {0}".format(application));
                 return dm;
@@ -600,7 +579,7 @@
             if (dispatcher.schema) {
                 transientAppData.actionPermissions.filter(itemsOfSchema)
                     .forEach(function (item) {
-                        var idx = dm["#actionPermissions_"].findIndex(function (screenItem) {
+                        const idx = dm["#actionPermissions_"].findIndex(function (screenItem) {
                             return screenItem.actionid === item.actionId;
                         });
                         if (idx !== -1) {
@@ -614,13 +593,12 @@
 
             //#region field permission restore (tab or paginated dispatcher)
             if ((dispatcher.tab || dispatcher["#fieldPermissions_"]) && transientAppData.containerPermissions) {
-                var container = transientAppData.containerPermissions.firstOrDefault(function (item) {
+                const container = transientAppData.containerPermissions.firstOrDefault(function (item) {
                     return item.schema === schema && item.containerKey === tab;
                 });
                 if (container) {
                     container.fieldPermissions.forEach(function (item) {
-
-                        var screenField = dm["#fieldPermissions_"].firstOrDefault(function (screenItem) {
+                        const screenField = dm["#fieldPermissions_"].firstOrDefault(function (screenItem) {
                             return screenItem.fieldKey === item.fieldKey;
                         });
                         if (screenField != null && screenField.permission !== item.permission) {
@@ -635,7 +613,7 @@
 
             if (dispatcher.tab && transientAppData.compositionPermissions) {
                 if (dm["iscompositiontab"] === true && tab) {
-                    var cmpData = transientAppData.compositionPermissions.firstOrDefault(function (item) {
+                    const cmpData = transientAppData.compositionPermissions.firstOrDefault(function (item) {
                         return item.schema === schema && item.compositionKey === tab;
                     });
                     if (cmpData) {
@@ -656,7 +634,7 @@
         }
 
         function save() {
-            var validationArray = validationService.validateCurrent();
+            const validationArray = validationService.validateCurrent();
             if (validationArray.length > 0) {
                 return $q.reject();
             }
@@ -664,37 +642,33 @@
 
             //last storal
             storeFromDmIntoTransient();
-            var dm = crudContextHolderService.rootDataMap().fields;
-            var appPermissions = Object.keys($rootScope["#transientprofiledata"])
+            const dm = crudContextHolderService.rootDataMap().fields;
+            const appPermissions = Object.keys($rootScope["#transientprofiledata"])
                 .map(function (key) {
                     return $rootScope["#transientprofiledata"][key];
                 }).filter(function (ob) {
                     return ob["_#isDirty"];
-                });
-
-            //TODO: add pagination support here
-            var selectedRoles = dm["#basicroles_"].filter(function (role) {
+                }); //TODO: add pagination support here
+            const selectedRoles = dm["#basicroles_"].filter(function (role) {
                 return role["_#selected"];
             }).map(function (selectedRole) {
                 return { id: selectedRole.id, name: selectedRole.name };
             });
-
-            var ob = {
+            const ob = {
                 id: dm["id"],
                 name: dm["name"],
                 description: dm["description"],
                 applicationPermissions: appPermissions,
                 deletable: dm["deletable"] === true || dm["deletable"] === "1" || dm["deletable"] === "true",
                 roles: selectedRoles
-            }
-
+            };
             return restService.postPromise("UserProfile", "Save", null, ob).then(function (httpResponse) {
-                var resultObject = httpResponse.data.resultObject;
+                const resultObject = httpResponse.data.resultObject;
                 crudContextHolderService.rootDataMap().fields.id = resultObject.id;
 
                 resultObject.applications.forEach(function (resultDTO) {
                     //updating so that id no longer null
-                    var app = resultDTO.appPermission;
+                    const app = resultDTO.appPermission;
                     $rootScope["#transientprofiledata"][app.applicationName] = app;
                     $rootScope["#transientprofiledata"][app.applicationName].hasCreationSchema = resultDTO.hasCreationSchema;
                 });
@@ -704,8 +678,7 @@
         }
 
         function batchUpdate() {
-            var dm = crudContextHolderService.rootDataMap();
-
+            const dm = crudContextHolderService.rootDataMap();
             var profileId = dm.fields.id;
 
             if (!profileId) {
@@ -717,20 +690,18 @@
             redirectService.openAsModal("_UserProfile", "batchupdate", {
                 title: "Batch Update",
                 savefn: function (modaData, modalSchema) {
-                    var modaldm = crudContextHolderService.rootDataMap("#modal");
-                    var selectedApps = modaldm.applications;
+                    const modaldm = crudContextHolderService.rootDataMap("#modal");
+                    const selectedApps = modaldm.applications;
                     if (!selectedApps || selectedApps.length === 0) {
                         alertService.alert("please select at least one application to proceed");
                         return $q.reject();
                     }
-
-                    var params = {
+                    const params = {
                         profileId: profileId,
                         allowCreation: modaldm.allowcreation,
                         allowUpdate: modaldm.allowupdate,
                         allowView: modaldm.allowview
-                    }
-
+                    };
                     return restService.postPromise("UserProfile", "BatchUpdate", params, selectedApps).then(function (httpResponse) {
                         $rootScope["#transientprofiledata"] = {};
                         crudContextHolderService.rootDataMap()["fields"]["application"] = null;
@@ -742,13 +713,13 @@
         }
 
         function removeMultiple() {
-            var dm = crudContextHolderService.rootDataMap();
-            var profileId = dm.fields.id;
+            const dm = crudContextHolderService.rootDataMap();
+            const profileId = dm.fields.id;
             if (!profileId) {
                 alertService.alert("Please save the profile before using this action");
                 return;
             }
-            var customParameters = {};
+            const customParameters = {};
             customParameters[0] = {};
             customParameters[0]["key"] = "profileId";
             customParameters[0]["value"] = profileId;
@@ -760,33 +731,35 @@
                     customParameters: customParameters
                 },
                 savefn: function () {
-                    var dm = crudContextHolderService.rootDataMap();
-                    var profileId = dm.fields.id;
-                    var selectedUsers = crudContextHolderService.getSelectionModel('#modal').selectionBuffer;
+                    const dm = crudContextHolderService.rootDataMap();
+                    const profileId = dm.fields.id;
+                    const selectedUsers = crudContextHolderService.getSelectionModel('#modal').selectionBuffer;
                     if (!selectedUsers || selectedUsers.length === 0) {
                         alertService.alert("please select at least one user to proceed");
                         return $q.reject();
                     }
-                    var usernames = [];
-                    for (var user in selectedUsers) {
+                    const usernames = [];
+                    for (let user in selectedUsers) {
                         usernames.push(user);
                     }
-                    var params = {
+                    const params = {
                         profileId: profileId
-                    }
+                    };
                     return restService.postPromise("UserProfile", "removeMultiple", params, usernames);
                 }
-            });
+            }).catch(err => 
+                alertService.alert("There is no user associated to this security group. Operation cannot be executed")
+            );
         }
 
         function applyMultiple() {
-            var dm = crudContextHolderService.rootDataMap();
-            var profileId = dm.fields.id;
+            const dm = crudContextHolderService.rootDataMap();
+            const profileId = dm.fields.id;
             if (!profileId) {
                 alertService.alert("Please save the profile before using this action");
                 return;
             }
-            var customParameters = {};
+            const customParameters = {};
             customParameters[0] = {};
             customParameters[0]["key"] = "profileId";
             customParameters[0]["value"] = profileId;
@@ -797,42 +770,44 @@
                     customParameters: customParameters
                 },
                 savefn: function () {
-                    var dm = crudContextHolderService.rootDataMap();
-                    var profileId = dm.fields.id;
-                    var selectedUsers = crudContextHolderService.getSelectionModel('#modal').selectionBuffer;
+                    const dm = crudContextHolderService.rootDataMap();
+                    const profileId = dm.fields.id;
+                    const selectedUsers = crudContextHolderService.getSelectionModel('#modal').selectionBuffer;
                     if (!selectedUsers || selectedUsers.length === 0) {
                         alertService.alert("please select at least one user to proceed");
                         return $q.reject();
                     }
-                    var usernames = [];
-                    for (var user in selectedUsers) {
+                    const usernames = [];
+                    for (let user in selectedUsers) {
                         usernames.push(user);
                     }
-                    var params = {
+                    const params = {
                         profileId: profileId
-                    }
+                    };
                     return restService.postPromise("UserProfile", "applyMultiple", params, usernames);
                 }
+            }).catch(err => {
+                alertService.alert("All users are already associated to this security group. Operation cannot be executed");
             });
         }
         //#endregion
 
         function getProfileId() {
-            var dm = crudContextHolderService.rootDataMap();
-            var profileId = dm.fields.id;
+            const dm = crudContextHolderService.rootDataMap();
+            const profileId = dm.fields.id;
             return [{ "key": "profileId", "value": profileId }];
         }
 
         function deleteProfile() {
             return alertService.confirm("Are you sure you want to delete this security group? This operation cannot be undone").then(function () {
-                var id = crudContextHolderService.rootDataMap().fields["id"];
+                const id = crudContextHolderService.rootDataMap().fields["id"];
                 return restService.postPromise("UserProfile", "Delete", { id: id }).then(function (httpResponse) {
                     return redirectService.goToApplicationView("_UserProfile", "list");
                 });
             });
         }
 
-        var hooks = {
+        const hooks = {
             afterSchemaListLoaded: afterSchemaListLoaded,
             afterModeChanged: afterModeChanged,
             afterSchemaChanged: afterSchemaChanged,
@@ -849,8 +824,7 @@
             onApplicationChange: onApplicationChange,
             tabvaluechanged: tabvaluechanged
         };
-
-        var api = {
+        const api = {
             'delete': deleteProfile,
             filterAvailablePermissions: filterAvailablePermissions,
             filterAvailableModes: filterAvailableModes,
@@ -859,14 +833,12 @@
             storeFromDmIntoTransient: storeFromDmIntoTransient,
             save: save,
             getProfileId: getProfileId
-        }
-
-        var actions = {
+        };
+        const actions = {
             batchUpdate: batchUpdate,
             applyMultiple: applyMultiple,
             removeMultiple: removeMultiple
-        }
-
+        };
         return angular.extend({}, hooks, api, actions);
 
     }

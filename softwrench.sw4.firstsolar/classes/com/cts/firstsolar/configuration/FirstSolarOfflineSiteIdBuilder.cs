@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.portable.Util;
-using cts.commons.simpleinjector;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
@@ -42,16 +38,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             var user = SecurityFacade.CurrentUser();
 
             if (!hasSiteid) {
-                return " {0}.orgid = '{1}' ".Fmt(entityName, user.OrgId);
+                return " {0}.orgid = '{1}' or {0}.orgid is null ".Fmt(entityName, user.OrgId);
             }
 
             if (!hasOrgid) {
-                return " {0}.siteid = '{1}' ".Fmt(entityName, user.SiteId);
+                return " {0}.siteid = '{1}' or {0}.siteid is null ".Fmt(entityName, user.SiteId);
             }
 
 
-            return " {0}.orgid = '{1}' and {0}.siteid = '{2}' ".Fmt(entityName, user.OrgId, user.SiteId);
-
+            return " ({0}.orgid = '{1}' or {0}.orgid is null) and ({0}.siteid = '{2}' or {0}.siteid is null) ".Fmt(entityName, user.OrgId, user.SiteId);
+            // TODO: verify if some associations will conflict when siteid is null. In that case: result = list.orderby(a => a.siteid).tohashset(<equals = a.UserId>)
         }
 
         public IDictionary<string, object> GetParameters() {

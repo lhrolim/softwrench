@@ -21,7 +21,7 @@ namespace softWrench.sW4.Metadata.Applications {
 
             foreach (var applicationSchema in schemas) {
                 var isSyncSchema = applicationSchema.SchemaId.Equals(ApplicationMetadataConstants.SyncSchema);
-                if (applicationSchema.IsWebPlatform() || (isSyncSchema&& !keepSyncSchema)) {
+                if (!applicationSchema.IsMobilePlatform() || (isSyncSchema && !keepSyncSchema)) {
                     continue;
                 }
                 var securedMetadata = originalMetadata.ApplyPolicies(applicationSchema.GetSchemaKey(), user, ClientPlatform.Mobile, null);

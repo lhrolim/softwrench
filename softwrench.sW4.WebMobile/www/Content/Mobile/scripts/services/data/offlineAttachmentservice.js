@@ -197,7 +197,7 @@
         function saveAttachment(schema, datamap) {
             const attachment = {
                 application: crudContextHolderService.currentApplicationName(),
-                parentId: crudContextHolderService.currentDetailItem().remoteId,
+                parentId: crudContextHolderService.currentDetailItem().id,
                 content: datamap[config.newAttachmentFieldName],
                 mimetype: datamap["#mimetype"],
                 compressed: false,
@@ -217,7 +217,7 @@
         function saveAttachmentAsFile(schema, datamap) {
             const attachment = {
                 application: crudContextHolderService.currentApplicationName(),
-                parentId: crudContextHolderService.currentDetailItem().remoteId,
+                parentId: crudContextHolderService.currentDetailItem().id,
                 path: datamap[config.newAttachmentFieldName]
             };
             return createAttachmentEntity(attachment);
@@ -243,7 +243,7 @@
         function loadRealAttachment(doclinkEntry) {
 
             const fileName = doclinkEntry.document;
-            const docinfoId = doclinkEntry.docinfoId;
+            const docinfoId = doclinkEntry.docinfoid;
             const localHash = doclinkEntry["#offlinehash"];
 
             const log = $log.get("attachmentService#loadRealAttachment", ["attachment"]);
@@ -254,7 +254,7 @@
             const deferred = $q.defer();
             loadingService.showDefault();
             swdbDAO.executeQuery(queryObj).then(result => {
-                if (result.length === 0) {
+                if (result.length === 0 || result[0].content==null) {
                     deferred.reject();
                     const error = `Could not open attachment ${docinfoId}, not found on database...`;
                     log.warn(error);
@@ -318,6 +318,31 @@
 
         }
 
+        /**
+         * Deletes the entities.Attachment related to the composition datamap.
+         * 
+         * @param {Datamap} composition 
+         * @returns {Promise<Array<Void>>} 
+         */
+        function deleteRelatedAttachment(composition) {
+            const attachmentHash = composition["#offlinehash"];
+            return swdbDAO.executeStatement(entities.Attachment.DeleteById, [attachmentHash]);
+        }
+
+        /**
+         * Deletes the entities.Attachments related to the compositions datamaps.
+         * 
+         * @param {Datamap} compositions 
+         * @returns {Promise<Array<Void>>} 
+         */
+        function deleteRelatedAttachments(compositions) {
+            const hashes = compositions.map(c => c["#offlinehash"]).filter(h => !!h).map(h => `'${h}'`);
+            if (hashes.length <= 0) return $q.when();
+
+            const query = entities.Attachment.DeleteMultipleByIdsPattern.format(hashes);
+            return swdbDAO.executeQuery(query);
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -325,6 +350,8 @@
             // general
             getAttachment,
             loadRealAttachment,
+            deleteRelatedAttachment,
+            deleteRelatedAttachments,
             // file
             attachCameraPictureAsFile,
             saveAttachmentAsFile,

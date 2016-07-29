@@ -1,0 +1,28 @@
+{
+  "ponum": "20009",
+  "siteid": "BEDFORD",
+  "description": "Sale lease machines",
+  "rowstamp": 12554287,
+  "matrectrans_": [
+    {
+      "ponum": "20009",
+      "matrectransid": 1336104849,
+      "polinenum": 1,
+      "itemnum": "D600",
+      "description": "Standard Notebook Computer",
+      "quantity": 1,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA"
+    },
+    {
+      "ponum": "20009",
+      "matrectransid": 1336103812,
+      "polinenum": 1,
+      "itemnum": "D600",
+      "description": "Standard Notebook Computer",
+      "quantity": 2,
+      "siteid": "BEDFORD",
+      "orgid": "EAGLENA"
+    }
+  ]
+}

@@ -36,9 +36,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog {
 
             if (!attachments.Any()) return result;
             var displayableAttachments = attachments.Select(attachment => new {
-                    name = attachment.document,
-                    url = AttachmentHandler.GetFileUrl(attachment.urlname)
-                });
+                name = attachment.document,
+                url = AttachmentHandler.GetFileUrl(attachment.urlname),
+                docinfoid = attachment.docinfoid,
+                urlname = attachment.urlname
+            });
             datamap.Add("attachments", displayableAttachments);
             return result;
         }

@@ -234,6 +234,7 @@
     <Compile Include="Data\Search\QuickSearch\QuickSearchHelper.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchDTO.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchWhereClauseHandler.cs" />
+    <Compile Include="Data\UnboundedDatamap.cs" />
     <Compile Include="Email\CommLogTemplateMerger.cs" />
     <Compile Include="Email\EmailHistory.cs" />
     <Compile Include="Exceptions\ErrorDto.cs" />
@@ -648,6 +649,8 @@
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
     <Compile Include="Util\AssemblyLocator.cs" />
+    <Compile Include="Util\DeployValidation\DeployValidationModel.cs" />
+    <Compile Include="Util\DeployValidation\DeployValidationService.cs" />
     <Compile Include="Util\ExcelUtil.cs" />
     <Compile Include="Util\IesiCollectionExtensions.cs" />
     <Compile Include="Util\CollectionUtil.cs" />
@@ -804,6 +807,26 @@
     <None Include="Service References\sw_ld\SW_LD_OBJ.xsd">
       <SubType>Designer</SubType>
     </None>
+    <EmbeddedResource Include="Util\DeployValidation\Data\Create\quickservicerequest.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Create\servicerequest.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\quickservicerequest.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\servicerequest.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Create\change.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Create\incident.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Create\invuse.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Create\pr.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Create\workorder.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\asset.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\change.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\incident.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\invbalances.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\labtrans.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\physicalcount.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\physicaldeviation.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\po.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\pr.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\receiving.json" />
+    <EmbeddedResource Include="Util\DeployValidation\Data\Update\workorder.json" />
     <None Include="Web References\wsAsset\ASSETKeyType1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>

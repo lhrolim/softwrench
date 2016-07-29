@@ -663,8 +663,13 @@
                                 }
 
                                 // not necessary to update the complete datamap after a composition save
-                                if (!parameters.dispatcherComposition) {
-                                    $scope.datamap = responseDataMap;
+                                if (!parameters.dispatcherComposition && (responseDataMap.type === null || responseDataMap.type !== "UnboundedDatamap")) {
+                                    if ($scope.datamap.fields) {
+                                        //TODO: remove fields
+                                        $scope.datamap.fields = responseDataMap;
+                                    } else {
+                                        $scope.datamap = responseDataMap;
+                                    }
                                 }
                             }
 

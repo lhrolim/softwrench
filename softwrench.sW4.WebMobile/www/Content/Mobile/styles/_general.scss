@@ -29,7 +29,7 @@
     transition: 0.2s linear !important;
     -webkit-transition-property: -webkit-transform, all !important;
     transition-property: transform, all !important;
-    margin: 25px 25px 31px;
+    margin: 25px 25px 53px;
     width: 56px;
     height: 56px;
 
@@ -53,6 +53,12 @@
     transition-property: transform, all !important;
 }
 
+.button.cts-blue {
+    border-color: transparent;
+    background-color: $cts-blue;
+    color: #fff;
+}
+
 .spinner {
     stroke: #fff;
 }
@@ -67,26 +73,46 @@
 
 .ion-autocomplete-container {
     .bar {
-        button {
-            background: none;
-            color: #000;
-            font-size: 16px;
+        .item-input-wrapper {
+            &.preferred {
+                background: none;
+
+                .label {
+                    margin-left: 24px;
+                }
+            }
         }
+
+        input[type=search] {
+            height: initial;
+            background: none;
+        }
+
+        .item-toggle {
+            border: none;
+            padding: 4px;
+            background: transparent;
+            top: initial;
+            position: relative;
+            right: initial;
+            margin-top: 3px;
+            margin-left: 10px;
+
+            .toggle {
+                top: initial;
+                position: relative;
+                right: initial;
+            }
+        }
+    }
+
+    ion-content {
+        top: 88px;
     }
 }
 
 .button-icon {
     color: #fff;
-}
-
-.menu {
-    .item-divider {
-        font-weight: bold;
-    }
-
-    .subleaf {
-        padding-left: 48px;
-    }
 }
 
 .mfb-component__button--main {

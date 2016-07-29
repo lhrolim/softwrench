@@ -369,7 +369,7 @@ namespace softWrench.sW4.Metadata {
                     var applicationMenu = (menuBaseDefinition as ApplicationMenuItemDefinition);
                     var application = Application(applicationMenu.Application, false);
 
-                    if (application != null && (user == null || user.IsInRole(application.Role) || (user.IsInRole(menuBaseDefinition.Role)))) {
+                    if (application != null && (user == null || user.IsAllowedInApp(application.ApplicationName))) {
                         if (applicationMenu.PermissionExpresion != null) {
                             if (!GenericSwMethodInvoker.Invoke<bool>(null, applicationMenu.PermissionExpresion)) {
                                 //filtering applications based on permission expressions

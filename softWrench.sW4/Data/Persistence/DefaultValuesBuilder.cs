@@ -14,7 +14,7 @@ using Microsoft.Ajax.Utilities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence {
-    class DefaultValuesBuilder {
+    public class DefaultValuesBuilder {
 
         private const string UserPrefix = "@user.";
         private const string PastFunctionPrefix = "@past(";
@@ -121,6 +121,12 @@ namespace softWrench.sW4.Data.Persistence {
 
             foreach (var keyword in StringUtil.GetSubStrings(input, "@")) {
                 valueParsed = GetDefaultValue(keyword, user);
+
+                // replaces the keyword only if its found
+                if (keyword.Equals(valueParsed)) {
+                    continue;
+                }
+
                 input = input.Replace("'" + keyword + "'", "'" + valueParsed + "'").Replace(keyword, "'" + valueParsed + "'");
             }
 
@@ -137,19 +143,11 @@ namespace softWrench.sW4.Data.Persistence {
             key = key.ToLower();
 
             if (key.Equals("@orgid")) {
-                if (ApplicationConfiguration.DefaultOrgId != null) {
-                    return ApplicationConfiguration.DefaultOrgId;
-                }
-                //falling back to current logged user
-                key = "@user.orgid";
+                return user.OrgId ?? ApplicationConfiguration.DefaultOrgId;
             }
 
             if (key.Equals("@siteid")) {
-                if (ApplicationConfiguration.DefaultSiteId != null) {
-                    return ApplicationConfiguration.DefaultSiteId;
-                }
-                //falling back to current logged user
-                key = "@user.siteid";
+                return user.SiteId ?? ApplicationConfiguration.DefaultSiteId;
             }
 
             if (key.Equals("@username")) {
@@ -195,6 +193,12 @@ namespace softWrench.sW4.Data.Persistence {
             return null;
         }
 
+        /// <summary>
+        /// @user.properties[xxx]
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         private static string ReadFromUserGenericProperties(string text, InMemoryUser user) {
             try {
                 var innerReference = Regex.Split(text, UserPrefix);

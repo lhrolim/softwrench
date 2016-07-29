@@ -572,11 +572,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public virtual TargetResult Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
             var compositionData = operationData.CompositionData;
             if (compositionData == null || !compositionData.Operation.EqualsAny(OperationConstants.CRUD_DELETE, OperationConstants.CRUD_UPDATE)) {
+                //not a composition deletion/update, no need for any further checking
                 return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
                     new Tuple<string, string>(operationData.UserId, operationData.SiteId));
             }
 
-            var clientComposition = operationData.RouteParametersDTOHandled.DispatcherComposition;
+            var clientComposition = compositionData.DispatcherComposition;
             var composition = application.Schema.Compositions().FirstOrDefault(f => f.Relationship.Equals(EntityUtil.GetRelationshipName(clientComposition)));
             if (composition == null) {
                 return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,

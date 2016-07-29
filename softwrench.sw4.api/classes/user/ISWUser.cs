@@ -17,5 +17,6 @@ namespace softwrench.sw4.api.classes.user {
 
         bool IsSwAdmin();
 
+        bool IsAllowedInApp(string applicationName);
     }
 }

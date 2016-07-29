@@ -6,8 +6,8 @@
 
     softwrench.directive('optionField',
         [
-            '$ionicModal',
-            function ($ionicModal) {
+            '$ionicModal','$log',
+            function ($ionicModal,$log) {
                 return {
                     /* Only use as <option-field> tag */
                     restrict: 'E',
@@ -43,6 +43,39 @@
                         scope.noteImg = attrs.noteImg || '';
                         scope.noteImgClass = attrs.noteImgClass || '';
 
+                        const valueChanged = function (value) {
+                            angular.forEach(scope.items, item => {
+                                if (item.value === value) {
+                                    item.checked = true;
+                                }
+                            });
+                        }
+
+                        const valuesChanged = function (values) {
+                            angular.forEach(values, value => {
+                                if (value) {
+                                    valueChanged(value);
+                                }
+                            });
+                        }
+
+                        // watch changes on value to update the multiple select checked state
+                        const watchForValueChanges = function () {
+                            return scope.$watch("value", function (newValue, oldValue) {
+                                if (newValue === oldValue || !scope.items || !scope.multiSelect) {
+                                    return;
+                                }
+
+                                angular.forEach(scope.items, item => item.checked = false);
+
+                                if (newValue) {
+                                    valuesChanged(newValue.split(";"));
+                                }
+                            });
+                        }
+
+                        scope.deWatchValueChanges = watchForValueChanges();
+
                         /* Optionnal callback function */
                         // scope.callback = attrs.callback || null;
 
@@ -73,10 +106,58 @@
                             scope.modal = modal;
                         });
 
+                        // object to store if the user moved the finger to prevent opening the modal
+                        var scrolling = {
+                            moved: false,
+                            startX: 0,
+                            startY: 0
+                        };
+
+                        // store the start coordinates of the touch start event
+                        scope.onTouchStart = function (e) {
+                            $log.get("optionfield#ontouchstart",["association"]).trace("ontouchstart handler");
+                            scrolling.moved = false;
+                            // Use originalEvent when available, fix compatibility with jQuery
+                            if (typeof (e.originalEvent) !== 'undefined') {
+                                e = e.originalEvent;
+                            }
+                            scrolling.startX = e.touches[0].clientX;
+                            scrolling.startY = e.touches[0].clientY;
+                        };
+
+                        // check if the finger moves more than 10px and set the moved flag to true
+                        scope.onTouchMove = function (e) {
+                            $log.get("optionfield#ontouchmove", ["association"]).trace("ontouchmove handler");
+                            // Use originalEvent when available, fix compatibility with jQuery
+                            if (typeof (e.originalEvent) !== 'undefined') {
+                                e = e.originalEvent;
+                            }
+                            if (Math.abs(e.touches[0].clientX - scrolling.startX) > 10 ||
+                                Math.abs(e.touches[0].clientY - scrolling.startY) > 10) {
+                                scrolling.moved = true;
+                            }
+                        };
+
+                        /* Show list */
+                        scope.showItems = function (event) {
+                            if (scrolling.moved || ionic.scroll.isScrolling) {
+                                return;
+                            }
+                            scrolling.moved = false;
+                            event.preventDefault();
+                            scope.modal.show();
+                        }
+
+
+
                         /* Validate selection from header bar */
                         scope.validate = function (event) {
                             // Construct selected values and selected text
                             if (scope.multiSelect == true) {
+
+                                // turns off the watch for value
+                                // multiple select toggles are updated at this point
+                                scope.deWatchValueChanges();
 
                                 // Clear values
                                 scope.value = '';
@@ -95,6 +176,9 @@
                                 // Remove trailing comma
                                 scope.value = scope.value.substr(0, scope.value.length - 1);
                                 scope.text = scope.text.substr(0, scope.text.length - 2);
+
+                                // turns the watch again on timeout to force - on timeout to force the watch run first
+                                scope.deWatchValueChanges = watchForValueChanges();
                             }
 
                             // Select first value if not nullable
@@ -119,11 +203,7 @@
                             }
                         }
 
-                        /* Show list */
-                        scope.showItems = function (event) {
-                            event.preventDefault();
-                            scope.modal.show();
-                        }
+                    
 
                         /* Hide list */
                         scope.hideItems = function () {
@@ -162,6 +242,19 @@
                                 });
                             }
                         }
+
+                        // $formatter to show label
+                        const inputElement = element[0].querySelector(".js_option_input");
+                        const ngModel = angular.element(inputElement).controller("ngModel");
+                        ngModel.$formatters.push(model => {
+                            if (!model || !scope.items) return model;
+                            const option = scope.items.find(o => o.value === model);
+                            const label = !option ? model : option.label;
+
+                            scope.$emit("sw:optionField:viewValue", label);
+                            return label;
+                        });
+
                     }
                 };
             }

@@ -81,6 +81,7 @@
                     );
                     $timeout(function () {
                         // mark data as not resolved since the template has not yet been compiled: can still trigger formatters and default values
+                        // avoiding bugs on the dirty checker this way
                         crudContextHolderService.clearDetailDataResolved();
                         $compile(element.contents())(scope);
                     }, 0, false)
@@ -593,6 +594,10 @@
                     }
 
                     $scope.getDispatchFn = function (serviceCall) {
+                        if (serviceCall == null) {
+                            return () => true;
+                        }
+
                         var validationFunction = dispatcherService.loadServiceByString(serviceCall);
                         if (validationFunction == null) {
                             validationFunction = function () { return true };

@@ -1,29 +1,39 @@
-﻿(function (angular) {
+﻿(function (angular, _) {
     "use strict";
 
-    mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", "crudContextHolderService", "$log", "searchIndexService", function (swdbDAO, fieldService, crudContextHolderService, $log, searchIndexService) {
+    mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", "crudContextHolderService", "$log", "searchIndexService", "dispatcherService", function (swdbDAO, fieldService, crudContextHolderService, $log, searchIndexService, dispatcherService) {
 
-    function testEmptyExpression(label) {
-        return "(!!" + label + " && " + label + " !== \'null\' && " + label + " !== \'undefined\')";
-    }
+        function testEmptyExpression(label) {
+            return `(!!${label} && ${label} !== \'null\' && ${label} !== \'undefined\')`;
+        }
 
         function fieldValueExpression(fieldMetadata) {
-            return "datamap." + fieldMetadata.valueField;
+            return `datamap.${fieldMetadata.valueField}`;
         };
 
         function fieldLabelExpression(fieldMetadata) {
-            var associationValueField = this.fieldValueExpression(fieldMetadata);
+            const associationValueField = this.fieldValueExpression(fieldMetadata);
             if ("true" === fieldMetadata.hideDescription) {
                 return associationValueField;
             }
+            const label = `datamap.${fieldMetadata.labelFields[0]}`;
 
-            var label = "datamap." + fieldMetadata.labelFields[0];
-
-            return "(" + testEmptyExpression(associationValueField) + " ? " + associationValueField + " : \'\' ) + " +
-                    "(" + testEmptyExpression(label) + " ? (\' - \'  + " + label + ") : \'\')";
+            return _.contains([false, "false", "False", 0, "0"], fieldMetadata.rendererParameters["showCode"])
+                // show only label/description
+                ? `(${testEmptyExpression(label)} ? ${label} : \'\')`
+                // show <code> - <label>
+                : `(${testEmptyExpression(associationValueField)} ? ${associationValueField} : \'\' ) + (${testEmptyExpression(label)} ? (\' - \'  + ${label}) : \'\')`;
         };
 
-        function filterPromise(parentSchema, parentdatamap, associationName, filterText, preCalcDisplayable) {
+        function getWhereClause(displayable, parentdatamap) {
+            var whereClause = displayable.schema.dataProvider.whereClause;
+            if (whereClause.startsWith("@")) {
+                whereClause = dispatcherService.invokeServiceByString(whereClause.substring(1));
+            }
+            return searchIndexService.parseWhereClause(whereClause, parentdatamap);
+        }
+
+        function filterPromise(parentSchema, parentdatamap, associationName, filterText, preCalcDisplayable, pageNumber, useWhereClause) {
             const log = $log.get("offlineAssociationService#filterPromise", ["association", "query"]);
 
             const displayable = preCalcDisplayable || fieldService.getDisplayablesByAssociationKey(parentSchema, associationName)[0];
@@ -67,12 +77,12 @@
                 }
             });
 
-            if (displayable.schema && displayable.schema.dataProvider && displayable.schema.dataProvider.whereClause) {
-                const whereClause = searchIndexService.parseWhereClause(displayable.schema.dataProvider.whereClause, parentdatamap);
-                baseQuery += ` and (${whereClause}) `;
+            if (displayable.schema && displayable.schema.dataProvider && displayable.schema.dataProvider.whereClause && useWhereClause) {
+                baseQuery += ` and (${getWhereClause(displayable, parentdatamap)}) `;
             }
 
-            return swdbDAO.findByQuery("AssociationData", baseQuery, { projectionFields: ["remoteId", "datamap"] });
+            pageNumber = pageNumber || 1;
+            return swdbDAO.findByQuery("AssociationData", baseQuery, { pagesize: 10, pageNumber: pageNumber, projectionFields: ["remoteId", "datamap"] });
         }
 
         function updateExtraProjections(associationDataEntry, associationKey) {
@@ -126,14 +136,14 @@
 
 
         const api = {
-        filterPromise,
-        fieldLabelExpression,
-        fieldValueExpression,
-        updateExtraProjections,
-        updateExtraProjectionsForOptionField,
+            filterPromise,
+            fieldLabelExpression,
+            fieldValueExpression,
+            updateExtraProjections,
+            updateExtraProjectionsForOptionField,
         }
         return api;
 
     }]);
 
-})(angular);
+})(angular, _);

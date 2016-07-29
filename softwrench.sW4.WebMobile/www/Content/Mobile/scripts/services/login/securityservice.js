@@ -1,7 +1,7 @@
-﻿(function (mobileServices, ionic) {
+﻿(function (mobileServices, ionic, _) {
     "use strict";
 
-    function securityService($rootScope,$state, localStorageService, routeService, $http, $q, swdbDAO, $ionicHistory) {
+    function securityService($rootScope, $state, localStorageService, routeService, $http, $q, dao, $ionicHistory, cookieService) {
 
         //#region Utils
 
@@ -9,23 +9,33 @@
             eventnamespace:"sw4:security:",
             authkey: "security:auth:user",
             previouskey: "security:auth:previous",
+            authCookieName: "swcookie",
             message: {
                 sessionexpired: "Your session has expired. Please log in to resume your activities. ",
                 unauthorizedaccess: "You're not authorized to access this resource. " +
                                     "Contact support if you're receiving this message in error."
+            },
+            keyblacklist: [ "security:", "settings:" ]
+        };
+
+        const $event = name => config.eventnamespace + name;
+
+        const isLoginState = () => $state.current.name === "login";
+
+        const setUserProperties = (user, properties) => {
+            if (!properties || _.isEmpty(properties)) {
+                delete user["properties"];
+            } else {
+                user["properties"] = properties;
+                if (!!properties["siteid"]) user["SiteId"] = properties["siteid"];
+                if (!!properties["orgid"]) user["OrgId"] = properties["orgid"];
             }
+            delete user["Properties"];
         };
-
-        const $event = function (name) {
-            return config.eventnamespace + name;
-        };
-
-        const isLoginState = function () {
-            return $state.current.name === "login";
-        };
+        
 
         /**
-         * Authenticates the user locally initializing it's client-side session
+         * Authenticates the user locally initializing it's client-side session, persisting the authentication cookie
          * and $broadcasts the event "security:login" in $rootScope with two parameters
          * the current just logged in user and the last logged user.
          * Users have the following format:
@@ -35,13 +45,23 @@
          * "SiteId": String
          * }
          * 
-         * @param {} user 
+         * @param {Object} user
+         * @return {Object} user
          */
-        const loginLocal = function (user) {
-            var previous = localStorageService.get(config.authkey);
-            previous = !!previous ? previous : localStorageService.get(config.previouskey);
-            localStorageService.put(config.authkey, user);
-            $rootScope.$broadcast($event("login"), user, previous);
+        const loginLocal = user => 
+            cookieService.persistCookie(config.authCookieName).then(() => {
+                var previous = localStorageService.get(config.authkey);
+                previous = !!previous ? previous : localStorageService.get(config.previouskey);
+                setUserProperties(user, user["Properties"]);
+                localStorageService.put(config.authkey, user);
+                $rootScope.$broadcast($event("login"), user, previous);
+                return user;
+            });
+
+        const cleanLocalStorage = () => {
+            Object.keys(localStorage)
+                .filter(k => !config.keyblacklist.some(b => k.startsWith(b)))
+                .forEach(k => localStorageService.remove(k));
         };
 
         //#endregion
@@ -61,28 +81,27 @@
          * @param String password 
          * @returns Promise resolved with the user retuned from the server
          */
-        const login = function (username, password) {
-            //this was setted during bootstrap of the application, or on settingscontroller.js (settings screen)
-            return routeService.loginURL().then(url => {
-                return $http({
+        const login = (username, password) => 
+            //this was set during bootstrap of the application, or on settingscontroller.js (settings screen)
+            routeService.loginURL().then(url => 
+                $http({
                     method: "POST",
                     url: url,
                     data: { username: username, password: password, userTimezoneOffset: new Date().getTimezoneOffset() },
                     timeout: 20 * 1000 // 20 seconds
-                });
-            })
+                })
+            )
             .then(response => {
                 //cleaning history so that back button does not return user to login page
                 $ionicHistory.clearCache();
 
                 const userdata = response.data;
-                if (!!userdata["Found"]) {
-                    loginLocal(userdata);
-                    return userdata;
-                }
-                return $q.reject(new Error("Invalid username or password"));
+
+                return !!userdata["Found"]
+                    ? loginLocal(userdata)
+                    : $q.reject(new Error("Invalid username or password"));
             });
-        }
+        
 
         /**
          * User has the following format:
@@ -132,17 +151,33 @@
          */
         const logout = function () {
             // invalidate current session
-            var current = localStorageService.remove(config.authkey);
+            const current = localStorageService.remove(config.authkey); 
             // making sure the previous user is always the last "active" user
             if (!!current) {
                 localStorageService.put(config.previouskey, current);
             }
             $rootScope.$broadcast($event("logout"), current);
 
-            return swdbDAO.resetDataBase(["Settings"]).then(() => {
+            return $q.all([
+                dao.resetDataBase(["Settings"]),
+                cookieService.clearCookies() // clear cookies 
+            ]).then(() => {
                 $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
+                cleanLocalStorage(); // clean non-blacklisted localstorage entries used by apps as cache
                 return current;
             });
+        };
+
+        /**
+         * Updates the current user's properties.
+         * Get the updated properties by using {@link #currentFullUser}.properties.
+         * 
+         * @param {Object} properties 
+         */
+        const updateCurrentUserProperties = function (properties) {
+            const current = currentFullUser();
+            setUserProperties(current, properties);
+            localStorageService.put(config.authkey, current);
         };
 
         /**
@@ -158,6 +193,15 @@
             }
         }, 0, true); //debouncing for when multiple parallel requests are unauthorized
 
+        /**
+         * Restores locally persisted authentication cookie to the webview.
+         * 
+         * @returns {Promise<String>} cookie value 
+         */
+        const restoreAuthCookie = function() {
+            return cookieService.restoreCookie(config.authCookieName);
+        };
+
         //#endregion
 
         //#region Service Instance
@@ -169,17 +213,18 @@
             currentFullUser,
             hasAuthenticatedUser,
             logout,
-            handleUnauthorizedRemoteAccess
+            handleUnauthorizedRemoteAccess,
+            updateCurrentUserProperties,
+            restoreAuthCookie
         };
         return service;
 
         //#endregion
     }
-
     //#region Service registration
 
-    mobileServices.factory("securityService", ["$rootScope","$state", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", securityService]);
+    mobileServices.factory("securityService", ["$rootScope","$state", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", "cookieService", securityService]);
 
     //#endregion
 
-})(mobileServices, ionic);
+})(mobileServices, ionic, _);

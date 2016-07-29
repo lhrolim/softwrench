@@ -106,18 +106,9 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
 
         public virtual string GetQueryReplacingMarkers(string entityName,string fromValue=null) {
             if (Query.StartsWith("ref:")) {
-                if (entityName.StartsWith("#")) {
-                    Query = MetadataProvider.SwdbEntityQuery(Query);
-                } else {
-                    Query = MetadataProvider.EntityQuery(Query);
-                }
+                Query = entityName.StartsWith("#") ? MetadataProvider.SwdbEntityQuery(Query) : MetadataProvider.EntityQuery(Query);
             }
-            var result =Query.Replace("!@", entityName + ".");
-            if (fromValue != null)
-            {
-                result = result.Replace("@from", fromValue);
-            }
-            return result;
+            return EntityUtil.GetQueryReplacingMarkers(Query, entityName, fromValue);
         }
 
         public EntityAttribute ClonePrependingContext(string context) {

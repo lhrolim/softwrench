@@ -225,12 +225,12 @@
 
         function setDetailDataResolved(panelid) {
             getContext(panelid).detailDataResolved = true;
-            getContext(panelid).associationsResolved = true;
+//            getContext(panelid).associationsResolved = true;
         }
 
         function clearDetailDataResolved(panelid) {
             getContext(panelid).detailDataResolved = false;
-            getContext(panelid).associationsResolved = false;
+//            getContext(panelid).associationsResolved = false;
         }
 
         function getDetailDataResolved(panelid) {

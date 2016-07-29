@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using cts.commons.Util;
 using softWrench.sW4.Data.Persistence.WS.Rest;
+using softWrench.sW4.Util.DeployValidation;
 using r = softWrench.sW4.Util.ReflectionUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
@@ -131,6 +132,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             }
             var property = ReflectionUtil.GetPropertyDescriptor(baseObject, propertyName);
             if (property == null) {
+                DeployValidationService.AddMissingProperty(propertyName);
                 Log.Warn(string.Format("property {0} not found on object {1}", propertyName, baseObject.GetType()));
                 return null;
             }
@@ -164,6 +166,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
             var propDescriptor = BaseReflectionUtil.PropertyDescriptor(baseObject, propertyName);
             if (propDescriptor == null) {
+                DeployValidationService.AddMissingProperty(propertyName);
                 if (ApplicationConfiguration.IsLocal()) {
                     Log.WarnFormat("property {0} not found on object {1}. Review metadata config or maximo config",
                         propertyName, baseObject);
@@ -174,9 +177,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             var isPrimitive = propertyType.IsPrimitive || typeof(DateTime).IsAssignableFrom(propertyType) || propertyType == typeof(string);
             if (isPrimitive) {
                 propDescriptor.SetValue(baseObject, value);
-                if (markSpecified) {
-                    SetValue(baseObject, propertyName + "Specified", true);
-                }
+                //if (markSpecified) {
+                //    SetValue(baseObject, propertyName + "Specified", true);
+                //}
                 return value;
             }
             var prop = propDescriptor.GetValue(baseObject);
@@ -184,9 +187,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 return ReflectionUtil.InstantiateProperty(baseObject, propertyName, new { Value = value });
             }
             ReflectionUtil.SetProperty(prop, new { Value = value });
-            if (markSpecified) {
-                SetValue(baseObject, propertyName + "Specified", true);
-            }
+            //if (markSpecified) {
+            //    SetValue(baseObject, propertyName + "Specified", true);
+            //}
             return prop;
         }
 
