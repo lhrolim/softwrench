@@ -88,7 +88,7 @@
             flex: none;
 
             &.search {
-                width: calc(100% - 150px);
+                width: 100%;
             }
 
             &.preferred {
@@ -96,6 +96,14 @@
 
                 .label {
                     margin-left: 24px;
+                }
+            }
+        }
+
+        &.hasusewhereclause {
+            .item-input-wrapper {
+                &.search {
+                    width: calc(100% - 150px);
                 }
             }
         }
