@@ -256,7 +256,10 @@
         <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
         <property key="icon.composition.tab" value="fa fa-wrench"/>
         <property key="list.offline.text.indexlist" value="wonum,description,status,location,asset_.description"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+        <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
       </properties>
+      
       <schemas>
         <schema id="list" stereotype="list.selection" title="Work Order Grid" platform="web">
           <filters>
@@ -792,11 +795,6 @@
 
       </schemas>
     
-    <properties>
-        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
-        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
-        <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
-      </properties>
     </application>
 
 
