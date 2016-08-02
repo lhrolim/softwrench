@@ -6,6 +6,7 @@ using softwrench.sw4.Shared2.Metadata.Menu.Containers;
 using softWrench.sW4.Metadata.Menu;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Validator {
 
@@ -24,7 +25,7 @@ namespace softWrench.sW4.Metadata.Validator {
             try {
                 var menuName = String.Format(MenuPattern, platform.ToString().ToLower());
                 using (var stream = MetadataParsingUtils.GetStream(streamValidator, menuName, fallbackToDefault)) {
-                    return stream == null ? null : new XmlMenuMetadataParser().Parse(catalog,stream);
+                    return stream == null ? null : new XmlMenuMetadataParser().Parse(catalog, stream);
                 }
             } catch (Exception) {
                 Log.Warn(String.Format("menu.{0}.xml not found", platform));
@@ -42,7 +43,8 @@ namespace softWrench.sW4.Metadata.Validator {
         internal Dictionary<ClientPlatform, MenuDefinition> Initialize(Stream streamValidator = null) {
             var menus = new Dictionary<ClientPlatform, MenuDefinition>();
             foreach (ClientPlatform platform in Enum.GetValues(typeof(ClientPlatform))) {
-                var menu = InitializeMenu(platform, streamValidator, !platform.Equals(ClientPlatform.Mobile));
+                var fallbackToDefault = !platform.Equals(ClientPlatform.Mobile) || "demo".Equals(ApplicationConfiguration.ClientName);
+                var menu = InitializeMenu(platform, streamValidator, fallbackToDefault);
                 if (menu != null) {
                     menus.Add(platform, menu);
                 }

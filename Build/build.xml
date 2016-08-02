@@ -90,6 +90,8 @@
 
   <target name="fulldeploy" depends="compile,changelog,copydlls,copylinkedfolders,webcompile,deploy"/>
 
+  <target name="demodeploy" depends="compile,copydlls,copylinkedfolders,webcompile,deploy"/>
+
   <target name="fullmultideploy">
     <if test="${IsWindows}"><logtimestart/></if>
     <echo message="Multiple Full Deploy Task" />
@@ -490,9 +492,11 @@
 
   <target name="setenv">
     <if test="${IsWindows}"><logtimestart/></if>
-    <xmlpoke file="${deploypath}/Web.config"
-               xpath="/configuration/appSettings/add[@key = 'profile']/@value"
-               value="${profile}" failonerror="true"/>
+    <if test="${profile != 'demo' or client == 'otb'}">
+      <xmlpoke file="${deploypath}/Web.config"
+                 xpath="/configuration/appSettings/add[@key = 'profile']/@value"
+                 value="${profile}" failonerror="true"/>
+    </if>
     <if test="${IsWindows}"><logtimeend/></if>
   </target>
 
@@ -521,48 +525,56 @@
   <target name="deploypeek" depends="setenv,setclient">
     <if test="${IsWindows}"><logtimestart/></if>
 
-    <property name="clientfile1" value="${deploypath}/App_Data/Client/${deployclientsw4}/deploy.xml" />
-    <property name="clientfile2" value="../softwrench.sW4.${deployclientsw4}/metadata/${deployclientsw4}/deploy.xml" />
+    <if test="${not environment::variable-exists('environmentsw4') or environment::get-variable('environmentsw4') != 'demo'}">
+      <property name="clientfile1" value="${deploypath}/App_Data/Client/${deployclientsw4}/deploy.xml" />
+      <property name="clientfile2" value="../softwrench.sW4.${deployclientsw4}/metadata/${deployclientsw4}/deploy.xml" />
 
-    <echo message="${clientfile1}"/>
-    <echo message="${clientfile2}"/>
+      <echo message="${clientfile1}"/>
+      <echo message="${clientfile2}"/>
 
-    <if test="${file::exists(clientfile1)}">
+      <if test="${file::exists(clientfile1)}">
 
-      <xmlpeek property="iispath" file="${clientfile1}"
-               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'iispath']/@value">
-        <namespaces>
-          <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
-        </namespaces>
-      </xmlpeek>
+        <xmlpeek property="iispath" file="${clientfile1}"
+                 xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'iispath']/@value">
+          <namespaces>
+            <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
+          </namespaces>
+        </xmlpeek>
 
-      <xmlpeek property="msdeploy_url" file="${clientfile1}"
-               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'msdeploy_url']/@value">
-        <namespaces>
-          <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
-        </namespaces>
-      </xmlpeek>
+        <xmlpeek property="msdeploy_url" file="${clientfile1}"
+                 xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'msdeploy_url']/@value">
+          <namespaces>
+            <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
+          </namespaces>
+        </xmlpeek>
 
+      </if>
+
+      <if test="${file::exists(clientfile2)}">
+
+        <echo message="searching in dll"/>
+
+        <xmlpeek property="iispath" file="${clientfile2}"
+                 xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'iispath']/@value">
+          <namespaces>
+            <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
+          </namespaces>
+        </xmlpeek>
+
+        <xmlpeek property="msdeploy_url" file="${clientfile2}"
+                 xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'msdeploy_url']/@value">
+          <namespaces>
+            <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
+          </namespaces>
+        </xmlpeek>
+
+      </if>
     </if>
+    
 
-    <if test="${file::exists(clientfile2)}">
-
-      <echo message="searching in dll"/>
-
-      <xmlpeek property="iispath" file="${clientfile2}"
-               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'iispath']/@value">
-        <namespaces>
-          <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
-        </namespaces>
-      </xmlpeek>
-
-      <xmlpeek property="msdeploy_url" file="${clientfile2}"
-               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'msdeploy_url']/@value">
-        <namespaces>
-          <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
-        </namespaces>
-      </xmlpeek>
-
+    <if test="${environment::variable-exists('environmentsw4') and environment::get-variable('environmentsw4') == 'demo'}">
+      <property name="msdeploy_url" value="https://10.50.100.101:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
+      <property name="iispath" value="softwrench/${deployclientsw4}" />
     </if>
 
     <echo message="urlPath: + ${msdeploy_url}"/>
