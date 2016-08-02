@@ -38,7 +38,7 @@ function ltEnabledLevel(currLevel, enabledLevel) {
         return currLevel.equalsAny('trace', 'debug', 'info');
     }
     if (enabledLevel.equalsIc("error")) {
-        return currLevel.equalsAny('trace', 'debug', 'info', 'error');
+        return currLevel.equalsAny('trace', 'debug', 'info','warn');
     }
     return true;
 }

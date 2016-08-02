@@ -338,32 +338,42 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
 
         evaluate: function (expression, datamap, scope, displayable) {
             const log = $log.getInstance('expressionService#evaluate');
+            //constant evaluations
+
             if (expression === "true" || expression === true) {
                 return true;
             }
             if (expression == null || expression === "false" || expression === false) {
                 return false;
             }
-            
-            const localDatamap = datamap || {};
+
 
             if (expression.startsWith('service:')) {
                 // Trim service: from the expression
                 const realServiceDefinition = expression.substr(8);
                 const targetFunction = dispatcherService.loadServiceByString(realServiceDefinition); // If the service.function is not found
                 const schema = scope ? scope.schema : null;
-                return targetFunction(localDatamap, schema, displayable);
+                return targetFunction(datamap, schema, displayable);
             }
-
-            expression = expression.replace(/\$/g, 'scope');
             
 
-            const expressionToEval = this.getExpression(expression, localDatamap, scope);
+
+            expression = expression.replace(/\$/g, 'scope');
+
+
+            const expressionToEval = this.getExpression(expression, datamap || {}, scope);
+
+            if (!datamap && expressionToEval.indexOf("datamap") >= 0) {
+                //if the datamap is undefined and we have a expression relying on datamap, there´s no point to evaluate it
+                //TODO: review
+                return true;
+            }
+
             try {
                 return eval(expressionToEval);
             } catch (e) {
                 if (contextService.isLocal()) {
-                    console.error(e);
+                    log.error(e);
                 }
                 return true;
             }
