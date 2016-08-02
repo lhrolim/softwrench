@@ -6,7 +6,7 @@
     <command id="new" icon="fa-plus" service="$scope" method="newEntry" label="New" tooltip="$scope:newShemaLabel" showexpression="$scope:hasNewSchema" cssclasses="large-button"/>
     <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
     <command id="print" icon="fa-print" label="Print" service="printService" method="printList" parameters="paginationData,schema" tooltip="Print" showexpression="" cssclasses="large-button"/>
-    <command id="export" icon="fa-file-text-o" label="Export" service="excelService" method="exporttoexcel" parameters="schema,searchData,searchSort,searchOperator,paginationData"
+    <command id="export" icon="fa-file-text-o" label="Export" service="excelService" method="exporttoexcel" parameters="schema,searchData,searchSort,searchOperator,paginationData,advancedsearchdata"
              tooltip="Export to Excel" showexpression="" cssclasses="large-button"/>
   </commandgroup>
 

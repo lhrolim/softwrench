@@ -67,7 +67,7 @@ angular.module('sw_layout')
         },
 
 
-        exporttoexcel: function (schema, searchData, searchSort, searchOperator, paginationData) {
+        exporttoexcel: function (schema, searchData, searchSort, searchOperator, paginationData, advancedsearchdata) {
             var schemaId = schema.schemaId;
             var parameters = {};
             parameters.key = {};
@@ -83,7 +83,9 @@ angular.module('sw_layout')
             } else {
                 parameters.key.schemaId = schemaId;
             }
-            var searchDTO = searchService.buildSearchDTO(searchData, searchSort,searchOperator, paginationData.filterFixedWhereClause);
+
+            var quickSearchDTO = (advancedsearchdata && advancedsearchdata.quickSearchData) ? { quickSearchData: advancedsearchdata.quickSearchData } : null;
+            var searchDTO = searchService.buildSearchDTO(searchData, searchSort, searchOperator, paginationData.filterFixedWhereClause, null, null, quickSearchDTO);
             var currentModule = contextService.currentModule();
             if (currentModule != null) {
                 parameters.module = currentModule;
