@@ -791,6 +791,12 @@
         <!-- endregion -->
 
       </schemas>
+    
+    <properties>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+        <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
+      </properties>
     </application>
 
 
