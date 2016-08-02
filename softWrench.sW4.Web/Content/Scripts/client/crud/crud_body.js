@@ -672,7 +672,7 @@
                                 if (!parameters.dispatcherComposition && (responseDataMap.type === null || responseDataMap.type !== "UnboundedDatamap")) {
                                     if ($scope.datamap.fields) {
                                         //TODO: remove fields
-                                        $scope.datamap.fields = responseDataMap;
+                                        $scope.datamap.fields = responseDataMap.fields;
                                     } else {
                                         $scope.datamap = responseDataMap;
                                     }
