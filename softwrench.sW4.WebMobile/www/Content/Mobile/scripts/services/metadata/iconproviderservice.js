@@ -50,16 +50,25 @@
 
         function getIconColor(item) {
             const datamap = item.datamap;
-            const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
-            if (!displayable || !displayable.attribute || displayable.attribute === "status") {
-                return statuscolorService.getColor(datamap["status"], crudContextService.currentApplicationName());
+            const defaultColor = "#808080";
+
+            if (!datamap) {
+                return defaultColor;
             }
 
-            if (displayable.attribute === "wopriority") {
+            const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
+
+            if (!displayable || !displayable.attribute || displayable.attribute === "status") {
+                if (!!datamap) {
+                    return statuscolorService.getColor(datamap["status"], crudContextService.currentApplicationName());
+                }
+            }
+
+            if (!displayable || !displayable.attribute || displayable.attribute === "wopriority") {
                 return statuscolorService.getPriorityColor(datamap[displayable.attribute]);
             }
 
-            return "#808080";
+            return defaultColor;
         }
 
         function getTextColor(item) {
@@ -72,12 +81,17 @@
                 return 'hasproblem';
             }
 
-            if (item.isDirty) {
+            if (item.isDirty || item[constants.localIdKey]) {
                 return 'isdirty';
             }
 
             if (item.pending) {
                 return 'ispending';
+            }
+
+            //composition item
+            if (!item.application) {
+                return crudContextService.tabIcon();
             }
 
             return null;
@@ -89,16 +103,26 @@
             }
 
             const datamap = item.datamap;
+
+            if (!datamap) {
+                return null;
+            }
+
             const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
 
             if (!displayable || !displayable.attribute || displayable.attribute === "status") {
-                const status = datamap["status"];
+                var status = null;
+
+                if (!!datamap) {
+                    status = datamap["status"];
+                }
+
                 return status == null ? "N" : status.charAt(0);
             }
 
             var value = datamap[displayable.attribute];
 
-            if (displayable.attribute === "wopriority") {
+            if (!displayable || !displayable.attribute || displayable.attribute === "wopriority") {
                 item.icon = value ? null : "flag";
                 return value ? value.substring(0, 1) : "";
             }
@@ -107,6 +131,7 @@
                 return null;
             }
             value += "";
+
             return value.substring(0, 1);
         }
 
@@ -115,7 +140,7 @@
                 return "exclamation-triangle";
             }
 
-            if (item.isDirty) {
+            if (item.isDirty || item[constants.localIdKey]) {
                 return "refresh";
             }
 
@@ -125,6 +150,10 @@
 
             const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
             if (!displayable) {
+                return null;
+            }
+
+            if (!item.datamap) {
                 return null;
             }
 

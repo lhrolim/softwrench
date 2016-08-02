@@ -93,6 +93,9 @@
                 return crudContextHolderService.tabTitle();
             },
 
+            tabIcon: function () {
+                return crudContextHolderService.tabIcon();
+            },
 
             leavingCompositionDetail: function () {
                 crudContextHolderService.leavingCompositionDetail();

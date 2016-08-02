@@ -3,13 +3,19 @@
 
     function laborTimerIconProvider(laborService) {
         //#region Utils
+        function hasActiveLabor(item) {
+            var activeLabor = laborService.getActiveLabor();
 
-        const hasActiveLabor = item => laborService.getActiveLaborParent() === item.id;
+            //is labor composition item
+            if (!item.application && !!activeLabor) {
+                return activeLabor["#localswdbid"] === item["#localswdbid"];   
+            }
 
+            return laborService.getActiveLaborParent() === item.id;
+        }
         //#endregion
 
         //#region Public methods
-
         function getIconClass(item) {
             return hasActiveLabor(item) ? "hasaction" : null;
         }
@@ -17,7 +23,6 @@
         function getIconIcon(item) {
             return hasActiveLabor(item) ? "clock-o" : null;
         }
-
         //#endregion
 
         //#region Service Instance
@@ -30,9 +35,7 @@
     }
 
     //#region Service registration
-
     angular.module("sw_mobile_services").factory("laborTimerIconProvider", ["laborService", laborTimerIconProvider]);
-
     //#endregion
 
 })(angular);

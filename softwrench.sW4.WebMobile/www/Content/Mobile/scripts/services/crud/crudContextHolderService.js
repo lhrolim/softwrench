@@ -212,6 +212,13 @@
             return _crudContext.composition.currentTab.label;
         };
 
+        function tabIcon() {
+            if (this.isOnMainTab()) {
+                return null;
+            }
+            return _crudContext.composition.currentTab.schema.schemas.list.properties['icon.composition.tab'];
+        };
+
         function getActiveTab() {
             if (this.isOnMainTab()) {
                 return null;
@@ -341,6 +348,7 @@
             isOnMainTab,
             resetTab,
             tabTitle,
+            tabIcon,
             leavingCompositionDetail,
             compositionList,
             getCompositionListSchema,

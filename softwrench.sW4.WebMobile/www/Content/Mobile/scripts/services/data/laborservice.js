@@ -267,7 +267,8 @@
             updateLineCost,
             formatRegularHours,
             formatApproved,
-            getActiveLaborParent
+            getActiveLaborParent,
+            getActiveLabor
         };
         return service;
         //#endregion
