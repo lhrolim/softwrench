@@ -88,7 +88,7 @@
                     "isprimary": operation
                 }
             }
-            datamap['department'] = datamap['reportedbyp_.department'];
+            datamap['department'] = datamap['reportedbyp_.department'] || datamap['department'];
             return $q.all([
                 searchService.searchWithData("email", searchData, "list", extraparams),
                 searchService.searchWithData("phone", searchData, "list", extraparams)
