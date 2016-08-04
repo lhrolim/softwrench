@@ -83,7 +83,19 @@
           <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
           <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>
         </relationship>
+        <relationship to="location" qualifier="offlinelocation">
+          <relationshipAttribute from ="storeloc" to="location" primary="true" />
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+          <relationshipAttribute to="status" literal="OPERATING" quoteLiteral="true" />
+        </relationship>
+        <relationship to="warranty">
+          <relationshipAttribute from="warranty" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WARRANTY" quoteLiteral="true" />
+        </relationship>
       </relationships>
+    </entity>
+
+    <entity name="warranty" parententity="alndomain" idAttribute="domainid" whereclause="!@domainid='WARRANTY'">
     </entity>
 
     <entity name="locancestor" idAttribute="locancestorid">
@@ -97,6 +109,7 @@
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
     </entity>
+    
   </entities>
 
   <applications>
@@ -664,7 +677,7 @@
             <dataprovider whereClause="@fsWorkorderOfflineService.getLocationsWhereClause"/>
           </association>
           <association target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location"
-                       requiredexpression="true" label="Asset" showexpression="@location !=null">
+                       requiredexpression="true" label="Asset" showexpression="!!@location">
             <renderer type="lookup" />
             <event type="afterchange" service="fsWorkorderOfflineService" method="updateLocation" />
             <dataprovider whereClause="@fsWorkorderOfflineService.getAssetWhereClause"/>
@@ -1168,17 +1181,23 @@
             <option label="MATERIAL" value="MATERIAL"/>
           </optionfield>
 
+          <association target="storeloc" labelfield="offlinelocation_.location"
+                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
+                       label="Storeroom">
+            <dataprovider whereClause="@materialService.getStoreRoomWhereClause"/>
+            <event type="afterchange" service="materialService" method="storeRoomSelected"/>
+          </association>
+
           <association target="itemnum" labelfield="offlineitem_.description" extraprojectionvalues="description"
                        showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
                        label="Item" >
-            <renderer type="lookup"/>
+            <dataprovider whereClause="@materialService.getAvailableItemsWhereClause"/>
             <event type="afterchange" service="materialService" method="itemSelected"/>
           </association>
 
-          <optionfield attribute="storeloc"
-                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
-                       label="Storeroom">
-          </optionfield>
+          <association target="warranty" labelfield="warranty_.description" requiredexpression="true" label="Warranty">
+            <renderer type="lookup" params="showCode=false"/>
+          </association>
 
           <field attribute="description" label="Material Description" requiredexpression="true" showexpression="@linetype==='MATERIAL'"/>
           <field attribute="unitcost" label="Unit Cost" qualifier="quantity" requiredexpression="@linetype==='MATERIAL'" showexpression="@linetype==='MATERIAL'">
@@ -1193,6 +1212,8 @@
         <!-- #endregion -->
       </schemas>
     </application>
+    
+    <!-- #region: Mobile offline association data -->
 
     <application name="offlineitem" entity="offlineitem" title="Item">
       <schemas>
@@ -1205,9 +1226,10 @@
           <field attribute="commoditygroup" label="Commodity Group"/>
         </list>
       </schemas>
+      <properties>
+        <property key="list.offline.text.indexlist" value="itemnum"/>
+      </properties>
     </application>
-
-    <!-- #region: Mobile offline association data -->
 
     <application name="offlineinventory" entity="inventory" title="Inventory">
       <schemas>
@@ -1216,6 +1238,9 @@
           <field attribute="itemnum" label="Item" />
         </list>
       </schemas>
+      <properties>
+        <property key="list.offline.text.indexlist" value="itemnum,location"/>
+      </properties>
     </application>
 
     <application name="classstructure" title="Class Structure" entity="classstructure">
@@ -1277,11 +1302,13 @@
         <list platform="mobile">
           <field attribute="location" label="Location" />
           <field attribute="description" label="Description"/>
+          <field attribute="type" label="Type" />
+          <field attribute="status" label="Status" />
         </list>
       </schemas>
 
       <properties>
-        <property key="list.offline.text.indexlist" value="location"/>
+        <property key="list.offline.text.indexlist" value="location,type,status"/>
       </properties>
     </application>
 
@@ -1297,6 +1324,16 @@
       <properties>
         <property key="list.offline.text.indexlist" value="location"/>
       </properties>
+    </application>
+
+    <application name="warranty" entity="warranty" title="Warranty">
+      <schemas>
+        <list platform="mobile">
+          <field attribute="domainid"/>
+          <field attribute="value"/>
+          <field attribute="description"/>
+        </list>  
+      </schemas>
     </application>
 
     <!-- #endregion-->
