@@ -63,8 +63,7 @@
 
     </ion-content>
 
-    <button class="button button-float" ng-click="addCompositionItem()" ng-if="!isOnMainTab()" ng-show="!hasDirtyChanges() && addCompositionAllowed()">
-        <i class="fa fa-plus"></i>
-    </button>
-
+    <div ng-if="!!compositionListSchema" ng-show="!hasDirtyChanges()">
+        <command-bar schema="compositionListSchema" datamap="datamap" position="mobile.composition" label="Actions"></command-bar>
+    </div>
 </ion-view>

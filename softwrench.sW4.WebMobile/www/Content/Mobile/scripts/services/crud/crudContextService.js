@@ -4,11 +4,11 @@
 
     mobileServices.factory('crudContextService', [
     "$q", "$log", "$rootScope", "swdbDAO", "searchIndexService", "problemService", 
-    "metadataModelService", "offlineSchemaService", "offlineCompositionService",
+    "metadataModelService", "offlineSchemaService", "offlineCompositionService", "expressionService",
     "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
     "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService", "offlineEntities",
     function ($q, $log, $rootScope, dao, searchIndexService, problemService, 
-    metadataModelService, offlineSchemaService, offlineCompositionService,
+    metadataModelService, offlineSchemaService, offlineCompositionService, expressionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
     crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService, entities) {
 
@@ -188,6 +188,19 @@
                 crudContext.composition.originalDetailItemDatamap = angular.copy(item);
                 contextService.insertIntoContext("crudcontext", crudContext);
                 return routeService.go("main.cruddetail.compositiondetail");
+            },
+
+            addCompositionAllowed: function() {
+                const context = crudContextHolderService.getCrudContext();
+                const composition = context.composition;
+                if (!composition || !composition.currentTab || !composition.currentTab.schema || composition.currentDetailItem != null) {
+                    return false;
+                }
+
+                const allowInsertion = composition.currentTab.schema.allowInsertion;
+                const datamap = context.currentDetailItem.datamap;
+                const schema = context.currentDetailSchema;
+                return expressionService.evaluate(allowInsertion, datamap, { schema: schema }, null);
             },
 
             createNewCompositionItem: function () {

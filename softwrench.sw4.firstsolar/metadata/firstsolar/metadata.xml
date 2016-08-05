@@ -109,7 +109,15 @@
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
     </entity>
-    
+
+    <entity name="labtrans" idAttribute="labtransid">
+      <relationships>
+        <relationship to="warranty">
+          <relationshipAttribute from="warranty" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WARRANTY" quoteLiteral="true" />
+        </relationship>
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
@@ -716,6 +724,16 @@
           <field attribute="value" label="Value"/>
           <field attribute="domainid" label="Domain"/>
         </list>
+      </schemas>
+    </application>
+
+    <application name="labtrans" entity="labtrans" title="Labor">
+      <schemas>
+        <detail stereotype="detail" title="Labor Reporting" platform="mobile" redeclaring="false">
+          <customization position="+regularhrs">
+            <association label="Warranty" target="warranty" labelfield="warranty_.description" default="NO_WARRANTY" requiredexpression="true"/>
+          </customization>
+        </detail>
       </schemas>
     </application>
 

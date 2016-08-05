@@ -15,11 +15,17 @@
                 label: "@"
             },
 
-            controller: ["$scope", "offlineCommandService", function ($scope, offlineCommandService) {
+            controller: ["$scope", "$rootScope", "offlineCommandService", function ($scope, $rootScope, offlineCommandService) {
 
                 class CommandBar {
                     constructor(commands) {
                         this.commands = commands;
+                        if (!this.hasActiveCommands) {
+                            return;
+                        }
+                        const activeCommands = this.commands.filter(c => !offlineCommandService.isCommandHidden($scope.datamap, $scope.schema, c));
+                        this.isSingleCommand = activeCommands.length === 1;
+                        this.singleCommand = activeCommands[0];
                     }
                     get hasActiveCommands() {
                         return angular.isArray(this.commands) && 
@@ -51,6 +57,12 @@
                 $scope.$watch("position", (newPosition, oldPosition) => {
                     if (newPosition === oldPosition) return;
                     updateCommandBar(null, newPosition);
+                });
+
+                $scope.$on("sw_updatecommandbar", (event, position) => {
+                    if (position === $scope.position) {
+                        updateCommandBar();
+                    }
                 });
             }],
 

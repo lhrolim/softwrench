@@ -12,10 +12,10 @@
         };
 
         $scope.loadTab = function (tab) {
-            crudContextService.loadTab(tab);
+            crudContextService.loadTab(tab).then(() => {
+                $scope.$emit("sw_compositionselected");
+            });
             $ionicScrollDelegate.scrollTop();
-            $scope.$emit("sw_compositionselected");
-
         }
 
         $scope.notOnMainTab = function () {

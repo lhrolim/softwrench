@@ -2,21 +2,25 @@
     <ng-switch on="position">
         <div ng-switch-when="mobile.fab" class="action-fab">
             <mfb-menu label="{{label}}"
-                      position="br"
-                      effect="slidein"
-                      toggling-method="click"
-                      active-icon="fa fa-times"
-                      resting-icon="fa fa-bolt">
+                        position="br"
+                        effect="slidein"
+                        toggling-method="click"
+                        active-icon="fa fa-times"
+                        resting-icon="fa fa-bolt">
                 <a mfb-button
-                   ng-repeat="command in commandBar.commands"
-                   ng-if="!isCommandHidden(command)"
-                   label="{{command.label}}"
-                   icon="{{command.icon}}"
-                   ng-click="executeCommand(command)"
-                   mfb-button-close></a>
+                    ng-repeat="command in commandBar.commands"
+                    ng-if="!isCommandHidden(command)"
+                    label="{{command.label}}"
+                    icon="{{command.icon}}"
+                    ng-click="executeCommand(command)"
+                    mfb-button-close></a>
             </mfb-menu>
         </div>
-
+        <div ng-switch-when="mobile.composition">
+            <button class="button button-float" ng-click="executeCommand(commandBar.singleCommand)">
+                <i class="fa {{commandBar.singleCommand.icon}}"></i>
+            </button>
+        </div>
     </ng-switch>
 
 </div>

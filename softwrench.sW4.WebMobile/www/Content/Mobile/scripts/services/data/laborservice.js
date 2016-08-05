@@ -1,7 +1,7 @@
 ﻿(function (angular, _) {
     "use strict";
 
-    function laborService(dao, securityService, localStorageService, crudContextService, $ionicPopup, $q, offlineSchemaService, offlineSaveService) {
+    function laborService(dao, securityService, localStorageService, crudContextService, $ionicPopup, $q, offlineSchemaService, offlineSaveService, $rootScope) {
         //#region Utils
 
         const constants = {
@@ -148,6 +148,14 @@
             return hasActiveLaborForCurrent();
         }
 
+        function showLaborCreationCommand() {
+            return crudContextService.addCompositionAllowed() && shouldAllowLaborStart();
+        }
+
+        function showLaborFinishCommand() {
+            return crudContextService.addCompositionAllowed() && shouldAllowLaborFinish();
+        }
+
         /**
          * Starts a labor reporting/transaction on the current parent entity.
          * If there's a labor already in-progress on another work order it will ask if the user wishes to stop it.
@@ -193,6 +201,14 @@
                 template: "Are you sure you want to finish the current labor report ?"
             })
             .then(res =>  res ? doStopLaborTransaction() : null);
+        }
+
+        function finishLaborTransactionFromComposition(schema, datamap) {
+            finishLaborTransaction(schema, datamap).then(result => {
+                if (result) {
+                    $rootScope.$broadcast("sw_updatecommandbar", "mobile.composition");
+                }
+            });
         }
 
         /**
@@ -262,8 +278,11 @@
             onDetailLoad,
             shouldAllowLaborStart,
             shouldAllowLaborFinish,
+            showLaborCreationCommand,
+            showLaborFinishCommand,
             startLaborTransaction,
             finishLaborTransaction,
+            finishLaborTransactionFromComposition,
             updateLineCost,
             formatRegularHours,
             formatApproved,
@@ -277,7 +296,7 @@
     //#region Service registration
     angular.module("sw_mobile_services")
         .factory("laborService",
-        ["swdbDAO", "securityService", "localStorageService", "crudContextService", "$ionicPopup", "$q", "offlineSchemaService", "offlineSaveService", laborService]);
+        ["swdbDAO", "securityService", "localStorageService", "crudContextService", "$ionicPopup", "$q", "offlineSchemaService", "offlineSaveService", "$rootScope", laborService]);
     //#endregion
 
 })(angular, _);

@@ -39,11 +39,25 @@
             $scope.compositionpopover.show($event);
         }
 
+        $scope.compositionListSchema = null;
+
         $scope.$on("sw_compositionselected", function () {
             $scope.compositionpopover.hide();
+            $scope.compositionListSchema = $scope.isOnMainTab() ? null : crudContextService.getCompositionListSchema();
         });
 
-
+        $scope.$watch(() => {
+            return $scope.isOnMainTab();
+        }, (newValue, oldValue) => {
+            if (oldValue === newValue) {
+                return;
+            }
+            if (newValue) {
+                $scope.compositionListSchema = null;
+            } else {
+                $scope.compositionListSchema = crudContextService.getCompositionListSchema();
+            }
+        });
 
         $scope.loadMainTab = function () {
             $ionicScrollDelegate.scrollTop();
@@ -115,15 +129,6 @@
         $scope.isOnMainTab = function () {
             return crudContextService.isOnMainTab();
         }
-
-        $scope.addCompositionAllowed = function() {
-            const context = crudContextService.getCrudContext();
-            const composition = context.composition;
-            return composition &&
-                composition.currentTab &&
-                composition.currentTab.schema &&
-                expressionService.evaluate(composition.currentTab.schema.allowInsertion, $scope.datamap, { schema: $scope.schema }, null);
-        };
 
         $scope.detailTitle = function () {
             const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
