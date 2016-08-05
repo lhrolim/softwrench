@@ -482,6 +482,8 @@
           </section>
           
           <section showexpression="@mode == 'batch'">
+
+
             <section>
               <renderer type="default" params="childinputsize=medium" />
               <reference id="issueitem" />
@@ -489,8 +491,9 @@
 
             <composition inline="true" relationship="#batchitem" label="Batch Items" detailschema="batchitemlinedetail">
               <collectionproperties listschema="batchitemline" autocommit="false"/>
-              <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true;childinputsize=small"/>
+              <renderer type="TABLE" params="mode=batch;composition.inline.startwithentry=true"/>
             </composition>
+
           </section>
 
           <section orientation="horizontal">

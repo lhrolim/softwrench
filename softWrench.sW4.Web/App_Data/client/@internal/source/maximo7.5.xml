@@ -1042,6 +1042,7 @@
         <attribute name="reportedby" type="varchar" required="false" />
         <attribute name="reportdate" type="datetime" required="false" />
         <attribute name="phone" type="varchar" required="false" />
+        <attribute name="email" type="varchar" required="false" />
         <attribute name="problemcode" type="varchar" required="false" />
         <attribute name="calendar" type="varchar" required="false" />
         <attribute name="downtime" type="smallint" required="true" />

@@ -82,6 +82,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             HandleMaterials(crudData, wo);
             LabTransHandler.HandleLabors(crudData, wo);
             ToolsHandler.HandleWoTools(crudData, wo);
+            // Update or create related records
             RelatedRecordHandler.HandleRelatedRecords(maximoTemplateData);
             // Update or create attachments
             _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);

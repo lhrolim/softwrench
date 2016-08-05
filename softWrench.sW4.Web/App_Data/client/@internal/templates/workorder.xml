@@ -690,9 +690,11 @@
           <commandbars>
             <commandgroup position="actions">
 <!--              <container label="Workflow" id="actioncontainer" icon="fa-bolt">-->
-                <command id="initiateWorkflow" icon="fa-play" label="Initiate Workflow" parameters="schema,datamap" service="workflowService" method="initiateWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
-                <command id="routeWorkflow" icon="fa-step-forward" label="Route Workflow" service="workflowService" method="routeWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
-                <command id="stopWorkflow" icon="fa-stop" label="Stop WorkFlow" service="workflowService" method="stopWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
+              <command id="initiateWorkflow" icon="fa-play" label="Initiate Workflow" parameters="schema,datamap" service="workflowService" method="initiateWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
+              <command id="routeWorkflow" icon="fa-step-forward" label="Route Workflow" service="workflowService" method="routeWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
+              <command id="stopWorkflow" icon="fa-stop" label="Stop WorkFlow" service="workflowService" method="stopWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
+              <!-- Create new SR as Related Record -->
+              <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>
 <!--              </container>-->
             </commandgroup>
           </commandbars>

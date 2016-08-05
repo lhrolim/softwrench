@@ -180,6 +180,9 @@ angular.module('sw_layout')
         },
 
         getBarCommands: function (schema, position) {
+            if (schema == null) {
+                return;
+            }
             schema.jscache = instantiateIfUndefined(schema.jscache);
             schema.jscache.commandbars = instantiateIfUndefined(schema.jscache.commandbars);
             if (schema.jscache.commandbars[position] !== undefined) {
