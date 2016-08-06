@@ -31,27 +31,14 @@
                 <div class="item item-divider">
                     Demo Mode
                 </div>
-                <label class="item demo-note">
+                <div class="item demo-note">
                     <div class="row">
-                        To access the softWrench demo, please use the following credentials to login:
+                        To access the softWrench demo, select one of the following users:
                     </div>
-                    <div class="users">
-                        <div class="row">
-                            <div class="name"><i class="fa fa-user"></i>&ensp;enduser</div>
-                            <div class="password"><i class="fa fa-unlock-alt"></i>&ensp;password</div>
-                        </div>
-                        <div class="row">
-                            <div class="name"><i class="fa fa-user"></i>&ensp;supervisor</div>
-                            <div class="password"><i class="fa fa-unlock-alt"></i>&ensp;password</div>
-                        </div>
-                        <div class="row">
-                            <div class="name"><i class="fa fa-user"></i>&ensp;administrator
-                            </div>
-                            <div class="password"><i class="fa fa-unlock-alt"></i>&ensp;password
-                            </div>
-                        </div>
-                    </div>
-                </label>
+                    <button class="button button-calm button-block" ng-click="login('enduser', 'password')"><i class="fa fa-user"></i>&ensp;enduser</button>
+                    <button class="button button-calm button-block" ng-click="login('supervisor', 'password')"><i class="fa fa-user"></i>&ensp;supervisor</button>
+                    <button class="button button-calm button-block" ng-click="login('administrator', 'password')"><i class="fa fa-user"></i>&ensp;administrator</button>
+                </div>
             </section>
         </div>
     </ion-content>
