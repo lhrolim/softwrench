@@ -101,13 +101,29 @@
             });
         }
 
+        function onSiteSelected(event) {
+            const datamap = event.fields;
+            if (!datamap["locationorg"]) {
+                datamap["locationorg"] = datamap["site_.orgid"];
+            }
+        }
+
+        function onOrganizationSelected(event) {
+            const datamap = event.fields;
+            if (datamap["locationorg"] !== datamap["site_.orgid"]) {
+                datamap["locationsite"] = null;
+            }
+        }
+
         const service = {
             afterChangeUsername,
             validatePerson,
             cancelEdition,
             submitPerson,
             loadPhone,
-            loadEmail
+            loadEmail,
+            onSiteSelected,
+            onOrganizationSelected
         };
         return service;
 

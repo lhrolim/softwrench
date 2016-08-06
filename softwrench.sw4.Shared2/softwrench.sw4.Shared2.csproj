@@ -145,6 +145,7 @@
     <Compile Include="Metadata\Menu\Containers\MenuDefinition.cs" />
     <Compile Include="Metadata\Menu\Interfaces\IMenuLeaf.cs" />
     <Compile Include="Metadata\Menu\Interfaces\MenuBaseDefinition.cs" />
+    <Compile Include="Metadata\Menu\ServiceMenuItemDefinition.cs" />
     <Compile Include="Metadata\Modules\ModuleDefinition.cs" />
     <Compile Include="Metadata\Offline\MobileMetadataDownloadResponseDefinition.cs" />
     <Compile Include="Metadata\SharedApplicationData.cs" />

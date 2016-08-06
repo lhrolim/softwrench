@@ -18,7 +18,7 @@
         <ion-content has-header="true" has-bouncing="false">
 
             <ul class="list">
-                <!-- apps -->
+                <!-- #region applications section -->
                 <div ng-show="menuleafs().length" class="item item-divider">
                     <i class="fa fa-th"></i>&ensp;Applications
                 </div>
@@ -32,7 +32,7 @@
                         <div ng-show="!collapsed">
                             <!-- container's subitems -->
                             <a ng-repeat="subleaf in leaf.leafs"
-                               ng-click="loadApplication(subleaf)" 
+                               ng-click="loadApplication(subleaf)"
                                class="item subleaf">
                                 <i class="fa" ng-class="subleaf.icon"></i>&ensp;{{subleaf.title}}
                             </a>
@@ -43,8 +43,10 @@
                         <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}
                     </a>
                 </ng-switch>
-                
 
+                <!--#endregion-->
+
+                <!-- #region main section -->
                 <div class="item item-divider">
                     <i class="fa fa-cogs"></i>&ensp;Admin
                 </div>
@@ -53,15 +55,19 @@
 
                 <!-- TODO: make audit presence configurable -->
                 <!--<a class="fa fa-lock" ng-click="loadAction('main.audit.applicationselect')">&ensp;Audit</a>-->
-                
-                <a class="item" ng-click="loadAction('main.settings')"><i class="fa fa-cog"></i>&ensp;Settings</a>
 
+                <a class="item" ng-click="loadAction('main.settings')"><i class="fa fa-cog"></i>&ensp;Settings</a>
+                <!-- #endregion -->
+
+                <!-- #region user section -->
                 <div class="item item-divider">
                     <i class="fa fa-user"></i>&ensp;User
                 </div>
+                <!-- TODO: generic profile instead of FS -->
+                <a class="item" ng-click="loadAction('main.firstsolar.userprofile')"><i class="fa fa-user"></i>&ensp;My Profile</a>
 
                 <a class="item" ng-click="logout()"><i class="fa fa-sign-out"></i>&ensp;Logout</a>
-
+                <!-- #endregion -->
 
                 <!--<a ui-sref="main.home" class="item" ng-click="toggleMenu()">Home</a>
                     <a ui-sref="main.tabs" class="item" ng-click="toggleMenu()">Tabs</a>-->

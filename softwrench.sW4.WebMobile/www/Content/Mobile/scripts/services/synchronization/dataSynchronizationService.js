@@ -8,7 +8,7 @@
         });
         return ids;
     };
-    const service = function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, entities, searchIndexService) {
+    const service = function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, entities, searchIndexService, securityService) {
 
         var errorHandlePromise = function (error) {
             if (!error) {
@@ -84,31 +84,36 @@
         function createAppSyncPromise(firstInLoop, app, currentApps, compositionMap) {
             var log = $log.get("dataSynchronizationService#createAppSyncPromise");
 
-            var params = {
-                applicationName: app,
-                clientCurrentTopLevelApps: currentApps,
-                returnNewApps: firstInLoop
-            }
             return rowstampService.generateRowstampMap(app)
                 .then(function (rowstampMap) {
                     //see samplerequest.json
                     rowstampMap.compositionmap = compositionMap;
                     log.debug("invoking service to get new data");
-                    return restService.post("Mobile", "PullNewData", params, rowstampMap);
+                    const payload = {
+                        applicationName: app,
+                        clientCurrentTopLevelApps: currentApps,
+                        returnNewApps: firstInLoop,
+                        userData: securityService.currentFullUser(),
+                        rowstampMap
+                    };
+                    return restService.post("Mobile", "PullNewData", null, payload);
                 }).then(resultHandlePromise);
         };
 
         function syncSingleItem(item) {
             const app = item.application;
-            const params = {
-                applicationName: app,
-                itemsToDownload: [item.remoteId]
-            };
+            
             return rowstampService.generateCompositionRowstampMap().then(compositionMap => {
                 const rowstampMap = {
                     compositionmap: compositionMap
                 }
-                var promise = restService.post("Mobile", "PullNewData", params, rowstampMap).then(resultHandlePromise).catch(errorHandlePromise);
+                const payload = {
+                    applicationName: app,
+                    itemsToDownload: [item.remoteId],
+                    userData: securityService.currentFullUser(),
+                    rowstampMap
+                };
+                var promise = restService.post("Mobile", "PullNewData", null, payload).then(resultHandlePromise).catch(errorHandlePromise);
                 return $q.all([promise]);
             });
 
@@ -118,15 +123,16 @@
         function syncData() {
             var currentApps = metadataModelService.getApplicationNames();
             const firstTime = currentApps.length === 0;
-            var params;
+            var payload;
             if (firstTime) {
                 //upon first synchronization let's just bring them all, since we don´t even know what are the metadatas
-                params = {
+                payload = {
                     clientCurrentTopLevelApps: currentApps,
-                    returnNewApps: true
+                    returnNewApps: true,
+                    userData: securityService.currentFullUser()
                 };
                 //single server call
-                return restService.post("Mobile", "PullNewData", params)
+                return restService.post("Mobile", "PullNewData", null, payload)
                     .then(resultHandlePromise)
                     .catch(errorHandlePromise);
             }
@@ -148,7 +154,7 @@
 
         return api;
     };
-    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "offlineRestService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities", "searchIndexService"];
+    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "offlineRestService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities", "searchIndexService", "securityService"];
 
     mobileServices.factory('dataSynchronizationService', service);
 

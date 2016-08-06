@@ -165,9 +165,12 @@
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
           <association target="locationorg" labelfield="organization_.description" label="Org ID" requiredexpression="true" defaultexpression="@orgid">
             <renderer type="lookup"/>
+            <event type="afterchange" service="personService" method="onOrganizationSelected" />
           </association>
-          <association target="locationsite" labelfield="site_.description" label="Site ID" requiredexpression="true" defaultexpression="@siteid">
+          <association target="locationsite" labelfield="site_.description" label="Site ID" requiredexpression="true" defaultexpression="@siteid" extraprojectionvalues="orgid">
             <renderer type="lookup"/>
+            <dataprovider prefilterfunction="FilterSites"/>
+            <event type="afterchange" service="personService" method="onSiteSelected" />
           </association>
           <association target="location" labelfield="location_.description" label="Location">
             <renderer type="lookup"/>
@@ -254,11 +257,14 @@
           <field attribute="lastname" label="Last Name" requiredexpression="true"/>
 
           <field attribute="#primaryphone" label="Primary Phone" />
-          <association target="locationorg" labelfield="organization_.description" label="Org ID" default="@orgid" requiredexpression="true">
+          <association target="locationorg" labelfield="organization_.description" label="Org ID" requiredexpression="true" defaultexpression="@orgid">
             <renderer type="lookup"/>
+            <event type="afterchange" service="personService" method="onOrganizationSelected" />
           </association>
-          <association target="locationsite" labelfield="site_.description" label="Site ID" default="@siteid" requiredexpression="true">
+          <association target="locationsite" labelfield="site_.description" label="Site ID" requiredexpression="true" defaultexpression="@siteid" extraprojectionvalues="orgid">
             <renderer type="lookup"/>
+            <dataprovider prefilterfunction="FilterSites"/>
+            <event type="afterchange" service="personService" method="onSiteSelected" />
           </association>
           <association target="location" labelfield="location_.description" label="Location">
             <renderer type="lookup"/>

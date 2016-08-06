@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using System.Web.Security;
+using softwrench.sw4.offlineserver.dto;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Web.Controllers.Security;
 
@@ -216,31 +217,9 @@ namespace softWrench.sW4.Web.Controllers {
 
             AuthenticationCookie.SetPersistentCookie(userName, userTimezoneOffset, Response);
 
-            return Json(new UserReturningData(user));
+            return Json(new UserSyncData(user));
         }
 
-        internal class UserReturningData {
-            public bool Found { get; set; }
-            public string UserName { get; set; }
-            public string OrgId { get; set; }
-            public string SiteId { get; set; }
-            public string PersonId { get; set; }
-            public long? UserTimezoneOffset { get; set; }
-            public IDictionary<string, object> Properties { get; set; }
-
-            public UserReturningData(InMemoryUser user) {
-                if (user == null) {
-                    Found = false;
-                } else {
-                    Found = true;
-                    UserName = user.Login;
-                    OrgId = user.OrgId;
-                    SiteId = user.SiteId;
-                    PersonId = user.MaximoPersonId;
-                    UserTimezoneOffset = user.TimezoneOffset;
-                    Properties = user.GenericSyncProperties;
-                }
-            }
-        }
+        
     }
 }

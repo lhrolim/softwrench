@@ -3,9 +3,9 @@
     "use strict";
 
     softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", 
-    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService","offlineSchemaService",
+    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService","offlineSchemaService","commandBarDelegate",
     function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform,
-    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService,offlineSchemaService) {
+    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService,offlineSchemaService,commandBarDelegate) {
         
         function turnOffChangeEvents() {
             $rootScope.areChangeEventsEnabled = false;
@@ -198,21 +198,11 @@
         };
 
         $scope.onScroll = function () {
-            var position = $ionicScrollDelegate.$getByHandle('detailHandler').getScrollPosition();
-
+            const position = $ionicScrollDelegate.$getByHandle('detailHandler').getScrollPosition();
             //update the position of the detail's floating action button when the user scrolls
             if (!!position) {
-                var toolbarPrimary = $('.bar-header.bar-positive:visible').outerHeight(true);
-                var toolbarSecondary = $('.bar-subheader.bar-dark:visible').outerHeight(true);
-                var headerTitle = $('.crud-details .crud-title:visible').outerHeight(true);
-                var headerDescription = $('.crud-details .crud-description:visible').outerHeight(true);
-                var componetHeights = toolbarPrimary + toolbarSecondary + headerTitle + headerDescription;
-
-                var top = position.top;
-                var element = $('command-bar[position="mobile.fab"]');
-                var windowHeight = $(window).height();
-                var offset = (windowHeight - componetHeights - 134) + top;
-                $(element).css('top', offset);
+                const element = $("command-bar[position=\"mobile.fab\"]");
+                commandBarDelegate.positionFabCommandBar(element, position.top);
             }
         };
 

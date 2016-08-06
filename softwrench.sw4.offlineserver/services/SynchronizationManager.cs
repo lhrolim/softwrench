@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +23,6 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
-using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
@@ -50,10 +47,11 @@ namespace softwrench.sw4.offlineserver.services {
         }
 
 
-        public SynchronizationResultDto GetData(SynchronizationRequestDto request, InMemoryUser user, JObject rowstampMap) {
+        public SynchronizationResultDto GetData(SynchronizationRequestDto request, InMemoryUser user) {
             var topLevelApps = GetTopLevelAppsToCollect(request, user);
-            _iEventDispatcher.Dispatch(new PreSyncEvent());
+            _iEventDispatcher.Dispatch(new PreSyncEvent(request));
             var result = new SynchronizationResultDto();
+            var rowstampMap = request.RowstampMap;
 
             foreach (var topLevelApp in topLevelApps) {
                 ResolveApplication(request, user, topLevelApp, result, rowstampMap);

@@ -42,6 +42,14 @@
         </annotation>
       </element>
 
+      <element name="service" type="tns:MenuServiceItem" maxOccurs="unbounded" minOccurs="0">
+        <annotation>
+          <documentation>
+            Specifies a client-side angular service to be executed when the menu gets clicked
+          </documentation>
+        </annotation>
+      </element>
+
       <element name="link" type="tns:MenuLinkItem"
 				maxOccurs="unbounded" minOccurs="0">
         <annotation>
@@ -261,6 +269,24 @@
       </annotation>
     </attribute>
   </complexType>
+  
+  <complexType name="MenuServiceItem">
+    <complexContent>
+      <extension base="tns:MenuBase">
+        <!-- client-side service.method -->
+        <attribute name="service" type="string" use="required">
+          <annotation>
+            <documentation>Client-side service.</documentation>
+          </annotation>
+        </attribute>
+        <attribute name="method" type="string" use="required">
+          <annotation>
+            <documentation>service's public method</documentation>
+          </annotation>
+        </attribute>        
+      </extension>
+    </complexContent>
+  </complexType>
 
   <complexType name="MenuActionItem">
     <annotation>
@@ -270,11 +296,19 @@
     </annotation>
     <complexContent>
       <extension base="tns:MenuBase">
-        <attribute name="action" type="string" use="optional"
-					default="index">
+        
+        <!-- server-side controller.action -->
+        <attribute name="action" type="string" use="optional" default="index">
+          <annotation>
+            <documentation>controller's Action method. Can have either 'controller' or 'service' defined, not both.</documentation>
+          </annotation>
         </attribute>
         <attribute name="controller" type="string" use="required">
+          <annotation>
+            <documentation>Server-side web controller</documentation>
+          </annotation>
         </attribute>
+        
         <attribute name="parameters" type="string" />
         <attribute name="target" default="self">
           <simpleType>
@@ -328,6 +362,13 @@
               <documentation>
                 Specifies an action to be executed when
                 the menu gets clicked
+              </documentation>
+            </annotation>
+          </element>
+          <element name="service" type="tns:MenuServiceItem" maxOccurs="unbounded" minOccurs="0">
+            <annotation>
+              <documentation>
+                Specifies a client-side angular service to be executed when the menu gets clicked.
               </documentation>
             </annotation>
           </element>

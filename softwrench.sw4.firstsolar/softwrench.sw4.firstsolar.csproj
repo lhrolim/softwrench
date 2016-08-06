@@ -90,7 +90,11 @@
     <Content Include="metadata\firstsolar\menu.mobile.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="offline_content\firstsolar\scripts\fsrouteconfig.mobile.js" />
+    <Content Include="offline_content\firstsolar\scripts\fsuserprofile.mobile.js" />
+    <Content Include="offline_content\firstsolar\scripts\fsuserprofileservice.mobile.js" />
     <Content Include="offline_content\firstsolar\scripts\fsWorkorderService.mobile.js" />
+    <Content Include="offline_content\firstsolar\templates\userprofile.html" />
     <Content Include="web_content\firstsolar\htmls\advancedSearchPcsButtons.html" />
     <Content Include="web_content\firstsolar\images\branding.png" />
     <Content Include="web_content\firstsolar\images\logo-pdf.png" />

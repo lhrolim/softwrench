@@ -1,16 +1,14 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller('MainController', ["$scope","routeService", "$ionicSideMenuDelegate", "menuModelService", "crudContextService", "swAlertPopup", "$ionicPopup", "securityService", "synchronizationFacade", "networkConnectionService",
-        function ($scope, routeService, $ionicSideMenuDelegate, menuModelService, crudContextService, swAlertPopup, $ionicPopup, securityService, synchronizationFacade, networkConnectionService) {
+    softwrench.controller('MainController', ["$scope", "routeService", "$ionicSideMenuDelegate", "menuModelService", "crudContextService", "swAlertPopup", "$ionicPopup", "securityService", "synchronizationFacade", "networkConnectionService", "menuRouterService",
+        function ($scope, routeService, $ionicSideMenuDelegate, menuModelService, crudContextService, swAlertPopup, $ionicPopup, securityService, synchronizationFacade, networkConnectionService, menuRouterService) {
 
             $scope.data = {};
            
             function init() {
-                //$scope.menuleafs = ;
-
-                if (window.parent.ripple !== undefined) {
-                    $('body').addClass('ripple');
+                if (isRippleEmulator()) {
+                    $("body").addClass("ripple");
                 }
             }
 
@@ -31,9 +29,10 @@
             }
 
             $scope.loadApplication = function (menuleaf) {
-                crudContextService.loadApplicationGrid(menuleaf.application, menuleaf.title, menuleaf.schema);
-                $ionicSideMenuDelegate.toggleLeft();
-            }
+                menuRouterService.routeFromMenuItem(menuleaf)
+                    .catch(e => swAlertPopup.show({ title: "Error", template: e.message }, 3000))
+                    .finally(() => $ionicSideMenuDelegate.toggleLeft());
+            };
 
             $scope.loadAction = function (action) {
                 routeService.go(action);
