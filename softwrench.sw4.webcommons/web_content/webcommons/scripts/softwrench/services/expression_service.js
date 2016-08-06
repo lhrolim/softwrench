@@ -358,6 +358,7 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
             
 
 
+
             expression = expression.replace(/\$/g, 'scope');
 
 

@@ -43,11 +43,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             return sb.ToString(0, sb.Length - 1);
         }
 
-        public static string GenerateOrLikeString(string columnName, IEnumerable<string> items) {
+        public static string GenerateOrLikeString(string columnName, IEnumerable<string> items, bool bringNoneIfEmpty=false) {
             var sb = new StringBuilder();
             var enumerable = items as IList<string> ?? items.ToList();
             if (items == null || !enumerable.Any()) {
-                return "1=1";
+                return bringNoneIfEmpty ? "1!=1" : "1=1";
             }
 
             foreach (var item in enumerable) {

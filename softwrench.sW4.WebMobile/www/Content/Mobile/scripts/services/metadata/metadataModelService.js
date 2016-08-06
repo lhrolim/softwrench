@@ -15,8 +15,8 @@
     function loadEntityInstance(serverMetadata, memoryArrayName, mergefunctionCBK) {
 
         var applicationName = serverMetadata.applicationName;
-        var applications = metadataModel[memoryArrayName];
-        var loadedEntity = $.findFirst(applications, function (el) {
+        const applications = metadataModel[memoryArrayName];
+        const loadedEntity = $.findFirst(applications, function (el) {
             return el.application === applicationName;
         });
         var dbId = null;
@@ -44,23 +44,22 @@
         /// <param name="memoryArray">which memory array to use</param>
         /// <returns type="promise"></returns>
         var defer = $q.defer();
-        var memoryArray = metadataModel[memoryArrayName];
+        const memoryArray = metadataModel[memoryArrayName];
         if (isArrayNullOrEmpty(serverMetadatas)) {
             defer.resolve();
             return defer.promise;
         }
-
-        var instancesToSavePromises = [];
+        const instancesToSavePromises = [];
         var instancesToDelete = [];
 
-        for (var i = 0; i < serverMetadatas.length; i++) {
-            var applicationMetadata = serverMetadatas[i];
+        for (let i = 0; i < serverMetadatas.length; i++) {
+            const applicationMetadata = serverMetadatas[i];
             instancesToSavePromises.push(loadEntityInstance(applicationMetadata, memoryArrayName, mergefunctionCbk));
         }
 
-        for (var j = 0; j < memoryArray.length; j++) {
+        for (let j = 0; j < memoryArray.length; j++) {
             var entity = memoryArray[j];
-            var serverInstance = $.findFirst(serverMetadatas, function (el) {
+            const serverInstance = $.findFirst(serverMetadatas, function (el) {
                 return el.applicationName === entity.application;
             });
             if (!serverInstance) {
@@ -86,24 +85,29 @@
             return metadataModel.topLevelApplications;
         },
 
-        getApplicationByName: function (applicationName) {
-            var metadatas = this.getMetadatas();
-            for (var i = 0; i < metadatas.length; i++) {
-                var metadata = metadatas[i];
+        getApplicationByName: function (applicationName, includeAssociations) {
+            const metadatas = this.getMetadatas();
+            for (let i = 0; i < metadatas.length; i++) {
+                const metadata = metadatas[i];
                 if (metadata.application === applicationName) {
                     return metadata;
                 }
             }
+            if (!!includeAssociations) {
+                return metadataModel.associationApplications.find(a => a.application === applicationName);
+            }
             return null;
         },
 
+     
+
         getApplicationNames: function () {
-            var appNames = [];
-            var metadatas = this.getMetadatas();
+            const appNames = [];
+            const metadatas = this.getMetadatas();
             if (!metadatas) {
                 return appNames;
             }
-            for (var i = 0; i < metadatas.length; i++) {
+            for (let i = 0; i < metadatas.length; i++) {
                 appNames.push(metadatas[i].application);
             }
             return appNames;
@@ -145,7 +149,7 @@
                 metadataModel.associationApplications = [];
                 metadataModel.compositionApplications = [];
                 metadataModel.topLevelApplications = [];
-                for (var i = 0; i < applications.length; i++) {
+                for (let i = 0; i < applications.length; i++) {
                     const application = applications[i];
                     if (application.association) {
                         log.info("caching association {0}".format(application.application));

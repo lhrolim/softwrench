@@ -12,10 +12,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
+using softwrench.sW4.Shared2.Metadata.Entity.Association;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
@@ -40,6 +42,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private IDictionary<string, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
+        private IDictionary<string, EntityAssociation> _offlineAssociations;
+
         /// <summary>
         /// This fields can only be resolved once the entire metadata.xml are parsed, so that´s why we are using this Lazy strategy.
         /// 
@@ -52,6 +56,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         ///  public delegate byte[] Base64Delegate(string attachmentData);
         public delegate IList<IApplicationDisplayable> LazyFkResolverDelegate(ApplicationSchemaDefinition definition);
 
+
+        public delegate IDictionary<string,EntityAssociation> LazyOfflineAssociationResolverDelegate(ApplicationSchemaDefinition definition);
+
         public delegate IEnumerable<IApplicationDisplayable> LazyComponentDisplayableResolver(ReferenceDisplayable reference, ApplicationSchemaDefinition schema, IEnumerable<DisplayableComponent> components);
 
         /// <summary>
@@ -61,13 +68,18 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public delegate SchemaFilters LazySchemaFilterResolver(ApplicationSchemaDefinition definition);
 
         [JsonIgnore]
-        public ApplicationSchemaDefinition.LazySchemaFilterResolver SchemaFilterResolver;
+        public LazySchemaFilterResolver SchemaFilterResolver;
 
         [JsonIgnore]
-        public ApplicationSchemaDefinition.LazyFkResolverDelegate FkLazyFieldsResolver;
+        public LazyFkResolverDelegate FkLazyFieldsResolver;
+
+        [JsonIgnore]
+        public LazyOfflineAssociationResolverDelegate LazyOfflineAssociationResolver;
 
         [JsonIgnore]
         public LazyComponentDisplayableResolver ComponentDisplayableResolver;
+
+        protected Lazy<IDictionary<string, EntityAssociation>> LazyEntityAssociation;
 
 
         public string SchemaId {
@@ -130,6 +142,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
 
         public ICollection<string> _fieldWhichHaveDeps = new HashSet<string>();
+
+        
 
         public string Name {
             get {
@@ -233,7 +247,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         [JsonIgnore]
         public virtual IEnumerable<ApplicationFieldDefinition> RelationshipFields {
             get {
-                return Fields.Where(f => f.Attribute.Contains("."));
+                return Fields.Where(f => f.Attribute.Contains(".") && !f.Attribute.StartsWith("#"));
             }
         }
 
@@ -249,6 +263,26 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public IList<ApplicationFieldDefinition> Fields {
             get {
                 return GetDisplayable<ApplicationFieldDefinition>(typeof(ApplicationFieldDefinition));
+            }
+        }
+
+        /// <summary>
+        /// Map of associations to be returned to the offline client side. Not intended to be used on server side, nor on online mode
+        /// </summary>
+        [CanBeNull]
+        public IDictionary<string, EntityAssociation> OfflineAssociations {
+            get {
+                if (ClientPlatform.Mobile != Platform) {
+                    //avoid unnecessary online overhead
+                    return null;
+                }
+                if (_offlineAssociations != null || Fields == null) {
+                    return _offlineAssociations;
+                }
+
+                _offlineAssociations =  LazyOfflineAssociationResolver(this);
+                return _offlineAssociations;
+
             }
         }
 
@@ -511,7 +545,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((ApplicationSchemaDefinition)obj);
         }
 
@@ -613,7 +647,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
-        public bool IgnoreCache { get; set; }
+        public bool IgnoreCache {
+            get; set;
+        }
 
 
     }

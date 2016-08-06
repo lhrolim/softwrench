@@ -30,9 +30,9 @@
     <ion-content has-header="true" has-bouncing="false">
 
         <ion-list class="has-header crud-list">
-
+            <!--generatedRowStamp is a transient column generated on persistence (persistence.store.sql) entity hydratation to allow multiple rows with same id (left joins...) -->
             <ion-item class="crud-item"
-                      ng-repeat="item in crudlist.items track by item.id"
+                      ng-repeat="item in crudlist.items track by item.generatedRowStamp"
                       item="item"
                       on-swipe-left="quickSync(item)"
                       on-hold="deleteOrRestoreItem(item)">

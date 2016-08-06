@@ -1,4 +1,4 @@
-﻿<ion-view>
+<ion-view>
 
     <ion-nav-buttons side="left">
         <button class="button-icon" menu-toggle="left"><i class="fa fa-bars"></i></button>
@@ -39,12 +39,12 @@
                     <crud-icon item="item"></crud-icon>
                 </div>
                 <div class="col-75">
-                    <div class="title row">
-                        {{detailTitle()}}
-                    </div>
-                    <div class="summary row">
-                        {{detailSummary()}}
-                    </div>
+                    <ul>
+                        <li class="featured">{{detailFeatured()}}</li>
+                        <li class="title">{{detailTitle()}}</li>
+                        <li class="subtitle">{{detailSubTitle()}}</li>
+                        <li class="excerpt">{{detailSummary()}}</li>
+                    </ul>
                 </div>
             </div>
         </div>

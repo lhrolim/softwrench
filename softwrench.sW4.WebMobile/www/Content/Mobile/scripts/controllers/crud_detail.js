@@ -3,9 +3,9 @@
     "use strict";
 
     softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", 
-    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService",
+    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService","offlineSchemaService",
     function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform,
-    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService) {
+    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService,offlineSchemaService) {
         
         function turnOffChangeEvents() {
             $rootScope.areChangeEventsEnabled = false;
@@ -130,6 +130,20 @@
             return crudContextService.isOnMainTab();
         }
 
+        $scope.detailSubTitle = function () {
+            if (crudContextService.isCreation()) {
+                return null;
+            }
+            return offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "subtitle", $scope.datamap);
+        }
+
+        $scope.detailFeatured = function (item) {
+            if (crudContextService.isCreation()) {
+                return null;
+            }
+            return offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "featured", $scope.datamap);
+        }
+
         $scope.detailTitle = function () {
             const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
             return schemaService.getTitle(crudContextService.currentDetailSchema(), datamap, true);
@@ -139,6 +153,9 @@
             const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
             return schemaService.getSummary(crudContextService.currentDetailSchema(), datamap, true);
         }
+
+
+
 
         $scope.addCompositionItem = function () {
             const validationErrors = crudContextService.validateDetail();

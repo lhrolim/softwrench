@@ -98,6 +98,11 @@ namespace softWrench.sW4.Security.Services {
             return UserFound(dbUser, userTimezoneOffset);
         }
 
+        public static void Logout(string username) {
+            if (Users.ContainsKey(username)) {
+                Users.Remove(username);
+            }
+        }
 
 
         private bool MatchPassword(User dbUser, string password) {

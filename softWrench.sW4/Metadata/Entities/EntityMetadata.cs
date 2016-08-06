@@ -262,6 +262,16 @@ namespace softWrench.sW4.Metadata.Entities {
             return new Tuple<EntityAttribute, string>(attribute, context);
         }
 
+        /// <summary>
+        ///  Locates an association given its qualified name
+        /// </summary>
+        /// <param name="name">Name of the relationship to search, that might or not contain _ or . in the end</param>
+        /// <returns></returns>
+        [NotNull]
+        public EntityAssociation LocateAssociationByName(string name) {
+            return LocateAssociationByLabelField(name + "." + "fake").Item1;
+        }
+
 
         public Tuple<EntityAssociation, EntityAttribute> LocateAssociationByLabelField(string labelField, bool validate = false) {
             var indexOf = labelField.IndexOf(".", StringComparison.Ordinal);
@@ -270,7 +280,7 @@ namespace softWrench.sW4.Metadata.Entities {
             if (char.IsNumber(lookupString[0])) {
                 //deprecated, in flavor of using it on the final of the string to avoid angular errors
                 lookupString = lookupString.Substring(1);
-            }else if (char.IsNumber(lookupString[lookupString.Length - 2])) {
+            } else if (char.IsNumber(lookupString[lookupString.Length - 2])) {
                 //disconsidering the _ and the number itself
                 lookupString = lookupString.Substring(0, lookupString.Length - 2) + "_";
             }

@@ -6,11 +6,11 @@
     "$q", "$log", "$rootScope", "swdbDAO", "searchIndexService", "problemService", 
     "metadataModelService", "offlineSchemaService", "offlineCompositionService", "expressionService",
     "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
-    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService", "offlineEntities",
+    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService", "offlineEntities", "queryListBuilderService",
     function ($q, $log, $rootScope, dao, searchIndexService, problemService, 
     metadataModelService, offlineSchemaService, offlineCompositionService, expressionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
-    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService, entities) {
+    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService, entities,queryListBuilderService) {
 
         // ReSharper disable once InconsistentNaming
         var internalListContext = {
@@ -272,6 +272,7 @@
                         crudContext.originalDetailItemDatamap = angular.copy(datamap);
                         composition.originalDetailItemDatamap = composition.currentDetailItem;
                         this.loadTab(composition.currentTab);
+                        this.refreshIfLeftJoinPresent(crudContext,null);
                     });
                 }
 
@@ -282,8 +283,23 @@
                         crudContext.newItem = false;
                         return this.refreshGrid().then(() => saved);
                     }
-                    return saved;
+                    return this.refreshIfLeftJoinPresent(crudContext,saved);
                 });
+            },
+
+            
+            refreshIfLeftJoinPresent: function (crudContext,saved) {
+                const itemlist = this.itemlist();
+                const currentDetailItem = crudContext.currentDetailItem;
+                if (itemlist.length > 0) {
+                    //due to possible leftjoins
+                    const repeatedItems = itemlist.some(i => i.id === currentDetailItem.id && i.generatedRowStamp !== currentDetailItem.generatedRowStamp);
+                    if (repeatedItems) {
+                        //let´s garantee that all items with the same id are updated (eventual left joins)
+                        return this.refreshGrid(true).then(() => saved);
+                    }
+                }
+                return saved;
             },
 
             restoreItemToOriginalState: function (item) {
@@ -335,12 +351,13 @@
                 internalListContext.pageNumber = 1;
                 return this.loadMorePromise().then(function () {
                     if (skipPostFilter) {
-                        return;
+                        return $q.when();
                     }
                     contextService.insertIntoContext("crudcontext", crudContext);
                     return routeService.go("main.crudlist");
                 });
             },
+
 
             loadMorePromise: function () {
                 var crudContext = crudContextHolderService.getCrudContext();
@@ -348,23 +365,27 @@
                 const quickSearch = crudContextHolderService.getQuickSearch();
                 const listSchema = crudContextHolderService.currentListSchema();
                 const appName = crudContextHolderService.currentApplicationName();
-
-                var baseQuery = "application = '{0}'".format(crudContext.currentApplicationName);
+                //appending root prefix, since a left join could be present leading to ambiguity amongst columns
+                var baseQuery = "`root`.application = '{0}'".format(crudContext.currentApplicationName);
                 if (quickSearch.value) {
-                    baseQuery += ' and datamap like \'%:"{0}%\''.format(quickSearch.value);
+                    baseQuery += ' and `root`.datamap like \'%:"{0}%\''.format(quickSearch.value);
                 }
                 if (!crudFilterContextService.showPending()) {
-                    baseQuery += ' and pending = 0 ';
+                    baseQuery += ' and `root`.pending = 0 ';
                 }
                 if (!crudFilterContextService.showDirty()) {
-                    baseQuery += ' and isDirty = 0 ';
+                    baseQuery += ' and `root`.isDirty = 0 ';
                 }
 
                 baseQuery += searchIndexService.buildSearchQuery(appName, listSchema, gridSearch);
 
                 baseQuery += searchIndexService.buildSortQuery(appName, listSchema, gridSearch);
 
-                return dao.findByQuery("DataEntry", baseQuery, { pagesize: 10, pageNumber: internalListContext.lastPageLoaded })
+                let queryObj = { pagesize: 10, pageNumber: internalListContext.lastPageLoaded };
+
+                queryObj = angular.extend(queryObj, queryListBuilderService.buildJoinParameters(listSchema));
+
+                return dao.findByQuery("DataEntry", baseQuery, queryObj)
                     .then(function (results) {
                         internalListContext.lastPageLoaded = internalListContext.lastPageLoaded + 1;
                         for (var i = 0; i < results.length; i++) {

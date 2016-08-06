@@ -18,6 +18,42 @@
   <entities>
 
 
+    <entity name="assignment" idAttribute="assignmentid">
+      <attributes>
+        <attribute name="wplaborid" type="varchar" required="false" />
+        <attribute name="wonum" type="varchar" required="true" />
+        <attribute name="craft" type="varchar" required="false" />
+        <attribute name="laborhrs" type="float" required="false" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="scheduledate" type="datetime" required="false" />
+        <attribute name="laborcode" type="varchar" required="false" />
+        <attribute name="startdate" type="datetime" required="false" />
+        <attribute name="finishdate" type="datetime" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="assignmentid" type="bigint" required="true" />
+        <attribute name="skilllevel" type="varchar" required="false" />
+        <attribute name="contractnum" type="varchar" required="false" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="workdate" type="datetime" required="false" />
+        <attribute name="parentassignid" type="bigint" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="crewworkgroup" type="varchar" required="false" />
+        <attribute name="amcrew" type="varchar" required="false" />
+        <attribute name="amcrewtype" type="varchar" required="false" />
+        <attribute name="apptrequired" type="smallint" required="true" />
+        <attribute name="appointment" type="smallint" required="true" />
+        <attribute name="worklog" type="smallint" required="true" />
+        <attribute name="schedstartnotime" query="DATEADD(dd, DATEDIFF(dd, 0, scheduledate), 0)" type="date"/>
+      </attributes>
+
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="assignment" />
+      </connectorParameters>
+
+    </entity>
+
+
     <entity name="asset" idAttribute="assetid">
       <attributes>
         <attribute name="openwo" query="(select count(1) from workorder where UPPER(workorder.status) not in ('CAN', 'COMP', 'CLOSE') and workorder.assetnum = !@assetnum and workorder.siteid = !@siteid and workorder.orgid = !@orgid)" type="int"/>
@@ -62,6 +98,13 @@
         <relationship to="location" qualifier="offlinelocation" >
           <relationshipAttribute from="location" to="location" primary="true"/>
         </relationship>
+
+        <relationship to="assignment" qualifier="assignment">
+          <relationshipAttribute from="wonum" to="wonum" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+
 
       </relationships>
     </entity>
@@ -171,6 +214,29 @@
       <option label="TIL1"  value="TIL02" extraprojections="site=1808;group=1808-SAR"/>
       <option label="TPZ1"  value="TPZ11" extraprojections="site=1803;group=1803-TPZ"/>
     </options>
+
+
+    <application name="assignment" title="Assignments" entity="assignment">
+      <schemas>
+        <list platform="mobile" title="WO - Assigned">
+          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
+          <field attribute="laborcode" label="Labor" qualifier="featured"/>
+          <field attribute="scheduledate" label="Scheduled Start Date" hidden="true"/>
+          <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
+          
+        </list>
+
+
+      </schemas>
+
+      <properties>
+        <property key="list.offline.text.indexlist" value="wonum,laborcode"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime,scheduledate"/>
+        <property key="offline.force.assoc.sync" value="true"/>
+      </properties>
+
+    </application>
+
 
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
 
@@ -564,9 +630,10 @@
         <!--#endregion-->
 
         <!-- #region: Mobile -->
-        
+
         <list platform="mobile" title="WO - Assigned" redeclaring="true">
           <filters>
+            <datefilter attribute="#assignment_.scheduledate" label="Scheduled Start Date"/>
             <optionfilter attribute="wopriority" provider="realpriority_.description" />
             <optionfilter attribute="location" label="Facility" whereclause="@fsWorkorderOfflineService.getFacilityFilterWhereClause" provider="@fsWorkorderOfflineService.getFacilityFilterOptions"/>
           </filters>
@@ -574,14 +641,17 @@
           <field attribute="location" label="Location"/>
           <field attribute="wonum" label="Workorder Number" qualifier="title"/>
           <field attribute="wopriority" label="Priority" qualifier="icon"/>
-          <field attribute="schedassigneddate" label="Scheduled Start Date" hidden="true"/>
-          <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
+          <field attribute="#assignment_.laborcode" qualifier="subtitle"/>
+          <field attribute="#assignment_.scheduledate" label="Scheduled Start Date" hidden="true"/>
+          <field attribute="#assignment_.schedstartnotime" label="Scheduled Start Date" qualifier="featured">
+            <renderer type="date"/>
+          </field>
           <field attribute="description" label="Description" qualifier="excerpt"/>
           <!-- TODO: had to add it here because the value was not being fetched on sync. Find out why, fix it, remove this field -->
           <field attribute="worktype" label="Work Type" />
 
           <properties>
-            <property key="list.defaultorderby" value="schedstartnotime is null asc, schedstartnotime asc, wopriority desc"/>
+            <property key="list.defaultorderby" value="#assignment_.schedstartnotime is null asc, #assignment_.schedstartnotime asc, wopriority desc"/>
           </properties>
         </list>
 
@@ -593,7 +663,7 @@
             <event type="afterchange" service="fsWorkorderOfflineService" method="clearAsset" />
             <dataprovider whereClause="@fsWorkorderOfflineService.getLocationsWhereClause"/>
           </association>
-          <association label="Asset" target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location" requiredexpression="true">
+          <association label="Asset" target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location,failurecode" requiredexpression="true">
             <event type="afterchange" service="fsWorkorderOfflineService" method="updateLocation" />
             <dataprovider whereClause="@fsWorkorderOfflineService.getAssetWhereClause"/>
           </association>
@@ -678,13 +748,15 @@
           <field attribute="orgid" hidden="true" requiredexpression="true" />
           <field attribute="siteid" hidden="true" requiredexpression="true" />
 
+          <field attribute="status" hidden="true" default="WAPPR"/>
+          
 
           <association target="location" labelfield="offlinelocation.description" requiredexpression="true" label="Location">
             <renderer type="lookup" params="hasUseWhereClause=true;useWhereClauseLabel=Preferred Locations"/>
             <event type="afterchange" service="fsWorkorderOfflineService" method="clearAsset" />
             <dataprovider whereClause="@fsWorkorderOfflineService.getLocationsWhereClause"/>
           </association>
-          <association target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location"
+          <association target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location,failurecode"
                        requiredexpression="true" label="Asset" showexpression="!!@location">
             <renderer type="lookup" />
             <event type="afterchange" service="fsWorkorderOfflineService" method="updateLocation" />
@@ -717,16 +789,6 @@
       </properties>
     </application>
 
-    <application name="numericdomain" title="Numeric Domain" entity="numericdomain">
-      <schemas>
-        <list platform="mobile" title="Numeric Domain">
-          <field attribute="description" label="Description"/>
-          <field attribute="value" label="Value"/>
-          <field attribute="domainid" label="Domain"/>
-        </list>
-      </schemas>
-    </application>
-
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
         <detail stereotype="detail" title="Labor Reporting" platform="mobile" redeclaring="false">
@@ -734,6 +796,167 @@
             <association label="Warranty" target="warranty" labelfield="warranty_.description" default="NO_WARRANTY" requiredexpression="true"/>
           </customization>
         </detail>
+      </schemas>
+    </application>
+
+    <application name="otherworkorder" title="Group Work Orders" entity="workorder" role="workorders">
+      <components>
+        <componentdisplayable id="detailhiddensoffline">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="woclass" hidden="true"/>
+          <field attribute="hasfollowupwork" hidden="true"/>
+          <field attribute="origrecordid" hidden="true"/>
+          <field attribute="origrecordclass" hidden="true"/>
+          <field attribute="wonum" hidden="true" />
+          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
+          <field attribute="changeby" label="Changed By" hidden="true"/>
+        </componentdisplayable>
+
+        <componentdisplayable id="offlineworktypes">
+          <optionfield attribute="worktype" requiredexpression="true" label="Work Type">
+            <option value="AD" label="Administrative" extraprojections="type=PM"/>
+            <option value="CC" label="Construction and Commissioning" extraprojections="type=CM"/>
+            <option value="INSP" label="Inspection" extraprojections="type=PM"/>
+            <option value="PM" label="Preventative Maintenance" extraprojections="type=PM"/>
+            <option value="SR" label="Safety / Environmental Work " extraprojections="type=PM"/>
+            <option value="TRAIN" label="Training" extraprojections="type=PM"/>
+            <option value="TRAVL" label="Travel" extraprojections="type=PM"/>
+            <option value="TRBLS" label="Troubleshoot" extraprojections="type=CM"/>
+            <option value="WO" label="General Work Order" extraprojections="type=CM"/>
+          </optionfield>
+        </componentdisplayable>
+
+      </components>
+
+      <properties>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
+        <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
+      </properties>
+
+      <schemas>
+        <list platform="mobile" title="WO - Group">
+          <filters>
+            <datefilter attribute="#assignment_.scheduledate" label="Scheduled Start Date"/>
+            <optionfilter attribute="wopriority" provider="realpriority_.description" />
+            <optionfilter attribute="location" label="Facility" whereclause="@fsWorkorderOfflineService.getFacilityFilterWhereClause" provider="@fsWorkorderOfflineService.getFacilityFilterOptions"/>
+            <filter attribute="#assignment_.laborcode" label="Labor"/> 
+          </filters>
+
+          <field attribute="location" hidden="true"/>
+          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
+          <field attribute="wopriority" label="Priority" qualifier="icon"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+          <field attribute="#assignment_.laborcode" qualifier="subtitle"/>
+          <field attribute="#assignment_.scheduledate" label="Scheduled Start Date" hidden="true"/>
+          <field attribute="#assignment_.schedstartnotime" label="Scheduled Start Date" qualifier="featured">
+            <renderer type="date"/>
+          </field>
+
+          <properties>
+            <property key="list.defaultorderby" value="#assignment_.schedstartnotime is null asc, #assignment_.schedstartnotime asc, wopriority desc"/>
+            <property key="list.offline.create.disabled" value="true"/>
+          </properties>
+        </list>
+
+        <detail platform="mobile" title="Work Order" stereotype="detail">
+          <reference id="detailhiddensoffline"/>
+
+          <association label="Location" target="location" labelfield="offlinelocation.description" requiredexpression="true">
+            <renderer type="lookup" params="hasUseWhereClause=true;useWhereClauseLabel=Locations"/>
+            <event type="afterchange" service="fsWorkorderOfflineService" method="clearAsset" />
+            <dataprovider whereClause="@fsWorkorderOfflineService.getLocationsWhereClause"/>
+          </association>
+          <association label="Asset" target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location,failurecode" requiredexpression="true">
+            <event type="afterchange" service="fsWorkorderOfflineService" method="updateLocation" />
+            <dataprovider whereClause="@fsWorkorderOfflineService.getAssetWhereClause"/>
+          </association>
+
+          <!-- do not remove - added to force the sync of numeric domains for priorities -->
+          <association label="Priority" target="wopriority" labelfield="realpriority_.description" showexpression="false"/>
+
+
+          <association label="Status" target="status" labelfield="synstatus.description" >
+            <dataprovider prefilterfunction="FilterStatusCodes"/>
+          </association>
+
+          <field attribute="description" label="Description" requiredexpression="true"/>
+          <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
+            <renderer type="richtext"/>
+          </field>
+
+          <!--          <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true"/>-->
+
+          <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true">
+            <renderer type="lookup" params="showCode=false"/>
+          </association>
+
+          <field attribute="worktype" hidden="true"/>
+          
+          <reference id="offlineworktypes"/>
+
+
+
+          <field label="Warranty Claim Number" attribute="WOLO10"/>
+          <field label="EPCR Number" attribute="EPCR_NUM"/>
+
+          <field label="JP Number" attribute="jobplan_.description" enableexpression="false" readonly="true"/>
+
+          <association label="Failure Class" target="failurecode" labelfield="failurelistonly_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'" extraprojectionvalues="failurelist">
+            <event type="afterchange" service="fsWorkorderOfflineService" method="afterFailureChanged"/>
+          </association>
+
+          <!-- Region Problems, cuase Remedy -->
+          <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="offlineproblemlist_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'" extraprojectionvalues="failurelist" >
+            <event type="afterchange" service="fsWorkorderOfflineService" method="afterProblemChanged"/>
+          </association>
+
+          <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="offlinecauselist_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'"
+                       extraprojectionvalues="failurelist">
+            <event type="afterchange" service="fsWorkorderOfflineService" method="afterCauseChanged"/>
+          </association>
+
+          <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="offlineremedylist_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'"
+                       extraprojectionvalues="failurelist">
+            <event type="afterchange" service="fsWorkorderOfflineService" method="afterRemedyChanged"/>
+          </association>
+
+          <!-- EndRegion-->
+
+          <!-- Region Compositions: materials, labors, attachmets -->
+          <composition relationship="matusetrans" label="Materials" >
+            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'"/>
+          </composition>
+          <composition relationship="labtrans" label="Labor">
+            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'" />
+          </composition>
+          <composition relationship="attachment" label="Attachments">
+            <collectionproperties prefilterfunction="ZeroAttachmentsWhereClause"/>
+          </composition>
+          <!-- EndRegion -->
+
+          <commandbars>
+            <commandgroup platform="mobile" position="mobile.fab">
+              <command id="startlabtrans" service="laborService" method="startLaborTransaction"
+                       icon="ion-play" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
+              <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
+                       icon="ion-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
+            </commandgroup>
+          </commandbars>
+
+        </detail>
+      </schemas>
+    </application>
+
+
+    <application name="numericdomain" title="Numeric Domain" entity="numericdomain">
+      <schemas>
+        <list platform="mobile" title="Numeric Domain">
+          <field attribute="description" label="Description"/>
+          <field attribute="value" label="Value"/>
+          <field attribute="domainid" label="Domain"/>
+        </list>
       </schemas>
     </application>
 
@@ -753,94 +976,7 @@
       </schemas>
     </application>
 
-    <application name="otherworkorder" title="Group Work Orders" entity="workorder" role="workorders">
-      <properties>
-        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
-        <property key="list.offline.numeric.indexlist" value="estdur"/>
-      </properties>
 
-      <schemas>
-        <list platform="mobile" title="WO - Group">
-          <filters>
-            <optionfilter attribute="wopriority" provider="realpriority_.description" />
-            <optionfilter attribute="location" label="Facility" whereclause="@fsWorkorderOfflineService.getFacilityFilterWhereClause" provider="@fsWorkorderOfflineService.getFacilityFilterOptions"/>
-          </filters>
-
-          <field attribute="location" label="Location"/>
-          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
-          <field attribute="wopriority" label="Priority" qualifier="icon"/>
-          <field attribute="description" label="Description" qualifier="excerpt"/>
-          <field attribute="estdur" label="Estimated Duration" qualifier="subtitle">
-            <renderer type="default" params="showLabel=true" />
-          </field>
-
-          <properties>
-            <property key="list.defaultorderby" value="wopriority desc, estdur asc"/>
-            <property key="list.offline.create.disabled" value="true"/>
-          </properties>
-        </list>
-
-        <detail platform="mobile" title="Work Order">
-          <!-- #region: detailhiddensoffline -->
-          <field attribute="workorderid" hidden="true"/>
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true"/>
-          <field attribute="woclass" hidden="true"/>
-          <field attribute="hasfollowupwork" hidden="true"/>
-          <field attribute="origrecordid" hidden="true"/>
-          <field attribute="origrecordclass" hidden="true"/>
-          <field attribute="wonum" hidden="true" />
-          <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
-          <field attribute="changeby" label="Changed By" hidden="true"/>
-
-          <!-- do not remove - added to force the sync of numeric domains for priorities -->
-          <association label="Priority" target="wopriority" labelfield="realpriority_.description" showexpression="false"/>
-          <!-- #endregion -->
-          <!-- #region: visible fields -->
-          <field attribute="owner" readonly="true" showexpression="!!@owner" label="Owner"/>
-          <field attribute="description" readonly="true" label="Description"/>
-          <field attribute="status" readonly="true" label="Status" />
-          <field attribute="location" readonly="true" label="Location" />
-          <field attribute="assetnum" readonly="true" label="Asset" />
-          <field attribute="classstructure_.description" readonly="true" label="Origination"/>
-          <field attribute="classstructureid" readonly="true" hidden="true" /> <!-- assign to me needs this -->
-          <field attribute="worktype" readonly="true" label="Work Type" />
-          <field attribute="ld_.ldtext" readonly="true" label="Details">
-            <renderer type="richtext"/>
-          </field>
-          <!-- #endregion -->
-          <!-- #region: hidden fields from FS.WO.detail -->
-          <field attribute="failurecode" readonly="true" hidden="true" />
-          <field attribute="WOLO10" readonly="true" hidden="true" />
-          <field attribute="EPCR_NUM" readonly="true" hidden="true" />
-          <field attribute="jobplan_.description" readonly="true" hidden="true"/>
-          <field attribute="problemcode" readonly="true" hidden="true" />
-          <field attribute="fr1code" readonly="true" hidden="true" />
-          <field attribute="fr2code" readonly="true" hidden="true" />
-          <!-- #endregion -->
-          <!-- #region: compositions -->
-          <composition relationship="matusetrans" label="Materials" >
-            <collectionproperties allowupdate="false" allowcreation="false" />
-          </composition>
-          <composition relationship="labtrans" label="Labor">
-            <collectionproperties allowupdate="false" allowcreation="false" />
-          </composition>
-          <!-- #endregion -->
-
-          <commandbars>
-            <commandgroup position="mobile.fab" platform="mobile">
-              <command id="assignworkorder" service="fsWorkorderOfflineService" method="assignWorkOrder"
-                       icon="ion-android-person-add" label="Assign To Me" />
-            </commandgroup>
-          </commandbars>
-
-
-
-        </detail>
-      </schemas>
-    </application>
-
-    
     <application name="location" title="Location" entity="location" >
 
       <filters>
@@ -1335,6 +1471,7 @@
         <list platform="mobile">
           <field attribute="assetnum" label="Asset"/>
           <field attribute="location" label="Location"/>
+          <field attribute="failurecode" hidden="true"/>
           <field attribute="description" label="Description"/>
         </list>
       </schemas>

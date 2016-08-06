@@ -4,11 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using cts.commons.portable.Util;
 using cts.commons.Util;
+using JetBrains.Annotations;
 using log4net;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Util;
 using EntityUtil = softwrench.sW4.Shared2.Util.EntityUtil;
@@ -72,7 +75,7 @@ namespace softWrench.sW4.Metadata {
                     // resolve the associations of the compositions
                     var compositionAssociations = schema.Value.Compositions()
                         .Where(composition => !composition.Inline) // TODO: !!!
-                        .Select(composition =>  composition.Schema.Schemas.Sync.Associations())
+                        .Select(composition => composition.Schema.Schemas.Sync.Associations())
                         .SelectMany(associations => associations)
                         .Where(association => !lookupTable.Contains(association.EntityAssociation.To) && !lookupTable.Contains(association.ApplicationTo))
                         .Select(association => {
@@ -119,6 +122,35 @@ namespace softWrench.sW4.Metadata {
             var force = app.GetProperty(ApplicationSchemaPropertiesCatalog.OfflineForceAssocSync);
             return !string.IsNullOrEmpty(force) && "true".EqualsIc(force);
         }
+
+        /// <summary>
+        ///  Retrieves a list of offline associations that should be inserted into the Schema definition, because they are transientes, and hence, marked to be resolved on the client state (i.e start with a #)
+        /// </summary>
+        /// <param name="definition">The schema in question</param>
+        /// <returns>Not null dictionary to force the correct cache</returns>
+        [NotNull]
+        public static IDictionary<string, EntityAssociation> LazyEntityAssociatonResolver(ApplicationSchemaDefinition definition) {
+            if (!MetadataProvider.FinishedParsing) {
+                return null;
+            }
+            var fields = definition.Fields;
+            var attributesToIterate = fields.Where(f => f.Attribute.StartsWith("#") && f.Attribute.Contains(".")).Select(d => d.Attribute);
+            var relationShipsToGrab = new HashSet<string>();
+
+            foreach (var def in attributesToIterate) {
+                relationShipsToGrab.Add(def.SubStringBeforeFirst('.', 1));
+            }
+
+            var result = new Dictionary<string, EntityAssociation>();
+
+            var entity = MetadataProvider.Entity(definition.EntityName);
+
+            foreach (var relationship in relationShipsToGrab) {
+                result.Add(relationship, entity.LocateAssociationByName(relationship));
+            }
+
+            return result;
+        }
     }
-    
+
 }

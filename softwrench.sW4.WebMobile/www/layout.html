@@ -6,338 +6,175 @@
 <!--    <meta http-equiv="Content-Security-Policy" content="default-src * 'self' cdvfile://*; style-src 'unsafe-inline' 'self' cdvfile://*; script-src 'self' 'unsafe-eval' cdvfile://*">-->
     <title>softwrench.sW4.WebMobile</title>
     <!-- start auto template VENDOR style tags, grunt will generate it for dev environment, do not remove this -->
-
     <link rel="stylesheet" type="text/css" href="Content/Vendor/css/font-awesome.min.css" />
-
     <link rel="stylesheet" type="text/css" href="Content/Vendor/css/ionautocomplete.min.css" />
-
     <link rel="stylesheet" type="text/css" href="Content/Vendor/css/ionic.min.css" />
-
     <link rel="stylesheet" type="text/css" href="Content/Vendor/css/ng-material-floating-button.css" />
-
     <link rel="stylesheet" type="text/css" href="Content/Vendor/css/skins/lightgray/content.min.css" />
-
     <link rel="stylesheet" type="text/css" href="Content/Vendor/css/skins/lightgray/skin.min.css" />
-
     <!-- end auto template VENDOR style tags -->
     <!-- start auto template style tags, grunt will generate it for dev environment, do not remove this -->
-
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
-
     <link rel="stylesheet" type="text/css" href="css/tinymce.css"/>
-
     <!-- end auto template style tags -->
     <!-- start auto template VENDOR script tags, grunt will generate it for dev environment, do not remove this -->
-
     <script type="text/javascript" src="Content/Vendor/scripts/polyfill.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/angular.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/angular-ui-router.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/angular-sanitize.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/angular-animate.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/ionic.min.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/ionic-angular.min.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/ng-material-floating-button.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/ng-material-floating-button-directive.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/tinymce.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/themes/modern/theme.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/angular-ui-tinymce.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/jquery.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/ng-cordova.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/moment.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/underscore.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/persistence.store.websql.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/lz-string.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/scripts/ngTouch.js"></script>
-
     <!-- end auto template VENDOR script tags -->
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>
     <!-- start auto template script tags, grunt will generate it for dev environment, do not remove this -->
-
     <script type="text/javascript" src="Content/Vendor/downloadedvendor/persistence.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/downloadedvendor/persistence.store.sql.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/downloadedvendor/persistence.store.cordovasql.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/downloadedvendor/jquery.scannerdetection.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/downloadedvendor/rolling-log.js"></script>
-
     <script type="text/javascript" src="Content/Vendor/downloadedvendor/ionautocomplete.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/persistence/module.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/persistence/services/offlineEntities.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/persistence/services/offlinePersistenceBootstrap.js"></script>
-
+    <script type="text/javascript" src="Content/Mobile/scripts/persistence/services/queryListBuilderService.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/persistence/services/swdbDAO.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/persistence/config.entities.js"></script>
-
     <script type="text/javascript" src="Content/Shared/audit_offline/scripts/offline/audit.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/statuscolor_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_arrayutils.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/object_util.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/context_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/tabs_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/i18n_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/schema_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/field_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/validation/passwordvalidationservice.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/validation/validation_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/alert_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/format_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/event_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/expression_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/dispatcher_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/scannerCommons.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/user_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/composition_commons.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/storage/compressionservice.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/storage/localstorageservice.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/data/datamapSanitize_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/notificationService.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/physicalinventory_service.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/commandcommons.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/components/richtext.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/directive/floatconverter.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js"></script>
-
     <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/applications/inventory/inventory_service_shared.js"></script>
-
     <script type="text/javascript" src="scripts/platformOverrides.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/mobile_bootstrap.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/utils/mobileconstants.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/utils/mobileajaxinterceptor.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/utils/mobileutils.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/constants/associationconstants.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/constants/crudconstants.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/constants/fileconstants.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/constants/rollinglogfileconstants.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/audit/audit.application.select.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/audit/audit.entry.detail.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/audit/audit.entry.list.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/compositionMenuController.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_composition_detail.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_composition_list.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_detail.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_input.js"></script>
-
-    <script type="text/javascript" src="Content/Mobile/scripts/controllers/crudlist.js"></script>
-
+    <script type="text/javascript" src="Content/Mobile/scripts/controllers/crud_list.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/crudlistsearch.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/filterOptionController.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/logincontroller.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/maincontroller.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/settingscontroller.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/syncoperationdetail.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/syncoperationhistory.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/application/applicationstateservice.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/configuration/configurationService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/configuration/settingsService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/crud/crudContextHolderService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/crud/crudContextService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/crud/crudFilterContextService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/crud/problem_service.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/crud/search_index_service.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/crud/wizard_service.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/data/datamapSanitizationService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/data/laborservice.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/data/labortimericonprovider.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/data/materialService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/data/offlineAttachmentservice.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/data/offlineCompositionService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/data/offlineSaveService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/data/offlinerestservice.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/data/operationService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/device/cameraservice.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/device/networkconnectionservice.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/login/cookieservice.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/login/securityservice.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/menu/menuModelService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/commandservice.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/iconproviderservice.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/metadataModelService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/offlineAssociationService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/offlineSchemaService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/routes/routeconstants.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/routes/routesService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/associationDataSynchronizationService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/asyncSynchronizationService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/attachmentDataSynchronizationService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/batchService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/dataSynchronizationService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/metadataSynchronizationService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/notificationPluginWrapper.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/rowstampService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/synchronizationFacade.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/synchronizationNotificationService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/synchronizationOperationService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/ui/loadingService.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/services/ui/swAlertPopup.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/associationDescription.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/autosizeTextarea.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/commandbar.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/crud/crud_icon.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/crud/crud_input_fields.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/crud/crud_output_fields.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/dateconverter.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/messagesection.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/option_field.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/richtextfield.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/singlefileinput.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/directives/swoperationicon.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/maximoservices/maximodataservice.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/maximoservices/workorder_offline_service.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/filters/capitalize.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/filters/linebreak.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/decorators/exceptionhandlerdecorator.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/decorators/fileloggerdecorator.js"></script>
-
     <script type="text/javascript" src="Content/Mobile/scripts/decorators/promisedecorator.js"></script>
-
     <script type="text/javascript" src="Content/Customers/pae_offline/scripts/paeAssetService.mobile.js"></script>
-
     <script type="text/javascript" src="Content/Customers/firstsolar_offline/scripts/fsWorkorderService.mobile.js"></script>
-
     <!-- end auto template script tags -->
 </head>
 <!-- <body ng-app="softwrench"> -->

@@ -2,11 +2,13 @@
     "use strict";
 
 
-    function searchIndexService(dispatcherService) {
+    function searchIndexService(dispatcherService, offlineSchemaService) {
 
 
-        const indexColumnCache = {}; // cache of attribute -> index column
+        var indexColumnCache = {}; // cache of attribute -> index column
         const orderByBlackList = ["asc", "desc", "is", "null"]; // list of ignored terms on order by parsing
+        //key = application name , value = array of columns
+        const applicationSortColumnCache = new Map();
 
 
         //#region utils
@@ -21,8 +23,7 @@
                 if (!trimmed) {
                     return;
                 }
-
-                cache[trimmed] = prefix + padToTwo(i + 1);
+                cache[trimmed] = "`root`." + prefix + padToTwo(i + 1);
             });
         }
 
@@ -64,7 +65,12 @@
                     parsedTokens.push(trimmed);
                     return;
                 }
-
+                var columnSet = applicationSortColumnCache.get(appName);
+                if (!columnSet) {
+                    columnSet = new Set();
+                    applicationSortColumnCache.set(appName, columnSet);
+                }
+                columnSet.add(trimmed);
                 var indexColumn = getIndexColumn(appName, listSchema, trimmed);
                 parsedTokens.push(indexColumn || trimmed);
             });
@@ -181,11 +187,32 @@
             return indexesData;
         };
 
-        // gets the index columns given the attribute
+        // gets the index columns given the attribute, or all of them if the attribute is no passed
         const getIndexColumn = function (appName, listSchema, attribute) {
+
+
+
             if (!indexColumnCache[appName]) {
                 indexColumnCache[appName] = buildIndexColumnCache(listSchema);
             }
+            if (!attribute) {
+                //to retrieve the list of all indexes
+                return indexColumnCache[appName];
+            }
+
+            if (attribute.startsWith("#") && attribute.contains(".")) {
+                //this means we are referring to a related joined schema that needs to be resolved on the offline
+                //let´s locate the appropriate index on that schema instead
+                const entityData = offlineSchemaService.findRelatedEntityName(attribute);
+                const entityName = entityData.entityName;
+                const relatedSchema = offlineSchemaService.locateRelatedListSchema(listSchema, entityName);
+                const relatedAppName = relatedSchema.applicationName;
+                if (!indexColumnCache[relatedAppName]) {
+                    indexColumnCache[relatedAppName] = buildIndexColumnCache(relatedSchema);
+                }
+                return indexColumnCache[relatedAppName][entityData.attribute].replace("`root`","`" + entityName+ "`");
+            }
+
             return indexColumnCache[appName][attribute];
         }
 
@@ -197,6 +224,7 @@
 
             const terms = defaultOrderBy.split(",");
             const parsedTerms = [];
+
             angular.forEach(terms, term => {
                 if (!term) {
                     return;
@@ -231,9 +259,9 @@
                 if (indexColumn) {
                     const direction = gridSearch.sort.direction;
                     if (indexColumn.startsWith("text")) {
-                        return ` order by isDirty desc, ${indexColumn} is null ${direction}, lower(${indexColumn}) ${direction} `;
+                        return ` order by \`root\`.isDirty desc, ${indexColumn} is null ${direction}, lower(${indexColumn}) ${direction} `;
                     }
-                    return ` order by isDirty desc, ${indexColumn} is null ${direction}, ${indexColumn} ${direction} `;
+                    return ` order by \`root\`.isDirty desc, ${indexColumn} is null ${direction}, ${indexColumn} ${direction} `;
                 }
             }
 
@@ -241,13 +269,13 @@
                 const orderBy = listSchema.properties["list.defaultorderby"];
                 if (orderBy) {
                     const parsedOrderBy = buildDefaultOrderBy(appName, listSchema, orderBy);
-                    return ` order by isDirty desc, ${parsedOrderBy}`;
+                    return ` order by \`root\`.isDirty desc, ${parsedOrderBy}`;
                 }
             }
-            return " order by isDirty desc, rowstamp is null desc, rowstamp desc ";
+            return " order by \`root\`.isDirty desc, \`root\`.rowstamp is null desc, \`root\`.rowstamp desc ";
         }
 
-        const parseWhereClause = function(whereClause, datamap) {
+        const parseWhereClause = function (whereClause, datamap) {
             const parameterRegex = /@[\w]+/g;
             const parameters = parameterRegex.exec(whereClause);
             if (!parameters) {
@@ -263,18 +291,30 @@
             return whereClause;
         }
 
+        const refreshIndexCaches = function () {
+            applicationSortColumnCache.clear();
+            indexColumnCache = {};
+        }
+
+        const getSearchColumnsByApp = function (applicationName) {
+            const set = applicationSortColumnCache.get(applicationName);
+            return set ? Array.from(set) : [];
+        }
+
         const service = {
-            buildIndexes: buildIndexes,
-            getIndexColumn: getIndexColumn,
-            buildDefaultOrderBy: buildDefaultOrderBy,
-            buildSearchQuery: buildSearchQuery,
-            buildSortQuery: buildSortQuery,
-            parseWhereClause: parseWhereClause
+            buildIndexes,
+            getIndexColumn,
+            buildDefaultOrderBy,
+            buildSearchQuery,
+            buildSortQuery,
+            getSearchColumnsByApp,
+            parseWhereClause,
+            refreshIndexCaches
         };
 
         return service;
 
     }
 
-    mobileServices.factory("searchIndexService", ["dispatcherService", searchIndexService]);
+    mobileServices.factory("searchIndexService", ["dispatcherService", "offlineSchemaService", searchIndexService]);
 })(angular);

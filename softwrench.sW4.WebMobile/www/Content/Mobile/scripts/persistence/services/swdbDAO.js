@@ -20,6 +20,8 @@
             const orderascending = queryoptions.orderbyascending;
             const pageSize = queryoptions.pagesize;
             const projectionFields = queryoptions.projectionFields || [];
+            const extraProjectionFields = queryoptions.extraProjectionFields || [];
+            const additionalJoins = queryoptions.additionalJoins || [];
             const queryToUse = queryoptions.fullquery;
             const prefetch = queryoptions.prefetch;
             var filter = getInstance(entity).all();
@@ -32,6 +34,8 @@
 
             filter._additionalWhereSqls = [];
             filter._projectionFields = [];
+            filter._extraProjectionFields = [];
+            filter._additionalJoinSqls = [];
             filter._querytoUse = null;
 
             if (queryString) {
@@ -39,6 +43,13 @@
             }
             if (projectionFields.length > 0) {
                 filter._projectionFields = projectionFields;
+            }
+            if (additionalJoins.length > 0) {
+                filter._additionalJoinSqls = additionalJoins;
+            }
+
+            if (extraProjectionFields.length > 0) {
+                filter._extraProjectionFields = extraProjectionFields;
             }
             if (prefetch) {
                 filter = filter.prefetch(prefetch);

@@ -48,7 +48,9 @@
             }
 
             const location = datamap["offlineasset_.location"];
+            const failurecode = datamap["offlineasset_.failurecode"];
             datamap["location"] = `${location}$ignorewatch`;
+            datamap["failurecode"] = failurecode;
         }
 
         function clearAsset(event) {
@@ -101,7 +103,7 @@
                     // TODO: set list model (in the crud context) and list view (in the history stack) manually so screen transition is not so agravating
                     crudContextService.loadApplicationGrid("workorder", "WO - Assigned", "list")
                         // $timeout required so list controller has time to get and dispose it's viewmodel
-                        .then(() => $timeout(() => crudContextService.loadDetail(saved), 0, false)) 
+                        .then(() => $timeout(() => crudContextService.loadDetail(saved), 0, false))
                 );
         }
 
@@ -112,7 +114,7 @@
         // textindex01 = location of locancestor
         // textindex02 = ancestor of locancestor
         const childLocationOfAssignedWos = `select textindex01 from associationdata where application = 'locancestor' and textindex02 in (${locationsOfAssignedWos})`;
-        
+
         // textindex01 = location of location
         const preferredLocations = `textindex01 in (${locationsOfAssignedWos}) or textindex01 in (${childLocationOfAssignedWos})`;
 
@@ -141,7 +143,7 @@
                 }
 
                 // textindex04 = location of the wo
-                terms.push(`textindex04 like '${trimmed}%'`);
+                terms.push(`root.textindex04 like '${trimmed}%'`);
             });
 
             return `(${terms.join(" or ")})`;

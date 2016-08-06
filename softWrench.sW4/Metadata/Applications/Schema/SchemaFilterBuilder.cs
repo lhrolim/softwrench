@@ -99,12 +99,18 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             IDictionary<string, LinkedListNode<BaseMetadataFilter>> positionBuffer = new Dictionary<string, LinkedListNode<BaseMetadataFilter>>();
             foreach (var field in applicationFieldDefinitions) {
 
-                if (field.IsTransient()) {
-                    //transient fields won´t become a filter by default                
+                if (field.IsTransient() && schema.Platform != ClientPlatform.Mobile) {
+                    //transient fields won´t become a filter by default
+                    // unless is mobile and have filter declared         
                     continue;
                 }
                 var overridenFilter = declaredFilters.Filters.FirstOrDefault(f => f.Attribute.EqualsIc(field.Attribute));
                 if (overridenFilter == null) {
+                    if (field.IsTransient()) {
+                        // is mobile but does not have filter declared
+                        continue;
+                    }
+
                     if (field.IsHidden) {
                         //first pass, all of non hidden columns become a filter (unless marked to remove)
                         //customized filters can be applied even to hidden fields

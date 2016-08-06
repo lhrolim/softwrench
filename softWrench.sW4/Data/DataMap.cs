@@ -67,7 +67,8 @@ namespace softWrench.sW4.Data {
                         value = null;
                     } else {
                         var stringValue = Convert.ToString(pair.Value);
-                        value = stringValue.Contains(".") ? stringValue.TrimEnd('0').TrimEnd('.') : stringValue;
+                        stringValue = stringValue.Contains(".") ? stringValue.TrimEnd('0').TrimEnd('.') : stringValue;
+                        value = stringValue.Contains(",") ? stringValue.TrimEnd('0').TrimEnd(',') : stringValue;
                     }
                 } else {
                     // let the serializer take care of date convertion

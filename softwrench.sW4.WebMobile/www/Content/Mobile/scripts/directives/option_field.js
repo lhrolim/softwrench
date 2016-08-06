@@ -59,12 +59,16 @@
                             });
                         }
 
+                        var lastUpdatedValue = null;
+
                         // watch changes on value to update the multiple select checked state
                         const watchForValueChanges = function () {
                             return scope.$watch("value", function (newValue, oldValue) {
-                                if (newValue === oldValue || !scope.items || !scope.multiSelect) {
+                                if (newValue === lastUpdatedValue || !scope.items || !scope.multiSelect) {
                                     return;
                                 }
+
+                                lastUpdatedValue = newValue;
 
                                 angular.forEach(scope.items, item => item.checked = false);
 

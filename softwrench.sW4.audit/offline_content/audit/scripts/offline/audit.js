@@ -40,7 +40,7 @@
         entities.AuditEntry.forEntityPattern = "refClientId='{0}' and refApplication='{1}'";
         entities.AuditEntry.deleteRelatedStatement = "delete from AuditEntry where refClientId=? and refApplication=?";
         //TODO: treat the case where AuditEntries that have no refId shouldn't be deleted (e.g. crud_create operations)
-        entities.AuditEntry.deleteRelatedByRefIdStatement = "delete from AuditEntry where refApplication=? and (refId in (?) or refId is null)";
+        entities.AuditEntry.deleteRelatedByRefIdStatement = "delete from AuditEntry where refApplication=? and (refId in ({0}) or refId is null)";
     }]);
     //#endregion
 

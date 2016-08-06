@@ -350,8 +350,15 @@ function config(persistence, dialect) {
         var o = new ent(session, undefined, true);
         o.id = tm.dbValToEntityVal(row[prefix + 'id'], tm.idType);
         o._new = false;
+        var joinedJSONs = [];
+
         for (var p in row) {
             if (row.hasOwnProperty(p)) {
+                if (p.startsWith("#")) {
+                    joinedJSONs.push(p);
+                    continue;
+                }
+
                 if (p.substring(0, prefix.length) === prefix) {
                     var prop = p.substring(prefix.length);
                     if (prop != 'id') {
@@ -360,6 +367,26 @@ function config(persistence, dialect) {
                 }
             }
         }
+        //cts:luiz this snippet inserts the joined entities json inside of the main entity json property
+        for (var i = 0; i < joinedJSONs.length; i++) {
+            var joinedJsonName = joinedJSONs[i];
+            var originalPropName = joinedJsonName.substr(1, joinedJsonName.indexOf(".") - 1); // the name of the property that has a matching join (ex: datamap)
+            var propName = joinedJsonName.substr(joinedJsonName.indexOf(".")+1); // the name of the relationship of the left join (ex: assignment_)
+            if (o.hasOwnProperty(originalPropName)) {
+                var innerJson = tm.dbValToEntityVal(row[joinedJsonName], "JSON");
+                for (var innerProperty in innerJson) {
+                    // each proprperty of the joined json will be added to its original one, making it transparent to other parts of the framework
+                    if (innerJson.hasOwnProperty(innerProperty)) {
+                        o[originalPropName]["#" + propName + "." + innerProperty] = innerJson[innerProperty];
+                    }
+                    
+                }
+                
+            }
+        }
+        //let´s use this to have a valid track by value, since the ids might not be unique on a left join operation
+        o.generatedRowStamp = persistence.createUUID();
+
         return o;
     }
 
@@ -450,7 +477,7 @@ function config(persistence, dialect) {
      * @param callback the function to call when all queries have been executed
      */
     function executeQueriesSeq(tx, queries, callback) {
-       
+
 
 
         // queries.reverse();
@@ -496,6 +523,7 @@ function config(persistence, dialect) {
         c._additionalJoinSqls = this._additionalJoinSqls.slice(0);
         c._additionalWhereSqls = this._additionalWhereSqls.slice(0);
         c._projectionFields = this._projectionFields.slice(0);
+        c._extraProjectionFields = this._extraProjectionFields.slice(0);
         c._querytoUse = this._querytoUse;
         c._additionalGroupSqls = this._additionalGroupSqls.slice(0);
         c._manyToManyFetch = this._manyToManyFetch;
@@ -511,6 +539,7 @@ function config(persistence, dialect) {
         this._additionalWhereSqls = [];
         this._additionalGroupSqls = [];
         this._projectionFields = [];
+        this._extraProjectionFields = [];
         this._querytoUse = null;
     };
 
@@ -673,7 +702,17 @@ function config(persistence, dialect) {
 
             selectFields = selectAll({ fields: fakeMetafields }, mainAlias, mainPrefix);
         } else {
+
+
             selectFields = selectAll(meta, mainAlias, mainPrefix);
+        }
+
+        if (this._extraProjectionFields && this._extraProjectionFields.length > 0) {
+
+            for (var m = 0; m < this._extraProjectionFields.length; m++) {
+                let field = this._extraProjectionFields[m];
+                selectFields.push(`${field.field} as ${field.alias}`);
+            }
         }
 
         var joinSql = '';
