@@ -807,6 +807,7 @@
           <field attribute="siteid" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="hasfollowupwork" hidden="true"/>
+          <field attribute="worktype" hidden="true"/>
           <field attribute="origrecordid" hidden="true"/>
           <field attribute="origrecordclass" hidden="true"/>
           <field attribute="wonum" hidden="true" />
@@ -815,6 +816,7 @@
         </componentdisplayable>
 
         <componentdisplayable id="offlineworktypes">
+          
           <optionfield attribute="worktype" requiredexpression="true" label="Work Type">
             <option value="AD" label="Administrative" extraprojections="type=PM"/>
             <option value="CC" label="Construction and Commissioning" extraprojections="type=CM"/>
@@ -892,7 +894,7 @@
             <renderer type="lookup" params="showCode=false"/>
           </association>
 
-          <field attribute="worktype" hidden="true"/>
+          
           
           <reference id="offlineworktypes"/>
 
