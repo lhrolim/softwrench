@@ -786,9 +786,9 @@
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
               <command id="startlabtrans" service="laborService" method="startLaborTransaction" 
-                       icon="ion-play" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
+                       icon="ion-play" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" cssclasses="green" />
               <command id="finishlabtrans" service="laborService" method="finishLaborTransaction" 
-                       icon="ion-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
+                       icon="ion-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" cssclasses="red"/>
             </commandgroup>
           </commandbars>
           

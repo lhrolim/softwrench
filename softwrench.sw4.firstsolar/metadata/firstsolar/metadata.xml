@@ -942,12 +942,16 @@
           </composition>
           <!-- EndRegion -->
 
-          <commandbars>
+       <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
-              <command id="startlabtrans" service="laborService" method="startLaborTransaction"
-                       icon="ion-play" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
-              <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
-                       icon="ion-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
+              <!--<container id="detail.container" icon="fa-bolt">--> <!-- add container declaration back to show FAB menu -->
+                <command id="startlabtrans" service="laborService" method="startLaborTransaction" 
+                         icon="ion-play" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" 
+                         cssclasses="green"/>
+                <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
+                         icon="ion-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" 
+                         cssclasses="red" />
+              <!--</container>-->
             </commandgroup>
           </commandbars>
 
