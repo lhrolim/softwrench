@@ -31,8 +31,6 @@
                     $scope.data.password = password;
                 }
 
-                console.log($scope.data.username, $scope.data.password);
-
                 securityService.login($scope.data.username, $scope.data.password)
                     .then(function (data) {
                         routeService.go('main.home');
