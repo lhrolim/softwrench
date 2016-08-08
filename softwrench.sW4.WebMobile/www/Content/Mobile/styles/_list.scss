@@ -17,6 +17,11 @@ input.ion-autocomplete[readonly] {
     cursor: text;
 }
 
+.col.crud-icon {
+    flex: none;
+    width: 70px;
+}
+
 crud-icon {
     button {
         z-index: 12 !important;
@@ -110,6 +115,7 @@ crud-icon {
 
         .featured {
             float: right;
+            color: #777;
         }
 
         .title {
@@ -136,8 +142,8 @@ crud-icon {
 }
 
 .crud-list-icon {
-    top: 36px;
-    left: 40px;
+    top: 41px;
+    left: 45px;
     z-index: 99;
     position: absolute;
 }

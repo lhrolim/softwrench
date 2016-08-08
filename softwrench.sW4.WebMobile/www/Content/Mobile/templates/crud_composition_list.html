@@ -3,10 +3,10 @@
 
         <ion-item ng-repeat="item in list()" item="item" ng-class="{'missingsync': isDirty(item)}">
             <div class="row" ng-click="loadCompositionDetail(item)" on-hold="startDeleteLocalComposition(item)">
-                <div class="col-25">
+                <div class="col col-25 crud-icon">
                     <crud-icon item="item"></crud-icon>
                 </div>
-                <div class="col-75">
+                <div class="col">
                     <ul>
                         <li ng-repeat="field in visibleFields(item)" ng-init="value = fieldValue(item, field)" ng-show="!!value">
                             <span class="input-label">{{field.label}}</span><span class="output-label">&nbsp;{{value}}</span>

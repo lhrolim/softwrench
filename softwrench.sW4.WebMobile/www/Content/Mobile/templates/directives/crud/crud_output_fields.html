@@ -1,15 +1,6 @@
-﻿<div ng-repeat="it in displayables" ng-show="!isFieldHidden(it)" class="crud-fields-wrapper">
-    <!-- group inputs 2-by-2 in landscape tablets: -->
-    <!-- http://stackoverflow.com/questions/27239735/ionic-framwork-gridlayout-with-multiple-rows-and-column-on-which-buttons-placed -->
-    <!-- http://stackoverflow.com/questions/23779773/angularjs-loops-and-formatting/27080632#27080632 -->
-    <div ng-if="$index % 2 == 0" class="row responsive-lg row-wrap" ng-init="fieldIndex = $index">
-        <div ng-repeat="i in [0,1]" ng-if="(fieldIndex + i) < displayables.length" class="col-50" ng-init="field = displayables[fieldIndex+i]">
-
-            <label class="item item-input">
-                <span class="input-label">{{field.label}}</span>
-                <label ng-bind-html="getFormattedValue(datamap[field.attribute],field,datamap) | linebreak"></label>
-            </label>
-
-        </div>
-    </div>
+﻿<div ng-repeat="field in displayables" ng-show="!isFieldHidden(it)" class="crud-fields-wrapper">
+    <label class="item item-input" ng-show="!isFieldHidden(field)">
+        <span class="input-label">{{field.label}}</span>
+        <label ng-bind-html="getFormattedValue(datamap[field.attribute],field,datamap) | linebreak"></label>
+    </label>
 </div>

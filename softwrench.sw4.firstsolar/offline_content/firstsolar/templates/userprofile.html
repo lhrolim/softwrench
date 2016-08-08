@@ -1,4 +1,4 @@
-﻿<ion-view title="My Profile">
+﻿<ion-view title="My Profile" class="page-userprofile">
     <ion-nav-buttons side="left">
         <button class="button" ng-if="!hasChanges()" ng-click="navigateBack()">
             <i class="fa fa-arrow-left"></i>&ensp;Back
@@ -20,13 +20,12 @@
         <div class="card list">
             <div class="item item-divider">User Details</div>
 
-            <div class="item item-text-wrap">Usename: {{profile.current.username}}</div>
-            <div class="item item-text-wrap">PersonId: {{profile.current.personid}}</div>
-            <div class="item item-text-wrap">OrgId: {{profile.current.orgid}}</div>
-            <div class="item item-text-wrap">SiteId: {{profile.current.siteid}}</div>
+            <div class="item item-text-wrap"><strong>Usename: </strong>{{profile.current.username}}</div>
+            <div class="item item-text-wrap"><strong>Person Id: </strong>{{profile.current.personid}}</div>
+            <div class="item item-text-wrap"><strong>Org Id: </strong>{{profile.current.orgid}}</div>
+            <div class="item item-text-wrap"><strong>Site Id: </strong>{{profile.current.siteid}}</div>
         </div>
-
-        <div class="card" ng-if="profile.current.facilities">
+        <div class="card list" ng-if="profile.current.facilities">
             <div class="item item-divider">Facilities</div>
             <div class="item item-text-wrap">
                 <option-field header-text="Facilities"

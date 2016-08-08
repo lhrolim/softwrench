@@ -136,6 +136,20 @@
     }
 }
 
+.platform-ios {
+    .ion-autocomplete-container {
+        .bar {
+            &.hasusewhereclause {
+                .item-input-wrapper {
+                    &.search {
+                        width: calc(100% - 165px);
+                    }
+                }
+            }
+        }
+    }
+}
+
 .button-icon {
     color: #fff;
 }
@@ -214,27 +228,6 @@ input[disabled], input[readonly]:not(.cloned-text-input), select[disabled], sele
 
 @media (min-width: 767px) {
     .responsive-container {
-        &.md {
-            width: 567px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .button-container, .button.button-block, .button.button-full {
-            padding-left: 0;
-            padding-right: 0;
-        }
-    }
-}
-
-@media (min-width: 1024px) {
-    .responsive-container {
-        &.lg {
-            width: 767px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
         .button-container, .button.button-block, .button.button-full {
             padding-left: 0;
             padding-right: 0;
