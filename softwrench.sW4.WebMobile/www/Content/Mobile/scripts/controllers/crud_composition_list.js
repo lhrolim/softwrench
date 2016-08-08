@@ -46,11 +46,11 @@
 
         function handlerOrDefault(event, defaultAction, ...params) {
             if (!event || !$injector.has(event.service)) {
-                return defaultAction;
+                return defaultAction();
             }
             const predeleteHandler = $injector.getInstance(event.service);
             if (!angular.isFunction(predeleteHandler[event.method])) {
-                return defaultAction;
+                return defaultAction();
             }
             return predeleteHandler[event.method](...params, defaultAction);
         }
