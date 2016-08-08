@@ -6,13 +6,20 @@
         "ngInject";
 
         $scope.failureTooltip = "Failure - Click here for more details";
+        $scope.testSuccessCount = 0;
+        $scope.testFailureCount = 0;
+        $scope.showOnlyFailure = true;
 
         $scope.validate = function () {
+            $scope.testSuccessCount = 0;
+            $scope.testFailureCount = 0;
+
             restService.getPromise("DeployValidation", "Validate", {}).then(response => {
                 if (!response.data || !response.data.resultObject) {
                     return;
                 }
                 var applicationTests = response.data.resultObject;
+
                 angular.forEach(applicationTests, (testResult, key) => {
                     if (!applicationTests.hasOwnProperty(key)) {
                         return;
@@ -21,22 +28,31 @@
                     if (!application) {
                         return;
                     }
-                    application.createValidation = testResult.createValidation;
-                    application.updateValidation = testResult.updateValidation;
+
+                    application.missingTestData = testResult.missingTestData;
+                    application.validationResultList = testResult.validationResultList;
+
+                    angular.forEach(application.validationResultList, (valResult, valkey) => {
+                        if (valResult.hasProblems) {
+                            $scope.testFailureCount += 1;
+                            application.hasfailedTests = true;
+                        } else {
+                            $scope.testSuccessCount += 1;
+                        }
+                    });
                 });
+
             });
         }
 
-        $scope.showFailures = function (application, isUpdate) {
-            const validation = isUpdate ? application.updateValidation : application.createValidation;
+        $scope.showFailures = function (application, validation) {
             if (!validation || validation.hasProblems !== true) {
                 return;
             }
             
             const data = {};
 
-            var operation = isUpdate ? "update" : "creation";
-            var msg = `For the ${operation} of the application "${application.title}":`;
+            var msg = `For the opertion ${validation.actionName} (${validation.actionDescription}) for the application "${application.title}":`;
             if (validation.missingWsdl) {
                 msg += "<br />";
                 msg += "- The WSDL is missing.";

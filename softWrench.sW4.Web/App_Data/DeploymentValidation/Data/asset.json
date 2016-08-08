@@ -1,0 +1,136 @@
+[
+  {
+    "application": "asset",
+    "action": "crud_update",
+    "actiondescription": "Update Asset Validation",
+    "data": {
+      "assetid": 1430,
+      "orgid": "EAGLENA",
+      "assetnum": "V1050",
+      "description": "MS Visio",
+      "status": "OPERATING",
+      "siteid": "BEDFORD",
+      "parent": "A7704",
+      "location": "OFF104",
+      "assettype": "IT",
+      "itemnum": "VISIO",
+      "conditioncode": null,
+      "failurecode": null,
+      "serialnum": null,
+      "groupname": null,
+      "usage": null,
+      "vendor": "ELECTRON",
+      "manufacturer": "MICROSOF",
+      "installdate": "2004-09-08T12:30:00+05:30",
+      "purchaseprice": 54.71,
+      "replacecost": 55,
+      "totalcost": 0,
+      "ytdcost": 0,
+      "budgetcost": 0,
+      "invcost": 0,
+      "isrunning": 1,
+      "totdowntime": 0,
+      "changeby": "MAXADMIN",
+      "changedate": "2016-02-19T22:29:42+05:30",
+      "priority": null,
+      "rowstamp": 33171321,
+      "parentasset_.description": "Standard Desktop Computer",
+      "parentasset_.assetnum": "A7704",
+      "location_.description": "Office #104",
+      "item_.description": "MS Visio",
+      "condition_.description": null,
+      "metergroup_.description": null,
+      "vendor_.name": "Electronic Super Supply",
+      "assettrans_.ponum": null,
+      "assetstatus_.changedate": null,
+      "subassembly_": [ ]
+    },
+    "subdata": [
+      {
+        "property": "workorder_",
+        "addto": "main",
+        "type": "array",
+        "data": [
+          {
+            "workorderid": 5698,
+            "wonum": "2199",
+            "description": "WO2Thru Asset",
+            "assetnum": "V1050",
+            "status": "WAPPR",
+            "schedstart": null,
+            "wopriority": null,
+            "siteid": "BEDFORD",
+            "orgid": "EAGLENA",
+            "location": "OFF104"
+          }
+        ]
+      },
+      {
+        "property": "sparepart_",
+        "addto": "main",
+        "type": "array",
+        "data": [
+          {
+            "itemnum": "0-0031",
+            "item_.description": "Elbow, Street- 1-1/8 In X 90 Deg",
+            "quantity": 1,
+            "issuedqty": 0,
+            "description": null,
+            "sparepartid": 668,
+            "itemsetid": "SET1",
+            "assetnum": "V1050",
+            "siteid": "BEDFORD"
+          }
+        ]
+      },
+      {
+        "property": "assetmeter_",
+        "addto": "main",
+        "type": "array",
+        "data": [
+          {
+            "sequence": null,
+            "metername": "GUARD RAIL",
+            "meter_.description": "Rail Meter - Guard rail loss",
+            "meter_.metertype": "CHARACTERISTIC",
+            "measureunitid": null,
+            "active": 1,
+            "assetmeterid": 238,
+            "assetnum": "V1050",
+            "siteid": "BEDFORD"
+          }
+        ]
+      },
+      {
+        "property": "assetspec_",
+        "addto": "main",
+        "type": "array",
+        "data": [
+          {
+            "classstructure_.description": "Business Software",
+            "classstructure_.classificationid": "43231500",
+            "assetspecid": 2236,
+            "assetnum": "V1050",
+            "siteid": "BEDFORD",
+            "classstructure_.hierarchypath": " 43000000 / 43230000 / 43231500"
+          }
+        ]
+      },
+      {
+        "property": "assetlocrelation_",
+        "addto": "main",
+        "type": "array",
+        "data": [
+          {
+            "relsequencenum": null,
+            "sourceassetnum": "V1050",
+            "assetrelationnum": "INCLUDES",
+            "targetassetnum": "1012",
+            "assetlocrelationid": 341
+          }
+        ]
+      }
+    ]
+  }
+]
+

@@ -1,41 +1,78 @@
 ﻿<div class="row" style="width: 100%;margin:10px" ng-controller="DeployValidationController" id="deploy-validation">
     <div class="col-md-12">        
-        <button class="applicationcommand btn btn-primary" ng-click="validate()">validate</button>
+        <span>
+            <button class="applicationcommand btn btn-primary" ng-click="validate()">validate</button>            
+        </span>
         <br />
         <div style="margin-top:10px">
-            <i class="fa fa-check deploy-success"></i> <label style="margin-right:10px">Indicates that the service is deployed withour any errors.</label>
+            <i class="fa fa-check deploy-success"></i> <label style="margin-right:10px;font-weight: normal !important;">Indicates that the service is deployed withour any errors.</label>
             <!--<br />-->
-            <i class="fa fa-times deploy-failure"></i> <label style="margin-right:10px">Indicates that the service is not deployed or has errors.</label>
+            <i class="fa fa-times deploy-failure"></i> <label style="margin-right:10px;font-weight: normal !important;">Indicates that the service is not deployed or has errors.</label>
             <!--<br />-->
-            <i class="fa fa-exclamation-triangle deploy-failure"></i> <label style="margin-right:10px">Indicates that the service cannot be validated due to missing test data.</label>
+            <i class="fa fa-exclamation-triangle deploy-failure"></i> <label style="margin-right:10px;font-weight: normal !important;">Indicates that the service cannot be validated due to missing test data.</label>
+            <label style="margin-top:10px;font-weight: normal !important;">Hover or Click on the status icon to get more details.</label>
             <br />
         </div>
-        <label style="margin-top:10px">Hover or Click on the status icon to get more details.</label>
+
+        <div class="container">
+            <label style="margin-top:10px;">Validation Summary</label>
+            <table class="table" style="width:300px">
+                <tr>
+                    <th style="width:100px;"></th>
+                    <th style="width:100px;"></th>
+                </tr>                
+                <tr class="info">                 
+                    <td style="width:100px;">Total Executed</td>
+                    <td style="width:100px;">{{testSuccessCount + testFailureCount}}</td>
+                </tr>                
+                <tr class="success">                 
+                    <td style="width:100px;">Success</td>
+                    <td style="width:100px;">{{testSuccessCount}}</td>
+                </tr>                
+                <tr class="danger">                 
+                    <td style="width:100px;">Failure</td>
+                    <td style="width:100px;">{{testFailureCount}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <br />
+        <label>Show failed tests only:</label> <input style="margin-left:10px" type="checkbox" ng-model="showOnlyFailure" />
         <hr />
+
         <table class="table table-striped table-hover hidden-phone">
             <thead>
                 <tr>
                     <th>{{i18N('general.application','Application')}}</th>
                     <th>{{i18N('general.applicationCode','Application Code')}}</th>
-                    <th>{{i18N('general.create','Create')}}</th>
-                    <th>{{i18N('general.update','Update')}}</th>
+                    <th colspan="2">Validation Result</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="application in applications">
+                <tr ng-repeat="application in applications" style="margin-bottom:10px" ng-hide="(showOnlyFailure ? !application.hasfailedTests : false)">
                     <td>{{application.title}}</td>
                     <td>{{application.applicationName}}</td>
-                    <td ng-class="{'has-failure' : hasProblemns(application, false)}" ng-click="showFailures(application, false);">
-                        <i ng-if="succeded(application, false)" rel="tooltip" title="Success" class="fa fa-check deploy-success"></i>
-                        <i ng-if="hasProblemns(application, false)" rel="tooltip" title="{{failureTooltip}}" class="fa fa-times deploy-failure"></i>
-                        <i ng-if="!application.hasCreationSchema" rel="tooltip" title="Does not Apply" class="fa fa-minus deploy-no-creation"></i>
-                        <i ng-if="isMissingTestData(application, false)" rel="tooltip" title="Missing test data" class="fa fa-exclamation-triangle deploy-failure"></i>
-                    </td>
-                    <td ng-class="{'has-failure' : hasProblemns(application, true)}" ng-click="showFailures(application, true);">
-                        <i ng-if="succeded(application, true)" rel="tooltip" title="Success" class="fa fa-check deploy-success"></i>
-                        <i ng-if="hasProblemns(application, true)" rel="tooltip" title="{{failureTooltip}}" class="fa fa-times deploy-failure"></i>
-                        <i ng-if="isMissingTestData(application, true)" rel="tooltip" title="Missing test data" class="fa fa-exclamation-triangle deploy-failure"></i>
-                    </td>
+                    <td>
+                        <div class="container">
+                            <table class="table" style="table-layout:fixed; width:910px;" ng-if="application.validationResultList && application.validationResultList.length > 0">
+                                <tr ng-if="!application.missingTestData" ng-repeat="validationResult in application.validationResultList"  ng-class="{'danger' : validationResult.hasProblems}" ng-hide="(showOnlyFailure ? !validationResult.hasProblems : false)">
+                                    <td style="padding:5px;width:550px; word-wrap:break-word;">{{validationResult.actionDescription}}</td>
+                                    <td style="padding:5px;width:300px; word-wrap:break-word;">{{validationResult.actionName}}</td>                                    
+                                    <td style="padding:5px;width:50px; word-wrap:break-word;" ng-click="showFailures(application, validationResult, false);">
+                                        <i ng-if="!validationResult.hasProblems && validationResult.actionSupported" rel="tooltip" title="Success" class="fa fa-check deploy-success"></i>
+                                        <i ng-if="validationResult.hasProblems && validationResult.actionSupported" rel="tooltip" title="{{failureTooltip}}" class="fa fa-times deploy-failure"></i>                                        
+                                        <i ng-if="!validationResult.actionSupported" rel="tooltip" title="This operation is not supported" class="fa fa-minus deploy-no-creation"></i>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div ng-if="application.missingTestData">
+                                <p> <i rel="tooltip" title="Test data was not found for this application." class="fa fa-exclamation-triangle deploy-failure"></i> No test data found </p>
+                            </div>
+                            <div ng-if="!application.validationResultList">
+                                <p> Test not run yet </p>
+                            </div>
+                        </div>
+                    </td>                
                 </tr>
             </tbody>
         </table>

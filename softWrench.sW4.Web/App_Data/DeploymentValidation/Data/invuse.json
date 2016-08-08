@@ -1,0 +1,26 @@
+[
+  {
+    "application": "invuse",
+    "action": "crud_create",
+    "actiondescription": "Create Inventory Transfer Validation",
+    "data": {
+      "usetype": null,
+      "invuseline_.fromstoreloc": null,
+      "mode": "true",
+      "siteid": "BEDFORD",
+      "itemnum": "117021",
+      "inventory_.item_.itemtype": "ITEM",
+      "invuseid": null,
+      "#batchitem_": [ ],
+      "invuseline_.itemnum": "117021",
+      "binnum": null,
+      "invuseline_.binnum": null,
+      "lotnum": null,
+      "invuseline_.lotnum": null,
+      "#curbal": null,
+      "curbal": null,
+      "frominvbalance_.curbal": null,
+      "invuseline_.unitcost": 5
+    }
+  }
+]

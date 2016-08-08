@@ -60,7 +60,7 @@
         const addSignature = function (parameters) {
             const datamap = crudContextHolderService.rootDataMap("#modal");
             if (datamap.message == undefined) {
-                const signature = contextService.getUserData().signature;
+                const signature = contextService.getUserData().signature || "";
                 datamap['message'] = signature !== "" ? "<br/><br/>" + signature : signature;
             }
         };

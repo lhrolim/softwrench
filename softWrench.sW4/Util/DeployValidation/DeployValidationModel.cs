@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using softwrench.sW4.Shared2.Metadata;
+using softWrench.sW4.Data.API.Composition;
 using System;
 using System.Collections.Generic;
 
@@ -9,11 +10,26 @@ namespace softWrench.sW4.Util.DeployValidation
         private Exception _ex = null;
         public HashSet<string> MissingProperties { get; set; }
         public bool MissingWsdl { get; set; }
-        public bool MissingTestData { get; set; }
+       
         public string ExClassName { get; set; }
         public string ExMsg { get; set; }
         public string ExStack { get; set; }
         public bool HasProblems { get; set; }
+
+        /// <summary>
+        /// The name of the current validation action
+        /// </summary>
+        public string ActionName { get; set; }
+
+        /// <summary>
+        /// The name of the current validation action description
+        /// </summary>
+        public string ActionDescription { get; set; }
+
+        /// <summary>
+        /// The validation action is supported
+        /// </summary>
+        public bool ActionSupported { get; set; }
 
         public DeployValidationModel() {
             MissingProperties = new HashSet<string>();
@@ -31,13 +47,26 @@ namespace softWrench.sW4.Util.DeployValidation
         }
 
         public bool CalcHasProblems() {
-            return HasProblems = MissingProperties.Count > 0 || MissingWsdl || MissingTestData || _ex != null;
+            return HasProblems = MissingProperties.Count > 0 || MissingWsdl || _ex != null;
         }
     }
 
     public class DeployValidationResult {
-        public DeployValidationModel CreateValidation { get; set; }
-        public DeployValidationModel UpdateValidation { get; set; }
+        private List<DeployValidationModel> validationResultList = null;
+
+        /// <summary>
+        /// True if the test data is missing; otherwise false
+        /// </summary>
+        public bool MissingTestData { get; set; }
+
+        public List<DeployValidationModel> ValidationResultList {
+            get {
+                return validationResultList ?? (validationResultList = new List<DeployValidationModel>());
+            }
+            set {
+                validationResultList = value;
+            }
+        }
     }
 
     /// <summary>
@@ -51,20 +80,40 @@ namespace softWrench.sW4.Util.DeployValidation
         public string Application { get; set; }
 
         /// <summary>
+        /// The validation action name
+        /// </summary>
+        public string Action { get; set; }
+
+        /// <summary>
+        /// The validation action description
+        /// </summary>
+        public string ActionDescription { get; set; }
+
+        /// <summary>
+        /// The schema key for the application
+        /// </summary>
+        public string SchemaKey { get; set; }
+
+        /// <summary>
+        /// The validation action is supported
+        /// </summary>
+        public bool ActionSupported { get; set; }
+
+        /// <summary>
         /// The application metadata
         /// </summary>
         public CompleteApplicationMetadataDefinition Metadata { get; set; }
 
         /// <summary>
-        /// The Json for the create operation
+        /// The composition data
         /// </summary>
-        public JObject CreateJson { get; set; }
+        public CompositionOperationDTO CompositionOperationDTO { get; set; }
 
         /// <summary>
-        /// The Json for the update operation
+        /// The Json for the operation
         /// </summary>
-        public JObject UpdateJson { get; set; }
-
+        public JObject TestJson { get; set; }
+        
         /// <summary>
         /// True if the test data is missing.
         /// </summary>

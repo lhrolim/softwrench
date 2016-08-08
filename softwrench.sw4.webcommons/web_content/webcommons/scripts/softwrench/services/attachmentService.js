@@ -251,7 +251,7 @@
 
 
         function validateRemoval(datamap, schema) {
-            if (datamap["createby"] === userService.getPersonId()) {
+            if (datamap["createby"].toLowerCase() === userService.getPersonId().toLowerCase()) {
                 return $q.when();
             }
 

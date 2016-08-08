@@ -938,7 +938,7 @@
           <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
         </relationship>
-        <relationship to="longdescription" qualifier="resol">
+        <relationship to="longdescription" qualifier="resolution">
           <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
