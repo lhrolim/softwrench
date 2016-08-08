@@ -19,12 +19,14 @@
                 </mfb-menu>
             </div>
 
-            <button ng-repeat="command in commandBar.childCommands.activeCommands" ng-if="commandBar.childCommands.hasActiveCommands"
-                    ng-click="executeCommand(command)"
-                    class="button button-fab-single"
-                    ng-class="command.cssClasses">
-                <i class="{{command.icon}}"></i>
-            </button>
+            <div ng-if="commandBar.childCommands.hasActiveCommands">
+                <button ng-repeat="command in commandBar.childCommands.activeCommands" ng-if="!isCommandHidden(command)"
+                        ng-click="executeCommand(command)"
+                        class="button button-fab-single"
+                        ng-class="command.cssClasses">
+                    <i class="{{command.icon}}"></i>
+                </button>
+            </div>
 
         </div>
 

@@ -85,7 +85,7 @@
             }],
 
             link: function (scope, element, attrs) {
-                commandBarDelegate.positionFabCommandBar(element)
+                commandBarDelegate.positionFabCommandBar(element);
             }
         };
 
