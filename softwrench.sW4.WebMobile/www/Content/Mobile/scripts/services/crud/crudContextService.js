@@ -272,21 +272,27 @@
                         crudContext.originalDetailItemDatamap = angular.copy(datamap);
                         composition.originalDetailItemDatamap = composition.currentDetailItem;
                         this.loadTab(composition.currentTab);
-                        this.refreshIfLeftJoinPresent(crudContext,null);
+                        return this.refreshIfLeftJoinPresent(crudContext,null);
                     });
                 }
 
-                return offlineSaveService.saveItem(crudContext.currentApplicationName, crudContext.currentDetailItem, showConfirmationMessage).then(saved => {
-                    crudContext.originalDetailItemDatamap = angular.copy(datamap);
+                return this.saveCurrentItem(showConfirmationMessage);
+            },
+
+            saveCurrentItem: function (showConfirmationMessage) {
+                const crudContext = crudContextHolderService.getCrudContext();
+                const applicationName = crudContext.currentApplicationName;
+                const item = crudContext.currentDetailItem;
+                return offlineSaveService.saveItem(applicationName, item, showConfirmationMessage).then(saved => {
+                    crudContext.originalDetailItemDatamap = angular.copy(item.datamap);
                     contextService.insertIntoContext("crudcontext", crudContext);
                     if (crudContext.newItem) {
                         crudContext.newItem = false;
                         return this.refreshGrid().then(() => saved);
                     }
-                    return this.refreshIfLeftJoinPresent(crudContext,saved);
+                    return this.refreshIfLeftJoinPresent(crudContext, saved);
                 });
             },
-
             
             refreshIfLeftJoinPresent: function (crudContext,saved) {
                 const itemlist = this.itemlist();

@@ -722,6 +722,8 @@
             <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'"/>
           </composition>
           <composition relationship="labtrans" label="Labor">
+            <event type="beforedelete" service="laborService" method="confirmPossibleTimer"/>
+            <event type="afterdelete" service="laborService" method="cancelPossibleTimer"/>
             <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'" />
           </composition>
           <composition relationship="attachment" label="Attachments">

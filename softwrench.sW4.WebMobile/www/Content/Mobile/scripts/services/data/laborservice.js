@@ -271,6 +271,26 @@
             return approved ? "Yes" : "No";
         }
 
+        function confirmPossibleTimer(item, defaultPreDeleteAction) {
+            const activeLabor = getActiveLabor();
+            return !!activeLabor && item["#localswdbid"] === activeLabor["#localswdbid"]
+                ? $ionicPopup.confirm({
+                    title: "Delete Labor",
+                    template: "The labor you are trying to delete has a timer. Are you sure you wish to cancel the timer and delete it?"
+                })
+                : defaultPreDeleteAction();
+        }
+
+
+        function cancelPossibleTimer(item, parent, defaultPostDeleteAction) {
+            const activeLabor = getActiveLabor();
+            if (!!activeLabor && item["#localswdbid"] === activeLabor["#localswdbid"]) {
+                clearCachedLabor();
+                return parent;
+            }
+            return defaultPostDeleteAction();
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -287,7 +307,9 @@
             formatRegularHours,
             formatApproved,
             getActiveLaborParent,
-            getActiveLabor
+            getActiveLabor,
+            confirmPossibleTimer,
+            cancelPossibleTimer
         };
         return service;
         //#endregion

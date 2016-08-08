@@ -1,8 +1,8 @@
 ﻿(function (softwrench, _) {
     "use strict";
 
-    softwrench.controller('CrudCompositionListController', ["$log", "$scope", "$rootScope", "$ionicPopup", "crudContextService", "fieldService", "formatService", "crudContextHolderService", "offlineAttachmentService",
-    function ($log, $scope, $rootScope, $ionicPopup, crudContextService, fieldService, formatService, crudContextHolderService, offlineAttachmentService) {
+    softwrench.controller('CrudCompositionListController', ["$log", "$scope", "$rootScope", "$ionicPopup", "crudContextService", "fieldService", "formatService", "crudContextHolderService", "offlineAttachmentService", "$injector",
+    function ($log, $scope, $rootScope, $ionicPopup, crudContextService, fieldService, formatService, crudContextHolderService, offlineAttachmentService, $injector) {
 
         $scope.empty = function () {
             var compositionList = crudContextService.compositionList();
@@ -44,6 +44,17 @@
             }
         }
 
+        function handlerOrDefault(event, defaultAction, ...params) {
+            if (!event || !$injector.has(event.service)) {
+                return defaultAction;
+            }
+            const predeleteHandler = $injector.getInstance(event.service);
+            if (!angular.isFunction(predeleteHandler[event.method])) {
+                return defaultAction;
+            }
+            return predeleteHandler[event.method](...params, defaultAction);
+        }
+
         $scope.startDeleteLocalComposition = function (item) {
             const localId = item["#localswdbid"];
             if (!localId) {
@@ -52,18 +63,25 @@
 
             const compositionSchema = crudContextHolderService.getCompositionDetailSchema();
             const compositionTitle = compositionSchema["title"] || compositionSchema["applicationTitle"];
-            console.log(crudContextService);
+            const compositionListSchema = crudContextHolderService.getCompositionListSchema();
+            const context = crudContextHolderService.getCrudContext();
+            const tab = context.composition.currentTab;
+            const compositionMetadata = tab.schema;
 
-            $ionicPopup.confirm({
+            const preDeleteEvent = compositionMetadata.events["beforedelete"] || compositionListSchema.events["beforedelete"];
+            const postDeleteEvent = compositionMetadata.events["afterdelete"] || compositionListSchema.events["afterdelete"];
+
+            const defaultPreDeletePromise = () => $ionicPopup.confirm({
                 title: `Delete ${compositionTitle}`,
                 template: `Are you sure to delete this local ${compositionTitle}?`
-            }).then(res => {
+            });
+            const preDeletePromise = handlerOrDefault(preDeleteEvent, defaultPreDeletePromise, item);
+
+            return preDeletePromise.then(res => {
                 if (!res) {
                     return;
                 }
 
-                const context = crudContextHolderService.getCrudContext();
-                const tab = context.composition.currentTab;
                 const relationship = tab["relationship"];
 
                 const datamap = crudContextHolderService.currentDetailItemDataMap();
@@ -76,12 +94,16 @@
                 const index = compositionList.indexOf(item);
                 compositionList.splice(index, 1);
 
-                const savePromise = crudContextService.saveChanges(null, false);
+                const savePromise = crudContextService.saveCurrentItem(false);
 
-                return compositionSchema.applicationName === "attachment" 
+                const deletePromise = compositionSchema.applicationName === "attachment"
                     ? savePromise.then(saved => offlineAttachmentService.deleteRelatedAttachment(item).then(() => saved))
                     : savePromise;
+
+                return deletePromise.then(saved => handlerOrDefault(postDeleteEvent, () => saved, item, saved));
             });
+
+
         }
 
         $scope.isDirty = function (item) {
