@@ -51,7 +51,7 @@
             const joinedfields = listSchema.displayables.filter(a => a.attribute.startsWith("#") && a.attribute.contains(".")).map(a=> a.attribute);
             const joinedIndexes = searchIndexService.getSearchColumnsByApp(listSchema.applicationName).find(a => a.startsWith("#") && a.contains("."));
 
-            const allAttributes = new Set(joinedfields.concat(joinedIndexes));
+            const allAttributes = joinedIndexes ? new Set(joinedfields.concat(joinedIndexes)) : joinedfields;
 
             if (allAttributes.length === 0) {
                 //no extra parameters needed
