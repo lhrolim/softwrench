@@ -1,32 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata"  xmlns:f="http://www.controltechnologysolutions.com/filters">
-
+  
   <templates>
     <template path="@servicerequest.xml"/>
+    <template path="@location.xml"/>
     <template path="@asset.xml"/>
-    <template path="@worklogs.xml"/>
-    <template path="@person.xml"/>
     <template path="@workorder.xml"/>
+    <template path="@phone.xml"/>
+    <template path="@email.xml"/>
+    <template path="@woactivity.xml"/>
+    <template path="@person.xml"/>
   </templates>
-
+  
   <entities>
     <entity name="persongroup" idAttribute="persongroupid">
       <attributes>
         <attribute name="pluspcustomer" type="varchar" required="false"/>
       </attributes>
     </entity>
-
-    <entity name="person" idAttribute="personid">
-      <attributes>
-        <attribute name="pluspcustomer" type="varchar" required="false"/>
-      </attributes>
-    </entity>
-
+    
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
         <attribute name="outageduration" type="float" required="false"/>
-        <attribute name="creationdate" type="datetime" required="false"/>
-        <attribute name="pluspcustomer" type="varchar" required="false"/>
         <attribute name="externalsystem" type="varchar" required="true"/>
         <attribute name="classificationid" type="varchar" required="true"/>
         <attribute name="itdclosedate" type="datetime" required="false"/>
@@ -39,6 +34,7 @@
         <attribute name="ismticketid" type="varchar" required="false"/>
         <attribute name="ismticketuid" type="varchar" required="false"/>
         <attribute name="tickettype" type="varchar" required="false"/>
+        <attribute name="creationdate" type="datetime" required="false"/>
       </attributes>
       <relationships>
         <relationship to="alndomain" qualifier="DEPARTMENT">
@@ -78,6 +74,12 @@
         <relationship to="classification">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
         </relationship>
+        <relationship to="impacturgency">
+          <relationshipAttribute to="type" literal="SR" quoteLiteral="true"/>
+          <relationshipAttribute from="impact" to="impact" primary="true"/>
+          <relationshipAttribute from="urgency" to="urgency"/>
+          <relationshipAttribute from="internalpriority" to="internalpriority"/>
+        </relationship>
         <relationship to="aticket" collection="true">
           <relationshipAttribute from="ticketuid" to="ticketuid" primary="true"/>
         </relationship>
@@ -112,12 +114,63 @@
         <relationship to="classstructure">
           <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
         </relationship>
+        <relationship to="woactivity" collection="true">
+          <relationshipAttribute from="ticketuid" to="origrecordid" primary="true"/>
+          <relationshipAttribute to="origrecordclass" literal="SR" quoteLiteral="true"/>
+        </relationship>
         <relationship to="itdthirdparty" collection="true">
           <relationshipAttribute from="ticketid" to="ticketid" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
-        <connectorParameter key="customconnector" value="softwrench.sw4.chicago.classes.com.cts.chicago.connector.ChicagoSRCrudConnector" />
+        <connectorParameter key="customconnector" value="softwrench.sw4.tgcs.classes.com.cts.tgcs.connector.ToshibaSRCrudConnector" />
+      </connectorParameters>
+    </entity>
+    <entity name="impacturgency" idAttribute="impacturgencyid">
+      <attributes>
+        <attribute name="impacturgencyid" type="bigint" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="impact" type="integer" required="true" />
+        <attribute name="urgency" type="integer" required="true" />
+        <attribute name="internalpriority" type="integer" required="true" />
+        <attribute name="hasid" type="varchar" required="false" />
+        <attribute name="type" type="varchar" required="true" />
+        <attribute name="rowstamp" type="integer" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="numericdomain" qualifier="impactdesc">
+          <relationshipAttribute from="impact" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="TICKETIMPACT" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="numericdomain" qualifier="urgencydesc">
+          <relationshipAttribute from="urgency" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="TICKETURGENCY" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="numericdomain" qualifier="prioritydesc">
+          <relationshipAttribute from="internalpriority" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="impacturgency" />
+      </connectorParameters>
+    </entity>
+    <entity name="aticket" idAttribute="eaudittransid">
+      <attributes>
+        <attribute name="eaudittransid" type="bigint"/>
+        <attribute name="eaudittimestamp" type="datetime"/>
+        <attribute name="eauditusername" type="varchar"/>
+        <attribute name="internalpriority" type="integer"/>
+        <attribute name="classificationid" type="varchar"/>
+        <attribute name="assetnum" type="varchar"/>
+        <attribute name="ownergroup" type="varchar"/>
+        <attribute name="impact" type="integer"/>
+        <attribute name="urgency" type="urgency"/>
+        <attribute name="actualstart" type="datetime"/>
+        <attribute name="actualfinish" type="datetime"/>
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="a_ticket"/>
       </connectorParameters>
     </entity>
     <entity name="worklog" idAttribute="worklogid">
@@ -156,9 +209,83 @@
         <connectorParameter key="dbtable" value="itdthirdparty" />
       </connectorParameters>
     </entity>
+    <entity name="person" idAttribute="personid">
+      <attributes>
+        <attribute name="pluspcustomer" type="varchar" required="false"/>
+      </attributes>
+      <relationships>
+        <relationship to="alndomain" qualifier="department">
+          <relationshipAttribute from="department" to="value" primary="true"/>
+          <relationshipAttribute literal="DEPARTMENTS" to="domainid" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
+    <application entity="impacturgency" name="impacturgency" title="Impact Urgency">
+      <schemas>
+        <schema id="list" title="Impace Urgency List" stereotype="list">
+          <field attribute="type" label="Type"/>
+          <field attribute="impact" label="Impact"/>
+          <field attribute="impactdesc_.description" label="Description"/>
+          <field attribute="urgency" label="Urgency"/>
+          <field attribute="urgencydesc_.description" label="Description"/>
+          <field attribute="internalpriority" label="Priority"/>
+          <field attribute="prioritydesc_.description" label="Description"/>
+        </schema>
+      </schemas>
+    </application>
+    
+    <application entity="aticket" name="aticket" title="Ticket Audit">
+      <schemas>
+        <schema id="compositionlist" title="Ticket Audit List" stereotype="compositionlist">
+          <field attribute="eaudittimestamp" label="e_Audit">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+          </field>
+          <field attribute="eauditusername" label="e_Audit User Name"/>
+          <field attribute="internalpriority" label="Internal Priority"/>
+          <field attribute="classificationid" label="Classification"/>
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="ownergroup" label="Owner Group"/>
+          <field attribute="impact" label="Impact"/>
+          <field attribute="urgency" label="Urgency"/>
+          <field attribute="actualstart" label="Actual Start">
+            <renderer type="datetime"/>
+          </field>
+          <field attribute="actualfinish" label="Actual Finish">
+            <renderer type="datetime"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+    
+    <application entity="person" name="person" title="Person">
+      <schemas>
+        <schema id="detail" stereotype="detail" title="User Profile" redeclaring="false">
+          <customization position="department">
+            <association target="department" labelfield="department_.description" label="Department">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+        </schema>
+        <schema id="myprofiledetail" parentschema="detail" title="Edit My Profile" redeclaring="false">
+          <customization position="department">
+            <association target="department" labelfield="department_.description" label="Department">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+        </schema>
+        <schema id="newPersonDetail" stereotype="detailnew" title="New User" mode="input" redeclaring="false">
+          <customization position="department">
+            <association target="department" labelfield="department_.description" label="Department">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+
     <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
       <schemas>
 
@@ -223,7 +350,7 @@
         </schema>
 
         <schema id="quicknewdetail" parentschema="adetail" stereotype="detailnew" title="New Quick Request" redeclaring="true">
-          
+
         </schema>
 
         <schema id="quickeditdetail" parentschema="adetail" stereotype="detail" title="Quick Request Details" redeclaring="true">
@@ -238,7 +365,7 @@
         </schema>
       </schemas>
     </application>
-    
+
     <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008">
       <schemas>
         <schema id="list"  stereotype="compositionlist" redeclaring="false">
@@ -251,7 +378,7 @@
 
         <detail stereotype="compositiondetail" title="Work Log" redeclaring="false">
           <customization position="logtype">
-            <association target="logtype" labelfield="LOGTYPE_.description" label="Log Type">
+            <association target="logtype" labelfield="LOGTYPE_.description" label="Log Type" default="CLIENTNOTE">
               <renderer type="lookup"/>
             </association>
           </customization>
@@ -281,8 +408,303 @@
         </schema>
       </schemas>
     </application>
+    
+    <application entity="SR" name="servicerequest" title="Service Request" role="sr">
+      <filters>
+        <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
+      </filters>
+      <schemas>
+        <schema id="list" title="Service Request Grid" stereotype="list" redeclaring="true">
+          <field attribute="ticketid" label="Service Request"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="reportedby" label="Reported By"/>
+          <field attribute="itdchcreatedbygroup" label="Created By Group"/>
+          <field attribute="pluspcustomer" label="Customer"/>
+          <field attribute="internalpriority" label="Internal Priority"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="reportdate" label="Reported Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+          </field>
+          <field attribute="targetfinish" label="Target Finish">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+          </field>
+          <field attribute="ownergroup" label="Owner Group"/>
+          <field attribute="isglobal" label="Is Global Issue">
+            <renderer type="checkbox"/>
+          </field>
+          <field attribute="itdresolvergroup" label="Resolver Group"/>
+          <field attribute="owner" label="Owner"/>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.ticketuid desc"/>
+          </properties>
+        </schema>
+        
+        <schema id="adetail" title="Request Details" abstract="true" stereotype="detail" redeclaring="true">
 
+          <field attribute="ismticketid" hidden="true"/>
+          <field attribute="ismticketuid" hidden="true"/>
+          
+          <section orientation="horizontal">
+            <field attribute="description" label="Summary" requiredexpression="true"/>
+            <section id="statussection"/>
+            <field attribute="siteid" label="Site ID" readonly="true"/>
+          </section>
+          <section>
+            <field label="Details" attribute="ld_.ldtext">
+              <renderer type="richtext"/>
+            </field>
+          </section>
+
+          <section orientation="horizontal">
+            <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" extraprojectionvalues="langcode,department" orderbyfield="personid asc" requiredexpression="true">
+              <renderer type="lookup" params="columnlabel=Name;"/>
+              <event type="afterchange" service="toshibasrService" method="afterChangeReportedby"/>
+            </association>
+            <field attribute="reportedphone" label="Reported By Phone" default="@user.phone" requiredexpression="true"/>
+            <association label="Affected Person" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" requiredexpression="true">
+              <renderer type="lookup" params="columnlabel=Name"/>
+            </association>
+            <association label="Source" target="externalsystem" labelfield="tsdtktsource_.description" requiredexpression="true">
+              <renderer type="lookup" params="columnlabel=Source"/>
+            </association>
+          </section>
+
+          <section orientation="horizontal">
+            <association target="reportedpriority" labelfield="TICKETPRIORITY_.description" label="Reported Priority">
+              <renderer type="lookup"/>
+            </association>
+            <field attribute="internalpriority" label="Internal Priority" readonly="true"/>
+            <association target="impact" labelfield="impacturgency_.impactdesc_.description" label="Impact" extraprojectionvalues="internalpriority,impact,urgency" valuefield="impact" requiredexpression="true">
+              <renderer type="lookup" params="application=impacturgency;schemaId=list;"/>
+              <event type="afterchange" service="toshibasrService" method="afterChangeImpact"/>
+            </association>
+            <association target="urgency" labelfield="impacturgency_.urgencydesc_.description" label="Urgency" extraprojectionvalues="internalpriority,impact,urgency" valuefield="urgency" requiredexpression="true">
+              <renderer type="lookup" params="application=impacturgency;schemaId=list;"/>
+              <event type="afterchange" service="toshibasrService" method="afterChangeUrgency"/>
+            </association>
+          </section>
+          
+          <section orientation="horizontal">
+            <field attribute="itdfirstcallresolution" label="First Call Resolution?">
+              <renderer type="checkbox"/>
+            </field>
+            <association target="classificationid" labelfield="classification_.description" label="Classification" requiredexpression="true">
+              <renderer type="lookup"/>
+              <dataprovider prefilterfunction="FilterClassification"/>
+            </association>
+          </section>
+          
+          <section orientation="horizontal">
+            <field attribute="createdby" label="Created By" default="@username" readonly="true"/>
+            <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" orderbyfield="personid asc">
+              <renderer type="lookup"/>
+            </association>
+            <field attribute="changeby" label="Changed By" default="@username" readonly="true"/>
+          </section>
+          
+          <section orientation="horizontal">
+            <association label="Created Group" target="itdchcreatedbygroup" labelfield="itdchcreatedbygroup_.description" orderbyfield="persongroup asc">
+              <renderer type="lookup"/>
+            </association>
+            <association label="Owner Group" target="ownergroup" labelfield="ownergroup_.description" orderbyfield="persongroup asc" requiredexpression="true">
+              <renderer type="lookup"/>
+            </association>
+            <field attribute="changedate" label="Change Date" default="" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            </field>
+            <association target="itdresolvergroup" labelfield="itdresolvergroup_.description" label="Resolver Group">
+              <renderer type="lookup"/>
+            </association>
+          </section>
+
+          <section orientation="horizontal">
+            <field attribute="reportdate" label="Reported Date" default="@now" readonly="true" requiredexpression="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            </field>
+            <field attribute="statusdate" label="Last Status Change Date" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            </field>
+            <field attribute="itdclosedate" label="Closed Date" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            </field>
+          </section>
+
+          <section orientation="horizontal">
+            <field attribute="actualstart" label="Actual Start" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            </field>
+            <field attribute="actualfinish" label="Actual Finish" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            </field>
+            <field attribute="outageduration" label="Outage Duration" readonly="true">
+              <renderer type="time" params="formatter=doubleToTime"/>
+            </field>
+          </section>
+
+          <section orientation="vertical" secondarycontent="true">
+            <section orientation="horizontal">
+              <field attribute="creationdate" label="Creation Date" default="@now" readonly="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+              </field>
+              <field attribute="affecteddate" label="Affected Date" default="@now" requiredexpression="true">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+              </field>
+              <field attribute="targetstart" label="Target Start">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+              </field>
+              <field attribute="targetfinish" label="Target Finish">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+              </field>
+            </section>
+            <section orientation="horizontal">
+              <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid">
+                <renderer type="lookup"/>
+                <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+              </association>
+              <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+                <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+                <dataprovider prefilterfunction="FilterAssets"/>
+                <event type="afterchange" service="srService" method="afterChangeAsset"/>
+              </association>
+              <field attribute="reportedbyp_.langcode" label="Language" readonly="true"/>
+            </section>
+            <section orientation="horizontal">
+              <field attribute="isglobal" label="Is Global Issue?">
+                <renderer type="checkbox"/>
+              </field>
+              <field attribute="isknownerror" label="Is Known Error?">
+                <renderer type="checkbox"/>
+              </field>
+              <field attribute="slaapplied" label="SLA Applied?" readonly="true" enableexpression="false">
+                <renderer type="checkbox"/>
+              </field>
+
+              <field attribute="sitevisit" label="Site Visited?">
+                <renderer type="checkbox"/>
+              </field>
+            </section>
+          </section>
+          <section id="hiddenfields">
+            <field attribute="ticketid" label="SR#" hidden="true"/>
+            <field attribute="ticketuid" label="SR#" hidden="true"/>
+          </section>
+          <section id="compositions"/>
+        </schema>
+        
+        <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" redeclaring="true">
+          <section id="statussection">
+            <field attribute="status" label="Status" default="NEW" readonly="true"/>
+          </section>
+        </schema>
+      
+        <schema id="editdetail" parentschema="adetail" stereotype="detail" title="Service Request Details" redeclaring="true">
+          <section id="statussection">
+            <association label="Status" target="status" labelfield="synstatus_.description" requiredexpression="true">
+              <renderer type="lookup" />
+            </association>
+          </section>
+          <section id="compositions">
+
+            <composition relationship="woactivity" label="Work Order Activity" inline="false">
+              <collectionproperties listschema="list" allowcreation="false" allowupdate="false" allowremoval="false"/>
+            </composition>
+            
+            <composition relationship="relatedrecord" label="Related Records">
+              <collectionproperties allowupdate="false" />
+            </composition>
+
+            <composition relationship="itdthirdparty" label="Third Party Tickets" detailschema="compositiondetail">
+              <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="compositionlist"/>
+            </composition>
+            
+            <tab label="Solution" id="solution" icon="fa fa-book">
+              <field attribute="solution" hidden="true"/>
+              <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="resolution_.ldtext,symptom_.ldtext,cause_.ldtext">
+                <renderer type="lookup"/>
+                <event type="afterchange" service="solutionService" method="setsolutiondata"/>
+              </association>
+              <!--<optionfield attribute="pmcosolstatus" label="Solution Status:">
+                <renderer type="combo" params="inputsize=medium;optionfield.donotusefirstoptionasdefault=true" />
+                <option label="Under Consideration" value="CONSIDER" />
+                <option label="Solution Failed" value="FAIL" />
+                <option label="Solution Successful" value="SUCCESS" />
+              </optionfield>-->
+              <field attribute="selfservsolaccess" label="Self-Service Access?">
+                <renderer type="checkbox" params="inputsize=medium" />
+              </field>
+              <field attribute="solution_.description" label="Description:" readonly="true" hidden="true"/>
+              <field attribute="symptom_.ldtext" label="Symptom:">
+                <renderer type="richtext"/>
+              </field>
+              <field attribute="cause_.ldtext" label="Cause:" >
+                <renderer type="richtext"/>
+              </field>
+              <field attribute="resolution_.ldtext" label="Resolution:" >
+                <renderer type="richtext"/>
+              </field>
+            </tab>
+            <composition relationship="worklog" label="Work Logs">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
+            </composition>
+            <composition relationship="commlog" label="Communications">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
+              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
+            </composition>
+            <composition relationship="attachment" label="Attachments" printenabled="false" >
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+            </composition>
+            <composition relationship="aticket" label="Audit Log" detailschema="">
+              <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="compositionlist" orderbyfield="eaudittimestamp desc"/>
+            </composition>
+          </section>
+        </schema>
+      </schemas>
+    </application>
+    
+    <application entity="aticket" name="aticket" title="Ticket Audit">
+      <schemas>
+        <schema id="compositionlist" title="Ticket Audit List" stereotype="compositionlist">
+          <field attribute="eaudittimestamp" label="e_Audit">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+          </field>
+          <field attribute="eauditusername" label="e_Audit User Name"/>
+          <field attribute="internalpriority" label="Internal Priority"/>
+          <field attribute="classificationid" label="Classification"/>
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="ownergroup" label="Owner Group"/>
+          <field attribute="impact" label="Impact"/>
+          <field attribute="urgency" label="Urgency"/>
+          <field attribute="actualstart" label="Actual Start">
+            <renderer type="datetime"/>
+          </field>
+          <field attribute="actualfinish" label="Actual Finish">
+            <renderer type="datetime"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="woactivity" name="woactivity" title="WO Activity">
+      <schemas>
+        <schema id="list" title="woactivity" stereotype="compositionlist" redeclaring="true">
+          <field attribute="wosequence" label="Sequence" />
+          <field attribute="wonum" label="Activity"/>
+          <field attribute="description" label="Summary"/>
+          <field attribute="location" label="Location" />
+          <field attribute="assetnum" label="Asset" />
+          <field attribute="cinum" label="Configuration Item"/>
+          <field attribute="status" label="Status" />
+          <field attribute="slaapplied" label="SLA Applied">
+            <renderer type="checkbox"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
     <application name="itdthirdparty" title="Third Party Ticket" entity="itdthirdparty">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-ticket"/>
+      </properties>
       <schemas>
         <schema id="compositionlist" stereotype="compositionlist" title="Third Party Ticket List">
           <field attribute="itdthirdpartyid" hidden="true"/>
@@ -315,4 +737,5 @@
       </schemas>
     </application>
   </applications>
+  
 </metadata>

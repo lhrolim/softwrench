@@ -97,7 +97,11 @@ namespace softWrench.sW4.Data.Persistence {
                         }
                     }
                 } else {
-                    dictionary.Add(key, defaultDisplayable.DefaultValue);
+                    var defaultValue = defaultDisplayable.DefaultValue;
+                    if (defaultValue == "@now" && !"date".EqualsIc(defaultDisplayable.RendererType)) {
+                        defaultValue = "@nowext";
+                    }
+                    dictionary.Add(key, defaultValue);
                 }
             }
             return dictionary;
@@ -160,6 +164,8 @@ namespace softWrench.sW4.Data.Persistence {
                 value = user.SiteId;
             } else if (key.Equals("@now")) {
                 value = DateTime.Now.ToShortDateString();
+            } else if (key.Equals("@nowext")) {
+                value = DateTime.Now.FromServerToRightKind().ToString();
             } else if (key.StartsWith(UserPrefix)) {
                 value = ParseUserProperty(key, user);
             } else if (key.StartsWith(PastFunctionPrefix)) {
