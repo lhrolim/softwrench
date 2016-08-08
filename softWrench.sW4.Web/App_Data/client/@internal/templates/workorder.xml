@@ -777,6 +777,8 @@
           
           <composition relationship="worklog" label="Work Logs" />
           <composition relationship="labtrans" label="Labor">
+            <event type="beforedelete" service="laborService" method="confirmPossibleTimer"/>
+            <event type="afterdelete" service="laborService" method="cancelPossibleTimer"/>
             <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
           </composition>
           <composition relationship="attachment" label="Attachments">
