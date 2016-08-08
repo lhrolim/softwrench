@@ -1,0 +1,38 @@
+[
+  {
+    "application": "labtrans",
+    "action": "crud_update",
+    "actiondescription": "Update Labor Validation",
+    "data": {
+      "labtransid": 103463,
+      "orgid": "EAGLENA",
+      "siteid": "BEDFORD",
+      "enterby": "AHALIM",
+      "genapprservreceipt": 1,
+      "payrate": 0,
+      "premiumpayrate": null,
+      "linecost": 0,
+      "transdate": "2016-06-20T10:48:00+05:30",
+      "enterdate": "2016-06-20T10:48:00+05:30",
+      "startdate": "2016-06-16T12:30:00+05:30",
+      "regularhrs": 6,
+      "premiumpayhours": null,
+      "laborcode": "BARRY",
+      "craft": "MECH",
+      "transtype": "WORK",
+      "refwo": "2206",
+      "location": "ADDR2002",
+      "assetnum": null,
+      "gldebitacct": "",
+      "premiumpaycode": null,
+      "rowstamp": 41691302,
+      "ppcraftrate_premiumpay_.description": null,
+      "ppcraftrate_premiumpay_.defaultrate": null,
+      "ppcraftrate_premiumpay_.premiumpayid": null,
+      "ppcraftrate_premiumpay_.rowstamp": null,
+      "labor_.worksite": null,
+      "laborcraftrate_.rate": null,
+      "ppcraftrate_.rate": null
+    }
+  }
+]
