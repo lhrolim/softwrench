@@ -26,7 +26,7 @@
                 return;
             }
             angular.forEach(displayables, function (field) {
-                if (field.rendererType !== "numericinput") {
+                if (field.rendererType !== "numericinput" || field.rendererParameters["numberType"] === "double" || field.rendererParameters["numberType"] === "float") {
                     return;
                 }
                 if (!datamap[field.attribute]) {
