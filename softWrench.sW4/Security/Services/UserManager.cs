@@ -99,7 +99,7 @@ namespace softWrench.sW4.Security.Services {
             return user;
         }
 
-        public static IEnumerable<User> GetUserByPersonIds(IEnumerable<string> personIds ) {
+        public static IEnumerable<User> GetUserByPersonIds(IEnumerable<string> personIds) {
             return SWDBHibernateDAO.GetInstance().FindByQuery<User>(User.UserByMaximoPersonIds, personIds) ?? null;
         }
 
@@ -117,7 +117,7 @@ namespace softWrench.sW4.Security.Services {
                     personid += HlagPrefix;
                 }
             }
-            var user = UserSyncManager.GetUserFromMaximoByUserName(personid, null,true);
+            var user = UserSyncManager.GetUserFromMaximoByPersonId(personid, true);
             if (user == null) {
                 //if the user does not exist on maximo, then we should not create it on softwrench either
                 return null;
@@ -138,7 +138,7 @@ namespace softWrench.sW4.Security.Services {
                 } catch (Exception e) {
                     if (_ldapManager.IsLdapSetup()) {
                         //recovering from scenarios where there might have been an already created user on softwrench with a personid equal to an existing user in maximo
-                        var legacyUser = DAO.FindSingleByQuery<User>(User.UserByUserNameOrPerson, user.UserName,user.MaximoPersonId);
+                        var legacyUser = DAO.FindSingleByQuery<User>(User.UserByUserNameOrPerson, user.UserName, user.MaximoPersonId);
                         if (legacyUser != null) {
                             legacyUser.UserName = user.UserName;
                             legacyUser.MaximoPersonId = user.MaximoPersonId;
@@ -157,7 +157,7 @@ namespace softWrench.sW4.Security.Services {
                 return existingUser;
             }
 
-            var user = UserSyncManager.GetUserFromMaximoByUserName(existingUser.MaximoPersonId, existingUser.Id);
+            var user = UserSyncManager.GetUserFromMaximoBySwUser(existingUser);
             if (user == null) {
                 return existingUser;
             }
@@ -178,7 +178,7 @@ namespace softWrench.sW4.Security.Services {
         public User FindUserByLink(string tokenLink, out bool hasExpired) {
             var user = _userLinkManager.RetrieveUserByLink(tokenLink, out hasExpired);
             if (user != null) {
-                var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(user.UserName, user.Id);
+                var maximoUser = UserSyncManager.GetUserFromMaximoBySwUser(user);
                 user.MergeMaximoWithNewUser(maximoUser);
             }
             return user;
@@ -209,7 +209,10 @@ namespace softWrench.sW4.Security.Services {
                     return "The email {0} is not registered on the database".Fmt(userNameOrEmail);
                 }
             }
-            user = UserSyncManager.GetUserFromMaximoByUserName(user.UserName, user.Id);
+            user = UserSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(user);
+            if (user.IsPoPulated()) {
+                return "User {0} not found".Fmt(userNameOrEmail);
+            }
             _userSetupEmailService.ForgotPasswordEmail(user, emailToSend);
             return null;
         }
@@ -219,8 +222,11 @@ namespace softWrench.sW4.Security.Services {
             if (user == null) {
                 throw new InvalidOperationException("user {0} not found".Fmt(userId));
             }
-            user = UserSyncManager.GetUserFromMaximoByUserName(user.UserName, user.Id);
-            _userSetupEmailService.SendActivationEmail(user, email);
+            user = UserSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(user);
+            if (user.IsPoPulated()) {
+                _userSetupEmailService.SendActivationEmail(user, email);
+            }
+
         }
 
         public bool VerifyChangePassword(InMemoryUser user) {

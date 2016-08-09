@@ -8,6 +8,7 @@ using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
+using JetBrains.Annotations;
 using log4net;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.services;
@@ -54,49 +55,35 @@ namespace softWrench.sW4.Security.Services {
             _userProfileManager = userProfileManager;
         }
 
+        [CanBeNull]
         public InMemoryUser DoLogin(User dbUser, string userTimezoneOffset) {
+
+            if (!dbUser.UserName.Equals("swadmin") && dbUser.IsActive.HasValue && dbUser.IsActive == false) {
+                //swadmin cannot be inactive--> returning a non active user, so that we can differentiate it from a not found user on screen
+                return InMemoryUser.NewAnonymousInstance(false);
+            }
+
             if (dbUser.Systemuser || dbUser.MaximoPersonId == null) {
                 //no need to sync to maximo, since there´s no such maximoPersonId
                 return UserFound(dbUser, userTimezoneOffset);
             }
-            var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.MaximoPersonId, dbUser.Id);
+            var maximoUser = UserSyncManager.GetUserFromMaximoBySwUser(dbUser);
             if (maximoUser == null) {
                 Log.WarnFormat("maximo user {0} not found", dbUser.MaximoPersonId);
-                return UserFound(dbUser, userTimezoneOffset);
+                return null;
             }
             maximoUser.MergeFromDBUser(dbUser);
-
-
             return UserFound(maximoUser, userTimezoneOffset);
         }
 
-        public InMemoryUser Login(User dbUser, string typedPassword, string userTimezoneOffset) {
+        [CanBeNull]
+        public InMemoryUser LoginCheckingPassword(User dbUser, string typedPassword, string userTimezoneOffset) {
             if (dbUser == null || !MatchPassword(dbUser, typedPassword)) {
                 return null;
             }
-            var maximoUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
-            if (maximoUser == null) {
-                if (dbUser.UserName.ToLower() == "swadmin") {
-                    return UserFound(dbUser, userTimezoneOffset);
-                }
-
-                Log.WarnFormat("user {0} not found on maximo with maximopersonid {1}, login unauthorized", dbUser.UserName, dbUser.MaximoPersonId);
-                return null;
-            }
-            maximoUser.MergeFromDBUser(dbUser);
-            return UserFound(maximoUser, userTimezoneOffset);
+            return DoLogin(dbUser, userTimezoneOffset);
         }
 
-        public InMemoryUser Login(string userName, string password, string userTimezoneOffset) {
-            var dbUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(LoginQuery, userName);
-            if (dbUser == null || !MatchPassword(dbUser, password)) {
-                return null;
-            }
-
-            dbUser = UserSyncManager.GetUserFromMaximoByUserName(userName, dbUser.Id);
-
-            return UserFound(dbUser, userTimezoneOffset);
-        }
 
         public static void Logout(string username) {
             if (Users.ContainsKey(username)) {
@@ -234,7 +221,7 @@ namespace softWrench.sW4.Security.Services {
             var fullUser = new User();
             LogicalThreadContext.SetData("executinglogin", "true");
             if (!swUser.Systemuser && swUser.MaximoPersonId != null) {
-                fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id, true);
+                fullUser = UserSyncManager.GetUserFromMaximoBySwUser(swUser);
                 if (fullUser == null) {
                     Log.WarnFormat("user {0} not found on database", swUser.MaximoPersonId);
                     fullUser = new User();
@@ -316,10 +303,6 @@ namespace softWrench.sW4.Security.Services {
             return maximoUser;
         }
 
-        public User FetchUser(string maximopersonid) {
-            User swUser = UserManager.GetUserByUsername(maximopersonid);
-            return UserSyncManager.GetUserFromMaximoBySwUser(swUser);
-        }
 
         public void HandleEvent(UserSavedEvent userEvent) {
             Users.Remove(userEvent.Login);

@@ -13,7 +13,7 @@
   
   <!--  <property key="email.smtp.timeout" value="10000"/>-->
   <!--property key="email.smtp.port" value="587"/-->
-  <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
+  <property key="email.smtp.host" value="10.50.100.15"/>
   <property key="email.stmp.enableSSL" value="false"/>
 
   <!--Sample UNC Doclink Path-->

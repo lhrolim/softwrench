@@ -14,6 +14,8 @@ namespace softwrench.sw4.user.classes.entities {
 
         private string _userName;
 
+
+        public const string ActiveUserByUserName = "from User where lower(UserName) = lower(?) and IsActive = true";
         public const string UserByUserName = "from User where lower(UserName) = lower(?)";
         public const string UserByUserNameOrPerson = "from User where lower(UserName) = lower(?) or lower(MaximoPersonId) = lower(?)";
         public const string UserByMaximoPersonIds = "from User where MaximoPersonId in (:p0)";
@@ -25,95 +27,79 @@ namespace softwrench.sw4.user.classes.entities {
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
-        public int? Id
-        {
+        public int? Id {
             get; set;
         }
 
         [Property]
-        public string UserName
-        {
-            get
-            {
+        public string UserName {
+            get {
                 return _userName == null ? null : _userName.ToLower();
             }
-            set
-            {
+            set {
                 _userName = value;
             }
         }
 
-        public Person Person
-        {
+        public Person Person {
             get; set;
         }
 
         [Property(TypeType = typeof(BooleanToIntUserType))]
-        public bool? IsActive
-        {
+        public bool? IsActive {
             get; set;
         }
 
 
-        public bool? MaximoActive
-        {
+        public bool? MaximoActive {
             get; set;
         }
 
         [Property]
-        public string CriptoProperties
-        {
+        public string CriptoProperties {
             get; set;
         }
         /// <summary>
         /// Users that exist only on softwrench but not in Maximo (at least not necessarily)
         /// </summary>
         [Property]
-        public bool Systemuser
-        {
+        public bool Systemuser {
             get; set;
         }
 
         [Property]
-        public string MaximoPersonId
-        {
+        public string MaximoPersonId {
             get; set;
         }
 
         [Property]
-        public string Password
-        {
+        public string Password {
             get; set;
         }
 
         [Property]
-        public string FirstName
-        {
+        public string FirstName {
             get; set;
         }
 
         [Property]
-        public string LastName
-        {
+        public string LastName {
             get; set;
         }
 
         [Property]
-        public string Email
-        {
+        public string Email {
             get; set;
         }
 
 
         [Property]
-        public string SiteId
-        {
+        public string SiteId {
             get; set;
         }
 
         [Property]
-        public string OrgId
-        {
+        public string OrgId {
             get; set;
         }
 
@@ -127,8 +113,7 @@ namespace softwrench.sw4.user.classes.entities {
         Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "user_id")]
         [OneToMany(2, ClassType = typeof(PersonGroupAssociation))]
-        public ISet<PersonGroupAssociation> PersonGroups
-        {
+        public ISet<PersonGroupAssociation> PersonGroups {
             get; set;
         }
 
@@ -137,8 +122,7 @@ namespace softwrench.sw4.user.classes.entities {
         Lazy = CollectionLazy.False)]
         [Key(1, Column = "user_id")]
         [ManyToMany(2, Column = "profile_id", ClassType = typeof(UserProfile))]
-        public ISet<UserProfile> Profiles
-        {
+        public ISet<UserProfile> Profiles {
             get; set;
         }
 
@@ -146,8 +130,7 @@ namespace softwrench.sw4.user.classes.entities {
         Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "user_id")]
         [OneToMany(2, ClassType = typeof(UserCustomRole))]
-        public ISet<UserCustomRole> CustomRoles
-        {
+        public ISet<UserCustomRole> CustomRoles {
             get; set;
         }
 
@@ -156,14 +139,12 @@ namespace softwrench.sw4.user.classes.entities {
           Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "user_id")]
         [OneToMany(2, ClassType = typeof(UserCustomConstraint))]
-        public ISet<UserCustomConstraint> CustomConstraints
-        {
+        public ISet<UserCustomConstraint> CustomConstraints {
             get; set;
         }
 
         [OneToOne(ClassType = typeof(UserPreferences), Lazy = Laziness.False, PropertyRef = "UserId", Cascade = "all")]
-        public UserPreferences UserPreferences
-        {
+        public UserPreferences UserPreferences {
             get; set;
         }
 
@@ -225,12 +206,22 @@ namespace softwrench.sw4.user.classes.entities {
             IsActive = IsActive ?? dbUSer.IsActive;
             PersonGroups = dbUSer.PersonGroups;
             CustomRoles = dbUSer.CustomRoles;
+            UserPreferences = dbUSer.UserPreferences;
             Profiles = !Profiles.IsEmpty ? Profiles : dbUSer.Profiles;
             MaximoPersonId = MaximoPersonId ?? dbUSer.MaximoPersonId;
             ChangePassword = ChangePassword ?? dbUSer.ChangePassword;
         }
 
         public void MergeMaximoWithNewUser(User newUser) {
+            if (newUser == null) {
+                return;
+            }
+
+            if (Person == null) {
+                Person = new Person();
+            }
+
+
             Person.LastName = UpdateIfNotNull(Person.LastName, newUser.Person.LastName);
             Person.FirstName = UpdateIfNotNull(Person.FirstName, newUser.Person.FirstName);
             Person.Department = UpdateIfNotNull(Person.Department, newUser.Person.Department);
@@ -295,10 +286,8 @@ namespace softwrench.sw4.user.classes.entities {
             return user;
         }
 
-        public string FullName
-        {
-            get
-            {
+        public string FullName {
+            get {
                 if (Person == null || (Person.FirstName == null && Person.LastName == null)) {
                     return FirstName + " " + LastName;
                 }
@@ -342,6 +331,10 @@ namespace softwrench.sw4.user.classes.entities {
             public override int GetHashCode() {
                 return (user != null ? user.GetHashCode() : 0);
             }
+        }
+
+        public bool IsPoPulated() {
+            return !string.IsNullOrEmpty(FullName);
         }
     }
 }

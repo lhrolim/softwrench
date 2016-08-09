@@ -27,7 +27,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             var authorized = false;
             var adminUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(softwrench.sw4.user.classes.entities.User.UserByUserName, "swadmin");
             if (adminUser.Password != null) {
-                var authenticatedAdminUser = SecurityFacade.GetInstance().Login(adminUser, password, string.Empty);
+                var authenticatedAdminUser = SecurityFacade.GetInstance().LoginCheckingPassword(adminUser, password, string.Empty);
                 if (authenticatedAdminUser != null) {
                     if (!user.IsInRole(Role.SysAdmin)) {
                         var adminRole = _dao.FindSingleByQuery<Role>(Role.RoleByName, Role.SysAdmin);

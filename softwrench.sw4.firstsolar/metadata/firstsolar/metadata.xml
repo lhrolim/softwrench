@@ -845,6 +845,7 @@
 
       <schemas>
         <list platform="mobile" title="WO - Group">
+          
           <filters>
             <datefilter attribute="#assignment_.scheduledate" label="Scheduled Start Date"/>
             <optionfilter attribute="wopriority" provider="realpriority_.description" />
