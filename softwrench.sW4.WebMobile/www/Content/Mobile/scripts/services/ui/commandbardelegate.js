@@ -22,14 +22,9 @@
             const componetHeights = toolbarPrimary + toolbarSecondary + headerTitle + headerDescription;
             const top = angular.isNumber(scrollPosition) && scrollPosition >= 0 ? scrollPosition : 0;
             const windowHeight = $(window).height();
-            const offset = (windowHeight - componetHeights - 134) + top;
-            const singleCommand = commandBarElement[0].querySelector(".button-fab-single");
+            const offset = (windowHeight - componetHeights - 110) + top;
 
             $(commandBarElement).css("top", offset);
-            if (singleCommand) {
-                const singleCommandOffset = offset + singleCommand.offsetHeight;
-                $(singleCommand).css("top", singleCommandOffset);
-            }
         }
 
         //#endregion
