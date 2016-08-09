@@ -12,6 +12,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string BooleanFilterElement = "booleanfilter";
         public const string ModalFilterElement = "modalfilter";
         public const string NumericFilterElement = "numericfilter";
+        public const string DateFilterElement = "datefilter";
         public const string BaseFilterElement = "filter";
 
         public const string OptionElement = "option";
@@ -31,6 +32,8 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string TargetSchemaAttribute = "targetschema";
         public const string ServiceAttribute = "service";
         public const string AdvancedFilterSchemaAttribute = "advancedfilterschema";
+        public const string AllowFutureAttribute = "allowfuture";
+        public const string DateOnlyAttribute = "dateonly";
 
         public const string FilterNamespace = "http://www.controltechnologysolutions.com/filters";
     }

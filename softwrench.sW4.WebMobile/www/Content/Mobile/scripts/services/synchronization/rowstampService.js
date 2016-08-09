@@ -3,7 +3,7 @@
 
     mobileServices.constant("rowstampConstants", {
         //above this limit framework shall no longer produce the full rowstamp map, but rather just pass the maxrowstamp to the server
-        maxItemsForFullStrategy: 300
+        maxItemsForFullStrategy: 1000
     });
 
     mobileServices.factory('rowstampService', ["$q", "$log", "swdbDAO", "offlineEntities", "rowstampConstants", function ($q, $log, swdbDAO, offlineEntities, rowstampConstants) {

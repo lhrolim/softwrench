@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
+using softwrench.sw4.Shared2.Metadata.Menu;
 using softwrench.sw4.Shared2.Metadata.Modules;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Menu;
@@ -76,6 +77,27 @@ namespace softWrench.sW4.Metadata.Menu {
             SchemaMode mode;
             Enum.TryParse(modeAttr, true, out mode);
             return new ApplicationMenuItemDefinition(id, title, role, tooltip, icon, application, schema, mode, PropertyUtil.ConvertToDictionary(parameters), moduleName, permissionExpression, customizationPosition);
+        }
+
+        [NotNull]
+        private static MenuBaseDefinition ParseService(XElement xElement, ICollection<ModuleDefinition> modules) {
+            var id = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseIdAttribute).ValueOrDefault((string)null);
+            var title = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseTitleAttribute).ValueOrDefault((string)null);
+            var tooltip = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseTipAttribute).ValueOrDefault((string)null);
+            var icon = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseIconAttribute).ValueOrDefault((string)null);
+            var role = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseRoleAttribute).ValueOrDefault((string)null);
+            var customizationPosition = xElement.Attribute(XmlMenuMetadataSchema.CustomizationPositionAttribute).ValueOrDefault((string)null);
+
+            var moduleName = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleName).ValueOrDefault((string)null);
+            var moduleAlias = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleAlias).ValueOrDefault((string)null);
+            if (moduleName != null) {
+                modules.Add(new ModuleDefinition(moduleName, moduleAlias));
+            }
+
+            var service = xElement.Attribute(XmlMenuMetadataSchema.ServiceMenuServiceAttribute).Value;
+            var method = xElement.Attribute(XmlMenuMetadataSchema.ServiceMenuMethodAttribute).Value;
+
+            return new ServiceMenuItemDefinition(id, title, role, tooltip, icon, customizationPosition, service, method);
         }
 
         [NotNull]
@@ -180,12 +202,18 @@ namespace softWrench.sW4.Metadata.Menu {
                 case XmlMenuMetadataSchema.ActionElement:
                 return ParseAction(xElement, modules);
 
+                case XmlMenuMetadataSchema.ServiceElement:
+                return ParseService(xElement, modules);
+
                 case XmlMenuMetadataSchema.LinkElement:
                 return ParseLink(xElement, modules);
+
                 case XmlMenuMetadataSchema.ApplicationElement:
                 return ParseApplication(xElement, modules);
+
                 case XmlMenuMetadataSchema.ResourceRefElement:
                 return ParseResourceRef(xElement, modules);
+
                 case XmlMenuMetadataSchema.DividerElement:
                 return ParseDivider(xElement);
             }

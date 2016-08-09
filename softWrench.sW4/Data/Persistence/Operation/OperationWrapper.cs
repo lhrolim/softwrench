@@ -79,6 +79,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
                     crudOperationData.UserId = UserId;
                 }
                 crudOperationData.SiteId = SiteId;
+                _operationData = crudOperationData;
                 return crudOperationData;
             }
 

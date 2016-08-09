@@ -13,7 +13,7 @@
   
   <!--  <property key="email.smtp.timeout" value="10000"/>-->
   <!--property key="email.smtp.port" value="587"/-->
-  <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
+  <property key="email.smtp.host" value="10.50.100.15"/>
   <property key="email.stmp.enableSSL" value="false"/>
 
   <!--Sample UNC Doclink Path-->
@@ -32,7 +32,7 @@
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png,lic"/>
   <property key="sourcemapping" value="smartcloud7.5"/>
   <property key="targetmapping" value="smartcloud7.5"/>
-  <property key ="defaultEmail" value="support@kogtsupport24.com"/>
+  <property key ="defaultEmail" value="support@kdisupport24.com"/>
   <property key="notifications.activityStream.enabled" value="true"/>
   <property key="notifications.activityStream.refreshRate" value="2"/>
   <property key="notifications.updateJob.refreshRate" value="2"/>

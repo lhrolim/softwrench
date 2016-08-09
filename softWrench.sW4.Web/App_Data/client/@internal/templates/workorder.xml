@@ -690,9 +690,11 @@
           <commandbars>
             <commandgroup position="actions">
 <!--              <container label="Workflow" id="actioncontainer" icon="fa-bolt">-->
-                <command id="initiateWorkflow" icon="fa-play" label="Initiate Workflow" parameters="schema,datamap" service="workflowService" method="initiateWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
-                <command id="routeWorkflow" icon="fa-step-forward" label="Route Workflow" service="workflowService" method="routeWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
-                <command id="stopWorkflow" icon="fa-stop" label="Stop WorkFlow" service="workflowService" method="stopWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
+              <command id="initiateWorkflow" icon="fa-play" label="Initiate Workflow" parameters="schema,datamap" service="workflowService" method="initiateWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
+              <command id="routeWorkflow" icon="fa-step-forward" label="Route Workflow" service="workflowService" method="routeWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
+              <command id="stopWorkflow" icon="fa-stop" label="Stop WorkFlow" service="workflowService" method="stopWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
+              <!-- Create new SR as Related Record -->
+              <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>
 <!--              </container>-->
             </commandgroup>
           </commandbars>
@@ -775,6 +777,8 @@
           
           <composition relationship="worklog" label="Work Logs" />
           <composition relationship="labtrans" label="Labor">
+            <event type="beforedelete" service="laborService" method="confirmPossibleTimer"/>
+            <event type="afterdelete" service="laborService" method="cancelPossibleTimer"/>
             <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
           </composition>
           <composition relationship="attachment" label="Attachments">
@@ -784,9 +788,9 @@
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
               <command id="startlabtrans" service="laborService" method="startLaborTransaction" 
-                       icon="ion-play" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" />
+                       icon="ion-play" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" cssclasses="green" />
               <command id="finishlabtrans" service="laborService" method="finishLaborTransaction" 
-                       icon="ion-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" />
+                       icon="ion-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" cssclasses="red"/>
             </commandgroup>
           </commandbars>
           

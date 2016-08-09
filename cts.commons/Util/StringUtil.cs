@@ -68,6 +68,16 @@ namespace cts.commons.portable.Util {
             return -1;
         }
 
+
+        public static string SubStringBeforeFirst(this string source, char charToSearch, int initialIndex=0) {
+            var idx = source.IndexOf(charToSearch);
+            if (idx == -1) {
+                return source.Substring(initialIndex);
+            }
+            return source.Substring(initialIndex, idx-1);
+        }
+
+
         public static int CountNumberOfOccurrences(this string source, char charToSearch) {
             int count = 0;
             for (int i = 0; i < source.Length; i++) {

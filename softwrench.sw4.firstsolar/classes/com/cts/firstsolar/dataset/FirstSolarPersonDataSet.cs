@@ -32,25 +32,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             string operation) {
             var baseUser = base.PopulateSwdbUser(application, json, id, operation);
             var facilitiesToken = ParseFacilities(json);
-            var preferences = baseUser.UserPreferences;
-            if (preferences.GenericProperties == null) {
-                preferences.GenericProperties = new HashedSet<GenericProperty>();;
-            }
-            var facilitiesProp = preferences.GenericProperties.FirstOrDefault(f => f.Key.Equals(FirstSolarConstants.FacilitiesProp));
-            if (facilitiesProp == null) {
-                preferences.GenericProperties.Add(new GenericProperty() {
-                    Key = FirstSolarConstants.FacilitiesProp,
-                    Value = facilitiesToken,
-                    UserPreferences = preferences,
-                    Type = "list"
-                });
-            } else {
-                if (facilitiesToken.Equals("")) {
-                    preferences.GenericProperties.Remove(facilitiesProp);
-                } else {
-                    facilitiesProp.Value = facilitiesToken;
-                }
-            }
+            _userFacilityBuilder.PopulatePreferredFacilities(baseUser, facilitiesToken);
             return baseUser;
         }
 

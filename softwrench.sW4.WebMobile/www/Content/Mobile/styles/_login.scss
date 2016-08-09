@@ -41,10 +41,9 @@
                 overflow: visible;
                 white-space: normal;
 
-                .users {
-                    .name {
-                        width: 140px;
-                    }
+                .button-demo {
+                    background-color: $cts-blue;
+                    color: #fff;
                 }
             }
         }

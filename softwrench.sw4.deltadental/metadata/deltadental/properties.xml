@@ -18,7 +18,7 @@
       a list of accepted values
   -->
   <property key="maximoutc" value="US Mountain Standard Time"/>
-  <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
+  <property key="email.smtp.host" value="10.50.100.15"/>
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>

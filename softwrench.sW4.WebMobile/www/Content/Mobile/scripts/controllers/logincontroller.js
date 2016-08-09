@@ -20,9 +20,17 @@
                 }
             };
 
-            $scope.login = function () {
+            $scope.login = function (username, password) {
                 loadingService.showDefault();
-                
+
+                if (!!username) {
+                    $scope.data.username = username;
+                }
+
+                if (!!password) {
+                    $scope.data.password = password;
+                }
+
                 securityService.login($scope.data.username, $scope.data.password)
                     .then(function (data) {
                         routeService.go('main.home');

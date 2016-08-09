@@ -27,7 +27,7 @@ namespace softWrench.sW4.Web.Controllers {
                     MetadataProvider.StubReset();
                     _eventDispatcher.Dispatch(new ClearCacheEvent());
                 }
-
+                SecurityFacade.Logout(user.Login);
                 DoLogout(Session, Response);
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/", "")));
             } catch {

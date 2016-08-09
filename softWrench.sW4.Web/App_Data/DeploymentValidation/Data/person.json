@@ -1,0 +1,314 @@
+﻿[
+  {
+    "application": "person",
+    "action": "crud_update",
+    "actiondescription": "Update Person Validation",
+    "schemakey": "detail.input.web",
+    "data": {
+      "personuid": 1550,
+      "personid": "AHABBU",
+      "firstname": "Ashwini",
+      "lastname": "Habbu",
+      "department": null,
+      "langcode": "EN",
+      "locationorg": "EAGLENA",
+      "locationsite": "BEDFORD",
+      "location": "ADDR2001",
+      "rowstamp": 42848703,
+      "maxuser_.active": 0,
+      "#isactive": false,
+      "#signature": "",
+      "#profiles": [ ],
+      "#availableprofiles": [
+        {
+          "id": 1,
+          "name": "approver",
+          "deletable": false,
+          "description": "Activates newly created users",
+          "roles": [ ],
+          "applicationPermissions": [ ]
+        }
+      ],
+      "ldapEnabled": false,
+      "statistics": null,
+      "activationlink": null,
+      "#userid": 194,
+      "#maxactive": false
+    },
+    "subdata": [
+      {
+        "property": "email_",
+        "addto": "main",
+        "type": "array",
+        "data": [
+          {
+            "personid": "AHABBU",
+            "emailid": 148932,
+            "loweremail": "123@123.com",
+            "emailaddress": "123@123.com",
+            "type": "WORK",
+            "isprimary": 1
+          }
+        ]
+      },
+      {
+        "property": "phone_",
+        "addto": "main",
+        "type": "array",
+        "data": [
+          {
+            "personid": "AHABBU",
+            "phoneid": 148166,
+            "phonenum": "12345678998765432100",
+            "type": "WORK",
+            "isprimary": 1
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "application": "person",
+    "action": "crud_update",
+    "actiondescription": "Delete Person Email",
+    "schemakey": "detail.input.web",
+    "data": {
+      "personuid": 1550,
+      "personid": "AHABBU",
+      "firstname": "Ashwini",
+      "lastname": "Habbu",
+      "department": null,
+      "langcode": "EN",
+      "locationorg": "EAGLENA",
+      "locationsite": "BEDFORD",
+      "location": "ADDR2001",
+      "rowstamp": 42850391,
+      "maxuser_.active": 0,
+      "#isactive": false,
+      "#signature": "",
+      "#profiles": [ ],
+      "#availableprofiles": [
+        {
+          "id": 1,
+          "name": "approver",
+          "deletable": false,
+          "description": "Activates newly created users",
+          "roles": [ ],
+          "applicationPermissions": [ ]
+        }
+      ],
+      "ldapEnabled": false,
+      "statistics": null,
+      "activationlink": null,
+      "#userid": 194,
+      "#maxactive": false,
+      "phone_": [
+        {
+          "personid": "AHABBU",
+          "phoneid": 148168,
+          "phonenum": "987654321",
+          "type": "WORK",
+          "isprimary": 0
+        },
+        {
+          "personid": "AHABBU",
+          "phoneid": 148166,
+          "phonenum": "12345678998765432100",
+          "type": "WORK",
+          "isprimary": 1
+        }
+      ],
+      "email_": [
+        {
+          "personid": "AHABBU",
+          "emailid": 148940,
+          "loweremail": "test@test.org",
+          "emailaddress": "test@test.org",
+          "type": "WORK",
+          "isprimary": 0
+        },
+        {
+          "personid": "AHABBU",
+          "emailid": 148938,
+          "loweremail": "test@test.in",
+          "emailaddress": "test@test.in",
+          "type": "WORK",
+          "isprimary": 0
+        },
+        {
+          "personid": "AHABBU",
+          "emailid": 148936,
+          "loweremail": "test@test.com",
+          "emailaddress": "test@test.com",
+          "type": "WORK",
+          "isprimary": 0
+        },
+        {
+          "personid": "AHABBU",
+          "emailid": 148934,
+          "loweremail": "user@testemail.com",
+          "emailaddress": "user@testemail.com",
+          "type": "WORK",
+          "isprimary": 0
+        },
+        {
+          "personid": "AHABBU",
+          "emailid": 148932,
+          "loweremail": "123@123.com",
+          "emailaddress": "123@123.com",
+          "type": "WORK",
+          "isprimary": 1
+        },
+        {
+          "personid": "AHABBU",
+          "emailid": 148934,
+          "loweremail": "user@testemail.com",
+          "emailaddress": "user@testemail.com",
+          "isprimary": 0,
+          "type": "WORK",
+          "rowstamp": 42850313,
+          "#deleted": 1,
+          "#isDirty": true
+        }
+      ]
+    },
+    "compositiondata": {
+      "dispatchercomposition": "email_",
+      "id": "148934",
+      "operation": "crud_delete",
+      "data": {
+        "personid": "AHABBU",
+        "emailid": 148934,
+        "loweremail": "user@testemail.com",
+        "emailaddress": "user@testemail.com",
+        "isprimary": 0,
+        "type": "WORK",
+        "rowstamp": 42850313,
+        "#deleted": 1,
+        "#isDirty": true
+      }
+    }
+  },
+  {
+    "application": "person",
+    "action": "crud_update",
+    "actiondescription": "Delete Person Phone",
+    "schemakey": "detail.input.web",
+    "data": {
+      "personuid": 1550,
+      "personid": "AHABBU",
+      "firstname": "Ashwini",
+      "lastname": "Habbu",
+      "department": null,
+      "langcode": "EN",
+      "locationorg": "EAGLENA",
+      "locationsite": "BEDFORD",
+      "location": "ADDR2001",
+      "rowstamp": 42850391,
+      "maxuser_.active": 0,
+      "#isactive": false,
+      "#signature": "",
+      "#profiles": [ ],
+      "#availableprofiles": [
+        {
+          "id": 1,
+          "name": "approver",
+          "deletable": false,
+          "description": "Activates newly created users",
+          "roles": [ ],
+          "applicationPermissions": [ ]
+        }
+      ],
+      "ldapEnabled": false,
+      "statistics": null,
+      "activationlink": null,
+      "#userid": 194,
+      "#maxactive": false,
+      "phone_": [
+        {
+          "personid": "AHABBU",
+          "phoneid": 148168,
+          "phonenum": "987654321",
+          "type": "WORK",
+          "isprimary": 0
+        },
+        {
+          "personid": "AHABBU",
+          "phoneid": 148166,
+          "phonenum": "12345678998765432100",
+          "type": "WORK",
+          "isprimary": 1
+        },
+        {
+          "personid": "AHABBU",
+          "phoneid": 148168,
+          "phonenum": "987654321",
+          "isprimary": 0,
+          "type": "WORK",
+          "rowstamp": 42850392,
+          "#deleted": 1,
+          "#isDirty": true
+        }
+      ],
+      "email_": [
+        {
+          "personid": "AHABBU",
+          "emailid": 148940,
+          "loweremail": "test@test.org",
+          "emailaddress": "test@test.org",
+          "type": "WORK",
+          "isprimary": 0
+        },
+        {
+          "personid": "AHABBU",
+          "emailid": 148938,
+          "loweremail": "test@test.in",
+          "emailaddress": "test@test.in",
+          "type": "WORK",
+          "isprimary": 0
+        },
+        {
+          "personid": "AHABBU",
+          "emailid": 148936,
+          "loweremail": "test@test.com",
+          "emailaddress": "test@test.com",
+          "type": "WORK",
+          "isprimary": 0
+        },
+        {
+          "personid": "AHABBU",
+          "emailid": 148934,
+          "loweremail": "user@testemail.com",
+          "emailaddress": "user@testemail.com",
+          "type": "WORK",
+          "isprimary": 0
+        },
+        {
+          "personid": "AHABBU",
+          "emailid": 148932,
+          "loweremail": "123@123.com",
+          "emailaddress": "123@123.com",
+          "type": "WORK",
+          "isprimary": 1
+        }
+      ]
+    },
+    "compositiondata": {
+      "dispatchercomposition": "phone_",
+      "id": "148168",
+      "operation": "crud_delete",
+      "data": {
+        "personid": "AHABBU",
+        "phoneid": 148168,
+        "phonenum": "987654321",
+        "isprimary": 0,
+        "type": "WORK",
+        "rowstamp": 42850392,
+        "#deleted": 1,
+        "#isDirty": true
+      }
+    }    
+  }
+]
+

@@ -376,7 +376,7 @@ namespace softWrench.sW4.Metadata.Security {
                 var allProperties = Genericproperties;
                 var syncProperties = allProperties == null
                     ? new Dictionary<string, object>()
-                    : allProperties.Where(p => p.Key.StartsWith("sync.")).ToDictionary(p => p.Key, p => p.Value);
+                    : allProperties.Where(p => p.Key!=null && p.Key.StartsWith("sync.")).ToDictionary(p => p.Key, p => p.Value);
                 syncProperties.Add("siteid", SiteId);
                 syncProperties.Add("orgid", OrgId);
                 return syncProperties;

@@ -1,0 +1,32 @@
+[
+  {
+    "application": "receiving",
+    "action": "crud_update",
+    "actiondescription": "Update Receiving Validation",
+    "data": {
+      "ponum": "20009",
+      "siteid": "BEDFORD",
+      "description": "Sale lease machines",
+      "rowstamp": 12554287
+    },
+    "subdata": [
+      {
+        "property": "matrectrans_",
+        "addto": "main",
+        "type": "main",
+        "data": [
+          {
+            "ponum": "20009",
+            "matrectransid": 1336104849,
+            "polinenum": 1,
+            "itemnum": "D600",
+            "description": "Standard Notebook Computer",
+            "quantity": 1,
+            "siteid": "BEDFORD",
+            "orgid": "EAGLENA"
+          }
+        ]
+      }
+    ]
+  }
+]

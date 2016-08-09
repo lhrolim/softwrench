@@ -97,16 +97,17 @@ namespace softwrench.sw4.offlineserver.controller {
 
         [HttpGet]
         public string Counts() {
+            var user = SecurityFacade.CurrentUser();
 
             var req = new SynchronizationRequestDto() {
-                ReturnNewApps = true
+                ReturnNewApps = true,
+                UserData = new UserSyncData(user)
             };
 
             _contextLookuper.LookupContext().OfflineMode = true;
 
             var watch = Stopwatch.StartNew();
-            var user = SecurityFacade.CurrentUser();
-            var appData = _syncManager.GetData(req, user, null);
+            var appData = _syncManager.GetData(req, user);
             watch.Stop();
             var appEllapsed = watch.ElapsedMilliseconds;
 
@@ -140,8 +141,8 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
         [HttpPost]
-        public SynchronizationResultDto PullNewData([FromUri]SynchronizationRequestDto synchronizationRequest, JObject rowstampMap) {
-            return _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser(), rowstampMap);
+        public SynchronizationResultDto PullNewData(SynchronizationRequestDto synchronizationRequest) {
+            return _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
         }
 
         [HttpPost]
@@ -151,7 +152,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
 
         [HttpPost]
-        public AssociationSynchronizationResultDto PullSingleAssociationData([FromUri]String applicationToFetch, JObject rowstampMap) {
+        public AssociationSynchronizationResultDto PullSingleAssociationData([FromUri]string applicationToFetch, JObject rowstampMap) {
             return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), rowstampMap, applicationToFetch);
         }
 

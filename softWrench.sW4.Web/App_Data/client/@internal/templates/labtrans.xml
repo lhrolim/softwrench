@@ -432,14 +432,19 @@
           <field attribute="regularhrs" label="Regular Hours">
             <renderer type="default" params="formatter=@laborService.formatRegularHours"/>
           </field>
-          <field attribute="linecost" label="Line Cost">
-            <renderer type="default" params="formatter=money"/>
-          </field>
           <field attribute="transtype" label="Work Type"/>
           <field attribute="gldebitacct" label="GL Debit Account" />
           <field attribute="genapprservreceipt" label="Approved?">
             <renderer type="default" params="formatter=@laborService.formatApproved"/>
           </field>
+
+          <commandbars>
+            <commandgroup platform="mobile" position="mobile.composition">
+              <removecommand id="additem"/>
+              <command id="addLabor" service="crudContextService" method="createNewCompositionItem" icon="fa-plus" showexpression="service:laborService.showLaborCreationCommand"/>
+              <command id="finishlabtrans" service="laborService" method="finishLaborTransactionFromComposition" icon="fa-stop" showexpression="service:laborService.showLaborFinishCommand"/>
+            </commandgroup>
+          </commandbars>
         </list>
         
         <detail stereotype="detail" title="Labor Reporting" platform="mobile">
@@ -456,10 +461,10 @@
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
           
-          <field label="Labor" attribute="laborcode" readonly="true" requiredexpression="true" />
+          <field label="Labor" attribute="laborcode" requiredexpression="true" />
           <field label="Pay Rate" attribute="payrate" readonly="true" requiredexpression="true"/>
-          <field label="Craft" attribute="craft" readonly="true" requiredexpression="true" />
-          <field label="Line Cost" attribute="linecost" readonly="true" requiredexpression="true" />
+          <field label="Craft" attribute="craft" requiredexpression="true" />
+          <field label="Line Cost" attribute="linecost" readonly="true" requiredexpression="true" hidden="true"/>
 
           <field attribute="transtype" label="Work Type" 
                  requiredexpression="true" readonly="true" 
@@ -469,7 +474,7 @@
           <field label="Start Date" attribute="startdate" default="@now" requiredexpression="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=true;allowfuture=false" />
           </field>
-          <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8">
+          <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="0">
             <event type="afterchange" service="laborService" method="updateLineCost"/>
             <renderer type="numericinput" params="min=0;step=0.01;numberType=double;formatter=@laborService.formatRegularHours"/>
           </field>

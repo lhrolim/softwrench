@@ -122,6 +122,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             LongDescriptionHandler.HandleLongDescription(sr, (CrudOperationData)maximoTemplateData.OperationData);
 
             HandleServiceAddress(maximoTemplateData);
+            MultiAssetLocciHandler.HandleMultiAssetLoccis((CrudOperationData)maximoTemplateData.OperationData, sr);
 
             _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
         }

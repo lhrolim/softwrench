@@ -250,7 +250,7 @@
 
         entities.DataEntry.insertOrReplacePattern = "INSERT OR REPLACE INTO DataEntry (application,datamap,pending,isDirty,remoteId,rowstamp,id,textindex01,textindex02,textindex03,textindex04,textindex05,numericindex01,numericindex02,dateindex01,dateindex02,dateindex03) values (?,?,0,0,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-        entities.DataEntry.deleteQueryPattern = "delete from DataEntry where 'remoteId' in(?) and 'application'=?";
+        entities.DataEntry.deleteQueryPattern = "delete from DataEntry where remoteId in ({0}) and application='{1}'";
         entities.DataEntry.deleteInIdsStatement = "delete from DataEntry where id in(?) and application=?";
         entities.DataEntry.deleteLocalStatement = "delete from DataEntry where id=? and application=?";
 

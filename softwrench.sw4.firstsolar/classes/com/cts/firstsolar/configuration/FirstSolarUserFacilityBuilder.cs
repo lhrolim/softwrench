@@ -2,9 +2,11 @@
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.simpleinjector.Events;
+using Iesi.Collections.Generic;
 using log4net;
+using Newtonsoft.Json.Linq;
 using softwrench.sw4.offlineserver.events;
-using softWrench.sW4.Metadata.Security;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -13,6 +15,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
 
         private readonly IMaximoHibernateDAO _dao;
+        private readonly ISWDBHibernateDAO _swdbDao;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof (FirstSolarOfflineSiteIdBuilder));
 
@@ -45,8 +48,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             { "6801-CLN", new []{"CLN"} },
         };
 
-        public FirstSolarUserFacilityBuilder(IMaximoHibernateDAO dao) {
+        public FirstSolarUserFacilityBuilder(IMaximoHibernateDAO dao, ISWDBHibernateDAO swdbDao) {
             _dao = dao;
+            _swdbDao = swdbDao;
         }
 
 
@@ -97,13 +101,49 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             genericproperties.Add(FirstSolarConstants.AvailableFacilitiesProp, facilityList);
 
             return genericproperties;
-
         }
 
+        public void PopulatePreferredFacilities(User user, string facilitiesToken) {
+            var preferences = user.UserPreferences;
+            if (preferences.GenericProperties == null) {
+                preferences.GenericProperties = new HashedSet<GenericProperty>();
+            }
+            var facilitiesProp = preferences.GenericProperties.FirstOrDefault(f => f.Key.Equals(FirstSolarConstants.FacilitiesProp));
+            if (facilitiesProp == null) {
+                preferences.GenericProperties.Add(new GenericProperty() {
+                    Key = FirstSolarConstants.FacilitiesProp,
+                    Value = facilitiesToken,
+                    UserPreferences = preferences,
+                    Type = "list"
+                });
+            } else {
+                if (facilitiesToken.Equals("")) {
+                    preferences.GenericProperties.Remove(facilitiesProp);
+                } else {
+                    facilitiesProp.Value = facilitiesToken;
+                }
+            }
+        }
 
         public void HandleEvent(PreSyncEvent eventToDispatch) {
             var user = SecurityFacade.CurrentUser();
-            AdjustUserFacilityProperties(user.Genericproperties, user.MaximoPersonId);
+            // AdjustUserFacilityProperties(eventToDispatch.Request.UserData.Properties, user.MaximoPersonId);
+            var requestProperties = eventToDispatch.Request.UserData.Properties;
+            object selectedFacilities;
+            if (!requestProperties.TryGetValue(FirstSolarConstants.FacilitiesProp, out selectedFacilities) || selectedFacilities == null) {
+                return;
+            }
+            // update inmemory
+            var selectedFacilitiesArray = ((JArray) selectedFacilities);
+            var selectedFacilitiesList = selectedFacilitiesArray.ToObject<List<string>>();
+            user.Genericproperties.Remove(FirstSolarConstants.FacilitiesProp);
+            user.Genericproperties.Add(FirstSolarConstants.FacilitiesProp, selectedFacilitiesList);
+            // update swuser db
+            var swUser = _swdbDao.FindSingleByQuery<User>(User.UserByUserName, user.Login);
+            var selectedFacilitiesToken = string.Join(",", selectedFacilitiesList);
+            PopulatePreferredFacilities(swUser, selectedFacilitiesToken);
+            _swdbDao.Save(swUser);
+            user.DBUser.UserPreferences = swUser.UserPreferences;
         }
     }
 }

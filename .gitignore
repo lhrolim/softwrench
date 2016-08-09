@@ -31,6 +31,8 @@ softWrench.sW4.Web/Content/Scripts/softwrench/shared
 Backup/
 
 softWrench.sW4.WebMobile/www/Content/Customers/**/
+!softWrench.sW4.WebMobile/www/Content/Customers/templates/
+softWrench.sW4.WebMobile/www/Content/Customers/templates/**/
 softWrench.sW4.WebMobile/www/Content/Shared/**/
 softWrench.sW4.WebMobile/www/Content/Vendor/scripts/*.js
 softWrench.sW4.WebMobile/www/Content/Vendor/fonts

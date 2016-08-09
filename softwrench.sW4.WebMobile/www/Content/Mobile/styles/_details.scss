@@ -47,12 +47,24 @@
 .crud-details {
     .crud-title {
         font-size: 16px;
-        font-weight: bold;
 
         .summary {
             color: #aaa;
             white-space: normal;
             font-weight: normal;
+        }
+
+        .featured {
+            float: right;
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+        .excerpt {
+            color: #aaa;
+            white-space: normal;
         }
     }
 
@@ -140,16 +152,23 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     }
 }
 
-.page-settings, .page-syncdetail, page-login {
-    .item-divider {
-        font-weight: bold;
-    }
+.page-settings, .page-syncdetail, .page-login, .page-userprofile {
+    .list {
+        .item-divider {
+            font-weight: bold;
+        }
 
-    .server {
-        input {
-            width: 100%;
-            color: #444 !important;
-            font-size: 16px;
+        .server {
+            input {
+                width: 100%;
+                color: #444 !important;
+                font-size: 16px;
+            }
+        }
+
+
+        strong {
+            color: #6e6e6e;
         }
     }
 }

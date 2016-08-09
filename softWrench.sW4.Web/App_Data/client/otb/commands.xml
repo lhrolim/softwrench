@@ -147,6 +147,10 @@
   <commandgroup platform="mobile" position="mobile.footer"></commandgroup>
   <!-- Header Bar position -->
   <commandgroup platform="mobile" position="mobile.header"></commandgroup>
+  <!-- Floating Action Button on compositions position -->
+  <commandgroup platform="mobile" position="mobile.composition">
+    <command id="additem" service="crudContextService" method="createNewCompositionItem" icon="fa-plus" showexpression="service:crudContextService.addCompositionAllowed"/>
+  </commandgroup>
   <!-- #endregion -->
 
 </commands>

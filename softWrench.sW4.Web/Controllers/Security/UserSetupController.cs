@@ -140,7 +140,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         private void AfterPasswordSet(SwUser user, string password, string userTimezoneOffset) {
             //logining in the user and redirecting him to home page
-            var inMemoryUser = SecurityFacade.GetInstance().Login(user, password, userTimezoneOffset);
+            var inMemoryUser = SecurityFacade.GetInstance().LoginCheckingPassword(user, password, userTimezoneOffset);
             AuthenticationCookie.SetSessionCookie(user.UserName, userTimezoneOffset, Response);
             FormsAuthentication.RedirectFromLoginPage(user.UserName, false);
             Thread.CurrentPrincipal = inMemoryUser;

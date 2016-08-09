@@ -91,7 +91,11 @@
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
-        
+        <relationship to="multiassetlocci" collection="true">
+          <relationshipAttribute from="ticketid" to="RECORDKEY" primary="true"/>
+          <relationshipAttribute from="class" to="RECORDCLASS" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
         
       </relationships>
       <connectorParameters>

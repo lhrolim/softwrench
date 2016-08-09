@@ -1,9 +1,9 @@
 ﻿(function (angular, _) {
     "use strict";
 
-    angular.module("sw_mobile_services").factory("offlineSchemaService", ["$log", "fieldService", "schemaService", "securityService", "dispatcherService", offlineSchemaService]);
+    angular.module("sw_mobile_services").factory("offlineSchemaService", ["$log", "fieldService", "schemaService", "securityService", "dispatcherService",  "metadataModelService", offlineSchemaService]);
 
-    function offlineSchemaService($log, fieldService, schemaService, securityService, dispatcherService) {
+    function offlineSchemaService($log, fieldService, schemaService, securityService, dispatcherService, metadataModelService) {
 
         const dateFormat = "MMM DD";
         const dateFormatHours = "MMM DD hh a";
@@ -12,8 +12,8 @@
         function loadDetailSchema(currentListSchema, currentApplication, selectedItem) {
             var detailSchemaId = "detail";
             var schemaDetailService = schemaService.getProperty(currentListSchema, "list.click.service");
-            var overridenSchema =  !!schemaDetailService && !!selectedItem
-                                    ? dispatcherService.invokeServiceByString(schemaDetailService, [currentApplication, currentListSchema, selectedItem]) 
+            var overridenSchema = !!schemaDetailService && !!selectedItem
+                                    ? dispatcherService.invokeServiceByString(schemaDetailService, [currentApplication, currentListSchema, selectedItem])
                                     : schemaService.getProperty(currentListSchema, "list.click.schema");
             if (overridenSchema) {
                 detailSchemaId = overridenSchema;
@@ -121,6 +121,29 @@
             return dateMoment.format(dateFormat);
         }
 
+
+        function locateRelatedListSchema(mainListSchema, childEntityName) {
+            const entityAssociation = mainListSchema.offlineAssociations[childEntityName];
+            const application = metadataModelService.getApplicationByName(entityAssociation.to, true);
+            return application.data.schemasList.find(s => s.stereotypeAttr === "list");
+        }
+
+        /**
+         * Receives a field on the format #xxx_.yyy and returns the relationship name (i.e xxx_ )
+         * @param {} transientFieldName 
+         * @returns {} 
+         */
+        function findRelatedEntityName(transientFieldName) {
+            if (!transientFieldName.contains(".")) {
+                return { attribute: transientFieldName };
+            }
+
+            const nonTransientValue = transientFieldName.substr(1);
+            const entityName = nonTransientValue.substr(0, nonTransientValue.indexOf("."));
+            const attribute = nonTransientValue.substr(nonTransientValue.indexOf(".")+1);
+            return { entityName, attribute };
+        }
+
         function buildDisplayValue(schema, qualifier, item) {
             if (schema == null) {
                 return null;
@@ -131,10 +154,10 @@
                 return null;
             }
 
-            if ("featured" === qualifier && ("datetime" === displayable.dataType || "timestamp" === displayable.dataType)) {
+            if ("featured" === qualifier && ("datetime" === displayable.dataType || "timestamp" === displayable.dataType || "datetime" === displayable.rendererType )) {
                 return formatDate(item[displayable.attribute], true, true);
             }
-            if ("featured" === qualifier && "date" === displayable.dataType) {
+            if ("featured" === qualifier && ("date" === displayable.dataType || "date" === displayable.rendererType)) {
                 return formatDate(item[displayable.attribute], false, false);
             }
 
@@ -151,14 +174,18 @@
             return !fields || fields.length <= 0 ? null : fields.find(f => f.attribute === attribute);
         }
 
+
+
         const service = {
-            loadDetailSchema: loadDetailSchema,
-            locateSchema: locateSchema,
-            locateSchemaByStereotype: locateSchemaByStereotype,
-            fillDefaultValues: fillDefaultValues,
-            locateDisplayableByQualifier: locateDisplayableByQualifier,
-            buildDisplayValue: buildDisplayValue,
-            getFieldByAttribute: getFieldByAttribute
+            loadDetailSchema,
+            locateSchema,
+            locateSchemaByStereotype,
+            locateRelatedListSchema,
+            fillDefaultValues,
+            findRelatedEntityName,
+            locateDisplayableByQualifier,
+            buildDisplayValue,
+            getFieldByAttribute
         };
         return service;
 

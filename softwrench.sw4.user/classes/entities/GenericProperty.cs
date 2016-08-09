@@ -1,4 +1,5 @@
-﻿using NHibernate.Mapping.Attributes;
+﻿using System.Collections.Generic;
+using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.user.classes.entities {
 
@@ -38,6 +39,9 @@ namespace softwrench.sw4.user.classes.entities {
                 return Value;
             }
             if (Type.Equals("list")) {
+                if (string.IsNullOrEmpty(Value)) {
+                    return new List<string>();
+                }
                 return Value.Split(',');
             }
             return Value;

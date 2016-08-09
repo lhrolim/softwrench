@@ -1,22 +1,40 @@
 ﻿<div class="commandbar {{getCommandBarStyleClass()}}" ng-if="commandBar.hasActiveCommands">
     <ng-switch on="position">
-        <div ng-switch-when="mobile.fab" class="action-fab">
-            <mfb-menu label="{{label}}"
-                      position="br"
-                      effect="slidein"
-                      toggling-method="click"
-                      active-icon="fa fa-times"
-                      resting-icon="fa fa-bolt">
-                <a mfb-button
-                   ng-repeat="command in commandBar.commands"
-                   ng-if="!isCommandHidden(command)"
-                   label="{{command.label}}"
-                   icon="{{command.icon}}"
-                   ng-click="executeCommand(command)"
-                   mfb-button-close></a>
-            </mfb-menu>
+
+        <div ng-switch-when="mobile.fab">
+            <div class="action-fab" ng-repeat="container in commandBar.containers" ng-if="container.hasActiveCommands">
+                <mfb-menu label="{{label}}"
+                          position="br"
+                          effect="slidein"
+                          toggling-method="click"
+                          active-icon="fa fa-times"
+                          resting-icon="fa {{ continer.icon || 'fa-bolt' }}">
+                    <a mfb-button
+                       ng-repeat="command in container.activeCommands"
+                       label="{{command.label}}"
+                       icon="{{command.icon}}"
+                       ng-click="executeCommand(command)"
+                       mfb-button-close>
+                    </a>
+                </mfb-menu>
+            </div>
+
+            <div ng-if="commandBar.childCommands.hasActiveCommands">
+                <button ng-repeat="command in commandBar.childCommands.activeCommands" ng-if="!isCommandHidden(command)"
+                        ng-click="executeCommand(command)"
+                        class="button button-fab-single"
+                        ng-class="command.cssClasses">
+                    <i class="{{command.icon}}"></i>
+                </button>
+            </div>
+
         </div>
 
+        <div ng-switch-when="mobile.composition">
+            <button class="button button-float" ng-click="executeCommand(commandBar.singleActiveCommand)">
+                <i class="fa {{commandBar.singleActiveCommand.icon}}"></i>
+            </button>
+        </div>
     </ng-switch>
 
 </div>

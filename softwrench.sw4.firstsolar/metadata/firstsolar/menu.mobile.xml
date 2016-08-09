@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="vertical" indexitem="WO">
+<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="vertical" indexitem="WO">
 
   <container title="Work Order" id="workorder" icon="fa-wrench">
     <application id="WO" title="Assigned to Me" ref="workorder" schema="list" icon="fa-table"/>
     <application id="OWO" title="Assigned to Group" ref="otherworkorder" schema="list" icon="fa-table"/>
   </container>
+
+  <!-- TODO: support for menu positioning. For now the profile is hardcoded in the ui -->
+  <!--<service id="userpofile" service="fsUserProfileService" method="goToMyProfile" title="User Profile" icon="fa-user"/>-->
+  
 </Menu>

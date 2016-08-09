@@ -1,9 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    
-
-    angular.module("softwrench").directive("commandBar", [function () {
+    angular.module("softwrench").directive("commandBar", ["commandBarDelegate", function (commandBarDelegate) {
         const directive = {
             restrict: "E",
             templateUrl: "Content/Mobile/templates/directives/commandbar.html",
@@ -15,16 +13,42 @@
                 label: "@"
             },
 
-            controller: ["$scope", "offlineCommandService", function ($scope, offlineCommandService) {
+            controller: ["$scope", "$rootScope", "offlineCommandService", function ($scope, $rootScope, offlineCommandService) {
 
-                class CommandBar {
+                class CommandContainer {
                     constructor(commands) {
                         this.commands = commands;
                     }
+                    get activeCommands() {
+                        return this.hasCommands
+                            ? this.commands.filter(c => !offlineCommandService.isCommandHidden($scope.datamap, $scope.schema, c))
+                            : [];
+                    }
+                    get hasCommands() {
+                        return angular.isArray(this.commands) && this.commands.length > 0;
+                    }
                     get hasActiveCommands() {
-                        return angular.isArray(this.commands) && 
-                            this.commands.length > 0 && 
-                            this.commands.some(c => !offlineCommandService.isCommandHidden($scope.datamap, $scope.schema, c));
+                        return this.activeCommands.length > 0;
+                    }
+                }
+
+                class CommandBar {
+                    constructor(commands) {
+                        const commandsDefined = angular.isArray(commands) && commands.length > 0;
+
+                        this.containers = commandsDefined
+                            ? commands.filter(c => c.type === "ContainerCommand").map(c => new CommandContainer(c.displayables))
+                            : [];
+
+                        this.childCommands = commandsDefined
+                            ? new CommandContainer(commands.filter(c => c.type !== "ContainerCommand"))
+                            : [];
+                    }
+                    get hasActiveCommands() {
+                        return this.childCommands.hasActiveCommands || this.containers.some(c => c.hasActiveCommands);
+                    }
+                    get singleActiveCommand() {
+                        return this.childCommands.activeCommands[0];
                     }
                 }
 
@@ -37,7 +61,7 @@
                 $scope.isCommandHidden = command => !command || offlineCommandService.isCommandHidden($scope.datamap, $scope.schema, command);
                 
                 const updateCommandBar = (schema, position) => {
-                    const commands = offlineCommandService.getCommands(schema || $scope.schema, position || $scope.position);
+                    const commands = offlineCommandService.getCommands(schema || $scope.schema, position || $scope.position) || [];
                     $scope.commandBar = new CommandBar(commands);
                 } 
                 const init = () => updateCommandBar();
@@ -52,21 +76,16 @@
                     if (newPosition === oldPosition) return;
                     updateCommandBar(null, newPosition);
                 });
+
+                $scope.$on("sw_updatecommandbar", (event, position) => {
+                    if (position === $scope.position) {
+                        updateCommandBar();
+                    }
+                });
             }],
 
             link: function (scope, element, attrs) {
-                //set the crud details list height
-                var toolbarPrimary = $('.bar-header.bar-positive:visible').outerHeight(true);
-                var toolbarSecondary = $('.bar-subheader.bar-dark:visible').outerHeight(true);
-                var headerTitle = $('.crud-details .crud-title:visible').outerHeight(true);
-                var headerDescription = $('.crud-details .crud-description:visible').outerHeight(true);
-                var componetHeights = toolbarPrimary + toolbarSecondary + headerTitle + headerDescription;
-
-                //TODO: impove this solution, move the fab to the crud details.html (outside of the content) and use only css
-                //set the inital position of the floating action button
-                var windowHeight = $(window).height();
-                var offset = windowHeight - componetHeights - 134;
-                $(element).css('top', offset);
+                commandBarDelegate.positionFabCommandBar(element);
             }
         };
 

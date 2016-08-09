@@ -1,4 +1,13 @@
-﻿.sw-operation-icon {
+﻿.col-20.operation-icon {
+    width: 70px;
+    flex: none;
+}
+
+.col.operation-details {
+    margin-left: 70px;
+}
+
+.sw-operation-icon {
     .operation-status-icon {
         color: white;
         text-align: center;

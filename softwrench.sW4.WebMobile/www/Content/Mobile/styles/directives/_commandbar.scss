@@ -5,6 +5,39 @@
     .mfb-component--br {
         bottom: auto;
     }
+
+    // single command present
+    .button.button-fab-single {
+        background-color: $cts_gray;
+        color: white;
+        position: fixed;
+        right: 25px;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
+        width: 56px;
+        height: 56px;
+
+        &.green {
+            background-color: $cts_green;
+        }
+        &.red {
+            background-color: $cts_red;
+        }
+    }
+}
+
+.mfb-component__button--main {
+    background-color: $cts_red;
+}
+
+.mfb-component__button--child {
+    background-color: $cts_gray;
+}
+
+.action-fab {
+    .mfb-component__button--main {
+        background-color: $cts_green;
+    }
 }
 
 .bar {

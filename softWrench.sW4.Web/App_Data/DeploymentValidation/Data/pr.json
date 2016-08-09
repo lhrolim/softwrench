@@ -1,0 +1,56 @@
+[
+  {
+    "application": "pr",
+    "action": "crud_create",
+    "actiondescription": "Create Purchase Request Validation",
+    "data": {
+      "description": null,
+      "prnum": null,
+      "priority": "1",
+      "totaltax1": null,
+      "totalcost": "0",
+      "currencycode": "USD",
+      "supervisor": null,
+      "novendor": true,
+      "vendor": null,
+      "contractrefnum": null
+    }
+  },
+  {
+    "application": "pr",
+    "action": "crud_update",
+    "actiondescription": "Update Purchase Request Validation",
+    "data": {
+      "ponum": "B4230",
+      "description": "Order",
+      "siteid": "BEDFORD",
+      "orderdate": "08/27/2001",
+      "priority": 3,
+      "rowstamp": 800943,
+      "targetstart": null
+    },
+    "subdata": [
+      {
+        "property": "poline_",
+        "addto": "main",
+        "type": "array",
+        "data": [
+          {
+            "ponum": "B4230",
+            "polinenum": 1,
+            "itemnum": "53-143",
+            "description": "V-Belt- 1/2 In, 30 In Circumference",
+            "orderqty": 12,
+            "unitcost": 36,
+            "gldebitacct": null,
+            "siteid": "BEDFORD",
+            "orgid": "EAGLENA",
+            "itemsetid": "SET1",
+            "linetype": "ITEM",
+            "enterdate": "2001-08-27T22:28:08+05:30"
+          }
+        ]
+      }
+    ]
+  }
+]

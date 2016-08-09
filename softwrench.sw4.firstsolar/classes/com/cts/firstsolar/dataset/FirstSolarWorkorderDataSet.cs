@@ -75,6 +75,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return new List<IAssociationOption>();
         }
 
-      
+        public SearchRequestDto ZeroAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
+            //enforcing no attachments are brought for group workorders
+            parameter.BASEDto.AppendWhereClause("1=0");
+            return parameter.BASEDto;
+        }
+
     }
 }

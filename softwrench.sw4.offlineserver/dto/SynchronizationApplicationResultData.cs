@@ -9,7 +9,9 @@ using softWrench.sW4.Metadata.Applications;
 namespace softwrench.sw4.offlineserver.dto {
     public class SynchronizationApplicationResultData {
 
-        public string ApplicationName { get; set; }
+        public string ApplicationName {
+            get; set;
+        }
 
 
         public ICollection<DataMap> InsertOrUpdateDataMaps {
@@ -79,7 +81,7 @@ namespace softwrench.sw4.offlineserver.dto {
         }
 
 
-      
+
 
 
         public Boolean IsEmpty {
@@ -88,6 +90,13 @@ namespace softwrench.sw4.offlineserver.dto {
                        !InsertOrUpdateDataMaps.Any();
             }
         }
+
+        public Boolean IsEmptyExceptDeletion {
+            get {
+                return !UpdatedDataMaps.Any() && !NewdataMaps.Any() && !InsertOrUpdateDataMaps.Any();
+            }
+        }
+
 
         public ApplicationMetadata Metadata {
             get; set;

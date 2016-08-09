@@ -25,10 +25,10 @@
 
             <div class="operation-status">
                 <div class="row">
-                    <div class="col col-20">
+                    <div class="col col-20 operation-icon">
                         <sw-operation-icon sync-operation="data.operation"></sw-operation-icon>
                     </div>
-                    <div class="col col-80">
+                    <div class="col">
                         <h4>{{data.operation.formattedstatus}}</h4>
                         <h5 ng-if="!data.operation.ispending" style="color: #aaa;">{{data.operation.elapsedtime}}&nbsp;seconds</h5>
                     </div>
@@ -36,7 +36,7 @@
             </div>
 
             <div class="operation-details row">
-                <div class="col col-offset-20">
+                <div class="col operation-details">
                     <div class="detail-section" ng-if="!data.operation.ispending">
                         <h5><i class="fa fa-download"></i>&ensp;Application Downloads: {{data.operation.numberofdownloadeditems}}</h5>
                     </div>

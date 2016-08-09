@@ -13,6 +13,7 @@
         public const string ApplicationElement = "application";
         public const string ResourceRefElement = "resourceref";
         public const string ActionElement = "action";
+        public const string ServiceElement = "service";
         public const string ReferenceElement = "reference";
         public const string LinkElement = "link";
         public const string CustomizationPositionAttribute = "customizationposition";
@@ -31,6 +32,9 @@
         
         public const string ActionMenuControllerAttribute = "controller";
         public const string ActionMenuActionAttribute = "action";
+
+        public const string ServiceMenuServiceAttribute = "service";
+        public const string ServiceMenuMethodAttribute = "method";
         
         
         public const string LinkMenuActionAttribute = "link";

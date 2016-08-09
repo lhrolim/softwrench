@@ -16,13 +16,15 @@ using softWrench.sW4.Metadata.Security;
 using System.IO;
 using System.Reflection;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.API.Composition;
 
 namespace softWrench.sW4.Util.DeployValidation {
     public class DeployValidationService : ISingletonComponent {
-
-        private readonly DataSetProvider _dataSetProvider;
-        private List<ApplicationValidationModel> applicationList = null;
-        private static readonly List<string> GlobalMissingPropertyBlackList = new List<string>(){
+        private const string DeploymentTestDataPath = "\\App_Data\\DeploymentValidation\\Data\\{0}";
+        private IEnumerable<CompleteApplicationMetadataDefinition> applicationsMetadataList;
+        private readonly DataSetProvider dataSetProvider;
+        private static string[] testFileNames;
+        private static readonly List<string> GlobalMissingPropertyBlackList = new List<string>() {
             "rowstamp" ,
             "class",
             "actlabhrs",
@@ -32,46 +34,54 @@ namespace softWrench.sW4.Util.DeployValidation {
             "estapprlabhrs",
             "estapprmatcost",
             "estapprlabcost",
-            "outservcost"
-    };
+            "outservcost",
+            "langcode",
+            "orgid",
+            "siteid",
+            "loweremail"
+        };
+        
+        private static string[] GetTestFileNames {
+            get {
+                if (testFileNames == null) {
+                    testFileNames = Directory.GetFiles(string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, string.Format(DeploymentTestDataPath, string.Empty)));
+                }
+
+                return testFileNames;
+            }
+        }
 
         public DeployValidationService(DataSetProvider dataSetProvider) {
-            _dataSetProvider = dataSetProvider;           
+            this.dataSetProvider = dataSetProvider;           
         }
         
         public Dictionary<string, DeployValidationResult> ValidateServices(InMemoryUser user) {
-            Setup();
+            var applicationValidationModels = SetupApplicationValidationModels();
 
             DoMockProxyInvocation();
             
             var resultmap = new Dictionary<string, DeployValidationResult>();
 
-            foreach (var app in applicationList) //.FindAll(x => x.CreateJson != null))
-            {
-                ValidateCreate(user, app, resultmap);
-            }
+            var applications = GetApplications.Select(x => x.ApplicationName);
 
-            foreach (var app in applicationList) //.FindAll(x => x.UpdateJson != null)) 
-            {
-                ValidateUpdate(user, app, resultmap);
+            foreach(var application in applications) {
+                var appValidationModels = applicationValidationModels.FindAll(x => string.Compare(x.Application, application, true) == 0);
+
+                foreach (var app in appValidationModels) {
+                    ValidateOperation(user, app, resultmap);
+                }
             }
 
             return resultmap;
         }
-
+               
         public Dictionary<string, Dictionary<string, object>> GetAllApplicationInfo() {
             var dict = new Dictionary<string, Dictionary<string, object>>();
-            GetApplications().ForEach(a => dict.Add(a.ApplicationName, GetAppInfo(a)));
+            GetApplications.ForEach(a => dict.Add(a.ApplicationName, GetAppInfo(a)));
 
             return dict;
         }
         
-        public IEnumerable<CompleteApplicationMetadataDefinition> GetApplications() { 
-            return MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null)
-               .Where(FilterApplication)
-               .OrderBy(a => a.Title);
-        }
-
         public static bool MockProxyInvocation() {
             var lds = System.Threading.Thread.GetNamedDataSlot("sw.deployvalidation.wsexecute.mock.proxy");
             var data = System.Threading.Thread.GetData(lds);
@@ -85,50 +95,62 @@ namespace softWrench.sW4.Util.DeployValidation {
             var model = GetModel();
             model.AddMissingProperty(property.ToLower());
         }
+        
+        private IEnumerable<CompleteApplicationMetadataDefinition> GetApplications {
+            get {
+                if (applicationsMetadataList == null) {
+                    applicationsMetadataList = MetadataProvider.Applications(false)
+                   .Where(FilterApplication)
+                   .OrderBy(a => a.Title);
+                }
 
-        private void ValidateCreate(InMemoryUser user, ApplicationValidationModel appValidationModel, IDictionary<string, DeployValidationResult> resultmap) {
+                return applicationsMetadataList;
+            }
+        }
+
+        private void ValidateOperation(InMemoryUser user, ApplicationValidationModel appValidationModel, IDictionary<string, DeployValidationResult> resultmap) {
             InsertModel();
 
             var application = appValidationModel.Application;      
-            var json = appValidationModel.CreateJson;
+            var json = appValidationModel.TestJson;
             var model = GetModel();
 
-            try
-            {
-                if(json == null)
-                {
-                    model.MissingTestData = true;
-                }
-                else
-                {
-                    model.MissingTestData = false;
-                    var platform = ClientPlatform.Web;
-                    var schemaRepresentation = MetadataProvider.LocateNewSchema(appValidationModel.Application);
-                    var schemaKey = (schemaRepresentation != null && !string.IsNullOrWhiteSpace(schemaRepresentation.SchemaId)) ? schemaRepresentation.SchemaId : "newdetail.input.web";
-                    var operationDataRequest = new OperationDataRequest()
-                    {
-                        ApplicationName = application,
-                        Batch = false,
-                        CurrentSchemaKey = schemaKey,
-                        Id = null,
-                        MockMaximo = false,
-                        Operation = OperationConstants.CRUD_CREATE,
-                        Platform = ClientPlatform.Web,
-                        UserId = null
-                    };
+            try {
+                model.ActionName = appValidationModel.Action;
+                model.ActionDescription = appValidationModel.ActionDescription;
+                model.ActionSupported = appValidationModel.ActionSupported;
 
-                    var currentschemaKey = SchemaUtil.GetSchemaKeyFromString(operationDataRequest.CurrentSchemaKey, platform);
-                    var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(currentschemaKey, user, platform);
+                if (appValidationModel.ActionSupported) {
+                    if (json == null) {
+                        
+                    } else {
+                        model.ActionSupported = appValidationModel.ActionSupported;
+                        var platform = ClientPlatform.Web;
 
-                    _dataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
-                    .Execute(applicationMetadata, json, operationDataRequest);
+                        OperationDataRequest operationDataRequest = null;
+
+                        switch (appValidationModel.Action) {
+                            case OperationConstants.CRUD_CREATE:
+                                operationDataRequest = GetCreateOperationDataRequest(appValidationModel);
+                                break;
+
+                            case OperationConstants.CRUD_UPDATE:
+                                operationDataRequest = GetUpdateOperationDataRequest(appValidationModel);
+                                break;
+
+                                /// ToDo: add more operations here.
+                        }
+
+                        var currentschemaKey = SchemaUtil.GetSchemaKeyFromString(operationDataRequest.CurrentSchemaKey, platform);
+                        var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(currentschemaKey, user, platform);
+
+                        dataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
+                        .Execute(applicationMetadata, json, operationDataRequest);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 var wsdlEx = ex as MaximoWebServiceNotResolvedException;
-                if (wsdlEx != null)
-                {
+                if (wsdlEx != null) {
                     model.MissingWsdl = true;
                 }
                 model.ReportException(ex);
@@ -136,106 +158,145 @@ namespace softWrench.sW4.Util.DeployValidation {
 
             var result = GetOrCreateResult(application, resultmap);
             model.CalcHasProblems();
-            result.CreateValidation = model;
+            result.ValidationResultList.Add(model);
         }
 
-        private void ValidateUpdate(InMemoryUser user, ApplicationValidationModel appValidationModel, IDictionary<string, DeployValidationResult> resultmap) {      
-            InsertModel();
+        private OperationDataRequest GetCreateOperationDataRequest(ApplicationValidationModel appValidationModel) {
+            var schemaRepresentation = MetadataProvider.LocateNewSchema(appValidationModel.Application);
 
-            var application = appValidationModel.Application;
-            var json = appValidationModel.UpdateJson;
-            var model = GetModel();
+            var schemaKey = !string.IsNullOrWhiteSpace(appValidationModel.SchemaKey) ? 
+                appValidationModel.SchemaKey : ((schemaRepresentation != null && !string.IsNullOrWhiteSpace(schemaRepresentation.SchemaId)) ? schemaRepresentation.SchemaId : "newdetail.input.web");
 
-            try
-            {
-                if (json == null)
-                {
-                    model.MissingTestData = true;
-                }
-                else
-                {
-                    model.MissingTestData = false;
+            var operationDataRequest = new OperationDataRequest() {
+                ApplicationName = appValidationModel.Application,
+                Batch = false,
+                CurrentSchemaKey = schemaKey,
+                Id = null,
+                MockMaximo = false,
+                Operation = OperationConstants.CRUD_CREATE,
+                Platform = ClientPlatform.Web,
+                UserId = null,
+                CompositionData = appValidationModel.CompositionOperationDTO
+            };
 
-                    var platform = ClientPlatform.Web;
-                    var schemaRepresentation = MetadataProvider.LocateRelatedDetailSchema(appValidationModel.Metadata.GetListSchema());
-                    var schemaKey = (schemaRepresentation != null && !string.IsNullOrWhiteSpace(schemaRepresentation.SchemaId)) ? schemaRepresentation.SchemaId : "editdetail.input.web";
-                    var operationDataRequest = new OperationDataRequest()
-                    {
-                        ApplicationName = application,
-                        Batch = false,
-                        CurrentSchemaKey = schemaKey,
-                        Id = "1",
-                        MockMaximo = false,
-                        Operation = OperationConstants.CRUD_UPDATE,
-                        Platform = ClientPlatform.Web,
-                        UserId = "1"
-                    };
-
-                    var currentschemaKey = SchemaUtil.GetSchemaKeyFromString(operationDataRequest.CurrentSchemaKey, platform);
-                    var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(currentschemaKey, user, platform);
-
-                    _dataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
-                    .Execute(applicationMetadata, json, operationDataRequest);
-                }
-            }
-            catch (Exception ex)
-            {
-                var wsdlEx = ex as MaximoWebServiceNotResolvedException;
-                if (wsdlEx != null)
-                {
-                    model.MissingWsdl = true;
-                }
-                model.ReportException(ex);
-            }
-
-            var result = GetOrCreateResult(application, resultmap);
-            model.CalcHasProblems();
-            result.UpdateValidation = model;
+            return operationDataRequest;
         }
-        
-        private void Setup() {
 
-            if(applicationList == null)
-            {
-                applicationList = new List<ApplicationValidationModel>();
-            }
-            else
-            {
-                applicationList.Clear();
-            }
-            
+        private OperationDataRequest GetUpdateOperationDataRequest(ApplicationValidationModel appValidationModel) {
+            var schemaRepresentation = MetadataProvider.LocateRelatedDetailSchema(appValidationModel.Metadata.GetListSchema());
+
+            var schemaKey = !string.IsNullOrWhiteSpace(appValidationModel.SchemaKey) ?
+                appValidationModel.SchemaKey : ((schemaRepresentation != null && !string.IsNullOrWhiteSpace(schemaRepresentation.SchemaId)) ? schemaRepresentation.SchemaId : "editdetail.input.web");
+
+            var operationDataRequest = new OperationDataRequest() {
+                ApplicationName = appValidationModel.Application,
+                Batch = false,
+                CurrentSchemaKey = schemaKey,
+                Id = "1",
+                MockMaximo = false,
+                Operation = OperationConstants.CRUD_UPDATE,
+                Platform = ClientPlatform.Web,
+                UserId = "1",
+                CompositionData = appValidationModel.CompositionOperationDTO
+            };
+
+            return operationDataRequest;
+        }
+                
+        private List<ApplicationValidationModel> SetupApplicationValidationModels() {
+            var applicationValidationModels = new List<ApplicationValidationModel>();     
             var assembly = Assembly.GetExecutingAssembly();
+            var applications = GetApplications.Select(x => x.ApplicationName.ToLower());
 
-            foreach (var applicationMetadata in GetApplications()) {
-                var filePath = string.Empty;
-                var app = new ApplicationValidationModel();
-                app.Application = applicationMetadata.ApplicationName;
-                app.Metadata = applicationMetadata;
-
-                //Create json 
-                if (applicationMetadata.HasCreationSchema) {
-                    filePath = string.Format("softWrench.sW4.Util.DeployValidation.Data.Create.{0}.json", applicationMetadata.ApplicationName);
-                    using (Stream stream = assembly.GetManifestResourceStream(filePath)) {
+           // var testApplicationDataList = GetTestFileNames assembly.GetManifestResourceNames();
+            foreach (var filePath in GetTestFileNames) {
+                if (File.Exists(filePath)) {
+                    using (var stream = new StreamReader(filePath)) {// assembly.GetManifestResourceStream(filePath)) {
                         if (stream != null) {
-                            using (StreamReader reader = new StreamReader(stream)) {
-                                app.CreateJson = JObject.Parse(reader.ReadToEnd());
+                            var app = GetApplicationValidationModels(stream.ReadToEnd());
+
+                            if (app != null) {
+                                applicationValidationModels.AddRange(app);
                             }
                         }
                     }
                 }
+            }
 
-                //Update json
-                filePath = string.Format("softWrench.sW4.Util.DeployValidation.Data.Update.{0}.json", applicationMetadata.ApplicationName);
-                using (Stream stream = assembly.GetManifestResourceStream(filePath)) {
-                    if (stream != null) {
-                        using (StreamReader reader = new StreamReader(stream)) {
-                            app.UpdateJson = JObject.Parse(reader.ReadToEnd());
+            return applicationValidationModels;
+        }
+
+        private List<ApplicationValidationModel> GetApplicationValidationModels(string json) {
+            var models = new List<ApplicationValidationModel>();
+            var applicationDataAray = JArray.Parse(json);
+
+            if (applicationDataAray != null) {
+                for (int a = 0; a < applicationDataAray.Count; a++) {
+                    var jsonData = applicationDataAray[a];
+                    var mainData = JObject.Parse(jsonData["data"].ToString());
+                    var subDataArray = jsonData["subdata"] != null ? JArray.Parse(jsonData["subdata"].ToString()) : null;
+                    var compData = jsonData["compositiondata"] != null ? jsonData["compositiondata"] : null;
+                    var application = jsonData["application"].ToString();
+                    var action = jsonData["action"].ToString();
+                    var schemaKey = jsonData["schemakey"] != null ? jsonData["schemakey"].ToString() : string.Empty;   
+                    var applicationMetadata = MetadataProvider.Application(application, false);
+
+                    if (applicationMetadata == null || (action.Equals(OperationConstants.CRUD_CREATE) && !applicationMetadata.HasCreationSchema)) {
+                        models.Add(new ApplicationValidationModel() {
+                            Application = application,
+                            Action = action,
+                            ActionDescription = jsonData["actiondescription"].ToString(),
+                            ActionSupported = false,
+                            TestJson = null,
+                            Metadata = null,
+                            IsMissingTestData = true
+                        });
+                    } else {
+                        var applicationValidationModel = new ApplicationValidationModel();
+                        applicationValidationModel.Application = application;
+                        applicationValidationModel.Action = action;
+                        applicationValidationModel.ActionSupported = true;
+                        applicationValidationModel.ActionDescription = jsonData["actiondescription"].ToString();
+                        applicationValidationModel.Metadata = applicationMetadata;
+                        applicationValidationModel.SchemaKey = schemaKey;
+                        applicationValidationModel.IsMissingTestData = false;
+
+                        if (subDataArray != null) {
+                            for (int i = 1; i < subDataArray.Count; i++) {
+                                if (subDataArray[0]["addto"].ToString().Equals("main")) {
+                                    if (subDataArray[i]["type"].ToString().Equals("array")) {
+                                        mainData.Add(subDataArray[i]["property"].ToString(), JArray.Parse(string.Format("{0}", subDataArray[i]["data"].ToString())));
+                                    } else {
+                                        mainData.Add(subDataArray[i]["property"].ToString(), subDataArray[i]["data"].ToString());
+                                    }
+                                } else {
+                                    var propertyData = mainData.Property(subDataArray[i]["addto"].ToString());
+                                    if (subDataArray[i]["type"].ToString().Equals("array")) {
+                                        propertyData.Add(JArray.Parse(string.Format("{0}", subDataArray[i]["data"].ToString())));
+                                    } else {
+                                        propertyData.Add(subDataArray[i]["data"].ToString());
+                                    }
+                                }
+                            }
                         }
+
+                        if (compData != null) {
+                            var compositionData = new CompositionOperationDTO();
+                            compositionData.DispatcherComposition = compData["dispatchercomposition"].ToString();
+                            compositionData.Id = compData["id"].ToString();
+                            compositionData.Operation = compData["operation"].ToString();
+                            compositionData.CompositionItem = JObject.Parse(string.Format("{0}", compData["data"].ToString()));
+
+                            applicationValidationModel.CompositionOperationDTO = compositionData;
+                        }
+                        
+                        applicationValidationModel.TestJson = mainData;
+                        models.Add(applicationValidationModel);
                     }
                 }
-                
-                applicationList.Add(app);
-            }            
+            }
+            
+            return models;
         }
 
         private static void DoMockProxyInvocation() {
@@ -263,8 +324,13 @@ namespace softWrench.sW4.Util.DeployValidation {
         }
 
         private static bool FilterApplication(CompleteApplicationMetadataDefinition application) {
+            if (!GetTestFileNames.Contains(string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, string.Format(DeploymentTestDataPath, string.Format("{0}.json", application.ApplicationName))))) {
+                return false;
+            }
+
             var entity = MetadataProvider.Entity(application.Entity);
-            return entity.ConnectorParameters.Parameters.ContainsKey("integration_interface");
+            return entity.ConnectorParameters.Parameters.ContainsKey("integration_interface") 
+                || entity.ConnectorParameters.Parameters.ContainsKey("integration_interface_operations");
         }
 
         private static Dictionary<string, object> GetAppInfo(CompleteApplicationMetadataDefinition application) {

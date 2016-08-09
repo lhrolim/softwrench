@@ -1,7 +1,8 @@
 ﻿(function (angular, _) {
     "use strict";
 
-    mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", "crudContextHolderService", "$log", "searchIndexService", "dispatcherService", function (swdbDAO, fieldService, crudContextHolderService, $log, searchIndexService, dispatcherService) {
+    mobileServices.factory('offlineAssociationService', ["swdbDAO", "fieldService", "crudContextHolderService", "$log", "searchIndexService", "dispatcherService",
+        function (swdbDAO, fieldService, crudContextHolderService, $log, searchIndexService, dispatcherService) {
 
         function testEmptyExpression(label) {
             return `(!!${label} && ${label} !== \'null\' && ${label} !== \'undefined\')`;

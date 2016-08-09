@@ -23,8 +23,10 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Relationship.Composition;
+using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -133,6 +135,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 //for new users lets make them active by default
                 dataMap.SetAttribute("#isactive", "1");
                 dataMap.SetAttribute("#signature", "");
+                dataMap.SetAttribute("locationorg", ApplicationConfiguration.DefaultOrgId);
+                dataMap.SetAttribute("locationsite", ApplicationConfiguration.DefaultSiteId);
             }
 
             dataMap.SetAttribute("#profiles", swUser.Profiles);
@@ -185,6 +189,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
             //saving person on Maximo database
+            var operationData = (CrudOperationData)operationWrapper.OperationData(typeof(CrudOperationData));
+
+            if (operationData.GetAttribute("locationorg") == null) {
+                operationData.SetAttribute("locationorg", ApplicationConfiguration.DefaultOrgId);
+            }
+
+            if (operationData.GetAttribute("locationsite") == null) {
+                operationData.SetAttribute("locationsite", ApplicationConfiguration.DefaultSiteId);
+            }
+
             var targetResult = Engine().Execute(operationWrapper);
 
             // Upate the in memory user if the change is for the currently logged in user
@@ -265,11 +279,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var hasProfileChange = screenProfiles.Any(p => dbProfiles.All(d => d.Id != p.Id));
 
             return isSysAdmin || !hasProfileChange;
-
-
-
         }
 
+        public SearchRequestDto FilterSites(AssociationPreFilterFunctionParameters parameters) {
+            var searchDto = parameters.BASEDto;
+            var orgId = parameters.OriginalEntity.GetStringAttribute("locationorg");
+            if (!string.IsNullOrEmpty(orgId)) {
+                searchDto.AppendSearchEntry("site.orgid", orgId);
+            }
+            return searchDto;
+        }
 
         private static string HandlePassword(JObject json, User user) {
             JToken password;

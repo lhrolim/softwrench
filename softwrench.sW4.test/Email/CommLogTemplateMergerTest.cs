@@ -18,7 +18,7 @@ Support24 America: +1.866.994.7765
 Support24 Norway: +47.4000.1024
 Support24 Australia: +61.861.413.355
 Support24 UK: +44.1224.226.583
-Support24 Email: support@kogtsupport24.com
+Support24 Email: support@kdisupport24.com
 
 :description was last modified on :changedate
 
@@ -34,7 +34,7 @@ Support24 America: +1.866.994.7765
 Support24 Norway: +47.4000.1024
 Support24 Australia: +61.861.413.355
 Support24 UK: +44.1224.226.583
-Support24 Email: support@kogtsupport24.com
+Support24 Email: support@kdisupport24.com
 
 {1} was last modified on {2}
 

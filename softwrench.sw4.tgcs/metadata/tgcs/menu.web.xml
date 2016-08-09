@@ -2,6 +2,7 @@
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="horizontal" indexitem
   ="loadpreferred">
 
+  <reference id="servicereq"/>
   <reference id="qservicereq"/>
   
 </Menu>

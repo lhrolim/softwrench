@@ -1,7 +1,7 @@
 <ion-view cache-view="false">
 
     <ion-nav-buttons side="left">
-        <button class="button-icon" menu-toggle="left"><i class="fa fa-bars"></i></button>
+        <button class="button-icon show-phone" menu-toggle="left"><i class="fa fa-bars"></i></button>
     </ion-nav-buttons>
 
     <ion-nav-title>
@@ -30,18 +30,18 @@
     <ion-content has-header="true" has-bouncing="false">
 
         <ion-list class="has-header crud-list">
-
+            <!--generatedRowStamp is a transient column generated on persistence (persistence.store.sql) entity hydratation to allow multiple rows with same id (left joins...) -->
             <ion-item class="crud-item"
-                      ng-repeat="item in crudlist.items track by item.id"
+                      ng-repeat="item in crudlist.items track by item.generatedRowStamp"
                       item="item"
                       on-swipe-left="quickSync(item)"
                       on-hold="deleteOrRestoreItem(item)">
 
                 <div class="row" ng-click="openDetail(item)">
-                    <div class="col-25">
+                    <div class="col col-25 crud-icon">
                         <crud-icon item="item"></crud-icon>
                     </div>
-                    <div class="col-75">
+                    <div class="col">
                         <ul>
                             <li class="featured">{{itemFeatured(item.datamap)}}&ensp;<span class="details"><i class="fa fa-chevron-right"></i></span></li>
                             <li class="title">{{itemTitle(item.datamap)}}</li>

@@ -1,0 +1,44 @@
+﻿<ion-view title="My Profile" class="page-userprofile">
+    <ion-nav-buttons side="left">
+        <button class="button" ng-if="!hasChanges()" ng-click="navigateBack()">
+            <i class="fa fa-arrow-left"></i>&ensp;Back
+        </button>
+        <button class="button" ng-if="hasChanges()" ng-click="cancel()">
+            <i class="fa fa-times"></i>&ensp;Cancel
+        </button>
+    </ion-nav-buttons>
+
+    <ion-nav-buttons side="right">
+        <button class="button button-menu" ng-if="hasChanges()" ng-click="saveProfile()">
+            <i class="fa fa-check"></i>
+            &nbsp;Save
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header" has-bouncing="false">
+
+        <div class="card list">
+            <div class="item item-divider">User Details</div>
+
+            <div class="item item-text-wrap"><strong>Usename: </strong>{{profile.current.username}}</div>
+            <div class="item item-text-wrap"><strong>Person Id: </strong>{{profile.current.personid}}</div>
+            <div class="item item-text-wrap"><strong>Org Id: </strong>{{profile.current.orgid}}</div>
+            <div class="item item-text-wrap"><strong>Site Id: </strong>{{profile.current.siteid}}</div>
+        </div>
+        <div class="card list" ng-if="profile.current.facilities">
+            <div class="item item-divider">Facilities</div>
+            <div class="item item-text-wrap">
+                <option-field header-text="Facilities"
+                              allow-empty="false"
+                              value="profile.current.facilities.selected"
+                              items="profile.current.facilities.options"
+                              multi-select="true"
+                              text="value"
+                              class="option-search">
+                </option-field>
+            </div>
+        </div>
+
+    </ion-content>
+
+</ion-view>

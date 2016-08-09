@@ -49,40 +49,43 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         [CanBeNull]
-        public static User GetUserFromMaximoByUserName([NotNull] string userName, int? swId, bool forceUser = false) {
-            if (userName == null) throw new ArgumentNullException("userName");
-            User user = null;
-            var whereClause =(" (person.personid = '{0}') and (email_.isprimary is null or email_.isprimary = 1 )").Fmt(userName).ToUpper();
-            if (_ldapManager.IsLdapSetup() && forceUser) {
-                //if ldap is setup user need to exist on Maximo side
-                whereClause =(" (maxuser_.loginid = '{0}') and (email_.isprimary is null or email_.isprimary = 1 )")
-                        .Fmt(userName).ToUpper();
-            }
-            var dto = new SearchRequestDto {
-                WhereClause = whereClause
-            };
-            dto = BuildDTO(dto);
-            var entityMetadata = MetadataProvider.Entity(EntityName);
-            var maximoUsers = EntityRepository.Get(entityMetadata, dto);
-            var attributeHolders = maximoUsers as AttributeHolder[] ?? maximoUsers.ToArray();
-            if (!attributeHolders.Any()) {
-                return null;
-            }
-            var userFromMaximo = GetUserFromMaximoUsers(attributeHolders, forceUser);
-            if (userFromMaximo == null || !userFromMaximo.Any()) {
-                return null;
-            }
-            user = userFromMaximo.First();
-            user.Id = swId;
-            return user;
+        public static User GetUserFromMaximoByPersonId([NotNull] string personid, bool forceUser = false) {
+            return GetUserFromMaximoBySwUser(new User() {
+                UserName = personid,
+                MaximoPersonId = personid
+            }, true);
         }
 
+        [NotNull]
+        public static User GetUserFromMaximoBySwUserFallingBackToDefault(User swUser, bool forceUserShouldExist = false) {
+            var user = GetUserFromMaximoBySwUser(swUser, forceUserShouldExist);
+            return user ?? swUser;
+        }
+
+
+        /// <summary>
+        /// Retrieves the user entity filled with Maximo person and User tables data.
+        /// 
+        /// The user may or may not exist on maximo side, but the matching is made upon the personid (unless it´s an ldap and the flag forceuser is marked as true)
+        /// 
+        /// </summary>
+        /// <param name="swUser"></param>
+        /// <param name="forceUserShouldExist">if true the user itself needs to exist on maximo side with the exact username as on SWDB database</param>
+        /// <returns></returns>
         [CanBeNull]
-        public static User GetUserFromMaximoBySwUser(User swUser) {
+        public static User GetUserFromMaximoBySwUser(User swUser, bool forceUserShouldExist = false) {
             if (swUser == null) throw new ArgumentNullException("swUser");
             User fullUser = null;
+
+            var whereClause = (" (person.personid = '{0}') and (email_.isprimary is null or email_.isprimary = 1 )").Fmt(swUser.MaximoPersonId).ToUpper();
+            if (_ldapManager.IsLdapSetup() && forceUserShouldExist) {
+                //if ldap is setup user need to exist on Maximo side
+                whereClause = (" (maxuser_.loginid = '{0}') and (email_.isprimary is null or email_.isprimary = 1 )")
+                        .Fmt(swUser.UserName).ToUpper();
+            }
+
             var dto = new SearchRequestDto {
-                WhereClause = (" person.personid = '" + swUser.MaximoPersonId + "'").ToUpper()
+                WhereClause = whereClause
             };
             var query = MetadataProvider.GlobalProperty(SwUserConstants.PersonUserQuery);
             if (query != null) {
@@ -101,12 +104,14 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                 return null;
             }
 
+            //TODO: improve this solution
             fullUser = userFromMaximo.First();
             fullUser.Id = swUser.Id;
             fullUser.IsActive = swUser.IsActive;
             fullUser.Profiles = swUser.Profiles;
             fullUser.CustomRoles = swUser.CustomRoles;
             fullUser.PersonGroups = swUser.PersonGroups;
+            fullUser.UserPreferences = swUser.UserPreferences;
             fullUser.CustomConstraints = swUser.CustomConstraints;
             return fullUser;
         }
@@ -159,34 +164,33 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         [CanBeNull]
-        private static IList<User> GetUserFromMaximoUsers(IEnumerable<AttributeHolder> maximoPersons, bool forceUser=false) {
+        private static IList<User> GetUserFromMaximoUsers(IEnumerable<AttributeHolder> maximoPersons, bool forceUser = false) {
             IList<User> result = new List<User>();
-            foreach (var maximoUser in maximoPersons) {
-                var userName = (string)maximoUser.GetAttribute("maxuser_.loginid");
+            foreach (var maximoPerson in maximoPersons) {
+                var userName = (string)maximoPerson.GetAttribute("maxuser_.loginid");
                 if (userName == null && _ldapManager.IsLdapSetup() && forceUser) {
                     //disabling non users if ldap is turned on
                     continue;
                 }
-                var primaryemail = (string) maximoUser.GetAttribute("primaryemail_.emailaddress");
-                var primaryphone = (string) maximoUser.GetAttribute("primaryphone_.phonenum");
+                var primaryemail = (string) maximoPerson.GetAttribute("primaryemail_.emailaddress");
+                var primaryphone = (string) maximoPerson.GetAttribute("primaryphone_.phonenum");
                 var user = new User {
-                    UserName = userName ?? (string)maximoUser.GetAttribute("personid"),
+                    UserName = userName ?? (string)maximoPerson.GetAttribute("personid"),
                     Password = MetadataProvider.GlobalProperty(SwUserConstants.DefaultUserPassword),
-                    MaximoActive = (string)maximoUser.GetAttribute("status") == "ACTIVE",
+                    MaximoActive = (string)maximoPerson.GetAttribute("status") == "ACTIVE",
                     IsActive = null,
                     Person = new Person {
-                        FirstName = (string)maximoUser.GetAttribute("firstname"),
-                        LastName = (string)maximoUser.GetAttribute("lastname"),
-                        OrgId = (string)maximoUser.GetAttribute("locationorg") ?? ApplicationConfiguration.DefaultOrgId,
-                        SiteId =
-                            (string)maximoUser.GetAttribute("locationsite") ?? ApplicationConfiguration.DefaultSiteId,
-                        Email = !primaryemail.IsNullOrWhiteSpace() ? primaryemail : (string)maximoUser.GetAttribute("email_.emailaddress"),
-                        Department = (string)maximoUser.GetAttribute("department"),
-                        Phone = !primaryphone.IsNullOrWhiteSpace() ? primaryphone : (string)maximoUser.GetAttribute("phone_.phonenum"),
-                        Language = (string)maximoUser.GetAttribute("language")
+                        FirstName = (string)maximoPerson.GetAttribute("firstname"),
+                        LastName = (string)maximoPerson.GetAttribute("lastname"),
+                        OrgId = (string)maximoPerson.GetAttribute("locationorg") ?? ApplicationConfiguration.DefaultOrgId,
+                        SiteId = (string)maximoPerson.GetAttribute("locationsite") ?? ApplicationConfiguration.DefaultSiteId,
+						Email = !primaryemail.IsNullOrWhiteSpace() ? primaryemail : (string)maximoPerson.GetAttribute("email_.emailaddress"),
+                        Department = (string)maximoPerson.GetAttribute("department"),
+						Phone = !primaryphone.IsNullOrWhiteSpace() ? primaryphone : (string)maximoPerson.GetAttribute("phone_.phonenum"),
+                        Language = (string)maximoPerson.GetAttribute("language")
                     },
                     CriptoProperties = string.Empty,
-                    MaximoPersonId = (string)maximoUser.GetAttribute("personid"),
+                    MaximoPersonId = (string)maximoPerson.GetAttribute("personid"),
                 };
                 result.Add(user);
             }
@@ -231,7 +235,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                 (
                     !string.IsNullOrEmpty(userToIntegrate.Person.FirstName) &&
                     !string.IsNullOrEmpty(userToIntegrate.Person.LastName) &&
-                    !string.IsNullOrEmpty(userToIntegrate.MaximoPersonId)&&
+                    !string.IsNullOrEmpty(userToIntegrate.MaximoPersonId) &&
                     !userToIntegrate.Systemuser
                 );
             if (!isValid) {

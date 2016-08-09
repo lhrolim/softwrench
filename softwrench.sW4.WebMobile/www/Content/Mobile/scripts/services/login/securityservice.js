@@ -172,11 +172,18 @@
          * Updates the current user's properties.
          * Get the updated properties by using {@link #currentFullUser}.properties.
          * 
-         * @param {Object} properties 
+         * @param {Object} properties
+         * @param {Boolean} merge if true will only update the user properties declared in properties parameters instead of completely overriding them
          */
-        const updateCurrentUserProperties = function (properties) {
+        const updateCurrentUserProperties = function (properties, merge) {
             const current = currentFullUser();
-            setUserProperties(current, properties);
+            if (Boolean(merge)) {
+                const merged = current.properties || {};
+                angular.forEach(properties || {}, (value, key) => merged[key] = value);
+                setUserProperties(current, merged);
+            } else {
+                setUserProperties(current, properties);
+            }
             localStorageService.put(config.authkey, current);
         };
 

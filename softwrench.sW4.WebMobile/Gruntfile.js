@@ -560,8 +560,12 @@ module.exports = function (grunt) {
                 files: [
                     { src: ['build.json.template'], dest: 'build.json' },
                 ]
+            },
+            customerTemplates: { // copies customer templates so they are available to the app (symlinks wont work in prod/device)
+                files: [
+                    { expand: true, src: [ "*/templates/**/*.html" ], dest: "www/Content/Customers/templates", cwd: "www/Content/Customers" }
+                ]
             }
-
         },
         //#endregion
 
@@ -667,8 +671,8 @@ module.exports = function (grunt) {
     grunt.registerTask("cleanall", ["clean:vendor", "clean:temp", "clean:pub"]);
     grunt.registerTask("tagsdev", ["tags:buildScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
     grunt.registerTask("tagsdevbuild", ["tags:buildTranspiledScripts", "tags:buildVendorScripts", "tags:buildLinks", "tags:buildVendorLinks"]);
-    grunt.registerTask("devlocal", ["cleanall", "xmlpoke:bundleid", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "tagsdev"]);
-    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "xmlpoke:bundleid", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "babel:debug", "tagsdevbuild", "copy:buildjson","copy:build"]);
+    grunt.registerTask("devlocal", ["cleanall", "xmlpoke:bundleid", "copy:customerTemplates", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "tagsdev"]);
+    grunt.registerTask("devbuild", "prepares the project for a 'debug mode' build", ["cleanall", "xmlpoke:bundleid", "bowercopy:dev", "bowercopy:css", "bowercopy:fontsdev", "sass:dev", "babel:debug", "tagsdevbuild", "copy:buildjson", "copy:customerTemplates", "copy:build"]);
     grunt.registerTask("default", ["devlocal"]);
     //#endregion
 
@@ -680,6 +684,7 @@ module.exports = function (grunt) {
     grunt.registerTask("preparerelease", "prepares the project for release build", [
         "cleanall", // cleans destination folders
         "copy:buildjson", //copy build.json
+        "copy:customerTemplates", // copies customer templates inside the app from the symlinks
         "xmlpoke:bundleid", // update bundleid according to the platform
         "bowercopy:prod", "bowercopy:css", "bowercopy:fontsrelease", // copy bower dependencies to appropriate project folders
         "concatall", // concats the scripts and stylesheets

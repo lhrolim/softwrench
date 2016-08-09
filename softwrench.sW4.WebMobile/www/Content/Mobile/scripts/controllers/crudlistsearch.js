@@ -160,7 +160,6 @@
             // do search
             $scope.apply = function () {
                 crudContextService.refreshGrid();
-                routeService.go("^");
             }
 
             $scope.sortChanged = function (newValue) {

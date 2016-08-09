@@ -41,6 +41,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 ClientPlatform.Mobile, false, syncDisplayables, null, null, null, null, null, idFieldName, userIdFieldName, null);
             definition.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.SyncSchemaLazyFkResolverDelegate;
             definition.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
+            definition.LazyOfflineAssociationResolver = OffLineMetadataProvider.LazyEntityAssociatonResolver;
             return definition;
         }
 
@@ -77,6 +78,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             schema.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.LazyFkResolverDelegate;
             schema.SchemaFilterResolver = ApplicationSchemaLazyFkHandler.LazyFilterResolver;
             schema.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
+            schema.LazyOfflineAssociationResolver = OffLineMetadataProvider.LazyEntityAssociatonResolver;
             schema.ApplicationTitle = applicationTitle;
             SetTitle(applicationName, displayables, schema);
 

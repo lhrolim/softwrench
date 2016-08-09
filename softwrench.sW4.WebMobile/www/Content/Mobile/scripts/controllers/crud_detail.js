@@ -3,9 +3,9 @@
     "use strict";
 
     softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", 
-    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService",
+    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService","offlineSchemaService","commandBarDelegate",
     function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform,
-    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService) {
+    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService,offlineSchemaService,commandBarDelegate) {
         
         function turnOffChangeEvents() {
             $rootScope.areChangeEventsEnabled = false;
@@ -39,11 +39,25 @@
             $scope.compositionpopover.show($event);
         }
 
+        $scope.compositionListSchema = null;
+
         $scope.$on("sw_compositionselected", function () {
             $scope.compositionpopover.hide();
+            $scope.compositionListSchema = $scope.isOnMainTab() ? null : crudContextService.getCompositionListSchema();
         });
 
-
+        $scope.$watch(() => {
+            return $scope.isOnMainTab();
+        }, (newValue, oldValue) => {
+            if (oldValue === newValue) {
+                return;
+            }
+            if (newValue) {
+                $scope.compositionListSchema = null;
+            } else {
+                $scope.compositionListSchema = crudContextService.getCompositionListSchema();
+            }
+        });
 
         $scope.loadMainTab = function () {
             $ionicScrollDelegate.scrollTop();
@@ -116,14 +130,19 @@
             return crudContextService.isOnMainTab();
         }
 
-        $scope.addCompositionAllowed = function() {
-            const context = crudContextService.getCrudContext();
-            const composition = context.composition;
-            return composition &&
-                composition.currentTab &&
-                composition.currentTab.schema &&
-                expressionService.evaluate(composition.currentTab.schema.allowInsertion, $scope.datamap, { schema: $scope.schema }, null);
-        };
+        $scope.detailSubTitle = function () {
+            if (crudContextService.isCreation()) {
+                return null;
+            }
+            return offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "subtitle", $scope.datamap);
+        }
+
+        $scope.detailFeatured = function (item) {
+            if (crudContextService.isCreation()) {
+                return null;
+            }
+            return offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "featured", $scope.datamap);
+        }
 
         $scope.detailTitle = function () {
             const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
@@ -134,6 +153,9 @@
             const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
             return schemaService.getSummary(crudContextService.currentDetailSchema(), datamap, true);
         }
+
+
+
 
         $scope.addCompositionItem = function () {
             const validationErrors = crudContextService.validateDetail();
@@ -176,21 +198,11 @@
         };
 
         $scope.onScroll = function () {
-            var position = $ionicScrollDelegate.$getByHandle('detailHandler').getScrollPosition();
-
+            const position = $ionicScrollDelegate.$getByHandle('detailHandler').getScrollPosition();
             //update the position of the detail's floating action button when the user scrolls
             if (!!position) {
-                var toolbarPrimary = $('.bar-header.bar-positive:visible').outerHeight(true);
-                var toolbarSecondary = $('.bar-subheader.bar-dark:visible').outerHeight(true);
-                var headerTitle = $('.crud-details .crud-title:visible').outerHeight(true);
-                var headerDescription = $('.crud-details .crud-description:visible').outerHeight(true);
-                var componetHeights = toolbarPrimary + toolbarSecondary + headerTitle + headerDescription;
-
-                var top = position.top;
-                var element = $('command-bar[position="mobile.fab"]');
-                var windowHeight = $(window).height();
-                var offset = (windowHeight - componetHeights - 134) + top;
-                $(element).css('top', offset);
+                const element = $("command-bar[position=\"mobile.fab\"]");
+                commandBarDelegate.positionFabCommandBar(element, position.top);
             }
         };
 

@@ -136,22 +136,22 @@
     }
 }
 
+.platform-ios {
+    .ion-autocomplete-container {
+        .bar {
+            &.hasusewhereclause {
+                .item-input-wrapper {
+                    &.search {
+                        width: calc(100% - 165px);
+                    }
+                }
+            }
+        }
+    }
+}
+
 .button-icon {
     color: #fff;
-}
-
-.mfb-component__button--main {
-    background-color: #F65752;
-}
-
-.mfb-component__button--child {
-    background-color: $cts_gray;
-}
-
-.action-fab {
-    .mfb-component__button--main {
-        background-color: $cts_green;
-    }
 }
 
 .message-user-sync {
@@ -228,27 +228,6 @@ input[disabled], input[readonly]:not(.cloned-text-input), select[disabled], sele
 
 @media (min-width: 767px) {
     .responsive-container {
-        &.md {
-            width: 567px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .button-container, .button.button-block, .button.button-full {
-            padding-left: 0;
-            padding-right: 0;
-        }
-    }
-}
-
-@media (min-width: 1024px) {
-    .responsive-container {
-        &.lg {
-            width: 767px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
         .button-container, .button.button-block, .button.button-full {
             padding-left: 0;
             padding-right: 0;

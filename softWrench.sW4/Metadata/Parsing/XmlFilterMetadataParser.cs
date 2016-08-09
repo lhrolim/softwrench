@@ -63,9 +63,14 @@ namespace softWrench.sW4.Metadata.Parsing {
                     var falseLabel = el.Attribute(XmlFilterSchema.FalseLabelAttribute).ValueOrDefault((string)null);
                     var falseValue = el.Attribute(XmlFilterSchema.FalseValueAttribute).ValueOrDefault((string)null);
                     filters.AddLast(new MetadataBooleanFilter(attribute, label, icon, position, tooltip, whereclause, preSelected, trueLabel, trueValue, falseLabel, falseValue));
-                } else if (el.IsNamed(XmlFilterSchema.NumericFilterElement)) { 
+                } else if (el.IsNamed(XmlFilterSchema.NumericFilterElement)) {
                     var numberFilter = new MetadataNumberFilter(attribute, label, icon, position, tooltip, whereclause);
                     filters.AddLast(numberFilter);
+                } else if (el.IsNamed(XmlFilterSchema.DateFilterElement)) {
+                    var allowFuture = el.Attribute(XmlFilterSchema.AllowFutureAttribute).ValueOrDefault(true);
+                    var dateOnly = el.Attribute(XmlFilterSchema.DateOnlyAttribute).ValueOrDefault(true);
+                    var dateFilter = new MetadataDateTimeFilter(attribute, label, icon, position, tooltip, whereclause, allowFuture, dateOnly);
+                    filters.AddLast(dateFilter);
                 } else if (el.IsNamed(XmlFilterSchema.BaseFilterElement)) {
                     var toRemove = el.Attribute(XmlFilterSchema.RemoveAttribute).ValueOrDefault(false);
                     filters.AddLast(new BaseMetadataFilter(attribute, label, icon, position, tooltip, whereclause, toRemove, style));

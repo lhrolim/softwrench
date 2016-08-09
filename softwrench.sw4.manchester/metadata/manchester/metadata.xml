@@ -417,7 +417,8 @@
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-
+          <field attribute="phone" hidden="true"/>
+          <field attribute="email" hidden="true"/>
           <field attribute="targstartdate" hidden="true"/>
           <field attribute="targcompdate" hidden="true"/>
           <field attribute="actstart" hidden="true"/>
@@ -703,6 +704,14 @@
               </section>
             </tab>
           </section>
+
+          <commandbars>
+            <commandgroup position="actions">
+              <!-- Create new SR as Related Record -->
+              <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>
+            </commandgroup>
+          </commandbars>
+          
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
         </schema>
