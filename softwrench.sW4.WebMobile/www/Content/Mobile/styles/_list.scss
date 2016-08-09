@@ -112,10 +112,12 @@ crud-icon {
 .crud-list {
     .crud-item {
         cursor: pointer;
+        padding: 10px 15px;
 
         .featured {
             float: right;
-            color: #777;
+            color: #919191;
+            font-weight: bold;
         }
 
         .title {

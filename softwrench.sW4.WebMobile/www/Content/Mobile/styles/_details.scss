@@ -47,6 +47,11 @@
 .crud-details {
     .crud-title {
         font-size: 16px;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 10px;
+        margin-top: 0;
+        margin-bottom: 5px;
 
         .summary {
             color: #aaa;
@@ -56,6 +61,8 @@
 
         .featured {
             float: right;
+            color: #919191;
+            font-weight: bold;
         }
 
         .title {

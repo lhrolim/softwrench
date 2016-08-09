@@ -146,6 +146,10 @@
                     }
                 }
             }
+
+            input[type=search] {
+                margin-top: 5px;
+            }
         }
     }
 }
@@ -191,6 +195,13 @@ input[disabled], input[readonly]:not(.cloned-text-input), select[disabled], sele
 .input-label {
     font-size: 14px;
     font-weight: bold;
+}
+
+.no-records {
+    .item {
+        border-bottom: none;
+        font-size: 14px;
+    }
 }
 
 /* keeps side-menu open in tablets */
