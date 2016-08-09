@@ -30,8 +30,8 @@
             return $injector.get(iconProviderName);
         }
 
-        function delegateToDeclaredServiceProxy(method) {
-            const methodName = method.name;
+        function delegateToDeclaredServiceProxy(method, methodName) {
+            // const methodName = method.name; --> does not work in uglified scripts
             return function () {
                 const iconService = currentIconProvider();
                 if (!iconService || !iconService[methodName] || !angular.isFunction(iconService[methodName])) {
@@ -169,11 +169,11 @@
 
         //#region Service Instance
         const service = {
-            getIconClass: delegateToDeclaredServiceProxy(getIconClass),
-            getIconColor: delegateToDeclaredServiceProxy(getIconColor),
-            getTextColor: delegateToDeclaredServiceProxy(getTextColor),
-            getIconText: delegateToDeclaredServiceProxy(getIconText),
-            getIconIcon: delegateToDeclaredServiceProxy(getIconIcon)
+            getIconClass: delegateToDeclaredServiceProxy(getIconClass, "getIconClass"),
+            getIconColor: delegateToDeclaredServiceProxy(getIconColor, "getIconColor"),
+            getTextColor: delegateToDeclaredServiceProxy(getTextColor, "getTextColor"),
+            getIconText: delegateToDeclaredServiceProxy(getIconText, "getIconText"),
+            getIconIcon: delegateToDeclaredServiceProxy(getIconIcon, "getIconIcon")
         };
         return service;
         //#endregion
