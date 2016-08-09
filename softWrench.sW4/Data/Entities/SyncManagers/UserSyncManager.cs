@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
+using Quartz.Util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
@@ -126,6 +127,8 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             dto.AppendProjectionField(ProjectionField.Default("locationsite"));
             dto.AppendProjectionField(ProjectionField.Default("email_.emailaddress"));
             dto.AppendProjectionField(ProjectionField.Default("phone_.phonenum"));
+            dto.AppendProjectionField(ProjectionField.Default("primaryemail_.emailaddress"));
+            dto.AppendProjectionField(ProjectionField.Default("primaryphone_.phonenum"));
             dto.AppendProjectionField(ProjectionField.Default("language"));
             dto.AppendProjectionField(ProjectionField.Default("department"));
             dto.AppendProjectionField(ProjectionField.Default("personid"));
@@ -169,6 +172,8 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                     //disabling non users if ldap is turned on
                     continue;
                 }
+                var primaryemail = (string) maximoPerson.GetAttribute("primaryemail_.emailaddress");
+                var primaryphone = (string) maximoPerson.GetAttribute("primaryphone_.phonenum");
                 var user = new User {
                     UserName = userName ?? (string)maximoPerson.GetAttribute("personid"),
                     Password = MetadataProvider.GlobalProperty(SwUserConstants.DefaultUserPassword),
@@ -178,11 +183,10 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                         FirstName = (string)maximoPerson.GetAttribute("firstname"),
                         LastName = (string)maximoPerson.GetAttribute("lastname"),
                         OrgId = (string)maximoPerson.GetAttribute("locationorg") ?? ApplicationConfiguration.DefaultOrgId,
-                        SiteId =
-                            (string)maximoPerson.GetAttribute("locationsite") ?? ApplicationConfiguration.DefaultSiteId,
-                        Email = (string)maximoPerson.GetAttribute("email_.emailaddress"),
+                        SiteId = (string)maximoPerson.GetAttribute("locationsite") ?? ApplicationConfiguration.DefaultSiteId,
+						Email = !primaryemail.IsNullOrWhiteSpace() ? primaryemail : (string)maximoPerson.GetAttribute("email_.emailaddress"),
                         Department = (string)maximoPerson.GetAttribute("department"),
-                        Phone = (string)maximoPerson.GetAttribute("phone_.phonenum"),
+						Phone = !primaryphone.IsNullOrWhiteSpace() ? primaryphone : (string)maximoPerson.GetAttribute("phone_.phonenum"),
                         Language = (string)maximoPerson.GetAttribute("language")
                     },
                     CriptoProperties = string.Empty,
