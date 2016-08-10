@@ -612,7 +612,9 @@
                 const options = data.resultObject;
                 log.info('associations returned {0}'.format($.keys(options)));
                 updateAssociationOptionsRetrievedFromServer(scope, options, fields, postAssociationHook);
+                //clearDependantFieldValues(scope, triggerFieldName);
                 if (association.attribute !== "#eagerassociations") {
+                    clearDependantFieldValues(scope, triggerFieldName);
                     //this means we´re not getting the eager associations, see method above
                     //                    postAssociationHook(association, scope, { dispatchedbytheuser: true, phase: 'configured' });
                 } else {
@@ -794,6 +796,16 @@
             });
         };
 
+        function clearDependantFieldValues(scope, triggerFieldName) {
+            var fieldsDependant = scope.displayables.filter(function(o) {
+                return $.inArray(triggerFieldName, o.dependantFields) !== -1 && o.schema.isLazyLoaded;
+            });
+            $.each(fieldsDependant, function(key, value) {
+                var attribute = value.attribute;
+                scope.datamap[attribute] = null;
+            });
+        }
+
 
         function lookupAssociation(displayables, associationTarget) {
             for (let i = 0; i < displayables.length; i++) {
@@ -822,7 +834,8 @@
             loadSchemaAssociations: loadSchemaAssociations,
             updateDependentAssociationValues: updateDependentAssociationValues,
             updateFromServerSchemaLoadResult,
-            updateUnderlyingAssociationObject: updateUnderlyingAssociationObject
+            updateUnderlyingAssociationObject: updateUnderlyingAssociationObject,
+            clearDependantFieldValues: clearDependantFieldValues
         };
         return service;
     }

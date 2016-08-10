@@ -95,8 +95,9 @@
         </relationship>
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="locationorg" to="orgid"/>
           <relationshipAttribute from="locationsite" to="siteid"/>
-          <relationshipAttribute to="type" query="!@type != 'STOREROOM'"/>
+          <relationshipAttribute to="type" query="!@type not in ('STOREROOM', 'HOLDING')"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -167,12 +168,12 @@
             <renderer type="lookup"/>
             <event type="afterchange" service="personService" method="onOrganizationSelected" />
           </association>
-          <association target="locationsite" labelfield="site_.description" label="Site ID" requiredexpression="true" default="@siteid" extraprojectionvalues="orgid">
+          <association target="locationsite" labelfield="site_.description" label="Site ID" requiredexpression="true" default="@siteid" extraprojectionvalues="orgid" dependantfields="locationorg">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterSites"/>
             <event type="afterchange" service="personService" method="onSiteSelected" />
           </association>
-          <association target="location" labelfield="location_.description" label="Location">
+          <association target="location" labelfield="location_.description" label="Location" dependantfields="locationsite,locationorg">
             <renderer type="lookup"/>
           </association>
           <field attribute="department" label="Department"/>
