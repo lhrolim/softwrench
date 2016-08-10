@@ -177,14 +177,20 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         compiledTemplate.scope.getItemHeight = function (value) {
                             var width = $(window).width();
 
-                            //number of character per line, based on 43 character on a 360px wide device
-                            var characters = Math.ceil(width * (43 / 360));
-
                             //total number of lines
-                            var lines = Math.ceil(value.length / characters);
+                            const textWidth = compiledTemplate.scope.getTextWidth(value);
+                            const lines = Math.ceil(textWidth / width);
 
                             //calculated height
                             return lines * 20 + 32;
+                        }
+
+                        compiledTemplate.scope.getTextWidth = function (text) {
+                            // re-use canvas object for better performance
+                            var canvas = compiledTemplate.scope.getTextWidth.canvas || (compiledTemplate.scope.getTextWidth.canvas = document.createElement("canvas"));
+                            var context = canvas.getContext("2d");
+                            var metrics = context.measureText(text);
+                            return metrics.width;
                         }
 
                         // function which selects the item, hides the search container and the ionic backdrop if it is not a multiple select autocomplete
