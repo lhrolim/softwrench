@@ -11,8 +11,10 @@
   <property key="defaultOrgId" value="KOGT"/>
   <property key="defaultSiteId" value="SUPPORT24"/>
   
-  <!--  <property key="email.smtp.timeout" value="10000"/>-->
-  <!--property key="email.smtp.port" value="587"/-->
+  <!--property key="email.smtp.host" value="172.24.16.101"/>
+  <property key="email.smtp.timeout" value="10000"/>
+  <property key="email.smtp.port" value="587"/>
+  <property key="email.stmp.enableSSL" value="true"/> -->
   <property key="email.smtp.host" value="10.50.100.15"/>
   <property key="email.stmp.enableSSL" value="false"/>
 
@@ -25,10 +27,8 @@
       a list of accepted values
   -->
   <property key="maximoutc" value="US Mountain Standard Time"/>
-  <property key="maxAttachmentSize" value="10"/>
-  <!--in MB-->
-  <property key="maxScreenshotSize" value="5"/>
-  <!-- in MB-->
+  <property key="maxAttachmentSize" value="50"/>  <!--in MB-->
+  <property key="maxScreenshotSize" value="5"/>  <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png,lic"/>
   <property key="sourcemapping" value="smartcloud7.5"/>
   <property key="targetmapping" value="smartcloud7.5"/>
@@ -58,11 +58,14 @@
   </environment>
 
   <environment key="prod">
+    <!--Sample UNC Doclink Path-->
+    <property key="maximourldoclinkspath" value="https://smartcloud.kdisupport24.com"/>
+    
     <property key="maximoutc" value="Central Standard Time"/>
-    <property key="swdb_url" value="Data Source=172.24.16.111;Initial Catalog=SWDB_KOGTPROD;User Id=sw;password=$0ftWr3nch;" />
-    <!--<property key="basewsURL" value="https://www.kogtsupport24.com/meaweb/wsdl/" />-->
-    <property key="basewsURL" value="http://172.24.32.39:9080/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=172.24.16.111;Initial Catalog=KOGTPROD;User Id=MAXIMO;password=M@x1m0;" />
+    <property key="maximo_DB_url" value="Data Source=172.24.16.110;Initial Catalog=KOGTPROD;User Id=MAXIMO;password=M@x1m0;" />
+    <property key="swdb_url" value="Data Source=172.24.16.110;Initial Catalog=SWDB_KOGTPROD;User Id=sw;password=$0ftWr3nch;" />
+    <property key="basewsURL" value="https://smartcloud.kdisupport24.com/meaweb/wsdl/" />
+    <!--<property key="basewsURL" value="http://172.24.32.39:9080/meaweb/wsdl/" />-->
     <property key="email.smtp.host" value="172.24.16.101"/>
     <property key="email.stmp.enableSSL" value="true"/>
   </environment>
