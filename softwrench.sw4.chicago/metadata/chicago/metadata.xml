@@ -262,20 +262,25 @@
       </filters>
       <schemas>
         <schema id="list" title="Service Request Grid" stereotype="list" redeclaring="true">
-          <field attribute="ticketid" label="Service Request"/>
+          <field attribute="ticketid" label="Service Request">
+            <renderer type="default" params="width=10%" />
+          </field>
           <field attribute="description" label="Description"/>
-          <field attribute="reportedby" label="Reported By"/>
-          <field attribute="itdchcreatedbygroup" label="Created By Group"/>
-          <field attribute="pluspcustomer" label="Customer"/>
-          <field attribute="internalpriority" label="Internal Priority"/>
-          <field attribute="status" label="Status"/>
+          <field attribute="reportedby" label="Reported By">
+            <renderer type="default" params="width=19%" />
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="default" params="width=8%" />
+          </field>
           <field attribute="reportdate" label="Reported Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss;width=11%" />
           </field>
-          <field attribute="targetfinish" label="Target Finish">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+          <field attribute="itdclosedate" label="Closed Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss;width=11%" />
           </field>
-          <field attribute="owner" label="Owner"/>
+          <field attribute="owner" label="Owner">
+            <renderer type="default" params="width=19%" />
+          </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
             <property key="list.defaultorderby" value="sr.ticketuid desc"/>
