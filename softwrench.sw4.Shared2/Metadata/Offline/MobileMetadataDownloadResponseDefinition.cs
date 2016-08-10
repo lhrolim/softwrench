@@ -15,8 +15,6 @@ namespace softwrench.sW4.Shared2.Metadata.Offline {
         public string CommandBarsJson { get; set; }
 
         public JObject AppConfiguration { get; set; }
-
-        public IDictionary<string, object> UserProperties { get; set; }
     }
 
 }

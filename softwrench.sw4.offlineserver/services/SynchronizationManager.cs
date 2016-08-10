@@ -48,11 +48,12 @@ namespace softwrench.sw4.offlineserver.services {
 
 
         public SynchronizationResultDto GetData(SynchronizationRequestDto request, InMemoryUser user) {
-            var topLevelApps = GetTopLevelAppsToCollect(request, user);
             _iEventDispatcher.Dispatch(new PreSyncEvent(request));
-            var result = new SynchronizationResultDto();
-            var rowstampMap = request.RowstampMap;
 
+            var result = new SynchronizationResultDto() { UserProperties = user.GenericSyncProperties };
+
+            var rowstampMap = request.RowstampMap;
+            var topLevelApps = GetTopLevelAppsToCollect(request, user);
             foreach (var topLevelApp in topLevelApps) {
                 ResolveApplication(request, user, topLevelApp, result, rowstampMap);
             }

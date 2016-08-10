@@ -88,13 +88,49 @@ namespace softwrench.sw4.offlineserver.controller {
                 MenuJson = JsonConvert.SerializeObject(securedMenu, Formatting.None, _jsonSerializerSettings),
                 CommandBarsJson = JsonConvert.SerializeObject(commandBars, Formatting.None, _jsonSerializerSettings),
                 AppConfiguration = _appConfigurationProvider.AppConfig(),
-                UserProperties = user.GenericSyncProperties
             };
 
             Log.InfoFormat("Download Metadata executed in {0}", LoggingUtil.MsDelta(watch));
             return response;
         }
 
+        [HttpPost]
+        public SynchronizationResultDto PullNewData(SynchronizationRequestDto synchronizationRequest) {
+            return _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
+        }
+
+        [HttpPost]
+        public AssociationSynchronizationResultDto PullAssociationData(JObject rowstampMap) {
+            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), rowstampMap);
+        }
+
+
+        [HttpPost]
+        public AssociationSynchronizationResultDto PullSingleAssociationData([FromUri]string applicationToFetch, JObject rowstampMap) {
+            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), rowstampMap, applicationToFetch);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="application">Name of the application of this batch</param>
+        /// <param name="remoteId">Id of the batch on the remote end</param>
+        /// <param name="batchContent">The </param>
+        /// <returns></returns>
+        [HttpPost]
+        public Batch SubmitBatch([FromUri]string application, [FromUri]string remoteId, JObject batchContent) {
+            Log.InfoFormat("Creating batch for application {0}", application);
+            // return the generated Batch to be serialized
+            var batch = _offLineBatchService.SubmitBatch(application, remoteId, batchContent);
+            return batch;
+        }
+
+        [HttpGet]
+        public IList<Batch> BatchStatus([FromUri]IList<string> ids) {
+            return _offLineBatchService.GetBatchesByRemoteIds(ids);
+        }
+
+        #region Reporting
         [HttpGet]
         public string Counts() {
             var user = SecurityFacade.CurrentUser();
@@ -140,22 +176,6 @@ namespace softwrench.sw4.offlineserver.controller {
             });
         }
 
-        [HttpPost]
-        public SynchronizationResultDto PullNewData(SynchronizationRequestDto synchronizationRequest) {
-            return _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
-        }
-
-        [HttpPost]
-        public AssociationSynchronizationResultDto PullAssociationData(JObject rowstampMap) {
-            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), rowstampMap);
-        }
-
-
-        [HttpPost]
-        public AssociationSynchronizationResultDto PullSingleAssociationData([FromUri]string applicationToFetch, JObject rowstampMap) {
-            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), rowstampMap, applicationToFetch);
-        }
-
         public class MobileCountReport {
             public IDictionary<string, int> TopAppCounts = new Dictionary<string, int>();
             public IDictionary<string, int> AssociationCounts = new Dictionary<string, int>();
@@ -165,10 +185,7 @@ namespace softwrench.sw4.offlineserver.controller {
             public int AssociationTotals;
             public int TopAppTotals;
 
-            public MobileUserDtoReport UserData {
-                get; set;
-            }
-
+            public MobileUserDtoReport UserData { get; set; }
         }
 
         public class MobileUserDtoReport {
@@ -182,42 +199,11 @@ namespace softwrench.sw4.offlineserver.controller {
             }
 
             public string SiteId { get; set; }
-
             public string OrgId { get; set; }
-
-            public string PersonId {
-                get; set;
-            }
-
-            public string Username {
-                get; set;
-            }
-
-            public IDictionary<string, object> Properties {
-                get; set;
-            }
+            public string PersonId { get; set; }
+            public string Username { get; set; }
+            public IDictionary<string, object> Properties { get; set; }
         }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="application">Name of the application of this batch</param>
-        /// <param name="remoteId">Id of the batch on the remote end</param>
-        /// <param name="batchContent">The </param>
-        /// <returns></returns>
-        [HttpPost]
-        public Batch SubmitBatch([FromUri]string application, [FromUri]string remoteId, JObject batchContent) {
-            Log.InfoFormat("Creating batch for application {0}", application);
-            // return the generated Batch to be serialized
-            var batch = _offLineBatchService.SubmitBatch(application, remoteId, batchContent);
-            return batch;
-        }
-
-        [HttpGet]
-        public IList<Batch> BatchStatus([FromUri]IList<String> ids) {
-            return _offLineBatchService.GetBatchesByRemoteIds(ids);
-        }
-
+        #endregion
     }
 }

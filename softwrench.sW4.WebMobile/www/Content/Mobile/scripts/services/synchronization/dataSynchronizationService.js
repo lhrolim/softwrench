@@ -18,11 +18,14 @@
         };
 
 
-
         function resultHandlePromise(result) {
             const log = $log.get("dataSynchronizationService#createAppSyncPromise");
             const topApplicationData = result.data.topApplicationData;
             const compositionData = result.data.compositionData;
+
+            const userProperties = result.data.userProperties;
+            securityService.updateCurrentUserProperties(userProperties);
+
             if (result.data.isEmpty) {
                 log.info("no new data returned from the server");
                 //interrupting async calls
@@ -30,17 +33,16 @@
             }
 
             log.info("receiving new topLevel data from the server");
-            var queryArray = [];
-            for (let i = 0; i < topApplicationData.length; i++) {
+            const queryArray = [];
+            angular.forEach(topApplicationData, application => {
                 //multiple applications can be returned on a limit scenario where it´s the first sync, or on a server update.
-                const application = topApplicationData[i];
                 const newDataMaps = application.newdataMaps;
                 const updatedDataMaps = application.updatedDataMaps;
                 const insertUpdateDatamap = application.insertOrUpdateDataMaps;
                 const deletedIds = application.deletedRecordIds;
                 log.debug("{0} topleveldata: inserting:{1} | updating:{2} | deleting: {3}".format(application.applicationName, newDataMaps.length, updatedDataMaps.length, deletedIds.length));
 
-                angular.forEach(newDataMaps, function (newDataMap) {
+                angular.forEach(newDataMaps, newDataMap => {
                     const id = persistence.createUUID();
                     const newJson = JSON.stringify(newDataMap.fields); //newJson = datamapSanitizationService.sanitize(newJson);
                     const idx = searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, newDataMap);
@@ -48,7 +50,7 @@
                     queryArray.push(insertQuery);
                 });
 
-                angular.forEach(insertUpdateDatamap, function (insertOrUpdateDatamap) {
+                angular.forEach(insertUpdateDatamap, insertOrUpdateDatamap => {
                     const id = persistence.createUUID();
                     const newJson = JSON.stringify(insertOrUpdateDatamap.fields); //newJson = datamapSanitizationService.sanitize(newJson);
                     const idx = searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, insertOrUpdateDatamap);
@@ -56,7 +58,7 @@
                     queryArray.push(insertOrUpdateQuery);
                 });
 
-                angular.forEach(updatedDataMaps, function (updateDataMap) {
+                angular.forEach(updatedDataMaps, updateDataMap => {
                     const updateJson = JSON.stringify(updateDataMap.fields); //updateJson = datamapSanitizationService.sanitize(updateJson);
                     const idx = searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, updateDataMap);
                     const updateQuery = { query: entities.DataEntry.updateQueryPattern, args: [updateJson, String(updateDataMap.approwstamp), idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3, updateDataMap.id, updateDataMap.application] };
@@ -68,15 +70,18 @@
                     queryArray.push(deleteQuery);
                     //TODO: treat the case where AuditEntries that have no refId shouldn't be deleted (e.g. crud_create operations)
                     const deleteAuditQuery = {
-                        query: entities.AuditEntry.deleteRelatedByRefIdStatement.format(buildIdsString(deletedIds)), args: [application.apllicationName] };
+                        query: entities.AuditEntry.deleteRelatedByRefIdStatement.format(buildIdsString(deletedIds)),
+                        args: [application.apllicationName]
+                    };
                     queryArray.push(deleteAuditQuery);
                 }
-            }
-            //ignoring composition number to SyncOperation table
+            });
+
+            // ignoring composition number to SyncOperation table
             const numberOfDownloadedItems = queryArray.length;
             return offlineCompositionService.generateSyncQueryArrays(compositionData)
-                .then((compositionQueriesToAppend) => queryArray.concat(compositionQueriesToAppend))
-                .then((queryArray) =>swdbDAO.executeQueries(queryArray))
+                .then(compositionQueriesToAppend => queryArray.concat(compositionQueriesToAppend))
+                .then(queryArray => swdbDAO.executeQueries(queryArray))
                 .then(() =>  $q.when(numberOfDownloadedItems));
         };
 

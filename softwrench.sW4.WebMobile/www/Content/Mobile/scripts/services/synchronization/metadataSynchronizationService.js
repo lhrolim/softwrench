@@ -24,9 +24,6 @@
                 const commandBars = JSON.parse(metadatasResult.data.commandBarsJson);
                 const config = metadatasResult.data.appConfiguration;
 
-                const userProperties = metadatasResult.data.userProperties;
-                securityService.updateCurrentUserProperties(userProperties);
-
                 const menuPromise = menuModelService.updateMenu(serverMenu);
                 const topLevelPromise = metadataModelService.updateTopLevelMetadata(topLevelMetadatas);
                 const associationPromise = metadataModelService.updateAssociationMetadata(associationMetadatasJson);

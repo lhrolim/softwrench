@@ -15,6 +15,8 @@ namespace softwrench.sw4.offlineserver.dto {
 
         public IList<SynchronizationApplicationResultData> CompositionData { get; set; }
 
+        public IDictionary<string, object> UserProperties { get; set; }
+
         public void AddTopApplicationData(SynchronizationApplicationResultData newResultData) {
             if (TopApplicationData == null) {
                 TopApplicationData = new List<SynchronizationApplicationResultData>();
@@ -29,7 +31,7 @@ namespace softwrench.sw4.offlineserver.dto {
             CompositionData.Add(newResultData);
         }
 
-        public Boolean IsEmpty {
+        public bool IsEmpty {
             get { return TopApplicationData.Union(CompositionData).All(data => data.IsEmpty); }
         }
 
