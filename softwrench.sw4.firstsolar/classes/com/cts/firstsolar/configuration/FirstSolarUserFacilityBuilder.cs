@@ -133,9 +133,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             if (!requestProperties.TryGetValue(FirstSolarConstants.FacilitiesProp, out selectedFacilities) || selectedFacilities == null) {
                 return;
             }
+            IEnumerable<string> selectedFacilitiesList;
+            if (selectedFacilities is JArray) { // client-side payload
+                var selectedFacilitiesArray = ((JArray)selectedFacilities);
+                selectedFacilitiesList = selectedFacilitiesArray.ToObject<List<string>>();
+            } else if (selectedFacilities is IEnumerable<string>) { // server-side payload
+                selectedFacilitiesList = ((IEnumerable<string>)selectedFacilities).ToList();
+            } else {
+                selectedFacilitiesList = Enumerable.Empty<string>();
+            }
             // update inmemory
-            var selectedFacilitiesArray = ((JArray) selectedFacilities);
-            var selectedFacilitiesList = selectedFacilitiesArray.ToObject<List<string>>();
             user.Genericproperties.Remove(FirstSolarConstants.FacilitiesProp);
             user.Genericproperties.Add(FirstSolarConstants.FacilitiesProp, selectedFacilitiesList);
             // update swuser db
