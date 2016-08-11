@@ -15,8 +15,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         public static void HandleMultiAssetLoccis(CrudOperationData entity, object rootObject) {
             // Use to obtain security information from current user
             var user = SecurityFacade.CurrentUser();
-
-            var dirtyEntries = ((IEnumerable<CrudOperationData>)entity.GetRelationship("multiassetlocci_")).Where(w => "true".EqualsIc(w.GetUnMappedAttribute("#isDirty"))).ToArray();
+            var multiassetlocci = (IEnumerable<CrudOperationData>) entity.GetRelationship("multiassetlocci_");
+            if (multiassetlocci == null || !multiassetlocci.Any()) {
+                return;
+            }
+            var dirtyEntries = multiassetlocci.Where(w => "true".EqualsIc(w.GetUnMappedAttribute("#isDirty"))).ToArray();
 
             // Multiassetlocci id to use from new record
             int multiid = -1;
