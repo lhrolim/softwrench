@@ -260,8 +260,8 @@
 
         entities.DataEntry.restoreToOriginalStateStatement = "update DataEntry set isDirty=0,datamap=originaldatamap where id=? and application=?";
 
-        entities.DataEntry.clearProblem = "update DataEntry set 'hasProblem'=0 where id in(?)";
-        entities.DataEntry.setProblem = "update DataEntry set 'hasProblem'=1 where id in(?)";
+        //entities.DataEntry.clearProblem = "update DataEntry set hasProblem=0 where id in (?)";
+        //entities.DataEntry.setProblem = "update DataEntry set hasProblem=1 where id in (?)";
         entities.DataEntry.findProblems = "select p.* from Problem p left join batchitem bi on p.id = bi.problem left join batch b on b.id = bi.batch where bi.dataentry = ? order by b.sentDate desc";
 
         //here because of the order of the files

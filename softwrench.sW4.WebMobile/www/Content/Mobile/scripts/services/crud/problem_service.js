@@ -7,8 +7,12 @@
             if (dataEntriesIds.length === 0) {
                 return $q.when(null);
             }
-            const queryStr = hasProblem ? offlineEntities.DataEntry.setProblem : offlineEntities.DataEntry.clearProblem;
-            return swdbDAO.executeQuery({ query: queryStr, args: [dataEntriesIds] });
+
+            var whereClause = dataEntriesIds.map(id => `id='${id}' or `).join(""); // using id in (?) did not work for some reason...
+            whereClause = whereClause.substring(0, whereClause.lastIndexOf(" or "));
+            const queryStr = `update DataEntry set hasProblem=${hasProblem ? 1 : 0} where (${whereClause})`;
+
+            return swdbDAO.executeQuery(queryStr);
         }
 
         function rejectProblematicQuickSync(quickSyncItem) {
@@ -66,13 +70,14 @@
                 }
             });
 
-            return $q.all(batchPromises).then(() => {
-                return updateProblem(false, problemContext.okIds);
-            }).then(() => {
-                return updateProblem(true, problemContext.problematicIds);
-            }).then(() => {
-                return rejectProblematicQuickSync(quickSyncItem);
-            }).then(() => batches);
+            return $q.all(batchPromises)
+                .then(() =>
+                    updateProblem(false, problemContext.okIds))
+                .then(() =>
+                    updateProblem(true, problemContext.problematicIds))
+                .then(() =>
+                    rejectProblematicQuickSync(quickSyncItem))
+                .then(() => batches);
         }
 
         function getProblems(dataEntryId) {
