@@ -46,7 +46,7 @@
                     }
                     //let´s delete the old compositions first, to avoid any chance of errors due to server side updates
                     //however persistence.js reverts the array... damn it
-                    queryArray.push({ query: entities.CompositionDataEntry.syncdeletionQuery, args: [idsToDelete] });
+                    queryArray.push(entities.CompositionDataEntry.syncdeletionQuery.format(idsToDelete));
                 }
 
                 return attachmentDataSynchronizationService.generateAttachmentsQueryArray(doclinksArray)
