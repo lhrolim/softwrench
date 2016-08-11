@@ -5,6 +5,7 @@ using cts.commons.simpleinjector.Events;
 using Iesi.Collections.Generic;
 using log4net;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.offlineserver.dto;
 using softwrench.sw4.offlineserver.events;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Security.Services;
@@ -127,8 +128,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
         public void HandleEvent(PreSyncEvent eventToDispatch) {
             var user = SecurityFacade.CurrentUser();
-            // AdjustUserFacilityProperties(eventToDispatch.Request.UserData.Properties, user.MaximoPersonId);
-            var requestProperties = eventToDispatch.Request.UserData.Properties;
+            var userSyncData = eventToDispatch.Request.UserData;
+            if (userSyncData == null) {
+                // did not send userdata: no changes made remotely -> keep server defined facilities
+                Log.Debug("No user data sent from client: skipping setting facilities. Server facilities prevail");
+                return;
+            }
+            var requestProperties = userSyncData.Properties;
             object selectedFacilities;
             if (!requestProperties.TryGetValue(FirstSolarConstants.FacilitiesProp, out selectedFacilities) || selectedFacilities == null) {
                 return;

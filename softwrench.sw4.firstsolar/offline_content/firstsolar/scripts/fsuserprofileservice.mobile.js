@@ -67,7 +67,7 @@
         function saveUserProfile(userViewModel) {
             const selectedFacilities = userViewModel.facilities.options.filter(f => f.checked).map(f => f.value);
             const properties = { [config.facilities.selected]: selectedFacilities };
-            return $q.when(securityService.updateCurrentUserProperties(properties, true));
+            return $q.when(securityService.updateCurrentUserProperties(properties));
         }
 
         //#endregion

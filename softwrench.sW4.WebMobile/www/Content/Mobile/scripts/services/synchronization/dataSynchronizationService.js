@@ -24,7 +24,7 @@
             const compositionData = result.data.compositionData;
 
             const userProperties = result.data.userProperties;
-            securityService.updateCurrentUserProperties(userProperties);
+            securityService.overrideCurrentUserProperties(userProperties);
 
             if (result.data.isEmpty) {
                 log.info("no new data returned from the server");
@@ -85,6 +85,10 @@
                 .then(() =>  $q.when(numberOfDownloadedItems));
         };
 
+        function userDataIfChanged() {
+            const current = securityService.currentFullUser();
+            return current.meta && current.meta.changed ? current : null;
+        }
 
         function createAppSyncPromise(firstInLoop, app, currentApps, compositionMap) {
             var log = $log.get("dataSynchronizationService#createAppSyncPromise");
@@ -98,7 +102,7 @@
                         applicationName: app,
                         clientCurrentTopLevelApps: currentApps,
                         returnNewApps: firstInLoop,
-                        userData: securityService.currentFullUser(),
+                        userData: userDataIfChanged(),
                         rowstampMap
                     };
                     return restService.post("Mobile", "PullNewData", null, payload);
@@ -115,7 +119,7 @@
                 const payload = {
                     applicationName: app,
                     itemsToDownload: [item.remoteId],
-                    userData: securityService.currentFullUser(),
+                    userData: userDataIfChanged(),
                     rowstampMap
                 };
                 var promise = restService.post("Mobile", "PullNewData", null, payload).then(resultHandlePromise).catch(errorHandlePromise);
@@ -134,7 +138,7 @@
                 payload = {
                     clientCurrentTopLevelApps: currentApps,
                     returnNewApps: true,
-                    userData: securityService.currentFullUser()
+                    userData: userDataIfChanged()
                 };
                 //single server call
                 return restService.post("Mobile", "PullNewData", null, payload)

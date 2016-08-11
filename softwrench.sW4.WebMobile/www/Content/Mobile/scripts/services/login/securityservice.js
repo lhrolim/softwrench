@@ -64,6 +64,11 @@
                 .forEach(k => localStorage.removeItem(k));
         };
 
+        const setHasChanged = (user, changed) => {
+            if (!user.meta) user.meta = {};
+            user.meta.changed = changed;
+        };
+
         //#endregion
 
         //#region Public methods
@@ -170,22 +175,35 @@
 
         /**
          * Updates the current user's properties.
+         * (will update the user properties declared in properties parameters instead of completely overriding them).
+         * Will mark the current user as changed (<current_user>.metad.chaged === true).
          * Get the updated properties by using {@link #currentFullUser}.properties.
          * 
          * @param {Object} properties
-         * @param {Boolean} merge if true will only update the user properties declared in properties parameters instead of completely overriding them
+         * @param {Boolean} merge if true will only 
          */
-        const updateCurrentUserProperties = function (properties, merge) {
+        const updateCurrentUserProperties = function (properties) {
             const current = currentFullUser();
-            if (Boolean(merge)) {
-                const merged = current.properties || {};
-                angular.forEach(properties || {}, (value, key) => merged[key] = value);
-                setUserProperties(current, merged);
-            } else {
-                setUserProperties(current, properties);
-            }
+            const merged = current.properties || {};
+            angular.forEach(properties || {}, (value, key) => merged[key] = value);
+            setUserProperties(current, merged);
+            setHasChanged(current, true);
             localStorageService.put(config.authkey, current);
         };
+
+        /**
+         * Overrides the current user properties.
+         * Will mark the current user as not changed (<current_user>.metad.chaged === false).
+         * Get the updated properties by using {@link #currentFullUser}.properties.
+         * 
+         * @param {Object} properties 
+         */
+        const overrideCurrentUserProperties = function(properties) {
+            const current = currentFullUser();
+            setUserProperties(current, properties);
+            setHasChanged(current, false);
+            localStorageService.put(config.authkey, current);
+        }
 
         /**
          * Handles the case in which the current user is received an "unauthorized"
@@ -222,6 +240,7 @@
             logout,
             handleUnauthorizedRemoteAccess,
             updateCurrentUserProperties,
+            overrideCurrentUserProperties,
             restoreAuthCookie
         };
         return service;
