@@ -160,8 +160,11 @@
 
 
 
-            const ids = dataEntries.map(entry => entry.id).join("','");
+            let ids = dataEntries.map(entry => entry.id).join("','");
 
+            if (ids !== "") {
+                ids = "'" + ids + "'";
+            } 
 
             const queryObj = { query: entities.Attachment.ByApplicationAndIds.format(ids), args: [applicationName] };
             return swdbDAO.executeQuery(queryObj).then(attachments => {
