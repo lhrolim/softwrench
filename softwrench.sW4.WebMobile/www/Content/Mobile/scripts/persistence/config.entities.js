@@ -175,7 +175,7 @@
         entities.Attachment.UpdateRemoteIdOfExistingAttachments = "update Attachment set 'compositionRemoteId' = ?, 'docinfoRemoteId'=? where id = ?";
         entities.Attachment.CreateNewBlankAttachments = "insert into Attachment ('application','parentId','compositionRemoteId','docinfoRemoteId','id') values (?,?,?,?,?)";
         //brings the attachments that need to be syncrhonized to the server. The ones which have a compositionRemoteId already point to a downloaded composition, and thus do not require to be uploaded
-        entities.Attachment.ByApplicationAndIds = "select id,parentId,content from Attachment where application = ? and parentId in (?) and compositionRemoteId is null";
+        entities.Attachment.ByApplicationAndIds = "select id,parentId,content from Attachment where application = ? and parentId in ({0}) and compositionRemoteId is null";
         
         /**
          * query to fetch list of attachments which are pending synchronization against the server side

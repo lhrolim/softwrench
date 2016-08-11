@@ -163,7 +163,7 @@
             const ids = dataEntries.map(entry => entry.id).join("','");
 
 
-            const queryObj = { query: entities.Attachment.ByApplicationAndIds, args: [applicationName, ids] };
+            const queryObj = { query: entities.Attachment.ByApplicationAndIds.format(ids), args: [applicationName] };
             return swdbDAO.executeQuery(queryObj).then(attachments => {
                 if (attachments.length === 0) {
                     log.debug("no attachments to uppload for application {0}".format(applicationName));
