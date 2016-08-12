@@ -125,6 +125,28 @@
                 " random text was wrapped 1 2 3 @#$%& rest of random text"
             ]
         },
+        nestedemailtags: {
+            input: [
+                "To Maguila: <maguila@gmail.com<mailto:maguila@gmail.com>> <br/>" +
+                "CC Na Base Do: <na_base_do@gmail.com<mailto:na_base_do@gmail.com>>"
+            ],
+            expected: [
+                "To Maguila: <a href='mailto:maguila@gmail.com'>maguila@gmail.com</a> <br/>" +
+                "CC Na Base Do: <a href='mailto:na_base_do@gmail.com'>na_base_do@gmail.com</a>"
+            ]
+        },
+        fileurltags: {
+            input: [
+                "Shared files: <br> " +
+                "pemba.zip <file:\/\/\/\\\\DOMAIN-HOST\\Users\\maguila\\nabasedo\\pemba.zip> <br>" +
+                "jambro.sql <file:\/\/DOMAIN-HOST\/usr\/Oliver\/jambro.sql>"
+            ],
+            expected: [
+                "Shared files: <br> " +
+                "pemba.zip <a href='file:\/\/\/\\\\DOMAIN-HOST\\Users\\maguila\\nabasedo\\pemba.zip'>file:\/\/\/\\\\DOMAIN-HOST\\Users\\maguila\\nabasedo\\pemba.zip</a> <br>" +
+                "jambro.sql <a href='file:\/\/DOMAIN-HOST\/usr\/Oliver\/jambro.sql'>file:\/\/DOMAIN-HOST\/usr\/Oliver\/jambro.sql</a>"
+            ]
+        },
         alltags: {
             input: [
                 "<div> aaaa <mailto:rodrigo.botti@gmail.com> " +
@@ -139,6 +161,8 @@
                     "<![if !supportLists]>· <![endif]>Unordered #2 " +
                     "<![if !supportLists]>1. <![endif]>Ordered #1 " +
                     "<![if !supportLists]>2. <![endif]>Ordered #2 " +
+                    "<br> Mail To: <tomas.turbano@bustamontes.com<mailto:tomas.turbano@bustamontes.com>>" +
+                    "<br> with attached file: <file:\/\/\/\\\\BRASIL-HUE\\Users\\Dilma\\fora.zip>" +
                     "<br> end of the text </div>",
                 "<div><b>DON'T CHANGE ME</b><br><b>I DON'T HAVE ANY INVALID TAGS</b></div>"
             ],
@@ -155,6 +179,8 @@
                     "· Unordered #2 " +
                     "1. Ordered #1 " +
                     "2. Ordered #2 " +
+                    "<br> Mail To: <a href='mailto:tomas.turbano@bustamontes.com'>tomas.turbano@bustamontes.com</a>" +
+                    "<br> with attached file: <a href='file:\/\/\/\\\\BRASIL-HUE\\Users\\Dilma\\fora.zip'>file:\/\/\/\\\\BRASIL-HUE\\Users\\Dilma\\fora.zip</a>" +
                     "<br> end of the text </div>",
                 "<div><b>DON'T CHANGE ME</b><br><b>I DON'T HAVE ANY INVALID TAGS</b></div>"
             ]
@@ -213,7 +239,13 @@
         runInvalidTagReplacementTest(config.iftags);
     });
 
-    it("url and email tags replacement", function () {
+    it("nested email tags replacement", () =>
+        runInvalidTagReplacementTest(config.nestedemailtags));
+
+    it("fileurl tags replacement", () =>
+        runInvalidTagReplacementTest(config.fileurltags));
+
+    it("all invalid tags replacement", function () {
         runInvalidTagReplacementTest(config.alltags);
     });
 
