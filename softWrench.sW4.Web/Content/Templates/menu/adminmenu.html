@@ -12,7 +12,7 @@
                             <i class="fa fa-user fa-fw"></i>&ensp;{{i18N('_headermenu.myprofile','Edit My Profile')}}
                         </a>
                     </li>
-                    <li class="dropdown-submenu" ng-show="isSysAdmin">
+                    <li class="dropdown-submenu" ng-if="isSysAdmin">
                         <a data-toggle="dropdown" aria-expanded="false">
                             <i class=" fa fa-cogs fa-fw"></i>&ensp;{{i18N('_headermenu.utilities','Utilities')}}
                         </a>
@@ -25,7 +25,7 @@
                             <li ng-show="isDynamicAdmin"><a href="" ng-click="doAction(null,'SqlClient','SqlClient',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;SQL Client</a></li>
                         </ul>
                     </li>
-                    <li class="dropdown-submenu" ng-show="isClientAdmin">
+                    <li class="dropdown-submenu" ng-if="isClientAdmin">
                         <a data-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-wrench fa-fw"></i>&ensp;Admin
                         </a>
@@ -83,7 +83,7 @@
                                 <i class="fa fa-user"></i>&ensp;{{i18N('_headermenu.myprofile','My Profile')}}
                             </button>
                         </a>
-                        <div class="btn-group" ng-show="isSysAdmin">
+                        <div class="btn-group" ng-if="isSysAdmin">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-cogs"></i>&ensp;{{i18N('_headermenu.utilities','Utilities')}}&ensp;<span class="caret"></span>
                             </button>
@@ -92,10 +92,10 @@
                                 <li><a href="" ng-click="doAction(null,'EntityMetadata','Editor',null,$event)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.metadataeditor','Metadata Editor')}}</a></li>
                                 <li><a href="" ng-click="doAction(null,'EntityMetadata','MenuEditor',null,$event)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.menueditor','Menu Editor')}}</a></li>
                                 <li><a href="" ng-click="doAction(null,'EntityMetadata','StatuscolorEditor',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;{{i18N('_headermenu.statuscoloreditor','Status Color Editor')}}</a></li>
-                                <li ng-show="isDynamicAdmin"><a href="" ng-click="doAction(null,'SqlClient','SqlClient',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;SQL Client</a></li>
+                                <li ng-if="isDynamicAdmin"><a href="" ng-click="doAction(null,'SqlClient','SqlClient',null)"><i class="fa fa-pencil-square-o fa-fw"></i>&ensp;SQL Client</a></li>
                             </ul>
                         </div>
-                        <div class="btn-group" ng-show="isClientAdmin">
+                        <div class="btn-group" ng-if="isClientAdmin">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-wrench"></i>&ensp;Admin&ensp;<span class="caret"></span>
                             </button>
