@@ -1,11 +1,11 @@
-﻿default: {
+default: {
     new: green,
     wappr: orange,
     closed: green,
 	draft: white,
     queued: yellow,
     pending: yellow,
-    inprog: blue,
+    inprog: orange,
     resolved: blue,
 	histedit: green,
     wmatl: red,
@@ -21,8 +21,8 @@
     appfm: blue,
     applm: blue,
     by design: blue,
-    duplicate: blue,
-	slahold: blue,
+    duplicate: #D2B0F2,
+	slahold: #B0D0F2,
     completed: green,
 	spam: red,
     wsch: orange

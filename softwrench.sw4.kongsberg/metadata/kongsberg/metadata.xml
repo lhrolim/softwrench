@@ -821,30 +821,30 @@
         </schema>
 
         <schema id="ledaflowlist" stereotype="list">
-          <field attribute="classificationid" label="Project">
-            <renderer type="default" params="width=9%;excelwidth=50"/>
-          </field>
-          <field attribute="ticketid" label="Service Request">
-            <renderer type="default"  params="width=9%" />
+          <field attribute="ticketid" label="SR#">
+            <renderer type="default" params="width=6%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="reportdate" label="Report Date">
-            <renderer type="datetime"/>
+          <field attribute="classificationid" label="Proj. Description">
+            <renderer type="default" params="width=10%;excelwidth=50"/>
           </field>
-          <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="width=9%" />
+          <field attribute="area" label="Area">
+            <renderer type="default" params="width=13%;excelwidth=50" />
+          </field>
+          <field attribute="problemtype" label="Prob. Type">
+            <renderer type="default" params="excelwidth=50"/>
+          </field>
+          <field attribute="reportedby" label="Reported By"/>
+          <field attribute="internalpriority" label="Int. Priority"/>
+          <field attribute="owner" label="Owner"/>
+          <field attribute="ownergroup" label="Owner Group"/>
+          <field attribute="changedate" label="Changed Date">
+            <renderer type="datetime" params="width=10%;format=MM/dd/yyyy HH:mm;showtime=false"/>
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=9%" />
-          </field>
-          <field attribute="problemtype_.description" label="Prob. Type"></field>
-          <field attribute="area" label="Area">
-            <renderer type="default" params="width=9%;excelwidth=50"/>
-          </field>
-          <field attribute="owner" label="Owner">
-            <renderer type="default" params="width=9%" />
+            <renderer type="statuscolor" params="width=10%;grid=servicerequest;column=status" />
           </field>
           <field attribute="attachments" tooltip="Attachments">
             <renderer type="icon" params="width=3%;expression={'#default':'fa-paperclip','0':''};autoloadcomposition=attachment_"/>
