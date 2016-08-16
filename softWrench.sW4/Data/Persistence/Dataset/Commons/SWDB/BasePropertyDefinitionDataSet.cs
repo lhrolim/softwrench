@@ -78,7 +78,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
 
         private void AddToResultList(ICollection<Dictionary<string, object>> resultList, AttributeHolder ah,
             ContextHolder lookupContext) {
-            var dict = (Dictionary<string, object>)ah.Attributes;
+            var dict = (Dictionary<string, object>)ah;
             dict["currentvalue"] = _configService.Lookup<string>((string)dict["FullKey"], lookupContext);
             resultList.Add(dict);
         }

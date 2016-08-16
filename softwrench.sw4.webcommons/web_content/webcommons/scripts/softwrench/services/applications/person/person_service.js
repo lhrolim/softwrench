@@ -9,7 +9,7 @@
 
         function handlePrimaryForCreation(compositionDatamap,type) {
             //phone creation
-            const personData = crudContextHolderService.rootDataMap().fields;
+            const personData = crudContextHolderService.rootDataMap();
             if (!personData[type] || personData[type].length === 0) {
                 compositionDatamap["isprimary"] = true;
                 compositionDatamap["originalprimary"] = true;
@@ -52,8 +52,8 @@
         };
 
         function afterChangeUsername(datamap) {
-            if (!nullOrEmpty(datamap.fields["#personid"])) {
-                datamap.fields["personid"] = datamap.fields["#personid"];
+            if (!nullOrEmpty(datamap["#personid"])) {
+                datamap["personid"] = datamap["#personid"];
             }
         };
 
@@ -71,7 +71,7 @@
 
         function submitPerson(schema, datamap) {
             var currentSchema = crudContextHolderService.currentSchema();
-            const fields = datamap.fields;
+            const fields = datamap;
 
             applicationService.save().then(function (response) {
 

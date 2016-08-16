@@ -36,11 +36,11 @@ angular.module('sw_layout')
     return {
 
         afterChangeAsset: function (event) {
-            var userId = event.fields['asset_.aucisowner_.person_.personid'];
-            var costCenter = event.fields['asset_.assetglaccount_.glaccount'];
-            event.fields['userid'] = userId;
-            event.fields['costcenter'] = costCenter;
-            parseLocations(event.fields, event.fields['asset_.location'], event.triggerparams);
+            var userId = event['asset_.aucisowner_.person_.personid'];
+            var costCenter = event['asset_.assetglaccount_.glaccount'];
+            event['userid'] = userId;
+            event['costcenter'] = costCenter;
+            parseLocations(event, event['asset_.location'], event.triggerparams);
         },
 
         goToImacGrid: function () {

@@ -62,7 +62,7 @@ app.directive('printSection', function (contextService) {
                     return;
                 }
 
-                var fields = $scope.printDatamap[0].fields;
+                var fields = $scope.printDatamap[0];
                 var id = fields[$scope.printSchema.userIdFieldName];
                 if (!id) {
                     return;
@@ -88,11 +88,11 @@ app.directive('printSection', function (contextService) {
                     if (value.schema != undefined) {
                         //this happens for tabs
                         compositionToPrint.schema = value.schema;
-                        $scope.datamap.fields[key] = value.items;
+                        $scope.datamap[key] = value.items;
                         compositionToPrint.title = value.title;
                     } else {
                         compositionToPrint.schema = compositionService.locatePrintSchema($scope.printSchema, key);
-                        $scope.datamap.fields[key] = value;
+                        $scope.datamap[key] = value;
                         compositionToPrint.title = compositionService.getTitle($scope.printSchema, key);
                     }
                     compositionToPrint.key = key;

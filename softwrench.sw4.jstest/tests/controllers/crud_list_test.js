@@ -54,7 +54,7 @@
 
         //simulating the data returned from the server
         var serverdata = {
-            resultObject: [{fields: { id: "100" } }, { fields: { id: "200" } }],
+            resultObject: [{ id: "100" }, { id: "200" }],
             schema:{idFieldName:"id",displayables:[],properties: {} }
         }
         //real call
@@ -68,7 +68,7 @@
             detail_next: { id: "0" },
             detail_previous: { id: "-1" },
             paginationData: {},
-            previousData: [{ fields: { id: "100" } }, { fields: { id: "200" } }]
+            previousData: [{ id: "100" }, { id: "200" }]
         });
     });
 

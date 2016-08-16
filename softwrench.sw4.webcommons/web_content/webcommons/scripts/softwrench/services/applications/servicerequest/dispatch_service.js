@@ -6,10 +6,7 @@
 
         function dispatchWO(schema, datamap) {
             var localDatamap = datamap;
-            if (datamap.fields) {
-                localDatamap = datamap.fields;
-            }
-
+            
             var crudData = {
                 crud: localDatamap
             };
@@ -20,7 +17,7 @@
         }
 
         function dispatchIncident(schema, datamap) {
-            var localDatamap = datamap.fields ? datamap.fields : datamap;
+            var localDatamap = datamap;
 
             var crudData = {
                 crud: localDatamap

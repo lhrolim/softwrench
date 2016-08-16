@@ -69,7 +69,6 @@
         var mockedResult1 = {
             data: {
                 resultObject: {
-                    fields: {
                         "sendfrom": 'origfrom@a.com',
                         "sendto": 'origto@a.com,origto2@a.com',
                         "cc": 'cc1@a.com,cc2@a.com',
@@ -78,7 +77,6 @@
                         "commloguid": 10,
                         "newattachment_path": '',
                         "attachments" : []
-                    }
                 }
             }
         }
@@ -104,7 +102,6 @@
         var mockedResult1 = {
             data: {
                 resultObject: {
-                    fields: {
                         "sendfrom": 'origfrom@a.com',
                         "sendto": 'origto@a.com,origto2@a.com,default@default.com',
                         "cc": 'cc1@a.com,cc2@a.com',
@@ -113,7 +110,6 @@
                         "commloguid": 10,
                         "newattachment_path": '',
                         "attachments": []
-                    }
                 }
             }
         }
@@ -139,7 +135,6 @@
         var mockedResult1 = {
             data: {
                 resultObject: {
-                    fields: {
                         "sendfrom": 'origfrom@a.com',
                         "sendto": 'origto@a.com,origto2@a.com,default@default.com',
                         "cc": null,
@@ -148,7 +143,6 @@
                         "commloguid": 10,
                         "newattachment_path": '',
                         "attachments": []
-                    }
                 }
             }
         }
@@ -174,7 +168,6 @@
         var mockedResult1 = {
             data: {
                 resultObject: {
-                    fields: {
                         "sendfrom": 'origfrom@a.com',
                         "sendto": 'origto@a.com,origto2@a.com,default@default.com',
                         "cc": null,
@@ -183,7 +176,6 @@
                         "commloguid": 10,
                         "newattachment_path": '',
                         "attachments": []
-                    }
                 }
             }
         }
@@ -209,7 +201,6 @@
         var mockedResult1 = {
             data: {
                 resultObject: {
-                    fields: {
                         "sendfrom": 'origfrom@a.com',
                         "sendto": 'origto@a.com,origto2@a.com,default@default.com',
                         "cc": 'a@b.com',
@@ -218,7 +209,6 @@
                         "commloguid": 10,
                         "newattachment_path": '',
                         "attachments": []
-                    }
                 }
             }
         }
@@ -244,7 +234,6 @@
         var mockedResult1 = {
             data: {
                 resultObject: {
-                    fields: {
                         "sendfrom": 'origfrom@a.com',
                         "sendto": 'origto@a.com,origto2@a.com,default@default.com',
                         "cc": null,
@@ -253,7 +242,6 @@
                         "commloguid": 10,
                         "newattachment_path": '',
                         "attachments": []
-                    }
                 }
             }
         }

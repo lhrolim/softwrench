@@ -34,7 +34,7 @@
         }
 
         function handleCompositions(scope, result) {
-            var datamap = scope.datamap.fields;
+            var datamap = scope.datamap;
             var schema = scope.schema;
             var isEdit = isEditDetail(schema, datamap);
 
@@ -52,7 +52,7 @@
             return $timeout(function () {
                 if (shouldFetchCompositions) {
                     $log.get("#detailService#fetchRelationshipData").info('fetching compositions of {0}'.format(scope.schema.applicationName));
-                    return compositionService.populateWithCompositionData(scope.schema, scope.datamap.fields);
+                    return compositionService.populateWithCompositionData(scope.schema, scope.datamap);
                 }
                 return $q.when();
             });

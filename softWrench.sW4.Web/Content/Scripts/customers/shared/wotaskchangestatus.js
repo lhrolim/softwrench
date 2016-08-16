@@ -11,7 +11,7 @@ angular.module('sw_layout')
         }
         //        currentmetadataparameter: "status={0}".format(item[status])
         applicationService.getApplicationDataPromise("woactivity", "editstatusschema", { id: item["workorderid"] }).then(function (result) {
-            modalService.show(result.data.schema, result.data.resultObject.fields, { title: 'Change Status', cssclass: "dashboardmodal" }, function (modalData) {
+            modalService.show(result.data.schema, result.data.resultObject, { title: 'Change Status', cssclass: "dashboardmodal" }, function (modalData) {
                 modalService.hide();
             });
         });

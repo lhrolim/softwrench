@@ -31,7 +31,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
         }
 
         private void LookupQuantityReturnedList(IEnumerable<AttributeHolder> datamap) {
-            var matusetransidlist = datamap.Select(row => row.Attributes["MATUSETRANSID"]).ToList();
+            var matusetransidlist = datamap.Select(row => row["matusetransid"]).ToList();
 
             if (!matusetransidlist.Any()) {
                 return;
@@ -55,7 +55,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
                     // CC: This is now safe because we are guarantee a record before we couldn't determine if we could find a matching record
                     // CC: matusetransid is case sensitive... maybe change the dictionary to case-insensitive.   
                     var datamapRecord = (from record in datamap
-                                         where record.Attributes["matusetransid"].ToString() == entry["issueid"].ToString()
+                                         where record["matusetransid"].ToString() == entry["issueid"].ToString()
                                          select record).SingleOrDefault();
 
                     datamapRecord.SetAttribute("QTYRETURNED", Double.Parse(entry["returned"]));
@@ -86,7 +86,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
 
         public SearchRequestDto FilterWorkorders(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
-            var siteid = parameters.OriginalEntity.Attributes["siteid"];
+            var siteid = parameters.OriginalEntity["siteid"];
             if (siteid != null) {
                 filter.AppendSearchEntry("workorder.siteid", siteid.ToString().ToUpper());
                 var validWorkOrderStatus = new List<string> { "APPR", "WMAT", "WSCH", "WORKING" };
@@ -97,7 +97,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
 
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
-            var siteid = parameters.OriginalEntity.Attributes["siteid"];
+            var siteid = parameters.OriginalEntity["siteid"];
             if (siteid != null) {
                 filter.AppendSearchEntry("asset.siteid", siteid.ToString().ToUpper());
             }

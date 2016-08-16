@@ -62,8 +62,8 @@
           <!-- creation -->
           <section showexpression="!@relatedrecordid">
 
-            <field attribute="siteid" defaultexpression="$.parentdata.fields.siteid" hidden="true"/>
-            <field attribute="orgid"  defaultexpression="$.parentdata.fields.orgid"  hidden="true"/>
+            <field attribute="siteid" defaultexpression="$.parentdata.siteid" hidden="true"/>
+            <field attribute="orgid"  defaultexpression="$.parentdata.orgid"  hidden="true"/>
             
             <optionfield attribute="relatedrecclass" label="Application" requiredexpression="true" default="" providerattribute="_RelatedRecordTypes">
               <!--<option label="Service Request" value="SR" />

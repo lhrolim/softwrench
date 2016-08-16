@@ -125,7 +125,7 @@
                 approveSingleLabtrans: function() {
                     var datamap = crudContextHolderService.rootDataMap();
                     var labtransIds = [];
-                    labtransIds.push(datamap.fields.labtransid);
+                    labtransIds.push(datamap.labtransid);
                     approveLabtrans(labtransIds);
                 },
                 approveMultipleLabtrans: function() {
@@ -139,10 +139,10 @@
                 deleteSingleLabtrans: function() {
                     var datamap = crudContextHolderService.rootDataMap();
                     var labtransIds = [];
-                    if (datamap.fields.genapprservreceipt == 1) {
+                    if (datamap.genapprservreceipt == 1) {
                         return alertService.alert("Approved Labor Transactions cannot be deleted.");
                     }
-                    labtransIds.push(datamap.fields.labtransid);
+                    labtransIds.push(datamap.labtransid);
                     deleteLabtrans(labtransIds);
                 },
                 deleteMultipleLabtrans: function () {
@@ -156,7 +156,7 @@
                     var approvedLaborIds = [];
                     // Sort the labors checking for approved records
                     keys.forEach(function(key) {
-                        if (selectedLabtrans[key].fields.genapprservreceipt == 1) {
+                        if (selectedLabtrans[key].genapprservreceipt == 1) {
                             approvedLaborIds.push(key);
                         } else {
                             labtransIds.push(key);
@@ -177,7 +177,7 @@
                 },
                 editLabtrans: function() {
                     var datamap = crudContextHolderService.rootDataMap();
-                    if (datamap.fields.genapprservreceipt == 1) {
+                    if (datamap.genapprservreceipt == 1) {
                         alertService.alert("Cannot edit already approved labor transactions");
                         return false;
                     }
@@ -199,7 +199,7 @@
                 defaultLaborExpression: function (datamap, schema, displayable) {
                     var username = '';
                     var rootdatamap = crudContextHolderService.rootDataMap();
-                    if (rootdatamap.fields['#laborlist_'].length < 2) {
+                    if (rootdatamap['#laborlist_'].length < 2) {
                         var user = contextService.getUserData();
                         username = user.login.toUpperCase();
                     }
@@ -207,7 +207,7 @@
                 },
                 save: function (datamap) {
                     applicationService.save().then(function (data) {
-                        datamap.fields['labtransid'] = data.id;
+                        datamap['labtransid'] = data.id;
                     });
                 }
     };

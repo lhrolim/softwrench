@@ -193,11 +193,6 @@
         };
 
         function invokeOperation(applicationName, schemaId, operation, datamap, extraParameters) {
-            var fields = datamap;
-            if (datamap.fields) {
-                fields = datamap.fields;
-            }
-
             var parameters = extraParameters ? extraParameters : {};
             parameters.Operation = operation;
 
@@ -205,7 +200,7 @@
             var putUrl = url("/api/data/" + applicationName);
 
             var jsonWrapper = {
-                json: fields,
+                json: datamap,
                 requestData: parameters
             }
 
@@ -221,10 +216,7 @@
 
         function getApplicationWithInitialDataPromise(applicationName, schemaId, parameters, initialData) {
             //TODO: refactor this code to pass data on body instead of query string
-            if (initialData && !isString(initialData)) {
-                if (initialData.fields) {
-                    initialData = initialData.fields;
-                }
+            if (initialData && !isString(initialData)) {               
                 initialData = angular.toJson(initialData);
             }
             var url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters, initialData);

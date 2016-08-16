@@ -8,7 +8,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
                 FillBlank(attributeHolder, field);
                 var value = attributeHolder.GetAttribute(attribute);
                 if (IsValid(value, typeof(String))) {
-                    attributeHolder.Attributes[field] = value.ToString();
+                    attributeHolder[field] = value.ToString();
                 }
             } catch {
                 FillBlank(attributeHolder, field);
@@ -16,7 +16,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         }
 
         public static void FillBlank(AttributeHolder attributeHolder, string field) {
-            attributeHolder.Attributes[field] = string.Empty;
+            attributeHolder[field] = string.Empty;
         }
 
         public static string GetLast(string source, int tailLength) {

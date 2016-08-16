@@ -59,13 +59,13 @@ namespace softWrench.sW4.Data.Offline {
         }
 
         public static void UpdateMaximoRowstamp(AttributeHolder firstAttributeHolder, Persistence.Relational.EntityRepository.EntityRepository.SearchEntityResult listOfCollections) {
-            if (!firstAttributeHolder.Attributes.ContainsKey(RowstampColumnName)) {
-                firstAttributeHolder.Attributes[RowstampColumnName] =
+            if (!firstAttributeHolder.ContainsKey(RowstampColumnName)) {
+                firstAttributeHolder[RowstampColumnName] =
                     listOfCollections.MaxRowstampReturned;
             } else {
                 if (listOfCollections.MaxRowstampReturned >
                     (long?)firstAttributeHolder.GetAttribute(RowstampColumnName)) {
-                    firstAttributeHolder.Attributes[RowstampColumnName] = listOfCollections.MaxRowstampReturned;
+                    firstAttributeHolder[RowstampColumnName] = listOfCollections.MaxRowstampReturned;
                 }
             }
         }

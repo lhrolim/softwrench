@@ -1,4 +1,4 @@
-<ng-switch on="dm.fields[column.parameters['column']] || 'null'">    
+<ng-switch on="dm[column.parameters['column']] || 'null'">    
     
     <div ng-switch-when="NEW" class="statuscolumncolor" style="background-color:orange;"></div>
     <div ng-switch-when="QUEUED" class="statuscolumncolor" style="background-color:yellow;"></div>

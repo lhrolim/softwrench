@@ -205,11 +205,11 @@ namespace softwrench.sw4.Hapag.Data.DataSet
             var statusDate = resultObject.GetAttribute("statusdate");
             if ("CLOSED".Equals(status))
             {
-                resultObject.Attributes["#closeddate"] = statusDate;
+                resultObject["#closeddate"] = statusDate;
             }
             else
             {
-                resultObject.Attributes["#closeddate"] = "";
+                resultObject["#closeddate"] = "";
             }
         }
 
@@ -220,29 +220,29 @@ namespace softwrench.sw4.Hapag.Data.DataSet
                 //Displaying the last 3 characters of pluspcustomer.
                 try
                 {
-                    attributeHolder.Attributes["#currentdatetime"] = DateTime.Now;
-                    var splitedSiteId = attributeHolder.Attributes[SITEID].ToString().Split('-');
+                    attributeHolder["#currentdatetime"] = DateTime.Now;
+                    var splitedSiteId = attributeHolder[SITEID].ToString().Split('-');
                     if (splitedSiteId.Length == 3 && splitedSiteId[2].Length == 3)
                     {
-                        attributeHolder.Attributes[SITEID] = splitedSiteId[2];
+                        attributeHolder[SITEID] = splitedSiteId[2];
                     }
                     else
                     {
-                        attributeHolder.Attributes[SITEID] = attributeHolder.Attributes[SITEID].ToString();
+                        attributeHolder[SITEID] = attributeHolder[SITEID].ToString();
                     }
 
                     var description = attributeHolder.GetAttribute("commodities_.description") as String;
                     if (description == null || description.IndexOf('-') == -1)
                     {
-                        attributeHolder.Attributes[COMMODITY] = MISSING;
-                        attributeHolder.Attributes[COMMODITYGROUP] = MISSING;
+                        attributeHolder[COMMODITY] = MISSING;
+                        attributeHolder[COMMODITYGROUP] = MISSING;
                     }
                     else
                     {
                         string[] arrTemp = description.Split('-');
                         var commodityGroup = arrTemp[0] + '-' + arrTemp[1];
-                        attributeHolder.Attributes[COMMODITYGROUP] = commodityGroup;
-                        attributeHolder.Attributes[COMMODITY] = description.Substring(commodityGroup.Length + 1, description.Length - commodityGroup.Length - 1);
+                        attributeHolder[COMMODITYGROUP] = commodityGroup;
+                        attributeHolder[COMMODITY] = description.Substring(commodityGroup.Length + 1, description.Length - commodityGroup.Length - 1);
                     }
                 }
                 catch (ArgumentOutOfRangeException)
@@ -258,8 +258,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet
                 //Displaying the last 3 chareacters of pluspcustomer.
                 try
                 {
-                    attributeHolder.Attributes["#currentdatetime"] = DateTime.Now;
-                    attributeHolder.Attributes[SITEID] = attributeHolder.Attributes[SITEID].ToString().Split('-').Last().Substring(0, 3);
+                    attributeHolder["#currentdatetime"] = DateTime.Now;
+                    attributeHolder[SITEID] = attributeHolder[SITEID].ToString().Split('-').Last().Substring(0, 3);
                 }
                 catch (ArgumentOutOfRangeException)
                 {
@@ -271,22 +271,22 @@ namespace softwrench.sw4.Hapag.Data.DataSet
         {
             foreach (var attributeHolder in resultObject)
             {
-                attributeHolder.Attributes["#currentdatetime"] = DateTime.Now;
+                attributeHolder["#currentdatetime"] = DateTime.Now;
                 var description = attributeHolder.GetAttribute("commodities_.description");
                 if (description == null || description.ToString().IndexOf('-') == -1)
                 {
-                    attributeHolder.Attributes[SystemField] = MISSING;
-                    attributeHolder.Attributes[ItemField] = MISSING;
-                    attributeHolder.Attributes[ModuleField] = MISSING;
-                    attributeHolder.Attributes[ComponentField] = MISSING;
+                    attributeHolder[SystemField] = MISSING;
+                    attributeHolder[ItemField] = MISSING;
+                    attributeHolder[ModuleField] = MISSING;
+                    attributeHolder[ComponentField] = MISSING;
                 }
                 else
                 {
                     string[] arrTemp = description.ToString().Split('-');
-                    attributeHolder.Attributes[SystemField] = arrTemp[0] + '-' + arrTemp[1];
-                    attributeHolder.Attributes[ComponentField] = (arrTemp.Length > 2) ? arrTemp[2] : MISSING;
-                    attributeHolder.Attributes[ItemField] = (arrTemp.Length > 3) ? arrTemp[3] : MISSING;
-                    attributeHolder.Attributes[ModuleField] = (arrTemp.Length > 4) ? ModuleFieldValue(arrTemp) : MISSING;
+                    attributeHolder[SystemField] = arrTemp[0] + '-' + arrTemp[1];
+                    attributeHolder[ComponentField] = (arrTemp.Length > 2) ? arrTemp[2] : MISSING;
+                    attributeHolder[ItemField] = (arrTemp.Length > 3) ? arrTemp[3] : MISSING;
+                    attributeHolder[ModuleField] = (arrTemp.Length > 4) ? ModuleFieldValue(arrTemp) : MISSING;
                 }
             }
         }

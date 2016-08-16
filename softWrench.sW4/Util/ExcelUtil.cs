@@ -149,7 +149,7 @@ namespace softWrench.sW4.Util {
 
         private int WriteRow(InMemoryUser user, AttributeHolder item, int rowIdx, OpenXmlWriter writer, IEnumerable<ApplicationFieldDefinition> applicationFields,
             ApplicationSchemaDefinition schema, Dictionary<string, string> colorStatusDict) {
-            var attributes = item.Attributes;
+            var attributes = item;
 
             // create new row
             var xmlAttributes = new List<OpenXmlAttribute>

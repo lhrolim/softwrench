@@ -5,8 +5,8 @@ angular.module('sw_layout')
     .factory('wobatchService', ["redirectService", "$rootScope", "restService", "alertService", "validationService", "$timeout", "searchService", function (redirectService, $rootScope, restService, alertService, validationService, $timeout, searchService) {
 
     function doSubmit(hasAtLeastOne, datamap) {
-        var batchId = datamap[0].fields["#batchId"];
-        var batchAlias = datamap[0].fields["#batchalias"];
+        var batchId = datamap[0]["#batchId"];
+        var batchAlias = datamap[0]["#batchalias"];
         var parameters = {
             batchId: batchId
         }
@@ -130,7 +130,7 @@ angular.module('sw_layout')
             var ids = [];
             var alreadyused = [];
             $.each(datamap, function (key, dm) {
-                var fields = dm.fields;
+                var fields = dm;
                 if (fields["_#selected"] == true) {
                     if (fields["#alreadyused"] != true) {
                         ids.push(fields["wonum"]);
@@ -281,8 +281,8 @@ angular.module('sw_layout')
             //            saveOrUpdateAliasCode(function (alias) {
 
             //workaround: the batchid is inserted into every row
-            var batchId = datamap[0].fields["#batchId"];
-            var batchAlias = datamap[0].fields["#batchalias"];
+            var batchId = datamap[0]["#batchId"];
+            var batchAlias = datamap[0]["#batchalias"];
             var parameters = {
                 batchId: batchId
             }
@@ -297,7 +297,7 @@ angular.module('sw_layout')
         submitBatch: function (datamap) {
             var hasAtLeastOne = false;
             $.each(datamap, function (key, item) {
-                if (item.fields["#closed"]) {
+                if (item["#closed"]) {
                     hasAtLeastOne = true;
                 }
             });
@@ -313,7 +313,7 @@ angular.module('sw_layout')
         configurePolling: function (scope, schema, datamap, parameters) {
             var idxs = [];
             $.each(datamap, function (key, value) {
-                if (value.fields.status.toLowerCase().startsWith("submitting")) {
+                if (value.status.toLowerCase().startsWith("submitting")) {
                     idxs.push(key);
                 }
             });

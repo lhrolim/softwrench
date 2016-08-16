@@ -13,7 +13,7 @@ function DownloadController($scope, i18NService, fieldService, alertService) {
         var parameters = {};
         parameters.id = id;
         parameters.mode = mode == undefined ? "http" : mode;
-        parameters.parentId = fieldService.getId(this.parentdata.fields, this.parentschema);
+        parameters.parentId = fieldService.getId(this.parentdata, this.parentschema);
         parameters.parentApplication = this.parentschema.applicationName;
         parameters.parentSchemaId = this.parentschema.schemaId;
         

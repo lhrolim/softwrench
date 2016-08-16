@@ -229,8 +229,8 @@
                             var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
                             promise.then(function (modalSchema) {
                                 var attFieldName = $scope.filter.advancedFilterAttribute || modalSchema.idFieldName;
-                                var datamap = { fields: {} };
-                                datamap.fields[attFieldName] = value;
+                                var datamap = { };
+                                datamap[attFieldName] = value;
                                 $scope.lookupModalBuffer[value] = datamap;
                             });
                         }
@@ -248,8 +248,8 @@
                             promise.then(function (modalSchema) {
                                 var attFieldName = $scope.filter.advancedFilterAttribute || modalSchema.idFieldName;
                                 selectedValues.forEach(function (value) {
-                                    var datamap = { fields: {} };
-                                    datamap.fields[attFieldName] = value;
+                                    var datamap = { };
+                                    datamap[attFieldName] = value;
                                     $scope.lookupModalBuffer[value] = datamap;
                                 });
                             });
@@ -519,11 +519,11 @@
                                     continue;
                                 }
                                 var datamap = buffer[id];
-                                var value = datamap.fields[attFieldName];
+                                var value = datamap[attFieldName];
                                 var label = value;
-                                if (datamap.fields.hasOwnProperty("description")) {
+                                if (datamap.hasOwnProperty("description")) {
                                     //TODO: receive this from metadata somehow
-                                    label = datamap.fields["description"];
+                                    label = datamap["description"];
                                 }
                                 addLookupOption(value, label);
                             }

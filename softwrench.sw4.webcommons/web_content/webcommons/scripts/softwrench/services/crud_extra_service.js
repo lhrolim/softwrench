@@ -6,7 +6,7 @@ angular.module('sw_layout')
 
     return {
         deletefn: function (schema, datamap) {
-            var fields = datamap.fields;
+            var fields = datamap;
             var idFieldName = schema.idFieldName;
             var applicationName = schema.applicationName;
             var id = fields[idFieldName];

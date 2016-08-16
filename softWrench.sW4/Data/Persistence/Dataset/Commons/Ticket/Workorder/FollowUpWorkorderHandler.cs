@@ -37,7 +37,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder {
             if (oldEntity == null) {
                 throw new InvalidOperationException(String.Format(NotFoundLog, metadataToUse.Name, followUpData.origrecordid));
             }
-            oldEntity.Attributes.Add("HASFOLLOWUPWORK", true);
+            oldEntity.Add("HASFOLLOWUPWORK", true);
             //TODO: make it easier to generate a CrudOperationData from a DataMap...
             var json = JObject.Parse(JsonConvert.SerializeObject(oldEntity.Fields));
             //TODO: should we use a different field for the userid here?

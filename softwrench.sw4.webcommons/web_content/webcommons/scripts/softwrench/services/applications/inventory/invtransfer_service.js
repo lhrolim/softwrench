@@ -81,7 +81,7 @@
             searchService.searchWithData("inventory", searchData)
                 .success(function (data) {
                     var resultObject = data.resultObject;
-                    var resultFields = resultObject[0].fields;
+                    var resultFields = resultObject[0];
                     var costtype = resultFields['costtype'];
                     fields['inventory_.costtype'] = costtype;
                     var locationFieldName = "";
@@ -103,7 +103,7 @@
                 "binLookupList", { searchOperators: searchOperators }).success(function (data) {
                     var resultObject = data.resultObject;
                     if (resultObject.length === 1) {
-                        var resultFields = resultObject[0].fields;
+                        var resultFields = resultObject[0];
                         fields["binnum"] = resultFields.binnum;
                         fields["invuseline_.frombin"] = resultFields.binnum;
                         fields["lotnum"] = resultFields.lotnum;

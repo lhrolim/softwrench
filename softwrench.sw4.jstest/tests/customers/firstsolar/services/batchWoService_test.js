@@ -47,18 +47,14 @@
 
         var bufferSelectedItems = {
             0: {
-                fields: {
-                    "location": 10,
-                    "description": "loc",
-                    "summary": "s"
-                }
+                "location": 10,
+                "description": "loc",
+                "summary": "s"
             },
             1: {
-                fields: {
-                    "location": 11,
-                    "description": "loc",
-                    "summary": "s"
-                }
+                "location": 11,
+                "description": "loc",
+                "summary": "s"
             }
         }
 
@@ -103,18 +99,14 @@
 
         var bufferSelectedItems = {
             0: {
-                fields: {
-                    "location": 10,
-                    "description": "loc",
-                    "summary": "s"
-                }
+                "location": 10,
+                "description": "loc",
+                "summary": "s"
             },
             1: {
-                fields: {
-                    "location": 11,
-                    "description": "loc2",
-                    "summary": "s"
-                }
+                "location": 11,
+                "description": "loc2",
+                "summary": "s"
             }
         }
 

@@ -36,14 +36,14 @@
         }
 
         function createAndAssociateGridPanel(datamap) {
-            var local = datamap.fields || datamap;
+            var local = datamap;
             local.size = parseInt(local.size);
 
             restService.postPromise("Dashboard", "SaveGridPanel", null, local).then(panelCreated(local));
         }
 
         function saveDashboard(datamap, policy) {
-            var localDatamap = datamap.fields || datamap;
+            var localDatamap = datamap;
             localDatamap.creationDateSt = localDatamap.creationDate;
             if (!localDatamap.panels) {
                 //this will avoid wrong serialization
@@ -99,7 +99,7 @@
         }
 
         function selectPanel(datamap) {
-            var local = datamap.fields || datamap;
+            var local = datamap;
             restService.getPromise("Dashboard", "LoadPanel", { panel: local.panel }).then(function (response) {
                 var data = response.data;
                 $rootScope.$broadcast("dash_panelassociated", data.resultObject);
@@ -148,8 +148,7 @@
             return instance.onProviderSelected(event);
         }
 
-        function createAndAssociateGraphicPanel(paramDatamap) {
-            var datamap = paramDatamap.fields || paramDatamap;
+        function createAndAssociateGraphicPanel(datamap) {
             datamap.size = parseInt(datamap.size);
 
             var instance = graphicPanelServiceProvider.getService(datamap.provider);

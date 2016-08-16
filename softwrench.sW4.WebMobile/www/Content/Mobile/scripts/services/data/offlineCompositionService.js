@@ -30,18 +30,16 @@
 
                     log.debug("inserting {0} new compositions for {1}".format(newDataMaps.length, application.applicationName));
                     const idsToDelete = [];
-                    const tempArray = [];
                     for (let j = 0; j < newDataMaps.length; j++) {
                         const datamap = newDataMaps[j];
                         const id = persistence.createUUID();
-                        const fields = datamap.fields;
 
-                        const query = { query: entities.CompositionDataEntry.insertionQueryPattern, args: [datamap.application, JSON.stringify(fields), datamap.id, String(datamap.approwstamp), id] };
+                        const query = { query: entities.CompositionDataEntry.insertionQueryPattern, args: [datamap.application, JSON.stringify(datamap), datamap.id, String(datamap.approwstamp), id] };
 
                         idsToDelete.push("'" + datamap.id + "'");
                         queryArray.push(query);
                         if (application.applicationName === "attachment_") {
-                            doclinksArray.push({ compositionRemoteId: fields.doclinksid, hash: fields["docinfo_.urlparam1"], ownerTable: fields.ownertable, ownerId: fields.ownerid, docinfoid: fields.docinfoid });
+                            doclinksArray.push({ compositionRemoteId: datamap.doclinksid, hash: datamap["docinfo_.urlparam1"], ownerTable: datamap.ownertable, ownerId: datamap.ownerid, docinfoid: datamap.docinfoid });
                         }
                     }
                     //let´s delete the old compositions first, to avoid any chance of errors due to server side updates

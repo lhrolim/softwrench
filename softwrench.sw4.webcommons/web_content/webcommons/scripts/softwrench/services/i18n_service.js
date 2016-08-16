@@ -187,12 +187,12 @@
         },
 
         getI18nRecordLabel: function (schema, datamap) {
-            if (datamap == null || datamap.fields == null || schema == null) {
+            if (datamap == null || schema == null) {
                 return "";
             }
 
             var userIdFieldName = schema.userIdFieldName;
-            var userId = datamap.fields[userIdFieldName];
+            var userId = datamap[userIdFieldName];
 
             if (schema.idDisplayable && userId != null) {
                 return '{0} {1}'.format(schema.idDisplayable, userId);

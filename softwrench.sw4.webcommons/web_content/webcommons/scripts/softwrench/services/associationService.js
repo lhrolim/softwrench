@@ -13,10 +13,7 @@
         var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
             const log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
             const key = associationFieldMetadata.associationKey;
-            if (datamap.fields != undefined) {
-                datamap = datamap.fields;
-            }
-
+            
             datamap[key] = {};
             datamap.extrafields = datamap.extrafields || {};
             if (associationFieldMetadata.extraProjectionFields == null) {
@@ -123,11 +120,7 @@
             const panelId = crudContextHolderService.isShowingModal() ? "#modal" : null;
             const datamap = crudContextHolderService.rootDataMap(panelId);
             const schema = crudContextHolderService.currentSchema(panelId);
-            var fields = datamap;
-            if (datamap && datamap.fields) {
-                fields = datamap.fields;
-            }
-            const fieldsTosubmit = submitService.removeExtraFields(fields, true, schema);
+            const fieldsTosubmit = submitService.removeExtraFields(datamap, true, schema);
             const key = schemaService.buildApplicationMetadataSchemaKey(schema);
             const parameters = {
                 key: key,
@@ -230,18 +223,18 @@
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
             const target = associationFieldMetadata.target;
-            var fields = datamap;
-            if (datamap && datamap.fields) {
-                fields = datamap.fields;
-            }
-            const selectedValue = fields[target];
+            const selectedValue = datamap[target];
+
             if (selectedValue == null) {
                 return null;
             }
+
             const resultValue = doGetFullObject(associationFieldMetadata, selectedValue, datamap, schema, contextData);
+
             if (resultValue == null) {
                 $log.getInstance('associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
             }
+
             return resultValue;
         };
 
@@ -289,10 +282,7 @@
 
             var fields = triggerparams.fields;
             if (!fields) {
-                fields = scope.datamap;
-                if (fields && fields.fields != undefined) {
-                    fields = scope.datamap.fields;
-                }
+                fields = scope.datamap;              
             }
 
             // clear the extra fields if new value is null
@@ -526,9 +516,7 @@
                 showmore: options.showmore || false
             };
             var fields = datamap;
-            if (datamap && datamap.fields) {
-                fields = datamap.fields;
-            }
+
             const fieldsTosubmit = submitService.removeExtraFields(fields, true, schema);
             const urlToUse = url("/api/generic/Association/GetSchemaOptions?" + $.param(parameters));
             const jsonString = angular.toJson(fieldsTosubmit);
@@ -582,13 +570,10 @@
             const applicationName = schema.applicationName;
             var fields = scope.datamap;
 
-            if (scope.datamap.fields) {
-                fields = scope.datamap.fields;
-            }
-
             if (options.datamap) {
                 fields = options.datamap;
             }
+
             const parameters = {
                 application: applicationName,
                 key: {

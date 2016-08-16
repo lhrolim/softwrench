@@ -71,10 +71,7 @@
         function validateCurrent(panelId) {
             const schema = crudContextHolderService.currentSchema(panelId);
             var datamap = crudContextHolderService.rootDataMap(panelId);
-            if (datamap.fields) {
-                datamap = datamap.fields;
-            }
-
+           
             return this.validate(schema, schema.displayables, datamap);
         }
 

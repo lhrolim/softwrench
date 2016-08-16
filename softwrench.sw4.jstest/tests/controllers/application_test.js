@@ -27,8 +27,7 @@
 
         var serverResult = {
             type: "ApplicationListResult",
-            resultObject: [{ fields: { id: "100" } }, { fields: { id: "200" } }],
-
+            resultObject: [{ id: "100" }, { id: "200" }],
         };
 
         spyOn(mockScope, "$broadcast");
@@ -44,7 +43,7 @@
 
     it("Returning From Detail to Grid (Cancel)", function () {
 
-        var data = [{ fields: { id: "100" } }, { fields: { id: "200" } }];
+        var data = [{ id: "100" }, { id: "200" }];
         var schema ={idFieldName:"id",displayables:[],properties: {} }
         mockScope.schema = schema;
 

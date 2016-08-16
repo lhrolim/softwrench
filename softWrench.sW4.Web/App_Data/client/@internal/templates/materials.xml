@@ -208,8 +208,8 @@
         <schema id="detail" stereotype="detail" title="Material Details">
           <event type="onload" service="scannerdetectionService" method="initMaterialScanningListener" />
           <field attribute="matusetransid" hidden="true" />
-          <field attribute="orgid" defaultexpression="$.parentdata.fields['orgid']" hidden="true" />
-          <field attribute="siteid" defaultexpression="$.parentdata.fields['siteid']" hidden="true" />
+          <field attribute="orgid" defaultexpression="$.parentdata['orgid']" hidden="true" />
+          <field attribute="siteid" defaultexpression="$.parentdata['siteid']" hidden="true" />
           <field attribute="refwo" hidden="true" />
           <field attribute="description" hidden="true" />
           <field attribute="transdate" hidden="true" />

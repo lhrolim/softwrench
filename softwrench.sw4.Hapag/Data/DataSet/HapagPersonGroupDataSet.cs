@@ -50,55 +50,55 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
             foreach (var attributeHolder in resultObject) {
                 try {
-                    var persongroup = attributeHolder.Attributes["persongroup"];
+                    var persongroup = attributeHolder["persongroup"];
                     if (persongroup != null) {
                         
-                        var groupDefault = attributeHolder.Attributes["groupdefault"];                        
+                        var groupDefault = attributeHolder["groupdefault"];                        
 
                         if (persongroup.ToString().StartsWith(HapagPersonGroupConstants.BaseHapagLocationPrefix)) {
 
-                            attributeHolder.Attributes["itcrole"] = groupDefault.Equals(1) ? "Location ITC" : "Location ITC Delegate";
-                            attributeHolder.Attributes["hlagsite"] = persongroup.ToString().Substring(HapagPersonGroupConstants.BaseHapagLocationPrefix.Length, 3);
+                            attributeHolder["itcrole"] = groupDefault.Equals(1) ? "Location ITC" : "Location ITC Delegate";
+                            attributeHolder["hlagsite"] = persongroup.ToString().Substring(HapagPersonGroupConstants.BaseHapagLocationPrefix.Length, 3);
 
-                            var persongroupdescription = attributeHolder.Attributes["persongroup_.description"];
+                            var persongroupdescription = attributeHolder["persongroup_.description"];
                             if (persongroupdescription != null) {
-                                attributeHolder.Attributes["hlagcostcenter"] = persongroupdescription.ToString().Substring(persongroupdescription.ToString().LastIndexOf("-") + 1);
+                                attributeHolder["hlagcostcenter"] = persongroupdescription.ToString().Substring(persongroupdescription.ToString().LastIndexOf("-") + 1);
 
-                                var costcenterDescription = attributeHolder.Attributes["costcenterdescription"];
+                                var costcenterDescription = attributeHolder["costcenterdescription"];
                                 if (costcenterDescription != null) {
-                                    attributeHolder.Attributes["hlagcostcenter"] += " // " + costcenterDescription;
+                                    attributeHolder["hlagcostcenter"] += " // " + costcenterDescription;
                                 }
                             }
 
                             // Add blank fields just to match the second union iterator (Region and Area)
-                            attributeHolder.Attributes["locationcostcenterdescription"] = String.Empty;
-                            attributeHolder.Attributes["locationpersongroup_.persongroup"] = String.Empty;
-                            attributeHolder.Attributes["locationpersongroup_.description"] = String.Empty;                            
+                            attributeHolder["locationcostcenterdescription"] = String.Empty;
+                            attributeHolder["locationpersongroup_.persongroup"] = String.Empty;
+                            attributeHolder["locationpersongroup_.description"] = String.Empty;                            
 
                         } else if (persongroup.ToString().StartsWith(HapagPersonGroupConstants.BaseHapagAreaPrefix) || 
                             persongroup.ToString().StartsWith(HapagPersonGroupConstants.BaseHapagRegionPrefix)) {
 
-                            var locationpersongroup = attributeHolder.Attributes["locationpersongroup_.persongroup"];
-                            attributeHolder.Attributes["hlagsite"] = locationpersongroup.ToString().Substring(HapagPersonGroupConstants.BaseHapagLocationPrefix.Length, 3);
+                            var locationpersongroup = attributeHolder["locationpersongroup_.persongroup"];
+                            attributeHolder["hlagsite"] = locationpersongroup.ToString().Substring(HapagPersonGroupConstants.BaseHapagLocationPrefix.Length, 3);
 
-                            var locationpersongroupdescription = attributeHolder.Attributes["locationpersongroup_.description"];
+                            var locationpersongroupdescription = attributeHolder["locationpersongroup_.description"];
                             if (locationpersongroupdescription != null) {
-                                attributeHolder.Attributes["hlagcostcenter"] = locationpersongroupdescription.ToString().Substring(locationpersongroupdescription.ToString().LastIndexOf("-") + 1);
+                                attributeHolder["hlagcostcenter"] = locationpersongroupdescription.ToString().Substring(locationpersongroupdescription.ToString().LastIndexOf("-") + 1);
 
-                                var locationcostcenterdescription = attributeHolder.Attributes["locationcostcenterdescription"];
+                                var locationcostcenterdescription = attributeHolder["locationcostcenterdescription"];
                                 if (locationcostcenterdescription != null) {
-                                    attributeHolder.Attributes["hlagcostcenter"] += " // " + locationcostcenterdescription;
+                                    attributeHolder["hlagcostcenter"] += " // " + locationcostcenterdescription;
                                 }
                             }
                             
                             if (persongroup.ToString().StartsWith(HapagPersonGroupConstants.BaseHapagAreaPrefix)) {
-                                attributeHolder.Attributes["itcrole"] = groupDefault.Equals(1) ? "Area ITC" : "Area ITC Delegate";
+                                attributeHolder["itcrole"] = groupDefault.Equals(1) ? "Area ITC" : "Area ITC Delegate";
                             } else if (persongroup.ToString().StartsWith(HapagPersonGroupConstants.BaseHapagRegionPrefix)) {
-                                attributeHolder.Attributes["itcrole"] = groupDefault.Equals(1) ? "Region ITC" : "Region ITC Delegate";
+                                attributeHolder["itcrole"] = groupDefault.Equals(1) ? "Region ITC" : "Region ITC Delegate";
                             }
 
                             // Add blank fields just to match the first union iterator (Location)
-                            attributeHolder.Attributes["costcenterdescription"] = String.Empty;
+                            attributeHolder["costcenterdescription"] = String.Empty;
                         }
                     }                    
                 }

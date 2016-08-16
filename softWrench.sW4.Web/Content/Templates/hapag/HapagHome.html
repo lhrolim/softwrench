@@ -50,8 +50,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="dm in datamap" ng-click="showDetail(dm.fields)" style="cursor: pointer">
-                                <td ng-repeat="column in schema.displayables" ng-hide="column.isHidden"><a style="color: black">{{format(dm.fields[column.attribute],column)}}</a></td>
+                            <tr ng-repeat="dm in datamap" ng-click="showDetail(dm)" style="cursor: pointer">
+                                <td ng-repeat="column in schema.displayables" ng-hide="column.isHidden"><a style="color: black">{{format(dm[column.attribute],column)}}</a></td>
                             </tr>
                         </tbody>
                     </table>

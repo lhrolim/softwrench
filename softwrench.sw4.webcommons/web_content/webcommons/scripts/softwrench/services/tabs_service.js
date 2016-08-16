@@ -45,7 +45,7 @@
             var resultList = [];
             var displayables = this.tabsDisplayables(schema);
             $.each(displayables, function (key, displayable) {
-                var value = datamap.fields[displayable.relationship];
+                var value = datamap[displayable.relationship];
                 if (value != undefined && value.length > 0) {
                     resultList.push(displayable);
                 }
@@ -125,7 +125,7 @@
                     return;
                 }
 
-                var compositionData = datamap.fields[key];
+                var compositionData = datamap[key];
 
                 if (compositionData == undefined) {
                     //this happens when the composition data has not been fetch yet,due to a lazy strategy

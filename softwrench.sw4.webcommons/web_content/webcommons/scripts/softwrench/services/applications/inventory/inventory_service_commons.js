@@ -23,7 +23,7 @@
             };
             searchService.searchWithData("invcost", searchData).success(function (data) {
                 var resultObject = data.resultObject;
-                var resultFields = resultObject[0].fields;
+                var resultFields = resultObject[0];
                 var costtype = fields['inventory_.costtype'];
                 if (costtype === 'STANDARD') {
                     parameters.fields[unitCostFieldName] = resultFields.stdcost;
@@ -44,7 +44,7 @@
             var that = this;
             searchService.searchWithData("inventory", searchData).success(function (data) {
                 var resultObject = data.resultObject;
-                var fields = resultObject[0].fields;
+                var fields = resultObject[0];
                 var costtype = fields['costtype'];
                 if (costtype.equalIc("fifo") || costtype.equalIc("lifo")) {
                     // TODO: Add support for FIFO / LIFO cost types

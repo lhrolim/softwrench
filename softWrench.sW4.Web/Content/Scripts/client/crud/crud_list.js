@@ -127,7 +127,7 @@
                     this.save = function () {
                         var saveFn = modalService.getSaveFn();
                         if (saveFn) {
-                            var result = saveFn($scope.datamap.fields, $scope.schema);
+                            var result = saveFn($scope.datamap, $scope.schema);
                             if (result && result.then) {
                                 result.then(function () {
                                     modalService.hide();
@@ -219,9 +219,9 @@
                             var applicationField = schemaService.locateDisplayableByQualifier($scope.schema, "application.name");
                             var detailShemaIdField = schemaService.locateDisplayableByQualifier($scope.schema, "schema.detail.id");
 
-                            var listitem = { id: item.fields[$scope.schema.idFieldName] };
-                            if (!!applicationField) listitem.application = item.fields[applicationField.attribute];
-                            if (!!detailShemaIdField) listitem.detailSchemaId = item.fields[detailShemaIdField.attribute];
+                            var listitem = { id: item[$scope.schema.idFieldName] };
+                            if (!!applicationField) listitem.application = item[applicationField.attribute];
+                            if (!!detailShemaIdField) listitem.detailSchemaId = item[detailShemaIdField.attribute];
 
                             return listitem;
                         });
@@ -369,7 +369,7 @@
 
                     $scope.isEditing = function (schema) {
                         var idFieldName = schema.idFieldName;
-                        var id = $scope.datamap.fields[idFieldName];
+                        var id = $scope.datamap[idFieldName];
                         return id != null;
                     };
 

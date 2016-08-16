@@ -5,40 +5,31 @@ using System.Collections.Generic;
 namespace softwrench.sW4.Shared2.Data {
 
 
-    public abstract class AttributeHolder {
+    public abstract class AttributeHolder : Dictionary<string, object> {
         private const string NotFound = "attribute {0} not found in {1}. Please review your metadata configuration";
-
-        //TODO: make Attributes a generic type instead of object
-        [JsonIgnore]
-        public IDictionary<string, object> Attributes {
-            get; set;
-        }
-
-        protected AttributeHolder() {
-
-        }
+        
+        protected AttributeHolder() { }
 
         protected AttributeHolder(IDictionary<string, object> attributes) {
-            Attributes = attributes;
+            this.AddAllAttribtes(attributes);
         }
 
-
-        ////        [JsonIgnore]
-        //        public IDictionary<string, object> Attributes {
-        //            get { return _attributes; }
-        //        }
-
+        public virtual void AddAllAttribtes(IDictionary<string, object> fields) {
+            foreach (KeyValuePair<string, object> entry in fields) {
+                this.Add(entry.Key, entry.Value);
+            }
+        }
+        
         public virtual object GetAttribute(string attributeName, bool remove = false, bool throwException = false) {
             object result;
-            if (!Attributes.TryGetValue(attributeName, out result)) {
-                if (!Attributes.TryGetValue(attributeName.ToUpper(), out result) && throwException) {
+            if (!this.TryGetValue(attributeName, out result)) {
+                if (!this.TryGetValue(attributeName.ToUpper(), out result) && throwException) {
                     throw new InvalidOperationException(String.Format(NotFound, attributeName, HolderName()));
                 }
             }
             if (remove && result != null) {
-                Attributes.Remove(attributeName);
+                this.Remove(attributeName);
             }
-
 
             return result;
         }
@@ -52,14 +43,14 @@ namespace softwrench.sW4.Shared2.Data {
         }
 
         public void SetAttribute(string attributeName, object value) {
-            if (Attributes.ContainsKey(attributeName)) {
-                Attributes.Remove(attributeName);
+            if (this.ContainsKey(attributeName)) {
+                this.Remove(attributeName);
             }
-            Attributes.Add(attributeName, value);
+            this.Add(attributeName, value);
         }
 
         public virtual bool ContainsAttribute(string attributeName, bool checksForNonNull = false) {
-            return Attributes.ContainsKey(attributeName);
+            return this.ContainsKey(attributeName);
         }
 
         public abstract string HolderName();

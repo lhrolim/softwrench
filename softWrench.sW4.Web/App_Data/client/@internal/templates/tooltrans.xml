@@ -105,7 +105,7 @@
             <!--Shows only on line expand -->
             <field label="Rate" attribute="toolrate" readonly="true" showexpression="!@_iscreation"/>
 
-            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.fields.glaccount">
+            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.glaccount">
               <renderer type="lookup"/>
             </association>
           </detail>

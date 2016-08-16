@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.EL
             var parameters = new object[_fieldNames.Count];
             for (int i = 0; i < _fieldNames.Count(); i++)
             {
-                dynamic obj = map.Attributes[_fieldNames[i]];
+                dynamic obj = map[_fieldNames[i]];
                 parameters[i] = obj;
             }
             return String.Format(_constExpression, parameters);

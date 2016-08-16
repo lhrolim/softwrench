@@ -44,7 +44,7 @@
                         const datamap = dataToInsert[j];
                         const id = persistence.createUUID();
                         const idx = searchIndexService.buildIndexes(textIndexes, numericIndexes, dateIndexes, datamap);
-                        const query = { query: queryToUse, args: [datamap.application, JSON.stringify(datamap.fields), String(datamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
+                        const query = { query: queryToUse, args: [datamap.application, JSON.stringify(datamap), String(datamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
                         queryArray.push(query);
                     }
                 }

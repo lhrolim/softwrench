@@ -128,11 +128,9 @@
                     $log.getInstance('compositionlistwrapper#doLoad').debug('loading composition {0}'.format(scope.tabid));
                     const metadata = scope.metadata;
                     scope.tabLabel = i18NService.get18nValue(metadata.schema.schemas.list.applicationName + '._title', metadata.label);
-                    if (scope.parentdata.fields) {
-                        scope.compositiondata = scope.parentdata.fields[scope.metadata.relationship];
-                    } else {
-                        scope.compositiondata = scope.parentdata[scope.metadata.relationship];
-                    }
+
+                    scope.compositiondata = scope.parentdata[scope.metadata.relationship];
+                    
                     if (!scope.compositiondata) {
                         const arr = [];
                         scope.parentdata[scope.metadata.relationship] = arr;
@@ -250,7 +248,7 @@
         $scope.filterApplied = function () {
             $scope.paginationData.pageNumber = 1;
             const searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
-            compositionService.searchCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata.fields || $scope.parentdata, searchDTO).then(
+            compositionService.searchCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata, searchDTO).then(
                 result => $scope.refreshList(result[$scope.relationship])
             ).finally(() => crudContextHolderService.setDetailDataResolved());
         };
@@ -309,7 +307,7 @@
                 clonedCompositionData: arr,
                 previousData: previousCompositionData
             };
-            eventService.onload($scope, $scope.compositionlistschema, $scope.parentdata.fields, parameters);
+            eventService.onload($scope, $scope.compositionlistschema, $scope.parentdata, parameters);
         }
 
         $scope.compositionData = function () {
@@ -399,7 +397,7 @@
                 clonedCompositionData: $scope.compositionData(),
                 paginationApplied: isPaginationRefresh
             };
-            eventService.onload($scope, $scope.compositionlistschema, $scope.parentdata.fields, parameters);
+            eventService.onload($scope, $scope.compositionlistschema, $scope.parentdata, parameters);
 
 
             if (!$scope.paginationData) {
@@ -735,7 +733,7 @@
                 // Check that main tab has all required fields filled before opening modal
                 const parentDatamap = crudContextHolderService.rootDataMap();
                 const parentSchema = crudContextHolderService.currentSchema();
-                if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap.fields).length > 0) {
+                if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap).length > 0) {
                     //crudContextHolderService.setActiveTab(null);
                     redirectService.redirectToTab('main');
                     return;
@@ -867,7 +865,7 @@
                 const compositionschema = $scope.compositionschemadefinition['schemas']['detail']; // TODO: watch for siteid changes to recalculate the whole composition list
 
                 if (clonedItem.hasOwnProperty("siteid") && !clonedItem["siteid"]) {
-                    clonedItem.siteid = $scope.parentdata.fields["siteid"];
+                    clonedItem.siteid = $scope.parentdata["siteid"];
                 }
                 const shouldToggle = commandService.executeClickCustomCommand(fullServiceName, clonedItem, column, $scope.compositionlistschema);
                 if (shouldToggle && $scope.hasDetailSchema()) {
@@ -910,7 +908,7 @@
             }
 
             compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
-                const datamap = result.resultObject.fields;
+                const datamap = result.resultObject;
                 if ($scope.isUpdate) {
                     datamap["#edited"] = 1;
                 }
@@ -932,7 +930,7 @@
             // Check that main tab has all required fields filled before opening modal
             const parentDatamap = crudContextHolderService.rootDataMap();
             const parentSchema = crudContextHolderService.currentSchema();
-            if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap.fields).length > 0) {
+            if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap).length > 0) {
                 //crudContextHolderService.setActiveTab(null);
                 redirectService.redirectToTab('main');
                 return;
@@ -945,7 +943,7 @@
                 const compositionId = item[$scope.compositionlistschema.idFieldName];
                 compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
                     //TODO: generate composition deletion method
-                    var compositionItem = result.resultObject.fields;
+                    var compositionItem = result.resultObject;
                     const event = $scope.compositionlistschema.events["onremoval.validation"];
                     if (event) {
                         const fn = dispatcherService.loadService(event.service, event.method);
@@ -1148,7 +1146,7 @@
 
             if (selecteditem != undefined) {
                 //ensure new item is captured as well
-                safePush($scope.parentdata.fields, $scope.relationship, selecteditem);
+                safePush($scope.parentdata, $scope.relationship, selecteditem);
             }
             const log = $log.getInstance('compositionlist#save');
             if (!$scope.collectionproperties.autoCommit) {
@@ -1385,7 +1383,7 @@
                 $scope.paginationData.pageNumber = pageNumber;
                 return $q.when();
             }
-            const fields = $scope.parentdata.fields || $scope.parentdata;
+            const fields = $scope.parentdata;
             crudContextHolderService.clearDetailDataResolved();
             const searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
             searchDTO.pageNumber = pageNumber;

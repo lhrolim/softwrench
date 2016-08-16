@@ -204,9 +204,6 @@ modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextS
 
     function buildDatamapVariables(variables, datamapVariables, datamap) {
         var datamapPath = 'datamap';
-        if (datamap.fields != undefined) {
-            datamapPath = 'datamap.fields';
-        }
         for (let i = 0; i < datamapVariables.length; i++) {
             const referenceVariable = datamapVariables[i];
             let realVariable = referenceVariable.replace(/\@/, '');

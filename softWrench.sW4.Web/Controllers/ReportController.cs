@@ -47,15 +47,12 @@ namespace softWrench.sW4.Web.Controllers {
             if (dataResponse is ApplicationListResult) {
                 var listData = ((ApplicationListResult)dataResponse).ResultObject;
                 var schema = ((ApplicationListResult)dataResponse).Schema;
-                data = ReportUtil.ConvertMapListToTable(
-                    listData.Select(f => f.Attributes).ToList(),
-                    schema
-                    );
+                data = ReportUtil.ConvertMapListToTable(listData as IList<IDictionary<string, object>>, schema);
             } else if (dataResponse is ApplicationDetailResult) {
                 var detailData = ((ApplicationDetailResult)dataResponse).ResultObject;
                 var schema = ((ApplicationDetailResult)dataResponse).Schema;
                 data = ReportUtil.ConvertMapListToTable(
-                    new List<IDictionary<string, object>>() { detailData.Attributes },
+                    new List<IDictionary<string, object>>() { detailData },
                     schema
                     );
             }

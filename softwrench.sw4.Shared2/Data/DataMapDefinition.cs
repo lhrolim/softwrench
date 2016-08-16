@@ -4,10 +4,39 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Data {
     public class DataMapDefinition : AttributeHolder {
-        public string Application { get; set; }
-        public long? Approwstamp { get; set; }
 
-        public string Id { get; set; }
+        private string _application;
+        public string Application {
+            get {
+                return _application;
+            }
+            set {
+                _application = value;
+                this["Application"] = value;
+            }
+        }
+
+        private long? _approwstamp;
+        public long? Approwstamp {
+            get {
+                return _approwstamp;
+            }
+            set {
+                _approwstamp = value;
+                this["Approwstamp"] = value;
+            }
+        }
+
+        private string _id;
+        public string Id {
+            get {
+                return _id;
+            }
+            set {
+                _id = value;
+                this["Id"] = value;
+            }
+        }
 
 
         public DataMapDefinition() { }
@@ -42,38 +71,38 @@ namespace softwrench.sW4.Shared2.Data {
         //        }
 
         public IDictionary<string, object> Fields {
-            get { return Attributes; }
+            get { return this; }
         }
 
 
         public string Value(string name) {
             if (name == null) throw new ArgumentNullException("name");
 
-            return Attributes[name].ToString();
+            return this[name].ToString();
         }
 
         public string Value(ApplicationFieldDefinition field) {
             if (field == null) throw new ArgumentNullException("field");
 
-            return Attributes[field.Attribute].ToString();
+            return this[field.Attribute].ToString();
         }
 
         public T Value<T>(string name) {
             if (name == null) throw new ArgumentNullException("name");
 
-            return (T)Convert.ChangeType(Attributes[name], typeof(T), null);
+            return (T)Convert.ChangeType(this[name], typeof(T), null);
         }
 
         public void Value(string name, string value) {
             if (name == null) throw new ArgumentNullException("name");
 
-            Attributes[name] = value;
+            this[name] = value;
         }
 
         public void Value(ApplicationFieldDefinition field, string value) {
             if (field == null) throw new ArgumentNullException("field");
 
-            Attributes[field.Attribute] = value;
+            this[field.Attribute] = value;
         }
 
 

@@ -107,7 +107,7 @@ angular.module('sw_layout')
             var resultObject = data.resultObject;
 
             for (var i = 0; i < resultObject.length; i++) {
-                var fields = resultObject[i]['fields'];
+                var fields = resultObject[i];
                 if (fields['binnum'] == binnum && fields['lotnum'] == lotnum) {
                     parameters.fields[balanceField] = fields.curbal;
                     // Exit the loop
@@ -132,7 +132,7 @@ angular.module('sw_layout')
         };
         searchService.searchWithData("maxvars", maxvarsSearchData).success(function (maxvarsData) {
             var resultObject = maxvarsData.resultObject;
-            var fields = resultObject[0].fields;
+            var fields = resultObject[0];
             var costtype = fields['varvalue'];
             parameters['fields']['inventory_.costtype'] = costtype;
 
@@ -153,7 +153,7 @@ angular.module('sw_layout')
             };
             searchService.searchWithData("invcost", searchData).success(function (data) {
                 var invcostRo = data.resultObject;
-                var invcostFields = invcostRo[0].fields;
+                var invcostFields = invcostRo[0];
                 if (costtype === 'STDCOST') {
                     parameters.fields['unitcost'] = invcostFields.stdcost;
                 } else if (costtype === 'AVGCOST') {
@@ -178,11 +178,7 @@ angular.module('sw_layout')
             var value = parameters.value;
             var column = parameters.column;
             var dm = parameters.datamap;
-            if (dm != undefined) {
-                if (dm.fields != undefined) {
-                    dm = parameters.datamap.fields;
-                }
-            }
+           
             return formatQtyReturned(dm, value, column);
         },
 
@@ -190,11 +186,7 @@ angular.module('sw_layout')
             var value = parameters.value;
             var column = parameters.column;
             var dm = parameters.datamap;
-            if (dm != undefined) {
-                if (dm.fields != undefined) {
-                    dm = parameters.datamap.fields;
-                }
-            }
+           
             return formatQty(dm, value, column);
         },
 
@@ -203,9 +195,6 @@ angular.module('sw_layout')
             var column = parameters.column;
             var dm = parameters.datamap;
             if (dm != undefined) {
-                if (dm.fields != undefined) {
-                    dm = parameters.datamap.fields;
-                }
                 var formattedValue = formatQtyReturned(dm, value, column);
                 dm[column.attribute] = formattedValue;
                 return formattedValue;
@@ -218,9 +207,6 @@ angular.module('sw_layout')
             var column = parameters.column;
             var dm = parameters.datamap;
             if (dm != undefined) {
-                if (dm.fields != undefined) {
-                    dm = parameters.datamap.fields;
-                }
                 var formattedValue = formatQty(dm, value, column);
                 dm[column.attribute] = formattedValue;
                 return formattedValue;
@@ -495,7 +481,7 @@ angular.module('sw_layout')
             };
             searchService.searchWithData("inventory", searchData).success(function (data) {
                 var resultObject = data.resultObject;
-                var fields = resultObject[0].fields;
+                var fields = resultObject[0];
                 var costtype = fields['costtype'];
                 parameters['fields']['inventory_.costtype'] = costtype;
                 var locationFieldName = "";
@@ -669,9 +655,6 @@ angular.module('sw_layout')
         },
 
         onloadReservation: function (scope, schema, datamap) {
-            if (datamap.fields) {
-                datamap = datamap.fields;
-            }
             var parameters = {
                 fields: datamap
             };

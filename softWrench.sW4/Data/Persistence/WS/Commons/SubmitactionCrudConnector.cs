@@ -18,8 +18,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         public Object SubmitAction(UpdateStatusOperationData opData) {
-            opData.CrudData.Attributes["status"] = opData.status;
-            opData.CrudData.Attributes["#submittingaction"] = "true";
+            opData.CrudData["status"] = opData.status;
+            opData.CrudData["#submittingaction"] = "true";
             return Maximoengine.Update(opData.CrudData);
         }
     }

@@ -133,7 +133,7 @@
                 value: newPriority
             }
 
-            commandService.executeClickCustomCommand(clickService, rowdm.fields, column, $scope.schema, $scope.panelid, newValue);
+            commandService.executeClickCustomCommand(clickService, rowdm, column, $scope.schema, $scope.panelid, newValue);
         };
 
         $scope.showDetail = function (rowdm, attribute, forceEdition) {
@@ -153,7 +153,7 @@
             if (selectionModel.selectionMode && !forceEdition) {
                 commandResult = null;
                 if (fullServiceName != null) {
-                    commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema, $scope.panelid);
+                    commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm, column, $scope.schema, $scope.panelid);
                 };
                 if (commandResult == undefined || commandResult !== false) {
                     gridSelectionService.toggleSelection(rowdm, $scope.schema, $scope.panelid);
@@ -175,7 +175,7 @@
             }
             // TODO: Result from custom list click MUST be false to stop execution of default list click?
             if (fullServiceName != null) {
-                commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema, $scope.panelid);
+                commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm, column, $scope.schema, $scope.panelid);
                 if (commandResult === false) {
                     return;
                 }else if (commandResult.then) {
@@ -190,7 +190,7 @@
         };
 
         $scope.doShowDetail = function (rowdm, schemaid, mode, popupmode, loadcompositiontab) {
-            var id = rowdm.fields[$scope.schema.idFieldName];
+            var id = rowdm[$scope.schema.idFieldName];
             if (id == null || id == "-666") {
                 window.alert('error id is null');
                 return;
@@ -226,14 +226,14 @@
                     }
 
                     var fieldName = customParamFields[param];
-                    var fieldValue = rowdm.fields[fieldName];
+                    var fieldValue = rowdm[fieldName];
                     // fieldValue not found: maybe a transientField --> find by matching attributeToServer 
                     if (!fieldValue) {
                         var actualField = schema.displayables.find(function(field) {
                             return field.attributeToServer === fieldName;
                         });
                         if (!!actualField) {
-                            fieldValue = rowdm.fields[actualField.attribute];
+                            fieldValue = rowdm[actualField.attribute];
                         }
                     }
 

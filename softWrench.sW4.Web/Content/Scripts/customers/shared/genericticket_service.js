@@ -26,33 +26,31 @@ angular.module('sw_layout')
         changeStatus: function (datamap,schemaId, newStatus) {
 
             var schema = crudContextHolderService.currentSchema();
-            var fields = datamap.fields ? datamap.fields : datamap;
             var dm = {};
             if (newStatus) {
                 dm["newStatus"] = newStatus;
-                dm["crud"] = fields;
+                dm["crud"] = datamap;
                 return applicationService.invokeOperation(schema.applicationName, schemaId, "ChangeStatus", dm).then(function(httpResponse) {
-                    fields["status"] = newStatus;
+                    datamap["status"] = newStatus;
                 });
             }
             return $q.when();
         },
 
         adjustOrgId: function (event) {
-            event.fields.orgid = event.fields.extrafields["site_.orgid"];
+            event.orgid = event.extrafields["site_.orgid"];
         },
 
         changePriority: function (datamap, schemaId, priorityField, newPriority) {
             var schema = crudContextHolderService.currentSchema();
-            var fields = datamap.fields ? datamap.fields : datamap;
-            var dm = fields;
+            var dm = datamap;
             var extraParameters = {
-                id: fields.ticketid
+                id: datamap.ticketid
             }
             if (newPriority) {
                 dm[priorityField] = newPriority;
                 return applicationService.invokeOperation(schema.applicationName, schemaId, "ChangePriority", dm, extraParameters).then(function (httpResponse) {
-                    fields[priorityField] = newPriority;
+                    datamap[priorityField] = newPriority;
                 });
             }
             return $q.when();
@@ -66,17 +64,17 @@ angular.module('sw_layout')
         },
 
         beforeChangeLocation: function (event) {
-            if (event.fields['assetnum'] == null) {
+            if (event['assetnum'] == null) {
                 //if no asset is selected we can proceed.
                 return true;
             }
-            if (event.fields['asset_.location'] == event.newValue) {
+            if (event['asset_.location'] == event.newValue) {
                 //if it´s changing to the asset location, proceed. It might be due to the AfterChangeAsset callback.
                 return true;
             }
             
             alertService.confirm("The location you have entered does not contain the current asset. Would you like to remove the current asset from the ticket?").then(function () {
-                event.fields['assetnum'] = null;
+                event['assetnum'] = null;
                 //TODO: this should be done using watchers, so that we could remove scope from event, decoupling things
                 event.scope.lookupAssociationsCode['assetnum'] = null;
                 event.scope.lookupAssociationsDescription["assetnum"] = null;
@@ -88,12 +86,12 @@ angular.module('sw_layout')
         },
 
         beforeChangeStatus: function (event) {
-            if (event.fields['owner'] == null || event.fields['status'] != "NEW") {
+            if (event['owner'] == null || event['status'] != "NEW") {
                 return true;
             }
             
             alertService.confirm("Changing the status to new would imply in removing the owner of this Service Request. Proceeed?").then(function () {
-                event.fields['owner'] = null;
+                event['owner'] = null;
                 event.continue();
             }, function () {
                 event.interrupt();
@@ -101,26 +99,26 @@ angular.module('sw_layout')
         },
 
         afterChangeAsset: function (event) {
-            if (event.fields.assetnum == null) {
+            if (event.assetnum == null) {
                 return;
             }
 
-            var assetLocation = event.fields["asset_.location"];
-            var location = event.fields["location"];
+            var assetLocation = event["asset_.location"];
+            var location = event["location"];
             if (assetLocation !== location) {
-                event.fields["location"] = assetLocation;
+                event["location"] = assetLocation;
             }
         },
 
         afterchangeowner: function (event) {
-            if (event.fields['owner'] == null) {
+            if (event['owner'] == null) {
                 return;
             }
-            if (event.fields['owner'] == ' ') {
-                event.fields['owner'] = null;
+            if (event['owner'] == ' ') {
+                event['owner'] = null;
                 return;
             }
-            if (event.fields['status'] == 'WAPPR') {
+            if (event['status'] == 'WAPPR') {
                 //event.fields['status'] = 'QUEUED';
                 alertService.alert("Owner Group Field will be disabled if the Owner is selected.");
                 return;
@@ -131,14 +129,14 @@ angular.module('sw_layout')
 
         afterchangeownergroup: function (event) {
 
-            if (event.fields['ownergroup'] == null) {
+            if (event['ownergroup'] == null) {
                 return;
             }
-            if (event.fields['ownergroup'] == ' ') {
-                event.fields['ownergroup'] = null;
+            if (event['ownergroup'] == ' ') {
+                event['ownergroup'] = null;
                 return;
             }
-            if (event.fields['status'] == 'WAPPR') {
+            if (event['status'] == 'WAPPR') {
                 //event.fields['status'] = 'QUEUED';
                 alertService.alert("Owner Field will be disabled if the Owner Group is selected.");
                 return;
@@ -147,24 +145,24 @@ angular.module('sw_layout')
         },
 
         beforechangeownergroup: function (event) {
-            if (event.fields['owner'] != null) {
+            if (event['owner'] != null) {
                 alertService.alert("You may select an Owner or an Owner Group; not both");
             }
         },
 
         beforeChangeWOServiceAddress: function (event) {
             if (event.newValue == null) {
-                event.fields["woaddress_"] = null;
-                event.fields["woaddress_.serviceaddressid"] = null;
-                event.fields["woaddress_.formattedaddress"] = "";
+                event["woaddress_"] = null;
+                event["woaddress_.serviceaddressid"] = null;
+                event["woaddress_.formattedaddress"] = "";
             }
         },
 
         afterChangeWOServiceAddress: function (event) { 
-            event.fields["woserviceaddress_.formattedaddress"] = event.fields["woaddress_.formattedaddress"];
-            event.fields["#formattedaddr"] = event.fields["woserviceaddress_.formattedaddress"];
-            event.fields["#woaddress_"] = event.fields["woaddress_"];
-            event.fields["#haswoaddresschange"] = true;
+            event["woserviceaddress_.formattedaddress"] = event["woaddress_.formattedaddress"];
+            event["#formattedaddr"] = event["woserviceaddress_.formattedaddress"];
+            event["#woaddress_"] = event["woaddress_"];
+            event["#haswoaddresschange"] = true;
         }, 
 
         validateCloseStatus: function (schema, datamap, originalDatamap, parameters) {
@@ -191,23 +189,23 @@ angular.module('sw_layout')
         },
 
         afterChangeReportedBy: function (event) {
-            var datamap = event.fields;
+            var datamap = event;
             var searchData = {
                 personid: datamap['reportedby'],
                 isprimary: '1'
             };
             searchService.searchWithData("email", searchData, "list").success(function (data) {
                 var resultObject = data.resultObject[0];
-                datamap['reportedemail'] = resultObject ? resultObject.fields['emailaddress'] : '';
+                datamap['reportedemail'] = resultObject ? resultObject['emailaddress'] : '';
             });
             searchService.searchWithData("phone", searchData, "list").success(function (data) {
                 var resultObject = data.resultObject[0];
-                datamap['reportedphone'] = resultObject ? resultObject.fields['phonenum'] : '';
+                datamap['reportedphone'] = resultObject ? resultObject['phonenum'] : '';
             });
         },
 
         isDeleteAllowed: function (datamap, schema) {
-            return datamap.fields['status'] === 'NEW' && datamap.fields['reportedby'] === userService.getPersonId();
+            return datamap['status'] === 'NEW' && datamap['reportedby'] === userService.getPersonId();
         },
 
         isClosed: function () {
@@ -216,7 +214,7 @@ angular.module('sw_layout')
                 return false;
             }
 
-            var originalDM = datamap.fields;
+            var originalDM = datamap;
             if (!originalDM) {
                 return false;
             }
@@ -260,7 +258,7 @@ angular.module('sw_layout')
             var schemaId = schema.schemaId;
 
             // items selected in the buffer
-            const selectedItems = Object.values(crudContextHolderService.getSelectionModel().selectionBuffer).map(s => s.fields);
+            const selectedItems = Object.values(crudContextHolderService.getSelectionModel().selectionBuffer).map(s => s);
 
             // invalid selection
             if (!this.validateBatchStatusChange(selectedItems)) return;

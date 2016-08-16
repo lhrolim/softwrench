@@ -29,8 +29,8 @@ angular.module('sw_layout')
 
         afterITCAssetChange: function (event) {
             // Clean User-Personal Asset
-            if (event.fields['assetnum'] != null) {
-                event.fields['assetnum'] = '$null$ignorewatch';
+            if (event['assetnum'] != null) {
+                event['assetnum'] = '$null$ignorewatch';
             }
             //event.fields['assetnum'] = null;
 
@@ -38,8 +38,8 @@ angular.module('sw_layout')
 
         afterUserAssetChange: function (event) {
             // Clean ITC-Responsible Asset
-            if (event.fields['itcassetnum'] != null) {
-                event.fields['itcassetnum'] = '$null$ignorewatch';
+            if (event['itcassetnum'] != null) {
+                event['itcassetnum'] = '$null$ignorewatch';
             }
             //event.fields['itcassetnum'] = null;
         }

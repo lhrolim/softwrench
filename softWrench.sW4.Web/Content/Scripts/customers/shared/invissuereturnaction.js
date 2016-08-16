@@ -6,14 +6,12 @@ function InvIssueReturnActionController($scope) {
     "ngInject";
 
     $scope.hasBeenReturned = function (matusetransitem) {
-        var data = matusetransitem['fields'];
-        var deltaQty = data['quantity'] + data['qtyreturned'] >= 0;
+        var deltaQty = matusetransitem['quantity'] + matusetransitem['qtyreturned'] >= 0;
         return deltaQty;
     };
 
     $scope.isReturnHidden = function (matusetransitem) {
-        var data = matusetransitem['fields'];
-        return data['issuetype'] != 'RETURN';
+        return matusetransitem['issuetype'] != 'RETURN';
     };
 }
 

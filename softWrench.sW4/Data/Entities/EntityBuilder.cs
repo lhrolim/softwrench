@@ -47,7 +47,7 @@ namespace softWrench.sW4.Data.Entities {
         private static void PopulateEntity<T>(EntityMetadata metadata, ApplicationMetadata applicationMetadata,
             JProperty property, Entity entity, Type entityType, OperationType operationType)
             where T : Entity {
-            var attributes = entity.Attributes;
+            var attributes = entity;
             var associationAttributes = entity.AssociationAttributes;
             var name = property.Name;
             var listAssociations = metadata.ListAssociations();

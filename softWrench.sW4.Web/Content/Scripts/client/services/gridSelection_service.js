@@ -50,9 +50,9 @@
          * @param {} panelid
          */
         function selectionChanged(datamap, schema, updatesSelectAll, panelid) {
-            var selected = datamap.fields["_#selected"];
+            var selected = datamap["_#selected"];
             var selectionModel = crudContextHolderService.getSelectionModel(panelid);
-            var rowId = datamap.fields[selectionModel.selectionBufferIdCollumn];
+            var rowId = datamap[selectionModel.selectionBufferIdCollumn];
             if (selected) {
                 crudContextHolderService.addSelectionToBuffer(rowId, datamap, panelid);
                 if (selectionModel.onPageSelectedCount < selectionModel.pageSize) {
@@ -94,16 +94,16 @@
         function updateRowState(row, schema, panelid, loadServerSelection) {
             var selectionModel = crudContextHolderService.getSelectionModel(panelid);
             var buffer = selectionModel.selectionBuffer;
-            var rowId = row.fields[selectionModel.selectionBufferIdCollumn];
+            var rowId = row[selectionModel.selectionBufferIdCollumn];
 
             if (loadServerSelection) {
-                var serverValue = Boolean(row.fields["_#selected"]);
+                var serverValue = Boolean(row["_#selected"]);
                 if (serverValue) {
                     buffer[rowId] = true;
                 }
             }
             var selected = Boolean(buffer[rowId]);
-            row.fields["_#selected"] = selected;
+            row["_#selected"] = selected;
             if (selected) {
                 buffer[rowId] = row;
             }
@@ -123,7 +123,7 @@
             var datamapToUse = datamap || crudContextHolderService.rootDataMap(panelid);
             var schemaToUse = schema || crudContextHolderService.currentSchema(panelid);
             for (var i = 0; i < datamapToUse.length; i++) {
-                datamapToUse[i].fields["_#selected"] = selectedValue;
+                datamapToUse[i]["_#selected"] = selectedValue;
                 selectionChanged(datamapToUse[i], schemaToUse, false, panelid);
             }
         }
@@ -137,7 +137,7 @@
          * @param {} panelid
          */
         function toggleSelection(datamap, schema, panelid) {
-            datamap.fields["_#selected"] = !datamap.fields["_#selected"];
+            datamap["_#selected"] = !datamap["_#selected"];
             selectionChanged(datamap, schema, true, panelid);
         }
 

@@ -4,9 +4,7 @@
     function locationService($log, redirectService) {
 
         function dispatchWO(schema, datamap) {
-
-
-            redirectService.goToApplication("workorder", "newdetail", null, { "location": datamap.fields["location"], "siteid": datamap.fields["siteid"] });
+            redirectService.goToApplication("workorder", "newdetail", null, { "location": datamap["location"], "siteid": datamap["siteid"] });
         }
         var service = {
             dispatchWO: dispatchWO

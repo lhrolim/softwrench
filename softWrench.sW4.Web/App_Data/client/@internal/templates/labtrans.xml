@@ -237,7 +237,7 @@
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
             <renderer type="numericinput" params="numberType=double;min=0"/>
           </field>
-          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.fields.glaccount">
+          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.glaccount">
             <renderer type="lookup"/>
           </association>
         </schema>
@@ -356,8 +356,8 @@
             </commandgroup>
           </commandbars>
           <field attribute="labtransid" hidden="true"/>
-          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.fields.orgid"/>
-          <field attribute="siteid" hidden="true" defaultexpression="$.parentdata.fields.siteid"/>
+          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
+          <field attribute="siteid" hidden="true" defaultexpression="$.parentdata.siteid"/>
           <field attribute="enterby" hidden="true" />
           <field attribute="genapprservreceipt" hidden="true"/>
           <field attribute="payrate" label="Rate" hidden="true"/>

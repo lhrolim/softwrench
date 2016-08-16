@@ -21,9 +21,9 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var status = resultObject.GetAttribute("status");
             var statusDate = resultObject.GetAttribute("statusdate");
             if ("CLOSED".Equals(status)) {
-                resultObject.Attributes["#closeddate"] = statusDate;
+                resultObject["#closeddate"] = statusDate;
             } else {
-                resultObject.Attributes["#closeddate"] = "";
+                resultObject["#closeddate"] = "";
             }
         }
 

@@ -178,7 +178,7 @@
 
                     // covers breadcrumb redirect when the target page does not have the active tab of the src page
                     const tab = crudContextHolderService.getActiveTab();
-                    var datamap = $scope.datamap.fields || $scope.datamap;
+                    var datamap = $scope.datamap;
                     if (tab != null && !tabsService.hasTab($scope.schema, tab)) {
                         // active tab not found
                         redirectService.redirectToTab($scope.getMainTabId());
@@ -235,9 +235,7 @@
                             const fn = dispatcherService.loadService(providerLoadedEvent.service, providerLoadedEvent.method);
                             if (fn != undefined) {
                                 let fields = crudContextHolderService.rootDataMap();
-                                if (fields && fields.fields) {
-                                    fields = fields.fields;
-                                }
+                               
                                 const providerLoadedParameters = {
                                     fields: fields,
                                     options: options,
@@ -301,14 +299,14 @@
                     return tabsService.hasTabs(schema);
                 };
                 $scope.isEditDetail = function (datamap, schema) {
-                    return datamap.fields[schema.idFieldName] != null;
+                    return datamap[schema.idFieldName] != null;
                 };
                 $scope.request = function (datamap, schema) {
-                    return datamap.fields[schema.userIdFieldName];
+                    return datamap[schema.userIdFieldName];
                 };
 
                 $scope.request = function (datamap, schema) {
-                    return datamap.fields[schema.userIdFieldName];
+                    return datamap[schema.userIdFieldName];
                 };
 
                 $scope.shouldShowComposition = function (composition) {
@@ -385,7 +383,7 @@
                     const value = contextService.fetchFromContext("crud_context", true);
 
                     // is detail and is not creation
-                    return schemaService.isDetail($scope.schema) && !!$scope.datamap.fields[$scope.schema.idFieldName] && (value && (value.detail_previous || value.detail_next));
+                    return schemaService.isDetail($scope.schema) && !!$scope.datamap[$scope.schema.idFieldName] && (value && (value.detail_previous || value.detail_next));
                 };
 
                 $scope.disableNavigationButton = function (direction) {
@@ -407,7 +405,7 @@
 
                 $scope.isEditing = function (schema) {
                     const idFieldName = schema.idFieldName;
-                    const id = $scope.datamap.fields[idFieldName];
+                    const id = $scope.datamap[idFieldName];
                     return id != null;
                 };
 
@@ -472,7 +470,7 @@
                     const schema = $scope.schema;
                     const idFieldName = schema.idFieldName;
                     const applicationName = schema.applicationName;
-                    const id = $scope.datamap.fields[idFieldName];
+                    const id = $scope.datamap[idFieldName];
                     var parameters = {};
                     if (sessionStorage.mockmaximo == "true") {
                         parameters.mockmaximo = true;
@@ -518,12 +516,12 @@
                     const modalSavefn = $scope.ismodal === "true" ? modalService.getSaveFn() : null; //if there´s a custom modal service, let´s use it instead of the ordinary crud savefn
                     if (modalSavefn) {
                         const errorForm = $scope.crudform ? $scope.crudform.$error : {};
-                        const validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, $scope.datamap.fields, errorForm);
+                        const validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, $scope.datamap, errorForm);
                         if (validationErrors.length > 0) {
                             //interrupting here, can´t be done inside service
                             return;
                         }
-                        const result = modalSavefn($scope.datamap.fields, schemaToSave);
+                        const result = modalSavefn($scope.datamap, schemaToSave);
                         if (result && result.then) {
                             result.then(() => modalService.hide());
                         }
@@ -534,7 +532,7 @@
                     //selectedItem would be passed in the case of a composition with autocommit=true, in the case the target would accept only the child instance... not yet supported. 
                     //Otherwise, fetching from the $scope.datamap
                     const fromDatamap = selecteditem == null;
-                    const fields = fromDatamap ? $scope.datamap.fields : selecteditem;
+                    const fields = fromDatamap ? $scope.datamap : selecteditem;
                     var originalDatamap = $scope.originalDatamap;
                     if (parameters.originalDatamap) {
                         originalDatamap = parameters.originalDatamap;
@@ -546,7 +544,7 @@
                     //this preserves the datamap (and therefore the data presented to the user) in case of a submission failure
                     var transformedFields = angular.copy(fields);
                     const eventParameters = {
-                        originaldatamap: originalDatamap.fields,
+                        originaldatamap: originalDatamap,
                         'continue': function () {
                             $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
                         }
@@ -578,7 +576,7 @@
                         originalDatamap = parameters.originalDatamap;
                     }
                     const eventParameters = {
-                        originaldatamap: originalDatamap.fields,
+                        originaldatamap: originalDatamap,
                         'continue': function () {
                             $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave);
                         }
@@ -594,7 +592,7 @@
                 };
 
                 $scope.setSetIdAfterCreation = function (data) {
-                    const fields = $scope.datamap.fields;
+                    const fields = $scope.datamap;
                     if (data && data.id && fields &&
                         /* making sure not to update when it's not creation */
                      (!fields.hasOwnProperty($scope.schema.idFieldName) ||
@@ -619,7 +617,7 @@
                     transformedFields = submitService.removeExtraFields(transformedFields, true, schemaToSave);
                     submitService.translateFields(schemaToSave.displayables, transformedFields);
                     associationService.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields);
-                    submitService.handleDatamapForMIF(schemaToSave, originalDatamap.fields, transformedFields);
+                    submitService.handleDatamapForMIF(schemaToSave, originalDatamap, transformedFields);
 
 
                     var successCbk = parameters.successCbk;
@@ -670,12 +668,7 @@
 
                                 // not necessary to update the complete datamap after a composition save
                                 if (!parameters.dispatcherComposition && (responseDataMap.type === null || responseDataMap.type !== "UnboundedDatamap")) {
-                                    if ($scope.datamap.fields) {
-                                        //TODO: remove fields
-                                        $scope.datamap.fields = responseDataMap.fields;
-                                    } else {
-                                        $scope.datamap = responseDataMap;
-                                    }
+                                    $scope.datamap = responseDataMap;
                                 }
                             }
 

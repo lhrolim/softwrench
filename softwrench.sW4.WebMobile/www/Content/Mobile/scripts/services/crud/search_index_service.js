@@ -158,22 +158,19 @@
 
             if (textIndexes) {
                 angular.forEach(textIndexes, (indexName, i) => {
-                    const data = newDataMap.fields || newDataMap;
-                    indexesData[`t${i + 1}`] = data[indexName] || null;
+                    indexesData[`t${i + 1}`] = newDataMap[indexName] || null;
                 });
             }
 
             if (numericIndexes) {
                 angular.forEach(numericIndexes, (indexName, i) => {
-                    const data = newDataMap.fields || newDataMap;
-                    indexesData[`n${i + 1}`] = data[indexName] || null;
+                    indexesData[`n${i + 1}`] = newDataMap[indexName] || null;
                 });
             }
 
             if (dateIndexes) {
                 angular.forEach(dateIndexes, (indexName, i) => {
-                    const data = newDataMap.fields || newDataMap;
-                    const value = data[indexName];
+                    const value = newDataMap[indexName];
                     var convertedValue;
                     if (!value) {
                         convertedValue = null;

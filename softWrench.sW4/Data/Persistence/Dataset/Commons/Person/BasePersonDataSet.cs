@@ -82,7 +82,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 if (swuser == null) {
                     continue;
                 }
-                record.Attributes.Add("#isactive", swuser.IsActive);
+                record.Add("#isactive", swuser.IsActive);
             }
             return result;
         }

@@ -214,7 +214,7 @@
                 };
                 searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
                     var resultObject = data.resultObject;
-                    var resultFields = resultObject[0].fields;
+                    var resultFields = resultObject[0];
                     var lotnum = resultFields['lotnum'];
                     var curbal = resultFields['curbal'];
                     fields['lotnum'] = lotnum;

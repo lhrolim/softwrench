@@ -63,7 +63,7 @@
                         // hit server
                         return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema)
                             .then(function(result) {
-                                $scope.doToggle(compositionId, result.resultObject.fields, entry);
+                                $scope.doToggle(compositionId, result.resultObject, entry);
                                 return onDetailDataResolved(entry, $scope.detailData[compositionId].data);
                             });
                     };

@@ -195,7 +195,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
             if (attributeHolders.Length == 1) {
                 //default scenario, we have just one entity here
-                firstAttributeHolder.Attributes.Add(targetCollectionAttribute, queryResult.ResultList);
+                firstAttributeHolder.Add(targetCollectionAttribute, queryResult.ResultList);
                 parameter.Results.Add(collectionAssociation.Qualifier, queryResult);
                 return;
             }
@@ -299,7 +299,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                     }
                 }
                 var foundEntity = matchingResultWrapper.FetchEntity(resultkey);
-                var attributes = foundEntity.Attributes;
+                var attributes = foundEntity;
                 if (!attributes.ContainsKey(targetCollectionAttribute)) {
                     attributes.Add(targetCollectionAttribute, new List<IDictionary<string, object>>());
                 }

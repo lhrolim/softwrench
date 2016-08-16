@@ -181,14 +181,14 @@ angular.module('sw_layout')
         selectAll: function (schema, datamap) {
 
             for (var i = 0; i < datamap.length; i++) {
-                datamap[i].fields['checked'] = true;
+                datamap[i]['checked'] = true;
 
             }
         },
 
         deselectAll: function (schema, datamap) {
             for (var i = 0; i < datamap.length; i++) {
-                datamap[i].fields['checked'] = false;
+                datamap[i]['checked'] = false;
             }
         },
 

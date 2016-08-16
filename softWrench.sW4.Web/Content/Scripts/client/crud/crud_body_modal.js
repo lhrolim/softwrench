@@ -106,9 +106,8 @@
                 $scope.isDetail = schemaService.isDetail(schema, true);
                 $scope.isList = schemaService.isList(schema);
 
-                $scope.datamap = {
-                    fields: datamap
-                };
+                $scope.datamap = datamap;
+
                 var datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
                 $scope.originalDatamap = angular.copy(datamapToUse);
                 fieldService.fillDefaultValues(schema.displayables, datamap, { parentdata: modaldata.previousdata, parentschema: modaldata.previousschema });

@@ -42,7 +42,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
         }
 
         public IDictionary<string, object> Fields {
-            get { return Attributes; }
+            get { return this; }
         }
 
         public string TableName {
@@ -54,7 +54,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
         }
 
         public CrudOperationData Clone() {
-            var atributes = new Dictionary<string, object>(Attributes);
+            var atributes = new Dictionary<string, object>(this);
             var assocAtributes = new Dictionary<string, object>(AssociationAttributes);
             var clone = new CrudOperationData(Id, atributes, assocAtributes, EntityMetadata, ApplicationMetadata)
             {

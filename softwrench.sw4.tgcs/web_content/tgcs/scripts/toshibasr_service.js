@@ -38,35 +38,35 @@
         };
 
         function afterChangeImpact(datamap) {
-            datamap.fields['impact'] = datamap.fields['impacturgency_.impact'];
-            var urgency = datamap.fields['urgency'];
+            datamap['impact'] = datamap['impacturgency_.impact'];
+            var urgency = datamap['urgency'];
             if (urgency == null) {
-                datamap.fields['urgency'] = datamap.fields['impacturgency_.urgency'];
+                datamap['urgency'] = datamap['impacturgency_.urgency'];
             }
-            datamap.fields['internalpriority'] = datamap.fields['impacturgency_.internalpriority'];
-            if (datamap.fields['impacturgency_.impact'] == null) {
-                datamap.fields['impact'] = null;
-                datamap.fields['urgency'] = null;
-                datamap.fields['internalpriority'] = null;
+            datamap['internalpriority'] = datamap['impacturgency_.internalpriority'];
+            if (datamap['impacturgency_.impact'] == null) {
+                datamap['impact'] = null;
+                datamap['urgency'] = null;
+                datamap['internalpriority'] = null;
             }
         };
 
         function afterChangeUrgency(datamap) {
-            datamap.fields['urgency'] = datamap.fields['impacturgency_.urgency'];
-            var impact = datamap.fields['impact'];
+            datamap['urgency'] = datamap['impacturgency_.urgency'];
+            var impact = datamap['impact'];
             if (impact == null) {
-                datamap.fields['impact'] = datamap.fields['impacturgency_.impact'];
+                datamap['impact'] = datamap['impacturgency_.impact'];
             }
-            datamap.fields['internalpriority'] = datamap.fields['impacturgency_.internalpriority'];
-            if (datamap.fields['impacturgency_.urgency'] == null) {
-                datamap.fields['impact'] = null;
-                datamap.fields['urgency'] = null;
-                datamap.fields['internalpriority'] = null;
+            datamap['internalpriority'] = datamap['impacturgency_.internalpriority'];
+            if (datamap['impacturgency_.urgency'] == null) {
+                datamap['impact'] = null;
+                datamap['urgency'] = null;
+                datamap['internalpriority'] = null;
             }
         };
 
         function afterChangeReportedby(event) {
-            var datamap = event.fields;
+            var datamap = event;
             var searchData = {
                 personid: datamap['reportedby'],
                 isprimary: '1'

@@ -9,7 +9,7 @@ angular.module('sw_layout')
     return {
 
         getFirstFocusableFieldIdx: function (schema, datamap, acceptFilled) {
-            var realdatamap = datamap.fields ? datamap.fields : datamap;
+            var realdatamap = datamap;
 
             var displayables = fieldService.getLinearDisplayables(schema);
             for (var i = 0; i < displayables.length; i++) {

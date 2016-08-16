@@ -446,13 +446,9 @@
                 if (fn == null) {
                     return;
                 }
-                var fields = scope.datamap;
-                if (scope.datamap.fields != undefined) {
-                    fields = scope.datamap.fields;
-                }
 
                 var afterchangeEvent = {
-                    fields: fields,
+                    fields:  scope.datamap,
                     target: field,
                     scope: scope,
                     oldValue: oldValue,

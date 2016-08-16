@@ -310,10 +310,10 @@
         }
 
         function updateCompositionDataAfterSave(schema, datamap, responseDataMap) {
-            const compositions = this.getLazyCompositions(schema, datamap.fields);
+            const compositions = this.getLazyCompositions(schema, datamap);
             compositions.forEach(function (composition) {
-                const currentValue = datamap.fields[composition];
-                const updateFields = responseDataMap.fields ? responseDataMap.fields : responseDataMap;
+                const currentValue = datamap[composition];
+                const updateFields = responseDataMap;
 
                 const updatedValue = updateFields[composition];
                 // has previous data but has no updated data: not safe to update -> hydrate with previous value

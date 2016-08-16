@@ -14,10 +14,7 @@
          */
         var buildMergedDatamap = function (datamap, parentdata) {
             var toClone = parentdata;
-            if (parentdata.fields) {
-                toClone = parentdata.fields;
-            }
-
+            
             var clonedDataMap = angular.copy(toClone);
             clonedDataMap = datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(clonedDataMap);
 

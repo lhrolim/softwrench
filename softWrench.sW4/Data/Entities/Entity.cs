@@ -142,7 +142,7 @@ namespace softWrench.sW4.Data.Entities {
                     return containsAttribute;
                 }
             }
-            var containsKey = Attributes.ContainsKey(lowerAttribute);
+            var containsKey = this.ContainsKey(lowerAttribute);
             var containsUnmapped = UnmappedAttributes.ContainsKey(lowerAttribute);
             if (!checksForNonNull) {
                 return containsKey || containsUnmapped;
@@ -153,7 +153,7 @@ namespace softWrench.sW4.Data.Entities {
                 return !string.IsNullOrEmpty((string)attribute);
             }
             if (containsKey) {
-                var attribute = Attributes[lowerAttribute];
+                var attribute = this[lowerAttribute];
                 if (attribute is string) {
                     return !string.IsNullOrEmpty((string)attribute);
                 }

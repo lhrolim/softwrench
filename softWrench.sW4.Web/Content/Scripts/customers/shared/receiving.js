@@ -22,7 +22,7 @@ function ReceivingController($scope, contextService, alertService, searchService
                 var totalquantityreceived = 0;
                 var i = 0;
                 for (i = 0;i< resultObject.length;i++) {
-                    totalquantityreceived = totalquantityreceived + resultObject[i]['fields']['quantity'];
+                    totalquantityreceived = totalquantityreceived + resultObject[i]['quantity'];
                 }
                 qtydue = compositionitem['orderqty'] - totalquantityreceived;
                 // prepopulate the values for the matrectrans record

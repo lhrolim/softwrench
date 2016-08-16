@@ -30,9 +30,9 @@
         if (updatable) {
             var limit = column.rendererParameters["limit"] || null;
             if (limit) {
-                st += "<div swcontenteditable >{{limitTextIfNeeded({0}.fields['{1}'], '{2}')}}".format(rowst, column.attribute, limit);
+                st += "<div swcontenteditable >{{limitTextIfNeeded({0}['{1}'], '{2}')}}".format(rowst, column.attribute, limit);
             } else {
-                st += "<div swcontenteditable ng-model=\"{0}.fields['{1}']\">".format(rowst, column.attribute);
+                st += "<div swcontenteditable ng-model=\"{0}['{1}']\">".format(rowst, column.attribute);
             }
         } else {
             st += '<div class="cell-wrapper"';
@@ -216,7 +216,7 @@
                 }
 
                 scope.appendDateTimeComponent = function (columnSt, rendererParameters, attribute, openCalendarTooltip) {
-                    var st = "<input type=\"text\" ng-model=\"{0}.fields[{1}]\" data-date-time  class=\"form-control\" ".format(columnSt, attribute);
+                    var st = "<input type=\"text\" ng-model=\"{0}[{1}]\" data-date-time  class=\"form-control\" ".format(columnSt, attribute);
                     st += " data-show-time=\"{0}\" ".format(parseBooleanValue(rendererParameters['showtime']));
                     st += " data-show-date=\"{0}\"".format(parseBooleanValue(rendererParameters['showdate']));
                     st += " data-date-format=\"{0}\"".format(rendererParameters['format']);
@@ -236,10 +236,10 @@
                 scope.innerLoadIcon = function (rowIndex, columnIndex) {
                     var column = scope.schema.displayables[columnIndex];
                     var row = scope.datamap[rowIndex];
-                    if (!row.fields) {
-                        return "";
-                    }
-                    return scope.loadIcon(row.fields[column.attribute], column);
+                    //if (!row.fields) {
+                    //    return "";
+                    //}
+                    return scope.loadIcon(row[column.attribute], column);
                 }
 
                 scope.limitTextIfNeeded = function (text, limit) {
@@ -292,21 +292,21 @@
                             rowClass = 'even';
                         }
 
-                        var rowTextColor = scope.classificationColor(datamap[i].fields.classificationid, schema.applicationName);
+                        var rowTextColor = scope.classificationColor(datamap[i].classificationid, schema.applicationName);
 
                         html += "<tr class='{0}' style='cursor: {1};color: {2}' listtablerendered rel='hideRow'>".format(rowClass, cursortype, rowTextColor);
                         needsWatchers = hasMultipleSelector || hasSingleSelector;
 
                         html += "<td class='select-multiple' data-title=\"Select\" {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
                         html += "<div class=\"cell-wrapper multiselect-dropdown\">";
-                        html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
+                        html += "<input type='checkbox' ng-model=\"{0}['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
                         html += "<i class=\"toggle fa fa-caret-down\" ></i>"; //placeholder to ensure column alignment
                         html += "</div>";
                         html += "</td>";
 
                         html += "<td class='select-single' {0}>".format(!hasSingleSelector ? 'style="display:none"' : '');
                         html += "<div class=\"cell-wrapper\">";
-                        html += "<input type='radio' name=\"selectradio\" ng-value=\"true\" ng-model=\"{0}.fields['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
+                        html += "<input type='radio' name=\"selectradio\" ng-value=\"true\" ng-model=\"{0}['_#selected']\" ng-change=\"selectChanged({0}, datamap)\">".format(rowst);
                         html += "</div>";
                         html += "</td>";
 
@@ -315,7 +315,7 @@
                             var columnst = "columnarray[{0}]".format(j);
                             column = schema.displayables[j];
                             var attribute = column.attribute;
-                            var formattedText = scope.getFormattedValue(datamap[i].fields[attribute], column, datamap[i]);
+                            var formattedText = scope.getFormattedValue(datamap[i][attribute], column, datamap[i]);
                             formattedText = scope.limitTextIfNeeded(formattedText, column.rendererParameters["limit"]);
 
                             if (!column.rendererParameters) {
@@ -336,7 +336,7 @@
                             html += " data-title='{0}'".format(column.label ? column.label : column.toolTip);
                             html += ">";
                             if (column.rendererType === 'color') {
-                                var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
+                                var color = scope.statusColor(dm[column.rendererParameters['column']] || 'null', schema.applicationName);
                                 html += "<div class='statuscolumncolor' style='background-color:{0}'>".format(color);
                             }
                             else if (column.rendererType === 'checkbox') {
@@ -344,9 +344,9 @@
                                 html += "<div class='cell-wrapper'>";
                                 if (column.rendererParameters["editable"] === "true") {
                                     html += "<input type='checkbox' class='check' name='{0}' ".format(name);
-                                    html += "ng-model=\"{0}.fields['{1}']\" >".format(rowst, name);
+                                    html += "ng-model=\"{0}['{1}']\" >".format(rowst, name);
                                 } else {
-                                    var field = dm.fields[attribute];
+                                    var field = dm[attribute];
                                     var icon = field === true || field === "true" || field === 1 ? "fa-check-square-o" : "fa-square-o";
                                     html += "<i class=\"fa {0}\" />".format(icon);
                                 }
@@ -383,7 +383,7 @@
                                 html += '<div class="cell-wrapper">' + scope.handleIcon(icon, column, formattedText, foreground, i);
 
                                 if (column.rendererParameters.changevalue !== undefined && column.rendererParameters.changevalue === 'true') {
-                                    var closed = 'CLOSED'.equalIc(dm.fields['status']) || 'CLOSE'.equalIc(dm.fields['status']);
+                                    var closed = 'CLOSED'.equalIc(dm['status']) || 'CLOSE'.equalIc(dm['status']);
                                     html += scope.priorityDropdown(i, column, icon, closed);
                                 }
                             }
@@ -397,7 +397,7 @@
 
                                     iconColumns.forEach(function(field) {
                                         var iconColumn = displayableObject[field];
-                                        var value = datamap[i].fields[field];
+                                        var value = datamap[i][field];
                                         var foreground = null;
                                         var icon = scope.loadIcon(value, iconColumn);
 
@@ -422,7 +422,7 @@
                                 if (!editable) {
                                     if (column.rendererType === 'statuscolor') {
                                         
-                                        var background = scope.statusColor(dm.fields[column.attribute], schema.applicationName);
+                                        var background = scope.statusColor(dm[column.attribute], schema.applicationName);
                                         var foreground = statuscolorService.foregroundColor(background);
 
                                         html += defaultAppending(formattedText, updatable, rowst, column, background, foreground);
@@ -446,7 +446,7 @@
                                         needsWatchers = true;
                                         html += "<div class=\"sw-combobox-container\">";
                                         html += "<select class=\"hidden-phone form-control combobox\"";
-                                        html += "ng-model=\"{0}.fields['{1}']\" ".format(rowst, column.target);
+                                        html += "ng-model=\"{0}['{1}']\" ".format(rowst, column.target);
                                         html += " ng-options=\"option.value as i18NOptionField(option,{0},schema) for option in GetAssociationOptions({0})\" ".format(columnst);
                                     }
                                 }

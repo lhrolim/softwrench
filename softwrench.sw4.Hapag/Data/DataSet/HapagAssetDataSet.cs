@@ -93,13 +93,13 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
             var woData = GetDAO().FindByQuery<HistWorkorder>(HistWorkorder.ByAssetnum, assetId.ToString());
             foreach (var row in woData) {
-                var list = (IList<Dictionary<string, object>>)resultObject.Attributes["workorder_"];
+                var list = (IList<Dictionary<string, object>>)resultObject["workorder_"];
                 list.Add(row.toAttributeHolder());
             }
 
             var ticketData = GetDAO().FindByQuery<HistTicket>(HistTicket.ByAssetnum, assetId.ToString());
-            var ticketList = (IList<Dictionary<string, object>>)resultObject.Attributes["ticket_"];
-            var imacList = (IList<Dictionary<string, object>>)resultObject.Attributes["imac_"];
+            var ticketList = (IList<Dictionary<string, object>>)resultObject["ticket_"];
+            var imacList = (IList<Dictionary<string, object>>)resultObject["imac_"];
             foreach (var row in ticketData) {
                 var attributeHolder = row.toAttributeHolder();
                 if (row.Classification != null && row.Classification.StartsWith("8151")) {

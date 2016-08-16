@@ -55,13 +55,13 @@ function JobPlanCompleteActionController($scope, $http, i18NService, contextServ
     $scope.submitAction = function (compositionitem, schema, datamap, compositionschema) {
         var schemaId = compositionschema.applicationName;
         var isJobPlan = schemaId == "woactivity";
-        datamap.fields['WoActivityId'] = compositionitem.wonum;
-        datamap.fields['activityownergroup'] = compositionitem.ownergroup;
-        datamap.fields['activitysequence'] = compositionitem.wosequence;
-        datamap.fields['#tasksummary'] = compositionitem.description;
-        datamap.fields['#selectedAction'] = $scope.actiontoexecute;
-        datamap.fields['#groupAction'] = getgroup(compositionitem, isJobPlan);
-        var parameters = datamap.fields;
+        datamap['WoActivityId'] = compositionitem.wonum;
+        datamap['activityownergroup'] = compositionitem.ownergroup;
+        datamap['activitysequence'] = compositionitem.wosequence;
+        datamap['#tasksummary'] = compositionitem.description;
+        datamap['#selectedAction'] = $scope.actiontoexecute;
+        datamap['#groupAction'] = getgroup(compositionitem, isJobPlan);
+        var parameters = datamap;
         var applicationName = schema.applicationName;
         var actionname = isJobPlan ? "completeaction" : "approvalaction";
         var urlToUse = url("api/data/operation/{0}/{1}?platform=web&id=".format(applicationName, actionname) + parameters.ticketid);

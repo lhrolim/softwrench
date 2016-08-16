@@ -10,7 +10,7 @@
 
             var parentData = crudContextHolderService.rootDataMap();
             if (datamap['ownertable'].equalIc("SR")) {
-                return "##" + parentData.fields['ticketid'] + '## ' + parentData.fields['description'];
+                return "##" + parentData['ticketid'] + '## ' + parentData['description'];
             }
             return "";
         };

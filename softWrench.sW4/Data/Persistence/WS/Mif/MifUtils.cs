@@ -36,7 +36,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif
 
         public static object PopulateWsEntityFromJson(Object dbEntity, EntityMetadata metadata, Entity json)
         {
-            foreach (var property in json.Attributes)
+            foreach (var property in json)
             {
                 var isAssociated = property
                     .Key

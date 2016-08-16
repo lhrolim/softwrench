@@ -10,7 +10,7 @@ angular.module('sw_layout')
         };
         searchService.searchWithData("po", searchData).success(function (data) {
             var resultObject = data.resultObject;
-            return resultObject[0]['fields']['receipts'];
+            return resultObject[0]['receipts'];
         });
     };
 
@@ -62,7 +62,7 @@ angular.module('sw_layout')
             };
             searchService.searchWithData("po", searchData).success(function (data) {
                 var resultObject = data.resultObject;
-                var receipts = resultObject[0]['fields']['receipts'];
+                var receipts = resultObject[0]['receipts'];
                 if (receipts.equalIc('complete')) {
                     alertService.alert("RECEIPTS ALREADY COMPLETED");
                     return;

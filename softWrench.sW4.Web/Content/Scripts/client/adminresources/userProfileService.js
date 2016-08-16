@@ -290,7 +290,7 @@
         //#region api methods for tests
 
         function filterAvailablePermissions(item) {
-            const dm = crudContextHolderService.rootDataMap().fields;
+            const dm = crudContextHolderService.rootDataMap();
             if (!dm["selectedmode"] || !dm["selectedmode"].equalsAny("grid", "view")) {
                 return true;
             }
@@ -298,7 +298,7 @@
         }
 
         function filterAvailableModes(item) {
-            const dm = crudContextHolderService.rootDataMap().fields;
+            const dm = crudContextHolderService.rootDataMap();
             const allowCreation = dm["#appallowcreation"];
             const allowUpdate = dm["#appallowupdate"];
             const allowView = dm["#appallowview"]; //            if (allowCreation && allowUpdate && allowView) {
@@ -341,9 +341,6 @@
             dispatcher = dispatcher || {};
 
             var dm = crudContextHolderService.rootDataMap();
-            if (dm.fields) {
-                dm = dm.fields;
-            }
 
             var transientData = $rootScope["#transientprofiledata"];
 
@@ -545,10 +542,7 @@
 
         function mergeTransientIntoDatamap(dispatcher) {
             var dm = crudContextHolderService.rootDataMap();
-            if (dm.fields) {
-                dm = dm.fields;
-            }
-            const application = dm.application;
+            var application = dm.application;
             var schema = dm.schema;
             var tab = dm["#selectedtab"];
             const transientAppData = $rootScope["#transientprofiledata"][application];
@@ -663,8 +657,8 @@
                 roles: selectedRoles
             };
             return restService.postPromise("UserProfile", "Save", null, ob).then(function (httpResponse) {
-                const resultObject = httpResponse.data.resultObject;
-                crudContextHolderService.rootDataMap().fields.id = resultObject.id;
+                var resultObject = httpResponse.data.resultObject;
+                crudContextHolderService.rootDataMap().id = resultObject.id;
 
                 resultObject.applications.forEach(function (resultDTO) {
                     //updating so that id no longer null
@@ -679,7 +673,7 @@
 
         function batchUpdate() {
             const dm = crudContextHolderService.rootDataMap();
-            var profileId = dm.fields.id;
+            var profileId = dm.id;
 
             if (!profileId) {
                 alertService.alert("Please save the profile before using this action");
@@ -704,7 +698,7 @@
                     };
                     return restService.postPromise("UserProfile", "BatchUpdate", params, selectedApps).then(function (httpResponse) {
                         $rootScope["#transientprofiledata"] = {};
-                        crudContextHolderService.rootDataMap()["fields"]["application"] = null;
+                        crudContextHolderService.rootDataMap()["application"] = null;
                     });
 
 
@@ -714,7 +708,7 @@
 
         function removeMultiple() {
             const dm = crudContextHolderService.rootDataMap();
-            const profileId = dm.fields.id;
+            const profileId = dm.id;
             if (!profileId) {
                 alertService.alert("Please save the profile before using this action");
                 return;
@@ -732,7 +726,7 @@
                 },
                 savefn: function () {
                     const dm = crudContextHolderService.rootDataMap();
-                    const profileId = dm.fields.id;
+                    const profileId = dm.id;
                     const selectedUsers = crudContextHolderService.getSelectionModel('#modal').selectionBuffer;
                     if (!selectedUsers || selectedUsers.length === 0) {
                         alertService.alert("please select at least one user to proceed");
@@ -754,7 +748,7 @@
 
         function applyMultiple() {
             const dm = crudContextHolderService.rootDataMap();
-            const profileId = dm.fields.id;
+            const profileId = dm.id;
             if (!profileId) {
                 alertService.alert("Please save the profile before using this action");
                 return;
@@ -771,7 +765,7 @@
                 },
                 savefn: function () {
                     const dm = crudContextHolderService.rootDataMap();
-                    const profileId = dm.fields.id;
+                    const profileId = dm.id;
                     const selectedUsers = crudContextHolderService.getSelectionModel('#modal').selectionBuffer;
                     if (!selectedUsers || selectedUsers.length === 0) {
                         alertService.alert("please select at least one user to proceed");
@@ -794,13 +788,13 @@
 
         function getProfileId() {
             const dm = crudContextHolderService.rootDataMap();
-            const profileId = dm.fields.id;
+            const profileId = dm.id;
             return [{ "key": "profileId", "value": profileId }];
         }
 
         function deleteProfile() {
             return alertService.confirm("Are you sure you want to delete this security group? This operation cannot be undone").then(function () {
-                const id = crudContextHolderService.rootDataMap().fields["id"];
+                const id = crudContextHolderService.rootDataMap()["id"];
                 return restService.postPromise("UserProfile", "Delete", { id: id }).then(function (httpResponse) {
                     return redirectService.goToApplicationView("_UserProfile", "list");
                 });

@@ -9,7 +9,7 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 namespace softwrench.sw4.manchester.classes.com.cts.manchester.dataset {
     class ComMatusetransDataSet : MaximoApplicationDataSet {
         private IEnumerable<IAssociationOption> filterMaterials(AssociationPostFilterFunctionParameters postParams) {
-            return (from item in postParams.Options where item.Label != null && item.Value.Equals(postParams.OriginalEntity.Attributes["itemnum"]) select new AssociationOption(item.Label, item.Label)).Cast<IAssociationOption>().ToList();
+            return (from item in postParams.Options where item.Label != null && item.Value.Equals(postParams.OriginalEntity["itemnum"]) select new AssociationOption(item.Label, item.Label)).Cast<IAssociationOption>().ToList();
         }
 
         public SearchRequestDto filterPlannedMaterials(AssociationPreFilterFunctionParameters parameters) {

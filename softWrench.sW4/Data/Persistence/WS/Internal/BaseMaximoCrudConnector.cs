@@ -39,11 +39,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 // The negative ID is used by the front end to identify new records. 
                 //The back end does not support this. therefore, it should be nullified when submitted to Maximo
                 operationData.Id = null;
-                operationData.Attributes[entityMetadata.IdFieldName] = null;
+                operationData[entityMetadata.IdFieldName] = null;
             }
 
 
-            foreach (var attribute in operationData.Attributes) {
+            foreach (var attribute in operationData) {
                 if (attribute.Value == null) {
                     continue;
                 }

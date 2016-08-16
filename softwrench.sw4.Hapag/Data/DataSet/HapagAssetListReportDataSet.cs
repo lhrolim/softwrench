@@ -37,7 +37,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                     }
                     var accountname = attributeHolder.GetAttribute("assetglaccount_.accountname");
                     department += " " + accountname;
-                    attributeHolder.Attributes[field] = department;
+                    attributeHolder[field] = department;
                 }
             } catch {
                 DataSetUtil.FillBlank(attributeHolder, field);
@@ -55,7 +55,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                         if (attributeAux.Count() > 1) {
                             var attribute = Regex.Split(attributeAux[1], "/");
                             if (attribute.Count() > 1) {
-                                attributeHolder.Attributes[field] = attribute[0];
+                                attributeHolder[field] = attribute[0];
                             }
                         }
                     }
@@ -87,7 +87,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 if (DataSetUtil.IsValid(description, typeof(String))) {
                     var attribute = Regex.Split(description.ToString(), "//");
                     if (attribute.Count() > 1) {
-                        attributeHolder.Attributes[field] = attribute[isAfter ? 1 : 0];
+                        attributeHolder[field] = attribute[isAfter ? 1 : 0];
                     }
                 }
             } catch {
@@ -101,7 +101,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 DataSetUtil.FillBlank(attributeHolder, field);
                 var parent = attributeHolder.GetAttribute("parent");
                 var assetnum = attributeHolder.GetAttribute("assetnum");
-                attributeHolder.Attributes[field] = parent + " " + assetnum;
+                attributeHolder[field] = parent + " " + assetnum;
             } catch {
                 DataSetUtil.FillBlank(attributeHolder, field);
             }

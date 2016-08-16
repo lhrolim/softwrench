@@ -65,9 +65,9 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
                 var problemItem = batchReport.ProblemItens == null ? null : batchReport.ProblemItens.FirstOrDefault(a => a.ItemId.Equals(id));
                 if (problemItem != null) {
                     attributeHolder.SetAttribute("#errormessage", problemItem.ErrorMessage);
-                    problemFields.Add(attributeHolder.Attributes);
+                    problemFields.Add(attributeHolder);
                 } else {
-                    sentFields.Add(attributeHolder.Attributes);
+                    sentFields.Add(attributeHolder);
                 }
             }
             detailResult.ExtraParameters.Add("sentbatchdatamap", sentFields);

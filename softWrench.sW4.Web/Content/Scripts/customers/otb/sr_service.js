@@ -6,11 +6,11 @@ angular.module('sw_layout')
 
     return {
         beforeChangeLocation: function (event) {
-            if (event.fields['assetnum'] == null) {
+            if (event.fields['assetnum']== null) {
                 //if no asset is selected we can proceed.
                 return true;
             }
-            if (event.oldValue == null && event.fields['asset_.location'] == event.newValue) {
+            if (event.oldValue == null && event.fields['asset_.location']== event.newValue) {
                 //if the location was null, and now it´s changing to the asset location, proceed. It might be 
                 //due to the AfterChangeAsset callback.
                 return true;
@@ -30,12 +30,12 @@ angular.module('sw_layout')
         },
 
         beforeChangeStatus: function (event) {
-            if (event.fields['owner'] == null || event.fields['status'] != "NEW") {
+            if (event.fields['owner'] == null || event.fields['status']!= "NEW") {
                 return true;
             }
 
             alertService.confirm("Changing the status to new would imply in removing the owner of this Service Request. Proceeed?").then(function () {
-                event.fields['owner'] = null;
+                event.fields['owner']= null;
                 event.continue();
             }, function () {
                 event.interrupt();
@@ -43,7 +43,7 @@ angular.module('sw_layout')
         },
 
         afterChangeAsset: function (event) {
-            if (event.fields['location'] == null && event.fields.assetnum!=null) {
+            if (event.fields['location'] == null && event.assetnum!=null) {
                 var location = event.fields['asset_.location'];
                 event.fields['location'] = location;
             }
@@ -51,14 +51,14 @@ angular.module('sw_layout')
 
 
         afterchangeowner: function (event) {
-            if (event.fields['owner'] == null) {
+            if (event.fields['owner']== null) {
                 return;
             }
             if (event.fields['owner'] == ' ') {
-                event.fields['owner'] = null;
+                event.fields['owner']= null;
                 return;
             }
-            if (event.fields['status'] == 'NEW' || event.fields['#originalstatus'] == "NEW") {
+            if (event.fields['status'] == 'NEW' || event.fields['#originalstatus']== "NEW") {
                 alertService.alert("Owner Group Field will be disabled if the Owner is selected.");
                 return;
             }
@@ -67,14 +67,14 @@ angular.module('sw_layout')
 
         afterchangeownergroup: function (event) {
             
-            if (event.fields['ownergroup'] == null) {
+            if (event.fields['ownergroup']== null) {
                 return;
             }
-            if (event.fields['ownergroup'] == ' ') {
-                event.fields['ownergroup'] = null;
+            if (event.fields['ownergroup']== ' ') {
+                event.fields['ownergroup']= null;
                 return;
             }
-            if (event.fields['status'] == 'NEW') {
+            if (event.fields['status']== 'NEW') {
                 alertService.alert("Owner Field will be disabled if the Owner Group is selected.");
                 return;
             }
@@ -83,13 +83,13 @@ angular.module('sw_layout')
         },
 
         beforechangeownergroup: function (event) {
-            if (event.fields['owner'] != null) {
+            if (event.fields['owner']!= null) {
                 alertService.alert("You may select an Owner or an Owner Group; not both");
             }
         },
 
         startRelatedSRCreation: function (schema, datamap) {
-            var localDatamap = datamap.fields || datamap;
+            var localDatamap = datamap;
             var relatedDatamap = {
                 'status': "NEW",
                 '#relatedrecord_recordkey': localDatamap[schema.userIdFieldName]
@@ -113,7 +113,7 @@ angular.module('sw_layout')
             var params = {
                 postProcessFn: function(data) {
                     angular.forEach(relatedDatamap, function(value, key) {
-                        data.resultObject.fields[key] = value;
+                        data.resultObject[key] = value;
                     });
                 }
             };

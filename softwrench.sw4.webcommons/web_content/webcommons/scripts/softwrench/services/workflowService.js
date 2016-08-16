@@ -6,7 +6,7 @@
 
 
         var initiateWorkflow = function (schema, datamap, workflowName) {
-            var fields = datamap["fields"];
+            var fields = datamap;
             var httpParameters = {
                 appName: schema.applicationName,
                 appId: fields[schema.idFieldName],
@@ -45,7 +45,7 @@
         };
 
         var routeWorkflow = function () {
-            var rootDatamap = crudContextHolderService.rootDataMap().fields;
+            var rootDatamap = crudContextHolderService.rootDataMap();
             var schema = crudContextHolderService.currentSchema();
 
 
@@ -66,14 +66,14 @@
                 var deferred = $q.defer();
 
                 var CompleteSelectedWFAssignment = function (appResponse) {
-                    modalService.show(appResponse.schema, appResponse.resultObject.fields, {
+                    modalService.show(appResponse.schema, appResponse.resultObject, {
                         title: "Complete Workflow Assignment",
                         cssclass: "dashboardmodal",
                         onloadfn: function () {
                             crudContextHolderService.updateEagerAssociationOptions("taskoptions", appResponse.associationOptions.eagerOptions["#taskoptions"]);
                         }
                     }, function (datamap) {
-                        var fields = datamap.fields || datamap;
+                        var fields = datamap;
                         var data = {
                             ownerId: rootDatamap[schema.idFieldName],
                             ownerTable: schema.applicationName,
@@ -106,7 +106,6 @@
                             crudContextHolderService.updateEagerAssociationOptions("workflows", appResponse.resultObject.workflows);
                         }
                     }, function (datamap) {
-                        var fields = datamap["fields"];
                         var httpParameters = {
                             wfAssignmentId: datamap["processname"],
                         }
@@ -135,10 +134,10 @@
 
             var httpParameters = {
                 entityName: schema.entityName,
-                id: datamap["fields"][schema.idFieldName],
-                userid: datamap["fields"][schema.userIdFieldName],
-                siteid: datamap["fields"]["siteid"],
-                orgid: datamap["fields"]["orgid"],
+                id: datamap[schema.idFieldName],
+                userid: datamap[schema.userIdFieldName],
+                siteid: datamap["siteid"],
+                orgid: datamap["orgid"],
                 wfInstanceId: wfInstanceId
             };
 

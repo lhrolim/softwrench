@@ -8,11 +8,7 @@
 
 
         // save method of inline wo edit modal
-        function woInlineEditSave(saveDataMap, schema) {
-            if (saveDataMap.fields) {
-                saveDataMap = saveDataMap.fields;
-            }
-
+        function woInlineEditSave(saveDataMap, schema) {           
             var validationErrors = validationService.validate(schema, schema.displayables, saveDataMap, {});
             if (validationErrors.length > 0) {
                 return;
@@ -32,15 +28,15 @@
                 associationService.insertAssocationLabelsIfNeeded(schema, saveDataMap);
                 var gridDatamap = crudContextHolderService.rootDataMap();
                 gridDatamap.forEach(function (row) {
-                    if (row.fields[schema.idFieldName] === saveDataMap[schema.idFieldName]) {
-                        row.fields.summary = saveDataMap.summary;
-                        row.fields.details = saveDataMap.details;
-                        row.fields.siteid = saveDataMap.siteid;
-                        row.fields.classification = saveDataMap["#classificationid_label"] || "";
-                        row.fields.classificationid = saveDataMap.classificationid;
-                        row.fields.worktype = saveDataMap.worktype;
-                        row.fields["#warning"] = resultObject["#warning"];
-                        row.fields["#wonums"] = resultObject["#wonums"];
+                    if (row[schema.idFieldName] === saveDataMap[schema.idFieldName]) {
+                        row.summary = saveDataMap.summary;
+                        row.details = saveDataMap.details;
+                        row.siteid = saveDataMap.siteid;
+                        row.classification = saveDataMap["#classificationid_label"] || "";
+                        row.classificationid = saveDataMap.classificationid;
+                        row.worktype = saveDataMap.worktype;
+                        row["#warning"] = resultObject["#warning"];
+                        row["#wonums"] = resultObject["#wonums"];
                     }
                 });
                 modalService.hide();
@@ -69,18 +65,18 @@
             batchData["items"] = Object.keys(selectionBuffer).map(function (key) {
                 var value = selectionBuffer[key];
                 var associationOption = {
-                    value: value.fields[schema.userIdFieldName],
-                    label: value.fields["description"]
+                    value: value[schema.userIdFieldName],
+                    label: value["description"]
                 };
 
                 associationOption.extraFields = {
-                    "siteid": value.fields["siteid"],
-                    "orgid": value.fields["orgid"]
+                    "siteid": value["siteid"],
+                    "orgid": value["orgid"]
                 }
 
                 if (schema.applicationName === "asset") {
                     //passing location of the asset as an extra projection field
-                    associationOption.extraFields["location"] = value.fields["location"];
+                    associationOption.extraFields["location"] = value["location"];
                 }
                 return associationOption;
             });
@@ -106,7 +102,7 @@
             //                        return;
             //                    });
             //            }
-            contextService.set("batchshareddata", applicationResponse.resultObject[0].fields, true);
+            contextService.set("batchshareddata", applicationResponse.resultObject[0], true);
             return redirectService.redirectFromServerResponse(applicationResponse);
         }
 
@@ -168,7 +164,7 @@
 
             itemsToSubmitKeys.forEach(function (bufferKey) {
                 var datamap = itemsToSubmit[bufferKey];
-                var fields = datamap.fields;
+                var fields = datamap;
                 var customizedValues = Object.keys(fields).filter(function (prop) {
                     return prop !== keyName && fields[prop] !== sharedData[prop];
                 });

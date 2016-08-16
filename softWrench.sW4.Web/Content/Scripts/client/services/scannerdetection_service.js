@@ -87,10 +87,10 @@ angular.module('sw_layout')
                     };
                     var urlToUse = url("/api/data/item?" + $.param(restParameters));
                     $http.get(urlToUse).success(function (data) {
-                        if (data.resultObject['fields'] === undefined) {
+                        if (data.resultObject === undefined) {
                             return;
                         }
-                        var itemdata = data.resultObject['fields'];
+                        var itemdata = data.resultObject;
                         var matusetransData = parameters.parentdata;
                         if (itemdata['itemtype'] == 'TOOL' && matusetransData['#issueto'] == null) {
                             //var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
@@ -134,7 +134,7 @@ angular.module('sw_layout')
                         };
                         searchService.searchWithData("invcost", searchData).success(function (costdata) {
                             var resultObject = costdata.resultObject;
-                            var resultFields = resultObject[0].fields;
+                            var resultFields = resultObject[0];
                             var costtype = itemdata['inventory_.costtype'];
                             if (costtype === 'STANDARD') {
                                 newRecord['unitcost'] = resultFields.stdcost;
@@ -248,7 +248,7 @@ angular.module('sw_layout')
             scope.$on('sw_griddatachanged', function (event, data, panelId) {
                 // If only one record is found
                 if (data.length === 1) {
-                    var invbalanceid = data[0]['fields']['invbalancesid'];
+                    var invbalanceid = data[0]['invbalancesid'];
                     var param = {};
                     param.id = invbalanceid;
                     var application = 'physicalcount';

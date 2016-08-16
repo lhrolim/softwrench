@@ -110,7 +110,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             } else if ("replacestd".Contains(schemaid) || "replacelan".Contains(schemaid) || "replaceother".Contains(schemaid)) {
                 imac.Problem.System = "81515500";
             }
-            jsonObject.Attributes["classification"] = imac.Problem.System;
+            jsonObject["classification"] = imac.Problem.System;
         }
     }
 }

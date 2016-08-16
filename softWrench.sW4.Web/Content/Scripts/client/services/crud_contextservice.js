@@ -359,7 +359,7 @@
                 var key = Object.keys(options)[0];
                 if (displayable.reverse && key) {
                     //Object.keys(options)[0] --> this would be the key of the association
-                    _crudContext.rootDataMap.fields[displayable.target] = key.toLowerCase();
+                    _crudContext.rootDataMap[displayable.target] = key.toLowerCase();
                 }
             }
 

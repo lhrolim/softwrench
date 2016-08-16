@@ -37,15 +37,14 @@
         function dispatchWo(schema, datamap) {
 
             var queryParams = {
-                location: datamap.fields["location"],
-                classification: datamap.fields["classstructureid"]
+                location: datamap["location"],
+                classification: datamap["classstructureid"]
             };
 
             return restService.getPromise("FirstSolarWorkorderBatch", "GetListOfRelatedWorkorders", queryParams).then(function (httpResponse) {
                 var appResponse = httpResponse.data;
                 if (appResponse.type === "BlankApplicationResponse") {
                     return workorderservice.openNewDetailModal();
-//                    return redirectService.goToApplication("workorder", "newdetail", null, { "location": datamap.fields["location"] });
                 }
 
                 contextService.insertIntoContext("grid_refreshdata", { data: appResponse, panelid: "#modal" }, true);

@@ -283,7 +283,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                         //                        if (!fileName.ToLower().EndsWith(extension)) {
                         //                            fileName = String.Format("{0}.{1}", fileName, extension);
                         //                        }
-                        fileName = BuildParsedURLName(file.Attributes);
+                        fileName = BuildParsedURLName(file);
 
                     }
                     return Tuple.Create(fileBytes, fileName);

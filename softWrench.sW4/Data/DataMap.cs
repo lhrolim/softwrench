@@ -14,17 +14,14 @@ namespace softWrench.sW4.Data {
             return new DataMap(application, new Dictionary<string, object>(), null, true);
         }
 
-
-        
-
         public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, Type mappingType = null, bool rowstampsHandled = false)
             : base(application, fields) {
             //TODO: apply mapping type properly
             if (!rowstampsHandled) {
-                HandleRowStamps(fields);
+                HandleRowStamps(this);
             }
             object rowstampObject;
-            if (fields.TryGetValue(RowStampUtil.RowstampColumnName, out rowstampObject)) {
+            if (this.TryGetValue(RowStampUtil.RowstampColumnName, out rowstampObject)) {
                 Approwstamp = (long)rowstampObject;
             }
         }
@@ -32,24 +29,24 @@ namespace softWrench.sW4.Data {
 
         public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, string idFieldName)
             : base(application, fields) {
-            HandleRowStamps(fields);
+            HandleRowStamps(this);
             object rowstampObject;
-            if (fields.TryGetValue(RowStampUtil.RowstampColumnName, out rowstampObject)) {
+            if (this.TryGetValue(RowStampUtil.RowstampColumnName, out rowstampObject)) {
                 Approwstamp = (long)rowstampObject;
             }
-            Id = fields[idFieldName].ToString();
+            Id = this[idFieldName].ToString();
         }
 
         private void HandleRowStamps(IDictionary<string, object> fields) {
             //TODO: handle associations correctly on entitymetadataslicer, rowstamps should not be here!
             var rowstampFields = new Dictionary<string, object>();
-            foreach (var pair in fields) {
+            foreach (var pair in this) {
                 if (pair.Key == RowStampUtil.RowstampColumnName || pair.Key.Contains("." + RowStampUtil.RowstampColumnName)) {
                     rowstampFields.Add(pair.Key, RowStampUtil.Convert(pair.Value));
                 }
             }
             foreach (var o in rowstampFields) {
-                fields[o.Key] = o.Value;
+                this[o.Key] = o.Value;
             }
         }
 

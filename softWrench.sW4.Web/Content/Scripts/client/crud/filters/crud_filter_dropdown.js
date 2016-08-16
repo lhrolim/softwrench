@@ -158,7 +158,7 @@
                          */
                         $scope.toggleSelectAll = function (checked) {
                             angular.forEach($scope.datamap, function (value) {
-                                value.fields["_#selected"] = checked;
+                                value["_#selected"] = checked;
                             });
                         };
 

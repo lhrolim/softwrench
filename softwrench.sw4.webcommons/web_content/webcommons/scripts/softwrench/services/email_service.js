@@ -22,7 +22,7 @@
         function hasPrimary() {
             const rootDatamap = crudContextHolderService.rootDataMap();
             var result = false;
-            const emailAddresses = rootDatamap.fields["email_"];
+            const emailAddresses = rootDatamap["email_"];
             for (let email in emailAddresses) {
                 if (!emailAddresses.hasOwnProperty(email)) {
                     continue;

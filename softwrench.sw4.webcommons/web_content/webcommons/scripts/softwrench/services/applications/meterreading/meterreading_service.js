@@ -66,8 +66,8 @@
                 compositionitem["progress2"] = reverseValue;
                 //sending minimum amount of data
                 var crudData = {
-                    'wonum': parentdata.fields['wonum'],
-                    'siteid': parentdata.fields['siteid'],
+                    'wonum': parentdata['wonum'],
+                    'siteid': parentdata['siteid'],
                     'multiassetlocci_': [compositionitem]
                 };
 

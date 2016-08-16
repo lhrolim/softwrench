@@ -227,7 +227,7 @@
                         $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
                     } else {
                         contextService.insertIntoContext("grid_refreshdata", { data: data.resultObject, panelid: "#modal" }, true);
-                        modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject.fields, parameters);
+                        modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject, parameters);
                     }
                     return $q.when(data);
                 });
@@ -242,7 +242,7 @@
                 $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
             } else {
                 contextService.insertIntoContext("grid_refreshdata", { data: data.resultObject, panelid: "#modal" }, true);
-                modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject.fields, parameters);
+                modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject, parameters);
             }
             if (afterRedirectHook != null) {
                 afterRedirectHook();

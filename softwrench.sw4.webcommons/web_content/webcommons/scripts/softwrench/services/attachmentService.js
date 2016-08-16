@@ -65,7 +65,7 @@
             searchData.docinfoid = item.docinfoid.toString();
             searchService.searchWithData("attachment", searchData).success(function (data) {
                 const resultObject = data.resultObject;
-                const resultFields = resultObject[0].fields;
+                const resultFields = resultObject[0];
                 const resultUrl = resultFields['docinfo_.urlname'];
                 window.open(resultUrl);
             }).error(function () {

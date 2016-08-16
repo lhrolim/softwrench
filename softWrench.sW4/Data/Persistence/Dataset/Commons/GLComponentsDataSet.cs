@@ -15,7 +15,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         public IEnumerable<IAssociationOption> GetGLComponents75(OptionFieldProviderParameters parameters) {
             var user = SecurityFacade.CurrentUser();
-            var orgid = parameters.OriginalEntity.Attributes.Any() ? parameters.OriginalEntity.Attributes["orgid"] : null;
+            var orgid = parameters.OriginalEntity.Any() ? parameters.OriginalEntity["orgid"] : null;
 
             if (orgid == null) orgid = user.OrgId;
 
@@ -29,7 +29,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             var user = SecurityFacade.CurrentUser();
 
-            var orgid = parameters.OriginalEntity.Attributes.Any() ? parameters.OriginalEntity.Attributes["orgid"] : null;
+            var orgid = parameters.OriginalEntity.Any() ? parameters.OriginalEntity["orgid"] : null;
 
             if (orgid == null) {
                 orgid = user.OrgId;

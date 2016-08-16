@@ -16,7 +16,6 @@ namespace softWrench.sW4.Data {
 
 
         public CompositeDatamap(IEnumerable<AttributeHolder> compositionAttributes) {
-            Attributes = new Dictionary<string, object>();
             foreach (var compositionData in compositionAttributes) {
                 _applicationName = compositionData.HolderName();
                 AppendComposition(compositionData);
@@ -24,8 +23,8 @@ namespace softWrench.sW4.Data {
         }
 
         private void AppendComposition(AttributeHolder datamapToAppend) {
-            foreach (var attribute in datamapToAppend.Attributes) {
-                if (!Attributes.ContainsKey(attribute.Key)) {
+            foreach (var attribute in datamapToAppend) {
+                if (!this.ContainsKey(attribute.Key)) {
                     if (attribute.Value == null) {
                         continue;
                     }
@@ -35,12 +34,12 @@ namespace softWrench.sW4.Data {
                         value = attribute.Value.ToString();
                     }
                     if (!string.IsNullOrEmpty(value)) {
-                        Attributes.Add(attribute.Key, value);
+                        this.Add(attribute.Key, value);
                     }
                 } else {
-                    var originalAttribute = Attributes[attribute.Key] as string;
+                    var originalAttribute = this[attribute.Key] as string;
                     if (!string.IsNullOrEmpty(attribute.Value as string)) {
-                        Attributes[attribute.Key] = originalAttribute + "," + attribute.Value;
+                        this[attribute.Key] = originalAttribute + "," + attribute.Value;
                     }
                 }
             }

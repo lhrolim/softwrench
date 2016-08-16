@@ -738,7 +738,7 @@
 
         <schema id="detail" platform="web">
           <field attribute="labtransid" hidden="true"/>
-          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.fields.orgid"/>
+          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
           <field attribute="siteid" hidden="true"/>
           <field attribute="laborcode" hidden="true" />
           <field attribute="transtype" hidden="true" />
@@ -768,7 +768,7 @@
           <field label="Line Cost" attribute="linecost" showexpression="!@_iscreation">
             <renderer type="default" params="formatter=money"/>
           </field>
-          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.parentdata.fields.glaccount">
+          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.parentdata.glaccount">
             <renderer type="lookup"/>
           </association>
         </schema>
@@ -798,7 +798,7 @@
             </association>
           </customization>
           <customization position="gldebitacct">
-            <association label="GL Debit Account:" target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.parentdata.fields['glaccount']">
+            <association label="GL Debit Account:" target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.parentdata['glaccount']">
               <renderer type="lookup"/>
             </association>
           </customization>
@@ -816,7 +816,7 @@
       <schemas>
         <detail platform="web" redeclaring="false">
           <customization position="gldebitacct">
-            <association label="GL Debit Account:"  target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.parentdata.fields.glaccount">
+            <association label="GL Debit Account:"  target="gldebitacct" labelfield="glcomponents_.comptext" defaultexpression="$.parentdata.glaccount">
               <renderer type="lookup"/>
             </association>
           </customization>

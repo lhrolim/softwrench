@@ -57,7 +57,7 @@
                     return;
                 }
 
-                var assetId = resultObject[0]['fields']['assetid'];
+                var assetId = resultObject[0]['assetid'];
                 var param = {};
                 param.id = assetId;
                 var application = 'asset';

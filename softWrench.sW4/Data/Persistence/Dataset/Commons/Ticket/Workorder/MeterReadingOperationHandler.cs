@@ -26,7 +26,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder {
             var locationMeters = (IEnumerable<Entity>)woData.CrudData.GetRelationship("locationmeter");
 
             foreach (var assetMeter in assetMeters) {
-                var crudData = new CrudOperationData(assetMeter.GetStringAttribute("assetmeterid"), assetMeter.Attributes, assetMeter.AssociationAttributes, _meterReadingEntity, null);
+                var crudData = new CrudOperationData(assetMeter.GetStringAttribute("assetmeterid"), assetMeter, assetMeter.AssociationAttributes, _meterReadingEntity, null);
                 if (assetMeter.GetAttribute("newreading") == null) {
                     //let´s ignore the ones which were not filled by the user
                     continue;
@@ -38,7 +38,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder {
             }
 
             foreach (var locationMeter in locationMeters) {
-                var crudData = new CrudOperationData(locationMeter.GetStringAttribute("locationmeterid"), locationMeter.Attributes, locationMeter.AssociationAttributes, _meterReadingEntity, null);
+                var crudData = new CrudOperationData(locationMeter.GetStringAttribute("locationmeterid"), locationMeter, locationMeter.AssociationAttributes, _meterReadingEntity, null);
                 if (locationMeter.GetAttribute("newreading") == null) {
                     //let´s ignore the ones which were not filled by the user
                     continue;

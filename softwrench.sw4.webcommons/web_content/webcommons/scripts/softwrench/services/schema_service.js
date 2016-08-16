@@ -58,9 +58,6 @@
         };
 
         function getId(datamap, schema) {
-            if (datamap.fields) {
-                return datamap.fields[schema.idFieldName];
-            }
             return datamap[schema.idFieldName];
         };
 
@@ -141,7 +138,7 @@
             if (!datamap) {
                 return "New " + schema.title;
             }
-            var fields = datamap.fields ? datamap.fields : datamap;
+            var fields = datamap;
 
             if (schema.properties['detail.titleexpression'] != null) {
                 return expressionService.evaluate(schema.properties['detail.titleexpression'], fields);
@@ -174,7 +171,7 @@
                 return null;
             }
 
-            var fields = datamap.fields ? datamap.fields : datamap;
+            var fields = datamap;
 
             if (!fields) {
                 return null;

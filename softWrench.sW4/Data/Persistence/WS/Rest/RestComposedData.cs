@@ -77,7 +77,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
 
             Entries = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             if (relatedData != null) {
-                foreach (var attr in relatedData.Attributes) {
+                foreach (var attr in relatedData) {
                     Entries[attr.Key] = attr.Value;
                 }
                 IsCompositionCreation = relatedData.Id == null;

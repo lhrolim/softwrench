@@ -116,7 +116,7 @@ angular.module('sw_layout')
                     }
 
 
-                    modalService.show(result.data.schema, result.data.resultObject.fields, { title: title, cssclass: modalclass }, function (modalData) {
+                    modalService.show(result.data.schema, result.data.resultObject, { title: title, cssclass: modalclass }, function (modalData) {
                         that.doExecuteService(scope, clientFunction, command,modalData).then(function () {
                             modalService.hide();
                         });

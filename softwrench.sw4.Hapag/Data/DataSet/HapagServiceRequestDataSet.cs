@@ -141,11 +141,11 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         private void HandleAffectDateAndTime(DataMap resultObject, ApplicationMetadata application) {
             var originalDateTime = resultObject.GetAttribute("affecteddate", true);
-            resultObject.Attributes["#affecteddateonly"] = originalDateTime;
-            resultObject.Attributes["#affectedtime"] = originalDateTime;
+            resultObject["#affecteddateonly"] = originalDateTime;
+            resultObject["#affectedtime"] = originalDateTime;
 
             var user = SecurityFacade.CurrentUser();
-            resultObject.Attributes["isitc"] = ShouldShowITC(user);
+            resultObject["isitc"] = ShouldShowITC(user);
         }
 
         private bool ShouldShowITC(InMemoryUser user) {
@@ -173,7 +173,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             if (CollectionExtensions.IsNullOrEmpty(usefulFaqLinks)) {
                 return;
             }
-            resultObject.Attributes.Add("usefulFaqLinks", usefulFaqLinks);
+            resultObject.Add("usefulFaqLinks", usefulFaqLinks);
         }
 
         private static void HandleCreationSummary(DataMap resultObject) {
@@ -184,7 +184,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 sb.Append(dictionary["docinfo_.description"]);
                 sb.Append("</p>");
             }
-            resultObject.Attributes.Add("#attachmentsummary", sb.ToString());
+            resultObject.Add("#attachmentsummary", sb.ToString());
         }
 
 
@@ -238,7 +238,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         public SearchRequestDto AssetFilterBySiteFunction(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             if (parameters.Metadata.Schema.SchemaId.Equals("printer") || parameters.Metadata.Schema.SchemaId.Equals("phone")) {
-                filter.WhereClause = string.Format("LOCATION = '{0}'", parameters.OriginalEntity.Attributes["location"]);
+                filter.WhereClause = string.Format("LOCATION = '{0}'", parameters.OriginalEntity["location"]);
             }
             return filter;
         }

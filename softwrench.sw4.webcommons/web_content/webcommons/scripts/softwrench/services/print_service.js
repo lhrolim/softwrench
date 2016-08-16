@@ -22,7 +22,7 @@ angular.module('sw_layout')
                 //this would happen in case of a tab being printed wherease we don´t have the fields on datamap
                 resultObj[value.key] = value.tabObject;
             } else {
-                resultObj[value.key] = datamap.fields[value.key];
+                resultObj[value.key] = datamap[value.key];
             }
 
         }
@@ -130,7 +130,7 @@ angular.module('sw_layout')
             if (printOptions != null && printOptions.compositionsToExpand) {
                 $.each(printOptions.compositionsToExpand, function (key, obj) {
                     if (obj.value == true) {
-                        var compositionData = datamap.fields[key];
+                        var compositionData = datamap[key];
                         //TODO: CompositionData might be undefined or not
                         if (compositionData == undefined || compositionData.length == 0) {
                             emptyCompositions[key] = [];

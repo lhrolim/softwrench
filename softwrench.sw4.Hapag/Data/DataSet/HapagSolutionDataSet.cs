@@ -18,7 +18,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
 
         internal void BuildAttachments(string folderName, IApplicationResponse dataResponse) {
-            ((ApplicationDetailResult)dataResponse).ResultObject.Attributes["attachment_"] = null;
+            ((ApplicationDetailResult)dataResponse).ResultObject["attachment_"] = null;
             var path = MetadataProvider.GlobalProperty("faqfspath", true) + folderName;
             if (!Directory.Exists(path)) {
                 return;
@@ -31,7 +31,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 var attachment = new Dictionary<string, object> { { "#path", fileEntry }, { "document", file.Name } };
                 attachments.Add(attachment);
             }
-            ((ApplicationDetailResult)dataResponse).ResultObject.Attributes["attachment_"] = attachments;
+            ((ApplicationDetailResult)dataResponse).ResultObject["attachment_"] = attachments;
         }
 
         public override string ClientFilter()

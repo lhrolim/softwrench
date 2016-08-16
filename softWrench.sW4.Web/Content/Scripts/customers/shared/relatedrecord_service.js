@@ -10,7 +10,7 @@ angular.module('sw_layout')
         };
         searchService.searchWithData("workorder", searchData, "wonumlookup").success(function (data) {
             var resultObject = data.resultObject;
-            var workorderid = resultObject[0]['fields']['workorderid'];
+            var workorderid = resultObject[0]['workorderid'];
             redirectService.goToApplicationView(app, "editdetail", "input", null, { id: workorderid });
         });
     };

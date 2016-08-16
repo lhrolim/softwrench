@@ -163,7 +163,7 @@
                     contextService.insertIntoContext("crud_context", crud_context);
                 }
 
-                var id = $scope.datamap.fields[$scope.schema.idFieldName];
+                var id = $scope.datamap[$scope.schema.idFieldName];
                 var list = crud_context.list_elements;
                 if (!list || !id) {
                     return;
@@ -297,10 +297,10 @@
 
         function setWindowTitle(scope) {
             var strategy = scope.schema.properties["popup.window.titlestrategy"];
-            var id = scope.datamap.fields[scope.schema.idFieldName];
+            var id = scope.datamap[scope.schema.idFieldName];
             var titleattribute = scope.schema.properties["popup.window.titleattribute"];
             if (titleattribute != null) {
-                var overridenTitle = scope.datamap.fields[titleattribute];
+                var overridenTitle = scope.datamap[titleattribute];
                 window.document.title = String.format(overridenTitle, id);
                 return;
             }

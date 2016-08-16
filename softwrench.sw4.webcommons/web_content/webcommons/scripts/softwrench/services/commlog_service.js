@@ -24,7 +24,7 @@
             const parentIdFieldName = parameters.parentSchema.idFieldName;
             const httpParameters = {
                 application: parameters.parentSchema.applicationName,
-                applicationItemId: parameters.parentData["fields"][parentIdFieldName],
+                applicationItemId: parameters.parentData[parentIdFieldName],
                 userId: user.dbId,
                 commlogId: parameters.compositionItemId
             };
@@ -38,7 +38,7 @@
         function formatCommTemplate(parameters) {
             const parentSchema = parameters.scope.parentschema || /* when commlog being edited in modal */ crudContextHolderService.currentSchema();
             const parentIdFieldName = parentSchema.idFieldName;
-            const parentData = parameters.parentdata["fields"];
+            const parentData = parameters.parentdata;
             const templateId = parameters.fields['#templateid'];
             if (templateId == null) {
                 return;
@@ -53,7 +53,7 @@
             restService.invokePost("CommTemplate", "MergeTemplateDefinition", null, angular.toJson(httpParameters), function (data) {
                 parameters.fields['subject'] = data.resultObject.subject;
                 parameters.fields['message'] = richTextService.getDecodedValue(data.resultObject.message);
-                parameters.fields['sendto'] = [parameters.parentdata['fields']['reportedemail']];
+                parameters.fields['sendto'] = [parameters.parentdata['reportedemail']];
             }, null);
         };
 
@@ -81,7 +81,7 @@
             applicationService.save();
         }
         const send = function (commLogDatamap, commLogSchema) {
-            var safeCommLogDatamap = commLogDatamap.fields ? commLogDatamap.fields : commLogDatamap;
+            var safeCommLogDatamap = commLogDatamap;
             const extraAtach = safeCommLogDatamap["extraattachments"];
             if (!extraAtach || extraAtach !== "details") {
                 applicationService.save();
@@ -151,8 +151,8 @@
         function getServerData(commloglistitem, schema) {
             return applicationService.getApplicationDataPromise("commlog", "detail", { id: commloglistitem["commloguid"] })
                 .then(function (result) {
-                    result.data.resultObject.fields.schema = schema;
-                    return result.data.resultObject.fields;
+                    result.data.resultObject.schema = schema;
+                    return result.data.resultObject;
                 });
         };
 

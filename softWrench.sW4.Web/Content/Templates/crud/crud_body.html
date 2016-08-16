@@ -77,8 +77,8 @@
                                                 ismodal="{{ismodal}}"
                                                 extraparameters="extraparameters"
                                                 elementid="crudInputMainComposition"
-                                                schema="schema" datamap="datamap.fields"
-                                                original-datamap="originalDatamap.fields"
+                                                schema="schema" datamap="datamap"
+                                                original-datamap="originalDatamap"
                                                 is-dirty="isDirty"
                                                 association-schemas="associationSchemas"
                                                 blockedassociations="blockedassociations"
@@ -91,7 +91,7 @@
                         </div>
                         <div ng-switch-when="false">
                             <crud-output-wrapper extraparameters="extraparameters"
-                                                 schema="schema" datamap="datamap.fields"
+                                                 schema="schema" datamap="datamap"
                                                  displayables="schema.displayables"
                                                  cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="main"/>
                         </div>
@@ -119,7 +119,7 @@
                                                 extraparameters="extraparameters"
                                                 elementid="tab_{{tab.tabid}}"
                                                 displayables="tab.displayables"
-                                                schema="schema" datamap="datamap.fields"
+                                                schema="schema" datamap="datamap"
                                                 association-schemas="associationSchemas"
                                                 blockedassociations="blockedassociations"
                                                 cancelfn="cancel(data,schema)"
@@ -128,7 +128,7 @@
                         </div>
                         <div ng-switch-when="false">
                             <crud-output-wrapper extraparameters="extraparameters"
-                                                 schema="schema" datamap="datamap.fields"
+                                                 schema="schema" datamap="datamap"
                                                  displayables="tab.displayables"
                                                  cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}"/>
                         </div>
