@@ -14,6 +14,8 @@ using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 using SpreadsheetLight;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Configuration;
 
 namespace softWrench.sW4.Util {
     public class ExcelUtil : ISingletonComponent {
@@ -26,10 +28,14 @@ namespace softWrench.sW4.Util {
 
         private readonly StatusColorResolver _statusColorsService;
 
-        public ExcelUtil(I18NResolver i18NResolver, IContextLookuper contextLookuper, StatusColorResolver statusColorsService) {
+        private readonly string defaultDateTimeFormat;
+
+        public ExcelUtil(I18NResolver i18NResolver, IContextLookuper contextLookuper, StatusColorResolver statusColorsService, IConfigurationFacade facade) {
             _i18NResolver = i18NResolver;
             _contextLookuper = contextLookuper;
             _statusColorsService = statusColorsService;
+            
+            defaultDateTimeFormat = facade != null ? facade.Lookup<string>(ConfigurationConstants.DateTimeFormat) : "dd/MM/yyyy HH:mm";
 
             // setup style dictionary for back colors
             // 2 = red, 3 = green, 4 = yellow, 5 = orange, 6 = blue, 7 = white
@@ -191,7 +197,7 @@ namespace softWrench.sW4.Util {
                 writer.WriteStartElement(new Cell(), xmlAttributes);
                 // write cell content
                 DateTime dtTimeAux;
-                var formatToUse = "dd/MM/yyyy HH:mm";
+                var formatToUse = defaultDateTimeFormat;
                 if (applicationField.RendererParameters.ContainsKey("format")) {
                     formatToUse = applicationField.RendererParameters["format"].ToString();
                 }
