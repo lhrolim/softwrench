@@ -3,7 +3,7 @@
         <div class="left col-sm-5">
             <label>Active Security Groups</label>
             <select multiple="multiple" ng-model="selectedprofiles" ng-options="profile.name for profile in profiles"
-                    class="form-control" />
+                    class="form-control" ng-dblclick="doubleClickedProfile()" />
             <div class="buttons">
                 <button class="btn btn-sm btn-defualt" ng-click="addSelectedProfiles(selectedavailableprofiles)" ng-if="canAssignSecurity()"><i class="fa fa-plus"></i>&ensp;ADD</button>
                 <button class="btn btn-sm btn-defualt" ng-click="removeSelectedProfiles(selectedprofiles)" ng-if="canAssignSecurity()"><i class="fa fa-minus"></i>&ensp;DELETE</button>
@@ -12,7 +12,7 @@
         <div class="right col-sm-5">
             <label>Available Security Groups</label>
             <select multiple="multiple" ng-model="selectedavailableprofiles" ng-options="profile.name for profile in availableprofiles"
-                    class="form-control input-block-level" />
+                    class="form-control input-block-level" ng-dblclick="doubleClickedProfile()" />
         </div>
     </div>
 </div>

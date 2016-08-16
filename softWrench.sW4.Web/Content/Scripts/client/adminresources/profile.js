@@ -2,15 +2,22 @@
     "use strict";
 
     angular.module("sw_layout").controller("ProfileController", ProfileController);
-    function ProfileController($scope, crudContextHolderService,userService, alertService) {
+
+
+    function ProfileController($scope, crudContextHolderService, userService, alertService, redirectService) {
         "ngInject";
 
         var app = angular.module('plunker', ['ui.multiselect']);
 
+        $scope.doubleClickedProfile = function () {
+            var profile = $scope.selectedprofiles[0] || $scope.selectedavailableprofiles[0];
+            goToProfileDetails(profile);
+        };
+
         $scope.canAssignSecurity = function () {
             var schema = crudContextHolderService.currentSchema();
             return schema.schemaId !== 'myprofiledetail' || userService.hasRole(["sysadmin"]);
-        }
+        };
 
         $scope.addSelectedProfiles = function (selectedavailableprofiles) {
             if (selectedavailableprofiles === undefined || selectedavailableprofiles.length === undefined || selectedavailableprofiles.length === 0) {
@@ -38,6 +45,11 @@
             }
         };
 
+        function goToProfileDetails(profile) {
+            if (profile) {
+                redirectService.goToApplicationView("_UserProfile", "detail", "edit", "Details", { id: profile.id, popupmode: 'browser' });
+            }
+        };
 
         function initUser() {
             $scope.parentDatamap = $scope.datamap;

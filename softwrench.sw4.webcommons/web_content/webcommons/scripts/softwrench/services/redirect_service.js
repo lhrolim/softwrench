@@ -189,16 +189,8 @@
             var popupMode = parameters.popupmode;
 
             if (popupMode === "browser") {
-                if (contextService.isLocal()) {
-                    //easier to debug on chrome like this
-                    window.open(redirectUrl);
-                    //                    w.moveto(0, 0);
-                } else {
-                    const x = screen.width / 2 - 800 / 2;
-                    const y = screen.height / 2 - 600 / 2;
-                    const w = window.open(redirectUrl, '_blank', 'height=600px,width=800px,left=' + x + ',top=' + y + ',resizable=yes,scrollbars=yes', false);
-                    w.focus();
-                }
+                window.open(redirectUrl);
+
                 //to keep promise consitent
                 return $q.when();
             }
@@ -206,8 +198,6 @@
             //this code will get called when the user is already on a crud page and tries to switch view only.
             $rootScope.popupmode = popupMode;
             fixHeaderService.unfix();
-
-
 
             if (jsonData == undefined) {
                 if (redirectUrl && !popupMode) {
