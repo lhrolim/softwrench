@@ -165,7 +165,7 @@
               <filter clientfunction="swchartGraphicPanelService.filterSelectableApplications"/>
               
               <option label="Service Request" value="SR" extraprojections="applicationName=servicerequest"/>
-              <option label="Quick Service Request" value="SR" extraprojections="applicationName=quickservicerequest"/>
+              <!--<option label="Quick Service Request" value="SR" extraprojections="applicationName=quickservicerequest"/>-->
               <option label="Work Order" value="workorder" extraprojections="applicationName=workorder"/>
               
               <event type="afterchange" service="swchartGraphicPanelService" method="onApplicationSelected" />

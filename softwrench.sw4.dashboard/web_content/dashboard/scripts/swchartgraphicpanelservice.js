@@ -258,7 +258,7 @@
             const applications = crudContextHolderService.fetchEagerAssociationOptions("applications", { schemaId: "#modal" });
             if (!applications || applications.length <= 0) return false;
             const appNames = applications.map(a => a.value);
-            const filterableName = "sr".equalIc(option.value) ? "servicerequest" : option.value;
+            const filterableName = option.extrafields["applicationName"] || ("sr".equalIc(option.value) ? "servicerequest" : option.value);
             // option is part of authorized apps
             return !!appNames.find(a =>  a === filterableName);
         }
