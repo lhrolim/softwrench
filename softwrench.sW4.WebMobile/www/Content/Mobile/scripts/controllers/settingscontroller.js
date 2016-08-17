@@ -1,8 +1,8 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("SettingsController", ["$scope", "routeService", "securityService", "applicationStateService", "settingsService", 
-        function ($scope, routeService, securityService, applicationStateService, settingsService) {
+    softwrench.controller("SettingsController", ["$scope", "routeService", "securityService", "applicationStateService", "settingsService", "offlinePersitenceBootstrap",
+        function ($scope, routeService, securityService, applicationStateService, settingsService, offlinePersitenceBootstrap) {
 
             $scope.config = null;
 
@@ -50,8 +50,11 @@
                 });                                   
             }
 
-            init();
-
+            offlinePersitenceBootstrap.addPersistenceReadyListener({
+                persistenceReady : function() {
+                    init();
+                }
+            });
         }]);
 
 })(softwrench);

@@ -10,6 +10,9 @@
             return config.storageNamespace + str;
         }
         function cacheSettings(settings) {
+            if (!settings) {
+                return settings;
+            }
             localStorageService.put(key("settings"), settings);
             if(!!settings.serverurl) localStorageService.put(key("serverurl"), settings.serverurl);
             return settings;

@@ -343,11 +343,14 @@
          */
         function dropDataBase() {
             const queries = [];
-            for (let entity in entities) {
-                if (!entities.hasOwnProperty(entity)) continue;
-                queries.push("drop table if exists `{0}`".format(entity));
-            }
-            return this.executeQueries(queries);
+            return persistence.runSql("SELECT name FROM sqlite_master where type = 'table'").then((results) => {
+                angular.forEach(results, (result) => {
+                    if (!result.name.startsWith("_")) {
+                        queries.push(`drop table if exists ${result.name}`);
+                    }
+                });
+                return this.executeQueries(queries);
+            });
         };
 
         /**

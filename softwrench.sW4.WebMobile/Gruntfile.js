@@ -10,6 +10,7 @@ module.exports = function (grunt) {
         "www/Content/Vendor/downloadedvendor/persistence.js",
         "www/Content/Vendor/downloadedvendor/persistence.store.sql.js",
         "www/Content/Vendor/downloadedvendor/persistence.store.cordovasql.js",
+        "www/Content/Vendor/downloadedvendor/persistence.migrations.js",
         "www/Content/Vendor/downloadedvendor/jquery.scannerdetection.js",
         "www/Content/Vendor/downloadedvendor/rolling-log.js",
         "www/Content/Vendor/downloadedvendor/ionautocomplete.js"
@@ -21,6 +22,7 @@ module.exports = function (grunt) {
         "www/Content/Mobile/scripts/persistence/module.js",
         "www/Content/Mobile/scripts/persistence/services/**/*.js",
         "www/Content/Mobile/scripts/persistence/config.entities.js",
+        "www/Content/Mobile/scripts/persistence/config.migrations.js",
         // audit.offline
         "www/Content/Shared/audit_offline/scripts/offline/audit.js"
     ];

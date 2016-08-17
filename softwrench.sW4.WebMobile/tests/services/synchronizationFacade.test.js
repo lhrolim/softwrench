@@ -26,9 +26,10 @@
             });
             this.args = [ids, args[1]];
         }
+
         return PreparedStatement;
     })();
-   //#endregion
+    //#endregion
 
     //#region test config
     var config = {
@@ -66,7 +67,7 @@
                     ]
                 }],
                 expected: [
-                    new PreparedStatement([ [1,3,5,7], "workorder" ])
+                    new PreparedStatement([[1, 3, 5, 7], "workorder"])
                 ]
             },
             multipleapplications: {
@@ -106,9 +107,9 @@
                     }
                 ],
                 expected: [
-                    new PreparedStatement([ [1, 3, 5, 7], "workorder"]),
-                    new PreparedStatement([ [8, 10, 12, 14], "servicerequest"]),
-                    new PreparedStatement([ [15, 17, 19, 21], "asset"])
+                    new PreparedStatement([[1, 3, 5, 7], "workorder"]),
+                    new PreparedStatement([[8, 10, 12, 14], "servicerequest"]),
+                    new PreparedStatement([[15, 17, 19, 21], "asset"])
                 ]
             }
         }
@@ -131,7 +132,7 @@
             });
         });
     }));
-    
+
     //#endregion test config
 
     function runHandleDeletableDataEntriesTest(testConfig, done) {

@@ -11,9 +11,34 @@
     var audit = angular.module("audit.offline", ["persistence.offline"]);
     //#endregion
 
+    //#region audit.offline migrations
+    angular.module("persistence.offline").config(["offlineMigrationsProvider", function (offlineMigrationsProvider) {
+        const migrationGroup = offlineMigrationsProvider.createMigrationGroup(10, "offline audit migrations");
+
+        migrationGroup.addMigration("table AuditEntry", {
+            up: function () {
+                this.createTable("AuditEntry", (t) => {
+                    t.text("operation");
+                    t.json("originaldatamap");
+                    t.json("datamap");
+                    t.text("refApplication");
+                    t.text("refClientId");
+                    t.text("refId");
+                    t.text("refUserId");
+                    t.text("createdBy");
+                    t.date("createdDate");
+                });
+            },
+            down: function () {
+                this.dropTable("AuditEntry");
+            }
+        });
+    }]);
+    //#endregion
+
     //#region audit.offline entities
     angular.module("persistence.offline").config(["offlineEntitiesProvider", function (offlineEntitiesProvider) {
-        var entities = offlineEntitiesProvider.entities;
+        const entities = offlineEntitiesProvider.entities;
 
         entities.AuditEntry = persistence.define("AuditEntry", {
             //the name of the operation, such as crud_create, crud_update, or a custom one

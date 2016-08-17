@@ -146,7 +146,7 @@
         //#endregion
 
         //#region Attachment
-        
+
         /**
          * The attachment entity holds the raw base64 of the attachment itself. 
          * It's equivalent to the docinfo table on the server side. 
@@ -166,7 +166,7 @@
             path: "TEXT", // local file system path to the saved file (should be in an external storage directory), used to cache access to ios devices
             compressed: "BOOL", // whether or not the file is compressed
             content: "TEXT", // base64 encoded content,
-            mimetype:"TEXT" //mimetype of the file
+            mimetype: "TEXT" //mimetype of the file
         });
 
         entities.Attachment.NonPendingAttachments = "select id,compositionRemoteId,docinfoRemoteId from Attachment where (path is not null or content is not null) and (id in ({0}) or docinfoRemoteId in ({1}) )";
@@ -176,7 +176,7 @@
         entities.Attachment.CreateNewBlankAttachments = "insert into Attachment ('application','parentId','compositionRemoteId','docinfoRemoteId','id') values (?,?,?,?,?)";
         //brings the attachments that need to be syncrhonized to the server. The ones which have a compositionRemoteId already point to a downloaded composition, and thus do not require to be uploaded
         entities.Attachment.ByApplicationAndIds = "select id,parentId,content from Attachment where application = ? and parentId in ({0}) and compositionRemoteId is null";
-        
+
         /**
          * query to fetch list of attachments which are pending synchronization against the server side
          */
@@ -185,7 +185,7 @@
         entities.Attachment.UpdatePendingAttachment = "update Attachment set content =? , mimetype=? where id =?";
 
         entities.Attachment.UpdateAttachmentPath = "update Attachment set path =? where docinfoRemoteId =?";
-        
+
         entities.Attachment.ByDocInfoId = "select content,mimetype,path from Attachment where docinfoRemoteId = ?";
         entities.Attachment.ByHashId = "select content,mimetype,path from Attachment where id = ?";
         entities.Attachment.DeleteById = "delete from Attachment where id = ?";
