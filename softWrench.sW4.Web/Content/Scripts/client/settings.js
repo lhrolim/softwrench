@@ -5,6 +5,11 @@ angular.module("sw_layout").controller("AceController", AceController);
 function AceController($scope, $http, $templateCache, $window, i18NService, alertService, restService, contextService) {
     "ngInject";
 
+    const EditMenu = "menu";
+    const EditStatucColor = "statuscolors";
+    const EditClassificationColor = "classificationcolors";
+    const EditMetaData = "metadata";
+
     $scope.templates = [];
     $scope.selectedTemplate = '';
 
@@ -33,24 +38,10 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
     };
 
     $scope.save = function () {
-        switch ($scope.type) {
-            case 'menu':
-                var urlToUse = "/api/generic/EntityMetadata/SaveMenu";
-                break;
-            case 'statuscolors':
-                var urlToUse = "/api/generic/EntityMetadata/SaveStatuscolor";
-                break;
-            case 'metadata':
-                var urlToUse = "/api/generic/EntityMetadata/SaveMetadata";
-                break;
-            default:
-                var urlToUse = $scope.type;
-                break;
-        }
         alertService.confirm("You will be logged out in order to implement this change.Do you want to continue? ").then(function () {
             $http({
                 method: "PUT",
-                url: url(urlToUse),
+                url: url(resolveApiUrl($scope.type)),
                 headers: { "Content-Type": "application/xml" },
                 data: ace.edit("editor").getValue()
             }).success(function () {
@@ -61,22 +52,22 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
     };
 
     $scope.savechanges = function () {
-        if ($scope.comments != undefined) {
-            alertService.confirm("Are you sure you want to save your changes to the Metadata? You will be logged out in order to implement this change. Do you want to continue?").then(function () {
+        if ($scope.comments && $scope.fullname) {
+            alertService.confirm("Are you sure you want to save your changes? You will be logged out in order to implement this change. Do you want to continue?").then(function () {
                 var httpParameters = {
                     Comments: $scope.comments,
                     Metadata: ace.edit("editor").getValue(),
                     Path: $scope.selectedTemplate.path,
-                    Name: $scope.selectedTemplate.name
+                    Name: $scope.selectedTemplate.name,
+                    UserFullName: $scope.fullname
                 };
 
-                var urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
                 var json = angular.toJson(httpParameters);
 
                 $http({
-                    method: "POST",
+                    method: "PUT",
                     dataType: "json",
-                    url: url(urlToUse),
+                    url: url(resolveApiUrl($scope.type)),
                     headers: { "Content-Type": "application/json; charset=utf-8" },
                     data: json
                 }).success(function () {
@@ -86,11 +77,10 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
                 });
             });
         } else {
-            alertService.alert("Please describe your changes in the Comments section");
+            alertService.alert("Please describe your changes in the comments section and enter your full name.");
         } 
     };
-       
-            
+                   
     $scope.restore = function () {
         alertService.confirm("This will restore your XML to the default XML file, and none of your changes will be saved. Is this what you want to do? ").then(function () {
             var urlToCall = url("/api/generic/EntityMetadata/RestoreDefaultMetadata");
@@ -141,15 +131,44 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
         return i18NService.get18nValue(key, defaultValue, paramArray);
     };
 
+    function resolveApiUrl(type) {
+        var urlToUse = "";
+
+        switch (type) {
+            case EditMenu:
+                urlToUse = "/api/generic/EntityMetadata/SaveMenu";
+                break;
+            case EditStatucColor:
+                urlToUse = "/api/generic/EntityMetadata/SaveStatuscolor";
+                break;
+            case EditClassificationColor:
+                urlToUse = "/api/generic/EntityMetadata/SaveClassificationcolor";
+                break;
+            case EditMetaData:
+                urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
+                break;
+            default:
+                urlToUse = $scope.type;
+                break;
+        }
+
+        return urlToUse;
+    };
+
     function init() {
         var editor = ace.edit("editor");
         editor.getSession().setMode("ace/mode/xml");
         var data = $scope.resultData;
         $scope.type = data.type;
-       
+
         editor.setValue(data.content);
         editor.gotoLine(0);
-    }
+
+        if (EditMetaData.equalIc($scope.type)) {
+            //Fetch the templates
+            $scope.getTemplates();
+        }
+    };
 
     loadScript("/Content/customVendor/scripts/msic/ace.js", init());
 
@@ -158,9 +177,6 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
             init();
         }
     });
-
-    //Fetch the templates
-    $scope.getTemplates();
 }
 
 window.AceController = AceController;

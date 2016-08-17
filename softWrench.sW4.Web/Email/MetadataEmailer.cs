@@ -20,7 +20,6 @@ namespace softWrench.sW4.Web.Email {
     public class MetadataEmailer : ISingletonComponent {
         private const string NoReplySendFrom = "noreply@controltechnologysolutions.com";
         private readonly IEmailService emailService;
-        private readonly IApplicationConfiguration appConfig;
         private readonly RedirectService redirectService;
         private static readonly ILog Log = LogManager.GetLogger(typeof(MetadataEmailer));
 
@@ -28,51 +27,39 @@ namespace softWrench.sW4.Web.Email {
         /// Initializes a new instance of the <see cref="MetadataEmailer"/> class.
         /// </summary>
         /// <param name="emailService">The email service reference</param>
-        public MetadataEmailer(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig) {
-            this.emailService = emailService;
-            this.appConfig = appConfig;
+        public MetadataEmailer(IEmailService emailService, RedirectService redirectService) {
+            this.emailService = emailService;            
             this.redirectService = redirectService;
         }
 
         /// <summary>
         /// Email the metadata file that has been changed.
         /// </summary>        
-        public void SendMetadataChangeEmail(string metadataName,
-            string newMetadatacontent,
-            string oldMetadataContent,
-            string comments,
-            User user,
-            DateTime changedOn,
-            string to,
-            string from = NoReplySendFrom) {
+        public void SendMetadataChangeEmail(MetadataChangeEmail email) {
             var templatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//metadata//metadatachangereport.html";
             var templateContent = File.ReadAllText(templatePath);
             var template = Template.Parse(templateContent);
-
-            var clientKey = appConfig.GetClientKey();
-
             var msg = template.Render(
                    Hash.FromAnonymousObject(new {
-                       headerurl = string.Format("{0}{1}", redirectService.GetRootUrl(), CustomerResourceResolver.ResolveHeaderImagePath(clientKey)),
-                       customer = clientKey,
-                       username = user.UserName,
-                       fullname = user.FullName,
-                       changedon = changedOn.ToString(),
-                       comments = comments,
-                       filename = metadataName,
+                       headerurl = string.Format("{0}{1}", redirectService.GetRootUrl(), CustomerResourceResolver.ResolveHeaderImagePath(email.Customer)),
+                       customer = email.Customer,
+                       username = email.CurrentUser.UserName,
+                       fullname = email.ChangedByFullName,
+                       ipaddress = email.IPAddress,
+                       changedon = email.ChangedOnUTC.ToString(),
+                       comments = email.Comment,
+                       filename = email.MetadataName,
                        profile = ApplicationConfiguration.Profile
                    }));
 
             var attachemnts = new List<EmailAttachment>();
-            attachemnts.Add(this.ConvertToMetadataAttachment(oldMetadataContent, string.Format("old_{0}", metadataName)));
-            attachemnts.Add(this.ConvertToMetadataAttachment(newMetadatacontent, string.Format("new_{0}", metadataName)));
+            attachemnts.Add(this.ConvertToMetadataAttachment(email.OldFileContent, string.Format("old_{0}", email.MetadataName)));
+            attachemnts.Add(this.ConvertToMetadataAttachment(email.NewFileContent, string.Format("new_{0}", email.MetadataName)));
 
-            var subject = string.Format("[softWrench {0} - {1}] Metadata Changed", clientKey, ApplicationConfiguration.Profile);
-
-            var emailData = new EmailData(from, to, subject, msg, attachemnts);
+            var emailData = new EmailData(string.IsNullOrWhiteSpace(email.SentBy) ? NoReplySendFrom : email.SentBy, email.SendTo, email.Subject, msg, attachemnts);
             emailService.SendEmail(emailData);
         }
-
+        
         private EmailAttachment ConvertToMetadataAttachment(string fileContent, string metadataName) {
             try {
                 return new EmailAttachment() { AttachmentBinary = Encoding.UTF8.GetBytes(fileContent), AttachmentName = metadataName };
@@ -83,4 +70,20 @@ namespace softWrench.sW4.Web.Email {
             }
         }
     }
+
+    public class MetadataChangeEmail {
+        public string Customer { get; set; }
+        public User CurrentUser { get; set; }
+        public string ChangedByFullName { get; set; }
+        public DateTime ChangedOnUTC { get; set; }
+        public string IPAddress { get; set; }
+        public string MetadataName { get; set; }
+        public string NewFileContent { get; set; }
+        public string OldFileContent { get; set; }
+        public string Comment { get; set; }       
+        public string SendTo { get; set; }
+        public string SentBy { get; set; }
+        public string Subject { get; set; }
+    }
+
 }

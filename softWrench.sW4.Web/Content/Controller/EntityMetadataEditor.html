@@ -1,7 +1,7 @@
 <article class="container page" ng-controller="AceController">
-    <form class="form-horizontal">
+    <form class="form-horizontal" name="entityMetadataEditorForm">
         <div class="metadataeditor">
-            <div class="input-group col-xs-12">
+            <div class="input-group col-xs-12" ng-show="templates.length > 0">
                 <label class="col-xs-12">Select the Template</label>
                 <div class="col-xs-12 col-sm-6">
                     <select class="form-control" ng-options="option.name for option in templates track by option.path"
@@ -12,9 +12,19 @@
             <div id="editor" style="height: 800px; border: 1px solid rgb(240, 240, 240)"></div>
            
             <div class="comments input-group col-xs-12">
-                <label class="col-xs-12">Comments <span class="red">*</span></label>
-                <div class="col-xs-12 col-sm-6" id="comment">
-                    <input type="text" placeholder="Changes made to the Metadata should be described here" class="form-control" ng-model="comments" maxlength="100"/>
+                <div class="row">
+                    <label class="col-xs-12">Comment <span class="red">*</span></label>
+                    <div class="col-xs-12 col-sm-6" id="comment">
+                        <input type="text" name="commentInput" placeholder="Changes made should be described here" class="form-control" ng-model="comments" maxlength="100" ng-required="true" ng-maxlength="255"/>
+                        <label ng-show="entityMetadataEditorForm.commentInput.$invalid && entityMetadataEditorForm.commentInput.$touched" style="color: red;margin-left:5px;">comment is required</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-xs-12">Changed By <span class="red">*</span></label>
+                    <div class="col-xs-12 col-sm-6" id="comment">
+                        <input type="text" name="fullnameInput" placeholder="Please enter your full name here" class="form-control" ng-model="fullname" maxlength="100" ng-required="true" ng-maxlength="200"/>
+                        <label ng-show="entityMetadataEditorForm.fullnameInput.$invalid && entityMetadataEditorForm.fullnameInput.$touched" style="color: red;margin-left:5px;">changed by is required</label>
+                    </div>
                 </div>
             </div>
             <div id="dvUserList">

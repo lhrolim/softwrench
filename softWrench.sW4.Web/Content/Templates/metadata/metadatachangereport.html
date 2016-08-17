@@ -6,17 +6,58 @@
     <img width="600" height="150" src="{{headerurl}}">
 
     <p style="margin-top: 20px;">New metadata changes made by: <span style="font-weight: bold">{{fullname}}</span></p>
+    <table style="width:600px;border: 1px solid black;">
+        <tr>
+            <th style="width:300px;"></th>
+            <th style="width:300px;"></th>
+        </tr>
+
+        <tr style="background-color:#ffe0b3">
+            <td style="width:300px;" colspan="2">The following file is updated</td>
+        </tr>
+        <tr>
+            <td style="width:300px;">File name</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{filename}}</span></td>
+        </tr>
+        <tr>
+            <td style="width:300px;">Comments</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{comments}}</span></td>
+        </tr>
+
+        <tr>
+            <td style="width:600px;" colspan="2"></td>
+        </tr>
+
+        <tr style="background-color:#cce5ff">
+            <td style="width:600px;" colspan="2">The file is updated by</td>
+        </tr>
+        <tr>
+            <td style="width:300px;">Name</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{fullname}}</span></td>
+        </tr>
+        <tr>
+            <td style="width:300px;">Username</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{username}}</span></td>
+        </tr>
+        <tr>
+            <td style="width:300px;">Customer</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{customer}}</span></td>
+        </tr>
+        <tr>
+            <td style="width:300px;">App profile</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{profile}}</span></td>
+        </tr>
+        <tr>
+            <td style="width:300px;">IP address</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{ipaddress}}</span></td>
+        </tr>
+        <tr>
+            <td style="width:300px;">Date/Time</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{changedon}} UTC</span></td>
+        </tr>
 
 
-    <p style="margin-top: 40px;">Customer: <span style="font-weight: bold">{{customer}}</span></p>
-    <p style="margin-top: 10px;">App Profile:<span style="font-weight: bold">{{profile}}</span></p>
-
-    <p style="margin-top: 10px;">Metadata File: <span style="font-weight:bold">{{filename}}</span></p>
-    <p style="margin-top: 10px;">Comments: <span style="font-weight: bold">{{comments}}</span></p>
-
-    <p style="margin-top: 10px;">Username: <span style="font-weight:bold">{{username}}</span></p>
-    <p style="margin-top: 10px;">Date/Time: <span style="font-weight:bold">{{changedon}}</span></p>
-    
+    </table>
     
     <p style="margin-top: 40px;">Please review the attached files for more information.</p>
 </body>

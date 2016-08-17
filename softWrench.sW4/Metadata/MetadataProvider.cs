@@ -74,10 +74,10 @@ namespace softWrench.sW4.Metadata {
             get; set;
         }
 
-        private const string Metadata = "metadata.xml";
-        private const string StatusColor = "statuscolors.json";
-        private const string ClassificationColor = "classificationcolors.json";
-        private const string MenuPattern = "menu.{0}.xml";
+        public const string Metadata = "metadata.xml";
+        public const string StatusColor = "statuscolors.json";
+        public const string ClassificationColor = "classificationcolors.json";
+        public const string MenuPattern = "menu.{0}.xml";
         public static bool FinishedParsing {
             get; set;
         }
@@ -520,29 +520,32 @@ namespace softWrench.sW4.Metadata {
             }
         }
 
-        public void SaveColor([NotNull] Stream data, bool internalFramework = false) {
-
+        public void SaveColor([NotNull] string data, string fileName,  bool internalFramework = false) {
             try {
-                using (var stream = File.Create(MetadataParsingUtils.GetPath(StatusColor, internalFramework))) {
-
-                    data.CopyTo(stream);
+                using (var stream = File.Create(MetadataParsingUtils.GetPath(fileName, internalFramework))) {
+                    using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(data))) {
+                        memoryStream.CopyTo(stream);
+                    }
+                    
                     stream.Flush();
                 }
-
             } catch (Exception e) {
                 Log.Error("error saving statuscolor", e);
                 throw;
             }
         }
 
-        public void SaveMenu([NotNull] Stream data, ClientPlatform platform = ClientPlatform.Web) {
+        public void SaveMenu([NotNull] string data, ClientPlatform platform = ClientPlatform.Web) {
             try {
-                var newMenu = new MenuXmlInitializer().InitializeMenu(platform, data);
-                using (var stream = File.Create(MenuXmlInitializer.GetMenuPath(platform))) {
-                    data.CopyTo(stream);
-                    stream.Flush();
+                using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(data))) {
+                    var newMenu = new MenuXmlInitializer().InitializeMenu(platform, memoryStream);
+                    using (var stream = File.Create(MenuXmlInitializer.GetMenuPath(platform))) {
+                        memoryStream.CopyTo(stream);
+                        stream.Flush();
+                    }
+
+                    _menus[platform] = newMenu;
                 }
-                _menus[platform] = newMenu;
             } catch (Exception e) {
                 Log.Error("error saving menu", e);
                 throw;
