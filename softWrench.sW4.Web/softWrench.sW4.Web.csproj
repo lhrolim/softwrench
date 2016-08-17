@@ -331,6 +331,7 @@
     <Compile Include="DB_Migration\5.9.0\20160518_SWWEB_2513.cs" />
     <Compile Include="DB_Migration\5.9.0\20160517_SWWEB_2492.cs" />
     <Compile Include="DB_Migration\5.9.1\20160629_SWWEB_2604.cs" />
+    <Compile Include="DB_Migration\5.9.4\20160817_SWWEB_2714.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="DB_Migration\DB2 FluentMigrator\ColumnBase.cs" />

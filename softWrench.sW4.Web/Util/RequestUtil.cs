@@ -7,9 +7,11 @@ using System.Web.Http;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
+using System.Web;
+using System.ServiceModel.Channels;
 
 namespace softWrench.sW4.Web.Util {
-    public class RequestUtil {
+    public static class RequestUtil {
 
         public static void ValidateMockError(HttpRequestMessage request) {
             if (request == null) {
@@ -44,5 +46,24 @@ namespace softWrench.sW4.Web.Util {
             return "null".Equals(value) ? null : value;
         }
 
+        /// <summary>
+        /// Extension method for the <see cref="HttpRequestMessage"/> class.
+        /// Gets the IP address from the <see cref="HttpRequestMessage"/> object.
+        /// </summary>
+        /// <param name="request">The <see cref="HttpRequestMessage"/> object.</param>
+        /// <returns>The IP address as string if its available else returns null</returns>
+        public static string GetIPAddress(this HttpRequestMessage request) {
+            if (request.Properties.ContainsKey("MS_HttpContext")) {
+                return ((HttpContextWrapper)request.Properties["MS_HttpContext"]).Request.UserHostAddress;
+            }
+
+            if (request.Properties.ContainsKey(RemoteEndpointMessageProperty.Name)) {
+                RemoteEndpointMessageProperty prop;
+                prop = (RemoteEndpointMessageProperty)request.Properties[RemoteEndpointMessageProperty.Name];
+                return prop.Address;
+            }
+
+            return null;
+        }
     }
 }

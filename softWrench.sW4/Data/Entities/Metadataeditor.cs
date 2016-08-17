@@ -36,6 +36,12 @@ namespace softWrench.sW4.Data.Entities {
         public virtual string Path { get; set; }
 
         [Property]
+        public virtual string IPAddress { get; set; }
+
+        [Property]
+        public virtual string ChangedByFullName { get; set; }
+
+        [Property]
         public virtual string BaselineVersion { get; set; }
 
         [Property]

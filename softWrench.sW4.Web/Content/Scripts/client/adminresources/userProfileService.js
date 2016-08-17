@@ -636,7 +636,7 @@
 
             //last storal
             storeFromDmIntoTransient();
-            const dm = crudContextHolderService.rootDataMap().fields;
+            const dm = crudContextHolderService.rootDataMap();
             const appPermissions = Object.keys($rootScope["#transientprofiledata"])
                 .map(function (key) {
                     return $rootScope["#transientprofiledata"][key];
