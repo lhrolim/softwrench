@@ -49,7 +49,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return FilterViewableWidgetsByUser(loadedUserDashboars, currentUser);
         }
 
-        private IEnumerable<Dashboard> FilterViewableWidgetsByUser(IEnumerable<Dashboard> loadedUserDashboards, ISWUser currentUser) {
+        private IEnumerable<Dashboard> FilterViewableWidgetsByUser(IEnumerable<Dashboard> loadedUserDashboards, InMemoryUser currentUser) {
             var filterViewableWidgetsByUser = loadedUserDashboards as Dashboard[] ?? loadedUserDashboards.ToArray();
             foreach (var dashboard in filterViewableWidgetsByUser) {
                 foreach (var panelRelationship in dashboard.PanelsSet) {
@@ -59,23 +59,21 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return filterViewableWidgetsByUser;
         }
 
-        private static void FilterPanelBasedOnRole(ISWUser currentUser, DashboardBasePanel panel) {
+        private static void FilterPanelBasedOnRole(InMemoryUser user, DashboardBasePanel panel) {
             if (!(panel is DashboardGridPanel)) {
                 return;
             }
-
             var gridPanel = (DashboardGridPanel)panel;
-            var overridenRole = MetadataProvider.ApplicationRoleAlias.ContainsKey(gridPanel.Application)
-                ? MetadataProvider.ApplicationRoleAlias[gridPanel.Application]
-                : null;
-            if (!currentUser.IsInRole(gridPanel.Application) && (overridenRole != null && !currentUser.IsInRole(overridenRole))) {
-                Log.DebugFormat("making panel {0} invisible due to abscence of role for application {1}", gridPanel.Alias,
-                    gridPanel.Application);
+
+            var appPermission = user.MergedUserProfile.Permissions.FirstOrDefault(p => p.ApplicationName == gridPanel.Application);
+
+            if (!user.IsSwAdmin() && (appPermission == null || appPermission.HasNoPermissions)) {
+                Log.DebugFormat("making panel {0} invisible due to abscence of role for application {1}", gridPanel.Alias, gridPanel.Application);
                 gridPanel.Visible = false;
             }
         }
 
-        public IEnumerable<DashboardBasePanel> LoadUserPanels(ISWUser currentUser, string panelType) {
+        public IEnumerable<DashboardBasePanel> LoadUserPanels(InMemoryUser currentUser, string panelType) {
             var profiles = currentUser.ProfileIds;
             var enumerable = profiles as int?[] ?? profiles.ToArray();
             string entityName;

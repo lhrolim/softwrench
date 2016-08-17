@@ -23,10 +23,9 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
         }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
-            if (ApplicationConfiguration.ClientName != "tgcs") {
-                return;
-            }
-            if (MetadataProvider.Application("quickservicerequest", false) == null || _service.DashBoardExists(CI.QuickSrChartDashboardAlias)) {
+            if (ApplicationConfiguration.ClientName != "tgcs" || 
+                MetadataProvider.Application("quickservicerequest", false) == null || 
+                _service.DashBoardExists(CI.QuickSrChartDashboardAlias)) {
                 return;
             }
 
