@@ -39,11 +39,11 @@
         };
 
         function getChartData(panel) {
-            var configuration = panel.configurationDictionary;
+            const configuration = panel.configurationDictionary;
             const isServiceRequest = "sr".equalsIc(configuration.application);
             const params = {
                 entity: isServiceRequest ? "SR" : configuration.application,
-                application: isServiceRequest ? "servicerequest" : configuration.application,
+                application: !!configuration.applicationName ? configuration.applicationName : (isServiceRequest ? "servicerequest" : configuration.application),
                 property: configuration.field,
                 whereClauseMetadataId: `dashboard:${panel.alias}`,
                 limit: (configuration.limit > 0 && !configuration.showothers && configuration.statusconfig !== "openclosed") ? configuration.limit : 0,
@@ -214,6 +214,7 @@
         function onBeforeAssociatePanel(datamap) {
             datamap.configurationDictionary = {
                 'application': datamap.application,
+                'applicationName': datamap["application_.applicationName"],
                 'field': datamap.field,
                 'type': datamap.type,
                 'statusfieldconfig': datamap.statusfieldconfig,
@@ -231,7 +232,6 @@
             if (!application) return;
             const fields = config.fields.getFields(application);
             crudContextHolderService.updateEagerAssociationOptions("fields", fields);
-
         }
 
         /**

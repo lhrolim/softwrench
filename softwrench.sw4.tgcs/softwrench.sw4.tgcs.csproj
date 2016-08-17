@@ -39,6 +39,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\tgcs\configuration\ToshibaChartInitializer.cs" />
     <Compile Include="classes\com\cts\tgcs\connector\ToshibaSRCrudConnector.cs" />
     <Compile Include="classes\com\cts\tgcs\dataset\ToshibaServiceRequestDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,7 +72,6 @@
     <None Include="web_content\tgcs\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\tgcs\configuration\" />
     <Folder Include="classes\com\cts\tgcs\migration\" />
     <Folder Include="web_content\tgcs\htmls\" />
   </ItemGroup>
@@ -95,6 +95,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.dashboard\softwrench.sw4.dashboard.csproj">
+      <Project>{BB222B54-5670-4853-ACF9-64BB36094021}</Project>
+      <Name>softwrench.sw4.dashboard</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
       <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>

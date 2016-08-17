@@ -2,7 +2,6 @@
 using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
 using log4net;
-using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.dashboard.classes.startup;
 using softWrench.sW4.Util;
