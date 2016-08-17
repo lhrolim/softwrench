@@ -30,14 +30,7 @@
 
                 // calcs the crudsearch panel height - used on scroll pane
                 $scope.setPaneHeight = function () {
-                    log.debug("setPaneHeight");
-
-                    var headerHeight = $("#crudsearch header").height();
-                    var panePaddingTop = parseInt($("#crudsearch .pane").css("padding-top"));
-                    var panePaddingBottom = parseInt($("#crudsearch .pane").css("padding-bottom"));
-
-                    var height = $(window).height() - headerHeight - panePaddingTop - panePaddingBottom;
-                    return height;
+                    return sidePanelService.calculateScrollPanelHeight($scope.panelid);
                 };
 
                 function setFocus(newState) {

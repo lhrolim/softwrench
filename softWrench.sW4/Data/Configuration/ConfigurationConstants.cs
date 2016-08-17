@@ -61,5 +61,11 @@
             public const string BlackListKey = "/Global/Password/BlackList";
             public const string LoginKey = "/Global/Password/Login";
         }
+
+        public class BulletinBoard {
+            public const string Enabled = "/Global/BulletinBoard/Enabled";
+            public const string JobRefreshRate = "/Global/BulletinBoard/RefreshRate/Job";
+            public const string UiRefreshRate = "/Global/BulletinBoard/RefreshRate/Ui";
+        }
     }
 }

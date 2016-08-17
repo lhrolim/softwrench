@@ -2,7 +2,7 @@
     padding-right: 55px;
 }
 
-#activitystream {
+.notificationstream {
     .jspVerticalBar {
         width: 4px;
     }
@@ -130,6 +130,22 @@
                 margin-top: 8px;
             }
         }
+
+        .message-footer {
+            display: table; 
+            width: 100%; 
+            padding-top: 10px;
+
+            .message-footer-element {
+                display: table-cell;
+                vertical-align: bottom;
+
+                &.expand-text {
+                    color: #4488f2;
+                    cursor: pointer;
+                }
+            }
+        }
     }
 
     .messages .nomessages {
@@ -139,7 +155,7 @@
     }
 }
 
-.no-touch #activitystream {
+.no-touch .notificationstream {
     header .button {
         &:hover {
             color: #666;
@@ -156,7 +172,7 @@
 }
 
 @media all and (min-width: 330px) {
-    #activitystream header .buttons.togglehide {
+    .notificationstream header .buttons.togglehide {
         display: none;
         margin-left: 0px;
     }

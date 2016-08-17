@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
+using cts.commons.simpleinjector.Events;
 using JetBrains.Annotations;
 using NHibernate.Linq;
 using softWrench.sW4.Configuration.Services.Api;
@@ -23,10 +24,12 @@ namespace softWrench.sW4.Configuration.Services {
 
         private readonly ISWDBHibernateDAO _dao;
         private readonly ConfigurationCache _cache;
+        private readonly IEventDispatcher _eventDispatcher;
 
-        public ConfigurationService(ISWDBHibernateDAO dao, ConfigurationCache cache) {
+        public ConfigurationService(ISWDBHibernateDAO dao, ConfigurationCache cache, IEventDispatcher eventDispatcher) {
             _dao = dao;
             _cache = cache;
+            _eventDispatcher = eventDispatcher;
         }
 
         [NotNull]
@@ -200,6 +203,8 @@ namespace softWrench.sW4.Configuration.Services {
             definition.Values.Add(propValue);
             _dao.Save(definition);
             _cache.ClearCache(fullKey);
+
+            _eventDispatcher.DispatchAsync(eventToDispatch: new ConfigurationChangedEvent(definition.FullKey, null, value), parallel: true);
         }
 
         // global property, ignores module, profile and conditions
@@ -216,6 +221,7 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         private void UpdateFoundValue(PropertyDefinition definition, string value, PropertyValue propValue) {
+            var previousValue = propValue.Value;
             if (string.IsNullOrEmpty(value) && propValue.SystemValue == null) {
                 _dao.Delete(propValue);
                 if (definition.Values != null && definition.Values.Contains(propValue)) {
@@ -233,6 +239,8 @@ namespace softWrench.sW4.Configuration.Services {
                 definition.Values.Add(propValue);
             }
             _cache.ClearCache(definition.FullKey);
+
+            _eventDispatcher.DispatchAsync(eventToDispatch: new ConfigurationChangedEvent(definition.FullKey, previousValue, value), parallel: true);
         }
 
         public ClientSideConfigurations GetClientSideConfigurations(long? cacheTimestamp, ContextHolder lookupContex) {

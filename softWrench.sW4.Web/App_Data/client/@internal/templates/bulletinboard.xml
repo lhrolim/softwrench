@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="bulletinboard" idAttribute="bulletinboardid" useridAttribute="bulletinboardid">
+      <attributes>
+        <attribute name="bulletinboarduid" type="bigint" />
+        <attribute name="bulletinboardid" type="varchar" />
+        <attribute name="message" type="varchar" />
+        <attribute name="postby" type="varchar" />
+        <attribute name="status" type="varchar" />
+        <attribute name="subject" type="varchar" />
+        <attribute name="expiredate" type="datetime" />
+        <attribute name="postdate" type="datetime" />
+      </attributes>
+    </entity>
+  </entities>
+  
+</metadata> 

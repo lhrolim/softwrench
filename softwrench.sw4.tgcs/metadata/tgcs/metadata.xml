@@ -10,6 +10,7 @@
     <template path="@email.xml"/>
     <template path="@woactivity.xml"/>
     <template path="@person.xml"/>
+    <template path="@bulletinboard.xml"/>
   </templates>
   
   <entities>
@@ -220,6 +221,13 @@
         </relationship>
       </relationships>
     </entity>
+
+    <entity name="bulletinboard" idAttribute="bulletinboarduid" useridAttribute="bulletinboardid">
+      <attributes>
+        <attribute name="pluspinsertcustomer" type="varchar" required="false"/>
+      </attributes>
+    </entity>
+    
   </entities>
 
   <applications>

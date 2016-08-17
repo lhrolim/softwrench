@@ -43,6 +43,7 @@
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -60,7 +61,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\Controller\BulletinBoardController.cs" />
+    <Compile Include="classes\Controller\BulletinBoardFacade.cs" />
+    <Compile Include="classes\Controller\Jobs\BulletinBoardStreamJob.cs" />
     <Compile Include="classes\Controller\NotificationController.cs" />
+    <Compile Include="classes\Model\BulletinBoard.cs" />
+    <Compile Include="classes\Model\BulletinBoardStream.cs" />
     <Compile Include="classes\Model\Notification.cs" />
     <Compile Include="classes\Model\InMemoryNotificationStream.cs" />
     <Compile Include="classes\Controller\Jobs\NotificationStreamUpdateJob.cs" />
@@ -95,10 +101,6 @@
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
-      <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
-      <Name>softwrench.sw4.Shared2</Name>
-    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
       <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
       <Name>softwrench.sw4.user</Name>
@@ -115,10 +117,12 @@
     </None>
     <None Include="packages.config" />
     <None Include="shared.placeholder" />
+    <Content Include="web_content\activitystream\scripts\bulletinboard.js" />
     <Content Include="web_content\activitystream\styles\sidePanel.scss" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="web_content\activitystream\scripts\activitystream.js" />
+    <Content Include="web_content\activitystream\templates\bulletinboard.html" />
     <Content Include="web_content\activitystream\templates\sidePanel.html" />
     <None Include="web_content\activitystream\styles\activitystream.scss" />
     <Content Include="web_content\activitystream\scripts\sidePanel.js" />

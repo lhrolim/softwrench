@@ -49,13 +49,18 @@
             });
         }
 
+        function fetchConfigurations(keys) {
+            return restService.get("Configuration", "GetConfigurations", { fullKeys: keys }).then(r => r.data);
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
             getConfigurationValue,
             updateConfigurations,
-            loadConfigsComposition
+            loadConfigsComposition,
+            fetchConfigurations
         };
         return service;
         //#endregion

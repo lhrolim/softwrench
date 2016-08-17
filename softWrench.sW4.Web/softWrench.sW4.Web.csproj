@@ -378,6 +378,7 @@
     <Compile Include="Util\StaticFileLoad\RowStampScriptHelper.cs" />
     <Compile Include="Util\StaticFileLoad\StaticFileTagRenderer.cs" />
     <Content Include="apple-touch-icon.png" />
+    <Content Include="App_Data\Client\%40internal\templates\bulletinboard.xml" />
     <Content Include="App_Data\Client\%40internal\templates\classspec.xml" />
     <Content Include="App_Data\Client\%40internal\target\rest.xml">
       <SubType>Designer</SubType>

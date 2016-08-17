@@ -149,7 +149,7 @@ namespace softWrench.sW4.Data.Configuration {
             facade.Register(ctes.DateTimeFormat, new PropertyDefinition() {
                 Description = "The default format for DateTime",
                 DataType = "string",
-                DefaultValue = "MM/dd/yyyy hh:mm"
+                DefaultValue = "MM/dd/yyyy hh:mm",
             });
 
             #region Password Config
@@ -222,6 +222,27 @@ namespace softWrench.sW4.Data.Configuration {
                 Description = "Password can contain user's username",
                 DataType = "boolean",
                 StringValue = "false",
+                CachedOnClient = true
+            });
+            #endregion
+
+            #region Bulletin Board
+            facade.Register(ctes.BulletinBoard.Enabled, new PropertyDefinition() {
+                Description = "Whether or not the bulletin board feature is enabled in softWrench",
+                DataType = "boolean",
+                DefaultValue = "false",
+                CachedOnClient = true
+            });
+            facade.Register(ctes.BulletinBoard.JobRefreshRate, new PropertyDefinition() {
+                Description = "Interval in minutes to run the job that caches active bulletinboard records from the database",
+                DataType = "long",
+                DefaultValue = "5",
+                CachedOnClient = true
+            });
+            facade.Register(ctes.BulletinBoard.UiRefreshRate, new PropertyDefinition() {
+                Description = "Interval in minutes to refresh the bulletin board messages displayed in the side-panel",
+                DataType = "long",
+                DefaultValue = "5",
                 CachedOnClient = true
             });
             #endregion

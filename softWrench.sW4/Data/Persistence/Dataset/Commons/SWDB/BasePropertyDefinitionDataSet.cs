@@ -76,10 +76,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return new CompositionFetchResult(compositions, null);
         }
 
-        private void AddToResultList(ICollection<Dictionary<string, object>> resultList, AttributeHolder ah,
-            ContextHolder lookupContext) {
+        private void AddToResultList(ICollection<Dictionary<string, object>> resultList, AttributeHolder ah, ContextHolder lookupContext) {
             var dict = (Dictionary<string, object>)ah;
-            dict["currentvalue"] = _configService.Lookup<string>((string)dict["FullKey"], lookupContext);
+            object key;
+            if (!dict.TryGetValue("FullKey", out key)) {
+                key = dict["fullkey"];
+            }
+            dict["currentvalue"] = _configService.Lookup<string>((string)key, lookupContext);
             resultList.Add(dict);
         }
 

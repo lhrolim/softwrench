@@ -348,7 +348,6 @@ namespace softWrench.sW4.Util {
                 return flag;
             }
         }
-
         #endregion
 
         #region UI Options

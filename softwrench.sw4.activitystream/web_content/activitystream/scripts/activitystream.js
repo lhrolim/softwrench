@@ -219,13 +219,7 @@ angular.module('sw_layout').directive('activitystream', function (contextService
             };
 
             $scope.setPaneHeight = function () {
-                log.debug('setPaneHeight');
-
-                var headerHeight = $('#activitystream header').height();
-                var panePaddingTop = parseInt($('#activitystream .pane').css('padding-top'));
-                var panePaddingBottom = parseInt($('#activitystream .pane').css('padding-bottom'));
-
-                return $(window).height() - headerHeight - panePaddingTop - panePaddingBottom;
+                return sidePanelService.calculateScrollPanelHeight($scope.panelid);
             };
 
             $scope.toggleFilter = function () {

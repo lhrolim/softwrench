@@ -1,7 +1,6 @@
 ﻿namespace cts.commons.simpleinjector.Events {
     public interface IEventDispatcher : ISingletonComponent {
-        void Dispatch<T>(T eventToDispatch) where T : class;
-
-
+        void Dispatch<T>(T eventToDispatch, bool parallel = false) where T : class;
+        void DispatchAsync<T>(T eventToDispatch, bool parallel = false) where T : class;
     }
 }

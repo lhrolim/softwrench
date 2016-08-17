@@ -15,11 +15,15 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
             }
 
             if (entity.Schema.Attributes.Any(a => a.Name.Equals("pluspcustomer"))) {
-                return String.Format("{0}.pluspcustomer like '{1}'", entityName, property);
+                return string.Format("{0}.pluspcustomer like '{1}'", entityName, property);
             }
 
             if (entity.Schema.Attributes.Any(a => a.Name.Equals("pluspcustvendor"))) {
-                return String.Format("{0}.pluspcustvendor like '{1}'", entityName, property);
+                return string.Format("{0}.pluspcustvendor like '{1}'", entityName, property);
+            }
+
+            if (entity.Schema.Attributes.Any(a => a.Name.Equals("pluspinsertcustomer"))) {
+                return string.Format("{0}.pluspinsertcustomer like '{1}'", entityName, property);
             }
 
             return null;

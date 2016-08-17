@@ -207,6 +207,14 @@
         function getTotalHandlesWidth() {
             return sidePanelHandlesWidth;
         }
+
+        function calculateScrollPanelHeight(panelid) {
+            const headerHeight = $(`#${panelid} header`).height();
+            const panePaddingTop = parseInt($(`#${panelid} .pane`).css("padding-top"));
+            const panePaddingBottom = parseInt($(`#${panelid} .pane`).css("padding-bottom"));
+            const height = $(window).height() - headerHeight - panePaddingTop - panePaddingBottom;
+            return height;
+        }
         //#endregion
 
         //#region Service Instance
@@ -223,7 +231,8 @@
             show: show,
             getNumberOfVisiblePanels: getNumberOfVisiblePanels,
             getTotalHandlesWidth: getTotalHandlesWidth,
-            getExpandedPanelFromPreference: getExpandedPanelFromPreference
+            getExpandedPanelFromPreference: getExpandedPanelFromPreference,
+            calculateScrollPanelHeight
         };
         return service;
         //#endregion

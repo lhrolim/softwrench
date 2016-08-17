@@ -13,16 +13,14 @@ namespace softWrench.sW4.Configuration.Services {
 
     class ConfigurationFacade : IConfigurationFacade, ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
 
-
-        private Boolean _appStarted;
-        private readonly IDictionary<string, PropertyDefinition> _toRegister = new Dictionary<string, PropertyDefinition>();
-        private readonly SWDBHibernateDAO _dao;
-        private readonly ConfigurationService _configService;
-
         private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigurationFacade));
 
-        private readonly IContextLookuper _contextLookuper;
+        private bool _appStarted;
+        private readonly IDictionary<string, PropertyDefinition> _toRegister = new Dictionary<string, PropertyDefinition>();
 
+        private readonly SWDBHibernateDAO _dao;
+        private readonly ConfigurationService _configService;
+        private readonly IContextLookuper _contextLookuper;
 
         public ConfigurationFacade(SWDBHibernateDAO dao, ConfigurationService configService, IContextLookuper contextLookuper) {
             _dao = dao;
@@ -47,7 +45,9 @@ namespace softWrench.sW4.Configuration.Services {
             if (!_appStarted) {
                 //TODO: Handle complex integration tests scenarios here, where the value is modified before application is up ==> config is not up yet
             }
+            //var previousValue = Lookup<object>(configkey);
             _configService.SetValue(configkey, value);
+            //_eventDispatcher.DispatchAsync(eventToDispatch: new ConfigurationChangedEvent(configkey, previousValue, value), parallel: true);
         }
 
 

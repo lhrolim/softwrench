@@ -154,6 +154,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Services\Api\ConfigurationChangedEvent.cs" />
     <Compile Include="Configuration\Services\ClientSideConfigurations.cs" />
     <Compile Include="Configuration\Services\ConfigurationCache.cs" />
     <Compile Include="Configuration\Services\ConfigurationCacheContext.cs" />
