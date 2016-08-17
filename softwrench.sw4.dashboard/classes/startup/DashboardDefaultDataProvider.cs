@@ -105,6 +105,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
         #endregion
 
+        #region Utils
         private List<DashboardBasePanel> ServiceRequestPanelsInstance(bool? quick = false) {
             var application = "servicerequest";
             var applicationTitle = "Service Requests";
@@ -145,6 +146,8 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
             return panel;
         }
+
+        #endregion
 
         public List<DashboardBasePanel> ServiceRequestPanels() {
             return ServiceRequestPanelsInstance();
