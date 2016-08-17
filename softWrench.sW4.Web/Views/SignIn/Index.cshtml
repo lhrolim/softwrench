@@ -99,7 +99,7 @@
                                 </script>
                             }
                             <div class="row login">
-                                @if (@Model.ClientName != "demo") {
+                                @if (@Model.ProfileName != "demo") {
                                     <div class="col-sm-offset-3 col-sm-6">
                                         <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
                                         <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
@@ -112,7 +112,7 @@
                                         <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
                                     </div>
                                 }
-                                @if (@Model.ClientName == "demo") {
+                                @if (@Model.ProfileName == "demo") {
                                     <div class="col-sm-6">
                                         <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
                                         <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
@@ -155,7 +155,7 @@
                                     </div>
                                     }
                                 </div>
-                            @if (@Model.ClientName != "demo") {
+                            @if (@Model.ProfileName != "demo") {
                                 <div class="buttons submit-button col-sm-offset-3 col-sm-6">
                                     <button class="btn col-xs-4 col-sm-5" type="submit" id="btnLogin"><i class="fa fa-sign-in"></i>&ensp;Login</button>
                                     <div class="col-xs-4 col-sm-5">
@@ -167,7 +167,7 @@
                                     </div>
                                 </div>
                             }
-                            @if (@Model.ClientName == "demo") {
+                            @if (@Model.ProfileName == "demo") {
                                 <div class="row buttons submit-button">
                                     <button class="btn col-xs-4 col-sm-2" type="submit" id="btnLogin"><i class="fa fa-sign-in"></i>&ensp;Login</button>
                                     <div class="col-xs-4 col-sm-2">

@@ -40,9 +40,9 @@ namespace softWrench.sW4.Web.Controllers {
             LoginHandlerModel model;
             string loginMessage = null;
             if (!IsLoginEnabled(ref loginMessage)) {
-                model = new LoginHandlerModel(false, loginMessage, ClientName());
+                model = new LoginHandlerModel(false, loginMessage, ClientName(), ProfileName());
             } else {
-                model = new LoginHandlerModel(true, IsHapagClient(), ClientName());
+                model = new LoginHandlerModel(true, IsHapagClient(), ClientName(), ProfileName());
             }
             model.Inactivity = timeout;
             model.Forbidden = forbidden;
@@ -86,7 +86,7 @@ namespace softWrench.sW4.Web.Controllers {
             LoginHandlerModel model = null;
             var validationMessage = GetValidationMessage(userName, password);
             if (!string.IsNullOrEmpty(validationMessage)) {
-                model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName());
+                model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName(), ProfileName());
                 return View(model);
             }
             userName = userName.ToLower();
@@ -172,7 +172,7 @@ namespace softWrench.sW4.Web.Controllers {
                     : null;
             }
 
-            var model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName()) {
+            var model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName(), ProfileName()) {
                 UserNotActive = !active
             };
             return View(model);
@@ -200,6 +200,11 @@ namespace softWrench.sW4.Web.Controllers {
 
         private string ClientName() {
             return ApplicationConfiguration.ClientName;
+        }
+
+        private string ProfileName()
+        {
+            return ApplicationConfiguration.Profile;
         }
 
         private string GetValidationMessage(string userName, string password) {
