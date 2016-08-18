@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using softwrench.sw4.activitystream.classes.Controller.Jobs;
@@ -59,15 +59,21 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         }
 
         public bool BulletinBoardEnabled {
-            get { return _configurationFacade.Lookup<bool>(ConfigurationConstants.BulletinBoard.Enabled); }
+            get {
+                return _configurationFacade.Lookup<bool>(ConfigurationConstants.BulletinBoard.Enabled);
+            }
         }
 
         public long BulletinBoardJobRefreshRate {
-            get { return _configurationFacade.Lookup<long>(ConfigurationConstants.BulletinBoard.JobRefreshRate); }
+            get {
+                return _configurationFacade.Lookup<long>(ConfigurationConstants.BulletinBoard.JobRefreshRate);
+            }
         }
 
         public long BulletinBoardUiRefreshRate {
-            get { return _configurationFacade.Lookup<long>(ConfigurationConstants.BulletinBoard.UiRefreshRate); }
+            get {
+                return _configurationFacade.Lookup<long>(ConfigurationConstants.BulletinBoard.UiRefreshRate);
+            }
         }
 
         public string GetBulletinBoardUpdateJobCron(long? refreshRate = null) {
@@ -76,11 +82,33 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         }
 
         public void HandleEvent(ConfigurationChangedEvent eventToDispatch) {
-            if (eventToDispatch.ConfigKey != ConfigurationConstants.BulletinBoard.JobRefreshRate) return;
-            // handle job refresh rate config change by actually changing the job's cron expression
-            var refreshRate = eventToDispatch.CurrentValue;
-            var newCron = GetBulletinBoardUpdateJobCron(long.Parse(refreshRate));
+            switch (eventToDispatch.ConfigKey) {
+                case ConfigurationConstants.BulletinBoard.Enabled:
+                    // handle enable config change
+                    var enabled = "true".EqualsIc(eventToDispatch.CurrentValue);
+                    BulletinBoardEnabledChanged(enabled);
+                break;
+                case ConfigurationConstants.BulletinBoard.JobRefreshRate:
+                    // handle job refresh rate config change by actually changing the job's cron expression
+                    var refreshRate = long.Parse(eventToDispatch.CurrentValue);
+                    SetBulletinBoardJobCron(refreshRate);
+                break;
+                default:
+                return;
+            }
+        }
+
+        private void SetBulletinBoardJobCron(long refreshRate) {
+            var newCron = GetBulletinBoardUpdateJobCron(refreshRate);
             _jobManager.ManageJobByCommand(BulletinBoardStreamJob.JobName, JobCommandEnum.ChangeCron, newCron);
+        }
+
+        private void BulletinBoardEnabledChanged(bool enabled) {
+            if (enabled) { // refresh stream
+                UpdateInMemoryBulletinBoard();
+            } else { // flush stream
+                ActiveStream.Stream = Enumerable.Empty<BulletinBoard>().ToList();
+            }
         }
     }
 }
