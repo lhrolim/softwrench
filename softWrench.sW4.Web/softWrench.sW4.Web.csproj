@@ -787,6 +787,7 @@
     <Content Include="Content\customVendor\scripts\angular\textAngular.js" />
     <Content Include="Content\customVendor\scripts\angular\textAngular-sanitize.js" />
     <Content Include="Content\styles\default\_deploy-validation.scss" />
+    <Content Include="Content\styles\default\_grid-filter.scss" />
     <None Include="Content\styles\default\_toolbar.scss" />
     <Content Include="Content\styles\default\_crud-masterdetails.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
