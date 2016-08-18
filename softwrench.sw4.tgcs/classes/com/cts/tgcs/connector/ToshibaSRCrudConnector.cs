@@ -4,16 +4,11 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Net;
 using cts.commons.persistence;
-using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using softwrench.sw4.problem.classes;
 using softWrench.sW4.Data.Persistence.WS.API;
-using softWrench.sW4.Metadata;
-using softWrench.sW4.Security.Services;
+using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.connector {
@@ -76,7 +71,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.connector {
 
             var crudOperationData = (CrudOperationData)maximoTemplateData.OperationData;
 
-            if (crudOperationData.ContainsAttribute("underwaycall", true) || string.IsNullOrEmpty(ApplicationConfiguration.RestCredentialsUser)) {
+            if (crudOperationData.ContainsAttribute("underwaycall", true) || !MaximoRestUtils.IsRestSetup()) {
                 //avoid infinite loop
                 return;
             }
@@ -113,7 +108,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.connector {
             base.AfterCreation(maximoTemplateData);
             var crudOperationData = (CrudOperationData)maximoTemplateData.OperationData;
 
-            if (crudOperationData.ContainsAttribute("underwaycall", true) || string.IsNullOrEmpty(ApplicationConfiguration.RestCredentialsUser)) {
+            if (crudOperationData.ContainsAttribute("underwaycall", true) || !MaximoRestUtils.IsRestSetup()) {
                 //avoid infinite loop
                 return;
             }

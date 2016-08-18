@@ -51,6 +51,11 @@
 
     <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="maxadmin"/>
+
+    <property key="rest.ism.url" value="http://173.193.44.2:9080/maxrest/rest/mbo/" />
+    <property key="rest.ism.credentials.user" value="mxintadm"/>
+    <property key="rest.ism.credentials.password" value="mxintadm"/>
+
   </environment>
 
   <environment key="qa">

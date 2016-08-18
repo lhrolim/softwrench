@@ -23,27 +23,32 @@ namespace softWrench.sW4.Data.Offline {
 
         public static long? Convert(object dbstamp) {
             if (ApplicationConfiguration.IsMSSQL(DBType.Maximo)) {
-                
-                // cloning so it doesn't alter parameter
-                // this was necessary because it is being called multiple times on the same dbstamp
-                // TODO: investigate how it is being called multiple times on same dbstamp (and possibly remove the clone)
-                var array = ((byte[])dbstamp);
-                var result = new byte[array.Length];
-                Array.Copy(array, result, array.Length); // Array.Copy is way faster than Array.Clone (fastest method besides buffer copy)
 
-                if (BitConverter.IsLittleEndian) {
-                    Array.Reverse(result);
-                }
-                if (!result.Any()) {
-                    return null;
-                }
-                var convert = BitConverter.ToInt64(result, 0);
-                return convert;
+                return ConvertByteArrayToLong(dbstamp);
             } else if (ApplicationConfiguration.IsDB2(DBType.Maximo)) {
                 return System.Convert.ToInt64(dbstamp);
             }
             return 1;
             //throw new NotImplementedException("not implemented for oracle database yet");
+        }
+
+        private static long? ConvertByteArrayToLong(object dbstamp) {
+            // cloning so it doesn't alter parameter
+            // this was necessary because it is being called multiple times on the same dbstamp
+            // TODO: investigate how it is being called multiple times on same dbstamp (and possibly remove the clone)
+            var array = ((byte[])dbstamp);
+            var result = new byte[array.Length];
+            Array.Copy(array, result, array.Length);
+            // Array.Copy is way faster than Array.Clone (fastest method besides buffer copy)
+
+            if (BitConverter.IsLittleEndian) {
+                Array.Reverse(result);
+            }
+            if (!result.Any()) {
+                return null;
+            }
+            var convert = BitConverter.ToInt64(result, 0);
+            return convert;
         }
 
         public static IList<object> TryToGetDeletedRecordsId(EntityMetadata entityMetadata, string rowstamp) {
@@ -74,9 +79,9 @@ namespace softWrench.sW4.Data.Offline {
             var extraRowstamps = entityMetadata.Schema.Attributes.Where(s => s.Name.StartsWith("rowstamp") && !s.Name.Equals("rowstamp"));
             var patternToUse = ApplicationConfiguration.IsMSSQL(DBType.Maximo) ? MSSQLRowstampQuery : RowstampQuery;
 
-            var sb = new StringBuilder(patternToUse.Fmt(entityMetadata.Name,"rowstamp",rowstamp));
+            var sb = new StringBuilder(patternToUse.Fmt(entityMetadata.Name, "rowstamp", rowstamp));
             foreach (var extraRowstamp in extraRowstamps) {
-                sb.Append(" or ").Append(patternToUse.Fmt(entityMetadata.Name, extraRowstamp.Name,rowstamp));
+                sb.Append(" or ").Append(patternToUse.Fmt(entityMetadata.Name, extraRowstamp.Name, rowstamp));
             }
             foreach (var association in entityMetadata.Associations) {
                 if (searchDto == null || searchDto.ProjectionFields == null || HasProjection(searchDto.ProjectionFields, association)) {
@@ -105,7 +110,19 @@ namespace softWrench.sW4.Data.Offline {
             //throw new NotImplementedException("not implemented for oracle database yet");
         }
 
-
-
+        /// <summary>
+        /// [0 0 0 0 2 16 -10 -66]
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static long? FromStringRepresentation(string value) {
+            var bytes = new byte[8];
+            var byteChunks = value.Substring(1, value.Length - 2).Split(' ');
+            for (int index = 0; index < byteChunks.Length; index++) {
+                var byteChunk = byteChunks[index];
+                bytes[index] = (byte)Int32.Parse(byteChunk);
+            }
+            return ConvertByteArrayToLong(bytes);
+        }
     }
 }

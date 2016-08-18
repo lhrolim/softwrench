@@ -4,6 +4,7 @@ using System.Security.Policy;
 using System.Xml.Linq;
 using cts.commons.portable.Util;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
@@ -31,18 +32,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
 
         }
 
-        private static XElement GetResultElement(XElement xml, EntityMetadata entityMetadata, string wsKey = null) {
-            if (wsKey == null) {
-                wsKey = entityMetadata.ConnectorParameters.GetWSEntityKey(ConnectorParameters.UpdateInterfaceParam,WsProvider.REST);
-            }
-
-
-            var rootSetElem = xml.Descendants().FirstOrDefault(f => f.Name.LocalName.EqualsIc(wsKey + "Set"));
-            if (rootSetElem == null) {
-                return xml;
-            }
-            return rootSetElem.Elements().FirstOrDefault();
-        }
+      
 
         internal static TargetResult ParseResult(EntityMetadata entityMetadata, string resultData, string wskey=null) {
             var idProperty = entityMetadata.Schema.IdAttribute.Name;
@@ -50,7 +40,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
             var userIdProperty = entityMetadata.Schema.UserIdAttribute.Name;
             var xml = XElement.Parse(resultData);
 
-            var resultElement = GetResultElement(xml, entityMetadata, wskey);
+            var resultElement = RestResponseParser.GetResultElement(xml, entityMetadata, wskey);
             if (resultElement == null) {
                 return null;
             }
