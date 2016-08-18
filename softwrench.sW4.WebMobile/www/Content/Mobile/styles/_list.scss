@@ -149,3 +149,9 @@ crud-icon {
     z-index: 99;
     position: absolute;
 }
+
+.composition.list {
+    .crud-list-icon {
+        top: 41px;
+    }
+}
