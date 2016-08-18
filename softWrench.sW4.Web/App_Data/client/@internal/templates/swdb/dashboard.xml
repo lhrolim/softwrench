@@ -158,15 +158,15 @@
           <section showexpression="@provider==='swChart'">
 
             <optionfield label="Application"
-                         attribute="application"
+                         attribute="#entity_application"
                          requiredexpression="true"
                          default="">
               <renderer type="combo"/>
               <filter clientfunction="swchartGraphicPanelService.filterSelectableApplications"/>
               
-              <option label="Service Request" value="SR" extraprojections="applicationName=servicerequest"/>
-              <!--<option label="Quick Service Request" value="SR" extraprojections="applicationName=quickservicerequest"/>-->
-              <option label="Work Order" value="workorder" extraprojections="applicationName=workorder"/>
+              <option label="Service Request" value="SR:servicerequest"/>
+              <option label="Quick Service Request" value="SR:quickservicerequest"/>
+              <option label="Work Order" value="workorder:workorder"/>
               
               <event type="afterchange" service="swchartGraphicPanelService" method="onApplicationSelected" />
             </optionfield>
