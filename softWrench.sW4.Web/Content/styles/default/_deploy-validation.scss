@@ -1,14 +1,14 @@
 ﻿#deploy-validation {
     .deploy-success {
-        color: green;
+        color: $cts_green;
     }
 
     .deploy-failure {
-        color: red;
+        color: $cts_red;
     }
 
     .deploy-no-creation {
-        color: gray;
+        color: $cts_gray;
     }
 
     .has-failure {

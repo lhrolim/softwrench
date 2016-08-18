@@ -1,0 +1,202 @@
+﻿.filter-label {
+    display: inline-block;
+
+    .filter-label-wrapper {
+        .filter-text {
+            font-weight: bold;
+        }
+
+        .dropdown {
+            .wrap {
+                padding: 5px 15px;
+                cursor: pointer;
+
+                &.slim {
+                    padding: 0;
+                }
+
+                > i.fa {
+                    color: #767676;
+
+                    &:hover {
+                        color: #aaa;
+                    }
+                }
+            }
+
+            .dropdown-menu {
+                padding-bottom: 0;
+                width: 250px;
+
+                .dropdown-content {
+                    padding-bottom: 0;
+                    width: 100%;
+
+                    .dropdown-close {
+                        text-align: right;
+                        padding: 0 10px 10px 0;
+
+                        icon {
+                            cursor: pointer;
+                        }
+                    }
+
+                    .input-group {
+                        width: 90%;
+                        margin-left: auto;
+                        margin-right: auto;
+                        margin-bottom: 15px;
+                    }
+
+                    .sw-combobox-container {
+                        h5 {
+                            font-weight: bold;
+                            font-size: 14px;
+                            padding-bottom: 5px;
+                            padding-top: 5px;
+                            margin-top: 0;
+                        }
+
+                        .lookup {
+                            margin-left: 3px;
+                            margin-bottom: 10px;
+                        }
+
+                        .select-all {
+                            padding-left: 5px;
+                            margin-bottom: 10px;
+
+                            .text {
+                                font-weight: bold;
+                                font-size: 14px;
+                                padding-top: 5px;
+                            }
+                        }
+
+                        .filter-options {
+                            max-height: 306px;
+                            overflow-y: auto;
+                        }
+
+                        ul {
+                            padding-left: 5px;
+                            list-style: none;
+
+                            li {
+                                padding-bottom: 10px;
+                                font-weight: normal;
+
+                                .removable {
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                    }
+
+                    .list-group {
+                        margin-bottom: 0;
+
+                        .list-group-item {
+                            cursor: pointer;
+                            border: none;
+
+                            &:not(.active) {
+                                &:hover {
+                                    background: $hover_background;
+                                }
+                            }
+                        }
+                    }
+
+                    .tt-dropdown-menu {
+                        min-width: 100%;
+
+                        .tt-suggestion {
+                            padding-top: 6px;
+                            padding-bottom: 6px;
+                            cursor: pointer;
+
+                            &:hover {
+                                background: $hover_background;
+                            }
+                        }
+                    }
+
+                    .bootstrap-datetimepicker-widget {
+                        z-index: 9999 !important; // force date picker to display on top of the dropdown
+                        width: 30em; // maintain date and time side-by-side
+                        @media (max-width: 768px) {
+                            width: 19em !important; // time below date for 'smaller' screens
+                        }
+
+                        table {
+                            th {
+                                padding: 10px 4px !important;
+                            }
+
+                            td {
+                                padding: 3px 0 !important;
+                                font-weight: normal;
+
+                                span {
+                                    margin: 0;
+                                }
+                            }
+                        }
+
+                        .picker-switch {
+                            td {
+                                padding: 0 3px !important;
+
+                                span {
+                                    padding: 0 8px;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .filter-dropdown-toolbar { //dropdown-menu buttons
+                    display: table;
+                    width: 100%;
+                    border-top: 1px solid $hover_background;
+                    margin-top: 1px;
+
+                    .button {
+                        display: table-cell;
+                        width: 50%;
+                        vertical-align: middle;
+                        cursor: pointer;
+                        text-align: center;
+                        height: 40px;
+                        color: #999;
+                        font-weight: bold;
+
+                        &.apply {
+                            color: #3a7ebd;
+                            border-right: 1px solid $hover_background;
+                        }
+
+                        &.clear {
+                            color: #555;
+                        }
+
+                        &:hover {
+                            background: $hover_background;
+                        }
+                    }
+                }
+
+                &.MetadataOptionFilter {
+                    .filter-dropdown-toolbar {
+                        .button {
+                            &.apply {
+                                display: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
