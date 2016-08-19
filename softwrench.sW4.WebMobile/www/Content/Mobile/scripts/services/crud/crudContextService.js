@@ -325,12 +325,20 @@
                     return allAttachments.filter(a => _.contains(newHashes, a["#offlinehash"]));
                 })();
 
+                const hadProblem = item.hasProblem;
                 item.isDirty = false;
-                const promise = dao.executeStatement(entities.DataEntry.restoreToOriginalStateStatement, [item.id, application]);
+                item.hasProblem = false;
 
-                return newAttachments.length > 0 
-                    ? promise.then(() => offlineAttachmentService.deleteRelatedAttachments(newAttachments))
-                    : promise;
+                var promise = dao.executeStatement(entities.DataEntry.restoreToOriginalStateStatement, [item.id, application]);
+                if (hadProblem) {
+                    item.hasProblem = false;
+                    promise = promise.then(() => problemService.deleteRelatedProblems(item.id));
+                }
+                if (newAttachments.length > 0) {
+                    promise = promise.then(() => offlineAttachmentService.deleteRelatedAttachments(newAttachments));
+                }
+
+                return promise;
             },
 
             deleteLocalItem: function(item) {

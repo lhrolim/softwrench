@@ -1,15 +1,20 @@
-﻿using softwrench.sw4.offlineserver.dto;
+﻿using cts.commons.simpleinjector.Events;
+using softwrench.sw4.offlineserver.dto;
 
 namespace softwrench.sw4.offlineserver.events {
-    public class PreSyncEvent {
-        private readonly SynchronizationRequestDto _request;
+    public class PreSyncEvent : ISWEvent {
+        private readonly BaseSynchronizationRequestDto _request;
 
-        public PreSyncEvent(SynchronizationRequestDto request) {
+        public PreSyncEvent(BaseSynchronizationRequestDto request) {
             _request = request;
         }
 
-        public SynchronizationRequestDto Request {
+        public BaseSynchronizationRequestDto Request {
             get { return _request; }
+        }
+
+        public bool AllowMultiThreading {
+            get { return false; }
         }
     }
 }
