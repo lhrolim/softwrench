@@ -84,9 +84,17 @@
             return swdbDAO.executeQuery({ query: offlineEntities.DataEntry.findProblems, args: [dataEntryId] });
         }
 
+        function deleteRelatedProblems(dataEntryId) {
+            return getProblems(dataEntryId)
+                .then(problems =>
+                    swdbDAO.executeQuery(`delete from Problem where id in (${problems.map(p => `'${p.id}'`)})`)
+                );
+        }
+
         const service = {
             updateHasProblemToDataEntries: updateHasProblemToDataEntries,
-            getProblems: getProblems
+            getProblems: getProblems,
+            deleteRelatedProblems
         };
 
         return service;

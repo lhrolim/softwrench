@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
 
 namespace softwrench.sw4.offlineserver.dto {
-    public class SynchronizationRequestDto {
+    public class SynchronizationRequestDto : BaseSynchronizationRequestDto {
 
         public string ApplicationName { get; set; }
 
@@ -23,9 +22,5 @@ namespace softwrench.sw4.offlineserver.dto {
         public List<string> ClientCurrentTopLevelApps { get; set; }
 
         public bool ReturnNewApps { get; set; }
-
-        public UserSyncData UserData { get; set; }
-
-        public JObject RowstampMap { get; set; }
     }
 }

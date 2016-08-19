@@ -61,8 +61,9 @@ namespace softwrench.sw4.offlineserver.services {
             return result;
         }
 
-        public AssociationSynchronizationResultDto GetAssociationData(InMemoryUser currentUser, JObject rowstampMap, string applicationToFetch = null) {
-            var watch = Stopwatch.StartNew();
+        public AssociationSynchronizationResultDto GetAssociationData(InMemoryUser currentUser, AssociationSynchronizationRequestDto request, string applicationToFetch = null) {
+            _iEventDispatcher.Dispatch(new PreSyncEvent(request));
+
             IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch;
             if (applicationToFetch == null) {
                 //let´s bring all the associations
@@ -71,7 +72,7 @@ namespace softwrench.sw4.offlineserver.services {
                 var app = MetadataProvider.Application(applicationToFetch);
                 applicationsToFetch = new List<CompleteApplicationMetadataDefinition>() { app };
             }
-            var dict = ClientStateJsonConverter.GetAssociationRowstampDict(rowstampMap);
+            var dict = ClientStateJsonConverter.GetAssociationRowstampDict(request.RowstampMap);
             return DoGetAssociationData(applicationsToFetch, dict, currentUser);
         }
 

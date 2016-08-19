@@ -95,19 +95,19 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
         [HttpPost]
-        public SynchronizationResultDto PullNewData(SynchronizationRequestDto synchronizationRequest) {
+        public SynchronizationResultDto PullNewData([FromBody] SynchronizationRequestDto synchronizationRequest) {
             return _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
         }
 
         [HttpPost]
-        public AssociationSynchronizationResultDto PullAssociationData(JObject rowstampMap) {
-            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), rowstampMap);
+        public AssociationSynchronizationResultDto PullAssociationData([FromBody] AssociationSynchronizationRequestDto request) {
+            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
         }
 
 
         [HttpPost]
-        public AssociationSynchronizationResultDto PullSingleAssociationData([FromUri]string applicationToFetch, JObject rowstampMap) {
-            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), rowstampMap, applicationToFetch);
+        public AssociationSynchronizationResultDto PullSingleAssociationData([FromUri] string applicationToFetch, [FromBody] AssociationSynchronizationRequestDto request) {
+            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request, applicationToFetch);
         }
 
         /// <summary>

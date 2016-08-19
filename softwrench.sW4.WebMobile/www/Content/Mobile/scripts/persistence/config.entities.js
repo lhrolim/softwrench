@@ -258,7 +258,7 @@
         entities.DataEntry.updateLocalSetOriginalPattern = "update DataEntry set 'datamap'=?,'originaldatamap'=?,'isDirty'=1,'textindex01'=?,'textindex02'=?,'textindex03'=?,'textindex04'=?,'textindex05'=?,'numericindex01'=?,'numericindex02'=?,'dateindex01'=?,'dateindex02'=?,'dateindex03'=? where id =?";
         entities.DataEntry.insertLocalPattern = "insert into DataEntry ('application','datamap','isDirty','pending','remoteId','rowstamp','id','textindex01','textindex02','textindex03','textindex04','textindex05','numericindex01','numericindex02','dateindex01','dateindex02','dateindex03') values (?,?,1,0,null,null,?,?,?,?,?,?,?,?,?,?,?)";
 
-        entities.DataEntry.restoreToOriginalStateStatement = "update DataEntry set isDirty=0,datamap=originaldatamap where id=? and application=?";
+        entities.DataEntry.restoreToOriginalStateStatement = "update DataEntry set isDirty=0,hasProblem=0,datamap=originaldatamap where id=? and application=?";
 
         //entities.DataEntry.clearProblem = "update DataEntry set hasProblem=0 where id in (?)";
         //entities.DataEntry.setProblem = "update DataEntry set hasProblem=1 where id in (?)";

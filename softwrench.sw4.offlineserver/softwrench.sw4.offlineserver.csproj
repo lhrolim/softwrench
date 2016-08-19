@@ -53,8 +53,10 @@
   <ItemGroup>
     <Compile Include="controller\MobileController.cs" />
     <Compile Include="controller\OfflineAttachmentController.cs" />
+    <Compile Include="dto\association\AssociationSynchronizationRequestDto.cs" />
     <Compile Include="dto\association\AssociationSynchronizationResultDto.cs" />
     <Compile Include="dto\association\ClientAssociationCacheEntry.cs" />
+    <Compile Include="dto\BaseSynchronizationRequestDto.cs" />
     <Compile Include="dto\UserSyncData.cs" />
     <Compile Include="events\IPreSyncEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

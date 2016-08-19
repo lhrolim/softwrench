@@ -1,8 +1,10 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    mobileServices.factory('associationDataSynchronizationService', ["$http", "$log", "$q", "swdbDAO", "metadataModelService", "offlineRestService", "rowstampService",
-        "offlineEntities", "searchIndexService", function ($http, $log, $q, swdbDAO, metadataModelService, restService, rowstampService, offlineEntities, searchIndexService) {
+    mobileServices.factory("associationDataSynchronizationService",
+        ["$http", "$log", "$q", "swdbDAO", "metadataModelService", "offlineRestService", "rowstampService", "offlineEntities", "searchIndexService", "securityService",
+    function ($http, $log, $q, swdbDAO, metadataModelService, restService, rowstampService, offlineEntities, searchIndexService, securityService) {
+
     return {
 
         /// <summary>
@@ -11,26 +13,35 @@
         /// <param name="applicationToFetch">a single application to fetch. If not provided, all the applications would be fetched</param>
         /// <returns type=""></returns>
         syncData: function (applicationToFetch) {
-            var log = $log.get("associationDataSynchronizationService#syncData");
+            const log = $log.get("associationDataSynchronizationService#syncData");
 
             const currentApps = metadataModelService.getApplicationNames();
             const firstTime = currentApps.length === 0;
 
-            var methodToUse = applicationToFetch ? "PullSingleAssociationData" : "PullAssociationData";
-            var params = {};
+            const methodToUse = applicationToFetch ? "PullSingleAssociationData" : "PullAssociationData";
+            const params = {};
             if (applicationToFetch) {
                 params.applicationToFetch = applicationToFetch;
             }
-            return rowstampService.generateAssociationRowstampMap(applicationToFetch).then(function (rowstampMap) {
-                return restService.post("Mobile", methodToUse, params, rowstampMap);
-            }).then(function (result) {
+
+            return rowstampService.generateAssociationRowstampMap(applicationToFetch).then(rowstampMap => {
+                const payload = { rowstampMap };
+                const current = securityService.currentFullUser();
+                if (current.meta && current.meta.changed) {
+                    payload.userData = current;
+                }
+                return restService.post("Mobile", methodToUse, params, payload);
+            })
+            .then(result => {
                 const associationData = result.data.associationData;
                 if (result.data.isEmpty) {
                     log.info("no new data returned from the server");
                     //interrupting async calls
                     return $q.reject();
                 }
-                var queryArray = [];
+
+                const queryArray = [];
+
                 //for first time, let´s not use the replace keyword in order to make the query faster (we know for sure they are all insertions)
                 //TODO: check possibility of having different arrays
                 const queryToUse = firstTime ? offlineEntities.AssociationData.InsertionPattern.format("") : offlineEntities.AssociationData.InsertionPattern.format(" or REPLACE ");
@@ -48,18 +59,15 @@
                         queryArray.push(query);
                     }
                 }
-                return swdbDAO.executeQueries(queryArray).then(function () {
+                return swdbDAO.executeQueries(queryArray).then(() => 
                     //returning the number of associationData created
-                    return $q.when(queryArray.length);
-                });
-            }).catch(function (err) {
-                if (!err) {
-                    //normal interruption
-                    return $q.when(0);
-                }
-                return $q.reject(err);
-            });
-
+                    $q.when(queryArray.length)
+                );
+            }).catch(err =>
+                !err
+                    ? $q.when(0) // normal interruption 
+                    : $q.reject(err)
+            );
 
         }
     }
