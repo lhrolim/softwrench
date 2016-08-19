@@ -11,7 +11,7 @@
                 this.createTable("OptionFieldData", (t) => {
                      t.text("application");
                      t.text("schema");
-                     t.text("providerattribute");
+                     t.text("providerAttribute");
                      t.text("optionkey");
                      t.text("optionvalue");
                      t.json("extraprojectionvalues");
@@ -61,9 +61,9 @@
                 this.createTable("Batch", (t) => {
                     t.text("application");
                     t.date("sentdate");
-                    t.date("completiondate");
-                    t.date("lastchecked");
-                    t.text("remoteid");
+                    t.date("completionDate");
+                    t.date("lastChecked");
+                    t.text("remoteId");
                     t.text("status");
                     t.varchar("syncoperation", 32);
                 });
@@ -106,8 +106,8 @@
                 this.createTable("CompositionDataEntry", (t) => {
                     t.text("application");
                     t.json("datamap");
-                    t.text("remoteid");
-                    t.boolean("isdirty");
+                    t.text("remoteId");
+                    t.boolean("isDirty");
                     t.integer("rowstamp");
                 });
             },
@@ -120,9 +120,9 @@
             up: function () {
                 this.createTable("Attachment", (t) => {
                     t.text("application");
-                    t.text("parentid");
-                    t.text("compositionremoteid");
-                    t.text("docinforemoteid");
+                    t.text("parentId");
+                    t.text("compositionRemoteId");
+                    t.text("docinfoRemoteId");
                     t.text("path");
                     t.boolean("compressed");
                     t.text("content");
@@ -141,9 +141,9 @@
                     t.json("originaldatamap");
                     t.json("datamap");
                     t.boolean("pending");
-                    t.text("remoteid");
-                    t.boolean("isdirty");
-                    t.boolean("hasproblem");
+                    t.text("remoteId");
+                    t.boolean("isDirty");
+                    t.boolean("hasProblem");
                     t.integer("rowstamp");
                     t.text("textindex01");
                     t.text("textindex02");
@@ -167,7 +167,7 @@
                 this.createTable("Operation", (t) => {
                     t.json("datamap");
                     t.text("operation");
-                    t.date("creationdate");
+                    t.date("creationDate");
                     t.varchar("entry", 32);
                 });
                 this.addIndex("Operation", "entry");
@@ -195,11 +195,11 @@
                     t.date("startdate");
                     t.date("enddate");
                     t.date("lastcheckdate");
-                    t.text("lastsyncserverversion");
+                    t.text("lastsyncServerVersion");
                     t.text("status");
                     t.integer("numberofdownloadeditems");
                     t.integer("numberofdownloadedsupportdata");
-                    t.boolean("hasproblems");
+                    t.boolean("hasProblems");
                     t.boolean("metadatachange");
                     t.integer("items");
                 });
@@ -264,7 +264,7 @@
             up: function () {
                 this.createTable("WhereClause", (t) => {
                     t.text("application");
-                    t.text("parentapplication");
+                    t.text("parentApplication");
                     t.text("metadataid");
                     t.text("data");
                 });

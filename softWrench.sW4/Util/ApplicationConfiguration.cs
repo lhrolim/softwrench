@@ -189,21 +189,7 @@ namespace softWrench.sW4.Util {
             }
         }
 
-        public static string RestCredentialsUser
-        {
-            get
-            {
-                return MetadataProvider.GlobalProperty("restcredentials.user");
-            }
-        }
-
-        public static string RestCredentialsPassword
-        {
-            get
-            {
-                return MetadataProvider.GlobalProperty("restcredentials.password");
-            }
-        }
+     
 
         #endregion
 

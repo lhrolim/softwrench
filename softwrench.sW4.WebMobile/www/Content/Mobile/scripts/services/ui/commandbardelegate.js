@@ -25,6 +25,17 @@
             const offset = (windowHeight - componetHeights - 110) + top;
 
             $(commandBarElement).css("top", offset);
+
+            const contentBody = $("ion-nav-view[name='body']");
+            const contentPane = $(".list.pane[state='main.cruddetail.maininput']");
+
+            if (componetHeights + contentBody.outerHeight(true) < windowHeight) {
+                const minHeight = windowHeight - componetHeights - 8;
+
+                $(contentBody).css("min-height", minHeight);
+                $(contentPane).css("min-height", minHeight);
+            }
+
         }
 
         //#endregion

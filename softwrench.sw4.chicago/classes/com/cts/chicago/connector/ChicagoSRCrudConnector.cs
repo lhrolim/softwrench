@@ -10,6 +10,7 @@ using cts.commons.simpleinjector;
 using log4net;
 using softwrench.sw4.problem.classes;
 using softWrench.sW4.Data.Persistence.WS.API;
+using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Util;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Security.Services;
@@ -73,7 +74,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
             var crudOperationData = (CrudOperationData)maximoTemplateData.OperationData;
 
-            if (crudOperationData.ContainsAttribute("underwaycall", true) || string.IsNullOrEmpty(ApplicationConfiguration.RestCredentialsUser)) {
+            if (crudOperationData.ContainsAttribute("underwaycall", true) || !MaximoRestUtils.IsRestSetup()) {
                 Log.DebugFormat("returning from underway call");
                 //avoid infinite loop
                 return;
@@ -142,7 +143,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             base.AfterCreation(maximoTemplateData);
             var crudOperationData = (CrudOperationData)maximoTemplateData.OperationData;
 
-            if (crudOperationData.ContainsAttribute("underwaycall", true) || string.IsNullOrEmpty(ApplicationConfiguration.RestCredentialsUser)) {
+            if (crudOperationData.ContainsAttribute("underwaycall", true) || !MaximoRestUtils.IsRestSetup()) {
                 //avoid infinite loop
                 return;
             }

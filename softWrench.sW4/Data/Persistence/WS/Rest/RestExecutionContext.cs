@@ -35,7 +35,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
         }
 
         private string GenerateRestUrl(EntityMetadata entityMetadata, string entityId) {
-            var baseRestURL = MetadataProvider.GlobalProperty("basewsRestURL");
+            var baseRestURL = MetadataProvider.GlobalProperty(MaximoRestUtils.BaseRestURLProp);
             var entityKey = entityMetadata.ConnectorParameters.GetWSEntityKey(ConnectorParameters.UpdateInterfaceParam, WsProvider.REST);
             if (baseRestURL.EndsWith("/mbo/")) {
                 if (entityKey.StartsWith("SW")) {
@@ -66,15 +66,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
 
         protected override object DoProxyInvocation() {
 
-            var authToken = GenerateAuthHeader();
-
-
-            var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                {"MAXAUTH", authToken},
-                {"Content-Type", "application/x-www-form-urlencoded"},
-                {"Authorization","Basic " + authToken }
-            };
+            var headers = MaximoRestUtils.GetMaximoHeaders();
 
             var payLoad = GeneratePayLoad();
 
@@ -82,19 +74,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
                 Log.DebugFormat("invoking web service at {0} with headers {1} and payload {2}", _baseRestURL, headers, payLoad);
             }
 
-            var callRestApiSync = RestUtil.CallRestApiSync(_baseRestURL, MethodName(), headers, payLoad);
-
-            using (var responseStream = callRestApiSync.GetResponseStream()) {
-                if (responseStream == null) {
-                    return null;
-                }
-                using (var responseReader = new StreamReader(responseStream)) {
-                    // parse xml response
-                    var text = responseReader.ReadToEnd();
-                    return text;
-                }
-            }
+            return RestUtil.CallRestApiSync(_baseRestURL, MethodName(), headers, payLoad);
         }
+
+     
 
         protected override Exception HandleProxyInvocationError(Exception e) {
             if (e is WebException) {
@@ -143,11 +126,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
             return sb.ToString();
         }
 
-        private static string GenerateAuthHeader() {
-            var credentialsUser = ApplicationConfiguration.RestCredentialsUser;
-            var credentialsPassword = ApplicationConfiguration.RestCredentialsPassword;
-            var plainText = "{0}:{1}".Fmt(credentialsUser, credentialsPassword);
-            return CompressionUtil.Base64Encode(plainText);
-        }
+        
     }
 }

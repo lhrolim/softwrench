@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata" >
+
+
+  <templates>
+    <template path="@workorder.xml"/>
+    <!--<template path="workorderbatch.xml"/>-->
+
+    <!--ServiceRequest-->
+    <template path="@servicerequest.xml"/>
+
+    <!--Incident-->
+    <template path="@incident.xml"/>
+
+    <!--Inventory-->
+    <template path="@inventory.xml"/>
+
+    <!--Changes-->
+    <template path="@wochange.xml"/>
+
+    <!--Purchasing-->
+    <template path="@receiving.xml"/>
+    <template path="@purchasing.xml"/>
+
+    <!--Solution-->
+    <template path="@solution.xml"/>
+
+    <!--Person-->
+    <template path="@person.xml"/>
+
+    <!--Workflow-->
+    <template path="@workflow.xml"/>
+    <template path="@asset.xml"/>
+
+  </templates>
+
+  <applications>
+    <application entity="SR" name="servicerequest" title="Service Request">
+      <schemas>
+
+        <schema id="list" redeclaring="false">
+          <properties>
+            <property key="list.click.schema" value="editdetail2"/>
+            <property key="list.search.compositionstoexclude" value="attachment"/>
+          </properties>
+        </schema>
+
+        <schema id="list2" redeclaring="false">
+          <properties>
+            <property key="list.click.schema" value="editdetail3"/>
+            <property key="list.search.compositionstoexclude" value="attachment"/>
+          </properties>
+        </schema>
+
+        <schema id="editdetail2" title="Service Request Details">
+
+          <section id="compositions">
+            <composition relationship="worklog" label="Work Logs">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
+            </composition>
+
+            <composition relationship="commlog" label="Communications">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
+              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
+            </composition>
+
+            <composition relationship="attachment" label="Attachments" printenabled="false" >
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+            </composition>
+
+          </section>
+        </schema>
+
+        <schema id="editdetail3" title="Service Request Details">
+
+          <section id="compositions">
+            <composition relationship="worklog" label="Work Logs">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
+            </composition>
+
+            <composition relationship="commlog" label="Communications">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
+              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
+            </composition>
+
+            <composition relationship="attachment" label="Attachments" printenabled="false" >
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+            </composition>
+
+            <composition relationship="relatedrecord" label="Related Records">
+              <collectionproperties allowcreation="false" />
+            </composition>
+
+          </section>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
+      <schemas>
+        <schema id="quicknewdetail" redeclaring="false">
+          <customization position="statussection">
+            <section orientation="horizontal" id="statussection">
+              <renderer type="default" params="childinputsize=small" />
+
+              <field attribute="extrafield" label="ExtraField" hidden="true"/>
+              <field attribute="ticketuid" label="SR#" hidden="true"/>
+              <field label="Status" attribute="status" readonly="true" default="NEW" hidden="true"/>
+              <field attribute="description" label="Summary" requiredexpression="true">
+                <renderer type="default" params="maxlength=100" />
+              </field>
+              
+            </section>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+    
+
+    <application name="relatedrecord" title="Related Records" entity="relatedrecord" redeclaring="false" >
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-tags"/>
+      </properties>
+      <schemas>
+        <list stereotype="compositionlist">
+          <properties>
+            <property key="list.click.service" value="relatedrecordService.open"/>
+            <property key="list.search.quicksearchfields" value=""/>
+          </properties>
+          <field attribute="relatedreckey" label="Related Record Key" />
+          <field attribute="relatedrecclass" label="Related Record Class" />
+          <field attribute="siteid" hidden="true" />
+        </list>
+      </schemas>
+    </application>
+
+    <application name="asset" title="Asset" entity="asset">
+      <schemas>
+        <schema id="detail" title="Asset Detail" stereotype="detail" platform="web" redeclaring="false">
+          <customization position="+item_.description">
+            <field attribute="pluspcustomer" label="Customer" readonly="true"/>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+
+
+
+  </applications>
+
+
+</metadata>

@@ -205,6 +205,9 @@
     <Compile Include="Data\Persistence\Engine\Exception\AfterCreationException.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
+    <Compile Include="Data\Persistence\Relational\EntityRepository\IEntityRepository.cs" />
+    <Compile Include="Data\Persistence\Relational\EntityRepository\RestEntityRepository.cs" />
+    <Compile Include="Data\Persistence\Relational\EntityRepository\RestResponseParser.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\ByUserIdSiteWhereBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\IDynamicWhereBuilder.cs" />
     <Compile Include="Data\Persistence\WS\AMEX\AmexAssetConnectors.cs" />
@@ -227,10 +230,12 @@
     <Compile Include="Data\Persistence\WS\Applications\Compositions\ServiceAddressHandler.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\ISMServiceEntities.cs" />
     <Compile Include="Data\Persistence\WS\Rest\IRestObjectWrapper.cs" />
+    <Compile Include="Data\Persistence\WS\Rest\MaximoRestUtils.cs" />
     <Compile Include="Data\Persistence\WS\Rest\RestExecutionContext.cs" />
     <Compile Include="Data\Persistence\WS\Rest\RestComposedData.cs" />
     <Compile Include="Data\Persistence\WS\Rest\RestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Rest\RestIntegrationObjectWrapper.cs" />
+    <Compile Include="Data\Persistence\WS\Rest\RestQueryEngine.cs" />
     <Compile Include="Data\Relationship\Association\AssociationCacheKey.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchHelper.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchDTO.cs" />

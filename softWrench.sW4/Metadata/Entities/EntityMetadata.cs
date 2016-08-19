@@ -187,9 +187,14 @@ namespace softWrench.sW4.Metadata.Entities {
             return AddGenericRelationshipAttributes(AttributesMode.NoCollections);
         }
 
-        public EntityMetadata RelatedEntityMetadata(string relationshipName) {
-            relationshipName = softWrench.sW4.Util.EntityUtil.GetRelationshipName(relationshipName);
-            var association = Associations.FirstOrDefault(r => r.Qualifier == relationshipName);
+        public EntityMetadata RelatedEntityMetadata(string originalRelationshipName) {
+            var relationshipName = softWrench.sW4.Util.EntityUtil.GetRelationshipName(originalRelationshipName);
+            var association = Associations.FirstOrDefault(r => r.Qualifier.EqualsIc(relationshipName));
+            if (association == null) {
+                //fallback
+                association = Associations.FirstOrDefault(r => r.To.EqualsIc(originalRelationshipName));
+            }
+
             return association != null ? MetadataProvider.Entity(association.To) : null;
         }
 

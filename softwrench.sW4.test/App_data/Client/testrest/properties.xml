@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Properties xmlns="http://www.controltechnologysolutions.com/propertiesmetadata" >
+
+  <property key="sourcemapping" value="maximo7.5"/>
+  <property key="targetmapping" value="maximo7.5"/>
+
+
+  <property key="rest.ism.url" value="http://localhost:8080/maxrest/rest/mbo/" />
+  <property key="rest.ism.credentials.user" value="mxintadm"/>
+  <property key="rest.ism.credentials.password" value="mxintadm"/>
+
+
+</Properties>
+  
+ 
+  
+

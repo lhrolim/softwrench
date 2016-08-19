@@ -45,9 +45,10 @@
                     if (!id || !migrationGroups.hasOwnProperty(id)) {
                         return;
                     }
-                    groupIds.push(id);
+                    groupIds.push(Number(id));
                 });
-                groupIds = groupIds.sort();
+
+                groupIds = groupIds.sort((a, b) => { return a - b });
                 angular.forEach(groupIds, (id) => {
                     migrations = migrations.concat(migrationGroups[id].migrations);
                 });

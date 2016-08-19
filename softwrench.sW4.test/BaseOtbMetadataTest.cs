@@ -12,7 +12,7 @@ namespace softwrench.sW4.test {
     public abstract class BaseOtbMetadataTest : BaseMetadataTest {
 
         [TestInitialize]
-        public void Init() {
+        public virtual void Init() {
             if (ApplicationConfiguration.TestclientName != GetClientName()) {
                 ApplicationConfiguration.TestclientName = GetClientName();
                 MetadataProvider.StubReset();

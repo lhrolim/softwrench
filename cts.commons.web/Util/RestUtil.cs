@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,11 @@ namespace cts.commons.web.Util {
             return await request.GetResponseAsync();
         }
 
-        public static WebResponse CallRestApiSync(string url, string method, Dictionary<string, string> headers = null, string payload = null) {
+        public static string CallRestApiSync(string url, string method, Dictionary<string, string> headers = null, string payload = null) {
             var request = DoBuildRequest(url, method, headers, payload);
             // fetch response
-            return request.GetResponse();
+            var webresponse = request.GetResponse();
+            return ConvertResponseToText(webresponse);
         }
 
         private static HttpWebRequest DoBuildRequest(string url, string method, Dictionary<string, string> headers, string payload) {
@@ -41,6 +43,19 @@ namespace cts.commons.web.Util {
                 }
             }
             return request;
+        }
+
+        private static string ConvertResponseToText(WebResponse callRestApiSync) {
+            using (var responseStream = callRestApiSync.GetResponseStream()) {
+                if (responseStream == null) {
+                    return null;
+                }
+                using (var responseReader = new StreamReader(responseStream)) {
+                    // parse xml response
+                    var text = responseReader.ReadToEnd();
+                    return text;
+                }
+            }
         }
     }
 }

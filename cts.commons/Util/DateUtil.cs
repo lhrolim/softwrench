@@ -8,7 +8,9 @@ namespace cts.commons.portable.Util {
 
         // added additional acceptance format 
         //TODO: modify this solution, as dd/mmy/yyyy and mm/dd/yyyy should need to be choosen based upon a locale rule (03/10/2016 could be parsed, both ways)
-        public static readonly string[] FormatOptions = { "yyyy/MM/dd", "yyyy/MM/dd hh:mm", "yyyy/MM/dd HH:mm", "MM/dd/yyyy hh:mm", "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm", "MM/dd/yyyy HH:mm", "M/d/yyyy hh:mm", "dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-MM-dd hh:mm", "yyyy-MM-dd HH:mm", "yyyy-M-d" };
+        public static readonly string[] FormatOptions = { "yyyy/MM/dd", "yyyy/MM/dd hh:mm", "yyyy/MM/dd HH:mm", "MM/dd/yyyy hh:mm", "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm", "MM/dd/yyyy HH:mm", "M/d/yyyy hh:mm", "dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-MM-dd hh:mm", "yyyy-MM-dd HH:mm", "yyyy-M-d", "yyyy-MM-dd HH:mm:ss.FFF" };
+
+        public const string MaximoDefaultIntegrationFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFK";
 
         public static DateTime? Parse(string date) {
             DateTime temp;
@@ -69,34 +71,34 @@ namespace cts.commons.portable.Util {
                 switch (timeUnit) {
                     case "year":
                     case "years":
-                        value = value.AddYears(number);
-                        break;
+                    value = value.AddYears(number);
+                    break;
                     case "month":
                     case "months":
-                        value = value.AddMonths(number);
-                        break;
+                    value = value.AddMonths(number);
+                    break;
                     case "week":
                     case "weeks":
-                        value = ProcessWeeks(value, number);
-                        break;
+                    value = ProcessWeeks(value, number);
+                    break;
                     case "day":
                     case "days":
-                        value = value.AddDays(number);
-                        break;
+                    value = value.AddDays(number);
+                    break;
                     case "hour":
                     case "hours":
-                        value = value.AddHours(number);
-                        break;
+                    value = value.AddHours(number);
+                    break;
                     case "minute":
                     case "minutes":
-                        value = value.AddMinutes(number);
-                        break;
+                    value = value.AddMinutes(number);
+                    break;
                     case "second":
                     case "seconds":
-                        value = value.AddSeconds(number);
-                        break;
+                    value = value.AddSeconds(number);
+                    break;
                     default:
-                        throw new FormatException();
+                    throw new FormatException();
                 }
                 return value;
             } catch (Exception) {

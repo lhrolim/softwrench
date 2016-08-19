@@ -37,8 +37,9 @@
                         deferred.resolve();
                     }
 
+                    const reversedMigrationsToRun = migrationsToRun.reverse(); // migrations reversed to use pop
                     const migrateOne = function () {
-                        const migration = migrationsToRun.pop();
+                        const migration = reversedMigrationsToRun.pop();
                         if (!migration) {
                             callback();
                             return;
@@ -46,8 +47,8 @@
 
                         const id = migration.body.id;
                         migration.up(function () {
-                            persistence.runSql("insert into migrations (id) values (?)", [id]).then(() => {
-                                if (migrationsToRun.length > 0) {
+                            persistence.runSql("insert into migrations (id,applied) values (?,?)", [id, new Date().getTime()]).then(() => {
+                                if (reversedMigrationsToRun.length > 0) {
                                     migrateOne();
                                 } else {
                                     callback();
