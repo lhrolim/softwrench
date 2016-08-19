@@ -30,7 +30,7 @@
                 if (current.meta && current.meta.changed) {
                     payload.userData = current;
                 }
-                return restService.post("Mobile", methodToUse, params, rowstampMap);
+                return restService.post("Mobile", methodToUse, params, payload);
             })
             .then(result => {
                 const associationData = result.data.associationData;
