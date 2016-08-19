@@ -35,9 +35,14 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
         public static IDictionary<string, string> BaseStatisticsSelectQueries = new Dictionary<string, string>{
             {"dashboard:wo.status.top5",  WoStatusWhereclauseCompleteQuery},
+
             {"dashboard:sr.status.top5",  SRStatusWhereclauseCompleteQuery},
             {"dashboard:sr.status.line",  SRStatusWhereclauseCompleteQuery},
             {"dashboard:sr.status.pie",  SRStatusWhereclauseCompleteQuery },
+
+            {"dashboard:quicksr.status.top5",  SRStatusWhereclauseCompleteQuery},
+            {"dashboard:quicksrsr.status.line",  SRStatusWhereclauseCompleteQuery},
+            {"dashboard:quicksrsr.status.pie",  SRStatusWhereclauseCompleteQuery },
         };
 
         /// <summary>

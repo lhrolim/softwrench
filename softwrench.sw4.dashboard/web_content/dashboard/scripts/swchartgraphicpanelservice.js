@@ -39,11 +39,11 @@
         };
 
         function getChartData(panel) {
-            var configuration = panel.configurationDictionary;
+            const configuration = panel.configurationDictionary;
             const isServiceRequest = "sr".equalsIc(configuration.application);
             const params = {
                 entity: isServiceRequest ? "SR" : configuration.application,
-                application: isServiceRequest ? "servicerequest" : configuration.application,
+                application: !!configuration.applicationName ? configuration.applicationName : (isServiceRequest ? "servicerequest" : configuration.application),
                 property: configuration.field,
                 whereClauseMetadataId: `dashboard:${panel.alias}`,
                 limit: (configuration.limit > 0 && !configuration.showothers && configuration.statusconfig !== "openclosed") ? configuration.limit : 0,
@@ -209,11 +209,12 @@
          * Fills the datamps's 'configurationDictionary' property correctly 
          * from it's view properties.
          * 
-         * @param {} datamap 
+         * @param {Object} datamap 
          */
         function onBeforeAssociatePanel(datamap) {
             datamap.configurationDictionary = {
-                'application': datamap.application,
+                'application': datamap.entity,
+                'applicationName': datamap.application,
                 'field': datamap.field,
                 'type': datamap.type,
                 'statusfieldconfig': datamap.statusfieldconfig,
@@ -227,11 +228,17 @@
         }
 
         function onApplicationSelected(event) {
-            const application = event.fields.application;
-            if (!application) return;
-            const fields = config.fields.getFields(application);
-            crudContextHolderService.updateEagerAssociationOptions("fields", fields);
+            const entityAndApp = event.fields["#entity_application"];
+            if (!entityAndApp) return;
 
+            const entityAndAppAux = entityAndApp.split(":");
+            const entity = entityAndAppAux[0];
+            const application = entityAndAppAux[1];
+
+            const fields = config.fields.getFields(application);
+            event.fields["entity"] = entity;
+            event.fields["application"] = application;
+            crudContextHolderService.updateEagerAssociationOptions("fields", fields);
         }
 
         /**
@@ -258,9 +265,9 @@
             const applications = crudContextHolderService.fetchEagerAssociationOptions("applications", { schemaId: "#modal" });
             if (!applications || applications.length <= 0) return false;
             const appNames = applications.map(a => a.value);
-            const filterableName = "sr".equalIc(option.value) ? "servicerequest" : option.value;
+            const application = option.value.split(":")[1];
             // option is part of authorized apps
-            return !!appNames.find(a =>  a === filterableName);
+            return !!appNames.find(a => a === application);
         }
 
         //#endregion

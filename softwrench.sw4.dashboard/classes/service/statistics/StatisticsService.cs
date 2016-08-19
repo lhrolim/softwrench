@@ -9,6 +9,7 @@ using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.startup;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
@@ -159,9 +160,8 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
             _contextLookuper.FillGridContext(request.Application, SecurityFacade.CurrentUser());
 
             var contextWhereClause = _whereBuilder.BuildWhereClause(request.Entity, new PaginatedSearchRequestDto() {
-                Context = new ApplicationLookupContext() {
-                    MetadataId = request.WhereClauseMetadataId
-                }
+                Key = new ApplicationMetadataSchemaKey() { ApplicationName  = request.Application },
+                Context = new ApplicationLookupContext() { MetadataId = request.WhereClauseMetadataId, }
             });
 
 
