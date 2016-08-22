@@ -28,7 +28,7 @@
 
         $scope.saveProfile = function () {
             fsUserProfileService.saveUserProfile($scope.profile.current)
-                .then(() => $ionicPopup.alert({ title: "Success", template: "Profile saved successfully" }))
+                .then(() => $ionicPopup.alert({ title: "Success", template: "Profile Saved Successfully" }))
                 .then(init);
         };
 
