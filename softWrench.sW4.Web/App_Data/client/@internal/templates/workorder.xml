@@ -175,6 +175,7 @@
         <relationship to="jobplan">
           <relationshipAttribute from="jpnum" to="jpnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
         
         
