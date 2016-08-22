@@ -240,8 +240,8 @@
                     loadingService.hide();
                     // sync failed: check if user wishes to logout regardless
                     return $ionicPopup.confirm({
-                        title: failPopupConfig.title || "Synchronization failed",
-                        template: failPopupConfig.template || "Continue anyway?"
+                        title: failPopupConfig.title || "Synchronization Failed",
+                        template: failPopupConfig.template || "Continue Anyway?"
                     })
                     .then(continueAnyway => !!continueAnyway);
                 });
