@@ -6,11 +6,11 @@
     "$q", "$log", "$rootScope", "swdbDAO", "searchIndexService", "problemService", 
     "metadataModelService", "offlineSchemaService", "offlineCompositionService", "expressionService",
     "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
-    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService", "offlineEntities", "queryListBuilderService",
+    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService", "offlineEntities", "queryListBuilderService", "swAlertPopup",
     function ($q, $log, $rootScope, dao, searchIndexService, problemService, 
     metadataModelService, offlineSchemaService, offlineCompositionService, expressionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
-    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService, entities,queryListBuilderService) {
+    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService, entities, queryListBuilderService, swAlertPopup) {
 
         // ReSharper disable once InconsistentNaming
         var internalListContext = {
@@ -174,14 +174,18 @@
 
             //TODO: move to offlinecompositionservice perhaps?
             loadCompositionDetail: function (item) {
+                const errors = this.validateDetail();
+                if (errors && errors.length > 0) {
+                    // main form has validations: disable edit and redirect to main tab
+                    return swAlertPopup.alertValidationErrors(errors, null, `Validation errors in the main form prevent you from editing this ${this.tabTitle()}. Please resolve this errors:`)
+                        .then(() => this.loadTab());
+                }
                 const crudContext = crudContextHolderService.getCrudContext();
                 const compositionDetailSchema = this.getCompositionDetailSchema();
                 const fields = compositionDetailSchema.displayables;
                 if (compositionDetailSchema.applicationName === "attachment") {
                     return offlineAttachmentService.loadRealAttachment(item);
                 }
-
-
                 datamapSanitizationService.enforceNumericType(item, fields);
                 //for compositions item will be the datamap itself
                 crudContext.composition.currentDetailItem = item;
@@ -204,6 +208,12 @@
             },
 
             createNewCompositionItem: function () {
+                const errors = this.validateDetail();
+                if (errors && errors.length > 0) {
+                    // main form has validations: disable create/add and redirect to main tab
+                    return swAlertPopup.alertValidationErrors(errors, null, `Validation errors in the main form prevent you from adding a new ${this.tabTitle()}. Please resolve this errors:`)
+                        .then(() => this.loadTab());
+                }
                 const crudContext = crudContextHolderService.getCrudContext();
                 const compositionParentDatamap = crudContext.currentDetailItem.datamap;
                 crudContext.composition.currentDetailItem = {};

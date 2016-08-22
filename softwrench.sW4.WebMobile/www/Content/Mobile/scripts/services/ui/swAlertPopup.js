@@ -70,11 +70,22 @@
             }
         }
 
+        function alertValidationErrors(errors, title, message) {
+            const errorMessage = errors.join("<br>");
+            const fullMessage = message ? `${message}<br>${errorMessage}` : errorMessage;
+            return $ionicPopup.alert({
+                title: title || "There are Validation Errors",
+                subTitle: fullMessage,
+                cssClass: "alert"
+            });
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
-            show
+            show,
+            alertValidationErrors
         };
         return service;
         //#endregion

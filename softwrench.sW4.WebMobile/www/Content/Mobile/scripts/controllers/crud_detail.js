@@ -3,9 +3,9 @@
     "use strict";
 
     softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", 
-    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService","offlineSchemaService","commandBarDelegate",
+    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService", "offlineSchemaService", "commandBarDelegate", "swAlertPopup",
     function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform,
-    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService,offlineSchemaService,commandBarDelegate) {
+    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService,offlineSchemaService,commandBarDelegate, swAlertPopup) {
         
         function turnOffChangeEvents() {
             $rootScope.areChangeEventsEnabled = false;
@@ -100,12 +100,7 @@
         }
 
         function showValidationErrors(validationErrors) {
-            const options = {
-                title: "There are Validation Errors:<p>",
-                subTitle: validationErrors.join("<br>"),
-                cssClass: "alert"
-            }
-            $ionicPopup.alert(options);
+            swAlertPopup.alertValidationErrors(validationErrors);
         }
 
         $scope.saveChanges = function () {
@@ -152,20 +147,6 @@
         $scope.detailSummary = function () {
             const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
             return schemaService.getSummary(crudContextService.currentDetailSchema(), datamap, true);
-        }
-
-
-
-
-        $scope.addCompositionItem = function () {
-            const validationErrors = crudContextService.validateDetail();
-            if (validationErrors.length === 0) {
-                crudContextService.createNewCompositionItem();
-                return;
-            }
-
-            $scope.navigateBack();
-            showValidationErrors(validationErrors);
         }
 
         const arrowNavigate = function(navigate) {
