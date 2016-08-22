@@ -178,6 +178,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var isactive = json.GetValue("#isactive").ToString().EqualsAny("1", "true");
             string primaryEmail = null;
             var isCreation = application.Schema.Stereotype == SchemaStereotype.DetailNew;
+
+
             var primaryEmailToken = json.GetValue("#primaryemail");
             if (primaryEmailToken != null) {
                 primaryEmail = primaryEmailToken.ToString();
@@ -190,6 +192,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
             //saving person on Maximo database
             var operationData = (CrudOperationData)operationWrapper.OperationData(typeof(CrudOperationData));
+
+            if (isCreation) {
+                operationData.SetAttribute("personid",operationData.GetAttribute("#personid"));
+            }
+
 
             if (operationData.GetAttribute("locationorg") == null) {
                 operationData.SetAttribute("locationorg", ApplicationConfiguration.DefaultOrgId);
