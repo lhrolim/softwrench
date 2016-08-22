@@ -67,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="customer.placeholder" />
+    <EmbeddedResource Include="customer.placeholder" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="metadata\gric\deploy.xml">

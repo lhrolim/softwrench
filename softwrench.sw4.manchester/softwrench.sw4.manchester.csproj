@@ -94,7 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="customer.placeholder" />
+    <EmbeddedResource Include="customer.placeholder" />
     <EmbeddedResource Include="metadata\manchester\statuscolors.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

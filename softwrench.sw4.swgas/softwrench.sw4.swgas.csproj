@@ -80,7 +80,7 @@
     <Folder Include="web_content\swgas\scripts\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="customer.placeholder" />
+    <EmbeddedResource Include="customer.placeholder" />
     <None Include="web_content\swgas\styles\branding.scss" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

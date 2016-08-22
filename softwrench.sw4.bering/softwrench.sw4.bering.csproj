@@ -45,7 +45,7 @@
     <Folder Include="web_content\bering\scripts\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="customer.placeholder" />
+    <EmbeddedResource Include="customer.placeholder" />
     <EmbeddedResource Include="metadata\bering\statuscolors.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

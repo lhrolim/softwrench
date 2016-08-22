@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="customer.placeholder" />
+    <EmbeddedResource Include="customer.placeholder" />
     <None Include="packages.config" />
     <None Include="web_content\amex\webcontent.placeholder" />
   </ItemGroup>

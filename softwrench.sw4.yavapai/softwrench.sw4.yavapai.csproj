@@ -61,7 +61,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="customer.placeholder" />
+    <EmbeddedResource Include="customer.placeholder" />
     <EmbeddedResource Include="metadata\yavapai\statuscolors.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
