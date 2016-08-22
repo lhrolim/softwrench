@@ -254,7 +254,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="person" idAttribute="personid">
+    <entity name="person" idAttribute="personuid" useridAttribute="personid">
       <attributes>
         <attribute name="personid" type="varchar" required="true" />
         <attribute name="status" type="varchar" required="true" />
