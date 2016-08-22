@@ -33,7 +33,7 @@
             return swdbDAO.executeQuery(queryToExecute)
                 .then(() => 
                     showConfirmationMessage === undefined || showConfirmationMessage === null || showConfirmationMessage === true
-                        ? $ionicPopup.alert({ title: `${messageEntry} saved successfully` }).then(() => item) 
+                        ? $ionicPopup.alert({ title: `${messageEntry} Saved Successfully` }).then(() => item) 
                         : item
                 );
         };
