@@ -337,6 +337,7 @@
             <field attribute="affectedemail" label="Affected By Email" default="@user.email" readonly="true"/>
             <field attribute="itdcloseate" label="Closed Date" readonly="true"/>
           </section>
+          <section id="attachmentsection"/>
           <section secondarycontent="true">
             <composition relationship="itdthirdparty" inline="true" label="Third Party Tickets" detailschema="compositiondetail">
               <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="compositionlist"/>
@@ -360,7 +361,12 @@
         </schema>
 
         <schema id="quicknewdetail" parentschema="adetail" stereotype="detailnew" title="New Quick Request" redeclaring="true">
-
+          <section id="attachmentsection" orientation="horizontal">
+            <renderer type="default" params="childinputsize=small" />
+            <field label="Attachment" attribute="newattachment">
+              <renderer type="upload"/>
+            </field>
+          </section>
         </schema>
 
         <schema id="quickeditdetail" parentschema="adetail" stereotype="detail" title="Quick Request Details" redeclaring="true">
