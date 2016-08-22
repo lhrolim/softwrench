@@ -34,6 +34,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
         private readonly EntityMetadata _metadata;
         private readonly MaximoConnectorEngine _maximoConnectorEngine;
         private readonly ApplicationMetadata _applicationMetadata;
+        private readonly bool _instanceConfigured;
 
         public ToshibaSRSyncJob(IConfigurationFacade configurationFacade, JobManager jobManager, RestEntityRepository restEntityRepository, EntityRepository entityRepository, MaximoConnectorEngine maximoConnectorEngine) {
             _configurationFacade = configurationFacade;
@@ -45,8 +46,14 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
 
             _restentityRepository.KeyName = "ism";
 
-            _applicationMetadata = MetadataProvider.Application("servicerequest").StaticFromSchema("editdetail");
+            var application = MetadataProvider.Application("servicerequest", false);
+            if (application == null) {
+                Log.Warn("Application 'servicerequest' not found. Job not properly configured so it won't execute.");
+                return;
+            }
+            _applicationMetadata = application.StaticFromSchema("editdetail");
             _slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(_applicationMetadata);
+            _instanceConfigured = true;
         }
 
         /// <summary>
@@ -186,7 +193,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
 
         public override bool IsEnabled {
             get {
-                return ApplicationConfiguration.ClientName == "tgcs" &&
+                return ApplicationConfiguration.ClientName == "tgcs" && _instanceConfigured &&
                 //only execute it if there´s a starting date to limit the amount of data
                 //TODO: check null possibility, and dates...
                 _configurationFacade.Lookup<DateTime?>(ToshibaConfigurationRegistry.ToshibaSyncSrStatusDate) != null;
