@@ -20,6 +20,7 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Scheduler;
 using softWrench.sW4.Scheduler.Interfaces;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
 
@@ -185,9 +186,10 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
 
         public override bool IsEnabled {
             get {
+                return ApplicationConfiguration.ClientName == "tgcs" &&
                 //only execute it if there´s a starting date to limit the amount of data
                 //TODO: check null possibility, and dates...
-                return _configurationFacade.Lookup<DateTime?>(ToshibaConfigurationRegistry.ToshibaSyncSrStatusDate) != null;
+                _configurationFacade.Lookup<DateTime?>(ToshibaConfigurationRegistry.ToshibaSyncSrStatusDate) != null;
             }
         }
 

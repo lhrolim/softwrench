@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using cts.commons.simpleinjector;
+﻿using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
     public class ToshibaConfigurationRegistry : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {
@@ -21,6 +17,8 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
         }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+            if (ApplicationConfiguration.ClientName != "tgcs") return;
+
             _configurationFacade.Register(ToshibaSyncSrStatusDate, new PropertyDefinition {
                 Description = "Start point statusdate after which ISM SR updates would be synced. If null, no sync will be performed",
                 StringValue = null,
