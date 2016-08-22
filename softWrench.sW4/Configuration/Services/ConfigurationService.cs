@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using JetBrains.Annotations;
 using NHibernate.Linq;
@@ -32,7 +33,7 @@ namespace softWrench.sW4.Configuration.Services {
             _eventDispatcher = eventDispatcher;
         }
 
-        [NotNull]
+        [CanBeNull]
         public T Lookup<T>(string configKey, ContextHolder lookupContext, ConfigurationCacheContext cacheContext = null) {
             var ignoreCache = cacheContext != null && cacheContext.IgnoreCache;
             var preDefinition = cacheContext != null ? cacheContext.PreDefinition : null;
@@ -40,14 +41,13 @@ namespace softWrench.sW4.Configuration.Services {
             if (!ignoreCache) {
                 var fromCache = _cache.GetFromCache(configKey, lookupContext);
                 if (fromCache.Key) {
-                    var convertedValue = (T)Convert.ChangeType(fromCache.Value, typeof(T));
-                    Log.DebugFormat("Retrieving key {0} from cache. Retrieved content: {1}", lookupContext, convertedValue);
-                    return convertedValue;
+                    Log.DebugFormat("Retrieving key {0} from cache. Retrieved content: {1}", lookupContext, fromCache.Value);
+                    return GetConvertedValue<T>(fromCache.Value);
                 }
             }
             var definition = preDefinition ?? _dao.FindSingleByQuery<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
             if (definition == null) {
-                Log.Warn(String.Format("property {0} not found", configKey));
+                Log.Warn(string.Format("property {0} not found", configKey));
                 return default(T);
             }
             var values = definition.Values;
@@ -68,19 +68,43 @@ namespace softWrench.sW4.Configuration.Services {
         public void SetValue(string configKey, object value) {
             var definition = _dao.FindSingleByQuery<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
             if (definition == null) {
-                throw new InvalidOperationException(String.Format("Property {0} not found", configKey));
+                throw new InvalidOperationException(string.Format("Property {0} not found", configKey));
             }
             if (definition.Contextualized) {
-                throw new InvalidOperationException(String.Format("Cannot modify value of a contextualized definition {0} programatically", configKey));
+                throw new InvalidOperationException(string.Format("Cannot modify value of a contextualized definition {0} programatically", configKey));
             }
             var foundValue = definition.Values.FirstOrDefault(d => d.Condition == null);
             if (foundValue == null) {
                 foundValue = new PropertyValue();
                 foundValue.Definition = definition;
             }
-            foundValue.StringValue = value.ToString();
+            if (foundValue.Definition.DataType.EqualsAny("date", "datetime")) {
+                HandleDateTimeValue(configKey, value, foundValue);
+            } else {
+                foundValue.StringValue = value.ToString();
+            }
+
             _dao.Save(foundValue);
             _cache.ClearCache(configKey);
+        }
+
+        private static void HandleDateTimeValue(string configKey, object value, PropertyValue foundValue)
+        {
+            if (value is DateTime)
+            {
+                //making sure to store datetimes under a unified format
+                foundValue.StringValue = ((DateTime) value).ToString(DateUtil.DefaultUsaDateTimeFormat);
+            }
+            else
+            {
+                var convertedDate = DateUtil.Parse(value.ToString());
+                if (convertedDate == null)
+                {
+                    throw new InvalidOperationException(string.Format("Cannot convert value {0} of key {1} to date type", value,
+                        configKey));
+                }
+                foundValue.StringValue = convertedDate.Value.ToString(DateUtil.DefaultUsaDateTimeFormat);
+            }
         }
 
         private T HandleConditions<T>(IEnumerable<PropertyValue> values, ContextHolder lookupContext, PropertyDefinition definition, bool ignoreCache = false) {
@@ -94,7 +118,7 @@ namespace softWrench.sW4.Configuration.Services {
                 return default(T);
             }
 
-            Log.Debug(String.Format(NoPropertiesForContext, lookupContext));
+            Log.Debug(string.Format(NoPropertiesForContext, lookupContext));
             return DefaultValueCase<T>(definition, lookupContext, ignoreCache);
         }
 
@@ -124,18 +148,18 @@ namespace softWrench.sW4.Configuration.Services {
                     Log.Warn("error updating context cache", e);
                 }
             }
-
-            var convertedValue = (T)Convert.ChangeType(value, typeof(T));
-
             Log.DebugFormat("Value matched: {0}", value);
-            return convertedValue;
+
+
+            return GetConvertedValue<T>(value);
         }
 
         private T DefaultValueCase<T>(PropertyDefinition definition, ContextHolder configCacheKey, bool ignoreCache = false) {
             if (!ignoreCache) {
                 _cache.AddToCache(definition.FullKey, configCacheKey, definition.StringValue);
             }
-            return (T)Convert.ChangeType(definition.StringValue, typeof(T));
+
+            return GetConvertedValue<T>(definition.StringValue);
         }
 
 
@@ -211,7 +235,25 @@ namespace softWrench.sW4.Configuration.Services {
         public T GetGlobalPropertyValue<T>(PropertyDefinition definition) {
             var value = InnerGetGlobalPropertyValue(definition);
             var stringValue = value == null ? null : (value.StringValue ?? value.SystemStringValue);
-            return (T)Convert.ChangeType(stringValue, typeof(T));
+            return GetConvertedValue<T>(stringValue);
+        }
+
+        private static T GetConvertedValue<T>(string stringValue) {
+            if (stringValue == null) {
+                return default(T);
+            }
+            var conversionType = typeof(T);
+            if (conversionType == typeof(DateTime) || conversionType == typeof(DateTime?)) {
+                var dt = DateUtil.Parse(stringValue);
+                if (dt == null) {
+                    Log.WarnFormat("couldn´t convert date {0}... returning null", stringValue);
+                    return default(T);
+                }
+
+                return (T)Convert.ChangeType(dt, Nullable.GetUnderlyingType(conversionType) ?? conversionType);
+            }
+
+            return (T)Convert.ChangeType(stringValue, Nullable.GetUnderlyingType(conversionType) ?? conversionType);
         }
 
         // global property, ignores module, profile and conditions

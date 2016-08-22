@@ -1,4 +1,4 @@
-﻿<div>
+<div>
     <div class="admin-area" ng-if="popupmode != 'browser'" ng-class="{'classic-admin' : showClassicMenu()}">
         <div breadcrumb class="breadcrumb" data-menu="menu" data-title="title"></div>
         <div class="admin-menu">
@@ -41,9 +41,9 @@
                             <li class="dropdown-submenu">
                                 <a data-toggle="dropdown" aria-expanded="false"><i class="fa fa-sliders fa-fw"></i>&ensp;Setup</a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="" ng-click="doAction(null,'Scheduler','Index',null,$event)"><i class="fa fa-clock-o fa-fw"></i>&ensp;{{i18N('_headermenu.schedulersetup','Scheduler')}}</a></li>
                                     <li><a href="" ng-click="loadApplication('_configuration','detail')"><i class="fa fa-terminal fa-fw"></i>&ensp;{{i18N('_headermenu.configuration','Configuration')}}</a></li>
                                     <li><a href="" ng-click="doAction(null,'Configuration','WhereClauses',{popup:true},$event)"><i class="fa fa-code fa-fw"></i>&ensp;{{i18N('_headermenu.whereclauses','Where Clauses')}}</a></li>
+                                    <li><a href="" ng-click="doAction(null,'Scheduler','Index',null,$event)"><i class="fa fa-clock-o fa-fw"></i>&ensp;{{i18N('_headermenu.schedulersetup','Scheduler')}}</a></li>
                                     <li><a href="" ng-click="doAction(null,'DeployValidation','Index')"><i class="fa fa-check-circle-o fa-fw"></i>&ensp;{{i18N('_headermenu.deployvalidation','Deploy Validation')}}</a></li>
                                 </ul>
                             </li>

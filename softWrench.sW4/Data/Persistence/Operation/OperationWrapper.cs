@@ -40,7 +40,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             ApplicationMetadata = applicationMetadata;
         }
 
-        public OperationWrapper(CrudOperationData operationData, string operationName) {
+        public OperationWrapper(IOperationData operationData, string operationName) {
             _entityMetadata = operationData.EntityMetadata;
             Id = operationData.Id;
             UserId = operationData.UserId;

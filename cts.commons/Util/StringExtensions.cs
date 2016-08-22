@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 
 namespace cts.commons.portable.Util {
     public static class StringExtensions {
@@ -23,6 +24,7 @@ namespace cts.commons.portable.Util {
             return new string(chars);
         }
 
+        [StringFormatMethod("str")]
         public static string Fmt(this string str, params object[] parameters) {
             return string.Format(str, parameters);
         }

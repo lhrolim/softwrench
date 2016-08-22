@@ -262,14 +262,20 @@ namespace softWrench.sW4.Data.Search {
             WhereClause += toAppendwhereclause;
         }
 
+        [StringFormatMethod("whereclause")]
         public void AppendWhereClauseFormat(string whereclause, params object[] parameters) {
             whereclause = string.Format(whereclause, parameters);
             AppendWhereClause(whereclause);
         }
 
         public void AppendProjectionField(ProjectionField projectionField) {
-
             _projectionFields.Add(projectionField);
+        }
+
+        public void AppendProjectionFields(params string[] fields) {
+            foreach (var field in fields) {
+                AppendProjectionField(ProjectionField.Default(field));
+            }
         }
 
         public ISet<ProjectionField> ProjectionFields {

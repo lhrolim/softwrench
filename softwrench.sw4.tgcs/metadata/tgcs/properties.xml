@@ -52,7 +52,8 @@
     <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="maxadmin"/>
 
-    <property key="rest.ism.url" value="http://173.193.44.2:9080/maxrest/rest/mbo/" />
+    <!-- Sync to itself in order to test it-->
+    <property key="rest.ism.url" value="http://10.50.100.178:9080/maxrest/rest/mbo/" />
     <property key="rest.ism.credentials.user" value="mxintadm"/>
     <property key="rest.ism.credentials.password" value="mxintadm"/>
 
@@ -72,6 +73,10 @@
 
     <property key="swdb_provider" value="System.Data.SQL"/>
     <property key="swdb_url" value="Data Source=10.50.100.54;Initial Catalog=SWDB_TSBQA;User Id=sw;password=softwrench;" />
+
+    <property key="rest.ism.url" value="http://173.193.44.2:9080/maxrest/rest/mbo/" />
+    <property key="rest.ism.credentials.user" value="mxintadm"/>
+    <property key="rest.ism.credentials.password" value="mxintadm"/>
 
     <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="maxadmin"/>

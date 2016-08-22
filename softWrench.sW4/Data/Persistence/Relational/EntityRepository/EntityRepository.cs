@@ -37,7 +37,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             return ApplicationConfiguration.DBConnectionString(DBType.Maximo);
         }
 
-        public IReadOnlyList<AttributeHolder> Get([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
+        public IReadOnlyList<DataMap> Get([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
             if (searchDto == null) throw new ArgumentNullException("searchDto");
             var query = _entityQueryBuilder.AllRows(entityMetadata, searchDto);
@@ -78,7 +78,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             return rows;
         }
 
-        public IReadOnlyList<AttributeHolder> Get([NotNull] EntityMetadata entityMetadata, long rowstamp, SearchRequestDto searchDto = null) {
+        public IReadOnlyList<DataMap> Get([NotNull] EntityMetadata entityMetadata, long rowstamp, SearchRequestDto searchDto = null) {
             if (entityMetadata == null) {
                 throw new ArgumentNullException("entityMetadata");
             }
@@ -194,7 +194,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
 
         [CanBeNull]
-        public AttributeHolder Get([NotNull] EntityMetadata entityMetadata, [NotNull] string id) {
+        public DataMap Get([NotNull] EntityMetadata entityMetadata, [NotNull] string id) {
             //TODO: we're always handling the entity ID as a string.
             //Maybe we should leverage the entity attribute type.
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");

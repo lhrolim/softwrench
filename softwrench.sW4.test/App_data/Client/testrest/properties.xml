@@ -4,6 +4,8 @@
   <property key="sourcemapping" value="maximo7.5"/>
   <property key="targetmapping" value="maximo7.5"/>
 
+  <property key="multitenantprefix" value="TTC-00"/>
+
 
   <property key="rest.ism.url" value="http://localhost:8080/maxrest/rest/mbo/" />
   <property key="rest.ism.credentials.user" value="mxintadm"/>

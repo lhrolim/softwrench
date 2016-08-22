@@ -1,43 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.web.Util;
 using JetBrains.Annotations;
+using log4net;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
     public class RestEntityRepository : IEntityRepository {
 
-        private RestResponseParser _restResponseParser;
+        private readonly RestResponseParser _restResponseParser;
+
+        private readonly ILog _log = LogManager.GetLogger(typeof(RestEntityRepository));
+
+        public string KeyName {
+            get; set;
+        }
+
 
         public RestEntityRepository(RestResponseParser restResponseParser) {
             _restResponseParser = restResponseParser;
+            _log.DebugFormat("init");
         }
 
 
-        protected virtual string KeyName {
-            get {
-                return null;
-            }
-        }
 
-        public IReadOnlyList<AttributeHolder> Get(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
+
+        public IReadOnlyList<DataMap> Get(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
+            //TODO: use async
             var baseURL = BuildGetUrl(entityMetadata, searchDto, KeyName);
             var responseAsText = RestUtil.CallRestApiSync(baseURL, "get", MaximoRestUtils.GetMaximoHeaders(KeyName));
             return _restResponseParser.ConvertXmlToDatamaps(entityMetadata, responseAsText);
         }
 
-        public AttributeHolder Get(EntityMetadata entityMetadata, string id) {
+        public DataMap Get(EntityMetadata entityMetadata, string id) {
             var baseURL = BuildGetUrl(entityMetadata, new SearchRequestDto() { Id = id }, KeyName);
             var responseAsText = RestUtil.CallRestApiSync(baseURL, "get", MaximoRestUtils.GetMaximoHeaders(KeyName));
             return _restResponseParser.ConvertXmlToDatamap(entityMetadata, responseAsText);
@@ -48,9 +54,12 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
             var baseURL = new StringBuilder(MaximoRestUtils.GenerateRestUrlForQuery(entityMetadata, id, keyname) + "?");
             baseURL.Append("_urs=true");
+            HandleMultiTenantPrefix(entityMetadata, baseURL);
 
             if (id != null) {
-                return baseURL.ToString();
+                var builtGetIdUrl = baseURL.ToString();
+                _log.DebugOrInfoFormat("url built : {0}", builtGetIdUrl);
+                return builtGetIdUrl;
             }
             //limiting the result set to 100 by default, avoiding issues
             var countThreshold = 100;
@@ -59,6 +68,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
                 countThreshold = d.PageSize;
             }
             baseURL.AppendFormat("&_maxitems={0}", countThreshold);
+
+            HandleSort(searchDto, baseURL);
+
 
             var projectionFields = searchDto.ProjectionFields;
             if (projectionFields.Any()) {
@@ -85,9 +97,32 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
                 }
             }
+            var builtGetUrl = baseURL.ToString();
+            _log.DebugOrInfoFormat("url built : {0}", builtGetUrl);
+            return builtGetUrl;
+        }
 
+        private static void HandleSort(SearchRequestDto searchDto, StringBuilder baseURL) {
+            if (searchDto.SearchSort != null) {
+                if (searchDto.SearchAscending) {
+                    baseURL.AppendFormat("&_orderbyasc={0}", searchDto.SearchSort);
+                } else {
+                    baseURL.AppendFormat("&_orderbydesc={0}", searchDto.SearchSort);
+                }
+            }
+        }
 
-            return baseURL.ToString();
+        private static void HandleMultiTenantPrefix(EntityMetadata entityMetadata, StringBuilder baseURL) {
+            var multiTenantPrefix = MetadataProvider.GlobalProperty(SwConstants.MultiTenantPrefix);
+            if (multiTenantPrefix != null) {
+                if (entityMetadata.Schema.Attributes.Any(a => a.Name.Equals("pluspcustomer"))) {
+                    baseURL.AppendFormat("&pluspcustomer=~eq~{0}", multiTenantPrefix);
+                } else if (entityMetadata.Schema.Attributes.Any(a => a.Name.Equals("pluspcustvendor"))) {
+                    baseURL.AppendFormat("&pluspcustvendor=~eq~{0}", multiTenantPrefix);
+                } else if (entityMetadata.Schema.Attributes.Any(a => a.Name.Equals("pluspinsertcustomer"))) {
+                    baseURL.AppendFormat("&pluspinsertcustomer=~eq~{0}", multiTenantPrefix);
+                }
+            }
         }
 
         private static string HandleValue(SearchParameter searchParameter) {

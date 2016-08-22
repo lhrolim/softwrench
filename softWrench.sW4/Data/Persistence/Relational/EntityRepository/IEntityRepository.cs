@@ -12,10 +12,10 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository
     {
 
         [NotNull]
-        IReadOnlyList<AttributeHolder> Get([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto);
+        IReadOnlyList<DataMap> Get([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto);
 
         [CanBeNull]
-        AttributeHolder Get([NotNull] EntityMetadata entityMetadata, [NotNull] string id);
+        DataMap Get([NotNull] EntityMetadata entityMetadata, [NotNull] string id);
 
         int Count([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto);
 

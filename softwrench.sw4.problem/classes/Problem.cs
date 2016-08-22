@@ -98,7 +98,17 @@ namespace softwrench.sw4.problem.classes {
         public Problem() {
 
         }
-
+        /// <summary>
+        /// Creates a problem with the minimum and usual data required
+        /// </summary>
+        /// <param name="recordType">Usually the application name</param>
+        /// <param name="recordSchema"></param>
+        /// <param name="recordId"></param>
+        /// <param name="recordUserId"></param>
+        /// <param name="stackTrace"></param>
+        /// <param name="message"></param>
+        /// <param name="problemType"></param>
+        /// <returns></returns>
         public static Problem BaseProblem(string recordType,string recordSchema, string recordId, string recordUserId,
             string stackTrace, string message, string problemType) {
             return new Problem() {

@@ -7,8 +7,14 @@ namespace softWrench.sW4.Scheduler.Interfaces {
         string Description();
         string Cron();
         void ExecuteJob();
-        bool IsScheduled { get; set; }
-        bool IsEnabled { get; }
+        bool IsScheduled {
+            get; set;
+        }
+        bool IsEnabled {
+            get;
+        }
+
+        void OnJobSchedule();
 
         bool RunAtStartup();
 

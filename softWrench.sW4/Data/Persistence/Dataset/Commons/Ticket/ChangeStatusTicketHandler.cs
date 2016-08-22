@@ -13,8 +13,20 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
     public class ChangeStatusTicketHandler : BaseMaximoCustomConnector {
 
-        public TargetResult ChangeStatus(NewStatusData crudOperationData) {
-            
+        public virtual TargetResult ChangeStatus(NewStatusData crudOperationData) {
+            var maximoExecutionContext = PrepareData(crudOperationData);
+            return DoExecute(crudOperationData, maximoExecutionContext);
+        }
+
+        protected virtual TargetResult DoExecute(NewStatusData crudOperationData,
+            MaximoOperationExecutionContext maximoExecutionContext) {
+            var ob = maximoExecutionContext.InvokeProxy();
+
+            return new TargetResult(crudOperationData.CrudData.Id, crudOperationData.CrudData.UserId, ob,
+                "Status has been successfully updated");
+        }
+
+        protected virtual MaximoOperationExecutionContext PrepareData(NewStatusData crudOperationData) {
             var maximoExecutionContext = GetContext(crudOperationData);
             var user = SecurityFacade.CurrentUser();
             var ticket = maximoExecutionContext.IntegrationObject;
@@ -38,14 +50,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
 
             WsUtil.SetChanged(statusIFace, statusDate, woStatus);
-            var ob = maximoExecutionContext.InvokeProxy();
-
-            return new TargetResult(crudData.Id,crudData.UserId,ob,"Status has been successfully updated");
-
+            return maximoExecutionContext;
         }
 
         public class NewStatusData : CrudOperationDataContainer {
-            public string NewStatus { get; set; }
+            public string NewStatus {
+                get; set;
+            }
         }
 
     }

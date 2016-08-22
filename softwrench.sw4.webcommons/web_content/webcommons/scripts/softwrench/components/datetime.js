@@ -15,7 +15,7 @@ angular.module('sw_layout')
 
     function updateView(ngModel, scope, element, datamap, angularDateFormat) {
         if (scope.fieldMetadata != undefined) {
-            var value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
+            const value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
             ngModel.$setViewValue(value);
             element.val(value);
             if (datamap != undefined && scope.fieldMetadata != undefined) {
@@ -26,12 +26,12 @@ angular.module('sw_layout')
     }
 
     function datetimeclassHandler(timeOnly,element) {
-        var datetime = $('.datetime-class', element.parent());
-        var calendar = 'glyphicon glyphicon-calendar';
-        var time = 'glyphicon glyphicon-time';
+        const datetime = $('.datetime-class', element.parent());
+        const calendar = 'glyphicon glyphicon-calendar';
+        const time = 'glyphicon glyphicon-time';
         datetime.removeClass(calendar);
         datetime.removeClass(time);
-        var classToAdd = timeOnly ? time : calendar;
+        const classToAdd = timeOnly ? time : calendar;
         datetime.addClass(classToAdd);
     }
 
@@ -43,13 +43,12 @@ angular.module('sw_layout')
             if (!ngModel) {
                 return;
             }
-
-            var showTime = parseBooleanValue(attrs.showTime);
-            var showDate = parseBooleanValue(attrs.showDate);
+            const showTime = parseBooleanValue(attrs.showTime);
+            const showDate = parseBooleanValue(attrs.showDate);
             var dateFormat = formatService.adjustDateFormatForPicker(attrs.formatString, showTime);
             var angularDateFormat = formatService.adjustDateFormatForAngular(attrs.formatString, showTime);
             attrs.language = (userLanguage !== '') ? userLanguage : 'en';
-            var istimeOnly = showTime && !showDate;
+            const istimeOnly = showTime && !showDate;
             var datamap = scope.datamap;
             datetimeclassHandler(istimeOnly,element);
 
@@ -65,9 +64,9 @@ angular.module('sw_layout')
             });
 
             if (dateFormat !== '' && dateFormat != undefined) {
-                var allowfuture = parseBooleanValue(attrs.allowFuture);
-                var allowpast = parseBooleanValue(attrs.allowPast);
-
+                const allowfuture = parseBooleanValue(attrs.allowFuture);
+                const allowpast = parseBooleanValue(attrs.allowPast);
+                const position = !!attrs.position ? attrs.position: "bottom";
                 var startDate = allowpast ? false : new Date();
                 var endDate = allowfuture ? false : new Date();
                 var minStartDateExpression = attrs.minDateexpression;
@@ -75,7 +74,7 @@ angular.module('sw_layout')
                 if (minStartDateExpression != null && minStartDateExpression != '') {
                     startDate = expressionService.evaluate(minStartDateExpression, datamap);
                     startDate = Date.parse(formatService.formatDate(startDate, attrs.dateFormat));
-                    var variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
+                    const variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
                     scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
                         if (newVal != oldVal) {
                             startDate = expressionService.evaluate(minStartDateExpression, datamap);
@@ -94,8 +93,8 @@ angular.module('sw_layout')
                 $timeout(function () {
                     //timeout to avoid $digest is already in progress exception... using false keyword postergates this to next digest loop
                     // element.datetimepicker({
-                    var elementToUse = !attrs.attachDatepickerToParent ? element : element.parent();
-                    var datetimepicker = elementToUse.datetimepicker({
+                    const elementToUse = !attrs.attachDatepickerToParent ? element : element.parent();
+                    const datetimepicker = elementToUse.datetimepicker({
                         format: dateFormat,
                         locale: attrs.language,
                         maxDate: endDate,
@@ -105,17 +104,16 @@ angular.module('sw_layout')
                         toolbarPlacement: 'top',
                         useCurrent: false,
                         widgetPositioning: {
-                            vertical: 'bottom'
+                            vertical: position
                         }
                         //debug: true
                     });
-
                     if (isIE()) {
                         //https://controltechnologysolutions.atlassian.net/browse/SWWEB-2198
                         datetimepicker.on("dp.change", function (e) {
                             scope.$apply(function() {
                                 ngModel.$modelValue = e.formattedDate;
-                                var value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
+                                const value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
                                 if (datamap != undefined && scope.fieldMetadata != undefined) {
                                     datamap[scope.fieldMetadata.attribute] = value;
                                 }

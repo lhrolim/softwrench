@@ -1,5 +1,6 @@
 ﻿using System;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 
 namespace softwrench.sw4.problem.classes {
     public class ProblemManager : IProblemManager {
@@ -27,15 +28,19 @@ namespace softwrench.sw4.problem.classes {
         }
 
         public Problem RegisterOrUpdateProblem(int currentUser, Problem problem, Func<string> queryToUse) {
-            var existingProblem = _swdbHibernateDAO.FindSingleByQuery<Problem>(queryToUse());
-            Problem resultingProblem = null;
-            IProblemHandler handler = null;
+            Problem existingProblem;
+            if (queryToUse == null) {
+                existingProblem = _swdbHibernateDAO.FindSingleByQuery<Problem>(Problem.ByEntryAndType.Fmt(problem.RecordId, problem.RecordType, problem.ProblemType));
+            } else {
+                existingProblem = _swdbHibernateDAO.FindSingleByQuery<Problem>(queryToUse());
+            }
+
             if (existingProblem != null) {
                 problem.Id = existingProblem.Id;
             }
             problem.CreatedBy = currentUser;
-            resultingProblem = _swdbHibernateDAO.Save(problem);
-            handler = _problemHandlerLookuper.FindHandler(problem.ProblemType, problem.RecordType);
+            var resultingProblem = _swdbHibernateDAO.Save(problem);
+            var handler = _problemHandlerLookuper.FindHandler(problem.ProblemType, problem.RecordType);
             if (handler != null) {
                 handler.OnProblemRegister(resultingProblem);
             }

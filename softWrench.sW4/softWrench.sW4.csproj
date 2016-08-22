@@ -431,6 +431,7 @@
     <Compile Include="Preferences\GridFilterManager.cs" />
     <Compile Include="Preferences\GridPreferences.cs" />
     <Compile Include="Scheduler\ASwJob.cs" />
+    <Compile Include="Scheduler\Interfaces\SWJobException.cs" />
     <Compile Include="Security\Attributes\DynamicAdminRoleAttribute.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseCondition.cs" />
@@ -679,6 +680,7 @@
     <Compile Include="Util\ClassificationColorResolver.cs" />
     <Compile Include="Util\StatusColorResolver.cs" />
     <Compile Include="Util\StreamUtils.cs" />
+    <Compile Include="Util\SW4Log4NetUtil.cs" />
     <Compile Include="Util\SwConstants.cs" />
     <Compile Include="Util\TaskFactoryExtensions.cs" />
     <Compile Include="Util\TransactionConstants.cs" />

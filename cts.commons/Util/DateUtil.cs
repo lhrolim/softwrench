@@ -8,13 +8,28 @@ namespace cts.commons.portable.Util {
 
         // added additional acceptance format 
         //TODO: modify this solution, as dd/mmy/yyyy and mm/dd/yyyy should need to be choosen based upon a locale rule (03/10/2016 could be parsed, both ways)
-        public static readonly string[] FormatOptions = { "yyyy/MM/dd", "yyyy/MM/dd hh:mm", "yyyy/MM/dd HH:mm", "MM/dd/yyyy hh:mm", "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm", "MM/dd/yyyy HH:mm", "M/d/yyyy hh:mm", "dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-MM-dd hh:mm", "yyyy-MM-dd HH:mm", "yyyy-M-d", "yyyy-MM-dd HH:mm:ss.FFF" };
+        public static readonly string[] FormatOptions = { "yyyy/MM/dd", "yyyy/MM/dd hh:mm", "yyyy/MM/dd HH:mm", "MM/dd/yyyy hh:mm", "MM/dd/yyyy hh:mm:ss", "MM/dd/yy hh:mm:ss", "MM/dd/yyyy HH:mm:ss", "MM/dd/yy HH:mm:ss", "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm", "MM/dd/yyyy HH:mm", "M/d/yyyy hh:mm", "dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-MM-dd hh:mm", "yyyy-MM-dd HH:mm", "yyyy-M-d", "yyyy-MM-dd HH:mm:ss.FFF", "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFK" };
 
         public const string MaximoDefaultIntegrationFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFK";
+
+        public const string DefaultUsaDateTimeFormat = "MM/dd/yyyy HH:mm";
+
+        public static DateTime? ParseExact(string date, string preferredFormat) {
+            DateTime temp;
+            // Switched from TryParse - it accepted 4500-5
+
+            var formatsToUse =  new[] { preferredFormat };
+
+            if (DateTime.TryParseExact(date, formatsToUse, CultureInfo.InvariantCulture, DateTimeStyles.None, out temp)) {
+                return temp;
+            }
+            return null;
+        }
 
         public static DateTime? Parse(string date) {
             DateTime temp;
             // Switched from TryParse - it accepted 4500-5
+
             if (DateTime.TryParseExact(date, FormatOptions, CultureInfo.InvariantCulture, DateTimeStyles.None, out temp)) {
                 return temp;
             }

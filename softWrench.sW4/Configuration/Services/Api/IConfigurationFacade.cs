@@ -7,7 +7,7 @@ namespace softWrench.sW4.Configuration.Services.Api {
 
     public interface IConfigurationFacade : ISingletonComponent {
 
-        [NotNull]
+        [CanBeNull]
         T Lookup<T>([NotNull]string configKey);
 
         void Register([NotNull]string configKey, [NotNull]PropertyDefinition definition);

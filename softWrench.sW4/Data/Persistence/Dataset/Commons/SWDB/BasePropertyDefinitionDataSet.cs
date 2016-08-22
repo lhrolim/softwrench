@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using NHibernate.Linq;
 using softwrench.sW4.Shared2.Data;
@@ -22,6 +23,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
+using softWrench.sW4.Util;
 using PropertyDefinition = softWrench.sW4.Configuration.Definitions.PropertyDefinition;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
@@ -58,8 +60,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             var searchDTO = request.PaginatedSearch;
             var compositions = new Dictionary<string, EntityRepository.SearchEntityResult>();
 
-            searchDTO.AppendWhereClause(
-                " (Visible = 1 AND FullKey like '/Global/%' AND (renderer is null or renderer != 'attachment')) ");
+            searchDTO.AppendWhereClauseFormat(
+                " (Visible = 1 AND (FullKey like '/Global/%' or FullKey like '/{0}/%')AND (renderer is null or renderer != 'attachment')) ".Fmt(ApplicationConfiguration.ClientName));
             var listApplication = MetadataProvider.Application("_configuration")
                 .ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("list"));
             var listResult = GetList(listApplication, searchDTO);

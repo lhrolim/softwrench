@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using cts.commons.portable.Util;
 using Common.Logging;
 using Quartz;
 using Quartz.Impl;
@@ -18,7 +19,7 @@ namespace softWrench.sW4.Scheduler {
         private ISchedulerFactory _sf;
         private const string GroupName = "SoftWrenchJobGroup";
         private static IEnumerable<ISwJob> _jobs;
-        private SimpleInjectorJobFactory _jobFactory;
+        private readonly SimpleInjectorJobFactory _jobFactory;
         public void Stop() {
             _scheduler.Standby();
         }
@@ -37,32 +38,32 @@ namespace softWrench.sW4.Scheduler {
         }
 
         private static void GetAllJobs(IScheduler scheduler) {
-            IList<string> jobGroups = scheduler.GetJobGroupNames();
-            IList<string> triggerGroups = scheduler.GetTriggerGroupNames();
+            var jobGroups = scheduler.GetJobGroupNames();
+            var triggerGroups = scheduler.GetTriggerGroupNames();
 
-            foreach (string group in jobGroups) {
+            foreach (var group in jobGroups) {
                 var groupMatcher = GroupMatcher<JobKey>.GroupContains(group);
                 var jobKeys = scheduler.GetJobKeys(groupMatcher);
                 foreach (var jobKey in jobKeys) {
                     var detail = scheduler.GetJobDetail(jobKey);
                     var triggers = scheduler.GetTriggersOfJob(jobKey);
-                    foreach (ITrigger trigger in triggers) {
-                        System.Diagnostics.Debug.WriteLine(group);
-                        System.Diagnostics.Debug.WriteLine(jobKey.Name);
-                        System.Diagnostics.Debug.WriteLine(detail.Description);
-                        System.Diagnostics.Debug.WriteLine(trigger.Key.Name);
-                        System.Diagnostics.Debug.WriteLine(trigger.Key.Group);
-                        System.Diagnostics.Debug.WriteLine(trigger.GetType().Name);
-                        System.Diagnostics.Debug.WriteLine(scheduler.GetTriggerState(trigger.Key));
-                        DateTimeOffset? nextFireTime = trigger.GetNextFireTimeUtc();
+                    foreach (var trigger in triggers) {
+                        Debug.WriteLine(group);
+                        Debug.WriteLine(jobKey.Name);
+                        Debug.WriteLine(detail.Description);
+                        Debug.WriteLine(trigger.Key.Name);
+                        Debug.WriteLine(trigger.Key.Group);
+                        Debug.WriteLine(trigger.GetType().Name);
+                        Debug.WriteLine(scheduler.GetTriggerState(trigger.Key));
+                        var nextFireTime = trigger.GetNextFireTimeUtc();
                         if (nextFireTime.HasValue) {
-                            System.Diagnostics.Debug.WriteLine(
+                            Debug.WriteLine(
                                 TimeZone.CurrentTimeZone.ToLocalTime(nextFireTime.Value.DateTime).ToString());
                         }
 
-                        DateTimeOffset? previousFireTime = trigger.GetPreviousFireTimeUtc();
+                        var previousFireTime = trigger.GetPreviousFireTimeUtc();
                         if (previousFireTime.HasValue) {
-                            System.Diagnostics.Debug.WriteLine(
+                            Debug.WriteLine(
                                 TimeZone.CurrentTimeZone.ToLocalTime(previousFireTime.Value.DateTime).ToString());
                         }
                     }
@@ -83,14 +84,13 @@ namespace softWrench.sW4.Scheduler {
 
                 _log.Info("------- Initializing ----------------------");
 
-                DateTimeOffset runTime = DateBuilder.EvenMinuteDate(DateTimeOffset.UtcNow);
+                var runTime = DateBuilder.EvenMinuteDate(DateTimeOffset.UtcNow);
 
                 var jobs = GetJobs();
 
                 foreach (var job in jobs) {
 
-                    if (job.IsEnabled)
-                    {
+                    if (job.IsEnabled) {
                         _scheduler = _sf.GetScheduler();
 
                         _log.Info("------- Initialization Complete -----------");
@@ -133,18 +133,24 @@ namespace softWrench.sW4.Scheduler {
 
                     switch (jobCommand) {
                         case JobCommandEnum.Execute:
-                            System.Diagnostics.Debug.WriteLine("executing job");
+                        Debug.WriteLine("executing job");
+                        if (job.IsEnabled) {
                             job.ExecuteJob();
                             break;
+                        }
+                        throw new Exception("Job {0} is disabled and cannot be started".Fmt(job.Name()));
 
-                        case JobCommandEnum.Pause: this.PauseJob(job);
-                            break;
+                        case JobCommandEnum.Pause:
+                        PauseJob(job);
+                        break;
 
-                        case JobCommandEnum.Schedule: this.ScheduleJob(job);
-                            break;
+                        case JobCommandEnum.Schedule:
+                        ScheduleJob(job);
+                        break;
 
-                        case JobCommandEnum.ChangeCron: this.ChangeCron(job, cronExpression);
-                            break;
+                        case JobCommandEnum.ChangeCron:
+                        ChangeCron(job, cronExpression);
+                        break;
                     }
 
                 }
@@ -164,7 +170,7 @@ namespace softWrench.sW4.Scheduler {
                     var detail = _scheduler.GetJobDetail(jobKey);
                     if (detail.JobType != job.GetType()) continue;
                     var triggers = _scheduler.GetTriggersOfJob(jobKey);
-                    foreach (ITrigger triggerPause in triggers) {
+                    foreach (var triggerPause in triggers) {
                         if (_scheduler.GetTriggerState(triggerPause.Key) != TriggerState.Normal) continue;
                         _scheduler.PauseTrigger(triggerPause.Key);
                         _scheduler.PauseJob(detail.Key);
@@ -175,7 +181,7 @@ namespace softWrench.sW4.Scheduler {
 
         private void ScheduleJob(ISwJob job) {
             var groupToResume = _scheduler.GetJobGroupNames();
-
+            job.OnJobSchedule();
             foreach (var group in groupToResume) {
                 var groupMatcher = GroupMatcher<JobKey>.GroupContains(group);
                 var jobKeys = _scheduler.GetJobKeys(groupMatcher);
@@ -183,7 +189,7 @@ namespace softWrench.sW4.Scheduler {
                     var detail = _scheduler.GetJobDetail(jobKey);
                     if (detail.JobType != job.GetType()) continue;
                     var triggers = _scheduler.GetTriggersOfJob(jobKey);
-                    foreach (ITrigger triggerResume in triggers) {
+                    foreach (var triggerResume in triggers) {
                         if (_scheduler.GetTriggerState(triggerResume.Key) != TriggerState.Paused) continue;
                         _scheduler.ResumeTrigger(triggerResume.Key);
                         _scheduler.ResumeJob(detail.Key);
@@ -202,7 +208,7 @@ namespace softWrench.sW4.Scheduler {
                     var detail = _scheduler.GetJobDetail(jobKey);
                     if (detail.JobType != job.GetType()) continue;
                     var triggers = _scheduler.GetTriggersOfJob(jobKey);
-                    foreach (ITrigger triggerResume in triggers) {
+                    foreach (var triggerResume in triggers) {
 
                         var trigger = (ICronTrigger)TriggerBuilder.Create()
                             .WithIdentity(job.Name() + "Trigger", GroupName)
@@ -224,10 +230,18 @@ namespace softWrench.sW4.Scheduler {
         #region Jobs Info
 
         public struct JobsInfo {
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public string Cron { get; set; }
-            public bool IsScheduled { get; set; }
+            public string Name {
+                get; set;
+            }
+            public string Description {
+                get; set;
+            }
+            public string Cron {
+                get; set;
+            }
+            public bool IsScheduled {
+                get; set;
+            }
         }
 
         public List<JobsInfo> GetJobsInfo() {

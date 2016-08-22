@@ -37,12 +37,22 @@ namespace softWrench.sW4.Scheduler.Jobs {
             _log.Info(string.Format("Finished in : {0}", DateTime.Now));
         }
 
-        public bool IsScheduled { get; set; }
+        public bool IsScheduled {
+            get; set;
+        }
 
-        public bool IsEnabled { get { return true; } }
+        public bool IsEnabled {
+            get {
+                return false;
+            }
+        }
 
         public ILog JobLog() {
             return _log;
+        }
+
+        public void OnJobSchedule() {
+
         }
 
         public bool RunAtStartup() {

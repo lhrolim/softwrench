@@ -26,7 +26,7 @@ namespace softwrench.sW4.test.Data.Relationship {
         [TestMethod]
         public void TestQueryById() {
             var result = RestClient.BuildGetUrl(_entity, new SearchRequestDto() {Id = "10"}, "ism");
-            Assert.AreEqual("http://localhost:8080/maxrest/rest/mbo/SR/10?_urs=true", result);
+            Assert.AreEqual("http://localhost:8080/maxrest/rest/mbo/SR/10?_urs=true&pluspcustomer=~eq~TTC-00", result);
         }
 
 
@@ -53,12 +53,13 @@ namespace softwrench.sW4.test.Data.Relationship {
             Assert.AreEqual("fake",query.Get("ticketuid.ormode"));
             Assert.AreEqual("2,3,4",query.Get("ticketuid"));
             Assert.AreEqual("~eq~APPR", query.Get("status"));
+            Assert.AreEqual("~eq~TTC-00", query.Get("pluspcustomer"));
             Assert.AreEqual("true", query.Get("_urs"));
 
             var maxitems = query.Get("_maxitems");
             Assert.AreEqual(maxitems, "100");
 
-            Assert.AreEqual(query.Count,6);
+            Assert.AreEqual(query.Count,7);
 
 
         }
@@ -80,19 +81,14 @@ namespace softwrench.sW4.test.Data.Relationship {
             var uri = new Uri(result);
             var query = HttpUtility.ParseQueryString(uri.Query);
 
-            var colsToInclude = query.Get("_includecols");
-            Assert.AreEqual(colsToInclude, "status,ticketid,ticketuid");
+            Assert.AreEqual("status,ticketid,ticketuid",query.Get("_includecols"));
+            Assert.AreEqual("~gt~2016-03-10T05:41:07.107", query.Get("changedate"));
+            Assert.AreEqual("true",query.Get("_urs"));
+            Assert.AreEqual("~eq~TTC-00", query.Get("pluspcustomer"));
 
-            var changeDate = query.Get("changedate");
-            Assert.AreEqual("~gt~2016-03-10T05:41:07.107", changeDate);
+            Assert.AreEqual("100",query.Get("_maxitems"));
 
-            var urs = query.Get("_urs");
-            Assert.AreEqual(urs, "true");
-
-            var maxitems = query.Get("_maxitems");
-            Assert.AreEqual(maxitems, "100");
-
-            Assert.AreEqual(query.Count, 4);
+            Assert.AreEqual(query.Count, 5);
 
 
         }
@@ -128,10 +124,29 @@ namespace softwrench.sW4.test.Data.Relationship {
             Assert.AreEqual("true", query.Get("_urs"));
 
             Assert.AreEqual("100",query.Get("_maxitems"));
+            Assert.AreEqual("~eq~TTC-00", query.Get("pluspcustomer"));
 
-            Assert.AreEqual(query.Count, 6);
+            Assert.AreEqual(query.Count, 7);
 
 
+        }
+
+
+        /// <summary>
+        /// Not testing other scenarios, just the ordering
+        /// </summary>
+        [TestMethod]
+        public void TestQueryWithOrderBy() {
+
+            var ascendingDTO = new SearchRequestDto {SearchSort = "statusdate"};
+            var result = RestClient.BuildGetUrl(_entity, ascendingDTO, "ism");
+            var query = HttpUtility.ParseQueryString(new Uri(result).Query);
+            Assert.AreEqual("statusdate", query.Get("_orderbydesc"));
+
+            var descendingDTO = new SearchRequestDto { SearchSort = "statusdate", SearchAscending = true};
+            result = RestClient.BuildGetUrl(_entity, descendingDTO, "ism");
+            query = HttpUtility.ParseQueryString(new Uri(result).Query);
+            Assert.AreEqual("statusdate", query.Get("_orderbyasc"));
         }
 
         public override string GetClientName() {

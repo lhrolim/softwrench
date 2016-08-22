@@ -76,7 +76,7 @@ namespace softWrench.sW4.Configuration.Definitions {
                 return BlobValue != null ? StringExtensions.GetString(CompressionUtil.Decompress(BlobValue)) : Value;
             }
             set {
-                if (value.Length > 1000) {
+                if (value != null && value.Length > 1000) {
                     BlobValue = CompressionUtil.Compress(value.GetBytes());
                 } else {
                     Value = value;

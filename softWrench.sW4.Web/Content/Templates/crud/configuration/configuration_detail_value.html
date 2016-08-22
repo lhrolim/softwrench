@@ -1,4 +1,4 @@
-﻿<fieldset class="form-group">
+<fieldset class="form-group">
     <label class="control-label">
         Default Value:
     </label>
@@ -9,11 +9,11 @@
         <div ng-switch-default>
             <ng-switch on="datamap.datatype">
                 <div class="input-group" ng-switch-when="boolean">
-                    <input type="checkbox" ng-checked="datamap.stringvalue == 'true'" onclick="return false"/>
+                    <input type="checkbox" ng-checked="datamap.stringvalue == 'true'" onclick="return false" />
                 </div>
                 <div class="input-group" ng-switch-default style="width: 100%">
-                    <label ng-if="!ismodal" class="form-control" ng-bind-html="datamap.stringvalue | linebreak" data-attribute="{{datamap.stringvalue}}"/>
-                    <input ng-if="ismodal" class="form-control" type="text" ng-model="datamap.stringvalue" disabled/>
+                    <label ng-if="!ismodal" class="form-control" ng-bind-html="datamap.stringvalue | linebreak" data-attribute="{{datamap.stringvalue}}" />
+                    <input ng-if="ismodal" class="form-control" type="text" ng-model="datamap.stringvalue" disabled />
                 </div>
             </ng-switch>
         </div>
@@ -31,9 +31,24 @@
         <div ng-switch-default>
             <ng-switch on="datamap.datatype">
                 <div class="input-group" ng-switch-when="boolean">
-                    <input ng-if="!ismodal" type="checkbox" ng-checked="datamap.value == 'true'" onclick="return false"/>
+                    <input ng-if="!ismodal" type="checkbox" ng-checked="datamap.value == 'true'" onclick="return false" />
 
-                    <input ng-if="ismodal" type="checkbox" ng-model="datamap.value" ng-true-value="'true'" ng-false-value="'false'"/>
+                    <input ng-if="ismodal" type="checkbox" ng-model="datamap.value" ng-true-value="'true'" ng-false-value="'false'" />
+                </div>
+
+                <div class="input-group" ng-switch-when="date">
+                    <input type="text" ng-model="datamap[fieldMetadata.attribute]"
+                           data-date-time
+                           data-show-time="true"
+                           data-show-date="true"
+                           data-format-string="{{fieldMetadata.rendererParameters['format']}}"
+                           data-allow-past="true"
+                           data-allow-future="true"
+                           position="top"
+                           class="form-control">
+                    <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
+                        <i class="datetime-class"></i>
+                    </span>
                 </div>
                 <div class="input-group" ng-switch-default style="width: 100%">
                     <label ng-if="!ismodal" class="form-control" ng-bind-html="datamap.value | linebreak" data-attribute="{{datamap.value}}" />

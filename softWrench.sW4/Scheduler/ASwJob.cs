@@ -24,6 +24,11 @@ namespace softWrench.sW4.Scheduler {
         }
 
         protected void DoExecute() {
+            if (!IsEnabled) {
+                Log.InfoFormat("Skipping disabled job {0}", Name());
+                return;
+            }
+
             LogicalThreadContext.SetData("user", "swjobuser");
             var before = Stopwatch.StartNew();
             try {
@@ -42,6 +47,10 @@ namespace softWrench.sW4.Scheduler {
         public abstract string Cron();
         public abstract void ExecuteJob();
 
+        public virtual void OnJobSchedule(){
+            //NOOP by default
+        }
+
         public abstract bool RunAtStartup();
 
         public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
@@ -50,17 +59,21 @@ namespace softWrench.sW4.Scheduler {
             }
         }
 
-        public bool IsScheduled { get; set; }
+        public bool IsScheduled {
+            get; set;
+        }
 
-        public virtual bool IsEnabled 
-        {
-            get
-            {
+        public virtual bool IsEnabled {
+            get {
                 return true;
             }
         }
 
         //run at the end
-        public int Order { get { return 1000; } }
+        public int Order {
+            get {
+                return 1000;
+            }
+        }
     }
 }

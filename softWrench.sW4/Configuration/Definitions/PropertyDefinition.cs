@@ -40,6 +40,9 @@ namespace softWrench.sW4.Configuration.Definitions {
         [Property]
         public virtual string Description { get; set; }
 
+        /// <summary>
+        /// Available options: long, string, date, boolean --> the way the information would be presented on screen
+        /// </summary>
         [Property]
         public virtual string DataType { get; set; }
 
@@ -70,7 +73,7 @@ namespace softWrench.sW4.Configuration.Definitions {
                 return DefaultValue;
             }
             set {
-                if (value.Length > 1000) {
+                if (value!= null && value.Length > 1000) {
                     DefaultBlobValue = CompressionUtil.Compress(value.GetBytes());
                 } else {
                     DefaultValue = value;
