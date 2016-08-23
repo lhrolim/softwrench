@@ -23,7 +23,7 @@ namespace softWrench.sW4.Util.DeployValidation {
         private const string DeploymentTestDataPath = "\\App_Data\\DeploymentValidation\\Data\\{0}";
         private IEnumerable<CompleteApplicationMetadataDefinition> applicationsMetadataList;
         private readonly DataSetProvider dataSetProvider;
-        private static string[] testFileNames;
+        private static List<string> testFileNames;
         private static readonly List<string> GlobalMissingPropertyBlackList = new List<string>() {
             "rowstamp" ,
             "class",
@@ -40,11 +40,22 @@ namespace softWrench.sW4.Util.DeployValidation {
             "siteid",
             "loweremail"
         };
-        
-        private static string[] GetTestFileNames {
+
+        private static List<string> GetTestFileNames {
             get {
                 if (testFileNames == null) {
-                    testFileNames = Directory.GetFiles(string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, string.Format(DeploymentTestDataPath, string.Empty)));
+                    testFileNames = new List<string>();
+                    var topLevelApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null);
+                    foreach (var app in topLevelApps) {
+                        var filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, string.Format(DeploymentTestDataPath, string.Format("{0}.json", app.ApplicationName)));
+                        if (File.Exists(filePath)) {
+                            testFileNames.Add(filePath);
+                        }
+                    }
+
+                    //ToDo : remove hardcoded applications. 
+                    // Fetch these along with the top level apps. 
+                    testFileNames.Add(string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, string.Format(DeploymentTestDataPath, "person.json")));
                 }
 
                 return testFileNames;
