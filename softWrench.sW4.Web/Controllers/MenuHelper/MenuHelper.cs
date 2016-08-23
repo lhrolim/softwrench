@@ -14,6 +14,7 @@ using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Models.Home;
 using softWrench.sW4.Web.Security;
+using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Web.Controllers.MenuHelper {
     public class MenuHelper : ISingletonComponent {
@@ -33,9 +34,9 @@ namespace softWrench.sW4.Web.Controllers.MenuHelper {
         public MenuModel BuildMenu(ClientPlatform platform) {
             try {
                 var user = SecurityFacade.CurrentUser();
-                var isSysAdmin = user.IsInRole("sysadmin") ||  (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
-                var isClientAdmin = user.IsInRole("clientadmin") || (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
-                var isDynamicAdmin = user.IsInRole("dynamicadmin") || (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
+                var isSysAdmin = user.IsInRole(Role.SysAdmin) ||  (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
+                var isClientAdmin = user.IsInRole(Role.ClientAdmin) || (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
+                var isDynamicAdmin = user.IsInRolInternal(Role.DynamicAdmin, false) || (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
                 bool fromCache;
                 var securedMenu = _menuSecurityManager.Menu(user,platform, out fromCache);
                 if (!user.Genericproperties.ContainsKey("menumanagerscached")) {

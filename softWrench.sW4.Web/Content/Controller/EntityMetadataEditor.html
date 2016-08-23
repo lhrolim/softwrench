@@ -48,7 +48,8 @@
                 <!--<button ng-click="save()" type="submit" class="btn btn-primary"><i class="fa fa-check"></i>&ensp;{{i18N('general.save','Save')}}</button>-->
                 <!--<button ng-click="restore()" type="submit" class="btn btn-primary"><i class="fa fa-refresh"></i>&ensp;{{i18N('general.restore','Restore Default')}}</button>-->
                 <!--<button ng-click="restorexml()" type="submit" class="btn btn-primary"><i class="fa fa-refresh"></i>&ensp;{{i18N('general.restorexml','Restore Saved XML')}}</button>-->
-                <button ng-click="savechanges()" type="submit" class="btn btn-primary"><i class="fa fa-check"></i>&ensp;{{i18N('general.savechanges','Save Changes')}}</button>
+                <button ng-click="savechanges()" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&ensp;{{i18N('general.savechanges','Save Changes')}}</button>
+                <button ng-if="supportsbackup()" ng-click="readbackupfile()" type="button" class="btn btn-primary"><i class="fa fa-download"></i>&ensp; Load Original</button>
             </div>
             <!-- <script type="text/javascript" ng-src="{{contextPath('/Content/Scripts/ace/ace.js')}}"></script>-->
         </div>

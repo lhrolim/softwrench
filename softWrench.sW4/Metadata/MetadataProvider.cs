@@ -40,6 +40,11 @@ using softWrench.sW4.Metadata.Stereotypes.Schema;
 using EntityUtil = softWrench.sW4.Util.EntityUtil;
 using System.Text;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
+using cts.commons.simpleinjector.Events;
+using cts.commons.simpleinjector;
+using softWrench.sW4.Data.Persistence.SWDB;
+using cts.commons.persistence.Util;
+using softWrench.sW4.Data.Persistence;
 
 namespace softWrench.sW4.Metadata {
     public class MetadataProvider {
@@ -74,10 +79,12 @@ namespace softWrench.sW4.Metadata {
             get; set;
         }
 
-        public const string Metadata = "metadata.xml";
-        public const string StatusColor = "statuscolors.json";
-        public const string ClassificationColor = "classificationcolors.json";
-        public const string MenuPattern = "menu.{0}.xml";
+        public const string METADATA_FILE = "metadata.xml";
+        public const string STATUS_COLOR_FILE = "statuscolors.json";
+        public const string CLASSIFICATION_COLOR_FILE = "classificationcolors.json";
+        public const string MENU_WEB_FILE = "menu.web.xml";
+        public const string PROPERTIES_FILE = "properties.xml";
+
         public static bool FinishedParsing {
             get; set;
         }
@@ -504,7 +511,7 @@ namespace softWrench.sW4.Metadata {
                 _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
                 _swdbmetadataXmlInitializer.Validate(_commandBars);
 
-                var metadataPath = string.IsNullOrWhiteSpace(path) ? MetadataParsingUtils.GetPath(Metadata, internalFramework) : path;
+                var metadataPath = string.IsNullOrWhiteSpace(path) ? MetadataParsingUtils.GetPath(METADATA_FILE, internalFramework) : path;
 
                 using (var stream = File.Create(metadataPath)) {
                     data.CopyTo(stream);
@@ -517,6 +524,54 @@ namespace softWrench.sW4.Metadata {
                 throw;
             } finally {
                 _metadataXmlInitializer = null;
+            }
+        }
+
+        /// <summary>
+        /// Save the changes to the properties.xml file.
+        /// This method also created a backup of the old file.
+        /// </summary>
+        /// <param name="fileData">The new file data</param>
+        /// <param name="internalFramework">is internal framework</param>
+        public void SavePropertiesFile([NotNull] string fileData, bool internalFramework = false) {
+            var filePath = MetadataParsingUtils.GetPath(MetadataProvider.PROPERTIES_FILE);
+
+            try {
+                using (var data = new MemoryStream(Encoding.UTF8.GetBytes(fileData))) {
+                    // Create a backup of the old file. 
+                    using (var backupFile = File.Create(string.Format("{0}.orig", filePath))) {
+                        using (var currentFile = File.OpenRead(filePath)) {
+                            currentFile.CopyTo(backupFile);
+                            backupFile.Flush();
+                        }
+                    }
+
+                    // Write the new data to the file.
+                    using (var stream = File.Create(filePath)) {
+                        data.CopyTo(stream);
+                        stream.Flush();
+                    }
+                }
+
+                // Check if everything is OK. 
+                DoInit();
+                
+                var conf = new ApplicationConfigurationAdapter();
+                new SWDBHibernateDAO(conf, new HibernateUtil(conf));
+                new MaximoHibernateDAO(conf, new HibernateUtil(conf));
+            } catch (Exception e) {
+                // restore the backup in case things go bad.
+                using (var file = File.Create(filePath)) {
+                    using (var origFile = File.OpenRead(string.Format("{0}.orig", filePath))) {
+                        origFile.CopyTo(file);
+                        file.Flush();
+                    }
+                }
+
+                DoInit();
+                Log.Error("error saving properties file! roperty file may be invalid.", e);
+                throw new Exception(string.Format("Message: {0} , Inner exception: {1}", e.Message, e.InnerException != null ? e.InnerException.Message : "None"));
+            } finally {
             }
         }
 

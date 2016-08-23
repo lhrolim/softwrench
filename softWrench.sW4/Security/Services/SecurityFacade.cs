@@ -207,10 +207,14 @@ namespace softWrench.sW4.Security.Services {
 
             if (!fetchFromDB || Users.ContainsKey(currLogin)) {
                 var inMemoryUser = Users[currLogin];
-                if (inMemoryUser == null) {
-                    throw UnauthorizedException.NotAuthenticated(currLogin);
+                if (requiresAuth && inMemoryUser != null) {
+                    ClearUserFromCache(currLogin);
+                } else {
+                    if (inMemoryUser == null) {
+                        throw UnauthorizedException.NotAuthenticated(currLogin);
+                    }
+                    return inMemoryUser;
                 }
-                return inMemoryUser;
             }
             //cookie authenticated already 
             //TODO: remove this in prod?

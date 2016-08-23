@@ -52,9 +52,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         public ActionResult Index() {
-
-
-            var user = SecurityFacade.CurrentUser();
+            var user = SecurityFacade.CurrentUser(true,true);
             //TODO: allow mobile
             var menuModel = _menuHelper.BuildMenu(ClientPlatform.Web);
             var indexItemId = menuModel.Menu.ItemindexId;

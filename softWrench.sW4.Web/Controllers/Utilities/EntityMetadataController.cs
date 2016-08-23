@@ -63,9 +63,26 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         [HttpGet]
         [SPFRedirect("Metadata Editor", "_headermenu.metadataeditor", "EntityMetadataEditor")]
         public IGenericResponseResult Editor() {
-            using (var reader = new MetadataProvider().GetStream(MetadataProvider.Metadata)) {
+            using (var reader = new MetadataProvider().GetStream(MetadataProvider.METADATA_FILE)) {
                 var result = reader.ReadToEnd();
-                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "metadata"));
+                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, MetadataProvider.METADATA_FILE));
+            }
+        }
+
+        [HttpGet]
+        public IGenericResponseResult ReadOriginalBackup(string file) { 
+            using (var reader = new MetadataProvider().GetStream(string.Format("{0}.orig",file))) {
+                var result = reader != null ? reader.ReadToEnd() : string.Empty;
+                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, file));
+            }
+        }        
+
+        [HttpGet]
+        [SPFRedirect("Metadata Editor", "_headermenu.metadataeditor", "EntityMetadataEditor")]
+        public IGenericResponseResult PropertiesFileEditor() {
+            using (var reader = new MetadataProvider().GetStream(MetadataProvider.PROPERTIES_FILE)) {
+                var result = reader.ReadToEnd();
+                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, MetadataProvider.PROPERTIES_FILE));
             }
         }
 
@@ -73,7 +90,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         public IGenericResponseResult GetMetadataContent(string templatePath) {
             using (var reader = new MetadataProvider().GetTemplateStream(templatePath)) {
                 var result = reader.ReadToEnd();
-                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "metadata"));
+                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, MetadataProvider.METADATA_FILE));
             }
         }
 
@@ -82,8 +99,8 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             var templates = new List<dynamic>();
 
             //add the metadata
-            var metadataPath = MetadataParsingUtils.GetPath(MetadataProvider.Metadata);
-            templates.Add(new { path = metadataPath, name = MetadataProvider.Metadata });
+            var metadataPath = MetadataParsingUtils.GetPath(MetadataProvider.METADATA_FILE);
+            templates.Add(new { path = metadataPath, name = MetadataProvider.METADATA_FILE });
 
             //add the templates
             var files = MetadataParsingUtils.GetTemplateFileNames();
@@ -98,7 +115,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         public IGenericResponseResult RestoreDefaultMetadata() {
             var resultData = swdbDao.FindByQuery<Metadataeditor>(Metadataeditor.ByDefaultId);
             var metadata = (from c in resultData select c.SystemStringValue).FirstOrDefault();
-            return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(metadata, "metadata"));
+            return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(metadata, MetadataProvider.METADATA_FILE));
 
         }
 
@@ -128,19 +145,19 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         [SPFRedirect("Classification Color Editor", "_headermenu.classificationcoloreditor", "EntityMetadataEditor")]
         public IGenericResponseResult ClassificationColorEditor()
         {
-            using (var reader = new MetadataProvider().GetStream(MetadataProvider.ClassificationColor))
+            using (var reader = new MetadataProvider().GetStream(MetadataProvider.CLASSIFICATION_COLOR_FILE))
             {
                 var result = reader.ReadToEnd();
-                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "classificationcolors"));
+                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, MetadataProvider.CLASSIFICATION_COLOR_FILE));
             }
         }
 
         [HttpGet]
         [SPFRedirect("Status Color Editor", "_headermenu.statuscoloreditor", "EntityMetadataEditor")]
         public IGenericResponseResult StatusColorEditor() {
-            using (var reader = new MetadataProvider().GetStream(MetadataProvider.StatusColor)) {
+            using (var reader = new MetadataProvider().GetStream(MetadataProvider.STATUS_COLOR_FILE)) {
                 var result = reader.ReadToEnd();
-                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "statuscolors"));
+                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, MetadataProvider.STATUS_COLOR_FILE));
             }
         }
 
@@ -149,7 +166,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         public IGenericResponseResult MenuEditor() {
             using (var reader = new MetadataProvider().GetStream("menu.web.xml")) {
                 var result = reader.ReadToEnd();
-                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "menu"));
+                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, MetadataProvider.MENU_WEB_FILE));
             }
         }
 
@@ -190,14 +207,56 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             };
             
             swdbDao.Save(newMetadataEntry);
-
+            
             new MetadataProvider().Save(metadata, false, filePath);
             
             this.SendMetadataChangeEmail(
-                MetadataProvider.StatusColor,
+                MetadataProvider.STATUS_COLOR_FILE,
                 newFileContent,
                 oldFileContent,
                 string.Format("[softWrench {0} - {1}] Metadata file updated", appConfig.GetClientKey(), ApplicationConfiguration.Profile),
+                comments,
+                ipAddress,
+                userFullName
+            );
+        }
+
+
+        [HttpPut]
+        public void SavePropertiesFile(HttpRequestMessage request) {
+            var content = request.Content;
+            var json = JObject.Parse(content.ReadAsStringAsync().Result);
+            var comments = json.StringValue("Comments");
+            var metadata = json.StringValue("Metadata");
+            var userFullName = json.StringValue("UserFullName");
+            var filePath = MetadataParsingUtils.GetPath(MetadataProvider.PROPERTIES_FILE);
+            var fileName = MetadataProvider.PROPERTIES_FILE;
+            var ipAddress = request.GetIPAddress();
+            var newFileContent = metadata;
+            var oldFileContent = File.ReadAllText(filePath);
+
+            var now = DateTime.Now;
+            var newMetadataEntry = new Metadataeditor() {
+                SystemStringValue = metadata,
+                Comments = comments,
+                CreatedDate = now,
+                DefaultId = 0,
+                ChangedBy = SecurityFacade.CurrentUser().MaximoPersonId,
+                ChangedByFullName = userFullName,
+                Name = fileName,
+                Path = filePath,
+                IPAddress = ipAddress
+            };
+
+            swdbDao.Save(newMetadataEntry);
+
+            new MetadataProvider().SavePropertiesFile(metadata, false);
+
+            this.SendMetadataChangeEmail(
+                MetadataProvider.PROPERTIES_FILE,
+                newFileContent,
+                oldFileContent,
+                string.Format("[softWrench {0} - {1}] Properties file updated", appConfig.GetClientKey(), ApplicationConfiguration.Profile),
                 comments,
                 ipAddress,
                 userFullName
@@ -212,7 +271,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             var metadata = json.StringValue("Metadata");
             var userFullName = json.StringValue("UserFullName");
             var ipAddress = request.GetIPAddress();
-            var filePath = MetadataParsingUtils.GetPath(MetadataProvider.StatusColor);
+            var filePath = MetadataParsingUtils.GetPath(MetadataProvider.STATUS_COLOR_FILE);
             var newFileContent = metadata;
             var oldFileContent = File.ReadAllText(filePath);
 
@@ -223,17 +282,17 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 DefaultId = 0,
                 ChangedBy = SecurityFacade.CurrentUser().MaximoPersonId,
                 ChangedByFullName = userFullName,
-                Name = MetadataProvider.StatusColor,
+                Name = MetadataProvider.STATUS_COLOR_FILE,
                 Path = filePath,
                 IPAddress = ipAddress
             };            
 
             swdbDao.Save(newMetadataEntry);
 
-            new MetadataProvider().SaveColor(metadata, MetadataProvider.StatusColor);
+            new MetadataProvider().SaveColor(metadata, MetadataProvider.STATUS_COLOR_FILE);
             
             this.SendMetadataChangeEmail(
-                MetadataProvider.StatusColor,
+                MetadataProvider.STATUS_COLOR_FILE,
                 newFileContent,
                 oldFileContent,
                 string.Format("[softWrench {0} - {1}] Status Color file updated", appConfig.GetClientKey(), ApplicationConfiguration.Profile),
@@ -253,7 +312,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             var metadata = json.StringValue("Metadata");
             var userFullName = json.StringValue("UserFullName");
             var ipAddress = request.GetIPAddress();
-            var filePath = MetadataParsingUtils.GetPath(MetadataProvider.ClassificationColor);
+            var filePath = MetadataParsingUtils.GetPath(MetadataProvider.CLASSIFICATION_COLOR_FILE);
             var newFileContent = metadata;
             var oldFileContent = File.ReadAllText(filePath);
 
@@ -264,17 +323,17 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 DefaultId = 0,
                 ChangedBy = SecurityFacade.CurrentUser().MaximoPersonId,
                 ChangedByFullName = userFullName,
-                Name = MetadataProvider.StatusColor,
+                Name = MetadataProvider.CLASSIFICATION_COLOR_FILE,
                 Path = filePath,
                 IPAddress = ipAddress
             };
 
             swdbDao.Save(newMetadataEntry);
 
-            new MetadataProvider().SaveColor(metadata, MetadataProvider.ClassificationColor);
+            new MetadataProvider().SaveColor(metadata, MetadataProvider.CLASSIFICATION_COLOR_FILE);
             
             this.SendMetadataChangeEmail(
-                MetadataProvider.StatusColor,
+                MetadataProvider.CLASSIFICATION_COLOR_FILE,
                 newFileContent,
                 oldFileContent,
                 string.Format("[softWrench {0} - {1}] Classification Color file updated", appConfig.GetClientKey(), ApplicationConfiguration.Profile),
@@ -293,7 +352,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             var comments = json.StringValue("Comments");
             var metadata = json.StringValue("Metadata");
             var userFullName = json.StringValue("UserFullName");
-            var fileName = string.Format(MetadataProvider.MenuPattern, ClientPlatform.Web.ToString().ToLower());
+            var fileName = MetadataProvider.MENU_WEB_FILE;
             var filePath = MetadataParsingUtils.GetPath(fileName);
             var ipAddress = request.GetIPAddress();
             var newFileContent = metadata;

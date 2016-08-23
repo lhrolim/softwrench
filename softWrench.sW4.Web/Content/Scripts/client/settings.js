@@ -5,10 +5,11 @@ angular.module("sw_layout").controller("AceController", AceController);
 function AceController($scope, $http, $templateCache, $window, i18NService, alertService, restService, contextService) {
     "ngInject";
 
-    const EditMenu = "menu";
-    const EditStatucColor = "statuscolors";
-    const EditClassificationColor = "classificationcolors";
-    const EditMetaData = "metadata";
+    const EditMenu = "menu.web.xml";
+    const EditStatucColor = "statuscolors.json";
+    const EditClassificationColor = "classificationcolors.json";
+    const EditMetaData = "metadata.xml";
+    const EditPropertiesFile = 'properties.xml';
 
     $scope.templates = [];
     $scope.selectedTemplate = '';
@@ -123,12 +124,34 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
         });
     };
 
+    $scope.readbackupfile = function () {
+        alertService.confirm("This action will load the original backup file in the editor. Is this what you want to do?").then(function () {
+            var urlToCall = url("/api/generic/EntityMetadata/ReadOriginalBackup?file=" + $scope.type);
+            $http.get(urlToCall).success(function (data) {
+                if (data.resultObject.content) {
+                    var editor = ace.edit("editor");
+                    editor.getSession().setMode("ace/mode/xml");
+                    editor.setValue(data.resultObject.content);
+                    editor.gotoLine(0);
+                } else {
+                    alertService.alert("No backup file found.");
+                }               
+            }).error(function (result) {
+                alertService.alert("Failed to load document.Please try again later");
+            });
+        });
+    };
+
     $scope.contextPath = function (path) {
         return url(path);
     };
 
     $scope.i18N = function (key, defaultValue, paramArray) {
         return i18NService.get18nValue(key, defaultValue, paramArray);
+    };
+
+    $scope.supportsbackup = function () {
+        return EditPropertiesFile.equalIc($scope.type);
     };
 
     function resolveApiUrl(type) {
@@ -146,6 +169,9 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
                 break;
             case EditMetaData:
                 urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
+                break;
+            case EditPropertiesFile:
+                urlToUse = "/api/generic/EntityMetadata/SavePropertiesFile";
                 break;
             default:
                 urlToUse = $scope.type;
