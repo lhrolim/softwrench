@@ -5,6 +5,8 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 using System.Collections.Generic;
+using softwrench.sw4.api.classes.integration;
+using softwrench.sW4.Shared2.Data;
 
 namespace softWrench.sW4.Data.Persistence.Operation {
     public sealed class CrudOperationData : Entity, IOperationData {
@@ -34,6 +36,8 @@ namespace softWrench.sW4.Data.Persistence.Operation {
         [JsonIgnore]
         public EntityMetadata EntityMetadata { get; set; }
         public OperationType OperationType { get; set; }
+        public OperationProblemData ProblemData { get; set; }
+        public AttributeHolder Holder { get { return this; } }
 
         public ApplicationMetadata ApplicationMetadata { get; set; }
 

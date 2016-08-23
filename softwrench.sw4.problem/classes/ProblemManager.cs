@@ -1,14 +1,17 @@
 ﻿using System;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
+using log4net;
 
 namespace softwrench.sw4.problem.classes {
     public class ProblemManager : IProblemManager {
 
         private readonly ISWDBHibernateDAO _swdbHibernateDAO;
         private readonly ProblemHandlerLookuper _problemHandlerLookuper;
+        private readonly ILog _log = LogManager.GetLogger(typeof (ProblemManager));
 
         public ProblemManager(ISWDBHibernateDAO swdbHibernateDAO, ProblemHandlerLookuper problemHandlerLookuper) {
+            _log.DebugFormat("init");
             _swdbHibernateDAO = swdbHibernateDAO;
             _problemHandlerLookuper = problemHandlerLookuper;
         }
@@ -23,11 +26,11 @@ namespace softwrench.sw4.problem.classes {
             if (handler != null) {
                 handler.OnProblemRegister(resultProblem);
             }
-
+            _log.WarnFormat("registering new problem {0} for entry {1}:{2}",handlerName,recordType, recordId);
             return resultProblem;
         }
 
-        public Problem RegisterOrUpdateProblem(int currentUser, Problem problem, Func<string> queryToUse) {
+        public Problem RegisterOrUpdateProblem(int? currentUser, Problem problem, Func<string> queryToUse) {
             Problem existingProblem;
             if (queryToUse == null) {
                 existingProblem = _swdbHibernateDAO.FindSingleByQuery<Problem>(Problem.ByEntryAndType.Fmt(problem.RecordId, problem.RecordType, problem.ProblemType));
@@ -44,6 +47,7 @@ namespace softwrench.sw4.problem.classes {
             if (handler != null) {
                 handler.OnProblemRegister(resultingProblem);
             }
+            _log.WarnFormat("registering new problem {0} for entry {1}:{2}", problem.ProblemType, problem.RecordType, problem.RecordId);
             return resultingProblem;
         }
 

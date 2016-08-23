@@ -21,7 +21,7 @@ namespace softwrench.sw4.problem.classes {
         Problem Register(string recordType, string recordId,string recordUserId, string datamap, int? createdBy, string stackTrace,
             string message,string problemType = null, string assignee=null,int priority= 1,string profiles=null);
 
-        Problem RegisterOrUpdateProblem(int currentUser,Problem problem, Func<string> queryToUse);
+        Problem RegisterOrUpdateProblem(int? currentUser,Problem problem, Func<string> queryToUse);
 
         void DeleteProblems(string recordType, string recordId, string problemType);
 

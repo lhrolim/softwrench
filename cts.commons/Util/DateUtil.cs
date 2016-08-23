@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 
 namespace cts.commons.portable.Util {
 
@@ -18,7 +19,7 @@ namespace cts.commons.portable.Util {
             DateTime temp;
             // Switched from TryParse - it accepted 4500-5
 
-            var formatsToUse =  new[] { preferredFormat };
+            var formatsToUse = new[] { preferredFormat };
 
             if (DateTime.TryParseExact(date, formatsToUse, CultureInfo.InvariantCulture, DateTimeStyles.None, out temp)) {
                 return temp;
@@ -26,7 +27,11 @@ namespace cts.commons.portable.Util {
             return null;
         }
 
-        public static DateTime? Parse(string date) {
+        public static DateTime? Parse([CanBeNull]string date) {
+            if (date == null) {
+                return null;
+            }
+
             DateTime temp;
             // Switched from TryParse - it accepted 4500-5
 

@@ -69,6 +69,7 @@ namespace softWrench.sW4.Data.Pagination {
             : this(30, DefaultPaginationOptions) {
         }
 
+
         public PaginatedSearchRequestDto(int defaultPageSize, List<int> paginationOptions) {
             PageNumber = 1;
             TotalCount = 0;

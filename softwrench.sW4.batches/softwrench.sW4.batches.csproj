@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="com\cts\softwrench\sw4\batches\configuration\BatchConfigurationRegistry.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchController.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchResult.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\exception\BatchConfigurationException.cs" />

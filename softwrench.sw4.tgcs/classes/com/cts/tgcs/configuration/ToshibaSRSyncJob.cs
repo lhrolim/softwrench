@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using cts.commons.portable.Util;
-using cts.commons.simpleinjector.Events;
-using Quartz.Util;
+using softwrench.sw4.api.classes.integration;
+using softwrench.sw4.batch.api;
+using softwrench.sw4.batch.api.entities;
+using softwrench.sw4.batch.api.services;
 using softwrench.sw4.tgcs.classes.com.cts.tgcs.connector;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Pagination;
-using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
@@ -19,36 +19,32 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Scheduler;
-using softWrench.sW4.Scheduler.Interfaces;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
 
-    public class ToshibaSRSyncJob : ASwJob, ISWEventListener<ConfigurationChangedEvent> {
+    public class ToshibaSRSyncJob : ConfigurableRateSwJob {
 
         private readonly IConfigurationFacade _configurationFacade;
-        private readonly JobManager _jobManager;
         private readonly RestEntityRepository _restentityRepository;
         private readonly EntityRepository _entityRepository;
         private readonly SlicedEntityMetadata _slicedEntityMetadata;
         private readonly EntityMetadata _metadata;
-        private readonly MaximoConnectorEngine _maximoConnectorEngine;
         private readonly ApplicationMetadata _applicationMetadata;
         private readonly bool _instanceConfigured;
+        private readonly IBatchSubmissionService _batchService;
 
-        public ToshibaSRSyncJob(IConfigurationFacade configurationFacade, JobManager jobManager, RestEntityRepository restEntityRepository, EntityRepository entityRepository, MaximoConnectorEngine maximoConnectorEngine) {
+        public ToshibaSRSyncJob(IConfigurationFacade configurationFacade, JobManager jobManager, RestEntityRepository restEntityRepository, EntityRepository entityRepository, IBatchSubmissionService batchService) : base(configurationFacade, jobManager) {
             _configurationFacade = configurationFacade;
-            _jobManager = jobManager;
             _restentityRepository = restEntityRepository;
             _entityRepository = entityRepository;
-            _maximoConnectorEngine = maximoConnectorEngine;
+            _batchService = batchService;
             _metadata = MetadataProvider.Entity("sr");
 
             _restentityRepository.KeyName = "ism";
 
             var application = MetadataProvider.Application("servicerequest", false);
-            if (application == null) {
-                Log.Warn("Application 'servicerequest' not found. Job not properly configured so it won't execute.");
+            if (!ApplicationConfiguration.IsClient("tgcs")) {
                 return;
             }
             _applicationMetadata = application.StaticFromSchema("editdetail");
@@ -89,22 +85,34 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             var ourSrs = _entityRepository.Get(_slicedEntityMetadata, dto);
 
 
-            var maxThreads = _configurationFacade.Lookup<int>(ToshibaConfigurationRegistry.ToshibaSyncMaximoThreads);
-            var options = new ParallelOptions { MaxDegreeOfParallelism = maxThreads };
-
             Log.InfoFormat("{0} updates found invoking services", ourSrs.Count);
 
-            Parallel.ForEach(ourSrs, options, sr => InvokeStatusChangeWS(sr, ismData));
+            var operationWrappers = ourSrs.Select(s => BuildOperationWrapper(s, ismData)).Where(i => i != null).ToList();
+
+            _batchService.SubmitTransientBatch(new TransientBatchOperationData() {
+                OperationWrappers = operationWrappers,
+                AppMetadata = _applicationMetadata,
+
+                BeforeWSExecution = delegate (IOperationWrapper wrapper) {
+                    var ticketid = wrapper.GetStringAttribute("ticketid");
+                    var status = wrapper.GetStringAttribute("status");
+                    var newStatus = ((ToshibaChangeStatusTicketHandler.ToshibaStatusData)(wrapper.GetOperationData)).NewStatus;
+                    Log.DebugFormat("updating status of ticket {0} from {1} to {2}", ticketid, status, newStatus);
+                    return true;
+                },
+
+                BatchOptions = new BatchOptions {
+                    MaxThreadsProperty = ToshibaConfigurationRegistry.ToshibaSyncMaximoThreads,
+                    ProblemKey = "ism.sr.statussync",
+                }
+            });
+
 
             _configurationFacade.SetValue(ToshibaConfigurationRegistry.ToshibaSyncSrStatusDate, srs[0].GetStringAttribute("statusdate"));
 
         }
 
-        private void InvokeStatusChangeWS(DataMap sr, IReadOnlyDictionary<object, Tuple<string, string>> ismData) {
-            //To enforce correct user in case of problems
-            LogicalThreadContext.SetData("user", "swjobuser");
-
-            IDictionary<string, object> attributes = new Dictionary<string, object>();
+        private OperationWrapper BuildOperationWrapper(DataMap sr, IReadOnlyDictionary<object, Tuple<string, string>> ismData) {
 
             var ismTicketUid = sr.GetStringAttribute("ismticketuid");
             var ticketUid = sr.GetStringAttribute("ticketuid");
@@ -112,33 +120,23 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             var status = sr.GetStringAttribute("status");
 
             var ismTuple = ismData[ismTicketUid];
+
             if (status.EqualsIc(ismTuple.Item1)) {
-                Log.WarnFormat("ignoring update of ticket {0} cause the status match at {1}", ticketid, status);
-                return;
+                Log.WarnFormat("ignoring update of ticket {0} cause the status already match at {1}", ticketid, status);
+                return null;
             }
 
-            attributes.Add("ticketuid", ticketUid);
-            attributes.Add("ticketid", ticketid);
-            attributes.Add("siteid", sr.GetAttribute("siteid"));
-
-            attributes.Add("status", ismTuple.Item1);
-            if (ismTuple.Item2 != null) {
-                attributes.Add("itdclosedate", ismTuple.Item2);
-            }
-            attributes.Add("jobMode", true);
-            var crudOperationData = new CrudOperationData(ticketUid, attributes, new Dictionary<string, object>(), _metadata,
+            var crudOperationData = new CrudOperationData(ticketUid, sr, new Dictionary<string, object>(), _metadata,
                 _applicationMetadata);
-
-            Log.DebugFormat("updating status of ticket {0} from {1} to {2}", ticketid, status, ismTuple.Item1);
 
             var statusData = new ToshibaChangeStatusTicketHandler.ToshibaStatusData {
                 CrudData = crudOperationData,
                 NewStatus = ismTuple.Item1,
                 CloseDate = DateUtil.Parse(ismTuple.Item2),
-                JobMode = true,
+                ProblemData = new OperationProblemData("ism.sr.statussync")
             };
 
-            _maximoConnectorEngine.Execute(new OperationWrapper(statusData, "ChangeStatus"));
+            return new OperationWrapper(statusData, "ChangeStatus");
         }
 
         private IReadOnlyList<DataMap> GetISMUpdates(DateTime startDate) {
@@ -156,14 +154,9 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
         #region JobSetup
 
 
-        public string GetCron(long? refreshRate = null) {
-            var rate = refreshRate ?? _configurationFacade.Lookup<long>(ToshibaConfigurationRegistry.ToshibaSyncRefreshrate);
-            return string.Format("0 */{0} * ? * *", rate);
-        }
 
-        public override string Cron() {
-            return GetCron();
-        }
+
+
 
         public override string Description() {
             return "Syncs the sr status out of ISM support Maximo into Softlayer Maximo";
@@ -178,34 +171,22 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             return true;
         }
 
-        public void HandleEvent(ConfigurationChangedEvent eventToDispatch) {
-            if (eventToDispatch.ConfigKey.EqualsIc(ToshibaConfigurationRegistry.ToshibaSyncRefreshrate)) {
-                var refreshRate = long.Parse(eventToDispatch.CurrentValue);
-                UpdateJob(refreshRate);
-            }
-        }
-
-        private void UpdateJob(long refreshRate) {
-            var newCron = GetCron(refreshRate);
-            _jobManager.ManageJobByCommand(Name(), JobCommandEnum.ChangeCron, newCron);
-        }
-
 
         public override bool IsEnabled {
             get {
-                return ApplicationConfiguration.ClientName == "tgcs" && _instanceConfigured &&
                 //only execute it if there´s a starting date to limit the amount of data
-                //TODO: check null possibility, and dates...
-                _configurationFacade.Lookup<DateTime?>(ToshibaConfigurationRegistry.ToshibaSyncSrStatusDate) != null;
+                return _configurationFacade.Lookup<DateTime?>(ToshibaConfigurationRegistry.ToshibaSyncSrStatusDate) != null;
             }
         }
 
-        public override void OnJobSchedule() {
-            if (!IsEnabled) {
-                throw new SwJobException("Cannot start {0} cause no {1} was set. Check Configuration Application", Name(), ToshibaConfigurationRegistry.ToshibaSyncRefreshrate);
-            }
-        }
+
 
         #endregion
+
+        protected override string JobConfigKey {
+            get {
+                return ToshibaConfigurationRegistry.ToshibaSRSyncRefreshrate;
+            }
+        }
     }
 }

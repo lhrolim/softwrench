@@ -431,6 +431,7 @@
     <Compile Include="Preferences\GridFilterManager.cs" />
     <Compile Include="Preferences\GridPreferences.cs" />
     <Compile Include="Scheduler\ASwJob.cs" />
+    <Compile Include="Scheduler\ConfigurableRateSwJob.cs" />
     <Compile Include="Scheduler\Interfaces\SWJobException.cs" />
     <Compile Include="Security\Attributes\DynamicAdminRoleAttribute.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />

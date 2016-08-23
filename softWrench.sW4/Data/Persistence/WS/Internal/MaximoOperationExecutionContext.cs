@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
+using cts.commons.simpleinjector;
 using log4net;
+using softwrench.sw4.problem.classes;
 using softWrench.sW4.Data.Persistence.WS.API;
 using WcfSamples.DynamicProxy;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -11,6 +13,7 @@ using softWrench.sW4.Data.Persistence.WS.Mea;
 using softWrench.sW4.Data.Persistence.WS.Mif;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
@@ -23,34 +26,61 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         protected static readonly ILog Log = LogManager.GetLogger(WsInputLog);
 
+        private readonly IProblemManager _problemManager;
+
         protected MaximoOperationExecutionContext(IOperationData operationData) {
             _operationData = operationData;
             _applicationMetadata = operationData.ApplicationMetadata;
             _metadata = operationData.EntityMetadata;
+            _problemManager = SimpleInjectorGenericFactory.Instance.GetObject<IProblemManager>(typeof(IProblemManager));
         }
 
         private readonly IOperationData _operationData;
         private readonly ApplicationMetadata _applicationMetadata;
         private readonly EntityMetadata _metadata;
 
-        public IOperationData OperationData { get { return _operationData; } }
-        public ApplicationMetadata ApplicationMetadata { get { return _applicationMetadata; } }
-        public EntityMetadata Metadata { get { return _metadata; } }
+        public IOperationData OperationData {
+            get {
+                return _operationData;
+            }
+        }
+        public ApplicationMetadata ApplicationMetadata {
+            get {
+                return _applicationMetadata;
+            }
+        }
+        public EntityMetadata Metadata {
+            get {
+                return _metadata;
+            }
+        }
 
-        public object IntegrationObject { get; set; }
+        public object IntegrationObject {
+            get; set;
+        }
 
-        public TargetResult ResultObject { get; set; }
+        public TargetResult ResultObject {
+            get; set;
+        }
 
-        public object RootInterfaceObject { get; set; }
+        public object RootInterfaceObject {
+            get; set;
+        }
 
 
-        public DynamicObject Proxy { get; set; }
+        public DynamicObject Proxy {
+            get; set;
+        }
         private IDictionary<String, object> _properties = new Dictionary<string, object>();
 
 
         public IDictionary<string, object> Properties {
-            get { return _properties; }
-            set { _properties = value; }
+            get {
+                return _properties;
+            }
+            set {
+                _properties = value;
+            }
         }
 
         public virtual object InvokeProxy() {
@@ -58,6 +88,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             try {
                 return DoProxyInvocation();
             } catch (Exception e) {
+              
+
                 throw HandleProxyInvocationError(e);
             } finally {
                 OnProxyInvocationComplete(before);
@@ -118,7 +150,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         /// Override for custom behavior.
         /// </summary>
         /// <param name="beforeInvocation">stopwatch started before the invocation</param>
-        protected virtual void OnProxyInvocationComplete(Stopwatch beforeInvocation) {}
+        protected virtual void OnProxyInvocationComplete(Stopwatch beforeInvocation) {
+        }
 
     }
 }

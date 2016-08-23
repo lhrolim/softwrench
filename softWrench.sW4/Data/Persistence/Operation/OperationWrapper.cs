@@ -1,12 +1,14 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.api.classes.integration;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 
 namespace softWrench.sW4.Data.Persistence.Operation {
-    public class OperationWrapper {
+    public class OperationWrapper : IOperationWrapper {
         private const string CrudFieldNotFound = "crud field expected on json of operation {0} of entity {1}";
         private string _operationName;
 
@@ -20,6 +22,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             get; set;
         }
 
+
         public string UserId {
             get; set;
         }
@@ -27,7 +30,23 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             get; set;
         }
 
-        public WsProvider? Wsprovider { get; set; }
+        [NotNull]
+        public ICommonOperationData GetOperationData {
+            get {
+                return OperationData();
+            }
+        }
+
+        public string GetStringAttribute(string attribute) {
+            if (GetOperationData.Holder != null) {
+                return GetOperationData.Holder.GetStringAttribute(attribute);
+            }
+            return null;
+        }
+
+        public WsProvider? Wsprovider {
+            get; set;
+        }
 
         private IOperationData _operationData;
 

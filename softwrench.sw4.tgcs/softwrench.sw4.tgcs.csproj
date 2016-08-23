@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="classes\com\cts\tgcs\configuration\ToshibaChartInitializer.cs" />
     <Compile Include="classes\com\cts\tgcs\configuration\ToshibaConfigurationRegistry.cs" />
+    <Compile Include="classes\com\cts\tgcs\configuration\ToshibaPersonSyncJob.cs" />
     <Compile Include="classes\com\cts\tgcs\configuration\ToshibaSRSyncJob.cs" />
     <Compile Include="classes\com\cts\tgcs\connector\ToshibaChangeStatusTicketHandler.cs" />
     <Compile Include="classes\com\cts\tgcs\connector\ToshibaSRCrudConnector.cs" />
@@ -113,6 +114,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
+      <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>
+      <Name>softwrench.sw4.batches.api</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.dashboard\softwrench.sw4.dashboard.csproj">
       <Project>{BB222B54-5670-4853-ACF9-64BB36094021}</Project>

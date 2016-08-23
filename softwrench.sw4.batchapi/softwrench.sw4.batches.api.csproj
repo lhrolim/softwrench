@@ -35,6 +35,10 @@
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations, Version=6.1.0.0, Culture=neutral, PublicKeyToken=3f033448d4bb5376, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.7.0\lib\net45\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -53,6 +57,7 @@
     <Compile Include="entities\BatchAttributes.cs" />
     <Compile Include="entities\BatchItem.cs" />
     <Compile Include="entities\BatchItemProblem.cs" />
+    <Compile Include="entities\BatchOperationWrapperAdapter.cs" />
     <Compile Include="entities\BatchReport.cs" />
     <Compile Include="entities\BatchStatus.cs" />
     <Compile Include="entities\BatchStatusType.cs" />

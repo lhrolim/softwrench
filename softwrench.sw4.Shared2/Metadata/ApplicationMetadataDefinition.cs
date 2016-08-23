@@ -60,7 +60,7 @@ namespace softwrench.sW4.Shared2.Metadata {
             return string.Format("Name: {0}, Entity: {1}, Schema: {2}", Name, Entity, Schema);
         }
 
-        protected bool Equals(ApplicationMetadataDefinition other)
+        protected bool Equals(softwrench.sW4.Shared2.Metadata.ApplicationMetadataDefinition other)
         {
             return string.Equals(Name, other.Name) && Equals(Schema, other.Schema);
         }

@@ -6,9 +6,14 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
     public class ToshibaConfigurationRegistry : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {
-        public const string ToshibaSyncSrStatusDate = "/Tgcs/Sync/SRStatusDate";
-        public const string ToshibaSyncRefreshrate = "/Tgcs/Sync/RefreshRate";
-        public const string ToshibaSyncMaximoThreads = "/Tgcs/Sync/MaximoThreads";
+        
+        
+        public const string ToshibaPersonSyncRefreshrate = "/Tgcs/Sync/Person/RefreshRate";
+        public const string ToshibaSyncPersonUId = "/Tgcs/Sync/Person/PersonUId";
+
+        public const string ToshibaSRSyncRefreshrate = "/Tgcs/Sync/SR/RefreshRate";
+        public const string ToshibaSyncSrStatusDate = "/Tgcs/Sync/SR/SRStatusDate";
+        public const string ToshibaSyncMaximoThreads = "/Tgcs/Sync/Global/MaximoThreads";
 
         private readonly IConfigurationFacade _configurationFacade;
 
@@ -20,9 +25,21 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             if (ApplicationConfiguration.ClientName != "tgcs") return;
 
             _configurationFacade.Register(ToshibaSyncSrStatusDate, new PropertyDefinition {
-                Description = "Start point statusdate after which ISM SR updates would be synced. If null, no sync will be performed",
+                Description = "Start point statusdate after which ISM SR updates would be synced. If null, no sync would be performed",
                 StringValue = null,
                 DataType = "date",
+            });
+
+            _configurationFacade.Register(ToshibaSyncPersonUId, new PropertyDefinition {
+                Description = "Start point personuid after which ISM SR updates would be synced. If null, no sync would be performed",
+                StringValue = null,
+                DataType = "long",
+            });
+
+            _configurationFacade.Register(ToshibaPersonSyncRefreshrate, new PropertyDefinition {
+                Description = "ISM Person Sync Job Default Refresh Rate",
+                StringValue = "12",
+                DataType = "long",
             });
 
             _configurationFacade.Register(ToshibaSyncMaximoThreads, new PropertyDefinition {
@@ -32,7 +49,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             });
 
 
-            _configurationFacade.Register(ToshibaSyncRefreshrate, new PropertyDefinition {
+            _configurationFacade.Register(ToshibaSRSyncRefreshrate, new PropertyDefinition {
                 Description = "ISM SR Sync Job Default Refresh Rate",
                 StringValue = "5",
                 DataType = "long",

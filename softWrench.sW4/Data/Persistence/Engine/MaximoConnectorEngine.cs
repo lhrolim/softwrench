@@ -1,9 +1,11 @@
 ﻿using System;
+using softwrench.sw4.problem.classes;
 using softWrench.sW4.Data.Persistence.Engine.Exception;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Engine {
@@ -12,9 +14,11 @@ namespace softWrench.sW4.Data.Persistence.Engine {
         //        private readonly SyncItemHandler _syncHandler;
 
 
+        private static IProblemManager _problemManager;
 
-        public MaximoConnectorEngine(EntityRepository entityRepository)
+        public MaximoConnectorEngine(EntityRepository entityRepository, IProblemManager problemManager)
             : base(entityRepository) {
+            _problemManager = problemManager;
             //            _syncHandler = syncHandler;
         }
 
@@ -39,7 +43,18 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 return DoExecuteCrud(operationWrapper, connector);
             }
 
-            return new MaximoCustomOperatorEngine(connector).InvokeCustomOperation(operationWrapper);
+            var customOperatorEngine = new MaximoCustomOperatorEngine(connector);
+
+            try {
+                return customOperatorEngine.InvokeCustomOperation(operationWrapper);
+            } catch (System.Exception e) {
+                if (operationWrapper.OperationData().ProblemData != null) {
+                    var operationData = operationWrapper.OperationData();
+                    return HandleDefaultProblem(operationData, e);
+                }
+            }
+
+            return customOperatorEngine.InvokeCustomOperation(operationWrapper);
         }
 
 
@@ -66,6 +81,20 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 return crudConnector.FindById(crudOperationData);
             }
 
+            return null;
+        }
+
+        private static TargetResult HandleDefaultProblem(IOperationData operationData,
+            System.Exception e) {
+            var problemData = operationData.ProblemData;
+            //default problem handling
+            var problem = Problem.BaseProblem(operationData.ApplicationMetadata.Name,
+                operationData.ApplicationMetadata.Schema.SchemaId, operationData.Id, operationData.UserId, e.StackTrace,
+                e.Message, problemData.ProblemKey);
+            _problemManager.RegisterOrUpdateProblem(SecurityFacade.CurrentUser().UserId.Value, problem, null);
+            if (operationData.ProblemData.PropagateException) {
+                throw e;
+            }
             return null;
         }
 
@@ -101,10 +130,19 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 var maximoTemplateData = _crudConnector.CreateExecutionContext(proxy, operationData);
                 _crudConnector.PopulateIntegrationObject(maximoTemplateData);
                 _crudConnector.BeforeUpdate(maximoTemplateData);
-                _crudConnector.DoUpdate(maximoTemplateData);
+                try {
+                    _crudConnector.DoUpdate(maximoTemplateData);
+                } catch (System.Exception e) {
+                    if (maximoTemplateData.OperationData.ProblemData != null) {
+                        return HandleDefaultProblem(operationData, e);
+                    }
+                    throw;
+                }
                 _crudConnector.AfterUpdate(maximoTemplateData);
                 return maximoTemplateData.ResultObject;
             }
+
+
 
             public TargetResult Create(CrudOperationData operationData) {
                 operationData.OperationType = OperationType.Add;
@@ -112,15 +150,24 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 var maximoTemplateData = _crudConnector.CreateExecutionContext(proxy, operationData);
                 _crudConnector.PopulateIntegrationObject(maximoTemplateData);
                 _crudConnector.BeforeCreation(maximoTemplateData);
-                _crudConnector.DoCreate(maximoTemplateData);
+                try {
+                    _crudConnector.DoCreate(maximoTemplateData);
+                } catch (System.Exception e) {
+                    if (maximoTemplateData.OperationData.ProblemData != null) {
+                        return HandleDefaultProblem(operationData, e);
+                    }
+                    throw;
+                }
+
                 try {
                     _crudConnector.AfterCreation(maximoTemplateData);
                 } catch (System.Exception e) {
-                    throw new AfterCreationException(maximoTemplateData.ResultObject,e);
+                    throw new AfterCreationException(maximoTemplateData.ResultObject, e);
                 }
 
                 return maximoTemplateData.ResultObject;
             }
+
             public TargetResult Delete(CrudOperationData operationData) {
                 operationData.OperationType = OperationType.Delete;
                 var proxy = _crudConnector.CreateProxy(operationData.EntityMetadata);
@@ -142,14 +189,6 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 _crudConnector.AfterFindById(maximoTemplateData);
                 return maximoTemplateData.ResultObject;
             }
-
-
-
-
         }
-
-
-
-
     }
 }

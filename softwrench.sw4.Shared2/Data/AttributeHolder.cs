@@ -11,7 +11,7 @@ namespace softwrench.sW4.Shared2.Data {
         protected AttributeHolder() : base(StringComparer.OrdinalIgnoreCase) {
         }
 
-        protected AttributeHolder(IDictionary<string, object> attributes) {
+        protected AttributeHolder(IDictionary<string, object> attributes) : base(StringComparer.OrdinalIgnoreCase) {
             AddAllAttribtes(attributes);
         }
 

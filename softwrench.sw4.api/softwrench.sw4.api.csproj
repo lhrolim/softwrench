@@ -47,7 +47,10 @@
     <Compile Include="classes\email\IEmailService.cs" />
     <Compile Include="classes\fwk\filter\FilterProviderParameters.cs" />
     <Compile Include="classes\IMenuManager.cs" />
+    <Compile Include="classes\integration\ICommonOperationData.cs" />
     <Compile Include="classes\integration\IErrorDto.cs" />
+    <Compile Include="classes\integration\IOperationWrapper.cs" />
+    <Compile Include="classes\integration\ProblemData.cs" />
     <Compile Include="classes\integration\TargetResult.cs" />
     <Compile Include="classes\user\ISWUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

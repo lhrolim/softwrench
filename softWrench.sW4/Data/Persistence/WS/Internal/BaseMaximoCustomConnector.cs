@@ -3,6 +3,8 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 using cts.commons.simpleinjector;
+using softwrench.sw4.api.classes.integration;
+using softwrench.sW4.Shared2.Data;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
     public abstract class BaseMaximoCustomConnector : IMaximoConnector {
@@ -29,6 +31,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             public string Class { get { return EntityMetadata.GetTableName(); } }
             public EntityMetadata EntityMetadata { get; set; }
             public OperationType OperationType { get; set; }
+            public OperationProblemData ProblemData { get; set; }
+            public AttributeHolder Holder { get { return null; }}
 
             public ApplicationMetadata ApplicationMetadata { get; set; }
 

@@ -1,4 +1,7 @@
-﻿using softWrench.sW4.Data.Persistence.WS.Internal;
+﻿using JetBrains.Annotations;
+using softwrench.sw4.api.classes.integration;
+using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 
@@ -13,6 +16,12 @@ namespace softWrench.sW4.Data.Persistence.Operation {
         public ApplicationMetadata ApplicationMetadata { get; set; }
         private OperationType _operationType = OperationType.AddChange;
         public string Id { get; set; }
+
+        [CanBeNull]
+        public OperationProblemData ProblemData { get; set; }
+
+        public virtual AttributeHolder Holder { get { return null; } }
+
 
         protected OperationData() {
 
