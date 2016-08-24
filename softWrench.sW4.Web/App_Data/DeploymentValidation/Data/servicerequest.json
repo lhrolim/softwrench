@@ -112,14 +112,8 @@
       "sraddress_.formattedaddress": null,
       "worklog_": [ ],
       "attachment_": [ ],
-      "commlog_": [ ]
-    },
-    "subdata": [
-      {
-        "property": "relatedrecord_",
-        "addto": "main",
-        "type": "array",
-        "data": [
+      "commlog_": [ ],
+      "relatedrecord_": [
           {
             "relatedreckey": "2213",
             "relatedrecclass": "WORKORDER",
@@ -129,7 +123,6 @@
             "class": "SR"
           }
         ]
-      }
-    ]
+    }
   }
 ]

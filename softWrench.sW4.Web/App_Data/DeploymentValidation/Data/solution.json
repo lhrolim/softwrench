@@ -1,0 +1,43 @@
+﻿[
+  {
+    "application": "solution",
+    "action": "crud_create",
+    "actiondescription": "Create Solution Validation",
+    "schemakey": "newdetail.input.web",
+    "data": {
+      "description": "test",
+      "selfservaccess": false,
+      "pmsoleffscore": null,
+      "assetnum": null,
+      "classstructureid": null,
+      "allkeywords": null,
+      "symptom_.ldtext": null,
+      "cause_.ldtext": null,
+      "resolution_.ldtext": null,
+      "solution": null,
+      "application": "solution"
+    }
+  },
+  {
+    "application": "solution",
+    "action": "crud_update",
+    "actiondescription": "Update Solution Validation",
+    "schemakey": "editdetail.input.web",
+    "data": {
+      "solution": "1906",
+      "description": "text ",
+      "selfservaccess": true,
+      "pmsoleffscore": null,
+      "allkeywords": "scmanager, permissions,",
+      "assetnum": null,
+      "classstructureid": "1209",
+      "status": "ACTIVE",
+      "rowstamp": 257684126,
+      "symptom_.ldtext": " text",
+      "cause_.ldtext": " text ",
+      "resolution_.ldtext": " text ",
+      "application": "solution",
+      "approwstamp": 257684126
+    }
+  }
+]

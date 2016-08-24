@@ -33,29 +33,18 @@
       "statistics": null,
       "activationlink": null,
       "#userid": 194,
-      "#maxactive": false
-    },
-    "subdata": [
-      {
-        "property": "email_",
-        "addto": "main",
-        "type": "array",
-        "data": [
-          {
-            "personid": "AHABBU",
-            "emailid": 148932,
-            "loweremail": "123@123.com",
-            "emailaddress": "123@123.com",
-            "type": "WORK",
-            "isprimary": 1
-          }
-        ]
-      },
-      {
-        "property": "phone_",
-        "addto": "main",
-        "type": "array",
-        "data": [
+      "#maxactive": false,
+      "email_": [
+        {
+          "personid": "AHABBU",
+          "emailid": 148932,
+          "loweremail": "123@123.com",
+          "emailaddress": "123@123.com",
+          "type": "WORK",
+          "isprimary": 1
+        }
+      ],
+      "phone_": [
           {
             "personid": "AHABBU",
             "phoneid": 148166,
@@ -64,8 +53,7 @@
             "isprimary": 1
           }
         ]
-      }
-    ]
+    }
   },
 
   {

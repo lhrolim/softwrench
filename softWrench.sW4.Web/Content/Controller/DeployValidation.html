@@ -15,30 +15,39 @@
         </div>
 
         <div class="container">
-            <label style="margin-top:10px;">Validation Summary</label>
-            <table class="table" style="width:300px">
-                <tr>
-                    <th style="width:100px;"></th>
-                    <th style="width:100px;"></th>
-                </tr>                
-                <tr class="info">                 
-                    <td style="width:100px;">Total Executed</td>
-                    <td style="width:100px;">{{testSuccessCount + testFailureCount}}</td>
-                </tr>                
-                <tr class="success">                 
-                    <td style="width:100px;">Success</td>
-                    <td style="width:100px;">{{testSuccessCount}}</td>
-                </tr>                
-                <tr class="danger">                 
-                    <td style="width:100px;">Failure</td>
-                    <td style="width:100px;">{{testFailureCount}}</td>
-                </tr>
-            </table>
+            <div class="col-md-3">
+                <label style="margin-top:10px;">Validation Summary</label>
+                <table class="table" style="width:300px">
+                    <tr>
+                        <th style="width:100px;"></th>
+                        <th style="width:100px;"></th>
+                    </tr>
+                    <tr class="info">
+                        <td style="width:100px;">Total Executed</td>
+                        <td style="width:100px;">{{testSuccessCount + testFailureCount + missingDataCount}}</td>
+                    </tr>
+                    <tr class="success">
+                        <td style="width:100px;">Success</td>
+                        <td style="width:100px;">{{testSuccessCount}}</td>
+                    </tr>
+                    <tr class="danger">
+                        <td style="width:100px;">Failure</td>
+                        <td style="width:100px;">{{testFailureCount}}</td>
+                    </tr>
+                    <tr class="danger">
+                        <td style="width:100px;">Missing Test Data</td>
+                        <td style="width:100px;">{{missingDataCount}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-3">
+                <br />
+                <br />
+                <input style="margin-left:10px" type="checkbox" ng-model="showOnlyFailure" /> <label>Show failed tests only</label>
+                <br />
+                <input style="margin-left:10px" type="checkbox" ng-model="excludeMissingTestData" /> <label>Exclude applications missing test data</label>
+            </div>
         </div>
-
-        <br />
-        <label>Show failed tests only:</label> <input style="margin-left:10px" type="checkbox" ng-model="showOnlyFailure" />
-        <hr />
 
         <table class="table table-striped table-hover hidden-phone">
             <thead>
@@ -49,25 +58,24 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="application in applications" style="margin-bottom:10px" ng-hide="(showOnlyFailure ? !application.hasfailedTests : false)">
+                <tr ng-repeat="application in applications" style="margin-bottom:10px" 
+                    ng-show="(showOnlyFailure ? application.hasfailedTests : (excludeMissingTestData ?  !application.missingTestData : true))">
                     <td>{{application.title}}</td>
                     <td>{{application.applicationName}}</td>
                     <td>
                         <div class="container">
                             <table class="table" style="table-layout:fixed; width:910px;" ng-if="application.validationResultList && application.validationResultList.length > 0">
-                                <tr ng-if="!application.missingTestData" ng-repeat="validationResult in application.validationResultList"  ng-class="{'danger' : validationResult.hasProblems}" ng-hide="(showOnlyFailure ? !validationResult.hasProblems : false)">
+                                <tr ng-repeat="validationResult in application.validationResultList"  ng-class="{'danger' : validationResult.hasProblems}" ng-hide="(showOnlyFailure ? !validationResult.hasProblems : false)">
                                     <td style="padding:5px;width:550px; word-wrap:break-word;">{{validationResult.actionDescription}}</td>
                                     <td style="padding:5px;width:300px; word-wrap:break-word;">{{validationResult.actionName}}</td>                                    
                                     <td style="padding:5px;width:50px; word-wrap:break-word;" ng-click="showFailures(application, validationResult, false);">
                                         <i ng-if="!validationResult.hasProblems && validationResult.actionSupported" rel="tooltip" title="Success" class="fa fa-check deploy-success"></i>
                                         <i ng-if="validationResult.hasProblems && validationResult.actionSupported" rel="tooltip" title="{{failureTooltip}}" class="fa fa-times deploy-failure"></i>                                        
-                                        <i ng-if="!validationResult.actionSupported" rel="tooltip" title="This operation is not supported" class="fa fa-minus deploy-no-creation"></i>
+                                        <i ng-if="!validationResult.actionSupported && !validationResult.missingTestData" rel="tooltip" title="This operation is not supported" class="fa fa-minus deploy-no-creation"></i>
+                                        <i ng-if="validationResult.missingTestData" rel="tooltip" title="Test data is missing" class="fa fa-exclamation-triangle deploy-no-creation"></i>
                                     </td>
                                 </tr>
                             </table>
-                            <div ng-if="application.missingTestData">
-                                <p> <i rel="tooltip" title="Test data was not found for this application." class="fa fa-exclamation-triangle deploy-failure"></i> No test data found </p>
-                            </div>
                             <div ng-if="!application.validationResultList">
                                 <p> Test not run yet </p>
                             </div>
@@ -76,5 +84,7 @@
                 </tr>
             </tbody>
         </table>
+        <br />
+        <br />       
     </div>
 </div>

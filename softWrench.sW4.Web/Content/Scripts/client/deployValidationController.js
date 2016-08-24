@@ -8,7 +8,9 @@
         $scope.failureTooltip = "Failure - Click here for more details";
         $scope.testSuccessCount = 0;
         $scope.testFailureCount = 0;
+        $scope.missingDataCount = 0;
         $scope.showOnlyFailure = true;
+        $scope.excludeMissingTestData = true;
 
         $scope.validate = function () {
             $scope.testSuccessCount = 0;
@@ -29,15 +31,21 @@
                         return;
                     }
 
-                    application.missingTestData = testResult.missingTestData;
                     application.validationResultList = testResult.validationResultList;
 
                     angular.forEach(application.validationResultList, (valResult, valkey) => {
-                        if (valResult.hasProblems) {
-                            $scope.testFailureCount += 1;
-                            application.hasfailedTests = true;
+                        if (valResult.missingTestData) {
+                            $scope.missingDataCount += 1;
+                            application.missingTestData = valResult.missingTestData;
+                            
                         } else {
-                            $scope.testSuccessCount += 1;
+                            if (valResult.hasProblems) {
+                                $scope.testFailureCount += 1;
+                                application.hasfailedTests = valResult.hasProblems;
+
+                            } else {
+                                $scope.testSuccessCount += 1;
+                            }
                         }
                     });
                 });

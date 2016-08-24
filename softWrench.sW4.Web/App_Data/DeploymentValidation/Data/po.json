@@ -10,14 +10,8 @@
       "orderdate": "08/27/2001",
       "priority": 3,
       "rowstamp": 800943,
-      "targetstart": null
-    },
-    "subdata": [
-      {
-        "property": "relatedrecord_",
-        "addto": "main",
-        "type": "array",
-        "data": [
+      "targetstart": null,
+      "relatedrecord_": [
           {
             "relatedreckey": "2212",
             "relatedrecclass": "WORKORDER",
@@ -27,7 +21,6 @@
             "class": "WORKORDER"
           }
         ]
-      }
-    ]
+    }
   }
 ]

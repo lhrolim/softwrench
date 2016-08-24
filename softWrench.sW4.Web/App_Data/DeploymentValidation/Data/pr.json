@@ -27,14 +27,8 @@
       "orderdate": "08/27/2001",
       "priority": 3,
       "rowstamp": 800943,
-      "targetstart": null
-    },
-    "subdata": [
-      {
-        "property": "poline_",
-        "addto": "main",
-        "type": "array",
-        "data": [
+      "targetstart": null,
+      "poline_": [
           {
             "ponum": "B4230",
             "polinenum": 1,
@@ -50,7 +44,6 @@
             "enterdate": "2001-08-27T22:28:08+05:30"
           }
         ]
-      }
-    ]
+    }
   }
 ]
