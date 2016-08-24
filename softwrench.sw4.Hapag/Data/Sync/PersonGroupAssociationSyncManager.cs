@@ -20,6 +20,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
     public class PersonGroupAssociationSyncManager : AMaximoRowstampManager, IUserSyncManager, ISWEventListener<UserLoginEvent> {
         private readonly HlagLocationManager _locationManager;
         private readonly PersonGroupSyncManager _personGroupSyncManager;
+        private readonly UserManager _userManager;
 
         private const string EntityName = "persongroupview";
         private const string UserNotFound = "user with maximo personid {0} not found";
@@ -30,11 +31,12 @@ namespace softwrench.sw4.Hapag.Data.Sync {
         private readonly HapagPersonGroupHelper _hapagHelper;
 
         public PersonGroupAssociationSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, HlagLocationManager locationManager,
-            PersonGroupSyncManager personGroupSyncManager, softwrench.sw4.Hapag.Data.Sync.HapagPersonGroupHelper hapagHelper, EntityRepository repository)
+            PersonGroupSyncManager personGroupSyncManager, softwrench.sw4.Hapag.Data.Sync.HapagPersonGroupHelper hapagHelper, EntityRepository repository, UserManager userManager)
             : base(dao, facade, repository) {
             _locationManager = locationManager;
             _personGroupSyncManager = personGroupSyncManager;
             _hapagHelper = hapagHelper;
+            _userManager = userManager;
         }
 
 
@@ -130,7 +132,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             var syncOk = DoSync(attributeHolders, users, groups);
 
             //If the sync was not ok, try it again later
-            SetRowstampIfBigger(ConfigurationConstants.PersonGroupAssociationRowstampKey, syncOk ? GetLastRowstamp(attributeHolders, new[] { "rowstamp","rowstamp1" }) : null, rowstamp);
+            SetRowstampIfBigger(ConfigurationConstants.PersonGroupAssociationRowstampKey, syncOk ? GetLastRowstamp(attributeHolders, new[] { "rowstamp", "rowstamp1" }) : null, rowstamp);
         }
 
         private static SearchRequestDto GetPersonGroupSearchDTO() {
@@ -175,7 +177,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                     if ("true".Equals(MetadataProvider.GlobalProperty("ldap.allownonmaximousers"))) {
                         Log.Info("creating missing user with personId" + personId);
                         //if this flag is true, let´s create a user on our side so that we can associate the right roles to it
-                        user = UserManager.CreateMissingDBUser(personId, false);
+                        user = _userManager.CreateMissingDBUser(personId, false);
                         users.Add(user);
                     } else {
                         Log.Warn(String.Format(UserNotFound, personId));
@@ -225,7 +227,11 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             return personGroups;
         }
 
-        public int Order { get { return 3; } }
+        public int Order {
+            get {
+                return 3;
+            }
+        }
         public void HandleEvent(UserLoginEvent eventToDispatch) {
             var user = eventToDispatch.InMemoryUser;
             if ("true".Equals(MetadataProvider.GlobalProperty("ldap.syncalways")) && !string.IsNullOrEmpty(user.MaximoPersonId) && !string.IsNullOrEmpty(user.Login)) {

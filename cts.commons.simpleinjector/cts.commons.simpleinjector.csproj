@@ -53,6 +53,7 @@
     <Compile Include="app\DBType.cs" />
     <Compile Include="app\IApplicationConfiguration.cs" />
     <Compile Include="app\MySqlSimpleApplicationConfiguration.cs" />
+    <Compile Include="IClientAwareComponent.cs" />
     <Compile Include="IgnoreComponentAttribute.cs" />
     <Compile Include="ComponentAttribute.cs" />
     <Compile Include="Core\Order\IOrdered.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Events\SimpleInjectorDomainEventDispatcher.cs" />
     <Compile Include="IClientApplicationAwareComponent.cs" />
     <Compile Include="ISingletonComponent.cs" />
+    <Compile Include="OverridingComponentAttribute.cs" />
     <Compile Include="SimpleInjectorGenericFactory.cs" />
     <Compile Include="IComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -15,7 +15,6 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Models.MyProfile;
-using System.Dynamic;
 
 namespace softWrench.sW4.Web.Controllers.Security {
     [Authorize]
@@ -24,24 +23,26 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private readonly SecurityFacade _facade = SecurityFacade;
         private static readonly SecurityFacade SecurityFacade = SecurityFacade.GetInstance();
 
-        private readonly ISWDBHibernateDAO dao;
-        private readonly IMaximoHibernateDAO maxdao;
+        private readonly ISWDBHibernateDAO _dao;
+        private readonly IMaximoHibernateDAO _maxdao;
+        private readonly UserSyncManager _userSyncManager;
 
-        public UserController(ISWDBHibernateDAO dao, IMaximoHibernateDAO maxdao) {
-            this.dao = dao;
-            this.maxdao = maxdao;
+        public UserController(ISWDBHibernateDAO dao, IMaximoHibernateDAO maxdao, UserSyncManager userSyncManager) {
+            this._dao = dao;
+            this._maxdao = maxdao;
+            _userSyncManager = userSyncManager;
         }
 
         [SPFRedirect(Title = "User Setup")]
         [HttpGet]
         public GenericResponseResult<UserListDto> List(bool refreshData = true) {
-            var partialUsers = dao.FindByQuery<User>("select new User(id,UserName,IsActive) from User order by UserName");
-            var users = partialUsers.Select(user => UserSyncManager.GetUserFromMaximoBySwUser(user)).ToList();
+            var partialUsers = _dao.FindByQuery<User>("select new User(id,UserName,IsActive) from User order by UserName");
+            var users = partialUsers.Select(user => _userSyncManager.GetUserFromMaximoBySwUser(user)).ToList();
             users.RemoveAll(user => user == null);
             ICollection<UserProfile> profiles = new List<UserProfile>();
             IList<Role> roles = new List<Role>();
             if (refreshData) {
-                roles = dao.FindByQuery<Role>("from Role order by name");
+                roles = _dao.FindByQuery<Role>("from Role order by name");
                 profiles = SecurityFacade.FetchAllProfiles(true);
             }
 
@@ -123,7 +124,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 return null;
             }
 
-            return maxdao.FindSingleByNativeQuery<string>(@"SELECT emailaddress FROM email WHERE emailaddress IS NOT NULL 
+            return _maxdao.FindSingleByNativeQuery<string>(@"SELECT emailaddress FROM email WHERE emailaddress IS NOT NULL 
                                                             AND isprimary = 1 AND personid = ?", currentUser.MaximoPersonId);
         }
 
@@ -152,24 +153,11 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
         public class UserListDto {
-            private ICollection<User> _users;
-            private ICollection<Role> _roles;
-            private ICollection<UserProfile> _profiles;
+            public ICollection<User> Users { get; set; }
 
-            public ICollection<User> Users {
-                get { return _users; }
-                set { _users = value; }
-            }
+            public ICollection<Role> Roles { get; set; }
 
-            public ICollection<Role> Roles {
-                get { return _roles; }
-                set { _roles = value; }
-            }
-
-            public ICollection<UserProfile> Profiles {
-                get { return _profiles; }
-                set { _profiles = value; }
-            }
+            public ICollection<UserProfile> Profiles { get; set; }
         }
 
     }

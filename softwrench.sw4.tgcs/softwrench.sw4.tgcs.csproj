@@ -58,6 +58,7 @@
     <Compile Include="classes\com\cts\tgcs\connector\ToshibaChangeStatusTicketHandler.cs" />
     <Compile Include="classes\com\cts\tgcs\connector\ToshibaSRCrudConnector.cs" />
     <Compile Include="classes\com\cts\tgcs\dataset\ToshibaServiceRequestDataSet.cs" />
+    <Compile Include="classes\com\cts\tgcs\services\MaximoAuthorizationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +131,10 @@
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{E3764769-6D4D-4986-BAF4-02D1B479D961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
+      <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
+      <Name>softwrench.sw4.user</Name>
     </ProjectReference>
     <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
       <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>

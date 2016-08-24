@@ -127,7 +127,7 @@ namespace softWrench.sW4.Web.Controllers {
                 //if this flag is true, we will create the user on the fly
                 var ldapResult = _ldapManager.LdapAuth(userName, password);
                 if (ldapResult.Success) {
-                    userAux = UserManager.CreateMissingDBUser(userName);
+                    userAux = _userManager.CreateMissingDBUser(userName);
                     if (userAux == null) {
                         //user might not exist on maximo either, in that case we should block its access
                         return null;
@@ -181,7 +181,7 @@ namespace softWrench.sW4.Web.Controllers {
         private ActionResult AuthSucceeded(string userName, string userTimezoneOffset, InMemoryUser user) {
             var syncEveryTime = "true".Equals(MetadataProvider.GlobalProperty(SwUserConstants.LdapSyncAlways));
             if (syncEveryTime) {
-                user.DBUser = UserManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
+                user.DBUser = _userManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
             }
             AuthenticationCookie.SetSessionCookie(userName, userTimezoneOffset, Response);
 
