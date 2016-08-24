@@ -1824,6 +1824,13 @@
             </section>
           </customization>
         </detail>
+        <schema id="list"  stereotype="compositionlist" redeclaring="false">
+          <customization position="modifydate">
+            <field attribute="modifydate" label="Last Changed Date" qualifier="subtitle">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            </field>
+          </customization>
+        </schema>
       </schemas>
     </application>
 
