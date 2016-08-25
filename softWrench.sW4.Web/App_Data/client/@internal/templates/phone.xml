@@ -29,6 +29,9 @@
       <properties>
         <property key ="icon.composition.tab" value="fa fa-phone"/>
       </properties>
+      <filters>
+        <booleanfilter attribute="isprimary"/>
+      </filters>
       <schemas>
         <schema id="list" stereotype="compositionlist" title="Phone list">
           <field attribute="personid" hidden="true"/>
