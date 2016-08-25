@@ -7,8 +7,6 @@ using cts.commons.Util;
 using Iesi.Collections.Generic;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
-using NHibernate.Criterion;
-using NHibernate.Util;
 using Quartz.Util;
 using softwrench.sw4.api.classes.exception;
 using softwrench.sw4.user.classes.entities;
@@ -175,15 +173,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         /// <param name="userIdSite"></param>
         /// <returns></returns>
         public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
-            var isactive = json.GetValue("#isactive").ToString().EqualsAny("1", "true");
-            string primaryEmail = null;
+            var isactive = json.StringValue("#isactive").EqualsAny("1", "true");
+            var primaryEmail = json.StringValue("#primaryemail");
             var isCreation = application.Schema.Stereotype == SchemaStereotype.DetailNew;
 
-
-            var primaryEmailToken = json.GetValue("#primaryemail");
-            if (primaryEmailToken != null) {
-                primaryEmail = primaryEmailToken.ToString();
-            }
             var user = PopulateSwdbUser(application, json, id, operation);
             var passwordString = HandlePassword(json, user);
             user = UserManager.SaveUser(user);
@@ -194,17 +187,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var operationData = (CrudOperationData)operationWrapper.OperationData(typeof(CrudOperationData));
 
             if (isCreation) {
-                operationData.SetAttribute("personid",operationData.GetAttribute("#personid"));
+                operationData.SetAttributeIfNull("personid", operationData.GetAttribute("#personid"));
             }
 
-
-            if (operationData.GetAttribute("locationorg") == null) {
-                operationData.SetAttribute("locationorg", ApplicationConfiguration.DefaultOrgId);
-            }
-
-            if (operationData.GetAttribute("locationsite") == null) {
-                operationData.SetAttribute("locationsite", ApplicationConfiguration.DefaultSiteId);
-            }
+            operationData.SetAttributeIfNull("locationorg", ApplicationConfiguration.DefaultOrgId);
+            operationData.SetAttributeIfNull("locationsite", ApplicationConfiguration.DefaultSiteId);
 
             var targetResult = Engine().Execute(operationWrapper);
 
@@ -217,9 +204,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             }
 
 
+            if (json.StringValue("#apicall") != null) {
+                targetResult.ResultObject = user;
+                return targetResult;
+            }
+
             if (isCreation && isactive) {
                 _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
             }
+            
+
 
             return targetResult;
         }
@@ -227,11 +221,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         //saving user on SWDB first
         protected virtual User PopulateSwdbUser(ApplicationMetadata application, JObject json, string id, string operation) {
             // Save the updated sw user record
-            var username = json.GetValue("personid").ToString();
-            var firstName = json.GetValue("firstname").ToString();
-            var lastName = json.GetValue("lastname").ToString();
-            var isactive = json.GetValue("#isactive").ToString().EqualsAny("1", "true");
-            var signature = json.GetValue("#signature").ToString();
+            var username = json.StringValue("personid");
+            var firstName = json.StringValue("firstname");
+            var lastName = json.StringValue("lastname");
+            var isactive = json.StringValue("#isactive").EqualsAny("1", "true");
+            var signature = json.StringValue("#signature");
             var dbUser = _swdbDAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, username);
 
             var user = dbUser ?? new User(null, username, isactive) {
@@ -298,15 +292,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         }
 
         private static string HandlePassword(JObject json, User user) {
-            JToken password;
-            json.TryGetValue("#password", out password);
-            string passwordString = null;
-            if (password != null && !password.ToString().NullOrEmpty() &&
+            var password = json.StringValue("#password");
+
+            if (!password.NullOrEmpty() &&
                 !ApplicationConfiguration.Profile.EqualsIc("demo")) {
-                passwordString = password.ToString();
-                user.Password = AuthUtils.GetSha1HashData(passwordString);
+                user.Password = AuthUtils.GetSha1HashData(password);
             }
-            return passwordString;
+            return password;
         }
 
         [NotNull]

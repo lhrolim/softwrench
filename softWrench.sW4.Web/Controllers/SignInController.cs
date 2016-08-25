@@ -19,13 +19,13 @@ using softWrench.sW4.Web.Controllers.Security;
 
 namespace softWrench.sW4.Web.Controllers {
     public class SignInController : Controller {
-        private readonly IConfigurationFacade _facade;
+        private readonly SecurityFacade _facade;
         private readonly LdapManager _ldapManager;
         private readonly SWDBHibernateDAO _dao;
         private readonly UserManager _userManager;
 
 
-        public SignInController(IConfigurationFacade facade, LdapManager ldapManager, SWDBHibernateDAO dao, UserManager userManager) {
+        public SignInController(SecurityFacade facade, LdapManager ldapManager, SWDBHibernateDAO dao, UserManager userManager) {
             _facade = facade;
             _ldapManager = ldapManager;
             _dao = dao;
@@ -150,13 +150,13 @@ namespace softWrench.sW4.Web.Controllers {
 
                 var ldapResult = _ldapManager.LdapAuth(userName, password);
                 if (ldapResult.Success) {
-                    return SecurityFacade.GetInstance().DoLogin(userAux, userTimezoneOffset);
+                    return _facade.DoLogin(userAux, userTimezoneOffset);
                 }
                 return null;
             }
 
             //non LDAP scenario
-            var user = SecurityFacade.GetInstance().LoginCheckingPassword(userAux, password, userTimezoneOffset);
+            var user = _facade.LoginCheckingPassword(userAux, password, userTimezoneOffset);
             return user;
 
         }

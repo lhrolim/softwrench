@@ -54,6 +54,13 @@ namespace softwrench.sW4.Shared2.Data {
             Add(attributeName, value);
         }
 
+        public void SetAttributeIfNull(string attributeName, object value) {
+            if (ContainsAttribute(attributeName, true)) {
+                return;
+            }
+            SetAttribute(attributeName,value);
+        }
+
         public virtual bool ContainsAttribute(string attributeName, bool checksForNonNull = false) {
             return ContainsKey(attributeName);
         }

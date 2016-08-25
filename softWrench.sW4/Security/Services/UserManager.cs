@@ -21,22 +21,22 @@ namespace softWrench.sW4.Security.Services {
         private const string HlagPrefix = "@HLAG.COM";
 
 
-        private readonly UserLinkManager _userLinkManager;
+        protected readonly UserLinkManager UserLinkManager;
 
-        private readonly MaximoHibernateDAO _maxDAO;
+        protected readonly MaximoHibernateDAO MaxDAO;
 
-        private readonly UserSetupEmailService _userSetupEmailService;
+        protected readonly UserSetupEmailService UserSetupEmailService;
 
-        private readonly UserSyncManager _userSyncManager;
+        protected readonly UserSyncManager UserSyncManager;
 
         private static LdapManager _ldapManager;
 
         public UserManager(UserLinkManager userLinkManager, MaximoHibernateDAO maxDAO, UserSetupEmailService userSetupEmailService, LdapManager ldapManager, UserSyncManager userSyncManager) {
-            _userLinkManager = userLinkManager;
-            _maxDAO = maxDAO;
-            _userSetupEmailService = userSetupEmailService;
+            UserLinkManager = userLinkManager;
+            MaxDAO = maxDAO;
+            UserSetupEmailService = userSetupEmailService;
             _ldapManager = ldapManager;
-            _userSyncManager = userSyncManager;
+            UserSyncManager = userSyncManager;
         }
 
 
@@ -78,7 +78,7 @@ namespace softWrench.sW4.Security.Services {
             user.ChangePassword = false;
             var savedUser = DAO.Save(user);
             //TODO: wipeout link
-            _userLinkManager.DeleteLink(savedUser);
+            UserLinkManager.DeleteLink(savedUser);
             // ReSharper disable once PossibleInvalidOperationException
             Dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName));
         }
@@ -120,7 +120,7 @@ namespace softWrench.sW4.Security.Services {
                     personid += HlagPrefix;
                 }
             }
-            var user = _userSyncManager.GetUserFromMaximoByPersonId(personid, true);
+            var user = UserSyncManager.GetUserFromMaximoByPersonId(personid, true);
             if (user == null) {
                 //if the user does not exist on maximo, then we should not create it on softwrench either
                 return null;
@@ -160,7 +160,7 @@ namespace softWrench.sW4.Security.Services {
                 return existingUser;
             }
 
-            var user = _userSyncManager.GetUserFromMaximoBySwUser(existingUser);
+            var user = UserSyncManager.GetUserFromMaximoBySwUser(existingUser);
             if (user == null) {
                 return existingUser;
             }
@@ -179,9 +179,9 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public User FindUserByLink(string tokenLink, out bool hasExpired) {
-            var user = _userLinkManager.RetrieveUserByLink(tokenLink, out hasExpired);
+            var user = UserLinkManager.RetrieveUserByLink(tokenLink, out hasExpired);
             if (user != null) {
-                var maximoUser = _userSyncManager.GetUserFromMaximoBySwUser(user);
+                var maximoUser = UserSyncManager.GetUserFromMaximoBySwUser(user);
                 user.MergeMaximoWithNewUser(maximoUser);
             }
             return user;
@@ -196,14 +196,14 @@ namespace softWrench.sW4.Security.Services {
                 if (user == null) {
                     return "User {0} not found".Fmt(userNameOrEmail);
                 }
-                var email = _maxDAO.FindSingleByNativeQuery<string>("select emailaddress from email where personid = ? and isPrimary = 1", user.MaximoPersonId);
+                var email = MaxDAO.FindSingleByNativeQuery<string>("select emailaddress from email where personid = ? and isPrimary = 1", user.MaximoPersonId);
                 if (email == null) {
                     return "User {0} has no primary email registered. Please contact your administrator".Fmt(userNameOrEmail);
                 }
                 emailToSend = email;
             } else {
                 emailToSend = userNameOrEmail;
-                var personid = _maxDAO.FindSingleByNativeQuery<string>("select personid from email where emailaddress = ? and isPrimary = 1", userNameOrEmail);
+                var personid = MaxDAO.FindSingleByNativeQuery<string>("select personid from email where emailaddress = ? and isPrimary = 1", userNameOrEmail);
                 if (personid == null) {
                     return "The email {0} is not registered on the database".Fmt(userNameOrEmail);
                 }
@@ -212,11 +212,11 @@ namespace softWrench.sW4.Security.Services {
                     return "The email {0} is not registered on the database".Fmt(userNameOrEmail);
                 }
             }
-            user = _userSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(user);
+            user = UserSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(user);
             if (user.IsPoPulated()) {
                 return "User {0} not found".Fmt(userNameOrEmail);
             }
-            _userSetupEmailService.ForgotPasswordEmail(user, emailToSend);
+            UserSetupEmailService.ForgotPasswordEmail(user, emailToSend);
             return null;
         }
 
@@ -225,9 +225,9 @@ namespace softWrench.sW4.Security.Services {
             if (user == null) {
                 throw new InvalidOperationException("user {0} not found".Fmt(userId));
             }
-            user = _userSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(user);
+            user = UserSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(user);
             if (user.IsPoPulated()) {
-                _userSetupEmailService.SendActivationEmail(user, email);
+                UserSetupEmailService.SendActivationEmail(user, email);
             }
 
         }

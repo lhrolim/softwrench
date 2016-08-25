@@ -105,6 +105,7 @@
     <Compile Include="ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Hapag\Data\Connector\Imac\ImacServicePlanHelperTest.cs" />
     <Compile Include="Hapag\Security\HlagGroupedLocationTest.cs" />
+    <Compile Include="Mapping\MappingResolverTest.cs" />
     <Compile Include="Metadata\AbstractSchemaTest.cs" />
     <Compile Include="Metadata\Applications\Command\ApplicationCommandMergerTest.cs" />
     <Compile Include="Metadata\Applications\Command\ApplicationCommandUtilsTest.cs" />

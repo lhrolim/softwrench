@@ -25,7 +25,7 @@ using softWrench.sW4.Data.Persistence.SWDB;
 namespace softWrench.sW4.Security.Services {
     public class UserProfileManager : ISingletonComponent {
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(UserProfileManager));
+        protected static readonly ILog Log = LogManager.GetLogger(typeof(UserProfileManager));
 
         private static readonly IDictionary<int?, UserProfile> ProfileCache = new Dictionary<int?, UserProfile>();
 
@@ -121,7 +121,7 @@ namespace softWrench.sW4.Security.Services {
             return profile;
         }
 
-        public List<UserProfile> FindUserProfiles(User dbUser) {
+        public virtual List<UserProfile> FindUserProfiles(User dbUser) {
             if (dbUser.Profiles == null) {
                 return new List<UserProfile>();
             }

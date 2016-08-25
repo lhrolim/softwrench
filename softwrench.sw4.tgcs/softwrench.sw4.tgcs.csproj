@@ -34,6 +34,10 @@
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -54,11 +58,14 @@
     <Compile Include="classes\com\cts\tgcs\configuration\ToshibaChartInitializer.cs" />
     <Compile Include="classes\com\cts\tgcs\configuration\ToshibaConfigurationRegistry.cs" />
     <Compile Include="classes\com\cts\tgcs\configuration\ToshibaPersonSyncJob.cs" />
+    <Compile Include="classes\com\cts\tgcs\configuration\ToshibaProfileCreator.cs" />
     <Compile Include="classes\com\cts\tgcs\configuration\ToshibaSRSyncJob.cs" />
     <Compile Include="classes\com\cts\tgcs\connector\ToshibaChangeStatusTicketHandler.cs" />
     <Compile Include="classes\com\cts\tgcs\connector\ToshibaSRCrudConnector.cs" />
     <Compile Include="classes\com\cts\tgcs\dataset\ToshibaServiceRequestDataSet.cs" />
-    <Compile Include="classes\com\cts\tgcs\services\MaximoAuthorizationService.cs" />
+    <Compile Include="classes\com\cts\tgcs\services\ToshibaAuthUtils.cs" />
+    <Compile Include="classes\com\cts\tgcs\services\ToshibaUserProfileManager.cs" />
+    <Compile Include="classes\com\cts\tgcs\services\ToshibaUserSyncManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

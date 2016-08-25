@@ -3,6 +3,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
+using softWrench.sW4.Data;
 
 namespace softWrench.sW4.Util {
     public static class JSonUtil {
@@ -16,8 +18,12 @@ namespace softWrench.sW4.Util {
 
         }
 
+        [CanBeNull]
+        public static string StringValue(this JObject ob, string propertyName) {
+            if (ob is JObjectDatamapAdapter) {
+                return ((JObjectDatamapAdapter)ob).GetStringValue(propertyName);
+            }
 
-        public static String StringValue(this JObject ob, string propertyName) {
             var prop = ob.Property(propertyName);
             if (prop == null || prop.Value == null) {
                 return null;
@@ -35,7 +41,7 @@ namespace softWrench.sW4.Util {
         }
 
         public static void NormalizeJson(string s, StringBuilder sb) {
-            if (String.IsNullOrEmpty(s)) {
+            if (string.IsNullOrEmpty(s)) {
                 return;
             }
 
