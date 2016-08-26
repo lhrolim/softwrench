@@ -140,6 +140,10 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
+        public void SetValuesDictionary(IDictionary<string, SearchParameter> values) {
+            if (values == null) return;
+            _valuesDictionary = values;
+        }
 
         public void BuildProjection(ApplicationSchemaDefinition schema) {
             var columns = schema.Fields;
@@ -149,7 +153,7 @@ namespace softWrench.sW4.Data.Search {
         }
 
 
-        internal void BuildProjection(ApplicationCompositionSchema schema, bool printMode = false, bool offLineMode = false) {
+        public void BuildProjection(ApplicationCompositionSchema schema, bool printMode = false, bool offLineMode = false) {
             var schemaToUse = schema.Schemas.List;
 
             if (printMode) {

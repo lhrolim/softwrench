@@ -56,10 +56,10 @@ namespace softwrench.sW4.test.Data.Relationship {
             Assert.AreEqual("~eq~TTC-00", query.Get("pluspcustomer"));
             Assert.AreEqual("true", query.Get("_urs"));
 
-            var maxitems = query.Get("_maxitems");
-            Assert.AreEqual(maxitems, "100");
+            Assert.AreEqual(query.Get("_maxitems"), "100");
+            Assert.AreEqual(query.Get("_rsStart"), "0");
 
-            Assert.AreEqual(query.Count,7);
+            Assert.AreEqual(query.Count, 8);
 
 
         }
@@ -87,8 +87,9 @@ namespace softwrench.sW4.test.Data.Relationship {
             Assert.AreEqual("~eq~TTC-00", query.Get("pluspcustomer"));
 
             Assert.AreEqual("100",query.Get("_maxitems"));
+            Assert.AreEqual("0",query.Get("_rsStart"));
 
-            Assert.AreEqual(query.Count, 5);
+            Assert.AreEqual(query.Count, 6);
 
 
         }
@@ -123,12 +124,11 @@ namespace softwrench.sW4.test.Data.Relationship {
 
             Assert.AreEqual("true", query.Get("_urs"));
 
-            Assert.AreEqual("100",query.Get("_maxitems"));
+            Assert.AreEqual("100", query.Get("_maxitems"));
+            Assert.AreEqual("0", query.Get("_rsStart"));
             Assert.AreEqual("~eq~TTC-00", query.Get("pluspcustomer"));
 
-            Assert.AreEqual(query.Count, 7);
-
-
+            Assert.AreEqual(query.Count, 8);
         }
 
 

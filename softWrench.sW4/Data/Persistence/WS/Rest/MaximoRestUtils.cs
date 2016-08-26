@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Connectors;
-using softWrench.sW4.Util;
 using CompressionUtil = cts.commons.Util.CompressionUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Rest {
@@ -24,9 +18,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
         public const string RestUserCredentials = "rest.{0}.credentials.user";
         public const string RestPasswordCredentials = "rest.{0}.credentials.password";
 
+        public const string RestMarkerFieldName = "#from_rest";
+
         [CanBeNull]
         public static string GenerateRestUrl(EntityMetadata entityMetadata, string entityId, string restKey = null) {
-
             if (!IsRestSetup(restKey)) {
                 return null;
             }
@@ -34,6 +29,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
             var baseRestURL = GetRestBaseUrl(restKey);
 
             var entityKey = entityMetadata.ConnectorParameters.GetWSEntityKey(ConnectorParameters.UpdateInterfaceParam, WsProvider.REST);
+
+            var hasEntityKey = !string.IsNullOrEmpty(entityKey);
+
+            // has no entityKey force use of '/mbo/<entityMetadata.Name>/' rest interface
+            // common case would be querying a composition
+            if (!hasEntityKey) {
+                baseRestURL = baseRestURL.Replace("/os/", "/mbo/");
+                if (!baseRestURL.EndsWith("/mbo/")) {
+                    baseRestURL += "mbo/";
+                }
+                return baseRestURL + entityMetadata.Name + "/" + entityId;
+            }
+
             if (baseRestURL.EndsWith("/mbo/")) {
                 //the url can point either to a mbo or to a Object structure (OS)
                 if (entityKey.StartsWith("SW")) {
@@ -118,7 +126,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
             return MetadataProvider.GlobalProperty(RestPasswordCredentials.Fmt(restKey));
         }
 
-        private static string GetRestBaseUrl(string restKey) {
+        public static string GetRestBaseUrl(string restKey) {
             return MetadataProvider.GlobalProperty(restKey == null ? BaseRestURLProp : NewUrlTemplate.Fmt(restKey));
         }
 

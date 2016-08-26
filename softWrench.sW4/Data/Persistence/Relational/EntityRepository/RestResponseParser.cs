@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using cts.commons.portable.Util;
@@ -7,9 +6,9 @@ using cts.commons.simpleinjector;
 using log4net;
 using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
+using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Connectors;
-using softWrench.sW4.Metadata.Parsing;
 
 namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
     public class RestResponseParser : ISingletonComponent {
@@ -27,9 +26,6 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         }
 
         internal DataMap ConvertXmlToDatamap(EntityMetadata entityMetadata, string responseAsText, string wsKey = null) {
-
-
-
             var xml = XElement.Parse(responseAsText);
             var resultElement = RestResponseParser.GetResultElement(xml, entityMetadata);
             if (resultElement == null) {
@@ -38,6 +34,16 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
             return InnerDatamapConversion(entityMetadata, resultElement);
         }
+
+        internal int TotalCountFromXml(EntityMetadata entityMetadata, string responseAsText, string wsKey = null) {
+            var xml = XElement.Parse(responseAsText);
+            var resultElement = RestResponseParser.GetResultElement(xml, entityMetadata);
+            if (resultElement == null) {
+                return 0;
+            }
+            var totalCountAttribute = resultElement.Attribute("rsTotal");
+            return totalCountAttribute == null ? 0 : int.Parse(totalCountAttribute.Value);
+        } 
 
         private static DataMap InnerDatamapConversion(EntityMetadata entityMetadata, XElement resultElement) {
             var result = new Dictionary<string, object>();
@@ -71,14 +77,16 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
                     }
                 }
             }
-
-            return new DataMap(entityMetadata.Name, result,null,true);
+            // marking rest origin
+            result[MaximoRestUtils.RestMarkerFieldName] = true;
+            return new DataMap(entityMetadata.Name, result, null, true);
         }
 
 
         public static XElement GetResultElement(XElement xml, EntityMetadata entityMetadata, string wsKey = null) {
             if (wsKey == null) {
-                wsKey = entityMetadata.ConnectorParameters.GetWSEntityKey(ConnectorParameters.UpdateInterfaceParam, WsProvider.REST);
+                var entityKey = entityMetadata.ConnectorParameters.GetWSEntityKey(ConnectorParameters.UpdateInterfaceParam, WsProvider.REST);
+                wsKey = entityKey ?? /* compositions: */ entityMetadata.Name + "Mbo";
             }
 
 

@@ -27,6 +27,7 @@
         const service = {
             isValid,
             downloadFile,
+            executeDownloadRequest,
             selectAttachment,
             fetchDownloadUrl,
             redirectToAttachmentView,
@@ -45,19 +46,21 @@
             });
         }
 
-        function downloadFile(item, column, schema) {
-            const parameters = {};
-            var id = item["docinfoid"];
-            parameters.id = id;
-            parameters.mode = "http";
-            const rawUrl = url("/Attachment/Download" + "?" + $.param(parameters));
-            $.fileDownload(rawUrl, {
-
-                failCallback: function (html, url) {
-                    alertService.alert(String.format(i18NService.get18nValue("download.error", "Error downloading file with id {0}. Please, Contact your Administrator"), id));
+        function executeDownloadRequest(controller, params, errorMessage) {
+            const controllerUrl = url(`${controller}/Download?${$.param(params)}`);
+            $.fileDownload(controllerUrl, {
+                failCallBack: (html, url) => {
+                    alertService.alert(errorMessage);
                 }
             });
             return false;
+        }
+
+        function downloadFile(item, column, schema) {
+            const id = item["docinfoid"];
+            const parameters = { id: id, mode: "http" };
+            const errorMessage = String.format(i18NService.get18nValue("download.error", "Error downloading file with id {0}. Please, Contact your Administrator"), id);
+            return executeDownloadRequest("Attachment", parameters, errorMessage);
         }
 
         function getUrl(item, column, schema) {

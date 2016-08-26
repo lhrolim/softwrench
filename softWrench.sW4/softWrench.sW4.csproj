@@ -199,6 +199,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ChangeStatusTicketHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\BaseCommlogDataset.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\CommlogHelper.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequestWhereClauseProvider.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\DispatchOperationHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\ProgressMultiAssetHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\MeterReadingOperationHandler.cs" />

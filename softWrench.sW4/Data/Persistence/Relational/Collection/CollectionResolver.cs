@@ -17,6 +17,7 @@ using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.Collection {
@@ -167,13 +168,13 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 tasks[0] = Task.Factory.NewThread(c => {
                     var dto = searchRequestDto.ShallowCopy();
                     Quartz.Util.LogicalThreadContext.SetData("context", c);
-                    queryResult = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, dto, offLineMode);
+                    queryResult = GetList(collectionEntityMetadata, dto, offLineMode);
                 }, ctx);
                 // one thread to count results for paginations
                 tasks[1] = Task.Factory.NewThread(c => {
                     var dto = searchRequestDto.ShallowCopy();
                     Quartz.Util.LogicalThreadContext.SetData("context", c);
-                    paginatedSearch.TotalCount = EntityRepository.Count(collectionEntityMetadata, dto);
+                    paginatedSearch.TotalCount = GetCount(collectionEntityMetadata, dto, offLineMode);
                 }, ctx);
                 Task.WaitAll(tasks);
                 // add paginationData to result 
@@ -195,11 +196,25 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
             if (attributeHolders.Length == 1) {
                 //default scenario, we have just one entity here
-                firstAttributeHolder.Add(targetCollectionAttribute, queryResult.ResultList);
+                if (!firstAttributeHolder.ContainsKey(targetCollectionAttribute)) {
+                    firstAttributeHolder.Add(targetCollectionAttribute, queryResult.ResultList);
+                } else {
+                    var list = (List<Dictionary<string, object>>)firstAttributeHolder[targetCollectionAttribute];
+                    list.AddRange(queryResult.ResultList);
+                }
+
                 parameter.Results.Add(collectionAssociation.Qualifier, queryResult);
                 return;
             }
             MatchResults(queryResult, matchingResultWrapper, targetCollectionAttribute);
+        }
+
+        protected virtual EntityRepository.EntityRepository.SearchEntityResult GetList(EntityMetadata entityMetadata, SearchRequestDto dto, bool offlineMode) {
+            return EntityRepository.GetAsRawDictionary(entityMetadata, dto, offlineMode);
+        }
+
+        protected virtual int GetCount(EntityMetadata entityMetadata, SearchRequestDto dto, bool offlineMode) {
+            return EntityRepository.Count(entityMetadata, dto);
         }
 
         protected virtual CollectionMatchingResultWrapper GetResultWrapper() {

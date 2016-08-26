@@ -11,6 +11,8 @@
     <template path="@woactivity.xml"/>
     <template path="@person.xml"/>
     <template path="@bulletinboard.xml"/>
+    <template path="@worklogs.xml"/>
+    <template path="@attachments.xml"/>
   </templates>
   
   <entities>
@@ -382,31 +384,53 @@
       </schemas>
     </application>
 
-    <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008">
+    <application name="worklog" title="Work Logs" entity="worklog">
       <schemas>
         <schema id="list"  stereotype="compositionlist" redeclaring="false">
+          <properties>
+            <property key="list.click.customparams" value="#from_rest"/>
+          </properties>
           <customization position="modifydate">
             <field attribute="modifydate" label="Last Changed Date" qualifier="subtitle">
               <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
             </field>
           </customization>
+          <customization position="synonymdomain_.description">
+            <field attribute="logtype" />
+          </customization>
         </schema>
 
         <detail stereotype="compositiondetail" title="Work Log" redeclaring="false">
+          <customization position="-createdate">
+            <field attribute="worklogid" hidden="true"/>
+          </customization>
           <customization position="logtype">
-            <association target="logtype" labelfield="LOGTYPE_.description" label="Log Type" default="CLIENTNOTE">
+            <association target="logtype" labelfield="LOGTYPE_.description" label="Log Type" default="CLIENTNOTE" showexpression="!@worklogid">
               <renderer type="lookup"/>
             </association>
+            <field attribute="logtype" label="Log Type" showexpression="!!@worklogid"/>
+          </customization>
+          <customization position="wld_.ldtext">
+            <field attribute="wld_.ldtext" label="Details" showexpression="!@worklogid">
+              <renderer type="richtext"/>
+            </field>
+            <field attribute="description_longdescription" label="Details" showexpression="!!@worklogid">
+              <renderer type="richtext"/>
+            </field>
           </customization>
         </detail>
 
         <schema id="qsrcompositiondetail" stereotype="compositiondetail" title="Work Log">
+          <field attribute="worklogid" hidden="true"/>
           <field attribute="createdate" hidden="true" />
 
           <field attribute="description" label="Summary" requiredexpression="true">
             <renderer type="default" params="maxlength=100"/>
           </field>
-          <field attribute="wld_.ldtext" label="Details" >
+          <field attribute="wld_.ldtext" label="Details" showexpression="!@worklogid">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="description_longdescription" label="Details" showexpression="!!@worklogid">
             <renderer type="richtext"/>
           </field>
           <section orientation="horizontal">
@@ -416,12 +440,8 @@
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
           </section>
-
-          <!-- attachment placeholder -->
-          <!-- TODO: use section+id instead of field when it's eventually possible -->
-          <field attribute="position_attachment" hidden="true"></field>
-
         </schema>
+        
       </schemas>
     </application>
     
@@ -661,14 +681,14 @@
               </field>
             </tab>
             <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" />
             </composition>
             <composition relationship="commlog" label="Communications">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
             <composition relationship="attachment" label="Attachments" printenabled="false" >
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
             </composition>
             <composition relationship="aticket" label="Audit Log" detailschema="">
               <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="compositionlist" orderbyfield="eaudittimestamp desc"/>
@@ -752,6 +772,19 @@
         </schema>
       </schemas>
     </application>
+    
+    <application name="attachment" title="Attachments" entity="DOCLINKS">
+      <schemas>
+        <list stereotype="compositionlist" platform="web" redeclaring="false">
+          <customization position="-ownerid">
+            <field attribute="urlname" hidden="true"/>
+            <field attribute="urltype" hidden="true"/>
+            <field attribute="weburl" hidden="true"/>  
+          </customization>
+        </list>
+      </schemas>
+    </application>
+    
   </applications>
   
 </metadata>

@@ -45,6 +45,7 @@ using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Metadata.Applications.Schema;
+using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using EntityUtil = softWrench.sW4.Util.EntityUtil;
@@ -215,13 +216,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             throw new InvalidOperationException("could not determine which operation to take upon request");
         }
 
+        protected virtual DataMap FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
+            return (DataMap) Engine().FindById(entityMetadata, request.Id, request.UserIdSitetuple);
+        }
+
         public virtual ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema, user);
             DataMap dataMap;
             if (request.IsEditionRequest) {
-                dataMap = (DataMap)Engine().FindById(entityMetadata, id, request.UserIdSitetuple);
+                dataMap = FetchDetailDataMap(application, user, request);
 
                 if (dataMap == null) {
                     return null;
@@ -276,7 +282,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return data;
         }
 
-        private void HandleAttachments(CompositionFetchResult data) {
+        protected virtual void HandleAttachments(CompositionFetchResult data) {
             var attachments = data.ResultObject["attachment_"].ResultList;
             foreach (var attachment in attachments) {
                 if (!attachment.ContainsKey("docinfo_.urlname")) continue;
@@ -286,7 +292,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
         }
 
-
+        protected virtual IDictionary<string, EntityRepository.SearchEntityResult> ResolveCompositionResult(SlicedEntityMetadata parentEntityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionsToResolve, Entity parentData, PaginatedSearchRequestDto search) {
+            return _collectionResolver.ResolveCollections(parentEntityMetadata, compositionsToResolve, parentData, search);
+        }
 
         private CompositionFetchResult DoGetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
@@ -312,7 +320,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             var cruddata = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata, application, currentData, request.Id);
 
-            result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
+            result = ResolveCompositionResult(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
 
             return new CompositionFetchResult(result, cruddata);
         }

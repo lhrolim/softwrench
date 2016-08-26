@@ -17,23 +17,24 @@ namespace softWrench.sW4.Web.Controllers {
 
         public FileContentResult Download(string id, string mode, AttachmentRequest request) {
 
-            Tuple<Byte[], string> fileTuple;
+            Tuple<byte[], string> fileTuple;
 
-            if (mode == "http") {
-                fileTuple = _attachmentHandler.DownloadViaHttpById(id);
-            } else if (mode == "ws") {
-                fileTuple = _attachmentHandler.DownloadViaParentWS(id, request.ParentId, request.ParentApplication, request.ParentSchemaId);
-            } else {
-                throw new NotImplementedException(String.Format("{0} mode not implemented. Please use 'http' or 'ws'", mode));
+            switch (mode) {
+                case "http":
+                    fileTuple = _attachmentHandler.DownloadViaHttpById(id);
+                    break;
+                case "ws":
+                    fileTuple = _attachmentHandler.DownloadViaParentWS(id, request.ParentId, request.ParentApplication, request.ParentSchemaId);
+                    break;
+                default:
+                    throw new NotImplementedException(string.Format("{0} mode not implemented. Please use 'http' or 'ws'", mode));
             }
 
-            if (fileTuple != null) {
-                var result = new FileContentResult(fileTuple.Item1, System.Net.Mime.MediaTypeNames.Application.Octet) {
-                    FileDownloadName = fileTuple.Item2
-                };
-                return result;
-            }
-            return null;
+            if (fileTuple == null) return null;
+            var result = new FileContentResult(fileTuple.Item1, System.Net.Mime.MediaTypeNames.Application.Octet) {
+                FileDownloadName = fileTuple.Item2
+            };
+            return result;
         }
 
 

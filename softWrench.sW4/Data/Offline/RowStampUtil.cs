@@ -33,6 +33,9 @@ namespace softWrench.sW4.Data.Offline {
         }
 
         private static long? ConvertByteArrayToLong(object dbstamp) {
+            if (dbstamp is long) {
+                return (long) dbstamp;
+            }
             // cloning so it doesn't alter parameter
             // this was necessary because it is being called multiple times on the same dbstamp
             // TODO: investigate how it is being called multiple times on same dbstamp (and possibly remove the clone)
