@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using log4net;
+using Newtonsoft.Json;
 
 namespace softWrench.sW4.Util {
     public class StatusColorResolver : ISingletonComponent, ISWEventListener<ClearCacheEvent> {
@@ -14,6 +15,8 @@ namespace softWrench.sW4.Util {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StatusColorResolver));
 
         private const string PathPattern = "{0}App_Data\\Client\\{1}\\statuscolors.json";
+
+        private const string FallbackPathPattern = "{0}App_Data\\Client\\@internal\\fallback\\{1}";
 
         private const string TestI18NdirPattern = "{0}\\Client\\{1}\\statuscolors.json";
 
@@ -76,37 +79,62 @@ namespace softWrench.sW4.Util {
                 {"wsch", "orange"}
             };
         }
-
-
+        
         public JObject FetchCatalogs() {
             if (_cacheSet && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest) {
                 //we won´t cache it on dev, because it would be boring on the development process
                 return _cachedCatalogs;
             }
 
-
             var currentClient = ApplicationConfiguration.ClientName;
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var patternToUse = ApplicationConfiguration.IsUnitTest ? TestI18NdirPattern : PathPattern;
             var statusColorJsonPath = String.Format(patternToUse, baseDirectory, currentClient);
-            if (File.Exists(statusColorJsonPath))
-            {
+            statusColorJsonPath = File.Exists(statusColorJsonPath) ? statusColorJsonPath : String.Format(FallbackPathPattern, baseDirectory, "statuscolors.json");
+
+            if (File.Exists(statusColorJsonPath)) {
                 JObject statusColorJson;
-                try
-                {
+                try {
                     statusColorJson = JSonUtil.BuildJSon(statusColorJsonPath);
-                }
-                catch (Exception)
-                {
+
+                    using (var stream = new StreamReader(String.Format(FallbackPathPattern, baseDirectory, "statuscolorvalues.json"))) {
+                        if (stream != null) {
+                            Dictionary<string, string> colors = JsonConvert.DeserializeObject<Dictionary<string, string>>(stream.ReadToEnd());
+
+                            foreach(JProperty property in statusColorJson.Properties()) {
+                                var value = statusColorJson[property.Name];
+                                
+                                var newTokenDictionary = new Dictionary<string, string>();
+                                var hasChanged = false;
+                                foreach (var val in value) {
+                                    var name = ((JProperty)val).Name;
+                                    var data = val.First.Value<string>();
+
+                                    if (!data.StartsWith("#") && colors.ContainsKey(data)) {
+                                        //rewite the value
+                                        data = colors[data];
+                                        hasChanged = true;
+                                    }
+
+                                    newTokenDictionary.Add(name, data);
+                                }
+
+                                if (hasChanged) {
+                                    value.Replace(JToken.Parse(JsonConvert.SerializeObject(newTokenDictionary)));
+                                }
+                            }
+                        }
+                    }
+
+                } catch (Exception e) {
                     Log.Error("Error reading Status Color JSON");
                     statusColorJson = new JObject();
                 }
+
                 _cachedCatalogs = statusColorJson;
+                _cacheSet = true;
             }
-            else {
-                _cachedCatalogs = null;
-            }
-            _cacheSet = true;
+            
             return _cachedCatalogs;
         }
 
@@ -156,7 +184,7 @@ namespace softWrench.sW4.Util {
             }
 
 
-            return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : null;
+            return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : _cachedColorDict["default"];
         }
 
         public Dictionary<string, string> GetDefaultColorsAsDict() {

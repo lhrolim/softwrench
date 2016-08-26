@@ -19,9 +19,7 @@ using softWrench.sW4.Data.Configuration;
 
 namespace softWrench.sW4.Util {
     public class ExcelUtil : ISingletonComponent {
-
-        private readonly Dictionary<string, String> _cellStyleDictionary;
-
+        
         private readonly I18NResolver _i18NResolver;
 
         private readonly IContextLookuper _contextLookuper;
@@ -29,6 +27,8 @@ namespace softWrench.sW4.Util {
         private readonly StatusColorResolver _statusColorsService;
 
         private readonly string defaultDateTimeFormat;
+
+        private Dictionary<string, String> _cellStyleDictionary;
 
         public ExcelUtil(I18NResolver i18NResolver, IContextLookuper contextLookuper, StatusColorResolver statusColorsService, IConfigurationFacade facade) {
             _i18NResolver = i18NResolver;
@@ -39,111 +39,108 @@ namespace softWrench.sW4.Util {
 
             // setup style dictionary for back colors
             // 2 = red, 3 = green, 4 = yellow, 5 = orange, 6 = blue, 7 = white
-            _cellStyleDictionary = new Dictionary<string, string>{
-                {"red", "2"},
-                {"green", "3"},
-                {"yellow", "4"},
-                {"orange", "5"},
-                {"blue", "6"},
-                {"white", "7"}
-            };
+            //_cellStyleDictionary = new Dictionary<string, string>{
+            //    {"red", "2"},
+            //    {"green", "3"},
+            //    {"yellow", "4"},
+            //    {"orange", "5"},
+            //    {"blue", "6"},
+            //    {"white", "7"}
+            //};
         }
 
 
 
         public SLDocument ConvertGridToExcel(ApplicationListResult result, InMemoryUser user) {
-            {
-                var schema = result.Schema;
-                var application = schema.ApplicationName;
+            var schema = result.Schema;
+            var application = schema.ApplicationName;
 
-                var colorStatusDict = _statusColorsService.GetColorsAsDict(application) ?? _statusColorsService.GetDefaultColorsAsDict();
+            var colorStatusDict = _statusColorsService.GetColorsAsDict(application) ?? _statusColorsService.GetDefaultColorsAsDict();
 
-                var resultItems = result.ResultObject;
+            var resultItems = result.ResultObject;
 
-                IEnumerable<ApplicationFieldDefinition> applicationFields = schema.Fields;
-                using (var ms = new System.IO.MemoryStream())
-                using (var xl = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook)) {
-                    // attributes of elements
-                    // the xml writer
+            IEnumerable<ApplicationFieldDefinition> applicationFields = schema.Fields;
+            using (var ms = new System.IO.MemoryStream())
+            using (var xl = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook)) {
+                // attributes of elements
+                // the xml writer
 
-                    xl.AddWorkbookPart();
-                    var worksheetpart = xl.WorkbookPart.AddNewPart<WorksheetPart>();
+                xl.AddWorkbookPart();
+                var worksheetpart = xl.WorkbookPart.AddNewPart<WorksheetPart>();
 
-                    var writer = OpenXmlWriter.Create(worksheetpart);
+                var writer = OpenXmlWriter.Create(worksheetpart);
 
-                    var worksheet = new Worksheet();
-                    writer.WriteStartElement(worksheet);
+                var worksheet = new Worksheet();
+                writer.WriteStartElement(worksheet);
 
-                    // create sheetdata element
-                    writer.WriteStartElement(new SheetData());
+                // create sheetdata element
+                writer.WriteStartElement(new SheetData());
 
-                    var stylesPart = xl.WorkbookPart.AddNewPart<WorkbookStylesPart>();
-                    stylesPart.Stylesheet = new Stylesheet();
+                var stylesPart = xl.WorkbookPart.AddNewPart<WorkbookStylesPart>();
+                stylesPart.Stylesheet = new Stylesheet();
 
-                    // create 2 fonts (one normal, one header)
-                    createFonts(stylesPart);
+                // create 2 fonts (one normal, one header)
+                createFonts(stylesPart);
 
+                _cellStyleDictionary = new Dictionary<string, string>();
 
-                    // create fills
-                    BuildFills(stylesPart);
+                // create fills
+                BuildFills(stylesPart, colorStatusDict);
 
-                    // blank border list
-                    stylesPart.Stylesheet.Borders = new Borders { Count = 1 };
-                    stylesPart.Stylesheet.Borders.AppendChild(new Border());
+                // blank border list
+                stylesPart.Stylesheet.Borders = new Borders { Count = 1 };
+                stylesPart.Stylesheet.Borders.AppendChild(new Border());
 
-                    // blank cell format list
-                    stylesPart.Stylesheet.CellStyleFormats = new CellStyleFormats { Count = 1 };
-                    stylesPart.Stylesheet.CellStyleFormats.AppendChild(new CellFormat());
+                // blank cell format list
+                stylesPart.Stylesheet.CellStyleFormats = new CellStyleFormats { Count = 1 };
+                stylesPart.Stylesheet.CellStyleFormats.AppendChild(new CellFormat());
 
-                    // cell format list
-                    CreateCellFormats(stylesPart);
+                // cell format list
+                CreateCellFormats(stylesPart);
 
-                    var rowIdx = 1;
+                var rowIdx = 1;
 
-                    // create header row
-                    CreateHeaderRow(applicationFields, writer, rowIdx, schema.Name);
-                    //count up row
-                    rowIdx++;
+                // create header row
+                CreateHeaderRow(applicationFields, writer, rowIdx, schema.Name);
+                //count up row
+                rowIdx++;
 
-                    // write data rows
+                // write data rows
 
-                    foreach (var item in resultItems) {
-                        rowIdx = WriteRow(user, item, rowIdx, writer, applicationFields, schema, colorStatusDict);
-                    }
-
-
-                    #region end worksheet
-
-                    writer.WriteEndElement();
-                    writer.Close();
-
-
-                    // write root element
-                    writer = OpenXmlWriter.Create(xl.WorkbookPart);
-                    writer.WriteStartElement(new Workbook());
-                    writer.WriteStartElement(new Sheets());
-
-                    writer.WriteElement(new Sheet {
-                        Name = "Sheet1",
-                        SheetId = 1,
-                        Id = xl.WorkbookPart.GetIdOfPart(worksheetpart)
-                    });
-
-
-                    // end Sheets
-                    writer.WriteEndElement();
-                    // end Workbook
-                    writer.WriteEndElement();
-                    writer.Close();
-
-                    xl.Close();
-
-
-                    var excelFile = new SLDocument(ms);
-                    SetColumnWidth(excelFile, applicationFields);
-                    #endregion
-                    return excelFile;
+                foreach (var item in resultItems) {
+                    rowIdx = WriteRow(user, item, rowIdx, writer, applicationFields, schema, colorStatusDict);
                 }
+
+
+                #region end worksheet
+
+                writer.WriteEndElement();
+                writer.Close();
+                    
+                // write root element
+                writer = OpenXmlWriter.Create(xl.WorkbookPart);
+                writer.WriteStartElement(new Workbook());
+                writer.WriteStartElement(new Sheets());
+
+                writer.WriteElement(new Sheet {
+                    Name = "Sheet1",
+                    SheetId = 1,
+                    Id = xl.WorkbookPart.GetIdOfPart(worksheetpart)
+                });
+                    
+                // end Sheets
+                writer.WriteEndElement();
+                // end Workbook
+                writer.WriteEndElement();
+                writer.Close();
+
+                xl.Close();
+
+
+                var excelFile = new SLDocument(ms);
+                SetColumnWidth(excelFile, applicationFields);
+                #endregion
+                return excelFile;
             }
         }
 
@@ -175,8 +172,7 @@ namespace softWrench.sW4.Util {
                 // that's the default style
                 var styleId = "1";
                 if (applicationField.Attribute.Contains("status")) {
-                    var success = getColor(data.Trim(), schema.Name, ref styleId, colorStatusDict);
-
+                    var success = getColor(string.IsNullOrEmpty(data.Trim()) ? "NULL" : data.Trim(), schema.Name, ref styleId, colorStatusDict);
                     if (!success) {
                         // check if status is something like NEW 1/4 (and make sure it doesn't match e.g. NEW REQUEST).
                         var match = Regex.Match(data.Trim(), "(([A-Z]+ )+)[1-9]+/[1-9]+");
@@ -225,7 +221,7 @@ namespace softWrench.sW4.Util {
         }
 
         private bool getColor(string status, string schemaName, ref string styleId, Dictionary<string, string> colorStatusDict) {
-            var colorCode = colorStatusDict.ContainsKey(status.ToLower()) ? colorStatusDict[status.ToLower()] : null;
+            var colorCode = colorStatusDict.ContainsKey(status) ? status : null;
             if (colorCode != null) {
                 return _cellStyleDictionary.TryGetValue(colorCode, out styleId);
             }
@@ -285,23 +281,27 @@ namespace softWrench.sW4.Util {
             stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat());
             // no color
             createCellFormat(stylesPart, 0, 0, 0, 0, true);
-            // red
-            createCellFormat(stylesPart, 0, 0, 0, 2, true);
-            // green
-            createCellFormat(stylesPart, 0, 0, 0, 3, true);
-            // yellow
-            createCellFormat(stylesPart, 0, 0, 0, 4, true);
-            // orange
-            createCellFormat(stylesPart, 0, 0, 0, 5, true);
-            // blue
-            createCellFormat(stylesPart, 0, 0, 0, 6, true);
-            // white
-            createCellFormat(stylesPart, 0, 0, 0, 7, true);
+            //// red
+            //createCellFormat(stylesPart, 0, 0, 0, 2, true);
+            //// green
+            //createCellFormat(stylesPart, 0, 0, 0, 3, true);
+            //// yellow
+            //createCellFormat(stylesPart, 0, 0, 0, 4, true);
+            //// orange
+            //createCellFormat(stylesPart, 0, 0, 0, 5, true);
+            //// blue
+            //createCellFormat(stylesPart, 0, 0, 0, 6, true);
+            //// white
+            //createCellFormat(stylesPart, 0, 0, 0, 7, true);
 
+            foreach(var kwp in _cellStyleDictionary) {
+                createCellFormat(stylesPart, 0, 0, 0, Convert.ToUInt32(kwp.Value), true);
+            }
+            
             // header style
             createCellFormat(stylesPart, 0, 1, 0, 0, true);
 
-            stylesPart.Stylesheet.CellFormats.Count = 8;
+            stylesPart.Stylesheet.CellFormats.Count = Convert.ToUInt32(_cellStyleDictionary.Count + 2);
         }
 
         private void createCellFormat(WorkbookStylesPart stylesPart, UInt32 formatId, UInt32 fontId, UInt32 borderId, UInt32 fillId, bool applyFill) {
@@ -334,39 +334,52 @@ namespace softWrench.sW4.Util {
             stylesPart.Stylesheet.Fonts.Count = 2;
         }
 
-        private void BuildFills(WorkbookStylesPart stylesPart) {
+        private void BuildFills(WorkbookStylesPart stylesPart, Dictionary<string, string> colors) {
             stylesPart.Stylesheet.Fills = new Fills();
-
-            // create a solid red fill
-            var solidRed = new PatternFill {
-                PatternType = PatternValues.Solid,
-                ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FFFF0000") },
-                BackgroundColor = new BackgroundColor { Indexed = 64 }
-            };
-
-            // the color codes should eventually be read from a config file
-            // create green
-            var green = createColor("FF006836");
-            // create yellow
-            var yellow = createColor("FFffff00");
-            // create orange
-            var orange = createColor("FFff7d00");
-            // create blue
-            var blue = createColor("ff002fff");
-            // create white
-            var white = createColor("ffffffff");
-
             stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.None } }); // required, reserved by Excel
             stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.Gray125 } }); // required, reserved by Excel
 
-            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = solidRed });
-            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = green });
-            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = yellow });
-            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = orange });
-            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = blue });
-            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = white });
+            var i = 2;
+            foreach(var kvp in colors) {
+                var fill = createColor(kvp.Value.Substring(1));
+                stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = fill });
 
-            stylesPart.Stylesheet.Fills.Count = 7;
+                _cellStyleDictionary.Add(kvp.Key, i.ToString());
+
+                i++;
+            }
+
+            stylesPart.Stylesheet.Fills.Count = Convert.ToUInt32(i + 2);
+
+            // create a solid red fill
+            //var solidRed = new PatternFill {
+            //    PatternType = PatternValues.Solid,
+            //    ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FFFF0000") },
+            //    BackgroundColor = new BackgroundColor { Indexed = 64 }
+            //};
+
+            //// the color codes should eventually be read from a config file
+            //// create green
+            //var green = createColor("FF006836");
+            //// create yellow
+            //var yellow = createColor("FFffff00");
+            //// create orange
+            //var orange = createColor("FFff7d00");
+            //// create blue
+            //var blue = createColor("ff002fff");
+            //// create white
+            //var white = createColor("ffffffff");
+
+
+
+            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = solidRed });
+            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = green });
+            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = yellow });
+            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = orange });
+            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = blue });
+            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = white });
+
+            //stylesPart.Stylesheet.Fills.Count = 7; 
         }
 
         private PatternFill createColor(string colorhex) {

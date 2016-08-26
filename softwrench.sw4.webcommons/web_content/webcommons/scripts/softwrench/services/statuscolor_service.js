@@ -62,7 +62,7 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
 
             //check for the status in the application/default
             if (status in applicationObject || status.toLowerCase() in applicationObject) {
-                return applicationObject[status.toLowerCase()];
+                return applicationObject[status];
             }
 
             //nothing else worked
