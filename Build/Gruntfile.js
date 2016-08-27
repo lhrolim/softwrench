@@ -151,6 +151,8 @@ module.exports = function (grunt) {
                     "globalize.js": "globalize/lib/globalize.js",
                     "dx.chartjs.js": "devextreme-web/js/dx.chartjs.js",
                     "dx.vectormap.usa.js": "devextreme-web/js/vectormap-data/usa.js",
+                    // colorbox
+                    "jquery-colorbox.js": "colorbox/jquery.colorbox-min.js",
                     // unminified vendors
                     "raw/jquery-file-style.js": "jquery.filestyle/jquery.filestyle.js",
                     "raw/jquery-file-download.js": "jquery-file-download/src/Scripts/jquery.fileDownload.js",
@@ -227,6 +229,8 @@ module.exports = function (grunt) {
 
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery-ui.js",
+
+                    "<%= bowercopy.scripts.options.destPrefix %>/jquery-colorbox.js",
 
                     // bootstrap
                     "<%= bowercopy.scripts.options.destPrefix %>/bootstrap.js",

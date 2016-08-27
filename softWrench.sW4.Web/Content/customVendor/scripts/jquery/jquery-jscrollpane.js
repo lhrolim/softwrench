@@ -204,6 +204,8 @@
 
 			    if (settings.hideHorizontalScroll) {
 			        isScrollableH = false;
+			    } else {
+			        isScrollableH = true;
 			    }
 
 				if (!(isScrollableH || isScrollableV)) {

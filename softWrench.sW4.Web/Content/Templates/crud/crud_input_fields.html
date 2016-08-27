@@ -110,7 +110,8 @@
                     <div ng-switch-when="richtext">
                         <div class="richtext image-holder"
                              text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]"
-                             ng-init="initRichtextField(fieldMetadata)" ta-disabled="true">
+                             ng-init="initRichtextField(fieldMetadata)" ta-disabled="true"
+                             colorbox-richtext>
                         </div>
                     </div>
 
@@ -322,7 +323,9 @@
                     <div ng-switch-when="richtext">
                         <div class="richtext image-holder"
                              text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]"
-                             ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isModifiableEnabled(fieldMetadata)"></div>
+                             ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isModifiableEnabled(fieldMetadata)"
+                             colorbox-richtext>
+                        </div>
                     </div>
                     <div ng-switch-when="upload">
                         <div file-upload class="input-group" id="{{fieldMetadata.attribute}}">

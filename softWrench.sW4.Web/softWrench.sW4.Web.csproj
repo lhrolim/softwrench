@@ -560,6 +560,7 @@
     <Content Include="Content\customVendor\css\bootstrap-combobox.css" />
     <Content Include="Content\customVendor\css\bootstrap-multiselect.css" />
     <Content Include="Content\customVendor\css\bootstrap-select.css" />
+    <Content Include="Content\customVendor\css\colorbox.css" />
     <Content Include="Content\customVendor\css\typeahead.js-bootstrap.css" />
     <Content Include="Content\Controller\About.html" />
     <Content Include="Content\Controller\MakeSWAdmin.html" />
@@ -612,6 +613,7 @@
     <Content Include="Content\Scripts\client\directives\fileUpload.js" />
     <Content Include="Content\Scripts\client\directives\gmaps.js" />
     <Content Include="Content\Scripts\client\directives\multiselectDropdown.js" />
+    <Content Include="Content\Scripts\client\directives\colorbox.js" />
     <Content Include="Content\Scripts\client\directives\swChart.js" />
     <Content Include="Content\Scripts\client\crud\search\crudSearchService.js" />
     <Content Include="Content\Scripts\client\directives\scrollPane.js" />
