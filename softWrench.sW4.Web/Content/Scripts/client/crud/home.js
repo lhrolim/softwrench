@@ -15,6 +15,7 @@
 
         i18NService.load(homeModel.I18NJsons, userLanguage);
         statuscolorService.load(homeModel.StatusColorJson);
+        statuscolorService.loadFallback(homeModel.StatusColorFallbackJson);
         classificationColorService.load(homeModel.ClassificationColorJson);
 
         $scope.$emit("sw_loadmenu", menuModel);

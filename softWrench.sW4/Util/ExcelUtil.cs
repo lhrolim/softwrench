@@ -36,17 +36,6 @@ namespace softWrench.sW4.Util {
             _statusColorsService = statusColorsService;
             
             defaultDateTimeFormat = facade != null ? facade.Lookup<string>(ConfigurationConstants.DateTimeFormat) : "dd/MM/yyyy HH:mm";
-
-            // setup style dictionary for back colors
-            // 2 = red, 3 = green, 4 = yellow, 5 = orange, 6 = blue, 7 = white
-            //_cellStyleDictionary = new Dictionary<string, string>{
-            //    {"red", "2"},
-            //    {"green", "3"},
-            //    {"yellow", "4"},
-            //    {"orange", "5"},
-            //    {"blue", "6"},
-            //    {"white", "7"}
-            //};
         }
 
 
@@ -55,7 +44,7 @@ namespace softWrench.sW4.Util {
             var schema = result.Schema;
             var application = schema.ApplicationName;
 
-            var colorStatusDict = _statusColorsService.GetColorsAsDict(application) ?? _statusColorsService.GetDefaultColorsAsDict();
+            var colorStatusDict = _statusColorsService.GetColorsAsDict(application);
 
             var resultItems = result.ResultObject;
 
@@ -172,13 +161,13 @@ namespace softWrench.sW4.Util {
                 // that's the default style
                 var styleId = "1";
                 if (applicationField.Attribute.Contains("status")) {
-                    var success = getColor(string.IsNullOrEmpty(data.Trim()) ? "NULL" : data.Trim(), schema.Name, ref styleId, colorStatusDict);
+                    var success = getColor(string.IsNullOrEmpty(data.Trim()) ? "NULL" : data.Trim().ToLower(), schema.Name, ref styleId, colorStatusDict);
                     if (!success) {
                         // check if status is something like NEW 1/4 (and make sure it doesn't match e.g. NEW REQUEST).
                         var match = Regex.Match(data.Trim(), "(([A-Z]+ )+)[1-9]+/[1-9]+");
                         if (match.Success) {
                             var status = match.Groups[2].Value.Trim();
-                            var compundStatus = getColor(status, schema.Name, ref styleId, colorStatusDict);
+                            var compundStatus = getColor(status.ToLower(), schema.Name, ref styleId, colorStatusDict);
                             if (!compundStatus) {
                                 styleId = "1";
                             }
@@ -221,9 +210,8 @@ namespace softWrench.sW4.Util {
         }
 
         private bool getColor(string status, string schemaName, ref string styleId, Dictionary<string, string> colorStatusDict) {
-            var colorCode = colorStatusDict.ContainsKey(status) ? status : null;
-            if (colorCode != null) {
-                return _cellStyleDictionary.TryGetValue(colorCode, out styleId);
+            if (colorStatusDict.ContainsKey(status)) {
+                return _cellStyleDictionary.TryGetValue(status, out styleId);
             }
 
             return false;
@@ -281,18 +269,6 @@ namespace softWrench.sW4.Util {
             stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat());
             // no color
             createCellFormat(stylesPart, 0, 0, 0, 0, true);
-            //// red
-            //createCellFormat(stylesPart, 0, 0, 0, 2, true);
-            //// green
-            //createCellFormat(stylesPart, 0, 0, 0, 3, true);
-            //// yellow
-            //createCellFormat(stylesPart, 0, 0, 0, 4, true);
-            //// orange
-            //createCellFormat(stylesPart, 0, 0, 0, 5, true);
-            //// blue
-            //createCellFormat(stylesPart, 0, 0, 0, 6, true);
-            //// white
-            //createCellFormat(stylesPart, 0, 0, 0, 7, true);
 
             foreach(var kwp in _cellStyleDictionary) {
                 createCellFormat(stylesPart, 0, 0, 0, Convert.ToUInt32(kwp.Value), true);
@@ -350,36 +326,6 @@ namespace softWrench.sW4.Util {
             }
 
             stylesPart.Stylesheet.Fills.Count = Convert.ToUInt32(i + 2);
-
-            // create a solid red fill
-            //var solidRed = new PatternFill {
-            //    PatternType = PatternValues.Solid,
-            //    ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FFFF0000") },
-            //    BackgroundColor = new BackgroundColor { Indexed = 64 }
-            //};
-
-            //// the color codes should eventually be read from a config file
-            //// create green
-            //var green = createColor("FF006836");
-            //// create yellow
-            //var yellow = createColor("FFffff00");
-            //// create orange
-            //var orange = createColor("FFff7d00");
-            //// create blue
-            //var blue = createColor("ff002fff");
-            //// create white
-            //var white = createColor("ffffffff");
-
-
-
-            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = solidRed });
-            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = green });
-            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = yellow });
-            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = orange });
-            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = blue });
-            //stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = white });
-
-            //stylesPart.Stylesheet.Fills.Count = 7; 
         }
 
         private PatternFill createColor(string colorhex) {

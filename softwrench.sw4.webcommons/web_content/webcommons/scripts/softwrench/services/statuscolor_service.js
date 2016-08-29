@@ -5,30 +5,45 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
 
     var fallbackFunction = function (status, applicationname) {
 
-        if (status.equalsAny("NEW", "WAPPR", "WSCH", "ACTIVE")) {
-            return "#e59323"; //orange
+        //if (status.equalsAny("NEW", "WAPPR", "WSCH", "ACTIVE")) {
+        //    return "#e59323"; //orange
+        //}
+
+        //if (status.equalsAny("QUEUED", "CANTREPROD", "WAITONINFO", "PENDING", "WMATL", "WORKING", "null")) {
+        //    return "#f2d935"; //yellow
+        //}
+
+        //if (status.equalsAny("CANCELLED", "FAIL", "CAN", "FAILPIR", "REJECTED", "NOTREQ", "WONT FIX", "WONTIMPLNT", "WONTRESPND", "POSTPONED", "SPAM" )) {
+        //    return "#f65752"; //red
+        //}
+
+        //if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "APPFM", "APPLM", "BY DESIGN", "AUTHORIZED", "DUPLICATE", "AUTH", "FIXED", "HOLDINPRG",  "INPROG", "INPRG", "PLANNED", "ACC_CAT", "ASSESSES")) {
+        //    return "#4488f2"; //blue
+        //}
+
+        //if (status.equalsAny("CLOSED", "IMPLEMENTED", "RESOLVCONF", "IMPL", "REVIEW", "CLOSE", "HISTEDIT", "COMP", "COMPLETED", "INPRG", "PLANNED")) {
+        //    return "#39b54a"; //green
+        //}
+
+        //if (status.equalsAny("DRAFT")) {
+        //    return "white";
+        //}
+        //return "#777";
+
+        var statuscolorFallbackJson = $rootScope.statuscolorFallbackJson;
+        if (statuscolorFallbackJson === undefined) {
+            statuscolorFallbackJson = contextService.fetchFromContext("statuscolorfallback", true);
+            $rootScope.statuscolorFallbackJson = statuscolorFallbackJson;
         }
 
-        if (status.equalsAny("QUEUED", "CANTREPROD", "WAITONINFO", "PENDING", "WMATL", "WORKING", "null")) {
-            return "#f2d935"; //yellow
+        var applicationObject = statuscolorFallbackJson[applicationname];
+        if (!applicationObject) {
+
+            //if there is no default application in the json, stop here
+            applicationObject = statuscolorFallbackJson["default"];
         }
 
-        if (status.equalsAny("CANCELLED", "FAIL", "CAN", "FAILPIR", "REJECTED", "NOTREQ", "WONT FIX", "WONTIMPLNT", "WONTRESPND", "POSTPONED", "SPAM" )) {
-            return "#f65752"; //red
-        }
-
-        if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "APPFM", "APPLM", "BY DESIGN", "AUTHORIZED", "DUPLICATE", "AUTH", "FIXED", "HOLDINPRG",  "INPROG", "INPRG", "PLANNED", "ACC_CAT", "ASSESSES")) {
-            return "#4488f2"; //blue
-        }
-
-        if (status.equalsAny("CLOSED", "IMPLEMENTED", "RESOLVCONF", "IMPL", "REVIEW", "CLOSE", "HISTEDIT", "COMP", "COMPLETED", "INPRG", "PLANNED")) {
-            return "#39b54a"; //green
-        }
-
-        if (status.equalsAny("DRAFT")) {
-            return "white";
-        }
-        return "#777";
+        return applicationObject[status.toLowerCase()];
     };
 
     return {
@@ -62,7 +77,7 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
 
             //check for the status in the application/default
             if (status in applicationObject || status.toLowerCase() in applicationObject) {
-                return applicationObject[status];
+                return applicationObject[status.toLowerCase()];
             }
 
             //nothing else worked
@@ -71,6 +86,10 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
 
         load: function (jsonString) {
             contextService.insertIntoContext("statuscolor", jsonString);
+        },
+
+        loadFallback: function (jsonString) {
+            contextService.insertIntoContext("statuscolorfallback", jsonString);
         },
 
         /// <summary>

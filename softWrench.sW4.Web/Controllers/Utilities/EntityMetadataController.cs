@@ -24,6 +24,7 @@ using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Web.Email;
 using cts.commons.simpleinjector.app;
 using softwrench.sW4.Shared2.Metadata.Applications;
+using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Web.Controllers.Utilities {
 
@@ -87,27 +88,42 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         }
 
         [HttpGet]
-        public IGenericResponseResult GetMetadataContent(string templatePath) {
-            using (var reader = new MetadataProvider().GetTemplateStream(templatePath)) {
+        public IGenericResponseResult GetFileContent(string path) {
+            using (var reader = new MetadataProvider().GetTemplateStream(path)) {
                 var result = reader.ReadToEnd();
-                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, MetadataProvider.METADATA_FILE));
+                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, Path.GetFileName(path)));
             }
         }
 
         [HttpGet]
-        public List<dynamic> GetTemplateFiles() {            
+        public List<dynamic> GetTemplateFiles(string type) {            
             var templates = new List<dynamic>();
 
-            //add the metadata
-            var metadataPath = MetadataParsingUtils.GetPath(MetadataProvider.METADATA_FILE);
-            templates.Add(new { path = metadataPath, name = MetadataProvider.METADATA_FILE });
+            switch (type) {
+                case MetadataProvider.METADATA_FILE:
+                    //add the metadata
+                    var metadataPath = MetadataParsingUtils.GetPath(MetadataProvider.METADATA_FILE);
+                    templates.Add(new { path = metadataPath, name = MetadataProvider.METADATA_FILE });
 
-            //add the templates
-            var files = MetadataParsingUtils.GetTemplateFileNames();
-            foreach (var file in files) {
-                templates.Add(new { path = file, name = Path.GetFileName(file) });
+                    //add the templates
+                    var files = MetadataParsingUtils.GetTemplateFileNames();
+                    foreach (var file in files) {
+                        templates.Add(new { path = file, name = Path.GetFileName(file) });
+                    }
+                    break;
+
+                case MetadataProvider.STATUS_COLOR_FILE:
+                    templates.Add(new { path = MetadataParsingUtils.GetPath(MetadataProvider.STATUS_COLOR_FILE), name = "status colors" });
+
+                    //Add fallback files if the user has the dynamic admin role.
+                    if (SecurityFacade.CurrentUser().IsInRolInternal(Role.DynamicAdmin, false)) {
+                        var fallbackPathPattern = "{0}App_Data\\Client\\@internal\\fallback\\{1}";
+                        templates.Add(new { path = String.Format(fallbackPathPattern, AppDomain.CurrentDomain.BaseDirectory, "statuscolors.json"), name = "status colors fallback file" });
+                        templates.Add(new { path = String.Format(fallbackPathPattern, AppDomain.CurrentDomain.BaseDirectory, "statuscolorvalues.json"), name = "status color values" });
+                    }
+                    break;
             }
-
+            
             return templates;
         }
 
@@ -151,7 +167,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, MetadataProvider.CLASSIFICATION_COLOR_FILE));
             }
         }
-
+        
         [HttpGet]
         [SPFRedirect("Status Color Editor", "_headermenu.statuscoloreditor", "EntityMetadataEditor")]
         public IGenericResponseResult StatusColorEditor() {
@@ -271,7 +287,8 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             var metadata = json.StringValue("Metadata");
             var userFullName = json.StringValue("UserFullName");
             var ipAddress = request.GetIPAddress();
-            var filePath = MetadataParsingUtils.GetPath(MetadataProvider.STATUS_COLOR_FILE);
+            var filePath = json.StringValue("Path");
+            var fileName = json.StringValue("Name");
             var newFileContent = metadata;
             var oldFileContent = File.ReadAllText(filePath);
 
@@ -282,14 +299,14 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 DefaultId = 0,
                 ChangedBy = SecurityFacade.CurrentUser().MaximoPersonId,
                 ChangedByFullName = userFullName,
-                Name = MetadataProvider.STATUS_COLOR_FILE,
+                Name = fileName,
                 Path = filePath,
                 IPAddress = ipAddress
             };            
 
             swdbDao.Save(newMetadataEntry);
 
-            new MetadataProvider().SaveColor(metadata, MetadataProvider.STATUS_COLOR_FILE);
+            new MetadataProvider().SaveColor(metadata, filePath);
             
             this.SendMetadataChangeEmail(
                 MetadataProvider.STATUS_COLOR_FILE,
@@ -330,7 +347,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
 
             swdbDao.Save(newMetadataEntry);
 
-            new MetadataProvider().SaveColor(metadata, MetadataProvider.CLASSIFICATION_COLOR_FILE);
+            new MetadataProvider().SaveColor(metadata, filePath);
             
             this.SendMetadataChangeEmail(
                 MetadataProvider.CLASSIFICATION_COLOR_FILE,
@@ -417,7 +434,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                     Subject = subject
                 };
 
-                metadataEmailer.SendMetadataChangeEmail(emailData);
+                //metadataEmailer.SendMetadataChangeEmail(emailData);
             }
         }
 
