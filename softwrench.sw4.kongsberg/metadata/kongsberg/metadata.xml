@@ -1640,6 +1640,13 @@
         <schema id="detail" title="Attachments" redeclaring="false" platform="web">
           <customization position="docinfo_.description">
           </customization>
+          
+          <customization position="newattachment">
+            <field label="Attachments" attribute="newattachment" requiredexpression="true">
+              <renderer type="dndupload" params="multiple=true"/>
+            </field>
+          </customization>
+        
           <commandbars>
             <commandgroup position="detail.primary"  >
               <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
