@@ -25,3 +25,23 @@ var isObjectEmpty = function (ob) {
     }
     return true;
 }
+
+
+function setDeep(el, key, value) {
+    key = key.split('.');
+    var i = 0, n = key.length;
+    for (; i < n - 1; ++i) {
+        el = el[key[i]];
+    }
+    return el[key[i]] = value;
+}
+
+function getDeep(el, key) {
+    key = key.split('.');
+    var i = 0, n = key.length;
+    for (; i < n; ++i) {
+        el = el[key[i]];
+    }
+    return el;
+}
+

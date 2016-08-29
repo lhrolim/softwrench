@@ -2,43 +2,47 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('cmpAutocompleteClient', ["$rootScope", "$log", "$timeout", "fieldService", function ($rootScope, $log, $timeout, fieldService) {
+    .factory('cmpAutocompleteClient', ["$rootScope", "$log", "$timeout", "fieldService", "crudContextHolderService", function ($rootScope, $log, $timeout, fieldService, crudContextHolderService) {
 
     return {
 
         unblock: function (displayable) {
-            var element = $("select[data-associationkey='" + displayable.associationKey + "']");
-            var combobox = $(element).data('combobox');
+            const element = $("select[data-associationkey='" + displayable.associationKey + "']");
+            const combobox = $(element).data('combobox');
             if (combobox != undefined) {
                 combobox.enable();
             }
         },
 
         block: function (displayable) {
-            var element = $("select[data-associationkey='" + displayable.associationKey + "']");
-            var combobox = $(element).data('combobox');
+            const element = $("select[data-associationkey='" + displayable.associationKey + "']");
+            const combobox = $(element).data('combobox');
             if (combobox != undefined) {
                 combobox.disable();
             }
         },
 
         focus:function(displayable) {
-            var element = $("select[data-associationkey='" + displayable.associationKey + "']");
-            var combobox = $(element).data('combobox');
+            const element = $("select[data-associationkey='" + displayable.associationKey + "']");
+            const combobox = $(element).data('combobox');
             if (combobox != undefined) {
                 combobox.setFocus();
             }
         },
 
         refreshFromAttribute: function (scope, displayable, value, availableoptions, datamapId) {
-            var attribute = displayable.attribute;
-
-            var log = $log.getInstance("autocompleteclient#refreshFromAttribute", ["association"]);
+            const log = $log.getInstance("autocompleteclient#refreshFromAttribute", ["association"]);
+            if (!crudContextHolderService.associationsResolved() && !availableoptions) {
+                log.info("associations not yet resolved,waiting...");
+                return;
+            }
+            const attribute = displayable.attribute;
+            
             var labelValue = value;
             if (!nullOrEmpty(value) && availableoptions) {
                 //Fixing SWWEB-1349--> the underlying selects have only the labels, so we need to fetch the entries using the original array instead
-                var valueMissing = true;
-                for (var i = 0; i < availableoptions.length; i++) {
+                let valueMissing = true;
+                for (let i = 0; i < availableoptions.length; i++) {
                     if (availableoptions[i].value.trim() === ("" + value).trim()) {
                         valueMissing = false;
                         labelValue = availableoptions[i].label;
@@ -46,11 +50,11 @@ angular.module('sw_layout')
                     }
                 }
                 if (valueMissing) {
-                    var missingValue = {
+                    const missingValue = {
                         "type": "AssociationOption",
                         "value": value,
                         "label": value + " ** unknown to softwrench **"
-                    }
+                    };
                     availableoptions.push(missingValue);
                 }
             } else if (displayable.rendererParameters && "true" === displayable.rendererParameters["selectonlyavailableoption"] && availableoptions && availableoptions.length === 1) {
@@ -60,7 +64,7 @@ angular.module('sw_layout')
 
             var combo;
             if (displayable.applicationPath) {
-                var key = displayable.applicationPath;
+                let key = displayable.applicationPath;
                 if (datamapId) {
                     key += datamapId;
                 }
@@ -78,19 +82,18 @@ angular.module('sw_layout')
         },
 
         init: function (bodyElement, datamap, schema, scope) {
-            var selects = $('select.combobox-dynamic', bodyElement);
-            for (var i = 0; i < selects.length; i++) {
-                var select = $(selects[i]);
-                var associationKey = select.data('associationkey');
+            const selects = $('select.combobox-dynamic', bodyElement);
+            for (let i = 0; i < selects.length; i++) {
+                const select = $(selects[i]);
+                const associationKey = select.data('associationkey');
                 $log.getInstance("autocompleteclient#init", ["association"]).debug("init autocompleteclient {0}".format(associationKey));
-                var parent = $(select.parents("div[rel=input-form-repeat]"));
+                const parent = $(select.parents("div[rel=input-form-repeat]"));
                 if (parent.data('selectenabled') === false || select.data('alreadyconfigured')) {
                     continue;
                 }
-
-                var fieldMetadata = fieldService.getDisplayablesByAssociationKey(schema, associationKey);
-                var minLength = null;
-                var pageSize = 300;
+                const fieldMetadata = fieldService.getDisplayablesByAssociationKey(schema, associationKey);
+                let minLength = null;
+                let pageSize = 300;
                 if (fieldMetadata != null && fieldMetadata.length > 0 && fieldMetadata[0].rendererParameters['minLength'] != null) {
                     minLength = parseInt(fieldMetadata[0].rendererParameters['minLength']);
                 }
