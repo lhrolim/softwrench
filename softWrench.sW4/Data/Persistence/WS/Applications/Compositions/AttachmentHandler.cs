@@ -106,7 +106,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
                     var title = attachment.GetAttribute("document").ToString();
                     var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
-                    var desc = docinfo != null && docinfo.Fields["description"] != null ? docinfo.Fields["description"].ToString() : null;
+                    var desc = docinfo != null && !string.IsNullOrEmpty(docinfo.GetStringAttribute("description")) ? docinfo.GetStringAttribute("description") : null;
+                    
                     data = attachment.GetUnMappedAttribute("newattachment");
                     path = attachment.GetUnMappedAttribute("newattachment_path");
                     var offlinehash = attachment.GetUnMappedAttribute("#offlinehash");
