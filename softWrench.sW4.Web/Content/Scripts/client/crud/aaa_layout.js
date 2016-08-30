@@ -1,41 +1,32 @@
 ﻿(function (angular) {
     "use strict";
 
-    var app = window.app = angular.module('sw_layout',
-        ['pasvaz.bindonce',
-         'angularTreeview',
-         'ngSanitize',
-         'textAngular',
-         'angularFileUpload',
-         'angular-clipboard',
-         "xeditable",
-         'sw_lookup',
-         'sw_typeahead',
-         "sw_scan",
-         "sw_crudadmin",
-         'webcommons_services',
-         'maximo_applications',
-         'selectize',
-         'ngAnimate',
-         'omr.angularFileDnD',
-         'dndLists'
-        ]);
+    const app = window.app = angular.module("sw_layout", [
+        "pasvaz.bindonce",
+        "angularTreeview",
+        "ngSanitize",
+        "textAngular",
+        "angularFileUpload",
+        "angular-clipboard",
+        "xeditable",
+        "sw_lookup",
+        "sw_typeahead",
+        "sw_scan",
+        "sw_crudadmin",
+        "webcommons_services",
+        "maximo_applications",
+        "selectize",
+        "ngAnimate",
+        "omr.angularFileDnD",
+        "dndLists",
+        "ui.tinymce"
+    ]);
 
-    angular.module('sw_prelogin', ["webcommons_services"]);
-
-    //angular 1.3 migration reference
-    //app.config(['$controllerProvider', function ($controllerProvider) {
-    //    $controllerProvider.allowGlobals();
-    //}]);
-
-    //app.config(function(uiSelectConfig) {
-    //    uiSelectConfig.theme = "bootstrap";
-    //});
+    angular.module("sw_prelogin", ["webcommons_services"]);
 
     app.run(["editableOptions", function (editableOptions) {
-        editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+        editableOptions.theme = "bs3"; // bootstrap3 theme. Can be also 'bs2', 'default'
     }]);
-
 
     //#region extra directives
     app.directive("dynamicName", function ($compile) {

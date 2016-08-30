@@ -320,9 +320,17 @@
                                   ng-init="initField(fieldMetadata)" />
                     </div>
                     <div ng-switch-when="richtext">
-                        <div class="richtext image-holder"
-                             text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]"
-                             ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isModifiableEnabled(fieldMetadata)"></div>
+                        <!--<div class="richtext image-holder"
+                                 text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]"
+                                 ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isModifiableEnabled(fieldMetadata)">
+                        </div>-->
+
+                        <textarea class="richtext image-holder"
+                                  ui-tinymce="tinymce.config"
+                                  ng-model="datamap[fieldMetadata.attribute]" 
+                                  ng-init="initRichtextField(fieldMetadata)">
+                        </textarea>
+
                     </div>
                     <div ng-switch-when="upload">
                         <div file-upload class="input-group" id="{{fieldMetadata.attribute}}">

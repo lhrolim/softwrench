@@ -151,6 +151,9 @@ module.exports = function (grunt) {
                     "globalize.js": "globalize/lib/globalize.js",
                     "dx.chartjs.js": "devextreme-web/js/dx.chartjs.js",
                     "dx.vectormap.usa.js": "devextreme-web/js/vectormap-data/usa.js",
+                    // tinymce
+                    "tinymce.js": "tinymce-dist/tinymce.min.js",
+                    "angular-ui-tinymce.js": "angular-ui-tinymce/dist/tinymce.min.js",
                     // unminified vendors
                     "raw/jquery-file-style.js": "jquery.filestyle/jquery.filestyle.js",
                     "raw/jquery-file-download.js": "jquery-file-download/src/Scripts/jquery.fileDownload.js",
@@ -224,10 +227,6 @@ module.exports = function (grunt) {
                     // jquery
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery-ui.js",
-
-                    "<%= bowercopy.scripts.options.destPrefix %>/jquery.js",
-                    "<%= bowercopy.scripts.options.destPrefix %>/jquery-ui.js",
-
                     // bootstrap
                     "<%= bowercopy.scripts.options.destPrefix %>/bootstrap.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/bootstrap-datetimepicker.js",
@@ -244,6 +243,9 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-xeditable.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-file-upload.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-drag-and-drop-lists.js",
+                    // tinymce
+                    "<%= bowercopy.scripts.options.destPrefix %>/tinymce.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular-ui-tinymce.js",
                     // minified raw vendors
                     "<%= app.tmp %>/scripts/rawVendor.min.js"
                 ],
@@ -349,7 +351,7 @@ module.exports = function (grunt) {
                 // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
                 preprocessors: {
                     '../softWrench.sW4.Web/Content/Templates/**/*.html': ["ng-html2js"],
-                    "<%= app.tests %>/tests/**/*.js": ['babel'],
+                    "<%= app.tests %>/tests/**/*.js": ["babel"]
                 },
 
                 babelPreprocessor: {

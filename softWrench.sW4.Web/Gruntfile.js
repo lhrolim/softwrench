@@ -104,13 +104,15 @@ module.exports = function (grunt) {
                     "devextreme/globalize.js": "globalize/lib/globalize.js",
                     "devextreme/dx.chartjs.js": "devextreme-web/js/dx.chartjs.js",
                     "devextreme/vectormap/usa.js": "devextreme-web/js/vectormap-data/usa.js",
+                    // tinymce
+                    "tinymce/tinymce.js" : "tinymce-dist/tinymce.js",
+                    "tinymce/angular-ui-tinymce.js" : "angular-ui-tinymce/src/tinymce.js",
                     // utils
                     "utils/a-moment.js": "moment/min/moment.min.js",
                     "utils/moment-locale-de.js": "moment/locale/de.js",
                     "utils/moment-locale-es.js": "moment/locale/es.js",
                     "utils/spin.js": "spin.js/spin.js",
-                    "utils/lz-string.js": "lz-string/libs/lz-string.js",
-                    //"underscore.js": "underscore/underscore-min.js",
+                    "utils/lz-string.js": "lz-string/libs/lz-string.js"
                 }
             }
         },
@@ -150,6 +152,8 @@ module.exports = function (grunt) {
                     "<%= app.vendor %>/scripts/devextreme/globalize.js",
                     "<%= app.vendor %>/scripts/devextreme/dx.chartjs.js",
                     "<%= app.vendor %>/scripts/devextreme/vectormap/usa.js",
+                    "<%= app.vendor %>/scripts/tinymce/tinymce.js",
+                    "<%= app.vendor %>/scripts/tinymce/angular-ui-tinymce.js",
 
                     // custom vendors
                     "<%= app.customVendor %>/scripts/**/*.js",

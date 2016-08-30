@@ -19,29 +19,30 @@
             }
         };
     })
-    .directive('configUpdateSectionDatamap', function () {
+    .directive("configUpdateSectionDatamap", function () {
         return {
-            restrict: 'A',
+            restrict: "A",
             link: function (scope, element, attr) {
                 if (scope.$first) {
                     scope.datamap[scope.fieldMetadata.id] = [];
                 }
-                var item = {};
-                item["label"] = scope.i18NLabel(scope.field);
-                item["value"] = scope.datamap[scope.field.attribute];
-                scope.$watch('datamap["' + scope.field.attribute + '"]', function (newValue, oldValue) {
+                const item = {
+                    label: scope.i18NLabel(scope.field),
+                    value: scope.datamap[scope.field.attribute],
+                    '#newvalue': ""
+                };
+                scope.$watch(`datamap["${scope.field.attribute}"]`, function (newValue, oldValue) {
                     if (oldValue === newValue) {
                         return;
                     }
                     scope.datamap[scope.fieldMetadata.id][scope.$index]["value"] = newValue;
                 });
-                item["#newvalue"] = '';
                 scope.datamap[scope.fieldMetadata.id].push(item);
             }
         };
     })
 
-    .directive('sectionElementInput', ["$compile", "$timeout", "crudContextHolderService", function ($compile, $timeout, crudContextHolderService) {
+    .directive("sectionElementInput", ["$compile", "$timeout", "crudContextHolderService", function ($compile, $timeout, crudContextHolderService) {
         return {
             restrict: "E",
             replace: true,
@@ -91,7 +92,7 @@
             }
         }
     }])
-    .directive('crudInputFields', ["contextService", "eventService", "crud_inputcommons", "crudContextHolderService", function (contextService, eventService, crud_inputcommons, crudContextHolderService) {
+    .directive("crudInputFields", ["contextService", "eventService", "crud_inputcommons", "crudContextHolderService", function (contextService, eventService, crud_inputcommons, crudContextHolderService) {
         return {
             restrict: 'E',
             replace: true,
@@ -136,7 +137,7 @@
                     }
                 }
 
-                var parameters = {
+                const parameters = {
                     element: element,
                     tabid: crudContextHolderService.getActiveTab()
                 };
@@ -599,10 +600,29 @@
 
                         var validationFunction = dispatcherService.loadServiceByString(serviceCall);
                         if (validationFunction == null) {
-                            validationFunction = function () { return true };
+                            validationFunction = () => true;
                         }
                         return validationFunction;
-                    }
+                    };
+
+                    $scope.tinymce = {
+                        config: {
+                            plugins: [
+                                "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                                "searchreplace wordcount visualblocks visualchars code fullscreen",
+                                "insertdatetime nonbreaking save table contextmenu directionality",
+                                "emoticons template paste textcolor colorpicker textpattern imagetools",
+                                "codesample paste"
+                            ],
+                            paste_data_images: true,
+                            paste_retain_style_properties: "color font-size",
+                            paste_word_valid_elements: "b,strong,i,em,h1,h2",
+                            menubar: "edit insert table",
+                            toolbar: "styleselect blockquote | bold italic underline bullist numlist undo redo | alignleft aligncenter alignright alignjustify | link image codesample",
+                            statusbar: false,
+                            height: 300
+                        }
+                    };
 
                     function init() {
                         if (!$scope.isVerticalOrientation()) {
