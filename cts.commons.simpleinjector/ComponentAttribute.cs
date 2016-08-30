@@ -10,7 +10,10 @@ namespace cts.commons.simpleinjector {
         /// </summary>
         public virtual Type RegistrationType { get; set; }
 
-        public virtual String Name { get; set; }
+        public virtual string Name { get; set; }
+
+
+        public virtual string ClientFilters {get; set;}
 
     }
 }

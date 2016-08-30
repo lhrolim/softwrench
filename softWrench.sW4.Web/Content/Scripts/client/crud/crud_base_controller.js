@@ -165,9 +165,9 @@
             return options;
         }
 
-        $scope.GetAssociationOptions = function (fieldMetadata) {
+        $scope.GetAssociationOptions = function (fieldMetadata, datamapValue) {
             if (fieldMetadata.type === "OptionField") {
-                return $scope.GetOptionFieldOptions(fieldMetadata);
+                return $scope.GetOptionFieldOptions(fieldMetadata,datamapValue);
             }
             var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
 
@@ -175,15 +175,18 @@
             if (compositionService.isCompositionListItem($scope.datamap)) {
                 contextData = compositionService.buildCompositionListItemContext(contextData, $scope.datamap, $scope.schema);
             }
-            var rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
+            const rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid, datamapValue);
             return applyFilter(fieldMetadata.filter, rawOptions);
         }
-        $scope.GetOptionFieldOptions = function (optionField) {
+        $scope.GetOptionFieldOptions = function (optionField, datamapValue) {
             if (optionField.providerAttribute == null) {
                 return applyFilter(optionField.filter, optionField.options);
             }
-            var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-            var options = crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData, $scope.panelid);
+            const contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+            const options = crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData, $scope.panelid,datamapValue);
+            if (!options) {
+                return blankArray;
+            }
             return applyFilter(optionField.filter, options);
         }
 

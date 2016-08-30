@@ -6,6 +6,7 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Composition;
@@ -43,7 +44,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return compList;
         }
 
-        public SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
+        
+
+        public virtual SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
 
             var appSchema = parameter.Schema.AppSchema;
             if ("true".EqualsIc(appSchema.GetProperty("attachments.skiprelatedattachments"))) {
@@ -52,70 +55,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             }
 
             var originalEntity = parameter.OriginalEntity;
-
-            var origrecordid = parameter.BASEDto.ValuesDictionary["ownerid"].Value;
-            var origrecordclass = parameter.BASEDto.ValuesDictionary["ownertable"].Value as string;
-            var ticketid = originalEntity.GetAttribute("ticketid");
-            var ticketuid = originalEntity.GetAttribute("ticketuid");
-
-
-            var siteId = originalEntity.GetAttribute("siteid");
-
-            var assetnum = originalEntity.GetAttribute("assetnum");
-            var location = originalEntity.GetAttribute("location");
-            var solution = originalEntity.GetAttribute("solution");
-            var cinum = originalEntity.GetAttribute("cinum");
-            var failureCode = originalEntity.GetAttribute("failurecode");
-
-            var sb = new StringBuilder();
-            //base section
-            sb.AppendFormat(
-                @"(ownertable = 'SR' and ownerid = {0})
-                or (  ownertable='PROBLEM' and ownerid in (select ticketuid from problem where ticketid={1} and class={2} )) 
-                or (  ownertable='INCIDENT' and ownerid in (select ticketuid from incident where ticketid={1} and class={2}))
-                or (  ownertable='WOCHANGE' and ownerid in (select workorderid from wochange where wonum={1} and woclass={2}))
-                or (  ownertable='WORELEASE' and ownerid in (select workorderid from worelease where wonum={1} and woclass={2}))
-                or (ownertable='WOACTIVITY' and ownerid in (select workorderid from woactivity where origrecordid={1} and origrecordclass={2}))
-                or (ownertable='JOBPLAN' and ownerid in (select jobplanid from jobplan where jpnum in (select jpnum from woactivity where origrecordid={1} and origrecordclass={2})))
-            ", "'" + ticketuid + "'", "'" + origrecordid + "'", "'" + origrecordclass + "'");
-
-            sb.AppendFormat(
-                @"or (ownertable='WORKLOG' and ownerid in (select worklogid from worklog where recordkey='{0}' and class='{1}'))",
-                ticketid, origrecordclass);
-
-            if (assetnum != null) {
-                sb.AppendFormat(
-                    @" or(ownertable = 'ASSET' and ownerid in (select assetuid from asset where assetnum ='{0}' and siteid ='{1}'))",
-                    assetnum, siteId);
-            }
-
-            if (location != null) {
-                sb.AppendFormat(@" or (ownertable = 'LOCATIONS' and ownerid in (select locationsid from locations where location ='{0}' and siteid ='{1}'))",
-                    location, siteId);
-            }
-
-            if (solution != null) {
-                sb.AppendFormat(@" or (ownertable='SOLUTION' and ownerid in (select solutionid from solution where solution='{0}'))", solution);
-            }
-
-            if (cinum != null) {
-                sb.AppendFormat(@" or(ownertable = 'CI' and ownerid in (select ciid from ci where cinum='{0}' and assetlocsiteid ='{1}'))",
-                    cinum, siteId);
-            }
-
-            if (failureCode != null) {
-                sb.AppendFormat(@" or(ownertable = 'FAILURELIST' and ownerid in (select failurelist from failurelist where failurecode='{0}' ))",
-                    failureCode);
-            }
-
-            sb.AppendFormat(@" or(ownertable = 'TKSERVICEADDRESS' and ownerid in (select tkserviceaddressid from TKSERVICEADDRESS where ticketid ='{0}' and siteid = '{1}' and class = 'SR'))", origrecordid, siteId);
-
-            sb.AppendFormat(
-                @" or (ownertable='COMMLOG' and ownerid in (select commloguid from commlog where ownertable='SR' and ownerid='{0}')) ", ticketuid);
+            var whereClause = ServiceRequestWhereClauseProvider.RelatedAttachmentsWhereClause(originalEntity);
 
             parameter.BASEDto.SearchValues = null;
             parameter.BASEDto.SearchParams = null;
-            parameter.BASEDto.AppendWhereClause(sb.ToString());
+            parameter.BASEDto.AppendWhereClause(whereClause);
 
             return parameter.BASEDto;
         }

@@ -19,13 +19,13 @@ using softWrench.sW4.Web.Controllers.Security;
 
 namespace softWrench.sW4.Web.Controllers {
     public class SignInController : Controller {
-        private readonly IConfigurationFacade _facade;
+        private readonly SecurityFacade _facade;
         private readonly LdapManager _ldapManager;
         private readonly SWDBHibernateDAO _dao;
         private readonly UserManager _userManager;
 
 
-        public SignInController(IConfigurationFacade facade, LdapManager ldapManager, SWDBHibernateDAO dao, UserManager userManager) {
+        public SignInController(SecurityFacade facade, LdapManager ldapManager, SWDBHibernateDAO dao, UserManager userManager) {
             _facade = facade;
             _ldapManager = ldapManager;
             _dao = dao;
@@ -127,7 +127,7 @@ namespace softWrench.sW4.Web.Controllers {
                 //if this flag is true, we will create the user on the fly
                 var ldapResult = _ldapManager.LdapAuth(userName, password);
                 if (ldapResult.Success) {
-                    userAux = UserManager.CreateMissingDBUser(userName);
+                    userAux = _userManager.CreateMissingDBUser(userName);
                     if (userAux == null) {
                         //user might not exist on maximo either, in that case we should block its access
                         return null;
@@ -150,13 +150,13 @@ namespace softWrench.sW4.Web.Controllers {
 
                 var ldapResult = _ldapManager.LdapAuth(userName, password);
                 if (ldapResult.Success) {
-                    return SecurityFacade.GetInstance().DoLogin(userAux, userTimezoneOffset);
+                    return _facade.DoLogin(userAux, userTimezoneOffset);
                 }
                 return null;
             }
 
             //non LDAP scenario
-            var user = SecurityFacade.GetInstance().LoginCheckingPassword(userAux, password, userTimezoneOffset);
+            var user = _facade.LoginCheckingPassword(userAux, password, userTimezoneOffset);
             return user;
 
         }
@@ -181,7 +181,7 @@ namespace softWrench.sW4.Web.Controllers {
         private ActionResult AuthSucceeded(string userName, string userTimezoneOffset, InMemoryUser user) {
             var syncEveryTime = "true".Equals(MetadataProvider.GlobalProperty(SwUserConstants.LdapSyncAlways));
             if (syncEveryTime) {
-                user.DBUser = UserManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
+                user.DBUser = _userManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
             }
             AuthenticationCookie.SetSessionCookie(userName, userTimezoneOffset, Response);
 

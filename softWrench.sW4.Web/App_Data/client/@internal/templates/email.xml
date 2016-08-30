@@ -9,10 +9,7 @@
         <connectorParameter key="integration_interface" value="SWEMAIL"/>
         <connectorParameter key="integration_interface_operations" value="CRUD_DELETE"/>
       </connectorParameters>
-      
-      
     </entity>
-    
   </entities>
 
   <applications>
@@ -20,6 +17,9 @@
       <properties>
         <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
       </properties>
+      <filters>
+        <booleanfilter attribute="isprimary"/>
+      </filters>
       <schemas>
         <schema id="list" stereotype="compositionlist" title="Email List">
           <field attribute="personid" hidden="true"/>

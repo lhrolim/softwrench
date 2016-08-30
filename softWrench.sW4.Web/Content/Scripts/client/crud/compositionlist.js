@@ -907,7 +907,23 @@
                 return;
             }
 
-            compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
+            const customParamNameString = $scope.compositionlistschema.properties["list.click.customparams"];
+            var customParams = null;
+            if (!!customParamNameString) {
+                const names = customParamNameString.split(",");
+                customParams = {};
+                let index = 0;
+                angular.forEach(names, name => {
+                    const value = item[name];
+                    if (!value) return;
+                    customParams[index++] = {
+                        key: name,
+                        value: value
+                    };
+                });
+            }
+
+            compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, customParams).then(function (result) {
                 const datamap = result.resultObject;
                 if ($scope.isUpdate) {
                     datamap["#edited"] = 1;

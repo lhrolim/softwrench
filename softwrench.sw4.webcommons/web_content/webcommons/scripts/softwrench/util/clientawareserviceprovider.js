@@ -8,10 +8,10 @@
     function enhanceInjector($injector, contextService, $log) {
 
         $injector.getInstance = function (serviceName) {
-            var client = contextService.client();
-            var clientServiceName = client + "." + serviceName;
-            // has client specif implementation
-            var log = $log.get("clientawareserviceprovider", ["services"]);
+            const client = contextService.client();
+            const clientServiceName = client + "." + serviceName;
+            const log = $log.get("clientawareserviceprovider", ["services"]);
+            // has client specific implementation
             if ($injector.has(clientServiceName)) {
                 log.debug("Client specific service", clientServiceName, "found.");
                 var clientService = $injector.get(clientServiceName);
@@ -22,9 +22,10 @@
                     angular.forEach(baseService, function (property, name) {
                         // skip useless (prototypically inherited from JS runtime) properties and overriden properties
                         if (!baseService.hasOwnProperty(name) || clientService.hasOwnProperty(name)) return;
-                        var overridenProperty = angular.isFunction(property) ? property.bind(baseService) : property;
+                        const overridenProperty = angular.isFunction(property) ? property.bind(baseService) : property;
                         clientService[name] = overridenProperty;
                     });
+                    clientService.__super__ = baseService;
                 }
                 return clientService;
             }

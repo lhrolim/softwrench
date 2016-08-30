@@ -49,7 +49,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         [CanBeNull]
-        public static User GetUserFromMaximoByPersonId([NotNull] string personid, bool forceUser = false) {
+        public User GetUserFromMaximoByPersonId([NotNull] string personid, bool forceUser = false) {
             return GetUserFromMaximoBySwUser(new User() {
                 UserName = personid,
                 MaximoPersonId = personid
@@ -57,7 +57,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         [NotNull]
-        public static User GetUserFromMaximoBySwUserFallingBackToDefault(User swUser, bool forceUserShouldExist = false) {
+        public User GetUserFromMaximoBySwUserFallingBackToDefault(User swUser, bool forceUserShouldExist = false) {
             var user = GetUserFromMaximoBySwUser(swUser, forceUserShouldExist);
             return user ?? swUser;
         }
@@ -73,7 +73,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         /// <param name="forceUserShouldExist">if true the user itself needs to exist on maximo side with the exact username as on SWDB database</param>
         /// <returns></returns>
         [CanBeNull]
-        public static User GetUserFromMaximoBySwUser(User swUser, bool forceUserShouldExist = false) {
+        public virtual User GetUserFromMaximoBySwUser(User swUser, bool forceUserShouldExist = false) {
             if (swUser == null) throw new ArgumentNullException("swUser");
             User fullUser = null;
 
@@ -94,8 +94,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
 
             dto = BuildDTO(dto);
             var entityMetadata = MetadataProvider.Entity(EntityName);
-            var maximoUsers = EntityRepository.Get(entityMetadata, dto);
-            var attributeHolders = maximoUsers as AttributeHolder[] ?? maximoUsers.ToArray();
+            var attributeHolders = EntityRepository.Get(entityMetadata, dto);
             if (!attributeHolders.Any()) {
                 return null;
             }
@@ -172,8 +171,8 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                     //disabling non users if ldap is turned on
                     continue;
                 }
-                var primaryemail = (string) maximoPerson.GetAttribute("primaryemail_.emailaddress");
-                var primaryphone = (string) maximoPerson.GetAttribute("primaryphone_.phonenum");
+                var primaryemail = (string)maximoPerson.GetAttribute("primaryemail_.emailaddress");
+                var primaryphone = (string)maximoPerson.GetAttribute("primaryphone_.phonenum");
                 var user = new User {
                     UserName = userName ?? (string)maximoPerson.GetAttribute("personid"),
                     Password = MetadataProvider.GlobalProperty(SwUserConstants.DefaultUserPassword),
@@ -184,9 +183,9 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                         LastName = (string)maximoPerson.GetAttribute("lastname"),
                         OrgId = (string)maximoPerson.GetAttribute("locationorg") ?? ApplicationConfiguration.DefaultOrgId,
                         SiteId = (string)maximoPerson.GetAttribute("locationsite") ?? ApplicationConfiguration.DefaultSiteId,
-						Email = !primaryemail.IsNullOrWhiteSpace() ? primaryemail : (string)maximoPerson.GetAttribute("email_.emailaddress"),
+                        Email = !primaryemail.IsNullOrWhiteSpace() ? primaryemail : (string)maximoPerson.GetAttribute("email_.emailaddress"),
                         Department = (string)maximoPerson.GetAttribute("department"),
-						Phone = !primaryphone.IsNullOrWhiteSpace() ? primaryphone : (string)maximoPerson.GetAttribute("phone_.phonenum"),
+                        Phone = !primaryphone.IsNullOrWhiteSpace() ? primaryphone : (string)maximoPerson.GetAttribute("phone_.phonenum"),
                         Language = (string)maximoPerson.GetAttribute("language")
                     },
                     CriptoProperties = string.Empty,

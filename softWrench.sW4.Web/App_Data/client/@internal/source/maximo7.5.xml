@@ -106,6 +106,18 @@
 
     </entity>
 
+    <entity name="groupuser" idAttribute="groupuserid">
+      <attributes>
+        <attribute name="groupuserid" type="bigint" required="true" />
+        <attribute name="userid" type="varchar" required="true" />
+        <attribute name="groupname" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="groupuser" />
+      </connectorParameters>
+    </entity>
+
 
     <entity name="maxpropvalue" idAttribute="maxpropvalueid">
       <attributes>

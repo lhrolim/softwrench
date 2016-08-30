@@ -34,6 +34,8 @@ namespace softWrench.sW4.Security.Services {
 
         private static UserProfileManager _userProfileManager;
 
+        private static UserSyncManager _userSyncManager;
+
         private static UserStatisticsService _statisticsService;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SecurityFacade));
@@ -48,11 +50,12 @@ namespace softWrench.sW4.Security.Services {
             return _instance;
         }
 
-        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager) {
+        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager, UserSyncManager userSyncManager) {
             _eventDispatcher = dispatcher;
             _gridFilterManager = gridFilterManager;
             _statisticsService = statisticsService;
             _userProfileManager = userProfileManager;
+            _userSyncManager = userSyncManager;
         }
 
         [CanBeNull]
@@ -67,7 +70,7 @@ namespace softWrench.sW4.Security.Services {
                 //no need to sync to maximo, since there´s no such maximoPersonId
                 return UserFound(dbUser, userTimezoneOffset);
             }
-            var maximoUser = UserSyncManager.GetUserFromMaximoBySwUser(dbUser);
+            var maximoUser = _userSyncManager.GetUserFromMaximoBySwUser(dbUser);
             if (maximoUser == null) {
                 Log.WarnFormat("maximo user {0} not found", dbUser.MaximoPersonId);
                 return null;
@@ -225,7 +228,7 @@ namespace softWrench.sW4.Security.Services {
             var fullUser = new User();
             LogicalThreadContext.SetData("executinglogin", "true");
             if (!swUser.Systemuser && swUser.MaximoPersonId != null) {
-                fullUser = UserSyncManager.GetUserFromMaximoBySwUser(swUser);
+                fullUser = _userSyncManager.GetUserFromMaximoBySwUser(swUser);
                 if (fullUser == null) {
                     Log.WarnFormat("user {0} not found on database", swUser.MaximoPersonId);
                     fullUser = new User();
@@ -300,7 +303,7 @@ namespace softWrench.sW4.Security.Services {
 
         public User FetchUser(int id) {
             var swUser = UserManager.GetUserById(id);
-            var maximoUser = UserSyncManager.GetUserFromMaximoBySwUser(swUser);
+            var maximoUser = _userSyncManager.GetUserFromMaximoBySwUser(swUser);
             if (maximoUser == null) {
                 return swUser;
             }

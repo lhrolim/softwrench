@@ -106,33 +106,22 @@
       "location_.serviceaddress_.streetaddress": null,
       "location_.serviceaddress_.city": null,
       "location_.serviceaddress_.stateprovince": null,
-      "location_.serviceaddress_.country": null
-    },
-    "subdata": [
-      {
-        "property": "multiassetlocci_",
-        "addto": "main",
-        "type": "array",
-        "data": [
-          {
-            "multiid": 8127,
-            "siteid": "BEDFORD",
-            "isprimary": 1,
-            "assetnum": "26200",
-            "location": "ADDR2001",
-            "sequence": null,
-            "progress": 0,
-            "recordkey": "2203",
-            "recordclass": "WORKORDER",
-            "worksiteid": "BEDFORD"
-          }
-        ]
-      },
-      {
-        "property": "relatedrecord_",
-        "addto": "main",
-        "type": "array",
-        "data": [
+      "location_.serviceaddress_.country": null,
+      "multiassetlocci_": [
+        {
+          "multiid": 8127,
+          "siteid": "BEDFORD",
+          "isprimary": 1,
+          "assetnum": "26200",
+          "location": "ADDR2001",
+          "sequence": null,
+          "progress": 0,
+          "recordkey": "2203",
+          "recordclass": "WORKORDER",
+          "worksiteid": "BEDFORD"
+        }
+      ],
+      "relatedrecord_": [
           {
             "relatedreckey": "2212",
             "relatedrecclass": "WORKORDER",
@@ -142,7 +131,6 @@
             "class": "WORKORDER"
           }
         ]
-      }
-    ]
+    }
   }
 ]

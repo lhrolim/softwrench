@@ -16,6 +16,8 @@ namespace softWrench.sW4.Util.DeployValidation
         public string ExStack { get; set; }
         public bool HasProblems { get; set; }
 
+        public bool MissingTestData { get; set; }
+
         /// <summary>
         /// The name of the current validation action
         /// </summary>

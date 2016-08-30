@@ -34,13 +34,16 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         }
 
 
-
-
         public IReadOnlyList<DataMap> Get(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
+            var responseAsText = ExecuteGet(entityMetadata, searchDto);
+            return _restResponseParser.ConvertXmlToDatamaps(entityMetadata, responseAsText);
+        }
+
+        private string ExecuteGet(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
             //TODO: use async
             var baseURL = BuildGetUrl(entityMetadata, searchDto, KeyName);
             var responseAsText = RestUtil.CallRestApiSync(baseURL, "get", MaximoRestUtils.GetMaximoHeaders(KeyName));
-            return _restResponseParser.ConvertXmlToDatamaps(entityMetadata, responseAsText);
+            return responseAsText;
         }
 
         public DataMap Get(EntityMetadata entityMetadata, string id) {
@@ -63,18 +66,25 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             }
             //limiting the result set to 100 by default, avoiding issues
             var countThreshold = 100;
+            var startIndex = 0;
             if (searchDto is PaginatedSearchRequestDto) {
                 var d = (PaginatedSearchRequestDto)searchDto;
                 countThreshold = d.PageSize;
+                startIndex = d.PageNumber <= 1 ? 0 : d.PageNumber * d.PageSize;
             }
-            baseURL.AppendFormat("&_maxitems={0}", countThreshold);
+            baseURL.AppendFormat("&_rsStart={0}", startIndex);
+            baseURL.AppendFormat("&_maxItems={0}", countThreshold);
 
             HandleSort(searchDto, baseURL);
 
 
             var projectionFields = searchDto.ProjectionFields;
             if (projectionFields.Any()) {
-                var includeCols = string.Join(",", projectionFields.Select(p => p.Name).OrderBy(s => s));
+                var fields = projectionFields
+                    .Where(p => !p.Name.StartsWith("#") && !p.Name.Contains(".")) // '#' makes it include all fields; '.' causes error 500
+                    .Select(p => p.Name)
+                    .OrderBy(s => s);
+                var includeCols = string.Join(",", fields);
                 baseURL.AppendFormat("&_includecols={0}", includeCols);
             }
 
@@ -103,7 +113,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         }
 
         private static void HandleSort(SearchRequestDto searchDto, StringBuilder baseURL) {
-            if (searchDto.SearchSort != null) {
+            if (!string.IsNullOrEmpty(searchDto.SearchSort)) {
                 if (searchDto.SearchAscending) {
                     baseURL.AppendFormat("&_orderbyasc={0}", searchDto.SearchSort);
                 } else {
@@ -162,15 +172,20 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         }
 
 
-
-
-
-
-
-
-
         public int Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
-            throw new NotImplementedException();
+            // rest interface: count comes in the root element when request is paginated
+            // trick: fetch first page with single element with only id as projectionfield (minimal payload possible for count)
+            var countQuery = new PaginatedSearchRequestDto() {
+                Id = null,
+                PageNumber = 1,
+                PageSize = 1,
+            };
+            countQuery.AppendProjectionFields(entityMetadata.IdFieldName);
+            // copy query
+            countQuery.SetValuesDictionary(searchDto.ValuesDictionary);
+
+            var responseText = ExecuteGet(entityMetadata, countQuery);
+            return _restResponseParser.TotalCountFromXml(entityMetadata, responseText);
         }
 
         public AttributeHolder ByUserIdSite(EntityMetadata entityMetadata, Tuple<string, string> userIdSiteTuple) {

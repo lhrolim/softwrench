@@ -16,7 +16,7 @@ namespace softWrench.sW4.Data.API {
             get; set;
         }
 
-        public String Title {
+        public string Title {
             get; set;
         }
 

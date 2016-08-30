@@ -7,14 +7,8 @@
       "ponum": "20009",
       "siteid": "BEDFORD",
       "description": "Sale lease machines",
-      "rowstamp": 12554287
-    },
-    "subdata": [
-      {
-        "property": "matrectrans_",
-        "addto": "main",
-        "type": "main",
-        "data": [
+      "rowstamp": 12554287,
+      "matrectrans_": [
           {
             "ponum": "20009",
             "matrectransid": 1336104849,
@@ -26,7 +20,6 @@
             "orgid": "EAGLENA"
           }
         ]
-      }
-    ]
+    }
   }
 ]

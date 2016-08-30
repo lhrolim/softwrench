@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using cts.commons.portable.Util;
 using SimpleInjector;
 
 namespace cts.commons.simpleinjector {
@@ -49,21 +50,39 @@ namespace cts.commons.simpleinjector {
             }
         }
 
-        public bool ContainsService(string serviceName, string methodName) {
-            if (!StringTypeDictionary.ContainsKey(serviceName)) {
-                return false;
-            }
-            return true;
+        public static bool ContainsService(string serviceName, string methodName) {
+            return StringTypeDictionary.ContainsKey(serviceName);
+        }
+
+
+        public static bool ContainsService(Type type) {
+            var name = char.ToLowerInvariant(type.Name[0]) + type.Name.Substring(1);
+            return ContainsService(name, null);
         }
 
 
         public static void RegisterNameAndType(Type type) {
             var attribute = (ComponentAttribute)Attribute.GetCustomAttribute(type, typeof(ComponentAttribute));
-            var name = Char.ToLowerInvariant(type.Name[0]) + type.Name.Substring(1);
+
+            var ovrattribute = (OverridingComponentAttribute)Attribute.GetCustomAttribute(type, typeof(OverridingComponentAttribute));
+
+            var realTypeAttr = type;
+            var overriding = ovrattribute != null && type.BaseType != null;
+
+            if (ovrattribute != null && type.BaseType != null) {
+                realTypeAttr = type.BaseType;
+            }
+
+
+            var name = char.ToLowerInvariant(realTypeAttr.Name[0]) + realTypeAttr.Name.Substring(1);
+
             if (attribute != null && !string.IsNullOrEmpty(attribute.Name)) {
                 name = attribute.Name;
             }
             if (!StringTypeDictionary.ContainsKey(name)) {
+                StringTypeDictionary[name] = type;
+            } else if (overriding) {
+                StringTypeDictionary.Remove(name);
                 StringTypeDictionary[name] = type;
             }
         }

@@ -257,24 +257,27 @@
          * Fetches the composition item with the specified id
          * 
          * @param String|Number compositionId item's id
-         * @param {} compositiondetailschema composition's detail schema 
+         * @param {Object} compositiondetailschema composition's detail schema 
          * @returns Promise resolved with response's body 
          */
-        function getCompositionDetailItem(compositionId, compositiondetailschema) {
-            var parameters = {};
-            var request = {};
-            var key = {};
-            var applicationName = compositiondetailschema.applicationName;
-            parameters.request = request;
-            request.id = compositionId;
-            request.key = key;
-            key.schemaId = compositiondetailschema.schemaId;
-            key.mode = compositiondetailschema.mode;
-            key.platform = "web";
-            var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
-            return $http.get(urlToCall).then(function (result) {
-                return result.data;
-            });
+        function getCompositionDetailItem(compositionId, compositiondetailschema, customParams) {
+            const applicationName = compositiondetailschema.applicationName;
+            const parameters = {
+                request: {
+                    id: compositionId,
+                    key: {
+                        schemaId: compositiondetailschema.schemaId,
+                        mode: compositiondetailschema.mode,
+                        platform: "web"
+                    }
+                }
+            };
+            if (!!customParams) {
+                parameters.request["customParameters"] = customParams;
+            }
+
+            const urlToCall = url(`/api/data/${applicationName}?${$.param(parameters)}`);
+            return $http.get(urlToCall).then(result => result.data);
         }
 
         function isCompositionListItem(datamap) {

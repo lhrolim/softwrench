@@ -14,6 +14,10 @@ namespace softWrench.sW4.Util {
             return source;
         }
 
+        public static bool ContainsAll<T>(this IEnumerable<T> source, IEnumerable<T> values) {
+            return !values.Except(source).Any();
+        }
+
 
         public static void AddAll<TSource>(this System.Collections.Generic.ISet<TSource> source, IEnumerable<TSource> items) {
             foreach (var item in items) {
