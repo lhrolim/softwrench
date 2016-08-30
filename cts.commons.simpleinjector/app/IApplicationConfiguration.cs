@@ -12,6 +12,8 @@ namespace cts.commons.simpleinjector.app
         bool IsOracle(DBType maximo);
         string GetClientKey();
 
+        bool IsLocal();
+
         bool IsUnitTest { get; }
     }
 }

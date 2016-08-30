@@ -65,6 +65,8 @@ namespace softWrench.sW4.Security.Services {
                 //swadmin cannot be inactive--> returning a non active user, so that we can differentiate it from a not found user on screen
                 return InMemoryUser.NewAnonymousInstance(false);
             }
+            //ensuring to get a clear instance upon login
+            ClearUserFromCache(dbUser.UserName);
 
             if (dbUser.Systemuser || dbUser.MaximoPersonId == null) {
                 //no need to sync to maximo, since there´s no such maximoPersonId
@@ -188,9 +190,8 @@ namespace softWrench.sW4.Security.Services {
         /// </para>
         /// </summary>
         /// <param name="fetchFromDB"></param>
-        /// <param name="requiresAuth"></param>
         /// <returns>current autheticated user</returns>
-        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true, Boolean requiresAuth = false) {
+        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true) {
             if (ApplicationConfiguration.IsUnitTest) {
                 return InMemoryUser.TestInstance("test");
             }
@@ -202,22 +203,17 @@ namespace softWrench.sW4.Security.Services {
 
             var currLogin = LogicalThreadContext.GetData<string>("user") ?? CurrentPrincipalLogin;
             if (string.IsNullOrEmpty(currLogin)) {
-                if (requiresAuth) {
-                    throw UnauthorizedException.NotAuthenticated(currLogin);
-                }
+
                 return InMemoryUser.NewAnonymousInstance();
             }
 
             if (!fetchFromDB || Users.ContainsKey(currLogin)) {
                 var inMemoryUser = Users[currLogin];
-                if (requiresAuth && inMemoryUser != null) {
-                    ClearUserFromCache(currLogin);
-                } else {
-                    if (inMemoryUser == null) {
-                        throw UnauthorizedException.NotAuthenticated(currLogin);
-                    }
-                    return inMemoryUser;
+                if (inMemoryUser == null) {
+                    throw UnauthorizedException.NotAuthenticated(currLogin);
                 }
+                Log.DebugFormat("retrieving user {0} from cache", inMemoryUser.Login);
+                return inMemoryUser;
             }
             //cookie authenticated already 
             //TODO: remove this in prod?

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using cts.commons.simpleinjector.app;
 using JetBrains.Annotations;
 using NHibernate;
 using NHibernate.Context;
@@ -33,14 +34,16 @@ namespace cts.commons.persistence {
 
         private ISessionFactory _sessionFactory;
         private readonly bool _isReadOnly;
+        private readonly IApplicationConfiguration _applicationConfiguration;
 
-        public SessionManagerWrapper(string connectionString, string driverName, string dialect, [CanBeNull] IEnumerable<Assembly> assembliesToLookupForMappings) {
+        public SessionManagerWrapper(string connectionString, string driverName, string dialect, [CanBeNull] IEnumerable<Assembly> assembliesToLookupForMappings, IApplicationConfiguration applicationConfiguration) {
             _connectionString = connectionString;
             _driverName = driverName;
             _dialect = dialect;
             // if we have no mapping, then we are using this as a readonly wrapper, since no entity is mapped
             _isReadOnly = assembliesToLookupForMappings == null;
             _assembliesToLookupForMappings = assembliesToLookupForMappings;
+            _applicationConfiguration = applicationConfiguration;
             _sessionFactory = InitSessionFactory();
         }
 
@@ -55,6 +58,10 @@ namespace cts.commons.persistence {
             properties.Add(NHibernate.Cfg.Environment.ShowSql, "false");
             properties.Add(NHibernate.Cfg.Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
             properties.Add(NHibernate.Cfg.Environment.ProxyFactoryFactoryClass, "NHibernate.Bytecode.DefaultProxyFactoryFactory, NHibernate");
+            if (_applicationConfiguration.IsLocal()) {
+                //overriding to allow better debugging
+                properties.Add(NHibernate.Cfg.Environment.CommandTimeout, "600");
+            }
             properties.Add(NHibernate.Cfg.Environment.CurrentSessionContextClass, "managed_web");
             configuration.SetProperties(properties);
 
