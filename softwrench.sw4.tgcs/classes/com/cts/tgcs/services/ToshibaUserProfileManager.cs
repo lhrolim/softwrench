@@ -40,8 +40,10 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.services {
             var profiles = base.FindUserProfiles(dbUser);
 
             SearchRequestDto dto = new PaginatedSearchRequestDto();
-            dto.AppendSearchEntry("USERID", _toshibaAuthUtils.TranslatePersonId(dbUser.MaximoPersonId));
+            var translatePersonId = _toshibaAuthUtils.TranslatePersonId(dbUser.MaximoPersonId);
+            dto.AppendSearchEntry("USERID", translatePersonId);
             try {
+                Log.DebugFormat("Fetching user profiles from ISM for person {0} ", translatePersonId);
                 var groups = _restEntityRepository.Get(_entityMetadata, dto);
 
                 var groupNames = groups.Select(g => g.GetStringAttribute("GROUPNAME"));

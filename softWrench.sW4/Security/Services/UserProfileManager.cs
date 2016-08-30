@@ -240,7 +240,9 @@ namespace softWrench.sW4.Security.Services {
             var roles = new HashedSet<Role>();
 
             foreach (var profile in profiles) {
-                roles.AddAll(profile.Roles);
+                if (profile.Roles != null) {
+                    roles.AddAll(profile.Roles);
+                }
             }
 
             return new MergedUserProfile() {

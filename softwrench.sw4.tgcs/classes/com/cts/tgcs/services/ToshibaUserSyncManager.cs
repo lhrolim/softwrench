@@ -48,6 +48,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.services {
             var user = base.GetUserFromMaximoBySwUser(swUser, forceUserShouldExist);
 
             if (user == null) {
+                Log.DebugFormat("Fetching user {0} from ISM", personId);
                 //if not found, let´s force a ISM sync/creation
                 var ismPerson = _restEntityRepository.Get(_entityMetadata, personId);
                 if (ismPerson == null) {
