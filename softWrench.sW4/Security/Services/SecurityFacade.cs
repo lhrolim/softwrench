@@ -110,7 +110,7 @@ namespace softWrench.sW4.Security.Services {
             return dbUser.Password.Equals(encryptedPassword);
         }
 
-        public static InMemoryUser UpdateUserCache(User dbUser, string userTimezoneOffset) {
+        public static InMemoryUser UpdateUserCacheStatic(User dbUser, string userTimezoneOffset) {
             int? userTimezoneOffsetInt = null;
             int tmp;
             if (int.TryParse(userTimezoneOffset, out tmp)) {
@@ -139,8 +139,14 @@ namespace softWrench.sW4.Security.Services {
             return inMemoryUser;
         }
 
+        public InMemoryUser UpdateUserCache(User dbUser, string userTimezoneOffset) {
+            return UpdateUserCacheStatic(dbUser, userTimezoneOffset);
+        }
+
+
+
         private static InMemoryUser UserFound(User dbUser, string userTimezoneOffset) {
-            var inMemoryUser = UpdateUserCache(dbUser, userTimezoneOffset);
+            var inMemoryUser = UpdateUserCacheStatic(dbUser, userTimezoneOffset);
             _eventDispatcher.Dispatch(new UserLoginEvent(inMemoryUser));
             if (Log.IsDebugEnabled) {
                 Log.Debug(String.Format("user:{0} logged in with roles {1}; profiles {2}; locations {3}",

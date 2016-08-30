@@ -38,14 +38,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         private readonly UserStatisticsService _userStatisticsService;
         private readonly UserProfileManager _userProfileManager;
         private readonly UserManager _userManager;
+        private readonly SecurityFacade _securityFacade;
 
-        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService, UserProfileManager userProfileManager, UserManager userManager) {
+        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService, UserProfileManager userProfileManager, UserManager userManager, SecurityFacade securityFacade) {
             _swdbDAO = swdbDAO;
             _userSetupEmailService = userSetupEmailService;
             _userLinkManager = userLinkManager;
             _userStatisticsService = userStatisticsService;
             _userProfileManager = userProfileManager;
             _userManager = userManager;
+            _securityFacade = securityFacade;
         }
 
 
@@ -200,8 +202,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             // Upate the in memory user if the change is for the currently logged in user
             var currentUser = SecurityFacade.CurrentUser();
             if (user.UserName.EqualsIc(currentUser.Login) && user.Id != null) {
-                var fullUser = SecurityFacade.GetInstance().FetchUser(user.Id.Value);
-                var userResult = SecurityFacade.UpdateUserCache(fullUser, currentUser.TimezoneOffset.ToString());
+                var fullUser = _securityFacade.FetchUser(user.Id.Value);
+                var userResult = _securityFacade.UpdateUserCache(fullUser, currentUser.TimezoneOffset.ToString());
                 targetResult.ResultObject = new UnboundedDatamap(application.Name, ToDictionary(userResult));
             }
 
@@ -215,7 +217,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
             }
 
-
+            if (ApplicationConfiguration.IsUnitTest) {
+                targetResult.ResultObject = user;
+            }
 
             return targetResult;
         }

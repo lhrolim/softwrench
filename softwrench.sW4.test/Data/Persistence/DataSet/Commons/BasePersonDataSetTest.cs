@@ -17,6 +17,7 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Person;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Context;
@@ -28,6 +29,7 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
     public class BasePersonDataSetTest : BaseOtbMetadataTest {
 
         private ApplicationMetadata _applicationMetadata;
+        private ApplicationMetadata _udpdateMetadata;
 
 
         private readonly Mock<ISWDBHibernateDAO> _swdbMock = TestUtil.CreateMock<ISWDBHibernateDAO>();
@@ -40,6 +42,8 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
         public void Init() {
             base.Init();
             _applicationMetadata = MetadataProvider.Application("person").StaticFromSchema("newPersonDetail");
+
+            _udpdateMetadata = MetadataProvider.Application("person").StaticFromSchema("detail");
 
             TestUtil.RestMocks(_swdbMock, _maximoEngine, _userSetupService, _userManager);
 
@@ -80,6 +84,43 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
 
 
             TestUtil.VerifyMocks(_swdbMock, _maximoEngine, _userSetupService, _userManager);
+
+        }
+
+
+        [TestMethod]
+        public void TestUpdateNoPassword() {
+
+            var json = JSonUtil.FromRelativePath("jsons\\person\\update1.json");
+
+            var ds = DataSetProvider.GetInstance();
+            ds.HandleEvent(new ApplicationStartedEvent());
+            var personDs = ds.LookupDataSet("person", null);
+
+            Expression<Func<User, bool>> userComparison = u => string.IsNullOrEmpty(u.Password) && u.IsActive.Value && u.UserName.EqualsIc("SWADMIN") && u.MaximoPersonId.EqualsIc("SWADMIN");
+
+            var resultUser = new User();
+            _userManager.Setup(x => x.SaveUser(It.Is(userComparison), false))
+                .Callback<User, bool>((a, b) => resultUser = a)
+                .Returns(() => resultUser);
+
+            var resultObj = new TargetResult("150", "SWADMIN", null);
+
+            _maximoEngine.Setup(e =>e.Execute(It.Is<OperationWrapper>(w =>
+                                w.GetStringAttribute("personid").EqualsIc("SWADMIN") &&
+                                w.OperationName.Equals(OperationConstants.CRUD_UPDATE))))
+                .Returns(() => resultObj);
+
+            var result = personDs.Execute(_udpdateMetadata, json, "150", OperationConstants.CRUD_UPDATE, false, null);
+
+            TestUtil.VerifyMocks(_swdbMock, _maximoEngine, _userSetupService, _userManager);
+
+            var user = (User)result.ResultObject;
+
+            Assert.AreEqual(true, user.IsActive);
+            Assert.AreEqual("SWADMIN", user.UserName,true);
+            Assert.AreEqual("SWADMIN", user.MaximoPersonId,true);
+            
 
         }
     }

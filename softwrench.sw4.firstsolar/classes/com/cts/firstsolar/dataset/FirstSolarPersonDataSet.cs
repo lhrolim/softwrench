@@ -23,8 +23,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         public FirstSolarPersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService,
             UserLinkManager userLinkManager, UserStatisticsService userStatisticsService,
-            UserProfileManager userProfileManager, FirstSolarUserFacilityBuilder userFacilityBuilder, UserManager userManager)
-            : base(swdbDAO, userSetupEmailService, userLinkManager, userStatisticsService, userProfileManager,userManager) {
+            UserProfileManager userProfileManager, FirstSolarUserFacilityBuilder userFacilityBuilder, UserManager userManager, SecurityFacade securityFacade)
+            : base(swdbDAO, userSetupEmailService, userLinkManager, userStatisticsService, userProfileManager,userManager, securityFacade) {
             _userFacilityBuilder = userFacilityBuilder;
         }
 
