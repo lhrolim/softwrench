@@ -152,7 +152,6 @@ module.exports = function (grunt) {
                     "dx.chartjs.js": "devextreme-web/js/dx.chartjs.js",
                     "dx.vectormap.usa.js": "devextreme-web/js/vectormap-data/usa.js",
                     // tinymce
-                    "tinymce.js": "tinymce-dist/tinymce.min.js",
                     "angular-ui-tinymce.js": "angular-ui-tinymce/dist/tinymce.min.js",
                     // unminified vendors
                     "raw/jquery-file-style.js": "jquery.filestyle/jquery.filestyle.js",
@@ -244,7 +243,6 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-file-upload.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-drag-and-drop-lists.js",
                     // tinymce
-                    "<%= bowercopy.scripts.options.destPrefix %>/tinymce.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-ui-tinymce.js",
                     // minified raw vendors
                     "<%= app.tmp %>/scripts/rawVendor.min.js"
@@ -296,7 +294,7 @@ module.exports = function (grunt) {
                 mangle: {
                     except: [
                         "jQuery", "angular", "tableau", "LZString", "moment", "Moment", "Modernizr",
-                        "app", "modules"
+                        "app", "modules", "tinymce", "Prism"
                     ]
                 }
             },

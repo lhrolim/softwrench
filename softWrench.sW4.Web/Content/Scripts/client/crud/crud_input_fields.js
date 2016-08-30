@@ -620,6 +620,7 @@
                             menubar: "edit insert table",
                             toolbar: "styleselect blockquote | bold italic underline bullist numlist undo redo | alignleft aligncenter alignright alignjustify | link image codesample",
                             statusbar: false,
+                            skin_url: "Content/customVendor/css/tinymce/skins/lightgray",
                             height: 300
                         }
                     };
