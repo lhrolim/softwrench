@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module("sw_layout").controller("AceController", AceController);
-function AceController($scope, $rootScope, $http, $templateCache, $window, i18NService, alertService, restService, contextService) {
+function AceController($scope, $http, $templateCache, $window, i18NService, alertService, restService, contextService) {
     "ngInject";
 
     const EditMenu = "menu.web.xml";
