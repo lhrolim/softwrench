@@ -4,6 +4,7 @@ using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using log4net;
@@ -23,9 +24,7 @@ namespace softWrench.sW4.Util {
         private JObject _cachedCatalogs;
         
         private Boolean _cacheSet = false;
-
-        private Dictionary<string, Dictionary<string, string>> _cachedColorDict;
-
+        
         public StatusColorResolver() {
         }
 
@@ -86,7 +85,6 @@ namespace softWrench.sW4.Util {
         public void ClearCache() {
             _cachedCatalogs = null;
             _cacheSet = false;
-            _cachedColorDict = null;
         }
 
 
@@ -96,18 +94,15 @@ namespace softWrench.sW4.Util {
             }
         }
 
-        public Dictionary<string, string> GetColorsAsDict([NotNull] string applicationId) {
-            if (_cacheSet && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest && _cachedColorDict != null) {
-                return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : _cachedColorDict["default"];
-            }
+        public Dictionary<string, string> GetColorsAsDict([NotNull] string applicationId, bool forceFallback = false) {            
+            var _cachedColorDict = new Dictionary<string, Dictionary<string, string>>();
 
-            _cachedColorDict = new Dictionary<string, Dictionary<string, string>>();
             JObject catalogs = FetchCatalogs();
-
-            if (catalogs == null) {
+            
+            if(catalogs == null || forceFallback) {
                 catalogs = FetchFallbackCatalogs();
-            } 
-
+            }
+            
             foreach (var currentToken in catalogs) {
 
                 var application = currentToken.Key;
@@ -124,9 +119,9 @@ namespace softWrench.sW4.Util {
 
                 _cachedColorDict[application] = colorDict;
             }
-
-
-            return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : _cachedColorDict["default"];
+            
+            return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : 
+                (_cachedColorDict.ContainsKey("default") ? _cachedColorDict["default"] : null);
         }
 
         private void ReplaceWithColorValues(JObject statusColorJson) {

@@ -46,6 +46,10 @@ namespace softWrench.sW4.Util {
 
             var colorStatusDict = _statusColorsService.GetColorsAsDict(application);
 
+            if(colorStatusDict == null) {
+                colorStatusDict = _statusColorsService.GetColorsAsDict(application, true);
+            }
+
             var resultItems = result.ResultObject;
 
             IEnumerable<ApplicationFieldDefinition> applicationFields = schema.Fields;
@@ -317,14 +321,14 @@ namespace softWrench.sW4.Util {
 
             var i = 2;
             foreach(var kvp in colors) {
-                var fill = createColor(kvp.Value.Substring(1));
+                var fill = createColor(kvp.Value.StartsWith("#") ? kvp.Value.Substring(1) : kvp.Value);
                 stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = fill });
 
                 _cellStyleDictionary.Add(kvp.Key, i.ToString());
 
                 i++;
             }
-
+            
             stylesPart.Stylesheet.Fills.Count = Convert.ToUInt32(i + 2);
         }
 
