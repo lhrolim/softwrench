@@ -9,12 +9,13 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Engine {
-    public sealed class MaximoConnectorEngine : AConnectorEngine {
+    public class MaximoConnectorEngine : AConnectorEngine {
 
         //        private readonly SyncItemHandler _syncHandler;
 
 
         private static IProblemManager _problemManager;
+
 
         public MaximoConnectorEngine(EntityRepository entityRepository, IProblemManager problemManager)
             : base(entityRepository) {

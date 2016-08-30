@@ -36,6 +36,8 @@ namespace softWrench.sW4.Security.Services {
 
         private static UserSyncManager _userSyncManager;
 
+        private static UserManager _userManager;
+
         private static UserStatisticsService _statisticsService;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SecurityFacade));
@@ -50,12 +52,13 @@ namespace softWrench.sW4.Security.Services {
             return _instance;
         }
 
-        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager, UserSyncManager userSyncManager) {
+        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager, UserSyncManager userSyncManager, UserManager userManager) {
             _eventDispatcher = dispatcher;
             _gridFilterManager = gridFilterManager;
             _statisticsService = statisticsService;
             _userProfileManager = userProfileManager;
             _userSyncManager = userSyncManager;
+            _userManager = userManager;
         }
 
         [CanBeNull]
@@ -282,7 +285,7 @@ namespace softWrench.sW4.Security.Services {
             var loginUser = CurrentUser();
 
             user.UserName = user.UserName.ToLower();
-            var saveUser = UserManager.SaveUser(user);
+            var saveUser = _userManager.SaveUser(user);
             ClearUserFromCache(user.UserName);
 
             if (saveUser.UserName.Equals(loginUser.Login)) {

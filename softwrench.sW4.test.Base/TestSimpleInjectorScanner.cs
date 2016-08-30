@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using log4net;
 using Moq;
@@ -32,6 +33,11 @@ namespace softwrench.sW4.TestBase {
             var before = Stopwatch.StartNew();
             RegisterComponents(Container);
             Log.Debug(LoggingUtil.BaseDurationMessage("SimpleInjector context initialized in {0}", before));
+            new SimpleInjectorGenericFactory(Container);
+//            var dispatcher =
+//                SimpleInjectorGenericFactory.Instance.GetObject<SimpleInjectorDomainEventDispatcher>(
+//                    typeof (SimpleInjectorDomainEventDispatcher));
+//            dispatcher.Dispatch(new ApplicationStartedEvent());
         }
 
         public void ResgisterSingletonMock<T>(Mock<T> mock) where T : class, IComponent {
@@ -40,14 +46,19 @@ namespace softwrench.sW4.TestBase {
                 return;
             }
             _singletonMockTypes.Add(mockType);
-            Container.RegisterSingle(mockType, () => mock.Object);
+            Container.RegisterSingle(mockType, MockInstanceCreator(mock));
             SimpleInjectorGenericFactory.RegisterNameAndType(mockType);
 
             foreach (var type in typeof(T).GetInterfaces().Where(type => typeof(IComponent).IsAssignableFrom(type)).Where(type => !_singletonMockTypes.Contains(type))) {
                 _singletonMockTypes.Add(type);
-                Container.RegisterSingle(type, () => mock.Object);
+                Container.RegisterSingle(type, MockInstanceCreator(mock));
                 SimpleInjectorGenericFactory.RegisterNameAndType(type);
             }
+        }
+
+        private static Func<object> MockInstanceCreator<T>(Mock<T> mock) where T : class, IComponent
+        {
+            return () => mock.Object;
         }
 
         public void ResgisterSingletonObject<T>(T obj) where T : class, IComponent {

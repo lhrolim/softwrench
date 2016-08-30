@@ -15,7 +15,9 @@ namespace cts.commons.simpleinjector {
 
         public SimpleInjectorGenericFactory(Container container) {
             this._container = container;
-            Instance = this;
+            if (Instance == null) {
+                Instance = this;
+            }
         }
 
         public T GetObject<T>(Type type) {
