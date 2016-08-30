@@ -113,13 +113,13 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                     break;
 
                 case MetadataProvider.STATUS_COLOR_FILE:
-                    templates.Add(new { path = MetadataParsingUtils.GetPath(MetadataProvider.STATUS_COLOR_FILE), name = "status colors" });
+                    templates.Add(new { path = MetadataParsingUtils.GetPath(MetadataProvider.STATUS_COLOR_FILE), name = "statuscolors.json" });
 
                     //Add fallback files if the user has the dynamic admin role.
                     if (SecurityFacade.CurrentUser().IsInRolInternal(Role.DynamicAdmin, false)) {
                         var fallbackPathPattern = "{0}App_Data\\Client\\@internal\\fallback\\{1}";
-                        templates.Add(new { path = String.Format(fallbackPathPattern, AppDomain.CurrentDomain.BaseDirectory, "statuscolors.json"), name = "status colors fallback file" });
-                        templates.Add(new { path = String.Format(fallbackPathPattern, AppDomain.CurrentDomain.BaseDirectory, "statuscolorvalues.json"), name = "status color values" });
+                        templates.Add(new { path = String.Format(fallbackPathPattern, AppDomain.CurrentDomain.BaseDirectory, "statuscolorsfallback.json"), name = "statuscolorsfallback.json" });
+                        templates.Add(new { path = String.Format(fallbackPathPattern, AppDomain.CurrentDomain.BaseDirectory, "statuscolorvalues.json"), name = "statuscolorvalues.json" });
                     }
                     break;
             }
@@ -249,7 +249,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             var fileName = MetadataProvider.PROPERTIES_FILE;
             var ipAddress = request.GetIPAddress();
             var newFileContent = metadata;
-            var oldFileContent = File.ReadAllText(filePath);
+            var oldFileContent = File.Exists(filePath) ? File.ReadAllText(filePath) : string.Empty;
 
             var now = DateTime.Now;
             var newMetadataEntry = new Metadataeditor() {
@@ -287,10 +287,10 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             var metadata = json.StringValue("Metadata");
             var userFullName = json.StringValue("UserFullName");
             var ipAddress = request.GetIPAddress();
-            var filePath = json.StringValue("Path");
-            var fileName = json.StringValue("Name");
+            var filePath = string.IsNullOrWhiteSpace(json.StringValue("Path")) ? MetadataParsingUtils.GetPath(MetadataProvider.STATUS_COLOR_FILE) : json.StringValue("Path");
+            var fileName = string.IsNullOrWhiteSpace(json.StringValue("Name")) ? MetadataProvider.STATUS_COLOR_FILE : json.StringValue("Name");
             var newFileContent = metadata;
-            var oldFileContent = File.ReadAllText(filePath);
+            var oldFileContent = File.Exists(filePath) ? File.ReadAllText(filePath) : string.Empty;
 
             var newMetadataEntry = new Metadataeditor() {
                 SystemStringValue = metadata,
@@ -331,7 +331,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             var ipAddress = request.GetIPAddress();
             var filePath = MetadataParsingUtils.GetPath(MetadataProvider.CLASSIFICATION_COLOR_FILE);
             var newFileContent = metadata;
-            var oldFileContent = File.ReadAllText(filePath);
+            var oldFileContent = File.Exists(filePath) ? File.ReadAllText(filePath) : string.Empty;
 
             var newMetadataEntry = new Metadataeditor() {
                 SystemStringValue = metadata,
@@ -373,8 +373,8 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             var filePath = MetadataParsingUtils.GetPath(fileName);
             var ipAddress = request.GetIPAddress();
             var newFileContent = metadata;
-            var oldFileContent = File.ReadAllText(filePath);
-            
+            var oldFileContent = File.Exists(filePath) ? File.ReadAllText(filePath) : string.Empty;
+
             var newMetadataEntry = new Metadataeditor() {
                 SystemStringValue = metadata,
                 Comments = comments,

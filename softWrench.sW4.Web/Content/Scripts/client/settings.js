@@ -22,7 +22,6 @@ function AceController($scope, $rootScope, $http, $templateCache, $window, i18NS
                 editor.getSession().setMode("ace/mode/xml");
                 editor.setValue($scope.resultData.content);
                 editor.gotoLine(0);
-                //init();
             })
             .error(function (data) {
                 alertService.alert("Failure!");

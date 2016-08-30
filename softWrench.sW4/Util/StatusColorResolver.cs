@@ -21,9 +21,7 @@ namespace softWrench.sW4.Util {
         private const string TestI18NdirPattern = "{0}\\Client\\{1}\\statuscolors.json";
 
         private JObject _cachedCatalogs;
-
-        private JObject _cachedFallbackCatalogs;
-
+        
         private Boolean _cacheSet = false;
 
         private Dictionary<string, Dictionary<string, string>> _cachedColorDict;
@@ -32,7 +30,7 @@ namespace softWrench.sW4.Util {
         }
 
         public JObject FetchFallbackCatalogs() {
-            var statusColorJsonPath = String.Format(FallbackPathPattern, AppDomain.CurrentDomain.BaseDirectory, "statuscolors.json");
+            var statusColorJsonPath = String.Format(FallbackPathPattern, AppDomain.CurrentDomain.BaseDirectory, "statuscolorsfallback.json");
 
             if (File.Exists(statusColorJsonPath)) {
                 JObject statusColorJson;
@@ -40,16 +38,14 @@ namespace softWrench.sW4.Util {
                     statusColorJson = JSonUtil.BuildJSon(statusColorJsonPath);
                     ReplaceWithColorValues(statusColorJson);
                 } catch (Exception e) {
-                    Log.Error("Error reading Status Color JSON");
+                    Log.Error("Error reading Status Color fallback JSON");
                     statusColorJson = new JObject();
                 }
 
-                _cachedFallbackCatalogs = statusColorJson;
-            } else {
-                _cachedFallbackCatalogs = null;
+                return  statusColorJson;
             }
 
-            return _cachedFallbackCatalogs;
+            return null;
         }
         
         public JObject FetchCatalogs() {
@@ -89,7 +85,6 @@ namespace softWrench.sW4.Util {
 
         public void ClearCache() {
             _cachedCatalogs = null;
-            _cachedFallbackCatalogs = null;
             _cacheSet = false;
             _cachedColorDict = null;
         }
