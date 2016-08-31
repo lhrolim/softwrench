@@ -23,7 +23,10 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
             if ("servicerequest".Equals(application.Name) && "crud_update".Equals(operation)) {
                 var user = SecurityFacade.CurrentUser();
                 var detail = GetApplicationDetail(application, user, new DetailRequest(id, application.Schema.GetSchemaKey()));
-                result.ResultObject = detail.ResultObject;
+
+                if(detail != null) {
+                    result.ResultObject = detail.ResultObject;
+                }
             }
 
             return result;
