@@ -73,7 +73,7 @@ app.directive('printSection', function (contextService) {
             }
 
             $scope.printComposition = function (item, composition) {
-                return item.fields[composition.key].length > 0;
+                return item[composition.key].length > 0;
             };
 
             $scope.doStartPrint = function (compositionData, shouldPageBreak, shouldPrintMain, printCallback) {
