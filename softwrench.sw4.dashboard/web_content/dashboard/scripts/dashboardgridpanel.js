@@ -55,6 +55,25 @@ angular.module('sw_layout')
         link: function (scope, element, attrs) {
             //building a schema object representation to propagate to crud_list.html
             doInit(scope);
+
+            //update pagination width
+            scope.$watch(
+                function () {
+                    return element[0].innerHTML.length;
+                },
+                function (newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        var pagination = $('.affix-pagination-panel', element);
+                        var grid = $('#listgrid', element);
+
+                        if (!pagination || !grid) {
+                            return;
+                        }
+
+                        pagination.width(grid[0].clientWidth);
+                    }
+                }
+            );
         }
     };
 }]);

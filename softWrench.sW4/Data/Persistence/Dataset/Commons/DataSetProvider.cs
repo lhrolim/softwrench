@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using softwrench.sw4.api.classes.application;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Util;
@@ -36,6 +37,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                    (_instance =
                        SimpleInjectorGenericFactory.Instance.GetObject<DataSetProvider>(typeof(DataSetProvider)));
         }
+
 
         public override void Clear() {
             _maximoDataSets.Clear();

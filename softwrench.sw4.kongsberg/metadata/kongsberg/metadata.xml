@@ -758,14 +758,20 @@
             <renderer type="default" params="width=10%;excelwidth=50"/>
           </field>
           <field attribute="area" label="Area">
-            <renderer type="default" params="width=13%;excelwidth=50" />
+            <renderer type="default" params="width=12%;excelwidth=50" />
           </field>
           <field attribute="problemtype" label="Prob. Type">
             <renderer type="default" params="excelwidth=50"/>
           </field>
-          <field attribute="reportedby" label="Reported By"/>
-          <field attribute="internalpriority" label="Int. Priority"/>
-          <field attribute="owner" label="Owner"/>
+          <field attribute="reportedby" label="Reported By">
+            <renderer type="default" params="width=10%" />
+          </field>
+          <field attribute="internalpriority" label="Int. Priority">
+            <renderer type="default" params="width=3%" />
+          </field>
+          <field attribute="owner" label="Owner">
+            <renderer type="default" params="width=10%" />
+          </field>
           <field attribute="ownergroup" label="Owner Group"/>
           <field attribute="changedate" label="Changed Date">
              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss;width=10%;showtime=false"/>
@@ -781,7 +787,7 @@
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
-            <property key="list.width.min" value="1600px"/>
+            <property key="list.width.min" value="2000px"/>
           </properties>
         </list>
 
@@ -1634,6 +1640,13 @@
         <schema id="detail" title="Attachments" redeclaring="false" platform="web">
           <customization position="docinfo_.description">
           </customization>
+          
+          <customization position="newattachment">
+            <field label="Attachments" attribute="newattachment" requiredexpression="true">
+              <renderer type="dndupload" params="multiple=true"/>
+            </field>
+          </customization>
+        
           <commandbars>
             <commandgroup position="detail.primary"  >
               <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"

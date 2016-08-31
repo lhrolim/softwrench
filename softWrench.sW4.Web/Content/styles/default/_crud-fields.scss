@@ -159,6 +159,14 @@ textarea .readonly {
             word-break: break-all;
             word-break: break-word;
         }
+
+        img {
+            max-width: 100%;
+        }
+    }
+
+    .ta-readonly {
+        background: #eee;
     }
 
     &.focussed {
@@ -171,8 +179,12 @@ textarea .readonly {
         }
     }
 
-    .ta-readonly {
-        background: #eee;
+    &.colorbox {
+        .ta-editor {
+            img {
+                cursor: pointer;
+            }
+        }
     }
 }
 

@@ -7,14 +7,16 @@ using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
+using softWrench.sW4.Util.DeployValidation;
 
 namespace softWrench.sW4.Data.Persistence.Engine {
-    public sealed class MaximoConnectorEngine : AConnectorEngine {
+    public class MaximoConnectorEngine : AConnectorEngine {
 
         //        private readonly SyncItemHandler _syncHandler;
 
 
         private static IProblemManager _problemManager;
+
 
         public MaximoConnectorEngine(EntityRepository entityRepository, IProblemManager problemManager)
             : base(entityRepository) {
@@ -138,7 +140,12 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                     }
                     throw;
                 }
-                _crudConnector.AfterUpdate(maximoTemplateData);
+
+                //ToDo: Improve this - Remove this if condition and replace with some advanced Mocking
+                if (!DeployValidationService.MockProxyInvocation()) {
+                    _crudConnector.AfterUpdate(maximoTemplateData);
+                }
+
                 return maximoTemplateData.ResultObject;
             }
 
@@ -159,10 +166,13 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                     throw;
                 }
 
-                try {
-                    _crudConnector.AfterCreation(maximoTemplateData);
-                } catch (System.Exception e) {
-                    throw new AfterCreationException(maximoTemplateData.ResultObject, e);
+                //ToDo: Improve this - Remove this if condition and replace with some advanced Mocking
+                if (!DeployValidationService.MockProxyInvocation()) {
+                    try {
+                        _crudConnector.AfterCreation(maximoTemplateData);
+                    } catch (System.Exception e) {
+                        throw new AfterCreationException(maximoTemplateData.ResultObject, e);
+                    }
                 }
 
                 return maximoTemplateData.ResultObject;
@@ -175,7 +185,12 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 _crudConnector.PopulateIntegrationObject(maximoTemplateData);
                 _crudConnector.BeforeDeletion(maximoTemplateData);
                 _crudConnector.DoDelete(maximoTemplateData);
-                _crudConnector.AfterDeletion(maximoTemplateData);
+
+                //ToDo: Improve this - Remove this if condition and replace with some advanced Mocking
+                if (!DeployValidationService.MockProxyInvocation()) {
+                    _crudConnector.AfterDeletion(maximoTemplateData);
+                }
+
                 return maximoTemplateData.ResultObject;
             }
 
@@ -186,7 +201,12 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 _crudConnector.PopulateIntegrationObject(maximoTemplateData);
                 _crudConnector.BeforeFindById(maximoTemplateData);
                 _crudConnector.DoFindById(maximoTemplateData);
-                _crudConnector.AfterFindById(maximoTemplateData);
+
+                //ToDo: Improve this - Remove this if condition and replace with some advanced Mocking
+                if (!DeployValidationService.MockProxyInvocation()) {
+                    _crudConnector.AfterFindById(maximoTemplateData);
+                }
+
                 return maximoTemplateData.ResultObject;
             }
         }

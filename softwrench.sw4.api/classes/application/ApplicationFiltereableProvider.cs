@@ -55,7 +55,8 @@ namespace softwrench.sw4.api.classes.application {
             return new ApplicationFiltereableKey(applicationName, null, null);
         }
 
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+            Clear();
             var dataSets = SimpleInjectorGenericFactory.Instance.GetObjectsOfType<T>(typeof(T));
 
             foreach (var dataSet in dataSets) {

@@ -151,6 +151,8 @@ module.exports = function (grunt) {
                     "globalize.js": "globalize/lib/globalize.js",
                     "dx.chartjs.js": "devextreme-web/js/dx.chartjs.js",
                     "dx.vectormap.usa.js": "devextreme-web/js/vectormap-data/usa.js",
+                    // colorbox
+                    "jquery-colorbox.js": "colorbox/jquery.colorbox-min.js",
                     // tinymce
                     "angular-ui-tinymce.js": "angular-ui-tinymce/dist/tinymce.min.js",
                     // unminified vendors
@@ -226,6 +228,8 @@ module.exports = function (grunt) {
                     // jquery
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery-ui.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/jquery-colorbox.js",
+
                     // bootstrap
                     "<%= bowercopy.scripts.options.destPrefix %>/bootstrap.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/bootstrap-datetimepicker.js",

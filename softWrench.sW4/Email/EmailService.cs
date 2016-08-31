@@ -6,6 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using cts.commons.portable.Util;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using log4net;
 using softWrench.sW4.Metadata;
@@ -84,7 +85,6 @@ namespace softWrench.sW4.Email {
             var email = new MailMessage() {
                 From = new MailAddress(emailData.SendFrom ?? MetadataProvider.GlobalProperty("defaultEmail")),
                 Subject = emailData.Subject,
-                Body = emailData.Message,
                 IsBodyHtml = true
             };
 
@@ -123,11 +123,45 @@ namespace softWrench.sW4.Email {
                 }
             }
 
-            email.IsBodyHtml = true;
             if (emailData.Attachments != null) {
                 HandleAttachments(emailData.Attachments, email);
             }
+
+            // adds email body
+            email.AlternateViews.Add(BuildContent(emailData.Message));
+
             return email;
+        }
+
+        public static AlternateView BuildContent(string html) {
+            var matches = HtmlImgRegex.Matches(html);
+            var inlines = new List<LinkedResource>();
+
+            foreach (Match match in matches) {
+                var src = match.Groups[0].Value;
+                if (src.Trim().Length == 0 || html.IndexOf(src, StringComparison.Ordinal) == -1) {
+                    continue;
+                }
+
+                const string srcToken = "src=\"";
+                var start = src.IndexOf(srcToken, StringComparison.Ordinal) + srcToken.Length;
+                var end = src.IndexOf("\"", start, StringComparison.Ordinal);
+                var srcText = src.Substring(start, end - start);
+                var base64Image = srcText.Split(',')[1];
+
+                var byteArray = Convert.FromBase64String(base64Image);
+                var stream = new MemoryStream(byteArray);
+                var cid = Guid.NewGuid().ToString();
+                var inline = new LinkedResource(stream) { ContentId = cid };
+                inlines.Add(inline);
+
+                var newSrc = src.Replace(srcText, "cid:" + cid);
+                html = html.Replace(src, newSrc);
+            }
+            var alternateView = AlternateView.CreateAlternateViewFromString(html, null, MediaTypeNames.Text.Html);
+            inlines.ForEach(inline => alternateView.LinkedResources.Add(inline));
+
+            return alternateView;
         }
 
         private static Boolean AllowedToAdd(string emailaddress) {

@@ -37,13 +37,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         private readonly UserLinkManager _userLinkManager;
         private readonly UserStatisticsService _userStatisticsService;
         private readonly UserProfileManager _userProfileManager;
+        private readonly UserManager _userManager;
+        private readonly SecurityFacade _securityFacade;
 
-        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService, UserProfileManager userProfileManager) {
+        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService, UserProfileManager userProfileManager, UserManager userManager, SecurityFacade securityFacade) {
             _swdbDAO = swdbDAO;
             _userSetupEmailService = userSetupEmailService;
             _userLinkManager = userLinkManager;
             _userStatisticsService = userStatisticsService;
             _userProfileManager = userProfileManager;
+            _userManager = userManager;
+            _securityFacade = securityFacade;
         }
 
 
@@ -179,7 +183,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             var user = PopulateSwdbUser(application, json, id, operation);
             var passwordString = HandlePassword(json, user);
-            user = UserManager.SaveUser(user);
+            user = _userManager.SaveUser(user,false);
 
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
@@ -198,8 +202,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             // Upate the in memory user if the change is for the currently logged in user
             var currentUser = SecurityFacade.CurrentUser();
             if (user.UserName.EqualsIc(currentUser.Login) && user.Id != null) {
-                var fullUser = SecurityFacade.GetInstance().FetchUser(user.Id.Value);
-                var userResult = SecurityFacade.UpdateUserCache(fullUser, currentUser.TimezoneOffset.ToString());
+                var fullUser = _securityFacade.FetchUser(user.Id.Value);
+                var userResult = _securityFacade.UpdateUserCache(fullUser, currentUser.TimezoneOffset.ToString());
                 targetResult.ResultObject = new UnboundedDatamap(application.Name, ToDictionary(userResult));
             }
 
@@ -212,8 +216,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             if (isCreation && isactive) {
                 _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
             }
-            
 
+            if (ApplicationConfiguration.IsUnitTest) {
+                targetResult.ResultObject = user;
+            }
 
             return targetResult;
         }
@@ -222,6 +228,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         protected virtual User PopulateSwdbUser(ApplicationMetadata application, JObject json, string id, string operation) {
             // Save the updated sw user record
             var username = json.StringValue("personid");
+            if (username == null) {
+                username = json.StringValue("#personid");
+            }
+
             var firstName = json.StringValue("firstname");
             var lastName = json.StringValue("lastname");
             var isactive = json.StringValue("#isactive").EqualsAny("1", "true");
@@ -230,7 +240,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             var user = dbUser ?? new User(null, username, isactive) {
                 FirstName = firstName,
-                LastName = lastName
+                LastName = lastName,
+                MaximoPersonId = username
             };
             user.IsActive = isactive;
             if (user.UserPreferences == null) {

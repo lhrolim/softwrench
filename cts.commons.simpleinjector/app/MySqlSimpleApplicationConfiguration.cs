@@ -19,8 +19,14 @@ namespace cts.commons.simpleinjector.app {
             return "";
         }
 
+        public bool IsLocal() {
+            return false;
+        }
+
         public bool IsUnitTest {
-            get { return false; }
+            get {
+                return false;
+            }
         }
     }
 }

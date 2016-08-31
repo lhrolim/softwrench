@@ -18,6 +18,7 @@ using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Exceptions;
@@ -82,11 +83,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             var data = entity.GetUnMappedAttribute("newattachment");
             var path = entity.GetUnMappedAttribute("newattachment_path");
             if (!string.IsNullOrWhiteSpace(data) && !string.IsNullOrWhiteSpace(path)) {
-                var attachmentParam = new AttachmentDTO() {
-                    Data = data,
-                    Path = path
-                };
-                AddAttachment(maximoObj, attachmentParam);
+                var mainattachments = BuildAttachments(path, data);
+                try {
+                    mainattachments.ForEach(attachment => AddAttachment(maximoObj, attachment));
+                } catch (MaximoException e) {
+                    throw new MaximoException("Could not attach image file. Please contact support about 'Installation Task [SWWEB-2156]'", e, ExceptionUtil.DigRootException(e));
+                }
             }
             // Screenshot
             var screenshot = entity.GetUnMappedAttribute("newscreenshot");
@@ -102,18 +104,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             if (attachments != null) {
                 // this will only filter new attachments
                 foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
-                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
                     var title = attachment.GetAttribute("document").ToString();
-                    var desc = docinfo != null && docinfo.Fields["description"] != null ? docinfo.Fields["description"].ToString() : "";
-                    var content = new AttachmentDTO() {
-                        Title = title,
-                        Data = attachment.GetUnMappedAttribute("newattachment"),
-                        Path = attachment.GetUnMappedAttribute("newattachment_path"),
-                        OffLineHash = attachment.GetUnMappedAttribute("#offlinehash"),
-                        Description = desc
-                    };
-                    if (content.Data != null) {
-                        AddAttachment(maximoObj, content);
+                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
+                    var desc = docinfo != null && !string.IsNullOrEmpty(docinfo.GetStringAttribute("description")) ? docinfo.GetStringAttribute("description") : null;
+                    
+                    data = attachment.GetUnMappedAttribute("newattachment");
+                    path = attachment.GetUnMappedAttribute("newattachment_path");
+                    var offlinehash = attachment.GetUnMappedAttribute("#offlinehash");
+                    var mainattachments = BuildAttachments(path, data, title, desc, offlinehash);
+                    try {
+                        mainattachments.ForEach(attch => AddAttachment(maximoObj, attch));
+                    } catch (MaximoException e) {
+                        throw new MaximoException(
+                            "Could not attach image file. Please contact support about 'Installation Task [SWWEB-2156]'",
+                            e, ExceptionUtil.DigRootException(e));
                     }
                 }
 
@@ -388,18 +392,39 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         /// </summary>
         /// <param name="paths">file paths concatenated by a ','</param>
         /// <param name="data">base64 encoded file data concatenated by a ','</param>
+        /// <param name="title">file titles concatenated by a ','</param>
+        /// <param name="desc">file descriptions concatenated by a ','</param>
+        /// <param name="offlinehash">offlinehash used to identify attachment in offline env concatenated by a ','</param>
         /// <returns></returns>
-        public List<AttachmentDTO> BuildAttachments(string paths, string data) {
+        public List<AttachmentDTO> BuildAttachments(string paths, string data, string title = null, string desc = null, string offlinehash = null) {
             if (string.IsNullOrWhiteSpace(paths) || string.IsNullOrWhiteSpace(data)) {
                 return new List<AttachmentDTO>();
             }
             var attachmentsData = data.Split(',');
             var attachmentsPath = paths.Split(',');
+            string[] attachmentsTitle = null;
+            if (title != null) {
+                attachmentsTitle = title.Split(',');
+            }
+            string[] attachmentsDesc = null;
+            if (desc != null) {
+                attachmentsDesc = desc.Split(',');
+            }
+            string[] attachmnetsOfflinehash = null;
+            if (offlinehash != null) {
+                attachmnetsOfflinehash = offlinehash.Split(',');
+            }
             var dtos = new List<AttachmentDTO>(attachmentsPath.Length);
             for (int i = 0, j = 0; i < attachmentsPath.Length; i++, j += 2) {
+                var attachmentTitle = attachmentsTitle != null ? attachmentsTitle[i] : null;
+                var attachmentDesc = attachmentsDesc != null ? attachmentsDesc[i] : null;
+                var attachmentOfflinehash = attachmnetsOfflinehash != null ? attachmnetsOfflinehash[i] : null;
                 var dto = new AttachmentDTO() {
                     Data = attachmentsData[j] + ',' + attachmentsData[j + 1],
                     Path = attachmentsPath[i],
+                    Title = attachmentTitle,
+                    OffLineHash = attachmentOfflinehash,
+                    Description = attachmentDesc,
                     DocumentInfoId = null
                 };
                 dtos.Add(dto);

@@ -68,7 +68,7 @@
              */
             _blockedAssociations: {},
 
-            compositionLoadEventQueue :{},
+            compositionLoadEventQueue: {},
 
             //TODO: below is yet to be implemented/refactored
             detail_previous: { id: "0" },
@@ -225,12 +225,12 @@
 
         function setDetailDataResolved(panelid) {
             getContext(panelid).detailDataResolved = true;
-//            getContext(panelid).associationsResolved = true;
+            //            getContext(panelid).associationsResolved = true;
         }
 
         function clearDetailDataResolved(panelid) {
             getContext(panelid).detailDataResolved = false;
-//            getContext(panelid).associationsResolved = false;
+            //            getContext(panelid).associationsResolved = false;
         }
 
         function getDetailDataResolved(panelid) {
@@ -375,23 +375,48 @@
             return associationOptions[keyToUse];
         }
 
-        function fetchEagerAssociationOptions(associationKey, contextData, panelid) {
+        function setDefaultValue(context,path, dmValue) {
+            //temporarily setting a value 
+            var resultOptions = [];
+            //temporarily setting a value 
+            resultOptions.push({ value: dmValue, label: "Loading..." });
+            setDeep(context._eagerassociationOptions, path, resultOptions);
+//            context._eagerassociationOptions[schemaId][entryId][associationKey] = resultOptions;
+        }
+
+        /**
+         * 
+         * @param {} associationKey the association key to bring
+         * @param {} contextData an instance of ContextData class (TODO)
+         * @param {} panelid the panel we´re handling, used to differentiate on dashboards and modals
+         * @param {} dmValue the current value on the datamap, needed in order to instantiate an array with that value upfront preventing bugs on the select component (SWWEB-2607)
+         * @returns an Array object with the eager options
+         */
+        function fetchEagerAssociationOptions(associationKey, contextData, panelid, dmValue) {
             var context = getContext(panelid);
             //if (context.showingModal) {
             //    contextData = { schemaId: "#modal" };
             //}
+            let resultOptions;
 
             if (contextData == null) {
-                return context._eagerassociationOptions["#global"][associationKey];
+                resultOptions = context._eagerassociationOptions["#global"][associationKey];
+                if (dmValue && !resultOptions) {
+                    setDefaultValue(context,`#global.${associationKey}`, dmValue);
+                }
+                return resultOptions;
             }
-
-            var schemaId = contextData.schemaId;
-            var entryId = contextData.entryId || "#global";
+            const schemaId = contextData.schemaId;
+            const entryId = contextData.entryId || "#global";
 
             context._eagerassociationOptions[schemaId] = context._eagerassociationOptions[schemaId] || {};
             context._eagerassociationOptions[schemaId][entryId] = context._eagerassociationOptions[schemaId][entryId] || {};
+            resultOptions = context._eagerassociationOptions[schemaId][entryId][associationKey];
+            if (dmValue && !resultOptions) {
+                setDefaultValue(context, `${schemaId}.${entryId}.${associationKey}`, dmValue);
+            }
 
-            return context._eagerassociationOptions[schemaId][entryId][associationKey];
+            return resultOptions;
         }
 
         function fetchEagerAssociationOption(associationKey, itemValue) {
@@ -439,7 +464,7 @@
             log.info("update eager list for {0}. Size: {1}".format(associationKey, options.length));
 
 
-            $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData,panelid);
+            $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData, panelid);
 
 
         }
@@ -583,7 +608,7 @@
 
         function setList(list) {
             getContext(panelid).isList = true;
-            getContext(panelid).isDetail= false;
+            getContext(panelid).isDetail = false;
         }
 
         function setDetail(list) {
@@ -622,25 +647,22 @@
             clearDetailDataResolved: clearDetailDataResolved,
             getContext: getContext
         };
-
-        var associationServices = {
-            updateLazyAssociationOption: updateLazyAssociationOption,
-            fetchLazyAssociationOption: fetchLazyAssociationOption,
-            updateEagerAssociationOptions: updateEagerAssociationOptions,
-            fetchEagerAssociationOptions: fetchEagerAssociationOptions,
-            fetchEagerAssociationOption: fetchEagerAssociationOption,
-            associationsResolved: associationsResolved,
-            markAssociationsResolved: markAssociationsResolved
-        }
-
-        var hookServices = {
-            afterSave: afterSave,
-            detailLoaded: detailLoaded,
-            disposeDetail: disposeDetail,
-            gridLoaded: gridLoaded,
-            compositionsLoaded: compositionsLoaded
-        }
-
+        const associationServices = {
+            updateLazyAssociationOption,
+            fetchLazyAssociationOption,
+            updateEagerAssociationOptions,
+            fetchEagerAssociationOptions,
+            fetchEagerAssociationOption,
+            associationsResolved,
+            markAssociationsResolved
+        };
+        const hookServices = {
+            afterSave,
+            detailLoaded,
+            disposeDetail,
+            gridLoaded,
+            compositionsLoaded
+        };
         var modalService = {
             disposeModal: disposeModal,
             getSaveFn: getSaveFn,

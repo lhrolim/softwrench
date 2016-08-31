@@ -96,8 +96,9 @@
 
                         var masterMargins = $('.master-details .master').outerHeight(true) - $('.master').height();
                         var pagination = $('.master-details  .master .swpagination').outerHeight(true);
+                        var commandbuttons = $('.master-details .toolbar-secondary:visible').outerHeight(true);
 
-                        return $(window).height() - scrollTop - masterMargins - pagination;
+                        return $(window).height() - scrollTop - masterMargins - pagination - commandbuttons;
                     };
 
                     $scope.getScrollSpaceDetails = function () {
@@ -106,7 +107,7 @@
                             return null;
                         }
 
-                        var commandbuttons = $('.master-details .commands:visible').outerHeight(true);
+                        var commandbuttons = $('.master-details .toolbar-secondary:visible').outerHeight(true);
 
                         return $(window).height() - scrollTop - commandbuttons;
                     };

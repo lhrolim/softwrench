@@ -36,6 +36,8 @@ namespace softWrench.sW4.Security.Services {
 
         private static UserSyncManager _userSyncManager;
 
+        private static UserManager _userManager;
+
         private static UserStatisticsService _statisticsService;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SecurityFacade));
@@ -50,12 +52,13 @@ namespace softWrench.sW4.Security.Services {
             return _instance;
         }
 
-        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager, UserSyncManager userSyncManager) {
+        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager, UserSyncManager userSyncManager, UserManager userManager) {
             _eventDispatcher = dispatcher;
             _gridFilterManager = gridFilterManager;
             _statisticsService = statisticsService;
             _userProfileManager = userProfileManager;
             _userSyncManager = userSyncManager;
+            _userManager = userManager;
         }
 
         [CanBeNull]
@@ -65,6 +68,8 @@ namespace softWrench.sW4.Security.Services {
                 //swadmin cannot be inactive--> returning a non active user, so that we can differentiate it from a not found user on screen
                 return InMemoryUser.NewAnonymousInstance(false);
             }
+            //ensuring to get a clear instance upon login
+            ClearUserFromCache(dbUser.UserName);
 
             if (dbUser.Systemuser || dbUser.MaximoPersonId == null) {
                 //no need to sync to maximo, since there´s no such maximoPersonId
@@ -105,7 +110,7 @@ namespace softWrench.sW4.Security.Services {
             return dbUser.Password.Equals(encryptedPassword);
         }
 
-        public static InMemoryUser UpdateUserCache(User dbUser, string userTimezoneOffset) {
+        public static InMemoryUser UpdateUserCacheStatic(User dbUser, string userTimezoneOffset) {
             int? userTimezoneOffsetInt = null;
             int tmp;
             if (int.TryParse(userTimezoneOffset, out tmp)) {
@@ -134,8 +139,14 @@ namespace softWrench.sW4.Security.Services {
             return inMemoryUser;
         }
 
+        public InMemoryUser UpdateUserCache(User dbUser, string userTimezoneOffset) {
+            return UpdateUserCacheStatic(dbUser, userTimezoneOffset);
+        }
+
+
+
         private static InMemoryUser UserFound(User dbUser, string userTimezoneOffset) {
-            var inMemoryUser = UpdateUserCache(dbUser, userTimezoneOffset);
+            var inMemoryUser = UpdateUserCacheStatic(dbUser, userTimezoneOffset);
             _eventDispatcher.Dispatch(new UserLoginEvent(inMemoryUser));
             if (Log.IsDebugEnabled) {
                 Log.Debug(String.Format("user:{0} logged in with roles {1}; profiles {2}; locations {3}",
@@ -188,9 +199,8 @@ namespace softWrench.sW4.Security.Services {
         /// </para>
         /// </summary>
         /// <param name="fetchFromDB"></param>
-        /// <param name="requiresAuth"></param>
         /// <returns>current autheticated user</returns>
-        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true, Boolean requiresAuth = false) {
+        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true) {
             if (ApplicationConfiguration.IsUnitTest) {
                 return InMemoryUser.TestInstance("test");
             }
@@ -202,22 +212,17 @@ namespace softWrench.sW4.Security.Services {
 
             var currLogin = LogicalThreadContext.GetData<string>("user") ?? CurrentPrincipalLogin;
             if (string.IsNullOrEmpty(currLogin)) {
-                if (requiresAuth) {
-                    throw UnauthorizedException.NotAuthenticated(currLogin);
-                }
+
                 return InMemoryUser.NewAnonymousInstance();
             }
 
             if (!fetchFromDB || Users.ContainsKey(currLogin)) {
                 var inMemoryUser = Users[currLogin];
-                if (requiresAuth && inMemoryUser != null) {
-                    ClearUserFromCache(currLogin);
-                } else {
-                    if (inMemoryUser == null) {
-                        throw UnauthorizedException.NotAuthenticated(currLogin);
-                    }
-                    return inMemoryUser;
+                if (inMemoryUser == null) {
+                    throw UnauthorizedException.NotAuthenticated(currLogin);
                 }
+                Log.DebugFormat("retrieving user {0} from cache", inMemoryUser.Login);
+                return inMemoryUser;
             }
             //cookie authenticated already 
             //TODO: remove this in prod?
@@ -286,7 +291,7 @@ namespace softWrench.sW4.Security.Services {
             var loginUser = CurrentUser();
 
             user.UserName = user.UserName.ToLower();
-            var saveUser = UserManager.SaveUser(user);
+            var saveUser = _userManager.SaveUser(user);
             ClearUserFromCache(user.UserName);
 
             if (saveUser.UserName.Equals(loginUser.Login)) {

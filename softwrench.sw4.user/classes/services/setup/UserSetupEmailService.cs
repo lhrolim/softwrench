@@ -44,8 +44,11 @@ namespace softwrench.sw4.user.classes.services.setup {
             _manualTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//welcomeemail_manualpassword.html";
             _forgotPasswordTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//forgotpassword.html";
             _newUserRegistrationApprovalRequestTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//newuserapproval.html";
+            if (_appConfig != null) {
+                //test
+                HandleHeaderImage();
+            }
 
-            HandleHeaderImage();
         }
 
         private void HandleHeaderImage() {
@@ -55,14 +58,14 @@ namespace softwrench.sw4.user.classes.services.setup {
             var clientKey = _appConfig.GetClientKey();
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-            if (File.Exists(baseDirectory + "//Content//Customers//" + clientKey +"//images//header-email.jpg")) {
+            if (File.Exists(baseDirectory + "//Content//Customers//" + clientKey + "//images//header-email.jpg")) {
                 _headerImageUrl = "Content/Customers/" + clientKey + "/images/header-email.jpg";
             } else if (File.Exists(baseDirectory + "//Content//Images//" + clientKey + "//header-email.jpg")) {
                 _headerImageUrl = "Content/Images/" + clientKey + "/header-email.jpg";
             }
         }
 
-        public void SendActivationEmail(User user, string email, string openPassword = null) {
+        public virtual void SendActivationEmail(User user, string email, string openPassword = null) {
             Validate.NotNull(email, "email");
             Validate.NotNull(user, "user");
             var automaticMode = openPassword == null;
@@ -135,8 +138,8 @@ namespace softwrench.sw4.user.classes.services.setup {
             var approverEmailsList = approverEmails.ToList();
             Validate.NotEmpty(approverEmailsList, "approverEmails");
 
-            var sendTo =  approverEmailsList.Count == 1 
-                ? approverEmailsList.First() 
+            var sendTo = approverEmailsList.Count == 1
+                ? approverEmailsList.First()
                 : approverEmailsList.Aggregate("", (concat, current) => concat + "," + current);
 
             var templateContent = File.ReadAllText(_newUserRegistrationApprovalRequestTemplatePath);

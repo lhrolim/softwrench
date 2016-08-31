@@ -1,0 +1,2730 @@
+﻿{
+    "personuid": 150,
+    "personid": "SWADMIN",
+    "firstname": "Admin",
+    "lastname": "Admin",
+    "department": "12",
+    "langcode": "EN",
+    "locationorg": "EAGLENA",
+    "locationsite": "BEDFORD",
+    "location": null,
+    "rowstamp": 42913416,
+    "maxuser_.active": 1,
+    "application": "person",
+    "approwstamp": 42913416,
+    "#isactive": true,
+    "#signature": "<p>Ashwini Habbu</p><p>Control Technology Solutions</p><p>QA Lead</p><p>O: +1.480.941.6460</p><p>M: +1.602.420.3972</p><p>controltechnologysolutions.com</p><p><br/></p>",
+    "#profiles": [
+      {
+        "id": 16,
+        "name": "dashboard",
+        "deletable": false,
+        "description": "can manage dashboards",
+        "roles": [
+          {
+            "id": 13,
+            "name": "ROLE_DASH_ADMIN",
+            "label": "Dashboard Admin",
+            "description": "Allows the creation/removal of other shareable dashboards for the entire organization, plus personal ones",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 14,
+            "name": "ROLE_DASH_MANAGER",
+            "label": "Dashboard Manager",
+            "description": "Allows the creation of personal dashboards, but do not allow the creation/removal of eventual shared ones",
+            "deletable": false,
+            "active": true
+          }
+        ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 6,
+        "name": "basic",
+        "deletable": false,
+        "description": "basic",
+        "roles": [ ],
+        "applicationPermissions": [
+          {
+            "id": 14,
+            "applicationName": "servicerequest",
+            "containerPermissions": [ ],
+            "compositionPermissions": [
+              {
+                "id": 69,
+                "compositionKey": "worklog",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 70,
+                "compositionKey": "commlog",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 71,
+                "compositionKey": "attachment",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 72,
+                "compositionKey": "relatedrecord",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              }
+            ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 15,
+            "applicationName": "workorder",
+            "containerPermissions": [ ],
+            "compositionPermissions": [
+              {
+                "id": 73,
+                "compositionKey": "worklog",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              }
+            ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 16,
+            "applicationName": "matrectransTransfers",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 17,
+            "applicationName": "invbalances",
+            "containerPermissions": [
+              {
+                "id": 28,
+                "schema": "invbalancesdetail",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [
+                  {
+                    "id": 252,
+                    "permission": "readonly",
+                    "fieldKey": "itemnum"
+                  },
+                  {
+                    "id": 253,
+                    "permission": "readonly",
+                    "fieldKey": "item_.description"
+                  },
+                  {
+                    "id": 254,
+                    "permission": "readonly",
+                    "fieldKey": "lotnum"
+                  },
+                  {
+                    "id": 255,
+                    "permission": "readonly",
+                    "fieldKey": "siteid"
+                  },
+                  {
+                    "id": 256,
+                    "permission": "readonly",
+                    "fieldKey": "location"
+                  },
+                  {
+                    "id": 257,
+                    "permission": "readonly",
+                    "fieldKey": "binnum"
+                  },
+                  {
+                    "id": 258,
+                    "permission": "readonly",
+                    "fieldKey": "item_.issueunit"
+                  }
+                ]
+              }
+            ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 18,
+            "applicationName": "invuse",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 19,
+            "applicationName": "invissue",
+            "containerPermissions": [
+              {
+                "id": 29,
+                "schema": "newInvIssueDetail",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [
+                  {
+                    "id": 259,
+                    "permission": "readonly",
+                    "fieldKey": "enterby"
+                  },
+                  {
+                    "id": 260,
+                    "permission": "readonly",
+                    "fieldKey": "binbalances_.lotnum"
+                  },
+                  {
+                    "id": 261,
+                    "permission": "readonly",
+                    "fieldKey": "inventory_.item_.itemtype"
+                  },
+                  {
+                    "id": 262,
+                    "permission": "readonly",
+                    "fieldKey": "binbalances_.curbal"
+                  },
+                  {
+                    "id": 263,
+                    "permission": "readonly",
+                    "fieldKey": "inventory_.issueunit"
+                  }
+                ]
+              }
+            ],
+            "compositionPermissions": [
+              {
+                "id": 74,
+                "compositionKey": "#batchitem",
+                "schema": "newInvIssueDetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              }
+            ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 20,
+            "applicationName": "asset",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 21,
+            "applicationName": "location",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 22,
+            "applicationName": "quickservicerequest",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          }
+        ]
+      }
+    ],
+    "#availableprofiles": [
+      {
+        "id": 1,
+        "name": "Laborers",
+        "deletable": false,
+        "description": "Laborers",
+        "roles": [
+          {
+            "id": 19,
+            "name": "workorders",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 16,
+            "name": "sr",
+            "deletable": false,
+            "active": true
+          }
+        ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 2,
+        "name": "enduser",
+        "deletable": false,
+        "roles": [ ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 3,
+        "name": "createsr",
+        "deletable": false,
+        "roles": [ ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 4,
+        "name": "TEST",
+        "deletable": false,
+        "description": "TEST",
+        "roles": [ ],
+        "applicationPermissions": [
+          {
+            "id": 23,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 24,
+            "applicationName": "workorder",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": true,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 25,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 26,
+            "applicationName": "workorder",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 28,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 29,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 30,
+            "applicationName": "servicerequest",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 31,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 32,
+            "applicationName": "asset",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 33,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 34,
+            "applicationName": "asset",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 35,
+            "applicationName": "change",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 36,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 37,
+            "applicationName": "asset",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 38,
+            "applicationName": "change",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 39,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 40,
+            "applicationName": "asset",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 41,
+            "applicationName": "change",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 42,
+            "applicationName": "quickservicerequest",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 43,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 44,
+            "applicationName": "asset",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 45,
+            "applicationName": "change",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 46,
+            "applicationName": "quickservicerequest",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "name": "Admin",
+        "deletable": false,
+        "roles": [ ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 7,
+        "name": "sr only",
+        "deletable": false,
+        "roles": [
+          {
+            "id": 16,
+            "name": "sr",
+            "deletable": false,
+            "active": true
+          }
+        ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 10,
+        "name": "inventory",
+        "deletable": false,
+        "roles": [
+          {
+            "id": 18,
+            "name": "inventory",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 25,
+            "name": "inventorytransfer",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 24,
+            "name": "issuesandreturns",
+            "deletable": false,
+            "active": true
+          }
+        ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 11,
+        "name": "Vendor",
+        "deletable": false,
+        "roles": [
+          {
+            "id": 16,
+            "name": "sr",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 19,
+            "name": "workorders",
+            "deletable": false,
+            "active": true
+          }
+        ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 12,
+        "name": "SR Requestor",
+        "deletable": false,
+        "description": "SR Requestor",
+        "roles": [
+          {
+            "id": 22,
+            "name": "ssr",
+            "label": "Create SR",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 16,
+            "name": "sr",
+            "deletable": false,
+            "active": true
+          }
+        ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 13,
+        "name": "administrator",
+        "deletable": false,
+        "description": "administrator",
+        "roles": [
+          {
+            "id": 2,
+            "name": "clientadmin",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 18,
+            "name": "inventory",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 12,
+            "name": "newwo",
+            "label": "New Work Order",
+            "description": "Create New Work Order",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 13,
+            "name": "ROLE_DASH_ADMIN",
+            "label": "Dashboard Admin",
+            "description": "Allows the creation/removal of other shareable dashboards for the entire organization, plus personal ones",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 16,
+            "name": "sr",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 1,
+            "name": "sysadmin",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 19,
+            "name": "workorders",
+            "deletable": false,
+            "active": true
+          },
+          {
+            "id": 14,
+            "name": "ROLE_DASH_MANAGER",
+            "label": "Dashboard Manager",
+            "description": "Allows the creation of personal dashboards, but do not allow the creation/removal of eventual shared ones",
+            "deletable": false,
+            "active": true
+          }
+        ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 15,
+        "name": "CSR",
+        "deletable": false,
+        "description": "Create SR",
+        "roles": [
+          {
+            "id": 22,
+            "name": "ssr",
+            "label": "Create SR",
+            "deletable": false,
+            "active": true
+          }
+        ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 17,
+        "name": "Location",
+        "deletable": false,
+        "roles": [
+          {
+            "id": 23,
+            "name": "location",
+            "deletable": false,
+            "active": true
+          }
+        ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 24,
+        "name": "Test2",
+        "deletable": false,
+        "description": "Testing",
+        "roles": [ ],
+        "applicationPermissions": [
+          {
+            "id": 8,
+            "applicationName": "location",
+            "containerPermissions": [
+              {
+                "id": 13,
+                "schema": "list",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [ ]
+              },
+              {
+                "id": 14,
+                "schema": "locationdetail",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [ ]
+              }
+            ],
+            "compositionPermissions": [
+              {
+                "id": 34,
+                "compositionKey": "asset",
+                "schema": "locationdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 35,
+                "compositionKey": "workorder",
+                "schema": "locationdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 36,
+                "compositionKey": "assettrans",
+                "schema": "locationdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 37,
+                "compositionKey": "locationmeter",
+                "schema": "locationdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 38,
+                "compositionKey": "locationspec",
+                "schema": "locationdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 67,
+                "compositionKey": "parentlocation",
+                "schema": "locationdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": true
+              },
+              {
+                "id": 68,
+                "compositionKey": "childlocation",
+                "schema": "locationdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": true
+              }
+            ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": true,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 9,
+            "applicationName": "servicerequest",
+            "containerPermissions": [
+              {
+                "id": 15,
+                "schema": "list",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [
+                  {
+                    "id": 235,
+                    "permission": "none",
+                    "fieldKey": "owner"
+                  },
+                  {
+                    "id": 236,
+                    "permission": "none",
+                    "fieldKey": "status"
+                  }
+                ]
+              },
+              {
+                "id": 16,
+                "schema": "editdetail",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [ ]
+              },
+              {
+                "id": 21,
+                "schema": "newdetail",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [
+                  {
+                    "id": 130,
+                    "permission": "readonly",
+                    "fieldKey": "owner"
+                  },
+                  {
+                    "id": 131,
+                    "permission": "readonly",
+                    "fieldKey": "ownergroup"
+                  },
+                  {
+                    "id": 132,
+                    "permission": "readonly",
+                    "fieldKey": "reportedby"
+                  },
+                  {
+                    "id": 133,
+                    "permission": "readonly",
+                    "fieldKey": "reportdate"
+                  },
+                  {
+                    "id": 134,
+                    "permission": "readonly",
+                    "fieldKey": "location"
+                  },
+                  {
+                    "id": 135,
+                    "permission": "readonly",
+                    "fieldKey": "assetnum"
+                  },
+                  {
+                    "id": 136,
+                    "permission": "readonly",
+                    "fieldKey": "classstructureid"
+                  },
+                  {
+                    "id": 137,
+                    "permission": "readonly",
+                    "fieldKey": "affectedperson"
+                  },
+                  {
+                    "id": 138,
+                    "permission": "readonly",
+                    "fieldKey": "newattachment"
+                  },
+                  {
+                    "id": 139,
+                    "permission": "readonly",
+                    "fieldKey": "saddresscode"
+                  },
+                  {
+                    "id": 140,
+                    "permission": "readonly",
+                    "fieldKey": "targetstart"
+                  },
+                  {
+                    "id": 141,
+                    "permission": "readonly",
+                    "fieldKey": "targetfinish"
+                  },
+                  {
+                    "id": 142,
+                    "permission": "readonly",
+                    "fieldKey": "schedstart"
+                  },
+                  {
+                    "id": 143,
+                    "permission": "readonly",
+                    "fieldKey": "schedfinish"
+                  },
+                  {
+                    "id": 144,
+                    "permission": "readonly",
+                    "fieldKey": "actualstart"
+                  },
+                  {
+                    "id": 145,
+                    "permission": "readonly",
+                    "fieldKey": "actualfinish"
+                  }
+                ]
+              }
+            ],
+            "compositionPermissions": [
+              {
+                "id": 39,
+                "compositionKey": "worklog",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 40,
+                "compositionKey": "commlog",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 41,
+                "compositionKey": "attachment",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 42,
+                "compositionKey": "relatedrecord",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 47,
+                "compositionKey": "worklog_",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": true
+              },
+              {
+                "id": 48,
+                "compositionKey": "commlog_",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": true
+              },
+              {
+                "id": 49,
+                "compositionKey": "attachment_",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": true
+              },
+              {
+                "id": 50,
+                "compositionKey": "relatedrecord_",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": true
+              }
+            ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 10,
+            "applicationName": "solution",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 11,
+            "applicationName": "asset",
+            "containerPermissions": [
+              {
+                "id": 17,
+                "schema": "assetlist",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [ ]
+              },
+              {
+                "id": 18,
+                "schema": "detail",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [
+                  {
+                    "id": 199,
+                    "permission": "none",
+                    "fieldKey": "parent"
+                  },
+                  {
+                    "id": 201,
+                    "permission": "none",
+                    "fieldKey": "location"
+                  },
+                  {
+                    "id": 202,
+                    "permission": "none",
+                    "fieldKey": "location_.description"
+                  },
+                  {
+                    "id": 203,
+                    "permission": "none",
+                    "fieldKey": "assettype"
+                  },
+                  {
+                    "id": 204,
+                    "permission": "none",
+                    "fieldKey": "itemnum"
+                  },
+                  {
+                    "id": 205,
+                    "permission": "none",
+                    "fieldKey": "item_.description"
+                  },
+                  {
+                    "id": 206,
+                    "permission": "none",
+                    "fieldKey": "priority"
+                  },
+                  {
+                    "id": 207,
+                    "permission": "none",
+                    "fieldKey": "conditioncode"
+                  },
+                  {
+                    "id": 208,
+                    "permission": "none",
+                    "fieldKey": "condition_.description"
+                  },
+                  {
+                    "id": 209,
+                    "permission": "none",
+                    "fieldKey": "failurecode"
+                  },
+                  {
+                    "id": 210,
+                    "permission": "none",
+                    "fieldKey": "serialnum"
+                  },
+                  {
+                    "id": 213,
+                    "permission": "none",
+                    "fieldKey": "usage"
+                  },
+                  {
+                    "id": 214,
+                    "permission": "none",
+                    "fieldKey": "vendor"
+                  },
+                  {
+                    "id": 215,
+                    "permission": "none",
+                    "fieldKey": "vendor_.name"
+                  },
+                  {
+                    "id": 216,
+                    "permission": "none",
+                    "fieldKey": "manufacturer"
+                  },
+                  {
+                    "id": 217,
+                    "permission": "none",
+                    "fieldKey": "monufacturer"
+                  },
+                  {
+                    "id": 218,
+                    "permission": "none",
+                    "fieldKey": "installdate"
+                  },
+                  {
+                    "id": 219,
+                    "permission": "none",
+                    "fieldKey": "purchaseprice"
+                  },
+                  {
+                    "id": 220,
+                    "permission": "none",
+                    "fieldKey": "replacecost"
+                  },
+                  {
+                    "id": 221,
+                    "permission": "none",
+                    "fieldKey": "assettrans_.ponum"
+                  },
+                  {
+                    "id": 222,
+                    "permission": "none",
+                    "fieldKey": "totalcost"
+                  },
+                  {
+                    "id": 223,
+                    "permission": "none",
+                    "fieldKey": "ytdcost"
+                  },
+                  {
+                    "id": 224,
+                    "permission": "none",
+                    "fieldKey": "budgetcost"
+                  },
+                  {
+                    "id": 225,
+                    "permission": "none",
+                    "fieldKey": "invcost"
+                  },
+                  {
+                    "id": 226,
+                    "permission": "none",
+                    "fieldKey": "isrunning"
+                  },
+                  {
+                    "id": 227,
+                    "permission": "none",
+                    "fieldKey": "assetstatus_.changedate"
+                  },
+                  {
+                    "id": 228,
+                    "permission": "none",
+                    "fieldKey": "totdowntime"
+                  },
+                  {
+                    "id": 229,
+                    "permission": "none",
+                    "fieldKey": "changeby"
+                  },
+                  {
+                    "id": 230,
+                    "permission": "none",
+                    "fieldKey": "changedate"
+                  }
+                ]
+              },
+              {
+                "id": 25,
+                "schema": "list",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [ ]
+              },
+              {
+                "id": 26,
+                "schema": "detail",
+                "containerKey": "spareparts",
+                "allowView": true,
+                "fieldPermissions": [ ]
+              },
+              {
+                "id": 27,
+                "schema": "detail",
+                "containerKey": "meters",
+                "allowView": true,
+                "fieldPermissions": [ ]
+              }
+            ],
+            "compositionPermissions": [
+              {
+                "id": 43,
+                "compositionKey": "assetspec",
+                "schema": "detail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": true,
+                "hasNoPermission": false
+              },
+              {
+                "id": 44,
+                "compositionKey": "assetlocrelation",
+                "schema": "detail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": true,
+                "hasNoPermission": false
+              },
+              {
+                "id": 45,
+                "compositionKey": "workorder",
+                "schema": "detail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": true,
+                "hasNoPermission": false
+              },
+              {
+                "id": 46,
+                "compositionKey": "assetmeter",
+                "schema": "detail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 62,
+                "compositionKey": "assetmeter_",
+                "schema": "detail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": true
+              },
+              {
+                "id": 63,
+                "compositionKey": "subassembly_",
+                "schema": "detail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": true
+              },
+              {
+                "id": 64,
+                "compositionKey": "sparepart_",
+                "schema": "detail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": true
+              },
+              {
+                "id": 65,
+                "compositionKey": "subassembly",
+                "schema": "detail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 66,
+                "compositionKey": "sparepart",
+                "schema": "detail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": true
+              }
+            ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 12,
+            "applicationName": "workorder",
+            "containerPermissions": [
+              {
+                "id": 22,
+                "schema": "list",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [
+                  {
+                    "id": 146,
+                    "permission": "none",
+                    "fieldKey": "location"
+                  },
+                  {
+                    "id": 147,
+                    "permission": "none",
+                    "fieldKey": "asset_.description"
+                  },
+                  {
+                    "id": 148,
+                    "permission": "none",
+                    "fieldKey": "status"
+                  },
+                  {
+                    "id": 149,
+                    "permission": "none",
+                    "fieldKey": "attachments"
+                  }
+                ]
+              },
+              {
+                "id": 23,
+                "schema": "editdetail",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [ ]
+              },
+              {
+                "id": 24,
+                "schema": "newdetail",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [ ]
+              }
+            ],
+            "compositionPermissions": [
+              {
+                "id": 51,
+                "compositionKey": "worklog",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 52,
+                "compositionKey": "woactivity",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 53,
+                "compositionKey": "matusetrans",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 54,
+                "compositionKey": "labtrans",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 55,
+                "compositionKey": "tooltrans",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 56,
+                "compositionKey": "commlog",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 57,
+                "compositionKey": "attachment",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 58,
+                "compositionKey": "relatedrecord",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 59,
+                "compositionKey": "multiassetlocci_",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": true
+              },
+              {
+                "id": 60,
+                "compositionKey": "assetmeter",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              },
+              {
+                "id": 61,
+                "compositionKey": "locationmeter",
+                "schema": "editdetail",
+                "fieldPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": false,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermission": false
+              }
+            ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 13,
+            "applicationName": "invbalances",
+            "containerPermissions": [
+              {
+                "id": 19,
+                "schema": "invbalancesList",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [ ]
+              },
+              {
+                "id": 20,
+                "schema": "invbalancesdetail",
+                "containerKey": "main",
+                "allowView": true,
+                "fieldPermissions": [
+                  {
+                    "id": 105,
+                    "permission": "readonly",
+                    "fieldKey": "itemnum"
+                  },
+                  {
+                    "id": 106,
+                    "permission": "readonly",
+                    "fieldKey": "lotnum"
+                  },
+                  {
+                    "id": 107,
+                    "permission": "readonly",
+                    "fieldKey": "siteid"
+                  },
+                  {
+                    "id": 108,
+                    "permission": "none",
+                    "fieldKey": "location"
+                  },
+                  {
+                    "id": 109,
+                    "permission": "none",
+                    "fieldKey": "binnum"
+                  },
+                  {
+                    "id": 110,
+                    "permission": "none",
+                    "fieldKey": "item_.rotating"
+                  },
+                  {
+                    "id": 111,
+                    "permission": "none",
+                    "fieldKey": "item_.iskit"
+                  },
+                  {
+                    "id": 112,
+                    "permission": "none",
+                    "fieldKey": "item_.issueunit"
+                  },
+                  {
+                    "id": 113,
+                    "permission": "none",
+                    "fieldKey": "curbal"
+                  }
+                ]
+              }
+            ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 27,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          }
+        ]
+      },
+      {
+        "id": 26,
+        "name": "approver",
+        "deletable": false,
+        "description": "approver",
+        "roles": [
+          {
+            "id": 2,
+            "name": "clientadmin",
+            "deletable": false,
+            "active": true
+          }
+        ],
+        "applicationPermissions": [ ]
+      },
+      {
+        "id": 29,
+        "name": "test3",
+        "deletable": true,
+        "description": "test",
+        "roles": [ ],
+        "applicationPermissions": [
+          {
+            "id": 47,
+            "applicationName": "_UserProfile",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 48,
+            "applicationName": "workorder",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 49,
+            "applicationName": "servicerequest",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 50,
+            "applicationName": "reservedMaterials",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 51,
+            "applicationName": "labtrans",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 52,
+            "applicationName": "asset",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 53,
+            "applicationName": "invbalances",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 54,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 55,
+            "applicationName": "invuse",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          },
+          {
+            "id": 56,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 57,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 58,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          },
+          {
+            "id": 59,
+            "applicationName": "UserProfile_",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": false,
+            "allowUpdate": false,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": true,
+            "allDefault": true
+          }
+        ]
+      },
+      {
+        "id": 30,
+        "name": "QuickSRAccess",
+        "deletable": false,
+        "description": "Profile to allow Quick Service request Access",
+        "roles": [ ],
+        "applicationPermissions": [
+          {
+            "id": 60,
+            "applicationName": "quickservicerequest",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          }
+        ]
+      },
+      {
+        "id": 31,
+        "name": "SRAccess",
+        "deletable": false,
+        "description": "Profile to allow Service request Access",
+        "roles": [ ],
+        "applicationPermissions": [
+          {
+            "id": 61,
+            "applicationName": "servicerequest",
+            "containerPermissions": [ ],
+            "compositionPermissions": [ ],
+            "actionPermissions": [ ],
+            "allowCreation": true,
+            "allowUpdate": true,
+            "allowRemoval": false,
+            "allowView": false,
+            "hasNoPermissions": false,
+            "allDefault": false
+          }
+        ]
+      }
+    ],
+    "ldapEnabled": false,
+    "statistics": {
+      "id": 3,
+      "user": {
+        "id": 1,
+        "userName": "swadmin",
+        "person": { },
+        "isActive": true,
+        "systemuser": true,
+        "maximoPersonId": "swadmin",
+        "password": "16193128416889160822141461911951451401273111117118200",
+        "firstName": "admin2",
+        "lastName": "admin",
+        "siteId": "BEDFORD",
+        "orgId": "EAGLENA",
+        "profiles": [
+          {
+            "id": 16,
+            "name": "dashboard",
+            "deletable": false,
+            "description": "can manage dashboards",
+            "roles": [
+              {
+                "id": 13,
+                "name": "ROLE_DASH_ADMIN",
+                "label": "Dashboard Admin",
+                "description": "Allows the creation/removal of other shareable dashboards for the entire organization, plus personal ones",
+                "deletable": false,
+                "active": true
+              },
+              {
+                "id": 14,
+                "name": "ROLE_DASH_MANAGER",
+                "label": "Dashboard Manager",
+                "description": "Allows the creation of personal dashboards, but do not allow the creation/removal of eventual shared ones",
+                "deletable": false,
+                "active": true
+              }
+            ],
+            "applicationPermissions": [ ]
+          },
+          {
+            "id": 6,
+            "name": "basic",
+            "deletable": false,
+            "description": "basic",
+            "roles": [ ],
+            "applicationPermissions": [
+              {
+                "id": 14,
+                "applicationName": "servicerequest",
+                "containerPermissions": [ ],
+                "compositionPermissions": [
+                  {
+                    "id": 69,
+                    "compositionKey": "worklog",
+                    "schema": "editdetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  },
+                  {
+                    "id": 70,
+                    "compositionKey": "commlog",
+                    "schema": "editdetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  },
+                  {
+                    "id": 71,
+                    "compositionKey": "attachment",
+                    "schema": "editdetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  },
+                  {
+                    "id": 72,
+                    "compositionKey": "relatedrecord",
+                    "schema": "editdetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  }
+                ],
+                "actionPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 15,
+                "applicationName": "workorder",
+                "containerPermissions": [ ],
+                "compositionPermissions": [
+                  {
+                    "id": 73,
+                    "compositionKey": "worklog",
+                    "schema": "editdetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  }
+                ],
+                "actionPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 16,
+                "applicationName": "matrectransTransfers",
+                "containerPermissions": [ ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 17,
+                "applicationName": "invbalances",
+                "containerPermissions": [
+                  {
+                    "id": 28,
+                    "schema": "invbalancesdetail",
+                    "containerKey": "main",
+                    "allowView": true,
+                    "fieldPermissions": [
+                      {
+                        "id": 252,
+                        "permission": "readonly",
+                        "fieldKey": "itemnum"
+                      },
+                      {
+                        "id": 253,
+                        "permission": "readonly",
+                        "fieldKey": "item_.description"
+                      },
+                      {
+                        "id": 254,
+                        "permission": "readonly",
+                        "fieldKey": "lotnum"
+                      },
+                      {
+                        "id": 255,
+                        "permission": "readonly",
+                        "fieldKey": "siteid"
+                      },
+                      {
+                        "id": 256,
+                        "permission": "readonly",
+                        "fieldKey": "location"
+                      },
+                      {
+                        "id": 257,
+                        "permission": "readonly",
+                        "fieldKey": "binnum"
+                      },
+                      {
+                        "id": 258,
+                        "permission": "readonly",
+                        "fieldKey": "item_.issueunit"
+                      }
+                    ]
+                  }
+                ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 18,
+                "applicationName": "invuse",
+                "containerPermissions": [ ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 19,
+                "applicationName": "invissue",
+                "containerPermissions": [
+                  {
+                    "id": 29,
+                    "schema": "newInvIssueDetail",
+                    "containerKey": "main",
+                    "allowView": true,
+                    "fieldPermissions": [
+                      {
+                        "id": 259,
+                        "permission": "readonly",
+                        "fieldKey": "enterby"
+                      },
+                      {
+                        "id": 260,
+                        "permission": "readonly",
+                        "fieldKey": "binbalances_.lotnum"
+                      },
+                      {
+                        "id": 261,
+                        "permission": "readonly",
+                        "fieldKey": "inventory_.item_.itemtype"
+                      },
+                      {
+                        "id": 262,
+                        "permission": "readonly",
+                        "fieldKey": "binbalances_.curbal"
+                      },
+                      {
+                        "id": 263,
+                        "permission": "readonly",
+                        "fieldKey": "inventory_.issueunit"
+                      }
+                    ]
+                  }
+                ],
+                "compositionPermissions": [
+                  {
+                    "id": 74,
+                    "compositionKey": "#batchitem",
+                    "schema": "newInvIssueDetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  }
+                ],
+                "actionPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 20,
+                "applicationName": "asset",
+                "containerPermissions": [ ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 21,
+                "applicationName": "location",
+                "containerPermissions": [ ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 22,
+                "applicationName": "quickservicerequest",
+                "containerPermissions": [ ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              }
+            ]
+          }
+        ],
+        "customRoles": [
+          {
+            "id": 11,
+            "userId": 1,
+            "role": {
+              "id": 1,
+              "name": "sysadmin",
+              "deletable": false,
+              "active": true
+            },
+            "exclusion": false
+          },
+          {
+            "id": 12,
+            "userId": 1,
+            "role": {
+              "id": 2,
+              "name": "clientadmin",
+              "deletable": false,
+              "active": true
+            },
+            "exclusion": false
+          }
+        ],
+        "customConstraints": [ ],
+        "userPreferences": {
+          "id": 4,
+          "userId": 1,
+          "signature": "<p>Ashwini Habbu</p><p>Control Technology Solutions</p><p>QA Lead</p><p>O: +1.480.941.6460</p><p>M: +1.602.420.3972</p><p>controltechnologysolutions.com</p><p><br/></p>",
+          "genericProperties": [ ]
+        },
+        "fullName": "admin2 admin"
+      },
+      "lastLoginDate": "2016-08-30T19:50:23-03:00",
+      "loginCount": 9664
+    },
+    "activationlink": {
+      "id": 2,
+      "token": "96871440640370.598384444452001661921772011758570137246929321919472",
+      "user": {
+        "id": 1,
+        "userName": "swadmin",
+        "person": { },
+        "isActive": true,
+        "systemuser": true,
+        "maximoPersonId": "swadmin",
+        "password": "16193128416889160822141461911951451401273111117118200",
+        "firstName": "admin2",
+        "lastName": "admin",
+        "siteId": "BEDFORD",
+        "orgId": "EAGLENA",
+        "profiles": [
+          {
+            "id": 16,
+            "name": "dashboard",
+            "deletable": false,
+            "description": "can manage dashboards",
+            "roles": [
+              {
+                "id": 13,
+                "name": "ROLE_DASH_ADMIN",
+                "label": "Dashboard Admin",
+                "description": "Allows the creation/removal of other shareable dashboards for the entire organization, plus personal ones",
+                "deletable": false,
+                "active": true
+              },
+              {
+                "id": 14,
+                "name": "ROLE_DASH_MANAGER",
+                "label": "Dashboard Manager",
+                "description": "Allows the creation of personal dashboards, but do not allow the creation/removal of eventual shared ones",
+                "deletable": false,
+                "active": true
+              }
+            ],
+            "applicationPermissions": [ ]
+          },
+          {
+            "id": 6,
+            "name": "basic",
+            "deletable": false,
+            "description": "basic",
+            "roles": [ ],
+            "applicationPermissions": [
+              {
+                "id": 14,
+                "applicationName": "servicerequest",
+                "containerPermissions": [ ],
+                "compositionPermissions": [
+                  {
+                    "id": 69,
+                    "compositionKey": "worklog",
+                    "schema": "editdetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  },
+                  {
+                    "id": 70,
+                    "compositionKey": "commlog",
+                    "schema": "editdetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  },
+                  {
+                    "id": 71,
+                    "compositionKey": "attachment",
+                    "schema": "editdetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  },
+                  {
+                    "id": 72,
+                    "compositionKey": "relatedrecord",
+                    "schema": "editdetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  }
+                ],
+                "actionPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 15,
+                "applicationName": "workorder",
+                "containerPermissions": [ ],
+                "compositionPermissions": [
+                  {
+                    "id": 73,
+                    "compositionKey": "worklog",
+                    "schema": "editdetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  }
+                ],
+                "actionPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 16,
+                "applicationName": "matrectransTransfers",
+                "containerPermissions": [ ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 17,
+                "applicationName": "invbalances",
+                "containerPermissions": [
+                  {
+                    "id": 28,
+                    "schema": "invbalancesdetail",
+                    "containerKey": "main",
+                    "allowView": true,
+                    "fieldPermissions": [
+                      {
+                        "id": 252,
+                        "permission": "readonly",
+                        "fieldKey": "itemnum"
+                      },
+                      {
+                        "id": 253,
+                        "permission": "readonly",
+                        "fieldKey": "item_.description"
+                      },
+                      {
+                        "id": 254,
+                        "permission": "readonly",
+                        "fieldKey": "lotnum"
+                      },
+                      {
+                        "id": 255,
+                        "permission": "readonly",
+                        "fieldKey": "siteid"
+                      },
+                      {
+                        "id": 256,
+                        "permission": "readonly",
+                        "fieldKey": "location"
+                      },
+                      {
+                        "id": 257,
+                        "permission": "readonly",
+                        "fieldKey": "binnum"
+                      },
+                      {
+                        "id": 258,
+                        "permission": "readonly",
+                        "fieldKey": "item_.issueunit"
+                      }
+                    ]
+                  }
+                ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 18,
+                "applicationName": "invuse",
+                "containerPermissions": [ ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 19,
+                "applicationName": "invissue",
+                "containerPermissions": [
+                  {
+                    "id": 29,
+                    "schema": "newInvIssueDetail",
+                    "containerKey": "main",
+                    "allowView": true,
+                    "fieldPermissions": [
+                      {
+                        "id": 259,
+                        "permission": "readonly",
+                        "fieldKey": "enterby"
+                      },
+                      {
+                        "id": 260,
+                        "permission": "readonly",
+                        "fieldKey": "binbalances_.lotnum"
+                      },
+                      {
+                        "id": 261,
+                        "permission": "readonly",
+                        "fieldKey": "inventory_.item_.itemtype"
+                      },
+                      {
+                        "id": 262,
+                        "permission": "readonly",
+                        "fieldKey": "binbalances_.curbal"
+                      },
+                      {
+                        "id": 263,
+                        "permission": "readonly",
+                        "fieldKey": "inventory_.issueunit"
+                      }
+                    ]
+                  }
+                ],
+                "compositionPermissions": [
+                  {
+                    "id": 74,
+                    "compositionKey": "#batchitem",
+                    "schema": "newInvIssueDetail",
+                    "fieldPermissions": [ ],
+                    "allowCreation": true,
+                    "allowUpdate": true,
+                    "allowRemoval": false,
+                    "allowView": false,
+                    "hasNoPermission": false
+                  }
+                ],
+                "actionPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 20,
+                "applicationName": "asset",
+                "containerPermissions": [ ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 21,
+                "applicationName": "location",
+                "containerPermissions": [ ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": false,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              },
+              {
+                "id": 22,
+                "applicationName": "quickservicerequest",
+                "containerPermissions": [ ],
+                "compositionPermissions": [ ],
+                "actionPermissions": [ ],
+                "allowCreation": true,
+                "allowUpdate": true,
+                "allowRemoval": false,
+                "allowView": false,
+                "hasNoPermissions": false,
+                "allDefault": false
+              }
+            ]
+          }
+        ],
+        "customRoles": [
+          {
+            "id": 11,
+            "userId": 1,
+            "role": {
+              "id": 1,
+              "name": "sysadmin",
+              "deletable": false,
+              "active": true
+            },
+            "exclusion": false
+          },
+          {
+            "id": 12,
+            "userId": 1,
+            "role": {
+              "id": 2,
+              "name": "clientadmin",
+              "deletable": false,
+              "active": true
+            },
+            "exclusion": false
+          }
+        ],
+        "customConstraints": [ ],
+        "userPreferences": {
+          "id": 4,
+          "userId": 1,
+          "signature": "<p>Ashwini Habbu</p><p>Control Technology Solutions</p><p>QA Lead</p><p>O: +1.480.941.6460</p><p>M: +1.602.420.3972</p><p>controltechnologysolutions.com</p><p><br/></p>",
+          "genericProperties": [ ]
+        },
+        "fullName": "admin2 admin"
+      },
+      "sentDate": "2015-08-26T22:52:50-03:00",
+      "expirationDate": "2015-09-06T03:59:59-03:00"
+    },
+    "#userid": 1,
+    "#maxactive": true,
+    "email_": [
+      {
+        "personid": "SWADMIN",
+        "emailid": 149031,
+        "loweremail": "nitin@manju.com",
+        "emailaddress": "nitin@manju.com",
+        "type": "WORK",
+        "isprimary": 0
+      },
+      {
+        "personid": "SWADMIN",
+        "emailid": 149028,
+        "loweremail": "luizhenrique.rolim+1@gmail.com",
+        "emailaddress": "luizhenrique.rolim+1@gmail.com",
+        "type": "WORK",
+        "isprimary": 1
+      }
+    ],
+    "phone_": [
+      {
+        "personid": "SWADMIN",
+        "phoneid": 148232,
+        "phonenum": "9898989898",
+        "type": "WORK",
+        "isprimary": 1
+      },
+      {
+        "personid": "SWADMIN",
+        "phoneid": 148230,
+        "phonenum": "87897987897987",
+        "type": "WORK",
+        "isprimary": 0
+      },
+      {
+        "personid": "SWADMIN",
+        "phoneid": 148072,
+        "phonenum": "1212121212",
+        "type": "HOME",
+        "isprimary": 0
+      }
+    ]
+  }

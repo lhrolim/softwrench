@@ -73,7 +73,8 @@ namespace softWrench.sW4.Web {
                     "~/Content/vendor/scripts/jquery/jquery-ui.js",
                     "~/Content/vendor/scripts//jquery-file-style.js",
                     "~/Content/vendor/scripts/jquery/jquery-file-download.js",
-                    "~/Content/vendor/scripts/jquery/jquery-file-upload.js"
+                    "~/Content/vendor/scripts/jquery/jquery-file-upload.js",
+                    "~/Content/vendor/scripts/jquery/jquery-colorbox.js"
                 )
                 // bootstrap
                 .Include(

@@ -560,6 +560,7 @@
     <Content Include="Content\customVendor\css\bootstrap-combobox.css" />
     <Content Include="Content\customVendor\css\bootstrap-multiselect.css" />
     <Content Include="Content\customVendor\css\bootstrap-select.css" />
+    <Content Include="Content\customVendor\css\colorbox.css" />
     <Content Include="Content\customVendor\css\prism.css" />
     <Content Include="Content\customVendor\css\typeahead.js-bootstrap.css" />
     <Content Include="Content\Controller\About.html" />
@@ -625,6 +626,7 @@
     <Content Include="Content\Scripts\client\directives\fileUpload.js" />
     <Content Include="Content\Scripts\client\directives\gmaps.js" />
     <Content Include="Content\Scripts\client\directives\multiselectDropdown.js" />
+    <Content Include="Content\Scripts\client\directives\colorbox.js" />
     <Content Include="Content\Scripts\client\directives\richtextfield.js" />
     <Content Include="Content\Scripts\client\directives\swChart.js" />
     <Content Include="Content\Scripts\client\crud\search\crudSearchService.js" />
@@ -763,6 +765,8 @@
     <Content Include="App_Data\DeploymentValidation\Data\person.json" />
     <Content Include="App_Data\DeploymentValidation\Data\solution.json" />
     <Content Include="App_Data\DeploymentValidation\Data\projectrequest.json" />
+    <Content Include="App_Data\Client\%40internal\fallback\statuscolorsfallback.json" />
+    <Content Include="App_Data\Client\%40internal\fallback\statuscolorvalues.json" />
     <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
     <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce-small.woff" />

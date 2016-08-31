@@ -53,9 +53,15 @@ namespace softWrench.sW4.Web.Email {
                    }));
 
             var attachemnts = new List<EmailAttachment>();
-            attachemnts.Add(this.ConvertToMetadataAttachment(email.OldFileContent, string.Format("old_{0}", email.MetadataName)));
-            attachemnts.Add(this.ConvertToMetadataAttachment(email.NewFileContent, string.Format("new_{0}", email.MetadataName)));
 
+            if (!string.IsNullOrWhiteSpace(email.OldFileContent)) {
+                attachemnts.Add(this.ConvertToMetadataAttachment(email.OldFileContent, string.Format("old_{0}", email.MetadataName)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(email.NewFileContent)) {
+                attachemnts.Add(this.ConvertToMetadataAttachment(email.NewFileContent, string.Format("new_{0}", email.MetadataName)));
+            }
+            
             var emailData = new EmailData(string.IsNullOrWhiteSpace(email.SentBy) ? NoReplySendFrom : email.SentBy, email.SendTo, email.Subject, msg, attachemnts);
             emailService.SendEmail(emailData);
         }
