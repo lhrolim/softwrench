@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module("sw_layout").directive("richtextField", ["contextService", "$timeout", function (contextService, $timeout) {
+    angular.module("sw_layout").directive("richtextField", ["contextService", "$timeout", "$compile", function (contextService, $timeout, $compile) {
         const directive = {
             restrict: "E",
             templateUrl: contextService.getResourceUrl("/Content/Templates/directives/richtextfield.html"),
@@ -11,11 +11,10 @@
                 readonly: "="
             },
 
-            controller: ["$scope", "richTextService", function ($scope, richTextService) {
+            controller: ["$scope", "richTextService", "crudContextHolderService", function ($scope, richTextService, crudContextHolderService) {
                 $scope.content = richTextService.getDecodedValue($scope.content);
 
                 $scope.richtext = {
-                    configured: false,
                     config: {
                         plugins: [
                             // from tinymce's basic + paste + codesample
@@ -26,10 +25,6 @@
                             "codesample paste"
                         ],
 
-                        menubar: $scope.readonly ? false : "edit insert table",
-                        toolbar: $scope.readonly ? false : "styleselect blockquote | bold italic underline bullist numlist undo redo | alignleft aligncenter alignright alignjustify | link image codesample",
-                        statusbar: false,
-
                         skin_url: "Content/customVendor/css/tinymce/skins/lightgray",
                         height: 250,
 
@@ -37,8 +32,15 @@
                         paste_retain_style_properties: "color font-size",
                         paste_word_valid_elements: "b,strong,i,em,h1,h2",
 
+                        codesample_dialog_height: window.innerHeight - 100,
+                        codesample_dialog_width: window.innerWidth - 100,
+
                         readonly: $scope.readonly,
                         debounce: true,
+
+                        menubar: $scope.readonly ? false : "edit insert table",
+                        toolbar: $scope.readonly ? false : "styleselect blockquote | bold italic underline bullist numlist undo redo | alignleft aligncenter alignright alignjustify | link image codesample",
+                        statusbar: false,
 
                         // hide/show toolbar+menubar on blur/focus
                         setup: function(editor) {
@@ -62,16 +64,29 @@
                         }
                     }
                 };
-            }],
-
-            link: function (scope, element, attrs) {
-                console.log("linked!");
-                $timeout(() => scope.richtext.configured = true, 500, false)
-                    .then(() => $timeout(() => scope.$broadcast("$tinymce:refresh"), 0, false));
-            }
+                // handling delayed input rendering (e.g. modals)
+                if (!$scope.readonly) {
+                    let rendered = false;
+                    $scope.$watch(() => crudContextHolderService.getDetailDataResolved(),
+                        debounce((newValue, oldValue) => {
+                            if (newValue && newValue !== oldValue && !rendered) {
+                                $timeout(() => $scope.$broadcast("$tinymce:refresh"), 0, false);
+                                rendered = true;
+                            }
+                        }));
+                }
+                
+            }]
         };
 
         return directive;
     }]);
+
+    // so user can focus on tinymce dialogs (e.g. codesample, link, image) when the richtext is already inside a modal
+    $(document).on("focusin", function (e) {
+        if ($(e.target).closest(".mce-window").length) {
+            e.stopImmediatePropagation();
+        }
+    });
 
 })(angular);
