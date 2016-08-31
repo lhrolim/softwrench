@@ -90,12 +90,22 @@ namespace softWrench.sW4.Web.Controllers {
                 return null;
             }
 
-            model = new HomeModel(url, title, FetchConfigs(), menuModel, user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), _classificationColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
+            model = new HomeModel(
+                url, 
+                title, 
+                FetchConfigs(), 
+                menuModel,
+                user, 
+                HasPopupLogo(),
+                _i18NResolver.FetchCatalogs(),
+                _statusColorResolver.FetchCatalogs(), 
+                _statusColorResolver.FetchFallbackCatalogs(), 
+                _classificationColorResolver.FetchCatalogs(),
+                ApplicationConfiguration.ClientName);
+
             return View(model);
         }
-
-
-
+        
         private HomeConfigs FetchConfigs() {
             var logoIcon = _facade.Lookup<string>(ConfigurationConstants.MainIconKey);
             var myProfileEnabled = _facade.Lookup<Boolean>(ConfigurationConstants.MyProfileEnabled);
@@ -164,7 +174,16 @@ namespace softWrench.sW4.Web.Controllers {
             var windowTitle = GetWindowTitle(redirectURL);
             var hasPopupLogo = HasPopupLogo(application, popupmode);
             var menuModel = _menuHelper.BuildMenu(ClientPlatform.Web);
-            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), menuModel, user, hasPopupLogo, _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), _classificationColorResolver.FetchCatalogs(),
+            return View("Index", new HomeModel(redirectURL, 
+                null, 
+                FetchConfigs(), 
+                menuModel, 
+                user, 
+                hasPopupLogo, 
+                _i18NResolver.FetchCatalogs(), 
+                _statusColorResolver.FetchCatalogs(), 
+                _statusColorResolver.FetchFallbackCatalogs(), 
+                _classificationColorResolver.FetchCatalogs(),
                 ApplicationConfiguration.ClientName, windowTitle, message));
         }
 

@@ -15,10 +15,13 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
     $scope.selectedTemplate = '';
 
     $scope.loadTemplate = function () {
-        $http.get(url("/api/generic/EntityMetadata/GetMetadataContent?templatePath=" + $scope.selectedTemplate.path))
+        $http.get(url("/api/generic/EntityMetadata/GetFileContent?path=" + $scope.selectedTemplate.path))
             .success(function (data) {
                 $scope.resultData = data.resultObject;
-                init();
+                var editor = ace.edit("editor");
+                editor.getSession().setMode("ace/mode/xml");
+                editor.setValue($scope.resultData.content);
+                editor.gotoLine(0);
             })
             .error(function (data) {
                 alertService.alert("Failure!");
@@ -26,7 +29,7 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
     };
 
     $scope.getTemplates = function () {
-        $http.get(url("/api/generic/EntityMetadata/GetTemplateFiles"))
+        $http.get(url("/api/generic/EntityMetadata/GetTemplateFiles?type=" + $scope.type))
             .success(function (data) {
                 $scope.templates = data;
                 if ($scope.templates.length > 0) {
@@ -37,7 +40,7 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
                 alertService.alert("Failure!");
             });
     };
-
+    
     $scope.save = function () {
         alertService.confirm("You will be logged out in order to implement this change.Do you want to continue? ").then(function () {
             $http({
@@ -190,7 +193,13 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
         editor.setValue(data.content);
         editor.gotoLine(0);
 
-        if (EditMetaData.equalIc($scope.type)) {
+        var userRoles = contextService.getUserData().roles;
+
+        var dynAdminRole = userRoles.find(function isPrime(element, index, array) {
+            return element.id === 99999;
+        });
+
+        if (EditMetaData.equalIc($scope.type) || (EditStatucColor.equalIc($scope.type) && dynAdminRole)) {
             //Fetch the templates
             $scope.getTemplates();
         }
