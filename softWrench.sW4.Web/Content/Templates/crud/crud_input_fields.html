@@ -108,10 +108,13 @@
                     </div>
 
                     <div ng-switch-when="richtext">
-                        <div class="richtext image-holder"
-                             text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]"
-                             ng-init="initRichtextField(fieldMetadata)" ta-disabled="true">
-                        </div>
+                        <!--<div class="richtext image-holder"
+                                 text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]"
+                                 ng-init="initRichtextField(fieldMetadata)" ta-disabled="true">
+                        </div>-->
+                        <richtext-field data-content="datamap[fieldMetadata.attribute]"
+                                        data-readonly="true">
+                        </richtext-field>
                     </div>
 
                     <input type="text"
@@ -325,11 +328,10 @@
                                  ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isModifiableEnabled(fieldMetadata)">
                         </div>-->
 
-                        <textarea class="richtext image-holder"
-                                  ui-tinymce="tinymce.config"
-                                  ng-model="datamap[fieldMetadata.attribute]" 
-                                  ng-init="initRichtextField(fieldMetadata)">
-                        </textarea>
+                        <richtext-field data-content="datamap[fieldMetadata.attribute]" 
+                                        data-readonly="!isModifiableEnabled(fieldMetadata)">
+                        </richtext-field>
+
 
                     </div>
                     <div ng-switch-when="upload">

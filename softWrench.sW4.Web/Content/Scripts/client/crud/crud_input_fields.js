@@ -605,26 +605,6 @@
                         return validationFunction;
                     };
 
-                    $scope.tinymce = {
-                        config: {
-                            plugins: [
-                                "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-                                "searchreplace wordcount visualblocks visualchars code fullscreen",
-                                "insertdatetime nonbreaking save table contextmenu directionality",
-                                "emoticons template paste textcolor colorpicker textpattern imagetools",
-                                "codesample paste"
-                            ],
-                            paste_data_images: true,
-                            paste_retain_style_properties: "color font-size",
-                            paste_word_valid_elements: "b,strong,i,em,h1,h2",
-                            menubar: "edit insert table",
-                            toolbar: "styleselect blockquote | bold italic underline bullist numlist undo redo | alignleft aligncenter alignright alignjustify | link image codesample",
-                            statusbar: false,
-                            skin_url: "Content/customVendor/css/tinymce/skins/lightgray",
-                            height: 300
-                        }
-                    };
-
                     function init() {
                         if (!$scope.isVerticalOrientation()) {
                             var countVisibleDisplayables = fieldService.countVisibleDisplayables($scope.datamap, $scope.schema, $scope.displayables);
