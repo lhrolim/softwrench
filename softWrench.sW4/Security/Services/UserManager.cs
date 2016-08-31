@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities.SyncManagers;
@@ -18,6 +19,7 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Services {
     public class UserManager : ISingletonComponent {
+
         private const string HlagPrefix = "@HLAG.COM";
 
 
@@ -31,44 +33,35 @@ namespace softWrench.sW4.Security.Services {
 
         private static LdapManager _ldapManager;
 
-        public UserManager(UserLinkManager userLinkManager, MaximoHibernateDAO maxDAO, UserSetupEmailService userSetupEmailService, LdapManager ldapManager, UserSyncManager userSyncManager) {
+        private readonly IEventDispatcher _dispatcher;
+
+        private readonly ISWDBHibernateDAO _dao;
+
+        
+        public UserManager(UserLinkManager userLinkManager, MaximoHibernateDAO maxDAO, UserSetupEmailService userSetupEmailService, LdapManager ldapManager, UserSyncManager userSyncManager, IEventDispatcher dispatcher, ISWDBHibernateDAO swdbDAO) {
             UserLinkManager = userLinkManager;
             MaxDAO = maxDAO;
             UserSetupEmailService = userSetupEmailService;
             _ldapManager = ldapManager;
             UserSyncManager = userSyncManager;
+            _dispatcher = dispatcher;
+            _dao = swdbDAO;
         }
 
+      
 
-        private static IEventDispatcher _dispatcher;
+    
 
-
-        public static IEventDispatcher Dispatcher {
-            get {
-                if (_dispatcher == null) {
-                    _dispatcher = SimpleInjectorGenericFactory.Instance.GetObject<IEventDispatcher>(typeof(IEventDispatcher));
-                }
-                return _dispatcher;
-
-            }
-        }
-
-        public static SWDBHibernateDAO DAO {
-            get {
-                return SWDBHibernateDAO.GetInstance();
-            }
-        }
-
-        public static User SaveUser(User user, bool updateMaximo = false) {
+        public virtual User SaveUser(User user, bool updateMaximo = false) {
             if (user.Id == null && user.MaximoPersonId == null) {
                 user.MaximoPersonId = user.UserName;
             }
             if (updateMaximo) {
                 user.Person.Save();
             }
-            var savedUser = DAO.Save(user);
+            var savedUser = _dao.Save(user);
             // ReSharper disable once PossibleInvalidOperationException --> just saved
-            Dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName));
+            _dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName));
             return savedUser;
         }
 
@@ -76,11 +69,11 @@ namespace softWrench.sW4.Security.Services {
             user.Password = AuthUtils.GetSha1HashData(password);
             user.IsActive = true;
             user.ChangePassword = false;
-            var savedUser = DAO.Save(user);
+            var savedUser = _dao.Save(user);
             //TODO: wipeout link
             UserLinkManager.DeleteLink(savedUser);
             // ReSharper disable once PossibleInvalidOperationException
-            Dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName));
+            _dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName));
         }
 
 
@@ -137,15 +130,15 @@ namespace softWrench.sW4.Security.Services {
             user.CustomRoles = new HashedSet<UserCustomRole>();
             if (save) {
                 try {
-                    return DAO.Save(user);
+                    return _dao.Save(user);
                 } catch (Exception e) {
                     if (_ldapManager.IsLdapSetup()) {
                         //recovering from scenarios where there might have been an already created user on softwrench with a personid equal to an existing user in maximo
-                        var legacyUser = DAO.FindSingleByQuery<User>(User.UserByUserNameOrPerson, user.UserName, user.MaximoPersonId);
+                        var legacyUser = _dao.FindSingleByQuery<User>(User.UserByUserNameOrPerson, user.UserName, user.MaximoPersonId);
                         if (legacyUser != null) {
                             legacyUser.UserName = user.UserName;
                             legacyUser.MaximoPersonId = user.MaximoPersonId;
-                            return DAO.Save(legacyUser);
+                            return _dao.Save(legacyUser);
                         }
                     }
                     throw;
@@ -169,7 +162,7 @@ namespace softWrench.sW4.Security.Services {
                 //let's play safe and clean passwords of users that might have been wrongly stored on swdb database, if we are on ldap auth
                 existingUser.Password = null;
             }
-            return DAO.Save(existingUser);
+            return _dao.Save(existingUser);
         }
 
         private static bool IsHapagProd {
@@ -192,7 +185,7 @@ namespace softWrench.sW4.Security.Services {
             User user;
             string emailToSend = null;
             if (!isEmail) {
-                user = DAO.FindSingleByQuery<User>(User.UserByUserName, userNameOrEmail);
+                user = _dao.FindSingleByQuery<User>(User.UserByUserName, userNameOrEmail);
                 if (user == null) {
                     return "User {0} not found".Fmt(userNameOrEmail);
                 }
@@ -207,7 +200,7 @@ namespace softWrench.sW4.Security.Services {
                 if (personid == null) {
                     return "The email {0} is not registered on the database".Fmt(userNameOrEmail);
                 }
-                user = DAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, personid);
+                user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personid);
                 if (user == null) {
                     return "The email {0} is not registered on the database".Fmt(userNameOrEmail);
                 }
@@ -221,7 +214,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public void SendActivationEmail(int userId, string email) {
-            var user = DAO.FindByPK<User>(typeof(User), userId);
+            var user = _dao.FindByPK<User>(typeof(User), userId);
             if (user == null) {
                 throw new InvalidOperationException("user {0} not found".Fmt(userId));
             }

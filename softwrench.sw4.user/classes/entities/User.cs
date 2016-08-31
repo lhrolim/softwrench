@@ -300,9 +300,12 @@ namespace softwrench.sw4.user.classes.entities {
         }
 
         public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != GetType())
+                return false;
             return Equals((User)obj);
         }
 
@@ -322,15 +325,22 @@ namespace softwrench.sw4.user.classes.entities {
             }
 
             public override bool Equals(object obj) {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != GetType()) return false;
+                if (ReferenceEquals(null, obj))
+                    return false;
+                if (ReferenceEquals(this, obj))
+                    return true;
+                if (obj.GetType() != GetType())
+                    return false;
                 return Equals((UserNameEqualityUser)obj);
             }
 
             public override int GetHashCode() {
                 return (user != null ? user.GetHashCode() : 0);
             }
+        }
+
+        public override string ToString() {
+            return string.Format("UserName: {0}", _userName);
         }
 
         public bool IsPoPulated() {

@@ -20,6 +20,10 @@ namespace softWrench.sW4.Util {
             return ApplicationConfiguration.ClientName;
         }
 
+        public bool IsLocal() {
+            return ApplicationConfiguration.IsLocal();
+        }
+
         public bool IsUnitTest {
             get {
                 return ApplicationConfiguration.IsUnitTest;

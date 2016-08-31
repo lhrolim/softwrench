@@ -10,12 +10,13 @@ using softWrench.sW4.Util;
 using softWrench.sW4.Util.DeployValidation;
 
 namespace softWrench.sW4.Data.Persistence.Engine {
-    public sealed class MaximoConnectorEngine : AConnectorEngine {
+    public class MaximoConnectorEngine : AConnectorEngine {
 
         //        private readonly SyncItemHandler _syncHandler;
 
 
         private static IProblemManager _problemManager;
+
 
         public MaximoConnectorEngine(EntityRepository entityRepository, IProblemManager problemManager)
             : base(entityRepository) {

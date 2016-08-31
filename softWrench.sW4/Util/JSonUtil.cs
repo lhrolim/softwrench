@@ -1,6 +1,7 @@
 ﻿using log4net;
 using Newtonsoft.Json.Linq;
 using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
@@ -28,7 +29,18 @@ namespace softWrench.sW4.Util {
             if (prop == null || prop.Value == null) {
                 return null;
             }
-            return prop.Value.ToString();
+            var val = prop.Value;
+            if (val is JValue) {
+                var jvalValue = ((JValue)val).Value;
+                return jvalValue == null ? null : jvalValue.ToString();
+            }
+            return val.ToString();
+        }
+
+
+
+        public static JObject FromRelativePath(string filePath) {
+            return JObject.Parse(new StreamReader(filePath).ReadToEnd());
         }
 
 

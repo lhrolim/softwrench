@@ -29,6 +29,9 @@
     
     <!--Workflow-->
     <template path="@workflow.xml"/>
+  
+    <!-- Bulletinboard -->
+    <template path="@bulletinboard"/>
   </templates>
   
   <entities>

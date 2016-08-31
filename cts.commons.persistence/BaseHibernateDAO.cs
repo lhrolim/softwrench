@@ -37,7 +37,10 @@ namespace cts.commons.persistence {
         protected BaseHibernateDAO([NotNull]IApplicationConfiguration applicationConfiguration, HibernateUtil hibernateUtil) {
             _applicationConfiguration = applicationConfiguration;
             HibernateUtil = hibernateUtil;
-            _sessionManager = new SessionManagerWrapper(GetConnectionString(), GetDriverName(), GetDialect(), GetListOfAssemblies());
+            if (!applicationConfiguration.IsUnitTest) {
+                _sessionManager = new SessionManagerWrapper(GetConnectionString(), GetDriverName(), GetDialect(), GetListOfAssemblies(), applicationConfiguration);
+            }
+            
         }
 
 

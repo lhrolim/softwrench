@@ -85,6 +85,7 @@
     <Compile Include="Data\Entities\EntityBuilderTest2.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestGric.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestHapag.cs" />
+    <Compile Include="Data\Persistence\DataSet\Commons\BasePersonDataSetTest.cs" />
     <Compile Include="Data\Persistence\Relational\EntityQueryBuilderTest.cs" />
     <Compile Include="Data\Persistence\Relational\DataConstraintWhereBuilderTest.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryFromBuilderTest.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Util\DateUtilTest.cs" />
     <Compile Include="Util\DisplayableUtilTest.cs" />
     <Compile Include="Util\FaqTest.cs" />
+    <Compile Include="Util\TestContextLookuper.cs" />
     <Compile Include="Util\TestUtil.cs" />
     <Compile Include="Util\I18NResolverTest.cs" />
     <Compile Include="Util\HibernateUtilTest.cs" />
@@ -273,6 +275,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="App_data\jsons\workorder\test5.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_data\jsons\person\creation1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_data\jsons\person\update1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />

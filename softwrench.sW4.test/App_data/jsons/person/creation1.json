@@ -1,0 +1,99 @@
+﻿{
+  "personuid": "-1",
+  "#personid": "personid",
+  "personid": null,
+  "#primaryemail": "test@a.com",
+  "passwordmode": "manual",
+  "#password": "test",
+  "#retypepassword": "test",
+  "firstname": "LUIZ HENRIQUE MARTINS",
+  "lastname": "ROLIM",
+  "#primaryphone": "11984580121",
+  "locationorg": "ITDNA",
+  "locationsite": "NASP",
+  "location": null,
+  "department": null,
+  "langcode": "EN",
+  "#isactive": true,
+  "application": "person",
+  "email_": [ ],
+  "phone_": [ ],
+  "#signature": "",
+  "#profiles": [ ],
+  "#availableprofiles": [
+    {
+      "id": 1,
+      "name": "approver",
+      "deletable": false,
+      "description": "Activates newly created users",
+      "roles": [ ],
+      "applicationPermissions": [ ]
+    },
+    {
+      "id": 2,
+      "name": "defaultcomusers",
+      "deletable": false,
+      "description": "Default COM Users",
+      "roles": [ ],
+      "applicationPermissions": [ ]
+    },
+    {
+      "id": 3,
+      "name": "admincomusers",
+      "deletable": false,
+      "description": "Admin COM Users",
+      "roles": [ ],
+      "applicationPermissions": [ ]
+    },
+    {
+      "id": 4,
+      "name": "QuickSRAccess",
+      "deletable": false,
+      "description": "Profile to allow Quick Service request Access",
+      "roles": [ ],
+      "applicationPermissions": [
+        {
+          "id": 1,
+          "applicationName": "quickservicerequest",
+          "containerPermissions": [ ],
+          "compositionPermissions": [ ],
+          "actionPermissions": [ ],
+          "allowCreation": true,
+          "allowUpdate": true,
+          "allowRemoval": false,
+          "allowView": false,
+          "hasNoPermissions": false,
+          "allDefault": false
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "SRAccess",
+      "deletable": false,
+      "description": "Profile to allow Service request Access",
+      "roles": [ ],
+      "applicationPermissions": [
+        {
+          "id": 2,
+          "applicationName": "servicerequest",
+          "containerPermissions": [ ],
+          "compositionPermissions": [ ],
+          "actionPermissions": [ ],
+          "allowCreation": true,
+          "allowUpdate": true,
+          "allowRemoval": false,
+          "allowView": false,
+          "hasNoPermissions": false,
+          "allDefault": false
+        }
+      ]
+    }
+  ],
+  "ldapEnabled": false,
+  "statistics": null,
+  "activationlink": null,
+  "#userid": null,
+  "#maxactive": false
+
+}

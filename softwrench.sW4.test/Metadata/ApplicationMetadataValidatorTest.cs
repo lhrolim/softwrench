@@ -54,8 +54,6 @@ namespace softwrench.sW4.test.Metadata {
 
                 scanner.InitDIController();
 
-                var injector = new SimpleInjectorGenericFactory(scanner.Container);
-
                 var dataSetProvider = DataSetProvider.GetInstance();
                 dataSetProvider.Clear();
                 dataSetProvider.HandleEvent(new ApplicationStartedEvent());

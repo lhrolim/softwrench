@@ -17,6 +17,8 @@ namespace softWrench.sW4.Web.Models.Home {
 
         public string StatusColorJson { get; set; }
 
+        public string StatusColorFallbackJson { get; set; }
+
         public string ClassificationColorJson { get; set; }
 
         public string Message { get; set; }
@@ -30,7 +32,7 @@ namespace softWrench.sW4.Web.Models.Home {
 
 
         public HomeModel(string url, string title, HomeConfigs configs, MenuModel MenuModel, InMemoryUser user, bool hasLogoPopup,
-            JObject i18NJsons, JObject statusColorJson, JObject classificationColorJson, string clientName, string windowTitle = null, string message = null) {
+            JObject i18NJsons, JObject statusColorJson, JObject statusColorFallbackJson, JObject classificationColorJson, string clientName, string windowTitle = null, string message = null) {
             Url = url;
             InitTimeMillis = configs.InitTimeMillis;
             Title = title;
@@ -59,10 +61,14 @@ namespace softWrench.sW4.Web.Models.Home {
                 StatusColorJson = statusColorJson.ToString(Newtonsoft.Json.Formatting.Indented);
             }
 
-            if (classificationColorJson != null)
-            {
+            if (statusColorFallbackJson != null) {
+                StatusColorFallbackJson = statusColorFallbackJson.ToString(Newtonsoft.Json.Formatting.Indented);
+            }
+            
+            if (classificationColorJson != null) {
                 ClassificationColorJson = classificationColorJson.ToString(Newtonsoft.Json.Formatting.Indented);
             }
+
             WindowTitle = windowTitle;
             Message = message;
         }

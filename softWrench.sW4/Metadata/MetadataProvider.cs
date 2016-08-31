@@ -575,9 +575,9 @@ namespace softWrench.sW4.Metadata {
             }
         }
 
-        public void SaveColor([NotNull] string data, string fileName,  bool internalFramework = false) {
+        public void SaveColor([NotNull] string data, string filePath,  bool internalFramework = false) {
             try {
-                using (var stream = File.Create(MetadataParsingUtils.GetPath(fileName, internalFramework))) {
+                using (var stream = File.Create(filePath)) {
                     using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(data))) {
                         memoryStream.CopyTo(stream);
                     }
