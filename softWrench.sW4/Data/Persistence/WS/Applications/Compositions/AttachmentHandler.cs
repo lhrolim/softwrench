@@ -419,6 +419,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 var attachmentTitle = attachmentsTitle != null ? attachmentsTitle[i] : null;
                 var attachmentDesc = attachmentsDesc != null ? attachmentsDesc[i] : null;
                 var attachmentOfflinehash = attachmnetsOfflinehash != null ? attachmnetsOfflinehash[i] : null;
+                if (attachmentsData.Length <= j + 1) {
+                    throw new Exception("One or more selected files contain no data and connot be added as attachments.");
+                }
                 var dto = new AttachmentDTO() {
                     Data = attachmentsData[j] + ',' + attachmentsData[j + 1],
                     Path = attachmentsPath[i],
