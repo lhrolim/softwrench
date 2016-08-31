@@ -11,7 +11,7 @@
                 readonly: "="
             },
 
-            controller: ["$scope", "$element", "richTextService", "crudContextHolderService", function ($scope, $element, richTextService, crudContextHolderService) {
+            controller: ["$scope", "richTextService", "crudContextHolderService", function ($scope, richTextService, crudContextHolderService) {
                 const log = $log.get("richtextfield#controller", ["richtext"]);
 
                 $scope.content = richTextService.getDisplayableValue($scope.content);
@@ -73,6 +73,7 @@
                 const log = $log.get("richtextfield#link", ["richtext"]);
                 // very very dirty hack to ensure tinymce editor is in the screen
                 // for some dynamically added fields this hack is necessary (e.g. inside modals, composition_masterdetails)
+                var canceled = false;
                 const interval = $interval(() => {
                     log.debug("loop to check tinymce's editor is in the screen");
                     const tinyMceFrame = element[0].querySelector("iframe");
@@ -85,8 +86,16 @@
                         log.debug("refreshing angular-ui-tinymce and cancelling check loop");
                         scope.$broadcast("$tinymce:refresh");
                         $interval.cancel(interval);
+                        canceled = true;
                     }
                 }, 500, null, false);
+
+                scope.$on("$destroy", () => {
+                    if (!canceled) {
+                        $interval.cancel(interval);
+                        canceled = true;
+                    }
+                });
             }
         };
 
