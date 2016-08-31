@@ -76,9 +76,13 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
                 .Returns(() => resultUser);
 
 
+            var resultObj = new TargetResult("150", "SWADMIN", null);
+
             _userSetupService.Setup(x => x.SendActivationEmail(It.Is(userComparison), "test@a.com", "test"));
 
-            _maximoEngine.Setup(e => e.Execute(It.Is<OperationWrapper>(w => w.GetStringAttribute("personid").EqualsIc("personid") && w.OperationName.Equals(OperationConstants.CRUD_CREATE))));
+
+
+            _maximoEngine.Setup(e => e.Execute(It.Is<OperationWrapper>(w => w.GetStringAttribute("personid").EqualsIc("personid") && w.OperationName.Equals(OperationConstants.CRUD_CREATE)))).Returns(() => resultObj);
 
             var result = personDs.Execute(_applicationMetadata, json, "-1", OperationConstants.CRUD_CREATE, false, null);
 
