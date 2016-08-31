@@ -89,17 +89,23 @@
             return executeInvalidTagProcessors(text);
         }
 
-        function getDecodedValue(content) {
-            content = replaceAll(content,"\n", "<br/>");
-            var decodedHtml = content;
-            // Matches any encoded html tag - &lt; &gt;
-            const regexEncode = new RegExp("&(lt|gt);");
-            // Also make sure non of these tags are present to truly confirm this is encoded HTML
-            const regexHtml = new RegExp("(<|>)");
+        function getDisplayableValue(content) {
+            content = replaceAll(content, "\n", "<br/>");
+            //var decodedHtml = content;
+            //// Matches any encoded html tag - &lt; &gt;
+            //const regexEncode = new RegExp("&(lt|gt);");
+            //// Also make sure non of these tags are present to truly confirm this is encoded HTML
+            //const regexHtml = new RegExp("(<|>)");
 
-            if (regexEncode.test(content) && !regexHtml.test(content)) {
-                decodedHtml = $("<div/>").html(content).text();
-            }
+            //if (regexEncode.test(content) && !regexHtml.test(content)) {
+            //    decodedHtml = $("<div/>").html(content).text();
+            //}
+            //return decodedHtml;
+            return content;
+        }
+
+        function getDecodedValue(content) {
+            const decodedHtml = getDisplayableValue(content);
             return replaceInvalidTags(decodedHtml);
         }
 
@@ -149,7 +155,8 @@
 
         const service = {
             getDecodedValue: getDecodedValue,
-            replaceInvalidTags: replaceInvalidTags
+            replaceInvalidTags: replaceInvalidTags,
+            getDisplayableValue: getDisplayableValue
         };
         init();
         return service;

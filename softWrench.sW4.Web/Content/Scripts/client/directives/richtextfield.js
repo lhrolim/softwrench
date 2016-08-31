@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module("sw_layout").directive("richtextField", ["contextService", "$timeout", "$compile", function (contextService, $timeout, $compile) {
+    angular.module("sw_layout").directive("richtextField", ["contextService", "$interval", "$log", function (contextService, $interval, $log) {
         const directive = {
             restrict: "E",
             templateUrl: contextService.getResourceUrl("/Content/Templates/directives/richtextfield.html"),
@@ -11,8 +11,10 @@
                 readonly: "="
             },
 
-            controller: ["$scope", "richTextService", "crudContextHolderService", function ($scope, richTextService, crudContextHolderService) {
-                $scope.content = richTextService.getDecodedValue($scope.content);
+            controller: ["$scope", "$element", "richTextService", "crudContextHolderService", function ($scope, $element, richTextService, crudContextHolderService) {
+                const log = $log.get("richtextfield#controller", ["richtext"]);
+
+                $scope.content = richTextService.getDisplayableValue($scope.content);
 
                 $scope.richtext = {
                     config: {
@@ -56,6 +58,7 @@
                                 executeOnActionBars("hide", this);
                             });
                             editor.on("init", function () {
+                                log.debug("tinymce editor's init", editor);
                                 executeOnActionBars("hide", this);
                                 // click/focus on codesamples trigger focus on the editor
                                 const localEditor = editor;
@@ -64,25 +67,34 @@
                         }
                     }
                 };
-                // handling delayed input rendering (e.g. modals)
-                if (!$scope.readonly) {
-                    let rendered = false;
-                    $scope.$watch(() => crudContextHolderService.getDetailDataResolved(),
-                        debounce((newValue, oldValue) => {
-                            if (newValue && newValue !== oldValue && !rendered) {
-                                $timeout(() => $scope.$broadcast("$tinymce:refresh"), 0, false);
-                                rendered = true;
-                            }
-                        }));
-                }
-                
-            }]
+            }],
+
+            link: function (scope, element, attrs) {
+                const log = $log.get("richtextfield#link", ["richtext"]);
+                // very very dirty hack to ensure tinymce editor is in the screen
+                // for some dynamically added fields this hack is necessary (e.g. inside modals, composition_masterdetails)
+                const interval = $interval(() => {
+                    log.debug("loop to check tinymce's editor is in the screen");
+                    const tinyMceFrame = element[0].querySelector("iframe");
+                    if (!tinyMceFrame) {
+                        log.debug("tinymce's iframe not yet present. skipping");
+                        return;
+                    }
+                    const contentId = $(tinyMceFrame.contentWindow.document.body).attr("data-id");
+                    if (!contentId) {
+                        log.debug("refreshing angular-ui-tinymce and cancelling check loop");
+                        scope.$broadcast("$tinymce:refresh");
+                        $interval.cancel(interval);
+                    }
+                }, 500, null, false);
+            }
         };
 
         return directive;
     }]);
 
-    // so user can focus on tinymce dialogs (e.g. codesample, link, image) when the richtext is already inside a modal
+    // so user can focus on tinymce dialogs (e.g. codesample, link, image) when the richtext input is inside a sw modal
+    // (bugfix for bootstrap+tinymce dialogs)
     $(document).on("focusin", function (e) {
         if ($(e.target).closest(".mce-window").length) {
             e.stopImmediatePropagation();

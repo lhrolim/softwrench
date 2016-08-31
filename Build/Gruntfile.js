@@ -298,7 +298,7 @@ module.exports = function (grunt) {
                 mangle: {
                     except: [
                         "jQuery", "angular", "tableau", "LZString", "moment", "Moment", "Modernizr",
-                        "app", "modules", "tinymce", "Prism"
+                        "app", "modules", "tinyMCE", "tinymce", "Prism"
                     ]
                 }
             },
