@@ -394,8 +394,8 @@
                 <command id="dispatchincident" icon="fa-warning" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD" 
                           parameters="schema,datamap" service="dispatchService" method="dispatchIncident" cssclasses="large-button" enableexpression="$scope:enableSave"/>
                 
-                <!--<command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap" 
-                         showexpression="service:genericTicketService.isDeleteAllowed" successmessage="SR deleted" position="right" icon="fa-remove"/>-->
+                <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap" 
+                         showexpression="service:genericTicketService.isDeleteAllowed" successmessage="SR deleted" position="right" cssclasses="large-button" icon="fa-remove"/>
                 
                 <!-- Create new SR as Related Record -->
                 <command id="createrelated" 

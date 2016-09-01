@@ -205,7 +205,7 @@ angular.module('sw_layout')
         },
 
         isDeleteAllowed: function (datamap, schema) {
-            return datamap['status'] === 'NEW' && datamap['reportedby'] === userService.getPersonId();
+            return datamap['status'] === 'NEW' && datamap['reportedby'] === userService.getPersonId().toUpperCase();
         },
 
         isClosed: function () {
