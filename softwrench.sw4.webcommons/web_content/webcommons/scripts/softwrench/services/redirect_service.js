@@ -12,6 +12,7 @@
         function redirectToHome() {
             contextService.deleteFromContext("swGlobalRedirectURL");
             $location.path("");
+            $location.url($location.path());
             window.location.reload();
         };
 
@@ -201,7 +202,7 @@
 
             if (jsonData == undefined) {
                 if (redirectUrl && !popupMode) {
-                    historyService.addToHistory(redirectUrl, parameters.saveHistoryReturn);
+                    historyService.addToHistory(redirectUrl, parameters.saveHistoryReturn,true);
                 }
 
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
