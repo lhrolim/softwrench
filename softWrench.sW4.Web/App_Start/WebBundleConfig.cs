@@ -49,7 +49,7 @@ namespace softWrench.sW4.Web {
                 .IncludeDirectory("~/Content/dist/css", "*.css"));
 
             bundles.Add(new StyleBundle(Bundles.Local.CustomVendorStyles)
-                .IncludeDirectory("~/Content/customVendor/css", "*"));
+                .IncludeDirectory("~/Content/customVendor/css", "*.css"));
         }
 
         public void PopulateScriptBundles(BundleCollection bundles) {
