@@ -26,7 +26,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 throw new InvalidDataException();
             }
 
-            var dictionary = new Dictionary<string, string>();
+            var dictionary = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
             IList<EnvironmentProperties> environments = new List<EnvironmentProperties>();
             foreach (var xElement in document.Root.Elements()) {
                 if (xElement.Name.LocalName == XmlMetadataSchema.EnvironmentElement) {
@@ -47,7 +47,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private EnvironmentProperties ParseEnvironment(XElement envElement) {
             var envKey = envElement.Attribute(XmlMetadataSchema.ApplicationPropertyKeyAttribute).Value;
-            var dictionary = new Dictionary<string, string>();
+            var dictionary = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
             foreach (var xElement in envElement.Elements()) {
                 AddProperty(xElement, dictionary);
             }

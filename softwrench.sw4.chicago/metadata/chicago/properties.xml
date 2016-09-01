@@ -36,8 +36,10 @@
   <property key="notifications.updateJob.refreshRate" value="2"/>
 
   <property key="multitenantprefix" value="CPS-00"/>
+  <property key="ignorewscerterrors" value="true"/>
   
   <environment key="dev">
+
 <!--    <property key="basewsURL" value="http://10.50.100.195:9080/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Server=10.50.100.195:50005;Database=maxdb75;UID=MAXIMO;PWD=$Qls3rver;CurrentSchema=maximo" />
     <property key="maximo_DB_provider" value="IBM.Data.DB2" />  -->
