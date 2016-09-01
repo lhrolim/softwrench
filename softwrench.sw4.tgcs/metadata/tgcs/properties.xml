@@ -32,6 +32,8 @@
   <property key="notifications.activityStream.refreshRate" value="20"/>
   <property key="notifications.updateJob.refreshRate" value="20"/>
 
+  <property key="ignorewscerterrors" value="true"/>
+
   <property key="multitenantprefix" value="TTC-00"/>
 
   <environment key="dev">

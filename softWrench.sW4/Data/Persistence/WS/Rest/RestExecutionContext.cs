@@ -65,7 +65,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
         }
 
         protected override object DoProxyInvocation() {
-
+            if (ApplicationConfiguration.IgnoreWsCertErrors) {
+                ServicePointManager.ServerCertificateValidationCallback = delegate {
+                    return true;
+                };
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                    | SecurityProtocolType.Tls11
+                    | SecurityProtocolType.Tls12
+                    | SecurityProtocolType.Ssl3;
+            }
             var headers = MaximoRestUtils.GetMaximoHeaders();
 
             var payLoad = GeneratePayLoad();

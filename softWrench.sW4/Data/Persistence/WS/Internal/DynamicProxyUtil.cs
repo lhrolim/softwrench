@@ -68,6 +68,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
             if (ApplicationConfiguration.IgnoreWsCertErrors) {
                 ServicePointManager.ServerCertificateValidationCallback = SWIgnoreErrorsCertHandler;
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                    | SecurityProtocolType.Tls11
+                    | SecurityProtocolType.Tls12
+                    | SecurityProtocolType.Ssl3;
             }
 
             if (ApplicationConfiguration.IsMea()) {

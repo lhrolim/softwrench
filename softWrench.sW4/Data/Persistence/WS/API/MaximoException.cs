@@ -91,7 +91,7 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
 
 
         public static Exception ParseWebExceptionResponse(WebException webException) {
-            var responseStream = webException.Response.GetResponseStream();
+            var responseStream = webException.Response == null ? null : webException.Response.GetResponseStream();
             if (responseStream == null) {
                 var rootException = ExceptionUtil.DigRootException(webException);
                 return new MaximoException(webException, rootException);

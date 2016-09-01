@@ -61,21 +61,21 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
         }
 
         internal override object FindById(object id) {
-            Type type = Proxy.ProxyType;
-            MethodInfo mi = type.GetMethod(MethodName());
-            ParameterInfo pi = mi.GetParameters().First();
-            Type parameterType = pi.ParameterType;
-            object qType = r.InstanceFromType(parameterType);
+            var type = Proxy.ProxyType;
+            var mi = type.GetMethod(MethodName());
+            var pi = mi.GetParameters().First();
+            var parameterType = pi.ParameterType;
+            var qType = r.InstanceFromType(parameterType);
             w.SetValue(qType, "WHERE", string.Format("{0}='{1}'", Metadata.Schema.IdAttribute.Name, id));
             var parameterList = MifUtils.GetParameterListForQuery(qType);
-            Type[] typesFromParameters = DynamicProxyUtil.TypesFromParameters(parameterList);
-            object result = Proxy.CallMethod(MethodName(), typesFromParameters, parameterList.ToArray());
+            var typesFromParameters = DynamicProxyUtil.TypesFromParameters(parameterList);
+            var result = Proxy.CallMethod(MethodName(), typesFromParameters, parameterList.ToArray());
             var enumerable = result as IEnumerable;
             if (enumerable == null) {
                 return null;
             }
 
-            IEnumerator enumerator = enumerable.GetEnumerator();
+            var enumerator = enumerable.GetEnumerator();
             if (enumerator.MoveNext()) {
                 return enumerator.Current;
             }
@@ -85,6 +85,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
         protected override object DoProxyInvocation() {
             if (ApplicationConfiguration.IgnoreWsCertErrors) {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                    | SecurityProtocolType.Tls11
+                    | SecurityProtocolType.Tls12
+                    | SecurityProtocolType.Ssl3;
             }
             if (Log.IsDebugEnabled) {
                 Log.Debug("sending content to mif :\n " + SerializeIntegrationObject());
