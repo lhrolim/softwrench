@@ -47,6 +47,9 @@ namespace softWrench.sW4.Web {
             // sass compiled and fonts already being distributed
             bundles.Add(new StyleBundle(Bundles.Distribution.VendorStyles)
                 .IncludeDirectory("~/Content/dist/css", "*.css"));
+
+            bundles.Add(new StyleBundle(Bundles.Local.CustomVendorStyles)
+                .IncludeDirectory("~/Content/customVendor/css", "*"));
         }
 
         public void PopulateScriptBundles(BundleCollection bundles) {
