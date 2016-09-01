@@ -573,7 +573,7 @@
     <Content Include="Content\customVendor\scripts\bootstrap\bootstrap-multiselect.js" />
     <Content Include="Content\customVendor\scripts\misc\bootbox.js" />
     <Content Include="Content\customVendor\scripts\misc\modernizr.js" />
-    <Content Include="Content\customVendor\scripts\misc\prism.js" />
+    <Content Include="Content\customVendor\scripts\minified\prism.js" />
     <Content Include="Content\customVendor\css\tinymce\skins\lightgray\content.inline.min.css" />
     <Content Include="Content\customVendor\css\tinymce\skins\lightgray\content.min.css" />
     <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce-small.svg" />
@@ -584,7 +584,7 @@
     <Content Include="Content\customVendor\css\tinymce\skins\lightgray\img\trans.gif" />
     <Content Include="Content\customVendor\css\tinymce\skins\lightgray\skin.ie7.min.css" />
     <Content Include="Content\customVendor\css\tinymce\skins\lightgray\skin.min.css" />
-    <Content Include="Content\customVendor\scripts\misc\tinymce-bundle-min.js" />
+    <Content Include="Content\customVendor\scripts\minified\tinymce-bundle-min.js" />
     <Content Include="Content\fonts\font.css" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
@@ -750,7 +750,7 @@
     <Content Include="Content\fonts\gstatic-varela-ff.woff" />
     <Content Include="Content\fonts\gstatic-varela-ie9.eot" />
     <Content Include="Content\fonts\gstatic-varela-ie9local.eot" />
-    <Content Include="Content\customVendor\scripts\misc\tableau-2.0.0-min.js" />
+    <Content Include="Content\customVendor\scripts\minified\tableau-2.0.0-min.js" />
     <Content Include="Content\styles\default\application\application.scss" />
     <Content Include="Content\styles\default\application\_forms.scss" />
     <Content Include="Content\styles\default\vendor\vendor.scss" />
@@ -960,7 +960,7 @@
     <Content Include="package.json" />
     <None Include="Properties\PublishProfiles\softWrench QA.pubxml" />
     <Content Include="Content\Images\update_24.png" />
-    <Content Include="Content\customVendor\scripts\misc\ace.js" />
+    <Content Include="Content\customVendor\scripts\minified\ace.js" />
     <Content Include="Content\Scripts\client\crud\aaa_layout.js" />
     <Content Include="Content\Scripts\client\adminresources\dashboard.js" />
     <Content Include="Content\Scripts\client\adminresources\user.js" />
