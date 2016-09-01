@@ -2,9 +2,9 @@
 (function (angular) {
     'use strict';
 
-    angular.module('maximo_applications').factory('personService', ['$rootScope',"$log", 'alertService', 'redirectService', 'applicationService', 'contextService', 'crudContextHolderService', 'dispatcherService', personService]);
+    angular.module('maximo_applications').factory('personService', ['$rootScope',"$log", 'alertService', 'redirectService', 'applicationService', 'contextService', 'crudContextHolderService', 'historyService','$q', personService]);
 
-    function personService($rootScope,$log, alertService, redirectService, applicationService, contextService, crudContextHolderService, dispatcherService) {
+    function personService($rootScope, $log, alertService, redirectService, applicationService, contextService, crudContextHolderService, historyService,$q) {
      
 
         function handlePrimaryForCreation(compositionDatamap,type) {
@@ -46,7 +46,11 @@
         function cancelEdition() {
             const schema = crudContextHolderService.currentSchema();
             if (schema.schemaId === 'myprofiledetail') {
-                return redirectService.redirectToHome();
+                const redirected = historyService.redirectOneBack();
+                if (!redirected) {
+                    return redirectService.redirectToHome();
+                }
+                return $q.when();
             }
             return redirectService.goToApplication("Person", "list");
         };
