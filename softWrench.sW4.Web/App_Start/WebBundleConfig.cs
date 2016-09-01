@@ -47,10 +47,6 @@ namespace softWrench.sW4.Web {
             // sass compiled and fonts already being distributed
             bundles.Add(new StyleBundle(Bundles.Distribution.VendorStyles)
                 .IncludeDirectory("~/Content/dist/css", "*.css"));
-
-            // tinymce requires that customVendor/css is available so it can download it's styles
-            bundles.Add(new StyleBundle(Bundles.Local.CustomVendorStyles)
-                .IncludeDirectory("~/Content/customVendor/css", "*.css"));
         }
 
         public void PopulateScriptBundles(BundleCollection bundles) {
