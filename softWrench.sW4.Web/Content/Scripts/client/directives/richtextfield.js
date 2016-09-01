@@ -27,7 +27,7 @@
                             "codesample paste"
                         ],
 
-                        skin_url: contextService.getResourceUrl("Content/customVendor/css/tinymce/skins/lightgray"),
+                        skin_url: url("Content/customVendor/css/tinymce/skins/lightgray"),
                         height: 250,
 
                         paste_data_images: true, // paste SS
@@ -36,7 +36,7 @@
 
                         codesample_dialog_height: window.innerHeight - 100,
                         codesample_dialog_width: window.innerWidth - 100,
-                        codesample_style: contextService.getResourceUrl("Content/customVendor/css/prism.css"),
+                        codesample_style: url("Content/customVendor/css/prism.css"),
 
                         readonly: $scope.readonly,
                         debounce: true,
