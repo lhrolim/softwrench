@@ -29,7 +29,7 @@
         if (locationUrl) {
             redirectUrl = locationUrl;
         } else {
-            historyService.addToHistory(redirectUrl);
+            historyService.addToHistory(redirectUrl,false, true);
         }
         //        if (sessionStorage.currentmodule != undefined && sessionStorage.currentmodule != "null") {
         //            //sessionstorage is needed in order to avoid F5 losing currentmodule
