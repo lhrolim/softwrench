@@ -14,7 +14,7 @@
             controller: ["$scope", "richTextService", "crudContextHolderService", function ($scope, richTextService, crudContextHolderService) {
                 const log = $log.get("richtextfield#controller", ["richtext"]);
 
-                $scope.content = richTextService.getDisplayableValue($scope.content);
+                $scope.content = richTextService.getDecodedValue($scope.content);
 
                 $scope.richtext = {
                     config: {

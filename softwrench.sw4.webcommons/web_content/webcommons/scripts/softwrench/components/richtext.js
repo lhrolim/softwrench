@@ -25,11 +25,11 @@
                  * matches '<(url pattern)+>' (url pattern includes query string)
                  * from: mix of http://code.tutsplus.com/tutorials/8-regular-expressions-you-should-know--net-6149 with http://stackoverflow.com/questions/23959352/validate-url-query-string-with-regex#answer-23959662
                  */
-                urltags: /\<(((https?|ftp):\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?)+\>/g,
+                urltags: /\<(((https?|ftp):\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?)+\>/g,
                 /**
                  * matches <file://(/\\)?/(path pattern)>
                  */
-                fileurltags: /\<(file:\/\/(\/\\\\)?([\da-zA-Z\.-]+)([(\/|\\)\w \.-]*)*\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?)+\>/g,
+                fileurltags: /\<(file:\/\/(\/\\\\)?([\da-zA-Z\.-]+)([(\/|\\)\w \.-]*)\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?)+\>/g,
                 /**
                  * matches '<![if ((!)?any characters)]>(any characters)<![endif]>'
                  * e.g. "<![if !supportLists]>· <![endif]>"
