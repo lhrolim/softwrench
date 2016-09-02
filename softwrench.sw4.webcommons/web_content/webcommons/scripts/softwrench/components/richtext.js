@@ -25,11 +25,11 @@
                  * matches '<(url pattern)+>' (url pattern includes query string)
                  * from: mix of http://code.tutsplus.com/tutorials/8-regular-expressions-you-should-know--net-6149 with http://stackoverflow.com/questions/23959352/validate-url-query-string-with-regex#answer-23959662
                  */
-                urltags: /\<(((https?|ftp):\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?)+\>/g,
+                urltags: /\<(((https?|ftp):\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?)+\>/g,
                 /**
                  * matches <file://(/\\)?/(path pattern)>
                  */
-                fileurltags: /\<(file:\/\/(\/\\\\)?([\da-zA-Z\.-]+)([(\/|\\)\w \.-]*)*\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?)+\>/g,
+                fileurltags: /\<(file:\/\/(\/\\\\)?([\da-zA-Z\.-]+)([(\/|\\)\w \.-]*)\/?(\?([\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?)?)+\>/g,
                 /**
                  * matches '<![if ((!)?any characters)]>(any characters)<![endif]>'
                  * e.g. "<![if !supportLists]>· <![endif]>"
@@ -89,17 +89,23 @@
             return executeInvalidTagProcessors(text);
         }
 
-        function getDecodedValue(content) {
-            content = replaceAll(content,"\n", "<br/>");
-            var decodedHtml = content;
-            // Matches any encoded html tag - &lt; &gt;
-            const regexEncode = new RegExp("&(lt|gt);");
-            // Also make sure non of these tags are present to truly confirm this is encoded HTML
-            const regexHtml = new RegExp("(<|>)");
+        function getDisplayableValue(content) {
+            content = replaceAll(content, "\n", "<br/>");
+            //var decodedHtml = content;
+            //// Matches any encoded html tag - &lt; &gt;
+            //const regexEncode = new RegExp("&(lt|gt);");
+            //// Also make sure non of these tags are present to truly confirm this is encoded HTML
+            //const regexHtml = new RegExp("(<|>)");
 
-            if (regexEncode.test(content) && !regexHtml.test(content)) {
-                decodedHtml = $("<div/>").html(content).text();
-            }
+            //if (regexEncode.test(content) && !regexHtml.test(content)) {
+            //    decodedHtml = $("<div/>").html(content).text();
+            //}
+            //return decodedHtml;
+            return content;
+        }
+
+        function getDecodedValue(content) {
+            const decodedHtml = getDisplayableValue(content);
             return replaceInvalidTags(decodedHtml);
         }
 
@@ -149,7 +155,8 @@
 
         const service = {
             getDecodedValue: getDecodedValue,
-            replaceInvalidTags: replaceInvalidTags
+            replaceInvalidTags: replaceInvalidTags,
+            getDisplayableValue: getDisplayableValue
         };
         init();
         return service;

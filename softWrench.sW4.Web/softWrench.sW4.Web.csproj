@@ -561,6 +561,7 @@
     <Content Include="Content\customVendor\css\bootstrap-multiselect.css" />
     <Content Include="Content\customVendor\css\bootstrap-select.css" />
     <Content Include="Content\customVendor\css\colorbox.css" />
+    <Content Include="Content\customVendor\css\prism.css" />
     <Content Include="Content\customVendor\css\typeahead.js-bootstrap.css" />
     <Content Include="Content\Controller\About.html" />
     <Content Include="Content\Controller\MakeSWAdmin.html" />
@@ -572,6 +573,18 @@
     <Content Include="Content\customVendor\scripts\bootstrap\bootstrap-multiselect.js" />
     <Content Include="Content\customVendor\scripts\misc\bootbox.js" />
     <Content Include="Content\customVendor\scripts\misc\modernizr.js" />
+    <Content Include="Content\customVendor\scripts\minified\prism.js" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\content.inline.min.css" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\content.min.css" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce-small.svg" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce.svg" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\img\anchor.gif" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\img\loader.gif" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\img\object.gif" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\img\trans.gif" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\skin.ie7.min.css" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\skin.min.css" />
+    <Content Include="Content\customVendor\scripts\minified\tinymce-bundle-min.js" />
     <Content Include="Content\fonts\font.css" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
@@ -614,6 +627,7 @@
     <Content Include="Content\Scripts\client\directives\gmaps.js" />
     <Content Include="Content\Scripts\client\directives\multiselectDropdown.js" />
     <Content Include="Content\Scripts\client\directives\colorbox.js" />
+    <Content Include="Content\Scripts\client\directives\richtextfield.js" />
     <Content Include="Content\Scripts\client\directives\swChart.js" />
     <Content Include="Content\Scripts\client\crud\search\crudSearchService.js" />
     <Content Include="Content\Scripts\client\directives\scrollPane.js" />
@@ -736,7 +750,7 @@
     <Content Include="Content\fonts\gstatic-varela-ff.woff" />
     <Content Include="Content\fonts\gstatic-varela-ie9.eot" />
     <Content Include="Content\fonts\gstatic-varela-ie9local.eot" />
-    <Content Include="Content\customVendor\scripts\misc\tableau-2.0.0-min.js" />
+    <Content Include="Content\customVendor\scripts\minified\tableau-2.0.0-min.js" />
     <Content Include="Content\styles\default\application\application.scss" />
     <Content Include="Content\styles\default\application\_forms.scss" />
     <Content Include="Content\styles\default\vendor\vendor.scss" />
@@ -753,6 +767,12 @@
     <Content Include="App_Data\DeploymentValidation\Data\projectrequest.json" />
     <Content Include="App_Data\Client\%40internal\fallback\statuscolorsfallback.json" />
     <Content Include="App_Data\Client\%40internal\fallback\statuscolorvalues.json" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce-small.woff" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce.eot" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce.ttf" />
+    <Content Include="Content\customVendor\css\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <None Include="Content\styles\default\_button.scss" />
     <None Include="Content\styles\default\vendor\_xeditable.scss" />
     <Content Include="Content\Scripts\client\crud\crud_base_list.js" />
@@ -834,6 +854,7 @@
     <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
+    <Content Include="Content\Templates\directives\richtextfield.html" />
     <Content Include="Content\Templates\directives\swChart.html" />
     <Content Include="Content\Scripts\client\crud\search\crud_search.js" />
     <Content Include="Content\Templates\crud\search\crud_search.html" />
@@ -939,7 +960,7 @@
     <Content Include="package.json" />
     <None Include="Properties\PublishProfiles\softWrench QA.pubxml" />
     <Content Include="Content\Images\update_24.png" />
-    <Content Include="Content\customVendor\scripts\misc\ace.js" />
+    <Content Include="Content\customVendor\scripts\minified\ace.js" />
     <Content Include="Content\Scripts\client\crud\aaa_layout.js" />
     <Content Include="Content\Scripts\client\adminresources\dashboard.js" />
     <Content Include="Content\Scripts\client\adminresources\user.js" />

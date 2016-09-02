@@ -153,6 +153,8 @@ module.exports = function (grunt) {
                     "dx.vectormap.usa.js": "devextreme-web/js/vectormap-data/usa.js",
                     // colorbox
                     "jquery-colorbox.js": "colorbox/jquery.colorbox-min.js",
+                    // tinymce
+                    "angular-ui-tinymce.js": "angular-ui-tinymce/dist/tinymce.min.js",
                     // unminified vendors
                     "raw/jquery-file-style.js": "jquery.filestyle/jquery.filestyle.js",
                     "raw/jquery-file-download.js": "jquery-file-download/src/Scripts/jquery.fileDownload.js",
@@ -226,10 +228,6 @@ module.exports = function (grunt) {
                     // jquery
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery-ui.js",
-
-                    "<%= bowercopy.scripts.options.destPrefix %>/jquery.js",
-                    "<%= bowercopy.scripts.options.destPrefix %>/jquery-ui.js",
-
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery-colorbox.js",
 
                     // bootstrap
@@ -248,6 +246,8 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-xeditable.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-file-upload.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-drag-and-drop-lists.js",
+                    // tinymce
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular-ui-tinymce.js",
                     // minified raw vendors
                     "<%= app.tmp %>/scripts/rawVendor.min.js"
                 ],
@@ -259,11 +259,24 @@ module.exports = function (grunt) {
                     separator: ";\n"
                 },
                 src: [
-                    // customVendors (except angular)
-                    "<%= app.customVendor %>/scripts/{**/*.js, !(angular)/**/*.js}",
+                    // customVendors (except angular and already minified)
+                    "<%= app.customVendor %>/scripts/**/*.js",
+                    "!<%= app.customVendor %>/scripts/angular/**",
+                    "!<%= app.customVendor %>/scripts/minified/**",
                 ],
 
                 dest: "<%= app.tmp %>/scripts/customvendor.concat.js"
+            },
+
+            finalCustomVendorScripts: {
+                options: {
+                    separator: ";\n"
+                },
+                src: [ // just now minified custom vendors + already minified custom vendors 
+                    "<%= app.tmp %>/scripts/customvendor.partial.min.js",
+                    "<%= app.customVendor %>/scripts/minified/**/*.js"
+                ],
+                dest: "<%= app.dist %>/scripts/customvendor.js"
             },
 
             appScripts: {
@@ -298,7 +311,7 @@ module.exports = function (grunt) {
                 mangle: {
                     except: [
                         "jQuery", "angular", "tableau", "LZString", "moment", "Moment", "Modernizr",
-                        "app", "modules"
+                        "app", "modules", "tinyMCE", "tinymce", "Prism"
                     ]
                 }
             },
@@ -318,7 +331,7 @@ module.exports = function (grunt) {
             customVendors: {
                 files: [{
                     src: ["<%= concat.customVendorScripts.dest %>"],
-                    dest: "<%= app.dist %>/scripts/customvendor.js"
+                    dest: "<%= app.tmp %>/scripts/customvendor.partial.min.js"
                 }]
             },
 
@@ -353,7 +366,7 @@ module.exports = function (grunt) {
                 // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
                 preprocessors: {
                     '../softWrench.sW4.Web/Content/Templates/**/*.html': ["ng-html2js"],
-                    "<%= app.tests %>/tests/**/*.js": ['babel'],
+                    "<%= app.tests %>/tests/**/*.js": ["babel"]
                 },
 
                 babelPreprocessor: {
@@ -381,16 +394,6 @@ module.exports = function (grunt) {
             target: {}
         },
         //#endregion
-
-        rename: {
-            build: {
-                files: [
-                    { src: [''], dest: '' },
-                ]
-            }
-        }
-
-
     });
 
     //#region load npm tasks
@@ -401,7 +404,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
-    grunt.loadNpmTasks("grunt-contrib-rename");
     grunt.loadNpmTasks("grunt-karma");
     require("load-grunt-tasks")(grunt);
 
@@ -417,12 +419,12 @@ module.exports = function (grunt) {
         "copyAll", // copying bower files
         "cssmin:customVendor", // minify and concat 'customized from vendor' css
         "concat:vendorStyles", // concat vendors's css + minified 'customized from vendor' and distribute as 'css/vendor.css'
-        "concat:customVendorScripts", // concat custom vendors's scripts and distribute as 'scripts/vendor.js'
+        "concat:customVendorScripts", // concat custom vendors's scripts in 'temp/scripts/customvendor.js'
         "uglify:rawVendors", // minifies unminified vendors
         "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
         "ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
-        "uglify:customVendors",
+        "uglify:customVendors", "concat:finalCustomVendorScripts", // distributes 'scripts/customvendor.js'
         "babel",// uses babeljs to convert brandnew ES6 javascript into ES5 allowing for old browsers
         "uglify:app" // minify app script and distribute as 'scripts/app.js'
         // "clean:vendor", "clean:tmp" // clean temporary folders 
@@ -442,7 +444,7 @@ module.exports = function (grunt) {
         "concat:customVendorScripts", // concat custom vendors's scripts and distribute as 'scripts/vendor.js'
         "ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
-        "uglify:customVendors",
+        "uglify:customVendors", "concat:finalCustomVendorScripts", // distributes 'scripts/customvendor.js'
         "babel",// uses babeljs to convert brandnew ES6 javascript into ES5 allowing for old browsers
         "uglify:app", // minify app script and distribute as 'scripts/app.js'
         "karma:target", // run tests on minified scripts

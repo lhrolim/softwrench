@@ -119,11 +119,9 @@
                                     </div>
                                 </div>
                                 <div ng-switch-when="richtext">
-                                    <div class="richtext image-holder"
-                                         text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]"
-                                         ng-init="initRichtextField(fieldMetadata)" ta-disabled="true"
-                                         colorbox-richtext>
-                                    </div>
+                                    <richtext-field data-content="datamap[fieldMetadata.attribute]"
+                                                    data-readonly="true">
+                                    </richtext-field>
                                 </div>
                                 <div ng-switch-when="imagepreview" class="imagepreview">
                                     <img ng-src="{{ datamap[fieldMetadata.attribute] }}" ng-if="isString(datamap[fieldMetadata.attribute])" />

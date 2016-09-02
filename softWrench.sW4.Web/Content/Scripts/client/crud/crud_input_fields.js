@@ -19,29 +19,30 @@
             }
         };
     })
-    .directive('configUpdateSectionDatamap', function () {
+    .directive("configUpdateSectionDatamap", function () {
         return {
-            restrict: 'A',
+            restrict: "A",
             link: function (scope, element, attr) {
                 if (scope.$first) {
                     scope.datamap[scope.fieldMetadata.id] = [];
                 }
-                var item = {};
-                item["label"] = scope.i18NLabel(scope.field);
-                item["value"] = scope.datamap[scope.field.attribute];
-                scope.$watch('datamap["' + scope.field.attribute + '"]', function (newValue, oldValue) {
+                const item = {
+                    label: scope.i18NLabel(scope.field),
+                    value: scope.datamap[scope.field.attribute],
+                    '#newvalue': ""
+                };
+                scope.$watch(`datamap["${scope.field.attribute}"]`, function (newValue, oldValue) {
                     if (oldValue === newValue) {
                         return;
                     }
                     scope.datamap[scope.fieldMetadata.id][scope.$index]["value"] = newValue;
                 });
-                item["#newvalue"] = '';
                 scope.datamap[scope.fieldMetadata.id].push(item);
             }
         };
     })
 
-    .directive('sectionElementInput', ["$compile", "$timeout", "crudContextHolderService", function ($compile, $timeout, crudContextHolderService) {
+    .directive("sectionElementInput", ["$compile", "$timeout", "crudContextHolderService", function ($compile, $timeout, crudContextHolderService) {
         return {
             restrict: "E",
             replace: true,
@@ -91,7 +92,7 @@
             }
         }
     }])
-    .directive('crudInputFields', ["contextService", "eventService", "crud_inputcommons", "crudContextHolderService", function (contextService, eventService, crud_inputcommons, crudContextHolderService) {
+    .directive("crudInputFields", ["contextService", "eventService", "crud_inputcommons", "crudContextHolderService", function (contextService, eventService, crud_inputcommons, crudContextHolderService) {
         return {
             restrict: 'E',
             replace: true,
@@ -136,7 +137,7 @@
                     }
                 }
 
-                var parameters = {
+                const parameters = {
                     element: element,
                     tabid: crudContextHolderService.getActiveTab()
                 };
@@ -599,10 +600,10 @@
 
                         var validationFunction = dispatcherService.loadServiceByString(serviceCall);
                         if (validationFunction == null) {
-                            validationFunction = function () { return true };
+                            validationFunction = () => true;
                         }
                         return validationFunction;
-                    }
+                    };
 
                     function init() {
                         if (!$scope.isVerticalOrientation()) {

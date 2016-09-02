@@ -92,14 +92,18 @@ namespace softWrench.sW4.Web {
                     "~/Content/vendor/scripts/angular/angular-file-upload.js",
                     "~/Content/vendor/scripts/angular/angular-drag-and-drop-lists.js"
                 )
-                //.Include("~/Content/vendor/scripts/underscore.js")
-
                 // dev extreme
                 .Include(
                     "~/Content/vendor/scripts/devextreme/globalize.js",
                     "~/Content/vendor/scripts/devextreme/dx.chartjs.js",
                     "~/Content/vendor/scripts/devextreme/vectormap/usa.js"
-            );
+                )
+                // tiny-mce
+                .Include(
+                    //"~/Content/vendor/scripts/tinymce/tinymce.js",
+                    "~/Content/vendor/scripts/tinymce/angular-ui-tinymce.js"
+                );
+
             vendorBundle.Orderer = new PassthroughBundleOrderer(); // enforcing import order
             bundles.Add(vendorBundle);
 
