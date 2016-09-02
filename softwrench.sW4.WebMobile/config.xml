@@ -85,6 +85,7 @@
     <platform name="wp8">
         <splash height="800" src="res/screens/wp8/SplashScreenImage.jpg" width="480"/>
     </platform>
+    <!-- #region: preferences -->
     <preference name="SplashScreen" value="screen"/>
     <preference name="AutoHideSplashScreen" value="false"/>
     <preference name="SplashScreenDelay" value="10000"/>
@@ -99,7 +100,11 @@
     <preference name="ShowTitle" value="True"/>
     <preference name="InAppBrowserStorageEnabled" value="False"/>
     <preference name="SuppressesIncrementalRendering" value="True"/>
+    <!-- #endregion -->
+    <!-- #region: hooks -->
     <hook src="hooks/hook-symlink-fix.js" type="before_compile"/>
+    <!-- #endregion -->
+    <!-- #region: plugins -->
     <plugin name="cordova-plugin-app-version" spec="~0.1.8"/>
     <plugin name="de.appplant.cordova.plugin.local-notification" spec="~0.8.4"/>
     <plugin name="cordova-plugin-compat" spec="~1.0.0"/>
@@ -118,4 +123,5 @@
     <plugin name="ionic-plugin-keyboard" spec="~2.2.1"/>
     <plugin name="cordova-plugin-wkwebview-engine" spec="https://github.com/driftyco/cordova-plugin-wkwebview-engine.git"/>
     <plugin name="cordova-plugin-whitelist" spec="~1.2.2"/>
+    <!-- #endregion -->
 </widget>
