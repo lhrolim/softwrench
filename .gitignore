@@ -55,7 +55,6 @@ softWrench.sW4.WebMobile/www/Content/public/
 softWrench.sW4.WebMobile/www/Content/Vendor/*
 !softWrench.sW4.WebMobile/www/Content/Vendor/downloadedvendor
 !softWrench.sW4.WebMobile/www/Content/Vendor/file.placeholder
-softWrench.sW4.WebMobile/build.json
 
 Build/jenkinstest-results.xml
 Build/test-results.testxml
