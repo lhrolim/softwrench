@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -18,20 +20,25 @@
 # under the License.
 #
 -->
-
-# Contributing to Apache Cordova
-
-Anyone can contribute to Cordova. And we need your contributions.
-
-There are multiple ways to contribute: report bugs, improve the docs, and
-contribute code.
-
-For instructions on this, start with the
-[contribution overview](http://cordova.apache.org/contribute/).
-
-The details are explained there, but the important items are:
- - Sign and submit an Apache ICLA (Contributor License Agreement).
- - Have a Jira issue open that corresponds to your contribution.
- - Run the tests so your patch doesn't break existing functionality.
-
-We look forward to your contributions!
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.apache.cordova.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+</dict>
+</plist>

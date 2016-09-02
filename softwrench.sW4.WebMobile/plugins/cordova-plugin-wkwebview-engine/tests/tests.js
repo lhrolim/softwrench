@@ -1,4 +1,5 @@
 /*
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,10 +19,26 @@
  *
 */
 
-if (!document.querySelector('meta[http-equiv=Content-Security-Policy]')) {
-    var msg = 'No Content-Security-Policy meta tag found. Please add one when using the cordova-plugin-whitelist plugin.';
-    console.error(msg);
-    setInterval(function() {
-        console.warn(msg);
-    }, 10000);
-}
+/* jshint jasmine: true */
+
+exports.defineAutoTests = function () {
+    describe('cordova-plugin-wkwebview-engine (cordova)', function () {
+        it("cordova-plugin-wkwebview-engine.spec.1 should exist", function () {
+            //expect(window).toBeDefined();
+        });
+    });
+};
+
+exports.defineManualTests = function (contentEl, createActionButton) {
+
+    contentEl.innerHTML = 'Your HTML instructions here';
+
+    createActionButton('Do something 1', function () {
+        // do something 1;
+    }, 'do-something-1');
+
+    createActionButton('Do something 2', function () {
+        // do something 2;
+    }, 'do-something-2');
+
+};

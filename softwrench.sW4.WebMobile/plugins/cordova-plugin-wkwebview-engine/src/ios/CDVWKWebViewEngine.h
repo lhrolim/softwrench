@@ -17,13 +17,11 @@
  under the License.
  */
 
-#import <UIKit/UIKit.h>
-#import <Cordova/CDVPlugin.h>
-#import <Cordova/CDVWhitelist.h>
-#import <Cordova/CDVURLRequestFilter.h>
+#import <WebKit/WebKit.h>
+#import <Cordova/CDV.h>
 
-@interface CDVNavigationWhitelistPlugin : CDVPlugin <CDVURLRequestFilter>{}
+@interface CDVWKWebViewEngine : CDVPlugin <CDVWebViewEngineProtocol, WKScriptMessageHandler, WKNavigationDelegate>
 
-@property (nonatomic, readonly, strong) CDVWhitelist* whitelist; // readonly for public
+@property (nonatomic, strong, readonly) id <WKUIDelegate> uiDelegate;
 
 @end
