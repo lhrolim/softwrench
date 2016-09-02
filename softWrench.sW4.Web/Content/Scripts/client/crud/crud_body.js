@@ -188,7 +188,7 @@
                         //time for the components to be rendered
                         focusService.setFocusToFirstField($scope.schema, datamap);
                     }, 1000, false);
-                    eventService.dispatchEvent($scope.schema, "onschemafullyloaded");
+                    eventService.onschemafullyloaded($scope.schema);
                 }
 
                 $scope.getTabRecordCount = function (tab) {
@@ -230,20 +230,17 @@
                     const promiseArray = [];
                     for (let i = 0; i < displayables.length; i++) {
                         const displayable = displayables[i];
-                        const providerLoadedEvent = displayable.events["providerloaded"];
-                        if (providerLoadedEvent != undefined) {
-                            const fn = dispatcherService.loadService(providerLoadedEvent.service, providerLoadedEvent.method);
-                            if (fn != undefined) {
-                                let fields = crudContextHolderService.rootDataMap();
-                               
-                                const providerLoadedParameters = {
-                                    fields: fields,
-                                    options: options,
-                                };
-                                $log.getInstance('crudinputfieldcommons#updateeager', ["lifecycle"]).debug('invoking post load service {0} method {1} for association {2}|{3}'
-                                .format(providerLoadedEvent.service, providerLoadedEvent.method, displayable.target, displayable.associationKey));
-                                promiseArray.push($q.when(fn(providerLoadedParameters)));
-                            }
+
+                        let fields = crudContextHolderService.rootDataMap();
+                        const providerLoadedParameters = {
+                            fields: fields,
+                            options: options
+                        };
+
+                        $log.getInstance('crudinputfieldcommons#updateeager', ["lifecycle"]).debug(`Invoking post load association ${displayable.target}|${displayable.associationKey}`);
+                        const result = eventService.providerloaded(displayable, providerLoadedParameters);
+                        if (result) {
+                            promiseArray.push($q.when(result));
                         }
                     }
                     if (promiseArray.length > 0) {

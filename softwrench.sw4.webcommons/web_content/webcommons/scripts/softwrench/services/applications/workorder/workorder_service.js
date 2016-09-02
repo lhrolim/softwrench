@@ -5,7 +5,7 @@
 
     function workorderService($log, redirectService, crudContextHolderService, applicationService, restService, compositionService, alertService, $http, $rootScope, submitService) {
 
-        function setLocationFromAsset(parameters) {
+        function setLocationFromAsset() {
             var dm = crudContextHolderService.rootDataMap();
             if (dm.location == null && dm.extrafields.asset_.location != null) {
                 dm.location = dm.extrafields.asset_.location;

@@ -941,8 +941,9 @@
 
           <section>
             <header displacement="ontop" label="Project Details" params="fieldset=true"/>
-            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid" requiredexpression="true">
+            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid" requiredexpression="true" extraprojectionvalues="classificationid">
               <renderer type="autocompleteclient" />
+              <event type="afterchange" expression='$e.parameters.fields["classificationid"] = $e.parameters.fields.extrafields["classstructureid.classificationid"]'/>
             </optionfield>
 
             <section orientation="horizontal">

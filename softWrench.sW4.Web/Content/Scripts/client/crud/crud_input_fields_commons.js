@@ -122,6 +122,9 @@
                             if (isMultiValued && association.rendererType !== 'lookup') {
                                 associationService.updateUnderlyingAssociationObject(association, null, $scope);
                             }
+                            if (association.type === "OptionField") {
+                                associationService.updateOptionFieldExtraFields(association, $scope);
+                            }
                             var resolved = contextService.fetchFromContext("associationsresolved", false, true);
                             var phase = resolved ? 'configured' : 'initial';
                             var dispatchedbytheuser = resolved ? true : false;
