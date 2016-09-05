@@ -5,6 +5,7 @@ using softWrench.sW4.Data.Persistence.Relational.Collection;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Security.Context;
 
 namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
     /// <summary>
@@ -14,7 +15,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
 
         private readonly RestEntityRepository _restRepository;
 
-        public ToshibaRestCollectionResolver(RestEntityRepository restRepository) {
+        public ToshibaRestCollectionResolver(RestEntityRepository restRepository, EntityRepository respository,IContextLookuper lookuper): base(respository,lookuper) {
             _restRepository = restRepository;
         }
 

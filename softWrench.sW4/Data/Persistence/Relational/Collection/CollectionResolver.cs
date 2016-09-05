@@ -23,29 +23,27 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Data.Persistence.Relational.Collection {
     public class CollectionResolver : ISingletonComponent {
 
-        private EntityRepository.EntityRepository _repository;
+        private readonly EntityRepository.EntityRepository _repository;
+        private readonly IContextLookuper _contextLookuper;
+
+        public CollectionResolver(EntityRepository.EntityRepository repository, IContextLookuper contextLookuper) {
+            _repository = repository;
+            _contextLookuper = contextLookuper;
+        }
+
 
         private EntityRepository.EntityRepository EntityRepository {
             get {
-                if (_repository == null) {
-                    _repository =
-                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository.EntityRepository>(typeof(EntityRepository.EntityRepository));
-                }
                 return _repository;
             }
         }
 
         protected readonly ILog Log = LogManager.GetLogger(typeof(CollectionResolver));
 
-        private IContextLookuper _contextLookuper;
+
 
         protected IContextLookuper ContextLookuper {
             get {
-                if (_contextLookuper != null) {
-                    return _contextLookuper;
-                }
-                _contextLookuper =
-                    SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
                 return _contextLookuper;
             }
         }
@@ -222,13 +220,13 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         }
 
 
-        protected virtual SearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
+        public virtual SearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
             CollectionMatchingResultWrapper matchingResultWrapper, PaginatedSearchRequestDto paginatedSearch = null) {
             var collectionAssociation = parameter.CollectionAssociation;
 
             var lookupAttributes = collectionAssociation.Attributes;
             SearchRequestDto searchRequestDto;
-            if (paginatedSearch != null && (!string.IsNullOrEmpty(paginatedSearch.SearchParams) || !string.IsNullOrEmpty(paginatedSearch.SearchSort))){
+            if (paginatedSearch != null && (!string.IsNullOrEmpty(paginatedSearch.SearchParams) || !string.IsNullOrEmpty(paginatedSearch.SearchSort))) {
                 searchRequestDto = paginatedSearch;
             } else if (paginatedSearch != null && paginatedSearch.PageSize > 0) {
                 searchRequestDto = new PaginatedSearchRequestDto();
@@ -291,7 +289,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
             if (searchValues.Any()) {
                 if (lookupAttribute.To != null) {
-                    searchRequestDto.AppendSearchEntry(lookupAttribute.To, searchValues);
+                    searchRequestDto.AppendSearchEntry(lookupAttribute.To, searchValues,lookupAttribute.AllowsNull);
                 } else if (lookupAttribute.Query != null) {
                     //TODO: support for multiple entities on print
                     searchRequestDto.AppendWhereClause(lookupAttribute.GetQueryReplacingMarkers(parameter.EntityMetadata.Name, searchValues.FirstOrDefault()));
@@ -325,7 +323,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
         #region matching Helper classes
 
-        protected class CollectionMatchingResultWrapper {
+        public class CollectionMatchingResultWrapper {
 
             readonly IDictionary<AttributeHolder, CollectionMatchingResultKey> _inverseDict = new Dictionary<AttributeHolder, CollectionMatchingResultKey>();
 
@@ -336,7 +334,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 Keys.Add(key);
             }
 
-            virtual internal CollectionMatchingResultKey FetchKey(AttributeHolder entity) {
+            public virtual CollectionMatchingResultKey FetchKey(AttributeHolder entity) {
                 CollectionMatchingResultKey key;
                 if (!_inverseDict.TryGetValue(entity, out key)) {
                     key = new CollectionMatchingResultKey();
@@ -352,9 +350,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         }
 
 
-
-
-        protected class CollectionMatchingResultKey {
+        public class CollectionMatchingResultKey {
             //holds for each attribute used in the relationship the value, so it can be matched later
             readonly IDictionary<string, string> _pairs = new Dictionary<string, string>();
 
@@ -363,9 +359,12 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
 
             public override bool Equals(object obj) {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != GetType()) return false;
+                if (ReferenceEquals(null, obj))
+                    return false;
+                if (ReferenceEquals(this, obj))
+                    return true;
+                if (obj.GetType() != GetType())
+                    return false;
                 return Equals((CollectionMatchingResultKey)obj);
             }
 
