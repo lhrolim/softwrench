@@ -77,9 +77,8 @@ namespace softWrench.sW4.Web.Test.Controllers {
             MetadataProvider.StubReset();
 
             var target = new AssociationController(dataSetProvider, 
-                new ApplicationAssociationResolver(), 
                 new FilterWhereClauseHandler(new Data.Search.QuickSearch.QuickSearchHelper()), 
-                contextLookuperMock.Object);
+                contextLookuperMock.Object, new DataProviderResolver(new DynamicOptionFieldResolver(), new ApplicationAssociationResolver()));
 
             // Test data.
             var dto = new Data.API.Association.Lookup.LookupOptionsFetchRequestDTO() {

@@ -31,7 +31,7 @@
                     <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
                 </legend>
 
-                <!--Read only section-->
+                <!--#region Read only section-->
 
                 <div ng-class="getInputClass(fieldMetadata)"
                      ng-if="isReadOnlyField(fieldMetadata,datamap)"
@@ -60,7 +60,7 @@
                               ng-init="bindEvalExpression(fieldMetadata)"
                               data-id="{{fieldMetadata.attribute}}"
                               ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}" />
-
+                    <!--#region checkbox-->
                     <div ng-switch-when="checkbox">
                         <table ng-if="fieldMetadata.type === 'OptionField'" style="min-width: 200px;">
                             <tr ng-repeat="option in getCheckboxOptions(fieldMetadata)">
@@ -102,7 +102,7 @@
                             </label>
                         </div>
                     </div>
-
+                    <!-- #endregion-->
                     <div ng-switch-when="imagepreview" class="imagepreview">
                         <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
                     </div>
@@ -122,11 +122,14 @@
 
                 </div>
 
+                <!--#endregion -->
+
                 <div ng-if="!isReadOnlyField(fieldMetadata,datamap)"
                      ng-show="fieldMetadata.attribute!=schema.idFieldName"
                      ng-switch on="fieldMetadata.rendererType"
                      ng-class="getInputClass(fieldMetadata)">
 
+                    <!--#region combo-->
                     <div ng-switch-when="combo" class="sw-combobox-container">
 
                         <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
@@ -158,6 +161,8 @@
                         </div>
 
                     </div>
+                    <!--#endregion-->
+                    <!--#region checkbox-->
                     <div ng-switch-when="checkbox">
                         <table ng-if="fieldMetadata.type === 'OptionField'" style="min-width: 200px;">
                             <tr ng-repeat="option in getCheckboxOptions(fieldMetadata)">
@@ -200,6 +205,8 @@
                             </label>
                         </div>
                     </div>
+                    <!-- #endregion-->
+                    <!--#region autocompleteclient-->
                     <div ng-switch-when="autocompleteclient">
                         <div ng-switch on="fieldMetadata.type">
                             <div ng-switch-when="OptionField">
@@ -228,6 +235,9 @@
                             </div>
                         </div>
                     </div>
+
+                    <!--#endregion-->
+
                     <div ng-switch-when="multiselectautocompleteclient">
                         <selectize config="{valueField:'value', labelField:'label',hideSelected:true, searchField: ['label'], createOnBlur:'true', beforeItemAdd:getDispatchFn(fieldMetadata.rendererParameters['newItemValidation']), }"
                                    options="GetAssociationOptions(fieldMetadata)"
@@ -251,7 +261,7 @@
                     </div>
 
 
-
+                    <!--#region radio-->
                     <fieldset ng-switch-when="radio">
                         <label ng-if="fieldMetadata.rendererParameters['vertical']==null" ng-repeat="option in GetAssociationOptions(fieldMetadata)" class="checkbox-inline">
                             <input type="radio"
@@ -270,6 +280,7 @@
                             </label>
                         </div>
                     </fieldset>
+                    <!--#endregion-->
                     <div ng-switch-when="textarea">
                         <textarea ng-model="datamap[fieldMetadata.attribute]" class="form-control" cols="120" rows="10" wrap="hard"
                                   data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
@@ -278,7 +289,7 @@
                                   ng-init="initField(fieldMetadata)" />
                     </div>
                     <div ng-switch-when="richtext">
-                        <richtext-field data-content="datamap[fieldMetadata.attribute]" 
+                        <richtext-field data-content="datamap[fieldMetadata.attribute]"
                                         data-readonly="!isModifiableEnabled(fieldMetadata)">
                         </richtext-field>
 
@@ -367,6 +378,8 @@
                         <iframe id="richTextBox_{{fieldMetadata.attribute}}" ng-show="isIE()" ng-src="{{contextPath('/UserControls/RichTextBox.aspx')}}"
                                 class="richtextbox" frameborder="0" />
                     </div>
+
+                    <!--#region numericinput-->
                     <div ng-switch-when="numericinput">
 
                         <input ng-if="fieldMetadata.rendererParameters['numberType'] === 'double' || fieldMetadata.rendererParameters['numberType'] === 'float'"
@@ -392,6 +405,9 @@
 
 
                     </div>
+                    <!--#endregion-->
+
+
                     <div ng-switch-when="combodropdown">
                         <div class="multiselect-div">
                             <select multiple="multiple" class="hidden-phone form-control combobox multiselect"
@@ -400,7 +416,7 @@
                                     ng-model="datamap[fieldMetadata.target]"
                                     ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata,datamap[fieldMetadata.target])"
                                     custombuttontext="">
-                                <!--                            <option value=""></option>-->
+                                <!-- <option value=""></option>-->
                             </select>
                             <div ng-if="fieldMetadata.rendererParameters['showvaluesbelow'] == 'true'">
                                 <table>
@@ -413,6 +429,9 @@
                             </div>
                         </div>
                     </div>
+
+                    <!--#region datecomponents-->
+
                     <div ng-switch-when="datetime">
                         <div ng-if="isDesktop()" id="datetimepicker" class="input-group" data-datepicker="true">
                             <input type="text" ng-model="datamap[fieldMetadata.attribute]"
@@ -464,10 +483,12 @@
                         <input ng-if="isMobile()" type="time" class="form-control" ng-model="datamap[fieldMetadata.attribute]">
                     </div>
 
+                    <!--#endregion-->
                     <div ng-switch-when="custom">
                         <div ng-include="contextPath(fieldMetadata.rendererParameters.resourcepath)" href="#" style="width: 100%" />
                     </div>
 
+                    <!--#region default-->
                     <div ng-switch-default>
                         <ng-switch on="fieldMetadata.type">
                             <div ng-switch-when="ApplicationSection">
@@ -578,6 +599,8 @@
                     </div>
 
                 </div>
+                <!--#endregion-->
+
             </fieldset>
         </div>
     </section>

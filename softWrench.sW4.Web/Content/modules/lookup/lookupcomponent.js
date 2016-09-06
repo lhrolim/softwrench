@@ -59,7 +59,7 @@
         }
 
         function updateLookupObject(scope, fieldMetadata, searchValue, searchDatamap) {
-            scope.lookupObj = scope.lookupObj || {};
+            scope.lookupObj = scope.lookupObj || new LookupDTO(fieldMetadata,null);
 
             scope.lookupObj.code = searchValue;
             scope.lookupObj.fieldMetadata = fieldMetadata;
@@ -109,12 +109,14 @@
                     return true;
                 }
             }
-            lookupObj.modalPaginationData = {};
-            lookupObj.modalPaginationData.pageCount = associationResult.pageCount;
-            lookupObj.modalPaginationData.pageNumber = associationResult.pageNumber;
-            lookupObj.modalPaginationData.pageSize = associationResult.pageSize;
-            lookupObj.modalPaginationData.totalCount = associationResult.totalCount;
-            lookupObj.modalPaginationData.selectedPage = associationResult.pageNumber;
+            lookupObj.modalPaginationData = {
+                pageCount : associationResult.pageCount,
+                pageNumber : associationResult.pageNumber,
+                pageSize : associationResult.pageSize,
+                totalCount : associationResult.totalCount,
+                selectedPage : associationResult.pageNumber
+            };
+            
             
             if (associationResult.searchDTO && associationResult.searchDTO.searchParams && associationResult.searchDTO.searchValues) {
                 var result = searchService.buildSearchDataAndOperations(associationResult.searchDTO.searchParams, associationResult.searchDTO.searchValues);

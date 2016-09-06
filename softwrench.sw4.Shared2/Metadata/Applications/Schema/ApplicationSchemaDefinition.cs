@@ -57,7 +57,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public delegate IList<IApplicationDisplayable> LazyFkResolverDelegate(ApplicationSchemaDefinition definition);
 
 
-        public delegate IDictionary<string,EntityAssociation> LazyOfflineAssociationResolverDelegate(ApplicationSchemaDefinition definition);
+        public delegate IDictionary<string, EntityAssociation> LazyOfflineAssociationResolverDelegate(ApplicationSchemaDefinition definition);
 
         public delegate IEnumerable<IApplicationDisplayable> LazyComponentDisplayableResolver(ReferenceDisplayable reference, ApplicationSchemaDefinition schema, IEnumerable<DisplayableComponent> components);
 
@@ -143,7 +143,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public ICollection<string> _fieldWhichHaveDeps = new HashSet<string>();
 
-        
+
 
         public string Name {
             get {
@@ -208,7 +208,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema,
             string idFieldName, string userIdFieldName, string unionSchema, IEnumerable<ApplicationEvent> events = null) {
             CompositionSchemas = new Dictionary<string, ApplicationCompositionSchema>();
-            if (displayables == null) throw new ArgumentNullException("displayables");
+            if (displayables == null)
+                throw new ArgumentNullException("displayables");
             EntityName = entityName;
             ApplicationName = applicationName;
             Platform = platform;
@@ -280,7 +281,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                     return _offlineAssociations;
                 }
 
-                _offlineAssociations =  LazyOfflineAssociationResolver(this);
+                _offlineAssociations = LazyOfflineAssociationResolver(this);
                 return _offlineAssociations;
 
             }
@@ -461,7 +462,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        public IList<T> GetDisplayable<T>(Type displayableType, SchemaFetchMode mode = SchemaFetchMode.All) {
+        public IList<T> GetDisplayable<T>(Type displayableType = null, SchemaFetchMode mode = SchemaFetchMode.All) {
+            if (displayableType == null) {
+                displayableType = typeof(T);
+            }
+
             return DisplayableUtil.GetDisplayable<T>(displayableType, Displayables, mode);
         }
 
@@ -543,9 +548,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != GetType())
+                return false;
             return Equals((ApplicationSchemaDefinition)obj);
         }
 
