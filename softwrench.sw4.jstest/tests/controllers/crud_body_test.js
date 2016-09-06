@@ -46,13 +46,13 @@
         let modalData1 = new ModalData(schema1);
         let modalData2 = new ModalData(schema2);
 
-        spyOn(eventService, "dispatchEvent");
+        spyOn(eventService, "onschemafullyloaded");
 
         $rootScope.$broadcast(JavascriptEventConstants.ModalShown, modalData1);
-        expect(eventService.dispatchEvent).toHaveBeenCalledWith(schema1, "onschemafullyloaded");
+        expect(eventService.onschemafullyloaded).toHaveBeenCalledWith(schema1);
 
         $rootScope.$broadcast(JavascriptEventConstants.ModalShown, modalData2);
-        expect(eventService.dispatchEvent).toHaveBeenCalledWith(schema2, "onschemafullyloaded");
+        expect(eventService.onschemafullyloaded).toHaveBeenCalledWith(schema2);
 
     });
 

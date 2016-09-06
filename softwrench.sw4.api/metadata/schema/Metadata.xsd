@@ -839,6 +839,24 @@
         </documentation>
       </annotation>
     </attribute>
+    <attribute name="extraprojectionvalues" type="string"
+     use="optional">
+      <annotation>
+        <documentation>
+          Comma separeted list of extra keys to be fetched
+          the option if you use a MultiValueAssociationOption
+          as result of the provider.
+
+          The extra values will be on datamap.extrafields
+          with the key atributeName.extraValueKey. 
+          <br />
+
+          If you need to submit such values to server side,
+          use a hidden field
+          <br />
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="Options">
@@ -1263,16 +1281,32 @@
     <annotation>
       <documentation>
         The base event uses a service and method attribute to
-        define the service.method to call. Extensions of this
+        define the service.method to call. Or a expression
+        to be evaluated can be provided. Extensions of this
         event type should be used to define type attributes
         containing enumerations of the applicable event types.
       </documentation>
     </annotation>
-    <attribute name="service" type="string" use="required"></attribute>
-    <attribute name="method" type="string" use="required"></attribute>
+    <attribute name="service" type="string"></attribute>
+    <attribute name="method" type="string"></attribute>
+    <attribute name="expression" type="string">
+      <annotation>
+        <documentation>
+          Use $e to access the event parameters. Each event pass different parameters.
+          Check event_service.js to see available parameter for each event.
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="inputEvent">
+    <annotation>
+      <documentation>
+        Uses a service and method attribute to
+        define the service.method to call. Or a expression
+        to be evaluated can be provided.
+      </documentation>
+    </annotation>
     <complexContent mixed="false">
       <extension base="tns:baseEvent">
         <attribute name="type" use="required">
@@ -1295,6 +1329,13 @@
   </complexType>
 
   <complexType name="schemaEvent">
+    <annotation>
+      <documentation>
+        Uses a service and method attribute to
+        define the service.method to call. Or a expression
+        to be evaluated can be provided.
+      </documentation>
+    </annotation>
     <complexContent mixed="false">
       <extension base="tns:baseEvent">
         <attribute name="type" use="required">

@@ -8,6 +8,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using softwrench.sw4.Shared2.Metadata.Applications.Relationships.Associations;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
@@ -17,7 +18,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
     /// It´s represented by the <optionfield></optionfield> tag in the metadata.xml
     /// 
     /// </summary>
-    public class OptionField : BaseApplicationFieldDefinition, IDataProviderContainer, IDependableField, IPCLCloneable {
+    public class OptionField : BaseApplicationFieldDefinition, IDataProviderContainer, IDependableField, IPCLCloneable, IExtraProjectionProvider {
 
         private readonly List<IAssociationOption> _options;
         private readonly OptionFieldRenderer _renderer;
@@ -33,7 +34,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public OptionField(string applicationName, string label, string attribute, string qualifier, string requiredExpression, bool isReadOnly, bool isHidden,
             OptionFieldRenderer renderer, FieldFilter filter, List<IAssociationOption> options, string defaultValue, bool sort, string showExpression,
             string toolTip, string attributeToServer, ISet<ApplicationEvent> events, string providerAttribute, string dependantFields, string enableExpression, 
-            string evalExpression, string extraParameter, string defaultExpression, string searchOperation)
+            string evalExpression, string extraParameter, string defaultExpression, string searchOperation, string extraProjectionFields = null)
             : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, null, toolTip, attributeToServer, events, enableExpression, defaultExpression, false, searchOperation) {
             _renderer = renderer;
             _filter = filter;
@@ -50,6 +51,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             _eventsSet = events;
             _dependantFieldsString = dependantFields;
             _dependantFields = ParsingUtil.GetCommaSeparetedParsingResults(dependantFields);
+            ExtraProjectionFields = ExtraProjectionProviderHelper.BuildExtraProjectionFields(extraProjectionFields);
             EnableExpression = enableExpression;
             EvalExpression = evalExpression;
 
@@ -99,11 +101,18 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get { return AssociationKey; }
         }
 
+        public ISet<string> ExtraProjectionFields { get; set; }
+
         public object Clone() {
-            return new OptionField(ApplicationName, Label, Attribute, Qualifier, RequiredExpression, IsReadOnly, IsHidden, _renderer, _filter,
+            var optionField = new OptionField(ApplicationName, Label, Attribute, Qualifier, RequiredExpression,
+                IsReadOnly, IsHidden, _renderer, _filter,
                 _options,
                 DefaultValue, _sort, ShowExpression, ToolTip, AttributeToServer, _eventsSet, ProviderAttribute,
-                _dependantFieldsString, EnableExpression, EvalExpression, _extraParameter, DefaultExpression, SearchOperation);
+                _dependantFieldsString, EnableExpression, EvalExpression, _extraParameter, DefaultExpression,
+                SearchOperation) {
+                ExtraProjectionFields = ExtraProjectionFields
+            };
+            return optionField;
         }
 
         public override string ToString() {

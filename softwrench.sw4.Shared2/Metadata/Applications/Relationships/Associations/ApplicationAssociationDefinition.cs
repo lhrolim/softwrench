@@ -14,7 +14,7 @@ using softwrench.sW4.Shared2.Util;
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations {
 
     public class ApplicationAssociationDefinition :
-        ApplicationRelationshipDefinition, IDataProviderContainer, IDefaultValueApplicationDisplayable, IDependableField, IApplicationAttributeDisplayable, IPCLCloneable {
+        ApplicationRelationshipDefinition, IDataProviderContainer, IDefaultValueApplicationDisplayable, IDependableField, IApplicationAttributeDisplayable, IPCLCloneable, IExtraProjectionProvider {
 
         private string _label;
         // protected string LabelField;
