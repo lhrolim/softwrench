@@ -5,7 +5,7 @@
 
 
 
-    function angularTypeahead(restService, $timeout, $log,$rootScope,
+    function angularTypeahead(restService, $timeout, $log, $rootScope,
         contextService, associationService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, expressionService) {
         /// <summary>
         /// This directive integrates with bootsrap-typeahead 0.10.X
@@ -14,11 +14,11 @@
 
         function beforeSendPostJsonDatamap(jqXhr, settings, datamap, isComposition) {
             if (datamap) {
-                var datamapToSend = datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(datamap);
+                let datamapToSend = datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(datamap);
                 if (isComposition) {
                     datamapToSend = compositionService.buildMergedDatamap(datamapToSend, crudContextHolderService.rootDataMap());
                 }
-                var jsonString = angular.toJson(datamapToSend);
+                const jsonString = angular.toJson(datamapToSend);
                 settings.type = 'POST';
                 settings.data = jsonString;
                 settings.hasContent = true;
@@ -27,27 +27,28 @@
             return true;
         }
 
-        var configureSearchEngine = function (attrs, schema, provider, attribute, rateLimit,datamap,mode) {
-
-            var applicationName = schema.applicationName;
-
-            var parameters = {
+        var configureSearchEngine = function (attrs, schema, provider, attribute, rateLimit, datamap, mode, fieldMetadata) {
+            const isDataEagerFetched = fieldMetadata.type === "OptionField";
+            const applicationName = schema.applicationName;
+            const parameters = {
                 key: schemaService.buildApplicationMetadataSchemaKey(schema),
                 labelSearchString: "%QUERY",
             };
-
             parameters.associationKey = provider;
-//            parameters.filterAttribute = attribute;
+            //            parameters.filterAttribute = attribute;
 
             var urlToUse = restService.getActionUrl("Association", "GetFilteredOptions", parameters);
             urlToUse = replaceAll(urlToUse, '%25', "%");
             var isComposition = "composition" === mode;
-
-            var engine = new Bloodhound({
+            const bloodHoundOptions = {
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 limit: 30,
-                remote: {
+
+            };
+
+            if (!isDataEagerFetched) {
+                bloodHoundOptions.remote = {
                     url: urlToUse,
                     rateLimitFn: 'debounce',
                     rateLimitWait: rateLimit,
@@ -60,23 +61,29 @@
                     },
                     ajax: {
                         beforeSend: function (jqXhr, settings) {
-
                             beforeSendPostJsonDatamap(jqXhr, settings, datamap, isComposition);
                         }
                     }
                 }
-            });
+            } else {
+                bloodHoundOptions.local = function () {
+                    const eagerLookupOptions = associationService.getEagerLookupOptions(new LookupDTO(fieldMetadata, null));
+                    return eagerLookupOptions == null ? [] : eagerLookupOptions.resultObject.associationData;
+                }
+            }
 
+
+            const engine = new Bloodhound(bloodHoundOptions);
             engine.initialize();
             return engine;
         }
 
         var configureStyles = function (element, parElement) {
             // Configure autocompletes layout
-            var typeAhead = $('span.twitter-typeahead', parElement);
+            const typeAhead = $('span.twitter-typeahead', parElement);
             typeAhead.css('width', '100%');
             typeAhead.css('display', 'block');
-            var ttHint = $('input.tt-hint', parElement);
+            const ttHint = $('input.tt-hint', parElement);
             ttHint.addClass('form-control');
             ttHint.css('width', '96%');
             $('input.tt-query', parElement).css('width', '97%');
@@ -86,7 +93,7 @@
         }
 
         var setInitialText = function (element, scope) {
-            var attributeValue = scope.datamap[scope.attribute];
+            const attributeValue = scope.datamap[scope.attribute];
             if (attributeValue == null) {
                 //no initial value present
                 return;
@@ -96,24 +103,34 @@
                     scope.log.debug("setting initial text of typeahead component {0} to {1}".format(scope.displayablepath, label));
                     element.typeahead('val', label);
                 });
-            
+
         }
 
-        var configureJqueryHooks = function (scope, element, engine) {
+        var configureJqueryHooks = function (scope, element, engine, fieldMetadata) {
+            const minLength = scope.minLength || 2;
 
-            var minLength = scope.minLength || 2;
+            const engineSourceFn = engine.ttAdapter();
+            const sourceFn = fieldMetadata.type === "OptionField" ?
+                function (query, cb) {
+                    const results = associationService.getEagerLookupOptions(new LookupDTO(fieldMetadata, new QuickSearchDTO(query)));
+                    if (results == null) {
+                        return cb([]);
+                    }
+                    return cb(results.resultObject.associationData);
+                } : engineSourceFn;
+
 
             //initing typeahead itself
             element.typeahead({ minLength: minLength, highlight: true }, {
                 displayKey: function (item) {
                     return associationService.parseLabelText(item, { hideDescription: scope.hideDescription, allowTransientValue: scope.allowCustomValue === "true" });
                 },
-                source: engine.ttAdapter()
+                source: sourceFn,
             });
 
 
             element.on("typeahead:selected typeahead:autocompleted", function (e, datum) {
-                var datamap = scope.datamap;
+                const datamap = scope.datamap;
                 if (datamap) {
                     datamap[scope.attribute] = datum.value;
                 }
@@ -133,7 +150,7 @@
             element.on("keyup", function (e) {
                 scope.searchText = scope.jelement.val();
                 if (scope.searchText === "") {
-                    var datamap = scope.datamap;
+                    const datamap = scope.datamap;
                     if (datamap) {
                         $log.getInstance("angulartypeahead#keyup").debug("cleaning datamap");
                         datamap[scope.attribute] = null;
@@ -145,15 +162,15 @@
                     //scope digest is enough if we´re not clearing nor selecting an entry (i.e, not changing the datamap)
                     scope.$digest();
                 }
-                
-                
+
+
 
             });
         }
 
         function link(scope, el, attrs) {
             scope.name = "angulartypeahead";
-            var log = $log.getInstance('angulartypeahed',['association','lookup']);
+            var log = $log.getInstance('angulartypeahed', ['association', 'lookup']);
             //setting defaults
             var rateLimit = scope.rateLimit || 500;
 
@@ -172,9 +189,9 @@
             $timeout(function () {
                 //let´s put this little timeout to delay the bootstrap-typeahead initialization to the next digest loop so that
                 //it has enough to time to render itself on screen
-                var engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit, scope.datamap,scope.mode);
+                const engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit, scope.datamap, scope.mode, scope.fieldMetadata);
                 log.debug("configuring (after timeout) angulartypeahead for attribute {0}, provider {1}".format(attribute, provider));
-                configureJqueryHooks(scope, element, engine);
+                configureJqueryHooks(scope, element, engine, scope.fieldMetadata);
 
                 if (crudContextHolderService.associationsResolved()) {
                     setInitialText(element, scope);
@@ -193,7 +210,7 @@
             }
 
             scope.$on("sw_associationsresolved", function (event, panelid) {
-                if (panelid != scope.panelid && !(panelid == null && scope.panelid ==="")) {
+                if (panelid != scope.panelid && !(panelid == null && scope.panelid === "")) {
                     //keep != to avoid errors
                     log.debug("ignoring event sw_associationsresolved for panelid {0} since we are on {1}".format(panelid, scope.panelid));
                     return;
@@ -203,14 +220,13 @@
             });
 
             scope.isModifiableEnabled = function (fieldMetadata) {
-                var result = expressionService.evaluate(fieldMetadata.enableExpression, scope.datamap, scope);
+                const result = expressionService.evaluate(fieldMetadata.enableExpression, scope.datamap, scope);
                 return result;
             };
 
         };
 
-
-        var directive = {
+        const directive = {
             link: link,
             restrict: 'E',
             replace: true,
@@ -219,9 +235,9 @@
                 'data-association-key="{{provider}}" data-displayablepath="{{displayablepath}}"/>' +
                 '<span class="input-group-addon last" ng-click="!isModifiableEnabled(fieldMetadata) || executeMagnetSearch()">' +
                 '<i class="fa fa-search"></i>' +
-                '</span>'+
-            '<div></div><!--stop addon from moving on hover-->'+
-            '</div>',
+                '</span>' +
+                '<div></div><!--stop addon from moving on hover-->' +
+                '</div>',
             scope: {
                 schema: '=',
                 datamap: '=',
@@ -239,7 +255,7 @@
 
                 hideDescription: '@',
                 mode: '@',
-                
+
 
                 //min number of characters to start searching. Depending on the size of the dataset might be wise to put a higher number here.
                 minLength: '@',
@@ -265,16 +281,13 @@
                 keydown: '&',
                 onFocus: '&',
                 // if the a value is set that is not an option adds it anyway (with the value as label)
-                allowCustomValue : '@'
+                allowCustomValue: '@'
             }
         };
-
-
-
         return directive;
     }
 
-    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log','$rootScope', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', 'expressionService', angularTypeahead]);
+    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', '$rootScope', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', 'expressionService', angularTypeahead]);
 
 })(angular, Bloodhound);
 

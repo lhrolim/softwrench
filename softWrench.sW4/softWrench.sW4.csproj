@@ -263,6 +263,7 @@
     <Compile Include="Mapping\Mapping.cs" />
     <Compile Include="Mapping\MappingResolver.cs" />
     <Compile Include="Metadata\Applications\Association\ApplicationAssociationSyncSchemaFactory.cs" />
+    <Compile Include="Metadata\Applications\Association\DataProviderResolver.cs" />
     <Compile Include="Metadata\Applications\Classification\ClassificationDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseUserProfileDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\WoActivityDataSet.cs" />

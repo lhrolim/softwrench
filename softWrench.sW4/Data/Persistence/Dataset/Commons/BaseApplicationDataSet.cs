@@ -510,7 +510,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 var field = optionField;
                 tasks.Add(Task.Factory.NewThread(c => {
                     Quartz.Util.LogicalThreadContext.SetData("context", c);
-                    var associationOptions = _dynamicOptionFieldResolver.ResolveOptions(schema, field, dataMap);
+                    var associationOptions = _dynamicOptionFieldResolver.ResolveOptions(schema, dataMap, field);
                     eagerFetchedOptions.Add(field.AssociationKey, associationOptions);
                 }, ctx));
             }
@@ -751,7 +751,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     var optionField = application.Schema.OptionFields().First(f => f.AssociationKey.EqualsIc(associationToUpdate));
                     tasks.Add(Task.Factory.NewThread(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
-                        var data = _dynamicOptionFieldResolver.ResolveOptions(application.Schema, optionField, cruddata);
+                        var data = _dynamicOptionFieldResolver.ResolveOptions(application.Schema, cruddata, optionField);
                         if (data != null) {
                             resultObject.Add(optionField.AssociationKey, new LookupOptionsFetchResultDTO(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
                         }

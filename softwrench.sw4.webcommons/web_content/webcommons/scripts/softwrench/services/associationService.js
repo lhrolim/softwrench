@@ -804,24 +804,26 @@
         }
 
         const service = {
-            getLabelText: getLabelText,
-            getFullObject: getFullObject,
-            getLookupOptions: getLookupOptions,
-            getEagerAssociations: getEagerAssociations,
-            insertAssocationLabelsIfNeeded: insertAssocationLabelsIfNeeded,
-            lookupAssociation: lookupAssociation,
-            lookupSingleAssociationByValue: lookupSingleAssociationByValue,
-            markAssociationProcessComplete: markAssociationProcessComplete,
-            parseLabelText: parseLabelText,
-            onAssociationChange: onAssociationChange,
-            postAssociationHook: postAssociationHook,
-            updateAssociationOptionsRetrievedFromServer: updateAssociationOptionsRetrievedFromServer,
-            updateAssociations: updateAssociations,
-            loadSchemaAssociations: loadSchemaAssociations,
-            updateDependentAssociationValues: updateDependentAssociationValues,
+            clearDependantFieldValues,
+            getLabelText,
+            getFullObject,
+            getLookupOptions,
+            getEagerAssociations,
+            getEagerLookupOptions,
+            insertAssocationLabelsIfNeeded,
+            lookupAssociation,
+            lookupSingleAssociationByValue,
+            markAssociationProcessComplete,
+            parseLabelText,
+            onAssociationChange,
+            postAssociationHook,
+            updateAssociationOptionsRetrievedFromServer,
+            updateAssociations,
+            loadSchemaAssociations,
+            updateDependentAssociationValues,
             updateFromServerSchemaLoadResult,
-            updateUnderlyingAssociationObject: updateUnderlyingAssociationObject,
-            clearDependantFieldValues: clearDependantFieldValues
+            updateUnderlyingAssociationObject
+            
         };
         return service;
     }

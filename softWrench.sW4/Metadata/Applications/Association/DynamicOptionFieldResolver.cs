@@ -7,14 +7,15 @@ using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
+using softWrench.sW4.Data.Search;
 
 namespace softWrench.sW4.Metadata.Applications.Association {
-    class DynamicOptionFieldResolver : BaseDependableResolver, ISingletonComponent {
+    public class DynamicOptionFieldResolver : BaseDependableResolver, ISingletonComponent {
 
         private const string WrongMethod = "Attribute provider {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
 
-        public IEnumerable<IAssociationOption> ResolveOptions(ApplicationSchemaDefinition schema, OptionField optionField, AttributeHolder dataMap) {
-            if (!FullSatisfied(optionField, dataMap)) {
+        public IEnumerable<IAssociationOption> ResolveOptions(ApplicationSchemaDefinition schema, AttributeHolder originalEntity, OptionField optionField, SearchRequestDto associationFilter = null) {
+            if (!FullSatisfied(optionField, originalEntity)) {
                 return null;
             }
             var attribute = optionField.ProviderAttribute;
@@ -35,7 +36,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 throw new InvalidOperationException(String.Format(WrongMethod, methodName, dataSet.GetType().Name));
             }
             var application = ApplicationMetadata.FromSchema(schema);
-            var associationOptions = (IEnumerable<IAssociationOption>)mi.Invoke(dataSet, new object[] { new OptionFieldProviderParameters { OriginalEntity = dataMap, ApplicationMetadata = application, OptionField = optionField } });
+            var associationOptions = (IEnumerable<IAssociationOption>)mi.Invoke(dataSet, new object[] { new OptionFieldProviderParameters { OriginalEntity = originalEntity, ApplicationMetadata = application, OptionField = optionField } });
             if (associationOptions != null && optionField.Sort) {
                 var enumerable = associationOptions as IAssociationOption[] ?? associationOptions.ToArray();
                 if (enumerable.Any()) {

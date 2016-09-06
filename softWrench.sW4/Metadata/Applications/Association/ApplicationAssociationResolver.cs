@@ -82,8 +82,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         }
 
         [CanBeNull]
-        public IEnumerable<IAssociationOption> ResolveOptions(ApplicationSchemaDefinition schema,
-            AttributeHolder originalEntity, ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
+        public IEnumerable<IAssociationOption> ResolveOptions([NotNull]ApplicationSchemaDefinition schema,
+            [NotNull]AttributeHolder originalEntity, [NotNull] ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             if (!FullSatisfied(association, originalEntity)) {
                 return null;
             }
