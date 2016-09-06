@@ -45,7 +45,7 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
 
             _udpdateMetadata = MetadataProvider.Application("person").StaticFromSchema("detail");
 
-            TestUtil.RestMocks(_swdbMock, _maximoEngine, _userSetupService, _userManager);
+            TestUtil.ResetMocks(_swdbMock, _maximoEngine, _userSetupService, _userManager);
 
             var scanner = new TestSimpleInjectorScanner();
             scanner.ResgisterSingletonMock(_swdbMock);

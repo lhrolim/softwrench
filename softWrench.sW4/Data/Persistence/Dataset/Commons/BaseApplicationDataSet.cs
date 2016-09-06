@@ -80,7 +80,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         private readonly ApplicationAssociationResolver _associationOptionResolver = new ApplicationAssociationResolver();
         private readonly DynamicOptionFieldResolver _dynamicOptionFieldResolver = new DynamicOptionFieldResolver();
-        private readonly CollectionResolver _collectionResolver = new CollectionResolver();
 
         private IContextLookuper _contextLookuper;
         private IBatchSubmissionService _batchSubmissionService;
@@ -103,6 +102,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 return _contextLookuper;
             }
         }
+
+        private CollectionResolver CollectionResolver {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<CollectionResolver>();
+            }
+        }
+
 
         protected FilterWhereClauseHandler FilterWhereClauseHandler {
             get {
@@ -218,7 +224,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         protected virtual DataMap FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            return (DataMap) Engine().FindById(entityMetadata, request.Id, request.UserIdSitetuple);
+            return (DataMap)Engine().FindById(entityMetadata, request.Id, request.UserIdSitetuple);
         }
 
         public virtual ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
@@ -285,7 +291,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         protected virtual void HandleAttachments(CompositionFetchResult data) {
             var attachments = data.ResultObject["attachment_"].ResultList;
             foreach (var attachment in attachments) {
-                if (!attachment.ContainsKey("docinfo_.urlname")) continue;
+                if (!attachment.ContainsKey("docinfo_.urlname"))
+                    continue;
                 var docInfoURL = (string)attachment["docinfo_.urlname"];
                 attachment["download_url"] = AttachmentHandler.GetFileUrl(docInfoURL);
                 AttachmentHandler.BuildParsedURLName(attachment);
@@ -293,7 +300,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         }
 
         protected virtual IDictionary<string, EntityRepository.SearchEntityResult> ResolveCompositionResult(SlicedEntityMetadata parentEntityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionsToResolve, Entity parentData, PaginatedSearchRequestDto search) {
-            return _collectionResolver.ResolveCollections(parentEntityMetadata, compositionsToResolve, parentData, search);
+            return CollectionResolver.ResolveCollections(parentEntityMetadata, compositionsToResolve, parentData, search);
         }
 
         private CompositionFetchResult DoGetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
@@ -314,7 +321,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             if (request is PreFetchedCompositionFetchRequest) {
                 var listOfEntities = ((PreFetchedCompositionFetchRequest)request).PrefetchEntities;
-                result = _collectionResolver.ResolveCollections(entityMetadata, compostionsToUse, listOfEntities);
+                result = CollectionResolver.ResolveCollections(entityMetadata, compostionsToUse, listOfEntities);
                 return new CompositionFetchResult(result, listOfEntities.FirstOrDefault());
             }
 
@@ -329,7 +336,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public virtual ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var totalCount = searchDto.TotalCount;
             IReadOnlyList<AttributeHolder> entities = null;
-            
+
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var schema = application.Schema;
             searchDto.BuildProjection(schema);

@@ -11,6 +11,8 @@ using softWrench.sW4.Metadata.Applications;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Security.Context;
 
 namespace softwrench.sw4.offlineserver.services {
     public class OffLineCollectionResolver : CollectionResolver {
@@ -21,7 +23,8 @@ namespace softwrench.sw4.offlineserver.services {
         private const string NewRowstampTemplate = "Cast({0}.rowstamp AS BIGINT)  > {1}";
         private const string AllNewTemplate = "{0} in ({1})";
 
-
+        public OffLineCollectionResolver(EntityRepository repository, IContextLookuper contextLookuper) : base(repository, contextLookuper) {
+        }
 
         protected override void BuildParentQueryConstraint(CollectionMatchingResultWrapper matchingResultWrapper,
             InternalCollectionResolverParameter parameter, EntityAssociationAttribute lookupAttribute, SearchRequestDto searchRequestDto, string relationshipName) {
@@ -57,8 +60,8 @@ namespace softwrench.sw4.offlineserver.services {
             var updateIdsForQuery = BaseQueryUtil.GenerateInString(offParameter.ExistingEntities, lookupAttribute.From);
 
             if (rowstamp == null) {
-                Log.WarnFormat("rowstamp is null for item {0}",relationshipName);
-                searchRequestDto.AppendWhereClauseFormat(BothQueryTemplateNoRowstamp, columnName, updateIdsForQuery,  newIdsForQuery);
+                Log.WarnFormat("rowstamp is null for item {0}", relationshipName);
+                searchRequestDto.AppendWhereClauseFormat(BothQueryTemplateNoRowstamp, columnName, updateIdsForQuery, newIdsForQuery);
             } else {
                 searchRequestDto.AppendWhereClauseFormat(BothQueryTemplate, columnName, updateIdsForQuery, rowstamp, newIdsForQuery, relationshipName);
             }
@@ -92,5 +95,7 @@ namespace softwrench.sw4.offlineserver.services {
                 return new CollectionMatchingResultKey();
             }
         }
+
+
     }
 }

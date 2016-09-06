@@ -79,8 +79,8 @@ namespace softWrench.sW4.Data {
             };
         }
 
-        public static DataMap GetInstanceFromStringDictionary(string application, IDictionary<string,string> fields) {
-            return new DataMap(application,fields.ToDictionary(f=> f.Key, f=> (object)f.Value));
+        public static DataMap GetInstanceFromStringDictionary(string application, IDictionary<string, string> fields) {
+            return new DataMap(application, fields.ToDictionary(f => f.Key, f => (object)f.Value));
         }
 
         public static DataMap GetInstanceFromDictionary(string application, IDictionary<string, object> fields) {
@@ -88,8 +88,21 @@ namespace softWrench.sW4.Data {
         }
 
         public string Type {
-            get { return GetType().Name; }
+            get {
+                return GetType().Name;
+            }
         }
 
+        public void PopulateFromString([CanBeNull]string extraParameters) {
+            if (extraParameters == null) {
+                return;
+            }
+
+            var parameters = extraParameters.Split(',');
+            foreach (var parameter in parameters) {
+                var strings = parameter.Split(':');
+                SetAttribute(strings[0], strings[1]);
+            }
+        }
     }
 }

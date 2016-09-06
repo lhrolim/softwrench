@@ -16,7 +16,7 @@ namespace softwrench.sW4.test.Util {
             return new List<string>(clientNames).Where(c => !c.Contains("@internal"));
         }
 
-        internal static void RestMocks(params Mock[] mocks) {
+        internal static void ResetMocks(params Mock[] mocks) {
             if (mocks == null) {
                 return;
             }

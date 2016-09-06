@@ -42,7 +42,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                     if (!attribute.AllowsNull) {
                         sb.AppendFormat("{0} = {1}" + suffix, @from, to);
                     } else {
-                        sb.AppendFormat("({0} = {1} or {0} is null or {1} is null)" + suffix, @from, to);
+                        sb.AppendFormat("({0} = {1} or {1} is null)" + suffix, @from, to);
                     }
                 } else {
                     var value = ParseLiteral(attribute);
