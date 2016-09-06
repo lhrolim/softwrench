@@ -495,7 +495,7 @@
                 scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
                     if (panelid === scope.panelid) {
                         scope.refreshGrid(datamap, schema);
-                        eventService.dispatchEvent(schema, "onschemafullyloaded");
+                        eventService.onschemafullyloaded(schema);
                     }
                 });
 

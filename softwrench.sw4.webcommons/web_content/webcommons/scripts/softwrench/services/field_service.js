@@ -423,15 +423,13 @@
             },
 
             onFieldChange: function (fieldMetadata, event) {
-                var eventType = "beforechange";
-                var beforeChangeEvent = fieldMetadata.events[eventType];
-                var fn = eventService.loadEvent(fieldMetadata, eventType);
-                if (fn == null) {
+                $log.getInstance("sw4.fieldservice#onFieldChange").debug("Invoking before field change event");
+                const result = eventService.beforechange(fieldMetadata, event);
+                if (result === null) {
                     event.continue();
                     return;
                 }
-                $log.getInstance('sw4.fieldservice#onFieldChange').debug('invoking before field change service {0} method {1}'.format(beforeChangeEventservice, beforeChangeEvent.method));
-                var result = fn(event);
+
                 //sometimes the event might be syncrhonous, returning either true of false
                 if (result != undefined && result == false) {
                     event.interrupt();
@@ -439,23 +437,17 @@
                     event.continue();
                 }
             },
-            postFieldChange: function (field, scope,oldValue,newValue) {
-                var eventType = "afterchange";
-                var afterChangeEvent = field.events[eventType];
-                var fn = eventService.loadEvent(field, eventType);
-                if (fn == null) {
-                    return;
-                }
 
-                var afterchangeEvent = {
-                    fields:  scope.datamap,
+            postFieldChange: function (field, scope, oldValue, newValue) {
+                const parameters = {
+                    fields: scope.datamap,
                     target: field,
                     scope: scope,
                     oldValue: oldValue,
-                    newValue : newValue
+                    newValue: newValue
                 };
-                $log.get('sw4.fieldservice#postfieldchange',["event","field","afterchange"]).debug('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
-                fn(afterchangeEvent);
+                $log.get("sw4.fieldservice#postfieldchange", ["event", "field", "afterchange"]).debug("Invoking post field change event.");
+                eventService.afterchange(field, parameters);
             },
 
             /// <summary>

@@ -4,5 +4,6 @@
         public string Type { get; set; }
         public string Service { get; set; }
         public string Method { get; set; }
+        public string Expression { get; set; }
     }
 }

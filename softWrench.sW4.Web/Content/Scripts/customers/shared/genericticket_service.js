@@ -165,8 +165,8 @@ angular.module('sw_layout')
             event["#haswoaddresschange"] = true;
         }, 
 
-        validateCloseStatus: function (schema, datamap, originalDatamap, parameters) {
-            var status = originalDatamap.originaldatamap['synstatus_.description'] == null ? originalDatamap.originaldatamap['status'] : originalDatamap.originaldatamap['synstatus_.description'];
+        validateCloseStatus: function (schema, datamap, parameters) {
+            var status = parameters.originaldatamap['synstatus_.description'] == null ? parameters.originaldatamap['status'] : parameters.originaldatamap['synstatus_.description'];
 
             if (status.equalIc('CLOSED') || status.equalIc('CLOSE')) {
                 alertService.alert("You cannot submit this ticket because it is already closed.");

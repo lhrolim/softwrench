@@ -818,12 +818,9 @@
         /// <param name="item">the row entry, datamap</param>
         /// <param name="column">the specific column clicked,might be used by different implementations</param>
         $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex) {
-
             $scope.isUpdate = columnMode === "edit";
-            const event = $scope.compositionlistschema.events["onedit.validation"];
-            if ($scope.isUpdate && event) {
-                const fn = dispatcherService.loadService(event.service, event.method);
-                fn(item, $scope.compositionlistschema).then(function () {
+            if ($scope.isUpdate) {
+                eventService.onedit_validation(item, $scope.compositionlistschema).then(() => {
                     $scope.executeToggleDetails(item, column, columnMode, $event, rowIndex);
                 });
             } else {
@@ -960,17 +957,10 @@
                 compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
                     //TODO: generate composition deletion method
                     var compositionItem = result.resultObject;
-                    const event = $scope.compositionlistschema.events["onremoval.validation"];
-                    if (event) {
-                        const fn = dispatcherService.loadService(event.service, event.method);
-                        fn(compositionItem, $scope.compositionlistschema).then(function () {
-                            compositionItem["#deleted"] = 1;
-                            $scope.save(compositionItem, null, "crud_delete");
-                        });
-                    } else {
+                    eventService.onremoval_validation(compositionItem, $scope.compositionlistschema).then(() => {
                         compositionItem["#deleted"] = 1;
                         $scope.save(compositionItem, null, "crud_delete");
-                    }
+                    });
                 });
             });
 

@@ -57,7 +57,7 @@
             }, null);
         };
 
-        const addSignature = function (parameters) {
+        const addSignature = function () {
             const datamap = crudContextHolderService.rootDataMap("#modal");
             if (datamap.message == undefined) {
                 const signature = contextService.getUserData().signature || "";

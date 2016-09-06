@@ -18,6 +18,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string EventsTypeAttribute = "type";
         public const string EventsServiceAttribute = "service";
         public const string EventsMethodAttribute = "method";
+        public const string EventsExpressionAttribute = "expression";
 
 
         public const string EnvironmentElement = "environment";
