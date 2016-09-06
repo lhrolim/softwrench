@@ -27,7 +27,7 @@
         </relationship>
         <relationship to="worklog" collection="true">
           <relationshipAttribute from="ticketid" to="recordkey" primary="true" />
-          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute from="siteid" to="siteid" allowsnull="true" />
           <relationshipAttribute to="class" literal="SR" quoteLiteral="true" />
         </relationship>
         <relationship to ="commlog" collection="true">

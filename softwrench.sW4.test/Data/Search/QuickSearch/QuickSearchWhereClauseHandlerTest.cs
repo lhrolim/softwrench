@@ -71,7 +71,7 @@ namespace softwrench.sW4.test.Data.Search.QuickSearch {
             _helperMock.Verify(a => a.BuildOrWhereClause(It.IsAny<IEnumerable<string>>(), null), Times.Once());
 
             Assert.AreEqual(
-                "(1=1 or exists (select 1 from worklog as worklog_ where SR.ticketid = worklog_.recordkey and SR.siteid = worklog_.siteid and worklog_.class = 'SR' and ((UPPER(COALESCE(worklog_.description,'')) like :quicksearchstring) or (UPPER(COALESCE(worklog_.createby,'')) like :quicksearchstring))))",
+                "(1=1 or exists (select 1 from worklog as worklog_ where SR.ticketid = worklog_.recordkey and (SR.siteid = worklog_.siteid or worklog_.siteid is null) and worklog_.class = 'SR' and ((UPPER(COALESCE(worklog_.description,'')) like :quicksearchstring) or (UPPER(COALESCE(worklog_.createby,'')) like :quicksearchstring))))",
                 result.WhereClause);
 
 
@@ -99,7 +99,7 @@ namespace softwrench.sW4.test.Data.Search.QuickSearch {
 
             var expected =
 @"(1=1 
-or exists (select 1 from worklog as worklog_ where SR.ticketid = worklog_.recordkey and SR.siteid = worklog_.siteid and worklog_.class = 'SR' and ((UPPER(COALESCE(worklog_.description,'')) like :quicksearchstring))) 
+or exists (select 1 from worklog as worklog_ where SR.ticketid = worklog_.recordkey and (SR.siteid = worklog_.siteid or worklog_.siteid is null) and worklog_.class = 'SR' and ((UPPER(COALESCE(worklog_.description,'')) like :quicksearchstring))) 
 or exists (select 1 from commlog as commlog_ where SR.ticketuid = commlog_.ownerid and commlog_.ownertable = 'SR' and ((commlog_.sendto like :quicksearchstring) or (UPPER(COALESCE(commlog_.sendfrom,'')) like :quicksearchstring) or (UPPER(COALESCE(commlog_.subject,'')) like :quicksearchstring))))";
             Assert.AreEqual(expected.Replace("\n", "").Replace("\t", "").Replace("\r", ""), whereClause.Replace("\n", "").Replace("\t", "").Replace("\r", ""));
         }

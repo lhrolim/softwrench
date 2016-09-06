@@ -652,8 +652,9 @@
             if (!eagerOptions) {
                 return null;
             }
-            var quickSearchData = lookupObj.quickSearchData;
-            if (quickSearchData) {
+            const quickSearchDTO = lookupObj.quickSearchDTO;
+            if (quickSearchDTO) {
+                const quickSearchData = quickSearchDTO.quickSearchData;
                 eagerOptions = eagerOptions.filter(function (a) {
                     return a.value.containsIgnoreCase(quickSearchData) || a.label.containsIgnoreCase(quickSearchData);
                 });

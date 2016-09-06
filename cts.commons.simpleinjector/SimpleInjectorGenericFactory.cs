@@ -19,10 +19,10 @@ namespace cts.commons.simpleinjector {
 
         }
 
-        public T GetObject<T>(Type type) {
+        public T GetObject<T>(Type type=null) {
             try {
                 // Return job registrated in container
-                return (T)_container.GetInstance(type);
+                return (T)_container.GetInstance(typeof(T));
             } catch (Exception ex) {
                 throw new Exception(
                     "Problem instantiating class", ex);

@@ -225,16 +225,16 @@ namespace softWrench.sW4.Data.Search {
             return this;
         }
 
-        public SearchRequestDto AppendSearchEntry(string searchParam, params string[] searchValue) {
+        public SearchRequestDto AppendSearchEntry(string searchParam, bool allownulls= false,params string[] searchValue) {
             if (searchValue != null) {
                 AppendSearchParam(searchParam);
-                AppendSearchValue(string.Join(",", searchValue));
+                AppendSearchValue(string.Join(",", searchValue),allownulls);
             }
             return this;
         }
 
-        public SearchRequestDto AppendSearchEntry(string searchParam, IEnumerable<string> searchValue) {
-            return AppendSearchEntry(searchParam, searchValue.ToArray());
+        public SearchRequestDto AppendSearchEntry(string searchParam,IEnumerable<string> searchValue, bool allowNulls = false) {
+            return AppendSearchEntry(searchParam, allowNulls, searchValue.ToArray());
         }
 
         public void AppendSearchParam(string searchParam) {

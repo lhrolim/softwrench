@@ -192,7 +192,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
             var filter = parameters.BASEDto;
             // Default filter to be applied to all Schemas
-            filter.AppendSearchEntry("status", AssetConstants.Active, AssetConstants.Operating);
+            filter.AppendSearchEntry("status", false, AssetConstants.Active, AssetConstants.Operating);
             filter.IgnoreWhereClause = true;
 
             // Add another filters depending on Schema
