@@ -159,7 +159,7 @@ namespace softWrench.sW4.Web {
             if (Request.UrlReferrer != null) {
                 //this is for ripple development where CORS is enabled.
                 //TODO: review if these settings are really needed into production,or how to do it the right way,since it might represent a security leak
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "http://" + Request.UrlReferrer.Authority);
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", Request.Url.Scheme + Uri.SchemeDelimiter + Request.UrlReferrer.Authority);
                 HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");
             }
 
