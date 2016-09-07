@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Http;
+using cts.commons.portable.Util;
 using cts.commons.web.Attributes;
 using JetBrains.Annotations;
 using log4net;
 using Newtonsoft.Json.Linq;
-using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Applications;
-using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Association.Lookup;
@@ -28,8 +27,6 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.Util;
-using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
 
@@ -38,19 +35,18 @@ namespace softWrench.sW4.Web.Controllers {
     public class AssociationController : ApiController {
 
         private readonly DataSetProvider _dataSetProvider;
-        private readonly ApplicationAssociationResolver _associationResolver;
+        private readonly DataProviderResolver _dataProviderResolver;
         private readonly FilterWhereClauseHandler _filterWhereClauseHandler;
         private readonly IContextLookuper _contextLookuper;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(AssociationController));
 
 
-        public AssociationController(DataSetProvider dataSetProvider, ApplicationAssociationResolver associationResolver,
-            FilterWhereClauseHandler filterWhereClauseHandler, IContextLookuper contextLookuper) {
+        public AssociationController(DataSetProvider dataSetProvider, FilterWhereClauseHandler filterWhereClauseHandler, IContextLookuper contextLookuper, DataProviderResolver dataProviderResolver) {
             _dataSetProvider = dataSetProvider;
-            _associationResolver = associationResolver;
             _filterWhereClauseHandler = filterWhereClauseHandler;
             _contextLookuper = contextLookuper;
+            _dataProviderResolver = dataProviderResolver;
         }
 
 
@@ -79,7 +75,7 @@ namespace softWrench.sW4.Web.Controllers {
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), MetadataProvider.EntityByApplication(application), app, currentData);
 
             //adopting to use an association to keep same existing service
-            var result = _associationResolver.ResolveOptions(app.Schema, cruddata, association, filter);
+            var result = _dataProviderResolver.ResolveOptions(app.Schema, cruddata, association, filter);
             return result;
         }
 
@@ -171,10 +167,12 @@ namespace softWrench.sW4.Web.Controllers {
                 associationPrefetcherRequest);
             return result;
         }
-
-        private static ApplicationAssociationDefinition BuildAssociation(ApplicationMetadata application, string associationKey) {
-            var registeredAssociation =
-                application.Schema.Associations().FirstOrDefault(a => a.AssociationKey.Equals(associationKey));
+        [NotNull]
+        private static IDataProviderContainer BuildAssociation(ApplicationMetadata application, string associationKey) {
+            var registeredAssociation = application.Schema.GetDisplayable<IDataProviderContainer>().FirstOrDefault(a => a.AssociationKey.Equals(associationKey));
+            if (registeredAssociation == null) {
+                throw new InvalidOperationException("couldn´t locate association {0} ".Fmt(associationKey));
+            }
             return registeredAssociation;
 
         }

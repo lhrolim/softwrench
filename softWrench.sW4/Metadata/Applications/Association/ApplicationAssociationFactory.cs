@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
+using softwrench.sw4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -33,9 +33,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             association.LabelFields = ParseLabelFields(labelField);
             association.ApplicationTo = ParseApplicationTo(labelField);
             association.OriginalLabelField = labelField;
-            if (extraProjectionFields != null) {
-                BuildExtraProjectionFields(association, extraProjectionFields);
-            }
+            association.ExtraProjectionFields = ExtraProjectionProviderHelper.BuildExtraProjectionFields(extraProjectionFields);
             association.SetLazyResolver(new Lazy<EntityAssociation>(
                 () => {
                     var appMetadata = MetadataProvider.Application(association.From);
@@ -58,16 +56,6 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }));
             MergeWithStereotypeComponent(association);
             return association;
-        }
-
-
-        private static void BuildExtraProjectionFields(ApplicationAssociationDefinition association, string extraProjectionFields) {
-            string[] collection = extraProjectionFields.Split(',');
-            var relationshipName = EntityUtil.GetRelationshipName(association.ApplicationTo);
-            foreach (var s in collection) {
-                association.ExtraProjectionFields.Add(s.Trim());
-            }
-
         }
 
         private static string ParseApplicationTo(string labelField) {

@@ -31,16 +31,9 @@ namespace softWrench.sW4.Web.Controllers {
         private IWhereClauseFacade _whereClauseFacade;
         private readonly I18NResolver _i18Nresolver;
 
-        private static IContextLookuper _contextManager;
-
         protected static IContextLookuper ContextManager {
             get {
-                if (_contextManager != null) {
-                    return _contextManager;
-                }
-                _contextManager =
-                    SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
-                return _contextManager;
+                return SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
             }
         }
 

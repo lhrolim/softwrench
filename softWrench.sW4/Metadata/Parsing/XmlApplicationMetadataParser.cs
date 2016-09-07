@@ -133,7 +133,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var qualifier = field.Attribute(XmlMetadataSchema.FieldAttributeQualifier).ValueOrDefault((string)null);
             var widget = XmlWidgetParser.Parse(field, attribute, isHidden);
             var attributeToServer = field.Attribute(XmlMetadataSchema.FieldAttributeAttributeToServer).ValueOrDefault((string)null);
-            var events = ParseEvents(field);
+            var events = ParseEvents(field, attribute);
             var filterElement = field.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.FilterElement);
             var enableExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute).ValueOrDefault("true");
             var enableDefault = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableDefaultAttribute).ValueOrDefault("true");
@@ -185,16 +185,24 @@ namespace softWrench.sW4.Metadata.Parsing {
             return datatype;
         }
 
-        private static ISet<ApplicationEvent> ParseEvents(XElement element) {
+        private static ISet<ApplicationEvent> ParseEvents(XElement element, string parentId) {
             ISet<ApplicationEvent> result = new HashSet<ApplicationEvent>();
 
             var events = element.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.EventsElement).ToList();
             foreach (var applicationEvent in events) {
-                result.Add(new ApplicationEvent {
+                var newEvent = new ApplicationEvent {
                     Type = applicationEvent.Attribute(XmlMetadataSchema.EventsTypeAttribute).Value,
-                    Service = applicationEvent.Attribute(XmlMetadataSchema.EventsServiceAttribute).Value,
-                    Method = applicationEvent.Attribute(XmlMetadataSchema.EventsMethodAttribute).Value
-                });
+                    Service = applicationEvent.Attribute(XmlMetadataSchema.EventsServiceAttribute).ValueOrDefault((string)null),
+                    Method = applicationEvent.Attribute(XmlMetadataSchema.EventsMethodAttribute).ValueOrDefault((string)null),
+                    Expression = applicationEvent.Attribute(XmlMetadataSchema.EventsExpressionAttribute).ValueOrDefault((string)null)
+                };
+                if (string.IsNullOrEmpty(newEvent.Expression) && (string.IsNullOrEmpty(newEvent.Service) && string.IsNullOrEmpty(newEvent.Method))) {
+                    var msg =
+                        string.Format("Event of type {0} from {1} needs a service and method or a expression to eval.",
+                            newEvent.Type, parentId);
+                    throw ExceptionUtil.InvalidOperation(msg);
+                }
+                result.Add(newEvent);
             }
             return result;
         }
@@ -314,6 +322,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var showExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
             var toolTip = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
             var attributeToServer = xElement.Attribute(XmlMetadataSchema.FieldAttributeAttributeToServer).ValueOrDefault((string)null);
+            var extraProjectionFields = xElement.Attribute(XmlMetadataSchema.ApplicationAssociationExtraProjectionFieldsAttribute).ValueOrDefault((string)null);
 
             var providerAttribute = xElement.Attribute(XmlMetadataSchema.OptionFieldProviderAttribute).ValueOrDefault((string)null);
             var skipValidation = xElement.Attribute(XmlMetadataSchema.OptionFieldSkipValidationAttribute).ValueOrDefault(false);
@@ -337,10 +346,10 @@ namespace softWrench.sW4.Metadata.Parsing {
                 renderer = (OptionFieldRenderer)ParseRendererNew(rendererElement, attribute, FieldRendererType.OPTION);
             };
             var filterElement = xElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.FilterElement);
-            var events = ParseEvents(xElement);
+            var events = ParseEvents(xElement, attribute);
             return new OptionField(applicationName, label, attribute, qualifier, requiredExpression, isReadOnly, isHidden, renderer, ParseFilterNew(filterElement, attribute),
                                    xElement.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.OptionElement).Select(ParseOption).ToList(),
-                                   defaultValue, sort, showExpression, toolTip, attributeToServer, events, providerAttribute, dependantFields, enableExpression, evalExpression, extraParameter, defaultExpression, searchOperation);
+                                   defaultValue, sort, showExpression, toolTip, attributeToServer, events, providerAttribute, dependantFields, enableExpression, evalExpression, extraParameter, defaultExpression, searchOperation, extraProjectionFields);
         }
 
         private static IAssociationOption ParseOption(XElement xElement) {
@@ -386,7 +395,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             ApplicationSection section = ParseAssociationDetails(association, schemaId, applicationName, entityMetadata);
 
             return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(applicationName, schemaId, association, target), showExpression, helpIcon, tooltip,
-                requiredExpression, ParseEvents(association), defaultValue, hideDescription, orderbyfield, defaultExpression, extraProjectionFields, enableExpression, forceDistinctOptions, valueField, section);
+                requiredExpression, ParseEvents(association, target), defaultValue, hideDescription, orderbyfield, defaultExpression, extraProjectionFields, enableExpression, forceDistinctOptions, valueField, section);
         }
 
         private static ApplicationSection ParseAssociationDetails(XElement association, string applicationName, string schemaId, EntityMetadata entityMetadata) {
@@ -481,7 +490,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
 
             var collectionProperties = ParseCollectionProperties(composition, applicationName, sourceSchemaId);
-            var applicationEvents = ParseEvents(composition);
+            var applicationEvents = ParseEvents(composition, schemaId);
             if (collectionProperties != null || isCollection) {
                 return new ApplicationCompositionCollectionSchema(inline, schemaId, collectionProperties, mode,
                     (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, fetchType, applicationEvents);
@@ -601,7 +610,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             resultDictionary.Add(key,
                 ApplicationSchemaFactory.GetInstance(entityName, applicationName, applicationTitle, title, id, redeclaring, stereotypeAttr, stereotype, mode, platform,
                     isAbstract, displayables, filters, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName,
-                    userIdFieldName, unionSchema, ParseEvents(xElement)));
+                    userIdFieldName, unionSchema, ParseEvents(xElement, id)));
         }
 
         private static ApplicationSchemaDefinition LookupParentSchema(string id, string applicationName, string parentSchemaValue, ClientPlatform? platform,

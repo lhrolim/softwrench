@@ -19,17 +19,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet.Faq {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(FaqUtils));
 
-        private EntityRepository _repository;
-
-        private EntityRepository EntityRepository {
+        private static EntityRepository EntityRepository {
             get {
-                if (_repository == null) {
-                    _repository =
-                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
-                }
-                return _repository;
+                return SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
             }
         }
+
         private static IEnumerable<FaqData> GetBuiltList(IEnumerable<FaqData> list, IEnumerable<UsefulFaqLinksUtils> usefulFaqLinksUtils) {
             try {
                 var buildedList = new List<FaqData>();
@@ -80,9 +75,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet.Faq {
 
             var applicationMetadata = MetadataProvider
                 .Application(application)
-                .ApplyPolicies(request.Key, user, ClientPlatform.Web,null);
+                .ApplyPolicies(request.Key, user, ClientPlatform.Web, null);
 
-            return _dataSetProvider.LookupDataSet(application,applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
+            return _dataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
         }
 
         #region Public

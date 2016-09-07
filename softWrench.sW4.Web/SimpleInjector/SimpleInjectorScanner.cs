@@ -11,19 +11,22 @@ using log4net;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
 using cts.commons.simpleinjector;
+using softWrench.sW4.Dynamic;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.SimpleInjector.WebApi;
 
 namespace softWrench.sW4.Web.SimpleInjector {
     class SimpleInjectorScanner {
-
         private static readonly ILog Log = LogManager.GetLogger(typeof(SimpleInjectorScanner));
+        private const string DynReplaceMsg = "Replacing component {0} with the dynamic component {1}";
 
-        public static Container InitDIController() {
+        public static Container InitDIController(ScriptEntry singleDynComponent) {
             var before = Stopwatch.StartNew();
             // Create the container as usual.
             var container = new Container();
             container.Options.AllowOverridingRegistrations = true;
+
+            DynamicScannerHelper.LoadDynamicTypes(singleDynComponent);
 
             RegisterComponents(container);
             SimpleInjectorWebAPIUtil.RegisterWebApiControllers(container);
@@ -39,6 +42,11 @@ namespace softWrench.sW4.Web.SimpleInjector {
             // Verify the container configuration
             container.Verify();
 
+            // prepare the script service to be able to reload the container
+            var scriptService = SimpleInjectorGenericFactory.Instance.GetObject<ScriptsService>(typeof(ScriptsService));
+            scriptService.Reloader = new ContainerReloader();
+            scriptService.ContainerReloaded(singleDynComponent);
+
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
             Log.Debug(LoggingUtil.BaseDurationMessage("SimpleInjector context initialized in {0}", before));
             return container;
@@ -47,7 +55,6 @@ namespace softWrench.sW4.Web.SimpleInjector {
 
 
         private static void RegisterComponents(Container container) {
-
 
             var assemblies = AssemblyLocator.GetSWAssemblies();
             IDictionary<Type, IList<Registration>> tempDict = new Dictionary<Type, IList<Registration>>();
@@ -61,30 +68,37 @@ namespace softWrench.sW4.Web.SimpleInjector {
                     if (shouldIgnore != null) {
                         continue;
                     }
-                    var attributes = typeToRegister.GetAllAttributes<ComponentAttribute>();
+
+                    var name = SimpleInjectorGenericFactory.BuildRegisterName(typeToRegister);
+                    var finalType = typeToRegister;
+                    if (DynamicScannerHelper.DynTypes.ContainsKey(name)) {
+                        var record = DynamicScannerHelper.DynTypes[name];
+                        Log.Debug(string.Format(DynReplaceMsg, name, record.Name));
+                        finalType = record.Type;
+                        SimpleInjectorGenericFactory.RegisterDynOriginalType(typeToRegister, name);
+                    }
+
+                    var attributes = finalType.GetAllAttributes<ComponentAttribute>();
                     var attr = attributes.FirstOrDefault();
-                    var reg = Lifestyle.Singleton.CreateRegistration(typeToRegister, container);
+                    var reg = Lifestyle.Singleton.CreateRegistration(finalType, container);
                     if (attr != null) {
                         RegisterFromAttribute(attr, tempDict, reg);
                     }
-                    var overridingAnnotation = typeToRegister.GetCustomAttribute(typeof(OverridingComponentAttribute));
-                    if (overridingAnnotation != null && typeToRegister.BaseType != null) {
-                        RegisterOverridingBaseClass(container, (OverridingComponentAttribute)overridingAnnotation, typeToRegister, reg);
+
+                    var overridingAnnotation = finalType.GetCustomAttribute(typeof(OverridingComponentAttribute));
+                    if (overridingAnnotation != null && finalType.BaseType != null) {
+                        RegisterOverridingBaseClass(container, (OverridingComponentAttribute)overridingAnnotation, finalType, reg, name);
                     }
 
-                    var name = typeToRegister.Name;
                     RegisterFromInterfaces(typeToRegister, tempDict, reg);
                     if (overridingAnnotation == null && attr == null) {
-                        RegisterClassItSelf(container, typeToRegister, reg);
+                        RegisterClassItSelf(container, typeToRegister, reg, name);
                     }
-
                 }
             }
             foreach (var entry in tempDict) {
                 var coll = entry.Value;
                 var serviceType = entry.Key;
-
-
                 if (typeof(ISingletonComponent).IsAssignableFrom(serviceType)) {
                     container.AddRegistration(serviceType, coll.FirstOrDefault());
                     SimpleInjectorGenericFactory.RegisterNameAndType(serviceType);
@@ -94,32 +108,34 @@ namespace softWrench.sW4.Web.SimpleInjector {
             }
         }
 
-        private static void RegisterOverridingBaseClass(Container container, OverridingComponentAttribute overridingAnnotation, Type realType, Registration simpleInjectorRegistration) {
+        private static void RegisterOverridingBaseClass(Container container, OverridingComponentAttribute overridingAnnotation, Type realType, Registration simpleInjectorRegistration, string name) {
             var type = realType.BaseType;
             if (overridingAnnotation.ClientFilters != null && (!overridingAnnotation.ClientFilters.Split(',').Contains(ApplicationConfiguration.ClientName))) {
                 Log.DebugOrInfoFormat("ignoring overriding type {0} due to client filters", realType.Name);
                 return;
             }
 
-            if (type.IsPublic) {
-                Log.DebugOrInfoFormat("registering replacement {0} for base class {1}", realType.Name, type.Name);
-                container.AddRegistration(type, simpleInjectorRegistration);
-                SimpleInjectorGenericFactory.RegisterNameAndType(realType);
+            if (type == null || (!type.IsPublic && !type.IsNestedPublic)) {
+                return;
             }
+
+            Log.DebugOrInfoFormat("registering replacement {0} for base class {1}", realType.Name, type.Name);
+            container.AddRegistration(type, simpleInjectorRegistration);
+            SimpleInjectorGenericFactory.RegisterNameAndType(realType, name);
         }
 
-        private static void RegisterClassItSelf(Container container, Type registration, Registration reg) {
-            if (registration.IsPublic)
-            {
-                var name = registration.Name;
-                if (SimpleInjectorGenericFactory.ContainsService(registration)) {
-                    Log.DebugOrInfoFormat("ignoring type {0} due to presence of existing overriding", registration.Name);
-                    return;
-                }
-
-                container.AddRegistration(registration, reg);
-                SimpleInjectorGenericFactory.RegisterNameAndType(registration);
+        private static void RegisterClassItSelf(Container container, Type registration, Registration reg, string name) {
+            if (!registration.IsPublic && !registration.IsNestedPublic) {
+                return;
             }
+
+            if (SimpleInjectorGenericFactory.ContainsService(name)) {
+                Log.DebugOrInfoFormat("ignoring type {0} due to presence of existing overriding", registration.Name);
+                return;
+            }
+
+            container.AddRegistration(registration, reg);
+            SimpleInjectorGenericFactory.RegisterNameAndType(registration, name);
         }
 
         private static void RegisterFromInterfaces(Type registration, IDictionary<Type, IList<Registration>> tempDict, Registration reg) {
@@ -129,20 +145,17 @@ namespace softWrench.sW4.Web.SimpleInjector {
                 }
                 tempDict[type].Add(reg);
             }
-
-
         }
 
         private static void RegisterFromAttribute(ComponentAttribute attr, IDictionary<Type, IList<Registration>> tempDict, Registration registration) {
             var registrationType = attr.RegistrationType;
-            if (registrationType != null) {
-                if (!tempDict.ContainsKey(registrationType)) {
-                    tempDict.Add(registrationType, new List<Registration>());
-                }
-                tempDict[registrationType].Add(registration);
+            if (registrationType == null) {
+                return;
             }
+            if (!tempDict.ContainsKey(registrationType)) {
+                tempDict.Add(registrationType, new List<Registration>());
+            }
+            tempDict[registrationType].Add(registration);
         }
-
-
     }
 }

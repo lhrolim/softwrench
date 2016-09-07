@@ -31,7 +31,7 @@ using System.Linq;
 using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
-    class HapagImacDataSet : HapagBaseApplicationDataSet {
+    public class HapagImacDataSet : HapagBaseApplicationDataSet {
         public HapagImacDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, IMaximoHibernateDAO maxDao)
             : base(locationManager, entityRepository, maxDao) {
         }

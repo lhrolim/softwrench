@@ -20,7 +20,7 @@
                     //why this timeout?
                     $log.get("#detailService#fetchRelationshipData").info('fetching eager associations of {0}'.format(scope.schema.applicationName));
                     associationService.loadSchemaAssociations(scope.datamap, scope.schema, { avoidspin: true }).then(function (result) {
-                        var eventInvocation = eventService.dispatchEvent(scope.schema, "onassociationsloaded");
+                        eventService.onassociationsloaded(scope.schema);
                         return result;
                     });
 

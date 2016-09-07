@@ -1,7 +1,6 @@
 ﻿using cts.commons.persistence;
 using cts.commons.persistence.Util;
 using cts.commons.simpleinjector;
-using cts.commons.simpleinjector.app;
 using log4net;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -22,18 +21,9 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
             _hibernateUtil = hibernateUtil;
         }
 
-
-        private static SWDBHibernateDAO _instance;
-
-
         public static SWDBHibernateDAO GetInstance() {
-            if (_instance == null) {
-                _instance =
-                    SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
-            }
-            return _instance;
+            return SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
         }
-
 
         protected override int? GetCreatedByUser() {
             return SecurityFacade.CurrentUser().UserId;
@@ -70,7 +60,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                 }
             }
         }
-        
+
         #region configuration
 
         protected override string GetDialect() {

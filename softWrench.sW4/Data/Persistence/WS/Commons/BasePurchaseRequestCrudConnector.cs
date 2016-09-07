@@ -1,5 +1,4 @@
-﻿using cts.commons.persistence;
-using softWrench.sW4.Data.Persistence.Operation;
+﻿using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
@@ -12,10 +11,11 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class BasePurchaseRequestCrudConnector : CrudConnectorDecorator {
-        protected AttachmentHandler _attachmentHandler;
 
-        public BasePurchaseRequestCrudConnector() {
-            _attachmentHandler = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
+        protected AttachmentHandler AttachmentHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
+            }
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -51,7 +51,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
 
             // Update or create attachments
-            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
+            AttachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
 
             HandlePRLINES(maximoTemplateData, crudData, sr);
             base.BeforeCreation(maximoTemplateData);
@@ -62,16 +62,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             var user = SecurityFacade.CurrentUser();
             w.CloneArray((IEnumerable<CrudOperationData>)crudDataEntity.GetRelationship("prline"), sr, "PRLINE",
-                delegate(object integrationObject, CrudOperationData crudData) {
+                delegate (object integrationObject, CrudOperationData crudData) {
                     if (ReflectionUtil.IsNull(integrationObject, "PRLINENUM")) {
                         //Need to generate a unique PR Line number for each PR
                         //Web sevice doesn't do it and hence do a native query to get the 
                         // maximum value and increment it by 1. 
-                        BaseHibernateDAO _dao = MaximoHibernateDAO.GetInstance();
                         String queryst = "Select MAX(prline.prlinenum) from prline where prnum like ";
                         var prnum = w.GetRealValue(sr, "PRNUM");
                         queryst = queryst + Convert.ToString(prnum);
-                        var id = _dao.FindSingleByNativeQuery<object>(queryst, null);
+                        var id = MaximoHibernateDAO.GetInstance().FindSingleByNativeQuery<object>(queryst, null);
                         int prlinenum = Convert.ToInt32(id) + 1;
                         w.SetValue(integrationObject, "PRLINENUM", prlinenum);
                     }

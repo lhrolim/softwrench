@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>softwrench.sw4.jstest</RootNamespace>
     <AssemblyName>softwrench.sw4.jstest</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,8 +62,10 @@
     <Content Include="tests\controllers\grid_filter_test.js" />
     <Content Include="tests\customers\firstsolar\services\batchWoService_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
+    <Content Include="tests\pojos\FieldMetadataPojo.js" />
     <Content Include="tests\pojos\SchemaPojo.js" />
     <Content Include="tests\services\adminresources\userprofileservice_test.js" />
+    <Content Include="tests\services\associationservice_test.js" />
     <Content Include="tests\services\format_service_test.js" />
     <Content Include="tests\services\passwordvalidationservice_test.js" />
     <Content Include="tests\services\search_service_test.js" />

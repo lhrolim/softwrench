@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using cts.commons.portable.Util;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
 using log4net;
 using softWrench.sW4.Metadata;
@@ -18,7 +19,7 @@ using LogManager = log4net.LogManager;
 namespace softWrench.sW4.Email {
     public class EmailService : IEmailService {
 
-        private static readonly Regex HtmlImgRegex = new Regex("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
+        private static readonly Regex HtmlInlineImgRegex = new Regex("<img[^>]+src\\s*=\\s*['\"]\\s*data:([^'\"]+)['\"][^>]*>");
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(EmailService));
 
@@ -62,13 +63,13 @@ namespace softWrench.sW4.Email {
         /// Sends email in a fire-and-forget way.
         /// </summary>
         /// <param name="emailData"></param>
-        public void SendEmailAsync(EmailData emailData) {
+        public virtual void SendEmailAsync(EmailData emailData) {
             Log.DebugFormat("sending email asynchronoysly");
             // Send the email message asynchronously
             Task.Run(() => SendEmail(emailData));
         }
 
-        public void SendEmail(EmailData emailData) {
+        public virtual void SendEmail(EmailData emailData) {
             try {
                 Log.DebugFormat("start sending email");
                 var smtpClient = ConfiguredSmtpClient();
@@ -77,6 +78,15 @@ namespace softWrench.sW4.Email {
                 smtpClient.Send(email);
             } catch (Exception ex) {
                 Log.Error(ex);
+                throw;
+            }
+        }
+
+        public virtual EmailAttachment CreateAttachment(string fileContent, string attachmentName) {
+            try {
+                return new EmailAttachment() { AttachmentBinary = Encoding.UTF8.GetBytes(fileContent), AttachmentName = attachmentName };
+            } catch (Exception e) {
+                Log.Error("error creating attachment", e);
                 throw;
             }
         }
@@ -134,7 +144,7 @@ namespace softWrench.sW4.Email {
         }
 
         public static AlternateView BuildContent(string html) {
-            var matches = HtmlImgRegex.Matches(html);
+            var matches = HtmlInlineImgRegex.Matches(html);
             var inlines = new List<LinkedResource>();
 
             foreach (Match match in matches) {

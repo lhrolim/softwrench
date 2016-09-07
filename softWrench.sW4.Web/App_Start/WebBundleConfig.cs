@@ -92,6 +92,13 @@ namespace softWrench.sW4.Web {
                     "~/Content/vendor/scripts/angular/angular-file-upload.js",
                     "~/Content/vendor/scripts/angular/angular-drag-and-drop-lists.js"
                 )
+                // angular
+                .Include(
+                    "~/Content/vendor/scripts/ace/ace.js",
+                    "~/Content/vendor/scripts/ace/mode-xml.js",
+                    "~/Content/vendor/scripts/ace/mode-csharp.js",
+                    "~/Content/vendor/scripts/ace/ui-ace.js"
+                )
                 // dev extreme
                 .Include(
                     "~/Content/vendor/scripts/devextreme/globalize.js",

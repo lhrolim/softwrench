@@ -58,24 +58,23 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         }
 
         protected virtual IEnumerable<IAssociationOption> GetClassStructureType(
-            OptionFieldProviderParameters parameters, string ticketclass, string searchString = null)
-        {
+            OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
 
             // TODO: Change the design to use a tree view component
             var query = BuildQuery(parameters, ticketclass, searchString);
 
             var result = MaxDAO.FindByNativeQuery(query, null);
 
-            return result.Select(record =>
-            {
+            return result.Select(record => {
                 var label = string.Format("{0}{1}{2}{3}{4}",
                         record["CLASS_5"] == null ? "" : record["CLASS_5"] + "/",
                         record["CLASS_4"] == null ? "" : record["CLASS_4"] + "/",
                         record["CLASS_3"] == null ? "" : record["CLASS_3"] + "/",
                         record["CLASS_2"] == null ? "" : record["CLASS_2"] + "/",
                         record["CLASS_1"] == null ? "" : record["CLASS_1"] + " (" + record["DESCRIPTION"] + ")");
-
-                return new AssociationOption(record["ID"], label);
+                var extra = new Dictionary<string, object>();
+                extra["classificationid"] = record["CLASS_1"];
+                return new MultiValueAssociationOption(record["ID"], label, extra);
             });
         }
 

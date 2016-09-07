@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using cts.commons.portable.Util;
 using SimpleInjector;
 
 namespace cts.commons.simpleinjector {
@@ -12,6 +11,9 @@ namespace cts.commons.simpleinjector {
         public static SimpleInjectorGenericFactory Instance = null;
 
         private static readonly IDictionary<string, Type> StringTypeDictionary = new Dictionary<string, Type>();
+        private static readonly IDictionary<string, Type> DynOriginalTypeDictionary = new Dictionary<string, Type>();
+
+        private static readonly IDictionary<Type, ISingletonComponent> SingletonCache = new Dictionary<Type, ISingletonComponent>();
 
         public SimpleInjectorGenericFactory(Container container) {
             this._container = container;
@@ -19,13 +21,25 @@ namespace cts.commons.simpleinjector {
 
         }
 
-        public T GetObject<T>(Type type=null) {
+        /// <summary>
+        /// Do not cache the result of this method, the singletons are already cached. If you do so a memory leak can occur.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public T GetObject<T>(Type type = null) {
             try {
-                // Return job registrated in container
-                return (T)_container.GetInstance(typeof(T));
+                type = type ?? typeof(T);
+                if (!typeof(ISingletonComponent).IsAssignableFrom(type)) {
+                    // Return job registrated in container
+                    return (T)_container.GetInstance(type);
+                }
+                if (!SingletonCache.ContainsKey(type)) {
+                    SingletonCache[type] = (ISingletonComponent)_container.GetInstance(type);
+                }
+                return (T)SingletonCache[type];
             } catch (Exception ex) {
-                throw new Exception(
-                    "Problem instantiating class", ex);
+                throw new Exception("Problem instantiating class", ex);
             }
         }
 
@@ -33,53 +47,50 @@ namespace cts.commons.simpleinjector {
             try {
                 return _container.GetAllInstances<T>();
             } catch (Exception ex) {
-                throw new Exception(
-                    "Problem instantiating class", ex);
+                throw new Exception("Problem instantiating class", ex);
             }
         }
 
+        /// <summary>
+        /// Do not cache the result of this method, the singletons are already cached. If you do so a memory leak can occur.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="serviceName"></param>
+        /// <returns></returns>
         public T GetObject<T>(string serviceName) {
             try {
                 // Return job registrated in container
-                if (StringTypeDictionary.ContainsKey(serviceName)) {
-                    return (T)_container.GetInstance(StringTypeDictionary[serviceName]);
-                }
-                return default(T);
+                return StringTypeDictionary.ContainsKey(serviceName) ? GetObject<T>(StringTypeDictionary[serviceName]) : default(T);
             } catch (Exception ex) {
-                throw new Exception(
-                    "Problem instantiating class", ex);
+                throw new Exception("Problem instantiating class", ex);
             }
         }
 
-        public static bool ContainsService(string serviceName, string methodName) {
+        public static bool ContainsService(string serviceName) {
             return StringTypeDictionary.ContainsKey(serviceName);
         }
 
-
-        public static bool ContainsService(Type type) {
-            var name = char.ToLowerInvariant(type.Name[0]) + type.Name.Substring(1);
-            return ContainsService(name, null);
-        }
-
-
-        public static void RegisterNameAndType(Type type) {
+        public static string BuildRegisterName(Type type) {
             var attribute = (ComponentAttribute)Attribute.GetCustomAttribute(type, typeof(ComponentAttribute));
-
             var ovrattribute = (OverridingComponentAttribute)Attribute.GetCustomAttribute(type, typeof(OverridingComponentAttribute));
 
             var realTypeAttr = type;
-            var overriding = ovrattribute != null && type.BaseType != null;
-
             if (ovrattribute != null && type.BaseType != null) {
                 realTypeAttr = type.BaseType;
             }
 
-
             var name = char.ToLowerInvariant(realTypeAttr.Name[0]) + realTypeAttr.Name.Substring(1);
-
             if (attribute != null && !string.IsNullOrEmpty(attribute.Name)) {
                 name = attribute.Name;
             }
+            return name;
+        }
+
+        public static void RegisterNameAndType(Type type, string preName = null) {
+            var ovrattribute = (OverridingComponentAttribute)Attribute.GetCustomAttribute(type, typeof(OverridingComponentAttribute));
+            var overriding = ovrattribute != null && type.BaseType != null;
+
+            var name = preName ?? BuildRegisterName(type);
             if (!StringTypeDictionary.ContainsKey(name)) {
                 StringTypeDictionary[name] = type;
             } else if (overriding) {
@@ -88,6 +99,22 @@ namespace cts.commons.simpleinjector {
             }
         }
 
+        public static void RegisterDynOriginalType(Type type, string name) {
+            DynOriginalTypeDictionary[name] = type;
+        }
 
+        public static Type GetDynOriginalType(string name) {
+            return !DynOriginalTypeDictionary.ContainsKey(name) ? null : DynOriginalTypeDictionary[name];
+        }
+
+        public static void CacheSingletons() {
+            Instance._container.GetAllInstances<ISingletonComponent>();
+        }
+
+        public static void ClearCache() {
+            StringTypeDictionary.Clear();
+            DynOriginalTypeDictionary.Clear();
+            SingletonCache.Clear();
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>softwrench.sw4.Shared2</RootNamespace>
     <AssemblyName>softwrench.sw4.Shared2</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -67,6 +67,7 @@
     <Compile Include="Metadata\Applications\Filter\MetadataOptionFilter.cs" />
     <Compile Include="Metadata\Applications\Filter\SchemaFilters.cs" />
     <Compile Include="Metadata\Applications\Notification\SchemaStereotype.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Associations\ExtraProjectionProviderHelper.cs" />
     <Compile Include="Metadata\Applications\Relationships\Compositions\FetchType.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationEvent.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationHeader.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationDisplayableContainer.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationFieldContainer.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IDependableField.cs" />
+    <Compile Include="Metadata\Applications\Schema\Interfaces\IExtraProjectionProvider.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IPropertyHolder.cs" />
     <Compile Include="Metadata\Applications\Schema\OptionContainer.cs" />
     <Compile Include="Metadata\Applications\Schema\ReferenceDisplayable.cs" />

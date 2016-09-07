@@ -2,7 +2,7 @@
     "use strict";
 
 
-    function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, restService, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService) {
+    function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, restService, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, eventService) {
 
 
         /**
@@ -13,8 +13,11 @@
         var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
             const log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
             const key = associationFieldMetadata.associationKey;
-            
-            datamap[key] = {};
+            const isOptionField = associationFieldMetadata.type === "OptionField";
+
+            if (!isOptionField) {
+                datamap[key] = {};
+            }
             datamap.extrafields = datamap.extrafields || {};
             if (associationFieldMetadata.extraProjectionFields == null) {
                 return;
@@ -22,6 +25,14 @@
             for (let i = 0; i < associationFieldMetadata.extraProjectionFields.length; i++) {
                 const extrafield = associationFieldMetadata.extraProjectionFields[i];
                 const valueToSet = (underlyingValue == null || !underlyingValue.extrafields) ? null : underlyingValue.extrafields[extrafield];
+
+                if (isOptionField) {
+                    log.debug(`updating extra field ${extrafield} from option field ${associationFieldMetadata.attribute} | value=${valueToSet}`);
+                    const extraFieldKey = associationFieldMetadata.attribute + "." + extrafield;
+                    datamap.extrafields[extraFieldKey] = valueToSet;
+                    continue;
+                }
+
                 log.debug('updating extra field {0}.{1} | value={2}'.format(key, extrafield, valueToSet));
                 if (extrafield.startsWith(key)) {
                     //if the extrafield has the association we dont need to append anything (i.e: solution_x_y and relationship = solution_)
@@ -275,6 +286,15 @@
             }
         };
 
+        function updateOptionFieldExtraFields(optionFieldMetadata, scope) {
+            if (!optionFieldMetadata.extraProjectionFields || optionFieldMetadata.extraProjectionFields.length === 0) {
+                return;
+            }
+            const contextData = scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+            const fullObject = this.getFullObject(optionFieldMetadata, scope.datamap, scope.schema, contextData);
+            doUpdateExtraFields(optionFieldMetadata, fullObject, scope.datamap);
+        }
+
 
         ///dispatchedbyuser: the method could be called after a user action (changing a field), or internally after a value has been set programatically 
         function postAssociationHook(associationMetadata, scope, triggerparams) {
@@ -290,27 +310,14 @@
                 doUpdateExtraFields(associationMetadata, null, fields);
             }
 
-            if (associationMetadata.events == undefined) {
-                return $q.when();
-            }
-            const afterChangeEvent = associationMetadata.events["afterchange"];
-            if (afterChangeEvent == undefined) {
-                return $q.when();
-            }
-            const fn = dispatcherService.loadService(afterChangeEvent.service, afterChangeEvent.method);
-            if (fn == undefined) {
-                //this should not happen, it indicates a metadata misconfiguration
-                return $q.when();
-            }
-            const params = {
+            const parameters = {
                 fields: fields,
                 scope: scope,
                 parentdata: scope.parentdata || /* when trigerring event from modal */ crudContextHolderService.rootDataMap(),
                 triggerparams: instantiateIfUndefined(triggerparams)
             };
-            $log.getInstance('sw4.associationservice#postAssociationHook').debug('invoking post hook service {0} method {1} from association {2}|{3}'
-                .format(afterChangeEvent.service, afterChangeEvent.method, associationMetadata.target, associationMetadata.associationKey));
-            const promise = $q.when(fn(params));
+            $log.getInstance("sw4.associationservice#postAssociationHook").debug(`Post hook from association ${associationMetadata.target}|${associationMetadata.associationKey}`);
+            const promise = $q.when(eventService.afterchange(associationMetadata, parameters));
             return promise;
         };
 
@@ -738,25 +745,15 @@
                 event.continue();
                 return true;
             }
-            const beforeChangeEvent = fieldMetadata.events['beforechange'];
-            if (beforeChangeEvent == undefined) {
-                event.continue();
-                return true;
-            } else {
-                const fn = dispatcherService.loadService(beforeChangeEvent.service, beforeChangeEvent.method);
-                if (fn == undefined) {
-                    //this should not happen, it indicates a metadata misconfiguration
-                    event.continue();
-                    return true;
-                }
-                const result = fn(event); //sometimes the event might be syncrhonous, returning either true of false
-                if (result != undefined && result == false) {
-                    event.interrupt();
-                    return false;
-                }
-                event.continue();
-                return true;
+
+            const result = eventService.beforechange(fieldMetadata, event); //sometimes the event might be syncrhonous, returning either true of false
+            if (result != undefined && result == false) {
+                event.interrupt();
+                return false;
             }
+
+            event.continue();
+            return true;
         };
 
         function insertAssocationLabelsIfNeeded(schema, datamap) {
@@ -804,31 +801,33 @@
         }
 
         const service = {
-            getLabelText: getLabelText,
-            getFullObject: getFullObject,
-            getLookupOptions: getLookupOptions,
-            getEagerAssociations: getEagerAssociations,
-            insertAssocationLabelsIfNeeded: insertAssocationLabelsIfNeeded,
-            lookupAssociation: lookupAssociation,
-            lookupSingleAssociationByValue: lookupSingleAssociationByValue,
-            markAssociationProcessComplete: markAssociationProcessComplete,
-            parseLabelText: parseLabelText,
-            onAssociationChange: onAssociationChange,
-            postAssociationHook: postAssociationHook,
-            updateAssociationOptionsRetrievedFromServer: updateAssociationOptionsRetrievedFromServer,
-            updateAssociations: updateAssociations,
-            loadSchemaAssociations: loadSchemaAssociations,
-            updateDependentAssociationValues: updateDependentAssociationValues,
+            clearDependantFieldValues,
+            getLabelText,
+            getFullObject,
+            getLookupOptions,
+            getEagerAssociations,
+            getEagerLookupOptions,
+            insertAssocationLabelsIfNeeded,
+            lookupAssociation,
+            lookupSingleAssociationByValue,
+            markAssociationProcessComplete,
+            parseLabelText,
+            onAssociationChange,
+            postAssociationHook,
+            updateAssociationOptionsRetrievedFromServer,
+            updateAssociations,
+            loadSchemaAssociations,
+            updateDependentAssociationValues,
             updateFromServerSchemaLoadResult,
-            updateUnderlyingAssociationObject: updateUnderlyingAssociationObject,
-            clearDependantFieldValues: clearDependantFieldValues
+            updateUnderlyingAssociationObject,
+            updateOptionFieldExtraFields
         };
         return service;
     }
 
     angular
     .module('sw_layout')
-    .factory('associationService', ['dispatcherService', '$http', '$q', '$timeout', '$log', '$rootScope', 'restService', 'submitService', 'fieldService', 'contextService', 'searchService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService',
+    .factory('associationService', ['dispatcherService', '$http', '$q', '$timeout', '$log', '$rootScope', 'restService', 'submitService', 'fieldService', 'contextService', 'searchService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', "eventService",
         associationService]);
 
 })(angular);

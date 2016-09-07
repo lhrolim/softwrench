@@ -9,15 +9,11 @@ using softWrench.sW4.SPF;
 namespace softWrench.sW4.Web.Controllers.Security {
     [Authorize]
     public class RoleController : ApiController {
-        private static readonly SecurityFacade SecurityFacade = SecurityFacade.GetInstance();
-
         private readonly SWDBHibernateDAO _dao;
 
-        public RoleController(SWDBHibernateDAO dao)
-        {
+        public RoleController(SWDBHibernateDAO dao) {
             this._dao = dao;
         }
-
 
         [SPFRedirect("Application Permissions", "_headermenu.rolesetup")]
         public GenericResponseResult<IList<Role>> Get() {
@@ -26,7 +22,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
         public GenericResponseResult<IList<Role>> Post(Role role) {
-            SecurityFacade.SaveUpdateRole(role);
+            SecurityFacade.GetInstance().SaveUpdateRole(role);
 
             var response = new GenericResponseResult<IList<Role>> {
                 ResultObject = Get().ResultObject,
@@ -38,7 +34,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         [HttpDelete]
         public GenericResponseResult<IList<Role>> Delete(Role role) {
-            SecurityFacade.DeleteRole(role);
+            SecurityFacade.GetInstance().DeleteRole(role);
 
             var response = new GenericResponseResult<IList<Role>> {
                 ResultObject = Get().ResultObject,
@@ -49,7 +45,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
         public GenericResponseResult<IList<Role>> Put(Role role) {
-            SecurityFacade.DeleteRole(role);
+            SecurityFacade.GetInstance().DeleteRole(role);
 
             var response = new GenericResponseResult<IList<Role>> {
                 ResultObject = Get().ResultObject,

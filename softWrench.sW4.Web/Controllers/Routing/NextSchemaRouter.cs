@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using log4net;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
@@ -11,18 +10,13 @@ using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Data;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 
 namespace softWrench.sW4.Web.Controllers.Routing {
     public class NextSchemaRouter {
 
-        private readonly BaseApplicationDataSet _dataObjectSet = new MaximoApplicationDataSet();
-        private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
-
         private static ILog Log = LogManager.GetLogger(typeof(NextSchemaRouter));
-
 
         /// <summary>
         /// this data is populated inside json. see aa_utils.js
@@ -65,7 +59,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
 
             var applicationName = nextMetadata.Name;
 
-            var dataSet = _dataSetProvider.LookupDataSet(applicationName, nextMetadata.Schema.SchemaId);
+            var dataSet = DataSetProvider.GetInstance().LookupDataSet(applicationName, nextMetadata.Schema.SchemaId);
 
             if (routerParameter.NoApplicationRedirectDetected && targetResult != null && targetResult.ResultObject != null) {
                 return new GenericApplicationResponse {
@@ -75,7 +69,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
                 };
             }
 
-            if (routerParameter.NoApplicationRedirectDetected ) {
+            if (routerParameter.NoApplicationRedirectDetected) {
 
                 if (routerParameter.NextAction == null) {
                     Log.DebugFormat("No redirect needed");
@@ -93,7 +87,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             }
 
             var nextSchema = nextMetadata.Schema;
-            
+
 
             if (nextSchema.Stereotype == SchemaStereotype.Detail || nextSchema.Stereotype == SchemaStereotype.DetailNew) {
                 if (targetMocked) {
@@ -115,9 +109,5 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             }
             throw new NotImplementedException("missing implementation for this kind of schema redirection");
         }
-
-
-
-
     }
 }

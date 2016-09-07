@@ -1,0 +1,16 @@
+﻿.cts-ace {
+    resize: both;
+    overflow: hidden;
+    padding: 5px;
+    height: 200px;
+    width: 100%;
+    min-width: 300px;
+    min-height: 100px;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    background-color: #eee;
+
+    .editor {
+        height: 100%;
+    }
+}
