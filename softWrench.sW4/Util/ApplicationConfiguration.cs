@@ -25,6 +25,7 @@ namespace softWrench.sW4.Util {
         private static string _environment;
         private static string _serverPath;
         private static string _appPath;
+        private static readonly DateTime _upTime = DateTime.Now;
 
         private static MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
 
@@ -637,6 +638,8 @@ namespace softWrench.sW4.Util {
         public static bool IsClient(string clientName) {
             return ClientName.Equals(clientName);
         }
+
+        public static DateTime UpTime { get { return _upTime; }}
     }
 
 }

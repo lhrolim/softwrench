@@ -7,23 +7,16 @@ using System.Xml;
 using System.Xml.Linq;
 using log4net;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
-using cts.commons.simpleinjector;
 using WcfSamples.DynamicProxy;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
     internal sealed class IsmCrudConnector : BaseMaximoCrudConnector {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(IsmCrudConnector));
-
-        private readonly SWDBHibernateDAO _dao;
-        public IsmCrudConnector() {
-            _dao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
-        }
 
         public override DynamicObject CreateProxy(EntityMetadata metadata) {
             //for ISM we have only a single wsdl for all the web-services
@@ -62,7 +55,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             }
             maximoTemplateData.ResultObject = new TargetResult(idProperty, idProperty, null);
         }
-      
+
 
 
 
@@ -127,7 +120,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
 
         }
 
-       
+
 
         public override MaximoOperationExecutionContext CreateExecutionContext(DynamicObject proxy, IOperationData operationData) {
             return new IsmExecutionContext(proxy, operationData);

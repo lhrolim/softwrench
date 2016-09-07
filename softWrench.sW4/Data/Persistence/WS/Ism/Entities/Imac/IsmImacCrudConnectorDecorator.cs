@@ -11,11 +11,10 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
     class IsmImacCrudConnectorDecorator : BaseISMTicketDecorator {
-
-        private readonly IImacServicePlanHelper _servicePlanHelper;
-
-        public IsmImacCrudConnectorDecorator() {
-            _servicePlanHelper = SimpleInjectorGenericFactory.Instance.GetObject<IImacServicePlanHelper>(typeof(IImacServicePlanHelper));
+        private static IImacServicePlanHelper ServicePlanHelper {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<IImacServicePlanHelper>(typeof(IImacServicePlanHelper));
+            }
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
@@ -43,7 +42,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
 
 
         private void HandleBusinessMatrix(ServiceIncident imac, CrudOperationData jsonObject, string schemaid) {
-            var activities = _servicePlanHelper.LoadFromServicePlan(schemaid, jsonObject);
+            var activities = ServicePlanHelper.LoadFromServicePlan(schemaid, jsonObject);
             if (activities != null) {
                 imac.Activity = activities.ToArray();
             }

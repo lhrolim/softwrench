@@ -17,6 +17,8 @@
     "tests"
   ],
   "dependencies": {
+    "ace-builds": "v1.2.4",
+    "angular-ui-ace": "0.2.3",
     "bootstrap": "~3.3.6",
     "jquery": "~2.1.4",
     "eonasdan-bootstrap-datetimepicker": "4.15.35",

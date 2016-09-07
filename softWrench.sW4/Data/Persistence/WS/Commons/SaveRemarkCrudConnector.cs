@@ -6,14 +6,12 @@ using cts.commons.simpleinjector;
 //TODO: move to hapag --> use simpleinjector
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class SaveRemarkCrudConnector : BaseMaximoCustomConnector {
-        private readonly SWDBHibernateDAO _dao;
-
-        public SaveRemarkCrudConnector() {
-            _dao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
+        private static SWDBHibernateDAO Dao() {
+            return SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
         }
 
         public object SaveRemarks(AssetRemarkContainer assetRemark) {
-            var extraField = _dao.FindSingleByQuery<ExtraAttributes>(ExtraAttributes.ByMaximoTABLEIdAndAttribute, "asset", assetRemark.Id,
+            var extraField = Dao().FindSingleByQuery<ExtraAttributes>(ExtraAttributes.ByMaximoTABLEIdAndAttribute, "asset", assetRemark.Id,
                 "remarks");
             if (extraField == null) {
                 extraField = new ExtraAttributes {
@@ -23,7 +21,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 };
             }
             extraField.AttributeValue = assetRemark.Remark;
-            return _dao.Save(extraField);
+            return Dao().Save(extraField);
         }
 
         public class AssetRemarkContainer : OperationData {

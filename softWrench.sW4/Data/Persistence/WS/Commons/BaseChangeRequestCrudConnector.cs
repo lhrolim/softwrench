@@ -8,26 +8,29 @@ using cts.commons.simpleinjector;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons
-{
-    class BaseChangeRequestCrudConnector : CrudConnectorDecorator
-    {
-        protected AttachmentHandler AttachmentHandler;
-        protected WorkLogHandler _WorkLogHandler;
+namespace softWrench.sW4.Data.Persistence.WS.Commons {
+    class BaseChangeRequestCrudConnector : CrudConnectorDecorator {
 
-        public BaseChangeRequestCrudConnector() {
-            AttachmentHandler = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
-            _WorkLogHandler = SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
+        protected AttachmentHandler AttachmentHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
+            }
+        }
+
+        protected WorkLogHandler WorkLogHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
+            }
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
             var sr = maximoTemplateData.IntegrationObject;
-            
+
             w.SetValueIfNull(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
             w.SetValueIfNull(sr, "CHANGEBY", user.Login);
 
-            _WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, sr);
+            WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, sr);
 
             CommonTransaction(maximoTemplateData);
 
@@ -35,7 +38,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
-            CommonTransaction(maximoTemplateData);           
+            CommonTransaction(maximoTemplateData);
             base.BeforeCreation(maximoTemplateData);
         }
 

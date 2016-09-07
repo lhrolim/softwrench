@@ -11,15 +11,9 @@ namespace softWrench.sW4.Data.Entities {
         private const string ChartOfAccountsEntity = "chartofaccounts";
         private const string PluspCustomerEntity = "pluspcustomer";
 
-        private EntityRepository _repository;
-
         private EntityRepository EntityRepository {
             get {
-                if (_repository == null) {
-                    _repository =
-                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
-                }
-                return _repository;
+                return SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
             }
         }
 

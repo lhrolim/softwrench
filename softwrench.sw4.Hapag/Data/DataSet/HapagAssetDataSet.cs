@@ -7,39 +7,23 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Entities.Historical;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
-using cts.commons.simpleinjector;
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
-    class HapagAssetDataSet : MaximoApplicationDataSet {
+    public class HapagAssetDataSet : MaximoApplicationDataSet {
 
-        private ISWDBHibernateDAO _dao;
+        private readonly ISWDBHibernateDAO _dao;
+        private readonly HapagImacDataSet _imacDataSet;
 
-        private HapagImacDataSet _imacDataSet;
-
-        //TODO: make these datasets injectables via SimpleInjector
-        public HapagAssetDataSet() {
-
-        }
-
-        private HapagImacDataSet GetImacDataSet() {
-            if (_imacDataSet == null) {
-                _imacDataSet = (HapagImacDataSet)DataSetProvider.GetInstance().LookupDataSet("imac", null);
-            }
-            return _imacDataSet;
-        }
-
-        private ISWDBHibernateDAO GetDAO() {
-            if (_dao == null) {
-                _dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>(typeof(ISWDBHibernateDAO));
-            }
-            return _dao;
+        public HapagAssetDataSet(ISWDBHibernateDAO dao, HapagImacDataSet imacDataSet)
+        {
+            _dao = dao;
+            _imacDataSet = imacDataSet;
         }
 
         public override ApplicationListResult GetList(ApplicationMetadata application, softWrench.sW4.Data.Pagination.PaginatedSearchRequestDto searchDto) {
@@ -72,14 +56,14 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
         private void FillCreationFromAssetData(DataMap resultObject) {
-            resultObject.SetAttribute("#availableimacoptions", GetImacDataSet().GetAvailableImacsFromAsset(resultObject));
+            resultObject.SetAttribute("#availableimacoptions", _imacDataSet.GetAvailableImacsFromAsset(resultObject));
             var attribute = (List<Dictionary<string, object>>)resultObject.GetAttribute("assetcustodian_");
             resultObject.SetAttribute("#iscustodian", attribute.Any(a => a["personid"].Equals(SecurityFacade.CurrentUser(false).MaximoPersonId)));
         }
 
         private void FetchRemarks(DataMap resultObject) {
             var assetId = resultObject.GetAttribute("assetid");
-            var extraAttributte = GetDAO().FindSingleByQuery<ExtraAttributes>(ExtraAttributes.ByMaximoTABLEIdAndAttribute, "asset", assetId.ToString(), "remarks");
+            var extraAttributte = _dao.FindSingleByQuery<ExtraAttributes>(ExtraAttributes.ByMaximoTABLEIdAndAttribute, "asset", assetId.ToString(), "remarks");
             if (extraAttributte != null) {
                 resultObject.SetAttribute(extraAttributte.AttributeName, extraAttributte.AttributeValue);
             }
@@ -91,13 +75,13 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 return;
             }
 
-            var woData = GetDAO().FindByQuery<HistWorkorder>(HistWorkorder.ByAssetnum, assetId.ToString());
+            var woData = _dao.FindByQuery<HistWorkorder>(HistWorkorder.ByAssetnum, assetId.ToString());
             foreach (var row in woData) {
                 var list = (IList<Dictionary<string, object>>)resultObject["workorder_"];
                 list.Add(row.toAttributeHolder());
             }
 
-            var ticketData = GetDAO().FindByQuery<HistTicket>(HistTicket.ByAssetnum, assetId.ToString());
+            var ticketData = _dao.FindByQuery<HistTicket>(HistTicket.ByAssetnum, assetId.ToString());
             var ticketList = (IList<Dictionary<string, object>>)resultObject["ticket_"];
             var imacList = (IList<Dictionary<string, object>>)resultObject["imac_"];
             foreach (var row in ticketData) {

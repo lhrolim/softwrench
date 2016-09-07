@@ -18,6 +18,7 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons.Person;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
+using softWrench.sW4.Dynamic;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Context;
@@ -36,6 +37,7 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
         private readonly Mock<MaximoConnectorEngine> _maximoEngine = TestUtil.CreateMock<MaximoConnectorEngine>();
         private readonly Mock<UserSetupEmailService> _userSetupService = TestUtil.CreateMock<UserSetupEmailService>();
         private readonly Mock<UserManager> _userManager = TestUtil.CreateMock<UserManager>();
+        private readonly Mock<IDynComponentEmailer> _dynComponentEmailerMock = TestUtil.CreateMock<IDynComponentEmailer>();
 
 
         [TestInitialize]
@@ -52,6 +54,7 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
             scanner.ResgisterSingletonMock(_maximoEngine);
             scanner.ResgisterSingletonMock(_userSetupService);
             scanner.ResgisterSingletonMock(_userManager);
+            scanner.ResgisterSingletonMock(_dynComponentEmailerMock);
 
             scanner.InitDIController();
             var me = SimpleInjectorGenericFactory.Instance.GetObject<MaximoConnectorEngine>(typeof(MaximoConnectorEngine));

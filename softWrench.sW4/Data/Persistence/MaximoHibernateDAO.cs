@@ -21,14 +21,8 @@ namespace softWrench.sW4.Data.Persistence {
         public MaximoHibernateDAO(ApplicationConfigurationAdapter applicationConfiguration, HibernateUtil hibernateUtil) : base(applicationConfiguration, hibernateUtil) {
         }
 
-        private static MaximoHibernateDAO _instance;
-
         public static MaximoHibernateDAO GetInstance() {
-            if (_instance == null) {
-                _instance =
-                    SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
-            }
-            return _instance;
+            return SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
         }
         
         protected override string GetDialect() {

@@ -89,7 +89,7 @@ namespace softWrench.sW4.Web {
             MetadataProvider.DoInit();
             new MigratorExecutor("SWDB").Migrate(runner => runner.MigrateUp());
             if (!changeClient) {
-                var container = SimpleInjectorScanner.InitDIController();
+                var container = SimpleInjectorScanner.InitDIController(null);
                 var dispatcher = (IEventDispatcher)container.GetInstance(typeof(IEventDispatcher));
                 dispatcher.Dispatch(new ApplicationStartedEvent());
                 //                ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());

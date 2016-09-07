@@ -10,5 +10,7 @@ namespace softwrench.sw4.api.classes.email {
         /// </summary>
         /// <param name="emailData"></param>
         void SendEmailAsync(EmailData emailData);
+
+        EmailAttachment CreateAttachment(string fileContent, string attachmentName);
     }
 }

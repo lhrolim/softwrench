@@ -4,7 +4,6 @@ using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Security;
 using softwrench.sw4.Shared2.Data.Association;
-using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications.DataSet;
@@ -15,7 +14,7 @@ using System.Linq;
 using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
-    class HapagBaseApplicationDataSet : MaximoApplicationDataSet {
+    public class HapagBaseApplicationDataSet : MaximoApplicationDataSet {
 
         private readonly IHlagLocationManager _locationManager;
 

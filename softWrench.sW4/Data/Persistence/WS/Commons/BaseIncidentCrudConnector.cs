@@ -4,7 +4,6 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
-using System.Collections.Generic;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
@@ -15,16 +14,28 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
     public class BaseIncidentCrudConnector : CrudConnectorDecorator {
 
-        protected AttachmentHandler AttachmentHandler;
-        protected CommLogHandler CommlogHandler;
-        protected WorkLogHandler WorkLogHandler;
-        protected readonly EmailService _emailService;
+        protected AttachmentHandler AttachmentHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
+            }
+        }
 
-        public BaseIncidentCrudConnector() {
-            AttachmentHandler = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
-            CommlogHandler = SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
-            WorkLogHandler = SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
-            _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
+        protected CommLogHandler CommlogHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
+            }
+        }
+
+        protected WorkLogHandler WorkLogHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
+            }
+        }
+
+        protected EmailService EmailService {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
+            }
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {

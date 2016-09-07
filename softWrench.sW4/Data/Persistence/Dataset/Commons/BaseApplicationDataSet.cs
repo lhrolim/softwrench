@@ -81,25 +81,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         private readonly ApplicationAssociationResolver _associationOptionResolver = new ApplicationAssociationResolver();
         private readonly DynamicOptionFieldResolver _dynamicOptionFieldResolver = new DynamicOptionFieldResolver();
 
-        private IContextLookuper _contextLookuper;
-        private IBatchSubmissionService _batchSubmissionService;
-        private IWhereClauseFacade _whereClauseFacade;
-        private FilterWhereClauseHandler _filterWhereClauseHandler;
-        private QuickSearchWhereClauseHandler _quickSearchWhereClauseHandler;
-        private BaseDataSetSearchHelper _baseDataSetSearchHelper;
-
-        private AttachmentHandler _attachmentHandler;
-
         internal BaseApplicationDataSet() {
         }
 
         protected IContextLookuper ContextLookuper {
             get {
-                if (_contextLookuper != null) {
-                    return _contextLookuper;
-                }
-                _contextLookuper = SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
-                return _contextLookuper;
+                return SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
             }
         }
 
@@ -112,67 +99,37 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         protected FilterWhereClauseHandler FilterWhereClauseHandler {
             get {
-                if (_filterWhereClauseHandler != null) {
-                    return _filterWhereClauseHandler;
-                }
-                _filterWhereClauseHandler =
-                    SimpleInjectorGenericFactory.Instance.GetObject<FilterWhereClauseHandler>(typeof(FilterWhereClauseHandler));
-                return _filterWhereClauseHandler;
+                return SimpleInjectorGenericFactory.Instance.GetObject<FilterWhereClauseHandler>(typeof(FilterWhereClauseHandler));
             }
         }
 
         protected IBatchSubmissionService BatchSubmissionService {
             get {
-                if (_batchSubmissionService != null) {
-                    return _batchSubmissionService;
-                }
-                _batchSubmissionService =
-                    SimpleInjectorGenericFactory.Instance.GetObject<IBatchSubmissionService>(typeof(IBatchSubmissionService));
-                return _batchSubmissionService;
+                return SimpleInjectorGenericFactory.Instance.GetObject<IBatchSubmissionService>(typeof(IBatchSubmissionService));
             }
         }
 
         protected IWhereClauseFacade WhereClauseFacade {
             get {
-                if (_whereClauseFacade != null) {
-                    return _whereClauseFacade;
-                }
-                _whereClauseFacade =
-                    SimpleInjectorGenericFactory.Instance.GetObject<IWhereClauseFacade>(typeof(IWhereClauseFacade));
-                return _whereClauseFacade;
+                return SimpleInjectorGenericFactory.Instance.GetObject<IWhereClauseFacade>(typeof(IWhereClauseFacade));
             }
         }
 
         protected QuickSearchWhereClauseHandler QuickSearchWhereClauseHandler {
             get {
-                if (_quickSearchWhereClauseHandler != null) {
-                    return _quickSearchWhereClauseHandler;
-                }
-                _quickSearchWhereClauseHandler =
-                    SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchWhereClauseHandler>(typeof(QuickSearchWhereClauseHandler));
-                return _quickSearchWhereClauseHandler;
+                return SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchWhereClauseHandler>(typeof(QuickSearchWhereClauseHandler));
             }
         }
 
         protected AttachmentHandler AttachmentHandler {
             get {
-                if (_attachmentHandler != null) {
-                    return _attachmentHandler;
-                }
-                _attachmentHandler =
-                    SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
-                return _attachmentHandler;
+                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
             }
         }
 
         protected BaseDataSetSearchHelper BaseDataSetSearchHelper {
             get {
-                if (_baseDataSetSearchHelper != null) {
-                    return _baseDataSetSearchHelper;
-                }
-                _baseDataSetSearchHelper =
-                    SimpleInjectorGenericFactory.Instance.GetObject<BaseDataSetSearchHelper>(typeof(BaseDataSetSearchHelper));
-                return _baseDataSetSearchHelper;
+                return SimpleInjectorGenericFactory.Instance.GetObject<BaseDataSetSearchHelper>(typeof(BaseDataSetSearchHelper));
             }
         }
 
@@ -586,7 +543,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         //        }
         public virtual TargetResult Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
             var compositionData = operationData.CompositionData;
-            if (compositionData == null || !compositionData.Operation.EqualsAny(OperationConstants.CRUD_DELETE, OperationConstants.CRUD_UPDATE)) {
+            if (compositionData == null || compositionData.Operation == null || !compositionData.Operation.EqualsAny(OperationConstants.CRUD_DELETE, OperationConstants.CRUD_UPDATE)) {
                 //not a composition deletion/update, no need for any further checking
                 return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
                     new Tuple<string, string>(operationData.UserId, operationData.SiteId));

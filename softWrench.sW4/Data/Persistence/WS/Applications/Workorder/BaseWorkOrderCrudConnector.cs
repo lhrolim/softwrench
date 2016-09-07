@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
-using Newtonsoft.Json;
 using softwrench.sw4.api.classes.email;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
-using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
 using softWrench.sW4.Security.Services;
@@ -22,21 +20,34 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
         //        private const string _newlongdescriptionKey = "newlongdescriptionKey";
         //        private const string _notFoundLog = "{0} {1} not found. Impossible to generate FollowUp Workorder";
 
-        protected AttachmentHandler _attachmentHandler;
-        protected LabTransHandler LabTransHandler;
-        protected CommLogHandler _commlogHandler;
-        protected WorkLogHandler WorkLogHandler;
-        protected MaximoHibernateDAO _maxHibernate;
+        protected AttachmentHandler AttachmentHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
+            }
+        }
 
-        private readonly EmailService _emailService;
+        protected CommLogHandler CommlogHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
+            }
+        }
 
-        public BaseWorkOrderCrudConnector() {
-            _attachmentHandler = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
-            _commlogHandler = SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
-            _maxHibernate = MaximoHibernateDAO.GetInstance();
-            _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
-            LabTransHandler = SimpleInjectorGenericFactory.Instance.GetObject<LabTransHandler>(typeof(LabTransHandler));
-            WorkLogHandler = SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
+        protected EmailService EmailService {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
+            }
+        }
+
+        protected LabTransHandler LabTransHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<LabTransHandler>(typeof(LabTransHandler));
+            }
+        }
+
+        protected WorkLogHandler WorkLogHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
+            }
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -49,7 +60,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 WsUtil.SetValue(wo, "STATUSIFACE", true);
                 WsUtil.SetValue(wo, "CHANGEBY", user.Login.ToUpper());
                 var status = WsUtil.GetRealValue(wo, "STATUS") as string;
-                if (!status.EqualsAny("CAN","CLOSE","COMP")) {
+                if (!status.EqualsAny("CAN", "CLOSE", "COMP")) {
                     //TODO: review these status later, whether it would make sense to abort TX here
                     maximoTemplateData.InvokeProxy();
                 }
@@ -60,7 +71,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             // TODO: Caching the status field to prevent multiple SQL update.  
             if (crudData.ContainsAttribute("#hasstatuschange")) {
                 // Correct combinations of orgid/siteid are null/null, orgid/null, orgid/siteid. You cannot have a siteid paired with a null orgid.
-                var maxStatusValues = _maxHibernate.FindByNativeQuery(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
+                var maxStatusValues = MaximoHibernateDAO.GetInstance().FindByNativeQuery(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
                 var maxStatusValue = maxStatusValues.First();
                 if (maxStatusValue.ContainsKey("MAXVALUE") && maxStatusValue["MAXVALUE"].Equals("INPRG")) {
                     // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
@@ -74,7 +85,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 }
             }
 
-            
+
 
             // This will prevent multiple action on these items
             WorkLogHandler.HandleWorkLogs(crudData, wo);
@@ -85,16 +96,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             // Update or create related records
             RelatedRecordHandler.HandleRelatedRecords(maximoTemplateData);
             // Update or create attachments
-            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
+            AttachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
             // Update or create commlogs
-            _commlogHandler.HandleCommLogs(maximoTemplateData, crudData, wo);
+            CommlogHandler.HandleCommLogs(maximoTemplateData, crudData, wo);
 
             base.BeforeUpdate(maximoTemplateData);
         }
 
         public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             if (maximoTemplateData.Properties.ContainsKey("mailObject")) {
-                _emailService.SendEmailAsync((EmailData)maximoTemplateData.Properties["mailObject"]);
+                EmailService.SendEmailAsync((EmailData)maximoTemplateData.Properties["mailObject"]);
             }
 
             //TODO: Delete the failed commlog entry or marked as failed : Input from JB needed 
@@ -225,9 +236,5 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
             });
         }
-
-     
-
-      
     }
 }
