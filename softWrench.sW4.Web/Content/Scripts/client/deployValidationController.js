@@ -2,6 +2,7 @@
     "use strict";
 
     angular.module("sw_layout").controller("DeployValidationController", DeployValidationController);
+    DeployValidationController.$inject = ["$scope", "$http", "restService", "i18NService", "alertService"];
     function DeployValidationController($scope, $http, restService, i18NService, alertService) {
         "ngInject";
 

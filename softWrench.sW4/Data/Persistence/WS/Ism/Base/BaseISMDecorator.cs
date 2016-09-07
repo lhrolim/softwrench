@@ -8,11 +8,10 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
     abstract class BaseISMDecorator : CrudConnectorDecorator {
-
-        protected readonly SWDBHibernateDAO DAO;
-
-        protected BaseISMDecorator() {
-            DAO = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
+        protected SWDBHibernateDAO DAO {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
+            }
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {

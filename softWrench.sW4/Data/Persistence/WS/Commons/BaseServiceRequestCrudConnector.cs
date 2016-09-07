@@ -4,7 +4,6 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
@@ -17,32 +16,28 @@ using softWrench.sW4.Email;
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
     public class BaseServiceRequestCrudConnector : CrudConnectorDecorator {
-
-        protected AttachmentHandler _attachmentHandler;
-        protected CommLogHandler _commlogHandler;
-        protected WorkLogHandler _WorkLogHandler;
-        private MaximoHibernateDAO maxHibernate;
-        private readonly EmailService _emailService;
-
-        protected MaximoHibernateDAO MaxHibernate
-        {
-            get
-            {
-                return maxHibernate;
-            }
-
-            set
-            {
-                maxHibernate = value;
+        protected AttachmentHandler AttachmentHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
             }
         }
 
-        public BaseServiceRequestCrudConnector() {
-            _attachmentHandler = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
-            _commlogHandler = SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
-            _WorkLogHandler = SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
-            MaxHibernate = MaximoHibernateDAO.GetInstance();
-            _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
+        protected CommLogHandler CommlogHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
+            }
+        }
+
+        protected WorkLogHandler WorkLogHandler {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
+            }
+        }
+
+        protected EmailService EmailService {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
+            }
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
@@ -60,7 +55,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // TODO: Caching the status field to prevent multiple SQL update.  
             if (crudData.ContainsAttribute("#hasstatuschange")) {
                 // Correct combinations of orgid/siteid are null/null, orgid/null, orgid/siteid. You cannot have a siteid paired with a null orgid.
-                var maxStatusValues = MaxHibernate.FindByNativeQuery(string.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'SRSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
+                var dao = MaximoHibernateDAO.GetInstance();
+                var maxStatusValues = dao.FindByNativeQuery(string.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'SRSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
                 var maxStatusValue = maxStatusValues.First();
                 if (maxStatusValue["MAXVALUE"].Equals("INPROG")) {
                     // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
@@ -78,9 +74,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
 
-            _WorkLogHandler.HandleWorkLogs(crudData, sr);
+            WorkLogHandler.HandleWorkLogs(crudData, sr);
 
-            _commlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
+            CommlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 
             RelatedRecordHandler.HandleRelatedRecords(maximoTemplateData);
             SolutionsHandler.HandleSolutions(crudData, sr);
@@ -90,7 +86,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             if (maximoTemplateData.Properties.ContainsKey("mailObject")) {
-                _emailService.SendEmailAsync((EmailData)maximoTemplateData.Properties["mailObject"]);
+                EmailService.SendEmailAsync((EmailData)maximoTemplateData.Properties["mailObject"]);
             }
 
             //TODO: Delete the failed commlog entry or marked as failed : Input from JB needed 
@@ -112,7 +108,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // SWWEB-980 Additional logic to change status to queued if owner is selected
             var statusValue = w.GetRealValue(sr, "STATUS");
 
-            if (statusValue!=null && statusValue.Equals("NEW") &&
+            if (statusValue != null && statusValue.Equals("NEW") &&
                 (w.GetRealValue(sr, "OWNER") != null || w.GetRealValue(sr, "OWNERGROUP") != null)) {
                 w.SetValue(sr, "STATUS", "QUEUED");
             }
@@ -124,7 +120,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             HandleServiceAddress(maximoTemplateData);
             MultiAssetLocciHandler.HandleMultiAssetLoccis((CrudOperationData)maximoTemplateData.OperationData, sr);
 
-            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
+            AttachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
         }
 
         private static void HandleServiceAddress(MaximoOperationExecutionContext maximoTemplateData) {
@@ -140,7 +136,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var streetaddr = data.GetUnMappedAttribute("#tkstaddrstreet");
             var streettype = data.GetUnMappedAttribute("#tkstaddrsttype");
 
-            var tkserviceaddress = ReflectionUtil.InstantiateSingleElementFromArray(maximoTemplateData.IntegrationObject, "TKSERVICEADDRESS",true);
+            var tkserviceaddress = ReflectionUtil.InstantiateSingleElementFromArray(maximoTemplateData.IntegrationObject, "TKSERVICEADDRESS", true);
             w.SetValueIfNull(tkserviceaddress, "TKSERVICEADDRESSID", -1);
             w.CopyFromRootEntity(maximoTemplateData.IntegrationObject, tkserviceaddress, "ORGID", user.OrgId);
             w.SetValue(tkserviceaddress, "SADDRESSCODE", saddresscode);

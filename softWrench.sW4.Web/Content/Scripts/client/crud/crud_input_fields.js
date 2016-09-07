@@ -660,6 +660,9 @@
                         return fieldService.isFieldRequired(fieldMetadata, $scope.datamap);
                     };
 
+                    $scope.codeEditorMode = function (fieldMetadata) {
+                        return fieldMetadata.rendererParameters ? fieldMetadata.rendererParameters["codemode"] : null;
+                    }
                 }]
         }
     }])

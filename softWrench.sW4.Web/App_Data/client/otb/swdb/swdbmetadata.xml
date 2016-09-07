@@ -8,6 +8,7 @@
     <template path="@batch.xml"/>
     <template path="@swerror.xml"/>
     <template path="@configuration.xml"/>
+    <template path="@dynamic.xml"/>
   </templates>
   
 </metadata>

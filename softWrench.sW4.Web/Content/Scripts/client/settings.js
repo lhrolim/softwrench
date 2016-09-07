@@ -205,7 +205,7 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
         }
     };
 
-    loadScript("/Content/customVendor/scripts/msic/ace.js", init());
+    loadScript("/Content/vendor/scripts/ace/ace.js", init());
 
     $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
         if (oldValue != newValue && $scope.resultObject.redirectURL.indexOf("EntityMetadataEditor.html") != -1) {

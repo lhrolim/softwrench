@@ -19,7 +19,8 @@
         "ngAnimate",
         "omr.angularFileDnD",
         "dndLists",
-        "ui.tinymce"
+        "ui.tinymce",
+        "ui.ace"
     ]);
 
     angular.module("sw_prelogin", ["webcommons_services"]);

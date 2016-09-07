@@ -6,7 +6,6 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using System;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
-using softwrench.sw4.problem.classes;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Util;
@@ -17,33 +16,6 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.connector {
 
         private const string ISMTicketId = "ismticketid";
         private const string ISMTicketUid = "ismticketuid";
-
-        private IProblemManager _problemManager;
-        private IMaximoHibernateDAO _maximoHibernateDAO;
-
-        private IProblemManager ProblemManager {
-            get {
-                if (_problemManager != null) {
-                    return _problemManager;
-                }
-                _problemManager = SimpleInjectorGenericFactory.Instance.GetObject<IProblemManager>(typeof(IProblemManager));
-                return _problemManager;
-            }
-
-
-        }
-
-        private IMaximoHibernateDAO MaximoDAO {
-            get {
-                if (_maximoHibernateDAO != null) {
-                    return _maximoHibernateDAO;
-                }
-                _maximoHibernateDAO =
-                    SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(typeof(IMaximoHibernateDAO));
-                return _maximoHibernateDAO;
-            }
-        }
-
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;
@@ -141,7 +113,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.connector {
             crudOperationData.SetAttribute("status", ticketOriginalData.Item3);
 
 
-            
+
             crudOperationData.Id = ticketOriginalData.Item1;
             crudOperationData.UserId = ticketOriginalData.Item2;
 
@@ -180,7 +152,8 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.connector {
 
 
             //mif returns only the ticketid. ticketuid needs to be picked from database
-            var obj = MaximoDAO.FindSingleByNativeQuery<object>("select ticketuid,status from sr where ticketid =? and siteid =? ", ticketId, originalSiteid) as dynamic;
+            var dao = SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(typeof(IMaximoHibernateDAO));
+            var obj = dao.FindSingleByNativeQuery<object>("select ticketuid,status from sr where ticketid =? and siteid =? ", ticketId, originalSiteid) as dynamic;
 
             ticketUid = obj[0].ToString();
             result.Id = ticketUid;

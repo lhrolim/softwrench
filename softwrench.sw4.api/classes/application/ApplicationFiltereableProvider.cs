@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
+using cts.commons.Util;
 
 namespace softwrench.sw4.api.classes.application {
-    public abstract class ApplicationFiltereableProvider<T> : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> where T : IApplicationFiltereable {
+    public abstract class ApplicationFiltereableProvider<T> : ISingletonComponent, ISWEventListener<ApplicationStartedEvent>, ISWEventListener<ContainerReloadedEvent> where T : IApplicationFiltereable {
 
         private readonly IDictionary<ApplicationFiltereableKey, T> _defaultStorage = new Dictionary<ApplicationFiltereableKey, T>();
-
 
         public virtual T LookupItem(String applicationName, string schemaId, string clientName) {
             var storage = LocateStorageByName(applicationName);
@@ -17,10 +17,7 @@ namespace softwrench.sw4.api.classes.application {
             return storage.ContainsKey(key) ? storage[key] : LocateDefaultItem(applicationName, schemaId, clientName);
         }
 
-
-
         protected abstract T LocateDefaultItem(string applicationName, string schemaId, string clientName);
-
 
         protected ApplicationFiltereableKey LookUp(string applicationName, string schemaId, string clientName, IDictionary<ApplicationFiltereableKey, T> storageToUse = null) {
             var key = new ApplicationFiltereableKey(applicationName, clientName, schemaId);
@@ -57,35 +54,53 @@ namespace softwrench.sw4.api.classes.application {
 
         public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             Clear();
+            Init();
+        }
+
+        public virtual void HandleEvent(ContainerReloadedEvent eventToDispatch) {
+            Clear();
+            Init();
+        }
+
+        public virtual void Init() {
             var dataSets = SimpleInjectorGenericFactory.Instance.GetObjectsOfType<T>(typeof(T));
 
             foreach (var dataSet in dataSets) {
-                var applicationNames = dataSet.ApplicationName();
+                RegisterDataSet(dataSet);
+            }
+        }
 
-                if (applicationNames == null) {
-                    //null stands for framework instances... we dont need to handle these
-                    continue;
-                }
-                var schemaId = dataSet.SchemaId();
+        public virtual void RegisterDataSet(T dataSet) {
+            var applicationNames = dataSet.ApplicationName();
 
-                var storageToUse = LocateStorage(dataSet);
+            if (applicationNames == null) {
+                //null stands for framework instances... we dont need to handle these
+                return;
+            }
+            var schemaId = dataSet.SchemaId();
 
-                var clientFilter = dataSet.ClientFilter();
-                foreach (string applicationName in applicationNames.Split(',')) {
-                    if (clientFilter != null) {
-                        var strings = clientFilter.Split(',');
-                        foreach (var client in strings) {
-                            storageToUse.Add(new ApplicationFiltereableKey(applicationName, client, schemaId), dataSet);
-                        }
-                    } else {
-                        storageToUse.Add(new ApplicationFiltereableKey(applicationName, null, schemaId), dataSet);
+            var storageToUse = LocateStorage(dataSet);
+
+            var clientFilter = dataSet.ClientFilter();
+            foreach (string applicationName in applicationNames.Split(',')) {
+                if (clientFilter != null) {
+                    var strings = clientFilter.Split(',');
+                    foreach (var client in strings) {
+                        storageToUse.Add(new ApplicationFiltereableKey(applicationName, client, schemaId), dataSet);
                     }
+                } else {
+                    storageToUse.Add(new ApplicationFiltereableKey(applicationName, null, schemaId), dataSet);
                 }
             }
         }
 
         public virtual void Clear() {
             _defaultStorage.Clear();
+        }
+
+        public virtual void Reset() {
+            Clear();
+            Init();
         }
 
         protected virtual IDictionary<ApplicationFiltereableKey, T> LocateStorageByName(string applicationName) {

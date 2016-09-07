@@ -29,34 +29,16 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         private const string WrongPostFilterMethod = "PostfilterFunction {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
         private const string ValueKeyConst = "value";
 
-        //        private readonly EntityRepository _entityRepository = new EntityRepository();
-
-        private EntityRepository _repository;
-        private QuickSearchHelper _quickSearchHelper;
-
-
-        private EntityRepository EntityRepository
-        {
-            get
-            {
-                if (_repository == null) {
-                    _repository =
-                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
-                }
-                return _repository;
+        private static EntityRepository EntityRepository {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
             }
         }
 
 
-        private QuickSearchHelper QuickSearchHelper
-        {
-            get
-            {
-                if (_quickSearchHelper == null) {
-                    _quickSearchHelper =
-                        SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchHelper>(typeof(QuickSearchHelper));
-                }
-                return _quickSearchHelper;
+        private static QuickSearchHelper QuickSearchHelper {
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchHelper>(typeof(QuickSearchHelper));
             }
         }
 
