@@ -18,7 +18,7 @@ using LogManager = log4net.LogManager;
 namespace softWrench.sW4.Email {
     public class EmailService : IEmailService {
 
-        private static readonly Regex HtmlImgRegex = new Regex("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
+        private static readonly Regex HtmlInlineImgRegex = new Regex("<img[^>]+src\\s*=\\s*['\"]\\s*data:([^'\"]+)['\"][^>]*>");
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(EmailService));
 
@@ -134,7 +134,7 @@ namespace softWrench.sW4.Email {
         }
 
         public static AlternateView BuildContent(string html) {
-            var matches = HtmlImgRegex.Matches(html);
+            var matches = HtmlInlineImgRegex.Matches(html);
             var inlines = new List<LinkedResource>();
 
             foreach (Match match in matches) {
