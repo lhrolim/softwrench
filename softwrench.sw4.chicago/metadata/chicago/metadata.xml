@@ -333,9 +333,7 @@
               <renderer type="lookup" params="columnlabel=Name"/>
             </association>
             <field attribute="createdby" label="Created By" default="@username" readonly="true"/>
-            <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" orderbyfield="personid asc">
-              <renderer type="lookup"/>
-            </association>
+            <reference id="owner"/>
           </section>
 
           <section orientation="horizontal">
@@ -346,9 +344,7 @@
             <association label="Created Group" target="itdchcreatedbygroup" labelfield="itdchcreatedbygroup_.description" orderbyfield="persongroup asc">
               <renderer type="lookup"/>
             </association>
-            <association label="Owner Group" target="ownergroup" labelfield="ownergroup_.description" orderbyfield="persongroup asc" requiredexpression="true">
-              <renderer type="lookup"/>
-            </association>
+            <reference id="ownergroup"/>
           </section>
 
           <section orientation="horizontal">
