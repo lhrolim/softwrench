@@ -30,7 +30,7 @@ namespace cts.commons.portable.Util {
         }
 
         public static bool EqualsAny(this string str, params string[] strings) {
-            return strings.Any(toCompare => str.Equals(toCompare, StringComparison.CurrentCultureIgnoreCase));
+            return strings.Any(toCompare => toCompare.Equals(str, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public static bool EqualsIc(this string str, string other) {
