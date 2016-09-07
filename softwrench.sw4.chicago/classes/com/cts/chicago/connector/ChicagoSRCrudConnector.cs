@@ -22,8 +22,6 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
         private const string ISMTicketId = "ismticketid";
         private const string ISMTicketUid = "ismticketuid";
 
-        private IMaximoHibernateDAO _maximoHibernateDAO;
-
         private static readonly ILog Log = LogManager.GetLogger(typeof(ChicagoSRCrudConnector));
 
         private IProblemManager ProblemManager {
@@ -34,12 +32,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
         private IMaximoHibernateDAO MaximoDAO {
             get {
-                if (_maximoHibernateDAO != null) {
-                    return _maximoHibernateDAO;
-                }
-                _maximoHibernateDAO =
-                    SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(typeof(IMaximoHibernateDAO));
-                return _maximoHibernateDAO;
+                return SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(typeof(IMaximoHibernateDAO));
             }
         }
 

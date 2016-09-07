@@ -26,13 +26,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         protected static readonly ILog Log = LogManager.GetLogger(WsInputLog);
 
-        private readonly IProblemManager _problemManager;
-
         protected MaximoOperationExecutionContext(IOperationData operationData) {
             _operationData = operationData;
             _applicationMetadata = operationData.ApplicationMetadata;
             _metadata = operationData.EntityMetadata;
-            _problemManager = SimpleInjectorGenericFactory.Instance.GetObject<IProblemManager>(typeof(IProblemManager));
         }
 
         private readonly IOperationData _operationData;

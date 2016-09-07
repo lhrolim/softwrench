@@ -16,19 +16,19 @@
                        ng-style="getLabelStyle(fieldMetadata)"
                        ng-class="getLabelClass(fieldMetadata)">
                     <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
-                    <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
+                    <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
                     <!--this will bring either label or header in case of section-->
                     {{i18NInputLabel(fieldMetadata)}}
-                    <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
+                    <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
                 </label>
 
                 <legend ng-if="isLabelVisible(fieldMetadata,true)"
                         rel="tooltip"
                         data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
                         class="legend-label">
-                    <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
+                    <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
                     {{i18NInputLabel(fieldMetadata)}}
-                    <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
+                    <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
                 </legend>
 
                 <!--#region Read only section-->
@@ -59,7 +59,9 @@
                               ng-enabled="isModifiableEnabled(fieldMetadata)"
                               ng-init="bindEvalExpression(fieldMetadata)"
                               data-id="{{fieldMetadata.attribute}}"
-                              ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}" />
+                              ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}"/>
+
+                    <code-editor ng-switch-when="code" readonly="true" mode="{{codeEditorMode(this)}}" value="datamap[fieldMetadata.attribute]"></code-editor>
                     <!--#region checkbox-->
                     <div ng-switch-when="checkbox">
                         <table ng-if="fieldMetadata.type === 'OptionField'" style="min-width: 200px;">
@@ -488,6 +490,8 @@
                         <div ng-include="contextPath(fieldMetadata.rendererParameters.resourcepath)" href="#" style="width: 100%" />
                     </div>
 
+                    <code-editor ng-switch-when="code" mode="{{codeEditorMode(fieldMetadata)}}" value="datamap[fieldMetadata.attribute]"></code-editor>
+
                     <!--#region default-->
                     <div ng-switch-default>
                         <ng-switch on="fieldMetadata.type">
@@ -599,8 +603,6 @@
                     </div>
 
                 </div>
-                <!--#endregion-->
-
             </fieldset>
         </div>
     </section>

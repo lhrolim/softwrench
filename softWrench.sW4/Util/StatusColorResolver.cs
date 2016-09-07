@@ -28,7 +28,7 @@ namespace softWrench.sW4.Util {
         public StatusColorResolver() {
         }
 
-        public JObject FetchFallbackCatalogs() {
+        public virtual JObject FetchFallbackCatalogs() {
             var statusColorJsonPath = String.Format(FallbackPathPattern, AppDomain.CurrentDomain.BaseDirectory, "statuscolorsfallback.json");
 
             if (File.Exists(statusColorJsonPath)) {
@@ -47,7 +47,7 @@ namespace softWrench.sW4.Util {
             return null;
         }
         
-        public JObject FetchCatalogs() {
+        public virtual JObject FetchCatalogs() {
             if (_cacheSet && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest) {
                 //we won´t cache it on dev, because it would be boring on the development process
                 return _cachedCatalogs;

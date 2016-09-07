@@ -143,6 +143,11 @@ module.exports = function (grunt) {
                     "angular-drag-and-drop-lists.js": "angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js",
                     // bootstrap
                     "bootstrap.js": "bootstrap/dist/js/bootstrap.min.js",
+                    // ace
+                    "ace.js": "ace-builds/src-min/ace.js",
+                    "mode-xml.js": "ace-builds/src-min/mode-xml.js",
+                    "mode-csharp.js": "ace-builds/src-min/mode-csharp.js",
+                    "ui-ace.js": "angular-ui-ace/ui-ace.min.js",
                     // utils
                     "moment.js": "moment/min/moment.min.js",
                     "spin.js": "spin.js/spin.min.js",
@@ -248,6 +253,11 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-drag-and-drop-lists.js",
                     // tinymce
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-ui-tinymce.js",
+                    // ace
+                    "<%= bowercopy.scripts.options.destPrefix %>/ace.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/mode-xml.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/mode-csharp.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/ui-ace.js",
                     // minified raw vendors
                     "<%= app.tmp %>/scripts/rawVendor.min.js"
                 ],

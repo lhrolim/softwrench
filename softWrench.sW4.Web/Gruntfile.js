@@ -107,6 +107,11 @@ module.exports = function (grunt) {
                     "devextreme/vectormap/usa.js": "devextreme-web/js/vectormap-data/usa.js",
                     // tinymce
                     "tinymce/angular-ui-tinymce.js" : "angular-ui-tinymce/src/tinymce.js",
+                    // ace
+                    "ace/ace.js": "ace-builds/src/ace.js",
+                    "ace/mode-xml.js": "ace-builds/src/mode-xml.js",
+                    "ace/mode-csharp.js": "ace-builds/src/mode-csharp.js",
+                    "ace/ui-ace.js": "angular-ui-ace/ui-ace.js",
                     // utils
                     "utils/a-moment.js": "moment/min/moment.min.js",
                     "utils/moment-locale-de.js": "moment/locale/de.js",
@@ -153,6 +158,12 @@ module.exports = function (grunt) {
                     "<%= app.vendor %>/scripts/devextreme/dx.chartjs.js",
                     "<%= app.vendor %>/scripts/devextreme/vectormap/usa.js",
                     "<%= app.vendor %>/scripts/tinymce/angular-ui-tinymce.js",
+
+                    // ace
+                    "<%= app.vendor %>/scripts/ace/ace.js",
+                    "<%= app.vendor %>/scripts/ace/mode-xml.js",
+                    "<%= app.vendor %>/scripts/ace/mode-csharp.js",
+                    "<%= app.vendor %>/scripts/ace/ui-ace.js",
 
                     // custom vendors
                     "<%= app.customVendor %>/scripts/**/*.js",

@@ -38,11 +38,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         private readonly MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
         private readonly DataSetProvider _dataSetProvider;
 
-        private AttachmentDao _attachmentDao;
         public AttachmentDao AttachmentDao {
-            get {
-                return _attachmentDao ?? (_attachmentDao = SimpleInjectorGenericFactory.Instance.GetObject<AttachmentDao>(typeof(AttachmentDao)));
-            }
+            get { return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentDao>(typeof (AttachmentDao)); }
         }
 
         /// <summary>

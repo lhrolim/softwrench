@@ -1,11 +1,9 @@
 ﻿using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
 using softWrench.sW4.Security.Services;
-using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
@@ -13,13 +11,6 @@ using System.Linq;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
     class IsmChangeCrudConnector : BaseISMDecorator {
-
-        private readonly SWDBHibernateDAO _dao;
-
-        public IsmChangeCrudConnector() {
-            _dao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
-        }
-
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             base.BeforeUpdate(maximoTemplateData);
             var entity = (CrudOperationData)maximoTemplateData.OperationData;

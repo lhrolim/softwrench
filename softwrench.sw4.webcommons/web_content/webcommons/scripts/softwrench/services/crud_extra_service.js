@@ -1,40 +1,41 @@
 ﻿(function (angular) {
     "use strict";
 
-angular.module('sw_layout')
-    .factory('crudextraService', ["$http", "$rootScope", "printService", "alertService", "submitService", "redirectService", function ($http, $rootScope, printService, alertService, submitService, redirectService) {
+    angular.module('sw_layout')
+        .factory('crudextraService', ["$http", "$rootScope", "printService", "alertService", "submitService", "redirectService", function ($http, $rootScope, printService, alertService, submitService, redirectService) {
+            return {
+                deletefn: function (schema, datamap, extraParameters, skipAlert) {
+                    const fields = datamap;
+                    const idFieldName = schema.idFieldName;
+                    const applicationName = schema.applicationName;
+                    const id = fields[idFieldName];
 
-    return {
-        deletefn: function (schema, datamap) {
-            var fields = datamap;
-            var idFieldName = schema.idFieldName;
-            var applicationName = schema.applicationName;
-            var id = fields[idFieldName];
-            var userId = fields[schema.userIdFieldName];
+                    const request = () => {
+                        var parameters = submitService.createSubmissionParameters(fields, schema, null, id);
+                        parameters.siteId = fields["siteid"];
+                        if (extraParameters) {
+                            parameters = $.extend({}, parameters, extraParameters);
+                        }
+                        const deleteParams = $.param(parameters);
+                        const deleteUrl = removeEncoding(url(`/api/data/${applicationName}/?${deleteParams}`));
+                        $http.delete(deleteUrl).success(() => {
+                            //TODO: improve this solution, since not every app would have a list schema
+                            redirectService.goToApplication(applicationName, "list");
+                        });
+                    }
 
-            alertService.confirm(null, applicationName, id).then(function () {
-                var parameters = submitService.createSubmissionParameters(fields, schema, null, id);
-                parameters.userId = userId;
-                parameters.siteId = fields["siteid"];
-                var deleteParams = $.param(parameters);
-                var deleteURL = removeEncoding(url("/api/data/" + applicationName + "/?" + deleteParams));
-                $http.delete(deleteURL)
-                    .success(function (data) {
-                        //TODO: improve this solution, since not every app would have a list schema
-                        redirectService.goToApplication(applicationName, "list");
-                    });
-            });
+                    if (skipAlert) {
+                        request();
+                    } else {
+                        alertService.confirm(null, applicationName, id).then(request);
+                    }
+                },
 
-        },
+                printDetail: function (schema, datamap) {
+                    printService.printDetail(schema, datamap[schema.idFieldName]);
+                }
+            };
 
-       
-
-
-        printDetail: function (schema, datamap) {
-            printService.printDetail(schema, datamap[schema.idFieldName]);
-        }
-    };
-
-}]);
+        }]);
 
 })(angular);

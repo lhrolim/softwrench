@@ -1,0 +1,12 @@
+﻿<div class="row" style="width: 100%; margin: 10px" ng-controller="ScriptsController">
+    <code-editor mode="csharp" value="script" onload="editorLoaded(editor)"></code-editor>
+    <br/>
+    <span>
+        <button class="applicationcommand btn btn-primary" ng-click="evaluate()">Evaluate Script</button>
+    </span>
+    
+    <div class="container">
+        <label style="margin-top: 10px;">Evaluation Result:</label>
+        <textarea readonly class="form-control" ng-model="result" style="width: 500px; height: 100px"/>
+    </div>
+</div>

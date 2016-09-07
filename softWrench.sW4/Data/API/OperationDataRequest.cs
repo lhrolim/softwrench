@@ -49,6 +49,14 @@ namespace softWrench.sW4.Data.API {
             get; set;
         }
 
+        public string Username {
+            get; set;
+        }
+
+        public string Comment {
+            get; set;
+        }
+
         public CompositionOperationDTO CompositionData { get; set; }
 
         public bool Batch {

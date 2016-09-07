@@ -46,10 +46,7 @@ namespace softWrench.sW4.Security.Services {
 
 
         public static SecurityFacade GetInstance() {
-            if (_instance == null) {
-                _instance = SimpleInjectorGenericFactory.Instance.GetObject<SecurityFacade>(typeof(SecurityFacade));
-            }
-            return _instance;
+            return SimpleInjectorGenericFactory.Instance.GetObject<SecurityFacade>(typeof(SecurityFacade));
         }
 
         public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager, UserSyncManager userSyncManager, UserManager userManager) {

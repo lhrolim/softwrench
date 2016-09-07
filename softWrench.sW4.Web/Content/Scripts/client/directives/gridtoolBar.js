@@ -109,7 +109,8 @@
         if (!!fn && angular.isFunction(fn)) {
             executeClick = fn();
         } else if (commandService.isServiceMethod(expression)) {
-            executeClick = commandService.executeClickCustomCommand(expression);
+            const dm = crudContextHolderService.rootDataMap();
+            executeClick = commandService.executeClickCustomCommand(expression, dm);
         }
 
         return executeClick;

@@ -31,6 +31,7 @@ namespace softwrench.sW4.TestBase {
 
         public void InitDIController() {
             var before = Stopwatch.StartNew();
+            SimpleInjectorGenericFactory.ClearCache();
             RegisterComponents(Container);
             Log.Debug(LoggingUtil.BaseDurationMessage("SimpleInjector context initialized in {0}", before));
             new SimpleInjectorGenericFactory(Container);

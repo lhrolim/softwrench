@@ -14,6 +14,7 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications.Validator;
 using softWrench.sW4.Security.Context;
 using softwrench.sW4.TestBase;
+using softWrench.sW4.Dynamic;
 
 namespace softwrench.sW4.test.Metadata {
 
@@ -45,12 +46,14 @@ namespace softwrench.sW4.test.Metadata {
                 var maximodbMock = new Mock<IMaximoHibernateDAO>();
                 var contextLookuperMock = new Mock<IContextLookuper>();
                 var whereClauseFacadeMock = new Mock<IWhereClauseFacade>();
+                var dynComponentEmailer = new Mock<IDynComponentEmailer>();
 
                 var scanner = new TestSimpleInjectorScanner();
                 scanner.ResgisterSingletonMock<ISWDBHibernateDAO>(swdbMock);
                 scanner.ResgisterSingletonMock<IMaximoHibernateDAO>(maximodbMock);
                 scanner.ResgisterSingletonMock<IContextLookuper>(contextLookuperMock);
                 scanner.ResgisterSingletonMock<IWhereClauseFacade>(whereClauseFacadeMock);
+                scanner.ResgisterSingletonMock<IDynComponentEmailer>(dynComponentEmailer);
 
                 scanner.InitDIController();
 

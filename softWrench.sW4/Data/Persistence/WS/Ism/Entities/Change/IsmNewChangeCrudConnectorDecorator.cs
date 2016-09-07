@@ -13,16 +13,9 @@ using System.Linq;
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
     class IsmNewChangeCrudConnectorDecorator : BaseISMTicketDecorator {
 
-        private IContextLookuper _contextManager;
-
         protected IContextLookuper ContextManager {
             get {
-                if (_contextManager != null) {
-                    return _contextManager;
-                }
-                _contextManager =
-                    SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
-                return _contextManager;
+                return SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
             }
         }
 

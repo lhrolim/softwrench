@@ -8,12 +8,10 @@ using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
-using Microsoft.Ajax.Utilities;
 using softwrench.sw4.api.classes.fwk.context;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using LogicalThreadContext = Quartz.Util.LogicalThreadContext;
 
@@ -25,17 +23,10 @@ namespace softWrench.sW4.Web.Security {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ContextLookuper));
 
-        private IWhereClauseFacade _whereClauseFacade;
-
         //To avoid circular dependencies
         private IWhereClauseFacade WhereClauseFacade {
             get {
-                if (_whereClauseFacade != null) {
-                    return _whereClauseFacade;
-                }
-                _whereClauseFacade =
-                    SimpleInjectorGenericFactory.Instance.GetObject<IWhereClauseFacade>(typeof(IWhereClauseFacade));
-                return _whereClauseFacade;
+                return SimpleInjectorGenericFactory.Instance.GetObject<IWhereClauseFacade>(typeof(IWhereClauseFacade));
             }
         }
 

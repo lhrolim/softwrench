@@ -9,15 +9,9 @@ namespace softWrench.sW4.Data.Entities {
     public class MaxPropValueDao {
         private const string EntityName = "maxpropvalue";
 
-        private EntityRepository _repository;
-
         private EntityRepository EntityRepository {
             get {
-                if (_repository == null) {
-                    _repository =
-                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
-                }
-                return _repository;
+                return SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
             }
         }
 
