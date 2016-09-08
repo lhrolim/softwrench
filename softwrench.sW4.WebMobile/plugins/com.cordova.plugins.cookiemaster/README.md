@@ -11,10 +11,47 @@ As you may already know, WebViews on Android and iOS platforms do not support re
 
 Install with Cordova CLI
 
-    $ cordova plugin add https://github.com/kristianhristov/cordova-cookie-master.git
+    $ cordova plugin add https://github.com/schoettler/cordova-cookie-master
 
 ## Usage
+
+### Get cookies
+
+Gets all cookies from a given domain, returns a JSON object with each cookie as an attribute:
+```
+{
+    cookie1: value1,
+    cookie2: value2
+}
+```
+```javascript
+cookieMaster.getCookies('http://<some host>:<some port>', function(data) {
+  console.log(data); //JSON Object
+}, function(error) {
+  if (error) {
+    console.log('error: ' + error);
+  }
+});
+```
+### Set cookies
+Sets cookies contained in a JSON object with each cookie as an attribute as shown before:
+```
+{
+    cookie1: value1,
+    cookie2: value2
+}
+```
+```javascript
+cookieMaster.setCookies('http://<some host>:<some port>', jsonCookies, function() {
+  console.log('Cookies set');
+}, function(error) {
+  if (error) {
+    console.log('error: ' + error);
+  }
+});
+```
 ### Get cookie value
+Gets a string for a specific domain cookie:
 ```javascript
 cookieMaster.getCookieValue('http://<some host>:<some port>', '<cookie name>', function(data) {
   console.log(data.cookieValue);
