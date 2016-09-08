@@ -67,7 +67,7 @@
           <!-- Application and basic setup  -->
           <section orientation="horizontal">
             <header displacement="ontop" label="Application Settings" params="fieldset=true" />
-            <optionfield attribute="application" providerattribute="topLevelApplications" label="Application">
+            <optionfield attribute="#application" providerattribute="topLevelApplications" label="Application">
               <event type="afterchange" service="userProfileService" method="onApplicationChange"/>
               <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>
             </optionfield>

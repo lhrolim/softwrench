@@ -129,6 +129,7 @@
     <Compile Include="Metadata\CustomizationTest.cs" />
     <Compile Include="Metadata\Parsing\XmlStereotypeMetadataParserTest.cs" />
     <Compile Include="Metadata\Parsing\XmlMCommandBarMetadataParserTest.cs" />
+    <Compile Include="Metadata\Schema\ApplicationSchemaFactoryTest.cs" />
     <Compile Include="Metadata\SyncSchemaTest.cs" />
     <Compile Include="offline\ClientStateJsonConverterTest.cs" />
     <Compile Include="Poco\PocoSr.cs" />

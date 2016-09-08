@@ -75,7 +75,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
             MergeWithStereotypeSchema(schema);
 
-         
+
             schema.ApplicationTitle = applicationTitle;
             SetTitle(applicationName, displayables, schema);
 
@@ -238,22 +238,6 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         }
 
 
-        private static ApplicationSchemaDefinition OnApplyPlatformPolicy(ApplicationSchemaDefinition schema, ClientPlatform platform, List<IApplicationDisplayable> displayables) {
-            //pass null on ParentSchema to avoid reMerging the parentSchemaData
-            var newSchema = GetInstance(schema.EntityName, schema.ApplicationName, schema.ApplicationTitle, schema.Title, schema.SchemaId,
-                schema.RedeclaringSchema, schema.StereotypeAttr, schema.Stereotype, schema.Mode, platform,
-                schema.Abstract, displayables, schema.SchemaFilters,
-                schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName,
-                schema.UserIdFieldName, schema.UnionSchema,
-                schema.EventSet);
-            newSchema.DepandantFields(schema.DependantFields());
-            newSchema.FieldWhichHaveDeps = schema.FieldWhichHaveDeps;
-            newSchema.NoResultsNewSchema = schema.NoResultsNewSchema;
-            newSchema.RelatedCompositions = schema.RelatedCompositions;
-            newSchema.NewSchemaRepresentation = schema.NewSchemaRepresentation;
-            return newSchema;
-        }
-
         public static ApplicationSchemaDefinition Clone(ApplicationSchemaDefinition schema) {
             var newSchema = GetInstance(schema.EntityName, schema.ApplicationName, schema.ApplicationTitle,
                 schema.Title, schema.SchemaId, schema.RedeclaringSchema, schema.StereotypeAttr, schema.Stereotype, schema.Mode, schema.Platform,
@@ -273,7 +257,30 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             if (userRoles == null)
                 throw new ArgumentNullException("userRoles");
 
-            return OnApplyPlatformPolicy(schema, platform, ApplicationFieldSecurityApplier.OnApplySecurityPolicy(schema, userRoles, schemaFieldsToDisplay, profile));
+            var securedFields = ApplicationFieldSecurityApplier.OnApplySecurityPolicy(schema, userRoles, schemaFieldsToDisplay, profile);
+
+            //pass null on ParentSchema to avoid reMerging the parentSchemaData
+            var newSchema = GetInstance(schema.EntityName, schema.ApplicationName, schema.ApplicationTitle, schema.Title, schema.SchemaId,
+                schema.RedeclaringSchema, schema.StereotypeAttr, schema.Stereotype, schema.Mode, platform,
+                schema.Abstract, securedFields, schema.SchemaFilters,
+                schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName,
+                schema.UserIdFieldName, schema.UnionSchema,
+                schema.EventSet);
+
+            newSchema.DepandantFields(schema.DependantFields());
+            newSchema.FieldWhichHaveDeps = schema.FieldWhichHaveDeps;
+            newSchema.NoResultsNewSchema = schema.NoResultsNewSchema;
+            newSchema.RelatedCompositions = schema.RelatedCompositions;
+            newSchema.NewSchemaRepresentation = CheckCreationAllowed(schema, profile);
+            return newSchema;
+        }
+
+        private static SchemaRepresentation CheckCreationAllowed(ApplicationSchemaDefinition schema, MergedUserProfile profile) {
+            var applicationPermission = profile.GetPermissionByApplication(schema.ApplicationName);
+            if (applicationPermission == null) {
+                return schema.NewSchemaRepresentation;
+            }
+            return applicationPermission.AllowCreation ? schema.NewSchemaRepresentation : null;
         }
 
         [NotNull]

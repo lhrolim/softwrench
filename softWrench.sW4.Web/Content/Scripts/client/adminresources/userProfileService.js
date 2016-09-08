@@ -45,7 +45,7 @@
                 //due to mode changes
                 return;
             }
-            const application = parameters.fields["application"];
+            const application = parameters.fields["#application"];
             const schemaId = parameters.fields["schema"];
             dm["#fieldPermissions_"] = [];
 
@@ -175,7 +175,7 @@
 
         function onApplicationChange(parameters) {
             var dm = parameters.fields;
-            var nextApplication = dm["application"];
+            var nextApplication = dm["#application"];
 
             //cleaning up data
             dm["schema"] = dm["selectedmode"] = dm["#selectedtab"] = dm["iscompositiontab"] = null;
@@ -193,7 +193,7 @@
 
             if (!!transientData[nextApplication]) {
                 simpleLog.info("application has changed to {0}, but we already have local transient data. no need to fetch from the server".format(nextApplication));
-                mergeTransientIntoDatamap({ application: nextApplication });
+                mergeTransientIntoDatamap({ "#application": nextApplication });
                 return $q.when();
             }
             const queryParameters = {
@@ -220,7 +220,7 @@
                 transientData[nextApplication] = appPermission;
                 transientData[nextApplication]["hasCreationSchema"] = hasCreationSchema;
 
-                mergeTransientIntoDatamap({ application: nextApplication });
+                mergeTransientIntoDatamap({ "#application": nextApplication });
 
             });
         }
@@ -230,7 +230,7 @@
             dm["#selectedtab"] = dm["iscompositiontab"] = null;
             cleanUpCompositions();
             crudContextHolderService.updateEagerAssociationOptions("selectableTabs", []);
-            const application = parameters.fields["application"];
+            const application = parameters.fields["#application"];
             var schemaId = parameters.fields["schema"];
             if (schemaId == null) {
                 return;
@@ -344,7 +344,7 @@
 
             var transientData = $rootScope["#transientprofiledata"];
 
-            var application = dispatcher.application ? dispatcher.application : dm.application;
+            var application = dispatcher["#application"] ? dispatcher["#application"] : dm["#application"];
             if (!application) {
                 //save method called on blank application
                 return transientData;
@@ -542,7 +542,7 @@
 
         function mergeTransientIntoDatamap(dispatcher) {
             var dm = crudContextHolderService.rootDataMap();
-            var application = dm.application;
+            var application = dm["#application"];
             var schema = dm.schema;
             var tab = dm["#selectedtab"];
             const transientAppData = $rootScope["#transientprofiledata"][application];
@@ -553,7 +553,7 @@
 
             simpleLog.info("merge transiet into datamap for app {0}".format(application));
 
-            if (dispatcher.application) {
+            if (dispatcher["#application"]) {
 
                 dm["hasCreationSchema"] = transientAppData.hasCreationSchema;
                 //no need to restore this data on every single operation
@@ -698,7 +698,7 @@
                     };
                     return restService.postPromise("UserProfile", "BatchUpdate", params, selectedApps).then(function (httpResponse) {
                         $rootScope["#transientprofiledata"] = {};
-                        crudContextHolderService.rootDataMap()["application"] = null;
+                        crudContextHolderService.rootDataMap()["#application"] = null;
                     });
 
 
@@ -820,13 +820,13 @@
         };
         const api = {
             'delete': deleteProfile,
-            filterAvailablePermissions: filterAvailablePermissions,
-            filterAvailableModes: filterAvailableModes,
-            mergeTransientIntoDatamap: mergeTransientIntoDatamap,
-            refreshCache: refreshCache,
-            storeFromDmIntoTransient: storeFromDmIntoTransient,
-            save: save,
-            getProfileId: getProfileId
+            filterAvailablePermissions,
+            filterAvailableModes,
+            mergeTransientIntoDatamap,
+            refreshCache,
+            storeFromDmIntoTransient,
+            save,
+            getProfileId
         };
         const actions = {
             batchUpdate: batchUpdate,

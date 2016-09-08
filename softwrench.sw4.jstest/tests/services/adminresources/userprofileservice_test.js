@@ -110,7 +110,7 @@
 
         //simulating user was at main tab of application asset, changing to sr
         var screenDatamap = {
-            application: "servicerequest",
+            "#application": "servicerequest",
             //changed from true to false
             "#appallowcreation": false,
             "#appallowupdate": true,
@@ -164,7 +164,7 @@
         crudContextHolderService.rootDataMap(null, screenDatamap);
 
         var dispatcher = {
-            application: "asset",
+            "#application": "asset",
         }
 
         var updatedData = userProfileService.storeFromDmIntoTransient(dispatcher);
@@ -205,7 +205,7 @@
 
         //simulating user was at main tab of application asset, changing to sr
         var screenDatamap = {
-            application: "servicerequest",
+            "#application": "servicerequest",
             "#appallowcreation": true,
             "#appallowupdate": true,
             "#appallowview": true,
@@ -224,7 +224,7 @@
 
 
         var dispatcher = {
-            application: "asset",
+            "#application": "asset",
         }
 
         var updatedData = userProfileService.storeFromDmIntoTransient(dispatcher);
@@ -266,7 +266,7 @@
 
         //simulating user was at main tab of application asset, changing to sr
         var screenDatamap = {
-            application: "servicerequest",
+            "#application": "servicerequest",
             "#appallowcreation": true,
             "#appallowupdate": true,
             "#appallowview": true,
@@ -351,7 +351,7 @@
 
         //simulating a change to an asset application, where basic setup should be restored
         var screenDatamap = {
-            application: "asset",
+            "#application": "asset",
             "#appallowcreation": true,
             "#appallowupdate": true,
             "#appallowview": true,
@@ -367,7 +367,7 @@
 
 
         var dispatcher = {
-            application: "asset",
+            "#application": "asset",
         }
 
         var updatedData = userProfileService.mergeTransientIntoDatamap(dispatcher);
@@ -393,7 +393,7 @@
 
         //simulating a change to the detail schema
         var screenDatamap = {
-            application: "asset",
+            "#application": "asset",
             "#appallowcreation": true,
             "#appallowupdate": true,
             "#appallowview": true,
@@ -468,7 +468,7 @@
 
         //simulating a change to the detail schema
         var screenDatamap = {
-            application: "asset",
+            "#application": "asset",
             "#appallowcreation": true,
             "#appallowupdate": true,
             "#appallowview": true,
@@ -527,7 +527,7 @@
 
         //simulating a change to the detail schema
         var screenDatamap = {
-            application: "asset",
+            "#application": "asset",
             "#appallowcreation": true,
             "#appallowupdate": true,
             "#appallowview": true,
