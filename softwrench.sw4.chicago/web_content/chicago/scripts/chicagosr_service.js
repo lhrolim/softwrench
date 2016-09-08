@@ -25,34 +25,32 @@
         }
 
         function afterChangeImpact(event) {
-            event.fields['impact'] = event.fields['impacturgency_.impact'];
-            var urgency = event.fields['urgency'];
+            var datamap = event.fields;
+            datamap['impact'] = datamap['impacturgency_.impact'];
+            var urgency = datamap['urgency'];
             if (urgency == null) {
-                event.fields['urgency'] = event.fields['impacturgency_.urgency'];
+                datamap['urgency'] = datamap['impacturgency_.urgency'];
             }
-            event.fields['internalpriority'] = event.fields['impacturgency_.internalpriority'];
-            if (event.fields['impacturgency_.impact'] == null) {
-                event.fields['impact'] = null;
-                event.fields['urgency'] = null;
-                event.fields['internalpriority'] = null;
+            datamap['internalpriority'] = datamap['impacturgency_.internalpriority'];
+            if (datamap['impacturgency_.impact'] == null) {
+                datamap['impact'] = null;
+                datamap['urgency'] = null;
+                datamap['internalpriority'] = null;
             }
         };
 
         function afterChangeUrgency(event) {
-            event.fields['urgency'] = event.fields['impacturgency_.urgency'];
-
-            var impact = event.fields['impact'];
-
+            var datamap = event.fields;
+            datamap['urgency'] = datamap['impacturgency_.urgency'];
+            var impact = datamap['impact'];
             if (impact == null) {
-                event.fields['impact'] = event.fields['impacturgency_.impact'];
+                datamap['impact'] = datamap['impacturgency_.impact'];
             }
-
-            event.fields['internalpriority'] = event.fields['impacturgency_.internalpriority'];
-
-            if (event.fields['impacturgency_.urgency'] == null) {
-                event.fields['impact'] = null;
-                event.fields['urgency'] = null;
-                event.fields['internalpriority'] = null;
+            datamap['internalpriority'] = datamap['impacturgency_.internalpriority'];
+            if (datamap['impacturgency_.urgency'] == null) {
+                datamap['impact'] = null;
+                datamap['urgency'] = null;
+                datamap['internalpriority'] = null;
             }
         };
 
