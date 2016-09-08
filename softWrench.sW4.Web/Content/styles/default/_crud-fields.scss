@@ -270,11 +270,6 @@ label.form-control {
     font-weight: normal;
 }
 
-.tt-dropdown-menu {
-    height: 300px;
-    overflow-y: scroll;
-}
-
 .input-group-addon {
     cursor: pointer;
 
@@ -465,6 +460,14 @@ input[type="date"], input[type="time"] {
 
 .tt-dropdown-menu {
     width: 100% !important;
+    max-height: 240px;
+    overflow-y: scroll;
+}
+
+.input-group {
+    .tt-dropdown-menu {
+        width: calc(100% + 38px) !important;
+    }
 }
 
 .tt-suggestion {
