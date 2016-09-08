@@ -694,7 +694,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             MetadataProvider.AddComponents(name, appComponents);
 
             var completeApplicationMetadataDefinition = new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, null, appComponents, appFilters, service, role, auditFlag);
-            //
+            //need to add the recent generated application to a transient map, so that we can refer to it on the schema parser phase
             MetadataProvider.AddTransientApplication(completeApplicationMetadataDefinition);
 
             var schemas = ParseSchemas(name, title, entity, application, idFieldName, userIdFieldName);

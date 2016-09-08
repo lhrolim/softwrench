@@ -1,6 +1,5 @@
 ﻿using cts.commons.portable.Util;
 using JetBrains.Annotations;
-using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata;
@@ -9,23 +8,17 @@ using softwrench.sW4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
-using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Metadata.Applications.Reference;
 using softWrench.sW4.Metadata.Stereotypes;
-using softWrench.sW4.Security.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.user.classes.entities;
-using softwrench.sw4.user.classes.entities.security;
 using softwrench.sW4.Shared2.Util;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Applications.Security;
-using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.Schema {
 
