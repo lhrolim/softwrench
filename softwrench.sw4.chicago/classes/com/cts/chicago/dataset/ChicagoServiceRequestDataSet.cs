@@ -24,7 +24,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
                 var user = SecurityFacade.CurrentUser();
                 var detail = GetApplicationDetail(application, user, new DetailRequest(id, application.Schema.GetSchemaKey()));
 
-                if(detail != null) {
+                if (detail != null) {
                     result.ResultObject = detail.ResultObject;
                 }
             }
@@ -32,12 +32,43 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
             return result;
         }
 
+
+
+        /// <summary>
+        /// Filtering owners based upon ownergroup
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public SearchRequestDto FilterValidOwners(AssociationPreFilterFunctionParameters parameters) {
+            var dto = parameters.BASEDto;
+
+            var ownergroup = parameters.OriginalEntity.GetStringAttribute("ownergroup");
+            if (ownergroup == null) {
+                //no actions needed
+                return dto;
+            }
+
+            Log.DebugFormat("constraining owners of ownergroup {0}",ownergroup);
+
+            dto.AppendWhereClauseFormat("personid in (select respparty from persongroupteam where persongroup='{0}')",ownergroup);
+
+
+
+            return dto;
+        }
+
+
+
+
+
         public SearchRequestDto FilterClassification(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             // Only show classifications with classstructures that have pluspcustassoc's to 'CPS-00'
             filter.AppendWhereClause("classificationid in (select classstructure.classificationid from classstructure inner join pluspcustassoc on pluspcustassoc.ownertable = 'CLASSSTRUCTURE' and pluspcustassoc.ownerid = classstructure.classstructureuid and pluspcustassoc.customer = 'CPS-00')");
             return filter;
         }
+
+
 
         public SearchRequestDto FilterQSRWorklogs(CompositionPreFilterFunctionParameters parameter) {
             parameter.BASEDto.AppendWhereClause(" clientviewable = 1 ");

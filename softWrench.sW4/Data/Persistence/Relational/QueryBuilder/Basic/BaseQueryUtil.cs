@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using cts.commons.persistence;
@@ -9,6 +10,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
 using softWrench.sW4.Util;
+using WebGrease.Css.Extensions;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
     public class BaseQueryUtil {
@@ -60,6 +62,13 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                 sb.Append(" or ");
             }
             return sb.ToString(0, sb.Length - 4);
+        }
+
+        private ExpandoObject FromDictionary(IDictionary<string, object> dict) {
+            var parameters = new ExpandoObject();
+            var parameterCollection = (ICollection<KeyValuePair<string, object>>)parameters;
+            dict.ForEach(e => parameterCollection.Add(e));
+            return parameters;
         }
 
         public static string GenerateInString(IEnumerable<DataMap> items, string columnName = null) {

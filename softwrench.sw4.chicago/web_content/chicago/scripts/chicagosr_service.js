@@ -1,17 +1,10 @@
-﻿(function () {
+﻿(function (angular) {
     'use strict';
 
-    angular
-      .module('sw_layout')
-      .factory('chicagosrService', ['$q', 'alertService', 'searchService', chicagosrService]);
 
-    function chicagosrService($q, alertService, searchService) {
-        var service = {
-            afterChangeImpact: afterChangeImpact,
-            afterChangeUrgency: afterChangeUrgency,
-            beforeChangeStatus: beforeChangeStatus,
-            afterChangeReportedBy: afterChangeReportedBy
-        };
+
+    function chicagosrService($q, alertService, searchService, restService) {
+
 
         function latestWorklogType(datamap) {
             var worklogType = '';
@@ -25,7 +18,7 @@
         }
 
         function afterChangeImpact(datamap) {
-            datamap['impact'] =['impacturgency_.impact'];
+            datamap['impact'] = ['impacturgency_.impact'];
             var urgency = datamap['urgency'];
             if (urgency == null) {
                 datamap['urgency'] = datamap['impacturgency_.urgency'];
@@ -96,7 +89,7 @@
             return $q.all([
                 searchService.searchWithData("email", searchData, "list", extraparams),
                 searchService.searchWithData("phone", searchData, "list", extraparams)
-            ]).then(function(result) {
+            ]).then(function (result) {
                 var emailResult = result[0].data.resultObject[0];
                 datamap['reportedemail'] = emailResult ? emailResult.fields['emailaddress'] : '';
                 var phoneResult = result[1].data.resultObject[0];
@@ -104,6 +97,42 @@
             });
         };
 
+
+        function afterchangeownergroup(event) {
+            const dm = event.fields;
+            if (window.isNullOrEmpty(dm['ownergroup'])) {
+                dm['ownergroup'] = null;
+                return $q.when();
+            }
+            if (dm["owner"] === null) {
+                //no need to reevaluate owner
+                return $q.when();
+            }
+
+            return restService.get("ChicagoSr", "IsOwnerMember", { newOwnerGroup: dm["ownergroup"], owner: dm["owner"] }).then(result => {
+                var stillMember = result.data;
+                if (!stillMember) {
+                    alertService.alert("Please select another owner");
+                    dm['owner'] = null;
+                }
+            });
+
+
+        };
+
+        const service = {
+            afterChangeImpact,
+            afterChangeUrgency,
+            afterchangeownergroup,
+            beforeChangeStatus,
+            afterChangeReportedBy
+        };
+
         return service;
     }
-})();
+
+    angular
+      .module('chicago')
+      .clientfactory('srService', ['$q', 'alertService', 'searchService', 'restService', chicagosrService]);
+
+})(angular);
