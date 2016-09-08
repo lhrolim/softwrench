@@ -358,8 +358,8 @@
             <section orientation="vertical">
               <header label="Service Request Details" displacement="ontop" params="fieldset=true"/>
               <section orientation="horizontal">
-                <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="" requiredexpression="true">
-                  <renderer type="autocompleteclient" />
+                <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureTypeDescription" default="" requiredexpression="true">
+                  <renderer type="lookup" />
                 </optionfield>
               </section>
               <section orientation="horizontal">
