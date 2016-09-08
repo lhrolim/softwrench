@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>DataSet Directive</Title>
+      <Author>lhrolim</Author>
+      <Description>Template for adding a new prefilter fn on a dataset</Description>
+      <Shortcut>dspre</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+         <Literal>
+          <ID>name</ID>
+          <ToolTip>Name of the Pre Filter Function</ToolTip>
+         </Literal>
+      </Declarations>
+          <Code Language="csharp"><![CDATA[
+          public SearchRequestDto MyFn(AssociationPreFilterFunctionParameters parameters) {
+              var dto = parameters.BASEDto;
+              $end$
+              return dto;
+          }
+  ]]>
+</Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

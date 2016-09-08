@@ -75,7 +75,11 @@
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
         </relationship>
-        <relationship to ="persongroup">
+        <relationship to ="persongroup" >
+          <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
+        </relationship>
+        
+        <relationship to ="persongroup" qualifier="ownergroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
         <!--COMSW 24 Reverse Lookup of Service Address (Lazy Fetch)-->
@@ -96,7 +100,7 @@
           <relationshipAttribute from="class" to="RECORDCLASS" />
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
-        
+
       </relationships>
       <connectorParameters>
         <!--<connectorParameter key="integration_interface" value="SRSWVALIDATIONTEST" />-->
@@ -110,7 +114,49 @@
   </entities>
 
   <applications>
+
+
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
+
+      <components>
+        <componentdisplayable id="owner">
+          <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="srService" method="afterchangeowner"/>
+          </association>
+        </componentdisplayable>
+
+        <componentdisplayable id="ownergroup">
+          <association label="Owner Group" target="ownergroup" labelfield="ownergroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+          </association>
+        </componentdisplayable>
+
+        <componentdisplayable id="srhiddens">
+          <field attribute="ticketid" label="SR#" hidden="true"/>
+          <field attribute="ticketuid" label="SR#" hidden="true"/>
+          <field attribute="actlabcost" hidden="true" />
+          <field attribute="actlabhrs" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="createby" hidden="true"/>
+          <!-- hiddens for communication template -->
+          <field attribute="changedate" hidden="true"/>
+          <field attribute="classificationid" hidden="true"/>
+          <field attribute="reportedemail" hidden="true"/>
+          <field attribute="affectedemail" hidden="true"/>
+
+          <field attribute="class" label="" hidden="true"/>
+          <field attribute="solution" hidden="true"/>
+          <field attribute="assetsiteid" hidden="true"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="assetnum" hidden="true"/>
+          <field attribute="failurecode" hidden="true"/>
+          <field attribute="cinum" hidden="true"/>
+          <field attribute="ownerperson_.displayname" hidden="true"/>
+        </componentdisplayable>
+
+      </components>
 
       <filters>
         <optionfilter attribute="status" provider="synstatus_.description" displaycode="true"/>
@@ -184,7 +230,7 @@
                        parameters="schema,datamap" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
-          
+
         </list>
 
         <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status">
@@ -195,18 +241,20 @@
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
 
+          <reference id="srhiddens"/>
+
           <!-- field used for PECSO customization -->
           <field attribute="tophiddenfield" hidden="true"/>
           
+
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=large" />
-            <field attribute="ticketid" label="SR#" hidden="true"/>
-            <field attribute="ticketuid" label="SR#" hidden="true"/>
+            
             <field attribute="description" label="Summary" requiredexpression="true">
               <renderer type="default" params="maxlength=100;inputsize=xlarge" />
             </field>
             <section id="ticketidsection"/>
-            
+
             <!-- field used for PECSO customization -->
             <field attribute="locationhiddenfield" hidden="true"/>
           </section>
@@ -215,30 +263,9 @@
             <field label="Details" attribute="ld_.ldtext">
               <renderer type="richtext"/>
             </field>
-
           </section>
 
-          <section>
-            <field attribute="actlabcost" hidden="true" />
-            <field attribute="actlabhrs" hidden="true"/>
-            <field attribute="orgid" hidden="true"/>
-            <field attribute="createby" hidden="true"/>
-            <!-- hiddens for communication template -->
-            <field attribute="changedate" hidden="true"/>
-            <field attribute="classificationid" hidden="true"/>
-            <field attribute="reportedemail" hidden="true"/>
-            <field attribute="affectedemail" hidden="true"/>
 
-            <field attribute="class" label="" hidden="true"/>
-            <field attribute="solution" hidden="true"/>
-            <field attribute="assetsiteid" hidden="true"/>
-            <field attribute="location" hidden="true"/>
-            <field attribute="assetnum" hidden="true"/>
-            <field attribute="failurecode" hidden="true"/>
-            <field attribute="cinum" hidden="true"/>
-            <field attribute="ownerperson_.displayname" hidden="true"/>
-            
-          </section>
 
           <field attribute="changeby" default="@personid" hidden="true"/>
 
@@ -246,16 +273,8 @@
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
             <renderer type="default" params="childinputsize=medium" />
 
-
-            <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
-              <renderer type="lookup"/>
-              <event type="afterchange" service="srService" method="afterchangeowner"/>
-            </association>
-
-            <association label="Owner Group" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
-              <renderer type="lookup"/>
-              <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-            </association>
+            <reference id="owner"/>
+            <reference id="ownergroup"/>
 
             <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@personid" orderbyfield="personid asc" >
               <renderer type="lookup" params="columnlabel=Name;"/>
@@ -318,7 +337,7 @@
                 <field attribute="targetfinish" label="Target Finish Date">
                   <renderer type="datetime" params="format=MM/dd/yyyy"/>
                 </field>
-           
+
                 <field attribute="actualstart" label="Actual Start Date">
                   <renderer type="datetime" params="format=MM/dd/yyyy"/>
                 </field>
@@ -386,22 +405,22 @@
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
           <commandbars>
             <commandgroup position="actions">
-<!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command id="dispatchwo" icon="fa-wrench" label="Create W.O."
-                          parameters="schema,datamap" service="dispatchService" method="dispatchWO" cssclasses="large-button" enableexpression="$scope:enableSave"/>
-              
-                <!-- Incident is for smart cloud only, allowing them to dispatch incidents on all images is a violation for maximo images -->
-                <command id="dispatchincident" icon="fa-warning" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD" 
-                          parameters="schema,datamap" service="dispatchService" method="dispatchIncident" cssclasses="large-button" enableexpression="$scope:enableSave"/>
-                
-                <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap" 
-                         showexpression="service:genericTicketService.isDeleteAllowed" successmessage="SR deleted" position="right" cssclasses="large-button" icon="fa-remove"/>
-                
-                <!-- Create new SR as Related Record -->
-                <command id="createrelated" 
-                         service="srService" method="startRelatedSRCreation" parameters="schema,datamap" 
-                         label="Create Request" icon="fa-ticket" cssclasses="large-button" enableexpression="$scope:enableSave"/>
-<!--              </container>-->
+              <!--              <container label="Actions" id="actioncontainer" icon="fa-bolt">-->
+              <command id="dispatchwo" icon="fa-wrench" label="Create W.O."
+                        parameters="schema,datamap" service="dispatchService" method="dispatchWO" cssclasses="large-button" enableexpression="$scope:enableSave"/>
+
+              <!-- Incident is for smart cloud only, allowing them to dispatch incidents on all images is a violation for maximo images -->
+              <command id="dispatchincident" icon="fa-warning" label="Create Incident" permissionexpression="@maximoVersionEvaluator.IsSCCD"
+                        parameters="schema,datamap" service="dispatchService" method="dispatchIncident" cssclasses="large-button" enableexpression="$scope:enableSave"/>
+
+              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                       showexpression="service:genericTicketService.isDeleteAllowed" successmessage="SR deleted" position="right" cssclasses="large-button" icon="fa-remove"/>
+
+              <!-- Create new SR as Related Record -->
+              <command id="createrelated"
+                       service="srService" method="startRelatedSRCreation" parameters="schema,datamap"
+                       label="Create Request" icon="fa-ticket" cssclasses="large-button" enableexpression="$scope:enableSave"/>
+              <!--              </container>-->
             </commandgroup>
           </commandbars>
         </schema>
@@ -452,7 +471,7 @@
           </properties>
 
           <section id="extrahiddenfields"/>
-          
+
           <section orientation="horizontal" id="statussection">
             <renderer type="default" params="childinputsize=large" />
             <field attribute="ticketuid" label="SR#" hidden="true"/>

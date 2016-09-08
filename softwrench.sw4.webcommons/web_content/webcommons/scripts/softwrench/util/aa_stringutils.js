@@ -73,12 +73,17 @@ String.prototype.equalIc = String.prototype.f = function (other) {
 
 
 var nullOrEmpty = function (s) {
-    return nullOrUndef(s) || String(s).trim().length == 0;
+    return nullOrUndef(s) || String(s).trim().length === 0;
+};
+
+var isNullOrEmpty = function (s) {
+    return nullOrUndef(s) || String(s).trim().length === 0;
 };
 
 var isArrayNullOrEmpty = function (arr) {
-    return nullOrUndef(arr) || arr.length == 0;
+    return nullOrUndef(arr) || arr.length === 0;
 };
+
 
 String.format = function () {
     var s = arguments[0];

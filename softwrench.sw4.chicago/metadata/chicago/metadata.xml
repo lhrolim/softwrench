@@ -327,14 +327,16 @@
             <header displacement="ontop" label="Responsibility" params="fieldset=true" />
             <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@username" extraprojectionvalues="langcode,department" orderbyfield="personid asc" requiredexpression="true">
               <renderer type="lookup" params="columnlabel=Name;"/>
-              <event type="afterchange" service="chicagosrService" method="afterChangeReportedBy"/>
+              <event type="afterchange" service="srService" method="afterChangeReportedBy"/>
             </association>
             <association label="Affected Person" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" requiredexpression="true">
               <renderer type="lookup" params="columnlabel=Name"/>
             </association>
             <field attribute="createdby" label="Created By" default="@username" readonly="true"/>
+            
             <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" orderbyfield="personid asc">
               <renderer type="lookup"/>
+              <dataprovider prefilterfunction="FilterValidOwners"/>
             </association>
           </section>
 
@@ -346,8 +348,9 @@
             <association label="Created Group" target="itdchcreatedbygroup" labelfield="itdchcreatedbygroup_.description" orderbyfield="persongroup asc">
               <renderer type="lookup"/>
             </association>
-            <association label="Owner Group" target="ownergroup" labelfield="ownergroup_.description" orderbyfield="persongroup asc" requiredexpression="true">
+            <association label="Owner Group" target="ownergroup" labelfield="ownergroup_.description" orderbyfield="persongroup asc">
               <renderer type="lookup"/>
+              <event type="afterchange" service="srService" method="afterchangeownergroup"/>
             </association>
           </section>
 
@@ -374,11 +377,11 @@
               <section orientation="horizontal">
                 <association target="impact" labelfield="impacturgency_.impactdesc_.description" label="Impact" extraprojectionvalues="internalpriority,impact,urgency" valuefield="impact" requiredexpression="true">
                   <renderer type="lookup" params="application=impacturgency;schemaId=list;"/>
-                  <event type="afterchange" service="chicagosrService" method="afterChangeImpact"/>
+                  <event type="afterchange" service="srService" method="afterChangeImpact"/>
                 </association>
                 <association target="urgency" labelfield="impacturgency_.urgencydesc_.description" label="Urgency" extraprojectionvalues="internalpriority,impact,urgency" valuefield="urgency" requiredexpression="true">
                   <renderer type="lookup" params="application=impacturgency;schemaId=list;"/>
-                  <event type="afterchange" service="chicagosrService" method="afterChangeUrgency"/>
+                  <event type="afterchange" service="srService" method="afterChangeUrgency"/>
                 </association>
               </section>
               <section orientation="horizontal">
@@ -517,7 +520,7 @@
           <section id="statussection">
             <association label="Status" target="status" labelfield="synstatus_.description" requiredexpression="true">
               <renderer type="lookup" />
-              <event type="beforechange" service="chicagosrService" method="beforeChangeStatus"/>
+              <event type="beforechange" service="srService" method="beforeChangeStatus"/>
             </association>
           </section>
           <section id="compositions">
@@ -610,7 +613,7 @@
               <renderer type="default" params="childinputsize=small" />
               <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@personid" orderbyfield="personid asc" >
                 <renderer type="lookup" params="columnlabel=Name;"/>
-                <event type="afterchange" service="chicagosrService" method="afterChangeReportedBy"/>
+                <event type="afterchange" service="srService" method="afterChangeReportedBy"/>
               </association>
               <field attribute="reportedphone" label="Reported By Phone" readonly="true" default="@user.phone"/>
               <field attribute="reportedemail" label="Reported By Email" readonly="true" default="@user.email"/>
@@ -650,7 +653,7 @@
               <renderer type="default" params="childinputsize=small" />
               <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" extraprojectionvalues="department" default="@personid" orderbyfield="personid asc" >
                 <renderer type="lookup" params="columnlabel=Name;"/>
-                <event type="afterchange" service="chicagosrService" method="afterChangeReportedBy"/>
+                <event type="afterchange" service="srService" method="afterChangeReportedBy"/>
               </association>
               <field attribute="reportedphone" label="Reported By Phone" readonly="true"/>
               <field attribute="reportedemail" label="Reported By Email" readonly="true"/>

@@ -31,7 +31,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
         }
 
         public override string ToString() {
-            return string.Format("Id: {0}", Id);
+            return string.Format("Reference-- Id: {0}", Id);
         }
 
         #region uselessMethodsForThisDisplayable

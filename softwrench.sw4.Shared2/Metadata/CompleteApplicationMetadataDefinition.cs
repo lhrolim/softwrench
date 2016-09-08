@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
@@ -62,9 +63,9 @@ namespace softwrench.sW4.Shared2.Metadata {
         }
         //        public ToStringExpression _toStringExpression;
         //        public MobileApplicationSchema _mobileSchema;
-        private readonly IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> _schemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
+        private IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> _schemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
 
-        private readonly ISet<ApplicationSchemaDefinition> _schemasList = new HashSet<ApplicationSchemaDefinition>();
+        private ISet<ApplicationSchemaDefinition> _schemasList = new HashSet<ApplicationSchemaDefinition>();
 
         public IEnumerable<DisplayableComponent> DisplayableComponents = new List<DisplayableComponent>();
 
@@ -81,10 +82,14 @@ namespace softwrench.sW4.Shared2.Metadata {
             string role,
             bool? auditFlag = false
             ) {
-            if (applicationName == null) throw new ArgumentNullException("name");
-            if (title == null) throw new ArgumentNullException("title");
-            if (entity == null) throw new ArgumentNullException("entity");
-            if (idFieldName == null) throw new ArgumentNullException("idFieldName");
+            if (applicationName == null)
+                throw new ArgumentNullException("name");
+            if (title == null)
+                throw new ArgumentNullException("title");
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+            if (idFieldName == null)
+                throw new ArgumentNullException("idFieldName");
 
             Id = id;
             ApplicationName = applicationName;
@@ -95,15 +100,11 @@ namespace softwrench.sW4.Shared2.Metadata {
             Service = service;
             Parameters = paramters;
             AppFilters = appFilters ?? SchemaFilters.BlankInstance();
-            foreach (ApplicationSchemaDefinition schema in schemas.Values) {
-                schema.IdFieldName = IdFieldName;
-                MergeSchemaPropertiesWithApplicationProperties(schema, Parameters);
-            }
-            _schemas = schemas;
             if (paramters.ContainsKey(ApplicationMetadataConstants.FetchLimitProperty)) {
-                FetchLimit = int.Parse(paramters[ApplicationMetadataConstants.FetchLimitProperty].ToString());
+                FetchLimit = int.Parse(paramters[ApplicationMetadataConstants.FetchLimitProperty]);
             }
-            _schemasList = new HashSet<ApplicationSchemaDefinition>(_schemas.Values);
+            SetSchemas(schemas);
+
             DisplayableComponents = components;
             Role = role ?? applicationName;
             AuditFlag = auditFlag;
@@ -125,7 +126,7 @@ namespace softwrench.sW4.Shared2.Metadata {
         }
 
         public void AddSchema(ApplicationMetadataSchemaKey key, ApplicationSchemaDefinition schema) {
-            _schemas.Add(key,schema);
+            _schemas.Add(key, schema);
             _schemasList.Add(schema);
         }
 
@@ -182,9 +183,12 @@ namespace softwrench.sW4.Shared2.Metadata {
         }
 
         public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != this.GetType())
+                return false;
             return Equals((CompleteApplicationMetadataDefinition)obj);
         }
 
@@ -222,6 +226,17 @@ namespace softwrench.sW4.Shared2.Metadata {
             set {
                 Parameters = value;
             }
+        }
+
+        public void SetSchemas([CanBeNull]IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> schemas) {
+            if (schemas == null)return;
+
+            _schemas = schemas;
+            foreach (var schema in _schemas.Values) {
+                schema.IdFieldName = IdFieldName;
+                MergeSchemaPropertiesWithApplicationProperties(schema, Parameters);
+            }
+            _schemasList = new HashSet<ApplicationSchemaDefinition>(_schemas.Values);
         }
 
         public IEnumerable<ApplicationSchemaDefinition> CachedNonInternalSchemas {

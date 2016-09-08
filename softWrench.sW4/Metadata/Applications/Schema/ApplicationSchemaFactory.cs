@@ -1,6 +1,5 @@
 ﻿using cts.commons.portable.Util;
 using JetBrains.Annotations;
-using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata;
@@ -9,23 +8,17 @@ using softwrench.sW4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
-using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Metadata.Applications.Reference;
 using softWrench.sW4.Metadata.Stereotypes;
-using softWrench.sW4.Security.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.user.classes.entities;
-using softwrench.sw4.user.classes.entities.security;
 using softwrench.sW4.Shared2.Util;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Applications.Security;
-using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.Schema {
 
@@ -67,6 +60,13 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 MergeWithParentFilters(schema);
             }
             schema.Title = title ?? BuildDefaultTitle(schema);
+
+            //need the component resolver to be set before the hidden fields are evaluated, since some associations might require extra hiddens
+            schema.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
+            schema.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.LazyFkResolverDelegate;
+            schema.SchemaFilterResolver = ApplicationSchemaLazyFkHandler.LazyFilterResolver;
+            schema.LazyOfflineAssociationResolver = OffLineMetadataProvider.LazyEntityAssociatonResolver;
+
             if (schema.RedeclaringSchema) {
                 //otherwise this call needs to be performed after the customization process is finished
                 AddHiddenRequiredFields(schema);
@@ -75,17 +75,14 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
             MergeWithStereotypeSchema(schema);
 
-            schema.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.LazyFkResolverDelegate;
-            schema.SchemaFilterResolver = ApplicationSchemaLazyFkHandler.LazyFilterResolver;
-            schema.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
-            schema.LazyOfflineAssociationResolver = OffLineMetadataProvider.LazyEntityAssociatonResolver;
+         
             schema.ApplicationTitle = applicationTitle;
             SetTitle(applicationName, displayables, schema);
 
             return schema;
         }
 
-    
+
 
         private static void MergeWithParentFilters(ApplicationSchemaDefinition schema) {
             var reverseParentFields = schema.ParentSchema.DeclaredFilters.Filters.Reverse();
@@ -273,7 +270,8 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
         [NotNull]
         public static ApplicationSchemaDefinition ApplyPolicy(this ApplicationSchemaDefinition schema, [NotNull] IEnumerable<Role> userRoles, ClientPlatform platform, string schemaFieldsToDisplay, MergedUserProfile profile) {
-            if (userRoles == null) throw new ArgumentNullException("userRoles");
+            if (userRoles == null)
+                throw new ArgumentNullException("userRoles");
 
             return OnApplyPlatformPolicy(schema, platform, ApplicationFieldSecurityApplier.OnApplySecurityPolicy(schema, userRoles, schemaFieldsToDisplay, profile));
         }
