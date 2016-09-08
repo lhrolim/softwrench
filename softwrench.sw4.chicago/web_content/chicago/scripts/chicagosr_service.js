@@ -17,8 +17,9 @@
             return worklogType;
         }
 
-        function afterChangeImpact(datamap) {
-            datamap['impact'] = ['impacturgency_.impact'];
+        function afterChangeImpact(event) {
+            var datamap = event.fields;
+            datamap['impact'] = datamap['impacturgency_.impact'];
             var urgency = datamap['urgency'];
             if (urgency == null) {
                 datamap['urgency'] = datamap['impacturgency_.urgency'];
@@ -31,17 +32,14 @@
             }
         };
 
-        function afterChangeUrgency(datamap) {
+        function afterChangeUrgency(event) {
+            var datamap = event.fields;
             datamap['urgency'] = datamap['impacturgency_.urgency'];
-
             var impact = datamap['impact'];
-
             if (impact == null) {
                 datamap['impact'] = datamap['impacturgency_.impact'];
             }
-
             datamap['internalpriority'] = datamap['impacturgency_.internalpriority'];
-
             if (datamap['impacturgency_.urgency'] == null) {
                 datamap['impact'] = null;
                 datamap['urgency'] = null;
@@ -73,7 +71,7 @@
         };
 
         function afterChangeReportedBy(event) {
-            var datamap = event;
+            var datamap = event.fields;
             var searchData = {
                 personid: datamap['reportedby'],
                 isprimary: '1'
@@ -91,9 +89,9 @@
                 searchService.searchWithData("phone", searchData, "list", extraparams)
             ]).then(function (result) {
                 var emailResult = result[0].data.resultObject[0];
-                datamap['reportedemail'] = emailResult ? emailResult.fields['emailaddress'] : '';
+                datamap['reportedemail'] = emailResult ? emailResult['emailaddress'] : '';
                 var phoneResult = result[1].data.resultObject[0];
-                datamap['reportedphone'] = phoneResult ? phoneResult.fields['phonenum'] : '';
+                datamap['reportedphone'] = phoneResult ? phoneResult['phonenum'] : '';
             });
         };
 

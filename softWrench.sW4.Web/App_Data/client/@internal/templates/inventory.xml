@@ -713,7 +713,7 @@
         </schema>
 
 
-        <schema id="detail" title="Inventory Transfer Details">
+        <schema id="detail" title="Inventory Transfer Details" stereotype="detail">
           <field attribute="matrectransid" hidden="true"></field>
 
           <field attribute="itemnum" label="Item" readonly="true">
