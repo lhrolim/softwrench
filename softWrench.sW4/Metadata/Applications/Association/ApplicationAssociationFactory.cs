@@ -35,10 +35,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             association.OriginalLabelField = labelField;
             association.ExtraProjectionFields = ExtraProjectionProviderHelper.BuildExtraProjectionFields(extraProjectionFields);
             association.SetLazyResolver(new Lazy<EntityAssociation>(
-                () => {
-                    var appMetadata = MetadataProvider.Application(association.From);
-                    return MetadataProvider.Entity(appMetadata.Entity).LocateAssociationByLabelField(labelField).Item1;
-                }));
+                () => MetadataProvider.EntityByApplication(association.From).LocateAssociationByLabelField(labelField).Item1));
             association.SetLazyRendererParametersResolver(new Lazy<IDictionary<string, object>>(() => {
                 var metadataParameters = association.InnerRendererParameters;
                 var result = new Dictionary<string, object>();

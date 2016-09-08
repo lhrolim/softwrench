@@ -19,19 +19,21 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
         private const string PropReference = "@prop:";
 
         public static ApplicationSchemaDefinition.LazyComponentDisplayableResolver ComponentDisplayableResolver =
-            (reference, schema,components) => DoResolveReferences(schema, reference,components);
+            (reference, schema, components) => DoResolveReferences(schema, reference, components);
 
-        private static IEnumerable<IApplicationDisplayable> DoResolveReferences(ApplicationSchemaDefinition schema, ReferenceDisplayable reference, IEnumerable<DisplayableComponent> components)
-        {
+        private static IEnumerable<IApplicationDisplayable> DoResolveReferences(ApplicationSchemaDefinition schema, ReferenceDisplayable reference, IEnumerable<DisplayableComponent> components) {
             var componentsSource = components;
-            if (components == null)
-            {
-                if (!MetadataProvider.FinishedParsing || schema.Abstract)
-                {
+            var applicationName = schema.ApplicationName;
+            if (components == null) {
+                if (schema.Abstract) {
                     return null;
                 }
-                var application = MetadataProvider.Application(schema.ApplicationName);
+                var application = MetadataProvider.Application(applicationName);
                 componentsSource = application.DisplayableComponents;
+                if (!MetadataProvider.FinishedParsing && MetadataProvider.ComponentsDictionary.ContainsKey(applicationName)) {
+                    componentsSource = MetadataProvider.ComponentsDictionary[applicationName];
+                }
+
             }
             var component = componentsSource.FirstOrDefault(
                 f =>
@@ -40,7 +42,7 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
                             .CurrentCultureIgnoreCase));
             if (component == null) {
                 throw new InvalidOperationException(String.Format("displayable {0} not found in application {1} components",
-                    reference.Id, schema.ApplicationName));
+                    reference.Id, applicationName));
             }
             var resultDisplayables = new List<IApplicationDisplayable>();
             foreach (var declaredDisplayable in component.RealDisplayables) {

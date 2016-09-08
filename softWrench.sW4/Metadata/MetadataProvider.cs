@@ -26,12 +26,8 @@ using softwrench.sw4.Shared2.Metadata.Modules;
 using softWrench.sW4.Util;
 using cts.commons.Util;
 using System.Net;
-using Iesi.Collections;
-using Iesi.Collections.Generic;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
-using softwrench.sW4.Shared2.Util;
-using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Metadata.Security;
@@ -40,8 +36,6 @@ using softWrench.sW4.Metadata.Stereotypes.Schema;
 using EntityUtil = softWrench.sW4.Util.EntityUtil;
 using System.Text;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
-using cts.commons.simpleinjector.Events;
-using cts.commons.simpleinjector;
 using softWrench.sW4.Data.Persistence.SWDB;
 using cts.commons.persistence.Util;
 using softWrench.sW4.Data.Persistence;
@@ -60,12 +54,18 @@ namespace softWrench.sW4.Metadata {
         private static ICollection<EntityMetadata> _swdbentityMetadata;
         private static IReadOnlyCollection<CompleteApplicationMetadataDefinition> _swdbapplicationMetadata;
 
+
         // MAximo entities and applications
         private static EntityQueries _entityQueries;
         private static ICollection<EntityMetadata> _entityMetadata;
         private static IReadOnlyCollection<CompleteApplicationMetadataDefinition> _applicationMetadata;
+
         private static IDictionary<string, CommandBarDefinition> _commandBars;
         private static System.Collections.Generic.ISet<string> _appsAndEntitiesUsedCache = null;
+
+        private static IList<CompleteApplicationMetadataDefinition> _transientApplicationMetadataDefinitions = new List<CompleteApplicationMetadataDefinition>();
+
+
 
         /// <summary>
         /// Holds, for each application a corresponding role name that have been used on the menu to filter it (ex: application=servicerequest, but role was sr)
@@ -88,6 +88,9 @@ namespace softWrench.sW4.Metadata {
         public static bool FinishedParsing {
             get; set;
         }
+        
+        //before the application is fully merged
+        public static IDictionary<string, HashSet<DisplayableComponent>> ComponentsDictionary = new Dictionary<string, HashSet<DisplayableComponent>>();
 
         private static MetadataXmlSourceInitializer _metadataXmlInitializer;
 
@@ -102,7 +105,9 @@ namespace softWrench.sW4.Metadata {
             var msDelta = LoggingUtil.MsDelta(before);
             Log.Info(String.Format("Finished metadata registry in {0}", msDelta));
             if (ApplicationConfiguration.IgnoreWsCertErrors) {
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+                ServicePointManager.ServerCertificateValidationCallback = delegate {
+                    return true;
+                };
             }
         }
 
@@ -110,6 +115,8 @@ namespace softWrench.sW4.Metadata {
         public static void InitializeMetadata() {
             try {
                 _appsAndEntitiesUsedCache = null;
+                ComponentsDictionary.Clear();
+                _transientApplicationMetadataDefinitions.Clear();
                 FinishedParsing = false;
                 //this is needed because we may access the API method inside the validation process
                 //                _metadataValidator = new MetadataValidator();
@@ -118,6 +125,7 @@ namespace softWrench.sW4.Metadata {
 
                 var commandsInitializer = new CommandsXmlSourceInitializer();
                 _commandBars = commandsInitializer.Validate();
+
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
 
                 _mergedStereotypes = StereotypeFactory.MergeStereotypes(_globalStereotypes, _metadataXmlInitializer.InitializeCustomerStereotypes());
@@ -130,6 +138,7 @@ namespace softWrench.sW4.Metadata {
                 FillFields();
                 FillRoleAlias();
                 FinishedParsing = true;
+                _transientApplicationMetadataDefinitions.Clear();
                 new MetadataXmlTargetInitializer().Validate();
                 BuildSlicedMetadataCache();
             } catch (Exception) {
@@ -287,9 +296,13 @@ namespace softWrench.sW4.Metadata {
         /// <param name="throwException">If no mathcing application is found, the method throws <see cref="InvalidOperationException"/> if true; Default is false.</param>
         /// <param name="tryToLocateByEntity">The method tries to locate the application based on the name of its associated entities.</param>
         public static CompleteApplicationMetadataDefinition Application([NotNull] string name, bool throwException = true, bool tryToLocateByEntity = false) {
-            if (name == null) throw new ArgumentNullException("name");
             Validate.NotNull(name, "name");
-            var apps = name.StartsWith("_") ? _swdbapplicationMetadata : _applicationMetadata;
+
+            IEnumerable<CompleteApplicationMetadataDefinition> apps = name.StartsWith("_") ? _swdbapplicationMetadata : _applicationMetadata;
+            if (!FinishedParsing) {
+                //if we are parsing schemas from an application, let´s retrieve the app from this map instead
+                apps = _transientApplicationMetadataDefinitions;
+            }
 
             var application = apps.FirstOrDefault(
                         a => String.Equals(a.ApplicationName, name, StringComparison.CurrentCultureIgnoreCase));
@@ -555,7 +568,7 @@ namespace softWrench.sW4.Metadata {
 
                 // Check if everything is OK. 
                 DoInit();
-                
+
                 var conf = new ApplicationConfigurationAdapter();
                 new SWDBHibernateDAO(conf, new HibernateUtil(conf));
                 new MaximoHibernateDAO(conf, new HibernateUtil(conf));
@@ -575,13 +588,13 @@ namespace softWrench.sW4.Metadata {
             }
         }
 
-        public void SaveColor([NotNull] string data, string filePath,  bool internalFramework = false) {
+        public void SaveColor([NotNull] string data, string filePath, bool internalFramework = false) {
             try {
                 using (var stream = File.Create(filePath)) {
                     using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(data))) {
                         memoryStream.CopyTo(stream);
                     }
-                    
+
                     stream.Flush();
                 }
             } catch (Exception e) {
@@ -836,6 +849,18 @@ namespace softWrench.sW4.Metadata {
                 SchemaId = newSchema.SchemaId
             };
 
+        }
+
+        public static void AddComponents(string name, List<DisplayableComponent> appComponents) {
+            if (!ComponentsDictionary.ContainsKey(name)) {
+                ComponentsDictionary.Add(name, new HashSet<DisplayableComponent>(appComponents));
+            } else {
+                ComponentsDictionary[name].AddAll(appComponents);
+            }
+        }
+
+        public static void AddTransientApplication(CompleteApplicationMetadataDefinition completeApplicationMetadataDefinition) {
+            _transientApplicationMetadataDefinitions.Add(completeApplicationMetadataDefinition);
         }
     }
 }

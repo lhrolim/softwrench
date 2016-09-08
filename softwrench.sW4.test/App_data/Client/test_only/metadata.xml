@@ -850,6 +850,7 @@
         <schema id="newInvIssueDetail" mode="input" stereotype="detail" redeclaring="false">
           <customization position="issueto">
             <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
+              <renderer type="autocompleteclient"/>
             </association>
           </customization>
         </schema>

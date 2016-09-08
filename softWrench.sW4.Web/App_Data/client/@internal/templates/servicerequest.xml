@@ -75,6 +75,9 @@
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
         </relationship>
+        <relationship to ="persongroup" >
+          <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
+        </relationship>
         
         <relationship to ="persongroup" qualifier="ownergroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>

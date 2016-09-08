@@ -654,7 +654,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// <param name="application">The `application` element to be deserialized.</param>
         /// <param name="entityMetadata">The catalog of entity metadata to aid in the application parsing.</param>
         private CompleteApplicationMetadataDefinition ParseApplication(XElement application, IEnumerable<EntityMetadata> entityMetadata) {
-            string guid = application.Attribute(XmlMetadataSchema.ApplicationIdAttribute).ValueOrDefault((string)null);
+            var guid = application.Attribute(XmlMetadataSchema.ApplicationIdAttribute).ValueOrDefault((string)null);
             var id = guid != null ? Guid.Parse(guid) : (Guid?)null;
             var name = application.Attribute(XmlMetadataSchema.ApplicationNameAttribute).Value;
             if (_isSWDB) {
@@ -689,13 +689,24 @@ namespace softWrench.sW4.Metadata.Parsing {
 
             var appFilters = XmlFilterMetadataParser.ParseSchemaFilters(application);
 
-            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, title, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), appFilters, service, role, auditFlag);
+            var appComponents = ParseComponents(name, entity, application, idFieldName);
+            
+            MetadataProvider.AddComponents(name, appComponents);
+
+            var completeApplicationMetadataDefinition = new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, null, appComponents, appFilters, service, role, auditFlag);
+            //
+            MetadataProvider.AddTransientApplication(completeApplicationMetadataDefinition);
+
+            var schemas = ParseSchemas(name, title, entity, application, idFieldName, userIdFieldName);
+            completeApplicationMetadataDefinition.SetSchemas(schemas);
+            
+            return completeApplicationMetadataDefinition;
         }
 
 
 
-        private static IEnumerable<DisplayableComponent> ParseComponents(string name, string entity, XElement application, string idFieldName) {
-            IList<DisplayableComponent> resultList = new List<DisplayableComponent>();
+        private static List<DisplayableComponent> ParseComponents(string name, string entity, XElement application, string idFieldName) {
+            var resultList = new List<DisplayableComponent>();
             var firstOrDefault = application.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.ComponentsElement);
             if (firstOrDefault == null) {
                 return resultList;

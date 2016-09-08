@@ -19,8 +19,9 @@ namespace softWrench.sW4.Metadata.Validator {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SchemaMerger));
 
-        public static void MergeSchemas(ApplicationSchemaDefinition original, ApplicationSchemaDefinition overridenSchema, IEnumerable<DisplayableComponent> components) {
-
+        public static void MergeSchemas(ApplicationSchemaDefinition original, ApplicationSchemaDefinition overridenSchema, IEnumerable<DisplayableComponent> components)
+        {
+            
             var nonCustomizableDisplayables = GetNonCustomizableFields(overridenSchema);
             if (nonCustomizableDisplayables.Any()) {
                 var names = new List<string>();

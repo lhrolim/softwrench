@@ -12,7 +12,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         private AssociationRendererType EnumRendererType { get; set; }
 
         public AssociationFieldRenderer() {
-            EnumRendererType = AssociationRendererType.AUTOCOMPLETECLIENT;
+            EnumRendererType = AssociationRendererType.LOOKUP;
             RendererType = EnumRendererType.ToString();
             Stereotype = null;
         }
