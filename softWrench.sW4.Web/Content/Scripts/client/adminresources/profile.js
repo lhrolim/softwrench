@@ -46,7 +46,8 @@
         };
 
         function goToProfileDetails(profile) {
-            if (profile) {
+            var schema = crudContextHolderService.currentSchema();
+            if (profile && schema.schemaId !== 'myprofiledetail' && userService.hasRole(["sysadmin"])) {
                 redirectService.goToApplicationView("_UserProfile", "detail", "edit", "Details", { id: profile.id, popupmode: 'browser' });
             }
         };
