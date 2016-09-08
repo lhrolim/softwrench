@@ -24,35 +24,35 @@
             return worklogType;
         }
 
-        function afterChangeImpact(datamap) {
-            datamap['impact'] =['impacturgency_.impact'];
-            var urgency = datamap['urgency'];
+        function afterChangeImpact(event) {
+            event.fields['impact'] = event.fields['impacturgency_.impact'];
+            var urgency = event.fields['urgency'];
             if (urgency == null) {
-                datamap['urgency'] = datamap['impacturgency_.urgency'];
+                event.fields['urgency'] = event.fields['impacturgency_.urgency'];
             }
-            datamap['internalpriority'] = datamap['impacturgency_.internalpriority'];
-            if (datamap['impacturgency_.impact'] == null) {
-                datamap['impact'] = null;
-                datamap['urgency'] = null;
-                datamap['internalpriority'] = null;
+            event.fields['internalpriority'] = event.fields['impacturgency_.internalpriority'];
+            if (event.fields['impacturgency_.impact'] == null) {
+                event.fields['impact'] = null;
+                event.fields['urgency'] = null;
+                event.fields['internalpriority'] = null;
             }
         };
 
-        function afterChangeUrgency(datamap) {
-            datamap['urgency'] = datamap['impacturgency_.urgency'];
+        function afterChangeUrgency(event) {
+            event.fields['urgency'] = event.fields['impacturgency_.urgency'];
 
-            var impact = datamap['impact'];
+            var impact = event.fields['impact'];
 
             if (impact == null) {
-                datamap['impact'] = datamap['impacturgency_.impact'];
+                event.fields['impact'] = event.fields['impacturgency_.impact'];
             }
 
-            datamap['internalpriority'] = datamap['impacturgency_.internalpriority'];
+            event.fields['internalpriority'] = event.fields['impacturgency_.internalpriority'];
 
-            if (datamap['impacturgency_.urgency'] == null) {
-                datamap['impact'] = null;
-                datamap['urgency'] = null;
-                datamap['internalpriority'] = null;
+            if (event.fields['impacturgency_.urgency'] == null) {
+                event.fields['impact'] = null;
+                event.fields['urgency'] = null;
+                event.fields['internalpriority'] = null;
             }
         };
 
@@ -80,7 +80,7 @@
         };
 
         function afterChangeReportedBy(event) {
-            var datamap = event;
+            var datamap = event.fields;
             var searchData = {
                 personid: datamap['reportedby'],
                 isprimary: '1'
@@ -98,9 +98,9 @@
                 searchService.searchWithData("phone", searchData, "list", extraparams)
             ]).then(function(result) {
                 var emailResult = result[0].data.resultObject[0];
-                datamap['reportedemail'] = emailResult ? emailResult.fields['emailaddress'] : '';
+                datamap['reportedemail'] = emailResult ? emailResult['emailaddress'] : '';
                 var phoneResult = result[1].data.resultObject[0];
-                datamap['reportedphone'] = phoneResult ? phoneResult.fields['phonenum'] : '';
+                datamap['reportedphone'] = phoneResult ? phoneResult['phonenum'] : '';
             });
         };
 
