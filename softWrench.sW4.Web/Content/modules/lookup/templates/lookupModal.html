@@ -20,7 +20,8 @@
                     <pagination pagination-data="lookupObj.modalPaginationData"
                                 disable-export="true"
                                 disable-print="true"
-                                renderfn="lookupModalSearch(pageNumber)" ng-cloak />
+                                renderfn="lookupModalSearch(pageNumber)" ng-cloak/>
+                    <div class="item-count" ng-class="{'tall' : shouldShowPagination()}">Items:&ensp;{{lookupObj.modalPaginationData.totalCount}}</div>
                 </div>
             </div>
             <div class="modal-body">

@@ -39,6 +39,32 @@
     #listgrid, #compositionlistgrid {
         min-width: initial !important;
     }
+
+    .modal-header {
+        .context {
+            pagination {
+                float: left;
+                margin-top: 9px;
+
+                .pagesize {
+                    .form-group {
+                        min-height: initial;
+                    }
+                }
+            }
+
+            .item-count {
+                float: right;
+                text-align: center;
+                margin-top: 8px;
+                margin-right: 10px;
+
+                &.tall {
+                    margin-top: 18px;
+                }
+            }
+        }
+    }
 }
 
 .smallmodal {

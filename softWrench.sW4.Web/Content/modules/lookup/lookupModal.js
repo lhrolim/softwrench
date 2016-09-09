@@ -48,7 +48,7 @@
             },
 
             controller: function ($injector, $scope, $http, $element, searchService, i18NService, associationService,
-                                  formatService, expressionService, focusService, contextService) {
+                                  formatService, expressionService, focusService, contextService, crudContextHolderService) {
 
                 $scope.searchData = {};
                 $scope.searchOperator = {};
@@ -70,6 +70,17 @@
                         $scope.populateModal(result);
                     });
                 };
+
+                $scope.shouldShowPagination = function () {
+                    if (!$scope.lookupObj.modalPaginationData || !$scope.lookupObj.modalPaginationData.paginationOptions) {
+                        return false;
+                    }
+
+                    return !crudContextHolderService.getSelectionModel($scope.panelid).showOnlySelected && !!$scope.lookupObj.modalPaginationData && $scope.lookupObj.modalPaginationData.paginationOptions.some(function (option) {
+                        // totalCount is bigger than at least one option
+                        return option != 0 && $scope.lookupObj.modalPaginationData.totalCount > option;
+                    });;
+                }
 
                 $scope.populateModal = function (associationResult) {
                     $scope.lookupObj.options = associationResult.associationData;
