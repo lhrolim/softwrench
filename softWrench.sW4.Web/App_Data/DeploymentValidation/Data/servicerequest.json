@@ -110,7 +110,17 @@
       "sraddress_.staddrstreet": null,
       "sraddress_.staddrsttype": null,
       "sraddress_.formattedaddress": null,
-      "worklog_": [ ],
+       "worklog_": [
+        {
+          "_iscreation": true,
+          "logtype": "CLIENTNOTE",
+          "clientviewable": "0",
+          "createdate": null,
+          "wld_.ldtext": "<p>new for test</p>",
+          "description": "new",
+          "#isDirty": true
+        }
+      ],
       "attachment_": [ ],
       "commlog_": [ ],
       "relatedrecord_": [

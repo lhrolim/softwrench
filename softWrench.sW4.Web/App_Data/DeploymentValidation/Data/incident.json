@@ -70,6 +70,30 @@
       "cause_.ldtext": null,
       "resolution_.ldtext": null,
       "attachment_": [ ],
+      "worklog_": [
+        {
+          "worklogid": 360692,
+          "recordkey": "2764",
+          "class": "INCIDENT",
+          "createdate": "2016-08-25T07:56:51-03:00",
+          "createby": "DAGARWAL",
+          "modifydate": "2016-08-25T07:57:49-03:00",
+          "description": "TFS #85108 has been created",
+          "synonymdomain_.description": "Client Note",
+          "clientviewable": 0,
+          "logtype": "CLIENTNOTE",
+          "siteid": "SUPPORT24"
+        },
+        {
+          "_iscreation": true,
+          "logtype": "CLIENTNOTE",
+          "clientviewable": "0",
+          "createdate": null,
+          "wld_.ldtext": "<p>new for test</p>",
+          "description": "new",
+          "#isDirty": true
+        }
+      ],
       "asset_.location": null,
       "solution_.symptom_.ldtext": null,
       "solution_.cause_.ldtext": null,

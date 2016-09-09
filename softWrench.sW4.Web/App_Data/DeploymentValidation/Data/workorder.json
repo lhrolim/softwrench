@@ -92,7 +92,17 @@
       "failurelist_.description": "Pipe Failures",
       "failurelist_.failurelist": null,
       "ld_.ldtext": "<p>Test for attachments</p>",
-      "worklog_": [ ],
+      "worklog_": [
+        {
+          "_iscreation": true,
+          "logtype": "CLIENTNOTE",
+          "clientviewable": "0",
+          "createdate": null,
+          "wld_.ldtext": "<p>new for test</p>",
+          "description": "new",
+          "#isDirty": true
+        }
+      ],
       "labtrans_": [ ],
       "attachment_": [ ],
       "woactivity_": [ ],
@@ -122,15 +132,15 @@
         }
       ],
       "relatedrecord_": [
-          {
-            "relatedreckey": "2212",
-            "relatedrecclass": "WORKORDER",
-            "siteid": "BEDFORD",
-            "relatedrecordid": 3465,
-            "recordkey": "2203",
-            "class": "WORKORDER"
-          }
-        ]
+        {
+          "relatedreckey": "2212",
+          "relatedrecclass": "WORKORDER",
+          "siteid": "BEDFORD",
+          "relatedrecordid": 3465,
+          "recordkey": "2203",
+          "class": "WORKORDER"
+        }
+      ]
     }
   }
 ]
