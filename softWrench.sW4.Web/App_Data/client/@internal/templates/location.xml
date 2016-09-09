@@ -214,7 +214,7 @@
             <renderer type="icon" params="icon=fa-wrench;autoloadcomposition=workorder_"/>
           </field>
           <field attribute="statusicons" tooltip="Status Icons">
-            <renderer type="statusicons" params="width=5%;iconcolumns=workordercounter;icon=fa-tachometer;headericon=true;showsort=false"/>
+            <renderer type="statusicons" params="width=9%;iconcolumns=workordercounter;icon=fa-tachometer;headericon=true;showsort=false"/>
           </field>
           <!--Child Locations-->
           <!--Open Work Orders-->
