@@ -27,7 +27,8 @@ namespace softWrench.sW4.Data.API.Response {
                 QuickSearchDTO = searchDTO.QuickSearchDTO,
                 SearchTemplate = searchDTO.SearchTemplate,
                 SearchAscending = searchDTO.SearchAscending,
-                SearchSort = searchDTO.SearchSort
+                SearchSort = searchDTO.SearchSort,
+                MultiSearchSort = searchDTO.MultiSearchSort
             };
             AssociationOptions = associationOptions;
         }

@@ -2,6 +2,9 @@
     <div class="inputs">
         <div class="buttons">
             <refresh-filter></refresh-filter>
+            <button type="button" class="btn btn-context" data-original-title="Sort Order" rel="tooltip" ng-click="toggleMultiSortPanel()" ng-enabled="true">
+                <i class="fa fa-sort"></i>
+            </button>
             <button type="button" class="btn btn-context" data-original-title="{{i18N('_grid.filter.save','Save Filter')}}" rel="tooltip" ng-click="saveFilter()" ng-enabled="shouldEnableSaveButton()">
                 <i class="fa fa-save"></i>
             </button>
@@ -10,7 +13,7 @@
             </button>
         </div>
         
-        <select class="hidden-phone form-control combobox"
+        <select style="width:250px" class="hidden-phone form-control combobox"
                 ng-model="selectedfilter"
                 ng-options="option.alias for option in nonSharedFilters() track by option.id"
                 ng-change="filterChanged()">

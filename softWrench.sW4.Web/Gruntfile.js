@@ -101,6 +101,7 @@ module.exports = function (grunt) {
                     "angular/angular-file-upload.js": "angular-file-upload/angular-file-upload.js",
                     "angular/angular-bindonce.js": "angular-bindonce/bindonce.js",
                     "angular/angular-drag-and-drop-lists.js": "angular-drag-and-drop-lists/angular-drag-and-drop-lists.js",
+                    "angular/sortable.js": "angular-ui-sortable/sortable.js",
                     // devextreme
                     "devextreme/globalize.js": "globalize/lib/globalize.js",
                     "devextreme/dx.chartjs.js": "devextreme-web/js/dx.chartjs.js",

@@ -44,7 +44,8 @@
     "devextreme-web": "~15.2.5",
     "bootstrap-multiselect": "~0.9.13",
     "angular-drag-and-drop-lists": "^1.4.0",
-    "colorbox": "git://github.com/jackmoore/colorbox.git"
+    "colorbox": "git://github.com/jackmoore/colorbox.git",
+    "angular-ui-sortable": "0.14.3"
   },
   "resolutions": {
     "angular": "~1.5.6"

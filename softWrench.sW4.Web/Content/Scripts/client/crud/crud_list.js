@@ -47,6 +47,15 @@
 
                     $scope.$name = "crudlist";
 
+                    var multiSortVisibleKey = "multiSortVisible";
+                    $scope.multiSortVisible = !!userPreferencesService.getPreference(multiSortVisibleKey);
+
+                    $scope.toggleMultiSortPanel = function () {
+                        $scope.multiSortVisible = !$scope.multiSortVisible;
+                        userPreferencesService.setPreference(multiSortVisibleKey, $scope.multiSortVisible);
+                        fixHeaderService.callWindowResize();
+                    };
+
                     $scope.vm = {
                         quickSearchDTO: {
                             compositionsToInclude: []
@@ -186,6 +195,7 @@
                             $scope.searchOperator = {};
                             $scope.searchSort = {};
                             $scope.vm.quickSearchDTO = {};
+                            $scope.multiSort = [];
 
                             if (data.pageResultDto) {
                                 if (data.pageResultDto.quickSearchDTO) {
@@ -201,6 +211,10 @@
                                 if (data.pageResultDto["searchSort"]) {
                                     $scope.searchSort.field = data.pageResultDto["searchSort"];
                                     $scope.searchSort.order = data.pageResultDto["searchAscending"] === false ? "desc" : "asc";
+                                }
+
+                                if (data.pageResultDto["multiSearchSort"]) {
+                                    $scope.multiSort = data.pageResultDto["multiSearchSort"];
                                 }
                             }
 
@@ -318,6 +332,7 @@
                             $scope.paginationData.filterFixedWhereClause = null;
                             $scope.searchData = {};
                             $scope.searchSort = {};
+                            $scope.multiSort = [];
                             $scope.searchOperator = {};
                             $scope.searchValues = "";
                             $scope.vm.quickSearchDTO = { compositionsToInclude: [] };
@@ -439,7 +454,7 @@
                         var reportDto = contextService.retrieveReportSearchDTO($scope.schema.schemaId);
                         var searchDTO = !!reportDto
                             ? searchService.buildReportSearchDTO(reportDto, $scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause)
-                            : searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate);
+                            : searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate, null, $scope.multiSort);
 
                         searchDTO.pageNumber = pageNumber;
                         searchDTO.totalCount = totalCount;
@@ -513,6 +528,11 @@
                             sorting.field = columnName;
                             sorting.order = "asc";
                         }
+                        $scope.selectPage(1);
+                    };
+
+                    $scope.multisort = function (columns) {
+                        $scope.multiSort = columns;
                         $scope.selectPage(1);
                     };
 
