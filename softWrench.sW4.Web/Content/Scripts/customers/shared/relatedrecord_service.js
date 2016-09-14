@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('relatedrecordService', ["redirectService", "searchService", "crudContextHolderService", function (redirectService, searchService, crudContextHolderService) {
+    .factory('relatedrecordService', ["$rootScope", "redirectService", "searchService", "crudContextHolderService", function ($rootScope, redirectService, searchService, crudContextHolderService) {
     var getWorkOrderId = function (app, wonum, siteid) {
         var searchData = {
             wonum: wonum,
@@ -48,6 +48,8 @@ angular.module('sw_layout')
             event.fields["relatedreckey"] = null;
             event.fields["relatedservicerequest_"] = null;
             event.fields["relatedworkorder_"] = null;
+
+            $rootScope.$broadcast("sw_cleartypeaheadtext", null);
         },
 
         onAfterRelatedEntitySelected: function(event) {

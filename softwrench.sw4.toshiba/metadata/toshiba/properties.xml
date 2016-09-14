@@ -45,13 +45,41 @@
     <property key="mifcredentials.password" value="maxadmin"/>
   </environment>
 
+  <environment key="uat">
+    <!--<property key="basewsURL" value="http://10.50.100.196:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_provider" value="IBM.Data.DB2" />
+    <property key="maximo_DB_url" value="Server=10.50.100.196:50000;Database=TGSDEV;UID=MAXIMO;PWD=$@$Pass;CurrentSchema=maximo" />-->
+
+    <property key="basewsURL" value="https://173.193.44.2:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.37.19.66;Initial Catalog=ISM;User Id=maximo;password=MAXIMO;" />
+    <property key="maximo_DB_provider" value="System.Data.SQL" />
+	  <property key="ignorewscerterrors" value="true"/>
+
+
+    <!--<property key="swdb_provider" value="IBM.Data.DB2" />
+    <property key="swdb_url" value="Server=10.50.100.196:50000;Database=SWDB_TGS;UID=sw;PWD=sw@dm1n;CurrentSchema=SW" />-->
+
+    <property key="swdb_provider" value="System.Data.SQL"/>
+    <property key="swdb_url" value="Data Source=10.37.19.66;Initial Catalog=SWDB_TGCS;User Id=sw;password=softwrench;" />
+
+    <property key="mifcredentials.user" value="maxadmin"/>
+    <property key="mifcredentials.password" value="maxadmin"/>
+
+    <property key="mifcredentials.user" value="maxadmin"/>
+    <property key="mifcredentials.password" value="maxadmin"/>
+    <property key="iiscontextpath " value="http://uat.tgcs.softwrench.net"/>    
+	
+	<!--property key="maximoutc" value="Central Standard Time"/> -->
+
+    <property key="basewsRestURL" value="https://ism.smi.ibm.com/maxrest-uat/rest/os/" />
+    <property key="restcredentials.user" value="swservicedesk@ttc.tds"/>
+    <property key="restcredentials.password" value="Augtest02"/> 
+
+	</environment>
+
 
 
 </Properties>
-
-
-
-
 
 
 
