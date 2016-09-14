@@ -108,7 +108,6 @@ namespace softWrench.sW4.Web {
                 )
                 // tiny-mce
                 .Include(
-                    //"~/Content/vendor/scripts/tinymce/tinymce.js",
                     "~/Content/vendor/scripts/tinymce/angular-ui-tinymce.js"
                 );
 
