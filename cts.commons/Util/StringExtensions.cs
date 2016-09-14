@@ -33,6 +33,10 @@ namespace cts.commons.portable.Util {
             return strings.Any(toCompare => toCompare.Equals(str, StringComparison.CurrentCultureIgnoreCase));
         }
 
+        public static bool EqualsAny(this string str, params Enum[] enums) {
+            return enums.Any(toCompare => toCompare.ToString().Equals(str, StringComparison.CurrentCultureIgnoreCase));
+        }
+
         public static bool EqualsIc(this string str, string other) {
             return str.Equals(other, StringComparison.CurrentCultureIgnoreCase);
         }

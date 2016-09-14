@@ -2,23 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Util;
+using s = softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.BaseTicketDataSet.MaxSrStatus;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
+
     public class BaseTicketDataSet : MaximoApplicationDataSet {
 
 
+        public enum MaxSrStatus {
+            CAN, APPFM, APPLM, APPR, COMP, CLOSED, DRAFT, HISTEDIT, INPROG, NEW, PENDING, QUEUED, REJECTED, RESOLVCONF,
+            RESOLVED, SLAHOLD
+        }
+
         /*private const string Base = "(( DOCLINKS.ownerid = '{0}' ) AND ( UPPER(COALESCE(DOCLINKS.ownertable,'')) = '{0}' )  ";*/
 
-        //WAPPR -> Pode mudar para todos os outros. Sem restrições de edição na info da WO.
-        //APPR -> Pode mudar para todos os outros. Sem restrições de edição na info da WO (por enquanto).
-        //COMP -> Pode apenas mudar para CLOSE. Sem restrições de edição na info da WO.
-        //CLOSE-> Não dá para editar mais nenhuma info da WO.
-        //CAN -> Não dá para editar mais nenhuma info da WO.
+        
+      
         public IEnumerable<IAssociationOption> FilterAvailableStatus(AssociationPostFilterFunctionParameters postFilter) {
             var metadataParameters = ContextLookuper.LookupContext().MetadataParameters;
             string currentStatus = null;
@@ -30,20 +35,43 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             }
             var filterAvailableStatus = postFilter.Options;
             if (currentStatus == null) {
-                return new List<IAssociationOption> { filterAvailableStatus.First(l => l.Value == "OPEN") };
+                return new List<IAssociationOption> { filterAvailableStatus.First(l => l.Value.EqualsIc("OPEN")) };
             }
             var currentOption = filterAvailableStatus.FirstOrDefault(l => l.Value == currentStatus);
             if (currentOption == null) {
                 return filterAvailableStatus;
             }
 
-            if (currentStatus == "APPR" || currentStatus == "WAPPR") {
-                return filterAvailableStatus;
+            if (currentStatus.EqualsIc(s.CAN.ToString())) {
+                //no status
+                return new List<IAssociationOption>();
             }
-            if (currentStatus == "COMP") {
-                return new List<IAssociationOption> { currentOption, filterAvailableStatus.First(l => l.Value == "CLOSE") };
+
+            var baseResult = new List<IAssociationOption> { currentOption };
+
+            MaxSrStatus statusEnum;
+            Enum.TryParse(currentStatus, true, out statusEnum);
+
+            switch (statusEnum) {
+                case s.QUEUED:
+                baseResult.AddRange(filterAvailableStatus.Where(l => l.Value.EqualsAny(s.INPROG, s.REJECTED, s.CAN)));
+                break;
+                case s.INPROG:
+                baseResult.AddRange(filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CAN, s.PENDING, s.QUEUED, s.REJECTED, s.RESOLVCONF, s.RESOLVED, s.SLAHOLD)));
+                break;
+                case s.CLOSED:
+                baseResult.AddRange(filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CAN)));
+                break;
+                case s.RESOLVED:
+                baseResult.AddRange(filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CLOSED, s.CAN, s.INPROG, s.QUEUED, s.REJECTED, s.RESOLVCONF)));
+                break;
+                case s.COMP:
+                baseResult.AddRange(filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CLOSED, s.CAN)));
+                break;
             }
-            return new List<IAssociationOption> { currentOption };
+
+            return baseResult;
+            
         }
 
 
