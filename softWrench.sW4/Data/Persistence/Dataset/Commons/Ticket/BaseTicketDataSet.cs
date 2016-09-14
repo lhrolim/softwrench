@@ -125,9 +125,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             });
         }
 
+        /// <summary>
+        /// Using classstructureid by default, unless it requires to sync between more than one Maximo (TGCS and Chicago)
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string ClassificationIdToUse() {
+            return "classstructureid";
+        }
+
         protected virtual string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
 
-            var classStructureQuery = string.Format(@"SELECT  c.classstructureid AS ID, 
+            var classStructureQuery = string.Format(@"SELECT  c.{4} AS ID, c.classificationid as classificationid,
                                                                p3.classificationid AS CLASS_5, 
                                                                p2.classificationid AS CLASS_4,  
                                                                p1.classificationid AS CLASS_3, 
@@ -150,7 +158,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                                     parameters.OriginalEntity.GetAttribute("orgid"),
                                     parameters.OriginalEntity.GetAttribute("siteid"),
                                     ReferenceEquals(parameters.OriginalEntity.GetAttribute("class"), "") ? "" : ticketclass,
-                                    ApplicationConfiguration.IsOracle(DBType.Maximo) ? "" : "as"
+                                    ApplicationConfiguration.IsOracle(DBType.Maximo) ? "" : "as",
+                                    ClassificationIdToUse()
                                     );
             if (searchString != null) {
                 classStructureQuery += string.Format(@" and ( UPPER(COALESCE(p3.classificationid,'')) like '%{0}%' or UPPER(COALESCE(p3.description,'')) like '%{0}%' or

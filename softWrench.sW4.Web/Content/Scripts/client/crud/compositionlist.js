@@ -530,6 +530,22 @@
             return false;
         }
 
+        $scope.isChecked = function (value) {
+            return formatService.isChecked(value);
+        }
+
+        $scope.determineCheckBoxValueType = function (fieldMetadata, datamap, isTrueValue) {
+            switch (fieldMetadata.dataType) {
+                case "smallint":
+                    return isTrueValue ? 1 : 0;
+                    break;
+
+                case "boolean":
+                    return isTrueValue ? 'true' : 'false';
+                    break;
+            }
+        };
+
         $scope.invokeCustomCheckBoxService = function (fieldMetadata, datamap, $event) {
             if (fieldMetadata.rendererParameters["clickservice"] == null) {
                 return;

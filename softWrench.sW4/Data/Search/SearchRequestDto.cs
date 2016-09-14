@@ -48,6 +48,10 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
+        public List<SortOrder> MultiSearchSort {
+            get; set;
+        }
+
         public bool ExpressionSort {
             get; set;
         }

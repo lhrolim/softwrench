@@ -315,7 +315,7 @@
                   </association>
                   <!--<section id="statussection"/>-->
 
-                  <optionfield attribute="classstructureid" label="Classification" providerattribute="_SRClassStructureTypeDescription">
+                  <optionfield attribute="classificationid" label="Classification" providerattribute="_SRClassStructureTypeDescription">
                     <renderer type="lookup" />
                   </optionfield>
 

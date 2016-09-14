@@ -35,16 +35,28 @@
         border: none;
         font-size: 10px;
         display: block;
+
+        tbody > tr {
+            border-top: none;
+            border-bottom: none;
+        }
+
+        th, td {
+            width: initial !important;
+
+            .cell-wrapper {
+                 width: initial !important;
+            }
+
+            &.select-multiple, &.edit-detail {
+                display: none !important;
+            }
+        }
     }
 
     .hapag-topbar {
         text-shadow: none;
         box-shadow: none;
-    }
-
-    #listgrid tbody > tr {
-        border-top: none;
-        border-bottom: none;
     }
 
     .hapag-body-loaded {

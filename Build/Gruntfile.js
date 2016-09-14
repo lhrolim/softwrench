@@ -141,6 +141,7 @@ module.exports = function (grunt) {
                     "angular-xeditable.js": "angular-xeditable/dist/js/xeditable.min.js",
                     "angular-file-upload.js": "angular-file-upload/angular-file-upload.min.js",
                     "angular-drag-and-drop-lists.js": "angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js",
+                    "sortable.js": "angular-ui-sortable/sortable.js",
                     // bootstrap
                     "bootstrap.js": "bootstrap/dist/js/bootstrap.min.js",
                     // ace
@@ -251,6 +252,7 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-xeditable.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-file-upload.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-drag-and-drop-lists.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/sortable.js",
                     // tinymce
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-ui-tinymce.js",
                     // ace

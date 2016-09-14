@@ -140,7 +140,8 @@
                     searchOperator: "=",
                     searchTemplate: "=",
                     panelid: "=",
-                    quickSearchDto: "="
+                    quickSearchDto: "=",
+                    toggleMultiSortPanel: "&"
                 },
                 controller: "GridFilterController"
             };

@@ -13,7 +13,11 @@
         background: #eee;
         border-top: 1px solid #000;
         border-bottom: 1px solid #000;
-        padding: 10px 40px 10px 5px;
+        padding: 10px 0;
+
+        .main-commands {
+            padding: 0 40px 0 5px;
+        }
 
         .large-button {
             padding: 5px 0 !important;
@@ -135,7 +139,7 @@
 
                 select {
                     height: 30px;
-                    width: calc(100% - 120px);
+                    width: calc(100% - 160px);
                     display: inline-block;
                     top: 3px;
                     position: relative;
@@ -251,6 +255,51 @@
         &.detail {
             .pagination {
                 margin-top: 18px;
+            }
+        }
+
+        .tool-row.multi-sort {
+            border-top: 1px solid #999;
+            margin-top: 11px;
+            padding-top: 10px;
+
+            .wrap {
+                padding: 0 40px 0 10px;
+
+                #sortcolumns {
+                    padding-left: 0;
+                    margin-bottom: 0;
+                    float: left;
+
+                    li {
+                        list-style: none;
+                        float: left;
+                        margin-right: 10px;
+
+                        .btn {
+                            .remove-column {
+                                color: #a0a0a0;
+                            }
+                        }
+                    }
+                }
+
+                .add-column {
+                    float: left;
+                    height: 32px;
+                    padding-left: 24px;
+                }
+
+                .add-column-label {
+                    position: relative;
+                    top: 8px;
+                    left: -130px;
+                    pointer-events: none;
+                }
+
+                .reset-order {
+                    float: right;
+                }
             }
         }
     }

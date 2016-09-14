@@ -26,7 +26,7 @@
                 if (gridData.vm) {
                     quickserarchDTO = gridData.vm.quickSearchDTO;
                 }
-                const searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quickserarchDTO);
+                const searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quickserarchDTO, gridData.multiSort);
                 this.createGridCheckpoint(schema, searchDTO);
                 previousFilterService.createPreviousFilter(schema, gridData.searchData, gridData.searchOperator, gridData.searchSort);
             };
