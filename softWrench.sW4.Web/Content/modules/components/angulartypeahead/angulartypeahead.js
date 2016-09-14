@@ -144,7 +144,7 @@
                     element.typeahead("moveToBegin");
                     element.typeahead("highlight");
                 }, 0, false);
-
+                
             });
 
             element.on("keyup", function (e) {
@@ -200,7 +200,6 @@
                 configureStyles(element, parElement);
             }, 0, false);
 
-
             scope.executeMagnetSearch = function () {
                 scope.magnetClicked({ text: scope.getText() });
             }
@@ -208,6 +207,12 @@
             scope.getText = function () {
                 return scope.jelement.typeahead("val");
             }
+
+            scope.$on('sw_cleartypeaheadtext', function (event) {
+                if (scope && scope.jelement) {
+                    scope.jelement.typeahead('val', '');
+                }                
+            });
 
             scope.$on("sw_associationsresolved", function (event, panelid) {
                 if (panelid != scope.panelid && !(panelid == null && scope.panelid === "")) {
