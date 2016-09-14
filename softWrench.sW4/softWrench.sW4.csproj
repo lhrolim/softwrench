@@ -330,6 +330,7 @@
     <Compile Include="Data\Search\QuickSearch\QuickSearchHelper.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchDTO.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchWhereClauseHandler.cs" />
+    <Compile Include="Data\Search\SortOrder.cs" />
     <Compile Include="Data\UnboundedDatamap.cs" />
     <Compile Include="Dynamic\DynComponentStatus.cs" />
     <Compile Include="Dynamic\IContainerReloader.cs" />

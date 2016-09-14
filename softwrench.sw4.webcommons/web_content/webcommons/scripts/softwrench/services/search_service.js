@@ -256,8 +256,10 @@
             /// <param name="filterFixedWhereClause">a fallback query applied.it could be null</param>
             /// <param name="paginationData">an object containing pageNumber and pageSize properties</param>
             /// <param name="searchTemplate">a string containing the query, with the parameters delimited by : (ex: :a || :b || :c || :d) </param>
+            /// <param name="quicksearchDTO">a dto containing the quick search information </param>
+            /// <param name="multiSort">an object containing the multi sort information </param>
             /// <returns type=""></returns>        
-            buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData, searchTemplate, quicksearchDTO) {
+            buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData, searchTemplate, quicksearchDTO, multiSort) {
                 var searchDto = {};
                 searchData = searchData || {};
                 searchSort = searchSort || {};
@@ -270,6 +272,7 @@
                 searchDto.filterFixedWhereClause = filterFixedWhereClause;
                 searchDto.needsCountUpdate = true;
                 searchDto.quickSearchDTO = quicksearchDTO;
+                searchDto.multiSearchSort = multiSort;
                 //existing template pass too many variable, which some of them did not get translated and caused an SQL error
                 //searchDto.searchTemplate = searchTemplate;
                 searchDto.searchTemplate = searchTemplate;

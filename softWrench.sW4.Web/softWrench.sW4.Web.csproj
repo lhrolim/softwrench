@@ -946,6 +946,8 @@
     <None Include="Content\styles\default\_tooltips.scss" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
+    <Content Include="Content\Templates\commands\grid\multiSort.html" />
+    <Content Include="Content\Templates\commands\grid\multisort.js" />
     <Content Include="Content\Templates\commands\grid\refresh.js" />
     <Content Include="Content\Templates\commands\grid\refresh.html" />
     <Content Include="Content\Templates\crud\composition_masterdetails.html" />

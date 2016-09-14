@@ -20,7 +20,8 @@
         "omr.angularFileDnD",
         "dndLists",
         "ui.tinymce",
-        "ui.ace"
+        "ui.ace",
+        "ui.sortable"
     ]);
 
     angular.module("sw_prelogin", ["webcommons_services"]);

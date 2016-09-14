@@ -758,8 +758,8 @@
                             && !["input", "textarea", "select", "button", "a", "selectize"].some(function (tag) { //not input
                                 return element.tagName.equalIc(tag);
                             })
-                            && !$(element).parents("[text-angular]").length > 0 // not inside richtext
-                            && !$(element).hasClass("js_crud_pastecatcher"); // no the pasteCatcher
+                            && !$(element).parents("richtext-field").length > 0 // not inside richtext
+                            && !$(element).hasClass("js_crud_pastecatcher"); // not the pasteCatcher
                     }
 
                     if (!isChrome()) {
