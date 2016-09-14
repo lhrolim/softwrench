@@ -78,16 +78,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             });
         }
 
-        protected virtual IEnumerable<IAssociationOption> GetClassStructureTypeDescription(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null)
-        {
+        protected virtual IEnumerable<IAssociationOption> GetClassStructureTypeDescription(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
 
             // TODO: Change the design to use a tree view component
             var query = BuildQuery(parameters, ticketclass, searchString);
 
             var result = MaxDAO.FindByNativeQuery(query, null);
 
-            return result.Select(record =>
-            {
+            return result.Select(record => {
                 var label = record["DESCRIPTION"] ?? string.Format("{0}{1}{2}{3}{4}",
                     record["CLASS_5"] == null ? "" : record["CLASS_5"] + "/",
                     record["CLASS_4"] == null ? "" : record["CLASS_4"] + "/",
@@ -99,9 +97,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             });
         }
 
+        /// <summary>
+        /// Using classstructureid by default, unless it requires to sync between more than one Maximo (TGCS and Chicago)
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string ClassificationIdToUse() {
+            return "classstructureid";
+        }
+
         protected virtual string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
-            
-            var classStructureQuery = string.Format(@"SELECT  c.classstructureid AS ID, 
+
+            var classStructureQuery = string.Format(@"SELECT  c.{4} AS ID, c.classificationid as classificationid,
                                                                p3.classificationid AS CLASS_5, 
                                                                p2.classificationid AS CLASS_4,  
                                                                p1.classificationid AS CLASS_3, 
@@ -124,14 +130,15 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                                     parameters.OriginalEntity.GetAttribute("orgid"),
                                     parameters.OriginalEntity.GetAttribute("siteid"),
                                     ReferenceEquals(parameters.OriginalEntity.GetAttribute("class"), "") ? "" : ticketclass,
-                                    ApplicationConfiguration.IsOracle(DBType.Maximo) ? "" : "as"
+                                    ApplicationConfiguration.IsOracle(DBType.Maximo) ? "" : "as",
+                                    ClassificationIdToUse()
                                     );
             if (searchString != null) {
                 classStructureQuery += string.Format(@" and ( UPPER(COALESCE(p3.classificationid,'')) like '%{0}%' or UPPER(COALESCE(p3.description,'')) like '%{0}%' or
                                                               UPPER(COALESCE(p2.classificationid,'')) like '%{0}%' or UPPER(COALESCE(p2.description,'')) like '%{0}%' or
                                                               UPPER(COALESCE(p1.classificationid,'')) like '%{0}%' or UPPER(COALESCE(p1.description,'')) like '%{0}%' or
                                                               UPPER(COALESCE(p.classificationid,''))  like '%{0}%' or UPPER(COALESCE(p.description,''))  like '%{0}%' or
-                                                              UPPER(COALESCE(c.classificationid,''))  like '%{0}%' or UPPER(COALESCE(c.description,''))  like '%{0}%' )", 
+                                                              UPPER(COALESCE(c.classificationid,''))  like '%{0}%' or UPPER(COALESCE(c.description,''))  like '%{0}%' )",
                                                             searchString.ToUpper());
             }
             return classStructureQuery;

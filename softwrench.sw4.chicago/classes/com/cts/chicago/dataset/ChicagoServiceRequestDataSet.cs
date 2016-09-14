@@ -58,7 +58,9 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
         }
 
 
-
+        protected override string ClassificationIdToUse() {
+            return "classificationid";
+        }
 
 
         public SearchRequestDto FilterClassification(AssociationPreFilterFunctionParameters parameters) {

@@ -85,6 +85,11 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
             return base.BuildRelatedAttachmentsWhereClause(parameter);
         }
 
+        protected override string ClassificationIdToUse() {
+            return "classificationid";
+        }
+
+
         public override string ApplicationName() {
             return "servicerequest,quickservicerequest";
         }
