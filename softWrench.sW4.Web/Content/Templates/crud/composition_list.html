@@ -136,10 +136,10 @@
                                 <div ng-switch-when="checkbox">
                                     <i class="fa {{getBooleanClass(compositionitem,column.attribute)}}" ng-if="column.rendererParameters['editable'] != 'true'" />
                                     <input type="checkbox" ng-if="column.rendererParameters['editable'] == 'true'" ng-model="compositionitem[column.attribute]"
-                                           ng-checked="compositionitem[column.attribute] == 1"
+                                           ng-checked="{{isChecked(compositionitem[column.attribute])}}"
                                            ng-enabled="isModifiableEnabled(column,compositionitem)"
                                            ng-click="invokeCustomCheckBoxService(column,compositionitem,$event)"
-                                           ng-true-value="'true'" ng-false-value="'false'" />
+                                           ng-true-value="{{determineCheckBoxValueType(column,compositionitem,true)}}" ng-false-value="{{determineCheckBoxValueType(column,compositionitem,false)}}" />
                                 </div>
 
                                 <div ng-switch-when="numericinput">
