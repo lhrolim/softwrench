@@ -119,6 +119,14 @@
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
 
       <components>
+
+        <componentdisplayable id="status">
+          <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
+            <dataprovider postfilterfunction="FilterAvailableStatus"/>
+            <renderer type="lookup" />
+          </association>
+        </componentdisplayable>
+        
         <componentdisplayable id="owner">
           <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
             <renderer type="lookup"/>
@@ -235,6 +243,7 @@
 
         <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status">
           <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true">
+            <dataprovider postfilterfunction="FilterAvailableStatus"/>
             <renderer type="lookup"/>
           </association>
         </schema>
@@ -372,9 +381,7 @@
 
         <schema id="editdetail" parentschema="adetail" title="Service Request Details">
           <section id="ticketidsection">
-            <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true">
-              <renderer type="lookup" />
-            </association>
+            <reference id="status"/>
             <field label="Site" attribute="siteid" readonly="true"/>
           </section>
 
@@ -428,6 +435,15 @@
     </application>
 
     <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
+      <components>
+        <componentdisplayable id="status">
+          <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
+            <dataprovider postfilterfunction="FilterAvailableStatus"/>
+            <renderer type="lookup" />
+          </association>
+        </componentdisplayable>
+      </components>
+      
       <properties>
         <property key="mobile.disabled" value="true"/>
       </properties>
@@ -535,9 +551,7 @@
             <field attribute="description" label="Summary" requiredexpression="true">
               <renderer type="default" params="maxlength=100;inputsize=xlarge" />
             </field>
-            <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
-              <renderer type="lookup"/>
-            </association>
+            <reference id="status"/>
           </section>
 
           <field label="Details" attribute="ld_.ldtext" >

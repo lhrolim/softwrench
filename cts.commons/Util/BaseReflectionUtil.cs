@@ -9,7 +9,7 @@ namespace cts.commons.Util {
     public static class BaseReflectionUtil {
 
         public static object GetProperty(object baseObject, string propertyName) {
-            var prop = BaseReflectionUtil.PropertyDescriptor(baseObject, propertyName);
+            var prop = PropertyDescriptor(baseObject, propertyName);
             return prop == null ? null : prop.GetValue(baseObject);
         }
 
@@ -21,7 +21,7 @@ namespace cts.commons.Util {
 
 
         public static PropertyDescriptor PropertyDescriptor(object baseObject, string propertyName) {
-            PropertyDescriptor prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
+            var prop = TypeDescriptor.GetProperties(baseObject)[propertyName];
             if (prop == null) {
                 prop = TypeDescriptor.GetProperties(baseObject)[propertyName.ToUpper()];
             }
