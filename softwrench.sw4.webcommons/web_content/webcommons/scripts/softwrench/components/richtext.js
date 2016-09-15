@@ -90,17 +90,8 @@
         }
 
         function getDisplayableValue(content) {
-            content = replaceAll(content, "\n", "<br/>");
-            //var decodedHtml = content;
-            //// Matches any encoded html tag - &lt; &gt;
-            //const regexEncode = new RegExp("&(lt|gt);");
-            //// Also make sure non of these tags are present to truly confirm this is encoded HTML
-            //const regexHtml = new RegExp("(<|>)");
-
-            //if (regexEncode.test(content) && !regexHtml.test(content)) {
-            //    decodedHtml = $("<div/>").html(content).text();
-            //}
-            //return decodedHtml;
+            // replace text line-breaks by html entity line-feed + html entity carriage return 
+            content = replaceAll(content, "\n", String.fromCharCode(10, 13));
             return content;
         }
 
