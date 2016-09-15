@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
+using cts.commons.web.Formatting;
+using Newtonsoft.Json;
 using softwrench.sw4.activitystream.classes.Controller.Jobs;
 using softwrench.sw4.activitystream.classes.Model;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
 using softWrench.sW4.Scheduler;
+using ServerSentEvent4Net;
 
 namespace softwrench.sw4.activitystream.classes.Controller {
     public class BulletinBoardFacade : ISingletonComponent, ISWEventListener<ConfigurationChangedEvent> {
@@ -21,20 +26,39 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                                                                     bulletinboard.postdate <= :datetimenow and 
                                                                     expiredate > :datetimenow)";
 
-        private static readonly BulletinBoardStream ActiveStream = new BulletinBoardStream();
+        private static readonly Lazy<BulletinBoardStream> LazyActiveStream = new Lazy<BulletinBoardStream>(() => new BulletinBoardStream());
+        private static readonly Lazy<ServerSentEvent> LazyEventSource = new Lazy<ServerSentEvent>(() => {
+            var sse = new ServerSentEvent(1, false, 5 * 60 * 1000);
+            sse.SubscriberAdded += SSE_SubscriberChanged;
+            sse.SubscriberRemoved += SSE_SubscriberChanged;
+            return sse;
+        });
 
         private readonly IMaximoHibernateDAO _dao;
         private readonly MultiTenantCustomerWhereBuilder _whereBuilder;
         private readonly IConfigurationFacade _configurationFacade;
         private readonly JobManager _jobManager;
+        private readonly JsonMediaTypeFormatter _formatter;
 
-        public BulletinBoardFacade(IMaximoHibernateDAO dao, IConfigurationFacade configurationFacade, JobManager jobManager) {
+        public BulletinBoardFacade(IMaximoHibernateDAO dao, IConfigurationFacade configurationFacade, JobManager jobManager, ISWJsonFormatter jsonFormatter) {
             _dao = dao;
             _configurationFacade = configurationFacade;
             _jobManager = jobManager;
             _whereBuilder = new MultiTenantCustomerWhereBuilder();
+            _formatter = (JsonMediaTypeFormatter) jsonFormatter;
         }
 
+        private static ServerSentEvent EventSource {
+            get { return LazyEventSource.Value; }
+        }
+
+        private static BulletinBoardStream ActiveStream {
+            get { return LazyActiveStream.Value; }
+        }
+
+        /// <summary>
+        /// Updates in-memory state and broadcasts the new state to all subscribers (<see cref="AddBulletinBoardUpdateSubscriber"/>)
+        /// </summary>
         public void UpdateInMemoryBulletinBoard() {
             var multitenancyWhereClause = _whereBuilder.BuildWhereClause("bulletinboard");
 
@@ -50,12 +74,23 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 .Cast<IDictionary<string, object>>()
                 .Select(BulletinBoard.FromDictionary)
                 .ToList();
-
+            
+            // update in-memory stream
             ActiveStream.Stream = messages;
+            
+            // broadcast new memory state to all SSE subscribers
+            var bulletinBoardsState = GetActiveBulletinBoardsState();
+            var stateMessage = JsonConvert.SerializeObject(bulletinBoardsState, Formatting.None, _formatter.SerializerSettings);
+            EventSource.Send(stateMessage);
         }
 
         public IReadOnlyList<BulletinBoard> GetActiveBulletinBoards() {
             return ActiveStream.Stream.OrderByDescending(b => b.PostDate).ToList().AsReadOnly();
+        }
+
+        public BulletinBoardResponse GetActiveBulletinBoardsState() {
+            var messages = GetActiveBulletinBoards();
+            return new BulletinBoardResponse(messages.ToList());
         }
 
         public bool BulletinBoardEnabled {
@@ -67,12 +102,6 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         public long BulletinBoardJobRefreshRate {
             get {
                 return _configurationFacade.Lookup<long>(ConfigurationConstants.BulletinBoard.JobRefreshRate);
-            }
-        }
-
-        public long BulletinBoardUiRefreshRate {
-            get {
-                return _configurationFacade.Lookup<long>(ConfigurationConstants.BulletinBoard.UiRefreshRate);
             }
         }
 
@@ -96,6 +125,23 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 default:
                 return;
             }
+        }
+
+        /// <summary>
+        /// Subscribes the request to the BulletinBoard update SSE i.e. responds with an open stream connection response.
+        /// The response will receive the in-memory state (<see cref="GetActiveBulletinBoardsState"/>) whenever it is updated:
+        /// - 'message' event: will have the current state as json, sent every time the state is updated
+        /// - 'subscriber:count' event: will have the number of subscribers, sent every time a subscriber is added and removed  
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public HttpResponseMessage AddBulletinBoardUpdateSubscriber(HttpRequestMessage request) {
+            var response = EventSource.AddSubscriber(request);
+            return response;
+        }
+
+        private static void SSE_SubscriberChanged(object sender, SubscriberEventArgs args) {
+            EventSource.Send(args.SubscriberCount.ToString(), "subscriber:count");
         }
 
         private void SetBulletinBoardJobCron(long refreshRate) {

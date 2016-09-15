@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Net.Http;
 using System.Web.Http;
 using cts.commons.web.Attributes;
 using softwrench.sw4.activitystream.classes.Model;
@@ -15,20 +14,20 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             _bulletinBoardFacade = bulletinBoardFacade;
         }
 
+        /// <summary>
+        /// BulletinBoard SSE subscribe endpoint.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpGet]
-        public BulletinBoardResponse GetActiveMessages() {
-            var messages = _bulletinBoardFacade.GetActiveBulletinBoards();
-            return new BulletinBoardResponse(messages.ToList(), _bulletinBoardFacade.BulletinBoardUiRefreshRate);
+        public HttpResponseMessage Subscribe(HttpRequestMessage request) {
+            var response = _bulletinBoardFacade.AddBulletinBoardUpdateSubscriber(request);
+            return response;
         }
 
-        public class BulletinBoardResponse {
-            public List<BulletinBoard> Messages { get; set; }
-            public long RefreshRate { get; set; }
-
-            public BulletinBoardResponse(List<BulletinBoard> messages, long refreshRate) {
-                Messages = messages;
-                RefreshRate = refreshRate;
-            }
+        [HttpGet]
+        public BulletinBoardResponse ActiveMessages() {
+            return _bulletinBoardFacade.GetActiveBulletinBoardsState();
         }
     }
 }
