@@ -6,7 +6,8 @@
     function chicagosrService($q, alertService, searchService, restService) {
 
 
-        function latestWorklogType(datamap) {
+        function latestWorklogType(event) {
+            const datamap = event.fields;
             var worklogType = '';
             var worklogs = datamap["worklog_"];
             if (worklogs == null || worklogs.length < 1) {

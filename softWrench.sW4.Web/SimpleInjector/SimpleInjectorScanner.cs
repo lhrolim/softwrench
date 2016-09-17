@@ -25,6 +25,7 @@ namespace softWrench.sW4.Web.SimpleInjector {
             // Create the container as usual.
             var container = new Container();
             container.Options.AllowOverridingRegistrations = true;
+            container.Options.PropertySelectionBehavior = new ImportPropertySelectionBehavior();
 
             DynamicScannerHelper.LoadDynamicTypes(singleDynComponent);
 
@@ -35,6 +36,8 @@ namespace softWrench.sW4.Web.SimpleInjector {
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
 
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
+
+            
 
             // This is an extension method from the integration package as well.
             container.RegisterMvcAttributeFilterProvider();

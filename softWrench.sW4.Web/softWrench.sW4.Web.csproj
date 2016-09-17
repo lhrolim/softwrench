@@ -558,6 +558,9 @@
     <Content Include="App_Data\Client\%40internal\templates\receiving.xml" />
     <Content Include="App_Data\Client\%40internal\templates\relatedrecords.xml" />
     <Content Include="App_Data\Client\%40internal\templates\route.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\quickservicerequest.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml">
       <SubType>Designer</SubType>
     </Content>

@@ -4,6 +4,8 @@
     <template path="@person.xml"/>
     <!--ServiceRequest-->
     <template path="@servicerequest.xml"/>
+
+    <template path="@quickservicerequest.xml"/>
     
     <!--WorkOrder-->
     <template path="@workorder.xml"/>

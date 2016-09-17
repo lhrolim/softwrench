@@ -115,7 +115,18 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
             var options = BuildOptions(queryResponse, association, numberOfLabels, associationFilter.SearchSort == null);
             var filterFunctionName = association.Schema.DataProvider.PostFilterFunctionName;
-            return filterFunctionName != null ? ApplyFilters(applicationMetadata, originalEntity, filterFunctionName, options, association) : options;
+            if (filterFunctionName != null) {
+                var filteredResult = ApplyFilters(applicationMetadata, originalEntity, filterFunctionName, options, association);
+                var paginatedFilter = associationFilter as PaginatedSearchRequestDto;
+                var associationOptions = filteredResult as IList<IAssociationOption> ?? filteredResult.ToList();
+                if (paginatedFilter != null) {
+                    //limiting the number of results to the number filtered
+                    paginatedFilter.TotalCount = associationOptions.Count();
+                }
+                return associationOptions;
+            }
+            return options;
+
         }
 
         private void ExecuteCountQuery(SearchRequestDto associationFilter, EntityMetadata entityMetadata) {
@@ -159,11 +170,14 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         /// <returns></returns>
         private static string GetLabelFieldForQuickSearch(ApplicationAssociationDefinition association) {
             var field = association.LabelFields.FirstOrDefault();
-            if (string.IsNullOrEmpty(field)) return field;
+            if (string.IsNullOrEmpty(field))
+                return field;
             var targetEntity = MetadataProvider.Entity(association.EntityAssociation.To);
-            if (targetEntity == null) return field;
+            if (targetEntity == null)
+                return field;
             var targetField = targetEntity.LocateAttribute(field);
-            if (targetField == null || string.IsNullOrEmpty(targetField.Query)) return field;
+            if (targetField == null || string.IsNullOrEmpty(targetField.Query))
+                return field;
             return AssociationHelper.PrecompiledAssociationAttributeQuery(association.EntityAssociation.To, targetField);
         }
 
@@ -266,7 +280,11 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 OriginalEntity = originalEntity,
                 Association = association
             };
-            return (IEnumerable<IAssociationOption>)mi.Invoke(dataSet, new object[] { postFilterParam });
+            var result = (IEnumerable<IAssociationOption>)mi.Invoke(dataSet, new object[] { postFilterParam });
+
+
+
+            return result;
         }
 
         private static ProjectionResult BuildProjections(SearchRequestDto searchRequestDto, ApplicationAssociationDefinition association) {

@@ -8,6 +8,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Util;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
@@ -162,7 +163,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public override string ToString() {
-            return string.Format("Id: {0}, Displayables: {1}, Abstract: {2}", Id, Displayables.Count, Abstract);
+            return string.Format("Id: {0}, Displayables({1}): {2}, Abstract: {3}", Id,Displayables.Count, string.Join(",",Displayables.Select(d => d.Label)), Abstract);
         }
 
         public object Clone() {

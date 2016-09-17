@@ -9,6 +9,8 @@
     <!--ServiceRequest-->
     <template path="@servicerequest.xml"/>
 
+    <template path="@quickservicerequest.xml"/>
+
     <!--Inventory-->
     <template path="@inventory.xml"/>
   </templates>

@@ -289,6 +289,8 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\CommlogHelper.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequestWhereClauseProvider.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\DispatchOperationHandler.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\MaxSrStatus.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\TicketStatusHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\ProgressMultiAssetHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\MeterReadingOperationHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderToolTransDataSet.cs" />
@@ -368,6 +370,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\WoActivityDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderReadingDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\FilterWhereClauseParameters.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\LookupEmptySelectionException.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationCompositionSchemaExtension.cs" />
     <Compile Include="Metadata\Applications\Schema\SchemaFilterBuilder.cs" />
     <Compile Include="Metadata\Applications\Security\ApplicationCompositionSecurityApplier.cs" />

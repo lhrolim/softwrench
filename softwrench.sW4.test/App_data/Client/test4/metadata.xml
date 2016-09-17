@@ -8,6 +8,11 @@
 
     <!--ServiceRequest-->
     <template path="@servicerequest.xml"/>
+    
+    <template path="@quickservicerequest.xml"/>
+    
+    
+    
 
     <!--Incident-->
     <template path="@incident.xml"/>
@@ -55,41 +60,20 @@
         <schema id="editdetail2" title="Service Request Details">
 
           <section id="compositions">
-            <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
-            </composition>
-
-            <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
-              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
-            </composition>
-
-            <composition relationship="attachment" label="Attachments" printenabled="false" >
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-            </composition>
-
+            <reference id="worklogs"/>
+            <reference id="commlogs"/>
+            <reference id="attachments"/>
           </section>
         </schema>
 
         <schema id="editdetail3" title="Service Request Details">
 
           <section id="compositions">
-            <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
-            </composition>
 
-            <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
-              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
-            </composition>
-
-            <composition relationship="attachment" label="Attachments" printenabled="false" >
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-            </composition>
-
-            <composition relationship="relatedrecord" label="Related Records">
-              <collectionproperties allowcreation="false" />
-            </composition>
+            <reference id="worklogs"/>
+            <reference id="commlogs"/>
+            <reference id="attachments"/>
+            <reference id="relatedrecords"/>
 
           </section>
         </schema>

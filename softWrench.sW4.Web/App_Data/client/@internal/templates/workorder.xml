@@ -30,6 +30,7 @@
     <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
       <attributes>
         <attribute name="class" type="varchar" required="true" query="woclass"/>
+        <attribute name="originalstatus" query="!@status" type="varchar"/>
       </attributes>
       <relationships>
         <relationship to="worklog" collection="true">
@@ -245,6 +246,7 @@
           </association>
         </componentdisplayable>
 
+        
 
         
       </components>
@@ -780,7 +782,7 @@
           <composition relationship="labtrans" label="Labor">
             <event type="beforedelete" service="laborService" method="confirmPossibleTimer"/>
             <event type="afterdelete" service="laborService" method="cancelPossibleTimer"/>
-            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            <collectionproperties allowupdate="false" allowcreation="@originalstatus!='CLOSED'" />
           </composition>
           <composition relationship="attachment" label="Attachments">
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>

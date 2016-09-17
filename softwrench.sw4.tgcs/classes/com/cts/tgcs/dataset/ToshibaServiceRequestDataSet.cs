@@ -6,6 +6,7 @@ using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Search;

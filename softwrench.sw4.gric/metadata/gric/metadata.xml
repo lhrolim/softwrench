@@ -10,6 +10,8 @@
 
     <!--ServiceRequest-->
     <template path="@servicerequest.xml"/>
+
+    <template path="@quickservicerequest.xml"/>
   </templates>
   
   

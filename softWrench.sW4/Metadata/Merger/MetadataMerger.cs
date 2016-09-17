@@ -12,6 +12,7 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata.Applications.Schema;
+using softWrench.sW4.Metadata.Merger;
 
 namespace softWrench.sW4.Metadata.Validator {
     class MetadataMerger {

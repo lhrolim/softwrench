@@ -1,27 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
-using softwrench.sW4.Shared2.Data;
-using softwrench.sW4.Shared2.Metadata.Applications;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
-using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
@@ -44,7 +39,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return compList;
         }
 
-        
+
 
         public virtual SearchRequestDto BuildRelatedAttachmentsWhereClause(CompositionPreFilterFunctionParameters parameter) {
 
@@ -73,7 +68,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
             return string.IsNullOrEmpty(relatedOriginId)
                 // regular CREATE 
-                ? base.Execute(application, json, id, operation, isBatch, userIdSite) 
+                ? base.Execute(application, json, id, operation, isBatch, userIdSite)
                 // CREATE as relatedrecord
                 : CreateAsRelated(application, json, relatedOriginId);
         }
@@ -81,7 +76,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         private TargetResult CreateAsRelated(ApplicationMetadata application, JObject srToCreate, string relatedSrTicketId) {
             // regular crudoperationdata building
             var entityMetadata = MetadataProvider.Entity(application.Entity);
-            var operationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof (CrudOperationData), entityMetadata, application, srToCreate);
+            var operationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, application, srToCreate);
             // adding related record data
             operationData.SetAttribute("origrecordid", relatedSrTicketId);
             operationData.SetAttribute("origrecordclass", "SR");
@@ -89,8 +84,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return (TargetResult)((MaximoConnectorEngine)Engine()).Create(operationData);
         }
 
-        public IEnumerable<IAssociationOption> GetSRPriorityType(OptionFieldProviderParameters parameters)
-        {
+        public IEnumerable<IAssociationOption> GetSRPriorityType(OptionFieldProviderParameters parameters) {
             var query = @"SELECT description AS LABEL,
 	                             CAST(value AS INT) AS VALUE 
                           FROM numericdomain
@@ -99,14 +93,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             var result = MaxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();
 
-            if (result.Any())
-            {
-                foreach (var record in result)
-                {
+            if (result.Any()) {
+                foreach (var record in result) {
                     list.Add(new AssociationOption(record["VALUE"].ToString(), string.Format("{0} - {1}", record["VALUE"], record["LABEL"])));
                 }
-            }
-            else {
+            } else {
                 // If no values are found, then default to numeric selection 1-5
                 list.Add(new AssociationOption("1", "1"));
                 list.Add(new AssociationOption("2", "2"));
@@ -122,8 +113,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return GetClassStructureType(parameters, "SR");
         }
 
-        public IEnumerable<IAssociationOption> GetSRClassStructureTypeDescription(OptionFieldProviderParameters parameters)
-        {
+        public IEnumerable<IAssociationOption> GetSRClassStructureTypeDescription(OptionFieldProviderParameters parameters) {
             return GetClassStructureTypeDescription(parameters, "SR");
         }
 

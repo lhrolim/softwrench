@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using log4net;
-using softWrench.sW4.Exceptions;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Util;
+using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Applications.Validator;
 
-namespace softWrench.sW4.Metadata.Validator {
+namespace softWrench.sW4.Metadata.Merger {
     class SchemaMerger {
         private const string NonCustomizableFound = "overriden schemas can only contain customizations, however found {0} wrong displayables ( {1}) for schema {2}";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SchemaMerger));
 
-        public static void MergeSchemas(ApplicationSchemaDefinition original, ApplicationSchemaDefinition overridenSchema, IEnumerable<DisplayableComponent> components)
-        {
-            
+        public static void MergeSchemas(ApplicationSchemaDefinition original, ApplicationSchemaDefinition overridenSchema, IEnumerable<DisplayableComponent> components) {
+
             var nonCustomizableDisplayables = GetNonCustomizableFields(overridenSchema);
             if (nonCustomizableDisplayables.Any()) {
                 var names = new List<string>();
@@ -119,11 +119,7 @@ namespace softWrench.sW4.Metadata.Validator {
                 attribute = ((IApplicationDisplayableContainer)attrDisplayablee).Id;
             }
 
-            var customization =
-                customizations.FirstOrDefault(
-                    f =>
-                        (f.Position.Equals(attribute) || f.Position.Equals("+" + attribute) ||
-                         f.Position.Equals("-" + attribute)));
+            var customization = customizations.FirstOrDefault(f => AttributeComparison(f.Position, attribute, attrDisplayablee is ApplicationRelationshipDefinition));
             if (customization == null) {
                 if (attrDisplayablee is ApplicationAssociationDefinition) {
                     //if the field is an association let´s give it a change to search for the label field instead before assuming there´s no customization present
@@ -132,10 +128,7 @@ namespace softWrench.sW4.Metadata.Validator {
                     var association = attrDisplayablee as ApplicationAssociationDefinition;
                     var labelField = association.OriginalLabelField;
                     customization =
-                        customizations.FirstOrDefault(
-                            f =>
-                                (f.Position.Equals(labelField) || f.Position.Equals("+" + labelField) ||
-                                 f.Position.Equals("-" + labelField)));
+                        customizations.FirstOrDefault(f => AttributeComparison(f.Position, labelField, true));
                 }
             }
 
@@ -179,6 +172,16 @@ namespace softWrench.sW4.Metadata.Validator {
                 ApplicationMetadataValidator.RemoveDisplaybleToValidateIfNeeded(overridenSchema, attrDisplayablee);
             }
             return true;
+        }
+
+        private static bool AttributeComparison(string position, string attribute, bool isRelationship) {
+
+            var baseComparison = (position.Equals(attribute) || position.Equals("+" + attribute) || position.Equals("-" + attribute));
+            if (!baseComparison && isRelationship) {
+                //second chance to relationships
+                return AttributeComparison(position + "_", attribute, false);
+            }
+            return baseComparison;
         }
 
 

@@ -21,7 +21,7 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
         public static ApplicationSchemaDefinition.LazyComponentDisplayableResolver ComponentDisplayableResolver =
             (reference, schema, components) => DoResolveReferences(schema, reference, components);
 
-        private static IEnumerable<IApplicationDisplayable> DoResolveReferences(ApplicationSchemaDefinition schema, ReferenceDisplayable reference, IEnumerable<DisplayableComponent> components) {
+        public static IEnumerable<IApplicationDisplayable> DoResolveReferences(ApplicationSchemaDefinition schema, ReferenceDisplayable reference, IEnumerable<DisplayableComponent> components) {
             var componentsSource = components;
             var applicationName = schema.ApplicationName;
             if (components == null) {

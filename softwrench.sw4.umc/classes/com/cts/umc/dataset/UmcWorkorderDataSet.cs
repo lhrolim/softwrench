@@ -5,6 +5,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Util;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 
 namespace softWrench.sW4.umc.classes.com.cts.umc.dataset {
     public class UmcWorkorderDataSet : BaseWorkorderDataSet {

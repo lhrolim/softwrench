@@ -213,13 +213,11 @@ angular.module('sw_layout')
             if (!datamap) {
                 return false;
             }
-
-            var originalDM = datamap;
-            if (!originalDM) {
-                return false;
+            let  status = datamap["status"];
+            if (datamap.hasOwnProperty("originalstatus")) {
+                status = datamap["originalstatus"];
             }
-
-            return 'CLOSED'.equalIc(originalDM['status']) || 'CLOSE'.equalIc(originalDM['status']);
+            return status && status.equalsAny("CLOSE", "CLOSED");
         },
 
         //#region batch status change

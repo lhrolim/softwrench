@@ -6,6 +6,9 @@
     <template path="@workorder.xml"/>
     <template path="@location.xml"/>
     <template path="@servicerequest.xml"/>
+
+    <template path="@quickservicerequest.xml"/>
+    
     <template path="@asset.xml"/>
     <template path="@globalsearch.xml"/>
   </templates>

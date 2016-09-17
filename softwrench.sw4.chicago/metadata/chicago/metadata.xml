@@ -3,6 +3,7 @@
 
   <templates>
     <template path="@servicerequest.xml"/>
+    <template path="@quickservicerequest.xml"/>
     <template path="@asset.xml"/>
     <template path="@phone.xml"/>
     <template path="@email.xml"/>
@@ -317,6 +318,7 @@
             </association>
             <field attribute="siteid" label="Site ID" readonly="true"/>
           </section>
+          
           <section>
             <field label="Details" attribute="ld_.ldtext">
               <renderer type="richtext"/>
@@ -348,7 +350,7 @@
             <association label="Created Group" target="itdchcreatedbygroup" labelfield="itdchcreatedbygroup_.description" orderbyfield="persongroup asc">
               <renderer type="lookup"/>
             </association>
-            <association label="Owner Group" target="ownergroup" labelfield="ownergroup_.description" orderbyfield="persongroup asc">
+            <association label="Owner Group" target="ownergroup" labelfield="ownergroup_.description" orderbyfield="persongroup asc" requiredexpression="true">
               <renderer type="lookup"/>
               <event type="afterchange" service="srService" method="afterchangeownergroup"/>
             </association>
@@ -503,6 +505,7 @@
               </section>
             </section>
           </section>
+    
           <section id="hiddenfields">
             <field attribute="ticketid" label="SR#" hidden="true"/>
             <field attribute="ticketuid" label="SR#" hidden="true"/>
@@ -518,16 +521,19 @@
 
         <schema id="editdetail" parentschema="adetail" stereotype="detail" title="Service Request Details" redeclaring="true">
           <section id="statussection">
+            <field attribute="originalstatus" hidden="true"/>
             <association label="Status" target="status" labelfield="synstatus_.description" requiredexpression="true">
               <dataprovider postfilterfunction="FilterAvailableStatus"/>
               <renderer type="lookup" />
               <event type="beforechange" service="srService" method="beforeChangeStatus"/>
             </association>
           </section>
+       
           <section id="compositions">
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowupdate="false" />
             </composition>
+            
             <tab label="Solution" id="solution" icon="fa fa-book">
               <field attribute="solution" hidden="true"/>
               <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
@@ -554,16 +560,9 @@
                 <renderer type ="richtext"/>
               </field>
             </tab>
-            <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
-            </composition>
-            <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
-              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
-            </composition>
-            <composition relationship="attachment" label="Attachments" printenabled="false" >
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-            </composition>
+            <reference id="worklogs"/>
+            <reference id="commlogs"/>
+            <reference id="attachments"/>
             <composition relationship="aticket" label="Audit Log" detailschema="">
               <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="compositionlist" orderbyfield="eaudittimestamp desc"/>
             </composition>
@@ -633,6 +632,7 @@
             <field attribute="pluspcustomer" hidden="true" default="CPS-00"/>
             <field attribute="ismticketid" hidden="true"/>
             <field attribute="ismticketuid" hidden="true"/>
+            <field attribute="originalstatus" hidden="true"/>
             <section orientation="horizontal" id="statussection">
               <renderer type="default" params="childinputsize=small" />
               <field attribute="description" label="Summary" requiredexpression="true">
@@ -668,9 +668,7 @@
               <composition relationship="worklog" label="Work Logs" detailschema="qsrcompositiondetail">
                 <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" allowremoval="false" prefilterfunction="FilterQSRWorklogs"/>
               </composition>
-              <composition relationship="attachment" label="Attachments" printenabled="false">
-                <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" allowremoval="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-              </composition>
+              <reference id="attachments"/>
             </section>
           </customization>
           

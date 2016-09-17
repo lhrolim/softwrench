@@ -6,7 +6,6 @@ using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
-using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Email;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;

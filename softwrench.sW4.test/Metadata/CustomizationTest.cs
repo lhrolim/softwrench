@@ -230,7 +230,21 @@ namespace softwrench.sW4.test.Metadata {
             var tabNumber =newDetailSchema.GetDisplayable<ApplicationTabDefinition>(typeof(ApplicationTabDefinition))
                     .Count(s => s.Id.EqualsIc("spareparts"));
             Assert.AreEqual(1, tabNumber);
-            
+        }
+
+
+        [TestMethod]
+        public void TestCompositionReplacement() {
+
+            if (ApplicationConfiguration.TestclientName != "test4") {
+                ApplicationConfiguration.TestclientName = "test4";
+                MetadataProvider.StubReset();
+            }
+
+            var app = MetadataProvider.Application("servicerequest");
+            var detail = app.Schema(new ApplicationMetadataSchemaKey("editdetail2"));
+            var compositions = detail.Compositions();
+            Assert.AreEqual(3,compositions.Count);
 
 
         }

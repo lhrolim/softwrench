@@ -3,6 +3,7 @@ using cts.commons.persistence;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
@@ -11,9 +12,9 @@ using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
     class ChicagoServiceRequestDataSet : BaseServiceRequestDataSet {
-        private readonly IMaximoHibernateDAO _maximoDao;
-        public ChicagoServiceRequestDataSet(ISWDBHibernateDAO swdbDao, IMaximoHibernateDAO maximoDao) : base(swdbDao) {
-            _maximoDao = maximoDao;
+
+
+        public ChicagoServiceRequestDataSet(ISWDBHibernateDAO swdbDao) : base(swdbDao) {
         }
 
         public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch,
@@ -48,9 +49,9 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
                 return dto;
             }
 
-            Log.DebugFormat("constraining owners of ownergroup {0}",ownergroup);
+            Log.DebugFormat("constraining owners of ownergroup {0}", ownergroup);
 
-            dto.AppendWhereClauseFormat("personid in (select respparty from persongroupteam where persongroup='{0}')",ownergroup);
+            dto.AppendWhereClauseFormat("personid in (select respparty from persongroupteam where persongroup='{0}')", ownergroup);
 
 
 

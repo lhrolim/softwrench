@@ -43,9 +43,11 @@
       <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="-\System\ComponentModel\Composition\DirectoryCatalogService.cs" />
     <Compile Include="app\DBMS.cs" />
     <Compile Include="app\DBType.cs" />
     <Compile Include="app\IApplicationConfiguration.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="Events\ISWEventListener.cs" />
     <Compile Include="Events\SimpleInjectorDomainEventDispatcher.cs" />
     <Compile Include="IClientApplicationAwareComponent.cs" />
+    <Compile Include="ImportPropertySelectionBehavior.cs" />
     <Compile Include="ISingletonComponent.cs" />
     <Compile Include="OverridingComponentAttribute.cs" />
     <Compile Include="SimpleInjectorGenericFactory.cs" />

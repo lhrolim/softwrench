@@ -8,6 +8,8 @@
     <!--ServiceRequest-->
     <template path="@servicerequest.xml"/>
 
+    <template path="@quickservicerequest.xml"/>
+
     <!--Incident-->
     <template path="@incident.xml"/>
 

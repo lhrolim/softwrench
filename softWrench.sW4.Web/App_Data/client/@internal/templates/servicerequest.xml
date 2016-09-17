@@ -12,6 +12,10 @@
 
   <entities>
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
+      <attributes>
+        <attribute name="originalstatus" query="!@status" type="varchar"/>
+      </attributes>
+
       <relationships>
         <relationship to="asset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
@@ -78,7 +82,7 @@
         <relationship to ="persongroup" >
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
-        
+
         <relationship to ="persongroup" qualifier="ownergroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
@@ -126,7 +130,7 @@
             <renderer type="lookup" />
           </association>
         </componentdisplayable>
-        
+
         <componentdisplayable id="owner">
           <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
             <renderer type="lookup"/>
@@ -140,6 +144,32 @@
             <event type="afterchange" service="srService" method="afterchangeownergroup"/>
           </association>
         </componentdisplayable>
+
+        <componentdisplayable id="worklogs">
+          <composition relationship="worklog" label="Work Logs">
+            <collectionproperties allowcreation="@originalstatus!='CLOSED'" allowupdate="true" orderbyfield="modifydate desc" />
+          </composition>
+        </componentdisplayable>
+
+        <componentdisplayable id="commlogs">
+          <composition relationship="commlog" label="Communications">
+            <collectionproperties allowcreation="@originalstatus!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
+            <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
+          </composition>
+        </componentdisplayable>
+
+        <componentdisplayable id="attachments">
+          <composition relationship="attachment" label="Attachments" printenabled="false" >
+            <collectionproperties allowupdate="false" allowcreation="@originalstatus!='CLOSED'" allowremoval="@originalstatus!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+          </composition>
+        </componentdisplayable>
+
+        <componentdisplayable id="relatedrecords">
+          <composition relationship="relatedrecord" label="Related Records">
+            <collectionproperties allowupdate="false" allowcreation="@originalstatus!='CLOSED'" />
+          </composition>
+        </componentdisplayable>
+
 
         <componentdisplayable id="srhiddens">
           <field attribute="ticketid" label="SR#" hidden="true"/>
@@ -254,11 +284,11 @@
 
           <!-- field used for PECSO customization -->
           <field attribute="tophiddenfield" hidden="true"/>
-          
+
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=large" />
-            
+
             <field attribute="description" label="Summary" requiredexpression="true">
               <renderer type="default" params="maxlength=100;inputsize=xlarge" />
             </field>
@@ -386,22 +416,10 @@
           </section>
 
           <section id="compositions">
-            <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
-            </composition>
-
-            <composition relationship="commlog" label="Communications">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" orderbyfield="createdate desc"/>
-              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
-            </composition>
-
-            <composition relationship="attachment" label="Attachments" printenabled="false" >
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" allowremoval="@status!='CLOSED'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-
-            </composition>
-            <composition relationship="relatedrecord" label="Related Records">
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
-            </composition>
+            <reference id="worklogs"/>
+            <reference id="commlogs"/>
+            <reference id="attachments"/>
+            <reference id="relatedrecords"/>
 
             <tab label="Location Address" id="saddress" icon="fa-map-o" showexpression="(@location_.serviceaddress_.latitudey &amp;&amp; @location_.serviceaddress_.longitudex) || @location_.serviceaddress_.streetaddress">
               <section id="saddresssection" resourcepath="/Content/Templates/otb/saddress.html" parameters="zoom=19;tabid=saddress">
@@ -434,153 +452,5 @@
       </schemas>
     </application>
 
-    <application entity="SR" name="quickservicerequest" title="Quick Requests" role="ssr">
-      <components>
-        <componentdisplayable id="status">
-          <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
-            <dataprovider postfilterfunction="FilterAvailableStatus"/>
-            <renderer type="lookup" />
-          </association>
-        </componentdisplayable>
-      </components>
-      
-      <properties>
-        <property key="mobile.disabled" value="true"/>
-      </properties>
-      <schemas>
-        <schema id="quicksrgrid" title="Quick Request Grid" stereotype="list">
-
-          <filters>
-            <optionfilter attribute="status" provider="synstatus_.description"  displaycode="true"/>
-            <optionfilter attribute="owner" provider="ownerperson_.displayname" allowblank="true">
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@personid"/>
-            </optionfilter>
-            <optionfilter attribute="reportedby" provider="reportedbyp_.displayname" allowblank="true">
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Current User" value="@personid"/>
-            </optionfilter>
-          </filters>
-
-          <field attribute="ticketid" label="SR#">
-            <renderer type="default" params="width=12%" />
-          </field>
-          <field attribute="description" label="Summary">
-            <renderer type="default" params="excelwidth=50" />
-          </field>
-          <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="width=15%" />
-          </field>
-          <field attribute="owner" label="Owner">
-            <renderer type="default" params="width=15%" />
-          </field>
-          <field attribute="status" label="Status">
-            <renderer type="statuscolor" params="width=12%;grid=quickservicerequest;column=status" />
-          </field>
-          <properties>
-            <property key="list.click.schema" value="quickeditdetail"/>
-            <property key="list.defaultorderby" value="sr.ticketuid desc"/>
-          </properties>
-        </schema>
-
-        <schema id="quicknewdetail" stereotype="detailnew" title="New Quick Request">
-          <properties>
-            <property key="nextschema.schemaid" value="quicksrgrid"/>
-          </properties>
-
-          <section id="extrahiddenfields"/>
-
-          <section orientation="horizontal" id="statussection">
-            <renderer type="default" params="childinputsize=large" />
-            <field attribute="ticketuid" label="SR#" hidden="true"/>
-            <field label="Status" attribute="status" readonly="true" default="NEW" hidden="true"/>
-            <field attribute="description" label="Summary" requiredexpression="true">
-              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
-            </field>
-          </section>
-
-          <field label="Details" attribute="ld_.ldtext" >
-            <renderer type="richtext"/>
-          </field>
-
-          <section orientation="horizontal" id="reportedbysection">
-            <renderer type="default" params="childinputsize=medium" />
-            <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@personid" orderbyfield="personid asc" >
-              <renderer type="lookup" params="columnlabel=Name;"/>
-              <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
-            </association>
-            <field attribute="reportedphone" label="Reported By Phone" default="@user.phone" readonly="true"/>
-            <field attribute="reportedemail" label="Reported By Email" default="@user.email" readonly="true"/>
-            <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true">
-              <renderer type="lookup"/>
-            </association>
-            <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" >
-              <renderer type="lookup"/>
-              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-            </association>
-            <field label="Attachment" attribute="newattachment" >
-              <renderer type="upload"/>
-            </field>
-          </section>
-        </schema>
-
-        <schema id="quickeditdetail" stereotype="detail" title="Quick Request Details">
-          <properties>
-            <property key="nextschema.schemaid" value="quicksrgrid"/>
-          </properties>
-
-          <section id="extrahiddenfields"/>
-
-
-          <!-- hiddens for communication template -->
-          <field attribute="changedate" hidden="true"/>
-          <field attribute="classificationid" hidden="true"/>
-          <field attribute="reportedemail" hidden="true"/>
-          <field attribute="affectedemail" hidden="true"/>
-          <field attribute="solution" hidden="true"/>
-          <field attribute="assetsiteid" hidden="true"/>
-          <field attribute="location" hidden="true"/>
-          <field attribute="assetnum" hidden="true"/>
-          <field attribute="failurecode" hidden="true"/>
-          <field attribute="cinum" hidden="true"/>
-          <field attribute="class" label="" hidden="true"/>
-          <field attribute="ticketuid" hidden="true"/>
-
-          <field attribute="ticketid" label="SR#" readonly="true" hidden="true"/>
-
-          <section orientation="horizontal" id="statussection">
-            <renderer type="default" params="childinputsize=large" />
-            <field attribute="description" label="Summary" requiredexpression="true">
-              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
-            </field>
-            <reference id="status"/>
-          </section>
-
-          <field label="Details" attribute="ld_.ldtext" >
-            <renderer type="richtext"/>
-          </field>
-
-          <section orientation="horizontal" id="reportedbysection">
-            <renderer type="default" params="childinputsize=medium" />
-            <association label="Reported By" target="reportedby" labelfield="reportedbyp_.displayname" default="@personid" orderbyfield="personid asc" >
-              <renderer type="lookup" params="columnlabel=Name;"/>
-              <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
-            </association>
-            <field attribute="reportedphone" label="Reported By Phone" readonly="true"/>
-            <field attribute="reportedemail" label="Reported By Email" readonly="true"/>
-            <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true">
-              <renderer type="lookup"/>
-            </association>
-            <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" >
-              <renderer type="lookup"/>
-              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-            </association>
-          </section>
-          <section id="compositions">
-            <composition relationship="attachment" label="Attachments" printenabled="false">
-              <collectionproperties allowcreation="false" allowupdate="false" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-            </composition>
-          </section>
-        </schema>
-      </schemas>
-    </application>
   </applications>
 </metadata>

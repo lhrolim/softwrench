@@ -8,6 +8,7 @@
     <template path="@inventory.xml"/>
     <template path="@relatedrecords.xml"/>
     <template path="@servicerequest.xml"/>
+    <template path="@quickservicerequest.xml"/>
     <template path="@location.xml"/>
     
   </templates>

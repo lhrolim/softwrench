@@ -3,6 +3,8 @@
 
   <templates>
     <template path="@servicerequest.xml"/>
+
+    <template path="@quickservicerequest.xml"/>
     <template path="@workorder.xml"/>
     <template path="@solution.xml"/>
     <template path="@wochange.xml"/>

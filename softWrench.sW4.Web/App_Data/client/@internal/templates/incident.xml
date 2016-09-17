@@ -9,6 +9,10 @@
   <entities>
     <entity name="incident" idAttribute="ticketuid" useridAttribute="ticketid">
 
+      <attributes>
+        <attribute name="originalstatus" query="!@status" type="varchar"/>
+      </attributes>
+      
       <relationships>
         <relationship to="asset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
@@ -109,6 +113,15 @@
   <applications>
 
     <application name="incident" title="Incident" entity="incident">
+
+      <components>
+        <componentdisplayable id="attachments">
+          <composition relationship="attachment" label="Attachments" >
+            <collectionproperties  allowcreation="@originalstatus!='CLOSED' &amp;&amp; @originalstatus!='CAN'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+          </composition>
+        </componentdisplayable>
+      </components>
+      
       <filters>
         <optionfilter attribute="internalpriority" displaycode="true">
           <option xmlns="http://www.controltechnologysolutions.com/filters" label="High" value="1" />
@@ -296,9 +309,7 @@
                 <renderer type ="richtext"/>
               </field>
             </tab>
-            <composition relationship="attachment" label="Attachments" >
-              <collectionproperties  allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-            </composition>
+            <reference id="attachments"/>
           </section>
           
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
