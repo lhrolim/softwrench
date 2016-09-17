@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using cts.commons.portable.Util;
+using cts.commons.simpleinjector;
 using JetBrains.Annotations;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
+using softWrench.sW4.Security.Context;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Security {
     public static class InMemoryUserExtensions {
@@ -27,9 +33,13 @@ namespace softWrench.sW4.Metadata.Security {
 
 
         public static SecurityModeCheckResult VerifySecurityMode(this InMemoryUser user, ApplicationMetadata application, DataRequestAdapter request) {
-            if (user.IsSwAdmin() || application.Name.StartsWith("_")) {
+            if (user.IsSwAdmin()) {
                 //SWDB apps have their own rule as for now.
                 return SecurityModeCheckResult.Allow;
+            }
+
+            if (application.Name.StartsWith("_")) {
+                return VerifySecurityModeSw(user, application);
             }
 
             var isTopLevelApp = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null)
@@ -106,6 +116,29 @@ namespace softWrench.sW4.Metadata.Security {
 
         }
 
+        private static SecurityModeCheckResult VerifySecurityModeSw(this IPrincipal user, ApplicationMetadata application) {
+            var applicationMetadata = MetadataProvider.Application(application.Name, false);
+            if (applicationMetadata == null) {
+                return SecurityModeCheckResult.Block;
+            }
 
+            var lookuper = SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>();
+            var context = lookuper.LookupContext();
+            var local = ApplicationConfiguration.IsLocal();
+
+            var isSysAdmin = user.IsInRole(Role.SysAdmin) || (local && context.MockSecurity);
+            var sysAdminApplication = applicationMetadata.GetProperty(ApplicationSchemaPropertiesCatalog.SystemAdminApplication);
+            if ("true".EqualsIc(sysAdminApplication) && isSysAdmin) {
+                return SecurityModeCheckResult.Allow;
+            }
+
+            var isClientAdmin = user.IsInRole(Role.ClientAdmin) || (local && context.MockSecurity);
+            var clientAdminApplication = applicationMetadata.GetProperty(ApplicationSchemaPropertiesCatalog.ClientAdminApplication);
+            if ("true".EqualsIc(clientAdminApplication) && isClientAdmin) {
+                return SecurityModeCheckResult.Allow;
+            }
+
+            return SecurityModeCheckResult.Block;
+        }
     }
 }

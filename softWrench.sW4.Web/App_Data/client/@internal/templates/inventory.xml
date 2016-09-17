@@ -539,6 +539,7 @@
         <property key="mobile.fetchlimit" value="300"/>
         <property key="list.offline.numeric.indexlist" value="curbal"/>
         <property key="list.offline.text.indexlist" value="itemnum,item_.description,location"/>
+        <property key="application.mainlistschema" value="invbalancesList"/>
       </properties>
       <schemas>
         <schema stereotype="list" id="invbalancesList" title="Inventory Grid" platform="web">

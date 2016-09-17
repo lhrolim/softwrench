@@ -2,6 +2,12 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
   <applications>
     <application entity="PropertyDefinition" name="configuration" title="Configuration">
+      <properties>
+        <!-- the detail schema is a fake list in this case -->
+        <property key="application.mainlistschema" value="detail"/> 
+        <property key="application.security.clientadmin" value="true"/> 
+      </properties>
+      
       <schemas>
         <detail title="Configuration">
           <commandbars>

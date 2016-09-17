@@ -127,6 +127,7 @@
     <application name="labtrans" entity="labtrans" title="Labor">
       <properties>
         <property key ="icon.composition.tab" value="fa fa-clock-o"/>
+        <property key ="application.maindetailschema" value="editdetail"/>
       </properties>
 
       <filters>

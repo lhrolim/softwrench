@@ -152,6 +152,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dependencies\Oracle.DataAccess.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="Quartz, Version=2.2.1.400, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Quartz.2.2.1\lib\net40\Quartz.dll</HintPath>
@@ -367,6 +368,8 @@
     <Compile Include="Controllers\Dynamic\ScriptsController.cs" />
     <Compile Include="Controllers\MetadataController.cs" />
     <Compile Include="Controllers\LabtransController.cs" />
+    <Compile Include="Controllers\RoutePageController.cs" />
+    <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\SqlClient\SqlClientController.cs" />
     <Compile Include="Controllers\Utilities\DeployValidationController.cs" />
     <Compile Include="Controllers\WorkflowController.cs" />
@@ -441,7 +444,9 @@
     <Compile Include="Formatting\Rule\EmptyCollectionSerializationRule.cs" />
     <Compile Include="Formatting\Rule\EmptyObjectSerializationRule.cs" />
     <Compile Include="Formatting\Rule\IPropertySerializationRule.cs" />
+    <Compile Include="Models\Home\HomeService.cs" />
     <Compile Include="Models\Home\MenuModel.cs" />
+    <Compile Include="Models\Home\RouteService.cs" />
     <Compile Include="Models\IBaseLayoutModel.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
     <Compile Include="Models\Report\ReportModel.cs" />
@@ -650,6 +655,7 @@
     <Content Include="App_Data\DeploymentValidation\Data\receiving.json" />
     <Content Include="App_Data\DeploymentValidation\Data\servicerequest.json" />
     <Content Include="App_Data\DeploymentValidation\Data\workorder.json" />
+    <Content Include="Content\Controller\RoutePage.html" />
     <Content Include="Content\Controller\Scripts.html" />
     <Content Include="Content\Controller\DeployValidation.html" />
     <Content Include="Content\Controller\SqlClient.html" />
@@ -721,6 +727,7 @@
     <Content Include="Content\Scripts\client\crud\crud_expandable_section.js" />
     <Content Include="Content\Scripts\client\directives\codeEditor.js" />
     <Content Include="Content\Scripts\client\elementResizeEvent.js" />
+    <Content Include="Content\Scripts\client\routePageController.js" />
     <Content Include="Content\Scripts\client\scriptsController.js" />
     <Content Include="Content\Scripts\client\directives\fileUpload.js" />
     <Content Include="Content\Scripts\client\directives\gmaps.js" />
@@ -916,6 +923,7 @@
     <Content Include="Content\styles\default\_deploy-validation.scss" />
     <Content Include="Content\styles\default\_grid-filter.scss" />
     <Content Include="Content\styles\default\_dynamic.scss" />
+    <Content Include="Content\styles\default\_routepage.scss" />
     <None Include="Content\styles\default\_toolbar.scss" />
     <Content Include="Content\styles\default\_crud-masterdetails.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />

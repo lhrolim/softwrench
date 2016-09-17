@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Web.Models.Home {
-    public class HomeModel :IBaseLayoutModel{
+    public class HomeModel : IBaseLayoutModel {
 
         public string Url { get; set; }
         public string Title { get; set; }
@@ -22,6 +23,7 @@ namespace softWrench.sW4.Web.Models.Home {
         public string ClassificationColorJson { get; set; }
 
         public string Message { get; set; }
+        public string MessageType { get; set; }
         public string WindowTitle { get; set; }
 
         public string ClientName { get; set; }
@@ -30,6 +32,9 @@ namespace softWrench.sW4.Web.Models.Home {
 
         public string MenuJSON { get; set; }
 
+        public bool FromRoute { get; set; }
+        public RouteInfo RouteInfo { get; set; }
+        public RouteListInfo RouteListInfo { get; set; }
 
         public HomeModel(string url, string title, HomeConfigs configs, MenuModel MenuModel, InMemoryUser user, bool hasLogoPopup,
             JObject i18NJsons, JObject statusColorJson, JObject statusColorFallbackJson, JObject classificationColorJson, string clientName, string windowTitle = null, string message = null) {
@@ -64,7 +69,7 @@ namespace softWrench.sW4.Web.Models.Home {
             if (statusColorFallbackJson != null) {
                 StatusColorFallbackJson = statusColorFallbackJson.ToString(Newtonsoft.Json.Formatting.Indented);
             }
-            
+
             if (classificationColorJson != null) {
                 ClassificationColorJson = classificationColorJson.ToString(Newtonsoft.Json.Formatting.Indented);
             }
@@ -74,5 +79,21 @@ namespace softWrench.sW4.Web.Models.Home {
         }
 
 
+    }
+
+    public class RouteInfo {
+        public Dictionary<string, SchemaInfo> schemaInfo { get; set; }
+        public string contextPath { get; set; }
+    }
+
+    public class SchemaInfo {
+        public string listSchema { get; set; }
+        public string newDetailSchema { get; set; }
+        public string detailSchema { get; set; }
+    }
+
+    public class RouteListInfo {
+        public string ApplicationName { get; set; }
+        public string Schemaid { get; set; }
     }
 }

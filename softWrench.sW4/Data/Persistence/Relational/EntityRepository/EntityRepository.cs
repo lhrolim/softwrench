@@ -93,6 +93,17 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
         }
 
+        public virtual IReadOnlyList<DataMap> GetIdAndSiteIdByUserId([NotNull] EntityMetadata entityMetadata, string userId) {
+            if (entityMetadata == null) {
+                throw new ArgumentNullException("entityMetadata");
+            }
+
+            var query = _entityQueryBuilder.IdAndSiteIdByUserId(entityMetadata, userId);
+            var rows = Query(entityMetadata, query, new SearchRequestDto());
+            return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
+               .Select(r => BuildDataMap(entityMetadata, r))
+               .ToList();
+        }
 
         public class SearchEntityResult {
             public IList<Dictionary<string, object>> ResultList;

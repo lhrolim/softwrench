@@ -19,7 +19,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         private const EntityMetadata.AttributesMode NoCollections = EntityMetadata.AttributesMode.NoCollections;
 
         public static string BuildSelectAttributesClause(EntityMetadata entityMetadata, QueryCacheKey.QueryMode queryMode
-            , SearchRequestDto dto = null) {
+            , SearchRequestDto dto = null, IList<EntityAttribute> preAtributes = null) {
             var buffer = new StringBuilder();
             if (queryMode == QueryCacheKey.QueryMode.Count) {
                 return CountClause;
@@ -30,8 +30,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                 buffer.Append(string.Format(" top({0}) ", entityMetadata.FetchLimit()));
             }
 
-            var attributes = entityMetadata.Attributes(NoCollections) as IList<EntityAttribute>
-                ?? entityMetadata.Attributes(NoCollections).ToList();
+            var attributes = preAtributes ?? entityMetadata.Attributes(NoCollections) as IList<EntityAttribute> ?? entityMetadata.Attributes(NoCollections).ToList();
 
             var hasProjection = dto != null && dto.ProjectionFields.Count > 0;
             if (hasProjection) {

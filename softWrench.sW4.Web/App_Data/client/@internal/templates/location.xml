@@ -154,6 +154,7 @@
       <properties>
         <property key="mobile.fetchlimit" value="3000"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
+        <property key="application.maindetailschema" value="locationdetail"/>
       </properties>
 
       <filters>

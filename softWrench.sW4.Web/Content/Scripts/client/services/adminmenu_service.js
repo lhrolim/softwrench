@@ -32,7 +32,7 @@ angular.module('sw_layout')
             var parameters = {
                 userid: id
             }
-            redirectService.goToApplicationView('Person', 'myprofiledetail', 'input', null, parameters, null);
+            redirectService.goToApplicationView('person', 'myprofiledetail', 'input', null, parameters, null);
 
         },
 

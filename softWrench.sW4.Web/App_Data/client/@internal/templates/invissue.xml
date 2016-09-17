@@ -165,6 +165,7 @@
       <properties>
         <property key="list.offline.numeric.indexlist" value="quantity,qtyreturned"/>
         <property key="list.offline.text.indexlist" value="itemnum,location,siteid,issuetype"/>
+        <property key="application.maindetailschema" value="viewinvissuedetail"/>
       </properties>
       
       <schemas>

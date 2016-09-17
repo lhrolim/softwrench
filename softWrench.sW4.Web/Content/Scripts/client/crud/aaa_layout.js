@@ -30,6 +30,10 @@
         editableOptions.theme = "bs3"; // bootstrap3 theme. Can be also 'bs2', 'default'
     }]);
 
+    app.config(function($locationProvider) {
+        $locationProvider.html5Mode(true);
+    });
+
     //#region extra directives
     app.directive("dynamicName", function ($compile) {
         "ngInject";

@@ -1,0 +1,8 @@
+﻿<div ng-controller="RoutePageController">
+    <div class="route-page-container" ng-if="!pageNotFound">
+        <p>{{info}}</p>
+        <div class="route-page-button" ng-repeat="datamap in datamaps">
+            <button class="btn" ng-click="route(datamap)">{{title(datamap)}}</button>
+        </div>
+    </div>
+</div>

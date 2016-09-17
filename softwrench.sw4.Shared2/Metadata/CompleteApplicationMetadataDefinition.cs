@@ -252,5 +252,20 @@ namespace softwrench.sW4.Shared2.Metadata {
             }
             return Properties[propertyKey];
         }
+
+        /// <summary>
+        /// Override schema to be used on the url /{applicationname}/
+        /// </summary>
+        public ApplicationSchemaDefinition MainListSchema { get; set; }
+
+        /// <summary>
+        ///  Override schema to be used on the url /{applicationname}/new
+        /// </summary>
+        public ApplicationSchemaDefinition MainNewDetailSchema { get; set; }
+
+        /// <summary>
+        ///  Override schema to be used on the url /{applicationname}/{userid} and /{applicationname}/uid/{id}
+        /// </summary>
+        public ApplicationSchemaDefinition MainDetailSchema { get; set; }
     }
 }

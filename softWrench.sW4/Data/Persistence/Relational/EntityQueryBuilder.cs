@@ -7,6 +7,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Entities;
 using cts.commons.simpleinjector;
+using softWrench.sW4.Metadata.Entities.Schema;
 
 namespace softWrench.sW4.Data.Persistence.Relational {
 
@@ -18,7 +19,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             return TemplateQueryBuild(entityMetadata, new InternalQueryRequest { Id = id }, QueryCacheKey.QueryMode.Detail);
         }
 
-        public BindedEntityQuery ByUserIdSite(EntityMetadata entityMetadata, Tuple<string,string> userIdSiteTuple) {
+        public BindedEntityQuery ByUserIdSite(EntityMetadata entityMetadata, Tuple<string, string> userIdSiteTuple) {
             return TemplateQueryBuild(entityMetadata, new InternalQueryRequest { UserIdSiteTuple = userIdSiteTuple }, QueryCacheKey.QueryMode.Detail);
         }
 
@@ -49,6 +50,29 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             return new BindedEntityQuery(buffer.ToString(), whereBuilder.GetParameters());
         }
 
+        public BindedEntityQuery IdAndSiteIdByUserId(EntityMetadata entityMetadata, string userid) {
+            var buffer = new StringBuilder(InitialStringBuilderCapacity);
 
+            // select
+            var attributes = new List<EntityAttribute>{
+                entityMetadata.Schema.IdAttribute
+            };
+            if (entityMetadata.Schema.SiteIdAttribute != null) {
+                attributes.Add(entityMetadata.Schema.SiteIdAttribute);
+            }
+            buffer.Append(QuerySelectBuilder.BuildSelectAttributesClause(entityMetadata, QueryCacheKey.QueryMode.Detail, null, attributes));
+
+            // from
+            buffer.AppendFormat(" from {0} ", BaseQueryUtil.AliasEntity(entityMetadata.Name, entityMetadata.Name));
+
+            // where
+            var list = new List<IWhereBuilder>{
+                new ByUserIdWhereBuilder(entityMetadata, userid)
+            };
+            var whereBuilder = new CompositeWhereBuilder(list);
+            buffer.Append(whereBuilder.BuildWhereClause(entityMetadata.Name));
+
+            return new BindedEntityQuery(buffer.ToString(), whereBuilder.GetParameters());
+        }
     }
 }

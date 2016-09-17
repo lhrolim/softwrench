@@ -121,10 +121,16 @@ namespace softWrench.sW4.Metadata.Validator {
             var auditEnabled = overridenApplication.AuditFlag ?? souceAplication.AuditFlag;
             var mergedFilters = SchemaFilterBuilder.ApplyFilterCustomizations(souceAplication.AppFilters, overridenApplication.AppFilters);
 
-            return new CompleteApplicationMetadataDefinition(souceAplication.Id, souceAplication.ApplicationName,
+            var app = new CompleteApplicationMetadataDefinition(souceAplication.Id, souceAplication.ApplicationName,
                 title, entity, idFieldName, userIdFieldName,
-                overridenParameters, resultSchemas, souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), mergedFilters, service, role, auditEnabled);
-
+                overridenParameters, resultSchemas,
+                souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), mergedFilters,
+                service, role, auditEnabled) {
+                MainListSchema = overridenApplication.MainListSchema ?? souceAplication.MainListSchema,
+                MainNewDetailSchema = overridenApplication.MainNewDetailSchema ?? souceAplication.MainNewDetailSchema,
+                MainDetailSchema = overridenApplication.MainDetailSchema ?? souceAplication.MainDetailSchema
+            };
+            return app;
         }
 
 

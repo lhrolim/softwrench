@@ -16,6 +16,11 @@
 
 
     <application entity="UserProfile" name="UserProfile" title="Security Groups">
+      <properties>
+        <property key="application.mainnewdetailschema" value="detail"/>
+        <property key="application.security.clientadmin" value="true"/>
+      </properties>
+      
       <schemas>
         <list title="Security Groups">
           <commandbars>

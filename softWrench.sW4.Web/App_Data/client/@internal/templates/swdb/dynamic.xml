@@ -2,11 +2,15 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <entities>
-    <entity name="ScriptEntry" idAttribute="id" useridAttribute="name"/>
+    <entity name="ScriptEntry" idAttribute="id"/>
   </entities>
   <applications>
 
     <application entity="ScriptEntry" name="dynamic" title="Dynamic Component">
+      <properties>
+        <property key="application.security.systemadmin" value="true"/>
+      </properties>
+      
       <schemas>
         <list stereotype="list" title="Dynamic Components Grid">
           <field attribute="id" hidden="true"/>

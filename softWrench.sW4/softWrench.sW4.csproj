@@ -298,6 +298,7 @@
     <Compile Include="Data\Persistence\Relational\EntityRepository\IEntityRepository.cs" />
     <Compile Include="Data\Persistence\Relational\EntityRepository\RestEntityRepository.cs" />
     <Compile Include="Data\Persistence\Relational\EntityRepository\RestResponseParser.cs" />
+    <Compile Include="Data\Persistence\Relational\QueryBuilder\ByUserIdWhereBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\ByUserIdSiteWhereBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\IDynamicWhereBuilder.cs" />
     <Compile Include="Data\Persistence\WS\AMEX\AmexAssetConnectors.cs" />
@@ -510,6 +511,7 @@
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
+    <Compile Include="Metadata\RefreshMetadataEvent.cs" />
     <Compile Include="Metadata\Security\SecurityException.cs" />
     <Compile Include="Metadata\Security\SecurityGroupExtensions.cs" />
     <Compile Include="Metadata\Stereotypes\AComponentStereotype.cs" />

@@ -2,17 +2,33 @@
 (function (angular) {
     "use strict";
 
-    function historyService($rootScope, $location, $log, $timeout, crudContextHolderService, i18NService, contextService, alertService) {
+    function historyService($rootScope, $location, $log, $timeout, $q, crudContextHolderService, i18NService, contextService, alertService, localStorageService, restService) {
         //#region Utils
         var breadcrumbHistoryKey = "breadcrumbHistory";
         var cancelReturnKey = "cancelReturn";
+        const routeInfoKey = `${url("")}:routeInfo`;
+
+        const applicationDecorationObject = {
+            "person": "user",
+            "servicerequest": "sr",
+            "quickservicerequest": "quicksr",
+            "workorder": "wo",
+            "_UserProfile": "securitygroup",
+            "_SoftwrenchError": "error"
+        }
+
+        const customPathObject = {
+            "/api/generic/Configuration/About": "/web/about"
+        }
+
+        const myProfileBaseUrl = "/api/data/person?userid=";
 
         function buildTitleFromSchema() {
             return i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(), crudContextHolderService.rootDataMap());
         }
 
         function createBreadCrumbEntry(url, addCurrentLabel) {
-            var entry = {};
+            const entry = {};
             if (addCurrentLabel) {
                 entry.title = buildTitleFromSchema();
             }
@@ -22,7 +38,7 @@
 
         // add some info from schema to the first entry to be able to recreate application node on breadcrumb
         function addSchemaInfo(breadcrumbEntry) {
-            var schema = crudContextHolderService.currentSchema();
+            const schema = crudContextHolderService.currentSchema();
             if (!schema) {
                 return;
             }
@@ -37,7 +53,7 @@
 
             // adds the title for the last entry (possibly schema info for the first entry)
             if (breadcrumbHistory.length === 0 && currentUrl) {
-                var firstEntry = createBreadCrumbEntry(currentUrl, true);
+                const firstEntry = createBreadCrumbEntry(currentUrl, true);
                 addSchemaInfo(firstEntry);
                 breadcrumbHistory.push(firstEntry);
             } else if (currentUrl) {
@@ -48,8 +64,8 @@
                 });
             }
 
-            var state = getLocationState();
-            var indexFromLocation = state && state.BcHistoryIndex != null ? state.BcHistoryIndex : -1;
+            const state = getLocationState();
+            const indexFromLocation = state && state.BcHistoryIndex != null ? state.BcHistoryIndex : -1;
             if (indexFromLocation >= 0 && indexFromLocation < breadcrumbHistory.length - 1) {
                 breadcrumbHistory = breadcrumbHistory.slice(0, indexFromLocation + 1);
             }
@@ -63,22 +79,8 @@
         // or by browser back and forward
         var locationUpdatedByService = false;
 
-        // firefox workaround - there  is some cases that firefox turns the hash into a path
-        function isOnFirefoxPath() {
-            if (BrowserDetect.browser.toLocaleLowerCase() !== "firefox") {
-                return false;
-            }
-            var path = $location.path();
-            return path && path.startsWith("/state=");
-        }
-
         function getHashBase64() {
-            // firefox workaround - there  is some cases that firefox turns the hash into a path
-            if (isOnFirefoxPath()) {
-                return $location.path().substring(7);
-            }
-
-            var hash = $location.hash();
+            const hash = $location.hash();
             if (hash && hash.startsWith("state=")) {
                 return hash.substring(6);
             }
@@ -86,19 +88,139 @@
             return null;
         }
 
-        function updateState(state) {
-            var hash = "state=" + Base64.encode(JSON.stringify(state));
-            if (isOnFirefoxPath()) {
-                $location.path("/" + hash);
+        function getRouteInfo() {
+            var routeInfo = localStorageService.get(routeInfoKey);
+            if (routeInfo) {
+                return $q.when(routeInfo);
+            }
+
+            return restService.getPromise("Metadata", "GetRouteInfo").then(response => {
+                routeInfo = response.data;
+                localStorageService.put(routeInfoKey, routeInfo);
+                return routeInfo;
+            });
+        }
+
+        function customPath(stateUrl, contextPath) {
+            const user = contextService.getUserData();
+            const username = user.login;
+            const myprofilePath = contextPath + myProfileBaseUrl + username;
+            if (stateUrl.toLowerCase().startsWith(myprofilePath)) {
+                return `${contextPath}/web/myprofile`;
+            }
+
+            var foundPath = null;
+            angular.forEach(customPathObject, (path, prefix) => {
+                if (stateUrl.startsWith(contextPath + prefix)) {
+                    foundPath = path;
+                }
+            });
+
+            // ReSharper disable once ConditionIsAlwaysConst
+            // ReSharper disable once HeuristicallyUnreachableCode
+            if (foundPath) {
+                return contextPath + foundPath;
+            }
+            return null;
+        }
+
+        function changePath(path, siteId) {
+            $location.path(path);
+            if (siteId) {
+                $location.search("siteid", siteId);
             } else {
-                $location.hash(hash);
+                $location.search({});
             }
         }
 
-        function getLocationState() {
-            var log = $log.getInstance("historyService#getLocationState");
+        function doUpdatePath(stateUrl, routeInfo) {
+            if (!routeInfo || !routeInfo.contextPath) {
+                return null;
+            }
 
-            var base64 = getHashBase64();
+            const contextPath = routeInfo.contextPath;
+
+            const foundCustomPath = customPath(stateUrl, contextPath);
+            if (foundCustomPath) {
+                return changePath(foundCustomPath);
+            }
+
+            const dataPrefix = contextPath + "/api/data/";
+            if (!stateUrl.startsWith(dataPrefix)) {
+                return changePath(contextPath);
+            }
+
+            const decoded = decodeURI(stateUrl);
+            const tokens = decoded.split("?");
+            const path = tokens[0];
+            const paramsStr = tokens[1];
+            if (!paramsStr) {
+                return changePath(contextPath);
+            }
+
+            const application = path.substring(dataPrefix.length).split("/")[0];
+            if (!application) {
+                return changePath(contextPath);
+            }
+
+            const params = JSON.parse(`{"${paramsStr.replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"')}"}`);
+
+            const schemaId = params["key[schemaId]"];
+            if (!schemaId) {
+                return changePath(contextPath);
+            }
+
+            if (!routeInfo.schemaInfo || !routeInfo.schemaInfo[application]) {
+                return changePath(contextPath);
+            }
+
+            const schemaInfo = routeInfo.schemaInfo[application];
+
+            const decoratedApplication = applicationDecorationObject[application] || application;
+
+            const listSchema = schemaInfo["listSchema"];
+            if ((listSchema && listSchema === schemaId) || "list".equalsIc(schemaId)) {
+                return changePath(`${contextPath}/web/${decoratedApplication}`);
+            }
+
+            const id = params["id"];
+
+            const newDetailSchema = schemaInfo["newDetailSchema"];
+            if (((newDetailSchema && newDetailSchema === schemaId) || "detailnew".equalsIc(schemaId)) && !id) {
+                return changePath(`${contextPath}/web/${decoratedApplication}/new`);
+            }
+
+            const detailSchema = schemaInfo["detailSchema"];
+            if ((!detailSchema || detailSchema !== schemaId) && !"detail".equalsIc(schemaId)) {
+                return changePath(contextPath);
+            }
+
+            if (id) {
+                return changePath(`${contextPath}/web/${decoratedApplication}/uid/${id}`);
+            }
+
+            const userId = params["userId"];
+            const siteId = params["siteId"];
+            if (userId) {
+                return changePath(`${contextPath}/web/${decoratedApplication}/${userId}`, siteId);
+            }
+
+            return changePath(contextPath);
+        }
+
+        function updatePath(stateUrl) {
+            getRouteInfo().then(routeInfo => doUpdatePath(stateUrl, routeInfo));
+        }
+
+        function updateState(state) {
+            const hash = `state=${Base64.encode(JSON.stringify(state))}`;
+            $location.hash(hash);
+        }
+
+        function getLocationState() {
+            const log = $log.getInstance("historyService#getLocationState");
+
+            const base64 = getHashBase64();
             if (!base64) {
                 log.debug("No history state on current location.");
                 return null;
@@ -117,20 +239,21 @@
 
         function innerRedirect(url, historyIndex, currentIndex) {
             // sets history index in case of the same url appears more than once on history
-            var state = {
+            const state = {
                 url: url,
                 BcHistoryIndex: historyIndex
             }
             updateState(state);
+            updatePath(state.url);
 
             // fires an event if the src and target have the same title
             // to force the breadcrumb update the current page
             if (currentIndex < 0 || historyIndex < 0) {
                 return;
             }
-            var history = getBreadcrumbHistory();
-            var current = history[currentIndex];
-            var target = history[historyIndex];
+            const history = getBreadcrumbHistory();
+            const current = history[currentIndex];
+            const target = history[historyIndex];
             if (!current || !target) {
                 return;
             }
@@ -145,7 +268,7 @@
                 return;
             }
 
-            var confirmMsg = msg || "Are you sure you want to leave the page?";
+            const confirmMsg = msg || "Are you sure you want to leave the page?";
 
             alertService.confirmCancel(confirmMsg).then(function () {
                 // alternative $scope.digest
@@ -158,7 +281,7 @@
         }
 
         function doSaveCancelReturn() {
-            var state = getLocationState();
+            const state = getLocationState();
             contextService.set(cancelReturnKey, state);
         }
         //#endregion
@@ -166,7 +289,7 @@
         //#region Public methods for history
 
         function addToHistory(url, saveHistoryReturn, saveCancelReturn) {
-            var state = { url: url };
+            const state = { url: url };
             if (saveHistoryReturn) {
                 state.BcHistoryIndex = addToBreadcrumbHistory(url);
             } else {
@@ -179,7 +302,7 @@
                 doSaveCancelReturn();
             }
 
-            var log = $log.getInstance("historyService#addToHistory");
+            const log = $log.getInstance("historyService#addToHistory");
             log.debug("The url ({0}) is added to history.".format(url));
 
             locationUpdatedByService = true;
@@ -188,17 +311,18 @@
                 $location.replace();
             }
             updateState(state);
+            updatePath(state.url);
         }
 
         function getLocationUrl() {
-            var log = $log.getInstance("historyService#getLocationUrl");
+            const log = $log.getInstance("historyService#getLocationUrl");
 
-            var state = getLocationState();
+            const state = getLocationState();
             if (state == null) {
                 return null;
             }
 
-            var locationUrl = state.url;
+            const locationUrl = state.url;
             log.debug("The history url ({0}) was recovered from current location.".format(locationUrl));
             return locationUrl;
         }
@@ -212,12 +336,12 @@
         }
 
         function redirectOneBack(msg) {
-            var currentIndex = indexOnBreadcrumbHistory();
+            const currentIndex = indexOnBreadcrumbHistory();
 
             // not on breadcrumb navigation or the first one in history
             // tries to redirect from cancel button return on session
             if (currentIndex <= 0) {
-                var returnState = contextService.get(cancelReturnKey, true);
+                const returnState = contextService.get(cancelReturnKey, true);
                 if (!returnState) {
                     return false;
                 }
@@ -225,14 +349,14 @@
                 return true;
             }
 
-            var redirectIndex = currentIndex - 1;
-            var breadcrumbHistory = getBreadcrumbHistory();
-            var historyLength = breadcrumbHistory.length;
+            const redirectIndex = currentIndex - 1;
+            const breadcrumbHistory = getBreadcrumbHistory();
+            const historyLength = breadcrumbHistory.length;
             if (redirectIndex >= historyLength) {
                 return false;
             }
 
-            var redirectEntry = breadcrumbHistory[redirectIndex];
+            const redirectEntry = breadcrumbHistory[redirectIndex];
             breadcrumbRedirect(redirectEntry.url, redirectIndex, msg);
             return true;
         }
@@ -250,7 +374,7 @@
 
             // tries to find the current url on breadcrumb history
             // considers index from location state for the case that the same url appears more than once
-            var state = getLocationState();
+            const state = getLocationState();
             var indexFromLocation = state && state.BcHistoryIndex != null ? state.BcHistoryIndex : -1;
             var breadcrumbHistory = getBreadcrumbHistory();
             breadcrumbHistory.reverse().every(function (entry, index) {
@@ -259,7 +383,7 @@
                 }
 
                 // a reverse was done
-                var possibleIndex = breadcrumbHistory.length - 1 - index;
+                const possibleIndex = breadcrumbHistory.length - 1 - index;
 
                 //indexOnHistory = possibleIndex;
                 // no index on current location, picks the first found (last on array due to reverse)
@@ -291,13 +415,13 @@
         // updates the title of the last item of the breadcrumb history
         // also updates the current history index
         function updateBreadcrumbHistoryTitle(title) {
-            var history = getBreadcrumbHistory();
+            const history = getBreadcrumbHistory();
             history[history.length - 1].title = title;
             contextService.set(breadcrumbHistoryKey, history);
         }
 
         function breadcrumbRedirect(url, historyIndex, msg) {
-            var currentIndex = indexOnBreadcrumbHistory();
+            const currentIndex = indexOnBreadcrumbHistory();
             if (historyIndex === currentIndex) {
                 return;
             }
@@ -306,19 +430,20 @@
         //#endregion
 
         //#region Service Instance
-        var service = {
+        const service = {
             // history methods
-            addToHistory: addToHistory,
-            getLocationUrl: getLocationUrl,
-            wasLocationUpdatedByService: wasLocationUpdatedByService,
-            resetLocationUpdatedByService: resetLocationUpdatedByService,
-            redirectOneBack: redirectOneBack,
+            addToHistory,
+            getLocationUrl,
+            wasLocationUpdatedByService,
+            resetLocationUpdatedByService,
+            redirectOneBack,
             // breadcrumb history methods
-            indexOnBreadcrumbHistory: indexOnBreadcrumbHistory,
-            eraseBreadcrumbHistory: eraseBreadcrumbHistory,
-            getBreadcrumbHistory: getBreadcrumbHistory,
-            updateBreadcrumbHistoryTitle: updateBreadcrumbHistoryTitle,
-            breadcrumbRedirect: breadcrumbRedirect
+            indexOnBreadcrumbHistory,
+            eraseBreadcrumbHistory,
+            getBreadcrumbHistory,
+            updateBreadcrumbHistoryTitle,
+            breadcrumbRedirect,
+            routeInfoKey
         };
         return service;
         //#endregion
@@ -326,7 +451,7 @@
 
     //#region Service registration
 
-    modules.webcommons.factory("historyService", ["$rootScope", "$location", "$log", "$timeout", "crudContextHolderService", "i18NService", "contextService", "alertService", historyService]);
+    modules.webcommons.factory("historyService", ["$rootScope", "$location", "$log", "$timeout", "$q", "crudContextHolderService", "i18NService", "contextService", "alertService", "localStorageService", "restService", historyService]);
 
     //#endregion
 

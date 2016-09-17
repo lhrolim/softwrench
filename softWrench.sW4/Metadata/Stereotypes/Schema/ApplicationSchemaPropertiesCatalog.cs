@@ -7,6 +7,30 @@
         /// </summary>
         public const string NonInternalSchema = "schema.noninternal";
 
+        /// <summary>
+        /// Name of the schema to be used on the url /{applicationname}/
+        /// </summary>
+        public const string MainListSchema = "application.mainlistschema";
+
+        /// <summary>
+        /// Name of the schema to be used on the url /{applicationname}/new
+        /// </summary>
+        public const string MainNewDetailSchema = "application.mainnewdetailschema";
+
+        /// <summary>
+        /// Name of the schema to be used on the url /{applicationname}/{userid} and /{applicationname}/uid/{id}
+        /// </summary>
+        public const string MainDetailSchema = "application.maindetailschema";
+
+        /// <summary>
+        /// Mark an sw aplication as viewable by users with system admin role
+        /// </summary>
+        public const string SystemAdminApplication = "application.security.systemadmin";
+
+        /// <summary>
+        /// Mark an sw aplication as viewable by users with client admin role
+        /// </summary>
+        public const string ClientAdminApplication = "application.security.clientadmin";
 
         /// <summary>
         /// Use this property to invoke a custom service upon click on the list page. Value should be on the format serviceName.methodName (ex: changeService.open), 

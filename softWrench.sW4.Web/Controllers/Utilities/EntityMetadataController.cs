@@ -56,6 +56,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             if (ApplicationConfiguration.IsDev() || user.IsSwAdmin()) {
                 MetadataProvider.StubReset();
                 _eventDispatcher.Dispatch(new ClearCacheEvent());
+                _eventDispatcher.Dispatch(new RefreshMetadataEvent());
             }
             return new BlankApplicationResponse();
         }

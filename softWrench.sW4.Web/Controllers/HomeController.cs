@@ -1,57 +1,30 @@
 ﻿using System.Web.Security;
 using cts.commons.portable.Util;
-using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Menu;
-using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.API;
-using softWrench.sW4.Data.Configuration;
-using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Models.Home;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
-using softWrench.sW4.AUTH;
-using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
     [System.Web.Mvc.Authorize]
     public class HomeController : Controller {
 
-        //        private readonly IAPIControllerFactory _controllerFactory;
-
-        private readonly IConfigurationFacade _facade;
-        private readonly I18NResolver _i18NResolver;
-        private readonly StatusColorResolver _statusColorResolver;
-        private readonly ClassificationColorResolver _classificationColorResolver;
-        private readonly ContextLookuper _lookuper;
         private MenuHelper.MenuHelper _menuHelper;
-        private readonly UserManager _userManager;
+        private readonly HomeService _homeService;
 
-
-
-
-
-
-        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver, StatusColorResolver statusColorResolver, ContextLookuper lookuper, MenuHelper.MenuHelper menuHelper, ClassificationColorResolver classificationColorResolver, UserManager userManager) {
-            //            _controllerFactory = (IAPIControllerFactory)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IAPIControllerFactory));
-            _facade = facade;
-            _i18NResolver = i18NResolver;
-            _statusColorResolver = statusColorResolver;
-            _lookuper = lookuper;
+        public HomeController(MenuHelper.MenuHelper menuHelper, HomeService homeService) {
             _menuHelper = menuHelper;
-            _classificationColorResolver = classificationColorResolver;
-            _userManager = userManager;
+            _homeService = homeService;
         }
 
-        public ActionResult Index() {
+        public ActionResult Index(string application, string schemaid, string id) {
             var user = SecurityFacade.CurrentUser();
             //TODO: allow mobile
             var menuModel = _menuHelper.BuildMenu(ClientPlatform.Web);
@@ -67,14 +40,13 @@ namespace softWrench.sW4.Web.Controllers {
                 return Redirect("~/SignIn?forbidden=true&ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
 
-            HomeModel model = null;
             string url;
             string title = "softWrench";
             if (indexItem is ApplicationMenuItemDefinition) {
                 var app = (ApplicationMenuItemDefinition)indexItem;
                 var key = new ApplicationMetadataSchemaKey(app.Schema, app.Mode, ClientPlatform.Web);
                 var adapter = new DataRequestAdapter(null, key);
-                url = GetUrlFromApplication(app.Application, adapter);
+                url = _homeService.GetUrlFromApplication(app.Application, adapter);
                 //title = app.Title;
             } else if (indexItem is ActionMenuItemDefinition) {
                 var actItem = (ActionMenuItemDefinition)indexItem;
@@ -85,79 +57,14 @@ namespace softWrench.sW4.Web.Controllers {
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f&forbidden=true".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
 
-            if (_userManager.VerifyChangePassword(user)) {
-                Response.Redirect("~/UserSetup/ChangePassword");
+            if (_homeService.VerifyChangePassword(user, Response)) {
                 return null;
             }
 
-            model = new HomeModel(
-                url, 
-                title, 
-                FetchConfigs(), 
-                menuModel,
-                user, 
-                HasPopupLogo(),
-                _i18NResolver.FetchCatalogs(),
-                _statusColorResolver.FetchCatalogs(), 
-                _statusColorResolver.FetchFallbackCatalogs(), 
-                _classificationColorResolver.FetchCatalogs(),
-                ApplicationConfiguration.ClientName);
-
+            var model = _homeService.BaseHomeModel(Request, user, menuModel);
+            model.Url = url;
+            model.Title = title;
             return View(model);
-        }
-        
-        private HomeConfigs FetchConfigs() {
-            var logoIcon = _facade.Lookup<string>(ConfigurationConstants.MainIconKey);
-            var myProfileEnabled = _facade.Lookup<Boolean>(ConfigurationConstants.MyProfileEnabled);
-            var clientSideLogLevel = _facade.Lookup<string>(ConfigurationConstants.ClientSideLogLevel);
-            var invbalancesListScanOrder = _facade.Lookup<string>(ConfigurationConstants.InvbalancesListScanOrder);
-            var newInvIssueDetailScanOrder = _facade.Lookup<string>(ConfigurationConstants.NewInvIssueDetailScanOrder);
-            var invIssueListScanOrder = _facade.Lookup<string>(ConfigurationConstants.InvIssueListScanOrder);
-            var physicalcountListScanOrder = _facade.Lookup<string>(ConfigurationConstants.PhysicalcountListScanOrder);
-
-            var physicaldeviationListScanOrder = _facade.Lookup<string>(ConfigurationConstants.PhysicaldeviationListScanOrder);
-            var reservedMaterialsListScanOrder = _facade.Lookup<string>(ConfigurationConstants.ReservedMaterialsListScanOrder);
-            var matrectransTransfersListScanOrder = _facade.Lookup<string>(ConfigurationConstants.MatrectransTransfersListScanOrder);
-            var invIssueListBeringScanOrder = _facade.Lookup<string>(ConfigurationConstants.InvIssueListBeringScanOrder);
-            var newKeyIssueDetailScanOrder = _facade.Lookup<string>(ConfigurationConstants.NewKeyIssueDetailScanOrder);
-
-            var SWdisplayableFormats = new SWdisplayableFormats() {
-                DateTimeFormat = _facade.Lookup<string>(ConfigurationConstants.DateTimeFormat)
-            };
-
-            return new HomeConfigs() {
-                Logo = logoIcon,
-                MyProfileEnabled = myProfileEnabled,
-                I18NRequired = MetadataProvider.GlobalProperties.I18NRequired(),
-                ClientName = ApplicationConfiguration.ClientName,
-                Environment = ApplicationConfiguration.Profile,
-                IsLocal = ApplicationConfiguration.IsLocal(),
-                ActivityStreamFlag = ApplicationConfiguration.ActivityStreamFlag,
-                ClientSideLogLevel = clientSideLogLevel,
-                SuccessMessageTimeOut = GetSuccessMessageTimeOut(),
-                InitTimeMillis = ApplicationConfiguration.GetStartTimeInMillis(),
-                InvbalancesListScanOrder = invbalancesListScanOrder,
-                NewInvIssueDetailScanOrder = newInvIssueDetailScanOrder,
-                InvIssueListScanOrder = invIssueListScanOrder,
-                PhysicalcountListScanOrder = physicalcountListScanOrder,
-                PhysicaldeviationListScanOrder = physicaldeviationListScanOrder,
-                ReservedMaterialsListScanOrder = reservedMaterialsListScanOrder,
-                MatrectransTransfersListScanOrder = matrectransTransfersListScanOrder,
-                InvIssueListBeringScanOrder = invIssueListBeringScanOrder,
-                DefaultEmail = MetadataProvider.GlobalProperty("defaultEmail"),
-                UIShowClassicAdminMenu = ApplicationConfiguration.UIShowClassicAdminMenu,
-                UIShowToolbarLabels = ApplicationConfiguration.UIShowToolbarLabels,
-                DisplayableFormats = SWdisplayableFormats
-            };
-        }
-
-        private static int GetSuccessMessageTimeOut() {
-            int timeout;
-            int.TryParse(MetadataProvider.GlobalProperties.GlobalProperty(ApplicationSchemaPropertiesCatalog.SuccessMessageTimeOut), out timeout);
-            if (timeout == 0) {
-                timeout = 5000;
-            }
-            return timeout;
         }
 
         public ActionResult RedirectToAction(string application, string controllerToRedirect, string popupmode, string actionToRedirect, string queryString, string message) {
@@ -172,19 +79,14 @@ namespace softWrench.sW4.Web.Controllers {
             var redirectURL = WebAPIUtil.GetRelativeRedirectURL(actionURL, queryString);
 
             var windowTitle = GetWindowTitle(redirectURL);
-            var hasPopupLogo = HasPopupLogo(application, popupmode);
-            var menuModel = _menuHelper.BuildMenu(ClientPlatform.Web);
-            return View("Index", new HomeModel(redirectURL, 
-                null, 
-                FetchConfigs(), 
-                menuModel, 
-                user, 
-                hasPopupLogo, 
-                _i18NResolver.FetchCatalogs(), 
-                _statusColorResolver.FetchCatalogs(), 
-                _statusColorResolver.FetchFallbackCatalogs(), 
-                _classificationColorResolver.FetchCatalogs(),
-                ApplicationConfiguration.ClientName, windowTitle, message));
+            var hasPopupLogo = _homeService.HasPopupLogo(application, popupmode);
+
+            var model = _homeService.BaseHomeModel(Request, user);
+            model.Url = redirectURL;
+            model.HasPopupLogo = hasPopupLogo;
+            model.WindowTitle = windowTitle;
+            model.Message = message;
+            return View("Index", model);
         }
 
         public ActionResult MakeSWAdmin() {
@@ -210,26 +112,5 @@ namespace softWrench.sW4.Web.Controllers {
                 return title;
             }
         }
-
-
-        private static bool HasPopupLogo(string application = null, string popupmode = null) {
-            return ApplicationConfiguration.ClientName == "hapag" && popupmode == "browser";
-        }
-
-        private string GetUrlFromApplication(string application, DataRequestAdapter adapter) {
-            var actionURL = String.Format("api/data/{0}", application);
-            //TODO: fix WEBAPIUTIL method
-            var queryString = "key[schemaId]=" + adapter.Key.SchemaId + "&key[mode]=" +
-                                 adapter.Key.Mode.ToString().ToLower() + "&key[platform]=" +
-                                 adapter.Key.Platform.ToString().ToLower();
-            return WebAPIUtil.GetRelativeRedirectURL(actionURL, queryString);
-        }
-
-
-
-
-
-
-
     }
 }

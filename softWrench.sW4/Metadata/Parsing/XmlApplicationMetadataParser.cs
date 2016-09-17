@@ -699,11 +699,22 @@ namespace softWrench.sW4.Metadata.Parsing {
 
             var schemas = ParseSchemas(name, title, entity, application, idFieldName, userIdFieldName);
             completeApplicationMetadataDefinition.SetSchemas(schemas);
-            
+
+            completeApplicationMetadataDefinition.MainListSchema = GetMainSchema(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainListSchema);
+            completeApplicationMetadataDefinition.MainNewDetailSchema = GetMainSchema(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainNewDetailSchema);
+            completeApplicationMetadataDefinition.MainDetailSchema = GetMainSchema(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainDetailSchema);
+
             return completeApplicationMetadataDefinition;
         }
 
-
+        private static ApplicationSchemaDefinition GetMainSchema(CompleteApplicationMetadataDefinition application, string proppertyKey) {
+            var propertyValue = application.GetProperty(proppertyKey);
+            if (string.IsNullOrEmpty(propertyValue)) {
+                return null;
+            }
+            var key = new ApplicationMetadataSchemaKey(propertyValue, null, ClientPlatform.Web);
+            return application.Schema(key);
+        }
 
         private static List<DisplayableComponent> ParseComponents(string name, string entity, XElement application, string idFieldName) {
             var resultList = new List<DisplayableComponent>();
