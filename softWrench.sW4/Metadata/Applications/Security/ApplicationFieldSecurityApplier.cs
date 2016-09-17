@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using log4net;
@@ -14,7 +11,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
-using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using Role = softwrench.sw4.user.classes.entities.Role;
 
@@ -25,6 +22,11 @@ namespace softWrench.sW4.Metadata.Applications.Security {
 
 
         public static List<IApplicationDisplayable> OnApplySecurityPolicy(ApplicationSchemaDefinition schema, IEnumerable<Role> userRoles, string schemaFieldsToDisplay, MergedUserProfile profile) {
+            var user = SecurityFacade.CurrentUser();
+            if (user.IsSwAdmin()) {
+                return schema.Displayables;
+            }
+
             var applicationPermission = profile.GetPermissionByApplication(schema.ApplicationName);
 
             if (schemaFieldsToDisplay == null) {
