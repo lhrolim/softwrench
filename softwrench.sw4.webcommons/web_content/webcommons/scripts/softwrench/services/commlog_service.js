@@ -214,7 +214,7 @@
             }
 
             //not on client side user
-            $q.when(restService.getPromise("User", "GetPrimaryEmail")).then(function (result) {
+            $q.when(restService.getPromise("UserProfile", "GetPrimaryEmail")).then(function (result) {
                 const email = isString(result) ? result : result.data;
                 if (!email || "null".equalIc(email)) {
                     alertService.confirm('The current user does not have an email registered. Do you want define it now?')

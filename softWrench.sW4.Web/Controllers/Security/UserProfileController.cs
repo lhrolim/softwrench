@@ -25,6 +25,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
     [SWControllerConfiguration]
     public class UserProfileController : ApiController {
 
+        private const string PrimaryEmailQuery = @"SELECT emailaddress FROM email WHERE emailaddress IS NOT NULL AND isprimary = 1 AND personid = ?";
+
         private static readonly SecurityFacade SecurityFacade = SecurityFacade.GetInstance();
 
         private readonly SWDBHibernateDAO _dao;
@@ -247,6 +249,18 @@ namespace softWrench.sW4.Web.Controllers.Security {
             };
         }
 
+        /// <summary>
+        /// Gets the current users primary email address.
+        /// </summary>
+        /// <returns>The email address</returns>
+        [HttpGet]
+        public string GetPrimaryEmail() {
+            var currentUser = SecurityFacade.CurrentUser();
+            if (currentUser == null || string.IsNullOrWhiteSpace(currentUser.MaximoPersonId)) {
+                return null;
+            }
+            return maximoHibernateDAO.FindSingleByNativeQuery<string>(PrimaryEmailQuery, currentUser.MaximoPersonId);
+        }
 
         private static void SetBasicPermissions(bool allowCreation, bool allowUpdate, bool allowView,
             ApplicationPermission appPermission) {
