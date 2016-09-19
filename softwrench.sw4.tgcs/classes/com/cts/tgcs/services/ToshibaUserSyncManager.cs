@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using softwrench.sw4.problem.classes;
 using softwrench.sw4.user.classes.entities;
@@ -40,17 +41,17 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.services {
             _applicationMetadata = application.StaticFromSchema("newPersonDetail");
         }
 
-        public override User GetUserFromMaximoBySwUser(User swUser, bool forceUserShouldExist = false) {
+        public override async Task<User> GetUserFromMaximoBySwUser(User swUser, bool forceUserShouldExist = false) {
             var personId = TranslatePersonId(swUser);
 
 
             //first checking at softlayer side
-            var user = base.GetUserFromMaximoBySwUser(swUser, forceUserShouldExist);
+            var user = await base.GetUserFromMaximoBySwUser(swUser, forceUserShouldExist);
 
             if (user == null) {
                 Log.DebugFormat("Fetching user {0} from ISM", personId);
                 //if not found, let´s force a ISM sync/creation
-                var ismPerson = _restEntityRepository.Get(_entityMetadata, personId);
+                var ismPerson = await _restEntityRepository.Get(_entityMetadata, personId);
                 if (ismPerson == null) {
                     return null;
                 }

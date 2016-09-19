@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using cts.commons.persistence;
+﻿using cts.commons.persistence;
 using cts.commons.simpleinjector.Events;
 using log4net;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
-using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Data.Entities.Labor {
@@ -19,7 +17,7 @@ namespace softWrench.sW4.Data.Entities.Labor {
 
         private readonly EntityMetadata _entity;
         private readonly EntityMetadata _laborEntity;
-        private IMaximoHibernateDAO _maximoHibernateDAO;
+        private readonly IMaximoHibernateDAO _maximoHibernateDAO;
 
         public UserLaborCraftFetcher(EntityRepository repository, IMaximoHibernateDAO maximoHibernateDAO) {
             _repository = repository;
@@ -29,7 +27,7 @@ namespace softWrench.sW4.Data.Entities.Labor {
         }
 
 
-        public void HandleEvent(UserLoginEvent userEvent) {
+        public async void HandleEvent(UserLoginEvent userEvent) {
             if (_laborEntity != null) {
                 PopulateLabor(userEvent);
             }
@@ -41,7 +39,7 @@ namespace softWrench.sW4.Data.Entities.Labor {
             var dto = new SearchRequestDto();
             var user = userEvent.InMemoryUser;
             dto.AppendWhereClauseFormat("defaultcraft =1 and laborcode ='{0}'", user.MaximoPersonId);
-            var results = _repository.Get(_entity, dto);
+            var results = await _repository.Get(_entity, dto);
             if (results != null && results.Count == 1) {
                 var result = results[0];
                 var craft = result.GetAttribute("craft");

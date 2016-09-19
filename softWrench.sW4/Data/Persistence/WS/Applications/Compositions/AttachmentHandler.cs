@@ -39,7 +39,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         private readonly DataSetProvider _dataSetProvider;
 
         public AttachmentDao AttachmentDao {
-            get { return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentDao>(typeof (AttachmentDao)); }
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentDao>(typeof(AttachmentDao));
+            }
         }
 
         /// <summary>
@@ -104,7 +106,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     var title = attachment.GetAttribute("document").ToString();
                     var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
                     var desc = docinfo != null && !string.IsNullOrEmpty(docinfo.GetStringAttribute("description")) ? docinfo.GetStringAttribute("description") : null;
-                    
+
                     data = attachment.GetUnMappedAttribute("newattachment");
                     path = attachment.GetUnMappedAttribute("newattachment_path");
                     var offlinehash = attachment.GetUnMappedAttribute("#offlinehash");
@@ -183,7 +185,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
             w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? string.Empty);
 
-            if(attachment.DocumentInfoId != null) {
+            if (attachment.DocumentInfoId != null) {
                 w.SetValue(docLink, "URLNAME", attachment.ServerPath);
                 w.SetValue(docLink, "NEWURLNAME", attachment.ServerPath);
             } else {
@@ -257,11 +259,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         }
 
 
-        public Tuple<byte[], string> DownloadViaHttpById(string docinfoId) {
-            var file = AttachmentDao.ById(docinfoId);
+        public async Task<Tuple<byte[], string>> DownloadViaHttpById(string docinfoId) {
+            var file = await AttachmentDao.ById(docinfoId);
             var fileName = (string)file.GetAttribute("document");
             var docinfoURL = (string)file.GetAttribute("urlname");
-            var finalURL = GetFileUrl(docinfoURL);
+            var finalURL = await GetFileUrl(docinfoURL);
             if (finalURL == null) {
                 return null;
             }
@@ -296,10 +298,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         }
 
         public async Task<Tuple<byte[], string>> DownloadViaHttpByIdReturningMime(string docInfoId) {
-            var file = AttachmentDao.ById(docInfoId);
+            var file = await AttachmentDao.ById(docInfoId);
             var fileName = (string)file.GetAttribute("document");
             var docinfoURL = (string)file.GetAttribute("urlname");
-            var finalURL = GetFileUrl(docinfoURL);
+            var finalURL = await GetFileUrl(docinfoURL);
             if (finalURL == null) {
                 return null;
             }
@@ -355,9 +357,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             return null;
         }
 
-        public string GetFileUrl(string docInfoURL) {
+        public async Task<string> GetFileUrl(string docInfoURL) {
             if (_baseMaximoURL == null) {
-                BuildMaximoURL();
+                await BuildMaximoURL();
             }
 
             Log.DebugFormat("Setting _baseMaximoPath to {0}", _baseMaximoPath);
@@ -438,8 +440,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         /// 
         /// On Mif, its stored in  maxpropvalue with propname mxe.doclink.path01.
         /// </summary>
-        private void BuildMaximoURL() {
-            var rawValue = _maxPropValueDao.GetValue("mxe.doclink.path01");
+        private async
+        /// <summary>
+        /// On Mea environment there´s no maxpropvalue table, and the path is stored in a doclink.properties file, 
+        /// under C:\Maximo\applications\maximo\properties\doclink.properties. - Please provide 'maximodoclinkspath' and 'maximourldoclinkspath'
+        /// 
+        /// On Mif, its stored in  maxpropvalue with propname mxe.doclink.path01.
+        /// </summary>
+        Task
+BuildMaximoURL() {
+            var rawValue = await _maxPropValueDao.GetValue("mxe.doclink.path01");
             var valueArr = rawValue.Split('=');
             _baseMaximoPath = valueArr[0].Trim();
             _baseMaximoURL = valueArr[1].Trim();

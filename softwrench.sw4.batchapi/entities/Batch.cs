@@ -59,7 +59,7 @@ namespace softwrench.sw4.batch.api.entities {
         [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "batch_id", NotNull = true)]
         [OneToMany(2, ClassType = typeof(BatchItem))]
-        public virtual Iesi.Collections.Generic.ISet<BatchItem> Items {
+        public virtual ISet<BatchItem> Items {
             get; set;
         }
 
@@ -70,9 +70,9 @@ namespace softwrench.sw4.batch.api.entities {
         ///  For synchronous operations this will be built in-memory as the batch proceeds. Otherwise a query will be fetched to determine it
         ///    
         /// </summary>
-        public Iesi.Collections.Generic.ISet<string> SuccessItems = new HashedSet<string>();
+        public ISet<string> SuccessItems = new LinkedHashSet<string>();
 
-        public Iesi.Collections.Generic.ISet<TargetResult> TargetResults = new HashedSet<TargetResult>();
+        public ISet<TargetResult> TargetResults = new LinkedHashSet<TargetResult>();
 
         /// <summary>
         /// 

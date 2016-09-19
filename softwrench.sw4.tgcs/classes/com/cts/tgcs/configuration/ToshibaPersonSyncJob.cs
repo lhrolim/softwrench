@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using softwrench.sw4.api.classes.integration;
 using softwrench.sw4.batch.api;
 using softwrench.sw4.batch.api.entities;
@@ -59,13 +60,13 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
         ///  NOTE: This job relies on the personuid sequentially incremented, and won´t bring any updates on an existing person
         /// 
         /// </summary>
-        public override void ExecuteJob() {
+        public override async Task ExecuteJob() {
             var minPersonUid = _configurationFacade.Lookup<long?>(ToshibaConfigurationRegistry.ToshibaSyncPersonUId);
             if (minPersonUid == null) {
                 //playing safe, shouldn´t happen, cause job would be disabled
                 return;
             }
-            var ismPersonEntries = GetISMUpdates(minPersonUid);
+            var ismPersonEntries = await GetISMUpdates(minPersonUid);
             if (ApplicationConfiguration.IsLocal()) {
                 RandomizeLocalPersonIds(ismPersonEntries);
             }
@@ -75,13 +76,13 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
                 return;
             }
 
-            var missingSoftlayerEntries = FindMissingEntries(ismPersonEntries);
+            var missingSoftlayerEntries = await FindMissingEntries(ismPersonEntries);
 
             var biggestPersonUId = ismPersonEntries[0].GetStringAttribute("personuid");
 
             if (!missingSoftlayerEntries.Any()) {
                 Log.InfoFormat("All entries are already present at SoftLayer side finishing job execution");
-                _configurationFacade.SetValue(ToshibaConfigurationRegistry.ToshibaSyncPersonUId, biggestPersonUId);
+                await _configurationFacade.SetValue(ToshibaConfigurationRegistry.ToshibaSyncPersonUId, biggestPersonUId);
                 return;
             }
 
@@ -104,7 +105,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             });
 
             Log.DebugOrInfoFormat("updating personuid to {0} ", biggestPersonUId);
-            _configurationFacade.SetValue(ToshibaConfigurationRegistry.ToshibaSyncPersonUId, biggestPersonUId);
+            await _configurationFacade.SetValue(ToshibaConfigurationRegistry.ToshibaSyncPersonUId, biggestPersonUId);
 
 
         }
@@ -120,14 +121,14 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             }
         }
 
-        private IList<DataMap> FindMissingEntries(IReadOnlyList<DataMap> ismPersonEntries) {
+        private async Task<IList<DataMap>> FindMissingEntries(IReadOnlyList<DataMap> ismPersonEntries) {
             var inQuery = BaseQueryUtil.GenerateInString(ismPersonEntries, "personid");
             var dto = new PaginatedSearchRequestDto();
             dto.AppendProjectionField(ProjectionField.Default("personid"));
             dto.AppendWhereClauseFormat("personid in ({0})", inQuery);
 
-            var personEntriesWeHave =
-                _entityRepository.Get(_slicedEntityMetadata, dto).Select(r => r.GetStringAttribute("personid"));
+            var entries = await _entityRepository.Get(_slicedEntityMetadata, dto);
+            var personEntriesWeHave = entries.Select(r => r.GetStringAttribute("personid"));
 
             var personEntriesWeDoNotHave =
                 ismPersonEntries.Where(r => !personEntriesWeHave.Contains(r.GetStringAttribute("personid")));
@@ -135,7 +136,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
         }
 
 
-        private IReadOnlyList<DataMap> GetISMUpdates(long? storedPersonUid) {
+        private async Task<IReadOnlyList<DataMap>> GetISMUpdates(long? storedPersonUid) {
 
             Log.InfoFormat("fetching person updates from ism since id: {0}", storedPersonUid);
 
@@ -144,7 +145,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             dto.AppendSearchEntry("status", "ACTIVE");
             dto.SearchSort = "personuid";
 
-            return _restentityRepository.Get(_metadata, dto);
+            return await _restentityRepository.Get(_metadata, dto);
         }
 
         #region JobSetup

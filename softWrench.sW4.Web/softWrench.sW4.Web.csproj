@@ -89,8 +89,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\IBM.Data.DB2.dll</HintPath>
     </Reference>
-    <Reference Include="Iesi.Collections">
-      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=6.1.0.0, Culture=neutral, PublicKeyToken=3f033448d4bb5376, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -140,9 +141,9 @@
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHibernateX.1.3.1.4000\lib\net45\NHibernate.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NHibernate.Mapping.Attributes, Version=3.2.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -201,6 +202,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Interactive.Async, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ix-Async.1.2.5\lib\net45\System.Interactive.Async.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.IO.FileSystem, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -791,7 +796,6 @@
     <Compile Include="Controllers\SchedulerSetup\SchedulerController.cs" />
     <Compile Include="Controllers\DataController.cs" />
     <Compile Include="Controllers\DataRequestValueProviderFactory.cs" />
-    <Compile Include="Controllers\Security\UserController.cs" />
     <Compile Include="Controllers\Security\UserProfileController.cs" />
     <Compile Include="Controllers\Security\RoleController.cs" />
     <Compile Include="Controllers\SignInController.cs" />
@@ -1215,10 +1219,6 @@
     <ProjectReference Include="..\softwrench.sw4.chicago\softwrench.sw4.chicago.csproj">
       <Project>{2350e8f9-0d82-45c3-a268-57a732e85945}</Project>
       <Name>softwrench.sw4.chicago</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.classic\softwrench.sw4.classic.csproj">
-      <Project>{a8d521d4-5a04-4764-8fcb-204bdd4a29d9}</Project>
-      <Name>softwrench.sw4.classic</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.dashboard\softwrench.sw4.dashboard.csproj">
       <Project>{bb222b54-5670-4853-acf9-64bb36094021}</Project>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using cts.commons.portable.Util;
@@ -33,7 +34,7 @@ namespace softWrench.sW4.Web.Controllers {
             return NotFound(null);
         }
 
-        public ActionResult Route(string application, string extra, string uid, [FromUri] string siteid) {
+        public async Task<ActionResult> Route(string application, string extra, string uid, [FromUri] string siteid) {
             var user = SecurityFacade.CurrentUser();
 
             // redirects if change password is needed
@@ -107,7 +108,7 @@ namespace softWrench.sW4.Web.Controllers {
                 return RouteWithUserIdSiteId(user, appMetadata, userId, siteid);
             }
 
-            var datamaps = _entityRepository.GetIdAndSiteIdByUserId(entityMetadata, userId);
+            var datamaps = await _entityRepository.GetIdAndSiteIdByUserId(entityMetadata, userId);
 
             // no uids found -> page not found
             if (datamaps.Count == 0) {

@@ -36,15 +36,15 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.services {
         }
 
         //TODO: verify whether it makes sense also to clean up profiles that were associated on SWDB, or even to forbid such association
-        public override List<UserProfile> FindUserProfiles(User dbUser) {
-            var profiles = base.FindUserProfiles(dbUser);
+        public override async Task<List<UserProfile>> FindUserProfiles(User dbUser) {
+            var profiles = await base.FindUserProfiles(dbUser);
 
             SearchRequestDto dto = new PaginatedSearchRequestDto();
             var translatePersonId = _toshibaAuthUtils.TranslatePersonId(dbUser.MaximoPersonId);
             dto.AppendSearchEntry("USERID", translatePersonId);
             try {
                 Log.DebugFormat("Fetching user profiles from ISM for person {0} ", translatePersonId);
-                var groups = _restEntityRepository.Get(_entityMetadata, dto);
+                var groups = await _restEntityRepository.Get(_entityMetadata, dto);
 
                 var groupNames = groups.Select(g => g.GetStringAttribute("GROUPNAME"));
 

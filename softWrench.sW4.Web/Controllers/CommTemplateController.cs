@@ -1,23 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.portable.Util;
-using JetBrains.Annotations;
-using log4net.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence;
-using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Email;
 using softWrench.sW4.Metadata;
@@ -45,7 +36,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
-        public IGenericResponseResult MergeTemplateDefinition([FromBody]TemplateRequestDTO dto) {
+        public async Task<IGenericResponseResult> MergeTemplateDefinition([FromBody]TemplateRequestDTO dto) {
 
             var app = MetadataProvider.Application(dto.ApplicationName).ApplyPoliciesWeb(new ApplicationMetadataSchemaKey(dto.SchemaId));
 
@@ -54,7 +45,7 @@ namespace softWrench.sW4.Web.Controllers {
                 dto.ApplicationItemId);
             var searchRequestDto = new SearchRequestDto();
             searchRequestDto.AppendSearchEntry("templateid", dto.TemplateId);
-            var templates = _entityRepository.Get(_commtemplateEntity, searchRequestDto);
+            var templates = await _entityRepository.Get(_commtemplateEntity, searchRequestDto);
             if (!templates.Any()) {
                 throw new CommLogTemplateMerger.CommTemplateException("template with id {0} cannot be found".Fmt(dto.TemplateId));
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
@@ -33,7 +34,7 @@ namespace softWrench.sW4.Web.Controllers {
         ///
         [NotNull]
         [HttpPost]
-        public GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociation(string application,
+        public async Task<GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>> UpdateAssociation(string application,
             [FromUri] AssociationUpdateRequest request, JObject currentData) {
             var user = SecurityFacade.CurrentUser();
 
@@ -48,7 +49,7 @@ namespace softWrench.sW4.Web.Controllers {
             var baseDataSet = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId);
 
 
-            var response = baseDataSet.UpdateAssociations(applicationMetadata, request, currentData);
+            var response = await baseDataSet.UpdateAssociations(applicationMetadata, request, currentData);
 
             return response;
         }
@@ -62,7 +63,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <param name="options"></param>
         /// <returns></returns>
         [HttpGet]
-        public IGenericResponseResult ExpandCompositions(String application, [FromUri]DetailRequest detailRequest,
+        public async Task<IGenericResponseResult> ExpandCompositions(String application, [FromUri]DetailRequest detailRequest,
             [FromUri]CompositionExpanderHelper.CompositionExpansionOptions options) {
             var user = SecurityFacade.CurrentUser();
             var applicationMetadata = MetadataProvider
@@ -70,13 +71,13 @@ namespace softWrench.sW4.Web.Controllers {
                 .ApplyPolicies(detailRequest.Key, user, ClientPlatform.Web);
             //            var result = (ApplicationDetailResult)DataSetProvider.LookupAsBaseDataSet(application).Get(applicationMetadata, user, detailRequest);
             var compositionSchemas = CompositionBuilder.InitializeCompositionSchemas(applicationMetadata.Schema);
-            return CompositionExpander.Expand(SecurityFacade.CurrentUser(), compositionSchemas, options);
+            return await CompositionExpander.Expand(SecurityFacade.CurrentUser(), compositionSchemas, options);
         }
 
         [HttpPost]
-        public IApplicationResponse OpenDetailWithInitialData(string application, [FromUri] DataRequestAdapter request, JObject initialData) {
+        public async Task<IApplicationResponse> OpenDetailWithInitialData(string application, [FromUri] DataRequestAdapter request, JObject initialData) {
             request.InitialData = initialData;
-            var response = Get(application, request);
+            var response = await Get(application, request);
             if (!string.IsNullOrEmpty(request.Title)) {
                 var newtitle = request.Title.Fmt(response.Title);
                 response.Title = newtitle;
@@ -92,7 +93,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <returns>datamap populated with composition data</returns>
         [NotNull]
         [HttpPost]
-        public IGenericResponseResult GetCompositionData(CompositionRequestWrapperDTO dto) {
+        public async Task<CompositionFetchResult> GetCompositionData(CompositionRequestWrapperDTO dto) {
             var user = SecurityFacade.CurrentUser();
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
@@ -103,7 +104,7 @@ namespace softWrench.sW4.Web.Controllers {
             
             ContextLookuper.FillContext(request.Key);
             
-            var compositionData = DataSetProvider
+            var compositionData = await DataSetProvider
                 .LookupDataSet(application, applicationMetadata.Schema.SchemaId)
                 .GetCompositionData(applicationMetadata, request, dto.Data);
             

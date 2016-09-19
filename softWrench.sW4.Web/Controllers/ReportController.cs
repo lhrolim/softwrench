@@ -6,13 +6,13 @@ using softWrench.sW4.Util;
 using softWrench.sW4.Web.Models.Report;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
 using System;
 using softWrench.sW4.Data.Pagination;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -26,7 +26,7 @@ namespace softWrench.sW4.Web.Controllers {
 
         //
         // GET: /Report/
-        public ActionResult Index(string application, [FromUri] ReportRequest request) {
+        public async Task<ActionResult> Index(string application, [FromUri] ReportRequest request) {
             
             // this is necessary for opening the report in a new window
             if (request.ReportName == null ) {
@@ -41,7 +41,7 @@ namespace softWrench.sW4.Web.Controllers {
             request.Key.Mode = SchemaMode.input;
             request.Key.Platform = ClientPlatform.Web;
             
-            var dataResponse = _dataController.Get(application, request);
+            var dataResponse =await _dataController.Get(application, request);
             var data = new DataTable();
 
             if (dataResponse is ApplicationListResult) {

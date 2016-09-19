@@ -73,8 +73,8 @@ namespace softwrench.sw4.offlineserver.services.util {
             return result;
         }
 
-        public static Iesi.Collections.Generic.ISet<BatchItem> GetBatchItems(JObject batchContent) {
-            Iesi.Collections.Generic.ISet<BatchItem> result = new HashedSet<BatchItem>();
+        public static ISet<BatchItem> GetBatchItems(JObject batchContent) {
+            ISet<BatchItem> result = new LinkedHashSet<BatchItem>();
             dynamic obj = batchContent;
             foreach (dynamic item in obj.items) {
                 JObject dm = item.datamap;

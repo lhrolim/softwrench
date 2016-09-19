@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using cts.commons.persistence;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json;

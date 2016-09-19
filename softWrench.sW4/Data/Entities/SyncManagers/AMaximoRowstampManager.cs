@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using log4net;
 using softWrench.sW4.Configuration.Services.Api;
@@ -26,18 +27,18 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             EntityRepository = repository;
         }
 
-        protected IEnumerable<AttributeHolder> FetchNew(long rowstamp, string entityName, SearchRequestDto searchDto = null) {
+        protected async Task<IEnumerable<AttributeHolder>> FetchNew(long rowstamp, string entityName, SearchRequestDto searchDto = null) {
             var entityMetadata = MetadataProvider.Entity(entityName);
-            var result = EntityRepository.Get(entityMetadata, rowstamp, searchDto);
+            var result = await EntityRepository.Get(entityMetadata, rowstamp, searchDto);
             return result;
         }
 
 
-        protected void SetRowstampIfBigger(String key, long? rowstamp, long? oldRowstamp) {
+        protected async Task SetRowstampIfBigger(String key, long? rowstamp, long? oldRowstamp) {
             if (rowstamp == null || (oldRowstamp!=null && rowstamp < oldRowstamp)) {
                 return;
             }
-            ConfigFacade.SetValue(key, rowstamp);
+            await ConfigFacade.SetValue(key, rowstamp);
         }
 
 

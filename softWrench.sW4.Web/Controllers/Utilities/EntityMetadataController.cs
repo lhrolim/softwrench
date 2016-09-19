@@ -18,12 +18,10 @@ using System.Data;
 using softWrench.sW4.Metadata.Validator;
 using System.Collections.Generic;
 using System.IO;
-using softwrench.sw4.api.classes.email;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Web.Email;
 using cts.commons.simpleinjector.app;
-using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Web.Controllers.Utilities {

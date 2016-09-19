@@ -29,7 +29,7 @@ namespace softWrench.sW4.Web.Test.Controllers {
         /// Client metadata - Pesco
         /// </summary>
         [TestMethod]
-        public void FetchLookupOptions_LocationLookupTest() {
+        public async void FetchLookupOptions_LocationLookupTest() {
             // Mock objects
             var swdbMock = new Mock<ISWDBHibernateDAO>();
             var maximodbMock = new Mock<IMaximoHibernateDAO>();
@@ -93,10 +93,9 @@ namespace softWrench.sW4.Web.Test.Controllers {
             };
 
             // Test
-            var response = target.GetLookupOptions(dto, Newtonsoft.Json.Linq.JObject.Parse(new StreamReader("jsons\\workorder\\test5.json").ReadToEnd()));
+            var response = await target.GetLookupOptions(dto, Newtonsoft.Json.Linq.JObject.Parse(new StreamReader("jsons\\workorder\\test5.json").ReadToEnd()));
 
             Assert.IsNotNull(response);
-            Assert.IsTrue(response.ResultObject is LookupOptionsFetchResultDTO);
 
             var count = 0;
             using (IEnumerator<IAssociationOption> enumerator = response.ResultObject.AssociationData.GetEnumerator()) {

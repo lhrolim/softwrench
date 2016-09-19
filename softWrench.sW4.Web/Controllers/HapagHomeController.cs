@@ -17,6 +17,7 @@ using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Models.Hapag;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using c = softwrench.sw4.Hapag.Data.HapagDashBoardsConstants;
 
@@ -87,51 +88,51 @@ namespace softWrench.sW4.Web.Controllers {
         }
         //
         // GET: /HapagHome/
-        public GenericResponseResult<IList<DashboardDefinition>> Get() {
+        public async Task<GenericResponseResult<IList<DashboardDefinition>>> Get() {
             var user = SecurityFacade.CurrentUser();
             if (user.HasProfile(ProfileType.Itc)) {
-                return GetFromDict(c.ActionRequiredForOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenImacs);
+                return await GetFromDict(c.ActionRequiredForOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenImacs);
             }
-            return GetFromDict(c.ActionRequiredForOpenRequests, c.EUOpenRequests);
+            return await GetFromDict(c.ActionRequiredForOpenRequests, c.EUOpenRequests);
         }
 
         [HttpGet]
-        public GenericResponseResult<IList<DashboardDefinition>> XITCHome() {
-            return GetFromDict(c.ActionRequiredForOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenImacs);
+        public async Task<GenericResponseResult<IList<DashboardDefinition>>> XITCHome() {
+            return await GetFromDict(c.ActionRequiredForOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenImacs);
         }
 
         [HttpGet]
-        public GenericResponseResult<IList<DashboardDefinition>> TomHome() {
-            return GetFromDict(c.ActionRequiredForOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenApprovals, c.OpenChangeTasks);
+        public async Task<GenericResponseResult<IList<DashboardDefinition>>> TomHome() {
+            return await GetFromDict(c.ActionRequiredForOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenApprovals, c.OpenChangeTasks);
         }
 
         [HttpGet]
-        public GenericResponseResult<IList<DashboardDefinition>> ITomHome() {
-            return GetFromDict(c.ActionRequiredForOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenApprovals, c.OpenChangeTasks);
+        public async Task<GenericResponseResult<IList<DashboardDefinition>>> ITomHome() {
+            return await GetFromDict(c.ActionRequiredForOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenApprovals, c.OpenChangeTasks);
         }
 
         [HttpGet]
-        public GenericResponseResult<IList<DashboardDefinition>> ADHome() {
-            return GetFromDict(c.ActionRequiredForOpenIncidents);
+        public async Task<GenericResponseResult<IList<DashboardDefinition>>> ADHome() {
+            return await GetFromDict(c.ActionRequiredForOpenIncidents);
         }
 
         [HttpGet]
-        public GenericResponseResult<IList<DashboardDefinition>> ChangeHome() {
-            return GetFromDict(c.OpenApprovals, c.OpenChangeTasks);
+        public async Task<GenericResponseResult<IList<DashboardDefinition>>> ChangeHome() {
+            return await GetFromDict(c.OpenApprovals, c.OpenChangeTasks);
         }
 
         [HttpGet]
-        public GenericResponseResult<IList<DashboardDefinition>> SSOHome() {
-            return GetFromDict(c.ActionRequiredForOpenRequests, c.EUOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenApprovals, c.OpenChangeTasks);
+        public async Task<GenericResponseResult<IList<DashboardDefinition>>> SSOHome() {
+            return await GetFromDict(c.ActionRequiredForOpenRequests, c.EUOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenApprovals, c.OpenChangeTasks);
         }
 
         [HttpGet]
-        public GenericResponseResult<IList<DashboardDefinition>> TUIHome() {
-            return GetFromDict(c.OpenApprovals, c.OpenChangeTasks);
+        public async Task<GenericResponseResult<IList<DashboardDefinition>>> TUIHome() {
+            return await GetFromDict(c.OpenApprovals, c.OpenChangeTasks);
         }
 
-        private GenericResponseResult<IList<DashboardDefinition>> GetFromDict(params string[] dashboards) {
-            return DoGetFromList(dashboards.Select(dashboard => _dashboards[dashboard]).ToList());
+        private async Task<GenericResponseResult<IList<DashboardDefinition>>> GetFromDict(params string[] dashboards) {
+            return await DoGetFromList(dashboards.Select(dashboard => _dashboards[dashboard]).ToList());
         }
 
         private static void DashboardModuleHandler(IEnumerable<DashboardDefinition> dashboardDefinitionList) {
@@ -144,7 +145,7 @@ namespace softWrench.sW4.Web.Controllers {
             }
         }
 
-        private static GenericResponseResult<IList<DashboardDefinition>> DoGetFromList(List<DashboardDefinition> dashboardDefinitionList) {
+        private static async Task<GenericResponseResult<IList<DashboardDefinition>>> DoGetFromList(List<DashboardDefinition> dashboardDefinitionList) {
             var user = SecurityFacade.CurrentUser();
             var dataObjectSet = new MaximoApplicationDataSet();
 
@@ -160,7 +161,7 @@ namespace softWrench.sW4.Web.Controllers {
                 var applicationMetadata = MetadataProvider.Application(definition.ApplicationName)
                     .ApplyPolicies(key, user, ClientPlatform.Web);
 
-                definition.TotalCount = dataObjectSet.GetCount(applicationMetadata, searchRequestDto);
+                definition.TotalCount = await dataObjectSet.GetCount(applicationMetadata, searchRequestDto);
             }
             return new GenericResponseResult<IList<DashboardDefinition>>(dashboardDefinitionList, null) {
                 Title = new I18NResolver().I18NValue("_headermenu.serviceit", "ServiceIT")

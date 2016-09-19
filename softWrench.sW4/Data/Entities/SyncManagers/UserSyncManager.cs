@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using Quartz.Util;
@@ -34,10 +35,10 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         [CanBeNull]
-        public void Sync() {
+        public async Task Sync() {
             var rowstamp = ConfigFacade.Lookup<long>(ConfigurationConstants.UserRowstampKey);
             var dto = BuildDTO();
-            var maximoUsers = FetchNew(rowstamp, EntityName, dto);
+            var maximoUsers = await FetchNew(rowstamp, EntityName, dto);
             var attributeHolders = maximoUsers as AttributeHolder[] ?? maximoUsers.ToArray();
             if (!attributeHolders.Any()) {
                 //nothing to update
@@ -45,20 +46,20 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             }
             var usersToSave = ConvertMaximoUsersToUserEntity(attributeHolders);
             SaveOrUpdateUsers(usersToSave);
-            SetRowstampIfBigger(ConfigurationConstants.UserRowstampKey, GetLastRowstamp(attributeHolders, new[] { "rowstamp", "maxuser_.rowstamp", "email_.rowstamp", "phone_.rowstamp" }), rowstamp);
+            await SetRowstampIfBigger(ConfigurationConstants.UserRowstampKey, GetLastRowstamp(attributeHolders, new[] { "rowstamp", "maxuser_.rowstamp", "email_.rowstamp", "phone_.rowstamp" }), rowstamp);
         }
 
         [CanBeNull]
-        public User GetUserFromMaximoByPersonId([NotNull] string personid, bool forceUser = false) {
-            return GetUserFromMaximoBySwUser(new User() {
+        public async Task<User> GetUserFromMaximoByPersonId([NotNull] string personid, bool forceUser = false) {
+            return await GetUserFromMaximoBySwUser(new User() {
                 UserName = personid,
                 MaximoPersonId = personid
             }, true);
         }
 
         [NotNull]
-        public User GetUserFromMaximoBySwUserFallingBackToDefault(User swUser, bool forceUserShouldExist = false) {
-            var user = GetUserFromMaximoBySwUser(swUser, forceUserShouldExist);
+        public async Task<User> GetUserFromMaximoBySwUserFallingBackToDefault(User swUser, bool forceUserShouldExist = false) {
+            var user = await GetUserFromMaximoBySwUser(swUser, forceUserShouldExist);
             return user ?? swUser;
         }
 
@@ -73,8 +74,9 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         /// <param name="forceUserShouldExist">if true the user itself needs to exist on maximo side with the exact username as on SWDB database</param>
         /// <returns></returns>
         [CanBeNull]
-        public virtual User GetUserFromMaximoBySwUser(User swUser, bool forceUserShouldExist = false) {
-            if (swUser == null) throw new ArgumentNullException("swUser");
+        public virtual async Task<User> GetUserFromMaximoBySwUser(User swUser, bool forceUserShouldExist = false) {
+            if (swUser == null)
+                throw new ArgumentNullException("swUser");
             User fullUser = null;
 
             var whereClause = (" (person.personid = '{0}') and (email_.isprimary is null or email_.isprimary = 1 )").Fmt(swUser.MaximoPersonId).ToUpper();
@@ -94,7 +96,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
 
             dto = BuildDTO(dto);
             var entityMetadata = MetadataProvider.Entity(EntityName);
-            var attributeHolders = EntityRepository.Get(entityMetadata, dto);
+            var attributeHolders = await EntityRepository.Get(entityMetadata, dto);
             if (!attributeHolders.Any()) {
                 return null;
             }

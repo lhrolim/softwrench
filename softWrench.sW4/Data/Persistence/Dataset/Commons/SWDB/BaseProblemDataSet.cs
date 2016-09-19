@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json;
@@ -22,8 +23,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             _dataSetProvider = dataSetProvider;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = await base.GetApplicationDetail(application, user, request);
 
             var resultObject = result.ResultObject;
             var applicationName = resultObject.GetStringAttribute("recordtype");
@@ -39,7 +40,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
                 var app = MetadataProvider.Application(applicationName).ApplyPoliciesWeb(schemaKey);
                 //To avoid caching on RedirectUrlFilter
 
-                var applicationDetailResult = ds.GetApplicationDetail(app, user, new DetailRequest(recordId, schemaKey));
+                var applicationDetailResult = await ds.GetApplicationDetail(app, user, new DetailRequest(recordId, schemaKey));
                 ModifySchemaInsertingProblemData(applicationDetailResult, app);
                 applicationDetailResult.ResultObject.SetAttribute("#problemmessage",resultObject.GetAttribute("message"));
                 return applicationDetailResult;

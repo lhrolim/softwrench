@@ -1,7 +1,4 @@
-﻿using cts.commons.persistence;
-using cts.commons.persistence.Util;
-using FluentMigrator;
-using softWrench.sW4.Util;
+﻿using FluentMigrator;
 
 namespace softWrench.sW4.Web.DB_Migration._5._11._1 {
     [Migration(201607071429)]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using Common.Logging;
 using Quartz;
@@ -121,7 +122,7 @@ namespace softWrench.sW4.Scheduler {
 
         public delegate void JobHandler(ISwJob job);
 
-        public void ManageJobByCommand(string name, JobCommandEnum jobCommand, string cronExpression = null) {
+        public async Task ManageJobByCommand(string name, JobCommandEnum jobCommand, string cronExpression = null) {
             try {
                 var jobs = GetJobs();
 
@@ -135,7 +136,7 @@ namespace softWrench.sW4.Scheduler {
                         case JobCommandEnum.Execute:
                         Debug.WriteLine("executing job");
                         if (job.IsEnabled) {
-                            job.ExecuteJob();
+                            await job.ExecuteJob();
                             break;
                         }
                         throw new Exception("Job {0} is disabled and cannot be started".Fmt(job.Name()));

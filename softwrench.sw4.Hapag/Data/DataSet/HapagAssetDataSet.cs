@@ -12,6 +12,7 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
@@ -26,8 +27,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             _imacDataSet = imacDataSet;
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, softWrench.sW4.Data.Pagination.PaginatedSearchRequestDto searchDto) {
-            var dbList = base.GetList(application, searchDto);
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, softWrench.sW4.Data.Pagination.PaginatedSearchRequestDto searchDto) {
+            var dbList = await base.GetList(application, searchDto);
             var resultObject = dbList.ResultObject;
             SchemaIdHandler(application.Schema.SchemaId, resultObject);
             return dbList;
@@ -43,8 +44,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var dbDetail = base.GetApplicationDetail(application, user, request);
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var dbDetail = await base.GetApplicationDetail(application, user, request);
             var resultObject = dbDetail.ResultObject;
             if (application.Schema.SchemaId == "detail" && application.Schema.Mode == SchemaMode.output) {
                 HandleAssetTree(resultObject);

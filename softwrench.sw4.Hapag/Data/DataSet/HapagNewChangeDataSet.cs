@@ -10,6 +10,7 @@ using softWrench.sW4.Metadata.Applications.DataSet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
@@ -21,10 +22,9 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             : base(locationManager, entityRepository, maxDao) {
         }
 
-        public IEnumerable<IAssociationOption> GetInfrastructureAssetToChange(OptionFieldProviderParameters parameters) {
+        public async Task<IEnumerable<IAssociationOption>> GetInfrastructureAssetToChange(OptionFieldProviderParameters parameters) {
             var entityMetadata = MetadataProvider.Entity("ci");
-            var result = EntityRepository.Get(entityMetadata, new SearchRequestDto());
-            var attributeHolders = result as AttributeHolder[] ?? result.ToArray();
+            var attributeHolders = await EntityRepository.Get(entityMetadata, new SearchRequestDto());
             var options = new HashSet<IAssociationOption>();
             foreach (var attributeHolder in attributeHolders) {
                 var ciname = attributeHolder.GetAttribute("ciname");

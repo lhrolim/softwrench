@@ -18,8 +18,9 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.Web.Http;
-using NHibernate.Linq;
+using NHibernate.Util;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
@@ -89,7 +90,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         /// <param name="category">The <see cref="CategoryDTO"/> object</param>
         /// <returns>the <see cref="IGenericResponseResult"/> result</returns>
         /// <exception cref="InvalidWhereClauseException">Thrown when an invalid where clause is supplied</exception>
-        public IGenericResponseResult Put(CategoryDTO category) {
+        public async Task<IGenericResponseResult> Put(CategoryDTO category) {
             foreach (var definition in category.Definitions) {
                 if (category.FullKey.StartsWith("/_whereclauses/")) {
                     //not all categories are related to whereclauses only these need to be validated
@@ -97,7 +98,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
                 }
             }
 
-            var result = _configService.UpdateDefinitions(category);
+            var result = await _configService.UpdateDefinitions(category);
             category.Definitions = result;
             var updatedCategories = _cache.Update(category);
             var response = new GenericResponseResult<SortedSet<CategoryDTO>> {
@@ -201,8 +202,8 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         }
 
         [HttpPost]
-        public void SetConfiguration(string fullKey, string value) {
-            _facade.SetValue(fullKey, value);
+        public async Task SetConfiguration(string fullKey, string value) {
+            await _facade.SetValue(fullKey, value);
         }
 
         [HttpGet]
@@ -222,8 +223,8 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         }
 
         [HttpGet]
-        public ClientSideConfigurations GetClientSideConfigurations([FromUri] long? cacheTimestamp) {
-            return _facade.GetClientSideConfigurations(cacheTimestamp);
+        public async Task<ClientSideConfigurations> GetClientSideConfigurations([FromUri] long? cacheTimestamp) {
+            return await _facade.GetClientSideConfigurations(cacheTimestamp);
         }
 
         class ConfigurationScreenResult {

@@ -68,7 +68,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         [Key(1, Column = "dashboard_id")]
         [OneToMany(2, ClassType = typeof(DashboardPanelRelationship))]
         [JsonIgnore]
-        public Iesi.Collections.Generic.ISet<DashboardPanelRelationship> PanelsSet { get; set; }
+        public ISet<DashboardPanelRelationship> PanelsSet { get; set; }
 
         //Adapter cause asp.net won´t serialize interfaces
         public List<DashboardPanelRelationship> Panels {
@@ -76,7 +76,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
                 return PanelsSet != null ? new List<DashboardPanelRelationship>(PanelsSet) : null;
             }
             set {
-                PanelsSet = new HashedSet<DashboardPanelRelationship>(value);
+                PanelsSet = new LinkedHashSet<DashboardPanelRelationship>(value);
             }
         }
 

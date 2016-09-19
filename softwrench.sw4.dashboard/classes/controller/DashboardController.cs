@@ -61,7 +61,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                         //removing link id to force creation of a new one
                         panel.Id = null;
                         if (dashboard.PanelsSet == null) {
-                            dashboard.PanelsSet = new HashedSet<DashboardPanelRelationship>();
+                            dashboard.PanelsSet = new LinkedHashSet<DashboardPanelRelationship>();
                         }
                         dashboard.PanelsSet.Add(panel);
                     }

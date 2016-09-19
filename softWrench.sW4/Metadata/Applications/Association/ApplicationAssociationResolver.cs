@@ -58,13 +58,13 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             return null;
         }
 
-        public IEnumerable<IAssociationOption> ResolveOptions(ApplicationMetadata applicationMetadata,
+        public async Task<IEnumerable<IAssociationOption>> ResolveOptions(ApplicationMetadata applicationMetadata,
             AttributeHolder originalEntity, ApplicationAssociationDefinition association) {
-            return ResolveOptions(applicationMetadata.Schema, originalEntity, association, new SearchRequestDto());
+            return await ResolveOptions(applicationMetadata.Schema, originalEntity, association, new SearchRequestDto());
         }
 
         [CanBeNull]
-        public IEnumerable<IAssociationOption> ResolveOptions([NotNull]ApplicationSchemaDefinition schema,
+        public async Task<IEnumerable<IAssociationOption>> ResolveOptions([NotNull]ApplicationSchemaDefinition schema,
             [NotNull]AttributeHolder originalEntity, [NotNull] ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             if (!FullSatisfied(association, originalEntity)) {
                 return null;
@@ -106,7 +106,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             //caching for multithread access
             associationFilter.GetParameters();
 
-            var queryResponse = EntityRepository.Get(entityMetadata, associationFilter);
+            var queryResponse =await EntityRepository.Get(entityMetadata, associationFilter);
 
             // execute query count in separate thread and update the dto with the pagination data
             if (isLookupMode) {
@@ -131,12 +131,12 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         private void ExecuteCountQuery(SearchRequestDto associationFilter, EntityMetadata entityMetadata) {
             var tasks = new List<Task>(1) {
-                Task.Factory.NewThread(c => {
+                Task.Factory.NewThread(async c => {
                     var paginatedFilter = (PaginatedSearchRequestDto) associationFilter;
                     if (paginatedFilter.NeedsCountUpdate) {
                         //cloning to avoid any concurrency issues
                         var clonedDTO = (PaginatedSearchRequestDto) associationFilter.ShallowCopy();
-                        paginatedFilter.TotalCount = EntityRepository.Count(entityMetadata, clonedDTO);
+                        paginatedFilter.TotalCount = await EntityRepository.Count(entityMetadata, clonedDTO);
                     }
                 }, null)
             };

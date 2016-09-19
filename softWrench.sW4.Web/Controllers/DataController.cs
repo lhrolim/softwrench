@@ -24,8 +24,8 @@ using softWrench.sW4.Web.Controllers.Routing;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
-using cts.commons.portable.Util;
 using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Web.Util;
@@ -60,7 +60,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <param name="request"></param>
         /// <returns></returns>
         [NotNull]
-        public IApplicationResponse Get(string application, [FromUri] DataRequestAdapter request) {
+        public async Task<IApplicationResponse> Get(string application, [FromUri] DataRequestAdapter request) {
             var user = SecurityFacade.CurrentUser();
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
@@ -79,7 +79,7 @@ namespace softWrench.sW4.Web.Controllers {
 
 
             ContextLookuper.FillContext(request.Key);
-            var response = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
+            var response = await DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
 
@@ -101,9 +101,9 @@ namespace softWrench.sW4.Web.Controllers {
         /// <summary>
         /// API Method to handle Delete operations
         /// </summary>
-        public IApplicationResponse Delete([FromUri]OperationDataRequest operationDataRequest) {
+        public async Task<IApplicationResponse> Delete([FromUri]OperationDataRequest operationDataRequest) {
             operationDataRequest.Operation = OperationConstants.CRUD_DELETE;
-            var response = DoExecute(operationDataRequest, new JObject());
+            var response =await DoExecute(operationDataRequest, new JObject());
             var application = operationDataRequest.ApplicationName;
             var id = operationDataRequest.Id;
             var defaultMsg = String.Format("{0} {1} deleted successfully", application, operationDataRequest.UserId);
@@ -116,19 +116,19 @@ namespace softWrench.sW4.Web.Controllers {
         /// API Method to handle Update operations
         /// </summary>
         [HttpPut]
-        public IApplicationResponse Put([FromBody]JsonRequestWrapper wrapper) {
+        public async Task<IApplicationResponse> Put([FromBody]JsonRequestWrapper wrapper) {
             var operationDataRequest = wrapper.RequestData;
             if (operationDataRequest.Operation == null) {
                 //TODO: when Operation api is refactored, remove this one
                 operationDataRequest.Operation = OperationConstants.CRUD_UPDATE;
             }
-            return DoExecute(operationDataRequest, wrapper.Json);
+            return await DoExecute(operationDataRequest, wrapper.Json);
         }
 
         /// <summary>
         /// API Method to handle Insert operations
         /// </summary>
-        public IApplicationResponse Post([FromBody]JsonRequestWrapper wrapper) {
+        public async Task<IApplicationResponse> Post([FromBody]JsonRequestWrapper wrapper) {
             wrapper.RequestData.Operation = OperationConstants.CRUD_CREATE;
             if (wrapper.RequestData.CurrentSchemaKey == null) {
                 var schemaRepresentation = MetadataProvider.LocateNewSchema(wrapper.RequestData.ApplicationName);
@@ -136,7 +136,7 @@ namespace softWrench.sW4.Web.Controllers {
                     wrapper.RequestData.CurrentSchemaKey = schemaRepresentation.SchemaId;
                 }
             }
-            return DoExecute(wrapper.RequestData, wrapper.Json);
+            return await DoExecute(wrapper.RequestData, wrapper.Json);
         }
         //
         //        /// <summary>
@@ -152,7 +152,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// </summary>
         [HttpPost]
         //TODO: modify here, and on mobile in order to have the same api as the other methods
-        public IApplicationResponse Operation(String application, String operation, JObject json, ClientPlatform platform, string id = "") {
+        public async Task<IApplicationResponse> Operation(String application, String operation, JObject json, ClientPlatform platform, string id = "") {
             var currentschemaKey = _nextSchemaRouter.GetSchemaKeyFromJson(application, json, true);
             var nextSchemaKey = _nextSchemaRouter.GetSchemaKeyFromJson(application, json, false);
             currentschemaKey.Platform = platform;
@@ -166,11 +166,11 @@ namespace softWrench.sW4.Web.Controllers {
                 Platform = platform
             };
 
-            return DoExecute(operationRequest, json, currentschemaKey, nextSchemaKey);
+            return await DoExecute(operationRequest, json, currentschemaKey, nextSchemaKey);
         }
 
 
-        private IApplicationResponse DoExecute(OperationDataRequest operationDataRequest, JObject json, ApplicationMetadataSchemaKey resolvedSchema = null, ApplicationMetadataSchemaKey resolvedNextSchema = null) {
+        private async Task<IApplicationResponse> DoExecute(OperationDataRequest operationDataRequest, JObject json, ApplicationMetadataSchemaKey resolvedSchema = null, ApplicationMetadataSchemaKey resolvedNextSchema = null) {
             MockingUtils.EvalMockingErrorModeActive(json, Request);
             var user = SecurityFacade.CurrentUser();
             if (null == user) {
@@ -199,7 +199,7 @@ namespace softWrench.sW4.Web.Controllers {
             var operation = operationDataRequest.Operation;
 
             if (!mockMaximo) {
-
+                //TODO: Async
                 maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
                     .Execute(applicationMetadata, json, operationDataRequest);
             }
@@ -212,7 +212,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var routerParameters = new RouterParameters(applicationMetadata, platform, operationDataRequest.RouteParametersDTOHandled, operation, mockMaximo, maximoResult, user, resolvedNextSchema);
 
-            var response = _nextSchemaRouter.RedirectToNextSchema(routerParameters);
+            var response = await _nextSchemaRouter.RedirectToNextSchema(routerParameters);
             response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult, operation);
             response.WarningDto = maximoResult.WarningDto;
 
@@ -241,7 +241,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <param name="schema"></param>
         /// <returns></returns>
         [HttpGet]
-        public IApplicationResponse Search(string application, string searchFields, string searchText, string schema = "list") {
+        public async Task<IApplicationResponse> Search(string application, string searchFields, string searchText, string schema = "list") {
             var app = MetadataProvider.Application(application);
             var schemas = app.Schemas();
             var key = new ApplicationMetadataSchemaKey(schema, SchemaMode.input, ClientPlatform.Web);
@@ -254,7 +254,7 @@ namespace softWrench.sW4.Web.Controllers {
             var searchRequestDto = PaginatedSearchRequestDto.DefaultInstance(appSchema);
             searchRequestDto.SetFromSearchString(appSchema, searchFields.Split(','), searchText);
 
-            var dataResponse = Get(application, new DataRequestAdapter() { Key = key, SearchDTO = searchRequestDto });
+            var dataResponse = await Get(application, new DataRequestAdapter() { Key = key, SearchDTO = searchRequestDto });
             //fixing the filter parameters used so that it is applied on next queries
             ((ApplicationListResult)dataResponse).PageResultDto.BuildFixedWhereClause(app.Entity);
             dataResponse.Title = appSchema.Title;

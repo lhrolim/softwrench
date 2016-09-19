@@ -1,4 +1,5 @@
-﻿using cts.commons.portable.Util;
+﻿using System.Threading.Tasks;
+using cts.commons.portable.Util;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
@@ -17,17 +18,17 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
             _restRepository = restRepository;
         }
 
-        protected override DataMap FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+        protected override async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             if (request.CustomParameters == null || !request.CustomParameters.ContainsKey(MaximoRestUtils.RestMarkerFieldName)) {
-                return base.FetchDetailDataMap(application, user, request);
+                return await base.FetchDetailDataMap(application, user, request);
             }
             var isRestWorklog = "true".EqualsIc(request.CustomParameters[MaximoRestUtils.RestMarkerFieldName]);
             if (!isRestWorklog) {
-                return base.FetchDetailDataMap(application, user, request);
+                return await base.FetchDetailDataMap(application, user, request);
             }
 
             var entity = MetadataProvider.Entity(application.Entity);
-            var dataMap = _restRepository.Get(entity, request.Id);
+            var dataMap = await _restRepository.Get(entity, request.Id);
             if (dataMap == null) {
                 return null;
             }

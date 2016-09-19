@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using NHibernate.Linq;
+using NHibernate.Util;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services;
@@ -40,12 +42,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             _dao = dao;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user,
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user,
             DetailRequest request) {
             var id = request.Id;
             DataMap datamap;
             if (id != null) {
-                var definition = _dao.FindSingleByQuery<PropertyDefinition>(PropertyDefinition.ByKey, id);
+                var definition = await _dao.FindSingleByQueryAsync<PropertyDefinition>(PropertyDefinition.ByKey, id);
                 datamap = new DataMap(application.Name, ToDictionary(definition));
                 return new ApplicationDetailResult(datamap, null, application.Schema, null, id);
             }
@@ -55,7 +57,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
                 CompositionBuilder.InitializeCompositionSchemas(application.Schema, user), null);
         }
 
-        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application,
+        public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application,
             CompositionFetchRequest request, JObject currentData) {
             var searchDTO = request.PaginatedSearch;
             var compositions = new Dictionary<string, EntityRepository.SearchEntityResult>();
@@ -64,7 +66,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
                 " (Visible = 1 AND (FullKey like '/Global/%' or FullKey like '/{0}/%')AND (renderer is null or renderer != 'attachment')) ".Fmt(ApplicationConfiguration.ClientName));
             var listApplication = MetadataProvider.Application("_configuration")
                 .ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("list"));
-            var listResult = GetList(listApplication, searchDTO);
+            var listResult = await GetList(listApplication, searchDTO);
 
             var lookupContext = _contextLookuper.LookupContext();
             var resultList = new List<Dictionary<string, object>>();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
@@ -66,7 +67,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet.Faq {
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
 
         [NotNull]
-        private IApplicationResponse Get(string application, [FromUri] DataRequestAdapter request) {
+        private async Task<IApplicationResponse> Get(string application, [FromUri] DataRequestAdapter request) {
             var user = SecurityFacade.CurrentUser();
 
             if (null == user) {
@@ -77,7 +78,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet.Faq {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web, null);
 
-            return _dataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
+            return await _dataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
         }
 
         #region Public
@@ -116,19 +117,19 @@ namespace softWrench.sW4.Metadata.Applications.DataSet.Faq {
         }
 
 
-        public static IEnumerable<FaqData> GetUsefulFaqLinks(List<UsefulFaqLinksUtils> usefulFaqLinksUtils) {
-            var listToUse = new FaqUtils().GetList();
+        public static async Task<IEnumerable<FaqData>> GetUsefulFaqLinks(List<UsefulFaqLinksUtils> usefulFaqLinksUtils) {
+            var listToUse = await new FaqUtils().GetList();
             var builtList = GetBuiltList(listToUse, usefulFaqLinksUtils);
             return builtList;
         }
 
-        public IEnumerable<FaqData> GetList() {
+        public async Task<IEnumerable<FaqData>> GetList() {
             var dto = new SearchRequestDto();
             dto.AppendSearchEntry("pluspinsertcustomer", "HLC-%");
             dto.AppendSearchEntry("status", "ACTIVE");
             dto.AppendProjectionField(ProjectionField.Default("solutionid"));
             dto.AppendProjectionField(ProjectionField.Default("description"));
-            var result = EntityRepository.GetAsRawDictionary(MetadataProvider.Entity("solution"), dto);
+            var result = await EntityRepository.GetAsRawDictionary(MetadataProvider.Entity("solution"), dto);
             Log.DebugFormat("db size {0}", result.ResultList.Count());
             var treeDataList = new List<FaqData>();
             foreach (var attributeHolder in result.ResultList) {

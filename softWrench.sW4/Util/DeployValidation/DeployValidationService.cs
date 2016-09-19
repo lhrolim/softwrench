@@ -15,6 +15,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using System.IO;
 using System.Reflection;
+using NHibernate.Util;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.API.Composition;
 

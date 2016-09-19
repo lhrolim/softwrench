@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
@@ -22,7 +23,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
         }
 
 
-        public IGenericResponseResult Expand(InMemoryUser user, IDictionary<string, ApplicationCompositionSchema> compositionSchemas, CompositionExpanderHelper.CompositionExpansionOptions options) {
+        public async Task<IGenericResponseResult> Expand(InMemoryUser user, IDictionary<string, ApplicationCompositionSchema> compositionSchemas, CompositionExpanderHelper.CompositionExpansionOptions options) {
             var resultDict = new Dictionary<string, IEnumerable<IDictionary<string, object>>>();
             var result = CompositionExpanderHelper.ParseDictionary(options.CompositionsToExpand);
 
@@ -36,7 +37,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 var searchDTO = new SearchRequestDto();
                 searchDTO.AppendSearchParam(printSchema.IdFieldName);
                 searchDTO.AppendSearchValue(toExpand.Value);
-                var compositionExpanded = _entityRepository.GetAsRawDictionary(slicedEntityMetadata, searchDTO);
+                var compositionExpanded = await _entityRepository.GetAsRawDictionary(slicedEntityMetadata, searchDTO);
                 resultDict.Add(name, compositionExpanded.ResultList);
             }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Security;
 using log4net;
 using softWrench.sW4.Util;

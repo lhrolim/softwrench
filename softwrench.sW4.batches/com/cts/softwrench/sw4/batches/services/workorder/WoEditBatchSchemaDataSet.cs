@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.batch.api.entities;
@@ -22,7 +23,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             _swdbdao = swdbdao;
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var batchId = searchDto.SearchValues;
             if (batchId == null) {
                 throw BatchException.BatchIdNotInformed();
@@ -33,13 +34,13 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             }
 
             var itemIds = batch.ItemIds;
-            return DoGetMergedBatch(application, itemIds, batch);
+            return await DoGetMergedBatch(application, itemIds, batch);
         }
 
-        public ApplicationListResult DoGetMergedBatch(ApplicationMetadata application, string itemIds, MultiItemBatch _multiItemBatch) {
+        public async Task<ApplicationListResult> DoGetMergedBatch(ApplicationMetadata application, string itemIds, MultiItemBatch _multiItemBatch) {
             var searchDto = new PaginatedSearchRequestDto();
             searchDto.AppendSearchEntry("wonum", itemIds.Split(','));
-            var result = base.GetList(application, searchDto);
+            var result = await base.GetList(application, searchDto);
             MergeDataMap(result, _multiItemBatch);
             return result;
         }

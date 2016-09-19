@@ -13,6 +13,7 @@ using cts.commons.simpleinjector.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using softwrench.sw4.user.classes.entities;
 using HlagLocationManager = softwrench.sw4.Hapag.Security.HlagLocationManager;
 
@@ -42,7 +43,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
 
 
 
-        public void SyncUser(InMemoryUser user) {
+        public async Task SyncUser(InMemoryUser user) {
             _hapagHelper.Init();
             if (user.MaximoPersonId == null) {
                 return;
@@ -51,10 +52,10 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             var entityMetadata = MetadataProvider.Entity(EntityName);
             var searchDTO = GetPersonGroupSearchDTO();
             searchDTO.AppendSearchEntry(PersonIdColumn, user.MaximoPersonId);
-            var result = EntityRepository.Get(entityMetadata, searchDTO);
+            var result = await EntityRepository.Get(entityMetadata, searchDTO);
             var hasDeletedAssociation = false;
             var hasNewAssociation = false;
-            var toDelete = new HashedSet<PersonGroupAssociation>();
+            var toDelete = new LinkedHashSet<PersonGroupAssociation>();
             var groupsToAdd = new List<string>();
             foreach (var personGroup in user.PersonGroups) {
                 if (
@@ -84,7 +85,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             if (hasNewAssociation) {
                 Log.DebugFormat("new association found for user {0}", user.Login);
                 //run jobs now to avoid out of synch users
-                _personGroupSyncManager.Sync();
+                await _personGroupSyncManager.Sync();
                 var groups = DAO.FindByQuery<PersonGroup>(PersonGroup.PersonGroupByNames, groupsToAdd);
 
                 foreach (var personGroup in groups) {
@@ -97,7 +98,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                     user.DBUser.PersonGroups.Add(personGroupAssociation);
                     _hapagHelper.AddHapagMatchingRolesAndProfiles(personGroup, user.DBUser);
                 }
-                user.DBUser = DAO.Save(user.DBUser);
+                user.DBUser = await DAO.SaveAsync(user.DBUser);
                 user = new InMemoryUser(user.DBUser, user.DBUser.Profiles, user.GridPreferences, user.UserPreferences, user.TimezoneOffset, user.MergedUserProfile);
             }
 
@@ -112,10 +113,10 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             SecurityFacade.ClearUserFromCache(user.Login, user);
         }
 
-        public void Sync() {
+        public async Task Sync() {
             var rowstamp = ConfigFacade.Lookup<long>(ConfigurationConstants.PersonGroupAssociationRowstampKey);
             var dto = GetPersonGroupSearchDTO();
-            var personGroupAssociation = FetchNew(rowstamp, EntityName, dto);
+            var personGroupAssociation = await FetchNew(rowstamp, EntityName, dto);
             var attributeHolders = personGroupAssociation as AttributeHolder[] ?? personGroupAssociation.ToArray();
             if (!attributeHolders.Any()) {
                 //nothing to update
@@ -129,10 +130,10 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             //first we will fetch all the desidered entities from the database using a single query (each)
             var users = FindUsers(usersUsed);
             var groups = DAO.FindByQuery<PersonGroup>(PersonGroup.PersonGroupByNames, personGroupsUsed);
-            var syncOk = DoSync(attributeHolders, users, groups);
+            var syncOk = await DoSync(attributeHolders, users, groups);
 
             //If the sync was not ok, try it again later
-            SetRowstampIfBigger(ConfigurationConstants.PersonGroupAssociationRowstampKey, syncOk ? GetLastRowstamp(attributeHolders, new[] { "rowstamp", "rowstamp1" }) : null, rowstamp);
+            await SetRowstampIfBigger(ConfigurationConstants.PersonGroupAssociationRowstampKey, syncOk ? GetLastRowstamp(attributeHolders, new[] { "rowstamp", "rowstamp1" }) : null, rowstamp);
         }
 
         private static SearchRequestDto GetPersonGroupSearchDTO() {
@@ -164,7 +165,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
 
 
 
-        private Boolean DoSync(IEnumerable<AttributeHolder> attributeHolders, IList<User> users, IList<PersonGroup> groups) {
+        private async Task<bool> DoSync(IEnumerable<AttributeHolder> attributeHolders, IList<User> users, IList<PersonGroup> groups) {
             _hapagHelper.Init();
             var usersThatNeedsSave = new HashSet<User.UserNameEqualityUser>();
 
@@ -177,7 +178,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                     if ("true".Equals(MetadataProvider.GlobalProperty("ldap.allownonmaximousers"))) {
                         Log.Info("creating missing user with personId" + personId);
                         //if this flag is true, let´s create a user on our side so that we can associate the right roles to it
-                        user = _userManager.CreateMissingDBUser(personId, false);
+                        user = await _userManager.CreateMissingDBUser(personId, false);
                         users.Add(user);
                     } else {
                         Log.Warn(String.Format(UserNotFound, personId));
@@ -189,7 +190,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                     continue;
                 }
                 if (user.PersonGroups == null) {
-                    user.PersonGroups = new HashedSet<PersonGroupAssociation>();
+                    user.PersonGroups = new LinkedHashSet<PersonGroupAssociation>();
                 }
                 var association = new PersonGroupAssociation {
                     Delegate = false,
@@ -215,7 +216,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
 
 
         private IEnumerable<String> GetDistinctValuesOfColumn(IEnumerable<AttributeHolder> attributeHolders, string columnName) {
-            var personGroups = new HashedSet<string>();
+            var personGroups = new LinkedHashSet<string>();
             foreach (var personGroupView in attributeHolders) {
                 var personGroupFromMaximo = personGroupView.GetAttribute(columnName);
                 if (personGroupFromMaximo == null || string.IsNullOrEmpty((string)personGroupFromMaximo)) {

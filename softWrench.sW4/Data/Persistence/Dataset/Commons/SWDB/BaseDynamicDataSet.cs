@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using NHibernate.Linq;
+using NHibernate.Util;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
@@ -48,8 +49,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return new TargetResult(id.ToString(), entry == null ? "" : entry.Name, entry);
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = await base.GetApplicationDetail(application, user, request);
             result.ResultObject["systemversion"] = _scriptsService.GetSystemVersion();
 
             if (application.Schema.Stereotype == SchemaStereotype.DetailNew) {
@@ -62,8 +63,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return result;
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
-            var result = base.GetList(application, searchDto);
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+            var result =await base.GetList(application, searchDto);
             var datamaps = result.ResultObject;
             var datamapList = datamaps as IList<AttributeHolder> ?? datamaps.ToList();
             if (datamapList.Any()) {

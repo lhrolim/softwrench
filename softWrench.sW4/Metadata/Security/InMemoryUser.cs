@@ -43,7 +43,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly IList<Role> _roles;
         private readonly ICollection<UserProfile> _profiles;
         private MergedUserProfile _mergedUserProfile;
-        private readonly Iesi.Collections.Generic.ISet<PersonGroupAssociation> _personGroups;
+        private readonly ISet<PersonGroupAssociation> _personGroups;
         private readonly IList<DataConstraint> _dataConstraints;
         internal IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
         private IDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>> _cachedBars = new ConcurrentDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>>();
@@ -59,7 +59,7 @@ namespace softWrench.sW4.Metadata.Security {
 
         private InMemoryUser() {
             _roles = new List<Role>();
-            _personGroups = new HashedSet<PersonGroupAssociation>();
+            _personGroups = new LinkedHashSet<PersonGroupAssociation>();
             _profiles = new List<UserProfile>();
             _dataConstraints = new List<DataConstraint>();
         }
@@ -79,7 +79,7 @@ namespace softWrench.sW4.Metadata.Security {
             _dbId = dbUser.Id;
             _timezoneOffset = timezoneOffset;
             _maximoPersonId = dbUser.MaximoPersonId;
-            _personGroups = (dbUser.PersonGroups ?? new HashedSet<PersonGroupAssociation>());
+            _personGroups = (dbUser.PersonGroups ?? new LinkedHashSet<PersonGroupAssociation>());
             _mergedUserProfile = mergedProfile;
             _changePassword = dbUser.ChangePassword ?? false;
             var userProfiles = initializedProfiles as UserProfile[] ?? initializedProfiles.ToArray();
@@ -187,7 +187,7 @@ namespace softWrench.sW4.Metadata.Security {
             }
         }
 
-        public Iesi.Collections.Generic.ISet<PersonGroupAssociation> PersonGroups {
+        public ISet<PersonGroupAssociation> PersonGroups {
             get {
                 return _personGroups;
             }

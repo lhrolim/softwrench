@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Composition;
@@ -12,7 +13,7 @@ using softWrench.sW4.Metadata.Security;
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder {
 
     class WorkorderReadingDataSet : MaximoApplicationDataSet {
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var datamapToUse = LocateDataMap(request.InitialValues);
 
 
@@ -22,7 +23,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder {
                 {"location", datamapToUse.GetAttribute("location") as string},
                 {"siteid", datamapToUse.GetAttribute("siteid") as string}
             };
-            var compositionData = base.GetCompositionData(application, new CompositionFetchRequest {
+            var compositionData = await base.GetCompositionData(application, new CompositionFetchRequest {
                 Id = request.Id,
                 CompositionList = new List<string> { "locationmeter_", "assetmeter_" }
             }, currentData);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using softwrench.sw4.api.classes.integration;
 using softwrench.sw4.batch.api;
@@ -61,16 +62,16 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
         /// 4) update current sync date config
         /// 
         /// </summary>
-        public override void ExecuteJob() {
+        public override async Task ExecuteJob() {
             var startDate = _configurationFacade.Lookup<DateTime?>(ToshibaConfigurationRegistry.ToshibaSyncSrStatusDate);
             if (startDate == null) {
                 //playing safe, shouldn´t happen, cause job would be disabled
                 return;
             }
-            var srs = GetISMUpdates(startDate.Value);
+            var srs = await GetISMUpdates(startDate.Value);
             if (!srs.Any()) {
                 if (DateTime.Now > startDate) {
-                    _configurationFacade.SetValue(ToshibaConfigurationRegistry.ToshibaSyncSrStatusDate, DateTime.Now);
+                    await _configurationFacade.SetValue(ToshibaConfigurationRegistry.ToshibaSyncSrStatusDate, DateTime.Now);
                     Log.InfoFormat("no updates found, finishing job execution, marking current date");
                 } else {
                     Log.InfoFormat("no updates found, finishing job execution");
@@ -82,7 +83,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             var inQuery = BaseQueryUtil.GenerateInString(srs, "ticketuid");
             var dto = new PaginatedSearchRequestDto();
             dto.AppendWhereClauseFormat("ismticketuid in ({0})", inQuery);
-            var ourSrs = _entityRepository.Get(_slicedEntityMetadata, dto);
+            var ourSrs = await _entityRepository.Get(_slicedEntityMetadata, dto);
 
 
             Log.InfoFormat("{0} updates found invoking services", ourSrs.Count);
@@ -108,7 +109,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             });
 
 
-            _configurationFacade.SetValue(ToshibaConfigurationRegistry.ToshibaSyncSrStatusDate, srs[0].GetStringAttribute("statusdate"));
+            await _configurationFacade.SetValue(ToshibaConfigurationRegistry.ToshibaSyncSrStatusDate, srs[0].GetStringAttribute("statusdate"));
 
         }
 
@@ -139,7 +140,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             return new OperationWrapper(statusData, "ChangeStatus");
         }
 
-        private IReadOnlyList<DataMap> GetISMUpdates(DateTime startDate) {
+        private async Task<IReadOnlyList<DataMap>> GetISMUpdates(DateTime startDate) {
             var dateAsString = startDate.ToString(DateUtil.MaximoDefaultIntegrationFormat);
             Log.InfoFormat("fetching updates from ism since date {0}", dateAsString);
 
@@ -148,7 +149,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             dto.AppendProjectionFields("status", "itdclosedate", "ticketid", "ticketuid", "statusdate");
             dto.SearchSort = "statusdate";
 
-            return _restentityRepository.Get(_metadata, dto);
+            return await _restentityRepository.Get(_metadata, dto);
         }
 
         #region JobSetup

@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using softWrench.sW4.AUTH;
-using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
@@ -11,6 +10,7 @@ using softWrench.sW4.Web.Models.LoginHandler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
 using softwrench.sw4.offlineserver.dto;
@@ -57,9 +57,9 @@ namespace softWrench.sW4.Web.Controllers {
         /// <param name="userTimezoneOffset"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult SignInReturningUserData(string userName, string password, string userTimezoneOffset) {
+        public async Task<ActionResult> SignInReturningUserData(string userName, string password, string userTimezoneOffset) {
             userName = userName.ToLower();
-            var user = GetUser(userName, password, userTimezoneOffset);
+            var user = await GetUser(userName, password, userTimezoneOffset);
 
             if (user == null || (user.Active.HasValue && user.Active.Value == false)) {
                 //TODO: make a different message for non active users
@@ -82,7 +82,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Index(string userName, string password, string userTimezoneOffset) {
+        public async Task<ActionResult> Index(string userName, string password, string userTimezoneOffset) {
             LoginHandlerModel model = null;
             var validationMessage = GetValidationMessage(userName, password);
             if (!string.IsNullOrEmpty(validationMessage)) {
@@ -90,9 +90,9 @@ namespace softWrench.sW4.Web.Controllers {
                 return View(model);
             }
             userName = userName.ToLower();
-            var user = GetUser(userName, password, userTimezoneOffset);
+            var user = await GetUser(userName, password, userTimezoneOffset);
             if (user != null && user.Active == true) {
-                return AuthSucceeded(userName, userTimezoneOffset, user);
+                return await AuthSucceeded(userName, userTimezoneOffset, user);
             }
             return AuthFailed(user);
         }
@@ -113,7 +113,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <param name="userTimezoneOffset"></param>
         /// <returns></returns>
         [CanBeNull]
-        private InMemoryUser GetUser(string userName, string password, string userTimezoneOffset) {
+        private async Task<InMemoryUser> GetUser(string userName, string password, string userTimezoneOffset) {
             var userAux = _dao.FindSingleByQuery<User>(softwrench.sw4.user.classes.entities.User.UserByUserName, userName);
             // User needs to load person data
             var allowNonUsersToLogin = "true".Equals(MetadataProvider.GlobalProperty("ldap.allownonmaximousers"));
@@ -127,12 +127,12 @@ namespace softWrench.sW4.Web.Controllers {
                 //if this flag is true, we will create the user on the fly
                 var ldapResult = _ldapManager.LdapAuth(userName, password);
                 if (ldapResult.Success) {
-                    userAux = _userManager.CreateMissingDBUser(userName);
+                    userAux = await _userManager.CreateMissingDBUser(userName);
                     if (userAux == null) {
                         //user might not exist on maximo either, in that case we should block its access
                         return null;
                     }
-                    return SecurityFacade.GetInstance().DoLogin(userAux, userTimezoneOffset);
+                    return await _facade.DoLogin(userAux, userTimezoneOffset);
                 }
                 return null;
             }
@@ -150,13 +150,13 @@ namespace softWrench.sW4.Web.Controllers {
 
                 var ldapResult = _ldapManager.LdapAuth(userName, password);
                 if (ldapResult.Success) {
-                    return _facade.DoLogin(userAux, userTimezoneOffset);
+                    return await _facade.DoLogin(userAux, userTimezoneOffset);
                 }
                 return null;
             }
 
             //non LDAP scenario
-            var user = _facade.LoginCheckingPassword(userAux, password, userTimezoneOffset);
+            var user = await _facade.LoginCheckingPassword(userAux, password, userTimezoneOffset);
             return user;
 
         }
@@ -178,10 +178,10 @@ namespace softWrench.sW4.Web.Controllers {
             return View(model);
         }
 
-        private ActionResult AuthSucceeded(string userName, string userTimezoneOffset, InMemoryUser user) {
+        private async Task<ActionResult> AuthSucceeded(string userName, string userTimezoneOffset, InMemoryUser user) {
             var syncEveryTime = "true".Equals(MetadataProvider.GlobalProperty(SwUserConstants.LdapSyncAlways));
             if (syncEveryTime) {
-                user.DBUser = _userManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
+                user.DBUser = await _userManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
             }
             AuthenticationCookie.SetSessionCookie(userName, userTimezoneOffset, Response);
 

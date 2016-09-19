@@ -28,6 +28,7 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
@@ -36,12 +37,12 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             : base(locationManager, entityRepository, maxDao) {
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
-            var result = base.GetList(application, searchDto);
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+            var result = await base.GetList(application, searchDto);
             return result;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application,
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application,
             InMemoryUser user, DetailRequest request) {
             var isCreationFromAsset = request.InitialValues != null && request.InitialValues.ContainsAttribute("assetnum");
             if (isCreationFromAsset) {
@@ -52,7 +53,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
             request.AssociationsToFetch = isCreationFromAsset ? "#all" : "fromlocation";
 
-            var result = base.GetApplicationDetail(application, user, request);
+            var result = await base.GetApplicationDetail(application, user, request);
 
             if (isCreationFromAsset) {
                 UpdateAssetDependants(application, result);
@@ -64,7 +65,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return result;
         }
 
-        private void UpdateAssetDependants(ApplicationMetadata application, ApplicationDetailResult result) {
+        private async void UpdateAssetDependants(ApplicationMetadata application, ApplicationDetailResult result) {
             var assetnum = result.ResultObject.GetAttribute("asset");
             var relatedAsset = result.AssociationOptions.EagerOptions["asset_"].FirstOrDefault(a => a.Value.Equals(assetnum));
             if (relatedAsset != null) {
@@ -73,7 +74,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 result.ResultObject.SetAttribute("asset_.location",
                     ((MultiValueAssociationOption)relatedAsset).Extrafields["location"]);
             }
-            var assetDependants = DoUpdateAssociation(application, new AssociationUpdateRequest { TriggerFieldName = "asset" },
+            var assetDependants = await DoUpdateAssociation(application, new AssociationUpdateRequest { TriggerFieldName = "asset" },
                 result.ResultObject);
             foreach (var dependants in assetDependants) {
                 if (result.AssociationOptions.EagerOptions.ContainsKey(dependants.Key)) {
@@ -216,63 +217,63 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return searchDTO;
         }
 
-        public IEnumerable<IAssociationOption> GetSelectableITCsToLocation(OptionFieldProviderParameters parameters) {
-            return LocationManager.FindDefaultITCsOfLocation((string)parameters.OriginalEntity.GetAttribute("tolocation"));
+        public async Task<IEnumerable<IAssociationOption>> GetSelectableITCsToLocation(OptionFieldProviderParameters parameters) {
+            return await LocationManager.FindDefaultITCsOfLocation((string)parameters.OriginalEntity.GetAttribute("tolocation"));
         }
 
-        public IEnumerable<IAssociationOption> GetSelectableITCsFromLocation(OptionFieldProviderParameters parameters) {
-            return LocationManager.FindDefaultITCsOfLocation((string)parameters.OriginalEntity.GetAttribute("fromlocation"));
+        public async Task<IEnumerable<IAssociationOption>> GetSelectableITCsFromLocation(OptionFieldProviderParameters parameters) {
+            return await LocationManager.FindDefaultITCsOfLocation((string)parameters.OriginalEntity.GetAttribute("fromlocation"));
         }
 
 
-        public IEnumerable<IAssociationOption> GetCostCentersByToItc(OptionFieldProviderParameters parameters) {
-            return LocationManager.FindCostCentersOfITC((string)parameters.OriginalEntity.GetAttribute("tolocation"),
+        public async Task<IEnumerable<IAssociationOption>> GetCostCentersByToItc(OptionFieldProviderParameters parameters) {
+            return await LocationManager.FindCostCentersOfITC((string)parameters.OriginalEntity.GetAttribute("tolocation"),
                 (string)parameters.OriginalEntity.GetAttribute("toitc"));
         }
 
-        public IEnumerable<IAssociationOption> GetCostCentersByPrimaryUser(OptionFieldProviderParameters parameters) {
+        public async Task<IEnumerable<IAssociationOption>> GetCostCentersByPrimaryUser(OptionFieldProviderParameters parameters) {
 
-            return LocationManager.FindCostCentersOfITC((string)parameters.OriginalEntity.GetAttribute("fromlocation"),
+            return await LocationManager.FindCostCentersOfITC((string)parameters.OriginalEntity.GetAttribute("fromlocation"),
                 SecurityFacade.CurrentUser().MaximoPersonId);
         }
 
-        public IEnumerable<IAssociationOption> GetBuildingToLocation(OptionFieldProviderParameters parameters) {
-            return GetBuilding(parameters.OriginalEntity.GetAttribute("tolocation") as String);
+        public async Task<IEnumerable<IAssociationOption>> GetBuildingToLocation(OptionFieldProviderParameters parameters) {
+            return await GetBuilding(parameters.OriginalEntity.GetAttribute("tolocation") as String);
         }
 
-        public IEnumerable<IAssociationOption> GetBuildingFromLocation(OptionFieldProviderParameters parameters) {
-            return GetBuilding(parameters.OriginalEntity.GetAttribute("fromlocation") as String);
+        public async Task<IEnumerable<IAssociationOption>> GetBuildingFromLocation(OptionFieldProviderParameters parameters) {
+            return await GetBuilding(parameters.OriginalEntity.GetAttribute("fromlocation") as String);
         }
 
-        public IEnumerable<IAssociationOption> GetFloorToLocation(OptionFieldProviderParameters parameters) {
-            return GetFloor(parameters.OriginalEntity.GetAttribute("tolocation") as String,
+        public async Task<IEnumerable<IAssociationOption>> GetFloorToLocation(OptionFieldProviderParameters parameters) {
+            return await GetFloor(parameters.OriginalEntity.GetAttribute("tolocation") as String,
                 parameters.OriginalEntity.GetAttribute("building") as String);
         }
 
-        public IEnumerable<IAssociationOption> GetFloorFromLocation(OptionFieldProviderParameters parameters) {
-            return GetFloor(parameters.OriginalEntity.GetAttribute("fromlocation") as String,
+        public async Task<IEnumerable<IAssociationOption>> GetFloorFromLocation(OptionFieldProviderParameters parameters) {
+            return await GetFloor(parameters.OriginalEntity.GetAttribute("fromlocation") as String,
                 parameters.OriginalEntity.GetAttribute("building") as String);
         }
 
 
-        public IEnumerable<IAssociationOption> GetRoomToLocation(OptionFieldProviderParameters parameters) {
-            return GetRoom(parameters.OriginalEntity.GetAttribute("tolocation") as String,
+        public async Task<IEnumerable<IAssociationOption>> GetRoomToLocation(OptionFieldProviderParameters parameters) {
+            return await GetRoom(parameters.OriginalEntity.GetAttribute("tolocation") as String,
                 parameters.OriginalEntity.GetAttribute("buildingtolocation") as String,
                 parameters.OriginalEntity.GetAttribute("floor") as String);
         }
 
-        public IEnumerable<IAssociationOption> GetRoomFromLocation(OptionFieldProviderParameters parameters) {
-            return GetRoom(parameters.OriginalEntity.GetAttribute("fromlocation") as String,
+        public async Task<IEnumerable<IAssociationOption>> GetRoomFromLocation(OptionFieldProviderParameters parameters) {
+            return await GetRoom(parameters.OriginalEntity.GetAttribute("fromlocation") as String,
                 parameters.OriginalEntity.GetAttribute("building") as String,
                 parameters.OriginalEntity.GetAttribute("floor") as String);
         }
 
-        private IEnumerable<IAssociationOption> GetBuilding(string location) {
+        private async Task<IEnumerable<IAssociationOption>> GetBuilding(string location) {
             var dto = new SearchRequestDto();
             dto.AppendSearchEntry("CLASSSTRUCTUREID", "BUILDING");
             dto.AppendProjectionField(ProjectionField.Default("description"));
             dto.AppendProjectionField(ProjectionField.Default("location"));
-            return BuildingFloorRoomManager.DoGetLocation(location, dto, dict => {
+            return await BuildingFloorRoomManager.DoGetLocation(location, dto, dict => {
                 var rawLabel = (String)dict["description"];
                 var rawValue = (String)dict["location"];
                 //TODO: fix label
@@ -280,23 +281,23 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             });
         }
 
-        private IEnumerable<IAssociationOption> GetFloor(string location, string building) {
+        private async Task<IEnumerable<IAssociationOption>> GetFloor(string location, string building) {
             var dto = new SearchRequestDto();
             dto.AppendSearchEntry("LOCATION", building + "/FL:%");
             dto.AppendProjectionField(new ProjectionField("location", String.Format("DISTINCT SUBSTR(REPLACE(location.Location,'{0}',''),1,LOCATE('/',REPLACE(location.Location,'{0}',''))-1)", building + "/FL:")));
             dto.SearchSort = "location";
             dto.ExpressionSort = true;
             dto.SearchAscending = true;
-            return BuildingFloorRoomManager.DoGetLocation(location, dto, dict => {
+            return await BuildingFloorRoomManager.DoGetLocation(location, dto, dict => {
                 var rawValue = (String)dict["location"];
                 return new AssociationOption(rawValue, rawValue);
             });
         }
 
-        private IEnumerable<IAssociationOption> GetRoom(string location, string building, string floor) {
+        private async Task<IEnumerable<IAssociationOption>> GetRoom(string location, string building, string floor) {
             var dto = new SearchRequestDto();
             dto.AppendSearchEntry("LOCATION", building + "/FL:" + floor + "/RO:%");
-            return BuildingFloorRoomManager.DoGetLocation(location, dto, dict => {
+            return await BuildingFloorRoomManager.DoGetLocation(location, dto, dict => {
                 var rawValue = (String)dict["location"];
                 //TODO: fix label
                 return new AssociationOption(rawValue, rawValue.Split(new[] { "RO:" }, StringSplitOptions.None)[1]);
@@ -304,7 +305,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         }
 
-        public IEnumerable<IAssociationOption> GetAssetCommodities(OptionFieldProviderParameters parameters) {
+        public async Task<IEnumerable<IAssociationOption>> GetAssetCommodities(OptionFieldProviderParameters parameters) {
 
             var assetnum = parameters.OriginalEntity.GetAttribute("asset") as String;
             var user = SecurityFacade.CurrentUser();
@@ -320,7 +321,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             // This value is added due to a inserted parameter in a relatioship clause (from 'commodities' to 'assetloccomm') 
             searchDto.ValuesDictionary.Add("commodityassetnum", new SearchParameter(assetnum));
 
-            var entities = ((MaximoConnectorEngine)Engine()).Find(entityMetadata, searchDto);
+            var entities = await ((MaximoConnectorEngine)Engine()).Find(entityMetadata, searchDto);
 
             var options = new HashSet<IAssociationOption>();
 
@@ -349,8 +350,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         /// <param name="request"></param>
         /// <param name="currentData"></param>
         /// <returns></returns>
-        protected override IDictionary<string, BaseAssociationUpdateResult> DoUpdateAssociation(ApplicationMetadata application, AssociationUpdateRequest request, AttributeHolder currentData) {
-            var defaultResult = base.DoUpdateAssociation(application, request, currentData);
+        protected override async Task<IDictionary<string, BaseAssociationUpdateResult>> DoUpdateAssociation(ApplicationMetadata application, AssociationUpdateRequest request, AttributeHolder currentData) {
+            var defaultResult = await base.DoUpdateAssociation(application, request, currentData);
             if (!"asset".Equals(request.TriggerFieldName)) {
                 return defaultResult;
             }
@@ -361,7 +362,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                     ValueSearchString = userId,
                     AssociationFieldName = "person_"
                 };
-                var userIdResult = base.DoUpdateAssociation(application, userIdRequest, currentData);
+                var userIdResult = await base.DoUpdateAssociation(application, userIdRequest, currentData);
                 defaultResult.Add("person_", userIdResult["person_"]);
             }
 
@@ -378,14 +379,14 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 return defaultResult;
             }
 
-            var extraAssociationOptions = GetLocationOptionsFromAssetLocation(locationToUse, assetLocation, suffix);
+            var extraAssociationOptions = await GetLocationOptionsFromAssetLocation(locationToUse, assetLocation, suffix);
             foreach (var lookupAssociationUpdateResult in extraAssociationOptions) {
                 defaultResult.Add(lookupAssociationUpdateResult);
             }
             return defaultResult;
         }
 
-        private IEnumerable<KeyValuePair<string, BaseAssociationUpdateResult>> GetLocationOptionsFromAssetLocation(
+        private async Task<Dictionary<string, BaseAssociationUpdateResult>> GetLocationOptionsFromAssetLocation(
             string fromLocation, string assetLocation, string suffix = "") {
             var result = new Dictionary<string, BaseAssociationUpdateResult>();
             if (assetLocation == null) {
@@ -396,7 +397,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             if (idxBldg != -1) {
                 var building = assetLocation.Substring(0, idxBldg);
                 //the building is already fixed, so lets fetch the floor options right away
-                result["floor" + suffix] = new BaseAssociationUpdateResult(GetFloor(fromLocation, building));
+                result["floor" + suffix] = new BaseAssociationUpdateResult(await GetFloor(fromLocation, building));
 
             } else {
                 var parts = assetLocation.Split('/');
@@ -406,8 +407,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 }
                 var building = parts[0];
                 var floor = parts[1].Substring(parts[1].IndexOf(':') + 1);
-                result["floor" + suffix] = new BaseAssociationUpdateResult(GetFloor(fromLocation, building));
-                result["room" + suffix] = new BaseAssociationUpdateResult(GetRoom(fromLocation, building, floor));
+                result["floor" + suffix] = new BaseAssociationUpdateResult(await GetFloor(fromLocation, building));
+                result["room" + suffix] = new BaseAssociationUpdateResult(await GetRoom(fromLocation, building, floor));
             }
             return result;
         }

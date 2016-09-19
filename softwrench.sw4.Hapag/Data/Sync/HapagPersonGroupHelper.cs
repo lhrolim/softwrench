@@ -37,12 +37,12 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             var addedRole = false;
             if (_hapagProfiles.ContainsKey(personGroup.Name)) {
                 if (user.Profiles == null) {
-                    user.Profiles = new HashedSet<UserProfile>();
+                    user.Profiles = new LinkedHashSet<UserProfile>();
                 }
                 addedProfile = user.Profiles.Add(_hapagProfiles[personGroup.Name]);
             } else if (_hapagModules.ContainsKey(personGroup.Name)) {
                 if (user.CustomRoles == null) {
-                    user.CustomRoles = new HashedSet<UserCustomRole>();
+                    user.CustomRoles = new LinkedHashSet<UserCustomRole>();
                 }
                 var hapagModule = _hapagModules[personGroup.Name];
                 Log.DebugFormat("adding customrole {0} to user {1} from group {2}", hapagModule.Name, user.Id,
@@ -89,10 +89,10 @@ namespace softwrench.sw4.Hapag.Data.Sync {
 
 
         public InMemoryUser RemoveOrphanEntities(InMemoryUser user) {
-            Iesi.Collections.Generic.ISet<Role> rolesToRemove = new HashedSet<Role>();
+            ISet<Role> rolesToRemove = new LinkedHashSet<Role>();
 
-            Iesi.Collections.Generic.ISet<UserCustomRole> customRolesToDelete = new HashedSet<UserCustomRole>();
-            Iesi.Collections.Generic.ISet<UserProfile> profilesToremove = new HashedSet<UserProfile>();
+            ISet<UserCustomRole> customRolesToDelete = new LinkedHashSet<UserCustomRole>();
+            ISet<UserProfile> profilesToremove = new LinkedHashSet<UserProfile>();
             foreach (var role in _hapagModules.Keys) {
                 if (user.Roles.Contains(_hapagModules[role]) &&
                     !user.PersonGroups.Any(r => r.PersonGroup.Name.Equals(role))) {

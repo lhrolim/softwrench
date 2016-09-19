@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Configuration.Services.Api;
@@ -28,10 +24,10 @@ namespace softWrench.sW4.Scheduler {
             return string.Format("0 */{0} * ? * *", rate);
         }
 
-        public void HandleEvent(ConfigurationChangedEvent eventToDispatch) {
+        public async void HandleEvent(ConfigurationChangedEvent eventToDispatch) {
             if (eventToDispatch.ConfigKey.EqualsIc(JobConfigKey)) {
                 var refreshRate = long.Parse(eventToDispatch.CurrentValue);
-                UpdateJob(refreshRate);
+                await UpdateJob(refreshRate);
             }
         }
 
@@ -41,9 +37,9 @@ namespace softWrench.sW4.Scheduler {
             }
         }
 
-        private void UpdateJob(long refreshRate) {
+        private async Task UpdateJob(long refreshRate) {
             var newCron = GetCron(refreshRate);
-            _jobManager.ManageJobByCommand(Name(), JobCommandEnum.ChangeCron, newCron);
+            await _jobManager.ManageJobByCommand(Name(), JobCommandEnum.ChangeCron, newCron);
         }
         /// <summary>
         /// The configuration Key that controls the rate of the job execution

@@ -51,7 +51,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             if (schemaFieldsToDisplay != null && applicationPermission == null) {
                 //dashboard scenario
                 applicationPermission = new ApplicationPermission();
-                applicationPermission.ContainerPermissions = new HashedSet<ContainerPermission>();
+                applicationPermission.ContainerPermissions = new LinkedHashSet<ContainerPermission>();
             }
 
 

@@ -362,7 +362,8 @@ namespace softWrench.sW4.Util {
             get {
                 // SWWEB-1091 to extract the vbalue out from MAXIMO
                 // var ext = MetadataProvider.GlobalProperty("allowedAttachmentExtensions");
-                var ext = _maxPropValueDao.GetValue("mxe.doclink.doctypes.allowedFileExtensions");
+                //TODO: Asnc
+                var ext = AsyncHelper.RunSync(()=>_maxPropValueDao.GetValue("mxe.doclink.doctypes.allowedFileExtensions"));
 
                 if (!string.IsNullOrWhiteSpace(ext)) {
                     return ext.Split(',');

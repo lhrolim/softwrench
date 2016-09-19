@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
@@ -21,15 +22,17 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
     /// marker interface for classes that wish to provide methods for the applications
     /// </summary>
     public interface IDataSet : IApplicationFiltereable, IComponent {
-        Int32 GetCount(ApplicationMetadata application, [CanBeNull]IDataRequest request);
-        IApplicationResponse Get(ApplicationMetadata application, InMemoryUser user, IDataRequest request);
-        ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request);
-        CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData);
-        ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto);
+        Task<int>GetCount(ApplicationMetadata application, [CanBeNull]IDataRequest request);
 
-        AssociationMainSchemaLoadResult BuildAssociationOptions([NotNull]AttributeHolder dataMap, ApplicationSchemaDefinition schema, IAssociationPrefetcherRequest request);
+        Task<IApplicationResponse> Get(ApplicationMetadata application, InMemoryUser user, IDataRequest request);
 
-        LookupOptionsFetchResultDTO GetLookupOptions(ApplicationMetadata application, LookupOptionsFetchRequestDTO lookupRequest, AttributeHolder cruddata);
+        Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request);
+        Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData);
+        Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto);
+
+        Task<AssociationMainSchemaLoadResult> BuildAssociationOptions([NotNull]AttributeHolder dataMap, ApplicationSchemaDefinition schema, IAssociationPrefetcherRequest request);
+
+        Task<LookupOptionsFetchResultDTO> GetLookupOptions(ApplicationMetadata application, LookupOptionsFetchRequestDTO lookupRequest, AttributeHolder cruddata);
 
 
         //        SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData);
@@ -37,7 +40,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         TargetResult Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData);
 
-        GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociations(ApplicationMetadata application,
+        Task<GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>> UpdateAssociations(ApplicationMetadata application,
             AssociationUpdateRequest request, JObject currentData);
 
 

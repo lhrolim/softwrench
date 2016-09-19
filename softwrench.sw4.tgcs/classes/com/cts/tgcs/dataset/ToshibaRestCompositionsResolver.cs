@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using log4net;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
@@ -34,7 +35,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
         /// <param name="parentData"></param>
         /// <param name="search"></param>
         /// <returns></returns>
-        public IDictionary<string, EntityRepository.SearchEntityResult> ResolveRestCompositions(
+        public async Task<IDictionary<string, EntityRepository.SearchEntityResult>> ResolveRestCompositions(
             SlicedEntityMetadata parentEntityMetadata, 
             IDictionary<string, ApplicationCompositionSchema> restCompositions, 
             Entity parentData, 
@@ -47,7 +48,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
 
             if (string.IsNullOrEmpty(ismticketid) || string.IsNullOrEmpty(ismticketuid)) {
                 Log.WarnFormat("SR with ticketid='{0}' and ticketuid='{1}' has no ism data. Fetching compositions from database.", ticketid, ticketuid);
-                return _collectionResolver.ResolveCollections(parentEntityMetadata, restCompositions, parentData, search);
+                return await _collectionResolver.ResolveCollections(parentEntityMetadata, restCompositions, parentData, search);
             }
 
             // use ism identities in rest query
@@ -55,7 +56,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
             parentData[parentEntityMetadata.IdFieldName] = ismticketuid;
 
             // only worklogs and/or attachments
-            var restResult = _restCollectionResolver.ResolveCollections(parentEntityMetadata, restCompositions, parentData, search);
+            var restResult = await _restCollectionResolver.ResolveCollections(parentEntityMetadata, restCompositions, parentData, search);
 
             // restore entity
             parentData[parentEntityMetadata.UserIdFieldName] = ticketid;
@@ -83,7 +84,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
         /// <param name="parentData"></param>
         /// <param name="search"></param>
         /// <param name="restAttachmentResult"></param>
-        private void MergeRelatedAttachments(
+        private async void MergeRelatedAttachments(
             SlicedEntityMetadata parentEntityMetadata, 
             ApplicationCompositionSchema attachmentCompositions, 
             Entity parentData, 
@@ -100,7 +101,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
 
             if (restAttachmentPageResult == null) {
                 // not a paginated request: just concat the lists
-                var relatedAttachmentResult = _collectionResolver.ResolveCollections(parentEntityMetadata, attachmentComposition, parentData, search);
+                var relatedAttachmentResult = await _collectionResolver.ResolveCollections(parentEntityMetadata, attachmentComposition, parentData, search);
                 restAttachmentResult.ResultList = restAttachmentResult.ResultList.Concat(relatedAttachmentResult["attachment_"].ResultList).ToList();
             } else {
                 // paginated request: needs to include related and/or update pagination
@@ -111,7 +112,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
                     // still has room to add (pagesize - restresult.length) related attachments
                     relatedAttachmentSearchDto.PageSize = relatedAttachmentSearchDto.PageSize - restAttachmentResult.ResultList.Count;
 
-                    var relatedAttachmentResult = _collectionResolver.ResolveCollections(parentEntityMetadata, attachmentComposition, parentData, relatedAttachmentSearchDto);
+                    var relatedAttachmentResult =await _collectionResolver.ResolveCollections(parentEntityMetadata, attachmentComposition, parentData, relatedAttachmentSearchDto);
 
                     var relatedAttachments = relatedAttachmentResult["attachment_"];
                     restAttachmentResult.ResultList = restAttachmentResult.ResultList.Concat(relatedAttachments.ResultList).ToList();
@@ -127,7 +128,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
                     relatedAttachmentSearchDto.SearchValues = null;
                     relatedAttachmentSearchDto.SearchParams = null;
                     relatedAttachmentSearchDto.AppendWhereClause(whereClause);
-                    relatedAttachmentsCount = _entityRepository.Count(MetadataProvider.Entity("DOCLINKS"), relatedAttachmentSearchDto);
+                    relatedAttachmentsCount = await _entityRepository.Count(MetadataProvider.Entity("DOCLINKS"), relatedAttachmentSearchDto);
                 }
 
                 // recalculate pagination given new total

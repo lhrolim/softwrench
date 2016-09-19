@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
@@ -23,8 +24,8 @@ namespace softwrench.sw4.user.classes.services.setup {
             _dao = dao;
         }
 
-        public UserActivationLink GetLinkByUser(User user) {
-            var existingLink = _dao.FindSingleByQuery<UserActivationLink>(UserActivationLink.TokenByUser, user);
+        public async Task<UserActivationLink> GetLinkByUser(User user) {
+            var existingLink = await _dao.FindSingleByQueryAsync<UserActivationLink>(UserActivationLink.TokenByUser, user);
             return existingLink;
         }
 

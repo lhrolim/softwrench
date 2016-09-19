@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using cts.commons.persistence;
 using cts.commons.persistence.Util;
 using log4net;
-using NHibernate.Linq;
+using NHibernate.Util;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Dynamic;
 using softWrench.sW4.Util;

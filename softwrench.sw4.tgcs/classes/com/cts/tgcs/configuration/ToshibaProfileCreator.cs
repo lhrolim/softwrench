@@ -32,7 +32,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
                 var profile = new UserProfile {
                     Name = QsrpRofile,
                     Description = "Profile to allow Quick Service request Access",
-                    ApplicationPermissions = new HashedSet<ApplicationPermission>()
+                    ApplicationPermissions = new LinkedHashSet<ApplicationPermission>()
                 };
                 var appPermission = new ApplicationPermission();
                 appPermission.AllowCreation = appPermission.AllowUpdate = true;
@@ -47,7 +47,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
                 var profile = new UserProfile {
                     Name = SrpRofile,
                     Description = "Profile to allow Service request Access",
-                    ApplicationPermissions = new HashedSet<ApplicationPermission>()
+                    ApplicationPermissions = new LinkedHashSet<ApplicationPermission>()
                 };
                 var appPermission = new ApplicationPermission();
                 appPermission.AllowCreation = appPermission.AllowUpdate = true;

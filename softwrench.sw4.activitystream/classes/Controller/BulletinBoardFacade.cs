@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
@@ -45,21 +46,25 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             _configurationFacade = configurationFacade;
             _jobManager = jobManager;
             _whereBuilder = new MultiTenantCustomerWhereBuilder();
-            _formatter = (JsonMediaTypeFormatter) jsonFormatter;
+            _formatter = (JsonMediaTypeFormatter)jsonFormatter;
         }
 
         private static ServerSentEvent EventSource {
-            get { return LazyEventSource.Value; }
+            get {
+                return LazyEventSource.Value;
+            }
         }
 
         private static BulletinBoardStream ActiveStream {
-            get { return LazyActiveStream.Value; }
+            get {
+                return LazyActiveStream.Value;
+            }
         }
 
         /// <summary>
         /// Updates in-memory state and broadcasts the new state to all subscribers (<see cref="AddBulletinBoardUpdateSubscriber"/>)
         /// </summary>
-        public void UpdateInMemoryBulletinBoard() {
+        public async Task UpdateInMemoryBulletinBoard() {
             var multitenancyWhereClause = _whereBuilder.BuildWhereClause("bulletinboard");
 
             var query = string.IsNullOrEmpty(multitenancyWhereClause)
@@ -69,15 +74,15 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             var parameters = new ExpandoObject();
             var parameterCollection = (ICollection<KeyValuePair<string, object>>)parameters;
             parameterCollection.Add(new KeyValuePair<string, object>("datetimenow", DateTime.Now));
-
-            var messages = _dao.FindByNativeQuery(query, parameters)
+            var lists = await _dao.FindByNativeQueryAsync(query, parameters);
+            var messages = lists
                 .Cast<IDictionary<string, object>>()
                 .Select(BulletinBoard.FromDictionary)
                 .ToList();
-            
+
             // update in-memory stream
             ActiveStream.Stream = messages;
-            
+
             // broadcast new memory state to all SSE subscribers
             var bulletinBoardsState = GetActiveBulletinBoardsState();
             var stateMessage = JsonConvert.SerializeObject(bulletinBoardsState, Formatting.None, _formatter.SerializerSettings);
@@ -113,14 +118,14 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         public void HandleEvent(ConfigurationChangedEvent eventToDispatch) {
             switch (eventToDispatch.ConfigKey) {
                 case ConfigurationConstants.BulletinBoard.Enabled:
-                    // handle enable config change
-                    var enabled = "true".EqualsIc(eventToDispatch.CurrentValue);
-                    BulletinBoardEnabledChanged(enabled);
+                // handle enable config change
+                var enabled = "true".EqualsIc(eventToDispatch.CurrentValue);
+                BulletinBoardEnabledChanged(enabled);
                 break;
                 case ConfigurationConstants.BulletinBoard.JobRefreshRate:
-                    // handle job refresh rate config change by actually changing the job's cron expression
-                    var refreshRate = long.Parse(eventToDispatch.CurrentValue);
-                    SetBulletinBoardJobCron(refreshRate);
+                // handle job refresh rate config change by actually changing the job's cron expression
+                var refreshRate = long.Parse(eventToDispatch.CurrentValue);
+                SetBulletinBoardJobCron(refreshRate);
                 break;
                 default:
                 return;

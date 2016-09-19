@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
@@ -16,8 +17,8 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
             _attachmentDAO = attachmentDAO;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = await base.GetApplicationDetail(application, user, request);
             var datamap = result.ResultObject.Fields;
 
             var attachments = _attachmentDAO.ByOwner("WORKLOG", datamap[application.IdFieldName]);
@@ -28,7 +29,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
                 var attachment = attachments.First();
                 var docinfourl = (string)attachment.urlname;
 
-                var fileUrl = AttachmentHandler.GetFileUrl(docinfourl);
+                var fileUrl = await AttachmentHandler.GetFileUrl(docinfourl);
                 var isImage = fileUrl.ContainsAnyIgnoreCase(new[] { "png", "bmp", "jpg", "jpeg", "gif" }); // TODO: use actual mime type detection
 
                 datamap.Add("attachment_is_image", isImage);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
@@ -20,6 +21,7 @@ using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Util;
 
 
 namespace softWrench.sW4.Security.Services {
@@ -121,7 +123,7 @@ namespace softWrench.sW4.Security.Services {
             return profile;
         }
 
-        public virtual List<UserProfile> FindUserProfiles(User dbUser) {
+        public virtual async Task<List<UserProfile>> FindUserProfiles(User dbUser) {
             if (dbUser.Profiles == null) {
                 return new List<UserProfile>();
             }
@@ -237,7 +239,7 @@ namespace softWrench.sW4.Security.Services {
                 }
             }
 
-            var roles = new HashedSet<Role>();
+            var roles = new LinkedHashSet<Role>();
 
             foreach (var profile in profiles) {
                 if (profile.Roles != null) {
@@ -246,7 +248,7 @@ namespace softWrench.sW4.Security.Services {
             }
 
             return new MergedUserProfile() {
-                Permissions = new HashedSet<ApplicationPermission>(permissionsDict.Values),
+                Permissions = new LinkedHashSet<ApplicationPermission>(permissionsDict.Values),
                 Roles = roles
             };
         }

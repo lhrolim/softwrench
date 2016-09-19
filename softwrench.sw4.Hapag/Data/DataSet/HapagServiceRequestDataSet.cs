@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using softWrench.sW4.Metadata.Applications.DataSet.Faq;
 
@@ -33,7 +34,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             : base(locationManager, entityRepository, maxDao) {
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             //this means that we are creating the service request from an asset
             var isCreationFromAsset = request.InitialValues != null && request.InitialValues.ContainsAttribute("assetnum");
             if (isCreationFromAsset) {
@@ -42,7 +43,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 AdjustInitialValues(request.InitialValues, application.Schema.SchemaId);
                 request.AssociationsToFetch = "#all";
             }
-            var dbDetail = base.GetApplicationDetail(application, user, request);
+            var dbDetail = await base.GetApplicationDetail(application, user, request);
             var resultObject = dbDetail.ResultObject;
             if (resultObject == null) {
                 //it happens only if we´re pointint to a database different then the ws impl
@@ -167,8 +168,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             resultObject.SetAttribute("#closeddate", "CLOSED".Equals(status) ? statusDate : "");
         }
 
-        private static void HandleUsefulFaqLinks(DataMap resultObject, List<UsefulFaqLinksUtils> usefulFaqLinksUtils) {
-            var usefulFaqLinks = FaqUtils.GetUsefulFaqLinks(usefulFaqLinksUtils);
+        private static async void HandleUsefulFaqLinks(DataMap resultObject, List<UsefulFaqLinksUtils> usefulFaqLinksUtils) {
+            var usefulFaqLinks = await FaqUtils.GetUsefulFaqLinks(usefulFaqLinksUtils);
 
             if (CollectionExtensions.IsNullOrEmpty(usefulFaqLinks)) {
                 return;

@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Common.Log;
 using softWrench.sW4.Web.SPF.Filters;
 
@@ -12,7 +13,7 @@ namespace softWrench.sW4.Web.App_Start
             filters.Add(new MvContextFilter());
             filters.Add(new MVCLogFilter());
             //TODO: needs more testings
-//            filters.Add(new GenericExceptionFilter());
+            filters.Add(new GenericExceptionFilter());
         }
     }
 }

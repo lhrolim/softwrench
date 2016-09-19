@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
-using softWrench.sW4.Metadata.Security;
 using ActionFilterAttribute = System.Web.Http.Filters.ActionFilterAttribute;
 
 

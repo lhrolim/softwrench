@@ -7,6 +7,7 @@ using cts.commons.web.Formatting;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.user.classes.entities.security {
 
@@ -38,7 +39,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         [Key(1, Column = "app_id")]
         [OneToMany(2, ClassType = typeof(ContainerPermission))]
         [JsonConverter(typeof(IesiSetConverter<ContainerPermission>))]
-        public Iesi.Collections.Generic.ISet<ContainerPermission> ContainerPermissions {
+        public ISet<ContainerPermission> ContainerPermissions {
             get; set;
         }
 
@@ -46,7 +47,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         [Key(1, Column = "app_id")]
         [OneToMany(2, ClassType = typeof(CompositionPermission))]
         [JsonConverter(typeof(IesiSetConverter<CompositionPermission>))]
-        public Iesi.Collections.Generic.ISet<CompositionPermission> CompositionPermissions {
+        public ISet<CompositionPermission> CompositionPermissions {
             get; set;
         }
 
@@ -54,7 +55,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         [Key(1, Column = "app_id")]
         [OneToMany(2, ClassType = typeof(ActionPermission))]
         [JsonConverter(typeof(IesiSetConverter<ActionPermission>))]
-        public Iesi.Collections.Generic.ISet<ActionPermission> ActionPermissions {
+        public ISet<ActionPermission> ActionPermissions {
             get; set;
         }
 
@@ -114,25 +115,25 @@ namespace softwrench.sw4.user.classes.entities.security {
             AllowView = AllowCreation || other.AllowView;
             AllowRemoval = AllowCreation || other.AllowRemoval;
             if (ActionPermissions == null) {
-                ActionPermissions = new HashedSet<ActionPermission>();
+                ActionPermissions = new LinkedHashSet<ActionPermission>();
             }
             if (CompositionPermissions == null) {
-                CompositionPermissions = new HashedSet<CompositionPermission>();
+                CompositionPermissions = new LinkedHashSet<CompositionPermission>();
             }
 
             if (ContainerPermissions == null) {
-                ContainerPermissions = new HashedSet<ContainerPermission>();
+                ContainerPermissions = new LinkedHashSet<ContainerPermission>();
             }
             if (other.ActionPermissions == null) {
-                other.ActionPermissions = new HashedSet<ActionPermission>();
+                other.ActionPermissions = new LinkedHashSet<ActionPermission>();
             }
 
             if (other.ContainerPermissions == null) {
-                other.ContainerPermissions = new HashedSet<ContainerPermission>();
+                other.ContainerPermissions = new LinkedHashSet<ContainerPermission>();
             }
 
             if (other.CompositionPermissions == null) {
-                other.CompositionPermissions = new HashedSet<CompositionPermission>();
+                other.CompositionPermissions = new LinkedHashSet<CompositionPermission>();
             }
 
 

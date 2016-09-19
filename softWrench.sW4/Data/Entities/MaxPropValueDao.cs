@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
@@ -15,12 +16,12 @@ namespace softWrench.sW4.Data.Entities {
             }
         }
 
-        public string GetValue(string propName) {
+        public async Task<string> GetValue(string propName) {
             var entityMetadata = MetadataProvider.Entity(EntityName);
             var searchRequestDto = SearchRequestDto.GetFromDictionary(new Dictionary<string, string>() { { "propname", propName } });
             searchRequestDto.AppendProjectionField(new ProjectionField("propname", "propname"));
             searchRequestDto.AppendProjectionField(new ProjectionField("propvalue", "propvalue"));
-            var list = EntityRepository.Get(entityMetadata, searchRequestDto);
+            var list = await EntityRepository.Get(entityMetadata, searchRequestDto);
             var result = list.FirstOrDefault();
             return result == null ? null : (string)result.GetAttribute("propvalue");
         }

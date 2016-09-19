@@ -64,7 +64,7 @@ namespace softwrench.sW4.test.Configuration.Service {
                 new PropertyValue {Value = "2", Condition = new WhereClauseCondition{OfflineOnly = true,AppContext = new ApplicationLookupContext{Schema = "detail"}}},
                 new PropertyValue {Value = "3", Condition = new WhereClauseCondition{OfflineOnly = true,AppContext = new ApplicationLookupContext{MetadataId = "zzz"}}}
             };
-            var result = ConfigurationService.BuildResultValues<string>(offlineModeValues, context);
+            var result = ConfigurationService.BuildResultValues(offlineModeValues, context);
             Assert.IsFalse(result.Any());
         }
 
@@ -75,7 +75,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             {
                 new PropertyValue {Value = "1", Condition = new WhereClauseCondition{OfflineOnly = false}},
             };
-            var result = ConfigurationService.BuildResultValues<string>(offlineModeValues, context);
+            var result = ConfigurationService.BuildResultValues(offlineModeValues, context);
             Assert.AreEqual("1", result.First().Value.Value);
         }
 
@@ -87,7 +87,7 @@ namespace softwrench.sW4.test.Configuration.Service {
                 new PropertyValue {Value = "1", Condition = new WhereClauseCondition{OfflineOnly = false,AppContext = new ApplicationLookupContext{MetadataId = "zzz", }}},
                 new PropertyValue {Value = "2", Condition = new WhereClauseCondition{OfflineOnly = true,AppContext = new ApplicationLookupContext{MetadataId = "zzz"}}}
             };
-            var result = ConfigurationService.BuildResultValues<string>(values, context);
+            var result = ConfigurationService.BuildResultValues(values, context);
             Assert.AreEqual("2", result.First().Value.Value);
         }
 
@@ -98,7 +98,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             {
                 new PropertyValue {Value = "1", Condition = new WhereClauseCondition{OfflineOnly = true,AppContext = new ApplicationLookupContext{Schema = ""}}}
             };
-            var result = ConfigurationService.BuildResultValues<string>(values, context);
+            var result = ConfigurationService.BuildResultValues(values, context);
             Assert.AreEqual("1", result.First().Value.Value);
         }
 
@@ -109,7 +109,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             {
                 new PropertyValue {Value = "1", Condition = new WhereClauseCondition{OfflineOnly = true}}
             };
-            var result = ConfigurationService.BuildResultValues<string>(values, context);
+            var result = ConfigurationService.BuildResultValues(values, context);
             Assert.AreEqual("1", result.First().Value.Value);
         }
 
@@ -121,7 +121,7 @@ namespace softwrench.sW4.test.Configuration.Service {
                 new PropertyValue {Value = "1"},
                 new PropertyValue {Value = "2",Module = "xxx"}
             };
-            var result = ConfigurationService.BuildResultValues<string>(values, context);
+            var result = ConfigurationService.BuildResultValues(values, context);
             Assert.AreEqual("1", result.First().Value.Value);
         }
 
@@ -133,7 +133,7 @@ namespace softwrench.sW4.test.Configuration.Service {
                 new PropertyValue {Value = "1"},
                 new PropertyValue {Value = "2",Module = "xxx"}
             };
-            var result = ConfigurationService.BuildResultValues<string>(values, context);
+            var result = ConfigurationService.BuildResultValues(values, context);
             Assert.IsFalse(result.Any());
         }
 
@@ -143,14 +143,14 @@ namespace softwrench.sW4.test.Configuration.Service {
                 UserProfiles = new SortedSet<int?> { 3 },
                 ApplicationLookupContext = new ApplicationLookupContext { Schema = "list" }
             };
-            var result = ConfigurationService.BuildResultValues<string>(_values, context);
+            var result = ConfigurationService.BuildResultValues(_values, context);
             Assert.AreEqual("5", result.First().Value.Value);
 
             context = new ContextHolder {
                 UserProfiles = new SortedSet<int?> { 3 },
                 ApplicationLookupContext = new ApplicationLookupContext { Schema = "detail" }
             };
-            result = ConfigurationService.BuildResultValues<string>(_values, context);
+            result = ConfigurationService.BuildResultValues(_values, context);
             Assert.AreEqual("7", result.First().Value.Value);
 
 
@@ -160,7 +160,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             context = new ContextHolder {
                 UserProfiles = new SortedSet<int?> { 3 },
             };
-            result = ConfigurationService.BuildResultValues<string>(_values, context);
+            result = ConfigurationService.BuildResultValues(_values, context);
             Assert.AreEqual("5", result.First().Value.Value);
         }
 
@@ -170,7 +170,7 @@ namespace softwrench.sW4.test.Configuration.Service {
                 UserProfiles = new SortedSet<int?> { 3 },
                 ApplicationLookupContext = new ApplicationLookupContext { Schema = "detail" }
             };
-            var result = ConfigurationService.BuildResultValues<string>(_values, context);
+            var result = ConfigurationService.BuildResultValues(_values, context);
             Assert.AreEqual("7", result.First().Value.Value);
         }
 
@@ -180,7 +180,7 @@ namespace softwrench.sW4.test.Configuration.Service {
                 UserProfiles = new SortedSet<int?> { 2, 3 },
                 CurrentSelectedProfile = 3
             };
-            var result = ConfigurationService.BuildResultValues<string>(_values, context);
+            var result = ConfigurationService.BuildResultValues(_values, context);
             Assert.AreEqual("5", result.First().Value.Value);
         }
 
@@ -190,7 +190,7 @@ namespace softwrench.sW4.test.Configuration.Service {
                 UserProfiles = new SortedSet<int?> { 4 },
                 ApplicationLookupContext = new ApplicationLookupContext { Schema = "detail" }
             };
-            var result = ConfigurationService.BuildResultValues<string>(_values3, context);
+            var result = ConfigurationService.BuildResultValues(_values3, context);
             Assert.AreEqual("8", result.First().Value.Value);
         }
         [TestMethod]
@@ -198,7 +198,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             var context = new ContextHolder {
                 ApplicationLookupContext = new ApplicationLookupContext { Schema = "list" }
             };
-            var result = ConfigurationService.BuildResultValues<string>(_values4, context);
+            var result = ConfigurationService.BuildResultValues(_values4, context);
             Assert.IsFalse(result.Any());
         }
 
@@ -213,7 +213,7 @@ namespace softwrench.sW4.test.Configuration.Service {
                 ApplicationLookupContext = new ApplicationLookupContext { MetadataId = "xxx" },
                 SiteId = "site"
             };
-            var result = ConfigurationService.BuildResultValues<string>(_values, context);
+            var result = ConfigurationService.BuildResultValues(_values, context);
             Assert.AreEqual("6", result.First().Value.Value);
         }
 
@@ -224,7 +224,7 @@ namespace softwrench.sW4.test.Configuration.Service {
                 ApplicationLookupContext = new ApplicationLookupContext { MetadataId = "zzz" },
                 SiteId = "site"
             };
-            var result = ConfigurationService.BuildResultValues<string>(_values, context);
+            var result = ConfigurationService.BuildResultValues(_values, context);
             Assert.AreEqual("9", result.First().Value.Value);
         }
 
@@ -233,7 +233,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             var context = new ContextHolder {
                 Module = "xitc",
             };
-            var result = ConfigurationService.BuildResultValues<string>(_values, context);
+            var result = ConfigurationService.BuildResultValues(_values, context);
             Assert.AreEqual("2", result.First().Value.Value);
         }
 
@@ -249,26 +249,26 @@ namespace softwrench.sW4.test.Configuration.Service {
             var context = new ContextHolder {
                 Module = "xitc",
             };
-            var result = ConfigurationService.BuildResultValues<string>(allModulesTest, context);
+            var result = ConfigurationService.BuildResultValues(allModulesTest, context);
             Assert.AreEqual("2", result.First().Value.Value);
 
 
             context = new ContextHolder {
                 Module = "purchase",
             };
-            result = ConfigurationService.BuildResultValues<string>(allModulesTest, context);
+            result = ConfigurationService.BuildResultValues(allModulesTest, context);
             Assert.AreEqual("3", result.First().Value.Value);
 
             context = new ContextHolder {
                 Module = "sso",
             };
-            result = ConfigurationService.BuildResultValues<string>(allModulesTest, context);
+            result = ConfigurationService.BuildResultValues(allModulesTest, context);
             Assert.AreEqual("4", result.First().Value.Value);
 
             context = new ContextHolder {
                 Module = null,
             };
-            result = ConfigurationService.BuildResultValues<string>(allModulesTest, context);
+            result = ConfigurationService.BuildResultValues(allModulesTest, context);
             Assert.AreEqual("2", result.First().Value.Value);
         }
 
@@ -281,14 +281,14 @@ namespace softwrench.sW4.test.Configuration.Service {
                 Module = "xitc",
                 UserProfiles = new SortedSet<int?> { 2 },
             };
-            var result = ConfigurationService.BuildResultValues<string>(_list1ProfileNoModule, context);
+            var result = ConfigurationService.BuildResultValues(_list1ProfileNoModule, context);
             Assert.IsFalse(result.Any());
         }
 
         [TestMethod]
         public void AskAndDoNotFind() {
             var context = new ContextHolder();
-            var result = ConfigurationService.BuildResultValues<string>(_list2NoDefault, context);
+            var result = ConfigurationService.BuildResultValues(_list2NoDefault, context);
             Assert.IsFalse(result.Any());
         }
 
@@ -303,7 +303,7 @@ namespace softwrench.sW4.test.Configuration.Service {
                 new PropertyValue {Value = "2", Condition = new WhereClauseCondition{ Global = true,OfflineOnly = true}}
 
             };
-            var result = ConfigurationService.BuildResultValues<string>(offlineModeValues, context);
+            var result = ConfigurationService.BuildResultValues(offlineModeValues, context);
             Assert.AreEqual("2", result.First().Value.Value);
         }
     }

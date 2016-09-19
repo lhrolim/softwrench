@@ -5,6 +5,7 @@ using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
 using System;
+using System.Threading.Tasks;
 
 namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository
 {
@@ -12,15 +13,15 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository
     {
 
         [NotNull]
-        IReadOnlyList<DataMap> Get([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto);
+        Task<IReadOnlyList<DataMap>> Get([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto);
 
         [CanBeNull]
-        DataMap Get([NotNull] EntityMetadata entityMetadata, [NotNull] string id);
+        Task<DataMap> Get([NotNull] EntityMetadata entityMetadata, [NotNull] string id);
 
-        int Count([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto);
+        Task<int> Count([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto);
 
         [CanBeNull]
-        AttributeHolder ByUserIdSite([NotNull] EntityMetadata entityMetadata,
+        Task<AttributeHolder> ByUserIdSite([NotNull] EntityMetadata entityMetadata,
             [NotNull] Tuple<string, string> userIdSiteTuple);
     }
 

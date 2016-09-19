@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using NHibernate.Linq;
+using NHibernate.Util;
 using softWrench.sW4.Data.Persistence.Operation;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {

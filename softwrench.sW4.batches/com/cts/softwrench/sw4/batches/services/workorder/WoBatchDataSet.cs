@@ -1,4 +1,5 @@
-﻿using cts.commons.portable.Util;
+﻿using System.Threading.Tasks;
+using cts.commons.portable.Util;
 using softwrench.sw4.batch.api.entities;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
@@ -15,8 +16,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             _contextLookuper = contextLookuper;
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
-            var result = base.GetList(application, searchDto);
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+            var result = await base.GetList(application, searchDto);
             foreach (var item in result.ResultObject) {
                 var status = item.GetAttribute("status") as string;
                 if (BatchStatus.SUBMITTING.ToString().EqualsIc(status)) {

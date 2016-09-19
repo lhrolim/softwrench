@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using softWrench.sW4.Data.API.Response;
@@ -23,7 +24,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [System.Web.Http.HttpGet]
-        public IGenericResponseResult Index(string lang = null, string search = null) {
+        public async Task<GenericResponseResult<FaqModel>> Index(string lang = null, string search = null) {
             /*
             var lstFromMetadata = (ApplicationConfiguration.IsProd) ? GetList() : GetMockedList();
             if (lstFromMetadata.Any(treeData => treeData.SolutionId != Convert.ToInt32(treeData.Description.Substring(1, 4))))
@@ -31,7 +32,7 @@ namespace softWrench.sW4.Web.Controllers {
                 throw new NotImplementedException();
             }
              */
-            var listToUse = ApplicationConfiguration.IsProd() ? new FaqUtils().GetList() : FaqUtils.GetMockedList();
+            var listToUse = ApplicationConfiguration.IsProd() ? await new FaqUtils().GetList() : FaqUtils.GetMockedList();
             //var listToUse = ApplicationConfiguration.IsProd() ? new FaqUtils().GetList() : new FaqUtils().GetList();
             var tree = GetTree(listToUse, lang, search);
             var model = new FaqModel(tree) { Lang = lang, Search = search };

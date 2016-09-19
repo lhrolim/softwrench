@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto;
 using softwrench.sw4.Shared2.Data.Association;
@@ -68,7 +69,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
         }
 
 
-        public ApplicationListResult GetRelatedLocationWorkorders(string location, string classification) {
+        public async Task<ApplicationListResult> GetRelatedLocationWorkorders(string location, string classification) {
             var sb = new StringBuilder();
             sb.AppendFormat(BaseSingleLocationWhereQuery, location);
             if (classification != null) {
@@ -81,7 +82,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {
             PaginatedSearchRequestDto dto = PaginatedSearchRequestDto.DefaultInstance(app.Schema);
             dto.PageSize = 10;
             dto.FilterFixedWhereClause = sb.ToString();
-            return dataSet.GetList(app, dto);
+            return await dataSet.GetList(app, dto);
         }
 
 

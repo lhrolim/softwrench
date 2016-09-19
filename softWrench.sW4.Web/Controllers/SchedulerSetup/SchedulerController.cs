@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Scheduler;
@@ -34,15 +35,15 @@ namespace softWrench.sW4.Web.Controllers.SchedulerSetup {
             return mocketList;
         }
 
-        public GenericResponseResult<List<SchedulerSetupModel>> Get(string name, string jobCommand) {
+        public async Task<GenericResponseResult<List<SchedulerSetupModel>>> Get(string name, string jobCommand) {
             var jobCommandEnum = (JobCommandEnum)Enum.Parse(typeof(JobCommandEnum), jobCommand);
-            _jobManager.ManageJobByCommand(name, jobCommandEnum);
+            await _jobManager.ManageJobByCommand(name, jobCommandEnum);
             return GetResponse(jobCommandEnum);
         }
 
-        public GenericResponseResult<List<SchedulerSetupModel>> Get(string name, string jobCommand, string cron) {
+        public async Task<GenericResponseResult<List<SchedulerSetupModel>>> Get(string name, string jobCommand, string cron) {
             var jobCommandEnum = (JobCommandEnum)Enum.Parse(typeof(JobCommandEnum), jobCommand);
-            _jobManager.ManageJobByCommand(name, (JobCommandEnum)Enum.Parse(typeof(JobCommandEnum), jobCommand), cron);
+            await _jobManager.ManageJobByCommand(name, (JobCommandEnum)Enum.Parse(typeof(JobCommandEnum), jobCommand), cron);
             return GetResponse(jobCommandEnum);
         }
 

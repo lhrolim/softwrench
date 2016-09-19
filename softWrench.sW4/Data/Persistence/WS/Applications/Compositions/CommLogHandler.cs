@@ -27,6 +27,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.IO;
 using System.Text;
+using NHibernate.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
     public class CommLogHandler : ISingletonComponent {

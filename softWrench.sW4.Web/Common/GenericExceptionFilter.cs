@@ -77,7 +77,7 @@ namespace softWrench.sW4.Web.Common {
             filterContext.Result = result;
             filterContext.ExceptionHandled = true;
             filterContext.HttpContext.Response.Clear();
-            filterContext.HttpContext.Response.StatusCode = 200;
+            filterContext.HttpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
             filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
         }
     }

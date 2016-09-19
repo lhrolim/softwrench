@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
@@ -32,10 +33,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             _swdbDao = swdbDao;
         }
 
-        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
+        public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
             JObject currentData) {
-            var compList = base.GetCompositionData(application, request, currentData);
-            compList = CommlogHelper.SetCommlogReadStatus(application, request, compList);
+            var compList = await base.GetCompositionData(application, request, currentData);
+            compList = await CommlogHelper.SetCommlogReadStatus(application, request, compList);
             return compList;
         }
 

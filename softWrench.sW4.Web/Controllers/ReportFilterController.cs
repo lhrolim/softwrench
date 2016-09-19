@@ -4,6 +4,7 @@ using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -24,14 +25,14 @@ namespace softWrench.sW4.Web.Controllers {
             _i18Nresolver = i18Nresolver;
         }
 
-        public IApplicationResponse Get(string application, [FromUri] DataRequestAdapter request) {
+        public async Task<IApplicationResponse> Get(string application, [FromUri] DataRequestAdapter request) {
             var user = SecurityFacade.CurrentUser();
 
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
 
-            var response = _dataController.Get(application, request);
+            var response = await _dataController.Get(application, request);
 
             return response;
         }

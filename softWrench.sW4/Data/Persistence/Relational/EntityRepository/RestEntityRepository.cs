@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.web.Util;
 using JetBrains.Annotations;
@@ -34,21 +35,21 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         }
 
 
-        public IReadOnlyList<DataMap> Get(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
-            var responseAsText = ExecuteGet(entityMetadata, searchDto);
+        public async Task<IReadOnlyList<DataMap>> Get(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
+            var responseAsText = await ExecuteGet(entityMetadata, searchDto);
             return _restResponseParser.ConvertXmlToDatamaps(entityMetadata, responseAsText);
         }
 
-        private string ExecuteGet(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
+        private async Task<string> ExecuteGet(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
             //TODO: use async
             var baseURL = BuildGetUrl(entityMetadata, searchDto, KeyName);
-            var responseAsText = RestUtil.CallRestApiSync(baseURL, "get", MaximoRestUtils.GetMaximoHeaders(KeyName));
+            var responseAsText = await RestUtil.CallRestApi(baseURL, "get", MaximoRestUtils.GetMaximoHeaders(KeyName));
             return responseAsText;
         }
 
-        public DataMap Get(EntityMetadata entityMetadata, string id) {
+        public async Task<DataMap> Get(EntityMetadata entityMetadata, string id) {
             var baseURL = BuildGetUrl(entityMetadata, new SearchRequestDto() { Id = id }, KeyName);
-            var responseAsText = RestUtil.CallRestApiSync(baseURL, "get", MaximoRestUtils.GetMaximoHeaders(KeyName));
+            var responseAsText = await RestUtil.CallRestApi(baseURL, "get", MaximoRestUtils.GetMaximoHeaders(KeyName));
             return _restResponseParser.ConvertXmlToDatamap(entityMetadata, responseAsText);
         }
 
@@ -172,7 +173,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         }
 
 
-        public int Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
+        public async Task<int> Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
             // rest interface: count comes in the root element when request is paginated
             // trick: fetch first page with single element with only id as projectionfield (minimal payload possible for count)
             var countQuery = new PaginatedSearchRequestDto() {
@@ -184,11 +185,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             // copy query
             countQuery.SetValuesDictionary(searchDto.ValuesDictionary);
 
-            var responseText = ExecuteGet(entityMetadata, countQuery);
+            var responseText = await ExecuteGet(entityMetadata, countQuery);
             return _restResponseParser.TotalCountFromXml(entityMetadata, responseText);
         }
 
-        public AttributeHolder ByUserIdSite(EntityMetadata entityMetadata, Tuple<string, string> userIdSiteTuple) {
+        public Task<AttributeHolder> ByUserIdSite(EntityMetadata entityMetadata, Tuple<string, string> userIdSiteTuple) {
             throw new NotImplementedException();
         }
     }

@@ -19,11 +19,11 @@ namespace softWrench.sW4.Scheduler {
 
         }
 
-        public void Execute(IJobExecutionContext context) {
-            DoExecute();
+        public async void Execute(IJobExecutionContext context) {
+            await DoExecute();
         }
 
-        protected void DoExecute() {
+        protected async Task DoExecute() {
             if (!IsEnabled) {
                 Log.InfoFormat("Skipping disabled job {0}", Name());
                 return;
@@ -33,9 +33,9 @@ namespace softWrench.sW4.Scheduler {
             var before = Stopwatch.StartNew();
             try {
                 Log.InfoFormat("Starting execution of {0}", Name());
-                ExecuteJob();
+                await ExecuteJob();
             } catch (Exception e) {
-                Log.Error(String.Format("error executing job {0} ", Name()), e);
+                Log.Error(string.Format("error executing job {0} ", Name()), e);
             } finally {
                 Log.Info(LoggingUtil.BaseDurationMessageFormat(before, "Finished execution of {0}", Name()));
                 LogicalThreadContext.SetData("user", null);
@@ -45,7 +45,7 @@ namespace softWrench.sW4.Scheduler {
         public abstract string Name();
         public abstract string Description();
         public abstract string Cron();
-        public abstract void ExecuteJob();
+        public abstract Task ExecuteJob();
 
         public virtual void OnJobSchedule(){
             //NOOP by default
@@ -53,9 +53,9 @@ namespace softWrench.sW4.Scheduler {
 
         public abstract bool RunAtStartup();
 
-        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public virtual async void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (RunAtStartup()) {
-                Task.Factory.StartNew(DoExecute);
+                await DoExecute();
             }
         }
 

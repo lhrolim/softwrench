@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
@@ -25,29 +26,29 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             _entityRepository = entityRepository;
         }
 
-        public int Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
-            return _entityRepository.Count(entityMetadata, searchDto);
+        public async Task<int> Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
+            return await _entityRepository.Count(entityMetadata, searchDto);
         }
 
-        public AttributeHolder FindById(SlicedEntityMetadata entityMetadata, string id, Tuple<string, string> userIdSitetuple) {
+        public async Task<AttributeHolder> FindById(SlicedEntityMetadata entityMetadata, string id, Tuple<string, string> userIdSitetuple) {
             if (id == null && userIdSitetuple == null) {
                 throw new InvalidOperationException("either id or userid needs to be provided");
             }
             if (id != null) {
-                return _entityRepository.Get(entityMetadata, id);
+                return await _entityRepository.Get(entityMetadata, id);
             }
-            return _entityRepository.ByUserIdSite(entityMetadata, userIdSitetuple);
+            return await _entityRepository.ByUserIdSite(entityMetadata, userIdSitetuple);
         }
 
-        public IReadOnlyList<AttributeHolder> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto) {
-            return Find(slicedEntityMetadata, searchDto, null);
+        public async Task<IReadOnlyList<AttributeHolder>> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto) {
+            return await Find(slicedEntityMetadata, searchDto, null);
         }
 
 
 
-        public IReadOnlyList<AttributeHolder> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto,
+        public async Task<IReadOnlyList<AttributeHolder>> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto,
             IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
-            var list = _entityRepository.Get(slicedEntityMetadata, searchDto);
+            var list = await _entityRepository.Get(slicedEntityMetadata, searchDto);
 
 
 

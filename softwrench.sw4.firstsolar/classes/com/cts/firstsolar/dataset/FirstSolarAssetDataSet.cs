@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Response;
@@ -27,14 +28,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         }
 
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var quickSearchDTO = searchDto.QuickSearchDTO;
 
             if (quickSearchDTO == null) {
                 if (_advancedSearchHandler.IsAdvancedSearch(searchDto)) {
                     _advancedSearchHandler.AppendAdvancedSearchWhereClause(application, searchDto, "asset");
                 }
-                return base.GetList(application, searchDto);
+                return await base.GetList(application, searchDto);
             }
 
             var query = _pcsLocationHandler.DoGetPCSQuery(quickSearchDTO.QuickSearchData, "asset");
@@ -42,7 +43,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 searchDto.AppendWhereClause(query);
             }
 
-            return base.GetList(application, searchDto);
+            return await base.GetList(application, searchDto);
         }
 
         /// <summary>

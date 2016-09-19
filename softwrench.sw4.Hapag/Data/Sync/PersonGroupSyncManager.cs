@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Entities.SyncManagers;
@@ -24,12 +25,12 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             _hlagLocationManager = hlagLocationManager;
         }
 
-        public void Sync() {
+        public async Task Sync() {
             var rowstamp = ConfigFacade.Lookup<long>(ConfigurationConstants.PersonGroupRowstampKey);
             var dto = new SearchRequestDto();
             //let´s search just for persongroups that begin with the prefix
             dto.AppendSearchEntry(PersonGroupColumn, HapagPersonGroupConstants.BaseHapagPrefix);
-            var personGroup = FetchNew(rowstamp, EntityName, dto);
+            var personGroup = await FetchNew(rowstamp, EntityName, dto);
             var attributeHolders = personGroup as AttributeHolder[] ?? personGroup.ToArray();
             if (!attributeHolders.Any()) {
                 //nothing to update
@@ -38,7 +39,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             var personGroupToSave = ConvertMaximoPersonGroupToPersonGroupEntity(attributeHolders);
             var resultList = SaveOrUpdatePersonGroup(personGroupToSave);
             _hlagLocationManager.UpdateCache(resultList);
-            SetRowstampIfBigger(ConfigurationConstants.PersonGroupRowstampKey, GetLastRowstamp(attributeHolders,new[]{"rowstamp"}), rowstamp);
+            await SetRowstampIfBigger(ConfigurationConstants.PersonGroupRowstampKey, GetLastRowstamp(attributeHolders,new[]{"rowstamp"}), rowstamp);
         }
 
 

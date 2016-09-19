@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using softwrench.sw4.batch.api.entities;
@@ -22,7 +23,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             _swdbdao = swdbdao;
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             if (searchDto.ValuesDictionary == null) {
                 //let´s fill this only for the first call
                 var endToday = DateUtil.EndOfToday();
@@ -30,8 +31,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 searchDto.AppendSearchEntry("schedstart", ">=" + beginDate.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture));
                 searchDto.AppendSearchEntry("schedfinish", "<=" + endToday.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture));
             }
-            var result = base.GetList(application, searchDto);
-            var allActiveBatches = _swdbdao.FindByQuery<MultiItemBatch>(MultiItemBatch.ActiveBatchesofApplication, application.Name);
+            var result = await base.GetList(application, searchDto);
+            var allActiveBatches = await _swdbdao.FindByQueryAsync<MultiItemBatch>(MultiItemBatch.ActiveBatchesofApplication, application.Name);
             var idsUsed = new HashSet<string>();
             foreach (var activeBatch in allActiveBatches) {
                 idsUsed.AddAll(activeBatch.ItemIds.Split(','));

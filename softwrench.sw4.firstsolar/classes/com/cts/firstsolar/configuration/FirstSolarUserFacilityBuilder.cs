@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector.Events;
 using Iesi.Collections.Generic;
@@ -55,16 +56,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         }
 
 
-        public void HandleEvent(UserLoginEvent userEvent) {
+        public async void HandleEvent(UserLoginEvent userEvent) {
             if (!ApplicationConfiguration.IsClient("firstsolar")) {
                 //to avoid issues on dev environments
                 return;
             }
             var user = userEvent.InMemoryUser;
-            AdjustUserFacilityProperties(user.Genericproperties, user.MaximoPersonId);
+            await AdjustUserFacilityProperties(user.Genericproperties, user.MaximoPersonId);
         }
 
-        public IDictionary<string, object> AdjustUserFacilityProperties(IDictionary<string, object> genericproperties, string maximoPersonId) {
+        public async Task<IDictionary<string, object>> AdjustUserFacilityProperties(IDictionary<string, object> genericproperties, string maximoPersonId) {
             var hasStoredFacilities = genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp);
 
             if (hasStoredFacilities && genericproperties.ContainsKey(FirstSolarConstants.AvailableFacilitiesProp)) {
@@ -74,7 +75,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             }
             //otherwise that list should be populated defaulting to the persongroups of the user
             var groups =
-                _dao.FindByNativeQuery("select persongroup from persongroupview where personid = ? and status = 'ACTIVE' and persongroup is not null",
+                await _dao.FindByNativeQueryAsync("select persongroup from persongroupview where personid = ? and status = 'ACTIVE' and persongroup is not null",
                     maximoPersonId);
 
             Log.InfoFormat("fetching persongroups for user {0}",maximoPersonId);
@@ -107,7 +108,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         public void PopulatePreferredFacilities(User user, string facilitiesToken) {
             var preferences = user.UserPreferences;
             if (preferences.GenericProperties == null) {
-                preferences.GenericProperties = new HashedSet<GenericProperty>();
+                preferences.GenericProperties = new LinkedHashSet<GenericProperty>();
             }
             var facilitiesProp = preferences.GenericProperties.FirstOrDefault(f => f.Key.Equals(FirstSolarConstants.FacilitiesProp));
             if (facilitiesProp == null) {

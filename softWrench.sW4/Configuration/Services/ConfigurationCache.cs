@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
-using NHibernate.Linq;
+using NHibernate.Util;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Security.Context;
 

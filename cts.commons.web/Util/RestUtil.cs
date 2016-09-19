@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace cts.commons.web.Util {
     public static class RestUtil {
-        public static async Task<WebResponse> CallRestApi(string url, string method, Dictionary<string, string> headers = null, string payload = null) {
+        public static async Task<string> CallRestApi(string url, string method, Dictionary<string, string> headers = null, string payload = null) {
             var request = DoBuildRequest(url, method, headers, payload);
             // fetch response
-            return await request.GetResponseAsync();
+            var webresponse = await request.GetResponseAsync();
+            return ConvertResponseToText(webresponse);
         }
 
         public static string CallRestApiSync(string url, string method, Dictionary<string, string> headers = null, string payload = null) {

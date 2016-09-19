@@ -13,6 +13,7 @@ using softWrench.sW4.Security.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
@@ -23,16 +24,16 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         {
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
-            var dbList = base.GetList(application, searchDto);
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+            var dbList = await base.GetList(application, searchDto);
             var resultObject = dbList.ResultObject;
             if ((application.Schema.SchemaId == "itcreport")) {
-                dbList.ResultObject = HandleITCReport(resultObject, application, searchDto);
+                dbList.ResultObject = await HandleITCReport(resultObject, application, searchDto);
             }
             return dbList;
         }
 
-        private IEnumerable<AttributeHolder> HandleITCReport(IEnumerable<AttributeHolder> resultObject, ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        private async Task<List<AttributeHolder>> HandleITCReport(IEnumerable<AttributeHolder> resultObject, ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
 
             var user = SecurityFacade.CurrentUser();
             var applicationSchemaKey = new ApplicationMetadataSchemaKey("itcreportregionandarea");
@@ -45,7 +46,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             complementSearchDTO.ShouldPaginate = false;
             
             ContextLookuper.FillContext(applicationSchemaKey); 
-            var complementaryList = base.GetList(complementApplicationMetadata, complementSearchDTO);
+            var complementaryList = await base.GetList(complementApplicationMetadata, complementSearchDTO);
             resultObject = resultObject.Union(complementaryList.ResultObject);
 
             foreach (var attributeHolder in resultObject) {

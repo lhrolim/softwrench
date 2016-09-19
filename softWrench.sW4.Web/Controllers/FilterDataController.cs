@@ -1,29 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.web.Attributes;
-using JetBrains.Annotations;
-using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
-using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Data.API.Association;
-using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
-using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.Security.Services;
-using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.Controllers {
 
@@ -55,7 +47,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <param name="labelSearchString"></param>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<IAssociationOption> GetFilterOptions([FromUri]ApplicationMetadataSchemaKey key,
+        public async Task<IEnumerable<IAssociationOption>> GetFilterOptions([FromUri]ApplicationMetadataSchemaKey key,
             string filterProvider, string filterAttribute, string labelSearchString) {
 
             var application = key.ApplicationName;
@@ -84,7 +76,7 @@ namespace softWrench.sW4.Web.Controllers {
                 filter.PageSize = 21;
             }
             //adopting to use an association to keep same existing service
-            var result = _associationResolver.ResolveOptions(app.Schema, Entity.GetInstance(MetadataProvider.EntityByApplication(application)), association, filter);
+            var result = await _associationResolver.ResolveOptions(app.Schema, Entity.GetInstance(MetadataProvider.EntityByApplication(application)), association, filter);
             return result;
 
         }

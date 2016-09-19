@@ -8,8 +8,8 @@ namespace cts.commons.Util {
             return new HashSet<T>(source);
         }
 
-        public static HashedSet<T> ToHashedSet<T>(this IEnumerable<T> source) {
-            return new HashedSet<T>(source.ToList());
+        public static LinkedHashSet<T> ToLinkedHashSet<T>(this IEnumerable<T> source) {
+            return new LinkedHashSet<T>(source.ToList());
         }
     }
 }

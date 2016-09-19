@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using log4net;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
@@ -43,7 +44,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
         }
 
 
-        public IApplicationResponse RedirectToNextSchema(RouterParameters routerParameter) {
+        public async Task<IApplicationResponse> RedirectToNextSchema(RouterParameters routerParameter) {
             var nextMetadata = routerParameter.NextApplication;
             var targetMocked = routerParameter.TargetMocked;
             var targetResult = routerParameter.TargetResult;
@@ -95,7 +96,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
                     return MockingUtils.GetMockedDataMap(applicationName, nextSchema, nextMetadata);
                 }
                 var detailRequest = new DetailRequest(nextSchema.GetSchemaKey(), null) { Id = id, UserIdSitetuple = userIdSiteTuple };
-                var response = dataSet.Get(nextMetadata, SecurityFacade.CurrentUser(), detailRequest);
+                var response = await dataSet.Get(nextMetadata, SecurityFacade.CurrentUser(), detailRequest);
                 return response;
             }
             if (nextSchema.Stereotype == SchemaStereotype.List) {
@@ -105,7 +106,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
                     Log.DebugFormat("applying checkpoint search");
                     paginatedSearchRequestDto = routerParameter.CheckPointContext[applicationKey].ListContext;
                 }
-                return dataSet.Get(nextMetadata, routerParameter.User, new DataRequestAdapter(paginatedSearchRequestDto));
+                return await dataSet.Get(nextMetadata, routerParameter.User, new DataRequestAdapter(paginatedSearchRequestDto));
             }
             throw new NotImplementedException("missing implementation for this kind of schema redirection");
         }

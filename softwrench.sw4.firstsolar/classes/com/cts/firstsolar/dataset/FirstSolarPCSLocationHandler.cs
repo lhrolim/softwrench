@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using softwrench.sw4.api.classes.fwk.filter;
@@ -32,7 +33,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return pCsQueryString;
         }
 
-        public IEnumerable<IAssociationOption> HandlePCSLocationProvider(FilterProviderParameters filterParameter) {
+        public async Task<ISet<IAssociationOption>> HandlePCSLocationProvider(FilterProviderParameters filterParameter) {
             var inputSearch = filterParameter.InputSearch;
             var pCsQueryString = DoGetPCSQuery(filterParameter.InputSearch, "Location");
             if (inputSearch.GetNumberOfItems("%") == 0) {
@@ -51,7 +52,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             filter.PageSize = 21;
             //            }
             //adopting to use an association to keep same existing service
-            var queryResponse = _entityRepository.Get(location, filter);
+            var queryResponse = await _entityRepository.Get(location, filter);
 
             ISet<IAssociationOption> options = new SortedSet<IAssociationOption>();
             foreach (var attributeHolder1 in queryResponse) {

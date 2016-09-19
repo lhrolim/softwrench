@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API;
@@ -25,8 +26,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog {
             _attachmentDAO = attachmentDAO;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = await base.GetApplicationDetail(application, user, request);
 
             var datamap = result.ResultObject.Fields;
             var id = datamap[application.IdFieldName];

@@ -5,8 +5,6 @@ using cts.commons.Util;
 using log4net;
 using Microsoft.Web.Mvc;
 using Newtonsoft.Json.Serialization;
-using NHibernate.Context;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.log4net;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;

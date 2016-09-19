@@ -97,7 +97,7 @@ namespace softWrench.sW4.Security.Init {
                         Active = true
                     });
                 }
-                var userCustomRoles = new HashedSet<UserCustomRole>
+                var userCustomRoles = new LinkedHashSet<UserCustomRole>
                 {
                     new UserCustomRole {Exclusion = false, Role = role},
                     new UserCustomRole {Exclusion = false, Role = role2}

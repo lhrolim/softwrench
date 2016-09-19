@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softWrench.sW4.Data.API.Composition;
@@ -35,11 +36,11 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
             return parameter.BASEDto;
         }
 
-        protected override IDictionary<string, EntityRepository.SearchEntityResult> ResolveCompositionResult(SlicedEntityMetadata parentEntityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionsToResolve, Entity parentData, PaginatedSearchRequestDto search) {
+        protected override async Task<IDictionary<string, EntityRepository.SearchEntityResult>> ResolveCompositionResult(SlicedEntityMetadata parentEntityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionsToResolve, Entity parentData, PaginatedSearchRequestDto search) {
             var requestedWorklogs = compositionsToResolve.ContainsKey("worklog_");
             var requestedAttachments = compositionsToResolve.ContainsKey("attachment_");
             if (!requestedWorklogs && !requestedAttachments) {
-                return base.ResolveCompositionResult(parentEntityMetadata, compositionsToResolve, parentData, search);
+                return await base.ResolveCompositionResult(parentEntityMetadata, compositionsToResolve, parentData, search);
             }
             var restCompositions = new Dictionary<string, ApplicationCompositionSchema>();
             if (requestedWorklogs) {
@@ -54,10 +55,10 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
             }
 
             // every composition except worklogs and attachments
-            var baseResult = base.ResolveCompositionResult(parentEntityMetadata, compositionsToResolve, parentData, search);
+            var baseResult = await base.ResolveCompositionResult(parentEntityMetadata, compositionsToResolve, parentData, search);
             
             // only worklogs and/or attachments
-            var restResult = _restCompositionsResolver.ResolveRestCompositions(parentEntityMetadata, restCompositions, parentData, search);
+            var restResult = await _restCompositionsResolver.ResolveRestCompositions(parentEntityMetadata, restCompositions, parentData, search);
             
             return baseResult.AddRange(restResult);
         }

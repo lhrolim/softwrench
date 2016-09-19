@@ -380,7 +380,7 @@
             <composition relationship="worklog" label="Work Logs" detailschema="qsrcompositiondetail">
               <collectionproperties allowcreation="@originalstatus!='CLOSED'" allowupdate="false" allowremoval="false" prefilterfunction="FilterQSRWorklogs"/>
             </composition>
-            <reference id="attachment"/>
+            <reference id="attachments"/>
           </section>
         </schema>
       </schemas>

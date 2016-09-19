@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Security;
 using cts.commons.persistence;
 using cts.commons.Util;
 using Newtonsoft.Json.Linq;
-using NHibernate.Util;
 using softwrench.sw4.Shared2.Util;
 using softwrench.sw4.user.classes.services.setup;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -38,9 +38,12 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private const string ExpiredLinkException = "The link has expired, please contact your administrator and ask for a new link";
 
         private readonly UserManager _userManager;
+        private readonly SecurityFacade _facade;
 
-        public UserSetupController(UserManager userManager) {
+        public UserSetupController(UserManager userManager, SecurityFacade facade)
+        {
             _userManager = userManager;
+            _facade = facade;
         }
 
         [System.Web.Http.HttpGet]
@@ -138,9 +141,9 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return false;
         }
 
-        private void AfterPasswordSet(SwUser user, string password, string userTimezoneOffset) {
+        private async void AfterPasswordSet(SwUser user, string password, string userTimezoneOffset) {
             //logining in the user and redirecting him to home page
-            var inMemoryUser = SecurityFacade.GetInstance().LoginCheckingPassword(user, password, userTimezoneOffset);
+            var inMemoryUser = await _facade.LoginCheckingPassword(user, password, userTimezoneOffset);
             AuthenticationCookie.SetSessionCookie(user.UserName, userTimezoneOffset, Response);
             FormsAuthentication.RedirectFromLoginPage(user.UserName, false);
             Thread.CurrentPrincipal = inMemoryUser;
@@ -181,9 +184,9 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
         [System.Web.Http.HttpPost]
-        public IGenericResponseResult ForgotPassword([FromUri]string userNameOrEmail) {
+        public async Task<IGenericResponseResult> ForgotPassword([FromUri]string userNameOrEmail) {
             Validate.NotNull(userNameOrEmail, "userNameOrEmail");
-            var exception =_userManager.ForgotPassword(userNameOrEmail);
+            var exception =await _userManager.ForgotPassword(userNameOrEmail);
             if (exception != null){
                 throw new SecurityException(exception);
             }

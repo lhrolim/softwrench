@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.API.Response;
@@ -17,8 +18,8 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
             return "pesco";
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
-            var result = base.GetList(application, searchDto);
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+            var result = await base.GetList(application, searchDto);
             result.ResultObject.ToList().ForEach(CopyStatus);
             return result;
         }

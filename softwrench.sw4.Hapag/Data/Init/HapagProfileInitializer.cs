@@ -35,7 +35,7 @@ namespace softwrench.sw4.Hapag.Data.Init {
         private void AssociateRoles(ProfileType profileType, UserProfile userProfile, IDictionary<RoleType, Role> ordinaryRoles) {
             switch (profileType) {
                 case ProfileType.Itc:
-                    userProfile.Roles = new HashedSet<Role>(){
+                    userProfile.Roles = new LinkedHashSet<Role>(){
                         ordinaryRoles[RoleType.Incident],
                         ordinaryRoles[RoleType.Asset],
                         ordinaryRoles[RoleType.Faq],

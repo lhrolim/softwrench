@@ -8,7 +8,6 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.API;
-using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Context;
@@ -18,7 +17,6 @@ using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Controllers.Routing;
 using softWrench.sW4.Web.Models.Application;
-using softWrench.sW4.Web.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,6 +26,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.IO.Compression;
+using System.Threading.Tasks;
 
 namespace softWrench.sW4.Web.Controllers.Application {
     [System.Web.Mvc.Authorize]
@@ -51,14 +50,14 @@ namespace softWrench.sW4.Web.Controllers.Application {
             _contextLookuper = contextLookuper;
         }
 
-        public ActionResult Index(string application, string popupmode, [FromUri]DataRequestAdapter request) {
+        public async Task<ActionResult> Index(string application, string popupmode, [FromUri]DataRequestAdapter request) {
             var user = SecurityFacade.CurrentUser();
             var app = MetadataProvider.Application(application);
             var schemas = app.Schemas();
             ApplicationSchemaDefinition appSchema;
             if (schemas.TryGetValue(request.Key, out appSchema)) {
                 //todo apply security
-                var dataResponse = _dataController.Get(application, request);
+                var dataResponse = await _dataController.Get(application, request);
                 var model = new ApplicationModel(application, appSchema.SchemaId, request.Key.Mode.ToString().ToLower(), appSchema.Title, dataResponse);
                 TempData["model"] = model;
                 return RedirectToAction("Index", "Generic",
@@ -71,7 +70,7 @@ namespace softWrench.sW4.Web.Controllers.Application {
             throw new InvalidOperationException(String.Format("schema {0} not found", request.Key));
         }
         [ValidateInput(false)]
-        public ActionResult Input([NotNull] string application, string json, ClientPlatform platform, [NotNull] string currentSchemaKey, string nextSchemaKey) {
+        public async Task<ActionResult> Input([NotNull] string application, string json, ClientPlatform platform, [NotNull] string currentSchemaKey, string nextSchemaKey) {
 
             var user = SecurityFacade.CurrentUser();
 
@@ -106,13 +105,13 @@ namespace softWrench.sW4.Web.Controllers.Application {
                 };
                 if (String.IsNullOrWhiteSpace(entityId)) {
                     Log.DebugFormat("redirecting to datacontroller post with datamap " + datamap);
-                    response = _dataController.Post(new JsonRequestWrapper {
+                    response = await _dataController.Post(new JsonRequestWrapper {
                         Json = datamap,
                         RequestData = operationRequest
                     });
                 } else {
                     Log.DebugFormat("redirecting to datacontroller put");
-                    response = _dataController.Put(new JsonRequestWrapper {
+                    response = await _dataController.Put(new JsonRequestWrapper {
                         Json = datamap,
                         RequestData = operationRequest
                     });

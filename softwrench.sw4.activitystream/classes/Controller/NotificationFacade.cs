@@ -67,7 +67,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         // This will query against the base notification dataset to pull the necessary columns
         // for notifications and will use the security groups to determine which tables to get
         // notifications for and append any necessary where clauses to the query
-        public void UpdateNotificationStreams() {
+        public async Task UpdateNotificationStreams() {
             _securityGroupsNotificationsQueries = _queryBuilder.BuildNotificationsQueries();
             var currentTime = DateTime.Now.FromServerToRightKind();
             var tasks = new Task[_securityGroupsNotificationsQueries.Count];
@@ -75,12 +75,12 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             foreach (var securityGroupsNotificationsQuery in _securityGroupsNotificationsQueries) {
                 _log.DebugFormat("Updating notifications for security group {0}", securityGroupsNotificationsQuery.Key);
                 var query = securityGroupsNotificationsQuery;
-                tasks[i++] = Task.Factory.NewThread(() => ExecuteNotificationsQuery(query.Key, query.Value, currentTime));
+                tasks[i++] = ExecuteNotificationsQuery(query.Key, query.Value, currentTime);
             }
-            Task.WaitAll(tasks);
+            await Task.WhenAll(tasks);
         }
 
-        private void ExecuteNotificationsQuery(string groupKey, string query, DateTime currentTime) {
+        private async Task ExecuteNotificationsQuery(string groupKey, string query, DateTime currentTime) {
             // TODO: Add checking for security group key in the counter. If a Security Group is added while the application is running this will break the activity stream until the application is restarted.
             if (!_responseBuilder.IsGroupInitialized(groupKey)) {
                 return;
@@ -90,7 +90,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             }
             //TODO: why always servicerequest here?
             var formattedQuery = query.Fmt(ActivityStreamConstants.HoursToPurge, _responseBuilder.MaxServiceRequestId(groupKey));
-            var queryResult = _maxDAO.FindByNativeQuery(formattedQuery);
+            var queryResult = await _maxDAO.FindByNativeQueryAsync(formattedQuery);
             if (!queryResult.Any()) {
                 return;
             }

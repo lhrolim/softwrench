@@ -1,5 +1,6 @@
 ﻿using System;
 using cts.commons.persistence;
+using cts.commons.Util;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
@@ -23,7 +24,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
 
             if ("servicerequest".Equals(application.Name) && "crud_update".Equals(operation)) {
                 var user = SecurityFacade.CurrentUser();
-                var detail = GetApplicationDetail(application, user, new DetailRequest(id, application.Schema.GetSchemaKey()));
+                var detail = AsyncHelper.RunSync(()=>GetApplicationDetail(application, user, new DetailRequest(id, application.Schema.GetSchemaKey())));
 
                 if (detail != null) {
                     result.ResultObject = detail.ResultObject;

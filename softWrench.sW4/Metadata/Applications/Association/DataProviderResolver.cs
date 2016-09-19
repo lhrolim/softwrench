@@ -24,12 +24,12 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         }
 
 
-        public IEnumerable<IAssociationOption> ResolveOptions([NotNull] ApplicationSchemaDefinition schema,
+        public async Task<IEnumerable<IAssociationOption>> ResolveOptions([NotNull] ApplicationSchemaDefinition schema,
             [NotNull] AttributeHolder originalEntity, [NotNull] IDataProviderContainer association,
             SearchRequestDto associationFilter) {
 
             if (association is ApplicationAssociationDefinition) {
-                return _associationResolver.ResolveOptions(schema, originalEntity,
+                return await _associationResolver.ResolveOptions(schema, originalEntity,
                     (ApplicationAssociationDefinition)association, associationFilter);
             }
             return _optionFieldResolver.ResolveOptions(schema, originalEntity, (OptionField)association, associationFilter);

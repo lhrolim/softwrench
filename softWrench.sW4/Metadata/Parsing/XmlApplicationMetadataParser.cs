@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using NHibernate.Linq;
+using NHibernate.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Metadata.Applications.Validator;
 using softWrench.sW4.Metadata.Stereotypes;

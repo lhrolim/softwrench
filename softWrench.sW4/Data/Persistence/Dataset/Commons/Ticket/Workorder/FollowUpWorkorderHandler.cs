@@ -24,10 +24,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder {
             return Maximoengine.Create(followupData.CrudData);
         }
 
-        private void SaveOriginator(FollowUpOperationData followUpData) {
+        private async void SaveOriginator(FollowUpOperationData followUpData) {
             var maximoExecutionContext = GetContext(followUpData);
             var metadataToUse = followUpData.EntityMetadata;
-            var oldEntity = (DataMap)EntityRepository.Get(metadataToUse, followUpData.origrecordid);
+            var oldEntity = await EntityRepository.Get(metadataToUse, followUpData.origrecordid);
             if (oldEntity == null) {
                 throw new InvalidOperationException(String.Format(NotFoundLog, metadataToUse.Name, followUpData.origrecordid));
             }

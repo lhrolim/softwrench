@@ -1,6 +1,5 @@
 ﻿using FluentMigrator;
 using FluentMigrator.Runner;
-using FluentMigrator.Runner.Generators.DB2;
 using FluentMigrator.Runner.Processors;
 
 namespace softWrench.sW4.Web.DB_Migration.DB2_FluentMigrator {

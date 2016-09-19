@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using softWrench.sW4.Data.Persistence.Relational.Collection;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
@@ -19,12 +20,12 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
             _restRepository = restRepository;
         }
 
-        protected override EntityRepository.SearchEntityResult GetList(EntityMetadata entityMetadata, SearchRequestDto dto, bool offlineMode) {
+        protected override async Task<EntityRepository.SearchEntityResult> GetList(EntityMetadata entityMetadata, SearchRequestDto dto, bool offlineMode) {
             if (offlineMode) {
-                return base.GetList(entityMetadata, dto, true);
+                return await base.GetList(entityMetadata, dto, true);
             }
 
-            var result = _restRepository.Get(entityMetadata, dto);
+            var result = await _restRepository.Get(entityMetadata, dto);
 
             return new EntityRepository.SearchEntityResult() {
                 ResultList = result.Select(d => new Dictionary<string, object>(d.Fields, StringComparer.OrdinalIgnoreCase)).ToList(),
@@ -33,10 +34,10 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
             };
         }
 
-        protected override int GetCount(EntityMetadata entityMetadata, SearchRequestDto dto, bool offlineMode) {
+        protected override async Task<int> GetCount(EntityMetadata entityMetadata, SearchRequestDto dto, bool offlineMode) {
             return offlineMode
-                ? base.GetCount(entityMetadata, dto, true)
-                : _restRepository.Count(entityMetadata, dto);
+                ? await base.GetCount(entityMetadata, dto, true)
+                : await _restRepository.Count(entityMetadata, dto);
         }
 
         

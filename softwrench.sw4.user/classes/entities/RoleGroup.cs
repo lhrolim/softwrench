@@ -1,4 +1,5 @@
-﻿using NHibernate.Mapping.Attributes;
+﻿using System.Collections.Generic;
+using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.user.classes.entities {
 
@@ -18,7 +19,7 @@ namespace softwrench.sw4.user.classes.entities {
         [Set(0, Lazy = CollectionLazy.False, Inverse = true)]
         [Key(1, Column = "rolegroup_id")]
         [OneToMany(2, ClassType = typeof(Role))]
-        public virtual Iesi.Collections.Generic.ISet<Role> Roles { get; set; }
+        public virtual ISet<Role> Roles { get; set; }
 
 
     }

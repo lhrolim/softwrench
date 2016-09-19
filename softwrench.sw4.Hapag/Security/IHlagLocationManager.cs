@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using softwrench.sw4.Shared2.Data.Association;
 using cts.commons.simpleinjector;
 using softwrench.sw4.user.classes.entities;
@@ -18,8 +19,8 @@ namespace softwrench.sw4.Hapag.Security
         IEnumerable<HlagGroupedLocation> FindAllLocationsOfCurrentUser();
 
         IEnumerable<HlagGroupedLocation> FindAllLocations();
-        IEnumerable<IAssociationOption> FindDefaultITCsOfLocation(string subcustomer);
+        Task<IEnumerable<IAssociationOption>> FindDefaultITCsOfLocation(string subcustomer);
 
-        IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId);
+        Task<IEnumerable<IAssociationOption>> FindCostCentersOfITC(string subCustomer, string personId);
     }
 }

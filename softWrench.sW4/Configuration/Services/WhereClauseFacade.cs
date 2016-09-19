@@ -13,7 +13,9 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
+using cts.commons.Util;
 using Iesi.Collections.Generic;
 using NHibernate.Util;
 using softwrench.sw4.user.classes.entities;
@@ -48,6 +50,10 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         public WhereClauseResult Lookup(string applicationName, ApplicationLookupContext lookupContext = null, ContextHolder contextHolder = null) {
+            return AsyncHelper.RunSync(() => LookupAsync(applicationName, lookupContext, contextHolder));
+        }
+
+        public async Task<WhereClauseResult> LookupAsync(string applicationName, ApplicationLookupContext lookupContext = null, ContextHolder contextHolder = null) {
             var context = _contextLookuper.LookupContext();
             if (contextHolder != null) {
                 context = contextHolder;
@@ -55,7 +61,7 @@ namespace softWrench.sW4.Configuration.Services {
             if (lookupContext != null) {
                 context.ApplicationLookupContext = lookupContext;
             }
-            var resultString = _configurationService.Lookup<string>(GetFullKey(applicationName), context);
+            var resultString = await _configurationService.Lookup<string>(GetFullKey(applicationName), context);
             return BuildWhereClauseResult(resultString);
         }
 
@@ -104,6 +110,10 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         public void Register(string applicationName, String query, WhereClauseRegisterCondition condition = null, bool validate = false) {
+            AsyncHelper.RunSync(() => RegisterAsync(applicationName, query, condition, validate));
+        }
+
+        public async Task RegisterAsync(string applicationName, String query, WhereClauseRegisterCondition condition = null, bool validate = false) {
 
             var result = Validate(applicationName, validate);
             if (!result) {
@@ -114,16 +124,16 @@ namespace softWrench.sW4.Configuration.Services {
             if (!_appStarted) {
                 _toRegister.Add(Tuple.Create(configKey, query, condition));
             } else {
-                DoRegister(configKey, query, condition);
+                await DoRegister(configKey, query, condition);
             }
         }
 
-        public Iesi.Collections.Generic.ISet<UserProfile> ProfilesByApplication(string applicationName, InMemoryUser loggedUser) {
+        public async Task<ISet<UserProfile>> ProfilesByApplication(string applicationName, InMemoryUser loggedUser) {
 
             var profiles = loggedUser.Profiles;
             if (!EnumerableExtensions.Any(profiles)) {
                 //no profiles at all, nothing to consider
-                return new HashedSet<UserProfile>();
+                return new LinkedHashSet<UserProfile>();
             }
             int? defaultId = null;
             var sb = new StringBuilder();
@@ -137,9 +147,9 @@ namespace softWrench.sW4.Configuration.Services {
 
                 var holder = new ContextHolder {
                     CurrentSelectedProfile = profile.Id,
-                    UserProfiles = new System.Collections.Generic.SortedSet<int?>(loggedUser.ProfileIds)
+                    UserProfiles = new SortedSet<int?>(loggedUser.ProfileIds)
                 };
-                var wc = _configurationService.Lookup<string>(GetFullKey(applicationName), holder);
+                var wc = await _configurationService.Lookup<string>(GetFullKey(applicationName), holder);
                 if (!string.IsNullOrEmpty(wc)) {
                     result.Add(profile);
                 } else {
@@ -155,7 +165,7 @@ namespace softWrench.sW4.Configuration.Services {
 
             }
 
-            return new Iesi.Collections.Generic.HashedSet<UserProfile>(result);
+            return new LinkedHashSet<UserProfile>(result);
         }
 
         private static string GetFullKey(string applicationName) {
@@ -173,7 +183,7 @@ namespace softWrench.sW4.Configuration.Services {
             return true;
         }
 
-        private void DoRegister(string configKey, string query, WhereClauseRegisterCondition condition) {
+        private async Task DoRegister(string configKey, string query, WhereClauseRegisterCondition condition) {
 
 
 
@@ -194,11 +204,11 @@ namespace softWrench.sW4.Configuration.Services {
                     Contextualized = true
                 };
 
-                _dao.Save(definition);
+                await _dao.SaveAsync(definition);
                 return;
             }
 
-            var savedDefinition = _dao.FindSingleByQuery<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
+            var savedDefinition = await _dao.FindSingleByQueryAsync<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
 
 
             Condition storedCondition = null;
@@ -209,11 +219,11 @@ namespace softWrench.sW4.Configuration.Services {
 
             if (condition.Alias != null) {
                 //this means that we actually have a condition rather then just a simple utility class WhereClauseRegisterCondition, that could be used for profiles and modules
-                storedCondition = _dao.FindSingleByQuery<WhereClauseCondition>(Condition.ByAlias, condition.Alias);
+                storedCondition = await _dao.FindSingleByQueryAsync<WhereClauseCondition>(Condition.ByAlias, condition.Alias);
                 if (storedCondition != null) {
                     condition.Id = storedCondition.Id;
                 }
-                storedCondition = _dao.Save(condition.RealCondition);
+                storedCondition = await _dao.SaveAsync(condition.RealCondition);
             }
 
             var profile = new UserProfile();
@@ -226,7 +236,7 @@ namespace softWrench.sW4.Configuration.Services {
                 }
             }
 
-            var storedValue = _dao.FindSingleByQuery<PropertyValue>(
+            var storedValue = await _dao.FindSingleByQueryAsync<PropertyValue>(
                   PropertyValue.ByDefinitionConditionModuleProfile,
                   savedDefinition.FullKey, storedCondition, condition.Module, profile.Id);
 
@@ -238,16 +248,16 @@ namespace softWrench.sW4.Configuration.Services {
                     Module = condition.Module,
                     UserProfile = profile.Id
                 };
-                _dao.Save(newValue);
+                await _dao.SaveAsync(newValue);
             } else {
                 storedValue.SystemStringValue = query;
-                _dao.Save(storedValue);
+                await _dao.SaveAsync(storedValue);
             }
         }
 
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public async void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             foreach (var entry in _toRegister) {
-                DoRegister(entry.Item1, entry.Item2, entry.Item3);
+                await DoRegister(entry.Item1, entry.Item2, entry.Item3);
             }
             _appStarted = true;
         }

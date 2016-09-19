@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
@@ -42,13 +43,13 @@ namespace softWrench.sW4.Data.Entities {
             _maxDAO = maxDAO;
         }
 
-        public AttributeHolder ById(string documentId) {
+        public async Task<AttributeHolder> ById(string documentId) {
             var entityMetadata = MetadataProvider.Entity(EntityName);
             var searchRequestDto = SearchRequestDto.GetFromDictionary(new Dictionary<string, string>() { { "docinfoid", documentId } });
             searchRequestDto.AppendProjectionField(new ProjectionField("urlname", "urlname"));
             searchRequestDto.AppendProjectionField(new ProjectionField("document", "document"));
             searchRequestDto.AppendProjectionField(new ProjectionField("docinfoid", "docinfoid"));
-            var list = EntityRepository.Get(entityMetadata, searchRequestDto);
+            var list = await EntityRepository.Get(entityMetadata, searchRequestDto);
             var result = list.FirstOrDefault();
             return result;
         }

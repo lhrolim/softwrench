@@ -5,7 +5,7 @@ using System.Web;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
-using NHibernate.Linq;
+using NHibernate.Util;
 using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;

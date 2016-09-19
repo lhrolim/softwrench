@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.portable.Util;
 using cts.commons.web.Attributes;
@@ -60,7 +61,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// relying on external attributes</param>
         /// <returns></returns>
         [HttpPost]
-        public IEnumerable<IAssociationOption> GetFilteredOptions([FromUri]ApplicationMetadataSchemaKey key, [FromUri]string associationKey, [FromUri]string labelSearchString,
+        public async Task<IEnumerable<IAssociationOption>> GetFilteredOptions([FromUri]ApplicationMetadataSchemaKey key, [FromUri]string associationKey, [FromUri]string labelSearchString,
             JObject currentData) {
 
             //this is the main application, such as sr
@@ -75,7 +76,7 @@ namespace softWrench.sW4.Web.Controllers {
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), MetadataProvider.EntityByApplication(application), app, currentData);
 
             //adopting to use an association to keep same existing service
-            var result = _dataProviderResolver.ResolveOptions(app.Schema, cruddata, association, filter);
+            var result = await _dataProviderResolver.ResolveOptions(app.Schema, cruddata, association, filter);
             return result;
         }
 
@@ -87,7 +88,7 @@ namespace softWrench.sW4.Web.Controllers {
         ///
         [NotNull]
         [HttpPost]
-        public GenericResponseResult<LookupOptionsFetchResultDTO> GetLookupOptions([FromUri] LookupOptionsFetchRequestDTO request, JObject currentData) {
+        public async Task<GenericResponseResult<LookupOptionsFetchResultDTO>> GetLookupOptions([FromUri] LookupOptionsFetchRequestDTO request, JObject currentData) {
 
             var application = request.ParentKey.ApplicationName;
 
@@ -101,20 +102,20 @@ namespace softWrench.sW4.Web.Controllers {
                 applicationMetadata, currentData);
 
 
-            var response = baseDataSet.GetLookupOptions(applicationMetadata, request, cruddata);
+            var response = await baseDataSet.GetLookupOptions(applicationMetadata, request, cruddata);
 
             return new GenericResponseResult<LookupOptionsFetchResultDTO>(response);
         }
 
         [HttpPost]
-        public IAssociationOption LookupSingleAssociation([FromUri] ApplicationMetadataSchemaKey key, string associationKey, string associationValue, JObject currentData) {
+        public async Task<IAssociationOption> LookupSingleAssociation([FromUri] ApplicationMetadataSchemaKey key, string associationKey, string associationValue, JObject currentData) {
             if (associationValue == null) {
                 return null;
             }
 
             Log.DebugFormat("retrieving single association value for {0}:{1} app {2} ", associationKey, associationValue, key.ApplicationName);
             //TODO: make specific method for single association to increase performance/encapsulation
-            var result = DoGetAssociations(key, new SingleAssociationPrefetcherRequest() { AssociationsToFetch = associationKey }, currentData);
+            var result = await DoGetAssociations(key, new SingleAssociationPrefetcherRequest() { AssociationsToFetch = associationKey }, currentData);
             if (result.PreFetchLazyOptions.ContainsKey(associationKey)) {
                 var preFetchLazyOption = result.PreFetchLazyOptions[associationKey];
                 if (preFetchLazyOption.ContainsKey(associationValue.ToLower())) {
@@ -138,13 +139,13 @@ namespace softWrench.sW4.Web.Controllers {
         ///
         [NotNull]
         [HttpPost]
-        public GenericResponseResult<AssociationMainSchemaLoadResult> GetSchemaOptions([FromUri] ApplicationMetadataSchemaKey key, [FromUri] bool showmore, JObject currentData) {
-            var result = DoGetAssociations(key, new SchemaAssociationPrefetcherRequest() { IsShowMoreMode = showmore }, currentData);
+        public async Task<GenericResponseResult<AssociationMainSchemaLoadResult>> GetSchemaOptions([FromUri] ApplicationMetadataSchemaKey key, [FromUri] bool showmore, JObject currentData) {
+            var result = await DoGetAssociations(key, new SchemaAssociationPrefetcherRequest() { IsShowMoreMode = showmore }, currentData);
 
             return new GenericResponseResult<AssociationMainSchemaLoadResult>(result);
         }
 
-        private AssociationMainSchemaLoadResult DoGetAssociations(ApplicationMetadataSchemaKey key, IAssociationPrefetcherRequest associationPrefetcherRequest,
+        private async Task<AssociationMainSchemaLoadResult> DoGetAssociations(ApplicationMetadataSchemaKey key, IAssociationPrefetcherRequest associationPrefetcherRequest,
             JObject currentData) {
             var user = SecurityFacade.CurrentUser();
 
@@ -163,7 +164,7 @@ namespace softWrench.sW4.Web.Controllers {
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata,
                 applicationMetadata, currentData);
 
-            var result = baseDataSet.BuildAssociationOptions(cruddata, applicationMetadata.Schema,
+            var result = await baseDataSet.BuildAssociationOptions(cruddata, applicationMetadata.Schema,
                 associationPrefetcherRequest);
             return result;
         }

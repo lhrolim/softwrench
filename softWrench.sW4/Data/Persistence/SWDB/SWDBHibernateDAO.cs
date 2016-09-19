@@ -52,15 +52,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
 
 
 
-        public IList<T> FindAll<T>(Type type) where T : class {
-            using (var session = GetSession()) {
-                using (session.BeginTransaction()) {
-                    var query = BuildQuery("from " + type.Name, (object[])null, session);
-                    return query.List<T>();
-                }
-            }
-        }
-
+      
         #region configuration
 
         protected override string GetDialect() {

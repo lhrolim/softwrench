@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.web.Attributes;
 using Iesi.Collections.Generic;
@@ -46,13 +47,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         }
 
         [HttpPost]
-        public IApplicationResponse SubmitBatch(BatchSubmissionData batchData, [FromUri] FirstSolarBatchType batchType) {
+        public async Task<IApplicationResponse> SubmitBatch(BatchSubmissionData batchData, [FromUri] FirstSolarBatchType batchType) {
             var batch = Batch.TransientInstance("workorder", SecurityFacade.CurrentUser());
-            batch.Items = new HashedSet<BatchItem>(batchData.SpecificData.Select(s => FirstSolarDatamapConverterUtil.BuildBatchItem(s, batchData, batchType)).ToList());
+            batch.Items = new LinkedHashSet<BatchItem>(batchData.SpecificData.Select(s => FirstSolarDatamapConverterUtil.BuildBatchItem(s, batchData, batchType)).ToList());
             var resultBatch = _submissionService.Submit(batch, new BatchOptions() { Synchronous = true });
             var woDataSet = DataSetProvider.GetInstance().LookupDataSet("workorder", "list");
             var dto = _redirectionHelper.BuildDTO(resultBatch);
-            var applicationListResult = woDataSet.GetList(
+            var applicationListResult = await woDataSet.GetList(
                 MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("list")),
                 dto);
             applicationListResult.SuccessMessage = batchType.GetSuccessMessage(resultBatch.TargetResults.Count);
@@ -101,8 +102,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         }
 
         [HttpGet]
-        public IApplicationResponse GetListOfRelatedWorkorders(string location, string classification) {
-            var listResult = _validationHelper.GetRelatedLocationWorkorders(location, classification);
+        public async Task<IApplicationResponse> GetListOfRelatedWorkorders(string location, string classification) {
+            var listResult = await _validationHelper.GetRelatedLocationWorkorders(location, classification);
             if (!listResult.ResultObject.Any()) {
                 return new BlankApplicationResponse();
             }

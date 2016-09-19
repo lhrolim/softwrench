@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using SimpleInjector;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using cts.commons.simpleinjector.Core.Order;
@@ -32,12 +33,12 @@ namespace softWrench.sW4.Scheduler.Jobs {
             return "0 0/15/30/45 * * * ?";
         }
 
-        public override void ExecuteJob() {
+        public override async Task ExecuteJob() {
             if (_syncManagers == null) {
                 GetSyncManagers();
             }
             foreach (var userSyncManager in _syncManagers) {
-                userSyncManager.Sync();
+                await userSyncManager.Sync();
             }
         }
 

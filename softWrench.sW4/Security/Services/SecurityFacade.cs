@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Security;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
@@ -59,7 +60,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
         [CanBeNull]
-        public InMemoryUser DoLogin(User dbUser, string userTimezoneOffset) {
+        public async Task<InMemoryUser> DoLogin(User dbUser, string userTimezoneOffset) {
 
             if (!dbUser.UserName.Equals("swadmin") && dbUser.IsActive.HasValue && dbUser.IsActive == false) {
                 //swadmin cannot be inactive--> returning a non active user, so that we can differentiate it from a not found user on screen
@@ -72,7 +73,7 @@ namespace softWrench.sW4.Security.Services {
                 //no need to sync to maximo, since there´s no such maximoPersonId
                 return UserFound(dbUser, userTimezoneOffset);
             }
-            var maximoUser = _userSyncManager.GetUserFromMaximoBySwUser(dbUser);
+            var maximoUser = await _userSyncManager.GetUserFromMaximoBySwUser(dbUser);
             if (maximoUser == null) {
                 Log.WarnFormat("maximo user {0} not found", dbUser.MaximoPersonId);
                 return null;
@@ -82,11 +83,11 @@ namespace softWrench.sW4.Security.Services {
         }
 
         [CanBeNull]
-        public InMemoryUser LoginCheckingPassword(User dbUser, string typedPassword, string userTimezoneOffset) {
+        public async Task<InMemoryUser> LoginCheckingPassword(User dbUser, string typedPassword, string userTimezoneOffset) {
             if (dbUser == null || !MatchPassword(dbUser, typedPassword)) {
                 return null;
             }
-            return DoLogin(dbUser, userTimezoneOffset);
+            return await DoLogin(dbUser, userTimezoneOffset);
         }
 
 
@@ -114,7 +115,7 @@ namespace softWrench.sW4.Security.Services {
                 userTimezoneOffsetInt = tmp;
             }
 
-            var profiles = _userProfileManager.FindUserProfiles(dbUser);
+            var profiles = AsyncHelper.RunSync(()=>_userProfileManager.FindUserProfiles(dbUser));
             var gridPreferences = new GridPreferences() {
                 GridFilters = _gridFilterManager.LoadAllOfUser(dbUser.Id)
             };
@@ -230,7 +231,8 @@ namespace softWrench.sW4.Security.Services {
             var fullUser = new User();
             LogicalThreadContext.SetData("executinglogin", "true");
             if (!swUser.Systemuser && swUser.MaximoPersonId != null) {
-                fullUser = _userSyncManager.GetUserFromMaximoBySwUser(swUser);
+                //TODO: Async this method
+                fullUser = AsyncHelper.RunSync(()=>_userSyncManager.GetUserFromMaximoBySwUser(swUser));
                 if (fullUser == null) {
                     Log.WarnFormat("user {0} not found on database", swUser.MaximoPersonId);
                     fullUser = new User();
@@ -276,7 +278,7 @@ namespace softWrench.sW4.Security.Services {
             return _userProfileManager.FetchAllProfiles(eager);
         }
 
-        public User SaveUser(User user, Iesi.Collections.Generic.ISet<UserProfile> profiles, Iesi.Collections.Generic.ISet<UserCustomRole> customRoles, Iesi.Collections.Generic.ISet<UserCustomConstraint> customConstraints) {
+        public User SaveUser(User user, ISet<UserProfile> profiles, ISet<UserCustomRole> customRoles, ISet<UserCustomConstraint> customConstraints) {
             user.Profiles = profiles;
             user.CustomRoles = customRoles;
             user.CustomConstraints = customConstraints;
@@ -303,9 +305,9 @@ namespace softWrench.sW4.Security.Services {
             SWDBHibernateDAO.GetInstance().Delete(user);
         }
 
-        public User FetchUser(int id) {
+        public async Task<User> FetchUser(int id) {
             var swUser = UserManager.GetUserById(id);
-            var maximoUser = _userSyncManager.GetUserFromMaximoBySwUser(swUser);
+            var maximoUser = await _userSyncManager.GetUserFromMaximoBySwUser(swUser);
             if (maximoUser == null) {
                 return swUser;
             }

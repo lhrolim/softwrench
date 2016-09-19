@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using cts.commons.portable.Util;
 using softWrench.sW4.Data.API.Response;
@@ -9,7 +10,6 @@ using cts.commons.web.Controller;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Web.Util;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using CompressionUtil = cts.commons.Util.CompressionUtil;
@@ -28,7 +28,7 @@ namespace softWrench.sW4.Web.Controllers {
             _excelUtil = excelUtil;
         }
 
-        public FileContentResult Export(string application, [FromUri]ApplicationMetadataSchemaKey key,
+        public async Task<FileContentResult> Export(string application, [FromUri]ApplicationMetadataSchemaKey key,
             [FromUri] PaginatedSearchRequestDto searchDTO, string module) {
 
 
@@ -36,7 +36,7 @@ namespace softWrench.sW4.Web.Controllers {
             if (module != null) {
                 _contextLookuper.LookupContext().Module = module;
             }
-            var dataResponse = _dataController.Get(application, new DataRequestAdapter {
+            var dataResponse = await _dataController.Get(application, new DataRequestAdapter {
                 Key = key,
                 SearchDTO = searchDTO
             });

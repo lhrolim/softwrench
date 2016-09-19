@@ -35,6 +35,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
 using softwrench.sw4.batch.api.services;
 using softwrench.sW4.Shared2.Metadata.Applications;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.API.Association.Lookup;
@@ -136,7 +137,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         protected abstract IConnectorEngine Engine();
 
 
-        public Int32 GetCount(ApplicationMetadata application, [CanBeNull]IDataRequest request) {
+        public async Task<int> GetCount(ApplicationMetadata application, [CanBeNull]IDataRequest request) {
 
 
             SearchRequestDto searchDto = null;
@@ -150,10 +151,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             searchDto.BuildProjection(application.Schema);
 
-            return Engine().Count(entityMetadata, searchDto);
+            return await Engine().Count(entityMetadata, searchDto);
         }
 
-        public IApplicationResponse Get(ApplicationMetadata application, InMemoryUser user, IDataRequest request) {
+        public async Task<IApplicationResponse> Get(ApplicationMetadata application, InMemoryUser user, IDataRequest request) {
             var adapter = request as DataRequestAdapter;
             if (adapter != null) {
                 if (adapter.SearchDTO != null) {
@@ -164,33 +165,33 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
 
             if (request is PaginatedSearchRequestDto) {
-                return GetList(application, (PaginatedSearchRequestDto)request);
+                return await GetList(application, (PaginatedSearchRequestDto)request);
             }
             if (request is DetailRequest) {
-                return GetApplicationDetail(application, user, (DetailRequest)request);
+                return await GetApplicationDetail(application, user, (DetailRequest)request);
             }
             if (application.Schema.Stereotype == SchemaStereotype.List) {
-                return GetList(application, PaginatedSearchRequestDto.DefaultInstance(application.Schema));
+                return await GetList(application, PaginatedSearchRequestDto.DefaultInstance(application.Schema));
             }
             if (application.Schema.Stereotype == SchemaStereotype.Detail || application.Schema.Stereotype == SchemaStereotype.DetailNew || request.Key.Mode == SchemaMode.input) {
                 //case of detail of new items
-                return GetApplicationDetail(application, user, DetailRequest.GetInstance(application, adapter));
+                return await GetApplicationDetail(application, user, DetailRequest.GetInstance(application, adapter));
             }
             throw new InvalidOperationException("could not determine which operation to take upon request");
         }
 
-        protected virtual DataMap FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+        protected virtual async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            return (DataMap)Engine().FindById(entityMetadata, request.Id, request.UserIdSitetuple);
+            return (DataMap)await Engine().FindById(entityMetadata, request.Id, request.UserIdSitetuple);
         }
 
-        public virtual ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+        public virtual async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema, user);
             DataMap dataMap;
             if (request.IsEditionRequest) {
-                dataMap = FetchDetailDataMap(application, user, request);
+                dataMap = await FetchDetailDataMap(application, user, request);
 
                 if (dataMap == null) {
                     return null;
@@ -206,12 +207,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 //creation of items
                 dataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, entityMetadata.Schema.MappingType);
             }
-            var associationResults = BuildAssociationOptions(dataMap, application.Schema, request);
+            var associationResults = await BuildAssociationOptions(dataMap, application.Schema, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
             return detailResult;
         }
 
-        private void LoadCompositions(ApplicationMetadata application, DetailRequest request,
+        private async void LoadCompositions(ApplicationMetadata application, DetailRequest request,
             IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemas, DataMap dataMap) {
             var prefetchCompositions =
                 "true".EqualsIc(application.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions)) ||
@@ -229,12 +230,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             if (compostionsToUse.Any()) {
                 var preFetchedCompositionFetchRequest = new PreFetchedCompositionFetchRequest(new List<AttributeHolder> { dataMap });
                 preFetchedCompositionFetchRequest.CompositionList = new List<string>(compostionsToUse.Keys);
-                GetCompositionData(application, preFetchedCompositionFetchRequest, null);
+               await GetCompositionData(application, preFetchedCompositionFetchRequest, null);
             }
         }
 
-        public virtual CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
-            var data = DoGetCompositionData(application, request, currentData);
+        public virtual async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
+            var data = await DoGetCompositionData(application, request, currentData);
 
             // SWWEB-2046: adding download url to the datamap
             // fetching url at drag-time does not work
@@ -256,11 +257,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
         }
 
-        protected virtual IDictionary<string, EntityRepository.SearchEntityResult> ResolveCompositionResult(SlicedEntityMetadata parentEntityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionsToResolve, Entity parentData, PaginatedSearchRequestDto search) {
-            return CollectionResolver.ResolveCollections(parentEntityMetadata, compositionsToResolve, parentData, search);
+        protected virtual async Task<IDictionary<string, EntityRepository.SearchEntityResult>> ResolveCompositionResult(SlicedEntityMetadata parentEntityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionsToResolve, Entity parentData, PaginatedSearchRequestDto search) {
+            return await CollectionResolver.ResolveCollections(parentEntityMetadata, compositionsToResolve, parentData, search);
         }
 
-        private CompositionFetchResult DoGetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
+        private async Task<CompositionFetchResult> DoGetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
             var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
@@ -278,19 +279,19 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             if (request is PreFetchedCompositionFetchRequest) {
                 var listOfEntities = ((PreFetchedCompositionFetchRequest)request).PrefetchEntities;
-                result = CollectionResolver.ResolveCollections(entityMetadata, compostionsToUse, listOfEntities);
+                result = await CollectionResolver.ResolveCollections(entityMetadata, compostionsToUse, listOfEntities);
                 return new CompositionFetchResult(result, listOfEntities.FirstOrDefault());
             }
 
             var cruddata = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), entityMetadata, application, currentData, request.Id);
 
-            result = ResolveCompositionResult(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
+            result = await ResolveCompositionResult(entityMetadata, compostionsToUse, cruddata, request.PaginatedSearch);
 
             return new CompositionFetchResult(result, cruddata);
         }
 
 
-        public virtual ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public virtual async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var totalCount = searchDto.TotalCount;
             IReadOnlyList<AttributeHolder> entities = null;
 
@@ -321,7 +322,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto);
             QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
 
-            var tasks = new Task[1];
             var ctx = ContextLookuper.LookupContext();
 
             // add pre selected filter if originally it had not a searchDTO
@@ -331,13 +331,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
 
             //count query
-            tasks[0] = Task.Factory.NewThread(c => {
-                Quartz.Util.LogicalThreadContext.SetData("context", c);
-                if (searchDto.NeedsCountUpdate) {
-                    Log.DebugFormat("BaseApplicationDataSet#GetList calling Count method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, c);
-                    totalCount = Engine().Count(entityMetadata, searchDto.ShallowCopy());
-                }
-            }, ctx);
+            if (searchDto.NeedsCountUpdate) {
+                Quartz.Util.LogicalThreadContext.SetData("context", ctx);
+                Log.DebugFormat("BaseApplicationDataSet#GetList calling Count method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, ctx);
+                totalCount = await Engine().Count(entityMetadata, searchDto.ShallowCopy());
+            }
 
             //query
 
@@ -357,7 +355,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 dto.ShouldPaginate = dto.ShouldPaginate && !"true".Equals(schema.Properties[ApplicationSchemaPropertiesCatalog.DisablePagination]);
             }
             Log.DebugFormat("BaseApplicationDataSet#GetList calling Find method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, ctx);
-            entities = Engine().Find(entityMetadata, dto, applicationCompositionSchemata);
+            entities = await Engine().Find(entityMetadata, dto, applicationCompositionSchemata);
 
 
             // Get the composition data for the list, only in the case of detailed list (like printing details), otherwise, this is unecessary
@@ -365,14 +363,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 var request = new PreFetchedCompositionFetchRequest(entities) {
                     CompositionList = new List<string>(applicationCompositionSchemata.Keys)
                 };
-                GetCompositionData(application, request, null);
+                await GetCompositionData(application, request, null);
             }
 
 
-
-            Task.WaitAll(tasks);
             var listOptionsPrefetchRequest = new ListOptionsPrefetchRequest();
-            var associationResults = BuildAssociationOptions(DataMap.BlankInstance(application.Name), application.Schema, listOptionsPrefetchRequest);
+            var associationResults = await BuildAssociationOptions(DataMap.BlankInstance(application.Name), application.Schema, listOptionsPrefetchRequest);
             return new ApplicationListResult(totalCount, searchDto, entities, schema, associationResults) {
                 AffectedProfiles = ctx.AvailableProfilesForGrid.Select(s => s.ToDTO()),
                 CurrentSelectedProfile = ctx.CurrentSelectedProfile
@@ -382,7 +378,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
 
 
-        public virtual AssociationMainSchemaLoadResult BuildAssociationOptions(AttributeHolder dataMap,
+        public virtual async Task<AssociationMainSchemaLoadResult> BuildAssociationOptions(AttributeHolder dataMap,
             ApplicationSchemaDefinition schema, IAssociationPrefetcherRequest request) {
 
             var result = new AssociationMainSchemaLoadResult();
@@ -428,27 +424,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 }
                 var association = applicationAssociation;
 
-                tasks.Add(Task.Factory.NewThread(c => {
-                    Quartz.Util.LogicalThreadContext.SetData("context", c);
-                    var associationOptions = _associationOptionResolver.ResolveOptions(schema, dataMap, association, search);
-                    var associationData = (associationOptions == null) ? new IAssociationOption[0] : associationOptions.ToArray();
-                    if (association.IsEagerLoaded()) {
-                        eagerFetchedOptions.Add(association.AssociationKey, associationData);
-                    } else {
-                        if (!lazyOptions.ContainsKey(association.AssociationKey)) {
-                            lazyOptions[association.AssociationKey] = new Dictionary<string, IAssociationOption>();
-                        }
-                        if (associationData.Any()) {
-                            foreach (var associationOption in associationData) {
-                                //usually we´ll have just one option, unless we´re dealing with associations of inline compositions
-                                lazyOptions[association.AssociationKey].Add(associationOption.Value.ToLower(), associationOption);
-                            }
-
-                        }
-
-
-                    }
-                }, ctx));
+                tasks.Add(AssociationResolverWork(dataMap, schema, ctx, association, search, eagerFetchedOptions, lazyOptions));
 
             }
             #endregion
@@ -475,7 +451,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
 
 
-            Task.WaitAll(tasks.ToArray());
+            await Task.WhenAll(tasks.ToArray());
 
             //let's handle eventual inline compositions afterwards to avoid an eventual thread explosion
             #region inlineCompositions
@@ -489,7 +465,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             result.PreFetchLazyOptions = lazyOptions;
 
             if (schema.HasInlineComposition && dataMap is CrudOperationData) {
-                var innerCompositions = GenerateInlineCompositionResult(dataMap, schema, request);
+                var innerCompositions = await GenerateInlineCompositionResult(dataMap, schema, request);
                 result.MergeWithOtherSchemas(innerCompositions);
             }
 
@@ -498,7 +474,28 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return result;
         }
 
-        private List<AssociationMainSchemaLoadResult> GenerateInlineCompositionResult(AttributeHolder dataMap, ApplicationSchemaDefinition schema,
+        private async Task AssociationResolverWork(AttributeHolder dataMap, ApplicationSchemaDefinition schema, object c,
+            ApplicationAssociationDefinition association, SearchRequestDto search, IDictionary<string, IEnumerable<IAssociationOption>> eagerFetchedOptions,
+            IDictionary<string, IDictionary<string, IAssociationOption>> lazyOptions) {
+            Quartz.Util.LogicalThreadContext.SetData("context", c);
+            var associationOptions = await _associationOptionResolver.ResolveOptions(schema, dataMap, association, search);
+            var associationData = (associationOptions == null) ? new IAssociationOption[0] : associationOptions.ToArray();
+            if (association.IsEagerLoaded()) {
+                eagerFetchedOptions.Add(association.AssociationKey, associationData);
+            } else {
+                if (!lazyOptions.ContainsKey(association.AssociationKey)) {
+                    lazyOptions[association.AssociationKey] = new Dictionary<string, IAssociationOption>();
+                }
+                if (associationData.Any()) {
+                    foreach (var associationOption in associationData) {
+                        //usually we´ll have just one option, unless we´re dealing with associations of inline compositions
+                        lazyOptions[association.AssociationKey].Add(associationOption.Value.ToLower(), associationOption);
+                    }
+                }
+            }
+        }
+
+        private async Task<List<AssociationMainSchemaLoadResult>> GenerateInlineCompositionResult(AttributeHolder dataMap, ApplicationSchemaDefinition schema,
             IAssociationPrefetcherRequest request) {
 
             //TODO: switch to CompositionSchemaLoadResult in order to have different eager options available
@@ -520,7 +517,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     if (compositionData != null) {
                         var compositeDataMap = new CompositeDatamap(compositionData);
                         var compositionRequest = new InlineCompositionAssociationPrefetcherRequest(request, composition.AssociationKey);
-                        var task = Task<AssociationMainSchemaLoadResult>.Factory.StartNew(() => BuildAssociationOptions(compositeDataMap, listCompositionSchema, compositionRequest));
+                        var task = BuildAssociationOptions(compositeDataMap, listCompositionSchema, compositionRequest);
                         inlineCompositionTasks.Add(task);
                     }
                 }
@@ -530,7 +527,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 return result;
             }
 
-            Task.WaitAll(inlineCompositionTasks.ToArray());
+            await Task.WhenAll(inlineCompositionTasks.ToArray());
             foreach (var completedTask in inlineCompositionTasks) {
                 result.Add(((Task<AssociationMainSchemaLoadResult>)completedTask).Result);
             }
@@ -631,7 +628,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return Engine().Execute(operationWrapper);
         }
 
-        public GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociations(ApplicationMetadata application,
+        public async Task<GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>> UpdateAssociations(ApplicationMetadata application,
             AssociationUpdateRequest request, JObject currentData) {
 
             var entityMetadata = MetadataProvider.Entity(application.Entity);
@@ -641,11 +638,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             //                request.AssociationsToFetch = AssociationHelper.AllButSchema;
             //                return new GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>(BuildAssociationOptions(cruddata, application, request));
             //            }
-            return new GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>(DoUpdateAssociation(application, request, cruddata));
+            return new GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>(await DoUpdateAssociation(application, request, cruddata));
         }
 
 
-        public virtual LookupOptionsFetchResultDTO GetLookupOptions(ApplicationMetadata application, LookupOptionsFetchRequestDTO lookupRequest, AttributeHolder cruddata) {
+        public virtual async Task<LookupOptionsFetchResultDTO> GetLookupOptions(ApplicationMetadata application, LookupOptionsFetchRequestDTO lookupRequest, AttributeHolder cruddata) {
             var before = LoggingUtil.StartMeasuring(Log, "fetching lookup options for application {0} schema {1}", application.Name, application.Schema.Name);
 
             var association = application.Schema.Associations().FirstOrDefault(f => (EntityUtil.IsRelationshipNameEquals(f.AssociationKey, lookupRequest.AssociationFieldName)));
@@ -658,7 +655,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 SchemaFilterBuilder.AddPreSelectedFilters(associationApplicationMetadata.Schema.SchemaFilters, lookupRequest.SearchDTO);
             }
 
-            var options = _associationOptionResolver.ResolveOptions(application.Schema, cruddata, association, lookupRequest.SearchDTO);
+            var options = await _associationOptionResolver.ResolveOptions(application.Schema, cruddata, association, lookupRequest.SearchDTO);
 
             if (Log.IsDebugEnabled) {
                 Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finished execution of options fetching. Resolved collections: {0}"));
@@ -675,7 +672,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         /// <param name="cruddata"></param>
         /// <returns></returns>
             //TODO: refactor this code, removing lookup and autocomplete searches to a specific method
-        protected virtual IDictionary<string, BaseAssociationUpdateResult> DoUpdateAssociation(ApplicationMetadata application, AssociationUpdateRequest request,
+        protected virtual async Task<IDictionary<string, BaseAssociationUpdateResult>> DoUpdateAssociation(ApplicationMetadata application, AssociationUpdateRequest request,
             AttributeHolder cruddata) {
 
             var before = LoggingUtil.StartMeasuring(Log, "starting update association options fetching for application {0} schema {1}", application.Name, application.Schema.Name);
@@ -725,11 +722,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                         continue;
                     }
 
-                    tasks.Add(Task.Factory.NewThread(c => {
+                    tasks.Add(Task.Factory.NewThread(async c => {
                         var perThreadContext = ctx.ShallowCopy();
                         Quartz.Util.LogicalThreadContext.SetData("context", perThreadContext);
 
-                        var options = _associationOptionResolver.ResolveOptions(application.Schema, cruddata, association,
+                        var options = await _associationOptionResolver.ResolveOptions(application.Schema, cruddata, association,
                             searchRequest);
 
                         resultObject.Add(association.AssociationKey,
@@ -739,7 +736,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 }
             }
 
-            Task.WaitAll(tasks.ToArray());
+            await Task.WhenAll(tasks.ToArray());
 
             if (Log.IsDebugEnabled) {
                 var keys = string.Join(",", resultObject.Keys.Where(k => resultObject[k].AssociationData != null));

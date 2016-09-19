@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.audit.Interfaces;
@@ -23,9 +24,9 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.dataset {
             _auditManager = auditManager;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request)
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request)
         {
-            var result = base.GetApplicationDetail(application, user, request);
+            var result = await base.GetApplicationDetail(application, user, request);
 
 
             if (result != null && _contextLookuper.LookupContext().ScanMode)

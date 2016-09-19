@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
 using softwrench.sw4.Shared2.Data.Association;
@@ -28,11 +29,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return "workorder,otherworkorder";
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             if (_advancedSearchHandler.IsAdvancedSearch(searchDto)) {
                 _advancedSearchHandler.AppendAdvancedSearchWhereClause(application, searchDto, "workorder");
             }
-            return base.GetList(application, searchDto);
+            return await base.GetList(application, searchDto);
         }
 
         public override SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {

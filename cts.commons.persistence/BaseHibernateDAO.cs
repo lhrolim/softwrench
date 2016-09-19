@@ -12,6 +12,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using cts.commons.persistence.Event;
 using cts.commons.persistence.Util;
 using cts.commons.portable.Util;
@@ -24,7 +25,7 @@ using FlushMode = NHibernate.FlushMode;
 namespace cts.commons.persistence {
 
 
-    public abstract class BaseHibernateDAO : ISingletonComponent, ISWEventListener<RestartDBEvent> {
+    public abstract class BaseHibernateDAO : IBaseHibernateDAO, ISingletonComponent, ISWEventListener<RestartDBEvent> {
 
         private static readonly ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
 
@@ -40,8 +41,10 @@ namespace cts.commons.persistence {
             if (!applicationConfiguration.IsUnitTest) {
                 _sessionManager = new SessionManagerWrapper(GetConnectionString(), GetDriverName(), GetDialect(), GetListOfAssemblies(), applicationConfiguration);
             }
-            
+
         }
+
+
 
 
         [CanBeNull]
@@ -177,12 +180,16 @@ namespace cts.commons.persistence {
 
         [NotNull]
         public List<Dictionary<string, string>> FindByNativeQuery(string queryst, params object[] parameters) {
+            return AsyncHelper.RunSync(() => FindByNativeQueryAsync(queryst, parameters));
+        }
+
+        public async Task<List<Dictionary<string, string>>> FindByNativeQueryAsync(string queryst, params object[] parameters) {
             IList<dynamic> queryResult;
             using (var session = GetSession()) {
-                using (session.BeginTransaction()) {
+                using (await session.BeginTransactionAsync()) {
                     var query = BuildQuery(queryst, parameters, session, true);
                     query.SetResultTransformer(NhTransformers.ExpandoObject);
-                    queryResult = query.List<dynamic>();
+                    queryResult = await query.ListAsync<dynamic>();
                 }
             }
             if (queryResult == null || !queryResult.Any()) {
@@ -195,12 +202,17 @@ namespace cts.commons.persistence {
         }
 
         public IList<dynamic> FindByNativeQuery(string queryst, ExpandoObject parameters, IPaginationData paginationData = null, string queryAlias = null) {
+            return AsyncHelper.RunSync(() => FindByNativeQueryAsync(queryst, parameters, paginationData, queryAlias));
+        }
+
+        public async Task<IList<dynamic>> FindByNativeQueryAsync(string queryst, ExpandoObject parameters, IPaginationData paginationData = null,
+            string queryAlias = null) {
             var before = Stopwatch.StartNew();
             using (var session = GetSession()) {
-                using (session.BeginTransaction()) {
+                using (await session.BeginTransactionAsync()) {
                     var query = BuildQuery(queryst, parameters, session, true, paginationData);
                     query.SetResultTransformer(NhTransformers.ExpandoObject);
-                    var result = query.List<dynamic>();
+                    var result = await query.ListAsync<dynamic>();
                     GetLog()
                         .Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done query".Fmt(queryAlias ?? "")));
                     return result;
@@ -209,13 +221,18 @@ namespace cts.commons.persistence {
         }
 
         public T FindSingleByNativeQuery<T>(string queryst, params object[] parameters) where T : class {
+            return AsyncHelper.RunSync(() => FindSingleByNativeQueryAsync<T>(queryst, parameters));
+        }
+
+        public async Task<T> FindSingleByNativeQueryAsync<T>(string queryst, params object[] parameters) where T : class {
             using (var session = GetSession()) {
-                using (session.BeginTransaction()) {
+                using (await session.BeginTransactionAsync()) {
                     var query = BuildQuery(queryst, parameters, session, true);
-                    return (T)query.UniqueResult();
+                    return await query.UniqueResultAsync<T>();
                 }
             }
         }
+
 
         /// <summary>
         /// Executes update sql queries 
@@ -225,21 +242,27 @@ namespace cts.commons.persistence {
         /// <param name="parameters">The parameters</param>
         /// <returns>The affected row count</returns>
         public int ExecuteSql(string sql, params object[] parameters) {
+            return AsyncHelper.RunSync(() => ExecuteSqlAsync(sql, parameters));
+        }
+
+        public async Task<int> ExecuteSqlAsync(string sql, params object[] parameters) {
             using (var session = GetSession()) {
-                using (var transaction = session.BeginTransaction()) {
+                using (var transaction = await session.BeginTransactionAsync()) {
                     var query = session.CreateSQLQuery(sql);
                     if (parameters != null) {
                         for (int i = 0; i < parameters.Length; i++) {
                             query.SetParameter(i, parameters[i]);
                         }
                     }
-                    var result = query.ExecuteUpdate();
-                    transaction.Commit();
+                    var result = await query.ExecuteUpdateAsync();
+                    await transaction.CommitAsync();
 
                     return result;
                 }
             }
         }
+
+
 
         //public int FindSingleByQuery(String queryst, params object[] parameters)  {
         //    using (var session = GetSessionManager().OpenSession()) {
@@ -250,16 +273,21 @@ namespace cts.commons.persistence {
         //    }
         //}
         public int CountByNativeQuery(string queryst, ExpandoObject parameters, string queryAlias = null) {
+            return AsyncHelper.RunSync(() => CountByNativeQueryAsync(queryst, parameters, queryAlias));
+        }
+
+        public async Task<int> CountByNativeQueryAsync(string queryst, ExpandoObject parameters, string queryAlias = null) {
             var before = Stopwatch.StartNew();
             using (var session = GetSession()) {
-                using (session.BeginTransaction()) {
+                using (await session.BeginTransactionAsync()) {
                     var query = BuildQuery(queryst, parameters, session, true, null, queryAlias);
-                    var result = Convert.ToInt32(query.UniqueResult());
+                    var result = Convert.ToInt32(await query.UniqueResultAsync());
                     GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done count query".Fmt(queryAlias ?? "")));
                     return result;
                 }
             }
         }
+
 
 
 

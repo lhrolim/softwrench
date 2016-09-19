@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using cts.commons.simpleinjector;
 using log4net;
 using NHibernate.Linq;
@@ -32,7 +33,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             var title = fullTitle;
             if (title.Length > 20) {
                 title = "";
-                appTitle.Split(' ').ForEach(token => title += token.Substring(0, 1).ToUpper());
+                appTitle.Split(' ').ToList().ForEach(token => title += token.Substring(0, 1).ToUpper());
                 title += " Details";
             }
             var hasUserId = !string.IsNullOrEmpty(userId);

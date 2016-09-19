@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
@@ -106,14 +107,14 @@ namespace softWrench.sW4.Security.Services {
                 .FindByQuery<User>(querystring);
         }
 
-        public virtual User CreateMissingDBUser(string userName, bool save = true) {
+        public virtual async Task<User> CreateMissingDBUser(string userName, bool save = true) {
             var personid = userName.ToUpper();
             if (IsHapagProd) {
                 if (!personid.EndsWith(HlagPrefix)) {
                     personid += HlagPrefix;
                 }
             }
-            var user = UserSyncManager.GetUserFromMaximoByPersonId(personid, true);
+            var user = await UserSyncManager.GetUserFromMaximoByPersonId(personid, true);
             if (user == null) {
                 //if the user does not exist on maximo, then we should not create it on softwrench either
                 return null;
@@ -127,10 +128,10 @@ namespace softWrench.sW4.Security.Services {
                 }
             }
             user.IsActive = true;
-            user.CustomRoles = new HashedSet<UserCustomRole>();
+            user.CustomRoles = new LinkedHashSet<UserCustomRole>();
             if (save) {
                 try {
-                    return _dao.Save(user);
+                    return await _dao.SaveAsync(user);
                 } catch (Exception e) {
                     if (_ldapManager.IsLdapSetup()) {
                         //recovering from scenarios where there might have been an already created user on softwrench with a personid equal to an existing user in maximo
@@ -148,12 +149,12 @@ namespace softWrench.sW4.Security.Services {
             return user;
         }
 
-        public User SyncLdapUser(User existingUser, bool isLdapSetup) {
+        public async Task<User> SyncLdapUser(User existingUser, bool isLdapSetup) {
             if (existingUser.MaximoPersonId == null || existingUser.Systemuser) {
                 return existingUser;
             }
 
-            var user = UserSyncManager.GetUserFromMaximoBySwUser(existingUser);
+            var user = await UserSyncManager.GetUserFromMaximoBySwUser(existingUser);
             if (user == null) {
                 return existingUser;
             }
@@ -174,13 +175,14 @@ namespace softWrench.sW4.Security.Services {
         public User FindUserByLink(string tokenLink, out bool hasExpired) {
             var user = UserLinkManager.RetrieveUserByLink(tokenLink, out hasExpired);
             if (user != null) {
-                var maximoUser = UserSyncManager.GetUserFromMaximoBySwUser(user);
+                //TODO: Async refactoring
+                var maximoUser = AsyncHelper.RunSync(()=> UserSyncManager.GetUserFromMaximoBySwUser(user));
                 user.MergeMaximoWithNewUser(maximoUser);
             }
             return user;
         }
 
-        public string ForgotPassword(string userNameOrEmail) {
+        public async Task<string> ForgotPassword(string userNameOrEmail) {
             var isEmail = new EmailAddressAttribute().IsValid(userNameOrEmail);
             User user;
             string emailToSend = null;
@@ -205,7 +207,7 @@ namespace softWrench.sW4.Security.Services {
                     return "The email {0} is not registered on the database".Fmt(userNameOrEmail);
                 }
             }
-            user = UserSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(user);
+            user = await UserSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(user);
             if (user.IsPoPulated()) {
                 return "User {0} not found".Fmt(userNameOrEmail);
             }
@@ -213,12 +215,12 @@ namespace softWrench.sW4.Security.Services {
             return null;
         }
 
-        public void SendActivationEmail(int userId, string email) {
+        public async void SendActivationEmail(int userId, string email) {
             var user = _dao.FindByPK<User>(typeof(User), userId);
             if (user == null) {
                 throw new InvalidOperationException("user {0} not found".Fmt(userId));
             }
-            user = UserSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(user);
+            user = await UserSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(user);
             if (user.IsPoPulated()) {
                 UserSetupEmailService.SendActivationEmail(user, email);
             }

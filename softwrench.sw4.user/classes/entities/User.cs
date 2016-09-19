@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.persistence.Util;
@@ -155,8 +156,8 @@ namespace softwrench.sw4.user.classes.entities {
 
         public User() {
             Person = new Person();
-            Profiles = new HashedSet<UserProfile>();
-            CustomRoles = new HashedSet<UserCustomRole>();
+            Profiles = new LinkedHashSet<UserProfile>();
+            CustomRoles = new LinkedHashSet<UserCustomRole>();
         }
         /// <summary>
         /// used for nhibernate to generate a "view" of user entity to list screen
@@ -168,9 +169,9 @@ namespace softwrench.sw4.user.classes.entities {
             Id = id;
             UserName = userName;
             IsActive = isActive;
-            CustomConstraints = new HashedSet<UserCustomConstraint>();
-            CustomRoles = new HashedSet<UserCustomRole>();
-            Profiles = new HashedSet<UserProfile>();
+            CustomConstraints = new LinkedHashSet<UserCustomConstraint>();
+            CustomRoles = new LinkedHashSet<UserCustomRole>();
+            Profiles = new LinkedHashSet<UserProfile>();
         }
 
         public static User CreateAdminUser(string userName, string firstName, string lastName, string siteId, string orgId, string department, string phone, string language, string password, string storeloc, string email) {
@@ -207,7 +208,7 @@ namespace softwrench.sw4.user.classes.entities {
             PersonGroups = dbUSer.PersonGroups;
             CustomRoles = dbUSer.CustomRoles;
             UserPreferences = dbUSer.UserPreferences;
-            Profiles = !Profiles.IsEmpty ? Profiles : dbUSer.Profiles;
+            Profiles = Profiles.Any() ? Profiles : dbUSer.Profiles;
             MaximoPersonId = MaximoPersonId ?? dbUSer.MaximoPersonId;
             ChangePassword = ChangePassword ?? dbUSer.ChangePassword;
         }
@@ -242,9 +243,9 @@ namespace softwrench.sw4.user.classes.entities {
 
         public static User FromJson(JObject jObject) {
             var user = new User();
-            user.CustomRoles = new HashedSet<UserCustomRole>();
-            user.CustomConstraints = new HashedSet<UserCustomConstraint>();
-            user.Profiles = new HashedSet<UserProfile>();
+            user.CustomRoles = new LinkedHashSet<UserCustomRole>();
+            user.CustomConstraints = new LinkedHashSet<UserCustomConstraint>();
+            user.Profiles = new LinkedHashSet<UserProfile>();
             var roles = jObject["customRoles"];
             if (roles != null) {
                 foreach (var jToken in roles.ToArray()) {
@@ -267,7 +268,7 @@ namespace softwrench.sw4.user.classes.entities {
             if (personGroups != null) {
                 foreach (var jToken in personGroups.ToArray()) {
                     if (user.PersonGroups == null) {
-                        user.PersonGroups = new HashedSet<PersonGroupAssociation>();
+                        user.PersonGroups = new LinkedHashSet<PersonGroupAssociation>();
                     }
                     user.PersonGroups.Add(jToken.ToObject<PersonGroupAssociation>());
                 }

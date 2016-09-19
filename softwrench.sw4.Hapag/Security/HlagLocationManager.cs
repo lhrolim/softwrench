@@ -15,6 +15,7 @@ using cts.commons.simpleinjector.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using softwrench.sw4.user.classes.entities;
 
@@ -272,14 +273,14 @@ namespace softwrench.sw4.Hapag.Security {
             return HlagGroupedLocationsCache;
         }
 
-        public IEnumerable<IAssociationOption> FindDefaultITCsOfLocation(string subcustomer) {
+        public async Task<IEnumerable<IAssociationOption>> FindDefaultITCsOfLocation(string subcustomer) {
             var dto = new SearchRequestDto();
             dto.AppendProjectionField(ProjectionField.Default("personid"));
             dto.AppendProjectionField(ProjectionField.Default("hlagdisplayname"));
             var groupNameToQuery = HapagPersonGroupConstants.BaseHapagLocationPrefix + subcustomer + "%";
             dto.AppendWhereClauseFormat("personid in (select personid from persongroupview where persongroup like '{0}' and groupdefault=1)", groupNameToQuery);
 
-            var persons = _repository.Get(_personEntity, dto);
+            var persons = await _repository.Get(_personEntity, dto);
 
 
             var result = new HashSet<ItcUser>();
@@ -295,7 +296,7 @@ namespace softwrench.sw4.Hapag.Security {
         }
 
 
-        public IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId) {
+        public async Task<IEnumerable<IAssociationOption>> FindCostCentersOfITC(string subCustomer, string personId) {
             var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
             var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null, null, null, null));
             var groupedLocation = result.GroupedLocations.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
@@ -308,7 +309,7 @@ namespace softwrench.sw4.Hapag.Security {
 
             dto.AppendWhereClause(groupedLocation.CostCentersForQuery("glaccount"));
 
-            var queryResult = _repository.Get(MetadataProvider.Entity("chartofaccounts"), dto);
+            var queryResult =await _repository.Get(MetadataProvider.Entity("chartofaccounts"), dto);
             var options = new HashSet<GenericAssociationOption>();
 
             foreach (var attributeHolder in queryResult) {

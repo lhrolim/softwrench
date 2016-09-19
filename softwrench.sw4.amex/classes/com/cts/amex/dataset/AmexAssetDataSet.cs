@@ -11,16 +11,16 @@ using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sw4.amex.classes.com.cts.amex.dataset {
     public class AmexAssetDataSet : BaseAssetDataSet {
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             searchDto.SearchSort = "ASSET.MANUFACTURER, ASSET.ITEMNUM, ASSET.DESCRIPTION";
             searchDto.SearchAscending = true;
-            var result = base.GetList(application, searchDto);
+            var result = await base.GetList(application, searchDto);
             return result;
         }
 
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = await base.GetApplicationDetail(application, user, request);
             result.ResultObject.SetAttribute("#recdate", DateTime.Now);
             return result;
         }

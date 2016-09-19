@@ -8,6 +8,7 @@ using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
+using cts.commons.Util;
 using softwrench.sw4.api.classes.fwk.context;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Metadata;
@@ -65,8 +66,8 @@ namespace softWrench.sW4.Web.Security {
 
         public void FillGridContext(string applicationName, InMemoryUser user) {
             var context = (ContextHolder)ReflectionUtil.Clone(new ContextHolder(), LookupContext());
-
-            var availableProfiles = WhereClauseFacade.ProfilesByApplication(applicationName, user);
+            //TODO: Async
+            var availableProfiles = AsyncHelper.RunSync(()=> WhereClauseFacade.ProfilesByApplication(applicationName, user));
             context.AvailableProfilesForGrid = availableProfiles;
             if (availableProfiles.Any() && context.CurrentSelectedProfile == null) {
                 //if the profile was already set at client side, let´s not change it

@@ -52,7 +52,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             var bars = new Dictionary<string, CommandBarDefinition>();
             bars["app_schema_mode#gridtop"] = _commandBarDefinition2;
             var user = InMemoryUser.TestInstance("test");
-            var actionPermissions = new HashedSet<ActionPermission>(){
+            var actionPermissions = new LinkedHashSet<ActionPermission>(){
                 new ActionPermission(){
                     Schema = "schema",
                     ActionId = "c3"

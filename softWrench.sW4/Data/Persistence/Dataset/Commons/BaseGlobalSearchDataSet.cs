@@ -60,7 +60,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             _entityRepository = entityRepository;
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application,
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application,
          PaginatedSearchRequestDto searchDto) {
             var totalCount = searchDto.TotalCount;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
@@ -80,19 +80,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var queryParameter = new InternalQueryRequest { SearchDTO = searchDto };
             var compositeWhereBuilder = BaseQueryBuilder.GetCompositeBuilder(entityMetadata, queryParameter);
             var whereClause = compositeWhereBuilder.BuildWhereClause(entityMetadata.Name, queryParameter.SearchDTO);
-            var query = GetWrappedUnionQuery(application, searchDto);
-            var tasks = new Task[1];
+            var query = await GetWrappedUnionQuery(application, searchDto);
             var ctx = ContextLookuper.LookupContext();
             // Count query
-            tasks[0] = Task.Factory.NewThread(c => {
-                Quartz.Util.LogicalThreadContext.SetData("context", c);
-                if (searchDto.NeedsCountUpdate) {
-                    var boundEntityCountQuery = new BindedEntityQuery(string.Format(query, "count(*) as recordCount", whereClause, ""), compositeWhereBuilder.GetParameters());
-                    var totalCountResult = _maximoDao.FindByNativeQuery(boundEntityCountQuery.Sql, boundEntityCountQuery.Parameters);
-                    var recordCountString = ((ExpandoObject)totalCountResult[0]).FirstOrDefault(v => v.Key == "recordCount").Value.ToString();
-                    int.TryParse(recordCountString, out totalCount);
-                }
-            }, ctx);
+
+            if (searchDto.NeedsCountUpdate) {
+                var boundEntityCountQuery = new BindedEntityQuery(string.Format(query, "count(*) as recordCount", whereClause, ""), compositeWhereBuilder.GetParameters());
+                var totalCountResult = await _maximoDao.FindByNativeQueryAsync(boundEntityCountQuery.Sql, boundEntityCountQuery.Parameters);
+                var recordCountString = ((ExpandoObject)totalCountResult[0]).FirstOrDefault(v => v.Key == "recordCount").Value.ToString();
+                int.TryParse(recordCountString, out totalCount);
+            }
+
 
             // Record query
             // Append sort
@@ -108,7 +106,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                .Select(r => _entityRepository.BuildDataMap(entityMetadata, r))
                .ToList();
 
-            Task.WaitAll(tasks);
             return new ApplicationListResult(totalCount, searchDto, records, application.Schema, null);
         }
 
@@ -130,13 +127,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return result;
         }
 
-        public string BuildUnionQuery(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public async Task<string> BuildUnionQuery(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var user = SecurityFacade.CurrentUser();
             var customerApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, user);
             var sb = new StringBuilder();
             foreach (var key in _applications.Keys.Where(k => customerApps.Any(a => a.ApplicationName.EqualsIc(k)))) {
                 var baseQuery = _baseQueries[key];
-                var whereClause = _whereClauseFacade.Lookup(key);
+                var whereClause = await _whereClauseFacade.LookupAsync(key);
                 sb.Append(baseQuery.Fmt(whereClause.Query)).Append(" UNION ");
             }
             var queryString = sb.ToString();
@@ -147,12 +144,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return queryString;
         }
 
-        public string GetWrappedUnionQuery(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public async Task<string> GetWrappedUnionQuery(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var sb = new StringBuilder();
             // Begin wrapper
             sb.Append("select {0} from (");
             // Append union query
-            sb.Append(BuildUnionQuery(application, searchDto));
+            sb.Append(await BuildUnionQuery(application, searchDto));
             // Close wrapper
             sb.Append(") as globalsearch {1} {2}");
             return sb.ToString();

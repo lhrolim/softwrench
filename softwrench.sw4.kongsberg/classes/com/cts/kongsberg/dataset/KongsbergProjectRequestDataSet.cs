@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using softwrench.sw4.api.classes.fwk.filter;
@@ -49,8 +50,8 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
             _maximoDao = maximoDao;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = await base.GetApplicationDetail(application, user, request);
             // Instead of creating 24 relationships to the ticketspec we are instead getting the classspec/ticketspec and mapping
             // the assetattrid's to attributes on the application manually along with other key values for each of those assetattrid's.
             // Get the classstructureid from the current system using the classificationid

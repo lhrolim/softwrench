@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence.Util;
 using cts.commons.web.Formatting;
@@ -39,7 +40,7 @@ namespace softwrench.sw4.user.classes.entities {
         [Key(1, Column = "profile_id")]
         [ManyToMany(2, Column = "role_id", ClassType = typeof(Role))]
         [JsonConverter(typeof(IesiSetConverter<Role>))]
-        public virtual Iesi.Collections.Generic.ISet<Role> Roles {
+        public virtual ISet<Role> Roles {
             get; set;
         }
 
@@ -48,7 +49,7 @@ namespace softwrench.sw4.user.classes.entities {
         [Key(1, Column = "profile_id")]
         [OneToMany(2, ClassType = typeof(ApplicationPermission))]
         [JsonConverter(typeof(IesiSetConverter<ApplicationPermission>))]
-        public virtual Iesi.Collections.Generic.ISet<ApplicationPermission> ApplicationPermissions {
+        public virtual ISet<ApplicationPermission> ApplicationPermissions {
             get; set;
         }
 
@@ -84,7 +85,7 @@ namespace softwrench.sw4.user.classes.entities {
 
         public static UserProfile FromJson(JToken jObject) {
             var profile = new UserProfile();
-            profile.Roles = new HashedSet<Role>();
+            profile.Roles = new LinkedHashSet<Role>();
 
             JToken roles = jObject["#basicroles_"];
             if (roles != null) {

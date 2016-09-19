@@ -2,8 +2,6 @@
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
-using softWrench.sW4.Data.Persistence;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Attributes;
 using softWrench.sW4.SPF;
 using softWrench.sW4.SqlClient;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.Util;
@@ -51,13 +52,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         }
 
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var query = MetadataProvider.GlobalProperty(SwUserConstants.PersonUserQuery);
             // When getting the person list for the Apply/Remove profile action, we need to filter the list from maximo based on the usernames of the SW users who do/don't have the profile
             if (application.Schema.SchemaId == "userselectlist" || application.Schema.SchemaId == "userremovelist") {
                 var inclusion = application.Schema.SchemaId.EqualsIc("userselectlist") ? " NOT IN " : " IN ";
                 var profileId = searchDto.CustomParameters["profileId"];
-                var validUsernamesList = _swdbDAO.FindByNativeQuery("SELECT MAXIMOPERSONID FROM SW_USER2 WHERE MAXIMOPERSONID IS NOT NULL AND ID {0} (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {1})".FormatInvariant(inclusion, profileId)).ToList();
+                var validUsernamesList = await _swdbDAO.FindByNativeQueryAsync("SELECT MAXIMOPERSONID FROM SW_USER2 WHERE MAXIMOPERSONID IS NOT NULL AND ID {0} (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {1})".FormatInvariant(inclusion, profileId));
                 if (!validUsernamesList.Any()) {
                     throw new BlankListException();
                 } else {
@@ -72,7 +73,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 searchDto.WhereClause = query;
             }
             // get is active for each of the users
-            var result = base.GetList(application, searchDto);
+            var result = await base.GetList(application, searchDto);
 
             var usernames = result.ResultObject.Select(str => str.GetAttribute("personid").ToString()).ToList();
             if (!usernames.Any()) {
@@ -89,18 +90,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             return result;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             if (request.UserId != null && request.UserIdSitetuple == null) {
                 request.UserIdSitetuple = new Tuple<string, string>(request.UserId, null);
             }
 
-            var detail = base.GetApplicationDetail(application, user, request);
+            var detail = await base.GetApplicationDetail(application, user, request);
             // profile detail can be null for users created automatically by the system (such as swadmin). 
             // Shouldn't happen for actual maximo users.
             if (detail == null) {
                 var defaultDataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, MetadataProvider.SlicedEntityMetadata(application).Schema.MappingType);
                 defaultDataMap.SetAttribute("personid", request.UserIdSitetuple.Item1);
-                var associationResults = BuildAssociationOptions(defaultDataMap, application.Schema, request);
+                var associationResults = await BuildAssociationOptions(defaultDataMap, application.Schema, request);
                 detail = new ApplicationDetailResult(defaultDataMap, associationResults, application.Schema, CompositionBuilder.InitializeCompositionSchemas(application.Schema, user), request.Id);
             }
 
@@ -111,10 +112,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             UserStatistics statistics = null;
             UserActivationLink activationLink = null;
             if (personId != null) {
-                swUser = _swdbDAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
+                swUser = await _swdbDAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, personId);
                 if (swUser == null) {
                     //lets try with username then
-                    swUser = _swdbDAO.FindSingleByQuery<User>(User.UserByUserName, personId);
+                    swUser =await _swdbDAO.FindSingleByQueryAsync<User>(User.UserByUserName, personId);
                     if (swUser == null) {
                         swUser = new User {
                             MaximoPersonId = personId,
@@ -127,13 +128,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                     swUser = _swdbDAO.Save(swUser);
                 } else {
                     statistics = _userStatisticsService.LocateStatistics(swUser);
-                    activationLink = _userLinkManager.GetLinkByUser(swUser);
+                    activationLink = await _userLinkManager.GetLinkByUser(swUser);
                 }
                 AdjustDatamapFromUser(swUser, dataMap);
             } else {
                 dataMap.SetAttribute("email_", new JArray());
                 dataMap.SetAttribute("phone_", new JArray());
-                swUser.Profiles = new HashedSet<UserProfile>();
+                swUser.Profiles = new LinkedHashSet<UserProfile>();
                 //for new users lets make them active by default
                 dataMap.SetAttribute("#isactive", "1");
                 dataMap.SetAttribute("#signature", "");
@@ -202,7 +203,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             // Upate the in memory user if the change is for the currently logged in user
             var currentUser = SecurityFacade.CurrentUser();
             if (user.UserName.EqualsIc(currentUser.Login) && user.Id != null) {
-                var fullUser = _securityFacade.FetchUser(user.Id.Value);
+                //TODO: Async
+                var fullUser = AsyncHelper.RunSync(()=>_securityFacade.FetchUser(user.Id.Value));
                 var userResult = _securityFacade.UpdateUserCache(fullUser, currentUser.TimezoneOffset.ToString());
                 targetResult.ResultObject = new UnboundedDatamap(application.Name, ToDictionary(userResult));
             }
@@ -277,12 +279,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             return dict;
         }
 
-        private bool ValidateSecurityGroups(String schemaId, User dbUser, Iesi.Collections.Generic.ISet<UserProfile> screenProfiles) {
+        private bool ValidateSecurityGroups(String schemaId, User dbUser, ISet<UserProfile> screenProfiles) {
             if (!schemaId.EqualsIc("myprofiledetail")) {
                 return true;
             }
             var isSysAdmin = SecurityFacade.CurrentUser().IsInRole(Role.SysAdmin);
-            var dbProfiles = dbUser.Profiles ?? new HashedSet<UserProfile>();
+            var dbProfiles = dbUser.Profiles ?? new LinkedHashSet<UserProfile>();
 
             if (screenProfiles.Count != dbProfiles.Count) {
                 return isSysAdmin;
@@ -313,8 +315,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         }
 
         [NotNull]
-        public Iesi.Collections.Generic.ISet<UserProfile> LoadProfiles(JObject json) {
-            var result = new HashedSet<UserProfile>();
+        public ISet<UserProfile> LoadProfiles(JObject json) {
+            var result = new LinkedHashSet<UserProfile>();
             var profiles = json.GetValue("#profiles");
             if (profiles == null) {
                 return result;

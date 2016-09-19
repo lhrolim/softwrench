@@ -17,14 +17,14 @@ namespace softWrench.sW4.Data.Entities {
             }
         }
 
-        public void GetCostCenterDescription(Dictionary<string, string> costCenters) {
+        public async void GetCostCenterDescription(Dictionary<string, string> costCenters) {
             var entityMetadata = MetadataProvider.Entity(ChartOfAccountsEntity);
             const string glAccount = "glaccount";
             var searchRequestDto = new SearchRequestDto {
                 WhereClause = BuildIWhereIn(ChartOfAccountsEntity, glAccount, new List<string>(costCenters.Keys))
             };
-            var result = EntityRepository.Get(entityMetadata, searchRequestDto);
-            var attributeHolders = result as AttributeHolder[] ?? result.ToArray();
+            var attributeHolders = await EntityRepository.Get(entityMetadata, searchRequestDto);
+            
             if (!attributeHolders.Any()) {
                 return;
             }
@@ -34,14 +34,13 @@ namespace softWrench.sW4.Data.Entities {
             }
         }
 
-        public void GetLocationDescription(Dictionary<string, string> customers) {
+        public async void GetLocationDescription(Dictionary<string, string> customers) {
             var entityMetadata = MetadataProvider.Entity(PluspCustomerEntity);
             const string customer = "customer";
             var searchRequestDto = new SearchRequestDto {
                 WhereClause = BuildIWhereIn(PluspCustomerEntity, customer, new List<string>(customers.Keys))
             };
-            var result = EntityRepository.Get(entityMetadata, searchRequestDto);
-            var attributeHolders = result as AttributeHolder[] ?? result.ToArray();
+            var attributeHolders = await EntityRepository.Get(entityMetadata, searchRequestDto);
             if (!attributeHolders.Any()) {
                 return;
             }

@@ -27,8 +27,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }
 
             var result = new AssociationHelperResult();
-            var toFetch = new HashedSet<string>();
-            var toAvoid = new HashedSet<string>();
+            var toFetch = new LinkedHashSet<string>();
+            var toAvoid = new LinkedHashSet<string>();
 
             result.ToFetch = toFetch;
             result.ToAvoid = toAvoid;
@@ -117,10 +117,10 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
 
         public class AssociationHelperResult {
-            public Set<string> ToFetch {
+            public ISet<string> ToFetch {
                 get; set;
             }
-            public Set<string> ToAvoid {
+            public ISet<string> ToAvoid {
                 get; set;
             }
 

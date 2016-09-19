@@ -18,21 +18,21 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
 
         public static string BuildSearchSort(EntityMetadata entityMetadata, SearchRequestDto dto) {
             var searchSort = dto.SearchSort;
-            if (String.IsNullOrWhiteSpace(searchSort) && (dto.MultiSearchSort == null || dto.MultiSearchSort.Count == 0)) {
-                return String.Format(" order by {1} desc", entityMetadata.Name, entityMetadata.Schema.UserIdAttribute.Name);
+            if (string.IsNullOrWhiteSpace(searchSort) && (dto.MultiSearchSort == null || dto.MultiSearchSort.Count == 0)) {
+                return string.Format(" order by {1} desc", entityMetadata.Name, entityMetadata.Schema.UserIdAttribute.Name);
             }
 
-            if (dto.MultiSearchSort != null && dto.MultiSearchSort.Count > 0) {
+            if (dto.MultiSearchSort != null && dto.MultiSearchSort.Any(a => a != null)) {
                 var builder = new StringBuilder();
 
                 foreach (var column in dto.MultiSearchSort) {
                     if (!string.IsNullOrWhiteSpace(column.ColumnName)) {
-                        var sort = String.Format(" {0} {1}, ", column.ColumnName, column.IsAscending ? " asc " : " desc ");
+                        var sort = string.Format(" {0} {1}, ", column.ColumnName, column.IsAscending ? " asc " : " desc ");
                         builder.Append(sort);
                     }
                 }
 
-                return builder.Length > 0 ? String.Format(" order by {0}", builder.ToString().TrimEnd(',',' ')) : string.Empty;
+                return builder.Length > 0 ? string.Format(" order by {0}", builder.ToString().TrimEnd(',', ' ')) : string.Empty;
 
             } else {
                 var suffix = dto.SearchAscending ? " asc " : " desc ";
@@ -51,23 +51,23 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                     //                if (!dto.ExpressionSort) {
                     //                    return String.Format(" order by {0}.{1} {2}", entityMetadata.Name, searchSort, suffix);
                     //                }
-                    return String.Format(" order by {0} {1}", searchSort, suffix);
+                    return string.Format(" order by {0} {1}", searchSort, suffix);
                 }
 
 
-                return String.Format(" order by {0} {1}", searchSort, suffix);
+                return string.Format(" order by {0} {1}", searchSort, suffix);
             }
         }
-        
+
         private static string GetQuerySortBy(EntityMetadata entityMetadata, EntityAttribute attribute, string suffix) {
             if (entityMetadata is SlicedEntityMetadata) {
                 var a = (SlicedEntityMetadata)entityMetadata;
                 if (a.HasUnion()) {
                     //TODO: review this entirely
-                    return String.Format(" order by {0} {1}", attribute.Name, suffix);
+                    return string.Format(" order by {0} {1}", attribute.Name, suffix);
                 }
             }
-            return String.Format(" order by {0} {1}", attribute.GetQueryReplacingMarkers(entityMetadata.Name), suffix);
+            return string.Format(" order by {0} {1}", attribute.GetQueryReplacingMarkers(entityMetadata.Name), suffix);
         }
     }
 

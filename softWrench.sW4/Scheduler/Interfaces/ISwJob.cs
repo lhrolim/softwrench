@@ -1,4 +1,5 @@
-﻿using Quartz;
+﻿using System.Threading.Tasks;
+using Quartz;
 using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Scheduler.Interfaces {
@@ -6,7 +7,7 @@ namespace softWrench.sW4.Scheduler.Interfaces {
         string Name();
         string Description();
         string Cron();
-        void ExecuteJob();
+        Task ExecuteJob();
         bool IsScheduled {
             get; set;
         }

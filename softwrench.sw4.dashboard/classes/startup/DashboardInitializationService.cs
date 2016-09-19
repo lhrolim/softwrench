@@ -66,7 +66,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
             }).ToList();
         }
 
-        private ICollection<DashboardBasePanel> MergePanels([CanBeNull]Iesi.Collections.Generic.ISet<DashboardPanelRelationship> databasePanels, ICollection<DashboardBasePanel> panels) {
+        private ICollection<DashboardBasePanel> MergePanels([CanBeNull]ISet<DashboardPanelRelationship> databasePanels, ICollection<DashboardBasePanel> panels) {
             var now = DateTime.Now;
             // save panels and replace references by hibernate-managed ones
             foreach (var panel in panels) {

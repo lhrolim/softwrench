@@ -35,7 +35,7 @@ namespace softWrench.sW4.Configuration.Definitions {
         [Set(0, Inverse = true,Lazy = CollectionLazy.False)]
         [Key(1, Column = "category_id")]
         [OneToMany(2, ClassType = typeof(PropertyDefinition))]
-        public virtual Iesi.Collections.Generic.ISet<PropertyDefinition> Definitions { get; set; }
+        public virtual ISet<PropertyDefinition> Definitions { get; set; }
 
         protected bool Equals(Category other) {
             return string.Equals(Key, other.Key) && Equals(ParentCategory, other.ParentCategory);

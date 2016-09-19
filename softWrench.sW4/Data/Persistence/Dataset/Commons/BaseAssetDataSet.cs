@@ -1,13 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Quartz.Util;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
-using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
@@ -47,8 +46,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         /// <param name="user"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = await base.GetApplicationDetail(application, user, request);
 
             //result.ResultObject.SetAttribute("parentlocation_.systemid", request.CustomParameters["parentlocation_.systemid"]);
 
@@ -84,10 +83,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         /// <param name="request"></param>
         /// <param name="currentData"></param>
         /// <returns></returns>
-        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
+        public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
             JObject currentData) {
 
-            var result = base.GetCompositionData(application, request, currentData);
+            var result = await base.GetCompositionData(application, request, currentData);
             if (!result.ResultObject.ContainsKey("assetspec_")) {
                 //if we are navigating on one of the compositions records, the others are not fetched
                 //SWWEB-2038

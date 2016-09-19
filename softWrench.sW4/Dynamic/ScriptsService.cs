@@ -7,6 +7,7 @@ using cts.commons.simpleinjector;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using NHibernate.Linq;
+using NHibernate.Util;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Dynamic {

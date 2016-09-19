@@ -13,6 +13,7 @@ using softWrench.sW4.Metadata.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using c = softwrench.sw4.Hapag.Data.DataSet.Helper.ApproverConstants;
 
@@ -25,9 +26,9 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         {
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application,
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application,
             InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
+            var result = await base.GetApplicationDetail(application, user, request);
             if (request.Id != null) {
                 //this means we´re viewing details of a change
                 PopulateApprovalsCompositions(result.ResultObject, user);

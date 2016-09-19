@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.web.Attributes;
-using NHibernate.Linq;
+using NHibernate.Util;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Dynamic;
 using softWrench.sW4.SPF;

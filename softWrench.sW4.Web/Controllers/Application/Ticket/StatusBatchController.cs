@@ -37,7 +37,7 @@ namespace softWrench.sW4.Web.Controllers.Application.Ticket {
                 Operation = "crud_update",
                 UpdateDate = DateTime.Now,
             })
-            .ToHashedSet();
+            .ToLinkedHashSet();
 
             var result = _batchService.Submit(batch, new BatchOptions() { Synchronous = true });
             var response = new BlankApplicationResponse {

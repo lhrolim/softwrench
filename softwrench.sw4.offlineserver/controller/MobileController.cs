@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.Util;
 using log4net;
@@ -95,19 +96,19 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
         [HttpPost]
-        public SynchronizationResultDto PullNewData([FromBody] SynchronizationRequestDto synchronizationRequest) {
-            return _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
+        public async Task<SynchronizationResultDto> PullNewData([FromBody] SynchronizationRequestDto synchronizationRequest) {
+            return await _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
         }
 
         [HttpPost]
-        public AssociationSynchronizationResultDto PullAssociationData([FromBody] AssociationSynchronizationRequestDto request) {
-            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
+        public async Task<AssociationSynchronizationResultDto> PullAssociationData([FromBody] AssociationSynchronizationRequestDto request) {
+            return await _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
         }
 
 
         [HttpPost]
-        public AssociationSynchronizationResultDto PullSingleAssociationData([FromUri] string applicationToFetch, [FromBody] AssociationSynchronizationRequestDto request) {
-            return _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request, applicationToFetch);
+        public async Task<AssociationSynchronizationResultDto> PullSingleAssociationData([FromUri] string applicationToFetch, [FromBody] AssociationSynchronizationRequestDto request) {
+            return await _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request, applicationToFetch);
         }
 
         /// <summary>
@@ -132,7 +133,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
         #region Reporting
         [HttpGet]
-        public string Counts() {
+        public async Task<string> Counts() {
             var user = SecurityFacade.CurrentUser();
 
             var req = new SynchronizationRequestDto() {
@@ -143,12 +144,12 @@ namespace softwrench.sw4.offlineserver.controller {
             _contextLookuper.LookupContext().OfflineMode = true;
 
             var watch = Stopwatch.StartNew();
-            var appData = _syncManager.GetData(req, user);
+            var appData = await _syncManager.GetData(req, user);
             watch.Stop();
             var appEllapsed = watch.ElapsedMilliseconds;
 
             watch.Restart();
-            var associationResult = _syncManager.GetAssociationData(user, null);
+            var associationResult = await _syncManager.GetAssociationData(user, null);
             watch.Stop();
             var associationEllapsed = watch.ElapsedMilliseconds;
 

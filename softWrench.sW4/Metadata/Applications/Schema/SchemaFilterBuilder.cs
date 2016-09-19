@@ -4,6 +4,7 @@ using System.Linq;
 using cts.commons.portable.Util;
 using log4net;
 using NHibernate.Linq;
+using NHibernate.Util;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;

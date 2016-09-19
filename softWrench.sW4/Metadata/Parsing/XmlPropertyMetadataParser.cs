@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
+using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata.Properties;
 
 namespace softWrench.sW4.Metadata.Parsing {
@@ -42,6 +44,9 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static void AddProperty(XElement xElement, Dictionary<string, string> dictionary) {
             var key = xElement.Attribute(XmlMetadataSchema.PropertyKeyAttribute).Value;
             var value = xElement.Attribute(XmlMetadataSchema.PropertyValueAttribute).Value;
+            if (dictionary.ContainsKey(key)) {
+                throw new MetadataException("property {0} already registered review properties.xml".Fmt(key));
+            }
             dictionary.Add(key, value);
         }
 

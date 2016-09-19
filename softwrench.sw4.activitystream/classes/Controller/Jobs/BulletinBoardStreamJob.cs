@@ -1,4 +1,5 @@
-﻿using softWrench.sW4.Scheduler;
+﻿using System.Threading.Tasks;
+using softWrench.sW4.Scheduler;
 
 namespace softwrench.sw4.activitystream.classes.Controller.Jobs {
     public class BulletinBoardStreamJob : ASwJob {
@@ -23,9 +24,9 @@ namespace softwrench.sw4.activitystream.classes.Controller.Jobs {
             return _bulletinBoardFacade.GetBulletinBoardUpdateJobCron();
         }
 
-        public override void ExecuteJob() {
+        public override async Task  ExecuteJob() {
             if (_bulletinBoardFacade.BulletinBoardEnabled) {
-                _bulletinBoardFacade.UpdateInMemoryBulletinBoard();
+                await _bulletinBoardFacade.UpdateInMemoryBulletinBoard();
             }
         }
 

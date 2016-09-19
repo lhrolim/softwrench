@@ -1,12 +1,13 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Metadata.Applications;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
     class BaseInventoryReturnDataSet : BaseInventoryIssueDataSet {
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
-            var result = base.GetList(application, searchDto);
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+            var result = await base.GetList(application, searchDto);
             result = filterMatusetrans(result);
             return result;
         }

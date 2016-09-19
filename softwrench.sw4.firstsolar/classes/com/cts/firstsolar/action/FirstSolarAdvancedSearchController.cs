@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.web.Attributes;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
@@ -53,14 +54,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         }
 
         [HttpGet]
-        public ApplicationListResult FindAssetsBySelectedLocations(bool includeSubLocations, [FromUri] List<LocationDTO> locations) {
+        public async Task<ApplicationListResult> FindAssetsBySelectedLocations(bool includeSubLocations, [FromUri] List<LocationDTO> locations) {
 
             var app = MetadataProvider.Application("asset").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("assetLookupList"));
             var dto = new PaginatedSearchRequestDto();
 //            dto.WhereClause =_advancedSearchHandler.BuildAdvancedSearchWhereClause(locations.Select(s => s.LocationKey).ToList(),"asset", includeSubLocations);
             dto.FilterFixedWhereClause = _advancedSearchHandler.BuildAdvancedSearchWhereClause(locations.Select(s => s.Location).ToList(), "asset", includeSubLocations);
             var dataSet = _dataSetProvider.LookupDataSet("asset", "assetLookupList");
-            var result = dataSet.GetList(app, dto);
+            var result = await dataSet.GetList(app, dto);
             return result;
         }
 

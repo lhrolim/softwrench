@@ -1,5 +1,4 @@
-﻿using System;
-using cts.commons.portable.Util;
+﻿using cts.commons.portable.Util;
 using softWrench.sW4.Security.Context;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;

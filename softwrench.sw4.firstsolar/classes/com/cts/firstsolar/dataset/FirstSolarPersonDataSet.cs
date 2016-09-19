@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using Iesi.Collections;
 using Iesi.Collections.Generic;
@@ -36,13 +37,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return baseUser;
         }
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var detail = base.GetApplicationDetail(application, user, request);
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var detail = await base.GetApplicationDetail(application, user, request);
             var maximoPersonId = detail.ResultObject.GetStringAttribute("personid");
             var resultProperties = user.Genericproperties;
             if (maximoPersonId != user.MaximoPersonId) {
                 //sparing some queries for the myprofile scenario, since this data would already have been fetched upon login
-                resultProperties =
+                resultProperties = await
                     _userFacilityBuilder.AdjustUserFacilityProperties(new Dictionary<string, object>(), maximoPersonId);
             }
             if (resultProperties.ContainsKey(FirstSolarConstants.FacilitiesProp) && !detail.ResultObject.ContainsAttribute("facilities")) {

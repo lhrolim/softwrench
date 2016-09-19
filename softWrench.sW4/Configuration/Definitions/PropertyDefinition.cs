@@ -3,6 +3,7 @@ using Iesi.Collections.Generic;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Configuration.Util;
 using System;
+using System.Collections.Generic;
 using cts.commons.persistence.Util;
 using Newtonsoft.Json;
 using CompressionUtil = softWrench.sW4.Util.CompressionUtil;

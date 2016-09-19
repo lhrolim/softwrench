@@ -10,9 +10,6 @@ using softWrench.sW4.Metadata.Applications;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
     public class FirstSolarAssetLookupDataSet : BaseAssetDataSet {
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
-            return base.GetList(application, searchDto);
-        }
 
 
         public override string ApplicationName() {

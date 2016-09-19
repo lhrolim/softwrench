@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Iesi.Collections.Generic;
@@ -35,12 +36,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
         }
 
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = await base.GetApplicationDetail(application, user, request);
             var profileDatamap = result.ResultObject;
 
             var profileOb = new UserProfile() {
-                Roles = new HashedSet<Role>()
+                Roles = new LinkedHashSet<Role>()
             };
 
             if (profileDatamap.GetAttribute("id") != null) {
@@ -151,8 +152,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
         //    profileDatamap.SetAttribute("#users_", users);
         //}
 
-        public override CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
-            var result = base.GetCompositionData(application, request, currentData);
+        public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
+            var result = await base.GetCompositionData(application, request, currentData);
             if (request.CompositionList != null && request.CompositionList.Contains("#fieldPermissions_") && request.CompositionList.Count == 1) {
                 var app = MetadataProvider.Application(result.OriginalCruddata.GetStringAttribute("#application"));
                 var schema = app.Schema(new ApplicationMetadataSchemaKey(result.OriginalCruddata.GetStringAttribute("schema"), SchemaMode.None, ClientPlatform.Web));

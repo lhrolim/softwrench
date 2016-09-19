@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
@@ -75,11 +76,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return availableLocations.AsEnumerable();
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application,
-            PaginatedSearchRequestDto searchDto) {
-            var result = base.GetList(application, searchDto);
-            return result;
-        }
 
         public SearchRequestDto FilterBins(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;

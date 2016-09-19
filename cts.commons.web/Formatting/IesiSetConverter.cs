@@ -18,14 +18,14 @@ namespace cts.commons.web.Formatting {
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
-            Iesi.Collections.Generic.ISet<T> result = new Iesi.Collections.Generic.HashedSet<T>();
+            ISet<T> result = new LinkedHashSet<T>();
 
-            return serializer.Deserialize< HashedSet<T>>(reader);
+            return serializer.Deserialize<LinkedHashSet<T>>(reader);
 
 //            while (reader.Read()) {
 //                if (reader.TokenType == JsonToken.StartArray) {
 //                    // Load each object from the stream and do something with it
-//                    return serializer.Deserialize<HashedSet<T>>(reader);
+//                    return serializer.Deserialize<LinkedHashSet<T>>(reader);
 //                } else {
 //                    return serializer.Deserialize<string>(reader);
 //                }

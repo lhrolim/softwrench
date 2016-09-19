@@ -232,7 +232,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                         };
                         problem = _dao.Save(problem);
                         if (report.ProblemItens == null) {
-                            report.ProblemItens = new HashedSet<BatchItemProblem>();
+                            report.ProblemItens = new LinkedHashSet<BatchItemProblem>();
                         }
                         report.ProblemItens.Add(problem);
                         _dao.Save(report);

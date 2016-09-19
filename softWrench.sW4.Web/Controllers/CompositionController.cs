@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.web.Attributes;
 using JetBrains.Annotations;
@@ -41,7 +42,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <param name="options"></param>
         /// <returns></returns>
         [HttpGet]
-        public IGenericResponseResult ExpandCompositions(String application, [FromUri]DetailRequest detailRequest,
+        public async Task<IGenericResponseResult> ExpandCompositions(String application, [FromUri]DetailRequest detailRequest,
             [FromUri]CompositionExpanderHelper.CompositionExpansionOptions options) {
             var user = SecurityFacade.CurrentUser();
             var applicationMetadata = MetadataProvider
@@ -49,7 +50,7 @@ namespace softWrench.sW4.Web.Controllers {
                 .ApplyPolicies(detailRequest.Key, user, ClientPlatform.Web);
             //            var result = (ApplicationDetailResult)DataSetProvider.LookupAsBaseDataSet(application).Get(applicationMetadata, user, detailRequest);
             var compositionSchemas = CompositionBuilder.InitializeCompositionSchemas(applicationMetadata.Schema);
-            return _compositionExpander.Expand(SecurityFacade.CurrentUser(), compositionSchemas, options);
+            return await _compositionExpander.Expand(SecurityFacade.CurrentUser(), compositionSchemas, options);
         }
 
 
@@ -61,7 +62,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <returns>datamap populated with composition data</returns>
         [NotNull]
         [HttpPost]
-        public IGenericResponseResult GetCompositionData(CompositionRequestWrapperDTO dto) {
+        public async Task<IGenericResponseResult> GetCompositionData(CompositionRequestWrapperDTO dto) {
             var user = SecurityFacade.CurrentUser();
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
@@ -72,7 +73,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             _contextLookuper.FillContext(request.Key);
 
-            var compositionData = _dataSetProvider
+            var compositionData = await _dataSetProvider
                 .LookupDataSet(application, applicationMetadata.Schema.SchemaId)
                 .GetCompositionData(applicationMetadata, request, dto.Data);
 

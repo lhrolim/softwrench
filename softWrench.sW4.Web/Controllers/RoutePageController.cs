@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using softwrench.sw4.api.classes.fwk.context;
 using softWrench.sW4.Data;
@@ -24,7 +25,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpGet]
-        public IGenericResponseResult ManyUserIds(string application, string schemaid, string userid) {
+        public async Task<IGenericResponseResult> ManyUserIds(string application, string schemaid, string userid) {
             var appMetadata = MetadataProvider.Application(application);
             var entityName = appMetadata.Entity;
             var entityMetadata = MetadataProvider.Entity(entityName);
@@ -33,7 +34,7 @@ namespace softWrench.sW4.Web.Controllers {
             var fullContext = _lookuper.GetFromMemoryContext<SwHttpContext>("httpcontext");
 
             var dto = new RoutePageDTO {
-                Datamaps = _entityRepository.GetIdAndSiteIdByUserId(entityMetadata, userid),
+                Datamaps = await _entityRepository.GetIdAndSiteIdByUserId(entityMetadata, userid),
                 IdFieldName = appMetadata.IdFieldName,
                 SiteIdFieldName = siteIdAttr == null ? null : siteIdAttr.Name,
                 ApplicationName = application,

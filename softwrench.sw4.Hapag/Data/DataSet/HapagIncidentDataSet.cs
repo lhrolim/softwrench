@@ -16,6 +16,7 @@ using softWrench.sW4.Metadata.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 
 namespace softwrench.sw4.Hapag.Data.DataSet
@@ -168,9 +169,9 @@ namespace softwrench.sw4.Hapag.Data.DataSet
 
         #endregion Filter functions
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request)
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request)
         {
-            var dbDetail = base.GetApplicationDetail(application, user, request);
+            var dbDetail = await base.GetApplicationDetail(application, user, request);
             var resultObject = dbDetail.ResultObject;
 
             if (application.Schema.Mode == SchemaMode.output)
@@ -180,9 +181,9 @@ namespace softwrench.sw4.Hapag.Data.DataSet
             return dbDetail;
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto)
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto)
         {
-            var dbList = base.GetList(application, searchDto);
+            var dbList = await base.GetList(application, searchDto);
             var resultObject = dbList.ResultObject;
             if ((application.Schema.SchemaId == "hardwarerepair"))
             {

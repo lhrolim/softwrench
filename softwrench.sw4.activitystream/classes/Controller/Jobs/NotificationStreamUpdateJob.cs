@@ -22,26 +22,27 @@ namespace softwrench.sw4.activitystream.classes.Controller.Jobs {
             return "Job to populate the activity stream";
         }
 
-        public override string Cron()
-        {
+        public override string Cron() {
             var refreshRate = ApplicationConfiguration.NotificationRefreshRate;
             return string.Format("0 */{0} * ? * *", refreshRate);
         }
 
-        public override void ExecuteJob() {
-            _notificationFacade.UpdateNotificationStreams();
+        public override async Task ExecuteJob() {
+            await _notificationFacade.UpdateNotificationStreams();
             _notificationFacade.PurgeNotificationsFromStream();
         }
 
-        public override void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public override async void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (RunAtStartup() && IsEnabled) {
                 _notificationFacade.InitNotificationStreams();
-                Task.Factory.StartNew(DoExecute);
+                await DoExecute();
             }
         }
 
         public override bool IsEnabled {
-            get { return ApplicationConfiguration.ActivityStreamFlag; }
+            get {
+                return ApplicationConfiguration.ActivityStreamFlag;
+            }
         }
 
         public override bool RunAtStartup() {

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -7,14 +8,16 @@ using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog {
     static class CommlogHelper {
-        public static CompositionFetchResult SetCommlogReadStatus(ApplicationMetadata application, CompositionFetchRequest request, CompositionFetchResult compList) {
+
+
+        public static async Task<CompositionFetchResult> SetCommlogReadStatus(ApplicationMetadata application, CompositionFetchRequest request, CompositionFetchResult compList) {
             var user = SecurityFacade.CurrentUser();
 
             if (user == null) {
                 return compList;
             }
 
-            var commData = SWDBHibernateDAO.GetInstance().FindByQuery<MaxCommReadFlag>(MaxCommReadFlag.ByItemIdAndUserId, application.Name, request.Id, user.DBId);
+            var commData = await SWDBHibernateDAO.GetInstance().FindByQueryAsync<MaxCommReadFlag>(MaxCommReadFlag.ByItemIdAndUserId, application.Name, request.Id, user.DBId);
 
             if (!compList.ResultObject.ContainsKey("commlog_")) {
                 return compList;

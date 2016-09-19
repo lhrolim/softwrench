@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using softwrench.sw4.batch.api.entities;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
@@ -30,9 +31,9 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
         }
 
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var batchId = request.Id;
-            var batchReport = _dao.FindSingleByQuery<BatchReport>(BatchReport.ByBatchId, batchId);
+            var batchReport = await _dao.FindSingleByQueryAsync<BatchReport>(BatchReport.ByBatchId, batchId);
             if (batchReport == null) {
                 throw BatchException.BatchReportNotFound(batchId);
             }
@@ -46,7 +47,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
             var dataMap = SWDBDatamapBuilder.BuildDataMap(ApplicationName(), batchReport, application.Schema);
 
-            var associationResults = BuildAssociationOptions(dataMap, application.Schema, request);
+            var associationResults = await BuildAssociationOptions(dataMap, application.Schema, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, batchReport.Id.ToString());
 
             var batchApplication = GetBatchSchema(batchReport);
@@ -54,7 +55,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
             detailResult.ExtraParameters.Add("failedbatchschema", CloneAddingMessageItem(batchApplication.Schema));
 
 
-            var batchDataMap = _batchDataSet.DoGetMergedBatch(batchApplication, batchReport.OriginalMultiItemBatch.ItemIds, batchReport.OriginalMultiItemBatch);
+            var batchDataMap = await _batchDataSet.DoGetMergedBatch(batchApplication, batchReport.OriginalMultiItemBatch.ItemIds, batchReport.OriginalMultiItemBatch);
 
 
             var attributeHolders = batchDataMap.ResultObject;

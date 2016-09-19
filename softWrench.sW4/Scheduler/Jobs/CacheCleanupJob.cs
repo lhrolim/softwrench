@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Common.Logging;
 using Quartz;
 using softWrench.sW4.Configuration.Services.Api;
@@ -14,8 +15,8 @@ namespace softWrench.sW4.Scheduler.Jobs {
             _facade = facade;
         }
 
-        public void Execute(IJobExecutionContext context) {
-            ExecuteJob();
+        public async void Execute(IJobExecutionContext context) {
+            await ExecuteJob();
         }
 
         public string Name() {
@@ -30,7 +31,7 @@ namespace softWrench.sW4.Scheduler.Jobs {
             return "0 15 10 15 * ?";
         }
 
-        public void ExecuteJob() {
+        public async Task ExecuteJob() {
             _log = LogManager.GetLogger(typeof(CacheCleanupJob));
             _log.Info(string.Format("Executed in : {0}", DateTime.Now));
 

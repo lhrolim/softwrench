@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
@@ -16,16 +17,16 @@ using softwrench.sw4.Shared2.Data.Association;
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Inventory {
     class BaseInventoryIssueDataSet : MaximoApplicationDataSet {
 
-        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            var result = base.GetApplicationDetail(application, user, request);
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = await base.GetApplicationDetail(application, user, request);
             var datamap = result.ResultObject;
             LookupQuantityReturnedDetail(datamap);
             return result;
         }
 
-        public override ApplicationListResult GetList(ApplicationMetadata application,
+        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application,
             PaginatedSearchRequestDto searchDto) {
-            var result = base.GetList(application, searchDto);
+            var result = await base.GetList(application, searchDto);
             LookupQuantityReturnedList(result.ResultObject);
             return result;
         }

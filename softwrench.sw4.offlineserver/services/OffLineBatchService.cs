@@ -72,7 +72,7 @@ namespace softwrench.sw4.offlineserver.services {
 
         private void FormatBatches(IList<Batch> batches) {
             foreach (var batch in batches) {
-                Iesi.Collections.Generic.ISet<BatchItem> items = batch.Items;
+                ISet<BatchItem> items = batch.Items;
                 foreach (var item in items) {
                     var problem = item.Problem;
                     if (problem == null) {
