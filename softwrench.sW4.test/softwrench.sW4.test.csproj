@@ -95,6 +95,7 @@
     <Compile Include="Data\Entities\EntityBuilderTestGric.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestHapag.cs" />
     <Compile Include="Data\Persistence\DataSet\Commons\BasePersonDataSetTest.cs" />
+    <Compile Include="Data\Persistence\DataSet\Commons\Ticket\TicketStatusHandlerTest.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverTest.cs" />
     <Compile Include="Data\Persistence\Relational\EntityQueryBuilderTest.cs" />
     <Compile Include="Data\Persistence\Relational\DataConstraintWhereBuilderTest.cs" />

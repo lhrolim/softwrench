@@ -92,10 +92,13 @@ namespace softWrench.sW4.Data {
                 return GetType().Name;
             }
         }
-
-        public void PopulateFromString([CanBeNull]string extraParameters) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="extraParameters">on the form param:value,param2:value2</param>
+        public DataMap PopulateFromString([CanBeNull]string extraParameters) {
             if (extraParameters == null) {
-                return;
+                return this;
             }
 
             var parameters = extraParameters.Split(',');
@@ -103,6 +106,7 @@ namespace softWrench.sW4.Data {
                 var strings = parameter.Split(':');
                 SetAttribute(strings[0], strings[1]);
             }
+            return this;
         }
     }
 }

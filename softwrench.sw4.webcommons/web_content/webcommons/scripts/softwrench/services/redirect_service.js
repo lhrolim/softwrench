@@ -158,6 +158,7 @@
          * @param {type} parameters: any parameters to be passed within the query string plus
          *      popupmode -- modal, browser or null for redirecting the main page;
          *      savefn -- a savefn to be executed on popupmode;
+         *      onloadfn -- a function to be executed on popupmode;
          * @param {type} jsonData a initial data that could be passed to open a schema filled with some values
          */
         function goToApplication(applicationName, schemaId, parameters, jsonData) {
@@ -178,14 +179,18 @@
 
             // let´s exclude functions from possible parameters, otherwise it would be evaluated by $.param
             const savefn = parameters.savefn;
+            const onloadfn = parameters.onloadfn;
             const postProcessFn = parameters.postProcessFn;
             delete parameters.savefn;
+            delete parameters.onloadfn;
             delete parameters.postProcessFn;
             // building url without the function parameters
             var redirectUrl = applicationService.getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData, type);
             //including back savefn param
             parameters.savefn = savefn;
             parameters.postProcessFn = postProcessFn;
+            parameters.onloadfn = onloadfn
+            ;
 
             var popupMode = parameters.popupmode;
 

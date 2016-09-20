@@ -23,7 +23,7 @@ namespace softwrench.sW4.test.Util {
         }
 
         public ContextHolder LookupContext() {
-            return null;
+            return new ContextHolder();
         }
 
         public void FillGridContext(string applicationName, InMemoryUser user) {

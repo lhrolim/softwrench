@@ -23,6 +23,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             var metadataParameters = _contextLookuper.LookupContext().MetadataParameters;
             string currentStatus = null;
 
+            var addcurrent = true;
+            if (postFilter.OriginalEntity.ContainsAttribute("addcurrent")) {
+                addcurrent = bool.Parse(postFilter.OriginalEntity.GetStringAttribute("addcurrent"));
+            }
+            
+
             if (postFilter.OriginalEntity.ContainsAttribute("originalstatus")) {
                 currentStatus = postFilter.OriginalEntity.GetAttribute("originalstatus").ToString();
             } else if (metadataParameters.ContainsKey("currentstatus")) {
@@ -30,7 +36,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             }
             var filterAvailableStatus = postFilter.Options;
             if (currentStatus == null) {
-                return new List<IAssociationOption> { filterAvailableStatus.First(l => l.Value.EqualsIc("OPEN")) };
+                return filterAvailableStatus;
             }
             var currentOption = filterAvailableStatus.FirstOrDefault(l => l.Value.Equals(currentStatus));
 
@@ -44,7 +50,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             }
 
             var baseResult = new List<IAssociationOption>();
-            if (currentOption != null) {
+            if (currentOption != null && addcurrent) {
                 baseResult.Add(currentOption);
             }
 
@@ -52,49 +58,56 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             MaxSrStatus statusEnum;
             Enum.TryParse(currentStatus, true, out statusEnum);
 
-            switch (statusEnum) {
-                case s.NEW:
-
-                baseResult.AddRange(filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED, s.QUEUED, s.REJECTED)));
-                break;
-
-                case s.QUEUED:
-
-                baseResult.AddRange(filterAvailableStatus.Where(l => l.Value.EqualsAny(s.INPROG, s.REJECTED, s.CANCELLED)));
-                break;
-
-                case s.INPROG:
-                baseResult.AddRange(
-                    filterAvailableStatus.Where(
-                        l => l.Value.EqualsAny(s.CANCELLED, s.PENDING, s.QUEUED, s.REJECTED, s.RESOLVCONF, s.RESOLVED, s.SLAHOLD)));
-                break;
-
-                case s.CLOSED:
-                baseResult.AddRange(filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED)));
-                break;
-
-                case s.RESOLVED:
-                baseResult.AddRange(
-                    filterAvailableStatus.Where(
-                        l => l.Value.EqualsAny(s.CLOSED, s.CANCELLED, s.INPROG, s.QUEUED, s.REJECTED, s.RESOLVCONF)));
-                break;
-
-                case s.COMP:
-                baseResult.AddRange(filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CLOSED, s.CANCELLED)));
-                break;
-
-                case s.PENDING:
-                baseResult.AddRange(filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED, s.INPROG, s.QUEUED, s.REJECTED, s.RESOLVCONF, s.RESOLVED, s.SLAHOLD)));
-                break;
-
-                case s.SLAHOLD:
-                baseResult.AddRange(filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED, s.INPROG, s.QUEUED, s.REJECTED, s.RESOLVCONF, s.RESOLVED, s.PENDING)));
-                break;
-
-            }
+            baseResult.AddRange(DoFilterAvailableStatus(statusEnum, filterAvailableStatus));
 
             return baseResult;
         }
 
+        protected virtual IList<IAssociationOption> DoFilterAvailableStatus(MaxSrStatus statusEnum, ISet<IAssociationOption> filterAvailableStatus) {
+            switch (statusEnum) {
+                case s.NEW:
+
+                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED, s.QUEUED, s.REJECTED)).ToList();
+
+
+                case s.QUEUED:
+
+                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.INPROG, s.REJECTED, s.CANCELLED)).ToList();
+
+                case s.INPROG:
+                return
+                    filterAvailableStatus.Where(
+                        l =>
+                            l.Value.EqualsAny(s.CANCELLED, s.PENDING, s.QUEUED, s.REJECTED, s.RESOLVCONF, s.RESOLVED,
+                                s.SLAHOLD)).ToList();
+
+                case s.CLOSED:
+                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED)).ToList();
+
+                case s.RESOLVED:
+                return
+                    filterAvailableStatus.Where(
+                        l => l.Value.EqualsAny(s.CLOSED, s.CANCELLED, s.INPROG, s.QUEUED, s.REJECTED, s.RESOLVCONF)).ToList();
+
+                case s.COMP:
+                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CLOSED, s.CANCELLED)).ToList();
+
+                case s.PENDING:
+                return
+                    filterAvailableStatus.Where(
+                        l =>
+                            l.Value.EqualsAny(s.CANCELLED, s.INPROG, s.QUEUED, s.REJECTED, s.RESOLVCONF, s.RESOLVED,
+                                s.SLAHOLD)).ToList();
+
+                case s.SLAHOLD:
+                return
+                    filterAvailableStatus.Where(
+                        l =>
+                            l.Value.EqualsAny(s.CANCELLED, s.INPROG, s.QUEUED, s.REJECTED, s.RESOLVCONF, s.RESOLVED,
+                                s.PENDING)).ToList();
+
+            }
+            return new List<IAssociationOption>();
+        }
     }
 }

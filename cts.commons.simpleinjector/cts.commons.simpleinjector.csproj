@@ -83,6 +83,7 @@
     <Compile Include="SimpleInjectorGenericFactory.cs" />
     <Compile Include="IComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleInjectoScannerUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

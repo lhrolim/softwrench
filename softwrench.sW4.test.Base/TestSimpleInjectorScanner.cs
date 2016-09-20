@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using cts.commons.simpleinjector;
-using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using log4net;
 using Moq;
@@ -26,6 +25,7 @@ namespace softwrench.sW4.TestBase {
 
         public TestSimpleInjectorScanner() {
             Container = new Container();
+            Container.Options.AllowOverridingRegistrations = true;
         }
 
 
@@ -90,11 +90,16 @@ namespace softwrench.sW4.TestBase {
                     if (shouldIgnore != null) {
                         continue;
                     }
+                    var name = SimpleInjectorGenericFactory.BuildRegisterName(registration);
                     var attributes = registration.GetAllAttributes<ComponentAttribute>();
                     var attr = attributes.FirstOrDefault();
                     var reg = Lifestyle.Singleton.CreateRegistration(registration, container);
                     if (attr != null) {
-                        RegisterFromAttribute(attr, reg);
+                        SimpleInjectoScannerUtil.RegisterFromAttribute(attr,_tempDict, reg);
+                    }
+                    var overridingAnnotation = registration.GetCustomAttribute(typeof(OverridingComponentAttribute));
+                    if (overridingAnnotation != null && registration.BaseType != null) {
+                        SimpleInjectoScannerUtil.RegisterOverridingBaseClass(container, ApplicationConfiguration.ClientName, (OverridingComponentAttribute)overridingAnnotation, registration, reg, name);
                     }
                     RegisterFromInterfaces(registration, reg);
                     RegisterClassItSelf(container, registration, reg);
@@ -129,10 +134,6 @@ namespace softwrench.sW4.TestBase {
             foreach (var type in registration.GetInterfaces().Where(type => typeof(IComponent).IsAssignableFrom(type))) {
                 AddToTemp(type, reg);
             }
-        }
-
-        private void RegisterFromAttribute(ComponentAttribute attr, Registration registration) {
-            AddToTemp(attr.RegistrationType, registration);
         }
 
         private void AddToTemp(Type type, Registration reg) {

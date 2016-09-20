@@ -263,7 +263,9 @@ angular.module('sw_layout')
 
             log.debug("initializing batch status change for [application: {0}, schema: {1}]".format(application, schemaId));
 
-            redirectService.openAsModal(application, "batchStatusChangeModal", {
+            const status = selectedItems.map(s => s["status"])[0];
+
+            redirectService.openAsModal(application, "batchStatusChangeModal",{
                 savefn: function (modalData, modalSchema) {
                     var newStatus = modalData["status"];
 
@@ -285,7 +287,12 @@ angular.module('sw_layout')
                             crudContextHolderService.clearSelectionBuffer();
                             return searchService.refreshGrid(null, null, { panelid: null, keepfilterparams: true });
                         });
+                },
+                onloadfn: function(modalScope) {
+                    modalScope.datamap["originalstatus"] = status;
+                    modalScope.datamap["addcurrent"] = false;
                 }
+
             });
         }
         //#endregion

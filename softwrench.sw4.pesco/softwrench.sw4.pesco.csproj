@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="classes\com\cts\pesco\configuration\PescoDOFChartInitializer.cs" />
     <Compile Include="classes\com\cts\pesco\dataset\PescoServiceRequestDataSet.cs" />
+    <Compile Include="classes\com\cts\pesco\dataset\PescoTicketStatusHandler.cs" />
     <Compile Include="classes\com\cts\pesco\migration\MigrationSwweb2374.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
