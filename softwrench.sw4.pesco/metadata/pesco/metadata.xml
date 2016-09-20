@@ -24,7 +24,7 @@
         <relationship to="synonymdomain" qualifier="pescosynstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="SRSTATUS" quoteLiteral="true" />
-          <relationshipAttribute query="(description IN ('New', 'Pending', 'In Progress', 'Closed', 'Resolved'))"/>
+          <relationshipAttribute query="(value IN ('CLOSED','HISTEDIT','INPROG','NEW','PENDING','QUEUED','RESOLVED'))"/>
         </relationship>
       </relationships>
     </entity>
