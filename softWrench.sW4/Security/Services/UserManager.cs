@@ -208,7 +208,7 @@ namespace softWrench.sW4.Security.Services {
                 }
             }
             user = await UserSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(user);
-            if (user.IsPoPulated()) {
+            if (!user.IsPoPulated()) {
                 return "User {0} not found".Fmt(userNameOrEmail);
             }
             UserSetupEmailService.ForgotPasswordEmail(user, emailToSend);

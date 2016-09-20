@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -82,7 +83,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 throw new SecurityException(ExpiredLinkException);
             }
             _userManager.ActivateAndDefinePassword(user, password);
-            AfterPasswordSet(user, password, userTimezoneOffset);
+            AfterPasswordSet(user, password, userTimezoneOffset, System.Web.HttpContext.Current);
             return null;
         }
 
@@ -118,7 +119,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
             var user = memoryUser.DBUser;
             _userManager.ActivateAndDefinePassword(user, password);
-            AfterPasswordSet(user, password, userTimezoneOffset);
+            AfterPasswordSet(user, password, userTimezoneOffset, System.Web.HttpContext.Current);
             return null;
         }
 
@@ -141,11 +142,14 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return false;
         }
 
-        private async void AfterPasswordSet(SwUser user, string password, string userTimezoneOffset) {
+        private async void AfterPasswordSet(SwUser user, string password, string userTimezoneOffset, HttpContext context) {
             //logining in the user and redirecting him to home page
             var inMemoryUser = await _facade.LoginCheckingPassword(user, password, userTimezoneOffset);
             AuthenticationCookie.SetSessionCookie(user.UserName, userTimezoneOffset, Response);
+
+            System.Web.HttpContext.Current = context; // async method run in another thread so this is needed
             FormsAuthentication.RedirectFromLoginPage(user.UserName, false);
+
             Thread.CurrentPrincipal = inMemoryUser;
         }
 

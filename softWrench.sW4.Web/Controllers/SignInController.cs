@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using softwrench.sw4.offlineserver.dto;
@@ -84,6 +85,7 @@ namespace softWrench.sW4.Web.Controllers {
         [HttpPost]
         public async Task<ActionResult> Index(string userName, string password, string userTimezoneOffset) {
             LoginHandlerModel model = null;
+            var context = System.Web.HttpContext.Current; // needed due to the possible change of thread by async/await
             var validationMessage = GetValidationMessage(userName, password);
             if (!string.IsNullOrEmpty(validationMessage)) {
                 model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName(), ProfileName());
@@ -92,7 +94,7 @@ namespace softWrench.sW4.Web.Controllers {
             userName = userName.ToLower();
             var user = await GetUser(userName, password, userTimezoneOffset);
             if (user != null && user.Active == true) {
-                return await AuthSucceeded(userName, userTimezoneOffset, user);
+                return await AuthSucceeded(userName, userTimezoneOffset, user, context);
             }
             return AuthFailed(user);
         }
@@ -178,7 +180,7 @@ namespace softWrench.sW4.Web.Controllers {
             return View(model);
         }
 
-        private async Task<ActionResult> AuthSucceeded(string userName, string userTimezoneOffset, InMemoryUser user) {
+        private async Task<ActionResult> AuthSucceeded(string userName, string userTimezoneOffset, InMemoryUser user, HttpContext context) {
             var syncEveryTime = "true".Equals(MetadataProvider.GlobalProperty(SwUserConstants.LdapSyncAlways));
             if (syncEveryTime) {
                 user.DBUser = await _userManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
@@ -190,6 +192,7 @@ namespace softWrench.sW4.Web.Controllers {
                 Response.Redirect("~/UserSetup/ChangePassword");
                 return null;
             }
+            System.Web.HttpContext.Current = context; // needed due to the possible change of thread by async/await
             Response.Redirect(FormsAuthentication.GetRedirectUrl(userName, false));
             return null;
         }
