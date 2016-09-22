@@ -15,7 +15,8 @@
                     selectAll: "=", // shared boolean flag indicating if multiple select in filters is selected
                     advancedFilterMode: "=", // shared boolean flag indicating if advanced filter mode is activated
                     filterApplied: "&", // callback executed when the filters are applied
-                    panelid: "="
+                    panelid: "=",
+                    forprint: "="
                 },
                 //#region controller
                 controller: ["$scope", "$injector", "i18NService", "fieldService", "commandService", "formatService", "expressionService", "searchService", "filterModelService", "modalService", "schemaCacheService", "restService", "dispatcherService", "$q", "modalFilterService", "crudContextHolderService", "gridSelectionService",

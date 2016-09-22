@@ -9,9 +9,9 @@
             <span ng-hide="layout.standalone" class="filter-text">{{getFilterText(filter)}}</span>
             <i class="fa grid-filter-button"
                ng-class="{
-               'fa-caret-down': !layout.standalone,
-               'fa-filter': layout.standalone && !hasFilter(filter),
-               'fa-check': layout.standalone && hasFilter(filter)
+               'fa-caret-down': !layout.standalone && !forprint,
+               'fa-filter': layout.standalone && !hasFilter(filter) && !forprint,
+               'fa-check': layout.standalone && hasFilter(filter) && !forprint
                }">
             </i>
         </div>

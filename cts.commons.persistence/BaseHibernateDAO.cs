@@ -141,7 +141,8 @@ namespace cts.commons.persistence {
 
             if (ShouldPaginate(paginationData)) {
                 var pageSize = paginationData.PageSize;
-                query.SetMaxResults(pageSize);
+                var pagesMultiplier = paginationData.NumberOfPages > 0 ? paginationData.NumberOfPages : 1;
+                query.SetMaxResults(pageSize * pagesMultiplier);
                 query.SetFirstResult((paginationData.PageNumber - 1) * pageSize);
             }
             if (parameters == null) {

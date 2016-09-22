@@ -27,6 +27,11 @@ namespace softWrench.sW4.Data.Pagination {
 
         public int PageNumber { get; set; }
 
+        /// <summary>
+        /// Used for printing multiple pages
+        /// </summary>
+        public int NumberOfPages { get; set; }
+
         public int PageSize { get; set; }
 
         public List<int> PaginationOptions { get; set; }

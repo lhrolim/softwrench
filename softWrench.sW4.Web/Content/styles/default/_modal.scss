@@ -137,10 +137,14 @@
 .printModal {
     width: 330px;
     outline: none;
-}
 
-.printModal .modal-dialog {
-    width: 300px;
+    .modal-dialog {
+        width: 300px;
+    }
+
+    .thin-input {
+        width: 70px;
+    }
 }
 
 .modal-body {

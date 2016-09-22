@@ -102,7 +102,7 @@
     window.parseBooleanValue = parseBooleanValue;
 
     app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,eventService,
-    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService, classificationColorService, priorityService) {
+    fieldService, commandService, statuscolorService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService, classificationColorService, priorityService) {
         "ngInject";
 
         return {
@@ -472,9 +472,6 @@
                     element.html(html);
                     if (!$rootScope.printRequested && (hasSection || needsWatchers)) {
                         $compile(element.contents())(scope);
-                    }
-                    if ($rootScope.printRequested != null && $rootScope.printRequested) {
-                        printService.doPrint();
                     }
                     var t1 = new Date().getTime();
                     $log.getInstance('crudtbody#link').debug('grid compilation took {0} ms'.format(t1 - t0));

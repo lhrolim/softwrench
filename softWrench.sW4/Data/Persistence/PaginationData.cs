@@ -32,8 +32,9 @@ namespace softWrench.sW4.Data.Persistence {
             var paginatedSearchRequestDto = searchDTO as PaginatedSearchRequestDto;
             PaginationData paginationData = null;
             if (paginatedSearchRequestDto != null && paginatedSearchRequestDto.PageSize > 0 && paginatedSearchRequestDto.ShouldPaginate) {
-                paginationData = new PaginationData(paginatedSearchRequestDto.PageSize,
-                                                                     paginatedSearchRequestDto.PageNumber, qualifiedOrderColumn);
+                paginationData = new PaginationData(paginatedSearchRequestDto.PageSize, paginatedSearchRequestDto.PageNumber, qualifiedOrderColumn) {
+                    NumberOfPages = paginatedSearchRequestDto.NumberOfPages
+                };
             }
             return paginationData;
         }
@@ -41,6 +42,7 @@ namespace softWrench.sW4.Data.Persistence {
 
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
+        public int NumberOfPages { get; set; } // used when printing multiple pages
         public string QualifiedOrderByColumn { get; set; }
         public string OrderByColumn { get; set; }
     }

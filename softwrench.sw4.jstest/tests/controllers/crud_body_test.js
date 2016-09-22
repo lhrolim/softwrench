@@ -30,6 +30,8 @@
         $compile(el)(mockScope);
         //mocking directive loading
         $httpBackend.when('GET', '/Content/Templates/directives/multiselectDropdown.html').respond({});
+        //mocking routeinfo
+        $httpBackend.when('GET', '/api/generic/Metadata/GetRouteInfo?').respond({ contextPath: "/sw4" });
         mockScope.$digest();
         mockScope = el.isolateScope() || el.scope();
 

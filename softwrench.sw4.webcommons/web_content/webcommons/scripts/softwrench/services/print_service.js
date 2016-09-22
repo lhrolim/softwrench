@@ -5,8 +5,8 @@
 
 angular.module('sw_layout')
     .factory('printService', [
-        "$rootScope", "$http", "$timeout", "$log", "tabsService", "fixHeaderService", "redirectService", "searchService", 
-        function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService, redirectService, searchService) {
+        "$rootScope", "$http", "$timeout", "$log", "tabsService", "fixHeaderService", "redirectService", "searchService", "alertService", 
+        function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService, redirectService, searchService, alertService) {
 
     var mergeCompositionData = function (datamap, nonExpansibleData, expansibleData) {
         var resultObj = {};
@@ -35,67 +35,63 @@ angular.module('sw_layout')
         fixHeaderService.fixThead(schema);
     };
 
+    const searchPrintGrid = function (pageNumber, pageSize, numberOfPages) {
+        searchService.refreshGrid(null, null, {
+            pageNumber: pageNumber,
+            pageSize: pageSize,
+            numberOfPages: numberOfPages,
+            printMode: true
+        });
+    }
+
     var innerDoPrint = function () {
         window.print();
     };
 
     return {
-        doPrint: function () {
-            innerDoPrint();
+        doPrint: function (isList, schema) {
+            if (isList) {
+                doPrintGrid(schema);
+            } else {
+                innerDoPrint();
+            }
             $rootScope.printRequested = null; 
         },
 
-        printList: function (paginationData, schema) {
-            $.each($('.tooltip'), function () {
-                $(this).remove();
-            });
-            var totalCount = paginationData.totalCount;
-            var printPageSize = paginationData.pageSize;
-
-
-            $rootScope.printRequested = false;
-            if ($rootScope.$$listeners['listTableRenderedEvent'] != undefined) {
-                //avoids multiple listener registration
-                $rootScope.$$listeners['listTableRenderedEvent'] = null;
-            }
-
-            // to add the crud_body grid in printing page
-            var listgrid = $('#listgrid');
-            listgrid.removeClass('hiddenonprint');
-
-            $rootScope.$on('listTableRenderedEvent', function () {
-                if (!$rootScope.printRequested) {
-                    return;
-                }
-                $rootScope.printRequested = false;
-                var rows = $('[rel=hideRow]');
-                var index;
-                if (rows.length <= printPageSize) {
-                    return;
-                }
-                for (index = 1; index < rows.length; ++index) {
-                    if (index > printPageSize) {
-                        rows[index].className += ' hideRows';
-                    }
-                }
-                if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-                    listgrid.addClass('listgrid-firefox');
-                }
-                doPrintGrid(schema);
-            });
-
-            if (totalCount <= printPageSize) {
-                //If all the data is on the screen, just print it
-                doPrintGrid(schema);
+        printList: function (paginationData, schema, printOptions) {
+            if (!printOptions) {
+                $rootScope.$broadcast("sw_showprintmodal", schema, true, paginationData);
                 return;
             }
 
-            //otherwise, hit the server asking for the full grid to be print
-            searchService.refreshGrid(null, null, {
-                pageNumber: 1,
-                pageSize: totalCount,
-                printMode: true,
+            $.each($(".tooltip"), function () {
+                $(this).remove();
             });
+
+            if (printOptions.pageOption === "current") {
+                $rootScope.printRequested = true;
+                this.readyToPrintList();
+                return;
+            }
+
+            if (printOptions.pageOption === "all") {
+                searchPrintGrid(1, paginationData.totalCount);
+                return;
+            }
+
+            
+            if (printOptions.startPage > printOptions.endPage || 
+                printOptions.startPage < 1 || printOptions.endPage < 1 || 
+                printOptions.startPage > paginationData.pageCount || printOptions.endPage > paginationData.pageCount) {
+                alertService.alert("Invalid page range.");
+                return;
+            }
+
+            searchPrintGrid(printOptions.startPage, paginationData.pageSize, printOptions.endPage - printOptions.startPage + 1);
+        },
+
+        readyToPrintList: function (datamap) {
+            $rootScope.$broadcast("sw_readytoprintlistevent", datamap);
         },
 
         printDetail: function (schema, datamap, printOptions) {
@@ -103,7 +99,7 @@ angular.module('sw_layout')
             if (schema.hasNonInlineComposition && printOptions === undefined) {
                 //this case, we have to choose which extra compositions to choose, so we will open the print modal
                 //open print modal...
-                $rootScope.$broadcast("sw_showprintmodal", schema);
+                $rootScope.$broadcast("sw_showprintmodal", schema, false);
                 return;
             }
             var params = {};

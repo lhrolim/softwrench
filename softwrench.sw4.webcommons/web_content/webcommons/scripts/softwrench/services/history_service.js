@@ -88,19 +88,6 @@
             return null;
         }
 
-        function getRouteInfo() {
-            var routeInfo = localStorageService.get(routeInfoKey);
-            if (routeInfo) {
-                return $q.when(routeInfo);
-            }
-
-            return restService.getPromise("Metadata", "GetRouteInfo").then(response => {
-                routeInfo = response.data;
-                localStorageService.put(routeInfoKey, routeInfo);
-                return routeInfo;
-            });
-        }
-
         function customPath(stateUrl, contextPath) {
             const user = contextService.getUserData();
             const username = user.login;
@@ -360,6 +347,19 @@
             breadcrumbRedirect(redirectEntry.url, redirectIndex, msg);
             return true;
         }
+
+        function getRouteInfo() {
+            var routeInfo = localStorageService.get(routeInfoKey);
+            if (routeInfo) {
+                return $q.when(routeInfo);
+            }
+
+            return restService.getPromise("Metadata", "GetRouteInfo").then(response => {
+                routeInfo = response.data;
+                localStorageService.put(routeInfoKey, routeInfo);
+                return routeInfo;
+            });
+        }
         //#endregion
 
         //#region Public methods for breadcrumb history
@@ -437,6 +437,7 @@
             wasLocationUpdatedByService,
             resetLocationUpdatedByService,
             redirectOneBack,
+            getRouteInfo,
             // breadcrumb history methods
             indexOnBreadcrumbHistory,
             eraseBreadcrumbHistory,

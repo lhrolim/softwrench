@@ -28,18 +28,19 @@
                 checked: '=',
                 timestamp: '@',
                 panelid: "@",
+                forprint: "@"
             },
 
             controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log",
                 "formatService", "fixHeaderService", "alertService", "gridPreferenceService",
-                "searchService", "tabsService", "userPreferencesService",
+                "searchService", "tabsService", "userPreferencesService", "printService", 
                 "fieldService", "commandService", "i18NService", "modalService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
                 "checkpointService", "schemaCacheService", "dispatcherService", "schemaService",
                 function ($scope, $http, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService, gridPreferenceService,
-                    searchService, tabsService, userPreferencesService,
+                    searchService, tabsService, userPreferencesService, printService,
                     fieldService, commandService, i18NService, modalService,
                     validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
                     associationService, statuscolorService, contextService, eventService, iconService, expressionService,
@@ -459,6 +460,7 @@
                         searchDTO.pageNumber = pageNumber;
                         searchDTO.totalCount = totalCount;
                         searchDTO.pageSize = pageSize;
+                        searchDTO.numberOfPages = extraparameters.numberOfPages;
                         searchDTO.paginationOptions = $scope.paginationData.paginationOptions;
                         searchDTO.quickSearchDTO = $scope.vm.quickSearchDTO;
                         searchDTO.AddPreSelectedFilters = extraparameters.addPreSelectedFilters ? true : false;
@@ -504,13 +506,17 @@
                             schemaFieldsToDisplay: $scope.fieldstodisplay,
                             metadataid: $scope.metadataid,
                             saveSwGlobalRedirectURL: typeof $scope.panelid === "undefined" && $scope.ismodal !== "true",
-                            addToHistory: typeof $scope.panelid === "undefined"
+                            addToHistory: typeof $scope.panelid === "undefined" && !printMode
                         });
 
                         searchPromise.success(function (data) {
                             // Set the scroll position to the top of the new page
                             contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
-                            $scope.gridRefreshed(data, $scope.panelid);
+                            if (!printMode) {
+                                $scope.gridRefreshed(data, $scope.panelid);
+                            } else {
+                                printService.readyToPrintList(data.resultObject);
+                            }
                         });
 
                     };

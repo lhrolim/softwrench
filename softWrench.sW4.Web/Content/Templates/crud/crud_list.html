@@ -1,5 +1,5 @@
 <form>
-    <div id="affixpagination" class="hiddenonprint toolbar-primary" ng-class="{'affix-pagination' : ismodal !== 'true' }">
+    <div id="affixpagination" class="hiddenonprint toolbar-primary" ng-class="{'affix-pagination' : ismodal !== 'true' }" ng-if="!forprint">
 
         <div ng-hide="hidebars" ng-if="!panelid || panelid == '#modal'">
             <div class="context clearfix header-menu">
@@ -102,7 +102,7 @@
     </div>-->
     </div>
 
-    <div class="affix-pagination-panel hiddenonprint" ng-hide="'false' !== hidebars" ng-if="panelid">
+    <div class="affix-pagination-panel hiddenonprint" ng-hide="'false' !== hidebars" ng-if="panelid && !forprint">
         <div class="context clearfix header-menu">
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema="schema" application-name="{{schema.applicationName}}"
@@ -163,7 +163,7 @@
                                     <crud-filter-dropdown filter="columnFilter"
                                                           schema="schema" datamap="datamap" panelid="panelid"
                                                           advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"
-                                                          search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()"
+                                                          search-data="searchData" search-operator="searchOperator" filter-applied="filterApplied()" forprint="forprint"
                                                           filter-standalone/>
                                 </div>
                             </div>
@@ -192,7 +192,7 @@
         {{i18N("_grid.filter.noresultWithNewEnd"," or try adjusting your search terms.")}}
     </p>
     <!--this is exclusive for IBM Demo to indicate the bottom of the page.-->
-    <div ng-if="isNotHapagTest()" ng-hide="hidebars">
+    <div ng-if="isNotHapagTest() && !forprint" ng-hide="hidebars">
         <div id="affixpagination1" class="hiddenonprint context clearfix hiddenonprint">
             <!--            <gridtoolbar position="{{getGridCommandPosition('commandbar.bottom','gridbottom')}}"-->
             <!--                         schema="schema"-->
