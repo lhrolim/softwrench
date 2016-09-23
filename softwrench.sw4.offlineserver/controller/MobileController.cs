@@ -141,7 +141,9 @@ namespace softwrench.sw4.offlineserver.controller {
                 UserData = new UserSyncData(user)
             };
 
-            _contextLookuper.LookupContext().OfflineMode = true;
+            var context = _contextLookuper.LookupContext();
+            context.OfflineMode = true;
+            _contextLookuper.AddContext(context);
 
             var watch = Stopwatch.StartNew();
             var appData = await _syncManager.GetData(req, user);

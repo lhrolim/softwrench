@@ -48,7 +48,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 MockSecurity = mockSecurity,
                 CurrentSelectedProfile = profileAsString == null ? (int?) null : int.Parse(profileAsString),
                 MetadataParameters = PropertyUtil.ConvertToDictionary(currentMetadataParameter)
-            }, true);
+            });
 
             base.OnActionExecuting(actionContext);
         }

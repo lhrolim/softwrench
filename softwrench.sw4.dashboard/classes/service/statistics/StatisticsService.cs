@@ -7,14 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
-using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.startup;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
-using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
@@ -34,15 +32,13 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
 
         private readonly IMaximoHibernateDAO _maxdao;
         private readonly ISWDBHibernateDAO _swdao;
-        private readonly IWhereClauseFacade _whereClauseFacade;
         private readonly IWhereBuilder _whereBuilder;
         private readonly IContextLookuper _contextLookuper;
 
-        public StatisticsService(IMaximoHibernateDAO maxdao, ISWDBHibernateDAO swdao,
-            IWhereClauseFacade whereClauseFacade, DataConstraintsWhereBuilder whereBuilder, StatisticsWhereBuilder statisticsWhereBuilder, IContextLookuper contextLookuper) {
+        public StatisticsService(IMaximoHibernateDAO maxdao, ISWDBHibernateDAO swdao, 
+            DataConstraintsWhereBuilder whereBuilder, StatisticsWhereBuilder statisticsWhereBuilder, IContextLookuper contextLookuper) {
             _maxdao = maxdao;
             _swdao = swdao;
-            _whereClauseFacade = whereClauseFacade;
             _whereBuilder = new CompositeWhereBuilder(new List<IWhereBuilder>(){
                whereBuilder, new MultiTenantCustomerWhereBuilder(), statisticsWhereBuilder, new EntityWhereClauseBuilder()
             });
@@ -63,10 +59,8 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
             var query = BuildStatisticsQuery(request);
             var dao = IsMaximoApplication(request.Application) ? (IBaseHibernateDAO)_maxdao : _swdao;
 
-            return await Task.Run(() => {
-                var result = dao.FindByNativeQuery(query, new ExpandoObject(), pagination);
-                return FormatQueryResult(result, request.Property, request.NullValueLabel);
-            });
+            var result = await dao.FindByNativeQueryAsync(query, new ExpandoObject(), pagination);
+            return FormatQueryResult(result, request.Property, request.NullValueLabel);
         }
 
         private static IEnumerable<StatisticsResponseEntry> FormatQueryResult(IEnumerable<dynamic> resultSet, string propertyName, string nullValueLabel) {
@@ -131,21 +125,20 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
                     where d.rng is not null
                     group by d.rng");
 
-            return await Task.Run(() => {
 
-                var results = _swdao.FindByNativeQuery(queryBuilder.ToString())
-                                .Select(r => {
-                                    var max = long.Parse(r["maxmonthvalue"]);
-                                    var min = long.Parse(r["minmonthvalue"]);
-                                    return new Dictionary<string, object> {
+            var queryResult = await _swdao.FindByNativeQueryAsync(queryBuilder.ToString());
+            var results = queryResult
+                            .Select(r => {
+                                var max = long.Parse(r["maxmonthvalue"]);
+                                var min = long.Parse(r["minmonthvalue"]);
+                                return new Dictionary<string, object> {
                                         { ctes.FIELD_VALUE_VARIABLE_NAME, max - min },
                                         { "monthyear", r["monthyear"] },
                                         { ctes.FIELD_LABEL_VARIABLE_NAME, r["monthyear"] }
-                                    };
-                                }).Where(r => ((long)r[ctes.FIELD_VALUE_VARIABLE_NAME]) > 0);
+                                };
+                            }).Where(r => ((long)r[ctes.FIELD_VALUE_VARIABLE_NAME]) > 0);
 
-                return FormatQueryResult(results, "monthyear", "NULL");
-            });
+            return FormatQueryResult(results, "monthyear", "NULL");
         }
 
         #endregion

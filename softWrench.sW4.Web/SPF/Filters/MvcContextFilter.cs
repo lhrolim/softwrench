@@ -33,7 +33,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 Module = currentModule, ApplicationLookupContext = appCtx,
                 MetadataParameters = PropertyUtil.ConvertToDictionary(currentMetadataParameter),
                 MockSecurity = mockSecurity
-            }, true);
+            });
             //            instance.RegisterHttpContext(actionContext.HttpContext.re);
         }
 

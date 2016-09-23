@@ -332,7 +332,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             //count query
             if (searchDto.NeedsCountUpdate) {
-                Quartz.Util.LogicalThreadContext.SetData("context", ctx);
+                // Quartz.Util.LogicalThreadContext.SetData("context", ctx);
                 Log.DebugFormat("BaseApplicationDataSet#GetList calling Count method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, ctx);
                 totalCount = await Engine().Count(entityMetadata, searchDto.ShallowCopy());
             }
@@ -340,7 +340,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             //query
 
             var dto = (PaginatedSearchRequestDto)searchDto.ShallowCopy();
-            Quartz.Util.LogicalThreadContext.SetData("context", ctx);
+            // Quartz.Util.LogicalThreadContext.SetData("context", ctx);
             // Only fetch the compositions schemas if indicated on searchDTO
             var applicationCompositionSchemata = new Dictionary<string, ApplicationCompositionSchema>();
             if (searchDto.CompositionsToFetch != null && searchDto.CompositionsToFetch.Count > 0) {

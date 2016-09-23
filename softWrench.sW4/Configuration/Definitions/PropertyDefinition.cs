@@ -14,6 +14,7 @@ namespace softWrench.sW4.Configuration.Definitions {
     public class PropertyDefinition : IComparable<PropertyDefinition> {
 
         public const string ByKey = "from PropertyDefinition where FullKey=?";
+        public const string MultipleByKey = "from PropertyDefinition where FullKey in (:p0)";
         public const string ByVisibilityByConfigTypeOrderedByKey = "from PropertyDefinition where Visible = ? and FullKey like ? order by FullKey asc";
         public const string ByCachedOnClient = "from PropertyDefinition where CachedOnClient=?";
 

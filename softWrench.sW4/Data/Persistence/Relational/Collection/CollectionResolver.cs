@@ -161,19 +161,19 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 queryResult = await EntityRepository.GetAsRawDictionary(collectionEntityMetadata, dto, offLineMode);
             } else {
                 // one thread to fetch results
-                var ctx = ContextLookuper.LookupContext();
-                var tasks = new Task[2];
-//                tasks[0] = Task.Factory.NewThread(async c => {
-//                    var dto = searchRequestDto.ShallowCopy();
-//                    Quartz.Util.LogicalThreadContext.SetData("context", c);
-//                    queryResult = await GetList(collectionEntityMetadata, dto, offLineMode);
-//                }, ctx);
-//                // one thread to count results for paginations
-//                tasks[1] = Task.Factory.NewThread(async c => {
-//                    var dto = searchRequestDto.ShallowCopy();
-//                    Quartz.Util.LogicalThreadContext.SetData("context", c);
-//                    paginatedSearch.TotalCount = await GetCount(collectionEntityMetadata, dto, offLineMode);
-//                }, ctx);
+                //var ctx = ContextLookuper.LookupContext();
+                //var tasks = new Task[2];
+                //tasks[0] = Task.Factory.NewThread(async c => {
+                //    var dto = searchRequestDto.ShallowCopy();
+                //    Quartz.Util.LogicalThreadContext.SetData("context", c);
+                //    queryResult = await GetList(collectionEntityMetadata, dto, offLineMode);
+                //}, ctx);
+                //// one thread to count results for paginations
+                //tasks[1] = Task.Factory.NewThread(async c => {
+                //    var dto = searchRequestDto.ShallowCopy();
+                //    Quartz.Util.LogicalThreadContext.SetData("context", c);
+                //    paginatedSearch.TotalCount = await GetCount(collectionEntityMetadata, dto, offLineMode);
+                //}, ctx);
 
                 var listTask = GetList(collectionEntityMetadata, searchRequestDto, offLineMode);
                 var countTask = GetCount(collectionEntityMetadata, searchRequestDto, offLineMode);

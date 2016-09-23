@@ -34,7 +34,9 @@ namespace softWrench.sW4.Web.Controllers {
 
             searchDTO.PageSize = searchDTO.TotalCount + 1;
             if (module != null) {
-                _contextLookuper.LookupContext().Module = module;
+                var context = _contextLookuper.LookupContext();
+                context.Module = module;
+                _contextLookuper.AddContext(context);
             }
             var dataResponse = await _dataController.Get(application, new DataRequestAdapter {
                 Key = key,

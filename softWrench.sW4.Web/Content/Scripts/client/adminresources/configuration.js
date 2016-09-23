@@ -404,7 +404,9 @@ function configController($scope, $http, $timeout, i18NService, alertService) {
     };
 
     $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent) {
-        $("input[type=file]").filestyle({
+        const fileInput = $("input[type=file]");
+        if (!fileInput.exists()) return;
+        fileInput.filestyle({
             image: url("/Content/Images/update_24.png"),
             imageheight: 32,
             imagewidth: 25,

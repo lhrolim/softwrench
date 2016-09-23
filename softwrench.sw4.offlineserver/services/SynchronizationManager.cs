@@ -99,8 +99,9 @@ namespace softwrench.sw4.offlineserver.services {
                 }
 
                 tasks[i++] = Task.Factory.NewThread(async () => {
-
-                    _lookuper.LookupContext().OfflineMode = true;
+                    var context = _lookuper.LookupContext();
+                    context.OfflineMode = true;
+                    _lookuper.AddContext(context);
 
                     var datamaps = await FetchData(entityMetadata, userAppMetadata, rowstamp, null);
                     results.AssociationData.Add(association1.ApplicationName, datamaps);

@@ -885,3 +885,9 @@ if (typeof (Object.values !== "function")) {
         });
     };
 }
+
+jQuery.fn.extend({
+    exists: function() {
+        return this.length > 0;
+    }
+})

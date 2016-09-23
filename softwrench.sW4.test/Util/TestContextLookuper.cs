@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+﻿using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 
@@ -27,6 +22,10 @@ namespace softwrench.sW4.test.Util {
         }
 
         public void FillGridContext(string applicationName, InMemoryUser user) {
+        }
+
+        public ContextHolder AddContext(ContextHolder holder) {
+            return holder;
         }
     }
 }

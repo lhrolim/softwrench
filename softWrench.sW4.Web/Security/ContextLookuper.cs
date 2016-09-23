@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Web;
 using log4net;
 using softWrench.sW4.Security.Context;
@@ -35,11 +36,9 @@ namespace softWrench.sW4.Web.Security {
             return SimpleInjectorGenericFactory.Instance.GetObject<ContextLookuper>(typeof(ContextLookuper));
         }
 
-
         public ContextHolder LookupContext() {
-            var isHttp = HttpContext.Current != null;
-            var context = isHttp ? HttpContext.Current.Items["context"] : LogicalThreadContext.GetData<ContextHolder>("context");
-            return (ContextHolder)(context ?? AddContext(new ContextHolder(), isHttp));
+            var context = GetContextData() ?? new ContextHolder();
+            return AddContext(context);
         }
 
         public void FillContext(ApplicationMetadataSchemaKey key) {
@@ -56,29 +55,19 @@ namespace softWrench.sW4.Web.Security {
             appContext.Mode = key.Mode.ToString();
             context.ApplicationLookupContext = appContext;
 
-            var isHttp = HttpContext.Current != null;
-            if (isHttp) {
-                HttpContext.Current.Items["context"] = context;
-            } else {
-                LogicalThreadContext.SetData("context", context);
-            }
+            SetContextData(context);
         }
 
         public void FillGridContext(string applicationName, InMemoryUser user) {
             var context = (ContextHolder)ReflectionUtil.Clone(new ContextHolder(), LookupContext());
             //TODO: Async
-            var availableProfiles = AsyncHelper.RunSync(()=> WhereClauseFacade.ProfilesByApplication(applicationName, user));
+            var availableProfiles = AsyncHelper.RunSync(() => WhereClauseFacade.ProfilesByApplication(applicationName, user));
             context.AvailableProfilesForGrid = availableProfiles;
             if (availableProfiles.Any() && context.CurrentSelectedProfile == null) {
                 //if the profile was already set at client side, let´s not change it
                 context.CurrentSelectedProfile = availableProfiles.First().Id;
             }
-            var isHttp = HttpContext.Current != null;
-            if (isHttp) {
-                HttpContext.Current.Items["context"] = context;
-            } else {
-                LogicalThreadContext.SetData("context", context);
-            }
+            SetContextData(context);
         }
 
         public void SetMemoryContext(string key, object ob, bool userSpecific = false) {
@@ -110,13 +99,23 @@ namespace softWrench.sW4.Web.Security {
 
         }
 
-        public ContextHolder AddContext(ContextHolder context, bool isHttp) {
-            context.Environment = ApplicationConfiguration.Profile;
-            if (isHttp) {
+        private void SetContextData(ContextHolder context) {
+            CallContext.LogicalSetData("context", context);
+            // adding to 'deprecated' threadlocals just in case oter parts of the code are accessing these directly
+            LogicalThreadContext.SetData("context", context);
+            if (HttpContext.Current != null) {
                 HttpContext.Current.Items["context"] = context;
-            } else {
-                LogicalThreadContext.SetData("context", context);
             }
+        }
+
+        private ContextHolder GetContextData() {
+            // retrieving only from LogicalGetData as it is the only one that works with async/await threads
+            return CallContext.LogicalGetData("context") as ContextHolder;
+        }
+
+        public ContextHolder AddContext(ContextHolder context) {
+            context.Environment = ApplicationConfiguration.Profile;
+            SetContextData(context);
             try {
                 var user = SecurityFacade.CurrentUser();
                 if (user == null) {
@@ -127,11 +126,7 @@ namespace softWrench.sW4.Web.Security {
                 context.Environment = ApplicationConfiguration.Profile;
                 context.OrgId = user.OrgId;
                 context.SiteId = user.SiteId;
-                if (isHttp) {
-                    HttpContext.Current.Items["context"] = context;
-                } else {
-                    LogicalThreadContext.SetData("context", context);
-                }
+                SetContextData(context);
                 Log.DebugFormat("adding context " + context);
                 return context;
             } catch (Exception) {

@@ -91,11 +91,10 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         /// <returns>the <see cref="IGenericResponseResult"/> result</returns>
         /// <exception cref="InvalidWhereClauseException">Thrown when an invalid where clause is supplied</exception>
         public async Task<IGenericResponseResult> Put(CategoryDTO category) {
-            foreach (var definition in category.Definitions) {
-                if (category.FullKey.StartsWith("/_whereclauses/")) {
-                    //not all categories are related to whereclauses only these need to be validated
-                    ValidateWhereClause(category, definition);
-                }
+            var whereClauses = category.Definitions.Where(definition => category.FullKey.StartsWith("/_whereclauses/"));
+            foreach (var definition in whereClauses) {
+                //not all categories are related to whereclauses only these need to be validated
+                ValidateWhereClause(category, definition);
             }
 
             var result = await _configService.UpdateDefinitions(category);

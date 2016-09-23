@@ -14,6 +14,7 @@ using cts.commons.simpleinjector.Events;
 using JetBrains.Annotations;
 using NHibernate.Util;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Configuration.Services {
 
@@ -161,16 +162,21 @@ namespace softWrench.sW4.Configuration.Services {
         public async Task<SortedSet<PropertyDefinition>> UpdateDefinitions(CategoryDTO category) {
             var definitions = category.Definitions;
             var updatedDefinitions = new SortedSet<PropertyDefinition>();
-            foreach (var def in definitions) {
-                //TODO: we are only retrieving again, because a bug where the definition values are not sent over the wire
-                var definition = await _dao.FindByPKAsync<PropertyDefinition>(typeof(PropertyDefinition), def.FullKey);
+            var condition = category.Condition == null ? null : category.Condition.RealCondition;
+
+            //TODO: we are only retrieving again, because a bug where the definition values are not sent over the wire
+            var fullKeys = definitions.Select(def => def.FullKey).ToArray();
+            var propertyDefinitions = await _dao.FindByQueryAsync<PropertyDefinition>(PropertyDefinition.MultipleByKey, new object[] { fullKeys });
+            updatedDefinitions.AddAll(updatedDefinitions);
+
+            foreach (var definition in propertyDefinitions) {
+                //var definition = await _dao.FindByPKAsync<PropertyDefinition>(typeof(PropertyDefinition), def.FullKey);
                 updatedDefinitions.Add(definition);
                 string value;
                 if (!category.ValuesToSave.TryGetValue(definition.FullKey, out value)) {
                     //we didn´t touch at these definitions
                     continue;
                 }
-                var condition = category.Condition == null ? null : category.Condition.RealCondition;
 
                 var propValue = await _dao.FindSingleByQueryAsync<PropertyValue>(PropertyValue.ByDefinitionConditionModuleProfile, definition.FullKey,
                     condition, category.Module.Id, category.UserProfile);
