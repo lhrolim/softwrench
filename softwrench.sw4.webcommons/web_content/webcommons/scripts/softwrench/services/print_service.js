@@ -5,10 +5,12 @@
 
 angular.module('sw_layout')
     .factory('printService', [
-        "$rootScope", "$http", "$timeout", "$log", "tabsService", "fixHeaderService", "redirectService", "searchService", "alertService", 
-        function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService, redirectService, searchService, alertService) {
+        "$rootScope", "$http", "$timeout", "$log", "$q", "tabsService", "fixHeaderService", "redirectService", "searchService", "alertService", 
+        function ($rootScope, $http, $timeout, $log, $q, tabsService, fixHeaderService, redirectService, searchService, alertService) {
 
-    var mergeCompositionData = function (datamap, nonExpansibleData, expansibleData) {
+     const awaitables = [];
+
+     var mergeCompositionData = function (datamap, nonExpansibleData, expansibleData) {
         var resultObj = {};
         if (expansibleData != null) {
             resultObj = expansibleData;
@@ -217,6 +219,15 @@ angular.module('sw_layout')
             $rootScope.$broadcast("sw_hideprintmodal");
         },
 
+        registerAwaitable: function(awaitable) {
+            awaitables.push(awaitable);
+        },
+
+        awaitToPrint: function () {
+            return $q.all(awaitables).then(() => {
+                awaitables.length = 0;
+            });
+        }
     };
 
 }]);

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using NHibernate.Util;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
@@ -35,14 +36,21 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog {
             var attachments = _attachmentDAO.ByOwner("COMMLOG", id);
 
             if (!attachments.Any()) return result;
-            var displayableAttachments = attachments.Select(attachment => new {
-                name = attachment.document,
-                url = AttachmentHandler.GetFileUrl(attachment.urlname),
-                docinfoid = attachment.docinfoid,
-                urlname = attachment.urlname
+            var displayableAttachments = new List<dynamic>();
+            attachments.ForEach(async att => {
+                displayableAttachments.Add(await ToDisplayableAttachment(att));
             });
             datamap.Add("attachments", displayableAttachments);
             return result;
+        }
+
+        private async Task<dynamic> ToDisplayableAttachment(dynamic attachment) {
+            return new {
+                name = attachment.document,
+                url = await AttachmentHandler.GetFileUrl(attachment.urlname),
+                docinfoid = attachment.docinfoid,
+                urlname = attachment.urlname
+            };
         }
 
         public IEnumerable<IAssociationOption> EmailPostFilter(AssociationPostFilterFunctionParameters postParams) {

@@ -1,0 +1,44 @@
+﻿<div ng-if="iscollection">
+    <table class="table output" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
+        <thead>
+            <tr>
+                <th class="{{safeCSSselector(column.attribute)}}"
+                    ng-repeat="column in compositionlistschema.displayables"
+                    ng-if="!isCompositionItemFieldHidden(compositionlistschema,column,null)">
+
+                    <span class="add-on part" data-container="body">
+                        {{i18NLabel(column)}}
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody ng-if="compositionData().length > 0">
+            <tr ng-repeat="(rowindex, compositionitem) in compositionData()"
+                ng-if="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
+                ng-class="$odd ? 'odd' : 'even'">
+
+                <td class="{{safeCSSselector(column.attribute)}}"
+                    ng-repeat="column in compositionlistschema.displayables"
+                    ng-if="!isCompositionItemFieldHidden(compositionlistschema,column,compositionitem)"
+                    data-title="{{column.label}}">
+                    <ng-switch on="column.type">
+                        <div ng-switch-when="ApplicationSection">
+                        </div>
+                        <div ng-switch-default>
+                            {{getFormattedValue(compositionitem[column.attribute],column,compositionitem)}}
+                        </div>
+                    </ng-switch>
+                </td>
+            </tr>
+        </tbody>
+        <tbody ng-if="compositionData().length == 0">
+            <tr>
+                <td colspan="100%">
+                    <p class="no-results">
+                        <i class="fa fa-info-circle"></i>&ensp;{{i18N('general.norecords','No records to display.')}}
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

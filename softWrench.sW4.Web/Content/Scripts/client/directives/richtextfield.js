@@ -1,20 +1,28 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module("sw_layout").directive("richtextField", ["contextService", "$interval", "$log", function (contextService, $interval, $log) {
+    angular.module("sw_layout").directive("richtextField", ["contextService", "$interval", "$log", "$q", "$timeout", "printService",
+        function (contextService, $interval, $log, $q, $timeout, printService) {
+
         const directive = {
             restrict: "E",
             templateUrl: contextService.getResourceUrl("/Content/Templates/directives/richtextfield.html"),
             replace: false,
             scope: {
                 content: "=",
-                readonly: "="
+                readonly: "=",
+                forprint: "="
             },
 
             controller: ["$scope", "richTextService", function ($scope, richTextService) {
                 const log = $log.get("richtextfield#controller", ["richtext"]);
 
                 $scope.content = richTextService.getDecodedValue($scope.content);
+
+                if ($scope.forprint) {
+                    $scope.printDefered = $q.defer();
+                    printService.registerAwaitable($scope.printDefered.promise);
+                }
 
                 $scope.richtext = {
                     config: {
@@ -40,6 +48,11 @@
 
                         readonly: $scope.readonly,
                         debounce: true,
+                        inline: !!$scope.forprint,
+
+                        images_dataimg_filter: function(img) {
+                            return false;
+                        },
 
                         menubar: $scope.readonly ? false : "edit insert table",
                         toolbar: $scope.readonly ? false : "styleselect blockquote | bold italic underline bullist numlist undo redo | alignleft aligncenter alignright alignjustify | link image codesample",
@@ -48,6 +61,9 @@
                         // hide/show toolbar+menubar on blur/focus
                         setup: function(editor) {
                             const executeOnActionBars = (action, el) => {
+                                if (!el.contentAreaContainer) {
+                                    return;
+                                }
                                 const parentElement = $(el.contentAreaContainer.parentElement);
                                 parentElement.find("div.mce-toolbar-grp")[action]();
                                 parentElement.find("div.mce-menubar")[action]();
@@ -64,6 +80,12 @@
                                 // click/focus on codesamples trigger focus on the editor
                                 const localEditor = editor;
                                 $(this.getBody().querySelectorAll("pre[class^='language-']")).on("click", () => localEditor.focus());
+                                if (!$scope.printDefered) {
+                                    return;
+                                }
+                                $timeout(function () {
+                                    $scope.printDefered.resolve();
+                                }, 0);
                             });
                         }
                     }

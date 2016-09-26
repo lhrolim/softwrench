@@ -23,7 +23,7 @@
                     <div ng-show="shouldPrintMain">
                         <h4>{{printSchema.title}} - {{displayableID}}</h4>
                         <fieldset><legend class="legend-label">General</legend></fieldset>
-                        <crud-output-fields schema="printSchema" datamap="item" displayables="printSchema.displayables" orientation="vertical"></crud-output-fields>
+                        <crud-output-fields schema="printSchema" datamap="item" displayables="printSchema.displayables" orientation="vertical" forprint="true"></crud-output-fields>
                     </div>
                     <div ng-show="showPrintSectionCompostions">
                         <div ng-repeat="composition in compositionstoprint" ng-class="{'pagebreak-before1': shouldPageBreak}">
@@ -34,14 +34,14 @@
                                 <ng-switch on="composition.schema.type">
                                     <div ng-switch-when="ApplicationTabDefinition">
                                         <div>
-                                            <crud-output-fields schema="composition.schema" datamap="item" displayables="composition.schema.displayables" orientation="vertical">
+                                            <crud-output-fields schema="composition.schema" datamap="item" displayables="composition.schema.displayables" orientation="vertical" forprint="true">
                                             </crud-output-fields>
                                         </div>
                                     </div>
                                     <div ng-switch-default>
                                         <div ng-repeat="compositionDatamap in item[composition.key]">
                                             <div>
-                                                <crud-output-fields schema="composition.schema" datamap="compositionDatamap" displayables="composition.schema.displayables" orientation="vertical">
+                                                <crud-output-fields schema="composition.schema" datamap="compositionDatamap" displayables="composition.schema.displayables" orientation="vertical" forprint="true">
                                                 </crud-output-fields>
                                             </div>
                                             <div ng-show="item[composition.key] == null || item[composition.key].length == 0" class="no-records">

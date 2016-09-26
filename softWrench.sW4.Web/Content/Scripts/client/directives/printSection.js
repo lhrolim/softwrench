@@ -147,19 +147,22 @@ app.directive('printSection', function (contextService) {
             };
 
             $scope.$on('sw_printsectionrendered', function () {
-                if (sessionStorage.mockprint) {
-                    return;
-                }
-                if ($scope.printCallback) {
-                    $scope.printCallback();
-                } else {
-                    printService.hidePrintModal();
-                    printService.doPrint($scope.isList, $scope.printSchema);
-                }
-                $scope.showPrintSection = false;
-                $scope.showPrintSectionCompostions = false;
-                $scope.printSchema = null;
-                $scope.printCallback = null;
+                const promise = printService.awaitToPrint();
+                promise.then(() => {
+                    if (sessionStorage.mockprint) {
+                        return;
+                    }
+                    if ($scope.printCallback) {
+                        $scope.printCallback();
+                    } else {
+                        printService.hidePrintModal();
+                        printService.doPrint($scope.isList, $scope.printSchema);
+                    }
+                    $scope.showPrintSection = false;
+                    $scope.showPrintSectionCompostions = false;
+                    $scope.printSchema = null;
+                    $scope.printCallback = null;
+                });
             });
 
             if (sessionStorage.mockprint && contextService.isDev()) {

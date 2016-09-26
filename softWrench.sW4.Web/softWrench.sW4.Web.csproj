@@ -734,6 +734,7 @@
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_bar.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_viewmodel.js" />
     <Content Include="Content\Scripts\client\crud\crud_expandable_section.js" />
+    <Content Include="Content\Scripts\client\crud\inlinecompositionlistoutput.js" />
     <Content Include="Content\Scripts\client\directives\codeEditor.js" />
     <Content Include="Content\Scripts\client\elementResizeEvent.js" />
     <Content Include="Content\Scripts\client\routePageController.js" />
@@ -973,6 +974,7 @@
     <Content Include="Content\Templates\crud\filter\crud_filter_bar.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_dropdown.html" />
     <Content Include="Content\Templates\crud\filter\crud_filter_multipleoptions.html" />
+    <Content Include="Content\Templates\crud\inline_composition_list_output.html" />
     <Content Include="Content\Templates\directives\codeEditor.html" />
     <Content Include="Content\Templates\directives\richtextfield.html" />
     <Content Include="Content\Templates\directives\swChart.html" />

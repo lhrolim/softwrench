@@ -393,6 +393,15 @@
     }
 }
 
+#printsectionform #compositionlistgrid thead {
+    /* chrome 53 thead duplicate bug workaround*/
+    display: table-row-group;
+
+    th {
+        white-space: nowrap;
+    }
+} 
+
 .table-hover > tbody > tr:hover {
     background-color: #d6d6d6 !important;
 

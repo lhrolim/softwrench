@@ -14,7 +14,8 @@ app.directive('sectionElementOutput', function ($compile) {
             extraparameters: '=',
             rendererParameters: '=',
             orientation: '@',
-            hideempty: '='
+            hideempty: '=',
+            forprint: "="
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
@@ -24,7 +25,7 @@ app.directive('sectionElementOutput', function ($compile) {
                                     "datamap='datamap'" +
                                     "displayables='displayables'" +
                                     "section-parameters='rendererParameters'" +
-                                    "orientation='{{orientation}}' hideempty='hideempty'></crud-output-fields>"
+                                    "orientation='{{orientation}}' hideempty='hideempty' forprint='forprint'></crud-output-fields>"
                 );
                 $compile(element.contents())(scope);
             }
@@ -46,7 +47,8 @@ app.directive('crudOutputFields', function (contextService) {
             displayables: '=',
             sectionParameters: '=',
             orientation: '@',
-            hideempty: '='
+            hideempty: '=',
+            forprint: "="
         },
 
         controller: function ($scope, $injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService, expressionService, richTextService, layoutservice) {

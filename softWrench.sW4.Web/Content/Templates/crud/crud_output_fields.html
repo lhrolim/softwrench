@@ -20,9 +20,10 @@
         <div class="field" ng-class="getInputClass(fieldMetadata)">
             <ng-switch on="fieldMetadata.type">
                 <div ng-switch-when="ApplicationCompositionDefinition">
-                    <inline-composition-list-wrapper parentdata="datamap"
-                                                     metadata="fieldMetadata"
-                                                     iscollection="fieldMetadata.collection" />
+                    <inline-composition-list-output parentdata="datamap"
+                                                    metadata="fieldMetadata"
+                                                    iscollection="fieldMetadata.collection"
+                                                    forprint="forprint" />
                 </div>
                 <div ng-switch-when="ApplicationSection">
                     <div ng-if="fieldMetadata.resourcepath != null" ng-include="contextPath(fieldMetadata.resourcepath)" href="#" style="width: 100%" />
@@ -33,7 +34,8 @@
                                                 orientation="{{fieldMetadata.orientation}}"
                                                 data-id="{{fieldMetadata.id}}"
                                                 renderer-parameters="fieldMetadata.rendererParameters"
-                                                hideempty="hideempty">
+                                                hideempty="hideempty"
+                                                forprint="forprint">
                             <!--keep it like this, do not close-->
                         </section-element-output>
                     </div>
@@ -119,8 +121,7 @@
                                     </div>
                                 </div>
                                 <div ng-switch-when="richtext">
-                                    <richtext-field data-content="datamap[fieldMetadata.attribute]"
-                                                    data-readonly="true">
+                                    <richtext-field data-content="datamap[fieldMetadata.attribute]" data-readonly="true" data-forprint="forprint">
                                     </richtext-field>
                                 </div>
                                 <div ng-switch-when="imagepreview" class="imagepreview">
