@@ -133,9 +133,14 @@
             }
 
             const dataPrefix = contextPath + "/api/data/";
-            if (!stateUrl.startsWith(dataPrefix)) {
+            const dataPrefixUpper = contextPath + "/api/Data/";
+            const isPrefixed = stateUrl.startsWith(dataPrefix);
+            const isPrefixedUpper = stateUrl.startsWith(dataPrefixUpper);
+            if (!isPrefixed && !isPrefixedUpper) {
                 return changePath(contextPath);
             }
+
+            const realPrefix = isPrefixed ? dataPrefix : dataPrefixUpper;
 
             const decoded = decodeURI(stateUrl);
             const tokens = decoded.split("?");
@@ -145,7 +150,7 @@
                 return changePath(contextPath);
             }
 
-            const application = path.substring(dataPrefix.length).split("/")[0];
+            const application = path.substring(realPrefix.length).split("/")[0];
             if (!application) {
                 return changePath(contextPath);
             }
