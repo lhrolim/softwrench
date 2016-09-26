@@ -313,7 +313,9 @@ namespace softWrench.sW4.Data.Search {
             if (attributeDefinition != null) {
                 if (attributeDefinition.Query != null) {
                     baseResult = attributeDefinition.GetQueryReplacingMarkers(entityName);
-                } else if (attributeDefinition.IsDate) {
+                }
+
+                if (attributeDefinition.IsDate) {
                     resultType = ParameterType.Date;
                 } else if (attributeDefinition.IsNumber) {
                     resultType = ParameterType.Number;

@@ -70,7 +70,7 @@
         <attribute name="serviceaddresscode" type="varchar" required="false" />
         <attribute name="workordercounter" type="int" query="(select count(*) from workorder where status not in ('CAN', 'CLOSE', 'COMP') and location = !@location and siteid = !@siteid)"/>
         <!--<attribute name="children" type="varchar" query="(select count(lochierarchy.parent) from lochierarchy where lochierarchy.parent = location.location and lochierarchy.systemid = parentlocation_.systemid)"/>-->
-        <attribute name="assets" type="varchar" query="(select count(assetnum) from asset where asset.location = location.location and asset.orgid = location.orgid)"/>
+        <attribute name="assets" type="int" query="(select count(assetnum) from asset where asset.location = location.location and asset.orgid = location.orgid)"/>
       </attributes>
       <relationships>
         <relationship to="site">
