@@ -35,9 +35,9 @@
             }
         });
 
-    function crudBodyModal($rootScope, modalService, crudContextHolderService, schemaService, $timeout) {
+    function crudBodyModal($rootScope, modalService, crudContextHolderService, schemaService, crudlistViewmodel, $timeout) {
 
-        var controller = function($scope, $http, $filter, $injector,
+        var controller = function ($scope, $http, $filter, $injector,
             formatService, fixHeaderService,
             searchService, tabsService,
             fieldService, commandService, i18NService,
@@ -46,7 +46,7 @@
             "ngInject";
 
             $scope.$name = "crudbodymodal";
-            $scope.save = function(selecteditem) {
+            $scope.save = function (selecteditem) {
                 $scope.savefn({ selecteditem: selecteditem });
             };
 
@@ -57,14 +57,14 @@
                 return schema.properties[propertyName];
             };
 
-            $scope.$on('sw.modal.hide', function(event, selfThrown) {
+            $scope.$on('sw.modal.hide', function (event, selfThrown) {
                 crudContextHolderService.clearCrudContext(modalService.panelid);
                 if (selfThrown !== true) {
                     $scope.closeModal();
                 }
             });
 
-            $scope.closeModal = function() {
+            $scope.closeModal = function () {
                 $scope.modalshown = false;
                 $('#crudmodal').modal("hide");
                 $rootScope.showingModal = false;
@@ -75,23 +75,23 @@
                 crudContextHolderService.disposeModal();
             };
 
-            $scope.cancel = function() {
+            $scope.cancel = function () {
                 $scope.closeModal();
                 if ($scope.cancelfn) {
                     $scope.cancelfn();
                 }
             };
 
-            $scope.$on('sw.modal.show', function(event, modaldata) {
+            $scope.$on('sw.modal.show', function (event, modaldata) {
                 $scope.showModal(modaldata);
                 $scope.modalshown = true;
             });
 
-            $scope.$on("sw.crud.list.filter.modal.clear", function(event, args) {
+            $scope.$on("sw.crud.list.filter.modal.clear", function (event, args) {
                 gridSelectionService.clearSelection(null, null, modalService.panelid);
             });
 
-            $scope.showModal = function(modaldata, fromLink) {
+            $scope.showModal = function (modaldata, fromLink) {
                 var schema = modaldata.schema;
                 var datamap = modaldata.datamap;
                 $scope.schema = schema;
@@ -115,9 +115,9 @@
                 //$("#crudmodal").draggable();
                 $rootScope.showingModal = true;
                 //TODO: review this decision here it might not be suitable for all the scenarios
-                crudContextHolderService.modalLoaded(datamapToUse,schema);
+                crudContextHolderService.modalLoaded(datamapToUse, schema);
 
-                associationService.loadSchemaAssociations(datamapToUse, schema,{contextData: new ContextData("#modal")}).then(function () {
+                associationService.loadSchemaAssociations(datamapToUse, schema, { contextData: new ContextData("#modal") }).then(function () {
                     if (modaldata.onloadfn) {
                         modaldata.onloadfn($scope);
                     }
@@ -131,18 +131,18 @@
                 if (schema.stereotype.equalsIc("list")) {
                     //forcing underlying grid to refresh
                     if (modaldata.appResponseData) {
-                        $rootScope.$broadcast("sw_gridrefreshed", modaldata.appResponseData, "#modal");
+                        crudlistViewmodel.initGridFromServerResult(modaldata.appResponseData, "#modal");
                     } else if (datamap.length > 0) {
-                        $rootScope.$broadcast("sw_gridrefreshed", { resultObject: datamap, schema: schema }, "#modal");
+                        crudlistViewmodel.initGridFromDatamapAndSchema(datamap, schema, "#modal");
                     } else if (!modaldata.fromLink) {
                         searchService.refreshGrid({}, {}, { panelid: "#modal", forcecleanup: true });
                     }
 
-                
+
                 }
             };
 
-            $scope.save = function(selecteditem) {
+            $scope.save = function (selecteditem) {
                 $scope.savefn({ selecteditem: selecteditem });
             };
 
@@ -205,6 +205,6 @@
         return directive;
     }
 
-    angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', '$timeout', 'gridSelectionService',  crudBodyModal]);
+    angular.module('sw_layout').directive('crudBodyModal', ['$rootScope', 'modalService', 'crudContextHolderService', 'schemaService', 'crudlistViewmodel', '$timeout', crudBodyModal]);
 
 })(angular);

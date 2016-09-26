@@ -58,7 +58,7 @@
     function applicationController($scope, $http, $log, $timeout,
         fixHeaderService, $rootScope, associationService, validationService, historyService,
         contextService, searchService, alertService, schemaService, userPreferencesService,
-        checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService, redirectService) {
+        checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService, redirectService, crudlistViewmodel) {
         "ngInject";
 
         $scope.$name = 'applicationController';
@@ -198,7 +198,9 @@
             //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
 
             contextService.insertIntoContext("grid_refreshdata", { data: data, panelid: null }, true);
-            scope.$broadcast("sw_gridrefreshed", data, null);
+
+            crudlistViewmodel.initGridFromServerResult(data, null);
+
             scope.$broadcast("sw_gridchanged");
             switchMode(false, scope);
         };

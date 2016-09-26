@@ -6,13 +6,13 @@ class SchemaPojo {
             schemaId: id,
             displayables: [],
             properties: {},
-            commandSchema: {}
-
+            commandSchema: {},
+            idFieldName: "id"
         };
     }
 
-    static WithIdAndEvent(id, eventName, eventService,eventMethod) {
-        let result= {
+    static WithIdAndEvent(id, eventName, eventService, eventMethod) {
+        let result = {
             schemaId: id,
             displayables: [],
             events: {}
@@ -25,5 +25,5 @@ class SchemaPojo {
 
     }
 
-   
+
 }

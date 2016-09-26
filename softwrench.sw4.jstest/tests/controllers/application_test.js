@@ -4,21 +4,24 @@
     var controller;
     var _contextService;
     var _validationService;
+    var _crudlistViewmodel;
 
     //init app --> first action usually
     beforeEach(angular.mock.module('sw_layout'));
 
-    beforeEach(angular.mock.inject(function ($rootScope, $controller, contextService, validationService) {
+    beforeEach(angular.mock.inject(function ($rootScope, $controller, contextService, validationService, crudlistViewmodel) {
         mockScope = $rootScope.$new();
         mockScope.resultObject = {
             redirectURL: "Application.html",
         };
         _contextService = contextService;
         _validationService = validationService;
+        _crudlistViewmodel = crudlistViewmodel;
         controller = $controller('ApplicationController', {
             $scope: mockScope,
             contextService: _contextService,
-            validationService: _validationService
+            validationService: _validationService,
+            crudlistViewmodel: _crudlistViewmodel
         });
         _contextService.clearContext();
     }));
@@ -31,25 +34,27 @@
         };
 
         spyOn(mockScope, "$broadcast");
-        
+        spyOn(_crudlistViewmodel, "initGridFromServerResult");
+
         mockScope.renderData(serverResult);
 
         expect(mockScope.datamap).toEqual(serverResult.resultObject);
         expect(mockScope.previousdata).toEqual({});
         expect(mockScope.isList).toBeTruthy();
         expect(mockScope.$broadcast).toHaveBeenCalledWith("sw_gridchanged");
-        expect(mockScope.$broadcast).toHaveBeenCalledWith("sw_gridrefreshed", serverResult, null);
+        expect(_crudlistViewmodel.initGridFromServerResult).toHaveBeenCalledWith(serverResult, null);
     });
 
     it("Returning From Detail to Grid (Cancel)", function () {
 
         var data = [{ id: "100" }, { id: "200" }];
-        var schema ={idFieldName:"id",displayables:[],properties: {} }
+        var schema = { idFieldName: "id", displayables: [], properties: {} }
         mockScope.schema = schema;
 
         spyOn(mockScope, "$broadcast");
+        spyOn(_crudlistViewmodel, "initGridFromServerResult");
 
-        mockScope.toListSchema(data,schema);
+        mockScope.toListSchema(data, schema);
 
         expect(mockScope.datamap).toEqual(data);
         expect(mockScope.schema).toEqual(schema);
@@ -64,8 +69,8 @@
             pageResultDto: {},
         }
 
-        expect(mockScope.$broadcast).toHaveBeenCalledWith("sw_gridrefreshed", eventData, null);
-        
+        expect(_crudlistViewmodel.initGridFromServerResult).toHaveBeenCalledWith(eventData, null);
+
     });
 
 

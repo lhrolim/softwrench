@@ -5,6 +5,7 @@
     var $httpBackend;
     var _contextService;
     var _searchService;
+    var _checkPointService;
 
     beforeEach(module('sw_layout'));
 
@@ -14,7 +15,7 @@
         module('ngMockE2E');
     });
     
-    beforeEach(inject(function ($injector, $rootScope, $compile,$q, contextService,searchService) {
+    beforeEach(inject(function ($injector, $rootScope, $compile, $q, contextService, searchService, checkpointService) {
         $httpBackend = $injector.get('$httpBackend');
         mockScope = $rootScope.$new();
         mockScope.schema = {};
@@ -23,6 +24,7 @@
         
         mockScope.datamap = {};
         _contextService = contextService;
+        _checkPointService = checkpointService;
 
         _searchService = searchService;
 
@@ -32,8 +34,10 @@
             return $q.reject();
         });
 
+        spyOn(_checkPointService, "createGridCheckpointFromGridData");
+
         contextService.insertIntoContext("commandbars", {});
-        var el = angular.element("<crud-list datamap='datamap' schema='schema' is-list='true' ismodal='false' timestamp='100' />");
+        const el = angular.element("<crud-list datamap='datamap' schema='schema' is-list='true' ismodal='false' timestamp='100' />");
         $compile(el)(mockScope);
         //mocking directive loading
         $httpBackend.when('GET', '/Content/Templates/directives/multiselectDropdown.html').respond({});
@@ -53,15 +57,45 @@
         });
 
         //simulating the data returned from the server
-        var serverdata = {
+        const serverdata = {
             resultObject: [{ id: "100" }, { id: "200" }],
-            schema:{idFieldName:"id",displayables:[],properties: {} }
-        }
+            schema: SchemaPojo.WithId("schema")
+        };
         //real call
         mockScope.gridRefreshed(serverdata, null);
 
-        var crudContext = _contextService.fetchFromContext("crud_context", true);
+        expect(_checkPointService.createGridCheckpointFromGridData).toHaveBeenCalled();
+        const crudContext = _contextService.fetchFromContext("crud_context", true);
+        expect(crudContext).toBeDefined();
+        expect(crudContext).toEqual({
+            list_elements: [{ id: "100" }, { id: "200" }],
+            detail_next: { id: "0" },
+            detail_previous: { id: "-1" },
+            paginationData: {},
+            previousData: [{ id: "100" }, { id: "200" }]
+        });
+    });
 
+    it("Grid Initial Load --> no checkpoint insertion", function () {
+
+        _contextService.insertIntoContext("crud_context", {
+            list_elements: [{ id: "100" }, { id: "200" }, { id: "300" }],
+            detail_next: { id: "0" },
+            detail_previous: { id: "-1" },
+            paginationData: {},
+            previousData: [{}, {}, {}]
+        });
+
+        //simulating the data returned from the server
+        const serverdata = {
+            resultObject: [{ id: "100" }, { id: "200" }],
+            schema: SchemaPojo.WithId("schema")
+        };
+        //real call
+        mockScope.gridRefreshed(serverdata, null,true);
+
+        expect(_checkPointService.createGridCheckpointFromGridData).not.toHaveBeenCalled();
+        const crudContext = _contextService.fetchFromContext("crud_context", true);
         expect(crudContext).toBeDefined();
         expect(crudContext).toEqual({
             list_elements: [{ id: "100" }, { id: "200" }],

@@ -1,8 +1,6 @@
 (function (angular) {
     "use strict";
-
-    var app = angular.module('sw_layout');
-
+    const app = angular.module('sw_layout');
     app.directive('advancedFiltertoggle', ["contextService", function (contextService) {
         return {
             restrict: 'E',
@@ -96,7 +94,7 @@
                             $scope.vm.quickSearchDTO.compositionsToInclude = [];
                             compositionsToInclude = [];
                         }
-                        var idx= compositionsToInclude.indexOf(composition);
+                        const idx = compositionsToInclude.indexOf(composition);
                         if (idx === -1) {
                             compositionsToInclude.push(composition);
                         } else {
@@ -106,14 +104,13 @@
                     }
 
                     $scope.getGridColumnStyle = function (column, propertyName) {
-                        var property = column.rendererParameters[propertyName];
-
+                        const property = column.rendererParameters[propertyName];
                         if (property != null) {
                             return property;
                         }
 
                         if (propertyName === "maxwidth") {
-                            var high = $(window).width() > 1199;
+                            const high = $(window).width() > 1199;
                             if (high) {
                                 return "135px";
                             }
@@ -123,7 +120,7 @@
                     }
 
                     $scope.shouldShowSort = function (column, orientation) {
-                        var defaultCondition = !!column.attribute && ($scope.searchSort.field === column.attribute || $scope.searchSort.field === column.rendererParameters["sortattribute"]) && $scope.searchSort.order === orientation;
+                        const defaultCondition = !!column.attribute && ($scope.searchSort.field === column.attribute || $scope.searchSort.field === column.rendererParameters["sortattribute"]) && $scope.searchSort.order === orientation;
                         return $scope.shouldShowGridNavigation() && defaultCondition;
                     };
 
@@ -135,9 +132,9 @@
                     }
 
                     this.save = function () {
-                        var saveFn = modalService.getSaveFn();
+                        const saveFn = modalService.getSaveFn();
                         if (saveFn) {
-                            var result = saveFn($scope.datamap, $scope.schema);
+                            const result = saveFn($scope.datamap, $scope.schema);
                             if (result && result.then) {
                                 result.then(function () {
                                     modalService.hide();
@@ -158,7 +155,7 @@
                         return crudContextHolderService.getSelectionModel($scope.panelid).selectionMode;
                     }
 
-                    $scope.gridRefreshed = function (data, panelId) {
+                    $scope.gridRefreshed = function (data, panelId, initialLoad) {
                         if ($scope.panelid != panelId) {
                             //none of my business --> another dashboard event 
                             //IMPORTANT: do not make it !==, since null is coming and comparing to undefined
@@ -226,15 +223,16 @@
                         //usually this next call won´t do anything, but for lists with optionfields, this is needed
                         associationService.updateFromServerSchemaLoadResult(data.associationOptions, null, true);
 
-                        checkpointService.createGridCheckpointFromGridData($scope.schema, $scope);
+                        if (!initialLoad) {
+                            checkpointService.createGridCheckpointFromGridData($scope.schema, $scope);    
+                        }
 
                         $scope.gridDataChanged($scope.datamap);
 
                         var elements = $scope.datamap.map(function (item) {
-                            var applicationField = schemaService.locateDisplayableByQualifier($scope.schema, "application.name");
-                            var detailShemaIdField = schemaService.locateDisplayableByQualifier($scope.schema, "schema.detail.id");
-
-                            var listitem = { id: item[$scope.schema.idFieldName] };
+                            const applicationField = schemaService.locateDisplayableByQualifier($scope.schema, "application.name");
+                            const detailShemaIdField = schemaService.locateDisplayableByQualifier($scope.schema, "schema.detail.id");
+                            const listitem = { id: item[$scope.schema.idFieldName] };
                             if (!!applicationField) listitem.application = item[applicationField.attribute];
                             if (!!detailShemaIdField) listitem.detailSchemaId = item[detailShemaIdField.attribute];
 
@@ -257,14 +255,14 @@
                             // if show only selected recovers the selected buffer to show
                             // also update the total count of pagination
                             if (!$scope.selectionModel.showOnlySelected) {
-                                var paginationData = crudContextHolderService.getOriginalPaginationData($scope.panelid);
+                                const paginationData = crudContextHolderService.getOriginalPaginationData($scope.panelid);
                                 if (paginationData && $scope.paginationData) {
                                     $scope.paginationData.totalCount = paginationData.totalCount;
                                 }
                             } else {
-                                var selectionBuffer = $scope.selectionModel.selectionBuffer;
+                                const selectionBuffer = $scope.selectionModel.selectionBuffer;
                                 datamap = [];
-                                for (var o in selectionBuffer) {
+                                for (let o in selectionBuffer) {
                                     datamap.push(selectionBuffer[o]);
                                 }
                                 crudContextHolderService.setOriginalPaginationData($scope.paginationData, $scope.panelid);
@@ -306,9 +304,9 @@
                         
 
                         var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
-                        var pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
-                        var printmode = extraparameters.printMode;
-                        var keepfilterparameters = extraparameters.keepfilterparameters;
+                        const pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
+                        const printmode = extraparameters.printMode;
+                        const keepfilterparameters = extraparameters.keepfilterparameters;
                         // $scope.searchTemplate = extraparameters.searchTemplate;
 
                         // if search data is present, we should go back to first page, as we wont know exactly the new number of pages available
@@ -351,9 +349,8 @@
                     }
 
                     $scope.showActionSeparator = function () {
-                        var commands = commandService.getBarCommands($scope.schema, 'actions');
-                        var buttons = $('.toolbar-secondary.actions button');
-
+                        const commands = commandService.getBarCommands($scope.schema, 'actions');
+                        const buttons = $('.toolbar-secondary.actions button');
                         if (commands === null) {
                             return false;
                         }
@@ -367,7 +364,7 @@
 
                     $scope.quickSearch = function (filterdata) {
                         // have a selected saved filter - applies filter considering the quicksearch also
-                        var filter = crudContextHolderService.getSelectedFilter($scope.panelid);
+                        const filter = crudContextHolderService.getSelectedFilter($scope.panelid);
                         if (filter) {
                             filterdata = filterdata && filterdata.quickSearchData ? filterdata : { compositionsToInclude: [] };
                             gridPreferenceService.applyFilter(filter, $scope.searchOperator, filterdata, $scope.panelid);
@@ -379,13 +376,13 @@
                     };
 
                     $scope.cursortype = function () {
-                        var editDisabled = $scope.schema.properties["list.disabledetails"];
+                        const editDisabled = $scope.schema.properties["list.disabledetails"];
                         return "true" !== editDisabled ? "pointer" : "default";
                     };
 
                     $scope.isEditing = function (schema) {
-                        var idFieldName = schema.idFieldName;
-                        var id = $scope.datamap[idFieldName];
+                        const idFieldName = schema.idFieldName;
+                        const id = $scope.datamap[idFieldName];
                         return id != null;
                     };
 
@@ -394,8 +391,8 @@
                         if (expression === "true") {
                             return true;
                         }
-                        var stringExpression = "$scope.datamap." + expression;
-                        var ret = eval(stringExpression);
+                        const stringExpression = "$scope.datamap." + expression;
+                        const ret = eval(stringExpression);
                         return ret;
                     };
 
@@ -525,9 +522,8 @@
                         if (!$scope.shouldShowHeaderLabel(column) || "none" === $scope.schema.properties["list.sortmode"] || !$scope.shouldShowGridNavigation() || column.rendererParameters.showsort === "false") {
                             return;
                         }
-                        var columnName = column.attribute;
-
-                        var sorting = $scope.searchSort;
+                        const columnName = column.attribute;
+                        const sorting = $scope.searchSort;
                         if (sorting.field != null && sorting.field === columnName) {
                             sorting.order = sorting.order === "desc" ? "asc" : "desc";
                         } else {
@@ -592,16 +588,16 @@
                     }
 
                     $scope.noRecordsNewButtonLabel = function () {
-                        var create = i18NService.get18nValue("_grid.filter.noresultWithNewCreate", "Create");
+                        const create = i18NService.get18nValue("_grid.filter.noresultWithNewCreate", "Create");
                         return create + " " + $scope.schema.applicationTitle;
                     }
 
                     $scope.noRecordsNewClick = function () {
                         // calls the preaction function if needed and pass the created datamap to the next schema
-                        var noResultsPreAction = $scope.schema.properties["list.noresultspreaction"];
+                        const noResultsPreAction = $scope.schema.properties["list.noresultspreaction"];
                         var datamap = null;
                         if (noResultsPreAction) {
-                            var preAction = dispatcherService.loadServiceByString(noResultsPreAction);
+                            const preAction = dispatcherService.loadServiceByString(noResultsPreAction);
                             if (preAction) {
                                 datamap = preAction();
                                 if (datamap.then) {
@@ -630,8 +626,7 @@
                     $scope.$on("listTableRenderedEvent", function (listTableRenderedEvent) {
                         var log = $log.getInstance("sw4.crud_list_dir#on#listTableRenderedEvent");
                         log.debug("init table rendered listener");
-
-                        var parameters = {
+                        const parameters = {
                             fullKey: $scope.schema.properties["config.fullKey"],
                             searchData: $scope.searchData
                         };
@@ -640,10 +635,9 @@
                         if ($scope.ismodal === "true" && !(true === $scope.$parent.showingModal)) {
                             return;
                         }
-
-                        var params = {};
+                        const params = {};
                         fixHeaderService.fixThead($scope.schema, params);
-                        var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
+                        const onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                         if (onLoadMessage) {
                             alertService.notifymessage("success", onLoadMessage);
                         }
@@ -675,11 +669,11 @@
                     });
 
                     $scope.$on("sw_gridrefreshed", function (event, data, panelId) {
-                        $scope.gridRefreshed(data, panelId);
+                        $scope.gridRefreshed(data, panelId,true);
                     });
 
                     $scope.$on('sw.crud.list.toggleselected', function (event, args) {
-                        var panelid = args[0];
+                        const panelid = args[0];
                         if ($scope.panelid !== panelid) {
                             return;
                         }
@@ -689,7 +683,7 @@
 
 
                     $scope.$on('sw.crud.list.toggleselectionmode', function (event, args) {
-                        var panelid = args[0];
+                        const panelid = args[0];
                         if ($scope.panelid === panelid) {
                             crudContextHolderService.toggleSelectionMode($scope.panelid);
                         }
@@ -712,7 +706,7 @@
                     //#endregion
 
                     $scope.$watch("selectionModel.selectionMode", function (newValue) {
-                        var toggleCommand = crudContextHolderService.getToggleCommand("toggleselectionmode", $scope.panelid);
+                        const toggleCommand = crudContextHolderService.getToggleCommand("toggleselectionmode", $scope.panelid);
                         if (toggleCommand) {
                             toggleCommand.state = newValue;
                         }
@@ -737,9 +731,7 @@
                     }
 
                     function initController() {
-
-                        var log = $log.getInstance("crudlist#init", ["grid"]);
-
+                        const log = $log.getInstance("crudlist#init", ["grid"]);
                         $injector.invoke(BaseController, this, {
                             $scope: $scope,
                             i18NService: i18NService,
@@ -756,9 +748,7 @@
                             commandService: commandService,
                             gridSelectionService: gridSelectionService
                         });
-
-                        var dataRefreshed = contextService.fetchFromContext("grid_refreshdata", true, true, true);
-
+                        const dataRefreshed = contextService.fetchFromContext("grid_refreshdata", true, true, true);
                         if ($scope.ismodal === "true") {
                             $scope.panelid = modalService.panelid;
                         }
@@ -767,12 +757,10 @@
 
                         if (dataRefreshed) {
                             log.debug("data was already fetched from server... directive was compiled after the response");
-                            $scope.gridRefreshed(dataRefreshed.data, dataRefreshed.panelid);
+                            $scope.gridRefreshed(dataRefreshed.data, dataRefreshed.panelid,true);
                         }
-
-                        var pageSize = userPreferencesService.getSchemaPreference("pageSize", $scope.schema.applicationName, $scope.schema.schemaId, $scope.panelid);
-
-                        var dataToRefresh = contextService.fetchFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""), true, true, true);
+                        const pageSize = userPreferencesService.getSchemaPreference("pageSize", $scope.schema.applicationName, $scope.schema.schemaId, $scope.panelid);
+                        const dataToRefresh = contextService.fetchFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""), true, true, true);
                         if (dataToRefresh) {
                             log.debug("there was already a scheduled call to refresh data from the server");
                             if (pageSize) {
@@ -784,9 +772,8 @@
 
                         if (!dataRefreshed && !dataToRefresh) {
                             $scope.searchSort = $scope.searchOperator = $scope.searchData = {};
-
-                            var fixedWhereClause = crudContextHolderService.getFixedWhereClause($scope.panelid);
-                            var searchDTO = {};
+                            const fixedWhereClause = crudContextHolderService.getFixedWhereClause($scope.panelid);
+                            const searchDTO = {};
                             if (fixedWhereClause) {
                                 searchDTO.filterFixedWhereClause = fixedWhereClause;
                             }
@@ -794,8 +781,7 @@
                             if (pageSize) {
                                 searchDTO.pageSize = pageSize;
                             }
-
-                            var searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, $scope.schema.schemaId, {
+                            const searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, $scope.schema.schemaId, {
                                 searchDTO: searchDTO,
                                 printMode: false,
                                 metadataid: $scope.metadataid

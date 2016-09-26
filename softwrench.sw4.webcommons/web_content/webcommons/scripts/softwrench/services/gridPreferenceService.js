@@ -17,29 +17,27 @@ angular.module('sw_layout')
 
     function doLoadFilter(shared, application, schema) {
         var user = contextService.getUserData();
-        var gridpreferences = user.gridPreferences;
+        const gridpreferences = user.gridPreferences;
         var result = [];
         if (!gridpreferences) {
             return result;
         }
+        const filters = gridpreferences.gridFilters;
+        var log = $log.getInstance("#gridpreferenceservice#doLoadFilter",["filter"]);
 
-        var filters = gridpreferences.gridFilters;
-        
-        var log = $log.getInstance("#gridpreferenceservice#doLoadFilter");
         $.each(filters, function (key, association) {
             if (association.filter.application.equalIc(application)
                 && association.filter.schema.equalIc(schema)
-                && ((association.filter.creatorId == user.dbId) ^ shared)) {
+                && ((association.filter.creatorId === user.dbId) ^ shared)) {
                 log.debug("loading filter {0}; shared?".format(association.filter.alias, shared));
                 result.push(association.filter);
             }
         });
         result = result.sort(compareFilters);
-
-        var applicationKey = application + '.' + schema;
-        var previousFilter = previousFilterService.fetchPreviousFilter(applicationKey);
+        const applicationKey = application + '.' + schema;
+        const previousFilter = previousFilterService.fetchPreviousFilter(applicationKey);
         if (previousFilter != null && previousFilter !== {}) {
-            log.debug("Adding previous filter for schema {0}".format(schema));
+            log.debug(`Adding previous filter for application ${applicationKey}`);
             result.push(previousFilter);
         }
         return result;
@@ -56,10 +54,10 @@ angular.module('sw_layout')
         },
 
         hasFilter: function (application, schema) {
-            var user = contextService.getUserData();
-            var preferences = user.gridPreferences;
-            var associations = preferences.gridFilters;
-            var filters = $.grep(associations, function (e) {
+            const user = contextService.getUserData();
+            const preferences = user.gridPreferences;
+            const associations = preferences.gridFilters;
+            const filters = $.grep(associations, function (e) {
                 return e.filter.application == application && e.filter.schema == schema;
             });
             return filters.length > 0;
@@ -70,20 +68,18 @@ angular.module('sw_layout')
             var operators = "";
             var values = "";
             var user = contextService.getUserData();
-            var log = $log.getInstance("#gridpreferenceservice#savefilter");
-            for (var data in searchData) {
+            const log = $log.getInstance("#gridpreferenceservice#savefilter");
+            for (let data in searchData) {
                 if (data == "lastSearchedValues") {
                     continue;
                 }
                 fields += data + ",";
                 values += searchData[data] + ",,,";
-                var operator = searchOperators[data];
+                const operator = searchOperators[data];
                 // the operators are only setted if the user specific select them, but they should be 'C' as default --> avoiding inconsistency
                 operators += (operator == null ? 'C' : operator.symbol) + ",";
             }
-
-
-            var parameters = {
+            const parameters = {
                 application: schema.applicationName,
                 schema: schema.schemaId,
                 fields: fields.substr(0, fields.length - 1),
@@ -94,23 +90,22 @@ angular.module('sw_layout')
                 advancedSearch: advancedSearch,
                 id: id
             };
-
             if (id == null || filterowner != user.dbId) {
                 log.debug("creating new filter {0}".format(JSON.stringify(parameters)));
                 restService.invokePost("GridFilter", "CreateNewFilter", parameters, null, function (resultdata) {
-                    var filterassociation = resultdata.resultObject;
-                    var preferences = user.gridPreferences;
-                    var filters = preferences.gridFilters;
+                    const filterassociation = resultdata.resultObject;
+                    const preferences = user.gridPreferences;
+                    const filters = preferences.gridFilters;
                     filters.push(filterassociation);
                     successCbk(filterassociation.filter);
                 });
             } else {
                 log.debug("updating filter {0}".format(JSON.stringify(parameters)));
                 restService.invokePost("GridFilter", "UpdateFilter", parameters, null, function (resultdata) {
-                    var preferences = user.gridPreferences;
-                    var associations = preferences.gridFilters;
-                    var filter = resultdata.resultObject;
-                    for (var i = 0; i < associations.length; i++) {
+                    const preferences = user.gridPreferences;
+                    const associations = preferences.gridFilters;
+                    const filter = resultdata.resultObject;
+                    for (let i = 0; i < associations.length; i++) {
                         if (associations[i].filter.id == filter.id) {
                             associations[i].filter = filter;
                         }
@@ -121,14 +116,14 @@ angular.module('sw_layout')
         },
 
         deleteFilter: function (filterId, creatorId, cbk) {
-            var parameters = {
+            const parameters = {
                 filterId: filterId,
                 creatorId: creatorId,
             };
             var log = $log.getInstance("#gridpreferenceservice#deletefilter");
             var user = contextService.getUserData();
             restService.invokePost("GridFilter", "DeleteFilter", parameters, null, function (resultdata) {
-                var gridpreferences = user.gridPreferences;
+                const gridpreferences = user.gridPreferences;
                 var association = resultdata.resultObject;
                 log.debug("removing filter {0}".format(association.filter.alias));
                 gridpreferences.gridFilters = $.grep(gridpreferences.gridFilters, function (value) {
@@ -139,23 +134,21 @@ angular.module('sw_layout')
         },
 
         applyFilter: function (filter, searchOperator, quickSearchDTO, panelid) {
-            var searchData = {};
+            const searchData = {};
             if (filter.fields) {
-                var fieldsArray = filter.fields.split(",");
-                var operatorsArray = filter.operators.split(",");
-                var valuesArray = filter.values.split(",,,");
-                for (var i = 0; i < fieldsArray.length; i++) {
-                    var field = fieldsArray[i];
+                const fieldsArray = filter.fields.split(",");
+                const operatorsArray = filter.operators.split(",");
+                const valuesArray = filter.values.split(",,,");
+                for (let i = 0; i < fieldsArray.length; i++) {
+                    const field = fieldsArray[i];
                     searchData[field] = valuesArray[i];
                     searchOperator[field] = searchService.getSearchOperationBySymbol(operatorsArray[i]);
                 }
             } else {
                 searchOperator = {};
             }
-            
-            var template = filter.template;
-            var searchSort = filter.searchSort || {};
-
+            const template = filter.template;
+            const searchSort = filter.searchSort || {};
             searchService.refreshGrid(searchData, searchOperator, { searchTemplate: template, quickSearchDTO: quickSearchDTO, panelid: panelid, searchSort: searchSort });
         }
     };
