@@ -1,9 +1,9 @@
 ﻿(function (angular) {
     "use strict";
 
-    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, $location, $log, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService, historyService, configurationService, localStorageService, userPreferencesService) {
-
-        $scope.$name = "HomeController";
+    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, $location, $log, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService, historyService, configurationService, localStorageService, userPreferencesService, restService) {
+    const APP_VERION = 'sw_system_version_key';
+    $scope.$name = 'HomeController';
 
         function initController() {
             //workaround for knowing where the user is already loggedin
@@ -36,18 +36,26 @@
                 redirectUrl = sessionRedirectUrl;
             }
 
-            const locationUrl = historyService.getLocationUrl();
-            if (locationUrl) {
-                redirectUrl = locationUrl;
-            } else {
-                historyService.addToHistory(redirectUrl, false, true);
-            }
-            //        if (sessionStorage.currentmodule != undefined && sessionStorage.currentmodule != "null") {
-            //            //sessionstorage is needed in order to avoid F5 losing currentmodule
-            //            $rootScope.currentmodule = sessionStorage.currentmodule;
-            //        }
-            redirect(redirectUrl);
+        var locationUrl = historyService.getLocationUrl();
+        if (locationUrl) {
+            redirectUrl = locationUrl;
+        } else {
+            historyService.addToHistory(redirectUrl,false, true);
         }
+
+        //Check if the user is sysadmin and the application version has changed since last login for this user
+        if (contextService.HasRole(["sysadmin"]) && appVersionChanged(homeModel.ApplicationVersion)) {
+            redirectUrl = restService.getActionUrl("DeployValidation", "Index", null);
+        }
+
+
+        //        if (sessionStorage.currentmodule != undefined && sessionStorage.currentmodule != "null") {
+        //            //sessionstorage is needed in order to avoid F5 losing currentmodule
+        //            $rootScope.currentmodule = sessionStorage.currentmodule;
+        //        }
+
+        redirect(redirectUrl);
+    }
 
         function redirect(redirectUrl, avoidTemplateCache) {
             const parameters = {
@@ -112,10 +120,21 @@
             });
         };
 
-        initController();
+    function appVersionChanged(currentVersion) {
+        var localVersion = localStorageService.get(APP_VERION);
+
+        if (!currentVersion || (localVersion && currentVersion.equalsIc(localVersion))) {
+            return false;
+        } else {
+            localStorageService.put(APP_VERION, currentVersion);
+            return true;
+        }
     }
 
-    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$location", "$log", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", "historyService", "configurationService", "localStorageService", "userPreferencesService", HomeController]);
+    initController();
+}
+
+    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$location", "$log", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", "historyService", "configurationService", "localStorageService", "userPreferencesService", "restService", HomeController]);
     window.HomeController = HomeController;
 
 })(angular);

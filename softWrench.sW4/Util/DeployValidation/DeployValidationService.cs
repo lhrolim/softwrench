@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.simpleinjector;
 using Newtonsoft.Json.Linq;
-using NHibernate.Linq;
 using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -18,6 +17,8 @@ using System.Reflection;
 using NHibernate.Util;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.API.Composition;
+using cts.commons.Util;
+
 
 namespace softWrench.sW4.Util.DeployValidation {
     public class DeployValidationService : ISingletonComponent {
@@ -42,6 +43,7 @@ namespace softWrench.sW4.Util.DeployValidation {
             "loweremail",
             "allkeywords"
         };
+        
 
         private static Dictionary<string, string> GetTestFileNames {
             get {
@@ -64,6 +66,64 @@ namespace softWrench.sW4.Util.DeployValidation {
 
         public DeployValidationService(DataSetProvider dataSetProvider) {
             this.dataSetProvider = dataSetProvider;           
+        }
+
+        public List<DirectoryAndFileValidationModel> ValidateFilesDirectories(InMemoryUser user) {
+
+            var models = new List<DirectoryAndFileValidationModel>();
+
+            using (var stream = new StreamReader(string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, "\\App_Data\\DeploymentValidation\\FilesAndFolders.json"))) {
+                if (stream != null) {
+                    var filesDataAray = JArray.Parse(stream.ReadToEnd());
+
+                    for (int a = 0; a < filesDataAray.Count; a++) {
+                        var jsonData = filesDataAray[a];
+
+                        if(jsonData["type"].ToString().Equals("FOLDER", StringComparison.OrdinalIgnoreCase)) {
+                            var directoryValidation = new DirectoryAndFileValidationModel() { Validations = new List<DirectoryAndFileValidation>() };
+
+                            directoryValidation.Name = jsonData["folderName"].ToString();
+                            directoryValidation.Path = jsonData["folderPath"].ToString();
+
+                            if(directoryValidation.Path.Equals("NOT_DEFINED", StringComparison.OrdinalIgnoreCase)) {
+                                switch (directoryValidation.Name) {
+                                    case "App_Data":
+                                        directoryValidation.Path = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, directoryValidation.Name);
+                                        break;
+                                }
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(jsonData["shouldExist"].ToString()) && Convert.ToBoolean(jsonData["shouldExist"])){
+                                var validation = Directory.Exists(directoryValidation.Path) ? new DirectoryAndFileValidation() {
+                                    ValidationSuccess = true,
+                                    ValidationMessage = "The directory exists"
+                                } : new DirectoryAndFileValidation() {
+                                    ValidationSuccess = false,
+                                    ValidationMessage = "The directory does not exist"
+                                };
+
+                                directoryValidation.Validations.Add(validation);
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(jsonData["shouldHaveWriteAccess"].ToString()) && Convert.ToBoolean(jsonData["shouldHaveWriteAccess"])) {
+                                var validation = DirectoryUtil.HasWriteAccessToFolder(directoryValidation.Path) ? new DirectoryAndFileValidation() {
+                                    ValidationSuccess = true,
+                                    ValidationMessage = "The directory has write access"
+                                } : new DirectoryAndFileValidation() {
+                                    ValidationSuccess = false,
+                                    ValidationMessage = "The directory has no write access"
+                                };
+
+                                directoryValidation.Validations.Add(validation);
+                            }
+
+                            models.Add(directoryValidation);
+                        }
+                    }
+                }
+            }
+
+            return models;
         }
         
         public Dictionary<string, DeployValidationResult> ValidateServices(InMemoryUser user) {
@@ -117,7 +177,7 @@ namespace softWrench.sW4.Util.DeployValidation {
                 return applicationsMetadataList;
             }
         }
-
+        
         private void ValidateOperation(InMemoryUser user, ApplicationValidationModel appValidationModel, IDictionary<string, DeployValidationResult> resultmap) {
             InsertModel();
 

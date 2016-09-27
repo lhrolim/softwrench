@@ -1,0 +1,16 @@
+﻿[
+  {
+    "type": "Folder",
+    "folderName": "Logs",
+    "folderPath": "C:\\softwrench\\logs",
+    "shouldExist": true,
+    "shouldHaveWriteAccess": true
+  },
+  {
+    "type": "Folder",
+    "folderName": "App_Data",
+    "folderPath": "NOT_DEFINED",
+    "shouldExist": true,
+    "shouldHaveWriteAccess": true
+  }
+]

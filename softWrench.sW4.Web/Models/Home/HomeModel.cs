@@ -35,13 +35,16 @@ namespace softWrench.sW4.Web.Models.Home {
         public bool FromRoute { get; set; }
         public RouteInfo RouteInfo { get; set; }
         public RouteListInfo RouteListInfo { get; set; }
+        public string ApplicationVersion { get; set; }
+
 
         public HomeModel(string url, string title, HomeConfigs configs, MenuModel MenuModel, InMemoryUser user, bool hasLogoPopup,
-            JObject i18NJsons, JObject statusColorJson, JObject statusColorFallbackJson, JObject classificationColorJson, string clientName, string windowTitle = null, string message = null) {
+            JObject i18NJsons, JObject statusColorJson, JObject statusColorFallbackJson, JObject classificationColorJson, string clientName, string windowTitle = null, string message = null, string applicationVersion = null) {
             Url = url;
             InitTimeMillis = configs.InitTimeMillis;
             Title = title;
             ClientName = clientName;
+            ApplicationVersion = applicationVersion;
 
             ConfigJSON = JsonConvert.SerializeObject(configs, Newtonsoft.Json.Formatting.None,
             new JsonSerializerSettings() {

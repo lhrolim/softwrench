@@ -773,8 +773,11 @@
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
     <Compile Include="Util\AssemblyLocator.cs" />
+    <Compile Include="Util\DeployValidation\ApplicationValidationModel.cs" />
     <Compile Include="Util\DeployValidation\DeployValidationModel.cs" />
+    <Compile Include="Util\DeployValidation\DeployValidationResult.cs" />
     <Compile Include="Util\DeployValidation\DeployValidationService.cs" />
+    <Compile Include="Util\DeployValidation\DirectoryAndFileValidationModel.cs" />
     <Compile Include="Util\ExcelUtil.cs" />
     <Compile Include="Util\IesiCollectionExtensions.cs" />
     <Compile Include="Util\CollectionUtil.cs" />

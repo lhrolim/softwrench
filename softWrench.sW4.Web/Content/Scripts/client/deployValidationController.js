@@ -12,48 +12,48 @@
         $scope.missingDataCount = 0;
         $scope.showOnlyFailure = true;
         $scope.excludeMissingTestData = true;
+        $scope.testsFilesandDirectories = null;
 
-        $scope.validate = function () {
+        $scope.validateAll = function () {
             $scope.testSuccessCount = 0;
             $scope.testFailureCount = 0;
 
-            restService.getPromise("DeployValidation", "Validate", {}).then(response => {
+            restService.getPromise("DeployValidation", "ValidateAll", {}).then(response => {
                 if (!response.data || !response.data.resultObject) {
                     return;
                 }
-                var applicationTests = response.data.resultObject;
 
-                angular.forEach(applicationTests, (testResult, key) => {
-                    if (!applicationTests.hasOwnProperty(key)) {
-                        return;
-                    }
-                    var application = $scope.applications[key];
-                    if (!application) {
-                        return;
-                    }
-
-                    application.validationResultList = testResult.validationResultList;
-
-                    angular.forEach(application.validationResultList, (valResult, valkey) => {
-                        if (valResult.missingTestData) {
-                            $scope.missingDataCount += 1;
-                            application.missingTestData = valResult.missingTestData;
-                            
-                        } else {
-                            if (valResult.hasProblems) {
-                                $scope.testFailureCount += 1;
-                                application.hasfailedTests = valResult.hasProblems;
-
-                            } else {
-                                $scope.testSuccessCount += 1;
-                            }
-                        }
-                    });
-                });
-
+                processServiceValidations(response.data.resultObject['applicationServiceValidation']);
+                processDirectoryValidations(response.data.resultObject['filesAndDirectoriesValidation']);
             });
-        }
+        };
 
+        $scope.validateFilesAndFolders = function () {
+            $scope.testSuccessCount = 0;
+            $scope.testFailureCount = 0;
+
+            restService.getPromise("DeployValidation", "ValidateFilesAndDirectories", {}).then(response => {
+                if (!response.data || !response.data.resultObject) {
+                    return;
+                }
+
+                processDirectoryValidations(response.data.resultObject);
+            });
+        };
+
+        $scope.validateServices = function () {
+            $scope.testSuccessCount = 0;
+            $scope.testFailureCount = 0;
+
+            restService.getPromise("DeployValidation", "ValidateServices", {}).then(response => {
+                if (!response.data || !response.data.resultObject) {
+                    return;
+                }
+
+                processServiceValidations(response.data.resultObject);
+            });
+        };
+        
         $scope.showFailures = function (application, validation) {
             if (!validation || validation.hasProblems !== true) {
                 return;
@@ -112,5 +112,56 @@
             }
             return application.hasCreationSchema && application.createValidation && application.createValidation.missingTestData;
         }
+
+
+        function processServiceValidations(applicationTests) {
+            angular.forEach(applicationTests, (testResult, key) => {
+                if (!applicationTests.hasOwnProperty(key)) {
+                    return;
+                }
+                var application = $scope.applications[key];
+                if (!application) {
+                    return;
+                }
+
+                application.validationResultList = testResult.validationResultList;
+
+                angular.forEach(application.validationResultList, (valResult, valkey) => {
+                    if (valResult.missingTestData) {
+                        $scope.missingDataCount += 1;
+                        application.missingTestData = valResult.missingTestData;
+
+                    } else {
+                        if (valResult.hasProblems) {
+                            $scope.testFailureCount += 1;
+                            application.hasfailedTests = valResult.hasProblems;
+
+                        } else {
+                            $scope.testSuccessCount += 1;
+                        }
+                    }
+                });
+            });
+        };
+
+        function processDirectoryValidations(directoryTests) {
+            $scope.testsFilesandDirectories = directoryTests;
+
+            angular.forEach(directoryTests, (testResult, key) => {
+                if (!directoryTests.hasOwnProperty(key)) {
+                    return;
+                }                
+
+                angular.forEach(testResult.validations, (valResult, valkey) => {
+                    if (!valResult.validationSuccess) {
+                        $scope.testFailureCount += 1;
+                        testResult.hasfailedTests = true;
+
+                    } else {
+                        $scope.testSuccessCount += 1;
+                    }
+                });
+            });
+        };
     };
 })(angular);

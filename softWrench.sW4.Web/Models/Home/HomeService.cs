@@ -88,7 +88,10 @@ namespace softWrench.sW4.Web.Models.Home {
                 _statusColorResolver.FetchCatalogs(),
                 _statusColorResolver.FetchFallbackCatalogs(),
                 _classificationColorResolver.FetchCatalogs(),
-                ApplicationConfiguration.ClientName) { RouteInfo = _routeService.GetRouteInfo(request) };
+                ApplicationConfiguration.ClientName) {
+                RouteInfo = _routeService.GetRouteInfo(request),
+                ApplicationVersion = ApplicationConfiguration.SystemVersion
+            };
         }
 
         protected virtual HomeConfigs FetchConfigs() {

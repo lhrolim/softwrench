@@ -1,7 +1,7 @@
 ﻿<div class="row" style="width: 100%;margin:10px" ng-controller="DeployValidationController" id="deploy-validation">
     <div class="col-md-12">        
         <span>
-            <button class="applicationcommand btn btn-primary" ng-click="validate()">validate</button>            
+            <button class="applicationcommand btn btn-primary" ng-click="validateAll()">validate all</button>            
         </span>
         <br />
         <div style="margin-top:10px">
@@ -10,7 +10,7 @@
             <i class="fa fa-times deploy-failure"></i> <label style="margin-right:10px;font-weight: normal !important;">Indicates that the service is not deployed or has errors.</label>
             <!--<br />-->
             <i class="fa fa-exclamation-triangle deploy-failure"></i> <label style="margin-right:10px;font-weight: normal !important;">Indicates that the service cannot be validated due to missing test data.</label>
-            <label style="margin-top:10px;font-weight: normal !important;">Hover or Click on the status icon to get more details.</label>
+            <label style="margin-top:10px;font-weight: normal !important;">Hover on the status icon to get more details.</label>
             <br />
         </div>
 
@@ -43,13 +43,57 @@
             <div class="col-md-3">
                 <br />
                 <br />
-                <input style="margin-left:10px" type="checkbox" ng-model="showOnlyFailure" /> <label>Show failed tests only</label>
+                <input style="margin-left:10px" type="checkbox" ng-model="showOnlyFailure" /> <label>Show failed vakidations only</label>
                 <br />
-                <input style="margin-left:10px" type="checkbox" ng-model="excludeMissingTestData" /> <label>Exclude applications missing test data</label>
+                <input style="margin-left:10px" type="checkbox" ng-model="excludeMissingTestData" /> <label>Exclude  missing test data</label>
             </div>
         </div>
 
-        <table class="table table-striped table-hover hidden-phone">
+
+        <hr />
+
+        <span>
+            <button class="applicationcommand btn btn-primary" ng-click="validateFilesAndFolders()">validate files and directories</button>
+        </span>
+
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>File / Directory Name</th>
+                    <th>Path</th>
+                    <th colspan="2">Validation Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="file in testsFilesandDirectories" style="margin-bottom:10px" 
+                    ng-show="(showOnlyFailure ? file.hasfailedTests : true)">
+                    <td>{{file.name}}</td>
+                    <td>{{file.path}}</td>
+                    <td>
+                        <div class="container">
+                            <table class="table" style="table-layout:fixed; width:910px;" ng-if="file.validations && file.validations.length > 0">
+                                <tr ng-repeat="validationResult in file.validations" ng-class="{'danger' : !validationResult.validationSuccess}"
+                                    ng-show="(showOnlyFailure ? !validationResult.validationSuccess : true)">
+                                    <td style="padding:5px;width:550px; word-wrap:break-word;">{{validationResult.validationMessage}}</td>
+                                    <td style="padding:5px;width:50px; word-wrap:break-word;">
+                                        <i ng-if="validationResult.validationSuccess" rel="tooltip" title="Success" class="fa fa-check deploy-success"></i>
+                                        <i ng-if="!validationResult.validationSuccess" rel="tooltip" title="Failure" class="fa fa-times deploy-failure"></i>
+                                    </td>
+                                </tr>
+                            </table>                            
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr />
+
+        <span>
+            <button class="applicationcommand btn btn-primary" ng-click="validateServices()">validate service deployments</button>
+        </span>
+
+        <table class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th>{{i18N('general.application','Application')}}</th>

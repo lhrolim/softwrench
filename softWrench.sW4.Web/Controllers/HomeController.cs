@@ -64,6 +64,7 @@ namespace softWrench.sW4.Web.Controllers {
             var model = _homeService.BaseHomeModel(Request, user, menuModel);
             model.Url = url;
             model.Title = title;
+
             return View(model);
         }
 

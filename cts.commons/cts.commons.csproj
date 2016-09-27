@@ -66,6 +66,7 @@
     <Compile Include="Util\CompressionUtil.cs" />
     <Compile Include="Util\DateUtil.cs" />
     <Compile Include="Util\DictionaryUtil.cs" />
+    <Compile Include="Util\DirectoryUtil.cs" />
     <Compile Include="Util\LinqExtensions.cs" />
     <Compile Include="Util\LoggingUtil.cs" />
     <Compile Include="Util\ParsingUtil.cs" />

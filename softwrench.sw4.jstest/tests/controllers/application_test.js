@@ -12,7 +12,7 @@
     beforeEach(angular.mock.inject(function ($rootScope, $controller, contextService, validationService, crudlistViewmodel) {
         mockScope = $rootScope.$new();
         mockScope.resultObject = {
-            redirectURL: "Application.html",
+            redirectURL: "Application.html", 
         };
         _contextService = contextService;
         _validationService = validationService;

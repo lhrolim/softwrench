@@ -27,10 +27,28 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         }
 
         [HttpGet]
-        public GenericResponseResult<Dictionary<string, DeployValidationResult>> Validate() {
+        public GenericResponseResult<Dictionary<string, DeployValidationResult>> ValidateServices() {
             var user = SecurityFacade.CurrentUser();
             var result = _deployValidationService.ValidateServices(user);
             return new GenericResponseResult<Dictionary<string, DeployValidationResult>>(result);
+        }
+
+        [HttpGet]
+        public GenericResponseResult<List<DirectoryAndFileValidationModel>> ValidateFilesAndDirectories() {
+            var user = SecurityFacade.CurrentUser();
+            var result = _deployValidationService.ValidateFilesDirectories(user);
+            return new GenericResponseResult<List<DirectoryAndFileValidationModel>>(result);
+        }
+
+        [HttpGet]
+        public GenericResponseResult<Dictionary<string, object>> ValidateAll() {
+            var user = SecurityFacade.CurrentUser();
+            var results = new Dictionary<string, object>();
+
+            results.Add("ApplicationServiceValidation", _deployValidationService.ValidateServices(user));
+            results.Add("FilesAndDirectoriesValidation", _deployValidationService.ValidateFilesDirectories(user));        
+            
+            return new GenericResponseResult<Dictionary<string, object>>(results);
         }
     }
 }
