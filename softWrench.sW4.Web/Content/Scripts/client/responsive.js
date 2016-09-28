@@ -1,4 +1,9 @@
 ﻿$(function () {
+
+    if (typeof jScrollPane === 'undefined') {
+        return;
+    }
+
     var api = $('.menu-primary').jScrollPane({ maintainPosition: true }).data('jsp');
     var throttleTimeout;
 
