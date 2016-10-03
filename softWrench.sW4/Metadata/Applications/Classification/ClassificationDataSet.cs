@@ -34,8 +34,7 @@ namespace softWrench.sW4.Metadata.Applications.Classification {
                                         left join classstructure as p2 on p2.classstructureid = p1.parent
                                         left join classstructure as p3 on p3.classificationid = p2.parent
                                         where
-                                        c.haschildren = 0
-                                        and (c.orgid is null or (c.orgid is not null and c.orgid = '{0}' ))
+                                        (c.orgid is null or (c.orgid is not null and c.orgid = '{0}' ))
                                         and (c.siteid is null or (c.siteid is not null and c.siteid = '{1}' ))
                                         and c.classstructureid in (select classusewith.classstructureid
                                         from classusewith
