@@ -137,7 +137,6 @@
                 return;
             }
             //get the message data
-            const message = data.errorMessage || data.exceptionMessage;
             const exception = this.buildException(data);
             notificationViewModel.createNotification('error', null, exception.message, exception.type, exception.outline, exception.stack);
         };

@@ -1,4 +1,4 @@
-﻿(function (angular) {
+﻿(function (angular, $) {
     "use strict";
 
 //var PRINTMODAL_$_KEY = '[data-class="printModal"]';
@@ -7,21 +7,21 @@ angular.module('sw_layout')
 .factory('excelService', [
     "$rootScope", "$http", "$timeout", "$log", "tabsService", "fixHeaderService",
     "i18NService",
-    "redirectService", "searchService", "contextService", "fileService",
+    "redirectService", "searchService", "contextService", "fileService", "alertService",
     function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService,
         i18NService,
-        redirectService, searchService, contextService, fileService) {
+        redirectService, searchService, contextService, fileService, alertService) {
 
     return {
         showModalExportToExcel: function (parameters) {
             //TODO: fix this crap
-            var modalTitle = i18NService.get18nValue('_exportotoexcel.export', 'Export') + " " + parameters.application +
+            const modalTitle = i18NService.get18nValue('_exportotoexcel.export', 'Export') + " " + parameters.application +
                 " " + i18NService.get18nValue('_exportotoexcel.toexcel', 'to excel');
-            var selectText = i18NService.get18nValue('_exportotoexcel.selectexportmode', 'Select export mode');
-            var exportModeGridOnlyText = i18NService.get18nValue('_exportotoexcel.gridonly', 'Grid only');
-            var exportModeAllTheColumnsText = i18NService.get18nValue('_exportotoexcel.allthecolumns', 'Asset List');
-            var exportModeCategoriesText = i18NService.get18nValue('_exportotoexcel.categories', 'Categories');
-
+            const selectText = i18NService.get18nValue('_exportotoexcel.selectexportmode', 'Select export mode');
+            const exportModeGridOnlyText = i18NService.get18nValue('_exportotoexcel.gridonly', 'Grid only');
+            const exportModeAllTheColumnsText = i18NService.get18nValue('_exportotoexcel.allthecolumns', 'Asset List');
+            const exportModeCategoriesText = i18NService.get18nValue('_exportotoexcel.categories', 'Categories');
+            
             bootbox.dialog({
                 message: "<form id='infos' action=''>" +
                     "<label class='control-label'>" + selectText + ":</label><br>" +
@@ -43,22 +43,16 @@ angular.module('sw_layout')
                     cancel: {
                         label: i18NService.get18nValue('_exportotoexcel.cancel', 'Cancel'),
                         className: "btn btn-default",
-                        callback: function () {
-                            return null;
-                        }
+                        callback: () => null
                     },
                     main: {
                         label: i18NService.get18nValue('_exportotoexcel.export', 'Export'),
                         className: "btn-primary",
-                        callback: function (result) {
-                            if (result) {
-                                var exportModeSelected = $('input[name=exportMode]:checked', '#infos').val();
-                                if (exportModeSelected != parameters.key.schemaId) {
-                                    this.exportToExcel(exportModeSelected);
-                                } else {
-                                    this.exportToExcel(parameters.key.schemaId);
-                                }
-                            }
+                        callback: (result) => {
+                            if (!result) return;
+                            const exportModeSelected = $('input[name=exportMode]:checked', '#infos').val();
+                            const mode = exportModeSelected !== parameters.key.schemaId ? exportModeSelected : parameters.key.schemaId;
+                            this.exportToExcel(mode);
                         }
                     }
                 },
@@ -68,25 +62,23 @@ angular.module('sw_layout')
 
 
         exporttoexcel: function (schema, searchData, searchSort, searchOperator, paginationData, advancedsearchdata) {
-            var schemaId = schema.schemaId;
-            var parameters = {};
-            parameters.key = {};
-            parameters.key.schemaId = schema.schemaId;
-            parameters.key.mode = schema.mode;
-            parameters.key.platform = "web";
-            parameters.application = schema.applicationName;
-            if ((nullOrUndef(schemaId))) {
-                if (contextService.isClient("hapag") && parameters.application == "asset") {
-                    this.showModalExportToExcel(parameters);
-                    return null;
-                }
-            } else {
-                parameters.key.schemaId = schemaId;
+            const schemaId = schema.schemaId;
+            const parameters = {
+                key: {
+                    schemaId: schemaId,
+                    mode: schema.mode,
+                    platform: schema.platform
+                },
+                application: schema.applicationName
+            };
+            if (nullOrUndef(schemaId) && contextService.isClient("hapag") && parameters.application === "asset") {
+                this.showModalExportToExcel(parameters);
+                return null;
             }
 
-            var quickSearchDTO = (advancedsearchdata && advancedsearchdata.quickSearchData) ? { quickSearchData: advancedsearchdata.quickSearchData } : null;
-            var searchDTO = searchService.buildSearchDTO(searchData, searchSort, searchOperator, paginationData.filterFixedWhereClause, null, null, quickSearchDTO);
-            var currentModule = contextService.currentModule();
+            const quickSearchDTO = (advancedsearchdata && advancedsearchdata.quickSearchData) ? { quickSearchData: advancedsearchdata.quickSearchData } : null;
+            const searchDTO = searchService.buildSearchDTO(searchData, searchSort, searchOperator, paginationData.filterFixedWhereClause, null, null, quickSearchDTO);
+            const currentModule = contextService.currentModule();
             if (currentModule != null) {
                 parameters.module = currentModule;
             }
@@ -95,10 +87,19 @@ angular.module('sw_layout')
             searchDTO.pageSize = paginationData.pageSize;
 
             parameters.searchDTO = searchDTO;
-            fileService.download(url("/Excel/Export" + "?" + $.param(parameters)));
+            const downloadUrl = url(`/Excel/Export?${$.param(parameters)}`);
+            fileService.downloadPromise(downloadUrl)
+                .catch(error => {
+                    const exception = {
+                        exceptionMessage: "Error Downloading Excel File",
+                        outlineInformation: error.url,
+                        stackTrace: error.html
+                    };
+                    alertService.notifyexception(exception);
+                });
         }
     };
 
 }]);
 
-})(angular);
+})(angular, jQuery);

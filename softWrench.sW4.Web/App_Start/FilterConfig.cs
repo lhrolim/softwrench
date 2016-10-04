@@ -3,12 +3,9 @@ using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Common.Log;
 using softWrench.sW4.Web.SPF.Filters;
 
-namespace softWrench.sW4.Web.App_Start
-{
-    public class FilterConfig
-    {
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
-        {
+namespace softWrench.sW4.Web.App_Start {
+    public class FilterConfig {
+        public static void RegisterGlobalFilters(GlobalFilterCollection filters) {
             filters.Add(new HandleErrorAttribute());
             filters.Add(new MvContextFilter());
             filters.Add(new MVCLogFilter());

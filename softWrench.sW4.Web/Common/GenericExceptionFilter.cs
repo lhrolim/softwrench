@@ -31,30 +31,31 @@ namespace softWrench.sW4.Web.Common {
         /// Builds a custom ErrorDto depending on the exception.
         /// </summary>
         /// <param name="e"></param>
+        /// <param name="rootException"></param>
         /// <returns></returns>
-        private ErrorDto BuildErrorDto(Exception e) {
-            if (e is MaximoException) {
-                var maximoException = (MaximoException)e;
-                var dto = new ErrorDto(maximoException) {
+        private ErrorDto BuildErrorDto(Exception e, Exception rootException) {
+            var maximoException = rootException as MaximoException;
+            var dto = maximoException != null 
+                ? new ErrorDto(maximoException) {
                     OutlineInformation = maximoException.OutlineInformation,
                     ErrorStack = maximoException.FullStackTrace,
                     FullStack = maximoException.FullStackTrace
-                };
-                return dto;
+                }
+                : new ErrorDto(rootException);
+
+            var afterCreationException = e as AfterCreationException;
+            if (afterCreationException != null) {
+                dto.ResultObject = afterCreationException.ResultObject;
             }
-            return new ErrorDto(e);
+
+            return dto;
         }
 
         public override void OnException(HttpActionExecutedContext context) {
             var e = context.Exception;
             var rootException = ExceptionUtil.DigRootException(e);
             Log.Error(rootException, e);
-            var errorDto = BuildErrorDto(rootException);
-            if (e is AfterCreationException)
-            {
-                errorDto.ResultObject = ((AfterCreationException) e).ResultObject;
-            }
-
+            var errorDto = BuildErrorDto(e, rootException);
             var errorResponse = context.Request.CreateResponse(CodeOf(rootException), errorDto);
             throw new HttpResponseException(errorResponse);
         }
@@ -63,22 +64,33 @@ namespace softWrench.sW4.Web.Common {
             var e = filterContext.Exception;
             var rootException = ExceptionUtil.DigRootException(e);
             Log.Error(rootException, e);
-            //            var errorResponse = filterContext.HttpContext.Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorDto(rootException));
-            filterContext.ExceptionHandled = true;
-            filterContext.Result = new ContentResult();
-            var controllerName = (string)filterContext.RouteData.Values["controller"];
-            var actionName = (string)filterContext.RouteData.Values["action"];
-            var model = new HandleErrorInfo(rootException, controllerName, actionName);
-            filterContext.ExceptionHandled = true;
-            var result = new ViewResult {
-                ViewData = new ViewDataDictionary<HandleErrorInfo>(model),
-                TempData = filterContext.Controller.TempData
-            };
-            filterContext.Result = result;
+
             filterContext.ExceptionHandled = true;
             filterContext.HttpContext.Response.Clear();
-            filterContext.HttpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+            filterContext.HttpContext.Response.StatusCode = (int)CodeOf(rootException);
+
+            if (filterContext.HttpContext.Request.IsAjaxRequest()) {
+                // if Ajax: json response
+                var errorDto = BuildErrorDto(e, rootException);
+                var result = new JsonResult() {
+                    Data = errorDto,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                };
+                filterContext.Result = result;
+                
+            } else {
+                // not ajax: view result (html)
+                var controllerName = (string)filterContext.RouteData.Values["controller"];
+                var actionName = (string)filterContext.RouteData.Values["action"];
+                var model = new HandleErrorInfo(rootException, controllerName, actionName);
+                var result = new ViewResult {
+                    ViewData = new ViewDataDictionary<HandleErrorInfo>(model),
+                    TempData = filterContext.Controller.TempData
+                };
+                filterContext.Result = result;
+            }
             filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+            filterContext.HttpContext.Response.End();
         }
     }
 }

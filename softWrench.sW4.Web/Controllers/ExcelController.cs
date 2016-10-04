@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using cts.commons.portable.Util;
@@ -45,7 +46,6 @@ namespace softWrench.sW4.Web.Controllers {
 
             var loggedInUser = SecurityFacade.CurrentUser();
             var fileName = GetFileName(application, key.SchemaId) + ".xls";
-
             return DoExport(fileName, (ApplicationListResult) dataResponse, loggedInUser);
         }
 
