@@ -79,7 +79,7 @@
     <property key="globaservletpath_inc" value="https://195.183.78.161/HAPAGLLOYDSNINCWS/DocHandlerServlet"/>
     <property key="globaservletpath_chg" value="https://195.183.78.161/HAPAGLLOYDSNCHGWS/DocHandlerServlet"/>
     <property key="maximo_DB_url" value="Server=10.132.160.133:5101;Database=maximo;UID=maxsas;PWD=cD2g3nik;currentSchema=maximo;" />
-    <property key="swdb_url" value="Data Source=localhost;Initial Catalog=swdb;User Id=swdb;password=sw;" />
+    <property key="swdb_url" value="Data Source=localhost;Initial Catalog=swdb;User Id=swdb;password=pIGmkLPTJF6T;" />
     <property key="swdb_provider" value="System.Data.SQL" />
     <property key="ldapServer" value="adquery.hlag.com"/>
     <property key="ldapPortNumber" value="389"/>
