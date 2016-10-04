@@ -35,7 +35,7 @@ namespace softwrench.sw4.Hapag.Data.Scheduler.Jobs {
         }
 
         public override string Cron() {
-            return "0 0 1 * * ?";
+            return "0 45 * * * ?";
         }
 
         public override void ExecuteJob() {

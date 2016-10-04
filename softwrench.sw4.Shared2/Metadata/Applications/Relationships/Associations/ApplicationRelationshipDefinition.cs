@@ -15,6 +15,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public string Type { get { return GetType().Name; } }
         public abstract string Role { get; }
         public string ShowExpression { get; set; }
+        public string EnableExpression { get; set; }
         public string ToolTip { get; set; }
         public bool? ReadOnly { get; set; }
 

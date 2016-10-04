@@ -7,6 +7,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
     class AssetConstants {
         internal const string Operating = "OPERATING";
         internal const string Active = "120 Active";
+        internal const string Accepted = "100 Accepted";
         internal const string Idle = "150 Idle";
         internal const string Ordered = "010 Ordered";
        
@@ -28,7 +29,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         internal const string PhoneClassStructure = "43191511";
 
 
-        private static readonly string StdClassificationPathChild = StdClassificationPath.Fmt("43211900");
+        private static readonly string StdClassificationPathChild = StdClassificationPath.Fmt("43211902");
 
         internal static readonly string StdClassificationPathParent = StdClassificationPath.Fmt("43211500");
 

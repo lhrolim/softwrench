@@ -12,6 +12,8 @@ Service Attributes
 IBM technician – Yes/No:   yes
 Installation date:   
 Remarks:   
+Usage:   MEETING
+Cost Center:   6200/300/000//Maint+General
 =====================================================================
 Location
 
@@ -19,6 +21,5 @@ Building:
 Floor:   
 Room:   
 =====================================================================
-Cost Center:   6200/300/000//Maint+General
-User:   (BALL) Allan Ball
+User:   (BALL) Allan Ball --> 
 =====================================================================

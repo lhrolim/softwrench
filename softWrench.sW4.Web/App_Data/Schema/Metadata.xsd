@@ -256,7 +256,7 @@
       </annotation>
     </attribute>
     <attribute name="label" type="string"></attribute>
-    <attribute name="required" type="boolean"></attribute>
+    <attribute name="required" type="string"></attribute>
     <attribute name="readonly" type="boolean"></attribute>
     <attribute name="hidden" type="boolean"></attribute>
     <attribute name="showexpression" type="string"></attribute>
@@ -360,7 +360,7 @@
     <attribute name="enableexpression" type="string"
 			use="optional">
     </attribute>
-    <attribute name="required" type="boolean"></attribute>
+    <attribute name="required" type="string"></attribute>
     <attribute name="qualifier" type="string"></attribute>
   </complexType>
 
@@ -455,7 +455,7 @@
     </sequence>
     <attribute name="label" type="string"></attribute>
     <attribute name="attribute" type="string" use="required"></attribute>
-    <attribute name="required" type="boolean"></attribute>
+    <attribute name="required" type="string"></attribute>
     <attribute name="default" type="string"></attribute>
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
@@ -768,6 +768,7 @@
   <complexType name="referenceComplexType">
     <attribute name="id" type="string" use="required"></attribute>
     <attribute name="showexpression" type="string"></attribute>
+    <attribute name="enableexpression" type="string"></attribute>
     <attribute name="label" type="string"></attribute>
     <attribute name="attribute" type="string"></attribute>
     <attribute name="properties" type="string"></attribute>

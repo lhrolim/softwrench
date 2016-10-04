@@ -117,7 +117,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="hlagswd" type="varchar" required="false" query="CASE WHEN assetloccommswd_.commodity = 'HLC-0007' THEN 'Yes' ELSE 'No' END"/>
         <attribute name="hlagscanclient" type="varchar" required="false" query="CASE WHEN assetloccommscanclient_.commodity = 'HLC-0006' THEN 'Yes' ELSE 'No' END"/>
         <attribute name="ownedby" type="varchar" required="false" query="@assetReportControlWhereClauseProvider.GetCommodityOwnedByWhere"/>
-        
+
 
         <attribute name="assetcategory" type="varchar" query="COALESCE(classstructure_category_.description,'')" />
         <attribute name="assetregion" type="varchar" query="COALESCE(aucisnotowner_person_.department,'')" />
@@ -1902,6 +1902,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
       </properties>
       <components>
         <componentdisplayable id="usage">
+
           <optionfield attribute="usage" label="Usage" default="STANDARD" >
             <renderer type="combo" params="length=half"/>
             <option label="EDUCATION" value="EDUCATION"/>
@@ -1916,7 +1917,13 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <option label="STAND ALONE" value="STAND ALONE"/>
             <option label="TEST" value="TEST"/>
             <option label="TRAINEE" value="TRAINEE"/>
+            <event type="afterchange" service="imacservice" method="afterUsageChange"/>
           </optionfield>
+          <field label="" attribute="" default="The corresponding User relation will be removed." readonly="true" qualifier="nodescription" showexpression="@usage != null &amp;&amp; @usage.equalsAny('EDUCATION','POOL', 'MEETING')">
+            <renderer type="label" params="color=red"/>
+          </field>
+
+
         </componentdisplayable>
 
         <componentdisplayable id="ibmtechnician">
@@ -2020,6 +2027,12 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           </field>
         </componentdisplayable>
 
+        <componentdisplayable id="itccostcentersection">
+            <section showexpression="@prop:showcostcenter=false">
+              <reference id="itccostcenter"  showexpression="@toitc!=null" />
+            </section>
+        </componentdisplayable>
+          
         <componentdisplayable id="baseattributesection">
 
           <section parameters="detaildescription=Service Attributes">
@@ -2031,7 +2044,6 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
               <renderer type="default" params="maxlength=85" />
             </field>
 
-            <reference id="inputaccel" showexpression="@prop:showinputaccel=false"/>
 
             <reference id="ibmtechnician" showexpression="@prop:showibmtechnician=true"/>
 
@@ -2045,6 +2057,10 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             </field>
 
             <reference id="usage" showexpression="@prop:showusage=true"/>
+            <reference id="itccostcentersection" showexpression="@prop:showcostcenter=false"/>
+
+            <reference id="macaddress" showexpression="@prop:showmacaddress=false"/>
+            <reference id="macaddressOriginal" showexpression="@prop:macaddressOriginal=false"/>
           </section>
 
         </componentdisplayable>
@@ -2063,8 +2079,14 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
         <componentdisplayable id="costcenter">
           <optionfield label="Cost Center" attribute="costcenter" required="true" dependantfields="asset,fromlocation"
-									providerattribute="costCentersByPrimaryUser" showexpression="@asset!=null"/>
+									providerattribute="costCentersByPrimaryUser" showexpression="@asset!=null" />
         </componentdisplayable>
+
+        <componentdisplayable id="itccostcenter">
+          <optionfield label="Cost Center" attribute="costcenter" required="true" dependantfields="asset,toitc" 
+                       providerattribute="costCentersByToItc" />
+        </componentdisplayable>
+
 
         <componentdisplayable id="readonlycostcenter">
           <field label="Cost Center" attribute="costcenter" readonly="true" showexpression="@asset!=null" />
@@ -2089,7 +2111,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
         <componentdisplayable id="mainasset">
           <association
                  target="asset" dependantfields="fromlocation" label="Asset" labelfield="asset_.hlagdescription2" required="true"
-                                      extraprojectionvalues="usage, assetid, primaryuser_.personid, primaryuser_.hlagdisplayname, primaryuser_person_.displayname,primaryuser_person_.hlagdisplayname
+                                      extraprojectionvalues="assetspecmacaddress_.alnvalue, usage, assetid, primaryuser_.personid, primaryuser_.hlagdisplayname, primaryuser_person_.displayname,primaryuser_person_.hlagdisplayname
                      ,classification,location,location_.description,aucisowner_person_.hlagdisplayname,aucisowner_person_.personid,pluspcustomer,assetglaccount_.displaycostcenter,assetglaccount_.glaccount,status">
             <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=asset_.assetid"/>
             <event type="afterchange" service="imacservice" method="afterChangeAsset"/>
@@ -2123,11 +2145,26 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           </optionfield>
         </componentdisplayable>
 
+        <componentdisplayable id="macaddress">
+          <field attribute="macaddress" label="Mac Address" required="true" qualifier="macaddressOriginal_new">
+            <renderer type="default" params="maxlength=85" />
+          </field>
+        </componentdisplayable>
+
+        <componentdisplayable id="macaddressOriginal">
+          <field hidden="true" attribute="macaddressOriginal" label="Mac Address"/>
+        </componentdisplayable>
+
         <componentdisplayable id="defaultuserid">
-          <association label="User ID:" target="userid" labelfield="person_.hlagdisplayname" showexpression="@asset!=null" >
+          <association label="User ID" target="userid" labelfield="person_.hlagdisplayname"
+                       showexpression="@asset!=null &amp;&amp; @usage != null &amp;&amp; !@usage.equalsAny('EDUCATION','POOL', 'MEETING')"
+                       required="@usage != null &amp;&amp; @usage.equalsAny('STANDARD','MOBILE HOME')">
             <dataprovider prefilterfunction="FilterUserId" />
             <renderer type="autocompleteserver"/>
           </association>
+
+          <field attribute="#newuserid" label="" hidden="true" qualifier="userid_new"></field>
+
         </componentdisplayable>
 
         <componentdisplayable id="readonlyuserid">
@@ -2317,11 +2354,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <reference id="servicelabel"/>
             <reference id="fromlocation"/>
             <reference id="mainasset" />
-            <reference id="nchildasset" showexpression="@fromlocation!=null"/>
-            <association dependantfields="fromlocation" label="Moved Asset" labelfield="movedasset_.hlagdescription2" target="#movedasset" showexpression="@fromlocation!=null">
-              <dataprovider prefilterfunction="FilterMovedAsset"/>
-              <renderer type="autocompleteclient" params="minLength=3;length=full"/>
-            </association>
+            <reference id="nchildasset" showexpression="@fromlocation!=null" label="Workplace Asset"/>
           </section>
 
           <section id="attributes" showexpression="@fromlocation!=null"/>
@@ -2344,7 +2377,8 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           </section>
           <properties>
             <property key="servicename" value="Standard Client"/>
-            <property key="showinputaccel" value="true"/>
+            <property key="showmacaddress" value="true"/>
+            <property key="macaddressOriginal" value="true"/>
           </properties>
         </schema>
 
@@ -2371,6 +2405,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <property key="showlantype" value="@tolocation!=null &amp;&amp; @tolocation!=@fromlocation"/>
             <property key="showibmtechnician" value="@tolocation!=null &amp;&amp; @tolocation==@fromlocation"/>
             <property key="showusage" value="false"/>
+            <property key="showcostcenter" value="true"/>
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="popup.window.headertitle" value="New IMAC Request - Move"/>
           </properties>
@@ -2396,10 +2431,12 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
           <section id="other" parameters="detaildescription= " showexpression="@toitc!=null &amp;&amp; @asset_.primaryuser_.personid == @toitc">
 
-            <optionfield label="Cost Center" attribute="costcenter" required="true" dependantfields="asset,toitc"
-                          providerattribute="costCentersByToItc" />
 
-            <reference id="defaultuserid" label="User" />
+            <association label="User" target="userid" labelfield="person_.hlagdisplayname" showexpression="@asset!=null &amp;&amp; @usage != null &amp;&amp; !@usage.equalsAny('EDUCATION','POOL', 'MEETING')" required="@usage != null &amp;&amp; @usage.equalsAny('STANDARD','MOBILE HOME')">
+              <dataprovider prefilterfunction="FilterUserId" />
+              <renderer type="autocompleteserver"/>
+            </association>
+            <field attribute="#newuserid" label="" hidden="true" qualifier="userid_new"></field>
             <!--            <field label="User" attribute="asset_.primaryuser_.person_.hlagdisplayname" />-->
           </section>
 
@@ -2584,13 +2621,18 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <section id="other" parameters="detaildescription= ">
             <field attribute="originaluser"  hidden="true" label="User ID"/>
             <field attribute="#originaluser_label"  hidden="true" label="User ID" qualifier="nodescription"/>
-            <association label="User ID:" target="userid" labelfield="person_.hlagdisplayname" showexpression="@asset!=null" qualifier="originaluser_new">
+
+
+            <association label="User ID:" target="userid" labelfield="person_.hlagdisplayname" 
+                         showexpression="@asset!=null &amp;&amp; @usage != null &amp;&amp; !@usage.equalsAny('EDUCATION','POOL', 'MEETING')"
+                         required="@usage != null &amp;&amp; @usage.equalsAny('STANDARD','MOBILE HOME')"
+                         qualifier="originaluser_new">
               <dataprovider prefilterfunction="FilterUserId" />
               <renderer type="autocompleteserver"/>
             </association>
           </section>
 
-          <field label="ITC" attribute="asset_.primaryuser_.personid" readonly="true" showexpression="@asset!=null" />
+          <field label="ITC" attribute="asset_.primaryuser_.personid" readonly="true" showexpression="@asset!=null" enableexpression="@buildingOriginal == null || @buildingOriginal == @building" />
 
           <field label="Status" attribute="asset_.status" showexpression="@asset != null &amp;&amp; @asset.status != '150 Idle'" readonly="true" >
             <renderer type="label" />
@@ -2607,7 +2649,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           </section>
 
           <section id="other" parameters="detaildescription= ">
-            <reference id="readonlycostcenter" />
+            <reference id="costcenter" enableexpression="@buildingOriginal == null || @buildingOriginal == @building" readonly="false"/>
           </section>
           <section id="specification" showexpression="@asset!=null" resourcepath="/Content/Templates/crud/update_section.html" parameters="detaildescription=Specifications">
             <header displacement="sameline" label="Specifications"/>
@@ -3051,7 +3093,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="Street Address" attribute="location_pluspservaddr_.streetaddress">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
-         <field label="Floor" attribute="location_.floor">
+          <field label="Floor" attribute="location_.floor">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
           <field label="Room" attribute="location_.room">

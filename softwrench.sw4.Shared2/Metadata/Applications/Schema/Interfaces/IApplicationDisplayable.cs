@@ -18,6 +18,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces {
 
         string ShowExpression { get; set; }
 
+        string EnableExpression {get; set;}
+
         string ToolTip { get; }
 
         bool? ReadOnly { get; set; }

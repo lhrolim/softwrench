@@ -1,0 +1,42 @@
+﻿{
+    "#service": "Lan Printer",
+    "fromlocation": "MT4",
+    "asset": "B4000",
+    "childasset": "A7800",
+    "#movedasset": "A6002",
+    "#subtitle": "Value",
+    "titleoforder": "test",
+    "paperformat": "A0",
+    "lantype": "lan",
+    "paperorientation": "landscape",
+    "ibmtechnician": "yes",
+    "dhcpaddress": "100.100.100.100",
+    "installationdate": "27/06/2014",
+    "refprinter": "test",
+    "remarks": "test\r\n\r\ntest",
+    "usage": "EDUCATION",
+    "asset_.location_.description": "Atlanta Domocile Terminal",
+    "building": null,
+    "floor": null,
+    "room": null,
+    "#buildingOriginal_label": null,
+    "#floorOriginal_label": null,
+    "#roomOriginal_label": null,
+    "#userid_label": "(BALL) Allan Ball",
+    "#newuserid": "",
+    "asset_.primaryuser_.person_.displayname": "Steve Miller",
+    "asset_.custodianuser_.person_.displayname": null,
+    "costcenter": "6200-300-000",
+    "ticketid": null,
+    "asset_": {
+        "primaryuser_": {
+            "personid": "MILLER",
+            "person_": { "displayname": "Steve Miller" }
+        },
+        "primaryuser_.personid": "MILLER",
+        "primaryuser_person_.displayname": "Steve Miller",
+        "location_": { "description": "Atlanta Domocile Terminal" },
+        "location_.description": "Atlanta Domocile Terminal"
+    },
+    "asset_.primaryuser_.personid": "MILLER"
+}

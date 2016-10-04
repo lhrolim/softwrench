@@ -11,6 +11,7 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
     var parseLocations = function (datamap, location, triggerparams) {
         if (location == null) {
             datamap['building'] = datamap['floor'] = datamap['room'] = "$null$ignorewatch";
+            datamap['buildingOriginal'] = null;
             return;
         }
         var idxBldg = location.indexOf('/BLDG');
@@ -18,17 +19,20 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
             //point straight to building only
             datamap['building'] = location.substring(0, idxBldg) + '$ignorewatch';
             datamap['floor'] = datamap['room'] = "$null$ignorewatch";
+            datamap['buildingOriginal'] = null;
         } else {
             var parts = location.split("/");
             if (parts.length != 3) {
                 //this should never at hapag´s... but let´s play safe
                 datamap['building'] = datamap['floor'] = datamap['room'] = "$null$ignorewatch";
+                datamap['buildingOriginal'] = null;
                 return;
             }
             var shouldIgnoreWatch = triggerparams.dispatchedbytheuser && triggerparams.phase != 'initial';
             datamap['building'] = parts[0] + (shouldIgnoreWatch ? '$ignorewatch' : '');
             datamap['floor'] = parts[1].substring(parts[1].indexOf(':') + 1) + (shouldIgnoreWatch ? '$ignorewatch' : '');
             datamap['room'] = location;
+            datamap['buildingOriginal'] = parts[0];
         }
 
 
@@ -36,7 +40,10 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
 
     var setOriginalDataFromAttribute = function (schema, datamap, associationOptions, attributeName) {
         if (datamap[attributeName] != null && datamap[attributeName] != "$null$ignorewatch") {
-            datamap['#' + attributeName + 'Original_label'] = associationService.getFullObjectByAttribute(attributeName, schema, datamap, associationOptions).label;
+            var fo = associationService.getFullObjectByAttribute(attributeName, schema, datamap, associationOptions);
+            if (fo != null) {
+                datamap['#' + attributeName + 'Original_label'] = fo.label;
+            }
         } else {
             datamap['#' + attributeName + 'Original_label'] = null;
         }
@@ -80,6 +87,21 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
             datamap['costcenter'] = null;
         },
 
+        //R0038 implementation
+        afterUsageChange: function (event) {
+            var dm = event.fields;
+            if (dm.usage.equalsAny('EDUCATION', 'POOL', 'MEETING')) {
+                var selectedUser = associationService.getFullObjectByAttribute("userid", event.scope.schema, dm, event.scope.associationOptions);
+                if (selectedUser) {
+                    //setting here cause it will be removed later since the field will become invisible
+                    dm["#userid_label"] = selectedUser.label;
+                }
+                dm["#newuserid"] = "";
+            } else {
+                dm["#newuserid"] = null;
+                dm["#userid_label"] = null;
+            }
+        },
 
 
         afterChangeAsset: function (event) {
@@ -104,7 +126,7 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
 
             event.fields['assetlocation'] = assetLocation;
             var schemaId = event.scope.schema.schemaId;
-            if (schemaId.startsWith('update')) {
+            if (schemaId.startsWith('update') || schemaId.startsWith("move")) {
                 if (assetUsage &&
                     assetUsage.equalsAny("EDUCATION", "POOL", "MEETING", "MOB MARITME", "MOBILE HOME", "NON-STANDARD", "SPARE UNIT", "SPECIAL FUNC", "STANDARD", "STAND ALONE", "TEST", "TRAINEE")) {
                     //HAP-1025
@@ -114,6 +136,11 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
                 }
             } else {
                 event.fields['assetusage'] = assetUsage;
+            }
+
+            if (schemaId.startsWith('installstd')) {
+                event.fields['macaddressOriginal'] = event.fields['asset_.assetspecmacaddress_.alnvalue'];
+                event.fields['macaddress'] = event.fields['asset_.assetspecmacaddress_.alnvalue'];
             }
 
             var availablecostcenters = event.scope.associationOptions.costCentersByPrimaryUser;

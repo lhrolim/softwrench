@@ -43,6 +43,28 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
             DoTest("installlan", "installlan.json", "installlan.txt");
         }
 
+
+        [TestMethod]
+        //        [Ignore]
+        public void InstallLanEducation() {
+            DoTest("installlan", "installlaneducation.json", "installlaneducation.txt");
+        }
+
+        [TestMethod]
+        public void InstallStandard() {
+            DoTest("installstd", "installstd.json", "installstd.txt");
+        }
+
+        [TestMethod]
+        public void InstallStandardEmptyMac() {
+            DoTest("installstd", "installstdEmptyMac.json", "installstdEmptyMac.txt");
+        }
+
+        [TestMethod]
+        public void InstallStandardSameMac() {
+            DoTest("installstd", "installstdSameMac.json", "installstdSameMac.txt");
+        }
+
         [TestMethod]
         public void ReplaceAsset() {
             DoTest("replaceother", "replaceother.json", "replaceother.txt");
@@ -94,6 +116,8 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
             var resultDescription = ImacDescriptionHandler.BuildDescription(imac, appMetadata);
             Debug.Write(resultDescription);
             var expectedResult = new StreamReader("jsons\\imac\\descriptionresults\\" + output).ReadToEnd();
+            expectedResult = expectedResult.Replace("\r\n", "\n");
+            resultDescription = resultDescription.Replace("\r\n", "\n");
             Assert.AreEqual(expectedResult, resultDescription);
         }
 

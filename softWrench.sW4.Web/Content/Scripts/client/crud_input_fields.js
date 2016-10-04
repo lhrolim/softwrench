@@ -606,6 +606,10 @@ app.directive('crudInputFields', function (contextService) {
                 return isIe9();
             };
 
+            $scope.isFieldRequired = function (fieldMetadata) {
+                return fieldService.isFieldRequired(fieldMetadata, $scope.datamap);
+            };
+
             $scope.getLabelStyle = function (fieldMetadata) {
                 var rendererColor = styleService.getLabelStyle(fieldMetadata, 'color');
                 var weight = styleService.getLabelStyle(fieldMetadata, 'font-weight');

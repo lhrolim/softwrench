@@ -54,6 +54,10 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
             if (reference.ShowExpression != null) {
                 applicationDisplayable.ShowExpression = GetPropertyValue(schema, reference, reference.ShowExpression);
             }
+
+            if (reference.EnableExpression != null) {
+                applicationDisplayable.EnableExpression = GetPropertyValue(schema, reference, reference.EnableExpression);
+            }
             if (reference.Label != null) {
                 ((IApplicationAttributeDisplayable)applicationDisplayable).Label = GetPropertyValue(schema, reference, reference.Label);
             }
@@ -94,7 +98,7 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
                     ComponentDisplayableResolver);
 
                 var section = clonedDisplayable as ApplicationSection;
-                if (section != null) {
+                if (section != null && section.Header!=null) {
                     section.Header = (ApplicationHeader)CloneAndResolve(section.Header, schema, reference);
                 }
 

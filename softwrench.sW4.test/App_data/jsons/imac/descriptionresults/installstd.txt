@@ -3,28 +3,26 @@
 Request Details
 
 Location:   MT4
-Asset:   B4000
-Workplace Asset:   A7800
+Asset:   (1001) Fire Extinguisher
+Workplace Asset:   \n(1002) Fire Extinguisher
 =====================================================================
 Service Attributes
 
-Paper Format:   A0
-LAN Type (printers only):   lan
-Paper Orientation:   landscape
-IBM technician – Yes/No:   yes
-DHCP Address:   100.100.100.100
-Installation date:   27/06/2014
-Reference Printer:   test
+IBM technician – Yes/No:   no
+Installation date:   29/09/2016
 Remarks:   test
 
 test
 Usage:   TEST
+Mac Address:   xx-xx-yy-zz-uu-ww --> ww-uu-zz-yy-xx-xx
 =====================================================================
 Location
 
-Building:   
+Building:    --> Address Unit #2001 Oak St. - W560
 Floor:   
 Room:   
 =====================================================================
-Cost Center:   6200-300-000
+User ID:   
+Current ITC:   
+Cost Center:   6200/300/000 // Maint+General
 =====================================================================

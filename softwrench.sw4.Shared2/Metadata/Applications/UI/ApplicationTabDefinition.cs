@@ -29,6 +29,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
         public string Type { get { return typeof(ApplicationTabDefinition).Name; } }
         public string Role { get { return ApplicationName + "." + Id; } }
         public string ShowExpression { get; set; }
+        public string EnableExpression { get; set; }
         public string ToolTip { get; set; }
         public string IdFieldName { get; set; }
         public bool? ReadOnly { get { return false; } set { } }

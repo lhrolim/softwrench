@@ -9,16 +9,16 @@
                   ng-class="{'col-horizontal-orientation' : !isVerticalOrientation(), 'fieldset-inside-section' : insidelabellesssection=='true','bordered-fieldset' : isFieldSet(fieldMetadata) }"
                   ng-style="horizontalWidth">
 
-            <label class="control-label"
-                   rel="tooltip"
-                   data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
-                   ng-show="isLabelVisible(fieldMetadata,false)"
-                   ng-style="getLabelStyle(fieldMetadata)"
-                   ng-class="getLabelClass(fieldMetadata)">
-                <span ng-show="fieldMetadata.isRequired" class="requiredfieldmark">* </span>
-                <!--this will bring either label or header in case of section-->
-                {{i18NLabel(fieldMetadata)}}
-            </label>
+        <label class="control-label"
+               rel="tooltip"
+               data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
+               ng-show="isLabelVisible(fieldMetadata,false)"
+               ng-style="getLabelStyle(fieldMetadata)"
+               ng-class="getLabelClass(fieldMetadata)">
+            <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
+            <!--this will bring either label or header in case of section-->
+            {{i18NLabel(fieldMetadata)}}
+        </label>
 
             <legend ng-show="isLabelVisible(fieldMetadata,true)"
                     rel="tooltip"

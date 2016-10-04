@@ -15,7 +15,7 @@ namespace softwrench.sw4.Hapag.Data.Scheduler.Jobs.Helper {
                 QueryAlias = "rI101"
             };
 
-            dto.AppendWhereClause("upper(STATUS) = '{0}'".Fmt(AssetConstants.Active.ToUpper()));
+            dto.AppendWhereClause("upper(STATUS) in ('{0}','{1}')".Fmt(AssetConstants.Active.ToUpper(), AssetConstants.Accepted.ToUpper()));
 
             var configFilePath = MetadataProvider.GlobalProperty("RI101Path");
             if (!File.Exists(configFilePath)) {

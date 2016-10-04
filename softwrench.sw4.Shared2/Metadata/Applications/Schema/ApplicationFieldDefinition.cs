@@ -22,10 +22,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         }
 
-        public ApplicationFieldDefinition(string applicationName, string attribute, string label, bool isRequired, bool isReadOnly, bool isIsHidden,
+        public ApplicationFieldDefinition(string applicationName, string attribute, string label, string requiredExpression, bool isReadOnly, bool isIsHidden,
              FieldRenderer renderer, FieldFilter filter, IWidgetDefinition widgetDefinition, string defaultValue, string qualifier, string showExpression, string toolTip,
              string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression)
-            : base(applicationName, label, attribute, isRequired, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression) {
+            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression) {
             if (widgetDefinition == null) throw new ArgumentNullException("widgetDefinition");
             _widgetDefinition = widgetDefinition;
             _renderer = renderer;
@@ -108,12 +108,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public object Clone() {
-            return new ApplicationFieldDefinition(ApplicationName, Attribute, Label, IsRequired, IsReadOnly, IsHidden,
+            return new ApplicationFieldDefinition(ApplicationName, Attribute, Label, RequiredExpression, IsReadOnly, IsHidden,
                 Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression,EvalExpression);
         }
 
         public static ApplicationFieldDefinition HiddenInstance(string applicationName, string attributeName) {
-            return new ApplicationFieldDefinition(applicationName, attributeName, "", false, false, true,
+            return new ApplicationFieldDefinition(applicationName, attributeName, "", "false", false, true,
                         new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null,null);
         }
     }

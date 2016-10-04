@@ -25,7 +25,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
-        public Boolean IsRequired { get; set; }
+        public string RequiredExpression { get; set; }
 
         public string Qualifier { get; set; }
 
@@ -61,7 +61,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, Boolean required, string defaultValue, string enableExpression = "true", ISet<ApplicationEvent> events = null)
+            string showExpression, string toolTip, string requiredExpression, string defaultValue, string enableExpression = "true", ISet<ApplicationEvent> events = null)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
@@ -71,7 +71,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             _applicationAssociationSchema = applicationAssociationSchema;
             DefaultValue = defaultValue;
             EnableExpression = enableExpression;
-            IsRequired = required;
+            RequiredExpression = requiredExpression;
             _eventsSet = events;
             Qualifier = qualifier;
 
@@ -189,7 +189,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public override string Role { get { return From + "." + Target; } }
 
         public object Clone() {
-            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target,Qualifier, Schema, ShowExpression, ToolTip, IsRequired,
+            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target,Qualifier, Schema, ShowExpression, ToolTip, RequiredExpression,
                 DefaultValue, EnableExpression, _eventsSet) {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,

@@ -38,6 +38,17 @@ app.factory('fieldService', function (expressionService,$log) {
             return isFieldHidden(datamap, application, fieldMetadata);
         },
 
+        isFieldRequired: function (fieldMetadata, datamap) {
+            if (fieldMetadata.type === "ApplicationSection" && fieldMetadata.parameters) {
+                return "true" === fieldMetadata.parameters["required"];
+            }
+            var requiredExpression = fieldMetadata.requiredExpression;
+            if (requiredExpression != undefined) {
+                return expressionService.evaluate(requiredExpression, datamap);
+            }
+            return requiredExpression;
+        },
+
         nonTabFields: function (displayables) {
             var result = [];
             for (var i = 0; i < displayables.length; i++) {

@@ -29,7 +29,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             sb.AppendLine();
             var applicationSections = metadata.Schema.GetDisplayable<ApplicationSection>(typeof(ApplicationSection), false);
             foreach (var section in applicationSections) {
-                CreateSection(jsonObject, sb, section);
+                if (!section.ShowExpression.Equals("false")) {
+                    CreateSection(jsonObject, sb, section);
+                }
             }
             CloseSection(sb);
 
@@ -44,7 +46,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
 
             var sectionHeader = OpenSection(section);
             var displayables = DisplayableUtil.GetDisplayable<IApplicationAttributeDisplayable>(
-                typeof(IApplicationAttributeDisplayable), section.Displayables);
+                typeof(IApplicationAttributeDisplayable), section.Displayables,true,true);
 
             if (section.Id == "specification") {
                 sb.Append(sectionHeader);
@@ -61,7 +63,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
         private static string DoHandleDisplayables(CrudOperationData jsonObject, IList<IApplicationAttributeDisplayable> displayables) {
             var sb = new StringBuilder();
             foreach (var attributeDisplayable in displayables) {
-                if (attributeDisplayable.Qualifier != null && attributeDisplayable.Qualifier.Contains(NoDescriptionQualifier)) {
+                if (attributeDisplayable.Qualifier != null && attributeDisplayable.Qualifier.Contains(NoDescriptionQualifier) || attributeDisplayable.ShowExpression == "false") {
                     continue;
                 }
 
@@ -207,7 +209,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             if ("from Location".Equals(label)) {
                 label = "Location";
             }
-            if (newValue == null) {
+            if (newValue == null || (newValue.Equals(oldValue) && "Mac Address".Equals(label))) {
                 return String.Format(FieldPattern, label, oldValue);
             }
             return String.Format(FieldOldNewPattern, label, oldValue, newValue);

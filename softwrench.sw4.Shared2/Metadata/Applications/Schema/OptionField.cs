@@ -30,10 +30,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public String EnableExpression { get; set; }
 
 
-        public OptionField(string applicationName, string label, string attribute, string qualifier, bool isRequired, bool isReadOnly, bool isHidden,
+        public OptionField(string applicationName, string label, string attribute, string qualifier, string requiredExpression, bool isReadOnly, bool isHidden,
             OptionFieldRenderer renderer, FieldFilter filter, List<IAssociationOption> options, string defaultValue, bool sort, string showExpression,
             string toolTip, string attributeToServer, ISet<ApplicationEvent> events, string providerAttribute, string dependantFields, string enableExpression)
-            : base(applicationName, label, attribute, isRequired, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression) {
+            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression) {
             _renderer = renderer;
             _filter = filter;
             _options = options;
@@ -90,7 +90,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public object Clone() {
-            return new OptionField(ApplicationName, Label, Attribute, Qualifier, IsRequired, IsReadOnly, IsHidden, _renderer, _filter,
+            return new OptionField(ApplicationName, Label, Attribute, Qualifier, RequiredExpression, IsReadOnly, IsHidden, _renderer, _filter,
                 _options,
                 DefaultValue, _sort, ShowExpression, ToolTip, AttributeToServer, _eventsSet, ProviderAttribute,
                 _dependantFieldsString, EnableExpression);

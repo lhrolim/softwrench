@@ -11,7 +11,7 @@ using softwrench.sw4.Shared2.Metadata.Applications.UI;
 
 namespace softwrench.sW4.Shared2.Util {
     public class DisplayableUtil {
-        public static IList<T> GetDisplayable<T>(Type displayableType, IEnumerable<IApplicationDisplayable> originalDisplayables, Boolean fetchInner = true) {
+        public static IList<T> GetDisplayable<T>(Type displayableType, IEnumerable<IApplicationDisplayable> originalDisplayables, Boolean fetchInner = true, bool removeHidden = false) {
             var resultingDisplayables = new List<T>();
 
             foreach (IApplicationDisplayable displayable in originalDisplayables) {
@@ -20,6 +20,10 @@ namespace softwrench.sW4.Shared2.Util {
                 }
                 if (displayable is IApplicationDisplayableContainer) {
                     if (fetchInner) {
+                        var section = displayable as ApplicationSection;
+                        if (section != null && section.ShowExpression.Equals("false") && removeHidden) {
+                            continue;
+                        }
                         var container = displayable as IApplicationDisplayableContainer;
                         resultingDisplayables.AddRange(GetDisplayable<T>(displayableType, container.Displayables, fetchInner));
                     }

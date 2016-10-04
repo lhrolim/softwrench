@@ -100,7 +100,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static ApplicationFieldDefinition ParseField(string applicationName, XElement field, EntityMetadata entityMetadata) {
             var attribute = field.Attribute(XmlMetadataSchema.FieldAttributeAttribute).Value;
             var label = field.Attribute(XmlMetadataSchema.FieldAttributeLabel).ValueOrDefault("");
-            var isRequired = field.Attribute(XmlMetadataSchema.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
+            var isRequired = field.Attribute(XmlMetadataSchema.BaseDisplayableRequiredAttribute).ValueOrDefault("false");
             var isReadOnly = field.Attribute(XmlMetadataSchema.FieldAttributeReadOnly).ValueOrDefault(false);
             var isHidden = field.Attribute(XmlMetadataSchema.FieldAttributeHidden).ValueOrDefault(false);
             var showExpression = field.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
@@ -217,7 +217,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static IApplicationDisplayable ParseOptions(XElement xElement, string applicationName) {
             var attribute = xElement.Attribute(XmlMetadataSchema.FieldAttributeAttribute).Value;
             var label = xElement.Attribute(XmlMetadataSchema.FieldAttributeLabel).ValueOrDefault("");
-            var isRequired = xElement.Attribute(XmlMetadataSchema.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
+            var isRequired = xElement.Attribute(XmlMetadataSchema.BaseDisplayableRequiredAttribute).ValueOrDefault("false");
             var isReadOnly = xElement.Attribute(XmlMetadataSchema.FieldAttributeReadOnly).ValueOrDefault(false);
             var isHidden = xElement.Attribute(XmlMetadataSchema.FieldAttributeHidden).ValueOrDefault(false);
             var defaultValue = xElement.Attribute(XmlMetadataSchema.FieldAttributeDefaultValue).ValueOrDefault((string)null);
@@ -267,7 +267,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var tooltip = association.Attribute(XmlMetadataSchema.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
             var extraProjectionFields = association.Attribute(XmlMetadataSchema.ApplicationAssociationExtraProjectionFieldsAttribute).ValueOrDefault((string)null);
             var qualifier = association.Attribute(XmlMetadataSchema.FieldAttributeQualifier).ValueOrDefault((string)null);
-            var required = association.Attribute(XmlMetadataSchema.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
+            var required = association.Attribute(XmlMetadataSchema.BaseDisplayableRequiredAttribute).ValueOrDefault("false");
 
             return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(association, target), showExpression, tooltip, required, ParseEvents(association), defaultValue, extraProjectionFields, enableExpression);
         }
