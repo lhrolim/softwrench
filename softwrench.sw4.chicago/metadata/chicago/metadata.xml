@@ -294,7 +294,7 @@
               <removecommand id="export"/>
 
               <container position="+export" id="" label="Report" icon="fa-file-text-o" cssclasses="large-button">
-                <command id="export" icon="fa-file-text-o" label="Export Current Grid" service="excelService" method="exporttoexcel" parameters="schema,searchData,searchSort,searchOperator,paginationData" tooltip="Export to Excel" cssclasses="large-button"/>
+                <command id="export" icon="fa-file-text-o" label="Export Current Grid" service="excelService" method="exporttoexcel" parameters="schema,searchData,searchSort,searchOperator,paginationData,advancedsearchdata" tooltip="Export to Excel" cssclasses="large-button"/>
                 <command id="dailyTicket" icon="fa-file-text-o" label="Daily Tickets By Department" service="chicagoChartService" method="dailyTicketCount" tooltip="Get the number of tickets opened daily for each department since the beginning of the year"
                          cssclasses="large-button"/>
                 <command id="ticketByDepartment" icon="fa-file-text-o" label="Tickets Type By Department" service="chicagoChartService" method="ticketsByDepartment" tooltip="Get the number of tickets grouped by ticket type and department" cssclasses="large-button"/>
