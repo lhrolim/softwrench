@@ -377,24 +377,30 @@ namespace softwrench.sw4.Hapag.Security {
         public IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId = null) {
             string costCentersToUse = "";
             if (personId == null) {
-                //we´re interested in the current user, so we can assume its groups are synced fine.
-                //pick the groups from SWDB
                 personId = SecurityFacade.CurrentUser().MaximoPersonId;
-                var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
-                var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null));
-                var context = _contextLookuper.LookupContext();
-                //if the user is not on XITC context, then we should pick just the costcenters directly bound to him (HAP-799)
-                var locationsToUse = context.IsInModule(FunctionalRole.XItc)
-                    ? result.GroupedLocations
-                    : result.DirectGroupedLocations;
-                var groupedLocation = locationsToUse.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
-                if (groupedLocation == null) {
-                    return null;
-                }
-                costCentersToUse = groupedLocation.CostCentersForQuery("glaccount");
-            } else {
-                costCentersToUse = BuildCostCentersFromMaximo(subCustomer, personId);
             }
+
+            costCentersToUse = BuildCostCentersFromMaximo(subCustomer, personId);
+
+//            if (personId == null) {
+//                //we´re interested in the current user, so we can assume its groups are synced fine.
+//                //pick the groups from SWDB
+//                personId = SecurityFacade.CurrentUser().MaximoPersonId;
+//                var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
+//                var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null));
+//                var context = _contextLookuper.LookupContext();
+//                //if the user is not on XITC context, then we should pick just the costcenters directly bound to him (HAP-799)
+//                var locationsToUse = context.IsInModule(FunctionalRole.XItc)
+//                    ? result.GroupedLocations
+//                    : result.DirectGroupedLocations;
+//                var groupedLocation = locationsToUse.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
+//                if (groupedLocation == null) {
+//                    return null;
+//                }
+//                costCentersToUse = groupedLocation.CostCentersForQuery("glaccount");
+//            } else {
+//                
+//            }
 
             var dto = new SearchRequestDto();
             dto.AppendProjectionField(new ProjectionField("accountname", "accountname"));

@@ -2096,7 +2096,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
         <componentdisplayable id="updateasset">
           <association target="asset" dependantfields="fromlocation" label="Asset" labelfield="asset_.hlagdescription2" required="true"
 								  extraprojectionvalues="primaryuser_.personid,primaryuser_person_.hlagdisplayname,aucisowner_person_.hlagdisplayname,aucisowner_person_.personid,
-                  classification,location_.description,assetglaccount_.displaycostcenter,status,assetid,description,serialnum,item_.description,
+                  classification,location_.description,assetglaccount_.glaccount,assetglaccount_.displaycostcenter,status,assetid,description,serialnum,item_.description,
                   item_.itdmachtype,item_.itdmodel,installdate,assettag,assetnum,computername,location,assetspeccomment_.alnvalue,usage">
             <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=asset_.assetid"/>
             <dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
@@ -2648,7 +2648,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
           </section>
 
-          <section id="other" parameters="detaildescription= ">
+          <section id="other" parameters="detaildescription= " showexpression="@asset!=null">
             <reference id="costcenter" enableexpression="@buildingOriginal == null || @buildingOriginal == @building" readonly="false"/>
           </section>
           <section id="specification" showexpression="@asset!=null" resourcepath="/Content/Templates/crud/update_section.html" parameters="detaildescription=Specifications">

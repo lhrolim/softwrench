@@ -458,6 +458,7 @@
     <attribute name="required" type="string"></attribute>
     <attribute name="default" type="string"></attribute>
     <attribute name="showexpression" type="string"></attribute>
+    <attribute name="enableexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
 
     <attribute name="providerattribute" type="string"

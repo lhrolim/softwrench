@@ -314,6 +314,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 tasks.Add(Task.Factory.NewThread(c => {
                     Quartz.Util.LogicalThreadContext.SetData("context", c);
                     var associationOptions = _dynamicOptionFieldResolver.ResolveOptions(application, field, dataMap);
+                    if (associationOptionsDictionary.ContainsKey(field.AssociationKey)) {
+                        associationOptionsDictionary.Remove(field.AssociationKey);
+                    }
                     associationOptionsDictionary.Add(field.AssociationKey, new BaseAssociationUpdateResult(associationOptions));
                 }, ctx));
             }

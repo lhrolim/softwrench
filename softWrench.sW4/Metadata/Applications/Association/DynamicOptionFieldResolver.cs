@@ -23,6 +23,10 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             if (!FullSatisfied(optionField, dataMap)) {
                 return null;
             }
+            if (optionField.ShowExpression == "false") {
+                return null;
+            }
+
             var attribute = optionField.ProviderAttribute;
             attribute = attribute.Replace("#", "");
             attribute = attribute.Replace("_", "");

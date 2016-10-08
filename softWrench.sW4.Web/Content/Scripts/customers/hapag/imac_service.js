@@ -144,7 +144,7 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
             }
 
             var availablecostcenters = event.scope.associationOptions.costCentersByPrimaryUser;
-            if (schemaId.startsWith('install') || schemaId.startsWith('move')) {
+            if (schemaId.startsWith('install') || schemaId.startsWith('move') || schemaId.startsWith("update")) {
                 //if there´s an association, then, we set the value, and the label would be picked from the associationOptions list
                 //if the asset had a costcenter that is not one of the user´s costcentes, we need to remove it
                 if (checkCostCenterAvailability(availablecostcenters, costCenter, 'value')) {
