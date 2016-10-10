@@ -480,7 +480,7 @@ namespace softwrench.sw4.Hapag.Security {
             var results =
                 _maxDAO.FindByNativeQuery(
                     "select p.persongroup,description from PERSONGROUP p left join persongroupview v on p.PERSONGROUP = v.PERSONGROUP " +
-                    "where (p.persongroup  like {0} ) and v.PERSONID = {1}"
+                    "where (p.persongroup  like {0} ) and v.PERSONID = {1} and v.groupdefault = 1"
                         .Fmt(groupNameToQuery, "'" + personId + "'"));
             var list = results.Cast<IEnumerable<KeyValuePair<string, object>>>()
                 .Select(r => r.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase)).ToList();
