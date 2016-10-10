@@ -44,29 +44,25 @@ function ltEnabledLevel(currLevel, enabledLevel) {
 }
 
 function getContextLevel(context, relatedContexts) {
-
-    var methodLogLevel = sessionStorage["log_" + context];
-    if (methodLogLevel !== undefined) {
+    const methodLogLevel = sessionStorage[`log_${context}`];
+    if (methodLogLevel) {
         return methodLogLevel;
     }
     var minLevel = "none";
     if (relatedContexts) {
-        for (var i = 0; i < relatedContexts.length; i++) {
-            var relatedContext = relatedContexts[i];
-            var relatedContextLevel = sessionStorage["log_" + relatedContext];
-            if (relatedContextLevel !== undefined) {
-                if (ltEnabledLevel(relatedContextLevel, minLevel)) {
-                    minLevel = relatedContextLevel;
-                }
+        angular.forEach(relatedContexts, relatedContext => {
+            var relatedContextLevel = sessionStorage[`log_${relatedContext}`];
+            if (relatedContextLevel && ltEnabledLevel(relatedContextLevel, minLevel)) {
+                minLevel = relatedContextLevel;
             }
-        }
+        });
     }
 
-    var indexOf = context.indexOf("#");
+    const indexOf = context.indexOf("#");
     if (indexOf >= 0) {
-        var serviceName = context.substr(0, indexOf);
-        var serviceLogLevel = sessionStorage["log_" + serviceName];
-        if (serviceLogLevel !== undefined) {
+        const serviceName = context.substr(0, indexOf);
+        const serviceLogLevel = sessionStorage[`log_${serviceName}`];
+        if (serviceLogLevel) {
             return serviceLogLevel;
         }
     }
@@ -74,7 +70,7 @@ function getContextLevel(context, relatedContexts) {
 };
 
 function getMinLevel(globalLevel, contextLevel) {
-    if (contextLevel == null) {
+    if (!contextLevel) {
         return globalLevel;
     }
 
@@ -105,36 +101,37 @@ function enhanceAngularLog($log, $injector) {
    
     function enhanceLogging(loggingFunc, level, context, relatedContexts) {
         return function () {
-            var isEnabled = this.isLevelEnabled(level, context, relatedContexts);
+            const isEnabled = isLevelEnabled(level, context, relatedContexts);
             if (!isEnabled) {
                 return [];
             }
-            //var modifiedArguments = [].slice.call(arguments);
-            //modifiedArguments[0] = [moment().format("dddd hh:mm:ss:SSS a") + '::[' + context + ']> '] + modifiedArguments[0];
-            //add timestamp and context to array of arguments (inspect object using the bowser console)
-            var currentargs = [].slice.call(arguments);
-            var contextarg = ["[" + level.toUpperCase() + "] " + moment().format("dddd hh:mm:ss:SSS a") + '::[' + context + ']> '];
-            var modifiedArguments = contextarg.concat(currentargs);
+            const currentargs = [].slice.call(arguments);
+            const contextarg = [`[${level.toUpperCase()}] ${window.moment().format("dddd hh:mm:ss:SSS a")}::[${context}]> `];
+            const modifiedArguments = contextarg.concat(currentargs);
 
             loggingFunc.apply(null, modifiedArguments);
-            //if (localStorage.logs == undefined) {
-            //    localStorage.logs = "";
-            //}
-            //if (localStorage.logs.length > 10000) {
-            //    //clear to avoid exploding... todo --> send to server side
-            //    localStorage.logs = "";
-            //}
-            //localStorage.logs += modifiedArguments[0] + "\n";
+
             return modifiedArguments;
         };
     }
 
-    $log.get = function (context, relatedContexts) {
-        return this.getInstance(context, relatedContexts);
-    };
+    function globalLogLevel() {
+        const enabledLevel = sessionStorage["loglevel"];
+        return !enabledLevel
+            ? contextService.retrieveFromContext("defaultlevel") || "warn"
+            : enabledLevel;
+    }
 
+    function isLevelEnabled(level, context, relatedContexts) {
+        var enabledLevel = globalLogLevel();
 
-    $log.getInstance = function (context,relatedContexts) {
+        const contextLevel = getContextLevel(context, relatedContexts);
+        enabledLevel = getMinLevel(enabledLevel, contextLevel);
+
+        return !ltEnabledLevel(level, enabledLevel);
+    }
+
+    $log.getInstance = function (context, relatedContexts) {
         // getting around circular deps: $rootScope <- contextService <- $log <- $exceptionHandler <- $rootScope
         if (!contextService) contextService = $injector.get("contextService");
         return {
@@ -144,26 +141,21 @@ function enhanceAngularLog($log, $injector) {
             debug: enhanceLogging($log.debug, 'debug', context,relatedContexts, contextService),
             trace: enhanceLogging($log.debug, 'trace', context,relatedContexts, contextService),
             error: enhanceLogging($log.error, 'error', context,relatedContexts, contextService),
-            enableLogging: function (enable) {
+            enableLogging(enable) {
                 $log.enabledContexts[context] = enable;
             },
-            isLevelEnabled: function (level) {
+            isLevelEnabled(level) {
                 return isLevelEnabled(level, context, relatedContexts);
+            },
+            get globalLogLevel() {
+                return globalLogLevel();
             }
         };
     };
 
-    function isLevelEnabled(level, context, relatedContexts) {
-        var enabledLevel = sessionStorage.loglevel;
-        if (enabledLevel == undefined) {
-            enabledLevel = contextService.retrieveFromContext('defaultlevel') || "warn";
-        }
-
-        var contextLevel = getContextLevel(context, relatedContexts);
-        enabledLevel = getMinLevel(enabledLevel, contextLevel);
-
-        return !ltEnabledLevel(level, enabledLevel);
-    }
+    $log.get = function (context, relatedContexts) {
+        return this.getInstance(context, relatedContexts);
+    };
 
 };
 

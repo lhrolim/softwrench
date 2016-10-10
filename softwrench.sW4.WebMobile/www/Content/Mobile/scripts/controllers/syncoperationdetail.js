@@ -12,7 +12,7 @@
                 isLatestOperation: !$stateParams.id,
                 isSynching: false,
                 currentApplicationState: null,
-                applicationStateCollapsed: true,
+                applicationStateCollapsed: true
             }
 
 
@@ -36,7 +36,7 @@
             };
 
             var loadCurrentApplicationState = function () {
-                return applicationStateService.currentState().then(function (state) {
+                return applicationStateService.currentApplicationsState().then(function (state) {
                     $scope.data.currentApplicationState = state;
                     angular.forEach(state.applications, appState => {
                         const appMetadata = metadataModelService.getApplicationByName(appState.application);

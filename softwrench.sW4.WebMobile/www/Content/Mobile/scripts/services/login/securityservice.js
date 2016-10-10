@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, ionic, _) {
     "use strict";
 
-    function securityService($rootScope, $state, localStorageService, routeService, $http, $q, dao, $ionicHistory, cookieService) {
+    function securityService($rootScope, $state, localStorageService, routeService, $http, $q, dao, $ionicHistory, cookieService, $injector) {
 
         //#region Utils
 
@@ -32,7 +32,11 @@
             }
             delete user["Properties"];
         };
-        
+
+        const trackLogin = () => {
+            const tracking = $injector.get("trackingService");
+            tracking.trackStates("securityService#login", ["settings", "configs", "user", "device"], "User successfully logged in");
+        };
 
         /**
          * Authenticates the user locally initializing it's client-side session, persisting the authentication cookie
@@ -55,6 +59,7 @@
                 setUserProperties(user, user["Properties"]);
                 localStorageService.put(config.authkey, user);
                 $rootScope.$broadcast($event("login"), user, previous);
+                trackLogin();
                 return user;
             });
 
@@ -249,7 +254,8 @@
     }
     //#region Service registration
 
-    mobileServices.factory("securityService", ["$rootScope","$state", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", "cookieService", securityService]);
+    mobileServices.factory("securityService",
+        ["$rootScope", "$state", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", "cookieService", "$injector", securityService]);
 
     //#endregion
 

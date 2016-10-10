@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
@@ -38,16 +36,16 @@ namespace softwrench.sw4.offlineserver.services {
             var batch = new Batch {
                 Application = application,
                 RemoteId = remoteId,
-                Status = BatchStatus.SUBMITTING
+                Status = BatchStatus.SUBMITTING,
+                Items = ClientStateJsonConverter.GetBatchItems(batchContent)
             };
-            batch.Items = ClientStateJsonConverter.GetBatchItems(batchContent);
             var isSynchronous = batch.Items.Count <= minSize;
             var batchOptions = new BatchOptions {
-                    GenerateProblems = true,
-                    GenerateReport = false,
-                    SendEmail = false,
-                    Synchronous = isSynchronous
-                };
+                GenerateProblems = true,
+                GenerateReport = false,
+                SendEmail = false,
+                Synchronous = isSynchronous
+            };
 
             if (isSynchronous) {
                 return _batchItemSubmissionService.Submit(batch, batchOptions);
@@ -64,15 +62,15 @@ namespace softwrench.sw4.offlineserver.services {
         /// </summary>
         /// <param name="remoteIds"></param>
         /// <returns></returns>
-        public IList<Batch> GetBatchesByRemoteIds(IList<string> remoteIds) {
-            var batches = _swdbHibernateDAO.FindByQuery<Batch>(Batch.BatchesByRemoteId, remoteIds);
+        public async Task<IList<Batch>> GetBatchesByRemoteIds(IList<string> remoteIds) {
+            var batches = await _swdbHibernateDAO.FindByQueryAsync<Batch>(Batch.BatchesByRemoteId, remoteIds);
             FormatBatches(batches);
             return batches;
         }
 
-        private void FormatBatches(IList<Batch> batches) {
+        private void FormatBatches(IEnumerable<Batch> batches) {
             foreach (var batch in batches) {
-                ISet<BatchItem> items = batch.Items;
+                var items = batch.Items;
                 foreach (var item in items) {
                     var problem = item.Problem;
                     if (problem == null) {

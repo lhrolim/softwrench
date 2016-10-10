@@ -8,6 +8,7 @@ namespace softwrench.sw4.offlineserver.dto {
         public string OrgId { get; set; }
         public string SiteId { get; set; }
         public string PersonId { get; set; }
+        public string Email { get; set; }
         public long? UserTimezoneOffset { get; set; }
         public IDictionary<string, object> Properties { get; set; }
 
@@ -25,6 +26,7 @@ namespace softwrench.sw4.offlineserver.dto {
                 OrgId = user.OrgId;
                 SiteId = user.SiteId;
                 PersonId = user.MaximoPersonId;
+                Email = user.Email;
                 UserTimezoneOffset = user.TimezoneOffset;
                 Properties = user.GenericSyncProperties;
             }

@@ -38,7 +38,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MobileController));
 
-        private IContextLookuper _contextLookuper;
+        private readonly IContextLookuper _contextLookuper;
 
         private readonly SynchronizationManager _syncManager;
 
@@ -48,7 +48,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly MenuSecurityManager _menuManager;
 
-        readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
+        private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
@@ -127,8 +127,8 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
         [HttpGet]
-        public IList<Batch> BatchStatus([FromUri]IList<string> ids) {
-            return _offLineBatchService.GetBatchesByRemoteIds(ids);
+        public async Task<IList<Batch>> BatchStatus([FromUri]IList<string> ids) {
+            return await _offLineBatchService.GetBatchesByRemoteIds(ids);
         }
 
         #region Reporting

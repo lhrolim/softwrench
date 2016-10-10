@@ -2,7 +2,7 @@
     "use strict";
 
     function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
-        asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, swdbDAO, loadingService, $ionicPopup, crudConstants, entities, problemService) {
+        asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking) {
 
         //#region Utils
 
@@ -46,7 +46,7 @@
             // nothing to delete: resolve with batches immediately
             if (statements.length <= 0) return $q.when(batches);
             // resolve with batches if delete wass successful
-            return swdbDAO.executeQueries(statements).then(() => batches);
+            return dao.executeQueries(statements).then(() => batches);
         }
 
         /**
@@ -109,7 +109,7 @@
         //#region Public methods
 
         function hasDataToSync() {
-            return swdbDAO.countByQuery("DataEntry", "isDirty=1 and pending=0").then(count => count > 0);
+            return dao.countByQuery("DataEntry", "isDirty=1 and pending=0").then(count => count > 0);
         }
 
         /**
@@ -154,6 +154,7 @@
         function fullSync() {
             const log = $log.get("synchronizationFacade#fullSync", ["sync"]);
             log.info("init full synchronization process");
+            tracking.trackFullState("synchornizationFacace#fullSync pre-sync");
 
             const start = new Date().getTime();
             const dbapplications = metadataModelService.getMetadatas();
@@ -193,17 +194,23 @@
                                 return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
                             });
                     });
+                })
+                .finally(() => {
+                    tracking.trackFullState("synchornizationFacace#fullSync post-sync");
                 });
         }
 
         function syncItem(item) {
-            const log = $log.get("synchronizationFacade#fullSync", ["sync"]);
+            const log = $log.get("synchronizationFacade#syncItem", ["sync"]);
+            log.info("init quick sync process");
+            tracking.trackFullState("synchornizationFacace#syncItem pre-quicksync");
+
             const dbapplication = metadataModelService.getMetadatas().find(a => a.application === item.application);
             const start = new Date().getTime();
             loadingService.showDefault();
             // one Batch per application
             return batchService.createBatch(dbapplication, item)
-                    .then(batch => batchService.submitBatches([batch])
+                    .then(batch => batchService.submitBatches([batch]))
                     .then(batchResults => {
                         return handleDeletableDataEntries(batchResults)
                             .then(() => problemService.updateHasProblemToDataEntries(batchResults, item))
@@ -213,8 +220,10 @@
                                 return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
                             });
                     })
-                   .finally(loadingService.hide()));
-
+                   .finally(() => {
+                       loadingService.hide();
+                       tracking.trackFullState("synchornizationFacace#syncItem post-quicksync");
+                    });
         }
 
         /**
@@ -270,7 +279,7 @@
 
     //#region Service registration
     mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService",
-        "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", synchronizationFacade]);
+        "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", synchronizationFacade]);
     //#endregion
 
 })(mobileServices, angular, _);

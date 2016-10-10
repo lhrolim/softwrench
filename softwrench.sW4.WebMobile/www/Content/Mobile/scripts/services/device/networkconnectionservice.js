@@ -27,7 +27,7 @@
         //#endregion
 
         //#region Service instance
-        var service = {
+        const service = {
             isOnline: isOnline,
             isOffline: isOffline
         };

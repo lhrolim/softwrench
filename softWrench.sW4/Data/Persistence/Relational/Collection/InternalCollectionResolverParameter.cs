@@ -22,7 +22,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
         internal IEnumerable<AttributeHolder> EntitiesList { get { return ExternalParameters.ParentEntities; } }
 
-        internal ContextHolder Ctx { get; set; }
+        public ContextHolder Ctx { get; internal set; }
+
         internal IDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> Results { get; set; }
         public long? Rowstamp { get; set; }
 

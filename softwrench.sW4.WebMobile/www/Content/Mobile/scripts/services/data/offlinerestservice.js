@@ -7,7 +7,7 @@
             action =  action || "get";
             var params = parameters || {};
             return settingsService.getServerUrl().then(function(url) {
-                return url + "/api/generic/" + controller + "/" + action + "?" + $.param(params, true);
+                return `${url}/api/generic/${controller}/${action}?${$.param(params, true)}`;
             });
         }
         //#endregion
@@ -21,16 +21,16 @@
         }
         function get(controller, action, params) {
             return getActionUrl(controller, action, params).then(function (url) {
-                $log.getInstance("offlineRestService#get").info("invoking get on url", url);
+                $log.get("offlineRestService#get").info("invoking get on url", url);
                 return $http.get(url);
             });
         }
         //#endregion
 
         //#region Service Instance
-        var service = {
-            get: get,
-            post: post
+        const service = {
+            get,
+            post
         };
         return service;
         //#endregion

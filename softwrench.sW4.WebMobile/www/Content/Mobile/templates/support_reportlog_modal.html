@@ -1,0 +1,26 @@
+﻿<ion-modal-view>
+    <ion-header-bar class="bar-positive">
+        <h1 class="title">Log Reporting</h1>
+    </ion-header-bar>
+    <ion-content class="padding" has-header="true" has-bouncing="false">
+        <div class="list card responsive-container lg">
+            <div class="item item-divider">
+                Optional Email Data
+            </div>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Subject</span>
+                <input type="text" placeholder="Subject (optional)" ng-model="email.subject">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Message</span>
+                <textarea placeholder="Message (optional)" ng-model="email.message"></textarea>
+            </label>
+        </div>
+        <div class="responsive-container lg">
+            <button class="button button-block button-calm icon-left ion-email"
+                    ng-click="sendLogReport(email)">
+                Send Report
+            </button>
+        </div>
+    </ion-content>
+</ion-modal-view>

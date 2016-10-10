@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, angular, _) {
     "use strict";
 
-    function applicationStateService(dao, $q, entities, configurationService, $cordovaAppVersion) {
+    function applicationStateService(dao, $q, entities, configurationService, $cordovaAppVersion, settingsService, securityService, $cordovaDevice) {
 
         //#region Utils
 
@@ -51,6 +51,26 @@
                 });
         }
 
+        const stateResolver = {
+            settings() {
+                return settingsService.getSettings().then(s => _.pick(s, "serverurl"));
+            },
+            configs() {
+                return getAppConfig();
+            },
+            applications() {
+                return currentApplicationsState();
+            },
+            user() {
+                const user = securityService.currentFullUser();
+                return $q.when(user);
+            },
+            device() {
+                const device = _.pick($cordovaDevice.getDevice(), "platform", "version", "model");
+                return $q.when(device);
+            }
+        }
+
         //#endregion
 
         //#region Public methods
@@ -74,7 +94,7 @@
          * 
          * @returns Promised resolved with array of each application's states 
          */
-        function currentState() {
+        function currentApplicationsState() {
             return $q.all([topLevelApplicationState(), associationState()])
                 .spread((applications, associations) => ({ applications, associations }));
         }
@@ -95,12 +115,51 @@
             );
         }
 
+        /**
+         * Resolves the states of the app (e.g. logged user, settings, configs, application state, device info) 
+         * passed as parameter.
+         * 
+         * @param {Array<String>} states possible values are "settings"|"configs"|"user"|"device"|"applications"
+         * @returns {Promise<Object>} state 
+         */
+        function getStates(states) {
+            if (!angular.isArray(states) || states.length <= 0) return $q.when();
+            const promises = [];
+            angular.forEach(states, state => {
+                const resolver = stateResolver[state];
+                if (!resolver || !angular.isFunction(resolver)) return;
+                // state value indexed by it's name
+                const promise = resolver().then(result => ({ state, result }));
+                promises.push(promise);
+            });
+            if (promises.length <= 0) return $q.when();
+            return $q.all(promises).then(result => {
+                const fullState = {};
+                // build object { <state_name>: <state_value> }
+                angular.forEach(result, (value) => {
+                    fullState[value.state] = value.result;
+                });
+                return fullState;
+            });
+        }
+
+        /**
+         * Resolves all possible states of the app
+         * @see #getStates
+         * @returns {Promise<Object>} complete state
+         */
+        function getFullState() {
+            return getStates(Object.keys(stateResolver));
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
-            currentState,
-            getAppConfig
+            currentApplicationsState,
+            getAppConfig,
+            getStates,
+            getFullState
         };
         return service;
         //#endregion
@@ -108,7 +167,8 @@
 
     //#region Service registration
 
-    mobileServices.factory("applicationStateService", ["swdbDAO", "$q", "offlineEntities", "configurationService", "$cordovaAppVersion", applicationStateService]);
+    mobileServices.factory("applicationStateService",
+        ["swdbDAO", "$q", "offlineEntities", "configurationService", "$cordovaAppVersion", "settingsService", "securityService", "$cordovaDevice", applicationStateService]);
 
     //#endregion
 

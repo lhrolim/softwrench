@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Angular Decorator</Title>
+      <Author>Rodrigo Botti</Author>
+      <Description>Template for adding an Angular Decorator</Description>
+      <Shortcut>ngdecorator</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>module</ID>
+          <ToolTip>Replace with a module name variable.</ToolTip>
+          <Default>app</Default>
+        </Literal>
+        <Literal>
+          <ID>service</ID>
+          <ToolTip>Replace with the string name of the service you wish to decorate.</ToolTip>
+          <Default>serviceName</Default>
+        </Literal>
+        <Literal>
+          <ID>dependency</ID>
+          <ToolTip>Replace with a dependency for service.</ToolTip>
+          <Default>$window</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="JavaScript">
+        <![CDATA[
+(function (angular) {
+    "use strict";
+
+    angular.module("$module$").config(["$$provide", function ($$provide) {
+
+        $$provide.decorator("$service$", ["$$delegate", "$dependency$", function ($$delegate, $dependency$) {
+            //#region Utils
+
+            //#endregion
+
+            //#region Decorator
+            return $$delegate;
+            //#endregion
+        }]);
+
+    }]);
+
+})(angular);]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

@@ -17,11 +17,12 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
     "localStorageService", "menuModelService", "metadataModelService", "routeService",
     "crudContextService", "synchronizationNotificationService",
     "offlinePersitenceBootstrap", "offlineEntities", "configurationService", "$rootScope", "$q",
-    "$cordovaSplashscreen", "$timeout", "offlineCommandService", "$ionicScrollDelegate",
+    "$cordovaSplashscreen", "$timeout", "offlineCommandService", "$ionicScrollDelegate", "trackingService",
     function ($ionicPlatform, swdbDAO, $log, securityService, localStorageService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap,
-        entities, configService, $rootScope, $q, $cordovaSplashscreen, $timeout, offlineCommandService, $ionicScrollDelegate) {
+        entities, configService, $rootScope, $q, $cordovaSplashscreen, $timeout, offlineCommandService, $ionicScrollDelegate, trackingService) {
 
-            function initContext() {
+        function initContext() {
+                trackingService.enable();
                 return offlinePersitenceBootstrap.init().then(() => {
                     const menuPromise = menuModelService.initAndCacheFromDB();
                     const metadataPromise = metadataModelService.initAndCacheFromDB();
@@ -233,6 +234,16 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                         'main': {
                             templateUrl: 'Content/Mobile/templates/settings.html',
                             controller: 'SettingsController'
+                        }
+                    }
+                })
+                // support
+                .state("main.support", {
+                    url: "/support",
+                    views: {
+                        'main': {
+                            templateUrl: "Content/Mobile/templates/support.html",
+                            controller: "SupportController"
                         }
                     }
                 })

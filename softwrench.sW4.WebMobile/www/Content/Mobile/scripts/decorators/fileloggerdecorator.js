@@ -16,7 +16,7 @@
              * $roll config + internal state meta
              */
             const rollingLog = {
-                enabled: rollingLogFileConstants.logToFileEnabled,
+                enabled: fileConstants.fileEnabled,
                 configured: false,
                 started: false,
                 config: {
@@ -80,7 +80,7 @@
              * 
              * @param Function method a logger's logging method
              * @param String methodName logging method's name
-             * @param {} logger instance of a logger service
+             * @param {$log#get} logger instance of a logger service
              */
             function enhanceLoggingMethod(method, methodName, logger) {
                 // needs the method reference because if the method is retrieved by name at this point 
@@ -92,13 +92,14 @@
                     if (logger.isLevelEnabled(methodName) && !!logs && logs.length > 0) {
                         logToFile(methodName, logs);
                     }
+                    return logs;
                 }
             }
 
             /**
              * Enhances all of the logger's logging methods.
              * 
-             * @param {} logger instance of a logger service
+             * @param {$log#get} logger instance of a logger service
              */
             function enhanceLogger(logger) {
                 for (let method in logger) {

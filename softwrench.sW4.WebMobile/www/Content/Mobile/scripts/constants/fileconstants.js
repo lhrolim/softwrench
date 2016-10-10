@@ -8,7 +8,7 @@
     function getAppFileDirectory() {
         var dir = undefined;
         if (ionic.Platform.isAndroid()) {
-            dir = "externalApplicationStorageDirectory";
+            dir = "externalDataDirectory";
         } else if (ionic.Platform.isIOS()) {
             // TODO: test user accessibility
             dir = "dataDirectory";

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
@@ -21,6 +22,7 @@ using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
@@ -35,14 +37,16 @@ namespace softwrench.sw4.offlineserver.services {
         private readonly EntityRepository _repository;
         private readonly IContextLookuper _lookuper;
         private readonly IEventDispatcher _iEventDispatcher;
+        private readonly ISWDBHibernateDAO _swdbDAO;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SynchronizationManager));
 
-        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper, IEventDispatcher iEventDispatcher) {
+        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper, IEventDispatcher iEventDispatcher, ISWDBHibernateDAO swdbDAO) {
             _resolver = resolver;
             _repository = respository;
             _lookuper = lookuper;
             _iEventDispatcher = iEventDispatcher;
+            _swdbDAO = swdbDAO;
             Log.DebugFormat("init sync log");
         }
 
@@ -59,7 +63,27 @@ namespace softwrench.sw4.offlineserver.services {
                 await ResolveApplication(request, user, topLevelApp, result, rowstampMap);
             }
 
+            // add offline configs to the applications
+            var configResultData = await GetOfflineConfigs();
+            result.TopApplicationData.Add(configResultData);
+
             return result;
+        }
+
+        private async Task<SynchronizationApplicationResultData> GetOfflineConfigs() {
+            var configs = await _swdbDAO.FindByQueryAsync<PropertyDefinition>("from PropertyDefinition where FullKey like '/Offline/%'");
+            var datamaps = configs.Select(c => {
+                var fields = new Dictionary<string, object>() {
+                    { "fullKey", c.FullKey },
+                    { "stringValue" , c.StringValue},
+                    { "defaultValue" , c.DefaultValue}
+                };
+                return new DataMap("_configuration", fields);
+            }).ToList();
+
+            return new SynchronizationApplicationResultData("_configuration") {
+                InsertOrUpdateDataMaps = datamaps
+            };
         }
 
         public async Task<AssociationSynchronizationResultDto> GetAssociationData(InMemoryUser currentUser, AssociationSynchronizationRequestDto request, string applicationToFetch = null) {
@@ -146,7 +170,7 @@ namespace softwrench.sw4.offlineserver.services {
             Log.DebugFormat("SYNC:Finished handling top level app. Ellapsed {0}", LoggingUtil.MsDelta(watch));
 
             if (!appResultData.IsEmptyExceptDeletion) {
-                HandleCompositions(userAppMetadata, appResultData, result, rowstampMap);
+                await HandleCompositions(userAppMetadata, appResultData, result, rowstampMap);
             }
 
         }
@@ -164,7 +188,7 @@ namespace softwrench.sw4.offlineserver.services {
         /// <param name="appResultData"></param>
         /// <param name="result"></param>
         /// <param name="rowstampMap"></param>
-        private async void HandleCompositions(ApplicationMetadata topLevelApp, SynchronizationApplicationResultData appResultData, SynchronizationResultDto result, JObject rowstampMap) {
+        private async Task HandleCompositions(ApplicationMetadata topLevelApp, SynchronizationApplicationResultData appResultData, SynchronizationResultDto result, JObject rowstampMap) {
             var watch = Stopwatch.StartNew();
 
             var compositionMap = ClientStateJsonConverter.GetCompositionRowstampsDict(rowstampMap);

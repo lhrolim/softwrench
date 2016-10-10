@@ -12,13 +12,14 @@
     var securityService, $rootScope;
 
     beforeEach(module("softwrench"));
-    beforeEach(inject((_securityService_, _localStorageService_, _cookieService_, _$rootScope_, _$q_) => {
+    beforeEach(inject((_securityService_, _localStorageService_, _cookieService_, _$rootScope_, _$q_, _trackingService_) => {
         securityService = _securityService_;
         $rootScope = _$rootScope_;
 
         spyOn(_localStorageService_, "put").and.callFake((key, value, options) => mocked.storage[key] = value);
         spyOn(_localStorageService_, "get").and.callFake(key => mocked.storage[key]);
         spyOn(_cookieService_, "persistCookie").and.callFake(() => _$q_.when());
+        spyOn(_trackingService_, "trackStates").and.returnValue(null);
     }));
 
     it("Testing local login functions", done => {

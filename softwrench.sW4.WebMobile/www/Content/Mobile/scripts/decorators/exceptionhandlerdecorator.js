@@ -5,26 +5,23 @@
 
         $provide.decorator("$exceptionHandler", ["$delegate", "$injector", "fileConstants", "rollingLogFileConstants", function ($delegate, $injector, fileConstants, rollingLogFileConstants) {
             
-            var swAlertPopup, $log, logger, contextService;
+            var swAlertPopup, $log, logger, contextService, supportService;
 
-            function lazyInstance(instance, name, factory, getter) {
-                factory = factory || $injector;
-                getter = getter || "get";
-                if (!instance) instance = factory[getter](name);
+            function lazyInstance(instance, name, factory = $injector, getter = "get") {
+                if (!instance) {
+                    instance = factory[getter](name);
+                }
                 return instance;
             }
 
             function logFilePath() {
-                var path = cordova.file[fileConstants.appDirectory];
-                if (!path.endsWith("/")) {
-                    path += "/";
-                }
-                path += rollingLogFileConstants.logFileName;
-                return path;
+                const directory = cordova.file[fileConstants.appDirectory];
+                const fileName = rollingLogFileConstants.logFileName;
+                return directory + fileName;
             }
 
             function shouldAlertExceptionLogged(exception) {
-                var message = angular.isString(exception) ? exception : exception.message;
+                const message = angular.isString(exception) ? exception : exception.message; 
                 // only considered a worthwhile exception if has a message with more than 10 characters
                 return !!message && message.length >= 10;
             }
@@ -52,7 +49,9 @@
                 // default behavior (from angular.js source): $log.error.apply($log, arguments);
                 logger.error.apply(logger, arguments);
                 // alerting log file location for support
-                if (shouldAlertExceptionLogged(exception)) alertLogLocation();
+                // if (shouldAlertExceptionLogged(exception)) alertLogLocation();
+                supportService = lazyInstance(supportService, "supportService");
+                supportService.requestLogReporting({ subject:  "Unexpected Error" });
             };
 
         }]);
