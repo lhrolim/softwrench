@@ -42,7 +42,9 @@ namespace cts.commons.persistence {
                 using (var transaction = await session.BeginTransactionAsync()) {
                     // adding the saved items to a new collection 
                     // because they can't replace the original's in an iteration 
-                    result.AddRange(await Task.WhenAll(items.Select(item => DoSave(item, session))));
+                    foreach (var item in items) {
+                        result.Add(await DoSave(item, session));
+                    }
                     await transaction.CommitAsync();
                 }
             }
@@ -131,7 +133,7 @@ namespace cts.commons.persistence {
 
 
         public T FindSingleByQuery<T>(string queryst, params object[] parameters) {
-            return AsyncHelper.RunSync(() =>FindSingleByQueryAsync<T>(queryst, parameters));
+            return AsyncHelper.RunSync(() => FindSingleByQueryAsync<T>(queryst, parameters));
         }
 
         public async Task<T> FindSingleByQueryAsync<T>(string queryst, params object[] parameters) {
@@ -145,7 +147,7 @@ namespace cts.commons.persistence {
 
 
         public IList<T> FindByQuery<T>(string queryst, params object[] parameters) where T : class {
-            return AsyncHelper.RunSync(()=>FindByQueryAsync<T>(queryst, parameters));
+            return AsyncHelper.RunSync(() => FindByQueryAsync<T>(queryst, parameters));
         }
 
         public async Task<IList<T>> FindByQueryAsync<T>(string queryst, params object[] parameters) where T : class {
