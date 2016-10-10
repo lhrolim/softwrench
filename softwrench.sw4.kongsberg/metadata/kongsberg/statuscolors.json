@@ -2,7 +2,6 @@ default: {
   new: green,
   wappr: orange,
   closed: green,
-	draft: white,
   queued: yellow,
   pending: yellow,
   inprog: orange,

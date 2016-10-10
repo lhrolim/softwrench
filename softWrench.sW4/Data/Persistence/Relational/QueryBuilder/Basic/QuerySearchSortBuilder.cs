@@ -18,7 +18,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
 
         public static string BuildSearchSort(EntityMetadata entityMetadata, SearchRequestDto dto) {
             var searchSort = dto.SearchSort;
-            if (string.IsNullOrWhiteSpace(searchSort) && (dto.MultiSearchSort == null || dto.MultiSearchSort.Count == 0)) {
+            //third condition due to http://stackoverflow.com/questions/39559858/mvc-4-converting-to-one-element-list-with-null
+            if (string.IsNullOrWhiteSpace(searchSort) && (dto.MultiSearchSort == null || dto.MultiSearchSort.Count == 0 || dto.MultiSearchSort.All(a => a == null))) {
                 return string.Format(" order by {1} desc", entityMetadata.Name, entityMetadata.Schema.UserIdAttribute.Name);
             }
 
@@ -34,29 +35,28 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
 
                 return builder.Length > 0 ? string.Format(" order by {0}", builder.ToString().TrimEnd(',', ' ')) : string.Empty;
 
-            } else {
-                var suffix = dto.SearchAscending ? " asc " : " desc ";
-                if (searchSort.EndsWith("asc") || searchSort.EndsWith("desc")) {
-                    suffix = "";
-                }
+            }
+            var suffix = dto.SearchAscending ? " asc " : " desc ";
+            if (searchSort.EndsWith("asc") || searchSort.EndsWith("desc")) {
+                suffix = "";
+            }
 
-                var attrs = entityMetadata.Attributes(EntityMetadata.AttributesMode.NoCollections);
-                var attribute = attrs.FirstOrDefault(f => f.Name.Equals(dto.SearchSort.Trim(), StringComparison.CurrentCultureIgnoreCase));
+            var attrs = entityMetadata.Attributes(EntityMetadata.AttributesMode.NoCollections);
+            var attribute = attrs.FirstOrDefault(f => f.Name.Equals(dto.SearchSort.Trim(), StringComparison.CurrentCultureIgnoreCase));
 
-                if (attribute != null && attribute.Query != null) {
-                    return GetQuerySortBy(entityMetadata, attribute, suffix);
-                }
+            if (attribute != null && attribute.Query != null) {
+                return GetQuerySortBy(entityMetadata, attribute, suffix);
+            }
 
-                if (!searchSort.Contains(".")) {
-                    //                if (!dto.ExpressionSort) {
-                    //                    return String.Format(" order by {0}.{1} {2}", entityMetadata.Name, searchSort, suffix);
-                    //                }
-                    return string.Format(" order by {0} {1}", searchSort, suffix);
-                }
-
-
+            if (!searchSort.Contains(".")) {
+                //                if (!dto.ExpressionSort) {
+                //                    return String.Format(" order by {0}.{1} {2}", entityMetadata.Name, searchSort, suffix);
+                //                }
                 return string.Format(" order by {0} {1}", searchSort, suffix);
             }
+
+
+            return string.Format(" order by {0} {1}", searchSort, suffix);
         }
 
         private static string GetQuerySortBy(EntityMetadata entityMetadata, EntityAttribute attribute, string suffix) {

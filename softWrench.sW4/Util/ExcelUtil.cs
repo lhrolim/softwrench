@@ -243,7 +243,7 @@ namespace softWrench.sW4.Util {
                     // add new datatype for cell
                     new OpenXmlAttribute("t", null, "str"),
                     // add header style
-                    new OpenXmlAttribute("s", null, "8")
+                    new OpenXmlAttribute("s", null, "2")
                 };
 
                 writer.WriteStartElement(new Cell(), xmlAttributes);
@@ -318,9 +318,12 @@ namespace softWrench.sW4.Util {
             stylesPart.Stylesheet.Fills = new Fills();
             stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.None } }); // required, reserved by Excel
             stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.Gray125 } }); // required, reserved by Excel
+            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = createColor("d8d8d8") });
+            _cellStyleDictionary.Add("header", "2");
 
-            var i = 2;
-            foreach(var kvp in colors) {
+            var i = 3;
+            foreach (var kvp in colors)
+            {
                 var fill = createColor(kvp.Value.StartsWith("#") ? kvp.Value.Substring(1) : kvp.Value);
                 stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = fill });
 
@@ -328,7 +331,7 @@ namespace softWrench.sW4.Util {
 
                 i++;
             }
-            
+
             stylesPart.Stylesheet.Fills.Count = Convert.ToUInt32(i + 2);
         }
 
