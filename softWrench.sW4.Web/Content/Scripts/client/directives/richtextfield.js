@@ -105,7 +105,7 @@
                 };
 
                 interval = $interval(() => {
-                    log.debug("loop to check tinymce's editor is in the screen");
+                    log.trace("loop to check tinymce's editor is in the screen");
                     const tinyMceFrame = element[0].querySelector("iframe");
                     if (!tinyMceFrame) {
                         log.debug("tinymce's iframe not yet present. skipping");
