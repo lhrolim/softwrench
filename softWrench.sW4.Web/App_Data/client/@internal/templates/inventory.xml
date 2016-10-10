@@ -694,7 +694,7 @@
             <renderer type="default" params="width=10%" />
           </field>
           <field attribute="actualdate" label="Transfer Date">
-            <renderer type="datetime" params="width=12%;format=MM/dd/yyyy"/>
+            <renderer type="datetime" params="width=12%;format=MM/dd/yyyy HH:mm:ss;"/>
           </field>
           <properties>
             <property key="list.click.schema" value="detail"/>
