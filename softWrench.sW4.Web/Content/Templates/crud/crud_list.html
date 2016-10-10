@@ -129,7 +129,7 @@
         <!--build responsive css rules based on metadata-->
         <style column-widths schema="schema"></style>
         <div class="scroll-helper"></div>
-        <table class="table table-hover hidden-phone fixedtable listgrid-table" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" id="listgrid">
+        <table class="table table-hover hidden-phone fixedtable listgrid-table" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" id="listgrid" ng-class="{'nowrap' : schema.properties['list.nowrap']}">
             <thead id="listgridthread" class="listgrid-thead">
                 <tr class="header-row">
                     <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'" class="select-multiple">

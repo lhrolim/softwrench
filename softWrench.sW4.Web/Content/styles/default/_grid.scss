@@ -296,6 +296,18 @@
         }
     }
 
+    &.nowrap {
+        td {
+            white-space: nowrap;
+
+            .cell-wrapper {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                min-width: 50px;
+            }
+        }
+    }
+
     tr.batchadd {
         border-bottom: 2px solid #ddd;
 

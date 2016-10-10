@@ -181,6 +181,8 @@ function getCSSrule(columnIndex, columnClass, columnWidth, schema) {
         //-1 hide this column, else set width and show
         if (columnWidth === -1) {
             properties = '';
+        } else if (typeof columnWidth === 'string' && columnWidth.indexOf('px') > 0) {
+            properties = 'width:' + columnWidth;
         } else {
             properties = 'width:' + columnWidth + '%;';
         }
@@ -192,20 +194,33 @@ function getCSSrule(columnIndex, columnClass, columnWidth, schema) {
 window.getCSSrule = getCSSrule;
 
 function buildCSSrule(columnIndex, columnClass, properties, schema) {
-    return buildCSSselector(columnIndex, columnClass, 'th', schema) + ',' + buildCSSselector(columnIndex, columnClass, 'td', schema) + '{' + properties + '}';
+    if (!schema.properties['list.nowrap']) {
+        return buildCSSselector(columnIndex, columnClass, 'th', schema) + ',' + buildCSSselector(columnIndex, columnClass, 'td', schema) + '{' + properties + '}';
+    } else {
+        if (properties.indexOf('px') > 0) {
+            return buildCSSselector(columnIndex, columnClass, 'th', schema) + ',' + buildCSSselector(columnIndex, columnClass, 'td', schema, true) + '{' + properties + '}';
+        }
+    }
 }
 
 window.buildCSSrule = buildCSSrule;
 
-function buildCSSselector(columnIndex, columnClass, element, schema) {
-    var gridtype = getGridType(schema);
+function buildCSSselector(columnIndex, columnClass, element, schema, targetWrapper) {
+    var gridtype = getGridType(schema),
+        selector;
 
     //if css class found, build selector using class, else use nth-child as a fallback
     if (columnClass) {
-        return '#' + gridtype + '[data-application="' + schema.applicationName + '"][data-schema="' + schema.schemaId + '"] ' + element + '.' + columnClass;
+        selector = '#' + gridtype + '[data-application="' + schema.applicationName + '"][data-schema="' + schema.schemaId + '"] ' + element + '.' + columnClass;
     } else {
-        return '#' + gridtype + '[data-application="' + schema.applicationName + '"][data-schema="' + schema.schemaId + '"] ' + element + ':nth-child(' + columnIndex + ')';
+        selector = '#' + gridtype + '[data-application="' + schema.applicationName + '"][data-schema="' + schema.schemaId + '"] ' + element + ':nth-child(' + columnIndex + ')';
     }
+
+    if (targetWrapper) {
+        selector += ' .cell-wrapper';
+    }
+
+    return selector;
 }
 
 window.buildCSSselector = buildCSSselector;
@@ -243,6 +258,10 @@ function getGridType(schema) {
 window.getGridType = getGridType;
 
 function removePercent(value) {
+    if (typeof value === 'string' && value.indexOf('px') > 0) {
+        return value;
+    }
+
     if (value) {
         var size = parseInt(value.replace('%', ''));
 
