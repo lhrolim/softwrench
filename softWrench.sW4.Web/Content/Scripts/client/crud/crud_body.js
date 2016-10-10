@@ -665,7 +665,7 @@
 
                                 // not necessary to update the complete datamap after a composition save
                                 if (!parameters.dispatcherComposition && (responseDataMap.type === null || responseDataMap.type !== "UnboundedDatamap")) {
-                                    $scope.datamap = responseDataMap;
+                                    angular.extend($scope.datamap, responseDataMap);
                                 }
                             }
 

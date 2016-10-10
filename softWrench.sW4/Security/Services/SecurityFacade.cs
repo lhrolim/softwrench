@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
@@ -203,7 +204,7 @@ namespace softWrench.sW4.Security.Services {
                 return InMemoryUser.TestInstance("test");
             }
 
-            if ("true".Equals(LogicalThreadContext.GetData<string>("executinglogin"))) {
+            if ("true".Equals(CallContext.LogicalGetData("executinglogin"))) {
                 //in the middle of the logging in process
                 return null;
             }
@@ -229,7 +230,7 @@ namespace softWrench.sW4.Security.Services {
                 throw UnauthorizedException.UserNotFound(currLogin);
             }
             var fullUser = new User();
-            LogicalThreadContext.SetData("executinglogin", "true");
+            CallContext.LogicalSetData("executinglogin", "true");
             if (!swUser.Systemuser && swUser.MaximoPersonId != null) {
                 //TODO: Async this method
                 fullUser = AsyncHelper.RunSync(()=>_userSyncManager.GetUserFromMaximoBySwUser(swUser));
@@ -246,7 +247,7 @@ namespace softWrench.sW4.Security.Services {
                 timezone = userData["userTimezoneOffset"] as string;
             }
             UserFound(fullUser, timezone);
-            LogicalThreadContext.FreeNamedDataSlot("executinglogin");
+            CallContext.FreeNamedDataSlot("executinglogin");
             var currentUser = Users[currLogin];
             if (currentUser == null) {
                 throw UnauthorizedException.NotAuthenticated(currLogin);

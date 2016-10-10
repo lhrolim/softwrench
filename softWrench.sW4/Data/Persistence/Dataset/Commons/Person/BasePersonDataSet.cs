@@ -184,7 +184,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             var user = PopulateSwdbUser(application, json, id, operation);
             var passwordString = HandlePassword(json, user);
-            user = _userManager.SaveUser(user,false);
 
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
@@ -202,6 +201,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             // Upate the in memory user if the change is for the currently logged in user
             var currentUser = SecurityFacade.CurrentUser();
+            user = _userManager.SaveUser(user, false);
             if (user.UserName.EqualsIc(currentUser.Login) && user.Id != null) {
                 //TODO: Async
                 var fullUser = AsyncHelper.RunSync(()=>_securityFacade.FetchUser(user.Id.Value));
