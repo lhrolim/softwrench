@@ -252,6 +252,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 };
             }
             user.UserPreferences.Signature = signature;
+            user.SiteId = json.StringValue("locationsite") ?? user.SiteId;
+            user.OrgId = json.StringValue("locationorg") ?? user.SiteId;
             var screenSecurityGroups = LoadProfiles(json);
 
             var validSecurityGroupOperation = ValidateSecurityGroups(application.Schema.SchemaId, dbUser, screenSecurityGroups);
