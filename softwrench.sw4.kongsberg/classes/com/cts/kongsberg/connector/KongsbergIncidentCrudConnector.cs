@@ -1,13 +1,8 @@
-﻿using System;
-using cts.commons.simpleinjector;
-using softwrench.sw4.api.classes.email;
+﻿using softwrench.sw4.api.classes.email;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
-using softWrench.sW4.Email;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
@@ -19,11 +14,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
             var sr = maximoTemplateData.IntegrationObject;
             var user = SecurityFacade.CurrentUser();
 
-            if (w.GetRealValue(incident, "STATUS").Equals("INPROG")) {
-                w.SetValueIfNull(incident, "ACTUALSTART", DateTime.Now.FromServerToRightKind());
-            } else if (w.GetRealValue(incident, "STATUS").Equals("RESOLVED")) {
-                w.SetValue(incident, "ACTUALFINISH", DateTime.Now.FromServerToRightKind());
-            }
+            HandleActualDates(sr);
 
             // TODO: Temp fix for getting change by to update with the userid. 
             // This workaround required trigger in the Maximo DB and custom attribute "SWCHANGEBY" in ticket

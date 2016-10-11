@@ -2,7 +2,6 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
-using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using System;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
@@ -11,9 +10,10 @@ using log4net;
 using softwrench.sw4.problem.classes;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Rest;
-using softWrench.sW4.Util;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
+using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
@@ -44,18 +44,8 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;
 
-            var statusValue = w.GetRealValue(sr, "STATUS");
-            if (statusValue == null) {
-                base.BeforeUpdate(maximoTemplateData);
-                return;
-            }
-
-
-            if (statusValue.Equals("INPROG")) {
-                w.SetValueIfNull(sr, "ACTUALSTART", DateTime.Now.FromServerToRightKind());
-            } else if (statusValue.Equals("RESOLVED")) {
-                w.SetValueIfNull(sr, "ACTUALFINISH", DateTime.Now.FromServerToRightKind());
-            } else if (statusValue.Equals("CLOSED")) {
+            var statusValue = HandleActualDates(sr);
+            if (statusValue != null && statusValue.Equals("CLOSED") && w.GetRealValue(sr, "ITDCLOSEDATE") == null) {
                 w.SetValue(sr, "ITDCLOSEDATE", DateTime.Now.FromServerToRightKind());
             }
 

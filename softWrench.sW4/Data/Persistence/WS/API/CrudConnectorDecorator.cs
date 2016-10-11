@@ -1,9 +1,12 @@
-﻿using softWrench.sW4.Data.Persistence.Engine;
+﻿using System;
+using softWrench.sW4.Data.Persistence.Engine;
 using cts.commons.simpleinjector;
 using WcfSamples.DynamicProxy;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Util;
+using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.API {
     public abstract class CrudConnectorDecorator : IMaximoCrudConnector {
@@ -33,7 +36,22 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         public virtual void PopulateIntegrationObject(MaximoOperationExecutionContext maximoTemplateData) {
             RealCrudConnector.PopulateIntegrationObject(maximoTemplateData);
         }
-        
+
+        public virtual object HandleActualDates(object entity) {
+            var statusValue = w.GetRealValue(entity, "STATUS");
+            if (statusValue == null) {
+                return null;
+            }
+
+            if (statusValue.Equals("INPROG") && w.GetRealValue(entity, "ACTUALSTART") == null) {
+                w.SetValueIfNull(entity, "ACTUALSTART", DateTime.Now.FromServerToRightKind());
+            } else if (statusValue.Equals("RESOLVED") && w.GetRealValue(entity, "ACTUALFINISH") == null) {
+                w.SetValue(entity, "ACTUALFINISH", DateTime.Now.FromServerToRightKind());
+            }
+
+            return statusValue;
+        }
+
         #region Create
         public virtual void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             RealCrudConnector.BeforeCreation(maximoTemplateData);
