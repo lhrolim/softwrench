@@ -239,6 +239,8 @@
           <field attribute="invuseline_.fromstoreloc" default="@storeloc" hidden="true"/>
           <field attribute="mode" label="Mode" qualifier="batchselector" default="true" hidden="true"/>
 
+          <!--#region firstline-->
+
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
             <association label="Site" target="siteid" labelfield="site_.description"
@@ -255,7 +257,7 @@
               <renderer type="default" />
             </field>
           </section>
-
+          <!--#endregion-->
 
           <composition inline="true" relationship="#batchitem" label="Transfers" detailschema="transferdetail" showexpression="@itemnum!=null">
             <collectionproperties listschema="transferline" autocommit="false"/>

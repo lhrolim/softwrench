@@ -6,11 +6,16 @@
 
     function filterModelService(searchService, userService) {
 
-
-
-        var getFilterText = function (filter, searchData, operator) {
-            var attribute = filter.attribute;
-            var searchText = searchData[attribute];
+        /**
+         * Returns the text to display on the filters given the choosen operator 
+         * @param {} filter 
+         * @param {} searchData 
+         * @param {} operator 
+         * @returns {} 
+         */
+        const getFilterText = function (filter, searchData, operator) {
+            const attribute = filter.attribute;
+            var searchText = searchData ? searchData[attribute] : '';
             var prefix = operator.title;
 
             if (operator.id === 'CUSTOM') {
@@ -38,30 +43,30 @@
             }
 
             return prefix + '(' + searchText + ')';
-        }
+        };
 
         function doUpdateStore(application, schemaId, attribute, newValue) {
-            var key = "filter:" + application + ":" + schemaId + ":" + attribute;
+            const key = "filter:" + application + ":" + schemaId + ":" + attribute;
             localStorage[key] = JSON.stringify(newValue);
             return newValue;
         }
 
 
         function lookupRecentlyUsed(application, schemaId, attribute) {
-            var key = "filter:" + application + ":" + schemaId + ":" + attribute;
-            var stored = localStorage[key];
+            const key = "filter:" + application + ":" + schemaId + ":" + attribute;
+            const stored = localStorage[key];
             if (!stored) {
                 return [];
             }
             return JSON.parse(stored);
         }
 
-        var deleteFromRecentlyUsed = function (schema, attribute, item) {
-            var application = schema.applicationName;
-            var schemaId = schema.schemaId;
-            var stored = this.lookupRecentlyUsed(application, schemaId, attribute);
+        const deleteFromRecentlyUsed = function (schema, attribute, item) {
+            const application = schema.applicationName;
+            const schemaId = schema.schemaId;
+            const stored = this.lookupRecentlyUsed(application, schemaId, attribute);
             var idx = -1;
-            for (var i = 0; i < stored.length; i++) {
+            for (let i = 0; i < stored.length; i++) {
                 if (stored[i].value === item.value) {
                     idx = i;
                     break;
@@ -72,11 +77,10 @@
             }
             return doUpdateStore(application, schemaId, attribute, stored);
 
-        }
-
-        var updateRecentlyUsed = function (schema, attribute, itemArray) {
-            var application = schema.applicationName;
-            var schemaId = schema.schemaId;
+        };
+        const updateRecentlyUsed = function (schema, attribute, itemArray) {
+            const application = schema.applicationName;
+            const schemaId = schema.schemaId;
             var stored = this.lookupRecentlyUsed(application, schemaId, attribute);
             if (itemArray.length > 10) {
                 stored = itemArray.slice(0, 9);
@@ -89,7 +93,7 @@
 
                     if (stored.some(function (el) {
                         //avoid duplications, 
-                       return el.value === item.value;
+                        return el.value === item.value;
                     })) {
                         return;
                     }
@@ -102,28 +106,26 @@
                 });
             }
             return doUpdateStore(application, schemaId, attribute, stored);
-        }
-
-        var buildSelectedItemsArray = function (availableOptions, selectedOptions) {
-            var result = [];
-            for (var i = 0; i < availableOptions.length; i++) {
-                var item = availableOptions[i];
+        };
+        const buildSelectedItemsArray = function (availableOptions, selectedOptions) {
+            const result = [];
+            for (let i = 0; i < availableOptions.length; i++) {
+                const item = availableOptions[i];
                 if (selectedOptions.hasOwnProperty(item.value) && selectedOptions[item.value] === 1) {
                     result.push(item);
                 }
             }
             return result;
-        }
-
-        var buildSearchValueFromOptions = function (selectedItems) {
+        };
+        const buildSearchValueFromOptions = function (selectedItems) {
             if (selectedItems.length === 0) {
                 return null;
             }
             var buffer = "";
             var hasBlank = false;
             var hasAnyNonBlank = false;
-            for (var i = 0; i < selectedItems.length; i++) {
-                var item = selectedItems[i];
+            for (let i = 0; i < selectedItems.length; i++) {
+                const item = selectedItems[i];
                 if (item.value === "nullor:") {
                     hasBlank = true;
                     continue;
@@ -138,26 +140,23 @@
             return hasAnyNonBlank ? buffer.substring(0, buffer.length - 1) : buffer;
 
         };
-
-        var parseOptions = function(searchData) {
-            var options = [];
+        const parseOptions = function(searchData) {
+            const options = [];
             if (searchData.startsWith("nullor:")) {
                 options.push("nullor:");
                 searchData = searchData.substring(7);
             }
             return options.concat(searchData.split(","));
-        }
-
-        var service = {
-            lookupRecentlyUsed: lookupRecentlyUsed,
-            updateRecentlyUsed: updateRecentlyUsed,
-            deleteFromRecentlyUsed: deleteFromRecentlyUsed,
-            buildSearchValueFromOptions: buildSearchValueFromOptions,
-            getFilterText: getFilterText,
-            buildSelectedItemsArray: buildSelectedItemsArray,
-            parseOptions: parseOptions
         };
-
+        const service = {
+            lookupRecentlyUsed,
+            updateRecentlyUsed,
+            deleteFromRecentlyUsed,
+            buildSearchValueFromOptions,
+            getFilterText,
+            buildSelectedItemsArray,
+            parseOptions
+        };
         return service;
     }
 

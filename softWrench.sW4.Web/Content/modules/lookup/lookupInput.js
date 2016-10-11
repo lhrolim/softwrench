@@ -25,7 +25,10 @@
 
                 link: function (scope, element, attrs) {
 
-                    scope.lookupObj = {};
+                    scope.lookupObj = {
+                        searchData: {},
+                        searchOperator: {}
+                    };
                     scope.vm = {
                         isSearching: false
                     };
@@ -122,7 +125,7 @@
                     scope.showLookupModal = function (text) {
                         scope.loadModalWrappers = true;
                         const fieldMetadata = scope.fieldMetadata;
-                        
+
                         if (fieldMetadata.rendererType === "modal") {
                             this.showCustomModal(fieldMetadata, scope.schema, scope.datamap);
                             return;

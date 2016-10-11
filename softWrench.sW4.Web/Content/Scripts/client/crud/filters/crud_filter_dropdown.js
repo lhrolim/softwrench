@@ -1,4 +1,5 @@
-﻿(function (angular, BaseController, BaseList, $) {
+﻿//Directive that render the filters on top of the columns
+(function (angular, BaseController, BaseList, $) {
     "use strict";
 
     angular.module("sw_layout")

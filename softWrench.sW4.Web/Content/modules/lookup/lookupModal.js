@@ -18,10 +18,11 @@
                     if (!scope.datamap) {
                         scope.datamap = {};
                     }
+                    scope.name = "lookupmodalWrapper";
 
                     element.append(
                     "<lookup-modal lookup-obj='lookupObj'" +
-                        "schema='schema' datamap='datamap'>" +
+                        "schema='schema' datamap='datamap' >" +
                     "</lookup-modal>"
                     );
 
@@ -44,8 +45,13 @@
             scope: {
                 lookupObj: '=',
                 schema: '=',
-                datamap: '='
+                datamap: '=',
             },
+
+            link: function (scope, element, attrs) {
+                scope.name = "lookupmodal";
+            },
+
 
             controller: function ($injector, $scope, $http, $element, searchService, i18NService, associationService,
                                   formatService, expressionService, focusService, contextService, crudContextHolderService) {
@@ -61,7 +67,7 @@
                     $scope.lookupObj.quickSearchDTO = {
                         quickSearchData: $scope.lookupsearchdata
                     }
-                   
+
                     $scope.searchObj = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, null, $scope.searchTemplate);
                     $scope.searchObj.addPreSelectedFilters = false;
 
@@ -95,7 +101,7 @@
                     modalPaginationData.paginationOptions = associationResult.paginationOptions || [10, 30, 100];
                 };
 
-                $scope.filterForColumn = function(column) {
+                $scope.filterForColumn = function (column) {
                     return $scope.lookupObj.schema.schemaFilters.filters.find(function (filter) {
                         return filter.attribute === column.attribute;
                     });
@@ -107,7 +113,7 @@
                     $scope.lookupModalSearch(1);
                 };
 
-                $scope.checkboxIconClass = function(value) {
+                $scope.checkboxIconClass = function (value) {
                     return (value === 1 || value === true || "yes".equalsIc(value)) ? "fa-check-square-o" : "fa-square-o";
                 }
 
@@ -167,7 +173,7 @@
                     associationService.updateUnderlyingAssociationObject(fieldMetadata, option, $scope);
                     $element.modal('hide');
                 };
-                
+
                 $element.on('hide.bs.modal', function (e) {
                     $scope.lookupObj.quickSearchDTO = null;
                     $('body').removeClass('modal-open');
@@ -194,8 +200,8 @@
                         $scope.datamap = $scope.lookupObj.item;
                     }
 
-                    $scope.searchData = $scope.lookupObj.searchData;
-                    $scope.searchOperator = $scope.lookupObj.searchOperator;
+                    $scope.searchData = $scope.lookupObj.searchData || {};
+                    $scope.searchOperator = $scope.lookupObj.searchOperator || {};
                     $scope.modalCanceled = false;
                     $scope.selectedOption = null;
                     $scope.$digest();

@@ -561,12 +561,15 @@
             return result;
         };
 
-
+        /**
+         * 
+         * @returns list of commands particular to this composition
+         */
         $scope.compositionProvider = function () {
             const localCommands = {};
             const toAdd = [];
             localCommands.toAdd = toAdd;
-            const log = $log.getInstance('composition_service#compositionProvider');
+            const log = $log.getInstance('composition_service#compositionProvider',["composition"]);
             localCommands.toKeep = compositionService.getListCommandsToKeep($scope.compositionschemadefinition);
 
             if (!expressionService.evaluate($scope.collectionproperties.allowInsertion, $scope.parentdata) || $scope.inline) {
@@ -744,6 +747,9 @@
             $scope.edit(datamap, actionTitle, forceModal);
         });
 
+
+        //#region edition
+
         $scope.edit = function (datamap, actionTitle, forceModal) {
             if (!!forceModal || shouldEditInModal()) {
                 // Check that main tab has all required fields filled before opening modal
@@ -799,6 +805,7 @@
             }
         };
 
+        
 
         $scope.hasDetailSchema = function () {
             return !!$scope.compositiondetailschema;
@@ -967,6 +974,8 @@
             modalService.show($scope.compositiondetailschema, angular.copy(item), {}, $scope.save, null, $scope.parentdata, $scope.parentschema);
         }
 
+        //#endregion
+
         $scope.delete = function (item, column, $event, rowIndex) {
             alertService.confirm("Are you sure you want to delete this entry").then(function () {
                 const compositionId = item[$scope.compositionlistschema.idFieldName];
@@ -999,7 +1008,7 @@
             return !$scope.nodeleteallowed;
         }
 
-        /***************Batch functions **************************************/
+        //#region ***************Batch functions **************************************/
 
         $scope.addBatchItem = function () {
 
@@ -1095,7 +1104,7 @@
 
         }
 
-        /***************END Batch functions **************************************/
+        //#endregion ***************END Batch functions **************************************/
 
         $scope.newDetailFn = function () {
             $scope.isUpdate = true;
@@ -1136,6 +1145,8 @@
 
             return false;
         };
+
+        //#region saving
 
         $scope.save = function (selecteditem, schema, action) {
             if (!selecteditem) {
@@ -1253,6 +1264,8 @@
                 crudContextHolderService.setTabRecordCount($scope.relationship, null, $scope.paginationData.totalCount);
             });
         };
+
+        //#endregion
 
 
         $scope.clearNewCompositionData = function () {
@@ -1441,8 +1454,26 @@
         }
 
         //#endregion
-        if (!$scope.metadatadeclaration || expressionService.evaluate($scope.metadatadeclaration.showExpression, $scope.parentdata, $scope)) {
-            //this is needed for cases where we have an inline composition hidden under a showexpression, and we don´t want it even to be initialized
+
+        /**
+         *  this is needed for cases where we have an inline composition hidden under a showexpression, and we don´t want it even to be initialized;
+         *  metatadatadeclaration check is used for the commlog composition "subclass" implementation, whereas it doesn´t contain that property at all;
+         *  Usually, the source datamap for the composition would be resolved on server side and on the response of the event it would init the composition. 
+         *  However if the composition is marked as a batch composition to start with an entry, it would need to get started right away, even though it´s still hidden, 
+         *  otherwise it would never be initialized 
+         * 
+         *  https://controltechnologysolutions.atlassian.net/browse/SWWEB-2703
+         * 
+         * @returns {true if we need to initialize this composition right now, false otherwise} 
+         */
+        const shouldEagerInit = () => {
+            const isVisible = !$scope.metadatadeclaration || expressionService.evaluate($scope.metadatadeclaration.showExpression, $scope.parentdata, $scope);
+            var startsWithEntry = $scope.metadatadeclaration && fieldService.isPropertyTrue($scope.metadatadeclaration.schema, "composition.inline.startwithentry");
+            return isVisible || startsWithEntry;
+        }
+
+
+        if (shouldEagerInit()) {
             init();
         }
 
