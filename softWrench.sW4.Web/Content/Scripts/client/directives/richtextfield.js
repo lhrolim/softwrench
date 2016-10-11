@@ -14,7 +14,7 @@
                 forprint: "="
             },
 
-            controller: ["$scope", "richTextService", function ($scope, richTextService) {
+            controller: ["$scope", "$element", "richTextService", function ($scope, $element, richTextService) {
                 const log = $log.get("richtextfield#controller", ["richtext"]);
 
                 $scope.content = richTextService.getDecodedValue($scope.content);
@@ -54,9 +54,35 @@
                             return false;
                         },
 
+                        images_dataimg_filter: function (img) {
+                            return false;
+                        },
+
                         menubar: $scope.readonly ? false : "edit insert table",
                         toolbar: $scope.readonly ? false : "styleselect blockquote | bold italic underline bullist numlist undo redo | alignleft aligncenter alignright alignjustify | link image codesample",
                         statusbar: false,
+
+                        // add images as blobs - workaround to big images with too big base64 urls
+                        file_picker_callback: function (callback, value, meta) {
+                            if (meta.filetype !== "image") {
+                                return;
+                            }
+                            const input = $($element).find(".richtext-file-selector")[0];
+                            input.click();
+                            input.onchange = function () {
+                                const file = input.files[0];
+                                input.value = null;
+                                const reader = new FileReader();
+                                reader.onload = function (e) {
+                                    const blob = new Blob([e.target.result], { type: file.type });
+                                    const url = window.URL.createObjectURL(blob);
+                                    callback(url, {
+                                        alt: file.name
+                                    });
+                                };
+                                reader.readAsArrayBuffer(file);
+                            };
+                        },
 
                         // hide/show toolbar+menubar on blur/focus
                         setup: function(editor) {
@@ -86,6 +112,39 @@
                                 $timeout(function () {
                                     $scope.printDefered.resolve();
                                 }, 0);
+                            });
+
+                            // after an image is added if its a blob converts back to base64
+                            // workaround to big images with too big base64 urls
+                            editor.on("change", () => {
+                                const imgs = editor.dom.$("img");
+                                if (imgs.length === 0) {
+                                    return;
+                                }
+                                angular.forEach(imgs, (img) => {
+                                    if (!img.src || !img.src.startsWith("blob:")) {
+                                        return;
+                                    }
+
+                                    const xhr = new XMLHttpRequest();
+                                    xhr.open("GET", img.src, true);
+                                    xhr.responseType = "blob";
+                                    xhr.onload = function () {
+                                        if (this.status !== 200) {
+                                            return;
+                                        }
+                                       
+                                        const blob = this.response;
+                                        const reader = new FileReader();
+                                        //handler executed once reading(blob content referenced to a variable) from blob is finished. 
+                                        reader.addEventListener("loadend", function (e) {
+                                            img.src = e.srcElement.result;
+                                        });
+                                        //start the reading process.
+                                        reader.readAsDataURL(blob);
+                                    };
+                                    xhr.send();
+                                });
                             });
                         }
                     }
