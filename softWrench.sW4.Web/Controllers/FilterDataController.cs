@@ -74,6 +74,8 @@ namespace softWrench.sW4.Web.Controllers {
             //TODO: add a count call
             if (!association.EntityAssociation.Cacheable) {
                 filter.PageSize = 21;
+            } else {
+                filter.PageSize = 200; // lets assume that no cachable filter has more than 200 options (original default 30 is too low)
             }
             //adopting to use an association to keep same existing service
             var result = await _associationResolver.ResolveOptions(app.Schema, Entity.GetInstance(MetadataProvider.EntityByApplication(application)), association, filter);
