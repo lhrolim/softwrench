@@ -2,8 +2,6 @@
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
-using softWrench.sW4.Security.Services;
-using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
     public class KongsbergIncidentCrudConnector : BaseIncidentCrudConnector {
@@ -11,19 +9,13 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
         
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var incident = maximoTemplateData.IntegrationObject;
-            var sr = maximoTemplateData.IntegrationObject;
-            var user = SecurityFacade.CurrentUser();
 
-            HandleActualDates(sr);
+            HandleActualDates(incident);
+            SetSwChangeBy(incident);
 
-            // TODO: Temp fix for getting change by to update with the userid. 
-            // This workaround required trigger in the Maximo DB and custom attribute "SWCHANGEBY" in ticket
-            w.SetValue(incident, "SWCHANGEBY", user.Login);
-            //Handle Commlogs
             //Handle Commlogs
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
-            CommlogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
-
+            CommlogHandler.HandleCommLogs(maximoTemplateData, crudData, incident);
 
             base.BeforeUpdate(maximoTemplateData);
         }

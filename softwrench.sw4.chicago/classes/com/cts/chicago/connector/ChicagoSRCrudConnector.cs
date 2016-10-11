@@ -44,6 +44,8 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;
 
+            SetSwChangeBy(sr);
+
             var statusValue = HandleActualDates(sr);
             if (statusValue != null && statusValue.Equals("CLOSED") && w.GetRealValue(sr, "ITDCLOSEDATE") == null) {
                 w.SetValue(sr, "ITDCLOSEDATE", DateTime.Now.FromServerToRightKind());

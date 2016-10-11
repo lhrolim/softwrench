@@ -5,6 +5,7 @@ using WcfSamples.DynamicProxy;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
@@ -50,6 +51,13 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             }
 
             return statusValue;
+        }
+
+        protected virtual void SetSwChangeBy(object entity) {
+            var user = SecurityFacade.CurrentUser();
+            // TODO: Temp fix for getting change by to update with the userid. 
+            // This workaround required trigger in the Maximo DB and custom attribute "SWCHANGEBY" in ticket
+            w.SetValue(entity, "SWCHANGEBY", user.Login);
         }
 
         #region Create
