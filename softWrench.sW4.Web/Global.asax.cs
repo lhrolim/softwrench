@@ -30,7 +30,7 @@ namespace softWrench.sW4.Web {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class WebApiApplication : System.Web.HttpApplication, ISWEventListener<ClientChangeEvent>, ISWEventListener<ClearCacheEvent> {
+    public class WebApiApplication : HttpApplication, ISWEventListener<ClientChangeEvent>, ISWEventListener<ClearCacheEvent> {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(WebApiApplication));
         private static readonly ILog AuthLog = LogManager.GetLogger(SwConstants.AUTH_LOG);

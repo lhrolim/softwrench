@@ -229,7 +229,7 @@ namespace softWrench.sW4.Configuration.Services {
             await _dao.SaveAsync(definition);
             _cache.ClearCache(fullKey);
 
-            _eventDispatcher.DispatchAsync(eventToDispatch: new ConfigurationChangedEvent(definition.FullKey, null, value), parallel: true);
+            _eventDispatcher.Fire(eventToDispatch: new ConfigurationChangedEvent(definition.FullKey, null, value), parallel: true);
         }
 
         // global property, ignores module, profile and conditions
@@ -283,7 +283,7 @@ namespace softWrench.sW4.Configuration.Services {
             }
             _cache.ClearCache(definition.FullKey);
 
-            _eventDispatcher.DispatchAsync(eventToDispatch: new ConfigurationChangedEvent(definition.FullKey, previousValue, value), parallel: true);
+            _eventDispatcher.Fire(eventToDispatch: new ConfigurationChangedEvent(definition.FullKey, previousValue, value), parallel: true);
         }
 
         public async Task<ClientSideConfigurations> GetClientSideConfigurations(long? cacheTimestamp, ContextHolder lookupContex) {

@@ -11,7 +11,9 @@ using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.simpleinjector;
@@ -23,7 +25,7 @@ using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Configuration.Services {
-    public class WhereClauseFacade : IWhereClauseFacade, ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
+    public class WhereClauseFacade : IWhereClauseFacade, ISWEventListener<ApplicationStartedEvent>, IOrdered {
 
         private const string DefaultWhereClause = " 1=1 ";
 
@@ -35,7 +37,7 @@ namespace softWrench.sW4.Configuration.Services {
         private readonly UserProfileManager _userProfileManager;
 
 
-        private readonly IList<Tuple<string, string, WhereClauseRegisterCondition>> _toRegister = new List<Tuple<string, string, WhereClauseRegisterCondition>>();
+        private readonly ConcurrentBag<Tuple<string, string, WhereClauseRegisterCondition>> _toRegister = new ConcurrentBag<Tuple<string, string, WhereClauseRegisterCondition>>();
         private static readonly ILog Log = LogManager.GetLogger(typeof(WhereClauseFacade));
 
 
@@ -113,8 +115,7 @@ namespace softWrench.sW4.Configuration.Services {
             AsyncHelper.RunSync(() => RegisterAsync(applicationName, query, condition, validate));
         }
 
-        public async Task RegisterAsync(string applicationName, String query, WhereClauseRegisterCondition condition = null, bool validate = false) {
-
+        public async Task RegisterAsync(string applicationName, string query, WhereClauseRegisterCondition condition = null, bool validate = false) {
             var result = Validate(applicationName, validate);
             if (!result) {
                 Log.WarnFormat("application {0} not found skipping registration", applicationName);
@@ -185,8 +186,6 @@ namespace softWrench.sW4.Configuration.Services {
 
         private async Task DoRegister(string configKey, string query, WhereClauseRegisterCondition condition) {
 
-
-
             if (condition != null && condition.Environment != null && condition.Environment != ApplicationConfiguration.Profile) {
                 //we don´t need to register this property here.
                 return;
@@ -210,13 +209,11 @@ namespace softWrench.sW4.Configuration.Services {
 
             var savedDefinition = await _dao.FindSingleByQueryAsync<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
 
-
-            Condition storedCondition = null;
-
             if (condition.Alias == null && condition.AppContext != null && condition.AppContext.MetadataId != null) {
                 condition.Alias = condition.AppContext.MetadataId;
             }
 
+            Condition storedCondition = null;
             if (condition.Alias != null) {
                 //this means that we actually have a condition rather then just a simple utility class WhereClauseRegisterCondition, that could be used for profiles and modules
                 storedCondition = await _dao.FindSingleByQueryAsync<WhereClauseCondition>(Condition.ByAlias, condition.Alias);
@@ -230,8 +227,7 @@ namespace softWrench.sW4.Configuration.Services {
             if (condition.UserProfile != null) {
                 profile = _userProfileManager.FindByName(condition.UserProfile);
                 if (condition.UserProfile != null && profile == null) {
-                    Log.Warn(String.Format("unable to register definition as profile {0} does not exist",
-                        condition.UserProfile));
+                    Log.Warn(string.Format("unable to register definition as profile {0} does not exist", condition.UserProfile));
                     return;
                 }
             }
@@ -255,20 +251,15 @@ namespace softWrench.sW4.Configuration.Services {
             }
         }
 
-        public async void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             foreach (var entry in _toRegister) {
-                await DoRegister(entry.Item1, entry.Item2, entry.Item3);
+                var localEntry = entry;
+                AsyncHelper.RunSync(() => DoRegister(localEntry.Item1, localEntry.Item2, localEntry.Item3));
             }
             _appStarted = true;
         }
 
-
-
         //execute last
-        public int Order {
-            get {
-                return 100;
-            }
-        }
+        public int Order { get { return 100; } }
     }
 }

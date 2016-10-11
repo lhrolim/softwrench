@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using log4net;
 using softWrench.sW4.Configuration.Definitions;
@@ -17,7 +19,7 @@ namespace softWrench.sW4.Configuration.Services {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigurationFacade));
 
         private bool _appStarted;
-        private readonly IDictionary<string, PropertyDefinition> _toRegister = new Dictionary<string, PropertyDefinition>();
+        private readonly IDictionary<string, PropertyDefinition> _toRegister = new ConcurrentDictionary<string, PropertyDefinition>();
 
         private readonly SWDBHibernateDAO _dao;
         private readonly ConfigurationService _configService;
@@ -56,20 +58,24 @@ namespace softWrench.sW4.Configuration.Services {
             }
             //var previousValue = Lookup<object>(configkey);
             await _configService.SetValue(configkey, value);
-            //_eventDispatcher.DispatchAsync(eventToDispatch: new ConfigurationChangedEvent(configkey, previousValue, value), parallel: true);
+            //_eventDispatcher.Fire(eventToDispatch: new ConfigurationChangedEvent(configkey, previousValue, value), parallel: true);
         }
 
 
         private async Task DoRegister(string configKey, PropertyDefinition definition) {
-            definition.FullKey = configKey;
-            definition.SimpleKey = CategoryUtil.GetPropertyKey(configKey);
+            SetKeys(configKey, definition);
             await _dao.SaveAsync(definition);
         }
 
-        public async void HandleEvent(ApplicationStartedEvent eventToDispatch) {
-            foreach (var entry in _toRegister) {
-                await DoRegister(entry.Key, entry.Value);
-            }
+        private PropertyDefinition SetKeys(string configKey, PropertyDefinition definition) {
+            definition.FullKey = configKey;
+            definition.SimpleKey = CategoryUtil.GetPropertyKey(configKey);
+            return definition;
+        }
+
+        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+            var definitions = _toRegister.Select(entry => SetKeys(entry.Key, entry.Value)).ToList();
+            _dao.BulkSave(definitions);
             _appStarted = true;
         }
 
