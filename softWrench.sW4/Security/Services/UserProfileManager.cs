@@ -154,7 +154,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public CompositionFetchResult LoadAvailableFieldsAsCompositionData(ApplicationSchemaDefinition schema, string tab, int pageNumber) {
-            var fields = schema.NonHiddenFieldsOfTab(tab).Where(f => !"true".Equals(f.RequiredExpression));
+            var fields = schema.NonHiddenFieldsOfTab(tab);
             const int pageSize = 10;
             var applicationAttributeDisplayables = fields as IApplicationAttributeDisplayable[] ?? fields.ToArray();
             var totalCount = applicationAttributeDisplayables.Count();
@@ -166,6 +166,7 @@ namespace softWrench.sW4.Security.Services {
             foreach (var field in fieldsToShow) {
                 var dict = new Dictionary<string, object>();
                 dict["#label"] = string.IsNullOrEmpty(field.Label) ? field.Attribute : field.Label;
+                dict["#required"] = "true".Equals(field.RequiredExpression);
                 dict["fieldKey"] = field.Attribute;
                 //enabled by default
                 if (field.IsReadOnly) {

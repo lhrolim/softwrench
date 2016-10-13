@@ -133,14 +133,21 @@
             return null;
         };
 
-        function applyFilter(filter, options) {
+        function applyFilter(filter, options, {compositionItem} = {}) {
             if (options && filter && filter.clientFunction) {
                 const fn = dispatcherService.loadServiceByString(filter.clientFunction);
                 if (fn == null) {
                     $log.get("baselist#getoptionfields", ["association", "optionfield"]).warn("method {0} not found. review your metadata".format(filter.clientFunction));
                     return options;
                 }
-                const filteredOptions = options.filter(fn);
+
+                const filterFunction = function({compositionItem} = {}) {
+                    return function (element) {
+                        return fn(element, {compositionItem});
+                    }
+                }
+
+                const filteredOptions = options.filter(filterFunction({compositionItem}));
 
                 const currentValues = filteredOptions.map(item => {
                     return item.value;
@@ -165,9 +172,9 @@
             return options;
         }
 
-        $scope.GetAssociationOptions = function (fieldMetadata, datamapValue) {
+        $scope.GetAssociationOptions = function (fieldMetadata, datamapValue, {compositionItem} = {}) {
             if (fieldMetadata.type === "OptionField") {
-                return $scope.GetOptionFieldOptions(fieldMetadata,datamapValue);
+                return $scope.GetOptionFieldOptions(fieldMetadata, datamapValue, {compositionItem});
             }
             var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
 
@@ -176,18 +183,18 @@
                 contextData = compositionService.buildCompositionListItemContext(contextData, $scope.datamap, $scope.schema);
             }
             const rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid, datamapValue);
-            return applyFilter(fieldMetadata.filter, rawOptions);
+            return applyFilter(fieldMetadata.filter, rawOptions, {compositionItem});
         }
-        $scope.GetOptionFieldOptions = function (optionField, datamapValue) {
+        $scope.GetOptionFieldOptions = function (optionField, datamapValue, {compositionItem} = {}) {
             if (optionField.providerAttribute == null) {
-                return applyFilter(optionField.filter, optionField.options);
+                return applyFilter(optionField.filter, optionField.options, {compositionItem});
             }
             const contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
             const options = crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData, $scope.panelid,datamapValue);
             if (!options) {
                 return blankArray;
             }
-            return applyFilter(optionField.filter, options);
+            return applyFilter(optionField.filter, options, {compositionItem});
         }
 
 

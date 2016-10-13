@@ -4,7 +4,7 @@
 
 
 
-    function userProfileService($q, $rootScope, $log, restService, validationService, contextService, crudContextHolderService, redirectService, alertService, modalService, fixHeaderService) {
+    /*@ngNoInject*/ function userProfileService($q, $rootScope, $log, restService, validationService, contextService, crudContextHolderService, redirectService, alertService, modalService, fixHeaderService) {
 
         var simpleLog = $log.get("userProfileService", ["profile"]);
 
@@ -289,12 +289,19 @@
 
         //#region api methods for tests
 
-        function filterAvailablePermissions(item) {
+        function filterAvailablePermissions(item, {compositionItem} = {}) {
             const dm = crudContextHolderService.rootDataMap();
-            if (!dm["selectedmode"] || !dm["selectedmode"].equalsAny("grid", "view")) {
+            if (!dm["selectedmode"]) {
                 return true;
             }
-            return item.value !== "readonly";
+            if (dm["selectedmode"].equalsAny("grid", "view")) {
+                return item.value !== "readonly";
+            }
+
+            if (compositionItem && dm["selectedmode"] === "update" && compositionItem["#required"]) {
+                return item.value !== "none";
+            }
+            return true;
         }
 
         function filterAvailableModes(item) {

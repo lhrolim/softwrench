@@ -120,7 +120,7 @@
                                 <select class="hidden-phone form-control combobox"
                                         ng-model="compositionitem[column.target]"
                                         number-to-string
-                                        ng-options="option.value as i18NOptionField(option,column,compositionlistschema) for option in GetAssociationOptions(column)"
+                                        ng-options="option.value as i18NOptionField(option,column,compositionlistschema) for option in GetAssociationOptions(column, null, {compositionItem: compositionitem})"
                                         data-field="{{fieldMetadata.associationKey}}">
                                     <option value="" ng-if="false"></option>
                                 </select>

@@ -10,9 +10,15 @@ module.exports = function (grunt) {
     var babelCore = require('babel-core');
     var optManager = new babelCore.OptionManager();
     var resolvedPresets = optManager.resolvePresets(['es2015']);
+    var node_modulesPath = __dirname + "\\node_modules";
 
-
+    global.last = function (arr) {
+        return arr[arr.length - 1];
+    }
+    
     grunt.initConfig({
+
+
 
         //#region global app config
         app: {
@@ -31,8 +37,10 @@ module.exports = function (grunt) {
         //#region babeljs
         babel: {
             options: {
-                "presets": resolvedPresets
+                "presets": resolvedPresets,
+                "plugins": [node_modulesPath + "\\babel-plugin-angularjs-annotate"]
             },
+            dirname: { node_modulesPath },
             dist: {
                 files: {
                     "<%= app.tmp %>/scripts/app.es6.js": "<%= concat.appScripts.dest %>"
@@ -296,8 +304,30 @@ module.exports = function (grunt) {
                     separator: ";\n"
                 },
                 src: [
-                    // actual app: ng-annotated source
-                    "<%= app.tmp %>/scripts/app.annotated.js"
+                        // customized angular vendor modules
+                        "<%= app.customVendor %>/scripts/angular/**/*.js",
+                        // modules
+                        "<%= app.webcommons %>/scripts/softwrench/sharedservices_module.js", // webcommons
+                        "<%= app.content %>/Scripts/client/crud/aaa_layout.js", // sw
+                        // webcommons
+                        "<%= app.webcommons %>/scripts/**/*!(sharedservices_module).js",
+                        // app
+                        "<%= app.content %>/Scripts/client/crud/**/*!(aaa_layout).js",
+                        "<%= app.content %>/Scripts/client/services/*.js",
+                        "<%= app.content %>/Scripts/client/*.js",
+                        "<%= app.content %>/Scripts/client/adminresources/*.js",
+                        "<%= app.content %>/Scripts/client/directives/*.js",
+                        "<%= app.content %>/Scripts/client/directives/menu/*.js",
+                        "<%= app.content %>/Templates/commands/**/*.js",
+                        "<%= app.content %>/modules/**/*.js",
+                        // Shared
+                        "<%= app.content %>/Shared/{**/*.js, !(webcommons)/**/*.js}",
+                        // base otb
+                        "<%= app.content %>/Scripts/customers/otb/*.js",
+                        // customers shared
+                        "<%= app.content %>/Scripts/customers/shared/*.js",
+                        // customers: outer build process guarantees there's only the selected customer in the path
+                        "<%= app.customers %>/**/scripts/**/*.js"
                 ],
 
                 dest: "<%= app.tmp %>/scripts/app.concat.js"
@@ -434,7 +464,7 @@ module.exports = function (grunt) {
         "concat:customVendorScripts", // concat custom vendors's scripts in 'temp/scripts/customvendor.js'
         "uglify:rawVendors", // minifies unminified vendors
         "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
-        "ngAnnotate:app", // ng-annotates app's scripts
+        //"ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
         "uglify:customVendors", "concat:finalCustomVendorScripts", // distributes 'scripts/customvendor.js'
         "babel",// uses babeljs to convert brandnew ES6 javascript into ES5 allowing for old browsers
@@ -454,7 +484,6 @@ module.exports = function (grunt) {
         "uglify:rawVendors", // minifies unminified vendors
         "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
         "concat:customVendorScripts", // concat custom vendors's scripts and distribute as 'scripts/vendor.js'
-        "ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
         "uglify:customVendors", "concat:finalCustomVendorScripts", // distributes 'scripts/customvendor.js'
         "babel",// uses babeljs to convert brandnew ES6 javascript into ES5 allowing for old browsers
@@ -469,7 +498,6 @@ module.exports = function (grunt) {
        "bowercopy:scripts", // copying bower js files
        "uglify:rawVendors", // minifies unminified vendors
        "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
-       "ngAnnotate:app", // ng-annotates app's scripts
        "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
        "babel",// uses babeljs to convert brandnew ES6 javascript into ES5 allowing for old browsers
        "karma:target", // run tests on minified scripts
