@@ -1,8 +1,6 @@
 (function (angular) {
     "use strict";
-    var module = angular.module('sw_layout');
-
-  
+    const module = angular.module('sw_layout');
     module.factory('searchService', function (i18NService, $log, $rootScope, contextService, fieldService, $http, historyService) {
         "ngInject";
 
@@ -77,9 +75,9 @@
         };
 
         var buildSearchParamsString = function (searchData, searchOperator, useOrOperator) {
-            var operatorToUse = useOrOperator ? "||" : "&&";
+            const operatorToUse = useOrOperator ? "||" : "&&";
             var resultString = "";
-            for (var data in searchData) {
+            for (let data in searchData) {
                 if (data === "lastSearchedValues") {
                     //exclude this field which is used only to control the  needsCountUpdate flag
                     continue;
@@ -118,17 +116,17 @@
         };
 
         var specialCharactersHandler = function (searchData, searchOperator) {
-            var specialcharacter = "*";
-            for (var data in searchData) {
+            const specialcharacter = "*";
+            for (let data in searchData) {
                 if (!searchData.hasOwnProperty(data)) continue;
                 if (searchData[data] == null || searchData[data] == '' || data == "lastSearchedValues") {
                     continue;
                 }
-                var search = searchData[data];
+                const search = searchData[data];
                 if (!angular.isString(search)) return; // -> numeric inputs
                 if (search.indexOf(specialcharacter) > -1) {
-                    var indexSearchOperator = null;
-                    var searchreplaced = search.replace(/\*/g, '');
+                    let indexSearchOperator = null;
+                    const searchreplaced = search.replace(/\*/g, '');
                     if (search.indexOf(specialcharacter) == 0 && search.lastIndexOf(specialcharacter) == search.length - specialcharacter.length) {
                         indexSearchOperator = 1; /* contains */
                     } else if (search.indexOf(specialcharacter) == 0) {
@@ -195,7 +193,7 @@
                 var resultString = "";
                 var value = "";
                 var beginAlreadySet = false;
-                for (var data in searchData) {
+                for (let data in searchData) {
                     if (searchOperator[data] == null) {
                         continue;
                     }
@@ -260,7 +258,7 @@
             /// <param name="multiSort">an object containing the multi sort information </param>
             /// <returns type=""></returns>        
             buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData, searchTemplate, quicksearchDTO, multiSort) {
-                var searchDto = {};
+                const searchDto = {};
                 searchData = searchData || {};
                 searchSort = searchSort || {};
                 searchOperator = searchOperator || {};
@@ -293,9 +291,8 @@
                     searchDto.searchValues = this.buildSearchValuesString(searchData, searchOperator);
                 }
                 else {
-                    var extraParams = buildSearchParamsString(searchData, searchOperator);
-                    var extraValues = this.buildSearchValuesString(searchData, searchOperator);
-
+                    const extraParams = buildSearchParamsString(searchData, searchOperator);
+                    const extraValues = this.buildSearchValuesString(searchData, searchOperator);
                     if (extraParams != null && extraParams != '' && extraValues != null && extraValues != '') {
                         searchDto.searchParams += "&&" + extraParams;
                         searchDto.searchValues += ",,," + extraValues;
@@ -317,25 +314,23 @@
              * @returns {} an object containing both the searchData and the searchOperator that will be updated on the filters
              */
             buildSearchDataAndOperations: function (searchParams, searchValues) {
-                var result = {};
-
-                var searchData = {};
-                var searchOperator = {};
-
+                const result = {};
+                const searchData = {};
+                const searchOperator = {};
                 var params = searchParams.split("&&");
-                var values = searchValues.split(",,,");
+                const values = searchValues.split(",,,");
                 if (values.length !== params.length) {
                     //this was a global search, so it uses || and not && 
                     params = searchParams.split("||,");
                 }
 
-                for (var i = 0; i < params.length; i++) {
-                    var value = values[i];
-                    var param = params[i];
+                for (let i = 0; i < params.length; i++) {
+                    const value = values[i];
+                    const param = params[i];
                     searchOperator[param] = this.getSearchOperator(value);
                     searchData[param] = getSearchValue(value);
                     if (value.indexOf("__") !== -1) {
-                        var splittedValues = value.split("__");
+                        const splittedValues = value.split("__");
                         searchData[param] = splittedValues[0];
                         searchData[param+"_end"] = splittedValues[1];
                     }
@@ -350,7 +345,7 @@
             },
 
             getSearchOperationById: function (id) {
-                var op = $.grep(this.searchOperations(), function (e) {
+                const op = $.grep(this.searchOperations(), function (e) {
                     return e.id.toUpperCase() === id.toUpperCase();
                 });
                 if (op.length > 0) {
@@ -360,8 +355,8 @@
             },
 
             getSearchOperationBySymbol: function (symbol) {
-                var arr = this.searchOperations();
-                for (var i = 0; i < arr.length; i++) {
+                const arr = this.searchOperations();
+                for (let i = 0; i < arr.length; i++) {
                     if (arr[i].symbol.equalIc(symbol)) {
                         return arr[i];
                     }
@@ -371,7 +366,7 @@
 
             searchOperations: function () {
                 var language = i18NService.getCurrentLanguage();
-                var module = contextService.retrieveFromContext('currentmodule');
+                const module = contextService.retrieveFromContext('currentmodule');
                 if (!nullOrUndef(module)) {
                     //if inside a module language should be always english
                     language = 'EN';
@@ -403,8 +398,7 @@
              */
             refreshGrid: function (searchData, searchOperator, extraparameters) {
                 extraparameters = extraparameters || {};
-
-                var key = "poll_refreshgridaction" + (extraparameters.panelid ? extraparameters.panelid : "");
+                const key = "poll_refreshgridaction" + (extraparameters.panelid ? extraparameters.panelid : "");
 
                 //this is needed because the crud_list handler may not yet be in place when this method is called, 
                 //we need to make sure that as soon as it gets available it consumes the message
@@ -444,8 +438,7 @@
                 }
                 extraParameters = extraParameters || {};
                 searchData = searchData || {};
-
-                var log = $log.getInstance('searchService#searchWithData');
+                const log = $log.getInstance('searchService#searchWithData');
                 var searchDTO = extraParameters.searchDTO;
                 if (!searchDTO) {
                     searchDTO = this.buildSearchDTO(searchData, extraParameters.searchSort, extraParameters.searchOperators, null);
@@ -454,8 +447,7 @@
                     searchDTO.totalCount = 0;
                     searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
                 }
-
-                var restParameters = {
+                const restParameters = {
                     key: {
                         schemaId: schema ? schema : "list",
                         mode: extraParameters.mode ? extraParameters.mode : 'none',
@@ -464,8 +456,8 @@
                     schemaFieldsToDisplay: extraParameters.schemaFieldsToDisplay,
                     SearchDTO: searchDTO
                 };
-                var queryString = $.param(restParameters);
-                var urlToUse = url("/api/Data/{0}?{1}".format(application, queryString));
+                const queryString = $.param(restParameters);
+                const urlToUse = url("/api/Data/{0}?{1}".format(application, queryString));
                 log.info("invoking url {0}".format(urlToUse));
 
                 if (extraParameters.saveSwGlobalRedirectURL) {

@@ -313,7 +313,7 @@
         }
 
         function updateCompositionDataAfterSave(schema, datamap, responseDataMap) {
-            const compositions = this.getLazyCompositions(schema, datamap);
+            const compositions = this.getLazyCompositions(schema, datamap) || [];
             compositions.forEach(function (composition) {
                 const currentValue = datamap[composition];
                 const updateFields = responseDataMap;

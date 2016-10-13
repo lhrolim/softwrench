@@ -25,49 +25,51 @@
 
 
         function invissuelistclick(datamap, schema) {
-            var param = {};
-            param.id = datamap['matusetransid'];
-            var application = schema.applicationName;
-            var mode = 'input';
-            var schemaId = inventorySharedService.nextInvIssueDetailSchema(schema.applicationName, schema, datamap);
+            const param = {
+                id: datamap['matusetransid']
+            };
+            const application = schema.applicationName;
+            const mode = 'input';
+            const schemaId = inventorySharedService.nextInvIssueDetailSchema(schema.applicationName, schema, datamap);
 
             if (!!schemaId) {
+                //in that case, we will just bring the details page.
                 redirectService.goToApplicationView(application, schemaId, mode, null, param, null);
                 return;
             }
 
-
             //TODO: what´s the idea here? just one item?
-            //TODO: ken: is it correct to search for things even before the confirmation occurs?
             var transformedData = angular.copy(datamap);
             transformedData['#quantityadj'] = 1;
             inventoryServiceCommons.returnTransformation(null, transformedData);
             // Get the cost type
-            inventoryServiceCommons.updateInventoryCosttype({ fields: transformedData }, 'storeloc');
-            var originalDatamap = {
-                fields: datamap,
-            };
+
             inventoryServiceCommons.returnConfirmation(null, transformedData, {
                 continue: function () {
-                    // TODO: update so that mock client validation is not necessary
-                    sessionStorage.mockclientvalidation = true;
-                    $rootScope.$broadcast('sw_submitdata', {
-                        successCbk: function (data) {
-                            sessionStorage.mockclientvalidation = false;
-                            $rootScope.$broadcast('sw_refreshgrid');
-                        },
-                        failureCbk: function (data) {
-                            sessionStorage.mockclientvalidation = false;
-                        },
-                        isComposition: false,
-                        refresh: true,
-                        selecteditem: transformedData,
-                        originalDatamap: originalDatamap,
+                    inventoryServiceCommons.updateInventoryCosttype({ fields: transformedData }, 'storeloc').then((dm) => {
+
+                        var originalDatamap = {
+                            fields: datamap,
+                        };
+
+                        // TODO: update so that mock client validation is not necessary
+                        sessionStorage.mockclientvalidation = true;
+                        $rootScope.$broadcast('sw_submitdata', {
+                            successCbk: function (data) {
+                                sessionStorage.mockclientvalidation = false;
+                                searchService.refreshGrid();
+                            },
+                            failureCbk: function (data) {
+                                sessionStorage.mockclientvalidation = false;
+                            },
+                            isComposition: false,
+                            refresh: true,
+                            selecteditem: dm.fields,
+                            originalDatamap: originalDatamap,
+                        });
                     });
-                },
+                }
             });
-
-
         };
 
 

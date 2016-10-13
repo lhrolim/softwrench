@@ -4,8 +4,8 @@
     angular.module("sw_layout").controller("BaseList", BaseList);
 
     //idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-    BaseList.$inject = ["$scope", "$log", "formatService", "expressionService", "searchService", "fieldService", "i18NService", "commandService", "crudContextHolderService", "gridSelectionService", "dispatcherService", "controllerInheritanceService"];
-    function BaseList($scope, $log, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService, dispatcherService, controllerInheritanceService) {
+    BaseList.$inject = ["$scope", "$log", "formatService", "expressionService", "searchService", "fieldService", "i18NService", "commandService", "crudContextHolderService", "gridSelectionService", "dispatcherService", "controllerInheritanceService", "$q"];
+    function BaseList($scope, $log, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService, dispatcherService, controllerInheritanceService, $q) {
 
         
 
@@ -158,12 +158,12 @@
                 if (commandResult == undefined || commandResult !== false) {
                     gridSelectionService.toggleSelection(rowdm, $scope.schema, $scope.panelid);
                 }
-                return;
+                return $q.when();
             }
 
 
             if (popupmode === "report") {
-                return;
+                return $q.when();
             }
 
             if (mode && !mode.equalsAny('none', 'output', 'input')) {
@@ -171,13 +171,13 @@
             }
 
             if ("true" === editDisabled && nullOrUndef(fullServiceName)) {
-                return;
+                return $q.when();
             }
             // TODO: Result from custom list click MUST be false to stop execution of default list click?
             if (fullServiceName != null) {
                 commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm, column, $scope.schema, $scope.panelid);
-                if (commandResult === false) {
-                    return;
+                if (!commandResult) {
+                    return $q.when();
                 }else if (commandResult.then) {
                     return commandResult.then(function() {
                         $scope.doShowDetail(rowdm, schemaid, mode, popupmode);
