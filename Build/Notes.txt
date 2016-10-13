@@ -1,2 +1,3 @@
 <!-- to run a build set client and profile, like below -->
 nant -f:build.xml zip -D:client=kongsberg -D:profile=dev
+nant -f:build.xml webcompile -D:client=kongsberg -D:profile=dev
