@@ -7,7 +7,7 @@
     "grunt-contrib-copy": "^0.8.2",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-karma": "^0.12.1",
-    "grunt-sass": "^1.1.0",
+    "grunt-sass": "^1.2.1",
     "jasmine-core": "2.4.1",
     "karma": "^0.13.19",
     "karma-babel-preprocessor": "^6.0.1",
