@@ -70,7 +70,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         [System.Web.Http.HttpPost]
         [SPFRedirect(URL = "DefinePassword")]
-        public ActionResult DoSetPassword(string tokenLink, string password, string userTimezoneOffset) {
+        public async Task<ActionResult> DoSetPassword(string tokenLink, string password, string userTimezoneOffset) {
             Validate.NotNull(tokenLink, "tokenLink");
             Validate.NotNull(password, "password");
             bool hasExpired;
@@ -83,7 +83,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 throw new SecurityException(ExpiredLinkException);
             }
             _userManager.ActivateAndDefinePassword(user, password);
-            AfterPasswordSet(user, password, userTimezoneOffset, System.Web.HttpContext.Current);
+            await AfterPasswordSet(user, password, userTimezoneOffset, System.Web.HttpContext.Current);
             return null;
         }
 
@@ -108,7 +108,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         [System.Web.Http.Authorize]
         [System.Web.Http.HttpPost]
         [SPFRedirect(URL = "ChangePassword")]
-        public ActionResult DoChangePassword(string password, string userTimezoneOffset) {
+        public async Task<ActionResult> DoChangePassword(string password, string userTimezoneOffset) {
             Validate.NotNull(password, "password");
             var memoryUser = SecurityFacade.CurrentUser();
 
@@ -119,7 +119,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
             var user = memoryUser.DBUser;
             _userManager.ActivateAndDefinePassword(user, password);
-            AfterPasswordSet(user, password, userTimezoneOffset, System.Web.HttpContext.Current);
+            await AfterPasswordSet(user, password, userTimezoneOffset, System.Web.HttpContext.Current);
             return null;
         }
 
@@ -142,7 +142,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return false;
         }
 
-        private async void AfterPasswordSet(SwUser user, string password, string userTimezoneOffset, HttpContext context) {
+        private async Task AfterPasswordSet(SwUser user, string password, string userTimezoneOffset, HttpContext context) {
             //logining in the user and redirecting him to home page
             var inMemoryUser = await _facade.LoginCheckingPassword(user, password, userTimezoneOffset);
             AuthenticationCookie.SetSessionCookie(user.UserName, userTimezoneOffset, Response);
@@ -198,8 +198,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
         [System.Web.Http.HttpPost]
-        public IGenericResponseResult SendActivationEmail([FromUri]int userId, [FromUri]string email) {
-            _userManager.SendActivationEmail(userId, email);
+        public async Task<IGenericResponseResult> SendActivationEmail([FromUri]int userId, [FromUri]string email) {
+            await _userManager.SendActivationEmail(userId, email);
             return null;
         }
 

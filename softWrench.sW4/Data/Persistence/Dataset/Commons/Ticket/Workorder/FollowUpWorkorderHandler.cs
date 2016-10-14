@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -18,13 +19,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder {
 
         private const string NotFoundLog = "{0} {1} not found. Impossible to generate FollowUp Workorder";
 
-        public object CreateFollowUp(FollowUpOperationData followupData) {
-            SaveOriginator(followupData);
+        public async Task<Object> CreateFollowUp(FollowUpOperationData followupData) {
+            await SaveOriginator(followupData);
             //save followup workorder
             return Maximoengine.Create(followupData.CrudData);
         }
 
-        private async void SaveOriginator(FollowUpOperationData followUpData) {
+        private async Task SaveOriginator(FollowUpOperationData followUpData) {
             var maximoExecutionContext = GetContext(followUpData);
             var metadataToUse = followUpData.EntityMetadata;
             var oldEntity = await EntityRepository.Get(metadataToUse, followUpData.origrecordid);

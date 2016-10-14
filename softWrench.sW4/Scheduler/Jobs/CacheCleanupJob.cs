@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using cts.commons.Util;
 using Common.Logging;
 using Quartz;
 using softWrench.sW4.Configuration.Services.Api;
@@ -15,8 +16,8 @@ namespace softWrench.sW4.Scheduler.Jobs {
             _facade = facade;
         }
 
-        public async void Execute(IJobExecutionContext context) {
-            await ExecuteJob();
+        public void Execute(IJobExecutionContext context) {
+            AsyncHelper.RunSync(ExecuteJob);
         }
 
         public string Name() {

@@ -48,7 +48,7 @@
 
 
         function fetchCompositions(requestDTO, datamap, showLoading) {
-            var log = $log.getInstance('compositionservice#fetchCompositions');
+            var log = $log.getInstance('compositionservice#fetchCompositions', ['composition']);
             var urlToUse = url("/api/generic/Composition/GetCompositionData");
             return $http.post(urlToUse, requestDTO, { avoidspin: !showLoading })
                 .then(response => {

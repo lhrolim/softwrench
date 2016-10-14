@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector.Events;
+using cts.commons.Util;
 using Iesi.Collections.Generic;
 using log4net;
 using Newtonsoft.Json.Linq;
@@ -56,13 +57,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         }
 
 
-        public async void HandleEvent(UserLoginEvent userEvent) {
+        public void HandleEvent(UserLoginEvent userEvent) {
             if (!ApplicationConfiguration.IsClient("firstsolar")) {
                 //to avoid issues on dev environments
                 return;
             }
             var user = userEvent.InMemoryUser;
-            await AdjustUserFacilityProperties(user.Genericproperties, user.MaximoPersonId);
+            AsyncHelper.RunSync(()=> AdjustUserFacilityProperties(user.Genericproperties, user.MaximoPersonId));
         }
 
         public async Task<IDictionary<string, object>> AdjustUserFacilityProperties(IDictionary<string, object> genericproperties, string maximoPersonId) {

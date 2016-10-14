@@ -32,7 +32,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 return await _associationResolver.ResolveOptions(schema, originalEntity,
                     (ApplicationAssociationDefinition)association, associationFilter);
             }
-            return _optionFieldResolver.ResolveOptions(schema, originalEntity, (OptionField)association, associationFilter);
+            return await _optionFieldResolver.ResolveOptions(schema, originalEntity, (OptionField)association, associationFilter);
 
         }
     }

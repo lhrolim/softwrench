@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
@@ -17,7 +18,7 @@ namespace softWrench.sW4.Data.Entities {
             }
         }
 
-        public async void GetCostCenterDescription(Dictionary<string, string> costCenters) {
+        public async Task GetCostCenterDescription(Dictionary<string, string> costCenters) {
             var entityMetadata = MetadataProvider.Entity(ChartOfAccountsEntity);
             const string glAccount = "glaccount";
             var searchRequestDto = new SearchRequestDto {
@@ -34,7 +35,7 @@ namespace softWrench.sW4.Data.Entities {
             }
         }
 
-        public async void GetLocationDescription(Dictionary<string, string> customers) {
+        public async Task GetLocationDescription(Dictionary<string, string> customers) {
             var entityMetadata = MetadataProvider.Entity(PluspCustomerEntity);
             const string customer = "customer";
             var searchRequestDto = new SearchRequestDto {

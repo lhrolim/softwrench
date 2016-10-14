@@ -19,8 +19,8 @@ namespace softWrench.sW4.Scheduler {
 
         }
 
-        public async void Execute(IJobExecutionContext context) {
-            await DoExecute();
+        public void Execute(IJobExecutionContext context) {
+            AsyncHelper.RunSync(DoExecute);
         }
 
         protected async Task DoExecute() {
@@ -53,9 +53,9 @@ namespace softWrench.sW4.Scheduler {
 
         public abstract bool RunAtStartup();
 
-        public virtual async void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (RunAtStartup()) {
-                await DoExecute();
+                AsyncHelper.RunSync(DoExecute);
             }
         }
 

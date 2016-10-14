@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Web.Http;
 using cts.commons.portable.Util;
 using cts.commons.Util;
@@ -117,6 +118,18 @@ namespace softWrench.sW4.Util {
             return true;
         }
 
+        public static bool IsAsyncMethod(MethodInfo method) {
+
+            var attType = typeof(AsyncStateMachineAttribute);
+
+            // Obtain the custom attribute for the method. 
+            // The value returned contains the StateMachineType property. 
+            // Null is returned if the attribute isn't present for the method. 
+            var attrib = (AsyncStateMachineAttribute)method.GetCustomAttribute(attType);
+
+            return (attrib != null);
+        }
+
         private static object HandleCasting(PropertyDescriptor prop, object value) {
             if ("DateTime".EqualsIc(prop.PropertyType.Name) && !(value is DateTime)) {
                 return ConversionUtil.HandleDateConversion(value as string);
@@ -141,7 +154,8 @@ namespace softWrench.sW4.Util {
         }
 
         public static object InstantiateProperty(object baseObject, string propertyName) {
-            return InstantiateProperty(baseObject, propertyName, new { });
+            return InstantiateProperty(baseObject, propertyName, new {
+            });
         }
 
         public static object InstantiateAndSetIfNull(object baseObject, string propertyName) {
@@ -149,7 +163,8 @@ namespace softWrench.sW4.Util {
             if (value != null) {
                 return value;
             }
-            value = InstantiateProperty(baseObject, propertyName, new { });
+            value = InstantiateProperty(baseObject, propertyName, new {
+            });
             SetProperty(baseObject, propertyName, value);
             return value;
         }
@@ -328,9 +343,11 @@ namespace softWrench.sW4.Util {
             var sourceProperties = TypeDescriptor.GetProperties(source);
             foreach (PropertyDescriptor prop in targetProperties) {
                 var sourceProperty = sourceProperties.Find(prop.Name, true);
-                if (sourceProperty == null) continue;
+                if (sourceProperty == null)
+                    continue;
                 var value = sourceProperty.GetValue(source);
-                if (value == null) continue;
+                if (value == null)
+                    continue;
                 if (sourceProperty.PropertyType == prop.PropertyType) {
                     prop.SetValue(target, value);
                 } else if (!sourceProperty.PropertyType.IsPrimitive && propertyQualifier != null) {

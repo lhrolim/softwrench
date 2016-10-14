@@ -232,8 +232,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             return attachments;
         }
         
-        private async void UpdateEmailHistoryAsync(string userId, string[] emailAddresses) {
-            await Task.Factory.NewThread(() => {
+        private void UpdateEmailHistoryAsync(string userId, string[] emailAddresses) {
+            Task.Factory.NewThread(() => {
                 string[] userIds = { userId.ToLower() };
                 var emailRecords = _dao.FindByQuery<EmailHistory>(EmailHistory.byUserIdEmailAddess, userIds, emailAddresses).ToList();
 

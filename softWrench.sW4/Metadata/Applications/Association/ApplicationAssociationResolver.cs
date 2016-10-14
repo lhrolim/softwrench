@@ -110,7 +110,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
             // execute query count in separate thread and update the dto with the pagination data
             if (isLookupMode) {
-                ExecuteCountQuery(associationFilter, entityMetadata);
+                await ExecuteCountQuery(associationFilter, entityMetadata);
             }
 
             var options = BuildOptions(queryResponse, association, numberOfLabels, associationFilter.SearchSort == null);
@@ -129,19 +129,13 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         }
 
-        private void ExecuteCountQuery(SearchRequestDto associationFilter, EntityMetadata entityMetadata) {
-            var tasks = new List<Task>(1) {
-                Task.Factory.NewThread(async c => {
-                    var paginatedFilter = (PaginatedSearchRequestDto) associationFilter;
-                    if (paginatedFilter.NeedsCountUpdate) {
-                        //cloning to avoid any concurrency issues
-                        var clonedDTO = (PaginatedSearchRequestDto) associationFilter.ShallowCopy();
-                        paginatedFilter.TotalCount = await EntityRepository.Count(entityMetadata, clonedDTO);
-                    }
-                }, null)
-            };
-
-            Task.WaitAll(tasks.ToArray());
+        private async Task ExecuteCountQuery(SearchRequestDto associationFilter, EntityMetadata entityMetadata) {
+            var paginatedFilter = (PaginatedSearchRequestDto)associationFilter;
+            if (paginatedFilter.NeedsCountUpdate) {
+                //cloning to avoid any concurrency issues
+                var clonedDTO = (PaginatedSearchRequestDto)associationFilter.ShallowCopy();
+                paginatedFilter.TotalCount = await EntityRepository.Count(entityMetadata, clonedDTO);
+            }
         }
 
         private void AppendQuickSearch(ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {

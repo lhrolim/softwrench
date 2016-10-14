@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using cts.commons.simpleinjector.Events;
+using cts.commons.Util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Scheduler;
 using softWrench.sW4.Util;
@@ -32,10 +33,10 @@ namespace softwrench.sw4.activitystream.classes.Controller.Jobs {
             _notificationFacade.PurgeNotificationsFromStream();
         }
 
-        public override async void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public override void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (RunAtStartup() && IsEnabled) {
                 _notificationFacade.InitNotificationStreams();
-                await DoExecute();
+                AsyncHelper.RunSync(DoExecute);
             }
         }
 

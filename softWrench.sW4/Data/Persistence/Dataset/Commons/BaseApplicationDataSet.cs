@@ -196,7 +196,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 if (dataMap == null) {
                     return null;
                 }
-                LoadCompositions(application, request, applicationCompositionSchemas, dataMap);
+                await LoadCompositions(application, request, applicationCompositionSchemas, dataMap);
 
                 if (request.InitialValues != null) {
                     var initValDataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application,
@@ -212,7 +212,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return detailResult;
         }
 
-        private async void LoadCompositions(ApplicationMetadata application, DetailRequest request,
+        private async Task LoadCompositions(ApplicationMetadata application, DetailRequest request,
             IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemas, DataMap dataMap) {
             var prefetchCompositions =
                 "true".EqualsIc(application.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions)) ||
@@ -230,7 +230,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             if (compostionsToUse.Any()) {
                 var preFetchedCompositionFetchRequest = new PreFetchedCompositionFetchRequest(new List<AttributeHolder> { dataMap });
                 preFetchedCompositionFetchRequest.CompositionList = new List<string>(compostionsToUse.Keys);
-               await GetCompositionData(application, preFetchedCompositionFetchRequest, null);
+                await GetCompositionData(application, preFetchedCompositionFetchRequest, null);
             }
         }
 
@@ -402,7 +402,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             #region associations
 
-            System.Collections.Generic.ISet<string> handledAssociations = new HashSet<string>();
+            ISet<string> handledAssociations = new HashSet<string>();
 
             foreach (var applicationAssociation in associations) {
                 if (!associationsToFetch.ShouldResolve(applicationAssociation.AssociationKey)) {
@@ -440,12 +440,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     //if there´s no provider, there´s nothing to do --> static list
                     continue;
                 }
-                var field = optionField;
-                tasks.Add(Task.Factory.NewThread(c => {
-                    Quartz.Util.LogicalThreadContext.SetData("context", c);
-                    var associationOptions = _dynamicOptionFieldResolver.ResolveOptions(schema, dataMap, field);
-                    eagerFetchedOptions.Add(field.AssociationKey, associationOptions);
-                }, ctx));
+                tasks.Add(DoResolveEagerOptions(schema, dataMap, optionField, eagerFetchedOptions));
             }
             #endregion
 
@@ -473,6 +468,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             return result;
         }
+
+        private async Task DoResolveEagerOptions(ApplicationSchemaDefinition schema, AttributeHolder dataMap, OptionField field, IDictionary<string, IEnumerable<IAssociationOption>>
+                eagerFetchedOptions) {
+            var associationOptions = await _dynamicOptionFieldResolver.ResolveOptions(schema, dataMap, field);
+            eagerFetchedOptions.Add(field.AssociationKey, associationOptions);
+        }
+
 
         private async Task AssociationResolverWork(AttributeHolder dataMap, ApplicationSchemaDefinition schema, object c,
             ApplicationAssociationDefinition association, SearchRequestDto search, IDictionary<string, IEnumerable<IAssociationOption>> eagerFetchedOptions,
@@ -678,7 +680,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var before = LoggingUtil.StartMeasuring(Log, "starting update association options fetching for application {0} schema {1}", application.Name, application.Schema.Name);
             IDictionary<string, BaseAssociationUpdateResult> resultObject =
                 new Dictionary<string, BaseAssociationUpdateResult>();
-            System.Collections.Generic.ISet<string> associationsToUpdate = null;
+            ISet<string> associationsToUpdate = null;
 
             // Check if 'self' (for lazy load) or 'dependant' (for dependant combos) association update
             if (!String.IsNullOrWhiteSpace(request.AssociationFieldName)) {
@@ -703,16 +705,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     EntityUtil.IsRelationshipNameEquals(f.AssociationKey, associationToUpdate)));
                 if (association == null) {
                     var optionField = application.Schema.OptionFields().First(f => f.AssociationKey.EqualsIc(associationToUpdate));
-                    tasks.Add(Task.Factory.NewThread(c => {
-                        Quartz.Util.LogicalThreadContext.SetData("context", c);
-                        var data = _dynamicOptionFieldResolver.ResolveOptions(application.Schema, cruddata, optionField);
-                        if (data != null) {
-                            resultObject.Add(optionField.AssociationKey, new LookupOptionsFetchResultDTO(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
-                        }
-                    }, ctx));
+                    tasks.Add(DoResolveOptionFields(application, cruddata, optionField, resultObject));
+
                 } else {
-                    var associationApplicationMetadata =
-                        ApplicationAssociationResolver.GetAssociationApplicationMetadata(association);
+                
 
                     var searchRequest = BaseDataSetSearchHelper.BuildSearchDTOForAssociationSearch(request, association, cruddata);
 
@@ -722,17 +718,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                         continue;
                     }
 
-                    tasks.Add(Task.Factory.NewThread(async c => {
-                        var perThreadContext = ctx.ShallowCopy();
-                        Quartz.Util.LogicalThreadContext.SetData("context", perThreadContext);
-
-                        var options = await _associationOptionResolver.ResolveOptions(application.Schema, cruddata, association,
-                            searchRequest);
-
-                        resultObject.Add(association.AssociationKey,
-                            new LookupOptionsFetchResultDTO(searchRequest.TotalCount, searchRequest.PageNumber,
-                                searchRequest.PageSize, options, associationApplicationMetadata));
-                    }, ctx));
+                    tasks.Add(DoResolveOptionAssociations(application, cruddata,association,searchRequest,resultObject));
                 }
             }
 
@@ -745,6 +731,28 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
             return resultObject;
         }
+
+        private async Task DoResolveOptionFields(ApplicationMetadata application, AttributeHolder cruddata, OptionField optionField,
+            IDictionary<string, BaseAssociationUpdateResult> resultObject) {
+            var data = await _dynamicOptionFieldResolver.ResolveOptions(application.Schema, cruddata, optionField);
+            if (data != null) {
+                resultObject.Add(optionField.AssociationKey,
+                    new LookupOptionsFetchResultDTO(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
+            }
+        }
+
+        private async Task DoResolveOptionAssociations(ApplicationMetadata application, AttributeHolder cruddata, ApplicationAssociationDefinition association,PaginatedSearchRequestDto searchRequest,
+         IDictionary<string, BaseAssociationUpdateResult> resultObject) {
+            var associationApplicationMetadata =
+                    ApplicationAssociationResolver.GetAssociationApplicationMetadata(association);
+            var options = await _associationOptionResolver.ResolveOptions(application.Schema, cruddata, association,
+                              searchRequest);
+
+            resultObject.Add(association.AssociationKey,
+                new LookupOptionsFetchResultDTO(searchRequest.TotalCount, searchRequest.PageNumber,
+                    searchRequest.PageSize, options, associationApplicationMetadata));
+        }
+
 
         public IEnumerable<IAssociationOption> GetSWPriorityType(OptionFieldProviderParameters parameters) {
             //create default priority list

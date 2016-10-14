@@ -37,10 +37,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
         private readonly MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
         private readonly DataSetProvider _dataSetProvider;
+        private readonly AttachmentDao _attachmentDao;
 
         public AttachmentDao AttachmentDao {
             get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentDao>(typeof(AttachmentDao));
+                return _attachmentDao;
             }
         }
 
@@ -53,11 +54,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         /// </summary>
         private string _baseMaximoPath;
 
-        private MaximoHibernateDAO _maxDAO;
+        private readonly MaximoHibernateDAO _maxDAO;
 
-        public AttachmentHandler(MaximoHibernateDAO maxDAO, DataSetProvider dataSetProvider) {
+        public AttachmentHandler(MaximoHibernateDAO maxDAO, DataSetProvider dataSetProvider, AttachmentDao attachmentDao) {
             _maxDAO = maxDAO;
             _dataSetProvider = dataSetProvider;
+            _attachmentDao = attachmentDao;
         }
 
 
@@ -413,22 +415,35 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             if (offlinehash != null) {
                 attachmnetsOfflinehash = offlinehash.Split(',');
             }
+
+            //whether or not the data:application/pdf;base64, prefix was already stripped
+            var pureBase64String = !data.StartsWith("data:");
+
             var dtos = new List<AttachmentDTO>(attachmentsPath.Length);
             for (int i = 0, j = 0; i < attachmentsPath.Length; i++, j += 2) {
                 var attachmentTitle = attachmentsTitle != null ? attachmentsTitle[i] : null;
                 var attachmentDesc = attachmentsDesc != null ? attachmentsDesc[i] : null;
                 var attachmentOfflinehash = attachmnetsOfflinehash != null ? attachmnetsOfflinehash[i] : null;
-                if (attachmentsData.Length <= j + 1) {
-                    throw new Exception("One or more selected files contain no data and connot be added as attachments.");
-                }
-                var dto = new AttachmentDTO() {
-                    Data = attachmentsData[j] + ',' + attachmentsData[j + 1],
+                AttachmentDTO dto = new AttachmentDTO() {
                     Path = attachmentsPath[i],
                     Title = attachmentTitle,
                     OffLineHash = attachmentOfflinehash,
                     Description = attachmentDesc,
                     DocumentInfoId = null
                 };
+
+                if (pureBase64String) {
+                    dto.Data = attachmentsData[j];
+                } else {
+                    //on that case there´ll be a , between the base64 prefix and the real data, such as data:application/pdf;base64,asafasdfasdfa==
+                    //therefore we need to join the , splitted string back
+                    if (attachmentsData.Length <= j + 1) {
+                        throw new Exception("One or more selected files contain no data and connot be added as attachments.");
+                    }
+                    dto.Data = attachmentsData[j] + ',' + attachmentsData[j + 1];
+                }
+
+
                 dtos.Add(dto);
             }
             return dtos;

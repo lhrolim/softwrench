@@ -215,7 +215,7 @@ namespace softWrench.sW4.Security.Services {
             return null;
         }
 
-        public async void SendActivationEmail(int userId, string email) {
+        public async Task SendActivationEmail(int userId, string email) {
             var user = _dao.FindByPK<User>(typeof(User), userId);
             if (user == null) {
                 throw new InvalidOperationException("user {0} not found".Fmt(userId));
