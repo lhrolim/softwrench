@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -109,12 +110,8 @@ namespace softwrench.sw4.offlineserver.services {
             var results = new AssociationSynchronizationResultDto();
             var watch = Stopwatch.StartNew();
             foreach (var association in completeApplicationMetadataDefinitions) {
-
                 //this will return sync schema
                 var userAppMetadata = association.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
-
-                var entityMetadata = MetadataProvider.SlicedEntityMetadata(userAppMetadata);
-                var association1 = association;
 
                 Rowstamps rowstamp = null;
                 if (rowstampMap.ContainsKey(association.ApplicationName)) {
@@ -122,31 +119,33 @@ namespace softwrench.sw4.offlineserver.services {
                     rowstamp = new Rowstamps(currentRowStamp, null);
                 }
 
-                tasks[i++] = Task.Factory.NewThread(async () => {
-                    var context = _lookuper.LookupContext();
-                    context.OfflineMode = true;
-                    _lookuper.AddContext(context);
-
-                    var datamaps = await FetchData(entityMetadata, userAppMetadata, rowstamp, null);
-                    results.AssociationData.Add(association1.ApplicationName, datamaps);
-
-                    var textIndexes = new List<string>();
-                    results.TextIndexes.Add(association1.ApplicationName, textIndexes);
-
-                    var numericIndexes = new List<string>();
-                    results.NumericIndexes.Add(association1.ApplicationName, numericIndexes);
-
-                    var dateIndexes = new List<string>();
-                    results.DateIndexes.Add(association1.ApplicationName, dateIndexes);
-
-                    ParseIndexes(textIndexes, numericIndexes, dateIndexes, association1);
-                });
-
+                tasks[i++] = InnerGetAssocData(association, userAppMetadata, rowstamp, results);
             }
             await Task.WhenAll(tasks);
             Log.DebugFormat("SYNC:Finished handling all associations. Ellapsed {0}", LoggingUtil.MsDelta(watch));
 
             return results;
+        }
+
+        private async Task InnerGetAssocData(CompleteApplicationMetadataDefinition association, ApplicationMetadata userAppMetadata, Rowstamps rowstamp, AssociationSynchronizationResultDto results) {
+            var entityMetadata = MetadataProvider.SlicedEntityMetadata(userAppMetadata);
+            var context = _lookuper.LookupContext();
+            context.OfflineMode = true;
+            _lookuper.AddContext(context);
+
+            var datamaps = await FetchData(entityMetadata, userAppMetadata, rowstamp, null);
+            results.AssociationData.Add(association.ApplicationName, datamaps);
+
+            var textIndexes = new List<string>();
+            results.TextIndexes.Add(association.ApplicationName, textIndexes);
+
+            var numericIndexes = new List<string>();
+            results.NumericIndexes.Add(association.ApplicationName, numericIndexes);
+
+            var dateIndexes = new List<string>();
+            results.DateIndexes.Add(association.ApplicationName, dateIndexes);
+
+            ParseIndexes(textIndexes, numericIndexes, dateIndexes, association);
         }
 
         private async Task ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap) {
