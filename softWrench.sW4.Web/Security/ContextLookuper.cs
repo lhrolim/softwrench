@@ -101,8 +101,6 @@ namespace softWrench.sW4.Web.Security {
 
         private void SetContextData(ContextHolder context) {
             CallContext.LogicalSetData("context", context);
-            // adding to 'deprecated' threadlocals just in case oter parts of the code are accessing these directly
-            LogicalThreadContext.SetData("context", context);
             if (HttpContext.Current != null) {
                 HttpContext.Current.Items["context"] = context;
             }
