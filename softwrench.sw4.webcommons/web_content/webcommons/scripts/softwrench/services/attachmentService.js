@@ -47,7 +47,7 @@
             const parameters = { id: id, mode: "http" };
             const errorMessage = downloadErrorMessage(id);
 
-            const controllerUrl = url(`${controller}/Download?${$.param(parameters)}`);
+            const controllerUrl = url(`/Attachment/Download?${$.param(parameters)}`);
             return fileService.downloadPromise(controllerUrl).catch(() => alertService.alert(errorMessage));
         }
 
