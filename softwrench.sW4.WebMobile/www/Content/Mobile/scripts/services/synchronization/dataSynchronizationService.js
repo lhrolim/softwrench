@@ -66,14 +66,15 @@
                 });
 
                 if (deletedIds.length > 0) {
+                    const fnName = isRippleEmulator() ? "push" : "unshift";
                     const deleteQuery = { query: entities.DataEntry.deleteQueryPattern.format(buildIdsString(deletedIds), application.applicationName)};
-                    queryArray.push(deleteQuery);
+                    queryArray[fnName](deleteQuery);
                     //TODO: treat the case where AuditEntries that have no refId shouldn't be deleted (e.g. crud_create operations)
                     const deleteAuditQuery = {
                         query: entities.AuditEntry.deleteRelatedByRefIdStatement.format(buildIdsString(deletedIds)),
                         args: [application.apllicationName]
                     };
-                    queryArray.push(deleteAuditQuery);
+                    queryArray[fnName](deleteAuditQuery);
                 }
             });
 

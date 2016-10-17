@@ -14,7 +14,7 @@
             /// <param name="compositionDataReturned">The composition data returned from the server, a dictionary of multiple applications (worklogs,attachments, etc)</param>
             /// <returns type="CompositionSyncResult"></returns>
             const generateSyncQueryArrays = function (compositionDataReturned) {
-                const log = $log.get("compositionService#generateSyncQueryArrays");
+                const log = $log.get("compositionService#generateSyncQueryArrays",["composition"]);
                 let queryArray = [];
 
                 if (compositionDataReturned == null) {
@@ -42,13 +42,26 @@
                             doclinksArray.push({ compositionRemoteId: datamap.doclinksid, hash: datamap["docinfo_.urlparam1"], ownerTable: datamap.ownertable, ownerId: datamap.ownerid, docinfoid: datamap.docinfoid });
                         }
                     }
-                    //let´s delete the old compositions first, to avoid any chance of errors due to server side updates
-                    //however persistence.js reverts the array... damn it
-                    queryArray.push(entities.CompositionDataEntry.syncdeletionQuery.format(idsToDelete));
+                    if (idsToDelete.length !== 0) {
+                        //let´s delete the old compositions first, to avoid any chance of errors due to server side updates
+                        //however persistence.js reverts the array on ripple... damn it
+                        if (isRippleEmulator()) {
+                            queryArray.push(entities.CompositionDataEntry.syncdeletionQuery.format(application.applicationName, idsToDelete));
+                        } else {
+                            queryArray.unshift(entities.CompositionDataEntry.syncdeletionQuery.format(application.applicationName, idsToDelete));
+                        }
+
+                        
+                    }
+                    
                 }
 
                 return attachmentDataSynchronizationService.generateAttachmentsQueryArray(doclinksArray)
-                    .then((attachmentQueryArray) => queryArray.concat(attachmentQueryArray));
+                    .then((attachmentQueryArray) => {
+                        queryArray =queryArray.concat(attachmentQueryArray);
+                        log.debug(`final composition array count ${queryArray.length}`);
+                        return queryArray;
+                    });
 
             };
 
@@ -70,7 +83,7 @@
                     throw new Error("field displayable is required");
                 }
                 //TODO: cache...
-                const log = $log.get("offlineCompositionService#loadComposition");
+                const log = $log.get("offlineCompositionService#loadComposition", ["composition"]);
                 const localId = mainItem.id;
                 var baseQuery = "application = '{0}' and ( (".format(displayable.associationKey);
                 const entityDeclarationAttributes = displayable.entityAssociation.attributes;

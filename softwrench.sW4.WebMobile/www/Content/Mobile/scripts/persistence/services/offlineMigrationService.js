@@ -79,7 +79,13 @@
 
             // adding an extra "_" on index name to be the same pattern as indexes created from persistence.js hasOne and hasMany
             Migration.prototype.addIndex = function (tableName, columnName, unique, indexName) {
-                const name = indexName || tableName + "__" + columnName;
+                var originalColumnName = columnName;
+                if (columnName instanceof Array) {
+                    originalColumnName = columnName.join("_");
+                    columnName = columnName.join(',');
+                }
+
+                const name = indexName || tableName + "__" + originalColumnName;
                 const uniqueString = unique === true ? "UNIQUE" : "";
                 const sql = `CREATE ${uniqueString} INDEX ${name} ON ${tableName} (${columnName})`;
                 this.executeSql(sql);

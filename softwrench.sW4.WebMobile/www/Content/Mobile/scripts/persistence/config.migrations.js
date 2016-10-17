@@ -39,6 +39,7 @@
                     t.date("dateindex02");
                     t.date("dateindex03");
                 });
+                
             },
             down: function () {
                 this.dropTable("AssociationData");
@@ -156,6 +157,7 @@
                     t.date("dateindex02");
                     t.date("dateindex03");
                 });
+                this.addIndex("DataEntry", ["application","remoteid"], true);
             },
             down: function () {
                 this.dropTable("DataEntry");
