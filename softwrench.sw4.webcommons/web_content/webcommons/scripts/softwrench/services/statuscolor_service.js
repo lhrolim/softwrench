@@ -36,6 +36,10 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
             $rootScope.statuscolorFallbackJson = statuscolorFallbackJson;
         }
 
+        if (!statuscolorFallbackJson || !applicationname) {
+            return "#777";
+        }
+
         var applicationObject = statuscolorFallbackJson[applicationname];
         if (!applicationObject) {
 
