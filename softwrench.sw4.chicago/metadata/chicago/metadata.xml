@@ -588,6 +588,7 @@
           <customization position="statussection">
             <section orientation="horizontal" id="statussection">
               <renderer type="default" params="childinputsize=small" />
+              <field attribute="createdby" label="Created By" default="@username" hidden="true"/>
               <field attribute="pluspcustomer" hidden="true" default="CPS-00"/>
               <field attribute="ticketuid" label="SR#" hidden="true"/>
               <field attribute="creationdate" label="Creation Date" default="@currentdatetime" hidden="true">
