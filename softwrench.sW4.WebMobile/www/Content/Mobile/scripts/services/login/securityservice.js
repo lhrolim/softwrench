@@ -87,9 +87,9 @@
          * "SiteId": String
          * }
          * 
-         * @param String username 
-         * @param String password 
-         * @returns Promise resolved with the user retuned from the server
+         * @param {String} username 
+         * @param {String} password 
+         * @returns {Promise<UserData>} resolved with the user retuned from the server
          */
         const login = (username, password) => 
             //this was set during bootstrap of the application, or on settingscontroller.js (settings screen)

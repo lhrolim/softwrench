@@ -6,7 +6,8 @@
     <application id="OWO" title="Assigned to Group" ref="otherworkorder" schema="list" icon="fa-table"/>
   </container>
 
-  <!-- TODO: support for menu positioning. For now the profile is hardcoded in the ui -->
-  <!--<service id="userpofile" service="fsUserProfileService" method="goToMyProfile" title="User Profile" icon="fa-user"/>-->
+  <container id="user-section">
+    <service id="userprofile" service="fsUserProfileService" method="goToMyProfile" title="User Profile" icon="fa-user"/>
+  </container>
   
 </Menu>

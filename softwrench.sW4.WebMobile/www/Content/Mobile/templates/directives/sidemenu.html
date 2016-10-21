@@ -1,0 +1,59 @@
+﻿<ul class="list">
+    <!-- #region applications section -->
+    <div ng-show="menuleafs().length" class="item item-divider">
+        <i class="fa fa-th"></i>&ensp;Applications
+    </div>
+
+    <ng-switch ng-repeat="leaf in menuleafs()" on="leaf.type">
+        <!-- container -->
+        <div ng-switch-when="MenuContainerDefinition" ng-init="collapsed = true" ng-click="collapsed = !collapsed">
+            <div class="item leaf">
+                <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}&ensp;<span class="fa" ng-class="{ 'fa-caret-down': collapsed, 'fa-caret-up': !collapsed }"></span>
+            </div>
+            <div ng-show="!collapsed">
+                <!-- container's subitems -->
+                <a ng-repeat="subleaf in leaf.leafs"
+                   ng-click="loadApplication(subleaf)"
+                   class="item subleaf">
+                    <i class="fa" ng-class="subleaf.icon"></i>&ensp;{{subleaf.title}}
+                </a>
+            </div>
+        </div>
+        <!-- exploded items -->
+        <a ng-switch-default class="item" ng-click="loadApplication(leaf)">
+            <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}
+        </a>
+    </ng-switch>
+
+    <!--#endregion-->
+
+    <!-- #region admin section -->
+    <div class="item item-divider">
+        <i class="fa fa-cogs"></i>&ensp;Admin
+    </div>
+
+    <a class="item" ng-click="loadAction('main.home')"><i class="fa fa-refresh"></i>&ensp;Synchronization</a>
+
+    <a class="item" ng-click="loadAction('main.settings')"><i class="fa fa-cog"></i>&ensp;Settings</a>
+
+    <a class="item" ng-click="loadAction('main.support')"><i class="fa fa-question"></i>&ensp;Support</a>
+
+    <!-- metadata defined admin-section menu items -->
+    <a ng-repeat="adminLeaf in adminMenuItems()" class="item" ng-click="loadApplication(adminLeaf)">
+        <i class="fa {{adminLeaf.icon}}"></i>&ensp;{{adminLeaf.title}}
+    </a>
+    <!-- #endregion -->
+
+    <!-- #region user section -->
+    <div class="item item-divider">
+        <i class="fa fa-user"></i>&ensp;User
+    </div>
+
+    <!-- metadata defined user-section menu items -->
+    <a ng-repeat="userLeaf in userMenuItems()" class="item" ng-click="loadApplication(userLeaf)">
+        <i class="fa {{userLeaf.icon}}"></i>&ensp;{{userLeaf.title}}
+    </a>
+
+    <a class="item" ng-click="logout()"><i class="fa fa-sign-out"></i>&ensp;Logout</a>
+    <!-- #endregion -->
+</ul>

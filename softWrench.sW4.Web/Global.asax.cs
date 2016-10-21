@@ -154,18 +154,18 @@ namespace softWrench.sW4.Web {
 
             ContextLookuper.GetInstance().RegisterHttpContext(Request);
 
-            if (Request.UrlReferrer != null) {
+            HttpContext.Current.Response.BufferOutput = true;
+
+            if (/*Request.Browser.IsMobileDevice*/ Request.Headers["Origin"] != null) {
                 //this is for ripple development where CORS is enabled.
-                //TODO: review if these settings are really needed into production,or how to do it the right way,since it might represent a security leak
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", Request.Url.Scheme + Uri.SchemeDelimiter + Request.UrlReferrer.Authority);
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", Request.Headers["Origin"]);
                 HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");
             }
-
 
             if (HttpContext.Current.Request.HttpMethod == "OPTIONS") {
                 //These headers are handling the "pre-flight" OPTIONS call sent by the browser
                 HttpContext.Current.Response.AddHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept , offlineMode");
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept , offlineMode, request_start_timestamp");
                 HttpContext.Current.Response.AddHeader("Access-Control-Max-Age", "1728000");
                 HttpContext.Current.Response.End();
             }

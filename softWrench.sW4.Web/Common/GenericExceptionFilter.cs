@@ -68,6 +68,7 @@ namespace softWrench.sW4.Web.Common {
             filterContext.ExceptionHandled = true;
             filterContext.HttpContext.Response.Clear();
             filterContext.HttpContext.Response.StatusCode = (int)CodeOf(rootException);
+            filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
 
             if (filterContext.HttpContext.Request.IsAjaxRequest()) {
                 // if Ajax: json response
@@ -89,7 +90,6 @@ namespace softWrench.sW4.Web.Common {
                 };
                 filterContext.Result = result;
             }
-            filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
             filterContext.HttpContext.Response.End();
         }
     }

@@ -1,35 +1,47 @@
-﻿(function (mobileServices) {
+﻿(function (angular, mobileServices) {
     "use strict";
 
     mobileServices.config(["$httpProvider", function ($httpProvider) {
 
         $httpProvider.defaults.withCredentials = true;
+        $httpProvider.defaults.headers.common["offlineMode"] = true;
 
-        var ajaxInterceptor = function ($q, $rootScope, $timeout, contextService, $log, networkConnectionService, $injector) {
+        function ajaxInterceptor($q, $rootScope, $timeout, contextService, $log, networkConnectionService, $injector) {
 
             var securityService = null;
 
-            var started = function (config) {
-                config.headers['offlineMode'] = true;
-                var log = $log.getInstance('sw4.ajaxint#started');
-                log.debug("url: {0} ".format(config.url));
+            const started = function (config) {
+                config.headers["offlineMode"] = true;
+                config.headers["request_start_timestamp"] = new Date().getTime();
+                const log = $log.getInstance("sw4.ajaxint#started");
+                log.debug(`url: ${config.url}`);
             };
 
-            var endedok = function (response) {
-                var log = $log.getInstance('sw4.ajaxint#endedok');
-                log.debug("status :{0}, url: {1} ".format(response.status, response.config.url));
+            const endedok = function (response) {
+                const log = $log.getInstance("sw4.ajaxint#endedok");
+                log.debug(`status: ${response.status}, url: ${response.config.url}`);
             };
 
-            var endederror = function (rejection) {
-                var status = rejection.status;
-                if (status === 0) {
+            function isTimeoutError(rejection) {
+                const timeout = rejection.config.timeout;
+                const start = rejection.config["request_start_timestamp"];
+                const now = new Date().getTime();
+                return angular.isNumber(timeout) // timeout defined
+                    && angular.isNumber(start) // start timestamp defined
+                    && ((now - start) > timeout); // timeout has passed
+            }
+
+            const endederror = function (rejection) {
+                const status = rejection.status;
+                if (status === 0 || status === -1) {
                     // connection problem
                     if (networkConnectionService.isOffline()) {
                         // no connection at all
                         return new Error("No internet connection detected.");
                     } 
                     // request-response timeout or server unreachable/socket timeout 
-                    return new Error((!rejection.config.timeout ? "Server unreachable" : "Request timed out") + ". Please check your internet connection.");
+                    const message = (isTimeoutError(rejection) ? "Request timed out" : "Server unreachable") + ". Please make sure the url in settings is correct and check your internet connection.";
+                    return new Error(message);
                 
                 } else if (status >= 500 && status < 600) {
                     // internal server error
@@ -45,10 +57,9 @@
                     securityService.handleUnauthorizedRemoteAccess();
                 } 
                 return rejection;
-
             };
 
-            var interceptor = {
+            const interceptor = {
                 // optional method
                 'request': function (config) {
                     started(config);
@@ -61,19 +72,15 @@
                 },
                 // optional method
                 'responseError': function (rejection) {
-                    var error = endederror(rejection);
+                    const error = endederror(rejection);
                     return $q.reject(error || rejection);
                 }
             };
-
             return interceptor;
         };
-
+        
         $httpProvider.interceptors.push(["$q", "$rootScope", "$timeout", "contextService", "$log", "networkConnectionService", "$injector", ajaxInterceptor]);
 
     }]);
 
-})(mobileServices);
-
-
-
+})(angular, mobileServices);

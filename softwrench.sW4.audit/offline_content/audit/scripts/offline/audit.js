@@ -1,4 +1,4 @@
-﻿(function (angular, persistence) {
+﻿(function (angular, persistence, _) {
     "use strict";
 
     try {
@@ -8,7 +8,7 @@
     }
 
     //#region audit.offline module
-    var audit = angular.module("audit.offline", ["persistence.offline"]);
+    const audit = angular.module("audit.offline", ["persistence.offline"]);
     //#endregion
 
     //#region audit.offline migrations
@@ -72,11 +72,11 @@
     //#region offlineAuditService
     (function (audit) {
 
-        function offlineAuditService($q, entities, swdbDAO, securityService) {
+        function offlineAuditService($q, entities, dao, securityService, routeService) {
             //#region Utils
             function validateEntryField(dict, field) {
                 if (!dict[field]) {
-                    throw new Error("IllegalArgumentError: AuditEntry cannot have an empty '" + field + "'");
+                    throw new Error(`IllegalArgumentError: AuditEntry cannot have an empty '${field}'`);
                 }
             }
 
@@ -90,7 +90,7 @@
                 validateEntryField(dict, "createdBy");
 
                 dict["createdDate"] = new Date();
-                return swdbDAO.instantiate("AuditEntry", dict);
+                return dao.instantiate("AuditEntry", dict);
             }
 
             //#endregion
@@ -102,8 +102,8 @@
              * The entry should follow the format:
              * {
              *  operation: String, // name of the operation, such as crud_create, crud_update, or a custom one
-             *  originaldatamap: {}, // a datamap before an action has happened on the entry
-             *  datamap: {}, // datamap after the action has been performed, both will be used to generate a diff
+             *  originaldatamap: Object, // a datamap before an action has happened on the entry
+             *  datamap: Object, // datamap after the action has been performed, both will be used to generate a diff
              *  refApplication: String, // name of the application/entity being affected
              *  refClientId: String, // local id of the entity being affected
              *  refId: String, // server's id of the entity being affected
@@ -113,15 +113,12 @@
              * The other fields can be ommited depending on the action being executed, this method is intended for registering
              * complete entries though. See other methods (such as {@link #registerEvent}) for registering customized entries.
              * 
-             * @param {} entry dictionary in the aforementioned format
-             * @returns Promise resolved with the registered AuditEntry
-             * @throws Error if any of the mandatory fields is ommited and/or there's no user logged in
+             * @param {Object} entry dictionary in the aforementioned format
+             * @returns {Promise<entities.AuditEntry>} resolved with the registered AuditEntry
+             * @throws {Error} if any of the mandatory fields is ommited and/or there's no user logged in
              */
             function registerEntry(entry) {
-                return instantiateEntry(entry).then(function (auditentry) {
-                    return swdbDAO.save(auditentry);
-                });
-
+                return instantiateEntry(entry).then(auditentry => dao.save(auditentry));
             }
 
             /**
@@ -131,23 +128,23 @@
              * Usage example (user scanned an asset):
              * offlineAuditService.registerEvent("scan", "asset", asset.id, asset.remoteId, auth.currentUser());
              * 
-             * @param String operation name of the operation/event being tracked
-             * @param String refApplication name of the application/entity being affected by the event
-             * @param String refClientId local id of the enity being affected by the event
-             * @param String refId server's id of the entity being affected by the event
-             * @param String refUserId server's userId of the entity being affected by the event
-             * @param String createdBy username of the user who triggered the event -> defaults to current logged user if omitted  
-             * @return Promise resolved with the registered AuditEntry
-             * @throws Error if any of the parameters is omitted and/or there's no user logged in
+             * @param {String} operation name of the operation/event being tracked
+             * @param {String} refApplication name of the application/entity being affected by the event
+             * @param {String} refClientId local id of the enity being affected by the event
+             * @param {String} refId server's id of the entity being affected by the event
+             * @param {String} refUserId server's userId of the entity being affected by the event
+             * @param {String} createdBy username of the user who triggered the event -> defaults to current logged user if omitted  
+             * @return {Promise<entities.AuditEntry>} resolved with the registered AuditEntry
+             * @throws {Error} if any of the parameters is omitted and/or there's no user logged in
              */
             function registerEvent(operation, refApplication, refClientId, refId, refUserId, createdBy) {
-                var entry = {
-                    operation: operation,
-                    refApplication: refApplication,
-                    refClientId: refClientId,
-                    refId: refId,
-                    refUserId: refUserId,
-                    createdBy: createdBy
+                const entry = {
+                    operation,
+                    refApplication,
+                    refClientId,
+                    refId,
+                    refUserId,
+                    createdBy
                 };
                 return registerEntry(entry);
             }
@@ -155,104 +152,109 @@
             /**
              * Lists all apllications that have AuditEntries related to them (refApplication).
              * 
-             * @returns Promise resolved with array of name of the applications.
+             * @returns {Promise<Array<String>>} resolved with array of name of the applications.
              */
             function listAudittedApplications() {
-                var createdBy = securityService.currentUser();
-                return swdbDAO.executeStatement(entities.AuditEntry.listApplicationsStatement, [createdBy])
-                    .then(function (results) {
-                        return results.map(function (r) {
-                            return r.refApplication;
-                        });
-                    });
+                const createdBy = securityService.currentUser();
+                return dao.executeStatement(entities.AuditEntry.listApplicationsStatement, [createdBy])
+                    .then(results => _.pluck(results, "refApplication"));
             }
 
             /**
              * Fetches AuditEntries from the Database matching the values passed as arguments.
              * The list can be optionally paginated.
              * 
-             * @param String refApplication 
-             * @param {} paginationOptions dicitionary: 
+             * @param {String} refApplication 
+             * @param {Object?} paginationOptions dicitionary: 
              *              { 
              *              "pagenumber": Integer, // page to fetch 
              *              "pagesize": Integer // number of items per page
              *              }
              *           won't paginate if parameter is omitted
-             * @returns Promise resolved with AuditEntry list 
+             * @returns {Promise<Array<entities.AuditEntry>>} resolved with AuditEntry list 
              */
             function listEntries(refApplication, paginationOptions) {
-                var createdBy = securityService.currentUser();
-                var query = entities.AuditEntry.listPattern.format(refApplication, createdBy);
-                var options = { orderby: "createdDate", orderbyascendig: false };
+                const createdBy = securityService.currentUser();
+                const query = entities.AuditEntry.listPattern.format(refApplication, createdBy);
+                const options = { orderby: "createdDate", orderbyascendig: false };
                 if (!!paginationOptions) {
                     options.pagesize = paginationOptions["pagesize"];
                     options.pageNumber = paginationOptions["pagenumber"];
                 }
-                return swdbDAO.findByQuery("AuditEntry", query, options);
+                return dao.findByQuery("AuditEntry", query, options);
             }
 
             /**
              * Fetches the AuditEntry that has matching id.
              * 
-             * @param String id primary key in the database 
-             * @returns Promise resolved with the AuditEntry
+             * @param {String} id primary key in the database 
+             * @returns {Promise<entities.AuditEntry>} resolved with the AuditEntry
              */
             function getAuditEntry(id) {
-                return swdbDAO.findById("AuditEntry", id);
+                return dao.findById("AuditEntry", id);
             }
 
             /**
              * Fetches the DataEntry the entry is tracking.
              * 
-             * @param AuditEntry entry 
-             * @returns Promise resolved with the entity 
+             * @param {AuditEntry} entry 
+             * @returns {Promise<entities.DataEntry>} resolved with the entity 
              */
             function getTrackedEntity(entry) {
-                return swdbDAO.findById("DataEntry", entry.refClientId);
+                return dao.findById("DataEntry", entry.refClientId);
             }
 
             /**
-             * @param String DataEntry's id
-             * @param String application DataEntry's application
-             * @returns Promise resolved with list of AuditEntries related to the entity
+             * @param {String} DataEntry's id
+             * @param {String} application DataEntry's application
+             * @returns {Promise<Array<entites.DataEntry>>} resolved with list of AuditEntries related to the entity
              */
             function getEntriesForEntity(entityId, application) {
-                return swdbDAO.findByQuery("AuditEntry", entities.AuditEntry.forEntityPattern.format(entityId, application));
+                return dao.findByQuery("AuditEntry", entities.AuditEntry.forEntityPattern.format(entityId, application));
             }
 
             /**
              * Deletes all AuditEntries tracking the entity.
              * 
-             * @param String entityId DataEntry's id
-             * @param String 
-             * @returns Promise 
+             * @param {String} entityId DataEntry's id
+             * @param {String} 
+             * @returns {Promise<Void>} 
              */
             function deleteRelatedEntries(entityId, application) {
-                return swdbDAO.executeStatement(entities.AuditEntry.deleteRelatedStatement, [entityId, application]);
+                return dao.executeStatement(entities.AuditEntry.deleteRelatedStatement, [entityId, application]);
+            }
+
+            /**
+             * Navigates to audit's entry-point state (application select screen).
+             * 
+             * @returns {Promise<Void>} 
+             */
+            function goToAudit() {
+                return routeService.go("main.audit.applicationselect");
             }
 
             //#endregion
 
             //#region Service Instance
-            var service = {
-                registerEvent: registerEvent,
-                registerEntry: registerEntry,
-                listEntries: listEntries,
-                listAudittedApplications: listAudittedApplications,
-                getAuditEntry: getAuditEntry,
-                getTrackedEntity: getTrackedEntity,
-                getEntriesForEntity: getEntriesForEntity,
-                deleteRelatedEntries: deleteRelatedEntries
+            const service = {
+                registerEvent,
+                registerEntry,
+                listEntries,
+                listAudittedApplications,
+                getAuditEntry,
+                getTrackedEntity,
+                getEntriesForEntity,
+                deleteRelatedEntries,
+                goToAudit
             };
-
             return service;
             //#endregion
         };
 
         //#region Service registration
-        audit.factory("offlineAuditService", ["$q", "offlineEntities", "swdbDAO", "securityService", offlineAuditService]);
+        audit.factory("offlineAuditService", ["$q", "offlineEntities", "swdbDAO", "securityService", "routeService", offlineAuditService]);
         //#endregion
     })(audit);
     //#endregion
 
-})(angular, persistence);
+})(angular, persistence, _);

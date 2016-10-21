@@ -34,9 +34,10 @@
   </templates>
 
   <entities>
-    <entity name="paeasset" parententity="asset" idAttribute="assetid" useridAttribute="assetnum" whereclause="recordtype = 'PROP' and propcondition = 1">
+    <entity name="paeasset" parententity="asset" idAttribute="assetid" useridAttribute="assetnum"  whereclause="recordtype = 'PROP' and propcondition = 1">
       <attributes>
         <attribute name="assetid" type="bigint" required="true"/>
+        <attribute name="assetnum" type="varchar" required="true" />
         <attribute name="locinfo" type="varchar" required="false" />
         <attribute name="plustmodel" type="varchar" required="false" />
         <attribute name="prophr" type="varchar" required="false" />
@@ -85,6 +86,47 @@
       </schemas>
     </application>
 
+    <application name="transportation" title="Transportation" entity="paeasset" audit="true">
+      <properties>
+        <property key="mobile.presyncservice" value="paeAssetService.preSync"/>
+        <property key="mobile.fetchlimit" value="100000"/>
+      </properties>
+
+      <schemas>
+        <!-- #region mobile -->
+        <list platform="mobile">
+          <event type="onload" service="paeAssetService" method="initTransportationGridListener"/>
+          
+          <field attribute="assetnum" label="Asset #" qualifier="title"/>
+          <field attribute="description" label="Description" qualifier="subtitle"/>
+          <field attribute="serialnum" label="VIN / SN" qualifier="excerpt"/>
+        </list>
+        <detail platform="mobile">
+          <event type="onload" service="paeAssetService" method="initTransportationDetailListener"/>
+          <event type="offline.presave" service="paeAssetService" method="transportationAssetChanged"/>
+          
+          <field attribute="assetid" readonly="true" hidden="true"/>
+          <field attribute="assetnum" label="Asset #" readonly="true" qualifier="title"/>
+          <field attribute="description" label="Description" readonly="true" qualifier="subtitle"/>
+          <field attribute="serialnum" label="VIN / SN" qualifier="summary"/>
+          <field attribute="location_.description" label="Location" readonly="true"/>
+          <field attribute="vehorg" label="Vehicle Org" readonly="true"/>
+          <field attribute="status" label="Status" readonly="true"/>
+          <field attribute="bcn" label="BCN" readonly="true" />
+          <field attribute="invdate" label="Inventory Date" readonly="true" />
+          <field attribute="invpostdate" label="Inventory Post Date" readonly="true" />
+          <field attribute="invpostdateby" label="Inventory Posted By" readonly="true"/>
+          <field attribute="invposttype" label="Posted Type" readonly="true" />
+          <field attribute="scanremarks" label="Scan Remark" />
+          <field attribute="changeby" label="Changed By" readonly="true" />
+          <field attribute="changedate" label="Changed Date" readonly="true" />
+        
+          <field attribute="siteid"  label="Site" hidden="true"/>
+        </detail>
+        <!-- #endregion -->
+      </schemas>
+    </application>
+
     <application name="asset" title="Asset" entity="paeasset" audit="true">
       <properties>
         <property key="mobile.presyncservice" value="paeAssetService.preSync"/>
@@ -92,7 +134,66 @@
       </properties>
       
       <schemas>
-        <list>
+        <!-- #region mobile -->
+        <list platform="mobile">
+           <properties>
+            <property key="list.width.min" value="768px"/>
+          </properties>
+          <event type="onload" service="paeAssetService" method="initAssetGridListener"/>
+          
+          <field attribute="assetid" hidden="true"/>
+          <field attribute="assetnum" label="Asset" qualifier="title"/>
+          <field attribute="location" label="Location" qualifier="subtitle"/>
+          <field attribute="status" label="Status" qualifier="featured"/>
+          <field attribute="propmanuf" label="Manufacturer" qualifier="excerpt"/>
+        </list>
+        
+        <detail platform="mobile">
+          <event type="onload" service="paeAssetService" method="initAssetDetailListener"/>
+          
+          <field attribute="plustsoldamt" hidden="true"/>
+          <field attribute="plusttotalmprevenue" hidden="true"/>
+          <field attribute="taxpercent" hidden="true"/>
+
+          <field attribute="priority" hidden="true"/>
+          <field attribute="totdowntime" hidden="true"/>
+          <field attribute="purchaseprice" hidden="true"/>
+          <field attribute="replacecost" hidden="true"/>
+          <field attribute="totalcost" hidden="true"/>
+          <field attribute="ytdcost" hidden="true"/>
+          <field attribute="budgetcost" hidden="true"/>
+          <field attribute="unchargedcost" hidden="true"/>
+          <field attribute="totunchargedcost" hidden="true"/>
+          <field attribute="invcost" hidden="true"/>
+          <field attribute="location_.locationsid" hidden="true"/>
+          <field attribute="assetid" hidden="true" />
+
+          <field attribute="assetnum" label="Barcode Number"  readonly="true" />
+          
+          <association label="Status:" target="status" labelfield="assetstatus.description">
+            <renderer type="lookup" params="avoidautofocus=true"/>
+          </association>
+          
+          
+          <association target="proptype" label="Property Type" labelfield="assettype_.description">
+            <renderer type="lookup" />
+          </association>
+          <field attribute="description" label="Description" readonly="true"  />
+          <field attribute="locinfo" label="Location Info" />
+          <field attribute="plustmodel" label="Model" requiredexpression="true"/>
+          <field attribute="partnum" label="Part Number" requiredexpression="true"/>
+          <field attribute="propmanuf" label="Manufacturer"/>
+          <field attribute="serialnum" label="Serial Number" requiredexpression="true"/>
+          <association target="location" label="Location" labelfield="location_.description">
+            <renderer type="lookup" />
+          </association>
+          <field attribute="prophr" label="Hand Receipt#" hidden="true"/>
+          <field attribute="siteid"  label="Site" hidden="true"/>
+          <field attribute="orgid"  label="Site" hidden="true"/>
+        </detail>
+        <!-- #endregion -->
+          
+        <list platform="web">
           <field attribute="assetid" hidden="true"/>
           <field attribute="assetnum" label="Asset" qualifier="title"/>
           <field attribute="location" label="Location" qualifier="subtitle"/>
@@ -104,7 +205,7 @@
             <property key="list.width.min" value="768px"/>
           </properties>
         </list>
-        <detail>
+        <detail platform="web">
           <field attribute="plustsoldamt" hidden="true"/>
           <field attribute="plusttotalmprevenue" hidden="true"/>
           <field attribute="taxpercent" hidden="true"/>

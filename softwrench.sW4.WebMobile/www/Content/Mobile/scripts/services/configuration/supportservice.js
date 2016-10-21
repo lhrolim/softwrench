@@ -12,7 +12,8 @@
                 popup: {
                     title: "Log Reporting", 
                     template: "Do you wish to report to the support team"
-                }
+                },
+                ongoing: false
             }
         };
 
@@ -185,13 +186,19 @@
          */
         function requestLogReporting({ title = config.logs.popup.title, template = config.logs.popup.template } = {}) {
             // prompt user asking confirmation
+            if (config.logs.ongoing) return;
+            // make sure only a single report can run at a time 
+            // --> uncaught $digest loop (e.g. bad expression inside ng-if) exceptions may flood the screen
+            config.logs.ongoing = true;
             $ionicPopup.confirm({ title, template })
                 // build additional email data form modal
                 .then(res => res ? getLogReportingModal() : $q.reject())
                 // show built modal
                 .then(modal => modal.show())
                 // swallow any exceptions
-                .catch(e => e);
+                .catch(e => e)
+                // mark finished
+                .finally(() => config.logs.ongoing = false);
         }
 
         //#endregion
@@ -199,7 +206,7 @@
         //#region Service Instance
         const service = {
             reportLogs,
-            requestLogReporting: _.debounce(requestLogReporting)
+            requestLogReporting: _.debounce(requestLogReporting, 500)
         };
         return service;
         //#endregion

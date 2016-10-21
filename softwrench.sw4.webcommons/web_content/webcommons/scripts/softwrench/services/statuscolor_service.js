@@ -31,7 +31,7 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
         //return "#777";
 
         var statuscolorFallbackJson = $rootScope.statuscolorFallbackJson;
-        if (statuscolorFallbackJson === undefined) {
+        if (!statuscolorFallbackJson) {
             statuscolorFallbackJson = contextService.fetchFromContext("statuscolorfallback", true);
             $rootScope.statuscolorFallbackJson = statuscolorFallbackJson;
         }
@@ -42,7 +42,6 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
 
         var applicationObject = statuscolorFallbackJson[applicationname];
         if (!applicationObject) {
-
             //if there is no default application in the json, stop here
             applicationObject = statuscolorFallbackJson["default"];
         }
@@ -71,9 +70,8 @@ modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService"
             //if the application is missing from the json file
             var applicationObject = statuscolorJson[applicationname];
             if (!applicationObject) {
-
                 //if there is no default application in the json, stop here
-                var applicationObject = statuscolorJson["default"];
+                applicationObject = statuscolorJson["default"];
                 if (!applicationObject) {
                     return fallbackFunction(status, applicationname);
                 }

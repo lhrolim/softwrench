@@ -61,6 +61,13 @@
         }
 
         return {
+            dispatch: function(eventName, holder, parameters) {
+                const event = loadEvent(holder, eventName);
+                if (!event) {
+                    return null;
+                }
+                return execute(event, parameters);
+            },
             onload: function (scope, schema, datamap, parameters) {
                 const event = loadEvent(schema, "onload");
                 if (!event) {

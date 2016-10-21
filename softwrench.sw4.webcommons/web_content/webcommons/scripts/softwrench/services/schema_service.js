@@ -163,27 +163,14 @@
         };
 
         function getSummary(schema, datamap, smallDevices) {
-            if (!schema) {
+            if (!schema || !datamap) {
                 return null;
             }
-
-            if (!datamap) {
-                return null;
+            const field = locateDisplayableByQualifier(schema, "summary");
+            if (!field) {
+                return datamap.description;
             }
-
-            var fields = datamap;
-
-            if (!fields) {
-                return null;
-            }
-
-            var result;
-
-            if (fields.description != null) {
-                result = fields.description;
-            }
-
-            return result;
+            return datamap[field.attribute] || datamap.description;
         };
 
         function locateDisplayableByQualifier(schema, qualifier) {

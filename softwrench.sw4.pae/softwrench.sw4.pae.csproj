@@ -52,6 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\pae\configuration\PaeWhereClauseRegistry.cs" />
     <Compile Include="classes\com\cts\pae\dataset\PaeAssetDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -95,7 +96,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\pae\configuration\" />
     <Folder Include="classes\com\cts\pae\connector\" />
     <Folder Include="classes\com\cts\pae\migration\" />
     <Folder Include="offline_content\pae\htmls\" />

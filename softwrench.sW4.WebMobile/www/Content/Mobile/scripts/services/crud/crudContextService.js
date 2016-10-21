@@ -6,11 +6,11 @@
     "$q", "$log", "$rootScope", "swdbDAO", "searchIndexService", "problemService", 
     "metadataModelService", "offlineSchemaService", "offlineCompositionService", "expressionService",
     "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
-    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService", "offlineEntities", "queryListBuilderService", "swAlertPopup",
+    "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService", "offlineEntities", "queryListBuilderService", "swAlertPopup", "eventService",
     function ($q, $log, $rootScope, dao, searchIndexService, problemService, 
     metadataModelService, offlineSchemaService, offlineCompositionService, expressionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
-    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService, entities, queryListBuilderService, swAlertPopup) {
+    crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService, entities, queryListBuilderService, swAlertPopup, eventService) {
 
         // ReSharper disable once InconsistentNaming
         var internalListContext = {
@@ -293,15 +293,24 @@
                 const crudContext = crudContextHolderService.getCrudContext();
                 const applicationName = crudContext.currentApplicationName;
                 const item = crudContext.currentDetailItem;
-                return offlineSaveService.saveItem(applicationName, item, showConfirmationMessage).then(saved => {
-                    crudContext.originalDetailItemDatamap = angular.copy(item.datamap);
-                    contextService.insertIntoContext("crudcontext", crudContext);
-                    if (crudContext.newItem) {
-                        crudContext.newItem = false;
-                        return this.refreshGrid().then(() => saved);
-                    }
-                    return this.refreshIfLeftJoinPresent(crudContext, saved);
-                });
+                const datamap = item.datamap;
+                const schema = this.currentDetailSchema();
+
+                const beforeSave = eventService.dispatch("offline.presave", schema, { schema, datamap });
+
+                return $q.when(beforeSave)
+                    .then(() => {
+                        return offlineSaveService.saveItem(applicationName, item, showConfirmationMessage);
+                    })
+                    .then(saved => {
+                        crudContext.originalDetailItemDatamap = angular.copy(item.datamap);
+                        contextService.insertIntoContext("crudcontext", crudContext);
+                        if (crudContext.newItem) {
+                            crudContext.newItem = false;
+                            return this.refreshGrid().then(() => saved);
+                        }
+                        return this.refreshIfLeftJoinPresent(crudContext, saved);
+                    });
             },
             
             refreshIfLeftJoinPresent: function (crudContext,saved) {

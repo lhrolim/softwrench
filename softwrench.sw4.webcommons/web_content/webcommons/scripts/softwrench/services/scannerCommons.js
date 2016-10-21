@@ -36,31 +36,29 @@
          * Remember that in order to trigger your callbacks they need to have been previously registered and the event needs to be fired
          * in the correct context (defined by the matchingparamenters argument).
          * 
-         * @param {} matchingparameters dictionary in the format:
+         * @param {Object} matchingparameters dictionary in the format:
          *              {
          *                  applicationName: String, // the name of the application to register the scan,
          *                  schemaId: String, //the schemaId to register the scan
          *                  tabId: String // the id of the tab to register the scan (composition or tab)
          *              }
-         * @param function callback receives the scanned data as it's single argument 
+         * @param {Function<?, String>} callback receives the scanned data as it's single argument 
          */
         function registerScanCallBackOnSchema(matchingparameters, callback) {
+            const registerApplication = matchingparameters.applicationName;
+            const registerSchemaId = matchingparameters.schemaId;
+            const registerTabId = matchingparameters.tabid || "";
 
-            var registerApplication = matchingparameters.applicationName;
-            var registerSchemaId = matchingparameters.schemaId;
-            var registerTabId = matchingparameters.tabid || "";
-
-            scanCallbackMap["{0}.{1}.{2}".format(registerApplication, registerSchemaId, registerTabId)] = callback;
+            scanCallbackMap[`${registerApplication}.${registerSchemaId}.${registerTabId}`] = callback;
 
             $(document).scannerDetection({
                 avgTimeByChar: timeBetweenCharacters,
 
-
                 onComplete: function (data) {
-                    var tabId = crudContextHolderService.getActiveTab() || "";
-                    var schema = crudContextHolderService.currentSchema();
-                    var applicationName = crudContextHolderService.currentApplicationName();
-                    if (applicationName == null || schema == null) {
+                    const tabId = crudContextHolderService.getActiveTab() || "";
+                    const schema = crudContextHolderService.currentSchema();
+                    const applicationName = crudContextHolderService.currentApplicationName();
+                    if (!applicationName || !schema) {
                         //we´re not on a crud screen, let´s take the chance to unregister the scanner detector
                         //whenever it reaches the proper screen it can then register it self again
                         $(document).scannerDetection(null);
@@ -69,8 +67,8 @@
 
                     if (!Array.isArray(schema)) {
                         //sometimes we could have multiple schemas at the same time on screen, such as a master-detail for compositions 
-                        var callbackFn = scanCallbackMap["{0}.{1}.{2}".format(applicationName, schema.schemaId, tabId)];
-                        if (callbackFn) {
+                        const callbackFn = scanCallbackMap[`${applicationName}.${schema.schemaId}.${tabId}`];
+                        if (angular.isFunction(callbackFn)) {
                             callbackFn(data);
                         } else {
                             //no call back defined, let´s take the chance to unregister the scanner detector
@@ -81,23 +79,23 @@
                     }
 
                     //if we have multiple schemas on screen, invoke both functions unless they are the same
-                    var callbackFn1 = scanCallbackMap["{0}.{1}.{2}".format(applicationName, schema[0].schemaId, tabId)];
-                    var callbackFn2 = scanCallbackMap["{0}.{1}.{2}".format(applicationName, schema[1].schemaId, tabId)];
-                    if (callbackFn1 == null && callbackFn2 == null) {
+                    const callbackFn1 = scanCallbackMap[`${applicationName}.${schema[0].schemaId}.${tabId}`];
+                    const callbackFn2 = scanCallbackMap[`${applicationName}.${schema[1].schemaId}.${tabId}`];
+                    if (!angular.isFunction(callbackFn1) && !angular.isFunction(callbackFn2)) {
                         //no call back defined, let´s take the chance to unregister the scanner detector
                         //whenever it reaches the proper screen it can then register it self again
                         $(document).scannerDetection(null);
                         return;
                     }
 
-                    if (callbackFn1 == callbackFn2) {
+                    if (callbackFn1 === callbackFn2) {
                         callbackFn1(data);
                         return;
                     }
-                    if (callbackFn1) {
+                    if (angular.isFunction(callbackFn1)) {
                         callbackFn1(data);
                     }
-                    if (callbackFn2) {
+                    if (angular.isFunction(callbackFn2)) {
                         callbackFn2(data);
                     }
 
@@ -112,17 +110,12 @@
         //#endregion
 
         //#region Service Instance
-
-        var service = {
-            registerScanCallBackOnSchema: registerScanCallBackOnSchema,
-            getTimeBetweenChars: getTimeBetweenChars
+        const service = {
+            registerScanCallBackOnSchema,
+            getTimeBetweenChars
         };
-
         return service;
-
         //#endregion
     }
-
-
 
 })(angular);
