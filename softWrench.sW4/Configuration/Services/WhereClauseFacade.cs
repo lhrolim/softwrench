@@ -1,9 +1,6 @@
 ﻿using log4net;
-using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.Configuration.Util;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
@@ -13,7 +10,6 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.simpleinjector;
@@ -31,10 +27,8 @@ namespace softWrench.sW4.Configuration.Services {
 
         private readonly ConfigurationService _configurationService;
         private readonly IContextLookuper _contextLookuper;
-        private readonly SWDBHibernateDAO _dao;
         private bool _appStarted;
-
-        private readonly UserProfileManager _userProfileManager;
+        private readonly WhereClauseRegisterService _whereClauseRegisterService;
 
 
         private readonly ConcurrentBag<Tuple<string, string, WhereClauseRegisterCondition>> _toRegister = new ConcurrentBag<Tuple<string, string, WhereClauseRegisterCondition>>();
@@ -44,11 +38,10 @@ namespace softWrench.sW4.Configuration.Services {
         private const string WcConfig = "/{0}/{1}/whereclause";
         private const string AppNotFoundEx = "Application/Entity {0} not found, unable to register whereclause";
 
-        public WhereClauseFacade(ConfigurationService configurationService, IContextLookuper contextLookuper, SWDBHibernateDAO dao, UserProfileManager userProfileManager) {
+        public WhereClauseFacade(ConfigurationService configurationService, IContextLookuper contextLookuper, WhereClauseRegisterService whereClauseRegisterService) {
             _configurationService = configurationService;
             _contextLookuper = contextLookuper;
-            _dao = dao;
-            _userProfileManager = userProfileManager;
+            _whereClauseRegisterService = whereClauseRegisterService;
         }
 
         public WhereClauseResult Lookup(string applicationName, ApplicationLookupContext lookupContext = null, ContextHolder contextHolder = null) {
@@ -125,7 +118,7 @@ namespace softWrench.sW4.Configuration.Services {
             if (!_appStarted) {
                 _toRegister.Add(Tuple.Create(configKey, query, condition));
             } else {
-                await DoRegister(configKey, query, condition);
+                await _whereClauseRegisterService.DoRegister(configKey, query, condition);
             }
         }
 
@@ -184,77 +177,12 @@ namespace softWrench.sW4.Configuration.Services {
             return true;
         }
 
-        private async Task DoRegister(string configKey, string query, WhereClauseRegisterCondition condition) {
-
-            if (condition != null && condition.Environment != null && condition.Environment != ApplicationConfiguration.Profile) {
-                //we don´t need to register this property here.
-                return;
-            }
-
-            if (condition == null) {
-                //if no condition is passed, we just need to update the base definition data
-                var definition = new PropertyDefinition {
-                    FullKey = configKey,
-                    SimpleKey = CategoryUtil.GetPropertyKey(configKey),
-                    StringValue = query,
-                    DataType = typeof(string).Name,
-                    Renderer = "whereclause",
-                    Alias = "",
-                    Contextualized = true
-                };
-
-                await _dao.SaveAsync(definition);
-                return;
-            }
-
-            var savedDefinition = await _dao.FindSingleByQueryAsync<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
-
-            if (condition.Alias == null && condition.AppContext != null && condition.AppContext.MetadataId != null) {
-                condition.Alias = condition.AppContext.MetadataId;
-            }
-
-            Condition storedCondition = null;
-            if (condition.Alias != null) {
-                //this means that we actually have a condition rather then just a simple utility class WhereClauseRegisterCondition, that could be used for profiles and modules
-                storedCondition = await _dao.FindSingleByQueryAsync<WhereClauseCondition>(Condition.ByAlias, condition.Alias);
-                if (storedCondition != null) {
-                    condition.Id = storedCondition.Id;
-                }
-                storedCondition = await _dao.SaveAsync(condition.RealCondition);
-            }
-
-            var profile = new UserProfile();
-            if (condition.UserProfile != null) {
-                profile = _userProfileManager.FindByName(condition.UserProfile);
-                if (condition.UserProfile != null && profile == null) {
-                    Log.Warn(string.Format("unable to register definition as profile {0} does not exist", condition.UserProfile));
-                    return;
-                }
-            }
-
-            var storedValue = await _dao.FindSingleByQueryAsync<PropertyValue>(
-                  PropertyValue.ByDefinitionConditionModuleProfile,
-                  savedDefinition.FullKey, storedCondition, condition.Module, profile.Id);
-
-            if (storedValue == null) {
-                var newValue = new PropertyValue {
-                    Condition = storedCondition,
-                    Definition = savedDefinition,
-                    SystemStringValue = query,
-                    Module = condition.Module,
-                    UserProfile = profile.Id
-                };
-                await _dao.SaveAsync(newValue);
-            } else {
-                storedValue.SystemStringValue = query;
-                await _dao.SaveAsync(storedValue);
-            }
-        }
+    
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             foreach (var entry in _toRegister) {
                 var localEntry = entry;
-                AsyncHelper.RunSync(() => DoRegister(localEntry.Item1, localEntry.Item2, localEntry.Item3));
+                AsyncHelper.RunSync(() => _whereClauseRegisterService.DoRegister(localEntry.Item1, localEntry.Item2, localEntry.Item3));
             }
             _appStarted = true;
         }

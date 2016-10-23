@@ -12,7 +12,6 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using JetBrains.Annotations;
-using NHibernate.Util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Util;
 
