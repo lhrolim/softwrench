@@ -167,6 +167,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+        public bool DeclaredNoResultsNewSchema {
+            get; set;
+        }
+
+        public bool PreventResultsNewSchema {
+            get; set;
+        }
+
         private bool _lazyFksResolved;
 
         public bool FiltersResolved {

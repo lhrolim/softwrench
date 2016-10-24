@@ -2377,7 +2377,7 @@
         <attribute name="statusdate" type="datetime" required="true" />
         <attribute name="changedate" type="datetime" required="true" />
         <attribute name="changeby" type="varchar" required="true" />
-        <attribute name="totalcost" type="decimal" required="true" />
+        <attribute name="totalcost" type="double" required="true" />
         <attribute name="priority" type="int" required="true" />
         <attribute name="historyflag" type="smallint" required="true" />
         <attribute name="pr1" type="varchar" required="false" />
@@ -2395,7 +2395,7 @@
         <attribute name="exchangerate" type="decimal" required="false" />
         <attribute name="exchangedate" type="datetime" required="false" />
         <attribute name="buyahead" type="smallint" required="true" />
-        <attribute name="totaltax1" type="decimal" required="false" />
+        <attribute name="totaltax1" type="double" required="false" />
         <attribute name="totaltax2" type="decimal" required="false" />
         <attribute name="totaltax3" type="decimal" required="false" />
         <attribute name="inclusive1" type="smallint" required="true" />
@@ -2593,14 +2593,14 @@
       </connectorParameters>
     </entity>
 
-    <entity name="prline" idAttribute="prlinenum">
+    <entity name="prline" idAttribute="prlineid">
       <attributes>
         <attribute name="prnum" type="varchar" required="true" />
         <attribute name="itemnum" type="varchar" required="false" />
         <attribute name="storeloc" type="varchar" required="false" />
-        <attribute name="orderqty" type="decimal" required="false" />
+        <attribute name="orderqty" type="double" required="false" />
         <attribute name="orderunit" type="varchar" required="false" />
-        <attribute name="unitcost" type="decimal" required="false" />
+        <attribute name="unitcost" type="double" required="false" />
         <attribute name="ponum" type="varchar" required="false" />
         <attribute name="reqdeliverydate" type="datetime" required="false" />
         <attribute name="vendeliverydate" type="datetime" required="false" />
@@ -2623,9 +2623,9 @@
         <attribute name="chargestore" type="smallint" required="true" />
         <attribute name="gldebitacct" type="varchar" required="false" />
         <attribute name="glcreditacct" type="varchar" required="false" />
-        <attribute name="linecost" type="decimal" required="true" />
+        <attribute name="linecost" type="double" required="true" />
         <attribute name="tax1code" type="varchar" required="false" />
-        <attribute name="tax1" type="decimal" required="true" />
+        <attribute name="tax1" type="double" required="true" />
         <attribute name="tax2code" type="varchar" required="false" />
         <attribute name="tax2" type="decimal" required="true" />
         <attribute name="tax3code" type="varchar" required="false" />

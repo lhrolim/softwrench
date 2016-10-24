@@ -13,6 +13,7 @@ using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Applications.Validator;
+using softWrench.sW4.Metadata.Parsing;
 
 namespace softWrench.sW4.Metadata.Merger {
     class SchemaMerger {
@@ -43,7 +44,13 @@ namespace softWrench.sW4.Metadata.Merger {
                 : overridenSchema.Stereotype;
             original.CommandSchema.Merge(overridenSchema.CommandSchema);
 
-
+            XmlApplicationMetadataParser.AddNoResultsNewSchema(overridenSchema);
+            if (overridenSchema.DeclaredNoResultsNewSchema) {
+                original.NoResultsNewSchema = overridenSchema.NoResultsNewSchema;
+            }
+            if (overridenSchema.PreventResultsNewSchema) {
+                original.NoResultsNewSchema = null;
+            }
 
             DoApplyCustomizations(original, overridenSchema, components, customizations, customizationsActuallyApplied, fieldsThatShouldBeCustomized);
             SchemaFilterBuilder.ApplyFilterCustomizations(original.SchemaFilters, overridenSchema.DeclaredFilters);

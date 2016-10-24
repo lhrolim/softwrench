@@ -85,18 +85,18 @@
 
 
         $scope.$on('sw_navigaterequest', function (event, applicationName, schemaId, mode, title, parameters) {
-            var msg = "Are you sure you want to leave the page?";
-            if (crudContextHolderService.getDirty()) {
-                alertService.confirmCancel(msg).then(function () {
-                    $scope.renderView(applicationName, schemaId, mode, title, parameters);
-                    crudContextHolderService.clearDirty();
-                    crudContextHolderService.clearDetailDataResolved();
-                    $scope.$digest();
-                });
-            }
-            else {
+            if (!crudContextHolderService.getDirty() || parameters.skipDirtyMessage) {
                 $scope.renderView(applicationName, schemaId, mode, title, parameters);
+                return;
             }
+
+            const msg = "Are you sure you want to leave the page?";
+            alertService.confirmCancel(msg).then(function () {
+                $scope.renderView(applicationName, schemaId, mode, title, parameters);
+                crudContextHolderService.clearDirty();
+                crudContextHolderService.clearDetailDataResolved();
+                $scope.$digest();
+            });
         });
 
         $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters, dashboardpanelid) {

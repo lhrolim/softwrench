@@ -52,6 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\pae\connector\PaePrCrudConnector.cs" />
     <Compile Include="classes\com\cts\pae\configuration\PaeWhereClauseRegistry.cs" />
     <Compile Include="classes\com\cts\pae\dataset\PaeAssetDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,7 +84,11 @@
   <ItemGroup>
     <Content Include="metadata\pae\readme.txt" />
     <Content Include="offline_content\pae\scripts\paeAssetService.mobile.js" />
+    <Content Include="pr_changeby.sql" />
+    <Content Include="prstatus_changeby_after.sql" />
+    <Content Include="prstatus_changeby.sql" />
     <Content Include="web_content\pae\scripts\paeAssetService.web.js" />
+    <Content Include="web_content\pae\scripts\paePrService.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="metadata\pae\statuscolors.json">
@@ -96,7 +101,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\pae\connector\" />
     <Folder Include="classes\com\cts\pae\migration\" />
     <Folder Include="offline_content\pae\htmls\" />
     <Folder Include="offline_content\pae\images\" />

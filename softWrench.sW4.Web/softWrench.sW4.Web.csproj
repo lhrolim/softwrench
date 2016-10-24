@@ -728,6 +728,7 @@
     <Content Include="Content\Scripts\client\adminresources\adminmodule_setup.js" />
     <Content Include="Content\Scripts\client\adminresources\problemService.js" />
     <Content Include="Content\Scripts\client\crud\composition_masterdetails.js" />
+    <Content Include="Content\Scripts\client\crud\crud_crawl_service.js" />
     <Content Include="Content\Scripts\client\crud\crud_list_viewmodel.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_dropdown.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_multioptions.js" />

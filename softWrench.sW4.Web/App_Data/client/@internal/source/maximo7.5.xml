@@ -2060,7 +2060,7 @@
     </entity>
 
     <!--Added for SWWEB 204-->
-    <entity name="prline" idAttribute="prlinenum">
+    <entity name="prline" idAttribute="prlineid">
       <attributes>
         <attribute name="prnum" type="varchar" required="true" />
         <attribute name="itemnum" type="varchar" required="false" />

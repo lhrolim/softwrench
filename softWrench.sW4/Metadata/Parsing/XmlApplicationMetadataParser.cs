@@ -846,20 +846,30 @@ namespace softWrench.sW4.Metadata.Parsing {
             return resultApplications;
         }
 
-        private static void AddNoResultsNewSchema(CompleteApplicationMetadataDefinition app,
-            ApplicationSchemaDefinition schema) {
+        public static bool AddNoResultsNewSchema(ApplicationSchemaDefinition schema) {
             // return if is set to prevent the new button on no result list
             string preventNoResults;
             schema.Properties.TryGetValue(ApplicationSchemaPropertiesCatalog.PreventNoResultsNew, out preventNoResults);
             if ("true".Equals(preventNoResults)) {
-                return;
+                schema.PreventResultsNewSchema = true;
+                return true;
             }
 
             // if the schema of no result new is set uses it 
             string noResultsNewSchema;
             schema.Properties.TryGetValue(ApplicationSchemaPropertiesCatalog.NoResultsNewSchema, out noResultsNewSchema);
-            if (noResultsNewSchema != null) {
-                schema.NoResultsNewSchema = noResultsNewSchema;
+            if (noResultsNewSchema == null) {
+                return false;
+            }
+
+            schema.NoResultsNewSchema = noResultsNewSchema;
+            schema.DeclaredNoResultsNewSchema = true;
+            return true;
+        }
+
+        private static void AddNoResultsNewSchema(CompleteApplicationMetadataDefinition app,
+            ApplicationSchemaDefinition schema) {
+            if (AddNoResultsNewSchema(schema)) {
                 return;
             }
 

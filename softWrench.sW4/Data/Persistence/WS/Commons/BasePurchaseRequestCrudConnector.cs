@@ -10,7 +10,7 @@ using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
-    class BasePurchaseRequestCrudConnector : CrudConnectorDecorator {
+    public class BasePurchaseRequestCrudConnector : CrudConnectorDecorator {
 
         protected AttachmentHandler AttachmentHandler {
             get {
@@ -103,7 +103,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     w.SetValueIfNull(integrationObject, "MKTPLCITEM", false);
                     w.SetValueIfNull(integrationObject, "TAXEXEMPT", false);
                     w.SetValueIfNull(integrationObject, "CONSIGNMENT", false);
-                    w.SetValueIfNull(integrationObject, "ITEMNUM", "test");
+                    //w.SetValueIfNull(integrationObject, "ITEMNUM", "test");
 
                     ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
                 });

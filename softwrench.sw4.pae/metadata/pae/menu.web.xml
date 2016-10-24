@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="breadcrumb" indexitem="ASS">
+<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="breadcrumb" indexitem="PGRID">
   <!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
 
   <reference id="asset"/>
   <reference id="servicereq"/>
   <reference id="workorder"/>
   <reference id="change"/>
-  <reference id="purchase"/>
+  
+  <container title="Purchasing" id="purchase" tooltip="Click to access your purchases" icon="fa fa-dollar" role="purchasing">
+    <application id ="PGRID" icon="fa fa-table" title="Purchase Request Grid" ref="pr" schema="list" tooltip="Click to view your Purchase Request Grid"/>
+    <application id ="POGRID" icon="fa fa-table" title="Purchase Order Grid" ref="po" schema="list" tooltip="Click to view your Purchase Orders Grid"/>
+    <application id="RECEIPTS" icon="fa fa-table" title="Receiving Grid" ref="receiving" schema="list" tooltip="Click to view your Receiving Grid"/>
+  </container>
+  
   <reference id="Incident"/>
 
   <container title="Inventory" tooltip="Click to access your inventory" icon="fa fa-cube" id="Inventory" role="inventory" >
@@ -18,5 +24,4 @@
     <application id="RM" icon="fa fa-table" title="Reserved Materials" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials"/>
     <!--<application id="ASS" icon="fa fa-table" title="Asset Grid" ref="asset" schema="list" tooltip="Click to view your Service Request Grid"/>-->
   </container>
-
 </Menu>

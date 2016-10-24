@@ -107,7 +107,7 @@
 
             controller: function ($scope, $http, $q, $element, $rootScope, $filter, $injector,
             formatService, fixHeaderService, dispatcherService,
-            searchService, tabsService,
+            searchService, tabsService, crudCrawlService, 
             fieldService, commandService, i18NService,
             submitService, redirectService,
             associationService, crudContextHolderService, alertService,
@@ -428,40 +428,15 @@
                 };
 
                 $scope.crawl = function (direction) {
-                    var schema = crudContextHolderService.currentSchema();
-                    const value = contextService.fetchFromContext("crud_context", true);
-                    var item = direction == 1 ? value.detail_previous : value.detail_next;
-
-                    if (!item) return;
-
-                    // If the detail crawl has a custom param, we need to get it from the pagination list
-                    const customParams = {};
-                    if (schema.properties && schema.properties["detail.crawl.customparams"]) {
-                        // Get the next/previous record that the params will be coming from
-                        const record = value.previousData.filter(function (obj) {
-                            return obj.fields[schema.idFieldName] == item.id;
-                        }); // TODO: If the record is null (item not on page in previous data)????
-                        const customparamAttributes = schema.properties["detail.crawl.customparams"].replace(" ", "").split(",");
-                        for (let param in customparamAttributes) {
-                            if (!customparamAttributes.hasOwnProperty(param)) {
-                                continue;
-                            }
-                            customParams[param] = {};
-                            customParams[param]["key"] = customparamAttributes[param];
-                            customParams[param]["value"] = record[0].fields[customparamAttributes[param]];
-                        }
+                    const data = crudCrawlService.crawlData(direction);
+                    if (!data) {
+                        return;
                     }
                     const mode = $scope.$parent.mode;
                     const popupmode = $scope.$parent.popupmode;
-                    const schemaid = item.detailSchemaId || schema.schemaId;
-                    const applicationname = item.application || schema.applicationName;
                     const title = $scope.$parent.title;
-                    $scope.$emit("sw_navigaterequest", applicationname, schemaid, mode, title, { id: item.id, popupmode: popupmode, customParameters: customParams });
-
+                    $scope.$emit("sw_navigaterequest", data.applicationname, data.schemaid, mode, title, { id: data.id, popupmode: popupmode, customParameters: data.customParameters });
                 };
-
-
-
 
                 $scope.delete = function () {
                     const schema = $scope.schema;

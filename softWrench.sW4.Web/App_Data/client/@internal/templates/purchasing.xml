@@ -97,7 +97,7 @@
       </relationships>
     </entity>
 
-    <entity name="prline" idAttribute="prlinenum">
+    <entity name="prline" idAttribute="prlineid">
       <relationships>
         <relationship to ="item">
           <relationshipAttribute from ="itemnum" to="itemnum" primary="true"/>
@@ -388,6 +388,7 @@
       </properties>
       <schemas>
         <schema id="list" stereotype="compositionlist">
+          <field attribute="prlineid" hidden="true"/>
           <field attribute="prnum" label="PR#" readonly="true"/>
           <field attribute="prlinenum" label="Line#" />
           <field attribute="itemnum" label="Item"/>

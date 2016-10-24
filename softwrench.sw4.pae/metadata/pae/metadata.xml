@@ -70,9 +70,157 @@
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.PaeAssetCrudConnector"/>
       </connectorParameters>
     </entity>
+
+    <entity name="prline" idAttribute="prlinenum">
+      <relationships>
+        <relationship to="longdescription" qualifier="ld">
+          <relationshipAttribute from="prlineid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="PRLINE" quoteLiteral="true" />
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="pr" idAttribute="prnum" whereclause="pr.supervisor = @username">
+      <attributes>
+        <attribute name="swchangeby" type="varchar" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="synonymdomain" qualifier="prstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="PRSTATUS" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="longdescription" qualifier="ld">
+          <relationshipAttribute from="prid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="PR" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softwrench.sw4.pae.classes.com.cts.pae.connector.PaePrCrudConnector" />
+      </connectorParameters>
+    </entity>
   </entities>
 
   <applications>
+    <application entity="pr" name ="pr" title="Purchase Requests">
+      <filters>
+        <optionfilter attribute="status" eager="true" provider="prstatus_.description" displaycode="false" preselected="WAPPR"/>
+      </filters>
+
+      <properties>
+        <property key="application.maindetailschema" value="detail"/>
+      </properties>
+
+      <schemas>
+        <schema id="list" redeclaring="false">
+          <customization position="description"/>
+          <customization position="vendor"/>
+          <customization position="totalcost"/>
+          <customization position="siteid"/>
+          <customization position="status"/>
+
+          <customization position="+prnum">
+            <field attribute="prlineid" hidden="true"/>
+            <field attribute="description" label="Description">
+              <renderer type="default" params="excelwidth=50" />
+            </field>
+            <field attribute="status" label="Status">
+              <renderer type="statuscolor" params="width=12%;grid=pr;column=status" />
+            </field>
+            <field attribute="requestedby" label="Requested By"/>
+            <field attribute="totalcost" label="Total Cost">
+              <renderer type="default" params="width=15%" />
+            </field>
+            <field attribute="supervisor" label="Appr. Authority"/>
+          </customization>
+          
+          <commandbars>
+            <commandgroup position="gridtop">
+              <removecommand id="new"/>
+            </commandgroup>
+          </commandbars>
+
+          <properties>
+            <property key="list.preventnoresultsnew" value="true"/>
+          </properties>
+        </schema>
+
+        <schema id="detail" stereotype="detail" mode="input">
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=small"/>
+            <field attribute="prnum" label="PR#"/>
+            <field attribute="description" label="Description"/>
+            <association target="status" label="Status" labelfield="prstatus_.description" hideDescription="true"/>
+            <field attribute="requestedby" label="Requested By"/>
+            <optionfield attribute="priority" label="Priority" providerattribute="_SWPriorityType">
+              <renderer type="lookup"/>
+            </optionfield>
+            <field attribute="requireddate" label="Required Date">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            </field>
+            <field attribute="totalcost" label="Total Cost" default="0"/>
+            <field attribute="supervisor" label="Supervisor"/>
+            <field label="Details" attribute="ld_.ldtext">
+              <renderer type="richtext" params="inputsize=xlarge"/>
+            </field>
+          </section>
+
+          <section id="compositions">
+            <composition relationship="prline" label="PR Lines">
+              <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false"/>
+            </composition>
+          </section>
+
+          <properties>
+            <property key="detail.enabledfields" value=""/>
+          </properties>
+
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <removecommand id="save"/>
+              <command id="approve" icon="fa-thumbs-up" label="Approve" service="paePrService" cssclasses="large-button" method="approve" parameters="datamap" position="+save" enableexpression="paePrService.areButtonsEnabled"/>
+              <command id="reject" icon="fa-thumbs-down" label="Reject" service="paePrService" cssclasses="large-button" method="reject" parameters="datamap" position="+save" enableexpression="paePrService.areButtonsEnabled"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="prline" name="prline" title="Purchase Request Line">
+      <schemas>
+        <schema id="list" stereotype="compositionlist" redeclaring="false">
+          <customization position="prnum"/>
+          <customization position="+prlineid">
+            <field attribute="linetype" hidden="true"/>
+          </customization>
+          <customization position="+orderqty">
+            <field attribute="orderunit" label="Order Unit"/>
+          </customization>
+          <customization position="+unitcost">
+            <field attribute="linecost" label="Line Cost"/>
+          </customization>
+        </schema>
+        
+        <detail stereotype="compositiondetail" title="PR Line Details">
+          <field attribute="storeloc" label="Storeroom"/>
+          <field label="GL Debit Account" attribute="gldebitacct"/>
+          <optionfield attribute="linetype" label="Line Type" >
+            <renderer type="radio"/>
+            <option label="Item" value="item"/>
+            <option label="Material" value="material"/>
+          </optionfield>
+          <field label="Commodity Group" attribute="commoditygroup"/>
+          <field label="RefWo " attribute="refwo"/>
+          <field attribute="location" label="Location"/>
+          <field attribute="loadedcost" label="Loaded Cost"/>
+          <field attribute="assetnum" label="Asset"/>
+          <field label="Details" attribute="ld_.ldtext">
+            <renderer type="richtext"/>
+          </field>
+        </detail>
+      </schemas>
+    </application>
+
     <application name="companies" entity="companies" title="Companies">
       <schemas>
         <schema id="companiesLookupList" stereotype="list">
@@ -132,7 +280,7 @@
         <property key="mobile.presyncservice" value="paeAssetService.preSync"/>
         <property key="mobile.fetchlimit" value="100000"/>
       </properties>
-      
+
       <schemas>
         <!-- #region mobile -->
         <list platform="mobile">
@@ -224,12 +372,12 @@
           <field attribute="assetid" hidden="true" />
 
           <field attribute="assetnum" label="Barcode Number"  readonly="true" />
-          
+
           <association label="Status:" target="status" labelfield="assetstatus.description">
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>
-          
-          
+
+
           <association target="proptype" label="Property Type" labelfield="assettype_.description">
             <renderer type="lookup" />
           </association>
@@ -258,7 +406,7 @@
           <field attribute="siteid"  label="Site"/>
           <field attribute="status" label="Status"/>
         </schema>
-        
+
       </schemas>
     </application>
 
