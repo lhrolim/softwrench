@@ -18,6 +18,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             return sb.ToString();
         }
 
+
         public static string AppendJoinConditions(EntityMetadata entityMetadata, EntityAssociation association) {
 
             StringBuilder sb = new StringBuilder();
@@ -31,14 +32,19 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                     suffix = " and ";
                 }
                 var attribute = attributes[i];
+                var entityNameToUse = association.EntityName ?? entityMetadata.Name;
 
-                if (null != attribute.Query) {
-                    var query = AssociationHelper.PrecompiledAssociationAttributeQuery(association.Qualifier, attribute);
+                if (!string.IsNullOrWhiteSpace(attribute.Query)) {
+                    var from = string.Empty;
+                    if (!string.IsNullOrWhiteSpace(attribute.From)) {
+                        from = Parse(entityNameToUse, attribute.From);
+                    }
+
+                    var query = AssociationHelper.PrecompiledAssociationAttributeQuery(association.Qualifier, attribute, from, association.To);
                     sb.Append(query + suffix);
-                } else if (null != attribute.From) {
-                    var entityNameToUse = association.EntityName ?? entityMetadata.Name;
+                } else if (!string.IsNullOrWhiteSpace(attribute.From)) {
                     var from = Parse(entityNameToUse, attribute.From);
-                    var to = attribute.To != null ? Parse(association.Qualifier, attribute.To) : ParseLiteral(attribute);
+                    var to = !string.IsNullOrWhiteSpace(attribute.To) ? Parse(association.Qualifier, attribute.To) : ParseLiteral(attribute);
                     if (!attribute.AllowsNull) {
                         sb.AppendFormat("{0} = {1}" + suffix, @from, to);
                     } else {

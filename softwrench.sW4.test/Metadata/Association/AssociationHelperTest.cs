@@ -5,6 +5,7 @@ using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using System.Linq;
+using softwrench.sW4.Shared2.Metadata.Entity.Association;
 
 namespace softwrench.sW4.test.Metadata.Association {
     [TestClass]
@@ -59,9 +60,26 @@ namespace softwrench.sW4.test.Metadata.Association {
         }
 
 
+        /// <summary>
+        /// Testing scenario for SWWEB-2785
+        /// </summary>
+        [TestMethod]
+        public void TestQueryReplacement() {
+            var queryHolder = new EntityAssociationAttribute();
+            queryHolder.Query = "asset.location = @from or asset.location in (select location from locancestor locan where locan.ancestor = @from and assetattribute is not null)";
+            var result = AssociationHelper.PrecompiledAssociationAttributeQuery("asset_", queryHolder, "location.location","asset");
+            Assert.AreEqual("asset_.location = location.location or asset_.location in (select location from locancestor locan where locan.ancestor = location.location and assetattribute is not null)", result);
+        }
+
+
 
         private static ApplicationSchemaDefinition WithProperty(string value) {
             return new ApplicationSchemaDefinition() { Properties = { { ApplicationSchemaPropertiesCatalog.PreFetchAssociations, value } } };
         }
+
+
+        
+
+
     }
 }

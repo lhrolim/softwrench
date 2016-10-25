@@ -45,6 +45,11 @@ namespace cts.commons.portable.Util {
             return strings.Any(toCompare => str.Equals(toCompare, StringComparison.CurrentCultureIgnoreCase));
         }
 
+        public static string SafeReplace(this string input, string find, string replace, bool matchWholeWord) {
+            string textToFind = matchWholeWord ? string.Format(@"\b{0}\b", find) : find;
+            return Regex.Replace(input, textToFind, replace);
+        }
+
         public static bool StartsWithAny(this string str, params string[] strings) {
             return strings.Any(toCompare => str.StartsWith(toCompare, StringComparison.CurrentCultureIgnoreCase));
         }

@@ -216,7 +216,7 @@
         </relationship>
         <relationship to="worklog" collection="true">
           <relationshipAttribute from="ticketid" to="recordkey" primary="true" />
-          <relationshipAttribute from="siteid" query="(worklog.siteid = @from or worklog.siteid is null)"/>
+          <relationshipAttribute from="siteid" to="siteid" allowsnull="true" />
           <relationshipAttribute to="class" literal="SR" quoteLiteral="true" />
         </relationship>
         <relationship to ="commlog" collection="true">

@@ -4,6 +4,7 @@ using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Util;
 using System.Collections.Generic;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata.Entity;
 using softwrench.sW4.Shared2.Data;
@@ -67,10 +68,27 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         /// </summary>
         /// <param name="entityName"></param>
         /// <param name="attribute"></param>
+        /// <param name="from"></param>
+        /// <param name="originalToName"></param>
         /// <returns></returns>
-        public static string PrecompiledAssociationAttributeQuery([NotNull]string entityName, [NotNull]IQueryHolder attribute) {
-            if (attribute.Query == null) return null;
+        public static string PrecompiledAssociationAttributeQuery([NotNull]string entityName, [NotNull]IQueryHolder attribute, string from = null, string originalToName = null) {
+            if (attribute.Query == null)
+                return null;
             var query = attribute.GetQueryReplacingMarkers(entityName);
+            if (originalToName != null) {
+                //SWWEB-2785 --> queries can be declared using the entityname rather than the qualified name, causing an issue under some scenarios:
+                // for compositions and grids, we do not use the qualifiers, but we do for quick search relationships.
+                // since there´s no consistency across the framework (and would be hard to have it), better sanitize this way.
+                query= query.SafeReplace(originalToName + ".", entityName+ ".", true);
+            }
+
+
+
+            //TODO : move this to a standard class/interface
+            if (!string.IsNullOrWhiteSpace(from)) {
+                query = query.Replace("@from", from);
+            }
+
             if (query.StartsWith("@")) {
                 query = BaseQueryBuilder.GetServiceQuery(query);
             }
@@ -112,7 +130,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 }
             }
             return search;
-            
+
         }
 
 

@@ -1173,6 +1173,13 @@
       <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
       <Name>cts.commons.web</Name>
     </ProjectReference>
+	
+	 <ProjectReference Include="..\softwrench.sw4.tgcs\softwrench.sw4.tgcs.csproj">		
+       <Project>{83d9b360-0879-487f-b03c-62044846192c}</Project>		
+       <Name>softwrench.sw4.tgcs</Name>		
+     </ProjectReference>
+	
+	
     <ProjectReference Include="..\cts.commons\cts.commons.csproj">
       <Project>{5FA34361-87B3-4094-BFBE-7DB7B4D16036}</Project>
       <Name>cts.commons</Name>
@@ -1181,26 +1188,13 @@
       <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>
       <Name>softwrench.sw4.batches.api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.liggett\softwrench.sw4.liggett.csproj">
-      <Project>{dafd4db9-7f56-46ed-91d7-96c95685362a}</Project>
-      <Name>softwrench.sw4.liggett</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.sodexo\softwrench.sw4.sodexo.csproj">
-      <Project>{ee5325f6-2bab-4241-b7fb-0e1556a88e23}</Project>
-      <Name>softwrench.sw4.sodexo</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.wopro\softwrench.sw4.wopro.csproj">
-      <Project>{639d7dc5-14f8-4cda-a10e-4f8395d1320b}</Project>
-      <Name>softwrench.sw4.wopro</Name>
-    </ProjectReference>
+
+    
     <ProjectReference Include="..\softwrench.sw4.activitystream\softwrench.sw4.activitystream.csproj">
       <Project>{34d2e894-c3aa-4f6e-b562-7a91d3078793}</Project>
       <Name>softwrench.sw4.activitystream</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.amex\softwrench.sw4.amex.csproj">
-      <Project>{93e0b0e8-f6ca-4e06-8a82-616e2dfc905a}</Project>
-      <Name>softwrench.sw4.amex</Name>
-    </ProjectReference>
+
     <ProjectReference Include="..\softwrench.sw4.apachegold\softwrench.sw4.apachegold.csproj">
       <Project>{cbf64ea8-97df-43b4-97cb-477769f9941c}</Project>
       <Name>softwrench.sw4.apachegold</Name>
@@ -1217,10 +1211,7 @@
       <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
       <Name>softwrench.sW4.batches</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.bering\softwrench.sw4.bering.csproj">
-      <Project>{a267fe4b-887c-47a5-b09d-f29e5c55a868}</Project>
-      <Name>softwrench.sw4.bering</Name>
-    </ProjectReference>
+
     <ProjectReference Include="..\softwrench.sw4.chicago\softwrench.sw4.chicago.csproj">
       <Project>{2350e8f9-0d82-45c3-a268-57a732e85945}</Project>
       <Name>softwrench.sw4.chicago</Name>
@@ -1237,10 +1228,7 @@
       <Project>{4812b935-8303-4b80-9e32-8cd81abefc9f}</Project>
       <Name>softwrench.sw4.firstsolar</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.gric\softwrench.sw4.gric.csproj">
-      <Project>{3b4ed6c6-ba78-45cd-8af9-964f3dc409e6}</Project>
-      <Name>softwrench.sw4.gric</Name>
-    </ProjectReference>
+
     <ProjectReference Include="..\softwrench.sw4.Hapag\softwrench.sw4.Hapag.csproj">
       <Project>{22d901fc-310e-4f14-9506-d9433cf192cf}</Project>
       <Name>softwrench.sw4.Hapag</Name>
@@ -1273,18 +1261,7 @@
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.swgas\softwrench.sw4.swgas.csproj">
-      <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>
-      <Name>softwrench.sw4.swgas</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.tgcs\softwrench.sw4.tgcs.csproj">
-      <Project>{83d9b360-0879-487f-b03c-62044846192c}</Project>
-      <Name>softwrench.sw4.tgcs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.umc\softwrench.sw4.umc.csproj">
-      <Project>{6e187557-8460-4992-9687-84373c5f3ed2}</Project>
-      <Name>softwrench.sw4.umc</Name>
-    </ProjectReference>
+   
     <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
       <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
       <Name>softwrench.sw4.user</Name>
@@ -1293,14 +1270,8 @@
       <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>
       <Name>softwrench.sw4.webcommons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.xerox\softwrench.sw4.xerox.csproj">
-      <Project>{d704fc33-6b04-44a1-b12f-a8c196127a08}</Project>
-      <Name>softwrench.sw4.xerox</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.yavapai\softwrench.sw4.yavapai.csproj">
-      <Project>{3c826d52-6795-4243-8d0e-cf8cbcb47891}</Project>
-      <Name>softwrench.sw4.yavapai</Name>
-    </ProjectReference>
+
+
     <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
       <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>
       <Name>softWrench.sW4</Name>
