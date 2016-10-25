@@ -198,7 +198,13 @@
                 this.insertIntoContext('invIssueListBeringScanOrder', config.invIssueListBeringScanOrder);
                 this.insertIntoContext('newKeyISsueDetailScanOrder', config.newKeyIssueDetailScanOrder);
 
-                this.insertIntoContext('dateTimeFormat', config.displayableFormats.dateTimeFormat);
+                let dateTimeFormat = config.displayableFormats.dateTimeFormat;
+
+                if (dateTimeFormat.indexOf("hh") !== -1 && dateTimeFormat.indexOf("a") === -1) {
+                    dateTimeFormat += " a";
+                }
+
+                this.insertIntoContext('dateTimeFormat', dateTimeFormat);
             },
 
             getResourceUrl: function (path) {

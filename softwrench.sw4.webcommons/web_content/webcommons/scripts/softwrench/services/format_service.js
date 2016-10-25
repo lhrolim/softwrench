@@ -95,18 +95,18 @@
                 if (field.rendererParameters['formatter'] == 'numberToBoolean') {
                     value = value == 1 ? i18NService.get18nValue('general.yes', 'Yes') : i18NService.get18nValue('general.no', 'No');
                 }
-                else if (field.rendererParameters['formatter'] == 'numberToAbs') {
+                else if (field.rendererParameters['formatter'] === 'numberToAbs') {
                     if (!isNaN(value)) {
                         value = Math.abs(value);
                     }
                 }
-                else if (field.rendererParameters['formatter'] == 'doubleToTime') {
+                else if (field.rendererParameters['formatter'] === 'doubleToTime') {
                     if (value == null) {
                         return "";
                     }
                     //Converting to hh:mm
                     var time = value.toString();
-                    if (time.length > 0 && time.indexOf('.') == -1) {
+                    if (time.length > 0 && time.indexOf('.') === -1) {
                         return value + " : 00";
                     }
                     var hours = time.split('.')[0];
@@ -115,7 +115,7 @@
                     var mins = Math.round(Math.round(parseFloat(0 + '.' + tempMins) * 60 * 100) / 100);
                     return (hours < 10 ? "0" + hours : hours) + " : " + (mins < 10 ? "0" + mins : "" + mins);
                 }
-                else if (field.rendererParameters['formatter'] == 'doubleToTimeExt') {
+                else if (field.rendererParameters['formatter'] === 'doubleToTimeExt') {
                     if (value == null) {
                         return "";
                     }
@@ -183,16 +183,20 @@
                 dateFormat = contextService.retrieveFromContext('dateTimeFormat');
                 dateFormat = dateFormat.replace('dd', 'DD');
                 dateFormat = dateFormat.replace('yyyy', 'YYYY');
-                dateFormat = dateFormat.replace('hh', 'HH');
-
+//                dateFormat = dateFormat.replace('hh', 'HH');
                 //default ==> should be client specific
-                return showTime ? dateFormat : dateFormat.replace('HH:mm', '');
+                if (!showTime) {
+                    dateFormat = dateFormat.replace('HH:mm', '');
+                    dateFormat =dateFormat.replace('hh:mm', '');
+                }
+                return dateFormat;
             } else {
                 dateFormat = dateFormat.replace('dd', 'DD');
                 dateFormat = dateFormat.replace('yyyy', 'YYYY');
                 if (!showTime) {
                     //the format and the showtime flag are somehow conflitant, let´s adjust the format
                     dateFormat = dateFormat.replace('HH:mm', '');
+                    dateFormat = dateFormat.replace('hh:mm', '');
                 }
                 return dateFormat.trim();
             }

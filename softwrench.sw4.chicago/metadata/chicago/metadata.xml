@@ -575,7 +575,9 @@
         <schema id="quicksrgrid" title="Quick Request Grid" stereotype="list" redeclaring="false">
           <customization position="owner"/>
           <customization position="+reportedby">
-            <field attribute="reportdate" label="Reported Date"/>
+            <field attribute="reportdate" label="Reported Date">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+            </field>
             <field attribute="department" label="Department"/>
             <field attribute="tickettype" label="Ticket Type"/>
           </customization>
