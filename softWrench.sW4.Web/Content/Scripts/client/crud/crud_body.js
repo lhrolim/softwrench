@@ -549,18 +549,19 @@
                     }
                     const eventParameters = {
                         originaldatamap: originalDatamap,
-                        'continue': function () {
-                            $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave);
-                        }
                     };
-                    const eventResult = eventService.beforesubmit_postvalidation(schemaToSave, transformedFields, eventParameters);
-                    if (eventResult === false) {
-                        //this means that the custom postvalidator should call the continue method
-                        log.debug('waiting on custom postvalidator to invoke the continue function');
-                        return;
-                    }
 
-                    $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave);
+                    eventService.beforesubmit_postvalidation(schemaToSave, transformedFields, eventParameters).then((eventResult) => {
+                        if (eventResult === false) {
+                            //this means that the custom postvalidator should call the continue method
+                            log.debug('waiting on custom postvalidator to invoke the continue function');
+                            return;
+                        }
+                        $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave);
+                    });
+
+
+                    
                 };
 
                 $scope.setSetIdAfterCreation = function (data) {

@@ -104,7 +104,7 @@
                 if (!event) {
                     return null;
                 }
-                return execute(event, { schema, datamap, parameters });
+                return $q.when(execute(event, { schema, datamap, parameters }));
             },
             onedit_validation: function (datamap, schema) {
                 const event = loadEvent(schema, "onedit.validation");

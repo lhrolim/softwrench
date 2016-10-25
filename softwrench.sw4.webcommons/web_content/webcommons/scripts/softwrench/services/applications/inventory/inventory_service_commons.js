@@ -80,9 +80,7 @@
             if (binnum != null) {
                 message = message + " (Bin: " + binnum + ")";
             }
-            return alertService.confirm(message).then(function () {
-                parameters.continue();
-            });
+            return alertService.confirm(message);
         };
 
     }

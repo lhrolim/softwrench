@@ -191,10 +191,7 @@
         }
 
         function submitConfirmation(event, datamap, parameters) {
-            var message = "Are you sure you want to save changes to this record?";
-            return alertService.confirm(message).then(function () {
-                parameters.continue();
-            });
+            return alertService.confirm("Are you sure you want to save changes to this record?");
         }
 
         var service = {

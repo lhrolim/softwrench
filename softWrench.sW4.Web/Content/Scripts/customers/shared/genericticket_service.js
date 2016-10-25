@@ -58,7 +58,7 @@ angular.module('sw_layout')
 
         handleStatusChange: function (schema, datamap, parameters) {
             updateTicketStatus(datamap);
-            if (datamap['status'] != parameters.originaldatamap['status']) {
+            if (datamap['status'] !== parameters.originaldatamap['status']) {
                 datamap['#hasstatuschange'] = true;
             }
         },

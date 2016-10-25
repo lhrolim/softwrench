@@ -41,6 +41,7 @@
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="type" query="!@type not in ('STOREROOM','LABOR')" />
         </relationship>
         <relationship to="ticket" collection="true">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
