@@ -638,7 +638,9 @@
       
         <schema id="editdetail" parentschema="adetail" stereotype="detail" title="Service Request Details" redeclaring="true">
           <section id="statussection">
+            <field attribute="originalstatus" hidden="true"/>
             <association label="Status" target="status" labelfield="synstatus_.description" requiredexpression="true">
+              <dataprovider postfilterfunction="FilterAvailableStatus"/>
               <renderer type="lookup" />
             </association>
           </section>
