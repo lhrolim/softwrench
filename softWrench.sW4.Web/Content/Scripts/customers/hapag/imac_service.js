@@ -132,7 +132,7 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
                     //HAP-1025
                     event.fields['usage'] = assetUsage.toUpperCase();
                 } else {
-                    event.fields['usage'] = "";
+                    event.fields['usage'] = "STANDARD";
                 }
             } else {
                 event.fields['assetusage'] = assetUsage;
