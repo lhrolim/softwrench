@@ -9,7 +9,6 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Web.Formatting {
     public class JsonDateTimeConverter : IsoDateTimeConverter {
 
-        private const string FormatWithTimeZone = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK";
         private const string FormatWithoutTimeZone = "yyyy'-'MM'-'dd'T'HH':'mm':'ss";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(JsonDateTimeConverter));
@@ -42,21 +41,20 @@ namespace softWrench.sW4.Web.Formatting {
             //https://controltechnologysolutions.atlassian.net/browse/SWWEB-1688
             var isAlreadyOnUtc = DateTimeKind.Utc.Equals(date.Kind);
             var dateConverted = isAlreadyOnUtc ? date.FromUTCToUser(user) : date.FromMaximoToUser(user);
-            var formatToUse = isAlreadyOnUtc ? FormatWithoutTimeZone : FormatWithTimeZone;
 
             //let´s double check if UTC, cause we can´t afford to conver it then
             isAlreadyOnUtc = DateTimeKind.Utc.Equals(dateConverted.Kind);
             var isLocal = DateTimeKind.Local.Equals(dateConverted.Kind);
 
             if (userOffsetVal == 0 || isAlreadyOnUtc || isLocal) {
-                var dt = dateConverted.ToString(formatToUse);
+                var dt = dateConverted.ToString(FormatWithoutTimeZone);
                 writer.WriteValue(dt);
                 return;
             }
 
             var userOffset = TimeSpan.FromMinutes(userOffsetVal * -1);
             Log.DebugFormat("converting datetime {0} of kind {1} using offset {2} ".Fmt(dateConverted,dateConverted.Kind, userOffset));
-            var datetime = new DateTimeOffset(dateConverted, userOffset).ToString(FormatWithTimeZone);
+            var datetime = new DateTimeOffset(dateConverted, userOffset).ToString(FormatWithoutTimeZone);
             writer.WriteValue(datetime);
         }
     }
