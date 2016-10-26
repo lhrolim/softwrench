@@ -26,7 +26,7 @@
 			if (schema.properties && schema.properties["detail.crawl.customparams"]) {
 				// Get the next/previous record that the params will be coming from
 				const record = value.previousData.filter(function (obj) {
-					return obj.fields[schema.idFieldName] == item.id;
+					return obj[schema.idFieldName] === item.id;
 				}); // TODO: If the record is null (item not on page in previous data)????
 				const customparamAttributes = schema.properties["detail.crawl.customparams"].replace(" ", "").split(",");
 				for (let param in customparamAttributes) {
@@ -35,7 +35,7 @@
 					}
 					customParameters[param] = {};
 					customParameters[param]["key"] = customparamAttributes[param];
-					customParameters[param]["value"] = record[0].fields[customparamAttributes[param]];
+					customParameters[param]["value"] = record[0][customparamAttributes[param]];
 				}
 			}
 			return {
