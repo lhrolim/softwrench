@@ -555,7 +555,11 @@
         };
 
 
-
+        function broadcastEx(msg) {
+            const error = { errorMessage: msg}
+            $rootScope.$broadcast("sw_ajaxerror", error);
+            alertService.notifyexception(error);
+        }
 
 
         function doInit() {
@@ -577,10 +581,12 @@
 
             if (dataObject.schemas == null) {
                 if (dataObject.resultObject == null) {
-                    //this means, most likely a security issue
-                    var error = { errorMessage: 'You don´t have permission to see that register, contact your administrator' }
-                    $rootScope.$broadcast('sw_ajaxerror', error);
-                    alertService.notifyexception(error);
+                    if (dataObject.type === "NotFoundResponse") {
+                        broadcastEx("Page not found.");
+                        return;
+                    }
+
+                    broadcastEx("You don´t have permission to see that register, contact your administrator");
                     return;
                 }
                 $scope.renderViewWithData(applicationName, schemaId, mode, title, dataObject);

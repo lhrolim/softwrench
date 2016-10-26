@@ -80,6 +80,10 @@ namespace softWrench.sW4.Web.Controllers {
 
             ContextLookuper.FillContext(request.Key);
             var response = await DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
+            if (response == null) {
+                return new NotFoundResponse();
+            }
+
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
 
