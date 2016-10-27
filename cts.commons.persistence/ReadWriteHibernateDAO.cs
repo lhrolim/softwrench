@@ -29,15 +29,15 @@ namespace cts.commons.persistence {
         }
 
 
-        public ICollection<T> BulkSave<T>(ICollection<T> items) where T : class {
+        public ICollection<T> BulkSave<T>(IEnumerable<T> items) where T : class {
             return AsyncHelper.RunSync(() => BulkSaveAsync<T>(items));
         }
 
-        public async Task<ICollection<T>> BulkSaveAsync<T>(ICollection<T> items) where T : class {
+        public async Task<ICollection<T>> BulkSaveAsync<T>(IEnumerable<T> items) where T : class {
             if (items == null || !items.Any()) {
-                return items;
+                return items.ToList<T>();
             }
-            var result = new List<T>(items.Count);
+            var result = new List<T>(items.Count<T>());
             using (var session = GetSessionManager().OpenSession()) {
                 using (var transaction = await session.BeginTransactionAsync()) {
                     // adding the saved items to a new collection 

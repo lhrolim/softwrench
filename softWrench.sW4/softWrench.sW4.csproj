@@ -370,6 +370,7 @@
     <Compile Include="Mapping\IMappingResolver.cs" />
     <Compile Include="Mapping\InternalMappingStructure.cs" />
     <Compile Include="Mapping\Mapping.cs" />
+    <Compile Include="Mapping\MappingDefinition.cs" />
     <Compile Include="Mapping\MappingResolver.cs" />
     <Compile Include="Metadata\Applications\Association\ApplicationAssociationSyncSchemaFactory.cs" />
     <Compile Include="Metadata\Applications\Association\DataProviderResolver.cs" />
@@ -611,6 +612,7 @@
     <Compile Include="Security\Init\Com\ComProfileInitializer.cs" />
     <Compile Include="Security\Init\DbUserInitializer.cs" />
     <Compile Include="Security\Init\Com\ProfileType.cs" />
+    <Compile Include="Security\Init\MappingRegister.cs" />
     <Compile Include="Security\Init\RoleExtensions.cs" />
     <Compile Include="Security\Interfaces\AfterLoginRoleEvaluator.cs" />
     <Compile Include="Security\Interfaces\IRoleEvaluator.cs" />

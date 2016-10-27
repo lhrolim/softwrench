@@ -112,6 +112,9 @@ module.exports = function (grunt) {
                     // bootstrap
                     "bootstrap.css": "bootstrap/dist/css/bootstrap.min.css",
                     "bootstrap-theme.css": "bootstrap/dist/css/bootstrap-theme.min.css",
+                    "ui-grid.css": "angular-ui-grid/ui-grid.min.css",
+                    "ui-grid.ttf": "angular-ui-grid/ui-grid.ttf",
+                    "ui-grid.woff": "angular-ui-grid/ui-grid.woff",
                     "bootstrap-datetimepicker.css": "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
                     "selectize.css": "selectize/dist/css/selectize.bootstrap3.css",
                     // font-awesome
@@ -150,6 +153,7 @@ module.exports = function (grunt) {
                     "angular-file-upload.js": "angular-file-upload/angular-file-upload.min.js",
                     "angular-drag-and-drop-lists.js": "angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js",
                     "sortable.js": "angular-ui-sortable/sortable.js",
+                    "ui-grid.js": "angular-ui-grid/ui-grid.min.js",
                     // bootstrap
                     "bootstrap.js": "bootstrap/dist/js/bootstrap.min.js",
                     // ace
@@ -260,6 +264,7 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-xeditable.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-file-upload.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-drag-and-drop-lists.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/ui-grid.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/sortable.js",
                     // tinymce
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-ui-tinymce.js",

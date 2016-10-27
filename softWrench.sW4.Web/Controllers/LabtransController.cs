@@ -2,12 +2,16 @@
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using cts.commons.web.Attributes;
 using Quartz.Util;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.SPF;
 
 namespace softWrench.sW4.Web.Controllers {
+
+    [Authorize]
+    [SWControllerConfiguration]
     public class LabtransController : ApiController {
         private readonly MaximoHibernateDAO _maximoDao;
 

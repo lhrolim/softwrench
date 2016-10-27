@@ -37,8 +37,8 @@ namespace cts.commons.persistence
         Task<IList<T>> FindAllAsync<T>() where T : class;
 
 
-        ICollection<T> BulkSave<T>(ICollection<T> items) where T : class;
+        ICollection<T> BulkSave<T>(IEnumerable<T> items) where T : class;
 
-        Task<ICollection<T>> BulkSaveAsync<T>(ICollection<T> items) where T : class;
+        Task<ICollection<T>> BulkSaveAsync<T>(IEnumerable<T> items) where T : class;
     }
 }

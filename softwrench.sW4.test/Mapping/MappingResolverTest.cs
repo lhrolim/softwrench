@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
-using cts.commons.simpleinjector;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softwrench.sW4.TestBase;
-using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Mapping;
-using softWrench.sW4.Metadata;
-using softWrench.sW4.Util;
 
-namespace softwrench.sW4.test.MappingTest {
+namespace softwrench.sW4.test.Mapping {
     [TestClass]
     public class MappingResolverTest {
 
@@ -30,10 +23,10 @@ namespace softwrench.sW4.test.MappingTest {
         public void BasicTest() {
 
 
-            var daoResult = new List<Mapping>
+            var daoResult = new List<softWrench.sW4.Mapping.Mapping>
             {
-                Mapping.TestValue("key","1","a"),
-                Mapping.TestValue("key","2","b"),
+                softWrench.sW4.Mapping.Mapping.TestValue("1","a"),
+                softWrench.sW4.Mapping.Mapping.TestValue("2","b"),
             };
 
             _swdbDAO.Setup(a => a.FindByQuery<softWrench.sW4.Mapping.Mapping>(softWrench.sW4.Mapping.Mapping.ByKey, "key")).Returns(daoResult);
@@ -61,10 +54,10 @@ namespace softwrench.sW4.test.MappingTest {
         public void MultipleConditionTest() {
 
 
-            var daoResult = new List<Mapping>
+            var daoResult = new List<softWrench.sW4.Mapping.Mapping>
             {
-                Mapping.TestValue("key","1","a,b,c"),
-                Mapping.TestValue("key","2","d"),
+                softWrench.sW4.Mapping.Mapping.TestValue("1","a,b,c"),
+                softWrench.sW4.Mapping.Mapping.TestValue("2","d"),
             };
 
             _swdbDAO.Setup(a => a.FindByQuery<softWrench.sW4.Mapping.Mapping>(softWrench.sW4.Mapping.Mapping.ByKey, "key")).Returns(daoResult);
@@ -84,10 +77,10 @@ namespace softwrench.sW4.test.MappingTest {
         public void AndConditionTest() {
 
 
-            var daoResult = new List<Mapping>
+            var daoResult = new List<softWrench.sW4.Mapping.Mapping>
             {
-                Mapping.TestValue("key","1&2","a,b,c",1),
-                Mapping.TestValue("key","@default","d"),
+                softWrench.sW4.Mapping.Mapping.TestValue("1&2","a,b,c",1),
+                softWrench.sW4.Mapping.Mapping.TestValue("@default","d"),
             };
 
             _swdbDAO.Setup(a => a.FindByQuery<softWrench.sW4.Mapping.Mapping>(softWrench.sW4.Mapping.Mapping.ByKey, "key")).Returns(daoResult);
@@ -107,9 +100,9 @@ namespace softwrench.sW4.test.MappingTest {
         public void MultipleOrigins() {
 
 
-            var daoResult = new List<Mapping>
+            var daoResult = new List<softWrench.sW4.Mapping.Mapping>
             {
-                Mapping.TestValue("key","1,2","a,b,c",1),
+                softWrench.sW4.Mapping.Mapping.TestValue("1,2","a,b,c",1),
             };
 
             _swdbDAO.Setup(a => a.FindByQuery<softWrench.sW4.Mapping.Mapping>(softWrench.sW4.Mapping.Mapping.ByKey, "key")).Returns(daoResult);

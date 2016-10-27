@@ -21,7 +21,9 @@ namespace softwrench.sW4.test.Util {
                 return;
             }
             foreach (var mock in mocks) {
-                mock.Reset();
+                if (mock != null) {
+                    mock.Reset();
+                }
             }
         }
 

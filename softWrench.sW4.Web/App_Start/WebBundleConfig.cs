@@ -33,7 +33,8 @@ namespace softWrench.sW4.Web {
                 // angular
                 .IncludeDirectory("~/Content/vendor/css/angular/", "*.css")
                 .Include("~/Content/vendor/css/angular/angular-ui-select.css")
-                .Include("~/Content/vendor/css/angular/textAngular.css");
+                .Include("~/Content/vendor/css/angular/textAngular.css")
+                .Include("~/Content/vendor/css/angular-ui-grid/ui-grid.css");
             vendorBundle.Orderer = new PassthroughBundleOrderer();
             bundles.Add(vendorBundle);
 
@@ -92,7 +93,10 @@ namespace softWrench.sW4.Web {
                     "~/Content/vendor/scripts/angular/angular-file-upload.js",
                     "~/Content/vendor/scripts/angular/angular-drag-and-drop-lists.js",
                     "~/Content/vendor/scripts/angular/sortable.js"
+                ).Include(
+                    "~/Content/vendor/scripts/angular-ui-grid/ui-grid.js"
                 )
+
                 // angular
                 .Include(
                     "~/Content/vendor/scripts/ace/ace.js",

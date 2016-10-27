@@ -58,6 +58,9 @@ module.exports = function (grunt) {
                     // bootstrap
                     "bootstrap/bootstrap.css": "bootstrap/dist/css/bootstrap.css",
                     "bootstrap/bootstrap-theme.css": "bootstrap/dist/css/bootstrap-theme.css",
+                    "angular-ui-grid/ui-grid.css": "angular-ui-grid/ui-grid.min.css",
+                    "angular-ui-grid/ui-grid.ttf": "angular-ui-grid/ui-grid.ttf",
+                    "angular-ui-grid/ui-grid.woff": "angular-ui-grid/ui-grid.woff",
                     "bootstrap/bootstrap-datetimepicker.css": "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
                     "bootstrap/selectize.css": "selectize/dist/css/selectize.bootstrap3.css",
                     // font-awesome
@@ -74,7 +77,7 @@ module.exports = function (grunt) {
                 files: {
                     "fonts": [
                         "font-awesome/fonts/*",
-                        "bootstrap/dist/fonts/*"
+                        "bootstrap/dist/fonts/*",
                     ]
                 }
             },
@@ -98,6 +101,7 @@ module.exports = function (grunt) {
                     "angular/angular-strap.js": "angular-strap/dist/angular-strap.js",
                     "angular/angular-animate.js": "angular-animate/angular-animate.js",
                     "angular/angular-xeditable.js": "angular-xeditable/dist/js/xeditable.js",
+                    "angular-ui-grid/ui-grid.js": "angular-ui-grid/ui-grid.min.js",
                     "angular/angular-file-upload.js": "angular-file-upload/angular-file-upload.js",
                     "angular/angular-bindonce.js": "angular-bindonce/bindonce.js",
                     "angular/angular-drag-and-drop-lists.js": "angular-drag-and-drop-lists/angular-drag-and-drop-lists.js",
@@ -153,6 +157,7 @@ module.exports = function (grunt) {
                     "<%= app.vendor %>/scripts/jquery/*!(jquery).js",
                     "<%= app.vendor %>/scripts/angular/angular.js",
                     "<%= app.vendor %>/scripts/angular/*!(angular).js",
+                    "<%= app.vendor %>/scripts/angular-ui-grid/*.js",
                     "<%= app.vendor %>/scripts/utils/**/*.js",
                     "<%= app.vendor %>/scripts/bootstrap/**/*.js",
                     "<%= app.vendor %>/scripts/devextreme/globalize.js",

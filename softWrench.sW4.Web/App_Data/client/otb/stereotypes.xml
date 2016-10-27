@@ -103,6 +103,10 @@
 
   </stereotype>
 
+  <stereotype id="detail.noprint">
+    <property key="commandbar.top" value="spreadsheet"/>
+  </stereotype>
+  
   <stereotype id="detailoutput">
     <property key="popup.window.titlestrategy" value="nameandid"/>
     <property key="show.printcommand" value="editonly"/>

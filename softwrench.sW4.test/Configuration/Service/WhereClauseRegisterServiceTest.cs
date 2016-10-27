@@ -19,14 +19,15 @@ namespace softwrench.sW4.test.Configuration.Service {
 
         private WhereClauseRegisterService _service;
 
-        private readonly Mock<ISWDBHibernateDAO> _swdbDAO = TestUtil.CreateMock<ISWDBHibernateDAO>();
-        private readonly Mock<UserProfileManager> _userManager = TestUtil.CreateMock<UserProfileManager>();
+        private Mock<ISWDBHibernateDAO> _swdbDAO;
 
 
         [TestInitialize]
-        public void Init() {
-            TestUtil.ResetMocks(_swdbDAO, _userManager);
-            _service = new WhereClauseRegisterService(_swdbDAO.Object, _userManager.Object);
+        public void Init()
+        {
+            _swdbDAO = TestUtil.CreateMock<ISWDBHibernateDAO>();
+            TestUtil.ResetMocks(_swdbDAO);
+            _service = new WhereClauseRegisterService(_swdbDAO.Object, null);
         }
 
 
@@ -39,7 +40,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             result = await _service.DoRegister("test", "value", null);
             Assert.AreEqual(WhereClauseRegisterService.WCRegisterOperation.SimpleDefinitionUpdate, result);
 
-            TestUtil.VerifyMocks(_swdbDAO, _userManager);
+            TestUtil.VerifyMocks(_swdbDAO);
 
         }
 
@@ -89,7 +90,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             var result = await _service.DoRegister("test", "newvalue", conditionToRegister);
             Assert.AreEqual(WhereClauseRegisterService.WCRegisterOperation.ValueCreation, result);
 
-            TestUtil.VerifyMocks(_swdbDAO, _userManager);
+            TestUtil.VerifyMocks(_swdbDAO);
 
 
         }
@@ -141,7 +142,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             var result = await _service.DoRegister("test", "newvalue", conditionToRegister);
             Assert.AreEqual(WhereClauseRegisterService.WCRegisterOperation.ValueUpdate, result);
 
-            TestUtil.VerifyMocks(_swdbDAO, _userManager);
+            TestUtil.VerifyMocks(_swdbDAO);
 
 
         }

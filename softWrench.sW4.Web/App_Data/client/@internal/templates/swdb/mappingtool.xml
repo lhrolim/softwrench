@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="ScriptEntry" idAttribute="id"/>
+  </entities>
+  <applications>
+
+    <application entity="MappingDefinition" name="Mapping" title="Mapping Definitions">
+      
+      <schemas>
+        <list stereotype="list" title="Mappings">
+          <field attribute="id" hidden="true"/>
+          <field attribute="key_" label="Key" />
+          <field attribute="description" label="Description"/>
+          <properties>
+            <property key="list.disablepagination" value="true"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <removecommand id="print"/>
+              <removecommand id="export"/>
+              <removecommand id="new"/>
+            </commandgroup>
+          </commandbars>
+        </list>
+
+        <schema id="detail" stereotype="detail.noprint">
+          <field attribute="id" hidden="true"/>
+          <field attribute="key_" label="Key" readonly="true"/>
+          <field attribute="description" label="Description" readonly="true"/>
+
+          <field attribute="sourceColumnAlias" hidden="true"/>
+          <field attribute="destinationColumnAlias" hidden="true"/>
+          <section resourcepath="/Content/Templates/mappingtool/mappingtool.html"/>
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <command id="save" service="dispatcherService" method="dispatchevent" parameters="mappingtool.save" cssclasses="large-button"/>
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+
+<!--        <schema id="detailnew" stereotype="detailnew">-->
+<!--          <field attribute="id" hidden="true"/>-->
+<!--          <field attribute="key_" label="Key"/>-->
+<!--          <field attribute="description" label="Description"/>-->
+<!--          <field attribute="sourceColumnAlias" label="Source Column Name"/>-->
+<!--          <field attribute="destinationColumnAlias" label="Destination Column Name"/>-->
+<!--          <section resourcepath="/Content/Templates/mappingtool/mappingtool.html"/>-->
+<!--          <commandbars>-->
+<!--            <commandgroup position="detail.primary">-->
+<!--              <removecommand id="print"/>-->
+<!--            </commandgroup>-->
+<!--          </commandbars>-->
+<!--        </schema>-->
+
+     
+        
+      </schemas>
+    </application>
+
+  </applications>
+
+</metadata>

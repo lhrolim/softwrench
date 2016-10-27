@@ -19,6 +19,18 @@
       </connectorParameters>
     </entity>
 
+    <entity name="groupuser" idAttribute="groupuserid">
+      <attributes>
+        <attribute name="groupuserid" type="bigint" required="true" />
+        <attribute name="userid" type="varchar" required="true" />
+        <attribute name="groupname" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="groupuser" />
+      </connectorParameters>
+    </entity>
+
     <entity name="DOCLINKS" idAttribute="doclinksid">
       <attributes>
         <attribute name="changeby" type="varchar" required="false" />

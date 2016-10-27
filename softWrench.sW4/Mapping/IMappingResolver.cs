@@ -16,5 +16,6 @@ namespace softWrench.sW4.Mapping {
         IReadOnlyList<string> Resolve([NotNull]string key, [CanBeNull]IEnumerable<string> originalValues);
 
 
+        void UpdateCache(string key);
     }
 }

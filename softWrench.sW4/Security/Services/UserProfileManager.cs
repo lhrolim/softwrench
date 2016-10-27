@@ -21,6 +21,10 @@ using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Mapping;
+using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 
 
@@ -33,12 +37,20 @@ namespace softWrench.sW4.Security.Services {
 
         private static bool _cacheStarted;
 
-
+        private readonly EntityMetadata _entityMetadata;
         private readonly ISWDBHibernateDAO _dao;
+        private readonly IMappingResolver _mappingResolver;
+        private readonly IEntityRepository _entityRepositoryForProfileTranslation;
 
-        public UserProfileManager(ISWDBHibernateDAO dao) {
+        public UserProfileManager(ISWDBHibernateDAO dao, IMappingResolver mappingResolver) {
             _dao = dao;
+            _mappingResolver = mappingResolver;
+            //            _entityRepositoryForProfileTranslation = entityRepositoryForProfileTranslation;
+            _entityMetadata = MetadataProvider.Entity("groupuser");
         }
+
+
+
 
         public void ClearCache() {
             _cacheStarted = false;
@@ -123,11 +135,36 @@ namespace softWrench.sW4.Security.Services {
             return profile;
         }
 
+        //TODO: verify whether it makes sense also to clean up profiles that were associated on SWDB, or even to forbid such association
+        protected virtual async Task<List<UserProfile>> TranslateProfiles(User dbUser, string personid, List<UserProfile> profiles) {
+            SearchRequestDto dto = new PaginatedSearchRequestDto();
+            dto.AppendSearchEntry("USERID", personid);
+            try {
+                Log.DebugFormat("Fetching user profiles from ISM for person {0} ", personid);
+                var groups = await EntityRepositoryForTranslation.Get(_entityMetadata, dto);
+
+                var groupNames = groups.Select(g => g.GetStringAttribute("GROUPNAME"));
+
+                var swGroupNames = _mappingResolver.Resolve("maximo.securitygroup.mapping", groupNames);
+                profiles.AddRange(swGroupNames.Select(FindByName).Where(profile => profile != null));
+
+                return profiles;
+            } catch (Exception e) {
+                Log.Error("error contacting ISM for fetching profiles. Returning only user associated profiles", e);
+                return profiles;
+            }
+        }
+
+        protected virtual IEntityRepository EntityRepositoryForTranslation {
+            get { return SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(); }
+        }
+
         public virtual async Task<List<UserProfile>> FindUserProfiles(User dbUser) {
             if (dbUser.Profiles == null) {
                 return new List<UserProfile>();
             }
-            return dbUser.Profiles.Select(profile => ProfileCache[profile.Id]).ToList();
+            var list = dbUser.Profiles.Select(profile => ProfileCache[profile.Id]).ToList();
+            return await TranslateProfiles(dbUser, dbUser.MaximoPersonId, list);
         }
 
 

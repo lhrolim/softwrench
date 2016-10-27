@@ -9,6 +9,7 @@
     <template path="@swerror.xml"/>
     <template path="@configuration.xml"/>
     <template path="@dynamic.xml"/>
+    <template path="@mappingtool.xml"/>
   </templates>
   
 </metadata>

@@ -18,7 +18,7 @@ using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
-    public class EntityRepository : ISingletonComponent {
+    public class EntityRepository : IEntityRepository {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(EntityRepository));
 

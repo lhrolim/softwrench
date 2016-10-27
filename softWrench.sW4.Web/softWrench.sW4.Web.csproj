@@ -370,6 +370,7 @@
     <Compile Include="Controllers\Application\Ticket\StatusBatchController.cs" />
     <Compile Include="Controllers\AssociationController.cs" />
     <Compile Include="Controllers\Audit\AuditController.cs" />
+    <Compile Include="Controllers\MappingToolController.cs" />
     <Compile Include="Controllers\Dynamic\ScriptsController.cs" />
     <Compile Include="Controllers\MetadataController.cs" />
     <Compile Include="Controllers\LabtransController.cs" />
@@ -421,6 +422,7 @@
     <Compile Include="DB_Migration\4.4.1\20150723_SWWEB_1275.cs" />
     <Compile Include="DB_Migration\5.10.0\20160601_SWWEB_2526.cs" />
     <Compile Include="DB_Migration\5.11.1\20160707_SWWEB_2609.cs" />
+    <Compile Include="DB_Migration\5.15.0\20161018_SWWEB_2825.cs" />
     <Compile Include="DB_Migration\5.15.0\20160819_SWWEB_2709.cs" />
     <Compile Include="DB_Migration\5.14.0\20160825_SWWEB_2710.cs" />
     <Compile Include="DB_Migration\5.3.0\20160127_SWWEB_2020.cs" />
@@ -572,6 +574,9 @@
     <Content Include="App_Data\Client\%40internal\templates\serviceaddress.xml" />
     <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
     <Content Include="App_Data\Client\%40internal\templates\sparepart.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\swdb\mappingtool.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\swdb\dynamic.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -726,6 +731,7 @@
     <Content Include="Content\Scripts\automationscripts\StartWF.js" />
     <Content Include="Content\Scripts\automationscripts\OSIN.SWWO.js" />
     <Content Include="Content\Scripts\client\adminresources\adminmodule_setup.js" />
+    <Content Include="Content\Scripts\client\adminresources\mappingtoolcontroller.js" />
     <Content Include="Content\Scripts\client\adminresources\problemService.js" />
     <Content Include="Content\Scripts\client\crud\composition_masterdetails.js" />
     <Content Include="Content\Scripts\client\crud\crud_crawl_service.js" />
@@ -988,6 +994,7 @@
     <Content Include="Content\Templates\dynamic\dyncomponentcreated.html" />
     <Content Include="Content\Templates\dynamic\containerreload.html" />
     <Content Include="Content\Templates\dynamic\scriptevalreport.html" />
+    <Content Include="Content\Templates\mappingtool\mappingtool.html" />
     <Content Include="Content\Templates\metadata\metadatachangereport.html" />
     <Content Include="Content\Templates\notifications.html" />
     <Content Include="Content\Templates\breadcrumbDropdown.html" />

@@ -21,7 +21,11 @@
         "dndLists",
         "ui.tinymce",
         "ui.ace",
-        "ui.sortable"
+        "ui.sortable",
+        'ui.grid',
+        'ui.grid.pagination',
+        'ui.grid.edit',
+        'ui.grid.cellNav'
     ]);
 
     angular.module("sw_prelogin", ["webcommons_services"]);

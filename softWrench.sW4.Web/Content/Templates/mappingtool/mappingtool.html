@@ -1,0 +1,21 @@
+﻿<div ng-controller="MappingSpreadsheetController">
+    <div class="well well-sm faq clearfix">
+        <article >
+            <span>Syntax Help:<icon class="fa fa-question-circle" ng-click="toggleHelp()" /></span>
+            
+            <div class="col-md-12">
+                <p></p>
+                <ul ng-show="vm.helpExpanded">
+                    <li>Left column represents the source values, the conditions</li>
+                    <li>Right column represents the values that would be applied if the condition(s) match</li>
+                    <li>Comma Sepparated values --> Could be used on either the source or the destination column. Multiple value matching (ex: x,y applies x and y if a condition is matched, or if any of the conditions match apply a value)</li>
+                    <li>And Source mathing --> Both conditions need to exist (ex: x&amp;y applies a mapping only if both conditions x and y are matched)</li>
+                    <li>a @default source/condition could be set --> these values would be applied everytime regardless of any sort of matching (ex: a default profile could be set to all users like that) </li>
+                </ul>
+            </div>
+        </article>
+    </div>
+
+
+    <div ui-grid="vm.gridoptions" ui-grid-edit ui-grid-cellnav class="grid"></div>
+</div>
