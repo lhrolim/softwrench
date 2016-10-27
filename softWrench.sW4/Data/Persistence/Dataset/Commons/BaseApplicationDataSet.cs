@@ -623,7 +623,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 return BatchSubmissionService.CreateAndSubmit(operationWrapper.ApplicationMetadata.Name, operationWrapper.ApplicationMetadata.Schema.SchemaId, operationWrapper.JSON);
             }
 
-            return DoExecute(operationWrapper);
+            var result = DoExecute(operationWrapper);
+            var operationData = operationWrapper.OperationData();
+            var crudOperationData = operationData as CrudOperationData;
+            if (crudOperationData == null || !crudOperationData.ReloadAfterSave) {
+                return result;
+            }
+
+            var slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(application);
+            result.ResultObject = AsyncHelper.RunSync(() => Engine().FindById(slicedEntityMetadata, id, userIdSite));
+            return result;
         }
 
         public virtual TargetResult DoExecute(OperationWrapper operationWrapper) {

@@ -10,7 +10,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var incident = maximoTemplateData.IntegrationObject;
 
-            HandleActualDates(incident);
+            HandleActualDates(maximoTemplateData);
             SetSwChangeBy(incident);
 
             //Handle Commlogs

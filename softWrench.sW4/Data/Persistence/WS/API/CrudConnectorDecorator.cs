@@ -38,7 +38,9 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             RealCrudConnector.PopulateIntegrationObject(maximoTemplateData);
         }
 
-        public virtual object HandleActualDates(object entity) {
+        public virtual object HandleActualDates(MaximoOperationExecutionContext maximoTemplateData) {
+            var entity = maximoTemplateData.IntegrationObject;
+
             var statusValue = w.GetRealValue(entity, "STATUS");
             if (statusValue == null) {
                 return null;
@@ -46,11 +48,20 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
 
             if (statusValue.Equals("INPROG") && w.GetRealValue(entity, "ACTUALSTART") == null) {
                 w.SetValueIfNull(entity, "ACTUALSTART", DateTime.Now.FromServerToRightKind());
+                SetReloadAfterSave(maximoTemplateData);
             } else if (statusValue.Equals("RESOLVED") && w.GetRealValue(entity, "ACTUALFINISH") == null) {
                 w.SetValue(entity, "ACTUALFINISH", DateTime.Now.FromServerToRightKind());
+                SetReloadAfterSave(maximoTemplateData);
             }
 
             return statusValue;
+        }
+
+        public virtual void SetReloadAfterSave(MaximoOperationExecutionContext maximoTemplateData) {
+            var crudOperationData = maximoTemplateData.OperationData as CrudOperationData;
+            if (crudOperationData != null) {
+                crudOperationData.ReloadAfterSave = true;
+            }
         }
 
         protected virtual void SetSwChangeBy(object entity) {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using cts.commons.portable.Util;
 using log4net;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -67,7 +68,7 @@ namespace softWrench.sW4.Util {
             var kind = (ApplicationConfiguration.IsISM() || WsUtil.Is71()) ? DateTimeKind.Utc : DateTimeKind.Local;
             var user = SecurityFacade.CurrentUser(false);
             try {
-                var dateFromJson = Convert.ToDateTime(stValue);
+                var dateFromJson = Convert.ToDateTime(stValue, new CultureInfo("en-US"));
                 var date = DateTime.SpecifyKind(dateFromJson, kind);
                 var fromUserToRightKind = date.FromUserToRightKind(user);
                 return fromUserToRightKind;

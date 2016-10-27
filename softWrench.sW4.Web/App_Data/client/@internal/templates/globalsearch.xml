@@ -41,8 +41,12 @@
           <field attribute="recordid" label="System Record ID" hidden="true"/>
           <field attribute="userrecordid" label="Record ID"/>
           <field attribute="description" label="Summary"/>
-          <field attribute="createdate" label="Create Date"/>
-          <field attribute="changedate" label="Change Date"/>
+          <field attribute="createdate" label="Create Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss;"/>
+          </field>
+          <field attribute="changedate" label="Change Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss;"/>
+          </field>
           <field attribute="recordtypelabel" label="Record Type"/>
           <field attribute="recordtype" hidden="true"/>
           <field attribute="appname" label="Schema" hidden="true" qualifier="application.name" />

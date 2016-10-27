@@ -10,7 +10,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector
             var sr = maximoTemplateData.IntegrationObject;
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
 
-            HandleActualDates(sr);
+            HandleActualDates(maximoTemplateData);
             SetSwChangeBy(sr);
 
             base.BeforeUpdate(maximoTemplateData);

@@ -19,9 +19,10 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.connector {
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;
-            var statusValue = HandleActualDates(sr);
+            var statusValue = HandleActualDates(maximoTemplateData);
             if (statusValue != null && statusValue.Equals("CLOSED") && w.GetRealValue(sr, "ITDCLOSEDATE") == null) {
                 w.SetValue(sr, "ITDCLOSEDATE", DateTime.Now.FromServerToRightKind());
+                SetReloadAfterSave(maximoTemplateData);
             }
 
             base.BeforeUpdate(maximoTemplateData);

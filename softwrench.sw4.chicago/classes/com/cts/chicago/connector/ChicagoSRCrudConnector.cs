@@ -46,9 +46,10 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
             SetSwChangeBy(sr);
 
-            var statusValue = HandleActualDates(sr);
+            var statusValue = HandleActualDates(maximoTemplateData);
             if (statusValue != null && statusValue.Equals("CLOSED") && w.GetRealValue(sr, "ITDCLOSEDATE") == null) {
                 w.SetValue(sr, "ITDCLOSEDATE", DateTime.Now.FromServerToRightKind());
+                SetReloadAfterSave(maximoTemplateData);
             }
 
             base.BeforeUpdate(maximoTemplateData);

@@ -26,6 +26,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
         public string SiteId {get; set;}
 
+        public bool ReloadAfterSave { get; set; }
 
         public string UserId {
             get { return GetAttribute(_userIdAttributeName) == null ? null : GetAttribute(_userIdAttributeName).ToString(); }
@@ -63,7 +64,8 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             var clone = new CrudOperationData(Id, atributes, assocAtributes, EntityMetadata, ApplicationMetadata)
             {
                 SiteId = SiteId,
-                OperationType = OperationType
+                OperationType = OperationType,
+                ReloadAfterSave = ReloadAfterSave
             };
             return clone;
         }
