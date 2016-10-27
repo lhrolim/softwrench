@@ -37,7 +37,7 @@
         <relationship to="synonymdomain" qualifier="pescosynstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
-          <relationshipAttribute query="(value IN ('APPR', 'INPRG', 'WMATL', 'WSCH', 'COMP', 'CAN'))"/>
+          <relationshipAttribute query="(value IN ('APPR', 'INPRG', 'WMATL', 'WSCH', 'COMP', 'CAN', 'WAPPR'))"/>
         </relationship>
       </relationships>
     </entity>
