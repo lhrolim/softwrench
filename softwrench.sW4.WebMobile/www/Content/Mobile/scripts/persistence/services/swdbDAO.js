@@ -118,7 +118,7 @@
             if (!dbEntity) {
                 return $q.reject(new Error("entity {0} not found".format(entity)));
             }
-            return this.findSingleByQuery(entity, "id='" + id + "'");
+            return this.findSingleByQuery(entity, `id='${id}'`);
         };
 
         /// <summary>

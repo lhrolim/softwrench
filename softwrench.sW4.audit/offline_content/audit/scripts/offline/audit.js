@@ -217,7 +217,7 @@
              * Deletes all AuditEntries tracking the entity.
              * 
              * @param {String} entityId DataEntry's id
-             * @param {String} 
+             * @param {String} application
              * @returns {Promise<Void>} 
              */
             function deleteRelatedEntries(entityId, application) {

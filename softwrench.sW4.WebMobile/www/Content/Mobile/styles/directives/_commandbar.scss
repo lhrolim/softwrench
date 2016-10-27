@@ -5,7 +5,18 @@
     .mfb-component--br {
         bottom: auto;
     }
-
+    // fab container
+    .mfb-component__list {
+        li[mfb-button] {
+            @each $_color_name, $_color_value in $color_map {
+                &.#{$_color_name} {
+                    a.mfb-component__button--child {
+                        background-color: $_color_value;
+                    }
+                }
+            }
+        }
+    }
     // single command present
     .button.button-fab-single {
         background-color: $cts_gray;
@@ -17,11 +28,10 @@
         width: 56px;
         height: 56px;
 
-        &.green {
-            background-color: $cts_green;
-        }
-        &.red {
-            background-color: $cts_red;
+        @each $_color_name, $_color_value in $color_map {
+            &.#{$_color_name} {
+                background-color: $_color_value;
+            }
         }
     }
 }

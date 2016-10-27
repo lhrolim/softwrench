@@ -14,9 +14,39 @@
             },
 
             controller: ["$scope", "$rootScope", "offlineCommandService", function ($scope, $rootScope, offlineCommandService) {
+                //#region classes
+                class CommandHolder {
+                    constructor() {
+                        if (this.constructor === CommandHolder) {
+                            throw new TypeError("Cannot instantiate abstract class CommandHolder");
+                        }    
+                    }
+                    get activeCommands() {
+                        throw new TypeError("Not implemented");
+                    }
+                    get hasActiveCommands() {
+                        return this.activeCommands.length > 0;
+                    }
+                }
 
-                class CommandContainer {
+                class SingleCommandHolder extends CommandHolder {
+                    constructor() {
+                        super();
+                        if (this.constructor === SingleCommandHolder) {
+                            throw new TypeError("Cannot instantiate abstract class SingleCommandHolder");
+                        }
+                    }
+                    get isSingleActiveCommand() {
+                        return this.activeCommands.length === 1;
+                    }
+                    get singleActiveCommand() {
+                        return this.activeCommands[0];
+                    }
+                }
+
+                class CommandContainer extends SingleCommandHolder {
                     constructor(commands) {
+                        super();
                         this.commands = commands;
                     }
                     get activeCommands() {
@@ -27,13 +57,12 @@
                     get hasCommands() {
                         return angular.isArray(this.commands) && this.commands.length > 0;
                     }
-                    get hasActiveCommands() {
-                        return this.activeCommands.length > 0;
-                    }
                 }
 
-                class CommandBar {
+                class CommandBar extends SingleCommandHolder {
                     constructor(commands) {
+                        super();
+
                         const commandsDefined = angular.isArray(commands) && commands.length > 0;
 
                         this.containers = commandsDefined
@@ -47,10 +76,8 @@
                     get hasActiveCommands() {
                         return this.childCommands.hasActiveCommands || this.containers.some(c => c.hasActiveCommands);
                     }
-                    get singleActiveCommand() {
-                        return this.childCommands.activeCommands[0];
-                    }
                 }
+                //#endregion
 
                 $scope.commandBar = new CommandBar([]);
 

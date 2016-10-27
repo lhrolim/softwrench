@@ -1,8 +1,8 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", "synchronizationFacade", "routeService", "crudContextHolderService", "$ionicPopup", 
-        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, $ionicPopup) {
+    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", "synchronizationFacade", "routeService", "crudContextHolderService", "itemActionService",
+        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, itemActionService) {
 
             $scope.crudlist = {
                 items: [],
@@ -138,27 +138,9 @@
                 });
             }
   		
-            $scope.deleteOrRestoreItem = function(item) {
-                const restorable = item.remoteId && item.isDirty && !!item.originaldatamap;
-                const deletable = !item.remoteId;
-                if (item.pending || (!restorable && !deletable)) return;
-
-                const gridTitle = $scope.gridTitle();
-                const confirmConfig = restorable
-                    ? { title: "Cancel Changes", template: `Are you sure you want to cancel changes made to this ${gridTitle}` }
-                    : { title: `Delete ${gridTitle}`, template: `Are you sure you want to delete this ${gridTitle} created locally` }
-
-                return $ionicPopup.confirm(confirmConfig).then(res => {
-                    if (!res) return;
-
-                    const promise = restorable
-                        ? crudContextService.restoreItemToOriginalState(item)
-                        : crudContextService.deleteLocalItem(item);
-
-                    return promise
-                        .then(() => $ionicPopup.alert({ title: `${gridTitle} was successfuly ${restorable ? "restored" : "deleted"}` }))
-                        .then(crudContextService.refreshGrid());
-                });
+            $scope.deleteOrRestoreItem = function (item) {
+                return itemActionService.deleteOrRestoreItem(item)
+                    .then(res => res ? crudContextService.refreshGrid() : null);
             };
 
 

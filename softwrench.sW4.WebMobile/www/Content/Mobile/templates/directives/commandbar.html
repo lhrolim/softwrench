@@ -3,7 +3,8 @@
 
         <div ng-switch-when="mobile.fab">
             <div class="action-fab" ng-repeat="container in commandBar.containers" ng-if="container.hasActiveCommands">
-                <mfb-menu label="{{label}}"
+                <mfb-menu ng-if="!container.isSingleActiveCommand"
+                          label="{{label}}"
                           position="br"
                           effect="slidein"
                           toggling-method="click"
@@ -14,9 +15,17 @@
                        label="{{command.label}}"
                        icon="{{command.icon}}"
                        ng-click="executeCommand(command)"
-                       mfb-button-close>
+                       mfb-button-close
+                       ng-class="command.cssClasses">
                     </a>
                 </mfb-menu>
+
+                <button ng-if="container.isSingleActiveCommand"
+                        ng-click="executeCommand(container.singleActiveCommand)"
+                        class="button button-fab-single"
+                        ng-class="container.singleActiveCommand.cssClasses">
+                    <i class="{{container.singleActiveCommand.icon}}"></i>
+                </button>
             </div>
 
             <div ng-if="commandBar.childCommands.hasActiveCommands">

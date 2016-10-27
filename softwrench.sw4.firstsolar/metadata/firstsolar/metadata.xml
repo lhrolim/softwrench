@@ -735,14 +735,24 @@
 
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
-              <!--<container id="detail.container" icon="fa-bolt">--> <!-- add container declaration back to show FAB menu -->
-                <command id="startlabtrans" service="laborService" method="startLaborTransaction" 
-                         icon="ion-play" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" 
-                         cssclasses="green"/>
+              <container id="detail.container" position="detail.container" icon="fa-bolt">
+                <!-- TODO: currently no support for merging command containers so repeating base commands -->
+                <command id="quicksync"
+                         service="itemActionService" method="quickSyncCurrentItem"
+                         showexpression="service:itemActionService.shouldAllowQuickSyncForCurrentItem"
+                         icon="ion-loop" label="Quick Sync"/>
+                <command id="restoreitem"
+                         service="itemActionService" method="deleteOrRestoreCurrentItem"
+                         showexpression="service:itemActionService.shouldAllowDeleteOrRestoreForCurrentItem"
+                         icon="ion-trash-a" label="Delete/Restore" cssclasses="red" />
+                
+                <command id="startlabtrans" service="laborService" method="startLaborTransaction"
+                         showexpression="service:laborService.shouldAllowLaborStart" 
+                         icon="ion-play" label="Start Labor Report" cssclasses="green"/>
                 <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
-                         icon="ion-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" 
-                         cssclasses="red" />
-              <!--</container>-->
+                         showexpression="service:laborService.shouldAllowLaborFinish" 
+                         icon="ion-stop" label="Finish Labor Report" cssclasses="red" />
+              </container>
             </commandgroup>
           </commandbars>
 
@@ -945,16 +955,26 @@
           </composition>
           <!-- EndRegion -->
 
-       <commandbars>
-            <commandgroup platform="mobile" position="mobile.fab">
-              <!--<container id="detail.container" icon="fa-bolt">--> <!-- add container declaration back to show FAB menu -->
-                <command id="startlabtrans" service="laborService" method="startLaborTransaction" 
-                         icon="ion-play" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" 
-                         cssclasses="green"/>
+          <commandbars>
+            <commandgroup platform="mobile" position="mobile.fab" removeundeclared="false">
+              <container id="detail.container" icon="fa-bolt">
+                <!-- TODO: currently no support for merging command containers so repeating base commands -->
+                <command id="quicksync"
+                         service="itemActionService" method="quickSyncCurrentItem"
+                         showexpression="service:itemActionService.shouldAllowQuickSyncForCurrentItem"
+                         icon="ion-loop" label="Quick Sync"/>
+                <command id="restoreitem"
+                         service="itemActionService" method="deleteOrRestoreCurrentItem"
+                         showexpression="service:itemActionService.shouldAllowDeleteOrRestoreForCurrentItem"
+                         icon="ion-trash-a" label="Delete/Restore" cssclasses="red" />
+                
+                <command id="startlabtrans" service="laborService" method="startLaborTransaction"
+                         showexpression="service:laborService.shouldAllowLaborStart"
+                         icon="ion-play" label="Start Labor Report" cssclasses="green"/>
                 <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
-                         icon="ion-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" 
-                         cssclasses="red" />
-              <!--</container>-->
+                         showexpression="service:laborService.shouldAllowLaborFinish"
+                         icon="ion-stop" label="Finish Labor Report" cssclasses="red" />
+              </container>
             </commandgroup>
           </commandbars>
 

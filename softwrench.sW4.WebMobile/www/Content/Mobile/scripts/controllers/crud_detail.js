@@ -69,6 +69,10 @@
             return !!crudContextHolderService.getCrudContext().nextItem;
         };
 
+        $scope.hasPreviousItem = function() {
+            return !!crudContextHolderService.getCrudContext().previousItem;
+        };
+
         $scope.hasAnyComposition = function () {
             return crudContextService.currentCompositionsToShow().length > 0;
         }

@@ -142,7 +142,18 @@
   
   <!-- #region: mobile -->
   <!-- Floating Action Button position -->
-  <commandgroup platform="mobile" position="mobile.fab"></commandgroup>
+  <commandgroup platform="mobile" position="mobile.fab">
+    <container id="detail.container" icon="fa-bolt">
+      <command id="quicksync" 
+               service="itemActionService" method="quickSyncCurrentItem"
+               showexpression="service:itemActionService.shouldAllowQuickSyncForCurrentItem"
+               icon="ion-loop" label="Quick Sync"/>
+      <command id="restoreitem" 
+               service="itemActionService" method="deleteOrRestoreCurrentItem"
+               showexpression="service:itemActionService.shouldAllowDeleteOrRestoreForCurrentItem"
+               icon="ion-trash-a" label="Delete/Restore" cssclasses="red" />
+    </container>
+  </commandgroup>
   <!-- Footer Bar position -->
   <commandgroup platform="mobile" position="mobile.footer"></commandgroup>
   <!-- Header Bar position -->

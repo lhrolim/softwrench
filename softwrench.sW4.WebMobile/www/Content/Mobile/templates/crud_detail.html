@@ -21,7 +21,7 @@
         <h1 class="title"></h1>
 
         <div class="buttons" style="white-space: nowrap">
-            <button class="button navigate" ng-click="navigatePrevious()" ng-if="showNavigation()"><i class="fa fa-chevron-left"></i></button>
+            <button class="button navigate" ng-click="navigatePrevious()" ng-if="showNavigation() && hasPreviousItem()"><i class="fa fa-chevron-left"></i></button>
             <button class="button navigate" ng-click="navigateNext()" ng-if="showNavigation() && hasNextItem()"><i class="fa fa-chevron-right"></i></button>
             <div class="seperator" ng-if="!hasDirtyChanges() && hasAnyComposition() && showNavigation()"></div>
             <button class="button" ng-click="expandCompositions($event)" ng-if="!hasDirtyChanges() && hasAnyComposition()"><i class="fa fa-th"></i></button>
@@ -33,7 +33,7 @@
 
     <ion-content class="crud-details" has-header="true" has-subheader="true" has-bouncing="false" 
                  on-swipe-left="onSwipeLeft()" on-swipe-right="onSwipeRight()" on-scroll="onScroll()" delegate-handle="detailHandler">
-        <div class="crud-title" ng-click="loadMainTab()" ng-if="isOnMainTab()">
+        <div class="crud-title" ng-if="isOnMainTab()">
             <div class="row">
                 <div class="col col-25 crud-icon">
                     <crud-icon item="item"></crud-icon>
