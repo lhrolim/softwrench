@@ -73,6 +73,8 @@ bin
 obj
 /Releases
 /tmp
+*/-/
+*/_CreateNewNuGetPackage/
 TestResults
 
 # 3rd-party stuff copied during build
