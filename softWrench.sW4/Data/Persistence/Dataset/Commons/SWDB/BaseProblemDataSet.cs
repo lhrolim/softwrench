@@ -13,7 +13,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
-    class BaseProblemDataSet : SWDBApplicationDataset {
+    public class BaseProblemDataSet : SWDBApplicationDataset {
 
         private readonly ProblemHandlerLookuper _handlerLookuper;
         private readonly DataSetProvider _dataSetProvider;

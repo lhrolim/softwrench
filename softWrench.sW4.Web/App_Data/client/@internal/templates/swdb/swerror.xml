@@ -24,9 +24,12 @@
           </field>
           <field attribute="createdby" hidden="true"/>
           <field attribute="username" label="Created By"/>
-          <field attribute="assignee" label="Assignee"/>
+          <field attribute="message" label="Message">
+            <renderer type="default" params="width=40%"/>
+          </field>
+          <!--<field attribute="assignee" label="Assignee"/>
           <field attribute="priority" label="Priority"/>
-          <field attribute="status" label="Status"/>
+          <field attribute="status" label="Status"/>-->
           <properties>
             <property key="list.defaultorderby" value="createddate desc"/>
           </properties>
