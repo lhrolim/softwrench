@@ -19,10 +19,10 @@ namespace softWrench.sW4.Web.DB_Migration._5._15._0 {
 
             Alter.Table("MAP_MAPPING").AddColumn("definition_id").AsInt64().ForeignKey("MAP_DEFINITION", "id");
 
-            Create.Index("sw_mapping_def_idx").OnTable("SW_MAPPING").OnColumn("definition");
+            Create.Index("sw_mapping_def_idx").OnTable("MAP_MAPPING").OnColumn("definition");
 
-            Delete.Index("sw_mapping_key_idx").OnTable("MAP_MAPPING");
-            Delete.Column("key").FromTable("MAP_MAPPING");
+            Delete.Index("sw_mapping_key_idx").OnTable("SW_MAPPING");
+            Delete.Column("key").FromTable("SW_MAPPING");
             
 
 
