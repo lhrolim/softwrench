@@ -22,7 +22,7 @@
                         }    
                     }
                     get activeCommands() {
-                        throw new TypeError("Not implemented");
+                        throw new TypeError("Abstract getter for activeCommands not implemented");
                     }
                     get hasActiveCommands() {
                         return this.activeCommands.length > 0;
@@ -75,6 +75,9 @@
                     }
                     get hasActiveCommands() {
                         return this.childCommands.hasActiveCommands || this.containers.some(c => c.hasActiveCommands);
+                    }
+                    get activeCommands() {
+                        return this.childCommands.activeCommands;
                     }
                 }
                 //#endregion
