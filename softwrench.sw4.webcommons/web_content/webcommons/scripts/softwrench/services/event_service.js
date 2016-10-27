@@ -102,7 +102,7 @@
             beforesubmit_postvalidation: function (schema, datamap, parameters) {
                 const event = loadEvent(schema, "beforesubmit.postvalidation");
                 if (!event) {
-                    return null;
+                    return $q.when(null);
                 }
                 return $q.when(execute(event, { schema, datamap, parameters }));
             },
