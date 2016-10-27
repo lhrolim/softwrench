@@ -72,6 +72,18 @@ namespace softwrench.sW4.test.Metadata.Association {
         }
 
 
+        /// <summary>
+        /// Testing scenario for SWWEB-2785
+        /// </summary>
+        [TestMethod]
+        public void TestQueryReplacement2() {
+            var queryHolder = new EntityAssociationAttribute();
+            queryHolder.Query = "location_.type not in ('STOREROOM','LABOR')";
+            var result = AssociationHelper.PrecompiledAssociationAttributeQuery("location_", queryHolder, "location", "location");
+            Assert.AreEqual("location_.type not in ('STOREROOM','LABOR')", result);
+        }
+
+
 
         private static ApplicationSchemaDefinition WithProperty(string value) {
             return new ApplicationSchemaDefinition() { Properties = { { ApplicationSchemaPropertiesCatalog.PreFetchAssociations, value } } };

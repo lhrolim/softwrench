@@ -79,7 +79,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 //SWWEB-2785 --> queries can be declared using the entityname rather than the qualified name, causing an issue under some scenarios:
                 // for compositions and grids, we do not use the qualifiers, but we do for quick search relationships.
                 // since there´s no consistency across the framework (and would be hard to have it), better sanitize this way.
-                query= query.SafeReplace(originalToName + ".", entityName+ ".", true);
+                query= query.SafeReplace(originalToName + "\\.", entityName+ ".", true);
             }
 
 
