@@ -551,7 +551,9 @@
                         originaldatamap: originalDatamap,
                     };
 
-                    eventService.beforesubmit_postvalidation(schemaToSave, transformedFields, eventParameters).then((eventResult) => {
+                    const postvalidation = eventService.beforesubmit_postvalidation(schemaToSave, transformedFields, eventParameters);
+
+                    $q.when(postvalidation).then((eventResult) => {
                         if (eventResult === false) {
                             //this means that the custom postvalidator should call the continue method
                             log.debug('waiting on custom postvalidator to invoke the continue function');
@@ -559,8 +561,6 @@
                         }
                         $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave);
                     });
-
-
                     
                 };
 

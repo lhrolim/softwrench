@@ -44,7 +44,7 @@
         //#region Public methods
 
         function format(value, field, datamap) {
-            if (field == undefined || value==null) {
+            if (field == undefined || value == null) {
                 return value;
             }
 

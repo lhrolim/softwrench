@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <template path="@userprofile.xml"/>
+    <template path="@dashboard.xml"/>
+    <template path="@audit.xml"/>
+    <template path="@batch.xml"/>
+    <template path="@swerror.xml"/>
+    <template path="@configuration.xml"/>
+    <template path="@dynamic.xml"/>
+  </templates>
+
+  <applications>
+
+    <application name="audit" entity="AuditEntry" title="Audit Trail">
+      <schemas>
+        <schema id="auditList" stereotype="list" redeclaring="false" title="Audit Trail">
+          <customization position="+id">
+            <field attribute="refid" hidden="true"/>
+          </customization>
+          <customization position="+refuserid">
+            <field attribute="#asset_serialnum" label="VIN / SN" />
+            <field attribute="#asset_description" label="Description" />
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+    
+  </applications>
+  
+</metadata>

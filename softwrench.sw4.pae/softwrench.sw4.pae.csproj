@@ -55,6 +55,7 @@
     <Compile Include="classes\com\cts\pae\connector\PaePrCrudConnector.cs" />
     <Compile Include="classes\com\cts\pae\configuration\PaeWhereClauseRegistry.cs" />
     <Compile Include="classes\com\cts\pae\dataset\PaeAssetDataSet.cs" />
+    <Compile Include="classes\com\cts\pae\dataset\PaeAuditDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\pae\readme.txt" />
+    <Content Include="metadata\pae\swdb\swdbmetadata.xml" />
     <Content Include="offline_content\pae\scripts\paeAssetService.mobile.js" />
     <Content Include="pr_changeby.sql" />
     <Content Include="prstatus_changeby_after.sql" />
@@ -117,6 +119,10 @@
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841B4DEA-A209-4AA8-A73C-29C33E01EEE0}</Project>
       <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
+      <Project>{5FA34361-87B3-4094-BFBE-7DB7B4D16036}</Project>
+      <Name>cts.commons</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}</Project>

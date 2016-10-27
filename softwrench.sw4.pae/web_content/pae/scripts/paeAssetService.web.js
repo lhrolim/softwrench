@@ -1,5 +1,4 @@
-﻿
-(function (angular) {
+﻿(function (angular, $) {
     "use strict";
 
     //#region Service registration
@@ -7,47 +6,33 @@
     angular.module("maximo_applications").factory("paeAssetService", [
         "scanningCommonsService", "validationService", "$http", "submitService",
         "contextService", "searchService", "redirectService", "alertService",
+        "crudContextHolderService", "formatService", "schemaService",
         paeAssetService]);
 
     //#endregion
 
-    function paeAssetService(scanningCommonsService, validationService, $http, submitService, contextService, searchService, redirectService, alertService, crudContextHolderService) {
-
-        //#region Service Instance
-
-        var service = {
-            initAssetDetailListener: initAssetDetailListener,
-            initAssetGridListener: initAssetGridListener
-        };
-
-        return service;
-
-        //#endregion
-
+    function paeAssetService(scanningCommonsService, validationService, $http, submitService, contextService, searchService, redirectService, alertService, crudContextHolderService, formatService, schemaService) {
         //#region Utils
 
         function navigateToAsset(data) {
-            var user = contextService.getUserData();
-            var searchData = {
+            const user = contextService.getUserData();
+            const searchData = {
                 siteid: user.siteId,
                 orgid: user.orgId,
                 assetnum: data
             };
-
-            var equalityoperator = searchService.getSearchOperationBySymbol("=");
-            var extraparameters = {
+            const equalityoperator = searchService.getSearchOperationBySymbol("=");
+            const extraparameters = {
                 searchOperators: {
                     siteid: equalityoperator,
                     orgid: equalityoperator,
                     assetnum: equalityoperator
                 }
-            }
+            };
+            searchService.searchWithData("asset", searchData, null, extraparameters).then(response => {
+                const resultObject = response.data.resultObject;
 
-            searchService.searchWithData("asset", searchData, null, extraparameters).success(function (resultData) {
-
-                var resultObject = resultData.resultObject;
-
-                if (resultObject.length == 0) {
+                if (resultObject.length <= 0) {
                     alertService.alert("Asset record not found. Please contact your System Administrator.");
                     return;
                 }
@@ -57,15 +42,13 @@
                     return;
                 }
 
-                var assetId = resultObject[0]['assetid'];
-                var param = {};
-                param.id = assetId;
-                var application = 'asset';
-                var detail = 'detail';
-                var mode = 'input';
-                param.scanmode = true;
+                const assetId = resultObject[0]["assetid"];
+                const param = {
+                    id: assetId,
+                    scanmode: true
+                };
 
-                redirectService.goToApplicationView(application, detail, mode, null, param, null);
+                redirectService.goToApplicationView("asset", "detail", "input", null, param, null);
             });
         }
 
@@ -73,11 +56,9 @@
 
         //#region Public methods
 
-
         function initAssetDetailListener(scope, schema, datamap, parameters) {
 
             datamap["#originallocation"] = datamap["location"];
-
 
             // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
             $(document).scannerDetection({
@@ -88,22 +69,25 @@
                         return;
                     }
 
-                    var searchParameters = {
-                        continue: function () {
-                            var jsonString = angular.toJson(datamap);
-                            var httpParameters = {
+                    const searchParameters = {
+                        'continue': function () {
+                            const jsonString = angular.toJson(datamap);
+                            const httpParameters = {
                                 application: "asset",
                                 currentSchemaKey: "detail.input.web",
                                 platform: "web",
                                 scanmode: true
                             };
-                            var urlToUse = url("/api/data/asset/" + datamap["assetid"] + "?" + $.param(httpParameters));
-                            $http.put(urlToUse, jsonString).success(function () {
-                                // navigate to the asset which had been scanned
-                                navigateToAsset(data);
-                            }).error(function () {
-                                // Failed to update the asset
-                            });
+                            const urlToUse = url(`/api/data/asset/${datamap["assetid"]}?${$.param(httpParameters)}`);
+
+                            $http.put(urlToUse, jsonString)
+                                .then(() => {
+                                    // navigate to the asset which had been scanned
+                                    navigateToAsset(data);
+                                })
+                                .catch(error => {
+                                    // Failed to update the asset
+                                });
                         }
                     };
                     submitService.submitConfirmation(null, datamap, searchParameters);
@@ -124,9 +108,16 @@
 
         //#endregion
 
-     
+        //#region Service Instance
+        const service = {
+            initAssetDetailListener,
+            initAssetGridListener,
+            transportationAssetChanged
+        };
+        return service;
+        //#endregion
     }
 
     
 
-})(angular);
+})(angular, jQuery);

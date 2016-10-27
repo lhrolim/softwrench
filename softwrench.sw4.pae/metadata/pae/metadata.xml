@@ -28,13 +28,11 @@
 
     <!--Person-->
     <template path="@person.xml"/>
-
-
-
+  
   </templates>
 
   <entities>
-    <entity name="paeasset" parententity="asset" idAttribute="assetid" useridAttribute="assetnum"  whereclause="recordtype = 'PROP' and propcondition = 1">
+    <entity name="paeasset" parententity="asset" idAttribute="assetid" useridAttribute="assetnum">
       <attributes>
         <attribute name="assetid" type="bigint" required="true"/>
         <attribute name="assetnum" type="varchar" required="true" />
@@ -50,6 +48,10 @@
         <attribute name="invpostdate" type="datetime" required="true"/>
         <attribute name="invpostdateby" type="varchar" required="true"/>
         <attribute name="invposttype" type="varchar" required="true"/>
+        <attribute name="status" type="varchar" required="false"/>
+        <attribute name="vehorg" type="varchar" required="false"/>
+        <attribute name="bcn" type="varchar" required="false"/>
+        <attribute name="scanremarks" type="varchar" required="false"/>
       </attributes>
       <relationships>
         <relationship to="alndomain" qualifier="assettype">
@@ -63,6 +65,12 @@
           <relationshipAttribute from="siteid" to="siteid" allowsnull="true"/>
           <relationshipAttribute from="orgid" to="orgid" allowsnull="true"/>
           <relationshipAttribute to="domainid" literal="RSSASSETSTATUS" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="alndomain" qualifier="assetvehorg">
+          <relationshipAttribute from="vehorg" to="value" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" allowsnull="true"/>
+          <relationshipAttribute from="orgid" to="orgid" allowsnull="true"/>
+          <relationshipAttribute to="domainid" literal="VEHORG" quoteLiteral="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -240,7 +248,76 @@
         <property key="mobile.fetchlimit" value="100000"/>
       </properties>
 
+      <components>
+        <componentdisplayable id="transportation_hiddenfields">
+          <field attribute="assetid" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="replacecost" hidden="true"/>
+          <field attribute="totalcost" hidden="true"/>
+          <field attribute="ytdcost" hidden="true"/>
+          <field attribute="budgetcost" hidden="true"/>
+          <field attribute="unchargedcost" hidden="true"/>
+          <field attribute="totunchargedcost" hidden="true"/>
+          <field attribute="totdowntime" hidden="true"/>
+          <field attribute="priority" hidden="true"/>
+          <field attribute="invcost" hidden="true"/>
+        </componentdisplayable>
+      </components>
+
       <schemas>
+        <!-- #region web -->
+        <list platform="web">
+          <field attribute="assetnum" label="Asset" />
+          <field attribute="description" label="Description"/>
+          <field attribute="serialnum" label="VIN / SN" />
+          <field attribute="location" label="Location" />
+          <field attribute="vehorg" label="Vehicle Org" />
+          <field attribute="bcn" label="BCN" />
+          <field attribute="status" label="Status" />
+        </list>
+        
+        <detail platform="web">
+          <event type="onload" expression="$e.datamap['#originallocation'] = $e.datamap.location"/>
+
+          <section orientation="horizontal">
+            <field attribute="assetnum" label="Asset Number" readonly="true"/>
+            <field attribute="description" label="Description" readonly="true"/>
+            <field attribute="serialnum" label="VIN / SN"/>
+            <association target="location" label="Location" labelfield="location_.description">
+              <renderer type="lookup" />
+              <dataprovider whereClause="location not in ('CAFB-VM-DRMO', 'CAFB-VM-VRC')"/>
+            </association>
+          </section>
+          <section orientation="horizontal">
+            <association target="vehorg" labelfield="assetvehorg.description" label="Vehicle Org">
+              <renderer type="lookup"/>
+            </association>
+            <association target="status" labelfield="assetstatus.description" label="Status">
+              <renderer type="lookup"/>
+            </association>
+            <field attribute="bcn" label="BCN"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="invdate" label="Inventory Date" readonly="true" />
+            <field attribute="invpostdate" label="Inventory Post Date" readonly="true" />
+            <field attribute="invpostdateby" label="Inventory Posted By" readonly="true"/>
+            <field attribute="invposttype" label="Posted Type" readonly="true" />
+          </section>
+          <section orientation="horizontal">
+            <field attribute="scanremarks" label="Scan Remark" />
+            <field attribute="changeby" label="Changed By" readonly="true" />
+            <field attribute="changedate" label="Changed Date" readonly="true">
+              <date format="MM/dd/yyyy hh:mm"/>
+            </field>
+          </section>
+
+          <reference id="transportation_hiddenfields"/>
+          
+        </detail>
+        
+        <!-- #endregion -->
+        
         <!-- #region mobile -->
         <list platform="mobile">
           <event type="onload" service="paeAssetService" method="initTransportationGridListener"/>
@@ -249,11 +326,11 @@
           <field attribute="description" label="Description" qualifier="subtitle"/>
           <field attribute="serialnum" label="VIN / SN" qualifier="excerpt"/>
         </list>
+        
         <detail platform="mobile">
           <event type="onload" service="paeAssetService" method="initTransportationDetailListener"/>
           <event type="offline.presave" service="paeAssetService" method="transportationAssetChanged"/>
           
-          <field attribute="assetid" readonly="true" hidden="true"/>
           <field attribute="assetnum" label="Asset #" readonly="true" qualifier="title"/>
           <field attribute="description" label="Description" readonly="true" qualifier="subtitle"/>
           <field attribute="serialnum" label="VIN / SN" qualifier="summary"/>
@@ -268,8 +345,8 @@
           <field attribute="scanremarks" label="Scan Remark" />
           <field attribute="changeby" label="Changed By" readonly="true" />
           <field attribute="changedate" label="Changed Date" readonly="true" />
-        
-          <field attribute="siteid"  label="Site" hidden="true"/>
+
+          <reference id="transportation_hiddenfields"/>
         </detail>
         <!-- #endregion -->
       </schemas>
